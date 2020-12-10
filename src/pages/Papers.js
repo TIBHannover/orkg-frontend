@@ -121,12 +121,12 @@ class Papers extends Component {
     render() {
         return (
             <>
-                <Container className="d-flex mt-4 mb-4">
-                    <h1 className="flex-grow-1 h4">View all papers</h1>
+                <Container className="d-flex align-items-center">
+                    <h1 className="h4 mt-4 mb-4 flex-grow-1">View all papers</h1>
                     {!!this.props.user && this.props.user.isCurationAllowed && (
-                        <div className="justify-content-end mb-2">
+                        <div className="flex-shrink-0">
                             <ButtonDropdown size="sm" isOpen={this.state.dropdownOpen} toggle={this.toggle}>
-                                <DropdownToggle caret color="lightblue">
+                                <DropdownToggle caret color="darkblue">
                                     {this.state.verified === true && 'Verified'}
                                     {this.state.verified === false && 'Unverified'}
                                     {this.state.verified === null && 'All'}
