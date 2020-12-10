@@ -66,16 +66,19 @@ export default class PreviewComponent extends Component {
                 const title = metaState.object.label ?? '';
                 const description = await that.getDescription(metaNodeId);
 
-                const model = await that.getModel(metaNodeId);
-
-                if (model.data) {
-                    // create visualization object only when this exists;
-                    const visDataObject = {
-                        title: title,
-                        description: description,
-                        reconstructionModel: model
-                    };
-                    visDataArray.push(visDataObject);
+                try {
+                    const model = await that.getModel(metaNodeId);
+                    if (model.data) {
+                        // create visualization object only when this exists;
+                        const visDataObject = {
+                            title: title,
+                            description: description,
+                            reconstructionModel: model
+                        };
+                        visDataArray.push(visDataObject);
+                    }
+                } catch (error) {
+                    console.log('Error', error.message);
                 }
             }
             resolve();

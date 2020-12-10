@@ -89,7 +89,7 @@ function PublishVisualization(props) {
             return undefined;
         } else {
             metaVisData.reconstructionData = reconstructionData;
-            return JSON.stringify(metaVisData);
+            return metaVisData;
         }
     };
 

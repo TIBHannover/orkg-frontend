@@ -10,8 +10,7 @@ import env from '@beam-australia/react-env';
 export const similarityServiceUrl = env('SIMILARITY_SERVICE_URL');
 export const comparisonUrl = `${similarityServiceUrl}compare/`;
 export const similarityUrl = `${similarityServiceUrl}similar/`;
-export const getVisualizationUrl = `${similarityServiceUrl}getVisualization/`;
-export const addVisualizationUrl = `${similarityServiceUrl}addVisualization/`;
+export const visualizationServiceUrl = `${similarityServiceUrl}visualization/`;
 
 // TODO: call this function
 export const indexContribution = contribution_id => {
@@ -57,10 +56,10 @@ export const getSimilarContribution = id => {
 };
 
 export const getVisualization = resourceId => {
-    return submitGetRequest(`${getVisualizationUrl}?resourceId=${encodeURI(resourceId)}`, {
+    return submitGetRequest(`${visualizationServiceUrl}?resourceId=${encodeURI(resourceId)}`, {
         'Content-Type': 'application/json'
     });
 };
 export const addVisualization = data => {
-    return submitPostRequest(`${addVisualizationUrl}`, { 'Content-Type': 'application/json' }, data);
+    return submitPostRequest(`${visualizationServiceUrl}`, { 'Content-Type': 'application/json' }, data);
 };

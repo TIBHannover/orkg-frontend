@@ -131,8 +131,7 @@ export default class SelfVisDataMode {
         }
 
         reconstructionModel.customizationState = customizationState;
-
-        return JSON.stringify(reconstructionModel);
+        return reconstructionModel;
     };
 
     resetCustomizationModel = () => {
@@ -184,8 +183,6 @@ export default class SelfVisDataMode {
 
     applyReconstructionModel = model => {
         const data = model.data;
-        this.setRenderingMethod(data.visMethod);
-        this.setRenderingEngine(data.renderingEngine);
 
         if (!this.mrrModel) {
             console.log('Model Failed!');
@@ -196,8 +193,11 @@ export default class SelfVisDataMode {
         // reset the data model to original
         this.resetCustomizationModel();
 
+        this.setRenderingMethod(data.visMethod);
+        this.setRenderingEngine(data.renderingEngine);
         // reconstruct the data;
-        const reconstructionObject = JSON.parse(data.reconstructionData);
+        const reconstructionObject = data.reconstructionData;
+
         // applySelection in the contribution anchors;
         reconstructionObject.contributionAnchors.forEach(anchor => {
             const position = anchor.positionContribAnchor;
