@@ -1,7 +1,7 @@
 import React from 'react';
 import { Badge, Button } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faUser, faCalendar, faBars, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faUser, faCalendar, faBars, faTrash, faCheckCircle } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes';
@@ -83,12 +83,20 @@ const PaperHeader = props => {
                     </div>
                 )}
             </div>
-            <div className="flex-grow-1">
-                {props.editMode && <EditPaperDialog />}{' '}
-                {showDeleteButton && (
-                    <Button color="danger" size="sm" className="mt-2" style={{ marginLeft: 'auto' }} onClick={deletePapers}>
-                        <Icon icon={faTrash} /> Delete paper
-                    </Button>
+            <div className="d-flex">
+                <div className="flex-grow-1">
+                    {props.editMode && <EditPaperDialog />}{' '}
+                    {showDeleteButton && (
+                        <Button color="danger" size="sm" className="mt-2" style={{ marginLeft: 'auto' }} onClick={deletePapers}>
+                            <Icon icon={faTrash} /> Delete paper
+                        </Button>
+                    )}
+                </div>
+                {isCurationAllowed && viewPaper.verified && (
+                    <div className="mt-3 justify-content-end">
+                        <Icon icon={faCheckCircle} className="mt-1 mr-1 text-success" />
+                        Verified
+                    </div>
                 )}
             </div>
         </>
