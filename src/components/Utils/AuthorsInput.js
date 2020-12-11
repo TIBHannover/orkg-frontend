@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
-import { FormGroup, Label, Input, Button, Modal, ModalBody, ModalHeader, ModalFooter, FormFeedback } from 'reactstrap';
+import { FormGroup, Label, Button, Modal, ModalBody, ModalHeader, ModalFooter, FormFeedback } from 'reactstrap';
 import { sortableContainer, sortableElement, sortableHandle } from 'react-sortable-hoc';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faTimes, faSpinner, faSort, faPen, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { faOrcid } from '@fortawesome/free-brands-svg-icons';
 import styled, { withTheme } from 'styled-components';
-import { submitGetRequest } from 'network';
+import Autocomplete from 'components/Autocomplete/Autocomplete';
+import { resourcesUrl } from 'services/backend/resources';
+import { CLASSES } from 'constants/graphSettings';
+import { getPersonFullNameByORCID } from 'services/ORCID/index';
 import { get_error_message } from 'utils';
 import arrayMove from 'array-move';
 import PropTypes from 'prop-types';
@@ -126,8 +129,8 @@ class AuthorsInput extends Component {
         }));
     };
 
-    handleChange = event => {
-        this.setState({ [event.target.name]: event.target.value });
+    handleChange = selected => {
+        this.setState({ authorInput: selected });
     };
 
     isORCID = value => {
@@ -145,17 +148,15 @@ class AuthorsInput extends Component {
 
     saveAuthor = () => {
         if (this.state.authorInput) {
-            if (this.isORCID(this.state.authorInput)) {
+            if (this.isORCID(this.state.authorInput.label)) {
                 this.setState({ authorNameLoading: true });
                 // Get the full name from ORCID API
-                const orcid = this.state.authorInput.match(/([0-9]{4})-?([0-9]{4})-?([0-9]{4})-?(([0-9]{4})|([0-9]{3}X))/g)[0];
-                const ORCIDLink = 'https://pub.orcid.org/v2.0/' + orcid + '/person';
-                submitGetRequest(ORCIDLink, { Accept: 'application/orcid+json' })
-                    .then(response => {
-                        const authorName = this.getFullname(response.name);
+                const orcid = this.state.authorInput.label.match(/([0-9]{4})-?([0-9]{4})-?([0-9]{4})-?(([0-9]{4})|([0-9]{3}X))/g)[0];
+                getPersonFullNameByORCID(orcid)
+                    .then(authorFullName => {
                         const newAuthor = {
-                            label: authorName,
-                            id: authorName,
+                            label: authorFullName,
+                            id: authorFullName,
                             orcid: orcid,
                             statementId:
                                 this.state.editMode && this.props.value[this.state.editIndex] && this.props.value[this.state.editIndex].statementId
@@ -187,8 +188,9 @@ class AuthorsInput extends Component {
                     });
             } else {
                 const newAuthor = {
-                    label: this.state.authorInput,
-                    id: this.state.authorInput,
+                    ...this.state.authorInput,
+                    label: this.state.authorInput.label,
+                    id: this.state.authorInput.id ? this.state.authorInput.id : this.state.authorInput.label, // ID if the Author resource Exist
                     orcid: '',
                     statementId:
                         this.state.editMode && this.props.value[this.state.editIndex] && this.props.value[this.state.editIndex].statementId
@@ -285,14 +287,16 @@ class AuthorsInput extends Component {
                             <Label for="authorInput">
                                 Enter {this.props.itemLabel} name <b>or</b> ORCID <Icon color="#A6CE39" icon={faOrcid} />
                             </Label>
-                            <Input
+                            <Autocomplete
+                                requestUrl={resourcesUrl}
+                                optionsClass={CLASSES.AUTHOR}
+                                placeholder="Search for author or enter a new author..."
                                 onChange={this.handleChange}
-                                type="text"
-                                name="authorInput"
-                                id="authorInput"
                                 value={this.state.authorInput}
-                                invalid={Boolean(get_error_message(this.state.errors, 'authorInput'))}
+                                allowCreate={true}
+                                autoLoadOption={false}
                                 innerRef={ref => (this.inputRef.current = ref)}
+                                inputId="authorInput"
                             />
                             {Boolean(get_error_message(this.state.errors, 'authorInput')) && (
                                 <FormFeedback>{get_error_message(this.state.errors, 'authorInput')}</FormFeedback>
