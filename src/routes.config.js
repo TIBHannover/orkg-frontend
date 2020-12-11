@@ -41,6 +41,7 @@ import FeaturedComparisons from 'pages/FeaturedComparisons';
 import ExportData from 'pages/ExportData';
 import Contribution from 'pages/Contribution';
 import CsvImport from 'pages/CsvImport';
+import Tools from 'pages/Tools';
 import requireAuthentication from 'requireAuthentication';
 import { reverse } from 'named-urls';
 
@@ -257,6 +258,10 @@ const routes = [
     {
         path: ROUTES.CSV_IMPORT,
         component: CsvImport
+    },
+    {
+        path: ROUTES.TOOLS,
+        component: Tools
     },
     /* Don't add routes below this line */
     {

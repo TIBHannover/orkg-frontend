@@ -45,5 +45,6 @@ export default {
     FEATURED_COMPARISONS: '/featured-comparisons',
     PDF_TEXT_ANNOTATION: '/pdf-text-annotation',
     PDF_ANNOTATION: '/pdf-annotation',
-    CSV_IMPORT: '/csv-import'
+    CSV_IMPORT: '/csv-import',
+    TOOLS: '/tools'
 };
