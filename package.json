@@ -39,7 +39,7 @@
         "marked": "^0.7.0",
         "moment": "^2.24.0",
         "node-html-parser": "^1.2.16",
-        "node-sass": "^4.12.0",
+        "node-sass": "^4.13.1",
         "olap-cube": "^1.0.0",
         "path-to-regexp": "^6.1.0",
         "prop-types": "^15.7.2",
