@@ -20,14 +20,7 @@ import { flattenDepth } from 'lodash';
 import arrayMove from 'array-move';
 import ROUTES from 'constants/routes.js';
 import queryString from 'query-string';
-
-function usePrevious(value) {
-    const ref = useRef();
-    useEffect(() => {
-        ref.current = value;
-    });
-    return ref.current;
-}
+import { usePrevious } from 'react-use';
 
 function useComparison() {
     const location = useLocation();
