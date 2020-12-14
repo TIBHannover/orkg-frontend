@@ -70,7 +70,7 @@ const Section = props => {
                     />
                 )}
 
-                {isComparisonSection && <SectionComparison id={props?.section?.contentLink?.objectId} />}
+                {isComparisonSection && <SectionComparison id={props?.section?.contentLink?.objectId} isEditable />}
 
                 {!isStatementBrowserSection && !isComparisonSection && markdown && <SectionMarkdown markdown={markdown} />}
             </SectionStyled>

@@ -25,10 +25,8 @@ function useComparison({ id }) {
     const location = useLocation();
     const history = useHistory();
     const params = useParams();
-
-    //const { comparisonId } = useParams();
     const comparisonId = id || params.comparisonId;
-    console.log('comparisonId', comparisonId);
+
     /**
      * @typedef {Object} MetaData
      * @property {String} id comparison ID

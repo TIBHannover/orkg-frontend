@@ -7,9 +7,10 @@ import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import { createResource } from 'services/backend/resources';
 import { useDispatch } from 'react-redux';
+import ComparisonLoadingComponent from 'components/Comparison/ComparisonLoadingComponent';
 
-const SectionComparison = ({ id }) => {
-    const { contributions, properties, data } = useComparison({ id });
+const SectionComparison = ({ id, isEditable }) => {
+    const { contributions, properties, data, isLoadingComparisonResult, isFailedLoadingComparisonResult } = useComparison({ id });
     const [selectedResource, setSelectedResource] = useState(null);
     const dispatch = useDispatch();
 
@@ -39,17 +40,19 @@ const SectionComparison = ({ id }) => {
 
     return (
         <>
-            <Autocomplete
-                requestUrl="resource"
-                optionsClass={CLASSES.COMPARISON}
-                placeholder="Search for a comparison"
-                onChange={handleItemSelected}
-                value={selectedResource}
-                openMenuOnFocus={false}
-                autoFocus={false}
-                cssClasses="mb-2"
-            />
-            {id && contributions.length && (
+            {isEditable && (
+                <Autocomplete
+                    requestUrl="resource"
+                    optionsClass={CLASSES.COMPARISON}
+                    placeholder="Search for a comparison..."
+                    onChange={handleItemSelected}
+                    value={selectedResource}
+                    openMenuOnFocus={false}
+                    autoFocus={false}
+                    cssClasses="mb-2"
+                />
+            )}
+            {id && contributions.length > 0 && (
                 <ComparisonTable
                     data={data}
                     properties={properties}
@@ -59,15 +62,18 @@ const SectionComparison = ({ id }) => {
                     viewDensity="compact"
                 />
             )}
+            {isLoadingComparisonResult && <ComparisonLoadingComponent />}
         </>
     );
 };
 
 SectionComparison.propTypes = {
-    id: PropTypes.object
+    isEditable: PropTypes.bool,
+    id: PropTypes.string
 };
 
 SectionComparison.defaultProps = {
+    isEditable: false,
     id: null
 };
 
