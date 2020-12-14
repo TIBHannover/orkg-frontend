@@ -37,7 +37,7 @@ import { reverse } from 'named-urls';
 import env from '@beam-australia/react-env';
 
 function Comparison(props) {
-    const [
+    const {
         metaData,
         contributions,
         properties,
@@ -74,7 +74,7 @@ function Comparison(props) {
         setAuthors,
         loadCreatedBy,
         loadProvenanceInfos
-    ] = useComparison({});
+    } = useComparison({});
 
     const [cookies, setCookie] = useCookies();
     const history = useHistory();

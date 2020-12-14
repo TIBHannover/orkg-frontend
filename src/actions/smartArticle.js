@@ -123,9 +123,16 @@ export const createSection = ({ contributionId, afterIndex, sectionType }) => as
         await createLiteralStatement(sectionResource.id, PREDICATES.HAS_CONTENT, markdownLiteral.id);
         sectionResourceId = sectionResource.id;
         markdownLiteralId = markdownLiteral.id;
-    } else if (sectionType === 'resource' || sectionType === 'property') {
+    } else if (sectionType === 'resource' || sectionType === 'property' || sectionType === 'comparison') {
         // link section
-        typeId = sectionType === 'resource' ? CLASSES.RESOURCE_SECTION : CLASSES.PROPERTY_SECTION;
+        if (sectionType === 'resource') {
+            typeId = CLASSES.RESOURCE_SECTION;
+        } else if (sectionType === 'property') {
+            typeId = CLASSES.PROPERTY_SECTION;
+        } else if (sectionType === 'comparison') {
+            typeId = CLASSES.COMPARISON_SECTION;
+        }
+
         const sectionResource = await createResource('', [typeId]);
         await createResourceStatement(contributionId, PREDICATES.HAS_SECTION, sectionResource.id);
         sectionResourceId = sectionResource.id;

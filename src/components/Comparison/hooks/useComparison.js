@@ -21,11 +21,14 @@ import arrayMove from 'array-move';
 import ROUTES from 'constants/routes.js';
 import queryString from 'query-string';
 
-function useComparison() {
+function useComparison({ id }) {
     const location = useLocation();
     const history = useHistory();
-    const { comparisonId } = useParams();
+    const params = useParams();
 
+    //const { comparisonId } = useParams();
+    const comparisonId = id || params.comparisonId;
+    console.log('comparisonId', comparisonId);
     /**
      * @typedef {Object} MetaData
      * @property {String} id comparison ID
@@ -522,7 +525,7 @@ function useComparison() {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isLoadingComparisonResult]);
-    return [
+    return {
         metaData,
         contributions,
         properties,
@@ -559,6 +562,6 @@ function useComparison() {
         setAuthors,
         loadCreatedBy,
         loadProvenanceInfos
-    ];
+    };
 }
 export default useComparison;

@@ -13,6 +13,7 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { SortableElement, sortableHandle } from 'react-sortable-hoc';
 import Confirm from 'reactstrap-confirm';
+import SectionComparison from 'components/SmartArticle/SectionComparison';
 
 const Section = props => {
     const [isHovering, setIsHovering] = useState(false);
@@ -47,6 +48,7 @@ const Section = props => {
     };
 
     const isStatementBrowserSection = props.section.type.id === CLASSES.RESOURCE_SECTION || props.section.type.id === CLASSES.PROPERTY_SECTION;
+    const isComparisonSection = props.section.type.id === CLASSES.COMPARISON_SECTION;
     const isTypeChangeDisabled = isStatementBrowserSection;
 
     return (
@@ -68,7 +70,9 @@ const Section = props => {
                     />
                 )}
 
-                {!isStatementBrowserSection && markdown && <SectionMarkdown markdown={markdown} />}
+                {isComparisonSection && <SectionComparison id={props?.section?.contentLink?.objectId} />}
+
+                {!isStatementBrowserSection && !isComparisonSection && markdown && <SectionMarkdown markdown={markdown} />}
             </SectionStyled>
             <AddSection index={props.atIndex} />
         </>
