@@ -130,6 +130,9 @@ class AuthorsInput extends Component {
     };
 
     handleChange = selected => {
+        if (selected.__isNew__) {
+            selected = { ...selected, label: selected.value };
+        }
         this.setState({ authorInput: selected });
     };
 
@@ -138,12 +141,6 @@ class AuthorsInput extends Component {
         const ORCID_REGEX = '^\\s*(?:(?:https?://)?orcid.org/)?([0-9]{4})-?([0-9]{4})-?([0-9]{4})-?(([0-9]{4})|([0-9]{3}X))\\s*$';
         const supportedORCID = new RegExp(ORCID_REGEX);
         return Boolean(value && value.match(supportedORCID));
-    };
-
-    getFullname = name => {
-        let fullName = name['family-name'] && name['family-name'].value ? name['family-name'].value : '';
-        fullName = name['given-names'] && name['given-names'].value ? `${name['given-names'].value} ${fullName}` : fullName;
-        return fullName.trim();
     };
 
     saveAuthor = () => {
@@ -225,7 +222,7 @@ class AuthorsInput extends Component {
     editAuthor = key => {
         this.setState({
             editIndex: key,
-            authorInput: this.props.value[key].orcid ? this.props.value[key].orcid : this.props.value[key].label,
+            authorInput: this.props.value[key].orcid ? this.props.value[key].orcid : this.props.value[key],
             errors: null,
             editMode: true
         });
