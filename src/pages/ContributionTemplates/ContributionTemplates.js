@@ -163,6 +163,21 @@ export default class ContributionTemplates extends Component {
                     </RequireAuthentication>
                 </Container>
                 <Container className="box rounded pt-4 pb-2 pl-5 pr-5 clearfix">
+                    <p>
+                        <i>Templates</i> allows to specify the structure of content types, and they can be used when describing research
+                        contributions.{' '}
+                    </p>
+                    <p>
+                        Further information about templates can be also found in the{' '}
+                        <a
+                            href="https://gitlab.com/TIBHannover/orkg/orkg-frontend/-/wikis/Templates-for-structuring-contribution-descriptions"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            ORKG wiki
+                        </a>
+                        .
+                    </p>
                     <Form className="mb-3">
                         <Row form>
                             <Col md={6}>
