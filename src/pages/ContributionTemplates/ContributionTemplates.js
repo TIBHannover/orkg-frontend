@@ -10,6 +10,7 @@ import { resourcesUrl, getResourcesByClass } from 'services/backend/resources';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
 import TemplateCard from 'components/ContributionTemplates/TemplateCard';
 import { reverse } from 'named-urls';
+import { debounce } from 'lodash';
 import ROUTES from 'constants/routes';
 import { CLASSES, PREDICATES } from 'constants/graphSettings';
 
@@ -25,7 +26,7 @@ export default class ContributionTemplates extends Component {
             hasNextPage: false,
             page: 1,
             isLastPageReached: false,
-            filterReseachField: null,
+            filterResearchField: null,
             filterResearchProblem: null,
             filterClass: null,
             filterLabel: ''
@@ -40,12 +41,12 @@ export default class ContributionTemplates extends Component {
 
     componentDidUpdate = (prevProps, prevState) => {
         if (
-            prevState.filterReseachField !== this.state.filterReseachField ||
+            prevState.filterResearchField !== this.state.filterResearchField ||
             prevState.filterResearchProblem !== this.state.filterResearchProblem ||
             prevState.filterClass !== this.state.filterClass ||
             prevState.filterLabel !== this.state.filterLabel
         ) {
-            this.setState({ contributionTemplates: [], isNextPageLoading: false, hasNextPage: false, page: 1, isLastPageReached: false }, () =>
+            this.setState({ contributionTemplates: [], isNextPageLoading: true, hasNextPage: false, page: 1, isLastPageReached: false }, () =>
                 this.loadMoreContributionTemplates()
             );
         }
@@ -75,7 +76,7 @@ export default class ContributionTemplates extends Component {
 
     handleResearchFieldSelect = selected => {
         this.setState({
-            filterReseachField: !selected ? null : selected,
+            filterResearchField: !selected ? null : selected,
             filterResearchProblem: null,
             filterClass: null,
             filterLabel: ''
@@ -85,7 +86,7 @@ export default class ContributionTemplates extends Component {
     handleResearchProblemSelect = selected => {
         this.setState({
             filterResearchProblem: !selected ? null : selected,
-            filterReseachField: null,
+            filterResearchField: null,
             filterClass: null,
             filterLabel: ''
         });
@@ -94,7 +95,7 @@ export default class ContributionTemplates extends Component {
     handleClassSelect = selected => {
         this.setState({
             filterResearchProblem: null,
-            filterReseachField: null,
+            filterResearchField: null,
             filterClass: !selected ? null : selected,
             filterLabel: ''
         });
@@ -103,17 +104,17 @@ export default class ContributionTemplates extends Component {
     handleLabelFilter = e => {
         this.setState({
             filterResearchProblem: null,
-            filterReseachField: null,
+            filterResearchField: null,
             filterClass: null,
             filterLabel: e.target.value
         });
     };
 
-    loadMoreContributionTemplates = () => {
+    loadMoreContributionTemplates = debounce(() => {
         this.setState({ isNextPageLoading: true });
         let templates = [];
-        if (this.state.filterReseachField) {
-            templates = this.getTemplatesOfResourceId(this.state.filterReseachField.id, PREDICATES.TEMPLATE_OF_RESEARCH_FIELD);
+        if (this.state.filterResearchField) {
+            templates = this.getTemplatesOfResourceId(this.state.filterResearchField.id, PREDICATES.TEMPLATE_OF_RESEARCH_FIELD);
         } else if (this.state.filterResearchProblem) {
             templates = this.getTemplatesOfResourceId(this.state.filterResearchProblem.id, PREDICATES.TEMPLATE_OF_RESEARCH_PROBLEM);
         } else if (this.state.filterClass) {
@@ -131,21 +132,21 @@ export default class ContributionTemplates extends Component {
 
         templates.then(contributionTemplates => {
             if (contributionTemplates.length > 0) {
-                this.setState({
-                    contributionTemplates: [...this.state.contributionTemplates, ...contributionTemplates],
+                this.setState(prev => ({
+                    contributionTemplates: [...(prev.page === 1 ? [] : prev.contributionTemplates), ...contributionTemplates],
                     isNextPageLoading: false,
                     hasNextPage: contributionTemplates.length < this.pageSize ? false : true,
                     page: this.state.page + 1
-                });
+                }));
             } else {
                 this.setState({
                     isNextPageLoading: false,
                     hasNextPage: false,
-                    isLastPageReached: true
+                    isLastPageReached: this.state.page !== 1 ? true : false
                 });
             }
         });
-    };
+    }, 500);
 
     render() {
         return (
@@ -173,7 +174,7 @@ export default class ContributionTemplates extends Component {
                                         optionsClass={CLASSES.RESEARCH_FIELD}
                                         placeholder="Select or type to enter a research field"
                                         onChange={this.handleResearchFieldSelect}
-                                        value={this.state.filterReseachField}
+                                        value={this.state.filterResearchField}
                                         autoLoadOption={true}
                                         openMenuOnFocus={true}
                                         allowCreate={false}
@@ -238,6 +239,12 @@ export default class ContributionTemplates extends Component {
                         {this.state.contributionTemplates.length === 0 && !this.state.isNextPageLoading && (
                             <ListGroupItem tag="div" className="text-center">
                                 No contribution templates
+                                {(this.state.filterResearchField ||
+                                    this.state.filterResearchProblem ||
+                                    this.state.filterClass ||
+                                    this.state.filterLabel) &&
+                                    ' matches this filter'}
+                                .
                             </ListGroupItem>
                         )}
                         {this.state.isNextPageLoading && (
