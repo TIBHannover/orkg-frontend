@@ -64,7 +64,7 @@ export default function FeaturedItemsBox() {
                     className={`h6 col-md-6 text-center tab ${activeTab === 1 ? 'active' : ''}`}
                     onClick={() => setActiveState(1)}
                 >
-                    Featured papers
+                    Papers
                 </div>
             </FeaturedTabs>
             <TransitionGroup exit={false}>

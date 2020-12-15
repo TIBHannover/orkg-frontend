@@ -8,96 +8,106 @@ import Dotdotdot from 'react-dotdotdot';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { reverse } from 'named-urls';
-import { sortMethod } from 'utils';
-import { CLASSES, PREDICATES } from 'constants/graphSettings';
+import { sortMethod, getComparisonData } from 'utils';
+import { find } from 'lodash';
+import { CLASSES } from 'constants/graphSettings';
 
 export default function FeaturedComparisons() {
     const [comparisons, setComparisons] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
+    const [filter, setFilter] = useState('featured');
+    const [dropdownOpen, setOpen] = useState(false);
+
+    const toggle = () => setOpen(!dropdownOpen);
 
     const getFeaturedComparisons = async () => {
         setIsLoading(true);
-
         const responseJson = await getResourcesByClass({
             id: CLASSES.FEATURED_COMPARISON,
             sortBy: 'created_at',
             desc: false
         });
-
         const ids = responseJson.map(comparison => comparison.id);
-        const comparisonStatements = await getStatementsBySubjects({
+        getStatementsBySubjects({
             ids
+        })
+            .then(comparisonsStatements => {
+                let comparisons = comparisonsStatements.map(comparisonStatements => {
+                    const resourceSubject = find(responseJson, { id: comparisonStatements.id });
+                    return getComparisonData(
+                        comparisonStatements.id,
+                        comparisonStatements && resourceSubject.label ? resourceSubject.label : 'No Title',
+                        comparisonStatements.statements
+                    );
+                });
+
+                // order featured comparison on show only that have onHomePage predicate
+                comparisons = comparisons.filter(c => c.onHomePage).sort((c1, c2) => sortMethod(c1.order, c2.order));
+                setComparisons(comparisons);
+                setIsLoading(false);
+            })
+            .catch(() => {
+                setComparisons([]);
+                setIsLoading(false);
+            });
+    };
+
+    const getLatestComparisons = async () => {
+        setIsLoading(true);
+
+        const responseJson = await getResourcesByClass({
+            id: CLASSES.COMPARISON,
+            sortBy: 'created_at',
+            desc: true,
+            items: 8
         });
 
-        let comparisons = [];
-        for (const comparison of responseJson) {
-            let description = '';
-            let icon = '';
-            const url = '';
-            let type = '';
-            let order = Infinity;
-            let onHomepage = false;
-
-            for (const comparisonStatement of comparisonStatements) {
-                if (comparisonStatement.id === comparison.id) {
-                    const onHomepageStatement = comparisonStatement.statements.filter(statement => statement.predicate.id === PREDICATES.ON_HOMEPAGE);
-                    onHomepage = onHomepageStatement.length > 0 ? true : false;
-
-                    const descriptionStatement = comparisonStatement.statements.filter(
-                        statement => statement.predicate.id === PREDICATES.DESCRIPTION
+        const ids = responseJson.map(comparison => comparison.id);
+        getStatementsBySubjects({
+            ids
+        })
+            .then(comparisonsStatements => {
+                const comparisons = comparisonsStatements.map(comparisonStatements => {
+                    const resourceSubject = find(responseJson, { id: comparisonStatements.id });
+                    return getComparisonData(
+                        comparisonStatements.id,
+                        comparisonStatements && resourceSubject.label ? resourceSubject.label : 'No Title',
+                        comparisonStatements.statements
                     );
-                    description = descriptionStatement.length > 0 ? descriptionStatement[0].object.label : '';
+                });
 
-                    const iconStatement = comparisonStatement.statements.filter(statement => statement.predicate.id === PREDICATES.ICON);
-                    icon = iconStatement.length > 0 ? iconStatement[0].object.label : '';
-
-                    const typeStatement = comparisonStatement.statements.filter(statement => statement.predicate.id === PREDICATES.TYPE);
-                    type = typeStatement.length > 0 ? typeStatement[0].object.id : '';
-
-                    const orderStatement = comparisonStatement.statements.filter(statement => statement.predicate.id === PREDICATES.ORDER);
-                    order = orderStatement.length > 0 ? orderStatement[0].object.label : Infinity;
-                }
-            }
-
-            if (!onHomepage) {
-                continue;
-            }
-
-            comparisons.push({
-                label: comparison.label,
-                id: comparison.id,
-                description,
-                url,
-                icon,
-                type,
-                order
+                setComparisons(comparisons);
+                setIsLoading(false);
+            })
+            .catch(() => {
+                setComparisons([]);
+                setIsLoading(false);
             });
-        }
-
-        // order featured comparison
-        comparisons = comparisons.sort((c1, c2) => sortMethod(c1.order, c2.order));
-        setComparisons(comparisons);
-        setIsLoading(false);
     };
+
+    useEffect(() => {
+        if (filter === 'featured') {
+            getFeaturedComparisons();
+        } else {
+            getLatestComparisons();
+        }
+    }, [filter]);
 
     useEffect(() => {
         getFeaturedComparisons();
     }, []);
-
-    const [dropdownOpen, setOpen] = useState(false);
-
-    const toggle = () => setOpen(!dropdownOpen);
 
     return (
         <div className="pl-3 pr-3 pt-2 pb-3">
             <div className="d-flex justify-content-end mb-2">
                 <ButtonDropdown size="sm" isOpen={dropdownOpen} toggle={toggle}>
                     <DropdownToggle caret color="lightblue">
-                        Featured
+                        {filter === 'featured' && 'Featured'}
+                        {filter === 'latest' && 'Latest'}
                     </DropdownToggle>
                     <DropdownMenu>
-                        <DropdownItem>Featured</DropdownItem>
-                        <DropdownItem>Latest</DropdownItem>
+                        <DropdownItem onClick={() => setFilter('featured')}>Featured</DropdownItem>
+                        <DropdownItem onClick={() => setFilter('latest')}>Latest</DropdownItem>
                     </DropdownMenu>
                 </ButtonDropdown>
             </div>
@@ -110,15 +120,15 @@ export default function FeaturedComparisons() {
                                     <Link to={reverse(ROUTES.COMPARISON, { comparisonId: comparison.id })}>
                                         {comparison.label ? comparison.label : <em>No title</em>}
                                     </Link>
-                                    <p style={{ fontSize: '13px' }} className="text-muted">
+                                    <div style={{ fontSize: '13px' }} className="text-muted">
                                         <Dotdotdot clamp={3}>{comparison.description}</Dotdotdot>
-                                    </p>
+                                    </div>
                                 </ListGroupItem>
                             ))}
                         </ListGroup>
 
                         <div className="text-center">
-                            <Link to={ROUTES.FEATURED_COMPARISONS}>
+                            <Link to={filter === 'featured' ? ROUTES.FEATURED_COMPARISONS : ROUTES.COMPARISONS}>
                                 <Button color="primary" className="mr-3" size="sm">
                                     View more
                                 </Button>
@@ -126,7 +136,7 @@ export default function FeaturedComparisons() {
                         </div>
                     </>
                 ) : (
-                    <div className="text-center">No features comparison found</div>
+                    <div className="text-center">{filter === 'featured' ? 'No featured comparison found' : 'No published comparison found'}</div>
                 )
             ) : (
                 <div className="text-center">
