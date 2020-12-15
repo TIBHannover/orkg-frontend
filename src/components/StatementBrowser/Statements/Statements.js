@@ -5,7 +5,7 @@ import AddProperty from 'components/StatementBrowser/AddProperty/AddPropertyCont
 import Breadcrumbs from 'components/StatementBrowser/Breadcrumbs/BreadcrumbsContainer';
 import ContributionTemplate from 'components/StatementBrowser/ContributionTemplate/ContributionTemplateContainer';
 import PropertySuggestions from 'components/StatementBrowser/PropertySuggestions/PropertySuggestions';
-import HelpModal from 'components/StatementBrowser/HelpModal/HelpModal';
+import SBEditorHelpModal from 'components/StatementBrowser/SBEditorHelpModal/SBEditorHelpModal';
 import NoData from 'components/StatementBrowser/NoData/NoData';
 import { StyledLevelBox, StyledStatementItem } from 'components/StatementBrowser/styled';
 import { Cookies } from 'react-cookie';
@@ -130,6 +130,18 @@ export default function Statements(props) {
 
     return (
         <>
+            {props.enableEdit && (
+                <div className="clearfix mb-3">
+                    <Tippy content="Open data editor help">
+                        <span className="ml-3 float-right">
+                            <Button outline color="secondary" size="sm" onClick={() => setHelpModalOpen(v => !v)}>
+                                <Icon className="mr-1" icon={faQuestionCircle} /> Data editor help
+                            </Button>
+                        </span>
+                    </Tippy>
+                </div>
+            )}
+
             {props.level !== 0 ? (
                 <>
                     <Breadcrumbs />
@@ -137,25 +149,7 @@ export default function Statements(props) {
             ) : (
                 ''
             )}
-            {props.enableEdit && (
-                <div className="clearfix mb-3">
-                    <Tippy content="Open help">
-                        <span className="ml-3 float-right">
-                            <Button
-                                color="link"
-                                outline
-                                size="sm"
-                                style={{ fontSize: 22, lineHeight: 1 }}
-                                className="p-0"
-                                onClick={() => setHelpModalOpen(v => !v)}
-                            >
-                                <Icon icon={faQuestionCircle} />
-                            </Button>
-                        </span>
-                    </Tippy>
-                </div>
-            )}
-            <HelpModal isOpen={helpModalOpen} toggle={() => setHelpModalOpen(v => !v)} />
+            <SBEditorHelpModal isOpen={helpModalOpen} toggle={() => setHelpModalOpen(v => !v)} />
             {elements}
         </>
     );

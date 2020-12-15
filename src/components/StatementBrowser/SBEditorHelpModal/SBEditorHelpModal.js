@@ -2,15 +2,15 @@ import React from 'react';
 import { Modal, ModalHeader, ModalBody } from 'reactstrap';
 import PropTypes from 'prop-types';
 
-const HelpModal = props => {
+const SBEditorHelpModal = props => {
     return (
         <Modal isOpen={props.isOpen} toggle={props.toggle} size="lg">
-            <ModalHeader toggle={props.toggle}>ORKG Statement editor help</ModalHeader>
+            <ModalHeader toggle={props.toggle}>ORKG Data editor help</ModalHeader>
 
             <ModalBody>
                 <p>
-                    The statement editor in the main part of editing ORKG data. In this guide we provide most frequently asked question that helps to
-                    use the statement editor effectively
+                    The editor in the main part of editing ORKG Data. In this guide, we provide answers to the most frequently asked question that
+                    helps to use the editor effectively.
                 </p>
                 <ul>
                     <li>
@@ -64,9 +64,9 @@ const HelpModal = props => {
     );
 };
 
-HelpModal.propTypes = {
+SBEditorHelpModal.propTypes = {
     isOpen: PropTypes.bool.isRequired,
     toggle: PropTypes.func.isRequired
 };
 
-export default HelpModal;
+export default SBEditorHelpModal;
