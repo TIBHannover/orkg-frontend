@@ -1,24 +1,12 @@
 import React, { Component } from 'react';
 import { Container } from 'reactstrap';
-import HomeBannerBg from 'assets/img/graph-background.svg';
+
 import styled from 'styled-components';
 import Typed from 'typed.js';
 import Video from './Video';
 
 const JumbotronStyled = styled.div`
-    margin-top: -30px;
     color: hsla(0, 0%, 100%, 0.6);
-    background: rgb(95, 100, 116) url(${HomeBannerBg});
-    background-position-x: 0%, 0%;
-    background-position-y: 0%, 0%;
-    background-size: auto, auto;
-
-    background-size: cover;
-    position: relative;
-
-    background-attachment: fixed;
-    background-position: center 10%;
-    background-repeat: no-repeat;
 
     .marketingtext {
         font-size: larger;

@@ -1,4 +1,4 @@
-@import "../../assets/scss/ThemeVariables.scss";
+@import '../../assets/scss/ThemeVariables.scss';
 
 body {
     color: #646464;
@@ -6,12 +6,18 @@ body {
 }
 
 #main-navbar {
-    background: #fff !important;
-    box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.13);
+    &:not(.homePage) {
+        box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.13);
+        background: white;
+    }
+    transition: all 0.8s ease-in-out;
+    background: transparent;
+    border: 0;
 
     .nav-link {
         color: $darkblue;
-        &:hover {
+
+        & a:hover {
             color: $primary;
         }
     }
@@ -29,6 +35,27 @@ body {
             border: 1px solid #ced4da;
             border-left: 0 !important;
             background: $input-bg;
+        }
+    }
+
+    &.homePage {
+        & .nav-link {
+            color: white;
+            &:hover {
+                color: $primary;
+            }
+        }
+        & .signIn {
+            color: white;
+            background: #32303b;
+            border: 0;
+            &:hover {
+                color: white;
+                background: $primary;
+            }
+        }
+        .search-box .search-icon {
+            color: $darkblue;
         }
     }
 }

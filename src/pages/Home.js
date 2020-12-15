@@ -6,7 +6,7 @@ import { faStream } from '@fortawesome/free-solid-svg-icons';
 import ResearchFieldCards from 'components/Home/ResearchFieldCards';
 import ObservatoriesCarousel from 'components/Home/ObservatoriesCarousel/ObservatoriesCarousel';
 import FeaturedItemsBox from 'components/Home/FeaturedItemsBox';
-import Jumbotron from 'components/Home/Jumbotron';
+
 import { toast } from 'react-toastify';
 import TrendingProblems from 'components/Home/TrendingProblems';
 
@@ -28,8 +28,6 @@ export default function Home() {
 
     return (
         <div>
-            <Jumbotron />
-
             <Container style={{ marginTop: -50 }}>
                 <Row>
                     <Col md={7} sm={12} style={{ display: 'flex', flexDirection: 'column' }}>
