@@ -42,7 +42,7 @@ const SidebarStyledBox = styled.div`
     }
 `;
 
-export default function Sidebar() {
+export default function FeaturedItemsBox() {
     const [activeTab, setActiveState] = useState(1);
 
     return (

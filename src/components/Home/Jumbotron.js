@@ -6,7 +6,6 @@ import Typed from 'typed.js';
 import Video from './Video';
 
 const JumbotronStyled = styled.div`
-    padding: 120px 0;
     margin-top: -30px;
     color: hsla(0, 0%, 100%, 0.6);
     background: rgb(95, 100, 116) url(${HomeBannerBg});

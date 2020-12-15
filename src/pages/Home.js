@@ -5,7 +5,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faStream } from '@fortawesome/free-solid-svg-icons';
 import ResearchFieldCards from 'components/Home/ResearchFieldCards';
 import ObservatoriesCarousel from 'components/Home/ObservatoriesCarousel/ObservatoriesCarousel';
-import Sidebar from 'components/Home/Sidebar';
+import FeaturedItemsBox from 'components/Home/FeaturedItemsBox';
 import Jumbotron from 'components/Home/Jumbotron';
 import { toast } from 'react-toastify';
 import TrendingProblems from 'components/Home/TrendingProblems';
@@ -43,7 +43,7 @@ export default function Home() {
                     </Col>
                     <Col md={5} sm={12} style={{ display: 'flex', flexDirection: 'column' }}>
                         <ObservatoriesCarousel />
-                        <Sidebar />
+                        <FeaturedItemsBox />
                     </Col>
                 </Row>
             </Container>

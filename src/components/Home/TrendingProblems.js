@@ -90,8 +90,8 @@ const TrendingProblems = props => {
                     <div className="px-4 text-center pb-5">
                         <List>
                             {problems.map((problem, index) => (
-                                <div>
-                                    <div className={`item-${index}`} key={`${index}-problem`}>
+                                <div key={`${index}-problem`}>
+                                    <div className={`item-${index}`}>
                                         <Link to={reverse(ROUTES.RESEARCH_PROBLEM, { researchProblemId: problem.id })}>{problem.label}</Link>
                                     </div>
                                     {index !== problems.length - 1 && <hr className="mx-3 mt-2" />}

@@ -45,12 +45,11 @@ const CarouselItemStyled = styled(CarouselItem)`
 export default function ObservatoriesCarousel() {
     const [activeIndex, setActiveIndex] = useState(0);
     const [observatories, setObservatories] = useState([]);
+    const [animating, setAnimating] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         setIsLoading(true);
-        getAllOrganizations().then(v => {
-            console.log(v);
-        });
         getAllOrganizations().then(org => {
             getAllObservatories().then(obs => {
                 const ll = obs.map(ob => {
@@ -61,9 +60,6 @@ export default function ObservatoriesCarousel() {
             });
         });
     }, []);
-
-    const [animating, setAnimating] = useState(false);
-    const [IsLoading, setIsLoading] = useState(false);
 
     const next = () => {
         if (animating) {
@@ -86,12 +82,12 @@ export default function ObservatoriesCarousel() {
     };
 
     const slides = () => {
-        return observatories.map((observatory, index) => {
+        return observatories.map(observatory => {
             return (
                 <CarouselItemStyled
                     onExiting={() => setAnimating(true)}
                     onExited={() => setAnimating(false)}
-                    className="pt-4 pb-1 mb-4"
+                    className="pt-2 pb-1 mb-4"
                     key={`fp${observatory.id}`}
                 >
                     <ObservatoryCardStyled className="">
@@ -108,7 +104,7 @@ export default function ObservatoriesCarousel() {
                                                 <img
                                                     className="justify-content-center orgLogo"
                                                     key={`imageLogo${o.id}`}
-                                                    height="45px"
+                                                    height="60px"
                                                     src={o.logo}
                                                     alt={`${o.name} logo`}
                                                 />
@@ -143,7 +139,7 @@ export default function ObservatoriesCarousel() {
             </h2>
 
             <CarouselContainer>
-                {!IsLoading ? (
+                {!isLoading ? (
                     <Carousel activeIndex={activeIndex} next={next} previous={previous}>
                         {slides()}
 
