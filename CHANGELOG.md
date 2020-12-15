@@ -5,7 +5,27 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
-## [0.23](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.22...V0.23) - 2020-11-16
+## [0.24](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.23...V0.24) - 2020-12-10
+
+### Changes
+
+- feat: redirect user to page after authentication [`#441`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/441)
+- fix(Comparison): hide 'view resource' link if resource is not available [`#443`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/443)
+- feat: Mark paper metadata as manually verified [`#436`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/436)
+- ux: Add breadcrumbs on paper, research field and comparison pages [`#433`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/433)
+- enhancement: Comparison card [`#423`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/423)
+- enhancement: Delete a contribution without calling the comparison API [`#399`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/399)
+- enhancement (Add paper):  Search research field [`#428`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/428)
+- chore: update packages [`#440`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/440)
+- legal: update data protection [`#437`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/437)
+- fix: Save research problem when using  the CSV import tool [`#432`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/432)
+- fix: skip null values on stringifying queries [`#434`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/434)
+- feat(FeaturedComparisons): support anchors to category headers [`#431`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/431)
+- fix: Changing display name [`#430`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/430)
+- Add accessibility linter rules [`#429`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/429)
+
+---
+## [0.23](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.22...V0.23) - 2020-11-17
 
 ### Changes
 

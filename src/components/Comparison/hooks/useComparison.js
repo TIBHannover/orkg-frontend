@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { getStatementsBySubject, getStatementsBySubjectAndPredicate, getStatementsByObjectAndPredicate } from 'services/backend/statements';
 import { getUserInformationById } from 'services/backend/users';
 import { getObservatoryAndOrganizationInformation } from 'services/backend/observatories';
@@ -16,10 +16,11 @@ import {
 import { useParams, useLocation, useHistory } from 'react-router-dom';
 import { PREDICATES, CLASSES, MISC } from 'constants/graphSettings';
 import { reverse } from 'named-urls';
-import { remove, flattenDepth } from 'lodash';
+import { flattenDepth } from 'lodash';
 import arrayMove from 'array-move';
 import ROUTES from 'constants/routes.js';
 import queryString from 'query-string';
+import { usePrevious } from 'react-use';
 
 function useComparison() {
     const location = useLocation();
@@ -67,6 +68,9 @@ function useComparison() {
     const [createdBy, setCreatedBy] = useState(null);
     const [provenance, setProvenance] = useState(null);
 
+    // research fields (only the research field of the first contribution)
+    const [researchField, setResearchField] = useState(null);
+
     // urls
     const [urlNeedsToUpdate, setUrlNeedsToUpdate] = useState(false);
     const [publicURL, setPublicURL] = useState(window.location.href);
@@ -75,10 +79,13 @@ function useComparison() {
 
     // comparison config
     const [transpose, setTranspose] = useState(false);
-    const [comparisonType, setComparisonType] = useState(null);
+    const [comparisonType, setComparisonType] = useState('merge');
     const [responseHash, setResponseHash] = useState(null);
     const [contributionsList, setContributionsList] = useState([]);
     const [predicatesList, setPredicatesList] = useState([]);
+
+    //
+    const prevComparisonType = usePrevious(comparisonType);
 
     // loading indicators
     const [isLoadingMetaData, setIsLoadingMetaData] = useState(false);
@@ -152,7 +159,7 @@ function useComparison() {
                         const url = filterObjectOfStatementsByPredicate(statements, PREDICATES.URL, true);
                         if (url) {
                             setResponseHash(getParamFromQueryString(url?.label.substring(url?.label.indexOf('?')), 'response_hash'));
-                            setComparisonType(getParamFromQueryString(url?.label.substring(url?.label.indexOf('?')), 'type'));
+                            setComparisonType(getParamFromQueryString(url?.label.substring(url?.label.indexOf('?')), 'type') ?? 'merge');
                             setTranspose(getParamFromQueryString(url?.label.substring(url?.label.indexOf('?')), 'transpose', true));
                             setPredicatesList(getArrayParamFromQueryString(url?.label.substring(url?.label.indexOf('?')), 'properties'));
                             setContributionsList(getArrayParamFromQueryString(url?.label.substring(url?.label.indexOf('?')), 'contributions'));
@@ -305,15 +312,26 @@ function useComparison() {
         setIsLoadingComparisonResult(true);
         getComparison({ contributionIds: contributionsList, type: comparisonType, response_hash: responseHash, save_response: false })
             .then(comparisonData => {
+                // get Research field of the first contributions
+                return getStatementsBySubjectAndPredicate({
+                    subjectId: comparisonData.contributions[0].paperId,
+                    predicateId: PREDICATES.HAS_RESEARCH_FIELD
+                }).then(s => {
+                    if (s.length) {
+                        setResearchField(s[0].object);
+                    }
+                    return Promise.resolve(comparisonData);
+                });
+            })
+            .then(comparisonData => {
                 // mocking function to allow for deletion of contributions via the url
-                //const contributions = [];
-                //for (let i = 0; i < comparisonData.contributions.length; i++) {
-                //    const contribution = comparisonData.contributions[i];
-
-                //    if (contributionsList.includes(contribution.id)) {
-                //        contributions.push(contribution);
-                //    }
-                //}
+                comparisonData.contributions.forEach((contribution, index) => {
+                    if (!contributionsList.includes(contribution.id)) {
+                        comparisonData.contributions[index].active = false;
+                    } else {
+                        comparisonData.contributions[index].active = true;
+                    }
+                });
 
                 comparisonData.properties = extendAndSortProperties(comparisonData);
 
@@ -364,12 +382,11 @@ function useComparison() {
      * @param {String} contributionId Contribution id to remove
      */
     const removeContribution = contributionId => {
-        setResponseHash(null);
-        setContributionsList(
-            remove(contributionsList, function(n) {
-                return n !== contributionId;
-            })
-        );
+        const newContributions = contributions.map(contribution => {
+            return contribution.id === contributionId ? { ...contribution, active: !contribution.active } : contribution;
+        });
+        setContributionsList(activatedContributionsToList(newContributions));
+        setContributions(newContributions);
         setUrlNeedsToUpdate(true);
     };
 
@@ -404,6 +421,19 @@ function useComparison() {
             }
         });
         return activeProperties;
+    }, []);
+
+    /**
+     * Get ordered list of selected contributions
+     */
+    const activatedContributionsToList = useCallback(contributionsData => {
+        const activeContributions = [];
+        contributionsData.forEach((contribution, index) => {
+            if (contribution.active) {
+                activeContributions.push(contribution.id);
+            }
+        });
+        return activeContributions;
     }, []);
 
     /**
@@ -444,19 +474,21 @@ function useComparison() {
 
         for (let i = 0; i < contributions.length; i++) {
             const contribution = contributions[i];
-            const row = [contribution.title];
+            if (contribution.active) {
+                const row = [contribution.title];
 
-            for (const property of properties) {
-                if (property.active) {
-                    let value = '';
-                    if (data[property.id]) {
-                        // separate labels with comma
-                        value = data[property.id][i].map(entry => entry.label).join(', ');
-                        row.push(value);
+                for (const property of properties) {
+                    if (property.active) {
+                        let value = '';
+                        if (data[property.id]) {
+                            // separate labels with comma
+                            value = data[property.id][i].map(entry => entry.label).join(', ');
+                            row.push(value);
+                        }
                     }
                 }
+                rows.push(row);
             }
-            rows.push(row);
         }
         setMatrixData([header, ...rows]);
     };
@@ -468,7 +500,7 @@ function useComparison() {
             // Update browser title
             document.title = 'Comparison - ORKG';
             setResponseHash(getParamFromQueryString(location.search, 'response_hash'));
-            setComparisonType(getParamFromQueryString(location.search, 'type'));
+            setComparisonType(getParamFromQueryString(location.search, 'type') ?? 'merge');
             setTranspose(getParamFromQueryString(location.search, 'transpose', true));
             setContributionsList(getArrayParamFromQueryString(location.search, 'contributions'));
             setPredicatesList(getArrayParamFromQueryString(location.search, 'properties'));
@@ -483,7 +515,10 @@ function useComparison() {
      *  2/ Comparison type changed
      */
     useEffect(() => {
-        if (contributionsList.length > 0) {
+        if (
+            contributionsList.length > 0 &&
+            (prevComparisonType !== comparisonType || !contributionsList.every(id => contributions.map(c => c.id).includes(id)))
+        ) {
             getComparisonResult();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -545,6 +580,7 @@ function useComparison() {
         hasNextVersions,
         createdBy,
         provenance,
+        researchField,
         setMetaData,
         setComparisonType,
         toggleProperty,

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Container, Alert, UncontrolledAlert } from 'reactstrap';
 import { getStatementsBySubject, createResourceStatement, deleteStatementById } from 'services/backend/statements';
 import { getUserInformationById } from 'services/backend/users';
+import { getIsVerified } from 'services/backend/papers';
 import { getObservatoryAndOrganizationInformation } from 'services/backend/observatories';
 import { getResource, updateResource, createResource, getContributorsByResourceId } from 'services/backend/resources';
 import { connect } from 'react-redux';
@@ -11,6 +12,7 @@ import Contributions from 'components/ViewPaper/Contributions';
 import PropTypes from 'prop-types';
 import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
 import PaperHeader from 'components/ViewPaper/PaperHeader';
+import Breadcrumbs from 'components/Breadcrumbs/Breadcrumbs';
 import { resetStatementBrowser, updateContributionLabel } from 'actions/statementBrowser';
 import { loadPaper, selectContribution, setPaperAuthors } from 'actions/viewPaper';
 import GizmoGraphViewModal from 'components/ViewPaper/GraphView/GizmoGraphViewModal';
@@ -99,10 +101,9 @@ class ViewPaper extends Component {
                 }
 
                 this.processObservatoryInformation(paperResource, resourceId);
-
-                getStatementsBySubject({ id: resourceId })
-                    .then(paperStatements => {
-                        this.processPaperStatements(paperResource, paperStatements);
+                Promise.all([getStatementsBySubject({ id: resourceId }), getIsVerified(resourceId).catch(() => false)])
+                    .then(([paperStatements, verified]) => {
+                        this.processPaperStatements(paperResource, paperStatements, verified);
                     })
                     .then(() => {
                         // read ORCID of authors
@@ -231,12 +232,12 @@ class ViewPaper extends Component {
         }
     }
 
-    processPaperStatements = (paperResource, paperStatements) => {
+    processPaperStatements = (paperResource, paperStatements, verified) => {
         const paperData = getPaperData_ViewPaper(paperResource, paperStatements);
 
         // Set document title
         document.title = `${paperResource.label} - ORKG`;
-        this.props.loadPaper(paperData);
+        this.props.loadPaper({ ...paperData, verified: verified });
         this.setState({
             loading: false,
             contributions: paperData.contributions
@@ -324,6 +325,9 @@ class ViewPaper extends Component {
                                 paperTitle={this.props.viewPaper.title}
                             />
                         )}
+
+                        <Breadcrumbs researchFieldId={this.props.viewPaper.researchField.id} />
+
                         <VisibilitySensor onChange={this.handleShowHeaderBar}>
                             <Container className="d-flex align-items-center">
                                 <h1 className="h4 mt-4 mb-4 flex-grow-1">View paper</h1>

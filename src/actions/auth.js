@@ -47,12 +47,13 @@ export function firstLoad() {
     };
 }
 
-export const openAuthDialog = (action, signInRequired = false) => dispatch => {
+export const openAuthDialog = ({ action, signInRequired = false, redirectRoute = null }) => dispatch => {
     dispatch({
         type: type.OPEN_AUTHENTICATION_DIALOG,
         payload: {
             action,
-            signInRequired
+            signInRequired,
+            redirectRoute
         }
     });
 };

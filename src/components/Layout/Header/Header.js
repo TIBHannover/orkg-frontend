@@ -155,7 +155,7 @@ class Header extends Component {
         cookies.remove('token');
         cookies.remove('token_expires_in');
         this.props.resetAuth();
-        this.props.openAuthDialog('signin');
+        this.props.openAuthDialog({ action: 'signin' });
         this.logoutTimeoutId = null;
     };
 
@@ -215,9 +215,9 @@ class Header extends Component {
         });
     };
 
-    requireAuthentication = e => {
+    requireAuthentication = (e, redirectRoute) => {
         if (!this.props.user) {
-            this.props.openAuthDialog('signin', true);
+            this.props.openAuthDialog({ action: 'signin', signInRequired: true, redirectRoute });
             // Don't follow the link when user is not authenticated
             e.preventDefault();
         }
@@ -257,13 +257,23 @@ class Header extends Component {
                                     <DropdownItem tag={RouterNavLink} exact to={ROUTES.STATS}>
                                         Statistics
                                     </DropdownItem>
-                                    <DropdownItem tag={RouterNavLink} exact to={ROUTES.PDF_ANNOTATION} onClick={this.requireAuthentication}>
+                                    <DropdownItem
+                                        tag={RouterNavLink}
+                                        exact
+                                        to={ROUTES.PDF_ANNOTATION}
+                                        onClick={e => this.requireAuthentication(e, ROUTES.PDF_ANNOTATION)}
+                                    >
                                         PDF annotation{' '}
                                         <small>
                                             <Badge color="info">Beta</Badge>
                                         </small>
                                     </DropdownItem>
-                                    <DropdownItem tag={RouterNavLink} exact to={ROUTES.CSV_IMPORT} onClick={this.requireAuthentication}>
+                                    <DropdownItem
+                                        tag={RouterNavLink}
+                                        exact
+                                        to={ROUTES.CSV_IMPORT}
+                                        onClick={e => this.requireAuthentication(e, ROUTES.CSV_IMPORT)}
+                                    >
                                         CSV import
                                     </DropdownItem>
                                     <DropdownItem divider />
@@ -399,7 +409,12 @@ class Header extends Component {
                         )}
 
                         {!this.props.user && (
-                            <Button color="darkblue" className="pl-4 pr-4 flex-shrink-0" outline onClick={() => this.props.openAuthDialog('signin')}>
+                            <Button
+                                color="darkblue"
+                                className="pl-4 pr-4 flex-shrink-0"
+                                outline
+                                onClick={() => this.props.openAuthDialog({ action: 'signin' })}
+                            >
                                 {' '}
                                 <FontAwesomeIcon className="mr-1" icon={faUser} /> Sign in
                             </Button>
@@ -420,7 +435,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     resetAuth: () => dispatch(resetAuth()),
-    openAuthDialog: (action, signInRequired) => dispatch(openAuthDialog(action, signInRequired)),
+    openAuthDialog: payload => dispatch(openAuthDialog(payload)),
     updateAuth: data => dispatch(updateAuth(data))
 });
 

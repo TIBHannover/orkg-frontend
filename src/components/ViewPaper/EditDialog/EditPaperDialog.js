@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Modal, ModalHeader, ModalBody, ListGroup } from 'reactstrap';
+import { Button, Modal, ModalHeader, ModalBody, ListGroup, CustomInput } from 'reactstrap';
 import {
     createLiteralStatement,
     createResourceStatement,
@@ -11,8 +11,10 @@ import {
 } from 'services/backend/statements';
 import { updateLiteral, createLiteral as createLiteralApi } from 'services/backend/literals';
 import { updateResource, createResource } from 'services/backend/resources';
+import { markAsVerified, markAsUnverified } from 'services/backend/papers';
 import REGEX from 'constants/regex';
 import { toast } from 'react-toastify';
+import Tippy from '@tippy.js/react';
 import { connect } from 'react-redux';
 import EditItem from './EditItem';
 import { loadPaper } from 'actions/viewPaper';
@@ -50,7 +52,8 @@ class EditPaperDialog extends Component {
             authors: this.props.viewPaper.authors,
             publishedIn: this.props.viewPaper.publishedIn,
             url: this.props.viewPaper.url,
-            researchField: this.props.viewPaper.researchField
+            researchField: this.props.viewPaper.researchField,
+            verified: this.props.viewPaper.verified
         };
     };
 
@@ -72,6 +75,8 @@ class EditPaperDialog extends Component {
         // fixing publication month and year as int number edit;
         if (name === 'publicationMonth' || name === 'publicationYear') {
             this.setState({ [name]: parseInt(event.target.value) });
+        } else if (name === 'verified') {
+            this.setState({ [name]: event.target.checked });
         } else {
             this.setState({ [name]: event.target.value });
         }
@@ -154,6 +159,15 @@ class EditPaperDialog extends Component {
             predicateIdForCreate: PREDICATES.URL
         });
 
+        //verified
+        if (!!this.props.user && this.props.user.isCurationAllowed) {
+            if (this.state.verified) {
+                markAsVerified(this.props.viewPaper.paperResourceId, this.state.verified).catch(e => console.log(e));
+            } else {
+                markAsUnverified(this.props.viewPaper.paperResourceId, this.state.verified).catch(e => console.log(e));
+            }
+        }
+
         //update redux state with changes, so it is updated on the view paper page
         this.props.loadPaper({
             ...loadPaper,
@@ -164,7 +178,8 @@ class EditPaperDialog extends Component {
             authors: this.state.authors,
             publishedIn: this.state.publishedIn,
             url: this.state.url,
-            researchField: this.state.researchField
+            researchField: this.state.researchField,
+            verified: this.state.verified
         });
 
         this.setState({
@@ -415,10 +430,27 @@ class EditPaperDialog extends Component {
                                     toggleItem={() => this.toggleItem('url')}
                                 />
                             </ListGroup>
+                            <div className="d-flex" style={{ justifyContent: 'flex-end' }}>
+                                {!!this.props.user && this.props.user.isCurationAllowed && (
+                                    <Tippy content="Mark this meta-data as verified">
+                                        <span>
+                                            <CustomInput
+                                                className="mt-2 mr-2 pt-2"
+                                                type="checkbox"
+                                                id="replaceTitles"
+                                                label="Verified"
+                                                name="verified"
+                                                onChange={e => this.handleChange(e, 'verified')}
+                                                checked={this.state.verified}
+                                            />
+                                        </span>
+                                    </Tippy>
+                                )}
 
-                            <Button disabled={this.state.isLoading} color="primary" className="float-right mt-2 mb-2" onClick={this.handleSave}>
-                                Save
-                            </Button>
+                                <Button disabled={this.state.isLoading} color="primary" className=" mt-2 mb-2" onClick={this.handleSave}>
+                                    Save
+                                </Button>
+                            </div>
                         </ModalBody>
                     </LoadingOverlayStyled>
                 </Modal>
@@ -438,17 +470,20 @@ EditPaperDialog.propTypes = {
         publishedIn: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
         url: PropTypes.string,
         researchField: PropTypes.object.isRequired,
+        verified: PropTypes.bool.isRequired,
         authors: PropTypes.arrayOf(
             PropTypes.shape({
                 id: PropTypes.string.isRequired,
                 label: PropTypes.string.isRequired
             }).isRequired
         ).isRequired
-    }).isRequired
+    }).isRequired,
+    user: PropTypes.oneOfType([PropTypes.object, PropTypes.number])
 };
 
 const mapStateToProps = state => ({
-    viewPaper: state.viewPaper
+    viewPaper: state.viewPaper,
+    user: state.auth.user
 });
 
 const mapDispatchToProps = dispatch => ({

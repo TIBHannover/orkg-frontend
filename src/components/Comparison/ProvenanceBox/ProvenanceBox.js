@@ -80,7 +80,7 @@ function ProvenanceBox(props) {
                         )}
                     </div>
                 </div>
-                {props.provenance && (
+                {props.provenance && props.provenance.organization && (
                     <div className="col-4">
                         <div className={!props.provenance.organization.logo ? 'm-4' : ''}>
                             {props.provenance.organization.logo && (

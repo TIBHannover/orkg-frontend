@@ -15,14 +15,7 @@ import PaperCard from 'components/PaperCard/PaperCard';
 import ExternalDescription from 'components/ResearchProblem/ExternalDescription';
 import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
 import ROUTES from 'constants/routes';
-
-function usePrevious(value) {
-    const ref = useRef();
-    useEffect(() => {
-        ref.current = value;
-    });
-    return ref.current;
-}
+import { usePrevious } from 'react-use';
 
 function ResearchProblem(props) {
     const [researchProblemData, parentResearchProblems, isLoading, isFailedLoading, loadResearchProblemData] = useResearchProblem();

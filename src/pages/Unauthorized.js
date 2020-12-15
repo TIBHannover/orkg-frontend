@@ -20,11 +20,11 @@ const Unauthorized = () => {
     }, []);
 
     const handleSignIn = () => {
-        dispatch(openAuthDialog('signin'));
+        dispatch(openAuthDialog({ action: 'signin' }));
     };
 
     const handleSignUp = () => {
-        dispatch(openAuthDialog('signup'));
+        dispatch(openAuthDialog({ action: 'signup' }));
     };
 
     return (

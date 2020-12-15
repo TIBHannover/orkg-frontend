@@ -113,11 +113,16 @@ export const submitPutRequest = (url, headers, data, jsonStringify = true) => {
                         reject(new Error(`Error response. (${response.status}) ${response.statusText}`));
                     }
                 } else {
-                    const json = response.json();
-                    if (json.then) {
-                        json.then(resolve).catch(reject);
+                    if (response.status === 204) {
+                        // HTTP 204 No Content success status
+                        return resolve();
                     } else {
-                        return resolve(json);
+                        const json = response.json();
+                        if (json.then) {
+                            json.then(resolve).catch(reject);
+                        } else {
+                            return resolve(json);
+                        }
                     }
                 }
             })
