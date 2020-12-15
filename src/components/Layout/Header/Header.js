@@ -76,9 +76,6 @@ const StyledGravatar = styled(Gravatar)`
 `;
 
 const StyledTopBar = styled.div`
-    :not(.homePage) {
-        margin-bottom: 30px;
-    }
     margin-bottom: 0;
     padding-top: 72px;
 
