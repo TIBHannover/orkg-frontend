@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { InputGroup, InputGroupAddon, Button } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faClipboard, faLink, faAtom } from '@fortawesome/free-solid-svg-icons';
@@ -80,6 +80,13 @@ function Autocomplete(props) {
         }
         return prevOptions;
     };
+
+    useEffect(() => {
+        if (props.onChangeInputValue) {
+            props.onChangeInputValue(inputValue);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [inputValue]);
 
     /**
      * Lookup in ORKG backend
@@ -795,7 +802,8 @@ Autocomplete.propTypes = {
     autoFocus: PropTypes.bool,
     ols: PropTypes.bool,
     inputGroup: PropTypes.bool,
-    inputId: PropTypes.string
+    inputId: PropTypes.string,
+    onChangeInputValue: PropTypes.func
 };
 
 Autocomplete.defaultProps = {

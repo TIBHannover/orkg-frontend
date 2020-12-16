@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { FormGroup, Label, Button, Modal, ModalBody, ModalHeader, ModalFooter, FormFeedback } from 'reactstrap';
+import { FormGroup, Label, Button, Modal, ModalBody, ModalHeader, ModalFooter } from 'reactstrap';
 import { sortableContainer, sortableElement, sortableHandle } from 'react-sortable-hoc';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faTimes, faSpinner, faSort, faPen, faPlus } from '@fortawesome/free-solid-svg-icons';
@@ -9,9 +9,9 @@ import Autocomplete from 'components/Autocomplete/Autocomplete';
 import { resourcesUrl } from 'services/backend/resources';
 import { CLASSES } from 'constants/graphSettings';
 import { getPersonFullNameByORCID } from 'services/ORCID/index';
-import { get_error_message } from 'utils';
 import arrayMove from 'array-move';
 import PropTypes from 'prop-types';
+import { toast } from 'react-toastify';
 
 const AuthorTags = styled.div`
     display: flex;
@@ -116,8 +116,8 @@ class AuthorsInput extends Component {
         this.state = {
             showAuthorForm: false,
             authorInput: '',
+            authorAutocompleteLabel: '',
             authorNameLoading: false,
-            errors: null,
             editMode: false,
             editIndex: 0
         };
@@ -143,12 +143,12 @@ class AuthorsInput extends Component {
         return Boolean(value && value.match(supportedORCID));
     };
 
-    saveAuthor = () => {
-        if (this.state.authorInput) {
-            if (this.isORCID(this.state.authorInput.label)) {
+    saveAuthor = authorInput => {
+        if (authorInput && authorInput.label) {
+            if (this.isORCID(authorInput.label)) {
                 this.setState({ authorNameLoading: true });
                 // Get the full name from ORCID API
-                const orcid = this.state.authorInput.label.match(/([0-9]{4})-?([0-9]{4})-?([0-9]{4})-?(([0-9]{4})|([0-9]{3}X))/g)[0];
+                const orcid = authorInput.label.match(/([0-9]{4})-?([0-9]{4})-?([0-9]{4})-?(([0-9]{4})|([0-9]{3}X))/g)[0];
                 getPersonFullNameByORCID(orcid)
                     .then(authorFullName => {
                         const newAuthor = {
@@ -172,22 +172,21 @@ class AuthorsInput extends Component {
                         this.setState({
                             authorNameLoading: false,
                             authorInput: '',
-                            errors: null,
                             editMode: false
                         });
                         this.toggle('showAuthorForm');
                     })
                     .catch(e => {
                         this.setState({
-                            authorNameLoading: false,
-                            errors: { errors: [{ field: 'authorInput', message: `Invalid ORCID ID. Please enter the ${this.props.itemLabel} name` }] }
+                            authorNameLoading: false
                         });
+                        toast.error(`Invalid ORCID ID. Please enter the ${this.props.itemLabel} name`);
                     });
             } else {
                 const newAuthor = {
-                    ...this.state.authorInput,
-                    label: this.state.authorInput.label,
-                    id: this.state.authorInput.id ? this.state.authorInput.id : this.state.authorInput.label, // ID if the Author resource Exist
+                    ...authorInput,
+                    label: authorInput.label,
+                    id: authorInput.id ? authorInput.id : authorInput.label, // ID if the Author resource Exist
                     orcid: '',
                     statementId:
                         this.state.editMode && this.props.value[this.state.editIndex] && this.props.value[this.state.editIndex].statementId
@@ -203,11 +202,11 @@ class AuthorsInput extends Component {
                 } else {
                     this.props.handler([...this.props.value, newAuthor]);
                 }
-                this.setState({ authorInput: '', errors: null, editMode: false });
+                this.setState({ authorInput: '', editMode: false });
                 this.toggle('showAuthorForm');
             }
         } else {
-            this.setState({ errors: { errors: [{ field: 'authorInput', message: `Please enter the ${this.props.itemLabel} name` }] } });
+            toast.error(`Please enter the ${this.props.itemLabel} name`);
         }
     };
 
@@ -223,7 +222,6 @@ class AuthorsInput extends Component {
         this.setState({
             editIndex: key,
             authorInput: this.props.value[key].orcid ? this.props.value[key].orcid : this.props.value[key],
-            errors: null,
             editMode: true
         });
         this.toggle('showAuthorForm');
@@ -268,7 +266,7 @@ class AuthorsInput extends Component {
                         color="light"
                         className="w-100"
                         onClick={() => {
-                            this.setState({ authorNameLoading: false, authorInput: '', errors: null, editMode: false });
+                            this.setState({ authorNameLoading: false, authorInput: '', editMode: false });
                             this.toggle('showAuthorForm');
                         }}
                     >
@@ -294,17 +292,21 @@ class AuthorsInput extends Component {
                                 autoLoadOption={false}
                                 innerRef={ref => (this.inputRef.current = ref)}
                                 inputId="authorInput"
+                                onChangeInputValue={value => this.setState({ authorAutocompleteLabel: value })}
                             />
-                            {Boolean(get_error_message(this.state.errors, 'authorInput')) && (
-                                <FormFeedback>{get_error_message(this.state.errors, 'authorInput')}</FormFeedback>
-                            )}
                         </FormGroup>
                     </ModalBody>
                     <ModalFooter>
                         <Button color="light" onClick={() => this.toggle('showAuthorForm')}>
                             Cancel
                         </Button>
-                        <Button disabled={this.state.authorNameLoading} color="primary" onClick={() => this.saveAuthor()}>
+                        <Button
+                            disabled={this.state.authorNameLoading}
+                            color="primary"
+                            onClick={() =>
+                                this.saveAuthor(this.state.authorInput ? this.state.authorInput : { label: this.state.authorAutocompleteLabel })
+                            }
+                        >
                             {!this.state.authorNameLoading ? this.state.editMode ? 'Save' : 'Add' : <Icon icon={faSpinner} spin />}
                         </Button>{' '}
                     </ModalFooter>
