@@ -7,7 +7,7 @@ import styled from 'styled-components';
 
 const ObservatoryBoxStyled = styled.div`
     float: right;
-    background-color: ${props => props.theme.ultraLightBlue};
+    border: 2px solid ${props => props.theme.themeColors.lightblue};
     border-radius: 5px;
     display: flex;
     padding: 5px 20px;
@@ -21,7 +21,7 @@ const ObservatoryBoxStyled = styled.div`
     transition: background-color 0.2s;
 
     &:hover {
-        background-color: ${props => props.theme.themeColors.lightblue};
+        border: 2px solid ${props => props.theme.darkblue};
     }
 `;
 
