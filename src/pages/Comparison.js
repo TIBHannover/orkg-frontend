@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Alert, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Button, ButtonGroup, Badge } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faEllipsisV, faPlus, faLightbulb, faBezierCurve, faHistory, faWindowMaximize, faChartBar } from '@fortawesome/free-solid-svg-icons';
+import { faEllipsisV, faPlus, faLightbulb, faHistory, faWindowMaximize, faChartBar } from '@fortawesome/free-solid-svg-icons';
 import ComparisonLoadingComponent from 'components/Comparison/ComparisonLoadingComponent';
 import ComparisonTable from 'components/Comparison/ComparisonTable.js';
 import ExportToLatex from 'components/Comparison/ExportToLatex.js';
@@ -10,6 +10,7 @@ import SelectProperties from 'components/Comparison/SelectProperties';
 import ValuePlugins from 'components/ValuePlugins/ValuePlugins';
 import AddContribution from 'components/Comparison/AddContribution/AddContribution';
 import ProvenanceBox from 'components/Comparison/ProvenanceBox/ProvenanceBox';
+import ObservatoryBox from 'components/Comparison/ProvenanceBox/ObservatoryBox';
 import Breadcrumbs from 'components/Breadcrumbs/Breadcrumbs';
 import RelatedResources from 'components/Comparison/RelatedResources';
 import RelatedFigures from 'components/Comparison/RelatedFigures';
@@ -249,6 +250,32 @@ function Comparison(props) {
                                 <DropdownMenu right>
                                     <DropdownItem header>Customize</DropdownItem>
                                     <DropdownItem onClick={() => setShowPropertiesDialog(v => !v)}>Select properties</DropdownItem>
+                                    <Dropdown isOpen={dropdownMethodOpen} toggle={() => setDropdownMethodOpen(v => !v)} direction="left">
+                                        <DropdownToggle tag="div" className="dropdown-item" style={{ cursor: 'pointer' }}>
+                                            Comparison method
+                                        </DropdownToggle>
+                                        <DropdownMenu>
+                                            <div className="d-flex px-2">
+                                                <ComparisonTypeButton
+                                                    color="link"
+                                                    className="p-0 m-1"
+                                                    onClick={() => handleChangeType('merge')}
+                                                    active={comparisonType !== 'path'}
+                                                >
+                                                    <img src={IntelligentMerge} alt="Intelligent merge example" />
+                                                </ComparisonTypeButton>
+
+                                                <ComparisonTypeButton
+                                                    color="link"
+                                                    className="p-0 m-1"
+                                                    onClick={() => handleChangeType('path')}
+                                                    active={comparisonType === 'path'}
+                                                >
+                                                    <img src={ExactMatch} alt="Exact match example" />
+                                                </ComparisonTypeButton>
+                                            </div>
+                                        </DropdownMenu>
+                                    </Dropdown>
                                     <DropdownItem divider />
                                     <DropdownItem header>Export</DropdownItem>
                                     <DropdownItem onClick={() => setShowLatexDialog(v => !v)}>Export as LaTeX</DropdownItem>
@@ -354,40 +381,15 @@ function Comparison(props) {
                 <>
                     {!isFailedLoadingMetaData && !isFailedLoadingComparisonResult && (
                         <div className="p-0 d-flex align-items-start">
-                            <h2 className="h4 mb-4 mt-4 flex-grow-1">{metaData.title ? metaData.title : 'Compare'}</h2>
+                            <div className="flex-grow-1">
+                                <h2 className="h4 mb-4 mt-4">{metaData.title ? metaData.title : 'Compare'}</h2>
 
-                            <ButtonGroup className=" mb-4 mt-4  flex-shrink-0">
-                                <Dropdown group isOpen={dropdownMethodOpen} toggle={() => setDropdownMethodOpen(v => !v)}>
-                                    <DropdownToggle color="lightblue" size="sm" className="rounded-right">
-                                        <span className="mr-2">Method: {comparisonType === 'path' ? 'Exact match' : 'Intelligent merge'}</span>{' '}
-                                        <Icon icon={faBezierCurve} />
-                                    </DropdownToggle>
-                                    <DropdownMenu right>
-                                        <div className="d-flex px-2">
-                                            <ComparisonTypeButton
-                                                color="link"
-                                                className="p-0 m-1"
-                                                onClick={() => handleChangeType('merge')}
-                                                active={comparisonType !== 'path'}
-                                            >
-                                                <img src={IntelligentMerge} alt="Intelligent merge example" />
-                                            </ComparisonTypeButton>
+                                {!isFailedLoadingMetaData && <ComparisonMetaData authors={authors} metaData={metaData} />}
+                            </div>
 
-                                            <ComparisonTypeButton
-                                                color="link"
-                                                className="p-0 m-1"
-                                                onClick={() => handleChangeType('path')}
-                                                active={comparisonType === 'path'}
-                                            >
-                                                <img src={ExactMatch} alt="Exact match example" />
-                                            </ComparisonTypeButton>
-                                        </div>
-                                    </DropdownMenu>
-                                </Dropdown>
-                            </ButtonGroup>
+                            {metaData.id && provenance && <ObservatoryBox provenance={provenance} />}
                         </div>
                     )}
-                    {!isFailedLoadingMetaData && !isFailedLoadingComparisonResult && <ComparisonMetaData authors={authors} metaData={metaData} />}
                     {!isFailedLoadingMetaData && !isFailedLoadingComparisonResult && (
                         <>
                             {contributionsList.length > 3 && (

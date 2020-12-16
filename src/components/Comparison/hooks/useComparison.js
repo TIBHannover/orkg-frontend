@@ -20,6 +20,7 @@ import { flattenDepth } from 'lodash';
 import arrayMove from 'array-move';
 import ROUTES from 'constants/routes.js';
 import queryString from 'query-string';
+import { usePrevious } from 'react-use';
 
 function useComparison() {
     const location = useLocation();
@@ -82,6 +83,9 @@ function useComparison() {
     const [responseHash, setResponseHash] = useState(null);
     const [contributionsList, setContributionsList] = useState([]);
     const [predicatesList, setPredicatesList] = useState([]);
+
+    //
+    const prevComparisonType = usePrevious(comparisonType);
 
     // loading indicators
     const [isLoadingMetaData, setIsLoadingMetaData] = useState(false);
@@ -511,7 +515,10 @@ function useComparison() {
      *  2/ Comparison type changed
      */
     useEffect(() => {
-        if (contributionsList.length > 0 && !contributionsList.every(id => contributions.map(c => c.id).includes(id))) {
+        if (
+            contributionsList.length > 0 &&
+            (prevComparisonType !== comparisonType || !contributionsList.every(id => contributions.map(c => c.id).includes(id)))
+        ) {
             getComparisonResult();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps

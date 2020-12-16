@@ -241,6 +241,18 @@ export const getComparisonData = (id, label, comparisonStatements) => {
     // url
     const url = comparisonStatements.find(statement => statement.predicate.id === PREDICATES.URL);
 
+    // icon
+    const icon = comparisonStatements.find(statement => statement.predicate.id === PREDICATES.ICON);
+
+    // type
+    const type = comparisonStatements.find(statement => statement.predicate.id === PREDICATES.TYPE);
+
+    // order
+    const order = comparisonStatements.find(statement => statement.predicate.id === PREDICATES.ORDER);
+
+    // onHomePage
+    const onHomePage = comparisonStatements.find(statement => statement.predicate.id === PREDICATES.ON_HOMEPAGE);
+
     return {
         id,
         label,
@@ -248,7 +260,11 @@ export const getComparisonData = (id, label, comparisonStatements) => {
         nbContributions: url ? getArrayParamFromQueryString(url.object.label, 'contributions').length : 0,
         url: url ? url.object.label : '',
         reference: reference ? reference.object.label : '',
-        description: description ? description.object.label : ''
+        description: description ? description.object.label : '',
+        icon: icon ? icon.object.label : '',
+        order: order ? order.object.label : Infinity,
+        type: type ? type.object.id : '',
+        onHomePage: onHomePage ? true : false
     };
 };
 

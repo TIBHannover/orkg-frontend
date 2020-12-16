@@ -5,6 +5,22 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [0.25](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.24...V0.25) - 2020-12-16
+
+### Changes
+
+- ui: Home page improvements [`#425`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/425)
+- feat: Autocomplete in authors input fields [`#450`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/450)
+- fix: Filtering templates [`#454`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/454)
+- feat(Comparisons): show observatory logo in comparison header [`#452`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/452)
+- help: Links to wiki pages [`#453`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/453)
+- ux: Hint text for publishing comparisons Component [`#451`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/451)
+- design(BreadCrumbs): update background color [`#448`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/448)
+- fix: slow comparison re-renders [`#442`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/442)
+- fix: Comparison method option [`#447`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/447)
+- fix(CsvImport): require authentication [`#446`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/446)
+
+---
 ## [0.24](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.23...V0.24) - 2020-12-10
 
 ### Changes
@@ -25,7 +41,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - Add accessibility linter rules [`#429`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/429)
 
 ---
-## [0.23](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.22...V0.23) - 2020-11-17
+## [0.23](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.22...V0.23) - 2020-11-16
 
 ### Changes
 

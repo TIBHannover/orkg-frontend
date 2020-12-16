@@ -16,7 +16,7 @@ import { ScrollSync, ScrollSyncPane } from 'react-scroll-sync';
 import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
 import withFixedColumnsScrollEvent from 'react-table-hoc-fixed-columns';
 import 'react-table-hoc-fixed-columns/lib/styles.css'; // important: this line must be placed after react-table css import
-
+import { isEqual, omit, functions } from 'lodash';
 const ReactTableFixedColumns = withFixedColumnsScrollEvent(ReactTable);
 
 class ComparisonTable extends Component {
@@ -38,6 +38,13 @@ class ComparisonTable extends Component {
     componentDidMount = () => {
         this.defaultNextButtonState();
     };
+
+    shouldComponentUpdate(nextProps, nextState) {
+        // remove functions from equality check (mainly targeting "removeContribution"), otherwise it is always false
+        const hasPropsChanged = !isEqual(omit(this.props, functions(this.props)), omit(nextProps, functions(nextProps)));
+        const hasStateChanged = !isEqual(this.state, nextState);
+        return hasPropsChanged || hasStateChanged;
+    }
 
     getSnapshotBeforeUpdate() {
         // Maintaining scroll position with getSnapshotBeforeUpdate and componentDidUpdate

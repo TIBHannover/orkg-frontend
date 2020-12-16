@@ -1,25 +1,12 @@
 import React, { Component } from 'react';
 import { Container } from 'reactstrap';
-import HomeBannerBg from 'assets/img/graph-background.svg';
+
 import styled from 'styled-components';
 import Typed from 'typed.js';
 import Video from './Video';
 
 const JumbotronStyled = styled.div`
-    padding: 120px 0;
-    margin-top: -30px;
     color: hsla(0, 0%, 100%, 0.6);
-    background: rgb(95, 100, 116) url(${HomeBannerBg});
-    background-position-x: 0%, 0%;
-    background-position-y: 0%, 0%;
-    background-size: auto, auto;
-
-    background-size: cover;
-    position: relative;
-
-    background-attachment: fixed;
-    background-position: center 10%;
-    background-repeat: no-repeat;
 
     .marketingtext {
         font-size: larger;
@@ -70,9 +57,9 @@ export default class Jumbotron extends Component {
     render() {
         return (
             <div>
-                <JumbotronStyled className="pt-6 pb-6">
-                    <Container className="position-relative text-center">
-                        <HeaderStyled className="mb-3 text-white">
+                <JumbotronStyled className="pt-4 pb-5">
+                    <Container className="position-relative text-center pb-2 pt-2">
+                        <HeaderStyled className="text-white">
                             <div className="row">
                                 <div className="col-md-7 definition">Scholarly Knowledge.</div>
                                 <div className="col-md-5 motto pl-0">
@@ -85,7 +72,7 @@ export default class Jumbotron extends Component {
                                 </div>
                             </div>
                         </HeaderStyled>
-                        <div className="col-md-8 mx-auto mb-5 marketingtext">
+                        <div className="col-md-8 mx-auto mb-3 marketingtext">
                             <p className="mr-n2 ml-n2">
                                 The Open Research Knowledge Graph (ORKG) aims to describe research papers in a structured manner. With the ORKG,
                                 papers are easier to find and compare.{' '}
@@ -93,7 +80,7 @@ export default class Jumbotron extends Component {
                         </div>
 
                         <div style={{ position: 'relative' }}>
-                            <div className="mt-4 mb-4 text-shadow-dark text-center">
+                            <div className="mt-2 mb-4 text-shadow-dark text-center">
                                 <div className="flex-shrink-0 justify-content-center d-flex align-items-center">
                                     <Video />
                                 </div>
