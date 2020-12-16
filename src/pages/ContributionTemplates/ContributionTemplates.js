@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container, Col, Row, FormGroup, Label, Form, Input, ListGroup, ListGroupItem } from 'reactstrap';
+import { Container, Col, Row, FormGroup, Label, Form, Input, ListGroup, ListGroupItem, Alert } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import { faAngleDoubleDown, faPlus, faSpinner } from '@fortawesome/free-solid-svg-icons';
@@ -163,6 +163,18 @@ export default class ContributionTemplates extends Component {
                     </RequireAuthentication>
                 </Container>
                 <Container className="box rounded pt-4 pb-2 pl-5 pr-5 clearfix">
+                    <Alert color="info" fade={false}>
+                        Templates allows to specify the structure of content types, and they can be used when describing research contributions.
+                        Further information about templates can be also found in the{' '}
+                        <a
+                            href="https://gitlab.com/TIBHannover/orkg/orkg-frontend/-/wikis/Templates-for-structuring-contribution-descriptions"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            ORKG wiki
+                        </a>
+                        .
+                    </Alert>
                     <Form className="mb-3">
                         <Row form>
                             <Col md={6}>
