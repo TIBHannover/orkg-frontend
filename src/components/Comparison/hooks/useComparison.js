@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { getStatementsBySubject, getStatementsBySubjectAndPredicate, getStatementsByObjectAndPredicate } from 'services/backend/statements';
 import { getUserInformationById } from 'services/backend/users';
 import { getObservatoryAndOrganizationInformation } from 'services/backend/observatories';

@@ -277,14 +277,23 @@ class EditPaperDialog extends Component {
                     authors[i].classes = authorResource.classes;
                 }
             } else {
-                // Author resource doesn't exist
-                const newLiteral = await createLiteralApi(author.label);
-                // Create literal of author
-                const authorStatement = await createLiteralStatement(this.props.viewPaper.paperResourceId, PREDICATES.HAS_AUTHOR, newLiteral.id);
-                authors[i].statementId = authorStatement.id;
-                authors[i].id = newLiteral.id;
-                authors[i].class = authorStatement.object._class;
-                authors[i].classes = authorStatement.object.classes;
+                // Author resource exists
+                if (author.label !== author.id) {
+                    const authorStatement = await createResourceStatement(this.props.viewPaper.paperResourceId, PREDICATES.HAS_AUTHOR, author.id);
+                    authors[i].statementId = authorStatement.id;
+                    authors[i].id = author.id;
+                    authors[i].class = author._class;
+                    authors[i].classes = author.classes;
+                } else {
+                    // Author resource doesn't exist
+                    const newLiteral = await createLiteralApi(author.label);
+                    // Create literal of author
+                    const authorStatement = await createLiteralStatement(this.props.viewPaper.paperResourceId, PREDICATES.HAS_AUTHOR, newLiteral.id);
+                    authors[i].statementId = authorStatement.id;
+                    authors[i].id = newLiteral.id;
+                    authors[i].class = authorStatement.object._class;
+                    authors[i].classes = authorStatement.object.classes;
+                }
             }
         }
 
