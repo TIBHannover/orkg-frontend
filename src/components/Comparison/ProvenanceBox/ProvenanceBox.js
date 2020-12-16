@@ -84,7 +84,7 @@ function ProvenanceBox(props) {
                     <div className="col-4">
                         <div className={!props.provenance.organization.logo ? 'm-4' : ''}>
                             {props.provenance.organization.logo && (
-                                <StyledOrganizationCard className="card h-100">
+                                <StyledOrganizationCard className="card h-100 border-0">
                                     <Link className="logoContainer" to={reverse(ROUTES.ORGANIZATION, { id: props.provenance.organization.id })}>
                                         <img
                                             className="mx-auto p-2"
