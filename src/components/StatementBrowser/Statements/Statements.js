@@ -132,13 +132,11 @@ export default function Statements(props) {
         <>
             {props.enableEdit && (
                 <div className="clearfix mb-3">
-                    <Tippy content="Open data editor help">
-                        <span className="ml-3 float-right">
-                            <Button outline color="secondary" size="sm" onClick={() => setHelpModalOpen(v => !v)}>
-                                <Icon className="mr-1" icon={faQuestionCircle} /> Data editor help
-                            </Button>
-                        </span>
-                    </Tippy>
+                    <span className="ml-3 float-right">
+                        <Button outline color="secondary" size="sm" onClick={() => setHelpModalOpen(v => !v)}>
+                            <Icon className="mr-1" icon={faQuestionCircle} /> Help
+                        </Button>
+                    </span>
                 </div>
             )}
 

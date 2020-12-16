@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 const SBEditorHelpModal = props => {
     return (
         <Modal isOpen={props.isOpen} toggle={props.toggle} size="lg">
-            <ModalHeader toggle={props.toggle}>ORKG Data editor help</ModalHeader>
+            <ModalHeader toggle={props.toggle}>ORKG data editor help</ModalHeader>
 
             <ModalBody>
                 <p>
