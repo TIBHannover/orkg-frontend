@@ -243,7 +243,7 @@ export default class ContributionTemplates extends Component {
                                     this.state.filterResearchProblem ||
                                     this.state.filterClass ||
                                     this.state.filterLabel) &&
-                                    ' matches this filter'}
+                                    ' match this filter'}
                                 .
                             </ListGroupItem>
                         )}
