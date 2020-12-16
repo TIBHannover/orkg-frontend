@@ -268,7 +268,18 @@ function Publish(props) {
             <ModalHeader toggle={props.toggle}>Publish comparison</ModalHeader>
             <ModalBody>
                 <Alert color="info">
-                    A published comparison is made public to other users. The state of the comparison is saved and a persistent link is created.
+                    {!props.comparisonId && (
+                        <>
+                            A published comparison is made public to other users. The state of the comparison is saved and a persistent link is
+                            created.
+                        </>
+                    )}
+                    {props.comparisonId && !props.doi && (
+                        <>This comparison is already published, you can find the persistent link below, or create a DOI for this comparison.</>
+                    )}
+                    {props.comparisonId && props.doi && (
+                        <>This comparison is already published, you can find the persistent link and the DOI below.</>
+                    )}
                 </Alert>
                 {props.comparisonId && (
                     <FormGroup>
