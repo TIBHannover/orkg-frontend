@@ -3,6 +3,7 @@ import { Button, Modal, ModalHeader, ModalBody } from 'reactstrap';
 import styled from 'styled-components';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPlayCircle } from '@fortawesome/free-regular-svg-icons';
+import Tippy from '@tippy.js/react';
 
 const PlayButton = styled(Button)`
     font-size: 0.9rem !important;
@@ -51,12 +52,15 @@ export default class Video extends Component {
         return (
             <div>
                 <PlayButton color="link" className="p-0 m-0" onClick={this.toggleDialog}>
-                    <Icon icon={faPlayCircle} /> <br />
-                    Play the introduction video
+                    <Tippy content="Play introduction video" distance={50}>
+                        <span>
+                            <Icon icon={faPlayCircle} />
+                        </span>
+                    </Tippy>
                 </PlayButton>
 
                 <Modal isOpen={this.state.showDialog} toggle={this.toggleDialog} size="lg">
-                    <ModalHeader toggle={this.toggleDialog}>ORKG video</ModalHeader>
+                    <ModalHeader toggle={this.toggleDialog}>ORKG introduction video</ModalHeader>
                     <ModalBody>
                         <VideoContainer>
                             <IframeFullWidth

@@ -23,7 +23,7 @@ import Jumbotron from 'components/Home/Jumbotron';
 import { ReactComponent as Logo } from 'assets/img/logo.svg';
 import { ReactComponent as LogoWhite } from 'assets/img/logo_white.svg';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronDown, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faChevronDown, faPlus, faUser } from '@fortawesome/free-solid-svg-icons';
 import ROUTES from 'constants/routes.js';
 import { Cookies } from 'react-cookie';
 import Gravatar from 'react-gravatar';
@@ -268,8 +268,8 @@ class Header extends Component {
         const greeting = greetingTime(new Date());
 
         return (
-            <StyledTopBar className={this.state.isHomePageStyle ? 'homePage' : ''}>
-                <Navbar className={this.state.isHomePageStyle ? 'homePage' : ''} expand="md" fixed="top" id="main-navbar">
+            <StyledTopBar className={this.state.isHomePageStyle ? 'home-page' : ''}>
+                <Navbar className={this.state.isHomePageStyle ? 'home-page' : ''} expand="md" fixed="top" id="main-navbar">
                     <GlobalStyle scrollbarWidth={scrollbarWidth(true)} />
 
                     <div
@@ -393,12 +393,12 @@ class Header extends Component {
 
                             <RequireAuthentication
                                 component={Button}
-                                color={!this.state.isHomePageStyle ? 'primary' : 'secondary'}
+                                color={!this.state.isHomePageStyle ? 'primary' : 'light'}
                                 className="mr-3 pl-4 pr-4 flex-shrink-0"
-                                style={{ transition: 'all 0.4s ease-in-out' }}
                                 tag={Link}
                                 to={ROUTES.ADD_PAPER.GENERAL_DATA}
                             >
+                                <FontAwesomeIcon className="mr-1" icon={faPlus} />
                                 Add paper
                             </RequireAuthentication>
 
@@ -457,9 +457,8 @@ class Header extends Component {
                             {!this.props.user && (
                                 <Button
                                     color={!this.state.isHomePageStyle ? 'secondary' : 'darkblue'}
-                                    className="pl-4 pr-4 flex-shrink-0 signIn"
+                                    className="pl-4 pr-4 flex-shrink-0 sign-in"
                                     outline
-                                    style={{ transition: 'all 0.4s ease-in-out' }}
                                     onClick={() => this.props.openAuthDialog({ action: 'signin' })}
                                 >
                                     {' '}

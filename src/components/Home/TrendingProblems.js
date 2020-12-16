@@ -11,8 +11,11 @@ import ROUTES from 'constants/routes';
 const List = styled.div`
     padding: 0 40px; // have a large horizontal padding to ensure the items are not out of the box on transform
     & > div {
-        transition: transform 0.3s ease-in-out;
         display: block;
+
+        div {
+            transition: transform 0.3s ease-in-out;
+        }
 
         &:hover > div {
             transform: scale(1.2);
@@ -22,8 +25,8 @@ const List = styled.div`
         }
     }
     .item-0 {
-        font-size: 170%;
-        min-height: 45px;
+        font-size: 145%;
+        min-height: 40px;
         a {
             color: ${props => props.theme.darkblueDarker}!important;
         }
@@ -94,7 +97,7 @@ const TrendingProblems = props => {
                                     <div className={`item-${index}`}>
                                         <Link to={reverse(ROUTES.RESEARCH_PROBLEM, { researchProblemId: problem.id })}>{problem.label}</Link>
                                     </div>
-                                    {index !== problems.length - 1 && <hr className="mx-3 mt-2" />}
+                                    {index !== problems.length - 1 && <hr className="mx-3 mb-1 mt-0" />}
                                 </div>
                             ))}
                         </List>

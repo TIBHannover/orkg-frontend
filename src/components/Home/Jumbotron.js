@@ -58,7 +58,7 @@ export default class Jumbotron extends Component {
         return (
             <div>
                 <JumbotronStyled className="pt-4 pb-5">
-                    <Container className="position-relative text-center">
+                    <Container className="position-relative text-center pb-2 pt-2">
                         <HeaderStyled className="text-white">
                             <div className="row">
                                 <div className="col-md-7 definition">Scholarly Knowledge.</div>

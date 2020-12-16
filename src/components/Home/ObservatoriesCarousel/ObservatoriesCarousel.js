@@ -100,15 +100,9 @@ export default function ObservatoriesCarousel() {
                                 >
                                     <CardBody>
                                         {observatory.orgs.map(o => (
-                                            <span key={o.id}>
-                                                <img
-                                                    className="justify-content-center orgLogo"
-                                                    key={`imageLogo${o.id}`}
-                                                    height="60px"
-                                                    src={o.logo}
-                                                    alt={`${o.name} logo`}
-                                                />
-                                            </span>
+                                            <div key={o.id} className="justify-content-center d-flex">
+                                                <img className="orgLogo" key={`imageLogo${o.id}`} height="60px" src={o.logo} alt={`${o.name} logo`} />
+                                            </div>
                                         ))}{' '}
                                         <div className="mt-3">
                                             <div className="observatoryName text-center">{observatory.name}</div>

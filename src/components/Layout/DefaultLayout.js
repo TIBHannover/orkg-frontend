@@ -21,6 +21,7 @@ const StyledBody = styled.div`
 
 const StyledAppContent = styled.div`
     flex: 1 0 auto;
+    padding-top: 30px;
 `;
 
 const StyledFooter = styled.div`

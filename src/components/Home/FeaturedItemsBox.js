@@ -43,7 +43,7 @@ const SidebarStyledBox = styled.div`
 `;
 
 export default function FeaturedItemsBox() {
-    const [activeTab, setActiveState] = useState(1);
+    const [activeTab, setActiveState] = useState(2);
 
     return (
         <SidebarStyledBox className="box rounded-lg mt-3">

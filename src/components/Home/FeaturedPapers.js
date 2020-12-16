@@ -62,7 +62,7 @@ export default function FeaturedPapers() {
                         {filter === 'featured' && 'Featured'}
                         {filter === 'latest' && 'Latest'}
                     </DropdownToggle>
-                    <DropdownMenu>
+                    <DropdownMenu right>
                         <DropdownItem onClick={() => setFilter('featured')}>Featured</DropdownItem>
                         <DropdownItem onClick={() => setFilter('latest')}>Latest</DropdownItem>
                     </DropdownMenu>
