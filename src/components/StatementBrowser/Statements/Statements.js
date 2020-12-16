@@ -11,7 +11,6 @@ import { StyledLevelBox, StyledStatementItem } from 'components/StatementBrowser
 import { Cookies } from 'react-cookie';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
-import Tippy from '@tippy.js/react';
 import PropTypes from 'prop-types';
 
 export default function Statements(props) {
