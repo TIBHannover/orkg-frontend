@@ -28,11 +28,13 @@ export default function StatementItemTemplate(props) {
                     {!props.property.isEditing ? (
                         <div>
                             <div className="propertyLabel">
-                                {props.propertiesAsLinks ? (
-                                    <Link to={reverse(ROUTES.PREDICATE, { id: props.property.existingPredicateId })}>{props.predicateLabel}</Link>
-                                ) : (
-                                    props.predicateLabel
-                                )}
+                                <Link
+                                    to={reverse(ROUTES.PREDICATE, { id: props.property.existingPredicateId })}
+                                    target={!props.propertiesAsLinks ? '_blank' : '_self'}
+                                    className={!props.propertiesAsLinks ? 'text-dark' : ''}
+                                >
+                                    {props.predicateLabel}
+                                </Link>
                             </div>
                             {props.enableEdit && (
                                 <div className={propertyOptionsClasses}>
