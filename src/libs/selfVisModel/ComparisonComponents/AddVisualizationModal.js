@@ -1,32 +1,39 @@
 import React, { Component } from 'react';
-import * as PropTypes from 'prop-types';
-import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
-import SelfVisDataModel from '../SelfVisDataModel';
-
-import styled from 'styled-components';
-import CellEditor from '../RenderingComponents/CellEditor';
-import CellSelector from '../RenderingComponents/CellSelector';
-import VisualizationWidget from '../VisRenderer/VisualizationWidget';
+import { Modal, ModalHeader, ModalBody, ModalFooter, Button, Row } from 'reactstrap';
+import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
+import CellEditor from 'libs/selfVisModel/RenderingComponents/CellEditor';
+import CellSelector from 'libs/selfVisModel/RenderingComponents/CellSelector';
+import VisualizationWidget from 'libs/selfVisModel/VisRenderer/VisualizationWidget';
+import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
+import PublishVisualization from './PublishVisualization';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippy.js/react';
-import { openAuthDialog } from '../../../actions/auth';
-import { connect } from 'react-redux';
-import RequireAuthentication from '../../../components/RequireAuthentication/RequireAuthentication';
-import PublishVisualization from './PublishVisualization';
+import styled from 'styled-components';
+import PropTypes from 'prop-types';
+
+const TabButtons = styled(Row)`
+    border-bottom: 2px solid ${props => props.theme.ultraLightBlueDarker};
+`;
 
 const TabButton = styled.div`
     cursor: pointer;
-    color: #000000;
-    padding: 4px 20px 4px 20px;
-    border-right: 2px solid #black;
-    border-radius: 10px;
-    margin: 0 0;
-    background-color: #f8f9fb;
-    border-bottom-right-radius: 0px;
-    border-bottom-left-radius: 0px;
-    border: 1px solid #dbdde5;
-    border-bottom: none;
+    padding: 4px 20px;
+    background-color: ${props => (props.active ? props.theme.primary : props.theme.themeColors.lightblue)};
+    border: ${props => (props.active ? 'none' : '1px solid ' + props.theme.ultraLightBlueDarker)};
+    border-bottom: 0;
+    color: ${props => (props.active ? '#ffffff' : '')};
+    font-size: 18px;
+
+    &:first-child {
+        margin-left: 5px;
+        border-top-left-radius: 10px;
+        border-right: 0px;
+    }
+    &:last-child {
+        border-top-right-radius: 10px;
+        border-left: 0px;
+    }
 `;
 
 class AddVisualizationModal extends Component {
@@ -120,65 +127,39 @@ class AddVisualizationModal extends Component {
                 }}
                 style={{ maxWidth: '90%', marginBottom: 0 }}
             >
-                <ModalHeader toggle={this.props.toggle} style={{ width: '100%' }}>
-                    <div style={{ height: '60px', width: '800px' }}>
-                        <div style={{ width: '100%', height: '40px', paddingTop: '5px' }}>Create visualization of comparision table</div>
-                        <div style={{ flexDirection: 'row', display: 'flex', flexGrow: '1', marginLeft: '-15px', height: '36px' }}>
-                            {/*  TAB BUTTONS*/}
-                            <TabButton
-                                style={{
-                                    marginLeft: '5px',
-                                    borderTopRightRadius: '0',
-                                    borderRight: '0px',
-                                    backgroundColor: this.state.processStep === 0 ? '#e86161' : '',
-                                    border: this.state.processStep === 0 ? 'none' : '',
-                                    color: this.state.processStep === 0 ? '#ffffff' : ''
-                                }}
-                                onClick={() => {
-                                    this.setState({ processStep: 0 });
-                                }}
-                            >
-                                Select
-                            </TabButton>
-                            <TabButton
-                                style={{
-                                    borderRadius: '0',
-                                    backgroundColor: this.state.processStep === 1 ? '#e86161' : '',
-                                    color: this.state.processStep === 1 ? '#ffffff' : '',
-                                    border: this.state.processStep === 1 ? 'none' : ''
-                                }}
-                                onClick={() => {
-                                    this.setState({ processStep: 1 });
-                                }}
-                            >
-                                Map & Edit
-                            </TabButton>
-                            <TabButton
-                                style={{
-                                    borderTopLeftRadius: '0',
-                                    borderLeft: '0px',
-                                    backgroundColor: this.state.processStep === 2 ? '#e86161' : '',
-                                    color: this.state.processStep === 2 ? '#ffffff' : '',
-                                    border: this.state.processStep === 2 ? 'none' : ''
-                                }}
-                                onClick={() => {
-                                    this.setState({ processStep: 2 });
-                                }}
-                            >
-                                Visualize
-                            </TabButton>
-                        </div>
-                    </div>
-                </ModalHeader>
-                <ModalBody id="selfVisServiceModalBody" style={{ padding: '0', minHeight: '100px', height: this.state.windowHeight }}>
+                <ModalHeader toggle={this.props.toggle}>Create visualization of comparison table</ModalHeader>
+                <ModalBody id="selfVisServiceModalBody">
+                    <TabButtons>
+                        {/*  TAB BUTTONS*/}
+                        <TabButton
+                            active={this.state.processStep === 0 ? true : false}
+                            onClick={() => {
+                                this.setState({ processStep: 0 });
+                            }}
+                        >
+                            Select
+                        </TabButton>
+                        <TabButton
+                            active={this.state.processStep === 1 ? true : false}
+                            onClick={() => {
+                                this.setState({ processStep: 1 });
+                            }}
+                        >
+                            Map &amp; Edit
+                        </TabButton>
+                        <TabButton
+                            active={this.state.processStep === 2 ? true : false}
+                            onClick={() => {
+                                this.setState({ processStep: 2 });
+                            }}
+                        >
+                            Visualize
+                        </TabButton>
+                    </TabButtons>
                     {/*  renders different views based on the current step in the process*/}
-                    {this.state.processStep === 0 && this.props.showDialog && (
-                        <CellSelector isLoading={!this.state.loadedModel} height={this.state.windowHeight - 50} />
-                    )}
-                    {this.state.processStep === 1 && this.props.showDialog && (
-                        <CellEditor isLoading={!this.state.loadedModel} height={this.state.windowHeight - 50} />
-                    )}
-                    {this.state.processStep === 2 && this.props.showDialog && (
+                    {this.state.processStep === 0 && <CellSelector isLoading={!this.state.loadedModel} height={this.state.windowHeight - 50} />}
+                    {this.state.processStep === 1 && <CellEditor isLoading={!this.state.loadedModel} height={this.state.windowHeight - 50} />}
+                    {this.state.processStep === 2 && (
                         <VisualizationWidget
                             isLoading={!this.state.loadedModel}
                             height={this.state.windowHeight - 10}
@@ -199,97 +180,82 @@ class AddVisualizationModal extends Component {
                     />
                 </ModalBody>
                 <ModalFooter className="p-2">
-                    {this.state.processStep === 0 && this.props.showDialog && (
-                        <Button
-                            color="primary"
-                            style={{ float: 'right', margin: '2px' }}
-                            onClick={() => {
-                                this.setState({ processStep: this.state.processStep + 1 });
-                            }}
-                        >
-                            Next
-                        </Button>
-                    )}
-                    {this.state.processStep === 1 && this.props.showDialog && (
-                        <>
+                    <div className="d-flex justify-content-end">
+                        {this.state.processStep === 0 && (
                             <Button
                                 color="primary"
-                                style={{ float: 'right', margin: '2px' }}
-                                onClick={() => {
-                                    this.setState({ processStep: this.state.processStep - 1 });
-                                }}
-                            >
-                                Prev
-                            </Button>
-                            <Button
-                                color="primary"
-                                style={{ float: 'right', margin: '2px' }}
+                                className="mr-2"
                                 onClick={() => {
                                     this.setState({ processStep: this.state.processStep + 1 });
                                 }}
                             >
                                 Next
                             </Button>
-                        </>
-                    )}
-                    {this.state.processStep === 2 && this.props.showDialog && (
-                        <>
-                            <Button
-                                color="primary"
-                                style={{ float: 'right', margin: '2px' }}
-                                onClick={() => {
-                                    this.setState({ processStep: this.state.processStep - 1 });
-                                }}
-                            >
-                                Prev
-                            </Button>
-                            {this.props.initialData.metaData.id && (
-                                <RequireAuthentication
-                                    component={Button}
+                        )}
+                        {this.state.processStep === 1 && (
+                            <>
+                                <Button
                                     color="primary"
-                                    style={{ float: 'right', margin: '2px' }}
-                                    disabled={this.state.currentlyExporting}
+                                    className="mr-2"
                                     onClick={() => {
-                                        this.setShowPublishVisualizationDialog(!this.state.showPublishVisualizationDialog);
+                                        this.setState({ processStep: this.state.processStep - 1 });
                                     }}
                                 >
-                                    {this.state.currentlyExporting ? (
-                                        <>
-                                            <Icon icon={faSpinner} spin className="mr-1 align-self-center" /> Exporting
-                                        </>
-                                    ) : (
-                                        <>Export</>
-                                    )}
-                                </RequireAuthentication>
-                            )}
+                                    Prev
+                                </Button>
+                                <Button
+                                    color="primary"
+                                    className="mr-2"
+                                    onClick={() => {
+                                        this.setState({ processStep: this.state.processStep + 1 });
+                                    }}
+                                >
+                                    Next
+                                </Button>
+                            </>
+                        )}
+                        {this.state.processStep === 2 && (
+                            <>
+                                <Button
+                                    color="primary"
+                                    className="mr-2"
+                                    onClick={() => {
+                                        this.setState({ processStep: this.state.processStep - 1 });
+                                    }}
+                                >
+                                    Prev
+                                </Button>
+                                {this.props.initialData.metaData.id && (
+                                    <RequireAuthentication
+                                        component={Button}
+                                        color="primary"
+                                        className="mr-2"
+                                        disabled={this.state.currentlyExporting}
+                                        onClick={() => {
+                                            this.setShowPublishVisualizationDialog(!this.state.showPublishVisualizationDialog);
+                                        }}
+                                    >
+                                        {this.state.currentlyExporting ? (
+                                            <>
+                                                <Icon icon={faSpinner} spin className="mr-1 align-self-center" /> Exporting
+                                            </>
+                                        ) : (
+                                            <>Export</>
+                                        )}
+                                    </RequireAuthentication>
+                                )}
 
-                            {!this.props.initialData.metaData.id && (
-                                // Faked the button as a span (Tippy does not like Buttons oO )
-                                <span style={{ float: 'right', margin: '10px', marginTop: '17px', marginLeft: '5px' }}>
-                                    <Tippy content="Can not export visualization to a temporal comparison. Please publish comparison first.">
-                                        <span
-                                            style={{
-                                                marginTop: '10px',
-
-                                                color: '#fff',
-                                                backgroundColor: '#959796',
-                                                borderColor: '#e86161',
-                                                padding: '0.45rem 30px',
-                                                fontSize: '1rem',
-                                                lineHeight: '1.5',
-                                                fontWeight: '400',
-                                                textAlign: 'center',
-                                                borderRadius: '6px',
-                                                userSelect: 'none'
-                                            }}
-                                        >
-                                            Export
-                                        </span>
+                                {!this.props.initialData.metaData.id && (
+                                    <Tippy
+                                        hideOnClick={false}
+                                        content="Can not export visualization to a temporal comparison. Please publish comparison first."
+                                    >
+                                        <span className="btn btn-primary disabled">Export</span>
                                     </Tippy>
-                                </span>
-                            )}
-                        </>
-                    )}
+                                )}
+                            </>
+                        )}
+                    </div>
                 </ModalFooter>
             </Modal>
         );
@@ -301,21 +267,7 @@ AddVisualizationModal.propTypes = {
     showDialog: PropTypes.bool.isRequired,
     toggle: PropTypes.func.isRequired,
     updatePreviewComponent: PropTypes.func.isRequired,
-    closeOnExport: PropTypes.func.isRequired,
-    initialData: PropTypes.object,
-    openAuthDialog: PropTypes.func.isRequired,
-    user: PropTypes.any
+    initialData: PropTypes.object
 };
 
-const mapStateToProps = state => ({
-    user: state.auth.user
-});
-
-const mapDispatchToProps = dispatch => ({
-    openAuthDialog: (action, signInRequired) => dispatch(openAuthDialog(action, signInRequired))
-});
-
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(AddVisualizationModal);
+export default AddVisualizationModal;

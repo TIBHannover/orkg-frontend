@@ -34,12 +34,12 @@ import { useCookies } from 'react-cookie';
 import PropTypes from 'prop-types';
 import ExactMatch from 'assets/img/comparison-exact-match.svg';
 import IntelligentMerge from 'assets/img/comparison-intelligent-merge.svg';
-import AddVisualizationModal from '../libs/selfVisModel/ComparisonComponents/AddVisualizationModal';
+import AddVisualizationModal from 'libs/selfVisModel/ComparisonComponents/AddVisualizationModal';
+import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
+import PreviewComponent from 'libs/selfVisModel/ComparisonComponents/PreviewComponent';
 import { NavLink } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import env from '@beam-australia/react-env';
-import SelfVisDataModel from '../libs/selfVisModel/SelfVisDataModel';
-import PreviewComponent from 'libs/selfVisModel/ComparisonComponents/PreviewComponent';
 
 function Comparison(props) {
     const [
@@ -117,6 +117,7 @@ function Comparison(props) {
         setShowVisualizationModal(false);
         setReloadingFlag(!reloadingFlag);
     };
+
     const onDismissShiftMouseWheelScroll = () => {
         // dismiss function for the alert thingy!;
         setCookie('seenShiftMouseWheelScroll', true, { path: env('PUBLIC_URL'), maxAge: 315360000 }); // << TEN YEARS
@@ -548,25 +549,24 @@ function Comparison(props) {
                 DOI={metaData?.doi}
                 comparisonId={metaData?.id}
             />
-            {!isLoadingComparisonResult && !isFailedLoadingComparisonResult && (
-                <AddVisualizationModal
-                    toggle={() => setShowVisualizationModal(v => !v)}
-                    showDialog={showVisualizationModal}
-                    // Some data we track as input for the new data model TODO Check what we need
-                    initialData={{
-                        metaData,
-                        contributions,
-                        properties,
-                        data,
-                        authors, // do we need this? maybe to add a new author who creates the comparison
-                        contributionsList,
-                        predicatesList
-                    }}
-                    closeOnExport={closeOnExport}
-                    updatePreviewComponent={() => setReloadingFlag(v => !v)}
-                    useReconstructedData={applyReconstruction}
-                />
-            )}
+
+            <AddVisualizationModal
+                toggle={() => setShowVisualizationModal(v => !v)}
+                showDialog={showVisualizationModal}
+                // Some data we track as input for the new data model TODO Check what we need
+                initialData={{
+                    metaData,
+                    contributions,
+                    properties,
+                    data,
+                    authors, // do we need this? maybe to add a new author who creates the comparison
+                    contributionsList,
+                    predicatesList
+                }}
+                closeOnExport={closeOnExport}
+                updatePreviewComponent={() => setReloadingFlag(v => !v)}
+                useReconstructedData={applyReconstruction}
+            />
         </div>
     );
 }
