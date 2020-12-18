@@ -48,6 +48,10 @@ const SectionType = props => {
                 {
                     label: 'Property',
                     value: CLASSES.PROPERTY_SECTION
+                },
+                {
+                    label: 'Comparison',
+                    value: CLASSES.COMPARISON_SECTION
                 }
             ];
             const _options = sortBy([...ontologyClasses, ...additionalClasses], 'label');
@@ -90,7 +94,11 @@ const SectionType = props => {
                 </SectionTypeStyled>
             )}
 
-            {!isDisabled && !editMode && <SectionTypeStyled onClick={() => setEditMode(true)}>{typeValue.label}</SectionTypeStyled>}
+            {!isDisabled && !editMode && (
+                <SectionTypeStyled className="focus-primary" onClick={() => setEditMode(true)}>
+                    {typeValue.label}
+                </SectionTypeStyled>
+            )}
             {editMode && (
                 <SectionTypeContainerStyled>
                     <Select

@@ -73,13 +73,13 @@ const AddSection = props => {
                         <Button color="dark" onClick={() => handleAddSection('comparison')}>
                             Comparison
                         </Button>
-                        <Button color="dark">Visualization</Button>
-                        <Button color="dark">Problem</Button>
-                        <Button color="dark" onClick={() => handleAddSection('property')}>
-                            Property
-                        </Button>
+                        {/*<Button color="dark">Visualization</Button>
+                        <Button color="dark">Problem</Button>*/}
                         <Button color="dark" onClick={() => handleAddSection('resource')}>
                             Resource
+                        </Button>
+                        <Button color="dark" onClick={() => handleAddSection('property')}>
+                            Property
                         </Button>
                     </Toolbar>
                 </OutsideClickHandler>

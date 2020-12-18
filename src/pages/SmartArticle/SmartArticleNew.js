@@ -21,6 +21,7 @@ const SmartArticleNew = () => {
     const handleCreate = async () => {
         if (!title) {
             toast.error('Enter a paper title');
+            return;
         }
         const id = await create(title);
         history.push(reverse(ROUTES.SMART_ARTICLE, { id }));

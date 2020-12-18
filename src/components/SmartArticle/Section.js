@@ -49,7 +49,7 @@ const Section = props => {
 
     const isStatementBrowserSection = props.section.type.id === CLASSES.RESOURCE_SECTION || props.section.type.id === CLASSES.PROPERTY_SECTION;
     const isComparisonSection = props.section.type.id === CLASSES.COMPARISON_SECTION;
-    const isTypeChangeDisabled = isStatementBrowserSection;
+    const isTypeChangeDisabled = isStatementBrowserSection || isComparisonSection;
 
     return (
         <>
@@ -70,7 +70,7 @@ const Section = props => {
                     />
                 )}
 
-                {isComparisonSection && <SectionComparison id={props?.section?.contentLink?.objectId} isEditable />}
+                {isComparisonSection && <SectionComparison id={props?.section?.contentLink?.objectId} sectionId={props?.section?.id} isEditable />}
 
                 {!isStatementBrowserSection && !isComparisonSection && markdown && <SectionMarkdown markdown={markdown} />}
             </SectionStyled>

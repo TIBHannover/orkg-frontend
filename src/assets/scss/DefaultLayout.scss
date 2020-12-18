@@ -1,4 +1,4 @@
-@import "../../assets/scss/ThemeVariables.scss";
+@import '../../assets/scss/ThemeVariables.scss';
 
 body {
     color: #646464;
@@ -130,4 +130,14 @@ body {
 // ensure all images in the lightbox have a white background (in case they are transparent)
 .ril__image.ril-image-current:not(.ril-not-loaded) {
     background: #fff;
+}
+
+// MISC: in case custom buttons/controls are used, this class can be applied to support
+// the default focus indicator behavior. Colors are copied from Bootstrap (based on the primary color)
+.focus-primary {
+    &:focus {
+        box-shadow: 0 0 0 0.2rem rgba(232, 97, 97, 0.25);
+    }
+    outline: 0 !important;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }

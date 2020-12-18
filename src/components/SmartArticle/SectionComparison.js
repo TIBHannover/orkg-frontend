@@ -9,8 +9,8 @@ import { createResource } from 'services/backend/resources';
 import { useDispatch } from 'react-redux';
 import ComparisonLoadingComponent from 'components/Comparison/ComparisonLoadingComponent';
 
-const SectionComparison = ({ id, isEditable }) => {
-    const { contributions, properties, data, isLoadingComparisonResult, isFailedLoadingComparisonResult } = useComparison({ id });
+const SectionComparison = ({ id, sectionId, isEditable }) => {
+    const { contributions, properties, data, isLoadingComparisonResult } = useComparison({ id });
     const [selectedResource, setSelectedResource] = useState(null);
     const dispatch = useDispatch();
 
@@ -31,7 +31,7 @@ const SectionComparison = ({ id, isEditable }) => {
 
         dispatch(
             updateSectionLink({
-                //id: props.section.id,
+                id: sectionId,
                 objectId: id,
                 label
             })
@@ -62,19 +62,21 @@ const SectionComparison = ({ id, isEditable }) => {
                     viewDensity="compact"
                 />
             )}
-            {isLoadingComparisonResult && <ComparisonLoadingComponent />}
+            {id && isLoadingComparisonResult && <ComparisonLoadingComponent />}
         </>
     );
 };
 
 SectionComparison.propTypes = {
     isEditable: PropTypes.bool,
-    id: PropTypes.string
+    id: PropTypes.string,
+    sectionId: PropTypes.string
 };
 
 SectionComparison.defaultProps = {
     isEditable: false,
-    id: null
+    id: null,
+    sectionId: null
 };
 
 export default SectionComparison;
