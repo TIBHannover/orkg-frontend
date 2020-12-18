@@ -3,8 +3,8 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { deleteSection, updateSectionTitle } from 'actions/smartArticle';
 import AddSection from 'components/SmartArticle/AddSection';
 import ContentEditable from 'components/SmartArticle/ContentEditable';
+import SectionContentLink from 'components/SmartArticle/SectionContentLink';
 import SectionMarkdown from 'components/SmartArticle/SectionMarkdown';
-import SectionStatementBrowser from 'components/SmartArticle/SectionStatementBrowser';
 import SectionType from 'components/SmartArticle/SectionType';
 import { DeleteButton, MoveHandle, SectionStyled } from 'components/SmartArticle/styled';
 import { CLASSES } from 'constants/graphSettings';
@@ -13,7 +13,6 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { SortableElement, sortableHandle } from 'react-sortable-hoc';
 import Confirm from 'reactstrap-confirm';
-import SectionComparison from 'components/SmartArticle/SectionComparison';
 
 const Section = props => {
     const [isHovering, setIsHovering] = useState(false);
@@ -47,9 +46,16 @@ const Section = props => {
         }
     };
 
-    const isStatementBrowserSection = props.section.type.id === CLASSES.RESOURCE_SECTION || props.section.type.id === CLASSES.PROPERTY_SECTION;
-    const isComparisonSection = props.section.type.id === CLASSES.COMPARISON_SECTION;
-    const isTypeChangeDisabled = isStatementBrowserSection || isComparisonSection;
+    let sectionType = null;
+    if (type.id === CLASSES.RESOURCE_SECTION) {
+        sectionType = 'resource';
+    } else if (type.id === CLASSES.PROPERTY_SECTION) {
+        sectionType = 'property';
+    } else if (type.id === CLASSES.COMPARISON_SECTION) {
+        sectionType = 'comparison';
+    }
+
+    const isContentLinkSection = sectionType === 'resource' || sectionType === 'property' || sectionType === 'comparison';
 
     return (
         <>
@@ -58,21 +64,14 @@ const Section = props => {
                     <Icon icon={faTimes} />
                 </DeleteButton>
                 <SortableHandle />
-                <SectionType type={type.id} sectionId={title.id} isDisabled={isTypeChangeDisabled} />
+                <SectionType type={type.id} sectionId={title.id} isDisabled={isContentLinkSection} />
                 <h2 className="h4 border-bottom pb-1 mb-3" placeholder="trd">
                     <ContentEditable text={title.label} onBlur={handleBlurTitle} placeholder="Enter a section title..." />
                 </h2>
 
-                {isStatementBrowserSection && (
-                    <SectionStatementBrowser
-                        section={props.section}
-                        type={props.section.type.id === CLASSES.RESOURCE_SECTION ? 'resource' : 'property'}
-                    />
-                )}
+                {isContentLinkSection && <SectionContentLink section={props.section} type={sectionType} />}
 
-                {isComparisonSection && <SectionComparison id={props?.section?.contentLink?.objectId} sectionId={props?.section?.id} isEditable />}
-
-                {!isStatementBrowserSection && !isComparisonSection && markdown && <SectionMarkdown markdown={markdown} />}
+                {!isContentLinkSection && markdown && <SectionMarkdown markdown={markdown} />}
             </SectionStyled>
             <AddSection index={props.atIndex} />
         </>

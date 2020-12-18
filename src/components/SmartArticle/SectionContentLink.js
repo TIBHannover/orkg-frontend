@@ -1,13 +1,15 @@
-import Autocomplete from 'components/Autocomplete/Autocomplete';
-import StatementBrowser from 'components/StatementBrowser/Statements/StatementsContainer';
-import PropTypes from 'prop-types';
-import React, { useState, useEffect } from 'react';
-import { resourcesUrl, createResource } from 'services/backend/resources';
-import { predicatesUrl } from 'services/backend/predicates';
 import { updateSectionLink } from 'actions/smartArticle';
+import Autocomplete from 'components/Autocomplete/Autocomplete';
+import SectionComparison from 'components/SmartArticle/SectionComparison';
+import StatementBrowser from 'components/StatementBrowser/Statements/StatementsContainer';
+import { CLASSES } from 'constants/graphSettings';
+import PropTypes from 'prop-types';
+import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { predicatesUrl } from 'services/backend/predicates';
+import { createResource, resourcesUrl } from 'services/backend/resources';
 
-const SectionStatementBrowser = props => {
+const SectionContentLink = props => {
     const dispatch = useDispatch();
 
     const [selectedResource, setSelectedResource] = useState(null);
@@ -56,12 +58,14 @@ const SectionStatementBrowser = props => {
         );
     };
 
-    const requestUrl = props.type === 'resource' ? resourcesUrl : predicatesUrl;
+    const requestUrl = props.type === 'property' ? predicatesUrl : resourcesUrl;
+    const hasValue = selectedResource && selectedResource?.value;
+
     return (
         <div>
             <Autocomplete
                 requestUrl={requestUrl}
-                //optionsClass={CLASSES.RESEARCH_FIELD}
+                optionsClass={props.type === 'comparison' ? CLASSES.COMPARISON : undefined}
                 placeholder={`Enter a ${props.type}`}
                 onChange={handleItemSelected}
                 value={selectedResource}
@@ -70,7 +74,7 @@ const SectionStatementBrowser = props => {
                 autoFocus={false}
                 cssClasses="mb-2"
             />
-            {selectedResource && selectedResource?.value && (
+            {(props.type === 'resource' || props.type === 'property') && hasValue && (
                 <StatementBrowser
                     enableEdit={true}
                     syncBackend={true}
@@ -82,13 +86,14 @@ const SectionStatementBrowser = props => {
                     rootNodeType={props.type === 'resource' ? 'resource' : 'predicate'}
                 />
             )}
+            {props.type === 'comparison' && hasValue && <SectionComparison id={selectedResource.value} />}
         </div>
     );
 };
 
-SectionStatementBrowser.propTypes = {
+SectionContentLink.propTypes = {
     section: PropTypes.object.isRequired,
     type: PropTypes.string.isRequired
 };
 
-export default SectionStatementBrowser;
+export default SectionContentLink;
