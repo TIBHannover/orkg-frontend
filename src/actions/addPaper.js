@@ -11,7 +11,7 @@ import {
 } from './statementBrowser';
 import { createResource as createResourceApi } from 'services/backend/resources';
 import { createResourceStatement, createLiteralStatement } from 'services/backend/statements';
-import { saveFullPaper } from 'services/backend/misc';
+import { saveFullPaper } from 'services/backend/papers';
 import { createLiteral } from 'services/backend/literals';
 import { createPredicate } from 'services/backend/predicates';
 import { toast } from 'react-toastify';
@@ -395,7 +395,11 @@ export const saveAddPaper = data => {
             paper: {
                 title: data.title,
                 doi: data.doi,
-                authors: data.authors.map(author => ({ label: author.label, ...(author.orcid ? { orcid: author.orcid } : {}) })),
+                authors: data.authors.map(author => ({
+                    label: author.label,
+                    ...(author.label !== author.id ? { id: author.id } : {}),
+                    ...(author.orcid ? { orcid: author.orcid } : {})
+                })),
                 publicationMonth: data.publicationMonth,
                 publicationYear: data.publicationYear,
                 publishedIn: data.publishedIn ? data.publishedIn : undefined,

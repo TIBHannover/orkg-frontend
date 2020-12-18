@@ -248,6 +248,18 @@ export const getComparisonData = (id, label, comparisonStatements) => {
     // url
     const url = comparisonStatements.find(statement => statement.predicate.id === PREDICATES.URL);
 
+    // icon
+    const icon = comparisonStatements.find(statement => statement.predicate.id === PREDICATES.ICON);
+
+    // type
+    const type = comparisonStatements.find(statement => statement.predicate.id === PREDICATES.TYPE);
+
+    // order
+    const order = comparisonStatements.find(statement => statement.predicate.id === PREDICATES.ORDER);
+
+    // onHomePage
+    const onHomePage = comparisonStatements.find(statement => statement.predicate.id === PREDICATES.ON_HOMEPAGE);
+
     return {
         id,
         label,
@@ -255,7 +267,11 @@ export const getComparisonData = (id, label, comparisonStatements) => {
         nbContributions: url ? getArrayParamFromQueryString(url.object.label, 'contributions').length : 0,
         url: url ? url.object.label : '',
         reference: reference ? reference.object.label : '',
-        description: description ? description.object.label : ''
+        description: description ? description.object.label : '',
+        icon: icon ? icon.object.label : '',
+        order: order ? order.object.label : Infinity,
+        type: type ? type.object.id : '',
+        onHomePage: onHomePage ? true : false
     };
 };
 
@@ -329,9 +345,11 @@ export const generateRdfDataVocabularyFile = (data, contributions, properties, m
     //components
     const columns = [
         { id: 'Properties', title: 'Properties' },
-        ...contributions.map((contribution, index) => {
-            return contribution;
-        })
+        ...contributions
+            .filter(c => c.active)
+            .map((contribution, index) => {
+                return contribution;
+            })
     ];
     columns.forEach(function(column, index) {
         if (column.id === 'Properties') {
@@ -366,18 +384,20 @@ export const generateRdfDataVocabularyFile = (data, contributions, properties, m
             gds.add(new rdf.Triple(bno, cubens('dataSet'), ds));
             gds.add(new rdf.Triple(bno, dt['Properties'].toString(), new rdf.Literal(property.label.toString())));
             contributions.map((contribution, index2) => {
-                const cell = data[property.id][index2];
-                if (cell.length > 0) {
-                    cell.map(v => {
-                        if (v.type && v.type === 'resource') {
-                            gds.add(new rdf.Triple(bno, dt[contribution.id].toString(), orkgResource(`${v.resourceId}`)));
-                        } else {
-                            gds.add(new rdf.Triple(bno, dt[contribution.id].toString(), new rdf.Literal(`${v.label ? v.label : ''}`)));
-                        }
-                        return null;
-                    });
-                } else {
-                    gds.add(new rdf.Triple(bno, dt[contribution.id].toString(), new rdf.Literal('Empty')));
+                if (contribution.active) {
+                    const cell = data[property.id][index2];
+                    if (cell.length > 0) {
+                        cell.map(v => {
+                            if (v.type && v.type === 'resource') {
+                                gds.add(new rdf.Triple(bno, dt[contribution.id].toString(), orkgResource(`${v.resourceId}`)));
+                            } else {
+                                gds.add(new rdf.Triple(bno, dt[contribution.id].toString(), new rdf.Literal(`${v.label ? v.label : ''}`)));
+                            }
+                            return null;
+                        });
+                    } else {
+                        gds.add(new rdf.Triple(bno, dt[contribution.id].toString(), new rdf.Literal('Empty')));
+                    }
                 }
                 return null;
             });
@@ -700,6 +720,43 @@ function getOrder(paperStatements) {
 }
 
 /**
+ * Parse resources statements and return a related figures objects
+ * @param {Array} resourceStatements
+ */
+export function getRelatedFiguresData(resourcesStatements) {
+    const _figures = resourcesStatements.map(resourceStatements => {
+        const imageStatement = resourceStatements.statements.find(statement => statement.predicate.id === PREDICATES.IMAGE);
+        const alt = resourceStatements.statements.length ? resourceStatements.statements[0]?.subject?.label : null;
+        return {
+            src: imageStatement ? imageStatement.object.label : '',
+            figureId: resourceStatements.id,
+            alt
+        };
+    });
+    return _figures;
+}
+
+/**
+ * Parse resources statements and return a related resources objects
+ * @param {Array} resourceStatements
+ */
+export function getRelatedResourcesData(resourcesStatements) {
+    const _resources = resourcesStatements.map(resourceStatements => {
+        const imageStatement = resourceStatements.statements.find(statement => statement.predicate.id === PREDICATES.IMAGE);
+        const urlStatement = resourceStatements.statements.find(statement => statement.predicate.id === PREDICATES.URL);
+        const descriptionStatement = resourceStatements.statements.find(statement => statement.predicate.id === PREDICATES.DESCRIPTION);
+        return {
+            url: urlStatement ? urlStatement.object.label : '',
+            image: imageStatement ? imageStatement.object.label : '',
+            id: resourceStatements.id,
+            title: resourceStatements.statements[0]?.subject?.label,
+            description: descriptionStatement ? descriptionStatement.object.label : ''
+        };
+    });
+    return _resources;
+}
+
+/**
  * Truncating middle portion of a string
  *
  * @param {String} str string
@@ -729,7 +786,7 @@ export function truncStringPortion(str, firstCharCount = str.length, endCharCoun
 // TODO: refactor the authors dialog and create a hook to put this function
 export async function saveAuthors({ prevAuthors, newAuthors, paperId }) {
     if (isEqual(prevAuthors, newAuthors)) {
-        return newAuthors;
+        return null;
     }
 
     const statementsIds = [];
@@ -737,7 +794,6 @@ export async function saveAuthors({ prevAuthors, newAuthors, paperId }) {
     for (const author of prevAuthors) {
         statementsIds.push(author.statementId);
     }
-    console.log(statementsIds);
     deleteStatementsByIds(statementsIds);
 
     // Add all authors from the state
@@ -774,14 +830,23 @@ export async function saveAuthors({ prevAuthors, newAuthors, paperId }) {
                 authors[i].classes = authorResource.classes;
             }
         } else {
-            // Author resource doesn't exist
-            const newLiteral = await createLiteralApi(author.label);
-            // Create literal of author
-            const authorStatement = await createLiteralStatement(paperId, PREDICATES.HAS_AUTHOR, newLiteral.id);
-            authors[i].statementId = authorStatement.id;
-            authors[i].id = newLiteral.id;
-            authors[i].class = authorStatement.object._class;
-            authors[i].classes = authorStatement.object.classes;
+            // Author resource exists
+            if (author.label !== author.id) {
+                const authorStatement = await createResourceStatement(this.props.viewPaper.paperResourceId, PREDICATES.HAS_AUTHOR, author.id);
+                authors[i].statementId = authorStatement.id;
+                authors[i].id = author.id;
+                authors[i].class = author._class;
+                authors[i].classes = author.classes;
+            } else {
+                // Author resource doesn't exist
+                const newLiteral = await createLiteralApi(author.label);
+                // Create literal of author
+                const authorStatement = await createLiteralStatement(this.props.viewPaper.paperResourceId, PREDICATES.HAS_AUTHOR, newLiteral.id);
+                authors[i].statementId = authorStatement.id;
+                authors[i].id = newLiteral.id;
+                authors[i].class = authorStatement.object._class;
+                authors[i].classes = authorStatement.object.classes;
+            }
         }
     }
 

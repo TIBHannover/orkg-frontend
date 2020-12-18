@@ -6,11 +6,17 @@ body {
 }
 
 #main-navbar {
-    background: #fff !important;
-    box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.13);
+    &:not(.home-page) {
+        box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.13);
+        background: white;
+    }
+
+    background: transparent;
+    border: 0;
 
     .nav-link {
         color: $darkblue;
+
         &:hover {
             color: $primary;
         }
@@ -29,6 +35,28 @@ body {
             border: 1px solid #ced4da;
             border-left: 0 !important;
             background: $input-bg;
+        }
+    }
+
+    &.home-page {
+        & .nav-link {
+            color: white;
+            &:hover {
+                color: #bbbbbb;
+            }
+        }
+        & .sign-in {
+            color: white;
+            background: #32303b;
+            border-color: #32303b;
+            &:hover {
+                color: white;
+                background: #100f13;
+                border-color: #100f13;
+            }
+        }
+        .search-box .search-icon {
+            color: $darkblue;
         }
     }
 }

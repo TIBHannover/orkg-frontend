@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { getStatementsBySubjects } from 'services/backend/statements';
-import { PREDICATES } from 'constants/graphSettings';
 import styled from 'styled-components';
 import { Button } from 'reactstrap';
 import ROUTES from 'constants/routes';
@@ -10,6 +9,8 @@ import { reverse } from 'named-urls';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faArrowCircleRight, faArrowCircleLeft } from '@fortawesome/free-solid-svg-icons';
 import ItemsCarousel from 'react-items-carousel';
+import { flatMap, find } from 'lodash';
+import { getRelatedFiguresData } from 'utils';
 
 const NO_OF_CARDS = 5;
 const CHEVRON_WIDTH = 40;
@@ -61,31 +62,28 @@ class RelatedResourcesCard extends Component {
         if (this.props.figureStatements.length === 0) {
             return;
         }
-        const figuresData = [];
-        for (let i = 0; i < this.props.figureStatements.length; i++) {
-            if (this.props.figureStatements[i].figures !== null) {
-                for (let j = 0; j < this.props.figureStatements[i].figures.length; j++) {
-                    figuresData.push({ id: this.props.figureStatements[i].id, figure: this.props.figureStatements[i].figures[j] });
-                }
+        // map on figure to get { id: comparison.id, figures: fs.figures }
+        // using flatMap to get { id: comparison.id, figure: f }
+        const comparisonFigureMap = flatMap(
+            this.props.figureStatements.filter(fs => fs.figures !== null).map(fs => ({ id: fs.id, figures: fs.figures })),
+            v => {
+                return v.figures.map(f => ({ id: v.id, figure: f }));
             }
-        }
+        );
         getStatementsBySubjects({
-            ids: figuresData.map(resource => resource.figure.id)
+            ids: comparisonFigureMap.map(resource => resource.figure.id)
         })
-            .then(figuresStatements => {
-                const _figures = figuresStatements.map((figureStatements, key) => {
-                    const imageStatement = figureStatements.statements.find(statement => statement.predicate.id === PREDICATES.IMAGE);
-                    const alt = figureStatements.statements.length ? figureStatements.statements[0]?.subject?.label : null;
-
-                    return {
-                        src: imageStatement ? imageStatement.object.label : '',
-                        id: figuresData[key].id,
-                        figureId: figureStatements.id,
-                        alt
-                    };
+            .then(resourcesStatements => {
+                this.setState({
+                    relatedFigures: getRelatedFiguresData(resourcesStatements).map(rf => ({
+                        ...rf,
+                        id: find(comparisonFigureMap, c => {
+                            // use find to get the comparison id of the figure
+                            return c.figure.id === rf.figureId;
+                        }).id
+                    })),
+                    loadingFigures: false
                 });
-
-                this.setState({ relatedFigures: _figures, loadingFigures: false });
             })
             .catch(err => {
                 console.log(err);

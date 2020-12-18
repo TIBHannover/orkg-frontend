@@ -15,7 +15,7 @@ import {
     InputGroup
 } from 'reactstrap';
 import { createLiteralStatement } from 'services/backend/statements';
-import { saveFullPaper } from 'services/backend/misc';
+import { saveFullPaper } from 'services/backend/papers';
 import { createLiteral } from 'services/backend/literals';
 import { createResource } from 'services/backend/resources';
 import { CLASSES, PREDICATES, MISC } from 'constants/graphSettings';

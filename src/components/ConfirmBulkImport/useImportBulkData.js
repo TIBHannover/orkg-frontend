@@ -6,7 +6,7 @@ import { getPaperByDOI } from 'services/backend/misc';
 import { getResourcesByClass } from 'services/backend/resources';
 import { getResource } from 'services/backend/resources';
 import { getPredicate, getAllPredicates, createPredicate } from 'services/backend/predicates';
-import { saveFullPaper } from 'services/backend/misc';
+import { saveFullPaper } from 'services/backend/papers';
 import { toast } from 'react-toastify';
 
 const PREDEFINED_COLUMNS = [
@@ -74,8 +74,12 @@ const useImportBulkData = ({ data, onFinish }) => {
             // add research problem
             if (researchProblem && isString(researchProblem)) {
                 const problemObject = {};
+                // Add mapping to research problem predicate
+                _idToLabel[PREDICATES.HAS_RESEARCH_PROBLEM] = 'has research problem';
                 if (researchProblem.startsWith('orkg:')) {
                     problemObject['@id'] = cleanLabel(researchProblem);
+                } else {
+                    problemObject['label'] = researchProblem;
                 }
 
                 contributionStatements[PREDICATES.HAS_RESEARCH_PROBLEM] = [problemObject];

@@ -258,7 +258,7 @@ const routes = [
     },
     {
         path: ROUTES.CSV_IMPORT,
-        component: CsvImport
+        component: requireAuthentication(CsvImport)
     },
     {
         path: ROUTES.SMART_ARTICLE,

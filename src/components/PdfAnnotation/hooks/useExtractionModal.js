@@ -8,7 +8,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { zip, omit, isString } from 'lodash';
 import { PREDICATES, MISC } from 'constants/graphSettings';
 import { getStatementsBySubject } from 'services/backend/statements';
-import { saveFullPaper } from 'services/backend/misc';
+import { saveFullPaper } from 'services/backend/papers';
 import env from '@beam-australia/react-env';
 
 function useExtractionModal(props) {

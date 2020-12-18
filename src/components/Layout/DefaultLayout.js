@@ -17,12 +17,11 @@ const StyledBody = styled.div`
     display: flex;
     min-height: calc(100vh - 30px);
     flex-direction: column;
-    padding-top: 73px;
-    margin-top: 30px;
 `;
 
 const StyledAppContent = styled.div`
     flex: 1 0 auto;
+    padding-top: 30px;
 `;
 
 const StyledFooter = styled.div`

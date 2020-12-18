@@ -6,6 +6,7 @@ import { createObservatory } from 'services/backend/observatories';
 import NotFound from 'pages/NotFound';
 import InternalServerError from 'pages/InternalServerError';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
+import { CLASSES } from 'constants/graphSettings';
 import { Redirect } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { reverse } from 'named-urls';
@@ -122,7 +123,7 @@ class AddObservatory extends Component {
                                         <Label for="ObservatoryResearchField">Research Field</Label>
                                         <AutoComplete
                                             requestUrl={resourcesUrl}
-                                            optionsClass="ResearchField"
+                                            optionsClass={CLASSES.RESEARCH_FIELD}
                                             placeholder="Observatory research field"
                                             onItemSelected={async rf => {
                                                 this.setState({ researchField: { ...rf, label: rf.value } });
@@ -157,7 +158,11 @@ class AddObservatory extends Component {
                                 </div>
                             ) : (
                                 <>
-                                    <Button color="link" className="p-0 mb-2 mt-2 clearfix" onClick={() => this.props.openAuthDialog('signin')}>
+                                    <Button
+                                        color="link"
+                                        className="p-0 mb-2 mt-2 clearfix"
+                                        onClick={() => this.props.openAuthDialog({ action: 'signin' })}
+                                    >
                                         <Icon className="mr-1" icon={faUser} /> Sign in to create an observatory
                                     </Button>
                                 </>
@@ -175,7 +180,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    openAuthDialog: action => dispatch(openAuthDialog(action))
+    openAuthDialog: payload => dispatch(openAuthDialog(payload))
 });
 
 AddObservatory.propTypes = {
