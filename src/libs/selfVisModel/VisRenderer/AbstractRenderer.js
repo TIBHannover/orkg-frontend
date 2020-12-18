@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
-import * as PropTypes from 'prop-types';
-import SelfVisDataMode from '../SelfVisDataModel';
+import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
 import AbstractChartRenderer from './ChartRenderers/AbstractChartRenderer';
+import PropTypes from 'prop-types';
 
 export default class AbstractRenderer extends Component {
     constructor(props) {
         super(props);
         this.state = { updateFlipFlop: false, requiresUpdate: false };
-        this.selfVisModel = new SelfVisDataMode(); // this access the instance of the data (its a singleton)
+        this.selfVisModel = new SelfVisDataModel(); // this access the instance of the data (its a singleton)
         this.supportedVisualizationMethods = ['Table', 'BarChart', 'ColumnChart'];
         this.customizationState = undefined;
     }

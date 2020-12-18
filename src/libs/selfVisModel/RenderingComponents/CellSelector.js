@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
-import * as PropTypes from 'prop-types';
-import SelfVisDataMode from '../SelfVisDataModel';
+import { Alert, ButtonGroup, Button } from 'reactstrap';
+import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
 import CellRenderer from './CellRenderer';
 import DropDownMapperSelector from './DropdownMapperSelector';
 import CheckboxSelector from './CheckBoxSelector';
+import PropTypes from 'prop-types';
 
 export default class CellSelector extends Component {
     constructor(props) {
         super(props);
-        this.selfVisModel = new SelfVisDataMode(); // this access the instance of the data (its a singleton)
+        this.selfVisModel = new SelfVisDataModel(); // this access the instance of the data (its a singleton)
     }
 
     /** some data handlers **/
@@ -42,14 +43,37 @@ export default class CellSelector extends Component {
                     } else {
                         rowArray.push(
                             <CellRenderer key={keyVal} type="metaNodeSelector" data={null}>
-                                <CheckboxSelector
-                                    label=""
-                                    initializedValue={this.selfVisModel.mrrModel.propertyAnchors[j - 1]}
-                                    handleCheckboxChange={v => this.toggleCheckboxForCol(j - 1, v)}
-                                    cbx_id={'useValue+' + i + '_' + j}
-                                    key={'useValue+' + i + '_' + j}
-                                />
-                                <DropDownMapperSelector key={keyVal + 'dropdown'} data={this.selfVisModel.mrrModel.propertyAnchors[j - 1]} />
+                                <ButtonGroup
+                                    style={{ borderBottomLeftRadius: '0', borderBottomRightRadius: '0' }}
+                                    className="p-0 flex-grow-1"
+                                    size="sm"
+                                >
+                                    <Button
+                                        className="p-0 m-0"
+                                        size="sm"
+                                        color="darkblue"
+                                        style={{
+                                            borderBottomLeftRadius: '0',
+                                            borderBottomRightRadius: '0'
+                                        }}
+                                    >
+                                        <div
+                                            style={{
+                                                marginLeft: '4px',
+                                                marginRight: '-4px'
+                                            }}
+                                        >
+                                            <CheckboxSelector
+                                                label=""
+                                                initializedValue={this.selfVisModel.mrrModel.propertyAnchors[j - 1]}
+                                                handleCheckboxChange={v => this.toggleCheckboxForCol(j - 1, v)}
+                                                cbx_id={'useValue+' + i + '_' + j}
+                                                key={'useValue+' + i + '_' + j}
+                                            />
+                                        </div>
+                                    </Button>
+                                    <DropDownMapperSelector key={keyVal + 'dropdown'} data={this.selfVisModel.mrrModel.propertyAnchors[j - 1]} />
+                                </ButtonGroup>
                             </CellRenderer>
                         );
                     }
@@ -119,9 +143,14 @@ export default class CellSelector extends Component {
     /** component rendering entrance point **/
     render() {
         return (
-            <div className="tableSelectionAreaRoot" style={{ height: this.props.height + 'px', overflow: 'auto' }}>
-                Select cells for visualization and map to types.
-                <div>{this.props.isLoading ? <div>Loading...</div> : <div>{this.createTable()} </div>}</div>
+            <div className="pt-2">
+                <Alert color="info">Select cells for visualization and map to types.</Alert>
+
+                {this.props.isLoading ? (
+                    <div>Loading...</div>
+                ) : (
+                    <div style={{ height: this.props.height + 'px', overflow: 'auto' }}>{this.createTable()} </div>
+                )}
             </div>
         );
     }

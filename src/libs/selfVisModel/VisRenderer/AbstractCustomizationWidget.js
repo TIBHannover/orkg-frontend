@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
-import * as PropTypes from 'prop-types';
-import SelfVisDataMode from '../SelfVisDataModel';
+import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
 import CustomizationColumnChart from './ChartRenderers/CustomizationColumnChart';
 import CustomizationBarChart from './ChartRenderers/CustomizationBarChart';
 import CustomizationScatterChart from './ChartRenderers/CustomizationScatterChart';
 import CustomizationLineChart from './ChartRenderers/CustomizationLineChart';
+import PropTypes from 'prop-types';
 
 export default class AbstractCustomizationWidget extends Component {
     constructor(props) {
         super(props);
-        this.selfVisModel = new SelfVisDataMode(); // this access the instance of the data (its a singleton)
+        this.selfVisModel = new SelfVisDataModel(); // this access the instance of the data (its a singleton)
         this.state = { updateFlipFlop: false, requiresUpdate: false };
     }
 

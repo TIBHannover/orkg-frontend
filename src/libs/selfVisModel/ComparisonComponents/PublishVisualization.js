@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import { Modal, ModalHeader, ModalBody, ModalFooter, Input, Button, Label, FormGroup, Alert } from 'reactstrap';
-import { toast } from 'react-toastify';
-import PropTypes from 'prop-types';
 import { createLiteralStatement, createResourceStatement, getStatementsByPredicateAndLiteral } from 'services/backend/statements';
 import { createLiteral } from 'services/backend/literals';
 import { createResource } from 'services/backend/resources';
 import Tooltip from 'components/Utils/Tooltip';
 import AuthorsInput from 'components/Utils/AuthorsInput';
 import { PREDICATES, CLASSES } from 'constants/graphSettings';
-import SelfVisDataModel from '../SelfVisDataModel';
-import { addVisualization } from '../../../services/similarity';
+import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
+import { addVisualization } from 'services/similarity';
+import { toast } from 'react-toastify';
+import PropTypes from 'prop-types';
 
 function PublishVisualization(props) {
     const [isLoading, setIsLoading] = useState(false);

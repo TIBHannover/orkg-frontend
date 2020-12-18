@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import * as PropTypes from 'prop-types';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faArrowCircleLeft, faArrowCircleRight } from '@fortawesome/free-solid-svg-icons';
+import PropTypes from 'prop-types';
 
 export default class PreviewCarouselComponent extends Component {
     constructor(props) {

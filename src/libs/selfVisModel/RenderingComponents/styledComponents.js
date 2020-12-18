@@ -2,34 +2,44 @@ import styled from 'styled-components';
 import { Input } from 'reactstrap';
 
 /** adding styled divs for different cell items **/
+export const TableCell = styled.div`
+    &.noselect {
+        -webkit-touch-callout: none; /* iOS Safari */
+        -webkit-user-select: none; /* Safari */
+        -khtml-user-select: none; /* Konqueror HTML */
+        -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+        user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
+    }
+`;
+
+/** adding styled divs for different cell items **/
 export const PropertyCell = styled.div`
     overflow: hidden;
     text-overflow: ellipsis;
     display: ruby;
     color: white;
-    background: #80869b;
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
+    background: ${props => props.theme.darkblue};
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
     width: 150px;
     min-width: 150px;
-    height: 31px;
     padding: 0 2px;
-    margin: 0 1px;
+    margin: 1px 1px 0 1px;
 `;
 
-export const PropertyCellEditor = styled.div`
+// Map and Edit Property
+export const PropertyCellEditor = styled(TableCell)`
     overflow: hidden;
     text-overflow: ellipsis;
     display: ruby;
     color: white;
-    background: #80869b;
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
+    background: ${props => props.theme.darkblue};
     width: 150px;
     min-width: 150px;
-    height: 31px;
     padding: 0 2px;
-    margin: 0 1px;
+    margin: 1px 1px 0 1px;
     cursor: pointer;
 `;
 
@@ -47,7 +57,7 @@ export const ValueCell = styled.div`
     margin: 1px 1px;
 `;
 
-export const ContributionCell = styled.div`
+export const ContributionCell = styled(TableCell)`
     overflow: hidden;
     text-overflow: ellipsis;
     display: ruby;
@@ -83,20 +93,20 @@ export const MetaMapperSelector = styled.div`
     width: 150px;
     min-width: 150px;
     height: 30px;
-
-    margin: 1px 1px;
-    margin-left: 0.5px;
+    margin: 0 1px;
+    //margin-left: 0.5px;
 `;
+
+// Map and Edit Header
 export const MetaMapperSelectorSimple = styled.div`
     overflow: visible;
     background: white;
-
+    display: flex;
     color: white;
     width: 150px;
     min-width: 150px;
-    height: 30px;
-    margin: 1px 1px;
-    padding-left: 28px;
+    margin: 0 1px;
+    //padding-left: 28px;
 `;
 
 export const PropertyCellInput = styled(Input)`
@@ -122,7 +132,7 @@ export const PropertyCellInput = styled(Input)`
     }
 `;
 
-export const ValueCellValidator = styled.div`
+export const ValueCellValidator = styled(TableCell)`
     overflow: hidden;
     text-overflow: ellipsis;
     display: ruby;
@@ -138,7 +148,7 @@ export const ValueCellValidator = styled.div`
 
 export const ValueCellInput = styled(Input)`
     background: #fff;
-    color: black
+    color: black;
     outline: 0;
     border: dotted 2px ${props => props.theme.listGroupBorderColor};
     border-radius: 0;
@@ -152,7 +162,7 @@ export const ValueCellInput = styled(Input)`
 
     &:focus {
         background: #fff;
-        color: black
+        color: black;
         outline: 0;
         border: dotted 2px ${props => props.theme.listGroupBorderColor};
         padding: 0 4px;
@@ -163,7 +173,7 @@ export const ValueCellInput = styled(Input)`
 
 export const ContributionCellInput = styled(Input)`
     background: #fff;
-    color: black
+    color: black;
     outline: 0;
     border: dotted 2px ${props => props.theme.listGroupBorderColor};
     border-radius: 0;
@@ -176,7 +186,7 @@ export const ContributionCellInput = styled(Input)`
 
     &:focus {
         background: #fff;
-        color: black
+        color: black;
         outline: 0;
         border: dotted 2px ${props => props.theme.listGroupBorderColor};
         padding: 0 4px;

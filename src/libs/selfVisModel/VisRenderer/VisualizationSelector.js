@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import * as PropTypes from 'prop-types';
 import SelfVisDataMode from '../SelfVisDataModel';
 import { Dropdown, DropdownItem, DropdownMenu, DropdownToggle } from 'reactstrap';
+
 export default class VisualizationSelector extends Component {
     constructor(props) {
         super(props);
@@ -68,7 +69,7 @@ export default class VisualizationSelector extends Component {
                     });
                 }}
             >
-                <DropdownToggle caret color="darkblue" className="dropdownToggleCaret">
+                <DropdownToggle caret color="darkblue">
                     {this.state.visualizationMethod}
                 </DropdownToggle>
                 <DropdownMenu>{items}</DropdownMenu>

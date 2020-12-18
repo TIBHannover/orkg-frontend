@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import * as PropTypes from 'prop-types';
-import { CustomInput, FormGroup } from 'reactstrap';
+import { CustomInput } from 'reactstrap';
+import PropTypes from 'prop-types';
 
 class CheckboxSelector extends Component {
     constructor(props) {
@@ -25,20 +25,7 @@ class CheckboxSelector extends Component {
     render() {
         const { isChecked } = this.state;
 
-        return (
-            <div className="checkbox" style={{ marginLeft: '5px', paddingTop: '3px' }}>
-                <FormGroup style={{ fontSize: '90%' }}>
-                    <CustomInput
-                        style={{ marginRight: '-1px' }}
-                        type="checkbox"
-                        id={this.props.cbx_id}
-                        onChange={this.toggleCheckboxChange}
-                        checked={isChecked}
-                        label=""
-                    />
-                </FormGroup>
-            </div>
-        );
+        return <CustomInput bsSize="xs" type="checkbox" id={this.props.cbx_id} onChange={this.toggleCheckboxChange} checked={isChecked} label="" />;
     }
 }
 

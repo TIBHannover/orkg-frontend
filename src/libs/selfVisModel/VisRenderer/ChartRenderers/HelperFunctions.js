@@ -3,7 +3,6 @@ import React from 'react';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import styled from 'styled-components';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import '../../RenderingComponents/selfVisStyles.css';
 
 export const isMounted = ref => {
     if (ref.props.propagateUpdates) {
@@ -108,7 +107,7 @@ const createIntervalDropDownSelectors = (ref, id, interval_id, possibleValueCand
                 });
             }}
         >
-            <DropdownToggle caret color="darkblue" className="dropdownToggleCaret">
+            <DropdownToggle caret color="darkblue">
                 {ref.state.yAxisInterValSelectors[id][interval_id].label}
             </DropdownToggle>
             <DropdownMenu>{itemsArray}</DropdownMenu>
@@ -212,7 +211,7 @@ export const createValueSelectors = ref => {
                                 });
                             }}
                         >
-                            <DropdownToggle caret color="darkblue" className="dropdownToggleCaret">
+                            <DropdownToggle caret color="darkblue">
                                 {ref.state.yAxisSelector[id] ? ref.state.yAxisSelector[id] : possibleValueCandidates[0].label}
                             </DropdownToggle>
                             <DropdownMenu>{itemsArray[id]}</DropdownMenu>
@@ -288,7 +287,7 @@ export const createLabelSelectors = ref => {
                     });
                 }}
             >
-                <DropdownToggle caret color="darkblue" className="dropdownToggleCaret">
+                <DropdownToggle caret color="darkblue">
                     {ref.state.xAxisSelector ? ref.state.xAxisSelector : possibleLabelCandidates[0].label}
                 </DropdownToggle>
                 <DropdownMenu>{items}</DropdownMenu>

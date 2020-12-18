@@ -1,12 +1,22 @@
 import React, { Component } from 'react';
-import * as PropTypes from 'prop-types';
-import SelfVisDataMode from '../SelfVisDataModel';
-import { Dropdown, DropdownItem, DropdownMenu, DropdownToggle } from 'reactstrap';
+import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
+import { ButtonDropdown, DropdownItem, DropdownMenu, DropdownToggle } from 'reactstrap';
+import PropTypes from 'prop-types';
+import styled from 'styled-components';
+
+const StyledDropdownToggle = styled(DropdownToggle)`
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 122px;
+`;
 
 export default class DropDownMapperSelector extends Component {
     constructor(props) {
         super(props);
-        this.selfVisModel = new SelfVisDataMode(); // this access the instance of the data (its a singleton)
+        this.selfVisModel = new SelfVisDataModel(); // this access the instance of the data (its a singleton)
 
         let initMapper = 'Select Mapper';
         if (this.props.data && this.props.data.getPropertyMapperType()) {
@@ -46,29 +56,22 @@ export default class DropDownMapperSelector extends Component {
         });
 
         return (
-            <div style={{ overflow: 'visible' }}>
-                <Dropdown
-                    color="darkblue"
-                    size="sm"
-                    //    className='mb-4 mt-4'
-                    style={{
-                        height: 'min-content',
-                        paddingTop: '0px',
-                        width: '50px'
-                    }}
-                    isOpen={this.state.isOpen}
-                    toggle={() => {
-                        this.setState({
-                            isOpen: !this.state.isOpen
-                        });
-                    }}
-                >
-                    <DropdownToggle caret color="darkblue" className="dropdownToggleCaret">
-                        {this.state.selectedMapper}
-                    </DropdownToggle>
-                    <DropdownMenu>{items}</DropdownMenu>
-                </Dropdown>
-            </div>
+            <ButtonDropdown
+                color="darkblue"
+                size="sm"
+                className="pl-0 m-0 flex-grow-1"
+                isOpen={this.state.isOpen}
+                toggle={() => {
+                    this.setState({
+                        isOpen: !this.state.isOpen
+                    });
+                }}
+            >
+                <StyledDropdownToggle caret color="darkblue" className="pl-1" style={{ borderBottomRightRadius: '0', borderBottomLeftRadius: '0' }}>
+                    {this.state.selectedMapper}
+                </StyledDropdownToggle>
+                <DropdownMenu>{items}</DropdownMenu>
+            </ButtonDropdown>
         );
     }
 }

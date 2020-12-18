@@ -1,4 +1,5 @@
 import Joi from '@hapi/joi';
+
 export const validateCellMapping = (mapper, value) => {
     if (mapper === undefined) {
         return false;

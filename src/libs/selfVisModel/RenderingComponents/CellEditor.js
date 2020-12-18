@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
-import * as PropTypes from 'prop-types';
+import { Alert } from 'reactstrap';
 // TODO: add mouse area selection from :  import Selection from '@simonwep/selection-js';
-import SelfVisDataMode from '../SelfVisDataModel';
+import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
 import CellVE from './CellVE';
 import DropDownMapperSelector from './DropdownMapperSelector';
+import PropTypes from 'prop-types';
 
 export default class CellEditor extends Component {
     constructor(props) {
         super(props);
-        this.selfVisModel = new SelfVisDataMode(); // this access the instance of the data (its a singleton)
+        this.selfVisModel = new SelfVisDataModel(); // this access the instance of the data (its a singleton)
         this.state = { updateFlipFlop: false };
     }
 
@@ -82,9 +83,11 @@ export default class CellEditor extends Component {
     /** component rendering entrance point **/
     render() {
         return (
-            <div style={{ height: this.props.height + 'px', overflow: 'auto' }}>
-                Optionally edit cells values, valid entries are rendered in green
-                <div>{this.props.isLoading ? <div>Loading...</div> : <div>{this.createTable()} </div>}</div>
+            <div className="pt-2">
+                <Alert color="info">Optionally edit cells values, valid entries are rendered in green</Alert>
+                <div style={{ height: this.props.height + 'px', overflow: 'auto' }}>
+                    {this.props.isLoading ? <div>Loading...</div> : <div>{this.createTable()} </div>}
+                </div>
             </div>
         );
     }

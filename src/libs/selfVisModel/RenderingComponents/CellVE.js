@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
-import * as PropTypes from 'prop-types';
-import SelfVisDataMode from '../SelfVisDataModel';
-
+import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
 import Tippy from '@tippy.js/react';
-import './selfVisStyles.css';
 import {
     PropertyCellEditor,
     ContributionCell,
@@ -15,14 +12,15 @@ import {
     ContributionCellInput,
     ValueCellInput
 } from './styledComponents';
-import { validateCellMapping } from '../ValidateCellMapping.js';
+import { validateCellMapping } from 'libs/selfVisModel/ValidateCellMapping.js';
+import PropTypes from 'prop-types';
 
 //TODO: ADD a revert button on hover if the value is not original
 
 export default class CellVE extends Component {
     constructor(props) {
         super(props);
-        this.selfVisModel = new SelfVisDataMode(); // this access the instance of the data (its a singleton)
+        this.selfVisModel = new SelfVisDataModel(); // this access the instance of the data (its a singleton)
 
         let cellValue = 'undefined';
         let isValid = false;

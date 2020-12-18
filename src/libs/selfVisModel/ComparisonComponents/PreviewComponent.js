@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import * as PropTypes from 'prop-types';
-import { getStatementsBySubject } from '../../../services/backend/statements';
+import { getStatementsBySubject } from 'services/backend/statements';
 import SingleVisualizationComponent from './SingleVisualizationComponent';
-import { CLASSES, PREDICATES } from '../../../constants/graphSettings';
+import { CLASSES, PREDICATES } from 'constants/graphSettings';
 import PreviewCarouselComponent from './PreviewCarousel';
 import { getVisualization } from 'services/similarity/index';
+import PropTypes from 'prop-types';
 
 export default class PreviewComponent extends Component {
     constructor(props) {

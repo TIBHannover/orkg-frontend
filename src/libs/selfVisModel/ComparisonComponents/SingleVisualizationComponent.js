@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import * as PropTypes from 'prop-types';
 import { Chart } from 'react-google-charts';
 import styled from 'styled-components';
-import SelfVisDataModel from '../SelfVisDataModel';
+import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
+import PropTypes from 'prop-types';
 
 export default class SingleVisualizationComponent extends Component {
     constructor(props) {
