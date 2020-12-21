@@ -117,8 +117,8 @@
         "test": "react-app-rewired test --env=jsdom",
         "eject": "react-app-rewired eject",
         "flow": "flow",
-        "lint": "eslint src/**/*.{js,jsx}",
-        "lint:fix": "eslint src/**/*.{js,jsx} --fix",
+        "lint": "eslint 'src/**/*.{js,jsx}'",
+        "lint:fix": "eslint 'src/**/*.{js,jsx}' --fix",
         "version": "auto-changelog && git add CHANGELOG.md"
     },
     "devDependencies": {
