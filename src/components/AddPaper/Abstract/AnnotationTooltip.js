@@ -3,7 +3,7 @@ import AutoComplete from 'components/Autocomplete/Autocomplete';
 import { predicatesUrl } from 'services/backend/predicates';
 import { withTheme } from 'styled-components';
 import PropTypes from 'prop-types';
-import Tippy from '@tippy.js/react';
+import Tippy from '@tippyjs/react';
 import { followCursor } from 'tippy.js';
 import 'tippy.js/dist/tippy.css';
 

@@ -3,7 +3,7 @@ import { Input } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faTrash, faPen } from '@fortawesome/free-solid-svg-icons';
 import ROUTES from '../../../constants/routes';
-import Tippy from '@tippy.js/react';
+import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
 import { reverse } from 'named-urls';
 import { connect } from 'react-redux';

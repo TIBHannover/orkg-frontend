@@ -5,7 +5,7 @@ import { StyledDropdownItem, StyledButton, StyledDropdownToggle, ValueItemStyle 
 import StatementOptionButton from 'components/StatementBrowser/StatementOptionButton/StatementOptionButton';
 import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
 import defaultDatatypes from 'components/ContributionTemplates/helpers/defaultDatatypes';
-import Tippy from '@tippy.js/react';
+import Tippy from '@tippyjs/react';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPlus, faBars, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import AutoComplete from 'components/Autocomplete/Autocomplete';

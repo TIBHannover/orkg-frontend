@@ -15,7 +15,7 @@ import RequireAuthentication from 'components/RequireAuthentication/RequireAuthe
 import NotFound from 'pages/NotFound';
 import { useLocation, Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
-import Tippy from '@tippy.js/react';
+import Tippy from '@tippyjs/react';
 import ROUTES from 'constants/routes.js';
 import { connect, useSelector } from 'react-redux';
 import { resetStatementBrowser } from 'actions/statementBrowser';

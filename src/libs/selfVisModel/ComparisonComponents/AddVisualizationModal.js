@@ -8,7 +8,7 @@ import RequireAuthentication from 'components/RequireAuthentication/RequireAuthe
 import PublishVisualization from './PublishVisualization';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import Tippy from '@tippy.js/react';
+import Tippy from '@tippyjs/react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 

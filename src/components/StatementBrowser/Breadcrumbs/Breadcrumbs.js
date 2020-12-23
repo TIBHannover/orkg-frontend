@@ -7,7 +7,7 @@ import { reverse } from 'named-urls';
 import { truncate } from 'lodash';
 import ROUTES from 'constants/routes';
 import PropTypes from 'prop-types';
-import Tippy from '@tippy.js/react';
+import Tippy from '@tippyjs/react';
 
 export default function Breadcrumbs(props) {
     const handleOnClick = (id, historyIndex) => {

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
-import Tippy from '@tippy.js/react';
+import Tippy from '@tippyjs/react';
 import {
     PropertyCellEditor,
     ContributionCell,

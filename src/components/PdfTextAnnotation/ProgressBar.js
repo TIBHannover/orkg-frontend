@@ -1,6 +1,6 @@
 import React from 'react';
 import useOntology from 'components/PdfTextAnnotation/hooks/useOntology';
-import Tippy from '@tippy.js/react';
+import Tippy from '@tippyjs/react';
 import { useSelector } from 'react-redux';
 import { upperFirst, filter, meanBy } from 'lodash';
 import { Progress } from 'reactstrap';

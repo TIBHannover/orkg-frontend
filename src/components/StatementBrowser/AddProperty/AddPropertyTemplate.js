@@ -7,7 +7,7 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
 import defaultProperties from './helpers/defaultProperties';
 import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
-import Tippy from '@tippy.js/react';
+import Tippy from '@tippyjs/react';
 import PropTypes from 'prop-types';
 
 export default function AddPropertyTemplate(props) {

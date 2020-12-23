@@ -28,7 +28,7 @@ import { openAuthDialog } from 'actions/auth';
 import { CSVLink } from 'react-csv';
 import { isObject } from 'lodash';
 import { generateRdfDataVocabularyFile } from 'utils';
-import Tippy from '@tippy.js/react';
+import Tippy from '@tippyjs/react';
 import { connect } from 'react-redux';
 import { useCookies } from 'react-cookie';
 import PropTypes from 'prop-types';

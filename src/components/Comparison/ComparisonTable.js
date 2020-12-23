@@ -10,7 +10,7 @@ import TableCell from './TableCell';
 import ReactTable from 'react-table';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
-import Tippy from '@tippy.js/react';
+import Tippy from '@tippyjs/react';
 import { debounce } from 'lodash';
 import { ScrollSync, ScrollSyncPane } from 'react-scroll-sync';
 import ConditionalWrapper from 'components/Utils/ConditionalWrapper';

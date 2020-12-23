@@ -1,6 +1,6 @@
 import React from 'react';
 import { PropertyCell, ContributionCell, MetaCell, MetaMapperSelector, MetaMapperSelectorSimple, ValueCell } from './styledComponents';
-import Tippy from '@tippy.js/react';
+import Tippy from '@tippyjs/react';
 import PropTypes from 'prop-types';
 
 export default function CellRenderer(props) {

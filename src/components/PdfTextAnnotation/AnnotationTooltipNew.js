@@ -6,7 +6,7 @@ import useSuggestions from 'components/PdfTextAnnotation/hooks/useSuggestions';
 import { upperFirst, isString } from 'lodash';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
-import Tippy from '@tippy.js/react';
+import Tippy from '@tippyjs/react';
 import { Button } from 'reactstrap';
 import Select from 'react-select';
 import { toast } from 'react-toastify';

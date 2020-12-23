@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import StatementBrowserDialog from '../StatementBrowser/StatementBrowserDialog';
 import ValuePlugins from '../ValuePlugins/ValuePlugins';
-import Tippy from '@tippy.js/react';
+import Tippy from '@tippyjs/react';
 
 const Item = styled.div`
     padding-right: 10px;

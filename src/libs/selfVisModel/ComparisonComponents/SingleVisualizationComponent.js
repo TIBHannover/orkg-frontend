@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Chart } from 'react-google-charts';
 import styled from 'styled-components';
-import Tippy from '@tippy.js/react';
+import Tippy from '@tippyjs/react';
 import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
 import PropTypes from 'prop-types';
 
@@ -58,7 +58,9 @@ class SingleVisualizationComponent extends Component {
 
     /** hover over a preview card handler -- currently disabled **/
     handleMouseEnter = () => {
-        this.setState({ isHovering: true });
+        // get window dimensions to set the fullWidget into the center of the screen.
+        const width = this.getAvailableWidth();
+        this.setState({ isHovering: true, windowHeight: 0.4 * window.innerHeight, windowWidth: 0.8 * width });
     };
     handleMouseLeave = () => {
         this.setState({ isHovering: false });
@@ -72,12 +74,9 @@ class SingleVisualizationComponent extends Component {
                 <Tippy
                     onShow={this.handleMouseEnter}
                     onHide={this.handleMouseLeave}
-                    //interactive={true}
-                    flip={false}
+                    interactive={true}
                     placement="bottom"
                     theme="visualizationPreview"
-                    //trigger="click"
-                    //appendTo={document.body}
                     maxWidth={this.state.windowWidth}
                     content={
                         <div
@@ -86,7 +85,7 @@ class SingleVisualizationComponent extends Component {
                                 overflow: 'hidden',
                                 borderRadius: '4px',
                                 width: this.state.windowWidth - 20 + 'px',
-                                height: this.state.windowHeight - 50 + 'px'
+                                height: this.state.windowHeight + 'px'
                             }}
                         >
                             <DescriptionHeader>
@@ -139,9 +138,11 @@ class SingleVisualizationComponent extends Component {
     }
 }
 
-export default SingleVisualizationComponent.propTypes = {
+SingleVisualizationComponent.propTypes = {
     input: PropTypes.object,
     itemIndex: PropTypes.number,
     propagateClick: PropTypes.func,
     propagateUpdate: PropTypes.func
 };
+
+export default SingleVisualizationComponent;
