@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import * as PropTypes from 'prop-types';
-import SelfVisDataMode from '../SelfVisDataModel';
 import { Dropdown, DropdownItem, DropdownMenu, DropdownToggle } from 'reactstrap';
+import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
+import PropTypes from 'prop-types';
 
 export default class VisualizationSelector extends Component {
     constructor(props) {
@@ -18,7 +18,7 @@ export default class VisualizationSelector extends Component {
             errorCode: -1
         };
         this.supportedVisualizationMethods = ['Table', 'BarChart', 'ColumnChart', 'ScatterChart', 'LineChart'];
-        this.selfVisModel = new SelfVisDataMode(); // this access the instance of the data (its a singleton)
+        this.selfVisModel = new SelfVisDataModel(); // this access the instance of the data (its a singleton)
         this.selfVisModel.setRenderingEngine('Google-Charts'); // we only have GC at the moment;
     }
 

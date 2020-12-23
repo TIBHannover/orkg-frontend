@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
-import * as PropTypes from 'prop-types';
 import { Button } from 'reactstrap';
-import SelfVisDataMode from '../../SelfVisDataModel';
+import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
 import { createValueSelectors, createLabelSelectors, isMounted, getSelectorsState } from './HelperFunctions';
+import PropTypes from 'prop-types';
+
 class CustomizationBarChart extends Component {
     constructor(props) {
         super(props);
-        this.selfVisModel = new SelfVisDataMode(); // this access the instance of the data (its a singleton)
+        this.selfVisModel = new SelfVisDataModel(); // this access the instance of the data (its a singleton)
         this.errorCodeItem = {
             0: 'BAR_CHART_NO_STRING_TYPES_FOR_LABEL',
             1: 'BAR_CHART_NO_NUMBER_TYPES_FOR_VALUE'

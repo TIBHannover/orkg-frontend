@@ -23,7 +23,7 @@ export default class AbstractCustomizationWidget extends Component {
 
         switch (renderingMethod) {
             case 'Table': {
-                return <div> Tables dont have customizations</div>;
+                return <div> Tables don't have customizations</div>;
             }
             case 'ColumnChart': {
                 return (

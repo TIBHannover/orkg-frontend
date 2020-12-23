@@ -1,15 +1,36 @@
 import React, { Component } from 'react';
 import { Chart } from 'react-google-charts';
 import styled from 'styled-components';
+import Tippy from '@tippy.js/react';
 import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
 import PropTypes from 'prop-types';
 
-export default class SingleVisualizationComponent extends Component {
+const VisualizationCard = styled.div`
+    margin: 0 2px;
+    cursor: pointer;
+    border: ${props => (!props.isHovered ? '1px solid rgb(219,221,229)' : '1px solid #e8616169')};
+    border-radius: 5px;
+    width: 220px;
+`;
+
+const DescriptionHeader = styled.div`
+    color: white;
+    background: ${props => props.theme.primary};
+    padding: 5px;
+    text-overflow: ellipsis;
+    height: 32px;
+`;
+
+class SingleVisualizationComponent extends Component {
     constructor(props) {
         super(props);
+        // get window dimensions to set the fullWidget into the center of the screen.
+        const width = this.getAvailableWidth();
         this.state = {
             isHovering: false,
-            renderingData: undefined
+            renderingData: undefined,
+            windowHeight: 0.5 * window.innerHeight,
+            windowWidth: 0.8 * width
         };
 
         this.selfVisModel = new SelfVisDataModel();
@@ -32,14 +53,12 @@ export default class SingleVisualizationComponent extends Component {
 
     getAvailableWidth = () => {
         const item = document.getElementById('PreviewCarouselContainer');
-        return item.clientWidth;
+        return item?.clientWidth;
     };
 
     /** hover over a preview card handler -- currently disabled **/
     handleMouseEnter = () => {
-        // get window dimensions to set the fullWidget into the center of the screen.
-        const width = this.getAvailableWidth();
-        this.setState({ isHovering: true, windowHeight: 0.5 * window.innerHeight, windowWidth: 0.8 * width });
+        this.setState({ isHovering: true });
     };
     handleMouseLeave = () => {
         this.setState({ isHovering: false });
@@ -50,104 +69,79 @@ export default class SingleVisualizationComponent extends Component {
         const visMethod = this.props.input.reconstructionModel.data.visMethod;
         return (
             <>
-                <VisualizationCard
-                    onClick={() => {
-                        this.selfVisModel.applyReconstructionModel(this.props.input.reconstructionModel);
-                        this.props.propagateClick(true);
-                    }}
-                    onMouseEnter={this.handleMouseEnter}
-                    onMouseLeave={this.handleMouseLeave}
-                    isHovered={this.state.isHovering}
-                >
-                    <div style={{ padding: '5px', pointerEvents: 'none', minWidth: '200px', minHeight: '100px' }}>
-                        {this.state.renderingData && (
-                            <Chart
-                                chartType={visMethod}
-                                data={this.state.renderingData}
-                                width="200px"
-                                height="100px"
-                                options={{ showRowNumber: true }}
-                            />
-                        )}
-                    </div>
-                </VisualizationCard>
-
-                {this.state.isHovering && (
-                    <VisualizationCardFULL
-                        index={this.props.itemIndex}
-                        dimensions={{ width: this.state.windowWidth, height: this.state.windowHeight }}
-                    >
-                        <DescriptionHeader>
-                            {this.props.input.title.length > 0 ? 'Title: ' + this.props.input.title + ' | ' : ''}
-                            {this.props.input.description.length > 0 ? 'Description: ' + this.props.input.description : ''}
-                            {this.props.input.description.length === 0 &&
-                                this.props.input.title.length === 0 &&
-                                'No title and no description available'}
-                        </DescriptionHeader>
+                <Tippy
+                    onShow={this.handleMouseEnter}
+                    onHide={this.handleMouseLeave}
+                    //interactive={true}
+                    flip={false}
+                    placement="bottom"
+                    theme="visualizationPreview"
+                    //trigger="click"
+                    //appendTo={document.body}
+                    maxWidth={this.state.windowWidth}
+                    content={
                         <div
+                            index={this.props.itemIndex}
                             style={{
-                                // border: '1px solid rgb(219,221,229)',
-                                // borderTop: '0px',
-                                width: '100%',
-                                height: this.state.windowHeight + 'px'
+                                overflow: 'hidden',
+                                borderRadius: '4px',
+                                width: this.state.windowWidth - 20 + 'px',
+                                height: this.state.windowHeight - 50 + 'px'
                             }}
                         >
-                            <Chart
-                                chartType={visMethod}
-                                data={this.state.renderingData}
-                                width={this.state.windowWidth - 20 + 'px'}
-                                height={this.state.windowHeight + 'px'}
-                                options={{
-                                    showRowNumber: true,
-                                    width: '100%'
-                                }}
-                            />
+                            <DescriptionHeader>
+                                {this.props.input.title.length > 0 ? 'Title: ' + this.props.input.title + ' | ' : ''}
+                                {this.props.input.description.length > 0 ? 'Description: ' + this.props.input.description : ''}
+                                {this.props.input.description.length === 0 &&
+                                    this.props.input.title.length === 0 &&
+                                    'No title and no description available'}
+                            </DescriptionHeader>
+                            {this.state.isHovering && (
+                                <Chart
+                                    chartType={visMethod}
+                                    data={this.state.renderingData}
+                                    width={this.state.windowWidth - 20 + 'px'}
+                                    height={this.state.windowHeight + 'px'}
+                                    options={{
+                                        showRowNumber: true,
+                                        width: '100%'
+                                    }}
+                                />
+                            )}
+                            {!this.state.isHovering && (
+                                <div style={{ width: this.state.windowWidth - 20 + 'px', height: this.state.windowHeight - 50 + 'px' }} />
+                            )}
                         </div>
-                    </VisualizationCardFULL>
-                )}
+                    }
+                >
+                    <VisualizationCard
+                        onClick={() => {
+                            this.selfVisModel.applyReconstructionModel(this.props.input.reconstructionModel);
+                            this.props.propagateClick(true);
+                        }}
+                        isHovered={this.state.isHovering}
+                    >
+                        <div style={{ padding: '5px', pointerEvents: 'none', minWidth: '200px', minHeight: '100px' }}>
+                            {this.state.renderingData && (
+                                <Chart
+                                    chartType={visMethod}
+                                    data={this.state.renderingData}
+                                    width="200px"
+                                    height="100px"
+                                    options={{ showRowNumber: true }}
+                                />
+                            )}
+                        </div>
+                    </VisualizationCard>
+                </Tippy>
             </>
         );
     }
 }
 
-SingleVisualizationComponent.propTypes = {
+export default SingleVisualizationComponent.propTypes = {
     input: PropTypes.object,
     itemIndex: PropTypes.number,
     propagateClick: PropTypes.func,
     propagateUpdate: PropTypes.func
 };
-
-export const VisualizationCard = styled.div`
-    margin: 0 2px;
-    cursor: pointer;
-    border: ${props => (!props.isHovered ? '1px solid rgb(219,221,229)' : '1px solid #e8616169')};
-    border-radius: 5px;
-    width: 220px;
-`;
-export const DescriptionHeader = styled.div`
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
-    color: white;
-    background: ${props => props.theme.primary};
-    margin-top: -32px;
-    padding: 5px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    height: 32px;
-`;
-
-export const VisualizationCardFULL = styled.div`
-    position: absolute;
-    z-index: 100;
-    width: ${props => props.dimensions.width + 'px'};
-    height: ${props => props.dimensions.height + 'px'};
-    background-color: white;
-    margin: 0 2px;
-    cursor: pointer;
-    box-shadow: 0px 0px 30px grey;
-
-    padding: 0;
-    white-space: nowrap;
-    margin-left: ${props => 0.1 * props.dimensions.width + 'px'};
-    margin-top: 150px;
-`;

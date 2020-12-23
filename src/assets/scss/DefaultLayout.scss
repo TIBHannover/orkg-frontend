@@ -159,3 +159,24 @@ body {
 .ril__image.ril-image-current:not(.ril-not-loaded) {
     background: #fff;
 }
+
+// Tippy
+.tippy-tooltip.visualizationPreview-theme {
+    background-color: #fff;
+    border: 1px solid $primary;
+}
+.tippy-tooltip.visualizationPreview-theme .tippy-content {
+    padding: 0;
+}
+.tippy-tooltip.visualizationPreview-theme[data-placement^='top'] .tippy-arrow {
+    border-top-color: #fff;
+}
+.tippy-tooltip.visualizationPreview-theme[data-placement^='bottom'] .tippy-arrow {
+    border-bottom-color: $primary;
+}
+.tippy-tooltip.visualizationPreview-theme[data-placement^='left'] .tippy-arrow {
+    border-left-color: #fff;
+}
+.tippy-tooltip.visualizationPreview-theme[data-placement^='right'] .tippy-arrow {
+    border-right-color: #fff;
+}

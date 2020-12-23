@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import * as PropTypes from 'prop-types';
 import { Chart } from 'react-google-charts';
-import SelfVisDataMode from '../../SelfVisDataModel';
+import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
+import PropTypes from 'prop-types';
 
 class AbstractChartRenderer extends Component {
     constructor(props) {
         super(props);
-        this.selfVisModel = new SelfVisDataMode(); // this access the instance of the data (its a singleton)
+        this.selfVisModel = new SelfVisDataModel(); // this access the instance of the data (its a singleton)
         this.state = {
             fakeControls: [] // used to trigger an update event on the chart rendering engine
         };
