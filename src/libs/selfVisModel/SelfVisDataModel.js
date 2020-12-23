@@ -47,6 +47,20 @@ export default class SelfVisDataMode {
         return this.__customizationStateObject;
     };
 
+    getGoogleChartsData = () => {
+        if (this._renderingMethod === 'Table') {
+            return this._googleChartsData.useAllColumns();
+        } else {
+            const customizationState = { ...this.loadCustomizationState() };
+            const stateForGDC = {
+                xAxis: customizationState.xAxisSelector,
+                yAxis: customizationState.yAxisSelector,
+                yAxisIntervals: customizationState.yAxisInterValSelectors
+            };
+            return this._googleChartsData.createDataFromSelectors(stateForGDC);
+        }
+    };
+
     getReconstructionModel = () => {
         // the reconstruction model fetches the set flags and labels ;
         // get propertyAnchors;

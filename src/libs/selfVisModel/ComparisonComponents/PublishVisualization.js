@@ -83,7 +83,9 @@ function PublishVisualization(props) {
         metaVisData.orkgOrigin = resourceId;
         metaVisData.renderingEngine = currModel._renderingEngine;
         metaVisData.visMethod = currModel._renderingMethod;
+
         const reconstructionData = currModel.getReconstructionModel();
+        metaVisData.googleChartsData = currModel.getGoogleChartsData();
 
         if (reconstructionData === undefined) {
             return undefined;
