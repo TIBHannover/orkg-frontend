@@ -37,6 +37,7 @@ function useComparison() {
      * @property {String|Object} createdBy Comparison resource creator
      * @property {Array[Object]} resources Comparison related resources
      * @property {Array[Object]} figures Comparison related figures
+     * @property {Array[Object]} visualizations Comparison visualizations
      */
     /**
      * @typedef {Function} MetaDataSetter Set Metadata
@@ -135,6 +136,7 @@ function useComparison() {
                         const hasPreviousVersion = filterObjectOfStatementsByPredicate(statements, PREDICATES.HAS_PREVIOUS_VERSION, true);
                         const resources = filterObjectOfStatementsByPredicate(statements, PREDICATES.RELATED_RESOURCES, false);
                         const figures = filterObjectOfStatementsByPredicate(statements, PREDICATES.RELATED_FIGURE, false);
+                        const visualizations = filterObjectOfStatementsByPredicate(statements, PREDICATES.HAS_VISUALIZATION_DEFINITION, false);
                         // Load authors
                         let creators = filterObjectOfStatementsByPredicate(statements, PREDICATES.HAS_AUTHOR, false);
                         if (creators) {
@@ -152,7 +154,8 @@ function useComparison() {
                             references: references ? references.map(r => r.label) : [],
                             hasPreviousVersion: hasPreviousVersion,
                             resources: resources ? resources : [],
-                            figures: figures ? figures : []
+                            figures: figures ? figures : [],
+                            visualizations: visualizations ? visualizations : []
                         });
                         // TODO: replace this with ordered feature
                         // Load comparison config

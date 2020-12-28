@@ -105,7 +105,7 @@ export default class PreviewCarouselComponent extends Component {
     render() {
         return (
             <div style={{ paddingTop: '10px', height: '200px' }}>
-                <h2 className="h4 mb-1 mt-1 flex-grow-1">Chart Visualizations</h2>
+                <h2 className="h5 mb-2 mt-2">Chart Visualizations</h2>
                 <div
                     id="PreviewCarouselContainer"
                     style={{ display: 'flex', width: '100%', overflowX: 'hidden' }}
@@ -118,24 +118,24 @@ export default class PreviewCarouselComponent extends Component {
                 </div>
                 <div style={{ display: 'block', height: '35px' }}>
                     {this.state.showArrowLeft && (
-                        <span
-                            style={{ marginTop: '5px', position: 'relative', float: 'left', cursor: 'pointer' }}
+                        <button
+                            style={{ background: 'none', border: 'none', marginTop: '5px', position: 'relative', float: 'left', cursor: 'pointer' }}
                             onClick={() => {
                                 this.handleScrollLeft();
                             }}
                         >
                             <Icon icon={faArrowCircleLeft} className="text-primary" style={{ fontSize: 25 }} />
-                        </span>
+                        </button>
                     )}
                     {this.state.showArrowRight && (
-                        <span
-                            style={{ marginTop: '5px', position: 'relative', float: 'right', cursor: 'pointer' }}
+                        <button
+                            style={{ background: 'none', border: 'none', marginTop: '5px', position: 'relative', float: 'right', cursor: 'pointer' }}
                             onClick={() => {
                                 this.handleScrollRight();
                             }}
                         >
                             <Icon icon={faArrowCircleRight} className="text-primary " style={{ fontSize: 25 }} />
-                        </span>
+                        </button>
                     )}
                 </div>
             </div>

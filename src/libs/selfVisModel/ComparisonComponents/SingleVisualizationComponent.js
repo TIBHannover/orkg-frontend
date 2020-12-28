@@ -89,10 +89,10 @@ class SingleVisualizationComponent extends Component {
                             }}
                         >
                             <DescriptionHeader>
-                                {this.props.input.title.length > 0 ? 'Title: ' + this.props.input.title + ' | ' : ''}
+                                {this.props.input.label.length > 0 ? 'Title: ' + this.props.input.label + ' | ' : ''}
                                 {this.props.input.description.length > 0 ? 'Description: ' + this.props.input.description : ''}
                                 {this.props.input.description.length === 0 &&
-                                    this.props.input.title.length === 0 &&
+                                    this.props.input.label.length === 0 &&
                                     'No title and no description available'}
                             </DescriptionHeader>
                             {this.state.isHovering && (
@@ -116,7 +116,7 @@ class SingleVisualizationComponent extends Component {
                     <VisualizationCard
                         onClick={() => {
                             this.selfVisModel.applyReconstructionModel(this.props.input.reconstructionModel);
-                            this.props.propagateClick(true);
+                            this.props.expandVisualization(true);
                         }}
                         isHovered={this.state.isHovering}
                     >
@@ -141,7 +141,7 @@ class SingleVisualizationComponent extends Component {
 SingleVisualizationComponent.propTypes = {
     input: PropTypes.object,
     itemIndex: PropTypes.number,
-    propagateClick: PropTypes.func,
+    expandVisualization: PropTypes.func,
     propagateUpdate: PropTypes.func
 };
 

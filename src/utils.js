@@ -226,7 +226,7 @@ export const getPaperData = (id, label, paperStatements) => {
 };
 
 /**
- * Parse comparison statements and return a a comparison object
+ * Parse comparison statements and return a comparison object
  * @param {String} id
  * @param {String } label
  * @param {Array} comparisonStatements
@@ -265,6 +265,24 @@ export const getComparisonData = (id, label, comparisonStatements) => {
         order: order ? order.object.label : Infinity,
         type: type ? type.object.id : '',
         onHomePage: onHomePage ? true : false
+    };
+};
+
+/**
+ * Parse visualization statements and return a visualization object
+ * @param {String} id
+ * @param {String } label
+ * @param {Array} visualizationStatements
+ */
+export const getVisualizationData = (id, label, visualizationStatements) => {
+    // description
+    const description = visualizationStatements.find(statement => statement.predicate.id === PREDICATES.DESCRIPTION);
+
+    return {
+        id,
+        label,
+        created_at: description ? description.object.created_at : '',
+        description: description ? description.object.label : ''
     };
 };
 

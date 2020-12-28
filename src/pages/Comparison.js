@@ -36,7 +36,7 @@ import ExactMatch from 'assets/img/comparison-exact-match.svg';
 import IntelligentMerge from 'assets/img/comparison-intelligent-merge.svg';
 import AddVisualizationModal from 'libs/selfVisModel/ComparisonComponents/AddVisualizationModal';
 import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
-import PreviewComponent from 'libs/selfVisModel/ComparisonComponents/PreviewComponent';
+import PreviewVisualizationComparison from 'libs/selfVisModel/ComparisonComponents/PreviewVisualizationComparison';
 import { NavLink } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import env from '@beam-australia/react-env';
@@ -156,14 +156,17 @@ function Comparison(props) {
         setDropdownMethodOpen(false);
     };
 
-    const propagateTheClick = val => {
+    /**
+     * Expand a preview of a visualization
+     *
+     * @param {Boolean} val weather to use reconstructed data
+     */
+    const expandVisualization = val => {
         setUseReconstructedData(val);
-
         if (val === false) {
             const model = new SelfVisDataModel();
             model.resetCustomizationModel();
         }
-
         setShowVisualizationModal(true);
     };
 
@@ -417,11 +420,12 @@ function Comparison(props) {
                                         contributionsList,
                                         predicatesList
                                     }) && (
-                                        <PreviewComponent
+                                        <PreviewVisualizationComparison
                                             comparisonId={metaData.id}
-                                            propagateClick={propagateTheClick}
+                                            expandVisualization={expandVisualization}
                                             reloadingFlag={reloadingFlag}
                                             reloadingSizeFlag={reloadingSizeFlag}
+                                            visualizations={metaData.visualizations}
                                         />
                                     )}
 
