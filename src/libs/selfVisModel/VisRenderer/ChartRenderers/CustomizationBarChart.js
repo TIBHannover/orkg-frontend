@@ -68,7 +68,7 @@ class CustomizationBarChart extends Component {
                     <>
                         <div className="d-flex">Y-Axis:{this.createLabelSelectors()}</div>
                         <div className="d-flex">
-                            X-Axis:<div>{this.createValueSelectors()}</div>
+                            X-Axis:<div className="flex-grow-1">{this.createValueSelectors()}</div>
                         </div>
                     </>
                 )}

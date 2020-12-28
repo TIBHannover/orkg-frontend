@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Alert } from 'reactstrap';
 import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
 import CustomizationColumnChart from './ChartRenderers/CustomizationColumnChart';
 import CustomizationBarChart from './ChartRenderers/CustomizationBarChart';
@@ -23,7 +24,7 @@ export default class AbstractCustomizationWidget extends Component {
 
         switch (renderingMethod) {
             case 'Table': {
-                return <div> Tables don't have customizations</div>;
+                return <Alert color="secondary">Tables don't have customizations</Alert>;
             }
             case 'ColumnChart': {
                 return (

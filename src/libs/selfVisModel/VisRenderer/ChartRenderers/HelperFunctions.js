@@ -198,9 +198,7 @@ export const createValueSelectors = ref => {
                                 marginBottom: '5px',
                                 flexGrow: '1',
                                 display: 'flex',
-                                height: 'min-content',
-                                paddingTop: '-5px',
-                                width: '150px'
+                                maxWidth: '150px'
                             }}
                             isOpen={ref.state.yAxisSelectorOpen[id]}
                             toggle={() => {
@@ -212,7 +210,16 @@ export const createValueSelectors = ref => {
                             }}
                         >
                             <DropdownToggle caret color="darkblue">
-                                {ref.state.yAxisSelector[id] ? ref.state.yAxisSelector[id] : possibleValueCandidates[0].label}
+                                <div
+                                    style={{
+                                        maxWidth: '100px',
+                                        overflow: 'hidden',
+                                        display: 'inline-block',
+                                        lineHeight: '1.5'
+                                    }}
+                                >
+                                    {ref.state.yAxisSelector[id] ? ref.state.yAxisSelector[id] : possibleValueCandidates[0].label}
+                                </div>
                             </DropdownToggle>
                             <DropdownMenu>{itemsArray[id]}</DropdownMenu>
                         </Dropdown>
