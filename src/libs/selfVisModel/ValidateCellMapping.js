@@ -1,63 +1,29 @@
 import Joi from '@hapi/joi';
 
-export const validateCellMapping = (mapper, value) => {
+export const validateCellMapping = (mapper, cellValue) => {
     if (mapper === undefined) {
-        return false;
+        return { error: null, value: cellValue };
     }
 
     if (mapper === 'String') {
         // strings are always true
-        return true;
+        return { error: null, value: cellValue };
     }
     if (mapper === 'Number') {
-        const validationSchema = Joi.object({
-            value: Joi.number().required()
-        });
-        const res = resolver({ value: value }, validationSchema);
-        if (res.values.value) {
-            return true;
-        } else {
-            return res.errors;
-        }
+        const validationSchema = Joi.number().required();
+        return validationSchema.validate(cellValue);
     }
     if (mapper === 'Date') {
         // if this validates to number return false;
-        const numValidationSchema = Joi.object({
-            value: Joi.number().required()
-        });
-        const numRes = resolver({ value: value }, numValidationSchema);
-        if (numRes.values.value) {
-            return { value: { message: 'Value must be a valid data (YYYY-MM-DD) ' } };
+        const numValidationSchema = Joi.number().required();
+        const { error } = numValidationSchema.validate(cellValue);
+        if (!error) {
+            return { error: { message: 'Value must be a valid data (YYYY-MM-DD) ' }, value: cellValue };
         } else {
-            const validationSchema = Joi.object({
-                value: Joi.date().required()
-            });
-            const res = resolver({ value: value }, validationSchema);
-            if (res.values.value) {
-                return true;
-            } else {
-                return res.errors;
-            }
+            const validationSchema = Joi.date().required();
+            return validationSchema.validate(cellValue);
         }
     }
 
-    return false;
-};
-
-const resolver = (data, validationSchema) => {
-    const { error, value: values } = validationSchema.validate(data, {
-        abortEarly: false
-    });
-
-    return {
-        values: error ? {} : values,
-        errors: error
-            ? error.details.reduce((previous, currentError) => {
-                  return {
-                      ...previous,
-                      [currentError.path[0]]: currentError
-                  };
-              }, {})
-            : {}
-    };
+    return { error: null, value: cellValue };
 };

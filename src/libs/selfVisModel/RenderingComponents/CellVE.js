@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
+import { Button } from 'reactstrap';
 import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
-import Tippy from '@tippyjs/react';
+import { validateCellMapping } from 'libs/selfVisModel/ValidateCellMapping.js';
 import {
     PropertyCellEditor,
     ContributionCell,
@@ -12,10 +13,10 @@ import {
     ContributionCellInput,
     ValueCellInput
 } from './styledComponents';
-import { validateCellMapping } from 'libs/selfVisModel/ValidateCellMapping.js';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { faUndo } from '@fortawesome/free-solid-svg-icons';
+import Tippy from '@tippyjs/react';
 import PropTypes from 'prop-types';
-
-//TODO: ADD a revert button on hover if the value is not original
 
 export default class CellVE extends Component {
     constructor(props) {
@@ -35,10 +36,12 @@ export default class CellVE extends Component {
 
             if (mapper) {
                 // call the validator for this cell value;
-                isValid = validateCellMapping(mapper, props.data.label);
-                if (typeof isValid === 'object') {
-                    err = isValid.value.message;
+                const { error } = validateCellMapping(mapper, props.data.label);
+                if (error) {
+                    err = error.message;
                     isValid = false;
+                } else {
+                    isValid = true;
                 }
             }
         }
@@ -67,13 +70,16 @@ export default class CellVE extends Component {
         if (this.props.data && this.props.type === 'value') {
             const propertyCell = this.selfVisModel.mrrModel.propertyAnchors[this.props.data.positionPropertyAnchor];
             const mapper = propertyCell.getPropertyMapperType();
+            let isValid = false;
             if (mapper) {
                 // call the validator for this cell value;
-                let isValid = validateCellMapping(mapper, this.props.data.label);
+                const { error } = validateCellMapping(mapper, this.props.data.label);
                 let errorMessage = undefined;
-                if (typeof isValid === 'object') {
-                    errorMessage = isValid.value.message;
+                if (error) {
+                    errorMessage = error.message;
                     isValid = false;
+                } else {
+                    isValid = true;
                 }
                 const newValue = isValid;
                 const oldValue = prevState.cellValueIsValid;
@@ -92,16 +98,31 @@ export default class CellVE extends Component {
         this.setState({ cellLabelValue: event.target.value });
     };
 
+    cellUndoChange = () => {
+        this.setState({ cellLabelValue: this.props.data.originalLabel });
+        this.props.data.setLabel(this.props.data.originalLabel);
+    };
+
     render() {
         return (
             <>
                 {/*PROPERTY LABELS */}
                 {this.props.type === 'property' && this.state.renderingItem === 'text' && (
                     <Tippy
+                        interactive={true}
                         content={
-                            this.props.data.label === this.props.data.originalLabel
-                                ? this.props.data.label
-                                : this.props.data.originalLabel + '>>' + this.props.data.label
+                            <>
+                                {this.props.data.label === this.props.data.originalLabel
+                                    ? this.props.data.label
+                                    : this.props.data.originalLabel + ' >> ' + this.props.data.label}
+                                {this.props.data.label !== this.props.data.originalLabel && (
+                                    <div className="text-center">
+                                        <Button size="sm" onClick={this.cellUndoChange}>
+                                            <Icon size="sm" icon={faUndo} /> Undo
+                                        </Button>
+                                    </div>
+                                )}
+                            </>
                         }
                     >
                         <PropertyCellEditor
@@ -136,10 +157,20 @@ export default class CellVE extends Component {
                 {/*CONTRIBUTION LABELS */}
                 {this.props.type === 'contribution' && this.state.renderingItem === 'text' && (
                     <Tippy
+                        interactive={true}
                         content={
-                            this.props.data.label === this.props.data.originalLabel
-                                ? this.props.data.label
-                                : this.props.data.originalLabel + '>>' + this.props.data.label
+                            <>
+                                {this.props.data.label === this.props.data.originalLabel
+                                    ? this.props.data.label
+                                    : this.props.data.originalLabel + ' >> ' + this.props.data.label}
+                                {this.props.data.label !== this.props.data.originalLabel && (
+                                    <div className="text-center">
+                                        <Button size="sm" onClick={this.cellUndoChange}>
+                                            <Icon size="sm" icon={faUndo} /> Undo
+                                        </Button>
+                                    </div>
+                                )}
+                            </>
                         }
                     >
                         <ContributionCell
@@ -173,17 +204,27 @@ export default class CellVE extends Component {
                 {/*CELL VALUE LABELS */}
                 {this.props.type === 'value' && this.state.renderingItem === 'text' && (
                     <Tippy
+                        interactive={true}
                         content={
-                            this.state.cellValueIsValid === true
-                                ? this.props.data.label === this.props.data.originalLabel
-                                    ? this.props.data.label
-                                    : this.props.data.originalLabel + '>>' + this.props.data.label
-                                : 'ERROR:' +
-                                  this.state.errorMessage +
-                                  '  (' +
-                                  this.props.data.label +
-                                  ') >> orignial label: ' +
-                                  this.props.data.originalLabel
+                            <>
+                                {this.state.cellValueIsValid === true
+                                    ? this.props.data.label === this.props.data.originalLabel
+                                        ? this.props.data.label
+                                        : this.props.data.originalLabel + ' >> ' + this.props.data.label
+                                    : 'ERROR:' +
+                                      this.state.errorMessage +
+                                      '  (' +
+                                      this.props.data.label +
+                                      ') >> original label: ' +
+                                      this.props.data.originalLabel}
+                                {this.props.data.label !== this.props.data.originalLabel && (
+                                    <div className="text-center">
+                                        <Button size="sm" onClick={this.cellUndoChange}>
+                                            <Icon size="sm" icon={faUndo} /> Undo
+                                        </Button>
+                                    </div>
+                                )}
+                            </>
                         }
                     >
                         <ValueCellValidator

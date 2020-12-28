@@ -349,7 +349,12 @@ export default class SelfVisDataMode {
             const mapper = this.mrrModel.propertyAnchors[pos].getPropertyMapperType();
             if (mapper) {
                 // call the validator for this cell value;
-                cell.cellValueIsValid = validateCellMapping(mapper, cell.label);
+                const { error } = validateCellMapping(mapper, cell.label);
+                if (error) {
+                    cell.cellValueIsValid = false;
+                } else {
+                    cell.cellValueIsValid = true;
+                }
             }
         });
     };

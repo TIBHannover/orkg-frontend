@@ -40,7 +40,7 @@ function AddVisualizationModal(props) {
     const [processStep, setProcessStep] = useState(0);
     const [windowHeight, setWindowHeight] = useState(0);
     const [windowWidth, setWindowWidth] = useState(0);
-    const [loadedModel, setLoadedModel] = useState(null);
+    const [loadedModel, setLoadedModel] = useState(false);
     const [showPublishVisualizationDialog, setShowPublishVisualizationDialog] = useState(false);
     const prevProcessStep = usePrevious(processStep);
     const prevShowDialog = usePrevious(props.showDialog);
