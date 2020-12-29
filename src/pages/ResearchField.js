@@ -8,7 +8,6 @@ import {
     DropdownItem,
     Card,
     CardBody,
-    CardFooter,
     Row,
     Col,
     Badge,
@@ -19,13 +18,14 @@ import {
     ListGroupItem
 } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faSpinner, faEllipsisV, faAngleDoubleRight, faAngleDoubleDown } from '@fortawesome/free-solid-svg-icons';
+import { faSpinner, faEllipsisV, faAngleDoubleDown } from '@fortawesome/free-solid-svg-icons';
 import useResearchField from 'components/ResearchField/hooks/useResearchField';
 import useResearchFieldObservatories from 'components/ResearchField/hooks/useResearchFieldObservatories';
 import useResearchFieldPapers from 'components/ResearchField/hooks/useResearchFieldPapers';
 import useResearchFieldComparison from 'components/ResearchField/hooks/useResearchFieldComparison';
 import useResearchFieldProblems from 'components/ResearchField/hooks/useResearchFieldProblems';
 import ComparisonCard from 'components/ComparisonCard/ComparisonCard';
+import Breadcrumbs from 'components/Breadcrumbs/Breadcrumbs';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { reverse } from 'named-urls';
@@ -34,7 +34,7 @@ import PaperCard from 'components/PaperCard/PaperCard';
 import ROUTES from 'constants/routes';
 
 function ResearchField(props) {
-    const [researchFieldData, parentResearchFields, subResearchFields, isLoading, isFailedLoading] = useResearchField();
+    const [researchFieldData, subResearchFields, isLoading, isFailedLoading] = useResearchField();
     const [researchFieldObservatories] = useResearchFieldObservatories();
     const [papers, isLoadingPapers, hasNextPage, isLastPageReached, loadMorePapers] = useResearchFieldPapers();
     const [comparisons, isLoadingComparisons, hasNextPageComparison, isLastPageReachedComparison, loadMoreComparisons] = useResearchFieldComparison();
@@ -63,6 +63,8 @@ function ResearchField(props) {
             {!isLoading && isFailedLoading && <div className="text-center mt-4 mb-4">Failed loading the resource</div>}
             {!isLoading && !isFailedLoading && (
                 <div>
+                    <Breadcrumbs researchFieldId={researchFieldId} />
+
                     <Container className="d-flex align-items-center">
                         <h1 className="h4 mt-4 mb-4 flex-grow-1">Research field</h1>
 
@@ -82,21 +84,6 @@ function ResearchField(props) {
                             <CardBody>
                                 <h3 className="mt-4 mb-4">{researchFieldData && researchFieldData.label}</h3>
                             </CardBody>
-
-                            <CardFooter>
-                                {parentResearchFields.map((field, index) => (
-                                    <span key={field.id}>
-                                        {index !== parentResearchFields.length - 1 ? (
-                                            <Link to={reverse(ROUTES.RESEARCH_FIELD, { researchFieldId: field.id })}>
-                                                {index === 0 ? 'Main' : field.label}
-                                            </Link>
-                                        ) : (
-                                            field.label
-                                        )}
-                                        {index !== parentResearchFields.length - 1 && <Icon className="ml-2 mr-2" icon={faAngleDoubleRight} />}
-                                    </span>
-                                ))}
-                            </CardFooter>
                         </Card>
 
                         <Row className="mt-3">

@@ -4,9 +4,9 @@ import { getStatementsBySubjects } from 'services/backend/statements';
 import { Card, CardImg, CardColumns } from 'reactstrap';
 import Lightbox from 'react-image-lightbox';
 import 'react-image-lightbox/style.css';
-import { find, isString } from 'lodash';
 import styled from 'styled-components';
-import { PREDICATES } from 'constants/graphSettings';
+import { isString } from 'lodash';
+import { getRelatedFiguresData } from 'utils';
 import { useLocation } from 'react-router';
 
 const CardStyled = styled(Card)`
@@ -53,18 +53,7 @@ const RelatedFigures = props => {
                 ids: props.figureStatements.map(resource => resource.id)
             })
                 .then(figuresStatements => {
-                    const _figures = figuresStatements.map(figureStatements => {
-                        const figureTitle = find(props.figureStatements, { id: figureStatements.id });
-                        const imageStatement = figureStatements.statements.find(statement => statement.predicate.id === PREDICATES.IMAGE);
-                        const descriptionStatement = figureStatements.statements.find(statement => statement.predicate.id === PREDICATES.DESCRIPTION);
-                        return {
-                            src: imageStatement ? imageStatement.object.label : '',
-                            title: figureTitle.label,
-                            description: descriptionStatement ? descriptionStatement.object.label : '',
-                            id: figureStatements.id
-                        };
-                    });
-                    setFigures(_figures);
+                    setFigures(getRelatedFiguresData(figuresStatements));
                 })
                 .catch(err => {
                     console.log(err);
@@ -95,16 +84,16 @@ const RelatedFigures = props => {
             <>
                 <h3 className="mt-5 h5">Related figures</h3>{' '}
                 <CardColumns>
-                    {figures.map((url, index) => (
-                        <span key={`figure${index}`} ref={scrollTo} id={url.id}>
+                    {figures.map((figure, index) => (
+                        <span key={`figure${figure.figureId}`} ref={scrollTo} id={figure.figureId}>
                             <CardStyled onClick={() => openLightBox(index)}>
                                 <CardImg
-                                    id={url.id}
+                                    id={figure.figureId}
                                     top
                                     width="100%"
-                                    src={url.src}
-                                    alt={`figure #${url.id}`}
-                                    className={location.hash === '#' + url.id ? 'blink-figure' : ''}
+                                    src={figure.src}
+                                    alt={`figure #${figure.figureId}`}
+                                    className={location.hash === '#' + figure.figureId ? 'blink-figure' : ''}
                                 />
                             </CardStyled>
                         </span>

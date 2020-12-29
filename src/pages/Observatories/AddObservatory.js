@@ -157,7 +157,11 @@ class AddObservatory extends Component {
                                 </div>
                             ) : (
                                 <>
-                                    <Button color="link" className="p-0 mb-2 mt-2 clearfix" onClick={() => this.props.openAuthDialog('signin')}>
+                                    <Button
+                                        color="link"
+                                        className="p-0 mb-2 mt-2 clearfix"
+                                        onClick={() => this.props.openAuthDialog({ action: 'signin' })}
+                                    >
                                         <Icon className="mr-1" icon={faUser} /> Sign in to create an observatory
                                     </Button>
                                 </>
@@ -175,7 +179,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    openAuthDialog: action => dispatch(openAuthDialog(action))
+    openAuthDialog: payload => dispatch(openAuthDialog(payload))
 });
 
 AddObservatory.propTypes = {

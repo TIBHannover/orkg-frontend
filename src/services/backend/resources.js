@@ -81,11 +81,12 @@ export const getResourcesByClass = async ({
     q = null,
     creator = null,
     exact = false,
+    verified = null,
     returnContent = false
 }) => {
     const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
     const params = queryString.stringify(
-        { page, size, sort, creator, exact, ...(q ? { q } : {}) },
+        { page, size, sort, desc, creator, exact, ...(q ? { q } : {}), verified },
         {
             skipNull: true,
             skipEmptyString: true
@@ -95,6 +96,5 @@ export const getResourcesByClass = async ({
     const resources = await submitGetRequest(`${classesUrl}${encodeURIComponent(id)}/resources/?${params}`).then(res =>
         returnContent ? res.content : res
     );
-
     return resources;
 };

@@ -242,7 +242,9 @@ class ResearchFieldCards extends Component {
                                 <ul className="mt-3">
                                     {this.state.papers.map((paper, index) => (
                                         <li key={index}>
-                                            <Link to={reverse(ROUTES.VIEW_PAPER, { resourceId: paper.subject.id })}>{paper.subject.label}</Link>
+                                            <Link to={reverse(ROUTES.VIEW_PAPER, { resourceId: paper.subject.id })}>
+                                                {paper.subject.label ? paper.subject.label : <i>No title</i>}
+                                            </Link>
                                         </li>
                                     ))}
                                 </ul>

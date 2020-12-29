@@ -43,14 +43,16 @@ export default function ProvenanceBox(props) {
                                         <StyledItemProvenanceBox>
                                             <b style={{ textTransform: 'uppercase' }}>{props.observatoryInfo.name}</b>
                                             <br />
-                                            <Link to={reverse(ROUTES.ORGANIZATION, { id: props.observatoryInfo.organization.id })}>
-                                                <img
-                                                    style={{ marginTop: 8, marginBottom: 8, maxWidth: '80%', height: 'auto' }}
-                                                    className="mx-auto d-block"
-                                                    src={props.observatoryInfo.organization.logo}
-                                                    alt=""
-                                                />
-                                            </Link>
+                                            {props.observatoryInfo.organization && props.observatoryInfo.organization.id && (
+                                                <Link to={reverse(ROUTES.ORGANIZATION, { id: props.observatoryInfo.organization.id })}>
+                                                    <img
+                                                        style={{ marginTop: 8, marginBottom: 8, maxWidth: '80%', height: 'auto' }}
+                                                        className="mx-auto d-block"
+                                                        src={props.observatoryInfo.organization.logo}
+                                                        alt=""
+                                                    />
+                                                </Link>
+                                            )}
                                             {/* <p> */}
                                             {/* <Link to={reverse(ROUTES.ORGANIZATION, { id: props.observatoryInfo.organization.id })}> */}
                                             {/* {props.observatoryInfo.organization.name} */}
@@ -105,31 +107,38 @@ export default function ProvenanceBox(props) {
                                                     <StyledActivity key={`prov-${contributor.id}`} className="pl-3 pb-3">
                                                         <div className="time">{moment(contributor.createdAt).format('DD MMM YYYY')}</div>
                                                         <div>
-                                                            {contributor.created_by.display_name ===
-                                                                props.observatoryInfo.created_by.display_name && (
-                                                                <>
-                                                                    Added by{' '}
-                                                                    <Link to={reverse(ROUTES.USER_PROFILE, { userId: contributor.created_by.id })}>
-                                                                        <b>{contributor.created_by.display_name}</b>
-                                                                    </Link>
-                                                                </>
-                                                            )}
-
-                                                            {contributor.created_by.display_name !==
-                                                                props.observatoryInfo.created_by.display_name && (
-                                                                <>
-                                                                    Updated by{' '}
-                                                                    {contributor.created_by.id !== MISC.UNKNOWN_ID ? (
+                                                            {props.observatoryInfo.created_by !== null &&
+                                                                contributor.created_by.display_name ===
+                                                                    props.observatoryInfo.created_by.display_name && (
+                                                                    <>
+                                                                        Added by{' '}
                                                                         <Link
                                                                             to={reverse(ROUTES.USER_PROFILE, { userId: contributor.created_by.id })}
                                                                         >
                                                                             <b>{contributor.created_by.display_name}</b>
                                                                         </Link>
-                                                                    ) : (
-                                                                        <b>{contributor.created_by.display_name}</b>
-                                                                    )}
-                                                                </>
-                                                            )}
+                                                                    </>
+                                                                )}
+
+                                                            {props.observatoryInfo.created_by !== null &&
+                                                                contributor.created_by &&
+                                                                contributor.created_by.display_name !==
+                                                                    props.observatoryInfo.created_by.display_name && (
+                                                                    <>
+                                                                        Updated by{' '}
+                                                                        {contributor.created_by.id !== MISC.UNKNOWN_ID ? (
+                                                                            <Link
+                                                                                to={reverse(ROUTES.USER_PROFILE, {
+                                                                                    userId: contributor.created_by.id
+                                                                                })}
+                                                                            >
+                                                                                <b>{contributor.created_by.display_name}</b>
+                                                                            </Link>
+                                                                        ) : (
+                                                                            <b>{contributor.created_by.display_name}</b>
+                                                                        )}
+                                                                    </>
+                                                                )}
                                                         </div>
                                                     </StyledActivity>
                                                 );

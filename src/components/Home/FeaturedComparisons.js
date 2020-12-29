@@ -1,204 +1,149 @@
-import React, { Component } from 'react';
-import { Carousel, CarouselItem, CarouselIndicators } from 'reactstrap';
+import React, { useState, useEffect } from 'react';
+import { ListGroup, ListGroupItem, Button, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import ROUTES from 'constants/routes.js';
 import { getStatementsBySubjects } from 'services/backend/statements';
 import { getResourcesByClass } from 'services/backend/resources';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faStar } from '@fortawesome/free-solid-svg-icons';
 import Dotdotdot from 'react-dotdotdot';
-import styled from 'styled-components';
-import { sortMethod } from 'utils';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { reverse } from 'named-urls';
-import ContentLoader from 'react-content-loader';
-import { PREDICATES, CLASSES } from 'constants/graphSettings';
+import { sortMethod, getComparisonData } from 'utils';
+import { find } from 'lodash';
+import { CLASSES } from 'constants/graphSettings';
 
-const CarouselContainer = styled.div`
-    width: 100%;
+export default function FeaturedComparisons() {
+    const [comparisons, setComparisons] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
+    const [filter, setFilter] = useState('featured');
+    const [dropdownOpen, setOpen] = useState(false);
 
-    & li {
-        width: 10px !important;
-        height: 10px !important;
-        border-radius: 100% !important;
-        background-color: ${props => props.theme.orkgPrimaryColor} !important;
-    }
-`;
+    const toggle = () => setOpen(!dropdownOpen);
 
-const CarouselItemStyled = styled(CarouselItem)`
-    border-left: 4px solid ${props => props.theme.orkgPrimaryColor};
-`;
-
-const DescriptionPreview = styled.div`
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    font-style: italic;
-`;
-
-class FeaturedComparisons extends Component {
-    state = {
-        loading: false,
-        comparisons: [],
-        activeIndex: 0,
-        animating: false
-    };
-    componentDidMount = () => {
-        document.title = 'Featured comparisons - ORKG';
-
-        this.getFeaturedComparisons();
-    };
-
-    getFeaturedComparisons = async () => {
-        this.setState({
-            loading: true
-        });
-
+    const getFeaturedComparisons = async () => {
+        setIsLoading(true);
         const responseJson = await getResourcesByClass({
             id: CLASSES.FEATURED_COMPARISON,
             sortBy: 'created_at',
             desc: false,
             returnContent: true
         });
+        const ids = responseJson.map(comparison => comparison.id);
+        getStatementsBySubjects({
+            ids
+        })
+            .then(comparisonsStatements => {
+                let comparisons = comparisonsStatements.map(comparisonStatements => {
+                    const resourceSubject = find(responseJson, { id: comparisonStatements.id });
+                    return getComparisonData(
+                        comparisonStatements.id,
+                        comparisonStatements && resourceSubject.label ? resourceSubject.label : 'No Title',
+                        comparisonStatements.statements
+                    );
+                });
+
+                // order featured comparison on show only that have onHomePage predicate
+                comparisons = comparisons.filter(c => c.onHomePage).sort((c1, c2) => sortMethod(c1.order, c2.order));
+                setComparisons(comparisons);
+                setIsLoading(false);
+            })
+            .catch(() => {
+                setComparisons([]);
+                setIsLoading(false);
+            });
+    };
+
+    const getLatestComparisons = async () => {
+        setIsLoading(true);
+
+        const responseJson = await getResourcesByClass({
+            id: CLASSES.COMPARISON,
+            sortBy: 'created_at',
+            desc: true,
+            items: 8
+        });
 
         const ids = responseJson.map(comparison => comparison.id);
-        const comparisonStatements = await getStatementsBySubjects({
+        getStatementsBySubjects({
             ids
-        });
-
-        let comparisons = [];
-        for (const comparison of responseJson) {
-            let description = '';
-            let icon = '';
-            const url = '';
-            let type = '';
-            let order = Infinity;
-            let onHomepage = false;
-
-            for (const comparisonStatement of comparisonStatements) {
-                if (comparisonStatement.id === comparison.id) {
-                    const onHomepageStatement = comparisonStatement.statements.filter(statement => statement.predicate.id === PREDICATES.ON_HOMEPAGE);
-                    onHomepage = onHomepageStatement.length > 0 ? true : false;
-
-                    const descriptionStatement = comparisonStatement.statements.filter(
-                        statement => statement.predicate.id === PREDICATES.DESCRIPTION
+        })
+            .then(comparisonsStatements => {
+                const comparisons = comparisonsStatements.map(comparisonStatements => {
+                    const resourceSubject = find(responseJson, { id: comparisonStatements.id });
+                    return getComparisonData(
+                        comparisonStatements.id,
+                        comparisonStatements && resourceSubject.label ? resourceSubject.label : 'No Title',
+                        comparisonStatements.statements
                     );
-                    description = descriptionStatement.length > 0 ? descriptionStatement[0].object.label : '';
+                });
 
-                    const iconStatement = comparisonStatement.statements.filter(statement => statement.predicate.id === PREDICATES.ICON);
-                    icon = iconStatement.length > 0 ? iconStatement[0].object.label : '';
-
-                    const typeStatement = comparisonStatement.statements.filter(statement => statement.predicate.id === PREDICATES.TYPE);
-                    type = typeStatement.length > 0 ? typeStatement[0].object.id : '';
-
-                    const orderStatement = comparisonStatement.statements.filter(statement => statement.predicate.id === PREDICATES.ORDER);
-                    order = orderStatement.length > 0 ? orderStatement[0].object.label : Infinity;
-                }
-            }
-
-            if (!onHomepage) {
-                continue;
-            }
-
-            comparisons.push({
-                label: comparison.label,
-                id: comparison.id,
-                description,
-                url,
-                icon,
-                type,
-                order
+                setComparisons(comparisons);
+                setIsLoading(false);
+            })
+            .catch(() => {
+                setComparisons([]);
+                setIsLoading(false);
             });
+    };
+
+    useEffect(() => {
+        if (filter === 'featured') {
+            getFeaturedComparisons();
+        } else {
+            getLatestComparisons();
         }
+    }, [filter]);
 
-        // order featured comparison
-        comparisons = comparisons.sort((c1, c2) => sortMethod(c1.order, c2.order));
+    useEffect(() => {
+        getFeaturedComparisons();
+    }, []);
 
-        this.setState({
-            comparisons,
-            loading: false
-        });
-    };
-
-    next = () => {
-        if (this.state.animating) {
-            return;
-        }
-        const nextIndex = this.state.activeIndex === this.state.comparisons.length - 1 ? 0 : this.state.activeIndex + 1;
-        this.setState({ activeIndex: nextIndex });
-    };
-
-    previous = () => {
-        if (this.state.animating) {
-            return;
-        }
-        const nextIndex = this.state.activeIndex === 0 ? this.state.comparisons.length - 1 : this.state.activeIndex - 1;
-        this.setState({ activeIndex: nextIndex });
-    };
-
-    goToIndex = newIndex => {
-        this.setState({ activeIndex: newIndex });
-    };
-
-    slides = () => {
-        return this.state.comparisons.map((comparison, index) => {
-            return (
-                <CarouselItemStyled
-                    onExiting={() => this.setState({ animating: true })}
-                    onExited={() => this.setState({ animating: false })}
-                    className="pt-4 pb-1 pl-4 pr-4"
-                    key={`fp${comparison.id}`}
-                >
-                    <div style={{ minHeight: '120px' }} className="d-flex">
-                        <div>
-                            <h5>
-                                <Link className="" to={reverse(ROUTES.COMPARISON, { comparisonId: comparison.id })}>
-                                    <Dotdotdot clamp={2}>{comparison.label}</Dotdotdot>
-                                </Link>
-                            </h5>
-                            <DescriptionPreview>{comparison.description}</DescriptionPreview>
-                        </div>
-                    </div>
-                </CarouselItemStyled>
-            );
-        });
-    };
-
-    render() {
-        return (
-            <div className="box rounded-lg" style={{ overflow: 'hidden' }}>
-                <h2
-                    className="h5"
-                    style={{
-                        marginBottom: 0,
-                        padding: '15px'
-                    }}
-                >
-                    <Icon icon={faStar} className="text-primary" /> Featured paper comparisons
-                    <Link to={ROUTES.FEATURED_COMPARISONS}>
-                        <span style={{ fontSize: '0.9rem', float: 'right', marginTop: 2, marginBottom: 15 }}>More comparisons</span>
-                    </Link>
-                </h2>
-
-                <CarouselContainer>
-                    {!this.state.loading ? (
-                        <Carousel activeIndex={this.state.activeIndex} next={this.next} previous={this.previous}>
-                            {this.slides()}
-                            <CarouselIndicators items={this.state.comparisons} activeIndex={this.state.activeIndex} onClickHandler={this.goToIndex} />
-                        </Carousel>
-                    ) : (
-                        <div style={{ height: '130px' }} className="pt-4 pb-1 pl-4 pr-4">
-                            <ContentLoader speed={2} primaryColor="#f3f3f3" secondaryColor="#ecebeb" ariaLabel={false}>
-                                <rect x="1" y="0" rx="4" ry="4" width="300" height="20" />
-                                <rect x="1" y="25" rx="3" ry="3" width="250" height="20" />
-                            </ContentLoader>
-                        </div>
-                    )}
-                </CarouselContainer>
+    return (
+        <div className="pl-3 pr-3 pt-2 pb-3">
+            <div className="d-flex justify-content-end mb-2">
+                <ButtonDropdown size="sm" isOpen={dropdownOpen} toggle={toggle}>
+                    <DropdownToggle caret color="lightblue">
+                        {filter === 'featured' && 'Featured'}
+                        {filter === 'latest' && 'Latest'}
+                    </DropdownToggle>
+                    <DropdownMenu right>
+                        <DropdownItem onClick={() => setFilter('featured')}>Featured</DropdownItem>
+                        <DropdownItem onClick={() => setFilter('latest')}>Latest</DropdownItem>
+                    </DropdownMenu>
+                </ButtonDropdown>
             </div>
-        );
-    }
-}
+            {!isLoading ? (
+                comparisons.length > 0 ? (
+                    <>
+                        <ListGroup>
+                            {comparisons.map((comparison, index) => (
+                                <ListGroupItem key={index} className="p-0 m-0 mb-2" style={{ border: 0 }}>
+                                    <Link to={reverse(ROUTES.COMPARISON, { comparisonId: comparison.id })}>
+                                        {comparison.label ? comparison.label : <em>No title</em>}
+                                    </Link>
+                                    <div style={{ fontSize: '13px' }} className="text-muted">
+                                        <Dotdotdot clamp={3}>{comparison.description}</Dotdotdot>
+                                    </div>
+                                </ListGroupItem>
+                            ))}
+                        </ListGroup>
 
-export default FeaturedComparisons;
+                        <div className="text-center">
+                            <Link to={filter === 'featured' ? ROUTES.FEATURED_COMPARISONS : ROUTES.COMPARISONS}>
+                                <Button color="primary" className="mr-3" size="sm">
+                                    View more
+                                </Button>
+                            </Link>
+                        </div>
+                    </>
+                ) : (
+                    <div className="text-center">{filter === 'featured' ? 'No featured comparison found' : 'No published comparison found'}</div>
+                )
+            ) : (
+                <div className="text-center">
+                    <Icon icon={faSpinner} spin /> Loading
+                </div>
+            )}
+        </div>
+    );
+}

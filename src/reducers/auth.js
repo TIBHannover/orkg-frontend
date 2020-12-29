@@ -4,7 +4,8 @@ const initialState = {
     dialogIsOpen: false,
     action: 'signin',
     user: 0, // possible values: 0 (to differentiate first load from non-signedin but stay falsy), null (non signedin), or object (signedin)
-    signInRequired: null
+    signInRequired: null,
+    redirectRoute: null
 };
 
 export default (state = initialState, action) => {
@@ -27,14 +28,16 @@ export default (state = initialState, action) => {
                 ...state,
                 dialogIsOpen: true,
                 action: payload.action,
-                signInRequired: payload.signInRequired
+                signInRequired: payload.signInRequired,
+                redirectRoute: payload.redirectRoute
             };
         }
 
         case type.TOGGLE_AUTHENTICATION_DIALOG: {
             return {
                 ...state,
-                dialogIsOpen: !state.dialogIsOpen
+                dialogIsOpen: !state.dialogIsOpen,
+                redirectRoute: !state.dialogIsOpen ? state.redirectRoute : null // reset redirectRoute on close
             };
         }
 

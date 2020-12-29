@@ -6,7 +6,7 @@ import { getPaperByDOI } from 'services/backend/misc';
 import { getResourcesByClass } from 'services/backend/resources';
 import { getResource } from 'services/backend/resources';
 import { getPredicate, getPredicates, createPredicate } from 'services/backend/predicates';
-import { saveFullPaper } from 'services/backend/misc';
+import { saveFullPaper } from 'services/backend/papers';
 import { toast } from 'react-toastify';
 
 const PREDEFINED_COLUMNS = [
