@@ -25,7 +25,8 @@ export default function FeaturedPapers() {
             id: paperFilter === 'featured' ? CLASSES.FEATURED_PAPER : CLASSES.PAPER,
             sortBy: 'created_at',
             desc: false,
-            items: 10
+            items: 10,
+            returnContent: true
         });
         const ids = responseJson.map(paper => paper.id);
         getStatementsBySubjects({
