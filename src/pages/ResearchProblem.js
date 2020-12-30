@@ -46,8 +46,8 @@ function ResearchProblem(props) {
                         <StatementBrowserDialog
                             show={editMode}
                             toggleModal={() => setEditMode(v => !v)}
-                            resourceId={researchProblemId}
-                            resourceLabel={researchProblemData.label}
+                            id={researchProblemId}
+                            label={researchProblemData.label}
                             enableEdit={true}
                             syncBackend={true}
                         />

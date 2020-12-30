@@ -1,22 +1,20 @@
-import React, { Component } from 'react';
-import { ReactTableWrapper, Properties, PropertiesInner, ItemHeader, ItemHeaderInner, Contribution, Delete, ScrollButton } from './styled';
+import { faArrowCircleLeft, faArrowCircleRight, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faTimes, faArrowCircleRight, faArrowCircleLeft } from '@fortawesome/free-solid-svg-icons';
-import { Link } from 'react-router-dom';
-import { reverse } from 'named-urls';
-import ROUTES from 'constants/routes';
-import capitalize from 'capitalize';
-import TableCell from './TableCell';
-import ReactTable from 'react-table';
 import classNames from 'classnames';
+import PropertyValue from 'components/Comparison/PropertyValue';
+import ROUTES from 'constants/routes';
+import { debounce, functions, isEqual, omit } from 'lodash';
+import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
-import Tippy from '@tippy.js/react';
-import { debounce } from 'lodash';
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import { ScrollSync, ScrollSyncPane } from 'react-scroll-sync';
-import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
+import ReactTable from 'react-table';
 import withFixedColumnsScrollEvent from 'react-table-hoc-fixed-columns';
 import 'react-table-hoc-fixed-columns/lib/styles.css'; // important: this line must be placed after react-table css import
-import { isEqual, omit, functions } from 'lodash';
+import { Contribution, Delete, ItemHeader, ItemHeaderInner, Properties, PropertiesInner, ReactTableWrapper, ScrollButton } from './styled';
+import TableCell from './TableCell';
+
 const ReactTableFixedColumns = withFixedColumnsScrollEvent(ReactTable);
 
 class ComparisonTable extends Component {
@@ -216,19 +214,7 @@ class ComparisonTable extends Component {
                                         !this.props.transpose ? (
                                             <Properties className="columnProperty">
                                                 <PropertiesInner cellPadding={cellPadding}>
-                                                    <ConditionalWrapper
-                                                        condition={props.value.similar && props.value.similar.length > 0}
-                                                        wrapper={children => (
-                                                            <Tippy
-                                                                content={`This property is merged with : ${props.value.similar.join(', ')}`}
-                                                                arrow={true}
-                                                            >
-                                                                <span>{children}*</span>
-                                                            </Tippy>
-                                                        )}
-                                                    >
-                                                        {capitalize(props.value.label)}
-                                                    </ConditionalWrapper>
+                                                    <PropertyValue similar={props.value.similar} label={props.value.label} id={props.value.id} />
                                                 </PropertiesInner>
                                             </Properties>
                                         ) : (
@@ -307,19 +293,7 @@ class ComparisonTable extends Component {
                                                   Header: props => (
                                                       <ItemHeader key={`property${property.id}`}>
                                                           <ItemHeaderInner transpose={this.props.transpose}>
-                                                              <ConditionalWrapper
-                                                                  condition={property.similar && property.similar.length > 0}
-                                                                  wrapper={children => (
-                                                                      <Tippy
-                                                                          content={`This property is merged with : ${property.similar.join(', ')}`}
-                                                                          arrow={true}
-                                                                      >
-                                                                          <span>{children}*</span>
-                                                                      </Tippy>
-                                                                  )}
-                                                              >
-                                                                  {capitalize(property.label)}
-                                                              </ConditionalWrapper>
+                                                              <PropertyValue similar={property.similar} label={property.label} id={property.id} />
                                                           </ItemHeaderInner>
                                                       </ItemHeader>
                                                   ),
