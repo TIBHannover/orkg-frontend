@@ -15,17 +15,17 @@ import PropTypes from 'prop-types';
 
 export default function Statements(props) {
     useEffect(() => {
-        if (props.initialResourceId) {
+        if (props.initialSubjectId) {
             if (props.newStore) {
                 props.initializeWithoutContribution({
-                    resourceId: props.initialResourceId,
-                    label: props.initialResourceLabel,
+                    resourceId: props.initialSubjectId,
+                    label: props.initialSubjectLabel,
                     rootNodeType: props.rootNodeType
                 });
             } else {
                 props.initializeWithResource({
-                    resourceId: props.initialResourceId,
-                    label: props.initialResourceLabel
+                    resourceId: props.initialSubjectId,
+                    label: props.initialSubjectLabel
                 });
             }
             props.updateSettings({
@@ -174,8 +174,8 @@ Statements.propTypes = {
 
     enableEdit: PropTypes.bool.isRequired,
     openExistingResourcesInDialog: PropTypes.bool,
-    initialResourceId: PropTypes.string,
-    initialResourceLabel: PropTypes.string,
+    initialSubjectId: PropTypes.string,
+    initialSubjectLabel: PropTypes.string,
     syncBackend: PropTypes.bool.isRequired,
     newStore: PropTypes.bool,
     templatesFound: PropTypes.bool,
@@ -187,8 +187,8 @@ Statements.propTypes = {
 
 Statements.defaultProps = {
     openExistingResourcesInDialog: false,
-    initialResourceId: null,
-    initialResourceLabel: null,
+    initialSubjectId: null,
+    initialSubjectLabel: null,
     syncBackend: false,
     newStore: false,
     templatesFound: false,
