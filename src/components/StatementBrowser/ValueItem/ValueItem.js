@@ -269,8 +269,8 @@ export default function ValueItem(props) {
                 <StatementBrowserDialog
                     show={modal}
                     toggleModal={() => setModal(prev => !prev)}
-                    resourceId={dialogResourceId}
-                    resourceLabel={dialogResourceLabel}
+                    id={dialogResourceId}
+                    label={dialogResourceLabel}
                     newStore={Boolean(props.contextStyle === 'StatementBrowser' || existingResourceId)}
                     enableEdit={props.enableEdit && props.contextStyle !== 'StatementBrowser' && !existingResourceId}
                 />

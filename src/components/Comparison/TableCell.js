@@ -105,8 +105,8 @@ class TableCell extends Component {
                     <StatementBrowserDialog
                         show={this.state.modal}
                         toggleModal={() => this.toggle('modal')}
-                        resourceId={this.state.dialogResourceId}
-                        resourceLabel={this.state.dialogResourceLabel}
+                        id={this.state.dialogResourceId}
+                        label={this.state.dialogResourceLabel}
                     />
                 )}
             </>

@@ -38,23 +38,21 @@ class StatementBrowserDialog extends Component {
             >
                 <ModalHeader toggle={this.props.toggleModal}>
                     <span style={{ marginRight: 170, display: 'inline-block' }}>
-                        {this.props.newStore ? (
-                            <>View existing resource: {this.props.resourceLabel}</>
-                        ) : (
-                            <>View resource: {this.props.resourceLabel}</>
-                        )}
+                        {this.props.newStore
+                            ? `View existing ${this.props.type}: ${this.props.label}`
+                            : `View ${this.props.type}: ${this.props.label}`}
                     </span>
                     {this.props.newStore && (
                         <Link
                             style={{ right: 45, position: 'absolute', top: 12 }}
-                            title="Go to resource page"
+                            title={`Go to ${this.props.type} page`}
                             className="ml-2"
-                            to={reverse(ROUTES.RESOURCE, { id: this.props.resourceId })}
+                            to={reverse(this.props.type === 'resource' ? ROUTES.RESOURCE : ROUTES.PREDICATE, { id: this.props.id })}
                             target="_blank"
                             rel="noopener noreferrer"
                         >
                             <Button color="link" className="p-0">
-                                Open resource <Icon icon={faExternalLinkAlt} className="mr-1" />
+                                Open {this.props.type} <Icon icon={faExternalLinkAlt} className="mr-1" />
                             </Button>
                         </Link>
                     )}
@@ -63,19 +61,21 @@ class StatementBrowserDialog extends Component {
                     {this.props.newStore ? (
                         <Provider store={this.store}>
                             <Statements
+                                rootNodeType={this.props.type === 'resource' ? 'resource' : 'predicate'}
                                 enableEdit={this.props.enableEdit}
                                 syncBackend={this.props.syncBackend}
-                                initialResourceId={this.props.resourceId}
-                                initialResourceLabel={this.props.resourceLabel}
+                                initialSubjectId={this.props.id}
+                                initialSubjectLabel={this.props.label}
                                 newStore={this.props.newStore}
                                 openExistingResourcesInDialog={false}
                             />
                         </Provider>
                     ) : (
                         <Statements
+                            rootNodeType={this.props.type === 'resource' ? 'resource' : 'predicate'}
                             enableEdit={this.props.enableEdit}
-                            initialResourceId={this.props.resourceId}
-                            initialResourceLabel={this.props.resourceLabel}
+                            initialSubjectId={this.props.id}
+                            initialSubjectLabel={this.props.label}
                             openExistingResourcesInDialog={false}
                             newStore={this.props.newStore}
                         />
@@ -88,21 +88,23 @@ class StatementBrowserDialog extends Component {
 }
 
 StatementBrowserDialog.propTypes = {
-    resourceLabel: PropTypes.string.isRequired,
-    resourceId: PropTypes.string.isRequired,
+    label: PropTypes.string.isRequired,
+    id: PropTypes.string.isRequired,
     show: PropTypes.bool.isRequired,
     toggleModal: PropTypes.func.isRequired,
     newStore: PropTypes.bool.isRequired,
     enableEdit: PropTypes.bool.isRequired,
     syncBackend: PropTypes.bool.isRequired,
     openExistingResourcesInDialog: PropTypes.bool.isRequired,
-    updateSettings: PropTypes.func.isRequired
+    updateSettings: PropTypes.func.isRequired,
+    type: PropTypes.string
 };
 
 StatementBrowserDialog.defaultProps = {
     newStore: true,
     enableEdit: false,
-    syncBackend: false
+    syncBackend: false,
+    type: 'resource'
 };
 
 const mapStateToProps = state => {

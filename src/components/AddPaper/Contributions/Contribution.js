@@ -67,8 +67,8 @@ class Contribution extends Component {
                                 enableEdit={true}
                                 syncBackend={false}
                                 openExistingResourcesInDialog={false}
-                                initialResourceId={this.props.resourceId}
-                                initialResourceLabel={this.props.resourceLabel}
+                                initialSubjectId={this.props.resourceId}
+                                initialSubjectLabel={this.props.resourceLabel}
                                 templatesFound={false}
                             />
                         </FormGroup>

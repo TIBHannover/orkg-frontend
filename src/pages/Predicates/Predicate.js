@@ -89,8 +89,8 @@ function Predicate(props) {
                                     enableEdit={editMode}
                                     syncBackend={editMode}
                                     openExistingResourcesInDialog={false}
-                                    initialResourceId={props.match.params.id}
-                                    initialResourceLabel={label}
+                                    initialSubjectId={props.match.params.id}
+                                    initialSubjectLabel={label}
                                     newStore={true}
                                     propertiesAsLinks={true}
                                     resourcesAsLinks={true}

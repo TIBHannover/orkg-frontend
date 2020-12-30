@@ -132,7 +132,7 @@ function Publish(props) {
             } else {
                 // Author resource exists
                 if (author.label !== author.id) {
-                    const authorStatement = await createResourceStatement(this.props.viewPaper.paperResourceId, PREDICATES.HAS_AUTHOR, author.id);
+                    const authorStatement = await createResourceStatement(resourceId, PREDICATES.HAS_AUTHOR, author.id);
                     authors.statementId = authorStatement.id;
                     authors.id = author.id;
                     authors.class = author._class;
@@ -141,7 +141,7 @@ function Publish(props) {
                     // Author resource doesn't exist
                     const newLiteral = await createLiteral(author.label);
                     // Create literal of author
-                    const authorStatement = await createLiteralStatement(this.props.viewPaper.paperResourceId, PREDICATES.HAS_AUTHOR, newLiteral.id);
+                    const authorStatement = await createLiteralStatement(resourceId, PREDICATES.HAS_AUTHOR, newLiteral.id);
                     authors.statementId = authorStatement.id;
                     authors.id = newLiteral.id;
                     authors.class = authorStatement.object._class;
