@@ -1,7 +1,7 @@
 import { updateSectionLink } from 'actions/smartArticle';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
 import SectionComparison from 'components/SmartArticle/SectionComparison';
-import StatementBrowser from 'components/StatementBrowser/Statements/StatementsContainer';
+import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
 import { CLASSES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
@@ -79,8 +79,8 @@ const SectionContentLink = props => {
                     enableEdit={true}
                     syncBackend={true}
                     openExistingResourcesInDialog={false}
-                    initialResourceId={selectedResource.value}
-                    initialResourceLabel="Main"
+                    initialSubjectId={selectedResource.value}
+                    initialSubjectLabel="Main"
                     newStore={true}
                     key={statementBrowserKey}
                     rootNodeType={props.type === 'resource' ? 'resource' : 'predicate'}

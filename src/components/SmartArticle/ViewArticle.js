@@ -4,7 +4,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { Container } from 'reactstrap';
 import * as Showdown from 'showdown';
-import StatementBrowser from 'components/StatementBrowser/Statements/StatementsContainer';
+import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
 import { CLASSES } from 'constants/graphSettings';
 import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
@@ -58,8 +58,8 @@ const ViewArticle = () => {
                                                 </div>
                                                 <StatementBrowser
                                                     enableEdit={false}
-                                                    initialResourceId={section.contentLink.objectId}
-                                                    initialResourceLabel="Main"
+                                                    initialSubjectId={section.contentLink.objectId}
+                                                    initialSubjectLabel="Main"
                                                     newStore={true}
                                                     rootNodeType={section.type.id === CLASSES.RESOURCE_SECTION ? 'resource' : 'predicate'}
                                                 />
