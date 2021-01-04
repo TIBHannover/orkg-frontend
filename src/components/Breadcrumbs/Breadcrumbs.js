@@ -63,15 +63,9 @@ function Breadcrumbs(props) {
                         !isLoading &&
                         parentResearchFields.map((field, index) => (
                             <span key={field.id}>
-                                {index !== parentResearchFields.length - 1 ? (
+                                {index !== parentResearchFields.length - 1 || !props.disableLastField ? (
                                     <Link to={index === 0 ? reverse(ROUTES.HOME) : reverse(ROUTES.RESEARCH_FIELD, { researchFieldId: field.id })}>
-                                        {index === 0 ? (
-                                            <>
-                                                <Icon className="mr-1" icon={faHome} />
-                                            </>
-                                        ) : (
-                                            field.label
-                                        )}
+                                        {index === 0 ? <Icon className="mr-1" icon={faHome} /> : field.label}
                                     </Link>
                                 ) : (
                                     field.label
@@ -109,9 +103,7 @@ function Breadcrumbs(props) {
                                                         ))}
                                                 </>
                                             ) : (
-                                                <>
-                                                    <Icon className="ml-3" icon={faSpinner} spin />
-                                                </>
+                                                <Icon className="ml-3" icon={faSpinner} spin />
                                             )}
                                         </DropdownMenu>
                                     </Dropdown>
@@ -130,7 +122,12 @@ function Breadcrumbs(props) {
 }
 
 Breadcrumbs.propTypes = {
-    researchFieldId: PropTypes.string
+    researchFieldId: PropTypes.string,
+    disableLastField: PropTypes.bool
+};
+
+Breadcrumbs.defaultProps = {
+    disableLastField: false
 };
 
 export default Breadcrumbs;
