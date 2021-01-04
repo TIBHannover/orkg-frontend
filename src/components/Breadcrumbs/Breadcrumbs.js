@@ -8,7 +8,15 @@ import ContentLoader from 'react-content-loader';
 import { Link, NavLink } from 'react-router-dom';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
+import styled from 'styled-components';
 import PropTypes from 'prop-types';
+
+const StyledDropdownItem = styled(DropdownItem)`
+    &:active,
+    &:active.text-primary {
+        color: #fff !important;
+    }
+`;
 
 function Breadcrumbs(props) {
     const [parentResearchFields, setParentResearchFields] = useState([]);
@@ -88,14 +96,14 @@ function Breadcrumbs(props) {
                                                         siblings[index].length &&
                                                         siblings[index].map(rf =>
                                                             rf.id !== parentResearchFields[index + 1].id ? (
-                                                                <DropdownItem
+                                                                <StyledDropdownItem
                                                                     tag={NavLink}
                                                                     key={`rf-${rf.id}`}
                                                                     to={reverse(ROUTES.RESEARCH_FIELD, { researchFieldId: rf.id })}
                                                                     className="text-primary"
                                                                 >
                                                                     {rf.label}
-                                                                </DropdownItem>
+                                                                </StyledDropdownItem>
                                                             ) : (
                                                                 <DropdownItem key={`rf-${rf.id}`}>{rf.label}</DropdownItem>
                                                             )
