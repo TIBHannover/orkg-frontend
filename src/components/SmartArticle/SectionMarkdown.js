@@ -1,3 +1,5 @@
+import { faBold, faCode, faImage, faItalic, faLink, faList, faListOl, faQuoteLeft, faUnderline } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippy.js/react';
 import { updateSectionMarkdown } from 'actions/smartArticle';
 import { MarkdownPlaceholder } from 'components/SmartArticle/styled';
@@ -5,10 +7,8 @@ import PropTypes from 'prop-types';
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import Textarea from 'react-textarea-autosize';
+import { Button, ButtonGroup } from 'reactstrap';
 import * as Showdown from 'showdown';
-import { ButtonGroup, Button } from 'reactstrap';
-import { faBold, faCode, faImage, faItalic, faLink, faList, faListOl, faQuoteLeft, faUnderline } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 
 const converter = new Showdown.Converter({
     tables: true,

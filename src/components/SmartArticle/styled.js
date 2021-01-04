@@ -1,22 +1,13 @@
-import styled from 'styled-components';
+import Textarea from 'react-textarea-autosize';
 import { Button } from 'reactstrap';
-import ContentEditable from 'react-contenteditable';
+import styled from 'styled-components';
 
-export const ContentEditableStyled = styled(ContentEditable)`
-    cursor: text; // force text cursor in case the element is empty
-    padding: 2px;
-    margin: -2px 0 0 -2px;
-    &[contenteditable='true']:empty:before {
-        content: attr(placeholder);
-        display: block;
-        color: #aaa;
-    }
-    &:focus {
-        border-color: #f8d0d0;
-        outline: 0;
-        box-shadow: 0 0 0 0.22rem rgba(232, 97, 97, 0.25);
-        border-radius: ${props => props.theme.borderRadius};
-    }
+export const EditableTitle = styled(Textarea)`
+    width: 100%;
+    border: 0;
+    border-radius: ${props => props.theme.borderRadius};
+    color: inherit;
+    resize: none;
 `;
 
 export const MoveHandle = styled.div`

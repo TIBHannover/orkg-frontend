@@ -2,11 +2,10 @@ import { faBars, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { deleteSection, updateSectionTitle } from 'actions/smartArticle';
 import AddSection from 'components/SmartArticle/AddSection';
-import ContentEditable from 'components/SmartArticle/ContentEditable';
 import SectionContentLink from 'components/SmartArticle/SectionContentLink';
 import SectionMarkdown from 'components/SmartArticle/SectionMarkdown';
 import SectionType from 'components/SmartArticle/SectionType';
-import { DeleteButton, MoveHandle, SectionStyled } from 'components/SmartArticle/styled';
+import { DeleteButton, MoveHandle, SectionStyled, EditableTitle } from 'components/SmartArticle/styled';
 import { CLASSES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
@@ -16,7 +15,9 @@ import Confirm from 'reactstrap-confirm';
 
 const Section = props => {
     const [isHovering, setIsHovering] = useState(false);
-    const { type, markdown, title } = props.section;
+    const { type, markdown, title: titleProp } = props.section;
+    const sectionId = titleProp.id;
+    const [title, setTitle] = useState(titleProp.label);
     const dispatch = useDispatch();
 
     const SortableHandle = sortableHandle(() => (
@@ -25,11 +26,11 @@ const Section = props => {
         </MoveHandle>
     ));
 
-    const handleBlurTitle = async text => {
+    const handleBlurTitle = e => {
         dispatch(
             updateSectionTitle({
-                sectionId: title.id,
-                title: text
+                sectionId,
+                title: e.target.value
             })
         );
     };
@@ -42,7 +43,7 @@ const Section = props => {
         });
 
         if (confirm) {
-            dispatch(deleteSection(title.id));
+            dispatch(deleteSection(sectionId));
         }
     };
 
@@ -64,9 +65,16 @@ const Section = props => {
                     <Icon icon={faTimes} />
                 </DeleteButton>
                 <SortableHandle />
-                <SectionType type={type.id} sectionId={title.id} isDisabled={isContentLinkSection} />
+                <SectionType type={type.id} sectionId={sectionId} isDisabled={isContentLinkSection} />
                 <h2 className="h4 border-bottom pb-1 mb-3" placeholder="trd">
-                    <ContentEditable text={title.label} onBlur={handleBlurTitle} placeholder="Enter a section title..." />
+                    <EditableTitle
+                        value={title}
+                        className="focus-primary"
+                        onChange={e => setTitle(e.target.value)}
+                        onBlur={handleBlurTitle}
+                        placeholder="Enter a section title..."
+                        resize="false"
+                    />
                 </h2>
 
                 {isContentLinkSection && <SectionContentLink section={props.section} type={sectionType} />}

@@ -1,19 +1,23 @@
 import Tippy from '@tippy.js/react';
 import { updateTitle } from 'actions/smartArticle';
-import ContentEditable from 'components/SmartArticle/ContentEditable';
-import { SectionStyled, SectionTypeStyled } from 'components/SmartArticle/styled';
-import React from 'react';
+import { SectionStyled, SectionTypeStyled, EditableTitle } from 'components/SmartArticle/styled';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 const Title = () => {
-    const { id, title } = useSelector(state => state.smartArticle.paper);
+    const { id, title: titleStore } = useSelector(state => state.smartArticle.paper);
     const dispatch = useDispatch();
+    const [title, setTitle] = useState('');
 
-    const handleBlur = async text => {
+    useEffect(() => {
+        setTitle(titleStore);
+    }, [titleStore]);
+
+    const handleBlur = e => {
         dispatch(
             updateTitle({
                 id,
-                title: text
+                title: e.target.value
             })
         );
     };
@@ -27,7 +31,13 @@ const Title = () => {
             </SectionTypeStyled>
 
             <h1 className="h2 py-2 m-0">
-                <ContentEditable text={title} onBlur={handleBlur} placeholder="Enter a paper title..." />
+                <EditableTitle
+                    className="focus-primary"
+                    value={title}
+                    onBlur={handleBlur}
+                    onChange={e => setTitle(e.target.value)}
+                    placeholder="Enter a paper title..."
+                />
             </h1>
         </SectionStyled>
     );

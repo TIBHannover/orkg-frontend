@@ -26,7 +26,9 @@ const ViewArticle = () => {
     return (
         <Container className="print-only">
             <SectionStyled className="box rounded pr-4">
-                <h1 className="mb-2 mt-4">{paper.title}</h1>
+                <h1 className="mb-2 mt-4" style={{ whiteSpace: 'pre-line' }}>
+                    {paper.title}
+                </h1>
                 <div className="my-3">
                     <AuthorsList authors={authors} />
                 </div>
@@ -74,7 +76,9 @@ const ViewArticle = () => {
                     } else {
                         return (
                             <React.Fragment key={section.id}>
-                                <h2 className="h4 border-bottom mt-4">{section.title.label}</h2>
+                                <h2 className="h4 border-bottom mt-4" style={{ whiteSpace: 'pre-line' }}>
+                                    {section.title.label}
+                                </h2>
                                 <p dangerouslySetInnerHTML={{ __html: converter.makeHtml(section.markdown.label) }} />
                             </React.Fragment>
                         );
