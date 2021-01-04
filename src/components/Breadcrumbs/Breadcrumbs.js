@@ -5,8 +5,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faAngleDoubleRight, faAngleDoubleDown, faSpinner, faHome } from '@fortawesome/free-solid-svg-icons';
 import { PREDICATES } from 'constants/graphSettings';
 import ContentLoader from 'react-content-loader';
-import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
@@ -87,20 +86,20 @@ function Breadcrumbs(props) {
                                                 <>
                                                     {siblings[index] &&
                                                         siblings[index].length &&
-                                                        siblings[index].map(rf => (
-                                                            <DropdownItem key={`rf-${rf.id}`}>
-                                                                <ConditionalWrapper
-                                                                    condition={rf.id !== parentResearchFields[index + 1].id}
-                                                                    wrapper={children => (
-                                                                        <Link to={reverse(ROUTES.RESEARCH_FIELD, { researchFieldId: rf.id })}>
-                                                                            {children}
-                                                                        </Link>
-                                                                    )}
+                                                        siblings[index].map(rf =>
+                                                            rf.id !== parentResearchFields[index + 1].id ? (
+                                                                <DropdownItem
+                                                                    tag={NavLink}
+                                                                    key={`rf-${rf.id}`}
+                                                                    to={reverse(ROUTES.RESEARCH_FIELD, { researchFieldId: rf.id })}
+                                                                    className="text-primary"
                                                                 >
                                                                     {rf.label}
-                                                                </ConditionalWrapper>
-                                                            </DropdownItem>
-                                                        ))}
+                                                                </DropdownItem>
+                                                            ) : (
+                                                                <DropdownItem key={`rf-${rf.id}`}>{rf.label}</DropdownItem>
+                                                            )
+                                                        )}
                                                 </>
                                             ) : (
                                                 <Icon className="ml-3" icon={faSpinner} spin />
