@@ -21,7 +21,7 @@ import {
     updateSettings
 } from 'actions/statementBrowser';
 
-export default function Statements(props) {
+const Statements = props => {
     const statementBrowser = useSelector(state => state.statementBrowser);
     const { level, resources, properties, values, selectedResource } = statementBrowser;
     const canAddProperty = canAddPropertyFunction({ statementBrowser }, selectedResource);
@@ -178,7 +178,7 @@ export default function Statements(props) {
             {elements}
         </>
     );
-}
+};
 Statements.propTypes = {
     rootNodeType: PropTypes.string.isRequired,
     enableEdit: PropTypes.bool.isRequired,
@@ -207,3 +207,5 @@ Statements.defaultProps = {
     keyToKeepStateOnLocationChange: null,
     rootNodeType: 'resource'
 };
+
+export default Statements;
