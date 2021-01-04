@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Modal, ModalHeader, ModalBody, Button } from 'reactstrap';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import Statements from 'components/StatementBrowser/Statements/StatementsContainer';
+import Statements from 'components/StatementBrowser/Statements/Statements';
 import { Provider } from 'react-redux';
 import configureStore from 'store';
 import SameAsStatements from 'pages/SameAsStatements';
