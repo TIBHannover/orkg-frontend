@@ -1,11 +1,12 @@
 const path = require('path');
 const webpack = require('webpack');
 const copyWebpackPlugin = require('copy-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 const bundleOutputDir = './dist';
 const bundleReleaseOutputDir = './../public';
 
-module.exports = env => {
-    const isDevBuild = !(env && env.prod);
+module.exports = (env, argv) => {
+    const isDevBuild = argv.mode === 'development';
 
     return [
         {
@@ -27,8 +28,8 @@ module.exports = env => {
                         : JSON.stringify('https://www.orkg.org/orkg/')
                 }),
                 ...(isDevBuild
-                    ? [new webpack.SourceMapDevToolPlugin(), new copyWebpackPlugin([{ from: 'demo/' }])]
-                    : [new webpack.optimize.UglifyJsPlugin()])
+                    ? [new webpack.SourceMapDevToolPlugin(), new copyWebpackPlugin({ patterns: [{ from: 'demo/' }] })]
+                    : [new TerserPlugin()])
             ],
             module: {
                 rules: [
@@ -36,7 +37,12 @@ module.exports = env => {
                     { test: /\.css$/i, use: ['style-loader', 'css-loader'] },
                     {
                         test: /\.(jpe?g|png|gif|woff|woff2|eot|ttf|svg)(\?[a-z0-9=.]+)?$/,
-                        loader: 'url-loader?limit=100000'
+                        use: {
+                            loader: 'url-loader',
+                            options: {
+                                limit: 100000
+                            }
+                        }
                     },
                     {
                         test: /\.js$/i,

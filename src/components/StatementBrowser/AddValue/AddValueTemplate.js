@@ -190,8 +190,8 @@ export default function AddValueTemplate(props) {
                 <StatementBrowserDialog
                     show={modal}
                     toggleModal={() => setModal(prev => !prev)}
-                    resourceId={dialogResourceId}
-                    resourceLabel={dialogResourceLabel}
+                    id={dialogResourceId}
+                    label={dialogResourceLabel}
                     newStore={false}
                     enableEdit={true}
                 />

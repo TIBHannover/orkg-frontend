@@ -199,20 +199,18 @@ class ViewPaper extends Component {
 
     /** PROCESSING HELPER :  Helper functions to increase code readability**/
     processObservatoryInformation(paperResource, resourceId) {
-        if (
-            paperResource.observatory_id &&
-            paperResource.observatory_id !== MISC.UNKNOWN_ID &&
-            paperResource.created_by &&
-            paperResource.created_by !== MISC.UNKNOWN_ID
-        ) {
+        if (paperResource.observatory_id && paperResource.observatory_id !== MISC.UNKNOWN_ID) {
             const observatory = getObservatoryAndOrganizationInformation(paperResource.observatory_id, paperResource.organization_id);
-            const creator = getUserInformationById(paperResource.created_by).catch(e => {});
+            const creator =
+                paperResource.created_by && paperResource.created_by !== MISC.UNKNOWN_ID
+                    ? getUserInformationById(paperResource.created_by).catch(e => {})
+                    : undefined;
             Promise.all([observatory, creator]).then(data => {
                 this.setState({
                     observatoryInfo: {
                         ...data[0],
                         created_at: paperResource.created_at,
-                        created_by: data[1],
+                        created_by: data[1] !== undefined ? data[1] : null,
                         extraction_method: paperResource.extraction_method
                     }
                 });

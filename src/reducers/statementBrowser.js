@@ -10,7 +10,7 @@ const initialState = {
     level: 0,
     isFetchingStatements: false,
     openExistingResourcesInDialog: false,
-    propertiesAsLinks: false,
+    propertiesAsLinks: false, // if false the link appears in black font color and opens in a new window
     resourcesAsLinks: false,
     initOnLocationChange: true,
     keyToKeepStateOnLocationChange: null,

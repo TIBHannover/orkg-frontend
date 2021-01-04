@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Button } from 'reactstrap';
 import { getPredicate } from 'services/backend/predicates';
-import StatementBrowser from 'components/StatementBrowser/Statements/StatementsContainer';
+import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
 import InternalServerError from 'pages/InternalServerError';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import NotFound from 'pages/NotFound';
@@ -89,8 +89,8 @@ function Predicate(props) {
                                     enableEdit={editMode}
                                     syncBackend={editMode}
                                     openExistingResourcesInDialog={false}
-                                    initialResourceId={props.match.params.id}
-                                    initialResourceLabel={label}
+                                    initialSubjectId={props.match.params.id}
+                                    initialSubjectLabel={label}
                                     newStore={true}
                                     propertiesAsLinks={true}
                                     resourcesAsLinks={true}
