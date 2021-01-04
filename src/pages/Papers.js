@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
+import { ButtonDropdown, DropdownToggle, Container, ListGroup, ListGroupItem, DropdownItem, DropdownMenu } from 'reactstrap';
 import { getStatementsBySubjects } from 'services/backend/statements';
 import { getResourcesByClass } from 'services/backend/resources';
-import { Container, ListGroup, ListGroupItem } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner, faAngleDoubleDown } from '@fortawesome/free-solid-svg-icons';
 import PaperCardDynamic from 'components/PaperCard/PaperCardDynamic';
 import { CLASSES } from 'constants/graphSettings';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
-export default class Papers extends Component {
+class Papers extends Component {
     constructor(props) {
         super(props);
 
@@ -15,6 +17,8 @@ export default class Papers extends Component {
         this.componentIsMounted = false;
 
         this.state = {
+            dropdownOpen: false,
+            verified: null,
             statements: [],
             paperResources: [],
             isNextPageLoading: false,
@@ -41,7 +45,9 @@ export default class Papers extends Component {
             page: this.state.page,
             items: this.pageSize,
             sortBy: 'created_at',
-            desc: true
+            desc: true,
+            verified: this.state.verified,
+            returnContent: this.state.verified !== null ? true : false
         }).then(papers => {
             if (papers.length > 0) {
                 // update paper resources for paperCards preview
@@ -99,11 +105,40 @@ export default class Papers extends Component {
         return <PaperCardDynamic paper={{ title: paper.label, id: paper.id, paperData: paperData }} key={`pc${paper.id}`} />;
     };
 
+    setVerifiedFilter = value => {
+        this.setState(
+            { verified: value, page: 1, statements: [], paperResources: [], isNextPageLoading: false, hasNextPage: false, isLastPageReached: false },
+            () => {
+                this.loadMorePapers();
+            }
+        );
+    };
+
+    toggle = () => {
+        this.setState({ dropdownOpen: !this.state.dropdownOpen });
+    };
+
     render() {
         return (
             <>
-                <Container>
-                    <h1 className="h4 mt-4 mb-4">View all papers</h1>
+                <Container className="d-flex align-items-center">
+                    <h1 className="h4 mt-4 mb-4 flex-grow-1">View all papers</h1>
+                    {!!this.props.user && this.props.user.isCurationAllowed && (
+                        <div className="flex-shrink-0">
+                            <ButtonDropdown size="sm" isOpen={this.state.dropdownOpen} toggle={this.toggle}>
+                                <DropdownToggle caret color="darkblue">
+                                    {this.state.verified === true && 'Verified'}
+                                    {this.state.verified === false && 'Unverified'}
+                                    {this.state.verified === null && 'All'}
+                                </DropdownToggle>
+                                <DropdownMenu>
+                                    <DropdownItem onClick={e => this.setVerifiedFilter(null)}>All</DropdownItem>
+                                    <DropdownItem onClick={e => this.setVerifiedFilter(true)}>Verified</DropdownItem>
+                                    <DropdownItem onClick={e => this.setVerifiedFilter(false)}>Unverified</DropdownItem>
+                                </DropdownMenu>
+                            </ButtonDropdown>
+                        </div>
+                    )}
                 </Container>
                 <Container className="p-0">
                     <ListGroup flush className="box rounded" style={{ overflow: 'hidden' }}>
@@ -140,3 +175,13 @@ export default class Papers extends Component {
         );
     }
 }
+
+const mapStateToProps = state => ({
+    user: state.auth.user
+});
+
+Papers.propTypes = {
+    user: PropTypes.oneOfType([PropTypes.object, PropTypes.number])
+};
+
+export default connect(mapStateToProps)(Papers);

@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { getResource } from 'services/backend/resources';
-import { getParentResearchFields, getStatementsBySubjectAndPredicate, getStatementsBySubject } from 'services/backend/statements';
+import { getStatementsBySubjectAndPredicate, getStatementsBySubject } from 'services/backend/statements';
 import { getResearchFieldsStats } from 'services/backend/stats';
 import { filterObjectOfStatementsByPredicate } from 'utils';
 import { orderBy } from 'lodash';
@@ -9,7 +9,6 @@ import { PREDICATES } from 'constants/graphSettings';
 
 function useResearchField(initialVal = {}) {
     const [data, setData] = useState({ initialVal });
-    const [parentResearchFields, setParentResearchFields] = useState([]);
     const [subResearchFields, setSubResearchFields] = useState([]);
     const { researchFieldId } = useParams();
     const [isLoadingData, setIsLoadingData] = useState(true);
@@ -30,10 +29,6 @@ function useResearchField(initialVal = {}) {
                     setIsLoadingData(false);
                     setIsFailedLoadingData(true);
                 });
-
-            getParentResearchFields(rfId).then(result => {
-                setParentResearchFields(result.reverse());
-            });
 
             // Get description, same as and sub-problems of the research problem
             getStatementsBySubject({ id: rfId }).then(statements => {
@@ -67,6 +62,6 @@ function useResearchField(initialVal = {}) {
             loadResearchFieldData(researchFieldId);
         }
     }, [researchFieldId, loadResearchFieldData]);
-    return [data, parentResearchFields, subResearchFields, isLoadingData, isFailedLoadingData, loadResearchFieldData];
+    return [data, subResearchFields, isLoadingData, isFailedLoadingData, loadResearchFieldData];
 }
 export default useResearchField;

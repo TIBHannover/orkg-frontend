@@ -1,21 +1,19 @@
-import React, { Component } from 'react';
-import { ReactTableWrapper, Properties, PropertiesInner, ItemHeader, ItemHeaderInner, Contribution, Delete, ScrollButton } from './styled';
+import { faArrowCircleLeft, faArrowCircleRight, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faTimes, faArrowCircleRight, faArrowCircleLeft } from '@fortawesome/free-solid-svg-icons';
-import { Link } from 'react-router-dom';
-import { reverse } from 'named-urls';
-import ROUTES from 'constants/routes';
-import capitalize from 'capitalize';
-import TableCell from './TableCell';
-import ReactTable from 'react-table';
 import classNames from 'classnames';
+import PropertyValue from 'components/Comparison/PropertyValue';
+import ROUTES from 'constants/routes';
+import { debounce, functions, isEqual, omit } from 'lodash';
+import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
-import Tippy from '@tippy.js/react';
-import { debounce } from 'lodash';
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import { ScrollSync, ScrollSyncPane } from 'react-scroll-sync';
-import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
+import ReactTable from 'react-table';
 import withFixedColumnsScrollEvent from 'react-table-hoc-fixed-columns';
 import 'react-table-hoc-fixed-columns/lib/styles.css'; // important: this line must be placed after react-table css import
+import { Contribution, Delete, ItemHeader, ItemHeaderInner, Properties, PropertiesInner, ReactTableWrapper, ScrollButton } from './styled';
+import TableCell from './TableCell';
 
 const ReactTableFixedColumns = withFixedColumnsScrollEvent(ReactTable);
 
@@ -39,6 +37,13 @@ class ComparisonTable extends Component {
         this.defaultNextButtonState();
     };
 
+    shouldComponentUpdate(nextProps, nextState) {
+        // remove functions from equality check (mainly targeting "removeContribution"), otherwise it is always false
+        const hasPropsChanged = !isEqual(omit(this.props, functions(this.props)), omit(nextProps, functions(nextProps)));
+        const hasStateChanged = !isEqual(this.state, nextState);
+        return hasPropsChanged || hasStateChanged;
+    }
+
     getSnapshotBeforeUpdate() {
         // Maintaining scroll position with getSnapshotBeforeUpdate and componentDidUpdate
         return { scrollLeftContainerBody: this.scrollContainerBody.current.scrollLeft };
@@ -51,7 +56,10 @@ class ComparisonTable extends Component {
         }
 
         if (!this.props.transpose) {
-            if (this.props.contributions !== prevProps.contributions && this.props.contributions.length > 3) {
+            if (
+                this.props.contributions !== prevProps.contributions &&
+                this.props.contributions.filter(contribution => contribution.active).length > 3
+            ) {
                 this.defaultNextButtonState();
             }
         } else {
@@ -63,7 +71,7 @@ class ComparisonTable extends Component {
 
     defaultNextButtonState = () => {
         if (!this.props.transpose) {
-            if (this.props.contributions.length > 3) {
+            if (this.props.contributions.filter(contribution => contribution.active).length > 3) {
                 this.setState({
                     showNextButton: true
                 });
@@ -164,7 +172,7 @@ class ComparisonTable extends Component {
                             pageSize={
                                 !this.props.transpose
                                     ? this.props.properties.filter(property => property.active).length
-                                    : this.props.contributions.length
+                                    : this.props.contributions.filter(contribution => contribution.active).length
                             }
                             data={[
                                 ...(!this.props.transpose
@@ -206,19 +214,7 @@ class ComparisonTable extends Component {
                                         !this.props.transpose ? (
                                             <Properties className="columnProperty">
                                                 <PropertiesInner cellPadding={cellPadding}>
-                                                    <ConditionalWrapper
-                                                        condition={props.value.similar && props.value.similar.length > 0}
-                                                        wrapper={children => (
-                                                            <Tippy
-                                                                content={`This property is merged with : ${props.value.similar.join(', ')}`}
-                                                                arrow={true}
-                                                            >
-                                                                <span>{children}*</span>
-                                                            </Tippy>
-                                                        )}
-                                                    >
-                                                        {capitalize(props.value.label)}
-                                                    </ConditionalWrapper>
+                                                    <PropertyValue similar={props.value.similar} label={props.value.label} id={props.value.id} />
                                                 </PropertiesInner>
                                             </Properties>
                                         ) : (
@@ -238,7 +234,7 @@ class ComparisonTable extends Component {
                                                     </Contribution>
                                                 </PropertiesInner>
 
-                                                {this.props.contributions.length > 2 && (
+                                                {this.props.contributions.filter(contribution => contribution.active).length > 2 && (
                                                     <Delete onClick={() => this.props.removeContribution(props.value.id)}>
                                                         <Icon icon={faTimes} />
                                                     </Delete>
@@ -248,62 +244,56 @@ class ComparisonTable extends Component {
                                     width: 250
                                 },
                                 ...(!this.props.transpose && this.props.contributions
-                                    ? this.props.contributions.map((contribution, index) => {
-                                          return {
-                                              id: contribution.id, // <-here
-                                              Header: props => (
-                                                  <ItemHeader key={`contribution${index}`}>
-                                                      <ItemHeaderInner>
-                                                          <Link
-                                                              to={reverse(ROUTES.VIEW_PAPER, {
-                                                                  resourceId: contribution.paperId,
-                                                                  contributionId: contribution.id
-                                                              })}
-                                                          >
-                                                              {contribution.title ? contribution.title : <em>No title</em>}
-                                                          </Link>
-                                                          <br />
-                                                          <Contribution>
-                                                              {contribution.contributionLabel} {contribution.year && `- ${contribution.year}`}
-                                                          </Contribution>
-                                                      </ItemHeaderInner>
+                                    ? this.props.contributions
+                                          .map((contribution, index) => {
+                                              if (contribution.active) {
+                                                  return {
+                                                      id: contribution.id, // <-here
+                                                      Header: props => (
+                                                          <ItemHeader key={`contribution${contribution.id}`}>
+                                                              <ItemHeaderInner>
+                                                                  <Link
+                                                                      to={reverse(ROUTES.VIEW_PAPER, {
+                                                                          resourceId: contribution.paperId,
+                                                                          contributionId: contribution.id
+                                                                      })}
+                                                                  >
+                                                                      {contribution.title ? contribution.title : <em>No title</em>}
+                                                                  </Link>
+                                                                  <br />
+                                                                  <Contribution>
+                                                                      {contribution.contributionLabel} {contribution.year && `- ${contribution.year}`}
+                                                                  </Contribution>
+                                                              </ItemHeaderInner>
 
-                                                      {this.props.contributions.length > 2 && (
-                                                          <Delete onClick={() => this.props.removeContribution(contribution.id)}>
-                                                              <Icon icon={faTimes} />
-                                                          </Delete>
-                                                      )}
-                                                  </ItemHeader>
-                                              ),
-                                              accessor: d => {
-                                                  //return d.values[index].length > 0 ? d.values[index][0].label : '';
-                                                  return d.values[index];
-                                              },
-                                              Cell: props => <TableCell data={props.value} viewDensity={this.props.viewDensity} />, // Custom cell components!
-                                              width: 250
-                                          };
-                                      })
+                                                              {this.props.contributions.filter(contribution => contribution.active).length > 2 && (
+                                                                  <Delete onClick={() => this.props.removeContribution(contribution.id)}>
+                                                                      <Icon icon={faTimes} />
+                                                                  </Delete>
+                                                              )}
+                                                          </ItemHeader>
+                                                      ),
+                                                      accessor: d => {
+                                                          //return d.values[index].length > 0 ? d.values[index][0].label : '';
+                                                          return d.values[index];
+                                                      },
+                                                      Cell: props => <TableCell data={props.value} viewDensity={this.props.viewDensity} />, // Custom cell components!
+                                                      width: 250
+                                                  };
+                                              } else {
+                                                  return null;
+                                              }
+                                          })
+                                          .filter(Boolean)
                                     : this.props.properties
                                           .filter(property => property.active && this.props.data[property.id])
                                           .map((property, index) => {
                                               return {
                                                   id: property.id, // <-here
                                                   Header: props => (
-                                                      <ItemHeader key={`property${index}`}>
+                                                      <ItemHeader key={`property${property.id}`}>
                                                           <ItemHeaderInner transpose={this.props.transpose}>
-                                                              <ConditionalWrapper
-                                                                  condition={property.similar && property.similar.length > 0}
-                                                                  wrapper={children => (
-                                                                      <Tippy
-                                                                          content={`This property is merged with : ${property.similar.join(', ')}`}
-                                                                          arrow={true}
-                                                                      >
-                                                                          <span>{children}*</span>
-                                                                      </Tippy>
-                                                                  )}
-                                                              >
-                                                                  {capitalize(property.label)}
-                                                              </ConditionalWrapper>
+                                                              <PropertyValue similar={property.similar} label={property.label} id={property.id} />
                                                           </ItemHeaderInner>
                                                       </ItemHeader>
                                                   ),

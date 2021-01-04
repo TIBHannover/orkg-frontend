@@ -8,7 +8,6 @@ import {
     DropdownItem,
     Card,
     CardBody,
-    CardFooter,
     Row,
     Col,
     Badge,
@@ -19,16 +18,16 @@ import {
     ListGroupItem
 } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faSpinner, faEllipsisV, faAngleDoubleRight, faAngleDoubleDown, faPen } from '@fortawesome/free-solid-svg-icons';
+import { faSpinner, faEllipsisV, faAngleDoubleDown, faPen } from '@fortawesome/free-solid-svg-icons';
 import useResearchField from 'components/ResearchField/hooks/useResearchField';
 import useResearchFieldObservatories from 'components/ResearchField/hooks/useResearchFieldObservatories';
 import useResearchFieldPapers from 'components/ResearchField/hooks/useResearchFieldPapers';
 import useResearchFieldComparison from 'components/ResearchField/hooks/useResearchFieldComparison';
 import useResearchFieldProblems from 'components/ResearchField/hooks/useResearchFieldProblems';
 import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
-import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import ComparisonCard from 'components/ComparisonCard/ComparisonCard';
 import ExternalDescription from 'components/ResearchProblem/ExternalDescription';
+import Breadcrumbs from 'components/Breadcrumbs/Breadcrumbs';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
@@ -46,7 +45,7 @@ function usePrevious(value) {
 }
 
 function ResearchField(props) {
-    const [researchFieldData, parentResearchFields, subResearchFields, isLoading, isFailedLoading, loadResearchFieldData] = useResearchField();
+    const [researchFieldData, subResearchFields, isLoading, isFailedLoading, loadResearchFieldData] = useResearchField();
     const [editMode, setEditMode] = useState(false);
     const prevEditMode = usePrevious({ editMode });
     const [researchFieldObservatories] = useResearchFieldObservatories();
@@ -90,12 +89,15 @@ function ResearchField(props) {
                         <StatementBrowserDialog
                             show={editMode}
                             toggleModal={() => setEditMode(v => !v)}
-                            resourceId={researchFieldId}
-                            resourceLabel={researchFieldId.label}
+                            id={researchFieldId}
+                            label={researchFieldData.label}
                             enableEdit={true}
                             syncBackend={true}
+                            type="resource"
                         />
                     )}
+                    <Breadcrumbs researchFieldId={researchFieldId} />
+
                     <Container className="d-flex align-items-center">
                         <h1 className="h4 mt-4 mb-4 flex-grow-1">Research field</h1>
 
@@ -126,21 +128,6 @@ function ResearchField(props) {
                                     />
                                 )}
                             </CardBody>
-
-                            <CardFooter>
-                                {parentResearchFields.map((field, index) => (
-                                    <span key={field.id}>
-                                        {index !== parentResearchFields.length - 1 ? (
-                                            <Link to={reverse(ROUTES.RESEARCH_FIELD, { researchFieldId: field.id })}>
-                                                {index === 0 ? 'Main' : field.label}
-                                            </Link>
-                                        ) : (
-                                            field.label
-                                        )}
-                                        {index !== parentResearchFields.length - 1 && <Icon className="ml-2 mr-2" icon={faAngleDoubleRight} />}
-                                    </span>
-                                ))}
-                            </CardFooter>
                         </Card>
 
                         <Row className="mt-3">

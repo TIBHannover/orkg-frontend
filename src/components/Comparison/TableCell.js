@@ -68,7 +68,7 @@ class TableCell extends Component {
                         {this.props.data.map((date, index) =>
                             Object.keys(date).length > 0 ? (
                                 date.type === 'resource' ? (
-                                    <span key={`value-${index}`}>
+                                    <span key={`value-${date.resourceId}`}>
                                         {index > 0 && <ItemInnerSeparator />}
                                         <Tippy content={`Path of this value : ${date.pathLabels.slice(1).join(' / ')}`} arrow={true}>
                                             <span
@@ -81,7 +81,7 @@ class TableCell extends Component {
                                         </Tippy>
                                     </span>
                                 ) : (
-                                    <span key={`value-${index}`}>
+                                    <span key={`value-${date.label}`}>
                                         {index > 0 && <ItemInnerSeparator />}
                                         <Tippy content={`Path of this value : ${date.pathLabels.slice(1).join(' / ')}`} arrow={true}>
                                             <span>
@@ -105,8 +105,8 @@ class TableCell extends Component {
                     <StatementBrowserDialog
                         show={this.state.modal}
                         toggleModal={() => this.toggle('modal')}
-                        resourceId={this.state.dialogResourceId}
-                        resourceLabel={this.state.dialogResourceLabel}
+                        id={this.state.dialogResourceId}
+                        label={this.state.dialogResourceLabel}
                     />
                 )}
             </>

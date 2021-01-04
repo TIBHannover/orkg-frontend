@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Button, Badge, ListGroup, ListGroupItem, Card, CardBody, CardFooter } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner, faAngleDoubleDown, faAngleDoubleRight } from '@fortawesome/free-solid-svg-icons';
@@ -15,14 +15,7 @@ import PaperCard from 'components/PaperCard/PaperCard';
 import ExternalDescription from 'components/ResearchProblem/ExternalDescription';
 import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
 import ROUTES from 'constants/routes';
-
-function usePrevious(value) {
-    const ref = useRef();
-    useEffect(() => {
-        ref.current = value;
-    });
-    return ref.current;
-}
+import { usePrevious } from 'react-use';
 
 function ResearchProblem(props) {
     const [researchProblemData, parentResearchProblems, isLoading, isFailedLoading, loadResearchProblemData] = useResearchProblem();
@@ -53,8 +46,8 @@ function ResearchProblem(props) {
                         <StatementBrowserDialog
                             show={editMode}
                             toggleModal={() => setEditMode(v => !v)}
-                            resourceId={researchProblemId}
-                            resourceLabel={researchProblemData.label}
+                            id={researchProblemId}
+                            label={researchProblemData.label}
                             enableEdit={true}
                             syncBackend={true}
                         />

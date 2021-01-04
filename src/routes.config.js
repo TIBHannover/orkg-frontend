@@ -256,7 +256,7 @@ const routes = [
     },
     {
         path: ROUTES.CSV_IMPORT,
-        component: CsvImport
+        component: requireAuthentication(CsvImport)
     },
     /* Don't add routes below this line */
     {

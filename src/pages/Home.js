@@ -1,60 +1,50 @@
-import React, { Component } from 'react';
+import React, { useEffect } from 'react';
+import { useLocation, useHistory } from 'react-router';
 import { Container, Row, Col } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faStream } from '@fortawesome/free-solid-svg-icons';
-import ResearchFieldCards from '../components/Home/ResearchFieldCards';
-import Sidebar from '../components/Home/Sidebar';
-import FeaturedComparisons from '../components/Home/FeaturedComparisons';
-import Jumbotron from '../components/Home/Jumbotron';
+import ResearchFieldCards from 'components/Home/ResearchFieldCards';
+import ObservatoriesCarousel from 'components/Home/ObservatoriesCarousel/ObservatoriesCarousel';
+import FeaturedItemsBox from 'components/Home/FeaturedItemsBox';
+
 import { toast } from 'react-toastify';
-import PropTypes from 'prop-types';
 import TrendingProblems from 'components/Home/TrendingProblems';
 
-class Home extends Component {
-    componentDidMount = () => {
+export default function Home() {
+    const location = useLocation();
+    const history = useHistory();
+
+    useEffect(() => {
         document.title = 'Open Research Knowledge Graph';
-    };
+    }, []);
 
-    componentDidUpdate() {
-        const showSignOutMessage = this.props.location.state && this.props.location.state.signedOut;
+    const showSignOutMessage = location.state && location.state.signedOut;
 
-        if (showSignOutMessage) {
-            const locationState = { ...this.props.location.state, signedOut: false };
-            this.props.history.replace({ state: locationState });
-            toast.success('You have been signed out successfully');
-        }
+    if (showSignOutMessage) {
+        const locationState = { ...location.state, signedOut: false };
+        history.replace({ state: locationState });
+        toast.success('You have been signed out successfully');
     }
 
-    render = () => {
-        return (
-            <div>
-                <Jumbotron />
-
-                <Container style={{ marginTop: -50 }}>
-                    <Row>
-                        <Col md={7} sm={12} style={{ display: 'flex', flexDirection: 'column' }}>
-                            <FeaturedComparisons />
-                            <TrendingProblems />
-                            <div className="box rounded-lg mt-4 p-3" style={{ flexDirection: 'column', display: 'flex', flexGrow: '1' }}>
-                                <h2 className="h5">
-                                    <Icon icon={faStream} className="text-primary" /> Browse by research field
-                                </h2>
-                                <ResearchFieldCards />
-                            </div>
-                        </Col>
-                        <Col md={5} sm={12} style={{ display: 'flex', flexDirection: 'column' }}>
-                            <Sidebar />
-                        </Col>
-                    </Row>
-                </Container>
-            </div>
-        );
-    };
+    return (
+        <div>
+            <Container style={{ marginTop: -50 }}>
+                <Row>
+                    <Col md={7} sm={12} style={{ display: 'flex', flexDirection: 'column' }}>
+                        <div className="box rounded-lg p-3">
+                            <h2 className="h5">
+                                <Icon icon={faStream} className="text-primary" /> Browse by research field
+                            </h2>
+                            <ResearchFieldCards />
+                        </div>
+                        <TrendingProblems style={{ flexDirection: 'column', display: 'flex', flexGrow: '1' }} />
+                    </Col>
+                    <Col md={5} sm={12} style={{ display: 'flex', flexDirection: 'column' }}>
+                        <ObservatoriesCarousel />
+                        <FeaturedItemsBox />
+                    </Col>
+                </Row>
+            </Container>
+        </div>
+    );
 }
-
-Home.propTypes = {
-    location: PropTypes.object.isRequired,
-    history: PropTypes.object.isRequired
-};
-
-export default Home;

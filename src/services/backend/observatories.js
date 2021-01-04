@@ -58,16 +58,32 @@ export const createObservatory = (observatoryName, organizationId, description, 
 
 export const getObservatoryAndOrganizationInformation = (observatoryId, organizationId) => {
     return getObservatoryById(observatoryId).then(obsResponse => {
-        return getOrganization(organizationId).then(orgResponse => {
+        if (organizationId !== '00000000-0000-0000-0000-000000000000') {
+            return getOrganization(organizationId)
+                .then(orgResponse => {
+                    return {
+                        id: observatoryId,
+                        name: obsResponse.name,
+                        organization: {
+                            id: organizationId,
+                            name: orgResponse.name,
+                            logo: orgResponse.logo
+                        }
+                    };
+                })
+                .catch(() => {
+                    return {
+                        id: observatoryId,
+                        name: obsResponse.name,
+                        organization: null
+                    };
+                });
+        } else {
             return {
                 id: observatoryId,
                 name: obsResponse.name,
-                organization: {
-                    id: organizationId,
-                    name: orgResponse.name,
-                    logo: orgResponse.logo
-                }
+                organization: null
             };
-        });
+        }
     });
 };

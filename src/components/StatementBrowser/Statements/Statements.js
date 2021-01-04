@@ -1,30 +1,31 @@
-import React, { useEffect } from 'react';
-import { ListGroup } from 'reactstrap';
+import React, { useState, useEffect } from 'react';
+import { ListGroup, Button } from 'reactstrap';
 import StatementItem from 'components/StatementBrowser/StatementItem/StatementItemContainer';
 import AddProperty from 'components/StatementBrowser/AddProperty/AddPropertyContainer';
 import Breadcrumbs from 'components/StatementBrowser/Breadcrumbs/BreadcrumbsContainer';
 import ContributionTemplate from 'components/StatementBrowser/ContributionTemplate/ContributionTemplateContainer';
 import PropertySuggestions from 'components/StatementBrowser/PropertySuggestions/PropertySuggestions';
+import SBEditorHelpModal from 'components/StatementBrowser/SBEditorHelpModal/SBEditorHelpModal';
 import NoData from 'components/StatementBrowser/NoData/NoData';
 import { StyledLevelBox, StyledStatementItem } from 'components/StatementBrowser/styled';
 import { Cookies } from 'react-cookie';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faSpinner, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
 
 export default function Statements(props) {
     useEffect(() => {
-        if (props.initialResourceId) {
+        if (props.initialSubjectId) {
             if (props.newStore) {
                 props.initializeWithoutContribution({
-                    resourceId: props.initialResourceId,
-                    label: props.initialResourceLabel,
+                    resourceId: props.initialSubjectId,
+                    label: props.initialSubjectLabel,
                     rootNodeType: props.rootNodeType
                 });
             } else {
                 props.initializeWithResource({
-                    resourceId: props.initialResourceId,
-                    label: props.initialResourceLabel
+                    resourceId: props.initialSubjectId,
+                    label: props.initialSubjectLabel
                 });
             }
             props.updateSettings({
@@ -42,6 +43,8 @@ export default function Statements(props) {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []); // run only once : https://reactjs.org/docs/hooks-effect.html#tip-optimizing-performance-by-skipping-effects
+
+    const [helpModalOpen, setHelpModalOpen] = useState(false);
 
     const statements = () => {
         let propertyIds = [];
@@ -126,6 +129,16 @@ export default function Statements(props) {
 
     return (
         <>
+            {props.enableEdit && (
+                <div className="clearfix mb-3">
+                    <span className="ml-3 float-right">
+                        <Button outline color="secondary" size="sm" onClick={() => setHelpModalOpen(v => !v)}>
+                            <Icon className="mr-1" icon={faQuestionCircle} /> Help
+                        </Button>
+                    </span>
+                </div>
+            )}
+
             {props.level !== 0 ? (
                 <>
                     <Breadcrumbs />
@@ -133,7 +146,7 @@ export default function Statements(props) {
             ) : (
                 ''
             )}
-
+            <SBEditorHelpModal isOpen={helpModalOpen} toggle={() => setHelpModalOpen(v => !v)} />
             {elements}
         </>
     );
@@ -161,8 +174,8 @@ Statements.propTypes = {
 
     enableEdit: PropTypes.bool.isRequired,
     openExistingResourcesInDialog: PropTypes.bool,
-    initialResourceId: PropTypes.string,
-    initialResourceLabel: PropTypes.string,
+    initialSubjectId: PropTypes.string,
+    initialSubjectLabel: PropTypes.string,
     syncBackend: PropTypes.bool.isRequired,
     newStore: PropTypes.bool,
     templatesFound: PropTypes.bool,
@@ -174,8 +187,8 @@ Statements.propTypes = {
 
 Statements.defaultProps = {
     openExistingResourcesInDialog: false,
-    initialResourceId: null,
-    initialResourceLabel: null,
+    initialSubjectId: null,
+    initialSubjectLabel: null,
     syncBackend: false,
     newStore: false,
     templatesFound: false,

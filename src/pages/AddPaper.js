@@ -240,16 +240,18 @@ class AddPaper extends Component {
                     toggle={() => this.toggle('showGraphModal')}
                 />
                 {/*the style display node will hide the help button when the graph view is activated*/}
-                <Help
-                    style={this.state.showGraphModal ? { display: 'none' } : {}}
-                    onClick={() => {
-                        this.toggleTour();
-                    }}
-                    id="helpIcon"
-                    woochat={env('CHATWOOT_WEBSITE_TOKEN')}
-                >
-                    <HelpIcon icon={faQuestion} />
-                </Help>
+                {this.props.currentStep !== 2 && (
+                    <Help
+                        style={this.state.showGraphModal ? { display: 'none' } : {}}
+                        onClick={() => {
+                            this.toggleTour();
+                        }}
+                        id="helpIcon"
+                        woochat={env('CHATWOOT_WEBSITE_TOKEN')}
+                    >
+                        <HelpIcon icon={faQuestion} />
+                    </Help>
+                )}
             </div>
         );
     }

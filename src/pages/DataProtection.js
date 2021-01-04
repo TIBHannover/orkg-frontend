@@ -164,8 +164,8 @@ export default function DataProtection() {
                 <p>
                     To enable easy and direct communication with the service support team, ORKG integrates Chatwoot (chatwoot.com). To use Chatwoot
                     data subjects are not required to provide personal data. Chatwoot uses cookies to identify users, which is required to provide the
-                    chat functionality. They do not sell or transfer your Personally Identifiable Information to third-parties. For more information,
-                    see the{' '}
+                    chat functionality. They do not sell or transfer your Personally Identifiable Information to third-parties or use it for other
+                    purposes. For more information, see the{' '}
                     <a href="https://www.chatwoot.com/privacy-policy/" target="_blank" rel="noopener noreferrer">
                         Chatwoot Privacy Policy
                     </a>
