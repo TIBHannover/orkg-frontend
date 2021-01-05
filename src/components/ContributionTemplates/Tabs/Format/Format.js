@@ -32,7 +32,7 @@ function Format(props) {
                         <FormGroup className="mb-4">
                             <Label>Formatted label</Label>
                             <Input
-                                placeholder={'{P123} to {P456}'}
+                                placeholder="{P123} to {P456}"
                                 value={props.labelFormat}
                                 onChange={handleChangeLabelFormat}
                                 disabled={!props.editMode}
