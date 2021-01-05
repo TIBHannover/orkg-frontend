@@ -832,7 +832,7 @@ export async function saveAuthors({ prevAuthors, newAuthors, paperId }) {
         } else {
             // Author resource exists
             if (author.label !== author.id) {
-                const authorStatement = await createResourceStatement(this.props.viewPaper.paperResourceId, PREDICATES.HAS_AUTHOR, author.id);
+                const authorStatement = await createResourceStatement(paperId, PREDICATES.HAS_AUTHOR, author.id);
                 authors[i].statementId = authorStatement.id;
                 authors[i].id = author.id;
                 authors[i].class = author._class;
@@ -841,7 +841,7 @@ export async function saveAuthors({ prevAuthors, newAuthors, paperId }) {
                 // Author resource doesn't exist
                 const newLiteral = await createLiteralApi(author.label);
                 // Create literal of author
-                const authorStatement = await createLiteralStatement(this.props.viewPaper.paperResourceId, PREDICATES.HAS_AUTHOR, newLiteral.id);
+                const authorStatement = await createLiteralStatement(paperId, PREDICATES.HAS_AUTHOR, newLiteral.id);
                 authors[i].statementId = authorStatement.id;
                 authors[i].id = newLiteral.id;
                 authors[i].class = authorStatement.object._class;

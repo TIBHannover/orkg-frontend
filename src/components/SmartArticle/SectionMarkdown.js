@@ -2,20 +2,13 @@ import { faBold, faCode, faImage, faItalic, faLink, faList, faListOl, faQuoteLef
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippy.js/react';
 import { updateSectionMarkdown } from 'actions/smartArticle';
+import MarkdownRenderer from 'components/SmartArticle/MarkdownRenderer';
 import { MarkdownPlaceholder } from 'components/SmartArticle/styled';
 import PropTypes from 'prop-types';
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import Textarea from 'react-textarea-autosize';
 import { Button, ButtonGroup } from 'reactstrap';
-import * as Showdown from 'showdown';
-
-const converter = new Showdown.Converter({
-    tables: true,
-    simplifiedAutoLink: true,
-    strikethrough: true,
-    tasklists: true
-});
 
 const SectionMarkdown = props => {
     const [markdownValue, setMarkdownValue] = useState('');
@@ -81,7 +74,9 @@ const SectionMarkdown = props => {
             {!editMode && (
                 <Tippy hideOnClick={false} content="Double click to edit">
                     {markdownValue ? (
-                        <div dangerouslySetInnerHTML={{ __html: converter.makeHtml(markdownValue) }} onDoubleClick={() => setEditMode(true)} />
+                        <div onDoubleClick={() => setEditMode(true)}>
+                            <MarkdownRenderer text={markdownValue} />
+                        </div>
                     ) : (
                         <MarkdownPlaceholder onDoubleClick={() => setEditMode(true)}>Double click to edit this text</MarkdownPlaceholder>
                     )}

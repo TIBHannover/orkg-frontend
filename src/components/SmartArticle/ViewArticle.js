@@ -1,22 +1,26 @@
 import AuthorsList from 'components/SmartArticle/AuthorsList';
+import MarkdownRenderer from 'components/SmartArticle/MarkdownRenderer';
 import { SectionStyled } from 'components/SmartArticle/styled';
-import React from 'react';
-import { useSelector } from 'react-redux';
-import { Container } from 'reactstrap';
-import * as Showdown from 'showdown';
 import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
 import { CLASSES } from 'constants/graphSettings';
-import { Link } from 'react-router-dom';
-import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes';
+import { reverse } from 'named-urls';
+import React from 'react';
+import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { Container } from 'reactstrap';
+import * as Showdown from 'showdown';
+import footnotes from 'showdown-footnotes';
 import SectionComparison from './SectionComparison';
 
 const converter = new Showdown.Converter({
-    tables: true,
-    simplifiedAutoLink: true,
-    strikethrough: true,
-    tasklists: true
+    //tables: true,
+    //simplifiedAutoLink: true,
+    //strikethrough: true,
+    //tasklists: true,
+    extensions: [footnotes]
 });
+converter.setFlavor('github');
 
 const ViewArticle = () => {
     const paper = useSelector(state => state.smartArticle.paper);
@@ -79,7 +83,7 @@ const ViewArticle = () => {
                                 <h2 className="h4 border-bottom mt-4" style={{ whiteSpace: 'pre-line' }}>
                                     {section.title.label}
                                 </h2>
-                                <p dangerouslySetInnerHTML={{ __html: converter.makeHtml(section.markdown.label) }} />
+                                <MarkdownRenderer text={section.markdown.label} />
                             </React.Fragment>
                         );
                     }
