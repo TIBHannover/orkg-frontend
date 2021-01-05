@@ -80,7 +80,7 @@ const SectionMarkdown = props => {
         <>
             {!editMode && (
                 <Tippy hideOnClick={false} content="Double click to edit">
-                    {markdownValue && markdownValue !== 'null' ? (
+                    {markdownValue ? (
                         <div dangerouslySetInnerHTML={{ __html: converter.makeHtml(markdownValue) }} onDoubleClick={() => setEditMode(true)} />
                     ) : (
                         <MarkdownPlaceholder onDoubleClick={() => setEditMode(true)}>Double click to edit this text</MarkdownPlaceholder>
@@ -126,7 +126,7 @@ const SectionMarkdown = props => {
                         </ButtonGroup>
                     </div>
                     <Textarea
-                        value={markdownValue !== 'null' ? markdownValue : ''}
+                        value={markdownValue}
                         onChange={e => setMarkdownValue(e.target.value)}
                         onBlur={handleBlurMarkdown}
                         className="form-control"
