@@ -285,6 +285,21 @@ class SearchAutoComplete extends Component {
                                             this
                                         );
                                     }}
+                                    onKeyDown={e =>
+                                        e.keyCode === 13
+                                            ? this.handleDropdownItemClick(
+                                                  false,
+                                                  e,
+                                                  expandIconDisabled,
+                                                  item.visible,
+                                                  callHaloVis,
+                                                  callExpandHaloVis,
+                                                  this
+                                              )
+                                            : undefined
+                                    }
+                                    role="button"
+                                    tabIndex={0}
                                 >
                                     {finalItemLabel}
                                 </div>

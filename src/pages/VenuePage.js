@@ -193,6 +193,11 @@ class VenuePage extends Component {
                                     style={{ cursor: 'pointer' }}
                                     className="list-group-item list-group-item-action text-center mt-2"
                                     onClick={!this.state.isNextPageLoading ? this.loadMorePapers : undefined}
+                                    onKeyDown={e =>
+                                        e.keyCode === 13 ? (!this.state.isNextPageLoading ? this.loadMorePapers : undefined) : undefined
+                                    }
+                                    role="button"
+                                    tabIndex={0}
                                 >
                                     Load more papers
                                 </div>

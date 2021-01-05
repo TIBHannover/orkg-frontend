@@ -63,6 +63,14 @@ function CloseToastButton({ closeToast }) {
                 e.stopPropagation();
                 closeToast(e);
             }}
+            onKeyDown={e => {
+                if (e.keyCode === 13) {
+                    e.stopPropagation();
+                    closeToast(e);
+                }
+            }}
+            role="button"
+            tabIndex={0}
         >
             <Icon icon={faTimes} />
         </span>

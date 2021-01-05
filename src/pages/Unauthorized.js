@@ -61,6 +61,9 @@ const Unauthorized = () => {
                                         textDecoration: 'underline'
                                     }}
                                     onClick={handleSignUp}
+                                    onKeyDown={e => (e.keyCode === 13 ? handleSignUp : undefined)}
+                                    role="button"
+                                    tabIndex={0}
                                 >
                                     Create an account
                                 </span>

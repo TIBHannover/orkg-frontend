@@ -34,7 +34,13 @@ class Pulse extends Component {
                 arrow={false}
                 content={<div style={{ position: 'relative', display: 'inline-block' }}>{this.props.content}</div>}
             >
-                <span onClick={this.handleClick} style={{ position: 'relative' }}>
+                <span
+                    onClick={this.handleClick}
+                    style={{ position: 'relative' }}
+                    onKeyDown={e => (e.keyCode === 13 ? this.handleClick : undefined)}
+                    role="button"
+                    tabIndex={0}
+                >
                     <span className={this.state.active ? 'pulsate-css' : undefined} />
                     {this.props.children}
                 </span>

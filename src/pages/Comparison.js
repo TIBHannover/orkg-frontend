@@ -315,7 +315,14 @@ function Comparison(props) {
                                 ) : (
                                     <>
                                         <strong>Error.</strong> The comparison service is unreachable. Please come back later and try again.{' '}
-                                        <span className="btn-link" style={{ cursor: 'pointer' }} onClick={() => handleGoBack}>
+                                        <span
+                                            className="btn-link"
+                                            style={{ cursor: 'pointer' }}
+                                            onClick={() => handleGoBack}
+                                            onKeyDown={e => (e.keyCode === 13 ? handleGoBack : undefined)}
+                                            role="button"
+                                            tabIndex={0}
+                                        >
                                             Go back
                                         </span>{' '}
                                         or <Link to={ROUTES.HOME}>go to the homepage {contributionsList.length}</Link>.

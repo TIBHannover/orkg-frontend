@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { Modal, ModalHeader, ModalBody } from 'reactstrap';
+import { Modal, ModalHeader, ModalBody, Button } from 'reactstrap';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import { closeTour, openTour } from '../../../actions/addPaper';
+import { closeTour, openTour } from 'actions/addPaper';
 import Tour from 'reactour';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
@@ -85,9 +85,9 @@ class ContributionsHelpTour extends Component {
                                               The data is entered in a <strong>property and value </strong> structure. First you choose a property
                                               (e.g. method) and afterwards you add a value to this property (e.g. semi-structured interviews). <br />
                                               <br />
-                                              <span className="btn btn-link p-0" onClick={this.toggleVideoDialog}>
+                                              <Button color="link" className="p-0" onClick={this.toggleVideoDialog}>
                                                   Open example video
-                                              </span>
+                                              </Button>
                                           </span>
                                       ),
                                       style: { borderTop: '4px solid #E86161' },

@@ -1,6 +1,4 @@
-// import { include } from 'named-urls'
-
-export default {
+const routes = {
     HOME: '/',
     USER_SETTINGS: '/settings',
     USER_PROFILE: '/u/:userId',
@@ -47,3 +45,4 @@ export default {
     PDF_ANNOTATION: '/pdf-annotation',
     CSV_IMPORT: '/csv-import'
 };
+export default routes;

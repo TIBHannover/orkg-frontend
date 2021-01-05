@@ -80,7 +80,14 @@ class Video extends Component {
             } else {
                 return (
                     <>
-                        <span className="btn-link" onClick={this.toggleVideoDialog} style={{ cursor: 'pointer' }}>
+                        <span
+                            className="btn-link"
+                            onClick={this.toggleVideoDialog}
+                            style={{ cursor: 'pointer' }}
+                            onKeyDown={e => (e.keyCode === 13 ? this.toggleVideoDialog : undefined)}
+                            role="button"
+                            tabIndex={0}
+                        >
                             {labelToText} <Icon icon={faVideo} />
                         </span>
                         <Modal isOpen={this.state.showVideoDialog} toggle={this.toggleVideoDialog} size="lg">

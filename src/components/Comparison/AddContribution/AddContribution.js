@@ -106,6 +106,7 @@ export default function AddContribution(props) {
             });
     };
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     const debouncedGetLoadMoreResults = useCallback(debounce(loadMoreResults, 500), []);
 
     const toggleContribution = contributionsID => {
@@ -212,9 +213,15 @@ export default function AddContribution(props) {
                     )}
                     {!isNextPageLoading && hasNextPage && (
                         <StyledLoadMoreButton className="text-right action">
-                            <span className="btn btn-link btn-sm" onClick={() => loadMoreResults(searchPaper, currentPage + 1)}>
+                            <div
+                                className="btn btn-link btn-sm"
+                                onClick={() => loadMoreResults(searchPaper, currentPage + 1)}
+                                onKeyDown={e => (e.keyCode === 13 ? loadMoreResults(searchPaper, currentPage + 1) : undefined)}
+                                role="button"
+                                tabIndex={0}
+                            >
                                 + Load more
-                            </span>
+                            </div>
                         </StyledLoadMoreButton>
                     )}
                     {isNextPageLoading && hasNextPage && (

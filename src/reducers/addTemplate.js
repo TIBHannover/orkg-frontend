@@ -18,6 +18,7 @@ const initialState = {
     isSaving: false
 };
 
+// eslint-disable-next-line import/no-anonymous-default-export
 export default (state = initialState, action) => {
     switch (action.type) {
         case type.TEMPLATE_SET_LABEL: {

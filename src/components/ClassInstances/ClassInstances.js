@@ -19,6 +19,7 @@ const ClassInstances = props => {
     const [instances, setInstances] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     const loadInstances = useCallback(
         debounce((page, searchQuery) => {
             setIsLoading(true);

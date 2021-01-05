@@ -1,7 +1,7 @@
 import React from 'react';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
-import { ListGroup, ListGroupItem } from 'reactstrap';
+import { ListGroup, ListGroupItem, Button } from 'reactstrap';
 import ContentLoader from 'react-content-loader';
 import { Link, withRouter } from 'react-router-dom';
 import ROUTES from 'constants/routes.js';
@@ -13,7 +13,7 @@ import moment from 'moment';
 
 const StyledLoadMoreButton = styled.div`
     padding-top: 0;
-    & span {
+    & button {
         cursor: pointer;
         border: 1px solid rgba(0, 0, 0, 0.125);
         border-top: 0;
@@ -22,7 +22,7 @@ const StyledLoadMoreButton = styled.div`
         border-bottom-right-radius: 6px;
         border-bottom-left-radius: 6px;
     }
-    &.action:hover span {
+    &.action:hover button {
         z-index: 1;
         color: #495057;
         text-decoration: underline;
@@ -135,16 +135,16 @@ const Results = props => {
                         </ListGroup>
                         {!props.loading && props.hasNextPage && (
                             <StyledLoadMoreButton className="text-right action">
-                                <span className="btn btn-link btn-sm" onClick={props.loadMore}>
+                                <Button color="link" size="sm" onClick={props.loadMore}>
                                     + Load more
-                                </span>
+                                </Button>
                             </StyledLoadMoreButton>
                         )}
                         {props.loading && props.hasNextPage && (
                             <StyledLoadMoreButton className="text-right action">
-                                <span className="btn btn-link btn-sm" onClick={props.loadMore}>
+                                <Button color="link" size="sm" onClick={props.loadMore}>
                                     Loading...
-                                </span>
+                                </Button>
                             </StyledLoadMoreButton>
                         )}
                     </div>

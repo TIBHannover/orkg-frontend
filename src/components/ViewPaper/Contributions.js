@@ -22,7 +22,7 @@ import { toast } from 'react-toastify';
 import { selectContribution, updateResearchProblems } from 'actions/viewPaper';
 import { getReseachProblemsOfContribution } from 'actions/statementBrowser';
 import styled from 'styled-components';
-import { StyledHorizontalContributionsList, StyledHorizontalContribution } from '../AddPaper/Contributions/styled';
+import { StyledHorizontalContributionsList, StyledHorizontalContribution } from 'components/AddPaper/Contributions/styled';
 import Tippy from '@tippy.js/react';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import SuggestedTemplates from 'components/StatementBrowser/SuggestedTemplates/SuggestedTemplates';
@@ -204,12 +204,19 @@ class Contributions extends Component {
                                         );
                                     })}
                                     {this.props.enableEdit && (
-                                        <li className="addContribution" onClick={() => this.props.handleCreateContribution()}>
-                                            <Tippy content="Add contribution">
-                                                <span>
-                                                    <Icon size="xs" icon={faPlus} />
-                                                </span>
-                                            </Tippy>
+                                        <li className="addContribution">
+                                            <div
+                                                onClick={() => this.props.handleCreateContribution()}
+                                                onKeyDown={e => (e.keyCode === 13 ? this.props.handleCreateContribution() : undefined)}
+                                                role="button"
+                                                tabIndex={0}
+                                            >
+                                                <Tippy content="Add contribution">
+                                                    <span>
+                                                        <Icon size="xs" icon={faPlus} />
+                                                    </span>
+                                                </Tippy>
+                                            </div>
                                         </li>
                                     )}
                                 </StyledHorizontalContributionsList>

@@ -156,6 +156,16 @@ function ResearchProblemInput(props) {
                         problemBrowser: iprops.data
                     });
                 }}
+                onKeyDown={e =>
+                    e.keyCode === 13
+                        ? () =>
+                              this.setState({
+                                  problemBrowser: iprops.data
+                              })
+                        : undefined
+                }
+                role="button"
+                tabIndex={0}
             >
                 <components.MultiValueLabel {...iprops} />
             </div>

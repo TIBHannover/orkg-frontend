@@ -21,12 +21,12 @@ import {
 import { compose } from 'redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { range } from '../../../utils';
-import Tooltip from '../../Utils/Tooltip';
-import AuthorsInput from '../../Utils/AuthorsInput';
-import FormValidator from '../../Utils/FormValidator';
+import { range } from 'utils';
+import Tooltip from 'components/Utils/Tooltip';
+import AuthorsInput from 'components/Utils/AuthorsInput';
+import FormValidator from 'components/Utils/FormValidator';
 import { connect } from 'react-redux';
-import { updateGeneralData, nextStep, openTour, closeTour } from '../../../actions/addPaper';
+import { updateGeneralData, nextStep, openTour, closeTour } from 'actions/addPaper';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import { withCookies, Cookies } from 'react-cookie';
 import styled, { withTheme } from 'styled-components';
@@ -404,16 +404,23 @@ class GeneralData extends Component {
                                                     <Label for="paperDoi">
                                                         <Tooltip
                                                             message={
-                                                                <span>
+                                                                <div>
                                                                     Automatically fetch the details of your paper by providing a DOI or a BibTeX
-                                                                    entry.{' '}
-                                                                    <span
+                                                                    entry.
+                                                                    <div
                                                                         style={{ textDecoration: 'underline', cursor: 'pointer' }}
                                                                         onClick={() => this.handleLearnMore(0)}
+                                                                        onKeyDown={e => {
+                                                                            if (e.keyCode === 13) {
+                                                                                this.handleLearnMore(0);
+                                                                            }
+                                                                        }}
+                                                                        role="button"
+                                                                        tabIndex={0}
                                                                     >
                                                                         Learn more
-                                                                    </span>
-                                                                </span>
+                                                                    </div>
+                                                                </div>
                                                             }
                                                         >
                                                             Paper DOI or BibTeX

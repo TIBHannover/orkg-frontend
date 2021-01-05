@@ -243,7 +243,16 @@ class RDFDataCube extends Component {
                                         Header: columns[h].label,
                                         accessor: h,
                                         sortMethod: (a, b, desc) => sortMethod(a.label, b.label),
-                                        Cell: props => <span onClick={() => this.handleCellClick(props.value)}>{props.value.label}</span>, // Custom cell components!
+                                        Cell: props => (
+                                            <span
+                                                onKeyDown={e => (e.keyCode === 13 ? this.handleCellClick(props.value) : undefined)}
+                                                role="button"
+                                                tabIndex={0}
+                                                onClick={() => this.handleCellClick(props.value)}
+                                            >
+                                                {props.value.label}
+                                            </span>
+                                        ), // Custom cell components!
                                         Filter: ({ filter, onChange }) => (
                                             <input
                                                 type="text"
