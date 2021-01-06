@@ -9,6 +9,14 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import Textarea from 'react-textarea-autosize';
 import { Button, ButtonGroup } from 'reactstrap';
+import styled from 'styled-components';
+
+const Toolbar = styled.div`
+    position: sticky;
+    top: 85px;
+    margin-bottom: 3px;
+    margin-top: -40px;
+`;
 
 const SectionMarkdown = props => {
     const [markdownValue, setMarkdownValue] = useState('');
@@ -85,7 +93,7 @@ const SectionMarkdown = props => {
 
             {editMode && (
                 <>
-                    <div style={{ position: 'absolute', top: 25 }}>
+                    <Toolbar>
                         <ButtonGroup className="mr-1" size="sm">
                             <Button color="dark" onMouseDown={e => wrapText(e, '**', '**')}>
                                 <Icon icon={faBold} />
@@ -119,7 +127,7 @@ const SectionMarkdown = props => {
                                 <Icon icon={faCode} />
                             </Button>
                         </ButtonGroup>
-                    </div>
+                    </Toolbar>
                     <Textarea
                         value={markdownValue}
                         onChange={e => setMarkdownValue(e.target.value)}
