@@ -20,7 +20,7 @@
         "body-scroll-lock": "^3.1.5",
         "bootstrap": "^4.5.3",
         "capitalize": "^2.0.3",
-        "citation-js": "^0.4.10",
+        "citation-js": "^0.5.0-alpha.9",
         "classnames": "^2.2.6",
         "connected-react-router": "^6.8.0",
         "d3": "^3.5.6",
