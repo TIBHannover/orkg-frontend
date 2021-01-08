@@ -15,7 +15,7 @@
         "@tippy.js/react": "^3.1.1",
         "@trainiac/html2canvas": "^1.0.0",
         "@xobotyi/scrollbar-width": "^1.9.5",
-        "array-move": "^2.2.2",
+        "array-move": "^3.0.1",
         "body-scroll-lock": "^2.7.1",
         "bootstrap": "^4.5.3",
         "capitalize": "^2.0.3",
