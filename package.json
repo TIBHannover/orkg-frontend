@@ -38,7 +38,7 @@
         "marked": "^1.2.7",
         "moment": "^2.29.1",
         "named-urls": "^2.0.0",
-        "node-html-parser": "^1.4.9",
+        "node-html-parser": "^2.0.1",
         "node-sass": "^4.14.1",
         "olap-cube": "^1.0.0",
         "path-to-regexp": "^6.2.0",
