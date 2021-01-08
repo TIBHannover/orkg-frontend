@@ -31,7 +31,7 @@
         "handsontable": "^8.2.0",
         "husky": "^4.3.7",
         "immutability-helper": "^3.0.2",
-        "jspdf": "^1.5.3",
+        "jspdf": "^2.2.0",
         "lodash": "^4.17.20",
         "make-latex": "^0.1.0",
         "markdown-into-html": "^1.0.3",

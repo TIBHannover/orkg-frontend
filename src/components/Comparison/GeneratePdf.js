@@ -20,16 +20,20 @@ const GeneratePdf = props => {
         const imgData = canvasHeader.toDataURL('image/png');
         // jspdf is a large package, dynamically import it for code splitting
         const { default: jsPDF } = await import('jspdf');
-        const pdf = new jsPDF('l', 'mm', [headerHeightMm + bodyHeightMm, headerWidthMm]);
-        pdf.addImage(imgData, 'PNG', 0, 5);
+        const pdf = new jsPDF({
+            orientation: 'l',
+            unit: 'px',
+            format: [headerHeightMm + bodyHeightMm + 10, headerWidthMm + 10],
+            hotfixes: ['px_scaling']
+        });
+        pdf.addImage(imgData, 'PNG', 5, 5);
 
         // Body
         // There is issue (Unable to find element in cloned iframe) if we don't select the body again!
         body = document.getElementById(props.id).getElementsByClassName('rt-tbody')[0];
         const canvas = await html2canvas(body);
         const imgData2 = canvas.toDataURL('image/png');
-        // multiply by 0.26 to convert from pixel to mm
-        pdf.addImage(imgData2, 'PNG', 0, headerHeightMm * 0.26 + 5);
+        pdf.addImage(imgData2, 'PNG', 5, headerHeightMm + 5);
         pdf.save('ORKG Comparison exported.pdf');
     };
 
