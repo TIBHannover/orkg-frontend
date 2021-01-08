@@ -17,7 +17,7 @@
         "@xobotyi/scrollbar-width": "^1.9.5",
         "array-move": "^3.0.1",
         "auto-changelog": "^2.2.1",
-        "body-scroll-lock": "^2.7.1",
+        "body-scroll-lock": "^3.1.5",
         "bootstrap": "^4.5.3",
         "capitalize": "^2.0.3",
         "citation-js": "^0.4.10",
