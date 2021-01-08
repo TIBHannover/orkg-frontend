@@ -16,6 +16,7 @@
         "@trainiac/html2canvas": "^1.0.0",
         "@xobotyi/scrollbar-width": "^1.9.5",
         "array-move": "^3.0.1",
+        "auto-changelog": "^2.2.1",
         "body-scroll-lock": "^2.7.1",
         "bootstrap": "^4.5.3",
         "capitalize": "^2.0.3",
@@ -122,7 +123,6 @@
     "devDependencies": {
         "@babel/preset-env": "^7.12.11",
         "@beam-australia/react-env": "^2.1.2",
-        "auto-changelog": "^1.16.4",
         "enzyme": "^3.11.0",
         "enzyme-adapter-react-16": "^1.15.5",
         "enzyme-to-json": "^3.6.1",
