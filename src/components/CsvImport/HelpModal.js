@@ -33,7 +33,8 @@ const HelpModal = props => {
                     </li>
                     <li>
                         <strong>One paper per row.</strong> Each row should contain a single paper. It is not possible to use multiple rows to
-                        describe the same paper. Merge information in the same cells if necessary
+                        describe the same paper. Create new columns with the same label if multiple values are needed or merge information in the same
+                        cells if necessary.
                     </li>
                     <li>
                         <strong>Special cell values.</strong> By default each cell value is considered a literal (i.e. text). It is possible to
@@ -127,6 +128,7 @@ const HelpModal = props => {
                                 <th>paper:research_field</th>
                                 <th>contribution:research_problem</th>
                                 <th>location</th>
+                                <th>location</th>
                                 <th>value</th>
                                 <th>approach</th>
                             </tr>
@@ -140,6 +142,7 @@ const HelpModal = props => {
                                 <td>R11</td>
                                 <td>Example problem</td>
                                 <td>resource:Berlin</td>
+                                <td />
                                 <td>237.23</td>
                                 <td>We tried to measure...</td>
                             </tr>
@@ -151,12 +154,14 @@ const HelpModal = props => {
                                 <td>R11</td>
                                 <td>orkg:R41001</td>
                                 <td>resource:Hannover</td>
+                                <td>resource:Dresden</td>
                                 <td>12.2</td>
                                 <td>For this study, the...</td>
                             </tr>
                         </tbody>
                     </Table>
                 </div>
+                <i>In this example, Location property in the second paper will take two values (Hannover and Dresden)</i>
             </ModalBody>
         </Modal>
     );
