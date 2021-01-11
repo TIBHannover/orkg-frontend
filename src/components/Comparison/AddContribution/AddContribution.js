@@ -156,11 +156,19 @@ export default function AddContribution(props) {
                 </FormGroup>
                 <div>
                     {isNextPageLoading && paperResult.length === 0 && (
-                        <ContentLoader height={110} speed={2} primaryColor="#f3f3f3" secondaryColor="#ecebeb">
-                            <rect x="0" y="25" width="100%" height="15" />
-                            <rect x="0" y="42" width="100%" height="15" />
-                            <rect x="0" y="59" width="100%" height="15" />
-                            <rect x="0" y="76" width="100%" height="15" />
+                        <ContentLoader
+                            style={{ width: '100% !important' }}
+                            width="100%"
+                            height="100%"
+                            viewBox="0 0 100 20"
+                            speed={2}
+                            backgroundColor="#f3f3f3"
+                            foregroundColor="#ecebeb"
+                        >
+                            <rect x="0" y="0" width="100%" height="2" />
+                            <rect x="0" y="5" width="100%" height="2" />
+                            <rect x="0" y="10" width="100%" height="2" />
+                            <rect x="0" y="15" width="100%" height="2" />
                         </ContentLoader>
                     )}
                     {!isNextPageLoading && searchPaper && paperResult.length === 0 && (

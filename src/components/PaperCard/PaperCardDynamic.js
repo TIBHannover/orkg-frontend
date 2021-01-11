@@ -109,16 +109,17 @@ class PaperCardDynamic extends Component {
                             <div style={{ display: 'ruby' }}>
                                 <span>Loading</span>
                                 <ContentLoader
-                                    style={{ marginTop: '-8px', width: '8%' }}
-                                    height={12}
-                                    width={50}
+                                    style={{ marginTop: '-8px', width: '8% !important' }}
+                                    height={30}
+                                    width="8%"
+                                    viewBox="0 0 100 30"
                                     speed={2}
-                                    primaryColor="#f3f3f3"
-                                    secondaryColor="#ccc"
+                                    backgroundColor="#f3f3f3"
+                                    foregroundColor="#ccc"
                                 >
-                                    <circle cx="5" cy="9" r="2" />
-                                    <circle cx="10" cy="9" r="2" />
-                                    <circle cx="15" cy="9" r="2" />
+                                    <circle cx="6" cy="18" r="4" />
+                                    <circle cx="16" cy="18" r="4" />
+                                    <circle cx="26" cy="18" r="4" />
                                 </ContentLoader>
                             </div>
                         )}

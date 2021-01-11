@@ -179,7 +179,15 @@ class Contributions extends Component {
                         <Col md="9">
                             {this.state.loading && (
                                 <div>
-                                    <ContentLoader height={6} width={100} speed={2} primaryColor="#f3f3f3" secondaryColor="#ecebeb">
+                                    <ContentLoader
+                                        height="100%"
+                                        width="100%"
+                                        viewBox="0 0 100 6"
+                                        style={{ width: '100% !important' }}
+                                        speed={2}
+                                        backgroundColor="#f3f3f3"
+                                        foregroundColor="#ecebeb"
+                                    >
                                         <rect x="0" y="0" rx="1" ry="1" width={20} height="5" />
                                         <rect x="21" y="0" rx="1" ry="1" width={20} height="5" />
                                         <rect x="42" y="0" rx="1" ry="1" width={20} height="5" />
@@ -252,9 +260,17 @@ class Contributions extends Component {
                                             <Title style={{ marginTop: 0 }}>Research problems</Title>
                                             {this.state.loading && (
                                                 <div>
-                                                    <ContentLoader height={7} width={100} speed={2} primaryColor="#f3f3f3" secondaryColor="#ecebeb">
-                                                        <rect x="0" y="0" width="40" height="3" />
-                                                        <rect x="0" y="4" width="40" height="3" />
+                                                    <ContentLoader
+                                                        height="100%"
+                                                        width="100%"
+                                                        viewBox="0 0 100 5"
+                                                        style={{ width: '100% !important' }}
+                                                        speed={2}
+                                                        backgroundColor="#f3f3f3"
+                                                        foregroundColor="#ecebeb"
+                                                    >
+                                                        <rect x="0" y="0" width="40" height="2" />
+                                                        <rect x="0" y="3" width="40" height="2" />
                                                     </ContentLoader>
                                                 </div>
                                             )}
@@ -302,8 +318,16 @@ class Contributions extends Component {
                                             <Title>Contribution data</Title>
                                             {this.state.loading && (
                                                 <div>
-                                                    <ContentLoader height={6} width={100} speed={2} primaryColor="#f3f3f3" secondaryColor="#ecebeb">
-                                                        <rect x="0" y="0" rx="2" ry="2" width="90" height="6" />
+                                                    <ContentLoader
+                                                        height="100%"
+                                                        width="100%"
+                                                        viewBox="0 0 100 6"
+                                                        style={{ width: '100% !important' }}
+                                                        speed={2}
+                                                        backgroundColor="#f3f3f3"
+                                                        foregroundColor="#ecebeb"
+                                                    >
+                                                        <rect x="0" y="0" rx="1" ry="1" width="90" height="6" />
                                                     </ContentLoader>
                                                 </div>
                                             )}
@@ -323,7 +347,15 @@ class Contributions extends Component {
                                             <Title>Similar contributions</Title>
                                             {this.state.isSimilaireContributionsLoading && (
                                                 <div>
-                                                    <ContentLoader height={10} width={100} speed={2} primaryColor="#f3f3f3" secondaryColor="#ecebeb">
+                                                    <ContentLoader
+                                                        height="100%"
+                                                        width="100%"
+                                                        viewBox="0 0 100 10"
+                                                        style={{ width: '100% !important' }}
+                                                        speed={2}
+                                                        backgroundColor="#f3f3f3"
+                                                        foregroundColor="#ecebeb"
+                                                    >
                                                         <rect x="0" y="0" rx="2" ry="2" width="32" height="10" />
                                                         <rect x="33" y="0" rx="2" ry="2" width="32" height="10" />
                                                         <rect x="66" y="0" rx="2" ry="2" width="32" height="10" />
