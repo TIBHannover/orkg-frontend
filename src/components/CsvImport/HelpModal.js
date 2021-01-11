@@ -64,7 +64,7 @@ const HelpModal = props => {
                     <li>
                         <strong>paper:authors</strong>
                         <br />
-                        Paper authors, separated by a semicolon (e.g., Author 1; Author 2)
+                        Paper authors, separated by a semicolon (e.g., Author 1<b>;</b> Author 2)
                     </li>
 
                     <li>

@@ -297,7 +297,7 @@ const useImportBulkData = ({ data, onFinish }) => {
                 }
             } catch (e) {
                 console.log(e);
-                toast.error('Something went wrong while adding the paper: ' + paper.paper.title);
+                toast.error('Something went wrong while adding the paper: ' + paper.title);
             }
         }
         setIsLoading(false);
