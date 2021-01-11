@@ -117,8 +117,9 @@ export default (state = initialState, action) => {
 
             return {
                 ...state,
-                researchFields: payload.researchFields,
-                selectedResearchField: payload.selectedResearchField
+                researchFields: typeof payload.researchFields !== 'undefined' ? payload.researchFields : state.researchFields,
+                selectedResearchField:
+                    typeof payload.selectedResearchField !== 'undefined' ? payload.selectedResearchField : state.selectedResearchField
             };
         }
 
