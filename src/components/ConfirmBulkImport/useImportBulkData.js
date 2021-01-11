@@ -192,11 +192,13 @@ const useImportBulkData = ({ data, onFinish }) => {
     const getExistingPaperId = async (title, doi) => {
         // first check if there is a paper with this DOI
         if (doi) {
-            const paper = await getPaperByDOI(doi);
+            try {
+                const paper = await getPaperByDOI(doi);
 
-            if (paper) {
-                return paper.id;
-            }
+                if (paper) {
+                    return paper.id;
+                }
+            } catch (e) {}
         }
 
         // if no paper is found, check if there is a paper with this title
