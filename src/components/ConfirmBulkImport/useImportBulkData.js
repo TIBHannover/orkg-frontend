@@ -9,7 +9,15 @@ import { getPredicate, getAllPredicates, createPredicate } from 'services/backen
 import { saveFullPaper } from 'services/backend/papers';
 import { toast } from 'react-toastify';
 
-const PREDEFINED_COLUMNS = ['paper:title', 'paper:authors', 'paper:publication_month', 'paper:publication_year', 'paper:doi', 'paper:research_field'];
+const PREDEFINED_COLUMNS = [
+    'paper:title',
+    'paper:authors',
+    'paper:publication_month',
+    'paper:publication_year',
+    'paper:doi',
+    'paper:url',
+    'paper:research_field'
+];
 
 const useImportBulkData = ({ data, onFinish }) => {
     const [papers, setPapers] = useState([]);
@@ -52,6 +60,7 @@ const useImportBulkData = ({ data, onFinish }) => {
             const publicationMonth = getFirstValue(rowObject, 'paper:publication_month');
             const publicationYear = getFirstValue(rowObject, 'paper:publication_year');
             const doi = getFirstValue(rowObject, 'paper:doi');
+            const url = getFirstValue(rowObject, 'paper:url');
             let researchField = getFirstValue(rowObject, 'paper:research_field', MISC.RESEARCH_FIELD_MAIN);
 
             rowObject = omit(rowObject, PREDEFINED_COLUMNS);
@@ -162,7 +171,7 @@ const useImportBulkData = ({ data, onFinish }) => {
                 publicationMonth,
                 publicationYear,
                 researchField,
-                url: '',
+                url,
                 publishedIn: null,
                 contributions: [
                     {
@@ -183,11 +192,13 @@ const useImportBulkData = ({ data, onFinish }) => {
     const getExistingPaperId = async (title, doi) => {
         // first check if there is a paper with this DOI
         if (doi) {
-            const paper = await getPaperByDOI(doi);
+            try {
+                const paper = await getPaperByDOI(doi);
 
-            if (paper) {
-                return paper.id;
-            }
+                if (paper) {
+                    return paper.id;
+                }
+            } catch (e) {}
         }
 
         // if no paper is found, check if there is a paper with this title
