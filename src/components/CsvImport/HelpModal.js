@@ -84,6 +84,18 @@ const HelpModal = props => {
                     </li>
 
                     <li>
+                        <strong>paper:doi</strong>
+                        <br />
+                        The DOI of the paper (e.g. 10.1145/3360901.3364435)
+                    </li>
+
+                    <li>
+                        <strong>paper:url</strong>
+                        <br />
+                        The URL of the paper (in case no DOI is provided, the URL is displayed instead)
+                    </li>
+
+                    <li>
                         <strong>contribution:research_problem</strong>
                         <br />A research problem (e.g., Graph visualization)
                     </li>
