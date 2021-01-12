@@ -91,7 +91,7 @@ const ResearchFieldSelector = ({ selectedResearchField, researchFields, updateRe
 
     const getFieldsByIds = useCallback(async (ids, previousFields = []) => {
         const fields = [...previousFields];
-        const subfieldStatements = await getStatementsBySubjects({ ids }); // not always research fields
+        const subfieldStatements = await getStatementsBySubjects({ ids });
 
         for (const { id, statements } of subfieldStatements) {
             const hasChildren = statements.length > 0;
