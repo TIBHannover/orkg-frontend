@@ -262,7 +262,8 @@ class ComparisonTable extends Component {
                                                                   </Link>
                                                                   <br />
                                                                   <Contribution>
-                                                                      {contribution.contributionLabel} {contribution.year && `- ${contribution.year}`}
+                                                                      {contribution.year && `${contribution.year} - `}{' '}
+                                                                      {contribution.contributionLabel}
                                                                   </Contribution>
                                                               </ItemHeaderInner>
 
