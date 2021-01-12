@@ -33,12 +33,19 @@ const HelpModal = props => {
                     </li>
                     <li>
                         <strong>One paper per row.</strong> Each row should contain a single paper. It is not possible to use multiple rows to
-                        describe the same paper. Merge information in the same cells if necessary
+                        describe the same paper. Create new columns with the same label if multiple values are needed or merge information in the same
+                        cells if necessary.
+                    </li>
+                    <li>
+                        <strong>Special cell values.</strong> By default each cell value is considered a literal (i.e. text). It is possible to
+                        prepend <i>resource:</i> to a cell value to create a resource instead. Also, it is possible to use an existing ORKG resource.
+                        Use as cell value <i>orkg:</i> followed by the resource ID (e.g. <i>orkg:R100</i>). See the CSV example below for more
+                        details.
                     </li>
                 </ul>
                 <hr />
                 <h2 className="h4">Header labels</h2>
-                <p>Some predefined column labels are used to correctly add paper related data.</p>
+                <p>Some predefined column labels are used to correctly add paper related data. The column labels are case sensitive.</p>
 
                 <h3 className="h6">
                     <em>Required columns</em>
@@ -58,7 +65,7 @@ const HelpModal = props => {
                     <li>
                         <strong>paper:authors</strong>
                         <br />
-                        Paper authors, separated by a semicolon (e.g., Author 1; Author 2)
+                        Paper authors, separated by a semicolon (e.g., Author 1<b>;</b> Author 2)
                     </li>
 
                     <li>
@@ -106,7 +113,7 @@ const HelpModal = props => {
                 </h3>
                 <p>
                     Additional paper data can be added in additional columns to the CSV. The label of the column will be used as predicate in the
-                    ORKG. In case a header label is prefixed with resource:, a resource is created instead of a literal (e.g., resource:Location)
+                    ORKG.
                 </p>
                 <hr />
                 <h2 className="h4">CSV example</h2>
@@ -120,7 +127,8 @@ const HelpModal = props => {
                                 <th>paper:publication_year</th>
                                 <th>paper:research_field</th>
                                 <th>contribution:research_problem</th>
-                                <th>resource:location</th>
+                                <th>location</th>
+                                <th>location</th>
                                 <th>value</th>
                                 <th>approach</th>
                             </tr>
@@ -133,7 +141,8 @@ const HelpModal = props => {
                                 <td>2020</td>
                                 <td>R11</td>
                                 <td>Example problem</td>
-                                <td>Berlin</td>
+                                <td>resource:Berlin</td>
+                                <td />
                                 <td>237.23</td>
                                 <td>We tried to measure...</td>
                             </tr>
@@ -143,14 +152,16 @@ const HelpModal = props => {
                                 <td>6</td>
                                 <td>2019</td>
                                 <td>R11</td>
-                                <td>Example problem</td>
-                                <td>Hannover</td>
+                                <td>orkg:R41001</td>
+                                <td>resource:Hannover</td>
+                                <td>resource:Dresden</td>
                                 <td>12.2</td>
                                 <td>For this study, the...</td>
                             </tr>
                         </tbody>
                     </Table>
                 </div>
+                <i>In this example, Location property in the second paper will take two values (Hannover and Dresden)</i>
             </ModalBody>
         </Modal>
     );
