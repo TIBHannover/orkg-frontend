@@ -10,11 +10,10 @@ import {
     updateContributionLabel as updateContributionLabelInSB
 } from './statementBrowser';
 import { createResource as createResourceApi } from 'services/backend/resources';
-import { createResourceStatement, createLiteralStatement, getStatementsBySubjectAndPredicate } from 'services/backend/statements';
+import { createResourceStatement, createLiteralStatement } from 'services/backend/statements';
 import { saveFullPaper } from 'services/backend/papers';
 import { createLiteral } from 'services/backend/literals';
 import { createPredicate } from 'services/backend/predicates';
-import { indexContribution } from 'services/similarity';
 import { toast } from 'react-toastify';
 import { PREDICATES, MISC } from 'constants/graphSettings';
 
@@ -441,7 +440,6 @@ export const saveAddPaper = data => {
             dispatch({
                 type: type.ADD_PAPER_UNBLOCK_NAVIGATION
             });
-            indexContributionsByPaperId(paper.id);
         } catch (e) {
             console.log(e);
             toast.error('Something went wrong while saving this paper.');
@@ -450,13 +448,4 @@ export const saveAddPaper = data => {
             });
         }
     };
-};
-
-export const indexContributionsByPaperId = async paperId => {
-    const contributionStatements = await getStatementsBySubjectAndPredicate({
-        subjectId: paperId,
-        predicateId: PREDICATES.HAS_CONTRIBUTION
-    });
-
-    return contributionStatements.map(statement => indexContribution(statement.object.id));
 };
