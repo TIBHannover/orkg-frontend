@@ -4,7 +4,7 @@ import { faMinusSquare, faPlusSquare, faSpinner } from '@fortawesome/free-solid-
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
 import { CLASSES, MISC } from 'constants/graphSettings';
-import { sortBy } from 'lodash';
+import { sortBy, find, set } from 'lodash';
 import { resourcesUrl } from 'services/backend/resources';
 import { getParentResearchFields, getStatementsBySubjects } from 'services/backend/statements';
 import styled from 'styled-components';
@@ -44,6 +44,12 @@ const SubList = styled.ul`
 const IndicatorContainer = styled.div`
     width: 30px;
     text-align: center;
+`;
+
+const CollapseButton = styled(Button)`
+    && {
+        color: ${props => props.theme.darkblue};
+    }
 `;
 
 const ResearchFieldSelector = ({ selectedResearchField, researchFields, updateResearchField }) => {
@@ -176,7 +182,7 @@ const ResearchFieldSelector = ({ selectedResearchField, researchFields, updateRe
                                 <Icon icon={icon} spin={isLoading} className={selectedResearchField !== field.id ? 'text-darkblue' : ''} />
                             )}
                         </IndicatorContainer>
-                        {field.label}
+                        {find(parents, p => p.id === field.id) ? <b>{field.label}</b> : field.label}
                     </FieldItem>
                     {field.isExpanded && !isLoading && <SubList>{fieldList(field.id)}</SubList>}
                 </li>
@@ -184,10 +190,22 @@ const ResearchFieldSelector = ({ selectedResearchField, researchFields, updateRe
         });
     };
 
+    const getParents = (field, parents) => {
+        const f = field ? find(researchFields, f => f.id === field.parent) : null;
+        if (f) {
+            parents.push(f);
+            return getParents(f, parents);
+        } else {
+            return parents;
+        }
+    };
+
     let researchFieldLabel;
+    let parents = [];
     if (researchFields && researchFields.length > 0) {
         const field = researchFields.find(rf => rf.id === selectedResearchField);
         researchFieldLabel = field ? field.label : selectedResearchField;
+        parents = getParents(field, []);
     }
 
     return (
@@ -208,7 +226,19 @@ const ResearchFieldSelector = ({ selectedResearchField, researchFields, updateRe
                     <Icon icon={faSpinner} spin /> Loading
                 </div>
             )}
-
+            <CollapseButton
+                size="sm"
+                color="link"
+                disabled={!find(researchFields, f => f.isExpanded)}
+                className="float-right pr-0"
+                onClick={() =>
+                    updateResearchField({
+                        researchFields: researchFields.map(f => set(f, 'isExpanded', false))
+                    })
+                }
+            >
+                <Icon icon={faMinusSquare} /> Collapse all
+            </CollapseButton>
             <List>{fieldList(MISC.RESEARCH_FIELD_MAIN)}</List>
         </>
     );
