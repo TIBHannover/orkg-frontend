@@ -181,9 +181,16 @@ function Resource(props) {
                     <Container className="d-flex align-items-center">
                         <h1 className="h4 mt-4 mb-4 flex-grow-1">Resource view</h1>
                         <ButtonGroup className="flex-shrink-0">
-                            <Button color="darkblue" size="sm" tag={Link} to={ROUTES.ADD_RESOURCE} style={{ marginRight: 2 }}>
+                            <RequireAuthentication
+                                size="sm"
+                                component={Button}
+                                color="darkblue"
+                                style={{ marginRight: 2 }}
+                                tag={Link}
+                                to={ROUTES.ADD_RESOURCE}
+                            >
                                 <Icon icon={faPlus} className="mr-1" /> Create resource
-                            </Button>
+                            </RequireAuthentication>
                             {dedicatedLink && (
                                 <Button
                                     color="darkblue"
