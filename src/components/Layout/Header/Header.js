@@ -274,12 +274,12 @@ class Header extends Component {
 
                         <Collapse isOpen={this.state.isOpen} navbar>
                             <Nav className="mr-auto flex-shrink-0" navbar>
-                                {/* View menu */}
+                                {/* view menu */}
                                 <UncontrolledButtonDropdown nav inNavbar>
                                     <DropdownToggle nav className="ml-2">
                                         View <FontAwesomeIcon style={{ marginTop: '4px' }} icon={faChevronDown} pull="right" />
                                     </DropdownToggle>
-                                    <DropdownMenu right>
+                                    <DropdownMenu>
                                         <DropdownItem tag={RouterNavLink} exact to={ROUTES.PAPERS}>
                                             Papers
                                         </DropdownItem>
@@ -315,12 +315,12 @@ class Header extends Component {
                                     </DropdownMenu>
                                 </UncontrolledButtonDropdown>
 
-                                {/* Tools menu */}
+                                {/* tools menu */}
                                 <UncontrolledButtonDropdown nav inNavbar>
                                     <DropdownToggle nav className="ml-2">
                                         Tools <FontAwesomeIcon style={{ marginTop: '4px' }} icon={faChevronDown} pull="right" />
                                     </DropdownToggle>
-                                    <DropdownMenu right>
+                                    <DropdownMenu>
                                         <DropdownItem
                                             tag={RouterNavLink}
                                             exact
@@ -351,7 +351,7 @@ class Header extends Component {
                                     <DropdownToggle nav className="ml-2">
                                         About <FontAwesomeIcon style={{ marginTop: '4px' }} icon={faChevronDown} pull="right" />
                                     </DropdownToggle>
-                                    <DropdownMenu right>
+                                    <DropdownMenu>
                                         <DropdownItem tag="a" target="_blank" rel="noopener noreferrer" href="https://projects.tib.eu/orkg/">
                                             About ORKG <Icon size="sm" icon={faExternalLinkAlt} />
                                         </DropdownItem>
