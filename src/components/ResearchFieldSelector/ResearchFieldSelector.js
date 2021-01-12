@@ -1,17 +1,18 @@
+import React, { useCallback, useEffect, useState } from 'react';
+import { Button } from 'reactstrap';
 import { faMinusSquare, faPlusSquare, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
 import { CLASSES, MISC } from 'constants/graphSettings';
 import { sortBy } from 'lodash';
-import PropTypes from 'prop-types';
-import React, { useCallback, useEffect, useState } from 'react';
-import { Button } from 'reactstrap';
 import { resourcesUrl } from 'services/backend/resources';
 import { getParentResearchFields, getStatementsBySubjects } from 'services/backend/statements';
 import styled from 'styled-components';
+import PropTypes from 'prop-types';
 
 const FieldItem = styled(Button)`
     &&& {
+        // &&& https://styled-components.com/docs/faqs#how-can-i-override-styles-with-higher-specificity
         background: ${props => props.theme.light};
         border-radius: 6px;
         padding: 6px 7px;
@@ -84,19 +85,21 @@ const ResearchFieldSelector = ({ selectedResearchField, researchFields, updateRe
 
     const getFieldsByIds = useCallback(async (ids, previousFields = []) => {
         const fields = [...previousFields];
-        const subfieldStatements = await getStatementsBySubjects({ ids });
+        const subfieldStatements = await getStatementsBySubjects({ ids }); // not always research fields
 
         for (const { id, statements } of subfieldStatements) {
             const hasChildren = statements.length > 0;
             if (hasChildren) {
                 statements.map(statement =>
-                    fields.push({
-                        label: statement.object.label,
-                        id: statement.object.id,
-                        parent: id,
-                        hasChildren: null,
-                        isExpanded: false
-                    })
+                    statement.object.classes && statement.object.classes.length && statement.object.classes.includes(CLASSES.RESEARCH_FIELD) // Make sure that the object is research field
+                        ? fields.push({
+                              label: statement.object.label,
+                              id: statement.object.id,
+                              parent: id,
+                              hasChildren: null,
+                              isExpanded: false
+                          })
+                        : {}
                 );
             }
 
