@@ -192,10 +192,8 @@ class ResearchFieldCards extends Component {
         }
 
         const showPapers = this.state.breadcrumb.length > 1;
-        const researchFieldLink = this.state.breadcrumb.length
-            ? reverse(ROUTES.RESEARCH_FIELD, { researchFieldId: this.state.breadcrumb[this.state.breadcrumb.length - 1].id })
-            : null;
         const currentField = this.state.breadcrumb[this.state.breadcrumb.length - 1];
+        const researchFieldLink = this.state.breadcrumb.length ? reverse(ROUTES.RESEARCH_FIELD, { researchFieldId: currentField.id }) : null;
 
         return (
             <div className="mt-3">
