@@ -4,7 +4,7 @@ import moment from 'moment';
 
 export default function checkDataValidation(data) {
     const header = data && data[0];
-    const values = data && data.slice(1);
+    const values = data && data.slice(1).map(r => r.map(s => (s ? s.trim() : '')));
     const schema = Joi.array();
 
     // Check if paper:title column exists

@@ -33,7 +33,7 @@ const CsvImport = () => {
     const [isHelpModalOpen, setIsHelpModalOpen] = useState(false);
 
     const handleOnFileLoaded = (_data, fileInfo) => {
-        setData(_data);
+        setData(_data.map(r => r.map(s => (s ? s.trim() : ''))));
         setIsFinished(false);
         setFileName(fileInfo.name);
         validateCsv(_data);
