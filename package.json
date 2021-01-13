@@ -103,7 +103,6 @@
         "string-format": "^2.0.0",
         "styled-components": "^5.2.1",
         "typed.js": "^2.0.11",
-        "validator": "^10.11.0",
         "wordsninja": "^1.0.0"
     },
     "scripts": {

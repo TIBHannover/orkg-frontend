@@ -24,7 +24,7 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { range } from 'utils';
 import Tooltip from 'components/Utils/Tooltip';
 import AuthorsInput from 'components/Utils/AuthorsInput';
-import FormValidator from 'components/Utils/FormValidator';
+import Joi from '@hapi/joi';
 import { connect } from 'react-redux';
 import { updateGeneralData, nextStep, openTour, closeTour } from 'actions/addPaper';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
@@ -77,15 +77,6 @@ class GeneralData extends Component {
     constructor(props) {
         super(props);
 
-        this.validator = new FormValidator([
-            {
-                field: 'entry',
-                method: 'isEmpty',
-                validWhen: false,
-                message: "Please enter the DOI, Bibtex or select 'Manually' to enter the paper details yourself"
-            }
-        ]);
-
         this.lookup = createRef();
 
         this.state = {
@@ -101,7 +92,7 @@ class GeneralData extends Component {
             paperPublicationMonth: this.props.publicationMonth,
             paperPublicationYear: this.props.publicationYear,
             publishedIn: this.props.publishedIn,
-            validation: this.validator.valid(),
+            validation: null,
             errors: null,
             url: this.props.url,
             existingPaper: null
@@ -158,15 +149,21 @@ class GeneralData extends Component {
 
         this.lookup.current.blur();
 
-        const validation = this.validator.validate({ entry: this.state.entry.trim() });
-        this.setState({ validation });
-
-        if (!validation.isValid) {
+        const { error } = Joi.string()
+            .required()
+            .messages({
+                'string.empty': `Please enter the DOI, Bibtex or select 'Manually' to enter the paper details yourself`
+            })
+            .label('Paper DOI or BibTeX')
+            .validate(this.state.entry.trim());
+        if (error) {
+            this.setState({ validation: error.message });
             return;
         }
 
         this.setState({
-            isFetching: true
+            isFetching: true,
+            validation: null
         });
 
         let entry;
@@ -198,23 +195,14 @@ class GeneralData extends Component {
                 let validation;
                 switch (e.message) {
                     case 'This format is not supported or recognized':
-                        validation = this.validator.setError({
-                            field: 'entry',
-                            message:
-                                "This format is not supported or recognized. Please enter a valid DOI or Bibtex or select 'Manually' to enter the paper details yourself"
-                        });
+                        validation =
+                            "This format is not supported or recognized. Please enter a valid DOI or Bibtex or select 'Manually' to enter the paper details yourself";
                         break;
                     case 'Server responded with status code 404':
-                        validation = this.validator.setError({
-                            field: 'entry',
-                            message: 'No paper has been found'
-                        });
+                        validation = 'No paper has been found';
                         break;
                     default:
-                        validation = this.validator.setError({
-                            field: 'entry',
-                            message: 'An error occurred, reload the page and try again'
-                        });
+                        validation = 'An error occurred, reload the page and try again';
                         break;
                 }
                 this.setState({
@@ -433,12 +421,12 @@ class GeneralData extends Component {
                                                             id="paperDoi"
                                                             value={this.state.entry}
                                                             onChange={this.handleInputChange}
-                                                            invalid={this.state.validation.entry.isInvalid}
+                                                            invalid={!!this.state.validation}
                                                             onKeyPress={target => {
                                                                 target.charCode === 13 && this.handleLookupClick();
                                                             }}
                                                         />
-                                                        <FormFeedback className="order-1">{this.state.validation.entry.message}</FormFeedback>{' '}
+                                                        <FormFeedback className="order-1">{this.state.validation}</FormFeedback>{' '}
                                                         {/* Need to set order-1 here to fix Bootstrap bug of missing rounded borders */}
                                                         <InputGroupAddon addonType="append">
                                                             <Button
