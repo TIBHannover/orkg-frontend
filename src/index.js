@@ -12,7 +12,7 @@ import { ThemeProvider } from 'styled-components';
 import { MatomoProvider, createInstance } from '@datapunt/matomo-tracker-react';
 import { DndProvider } from 'react-dnd';
 import env from '@beam-australia/react-env';
-import HTML5Backend from 'react-dnd-html5-backend';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 
 // Extract Sass variables into a JS object
 // eslint-disable-next-line import/no-webpack-loader-syntax
