@@ -243,7 +243,7 @@ const useImportBulkData = ({ data, onFinish }) => {
         for (const paper of papers) {
             try {
                 // create new properties for the ones that do not yet exist
-                for (const [property, values] of Object.entries(paper.contributions[0].values)) {
+                for (let property in paper.contributions[0].values) {
                     // property does not yet exist, create a new one
                     if (!(property in _idToLabel) && !(property in newProperties)) {
                         const newProperty = await createPredicate(property);
@@ -255,11 +255,12 @@ const useImportBulkData = ({ data, onFinish }) => {
                         const propertyObject = paper.contributions[0].values;
                         // rename the property label to the property id
                         delete Object.assign(propertyObject, { [newId]: propertyObject[property] })[property];
+                        property = newId;
                     }
-
                     // if new resources should be created, create them now
                     // then ensure that duplicate resource labels are mapped to the same newly created resource  ID
-                    for (const [index, value] of values.entries()) {
+                    // (don't loop over 'values' directly, because they might be updated while creating properties above)
+                    for (const [index, value] of paper.contributions[0].values[property].entries()) {
                         // if there is a label, a new resource is created
                         if ('label' in value) {
                             const { label } = value;
