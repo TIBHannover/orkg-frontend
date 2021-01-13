@@ -1,4 +1,3 @@
-import React from 'react';
 import { FormGroup, Label, FormText, Input, CustomInput, Table } from 'reactstrap';
 import { setHasLabelFormat, setLabelFormat } from 'actions/addTemplate';
 import { connect } from 'react-redux';

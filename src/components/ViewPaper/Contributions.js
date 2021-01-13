@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Alert, Col, Container, Form, FormGroup, Row, Button } from 'reactstrap';
 import { deleteStatementById, createResourceStatement } from 'services/backend/statements';
 import { getResource } from 'services/backend/resources';

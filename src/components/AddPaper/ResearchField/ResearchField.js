@@ -1,6 +1,6 @@
 import { nextStep, previousStep, updateResearchField } from 'actions/addPaper';
 import ResearchFieldSelector from 'components/ResearchFieldSelector/ResearchFieldSelector';
-import React, { useCallback, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button } from 'reactstrap';
 

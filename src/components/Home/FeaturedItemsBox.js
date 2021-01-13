@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import FeaturedComparisons from './FeaturedComparisons';
 import FeaturedPapers from './FeaturedPapers';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';

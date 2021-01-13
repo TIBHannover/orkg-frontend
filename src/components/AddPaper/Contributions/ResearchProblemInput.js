@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useCallback } from 'react';
+import { Fragment, useState, useCallback } from 'react';
 import { StyledResearchFieldsInputFormControl, StyledResearchFieldBrowser } from './styled';
 import PropTypes from 'prop-types';
 import AsyncCreatableSelect from 'react-select/async-creatable';

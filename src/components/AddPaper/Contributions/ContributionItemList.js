@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { createRef, Component } from 'react';
 import { Input } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faTrash, faPen } from '@fortawesome/free-solid-svg-icons';
@@ -46,7 +46,7 @@ class ContributionItemList extends Component {
             draftLabel: this.props.contribution.label
         };
 
-        this.inputRefs = React.createRef();
+        this.inputRefs = createRef();
     }
 
     componentDidUpdate(prevProps) {

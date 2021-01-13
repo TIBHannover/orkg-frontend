@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { ButtonDropdown, DropdownToggle, Container, ListGroup, ListGroupItem, DropdownItem, DropdownMenu } from 'reactstrap';
 import { getStatementsBySubjects } from 'services/backend/statements';
 import { getResourcesByClass } from 'services/backend/resources';

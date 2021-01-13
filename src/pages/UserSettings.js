@@ -1,5 +1,5 @@
 import { Container, Row, TabContent, TabPane } from 'reactstrap';
-import React, { Component } from 'react';
+import { Component } from 'react';
 import styled from 'styled-components';
 import classnames from 'classnames';
 import GeneralSettings from '../components/UserSettings/GeneralSettings';

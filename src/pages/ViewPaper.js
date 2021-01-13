@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Container, Alert, UncontrolledAlert } from 'reactstrap';
 import { getStatementsBySubject, createResourceStatement, deleteStatementById } from 'services/backend/statements';
 import { getUserInformationById } from 'services/backend/users';

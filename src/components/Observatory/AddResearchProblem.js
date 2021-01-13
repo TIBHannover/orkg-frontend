@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Label, FormGroup } from 'reactstrap';
 import { addResourceToObservatory } from 'services/backend/resources';
 import { toast } from 'react-toastify';

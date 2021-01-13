@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import ContentLoader from 'react-content-loader';
 import { getStatementsByObjectAndPredicate, getParentResearchFields } from 'services/backend/statements';
 import Tooltip from 'components/Utils/Tooltip';

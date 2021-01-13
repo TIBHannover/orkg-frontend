@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Container, Button } from 'reactstrap';
 import { getPredicate } from 'services/backend/predicates';
 import StatementBrowser from 'components/StatementBrowser/Statements/StatementsContainer';

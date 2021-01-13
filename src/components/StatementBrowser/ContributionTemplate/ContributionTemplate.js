@@ -1,4 +1,3 @@
-import React from 'react';
 import { ListGroup } from 'reactstrap';
 import AddProperty from 'components/StatementBrowser/AddProperty/AddPropertyContainer';
 import TemplateHeader from 'components/StatementBrowser/TemplateHeader/TemplateHeaderContainer';

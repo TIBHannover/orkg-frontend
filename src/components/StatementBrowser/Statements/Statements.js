@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { ListGroup, Button } from 'reactstrap';
 import StatementItem from 'components/StatementBrowser/StatementItem/StatementItemContainer';
 import AddProperty from 'components/StatementBrowser/AddProperty/AddPropertyContainer';

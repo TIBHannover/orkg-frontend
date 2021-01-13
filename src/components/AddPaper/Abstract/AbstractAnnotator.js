@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { createRef, Component } from 'react';
 import PropTypes from 'prop-types';
 import rangy from 'rangy';
 import { compose } from 'redux';
@@ -20,7 +20,7 @@ class AbstractAnnotator extends Component {
     constructor(props) {
         super(props);
 
-        this.annotatorRef = React.createRef();
+        this.annotatorRef = createRef();
 
         this.state = {
             defaultOptions: []

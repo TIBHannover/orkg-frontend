@@ -1,4 +1,3 @@
-import React from 'react';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 import { ListGroup, ListGroupItem, Button } from 'reactstrap';

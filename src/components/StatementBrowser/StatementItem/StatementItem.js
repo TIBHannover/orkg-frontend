@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { updateStatement, deleteStatementById } from 'services/backend/statements';
 import { createPredicate } from 'services/backend/predicates';
 import { getResource } from 'services/backend/resources';

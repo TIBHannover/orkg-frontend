@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import Tooltip from '../../Utils/Tooltip';
 import { Badge, Alert } from 'reactstrap';
 import capitalize from 'capitalize';

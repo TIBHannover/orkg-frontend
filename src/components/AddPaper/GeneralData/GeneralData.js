@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { createRef, Component } from 'react';
 import {
     Row,
     Col,
@@ -86,7 +86,7 @@ class GeneralData extends Component {
             }
         ]);
 
-        this.lookup = React.createRef();
+        this.lookup = createRef();
 
         this.state = {
             isFirstVisit: true,

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Container, Button } from 'reactstrap';
 import ComparisonCard from 'components/ComparisonCard/ComparisonCard';
 import useContributionComparison from './hooks/useContributionComparison';

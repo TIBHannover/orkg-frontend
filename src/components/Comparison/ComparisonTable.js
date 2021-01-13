@@ -6,7 +6,7 @@ import ROUTES from 'constants/routes';
 import { debounce, functions, isEqual, omit } from 'lodash';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
-import React, { Component } from 'react';
+import { createRef, Component } from 'react';
 import { Link } from 'react-router-dom';
 import { ScrollSync, ScrollSyncPane } from 'react-scroll-sync';
 import ReactTable from 'react-table';
@@ -28,8 +28,8 @@ class ComparisonTable extends Component {
             showBackButton: false
         };
 
-        this.scrollContainerHead = React.createRef();
-        this.scrollContainerBody = React.createRef();
+        this.scrollContainerHead = createRef();
+        this.scrollContainerBody = createRef();
         this.scrollAmount = 500;
     }
 

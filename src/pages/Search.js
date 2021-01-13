@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Container, Row, Col } from 'reactstrap';
 import { withRouter } from 'react-router-dom'; // to access the history object
 import { reverse } from 'named-urls';

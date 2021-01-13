@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Container, Row, Col, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import { getStatementsByObject, getStatementsBySubject, getStatementsBySubjects } from 'services/backend/statements';
 import PaperCard from 'components/PaperCard/PaperCard';

@@ -1,5 +1,3 @@
-import React from 'react';
-// There is an issue in the main package (Unhandled Rejection (TypeError): setting getter-only property "className")
 import html2canvas from '@trainiac/html2canvas';
 import { DropdownItem } from 'reactstrap';
 import PropTypes from 'prop-types';

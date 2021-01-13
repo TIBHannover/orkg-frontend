@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Label, FormFeedback, Alert } from 'reactstrap';
 import Textarea from 'react-textarea-autosize';
 import { updateAbstract } from '../../../actions/addPaper';

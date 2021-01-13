@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
 import RDFDataCube from 'components/RDFDataCube/RDFDataCube';
 import { updateStatement, deleteStatementById } from 'services/backend/statements';

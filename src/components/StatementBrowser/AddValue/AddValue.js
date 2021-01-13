@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { createResourceStatement, createLiteralStatement } from 'services/backend/statements';
 import { createLiteral } from 'services/backend/literals';
 import { createPredicate } from 'services/backend/predicates';

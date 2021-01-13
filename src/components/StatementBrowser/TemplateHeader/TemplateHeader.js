@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Input } from 'reactstrap';
 import { faTrash, faPen, faQuestion } from '@fortawesome/free-solid-svg-icons';
 import StatementOptionButton from 'components/StatementBrowser/StatementOptionButton/StatementOptionButton';

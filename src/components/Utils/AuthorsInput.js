@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { createRef, Component } from 'react';
 import { FormGroup, Label, Button, Modal, ModalBody, ModalHeader, ModalFooter } from 'reactstrap';
 import { sortableContainer, sortableElement, sortableHandle } from 'react-sortable-hoc';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -130,7 +130,7 @@ class AuthorsInput extends Component {
     constructor(props) {
         super(props);
 
-        this.inputRef = React.createRef();
+        this.inputRef = createRef();
 
         this.state = {
             showAuthorForm: false,

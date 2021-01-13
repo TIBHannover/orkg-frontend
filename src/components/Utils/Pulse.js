@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import PropTypes from 'prop-types';
 import Tippy from '@tippy.js/react';
 import { withCookies, Cookies } from 'react-cookie';

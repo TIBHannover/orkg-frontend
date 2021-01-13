@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Row, Col, Button } from 'reactstrap';
 import ContributionItemList from './ContributionItemList';
 import ContributionsHelpTour from './ContributionsHelpTour';

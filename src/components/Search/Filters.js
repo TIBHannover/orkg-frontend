@@ -1,4 +1,3 @@
-import React from 'react';
 import { Input, InputGroup, InputGroupAddon, Button, Form, Label } from 'reactstrap';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
 import { withRouter } from 'react-router-dom';

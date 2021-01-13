@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Container } from 'reactstrap';
 import changelogPath from './CHANGELOG.md';
 import marked from 'marked';

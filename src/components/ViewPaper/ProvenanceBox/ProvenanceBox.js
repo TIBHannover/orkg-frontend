@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { StyledItemProvenanceBox, AnimationContainer, StyledActivity, ProvenanceBoxTabs, ErrorMessage, SidebarStyledBox } from './styled';
 import ObservatoryModal from 'components/ObservatoryModal/ObservatoryModal';
 import { TransitionGroup } from 'react-transition-group';

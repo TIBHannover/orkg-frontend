@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Modal, ModalHeader, ModalBody, ModalFooter, Button, FormGroup, Input, Label, ListGroup, ListGroupItem, InputGroup } from 'reactstrap';
 import { getStatementsBySubjectAndPredicate } from 'services/backend/statements';
 import { getResourcesByClass } from 'services/backend/resources';

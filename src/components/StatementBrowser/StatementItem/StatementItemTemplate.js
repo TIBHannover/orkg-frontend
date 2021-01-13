@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { ListGroup, InputGroup } from 'reactstrap';
 import PropTypes from 'prop-types';
