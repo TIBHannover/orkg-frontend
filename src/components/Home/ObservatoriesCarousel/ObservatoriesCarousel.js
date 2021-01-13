@@ -47,7 +47,7 @@ const CarouselIndicatorsStyled = styled(CarouselIndicators)`
         margin: 0;
     }
 
-    background: #e9ebf2;
+    background: ${props => props.theme.ultraLightBlue};
 `;
 
 const StyledGravatar = styled(Gravatar)`
@@ -55,6 +55,12 @@ const StyledGravatar = styled(Gravatar)`
     cursor: pointer;
     &:hover {
         border: 2px solid ${props => props.theme.primaryColor};
+    }
+`;
+
+const CardFooterStyled = styled(CardFooter)`
+    && {
+        background: ${props => props.theme.ultraLightBlue};
     }
 `;
 
@@ -149,11 +155,11 @@ export default function ObservatoriesCarousel() {
                                         <img key={`imageLogo${o.id}`} className="orgLogo" height="60px" src={o.logo} alt={`${o.name} logo`} />
                                     ))}
                                 </Link>
-                                <CardFooter className="text-muted">
+                                <CardFooterStyled className="text-muted">
                                     <small>
-                                        <Icon icon={faCubes} className="mr-1" /> {observatory.comparisons} Comparisons
+                                        <Icon icon={faCubes} className="mr-1" /> {observatory.comparisons} comparisons
                                         <Icon icon={faFile} className="mr-1 ml-2" />
-                                        {observatory.resources} Papers
+                                        {observatory.resources} papers
                                     </small>
                                     <div className="float-right" style={{ height: '25px' }}>
                                         {observatory.contributors.slice(0, 5).map(contributor => (
@@ -164,7 +170,7 @@ export default function ObservatoriesCarousel() {
                                             </Tippy>
                                         ))}
                                     </div>
-                                </CardFooter>
+                                </CardFooterStyled>
                             </Card>
                         )}
                     </ObservatoryCardStyled>
