@@ -104,6 +104,7 @@ const useImportBulkData = ({ data, onFinish }) => {
                     } else {
                         // property does not exist, it will be created when saving the papers
                         propertyId = property;
+                        valueToId[property] = property;
                     }
                 }
 
