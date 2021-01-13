@@ -84,11 +84,8 @@ const PaperList = props => {
                                 </div>
                             </div>
                             <small>
-                                {paper.authors.length && (
-                                    <>
-                                        <Icon size="sm" icon={faUser} /> {paper.authors.map(a => a.label).join(' • ')}
-                                    </>
-                                )}
+                                <Icon size="sm" icon={faUser} />{' '}
+                                {paper.authors.length > 0 ? paper.authors.map(a => a.label).join(' • ') : <i className="ml-1">No authors provided</i>}
                                 {(paper.publicationMonth || paper.publicationYear) && <Icon size="sm" icon={faCalendar} className="ml-2 mr-1" />}
                                 {paper.publicationMonth && paper.publicationMonth > 0 ? moment(paper.publicationMonth, 'M').format('MMMM') : ''}{' '}
                                 {paper.publicationYear}

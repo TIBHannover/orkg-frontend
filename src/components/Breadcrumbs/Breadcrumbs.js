@@ -5,11 +5,18 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faAngleDoubleRight, faAngleDoubleDown, faSpinner, faHome } from '@fortawesome/free-solid-svg-icons';
 import { PREDICATES } from 'constants/graphSettings';
 import ContentLoader from 'react-content-loader';
-import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
+import styled from 'styled-components';
 import PropTypes from 'prop-types';
+
+const StyledDropdownItem = styled(DropdownItem)`
+    &:active,
+    &:active.text-primary {
+        color: #fff !important;
+    }
+`;
 
 function Breadcrumbs(props) {
     const [parentResearchFields, setParentResearchFields] = useState([]);
@@ -63,15 +70,9 @@ function Breadcrumbs(props) {
                         !isLoading &&
                         parentResearchFields.map((field, index) => (
                             <span key={field.id}>
-                                {index !== parentResearchFields.length - 1 ? (
+                                {index !== parentResearchFields.length - 1 || !props.disableLastField ? (
                                     <Link to={index === 0 ? reverse(ROUTES.HOME) : reverse(ROUTES.RESEARCH_FIELD, { researchFieldId: field.id })}>
-                                        {index === 0 ? (
-                                            <>
-                                                <Icon className="mr-1" icon={faHome} />
-                                            </>
-                                        ) : (
-                                            field.label
-                                        )}
+                                        {index === 0 ? <Icon className="mr-1" icon={faHome} /> : field.label}
                                     </Link>
                                 ) : (
                                     field.label
@@ -93,25 +94,23 @@ function Breadcrumbs(props) {
                                                 <>
                                                     {siblings[index] &&
                                                         siblings[index].length &&
-                                                        siblings[index].map(rf => (
-                                                            <DropdownItem key={`rf-${rf.id}`}>
-                                                                <ConditionalWrapper
-                                                                    condition={rf.id !== parentResearchFields[index + 1].id}
-                                                                    wrapper={children => (
-                                                                        <Link to={reverse(ROUTES.RESEARCH_FIELD, { researchFieldId: rf.id })}>
-                                                                            {children}
-                                                                        </Link>
-                                                                    )}
+                                                        siblings[index].map(rf =>
+                                                            rf.id !== parentResearchFields[index + 1].id ? (
+                                                                <StyledDropdownItem
+                                                                    tag={NavLink}
+                                                                    key={`rf-${rf.id}`}
+                                                                    to={reverse(ROUTES.RESEARCH_FIELD, { researchFieldId: rf.id })}
+                                                                    className="text-primary"
                                                                 >
                                                                     {rf.label}
-                                                                </ConditionalWrapper>
-                                                            </DropdownItem>
-                                                        ))}
+                                                                </StyledDropdownItem>
+                                                            ) : (
+                                                                <DropdownItem key={`rf-${rf.id}`}>{rf.label}</DropdownItem>
+                                                            )
+                                                        )}
                                                 </>
                                             ) : (
-                                                <>
-                                                    <Icon className="ml-3" icon={faSpinner} spin />
-                                                </>
+                                                <Icon className="ml-3" icon={faSpinner} spin />
                                             )}
                                         </DropdownMenu>
                                     </Dropdown>
@@ -138,7 +137,12 @@ function Breadcrumbs(props) {
 }
 
 Breadcrumbs.propTypes = {
-    researchFieldId: PropTypes.string
+    researchFieldId: PropTypes.string,
+    disableLastField: PropTypes.bool
+};
+
+Breadcrumbs.defaultProps = {
+    disableLastField: false
 };
 
 export default Breadcrumbs;
