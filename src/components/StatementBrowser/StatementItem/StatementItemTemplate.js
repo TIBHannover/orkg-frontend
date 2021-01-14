@@ -4,7 +4,7 @@ import { ListGroup, InputGroup } from 'reactstrap';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import ValueItem from 'components/StatementBrowser/ValueItem/ValueItemContainer';
-import AddValue from 'components/StatementBrowser/AddValue/AddValueContainer';
+import AddValue from 'components/StatementBrowser/AddValue/AddValue';
 import StatementOptionButton from 'components/StatementBrowser/StatementOptionButton/StatementOptionButton';
 import { StatementsGroupStyle, PropertyStyle, ValuesStyle } from 'components/StatementBrowser/styled';
 import { predicatesUrl } from 'services/backend/predicates';

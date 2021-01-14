@@ -9,7 +9,7 @@ import Tippy from '@tippy.js/react';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPlus, faBars, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
-import useTogggle from './helpers/useToggle';
+import useToggle from './helpers/useToggle';
 import validationSchema from './helpers/validationSchema';
 import InputField from 'components/StatementBrowser/InputField/InputField';
 import PropTypes from 'prop-types';
@@ -25,14 +25,14 @@ export default function AddValueTemplate(props) {
 
     const [valueType, setValueType] = useState(props.isLiteral ? 'literal' : 'object');
     const [inputValue, setInputValue] = useState('');
-    const [dropdownValueTypeOpen, setDropdownValueTypeOpen] = useTogggle(false);
-    const [showAddValue, setShowAddValue] = useTogggle(false);
+    const [dropdownValueTypeOpen, setDropdownValueTypeOpen] = useToggle(false);
+    const [showAddValue, setShowAddValue] = useToggle(false);
     const [isValid, setIsValid] = useState(true);
     const [formFeedback, setFormFeedback] = useState(null);
     const [templateIsLoading, setTemplateIsLoading] = useState(false); // to show loading indicator of the template if the value class has a template
 
     // uniqueLabel is set to true when it's a research problem
-    const [uniqueLabel, setuniqueLabel] = useState(props.valueClass && props.valueClass.id === CLASSES.PROBLEM ? true : false);
+    const [uniqueLabel, setUniqueLabel] = useState(props.valueClass && props.valueClass.id === CLASSES.PROBLEM ? true : false);
     const [disabledCreate, setDisabledCreate] = useState(false);
 
     const handleCreateExistingLabel = (inputValue, selectOptions) => {
@@ -71,7 +71,7 @@ export default function AddValueTemplate(props) {
     }, [props.isLiteral]);
 
     useEffect(() => {
-        setuniqueLabel(props.valueClass && props.valueClass.id === CLASSES.PROBLEM ? true : false);
+        setUniqueLabel(props.valueClass && props.valueClass.id === CLASSES.PROBLEM ? true : false);
     }, [props.valueClass]);
 
     useEffect(() => {
@@ -150,7 +150,7 @@ export default function AddValueTemplate(props) {
     useEffect(() => {
         if (props.valueClass && !defaultDatatypes.map(t => t.id).includes(props.valueClass.id)) {
             setTemplateIsLoading(true);
-            props.fetchTemplatesofClassIfNeeded(props.valueClass.id).then(() => {
+            props.fetchTemplatesOfClassIfNeeded(props.valueClass.id).then(() => {
                 if (props.classes[props.valueClass.id] && props.classes[props.valueClass.id].templateIds) {
                     const templateIds = props.classes[props.valueClass.id].templateIds;
                     //check if it's an inline resource
@@ -350,7 +350,7 @@ AddValueTemplate.propTypes = {
     handleValueSelect: PropTypes.func.isRequired,
     newResources: PropTypes.array.isRequired,
     handleAddValue: PropTypes.func.isRequired,
-    fetchTemplatesofClassIfNeeded: PropTypes.func.isRequired,
+    fetchTemplatesOfClassIfNeeded: PropTypes.func.isRequired,
     components: PropTypes.array.isRequired,
     templates: PropTypes.object.isRequired,
     classes: PropTypes.object.isRequired,
