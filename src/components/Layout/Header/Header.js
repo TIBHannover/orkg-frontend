@@ -1,15 +1,12 @@
 import React, { Component } from 'react';
 import {
     Button,
-    ButtonDropdown,
     UncontrolledButtonDropdown,
     Collapse,
     DropdownItem,
     DropdownMenu,
     DropdownToggle,
     Nav,
-    NavItem,
-    NavLink,
     Navbar,
     NavbarToggler,
     Tooltip,
@@ -121,11 +118,9 @@ class Header extends Component {
         super(props);
 
         this.toggle = this.toggle.bind(this);
-        this.dropdownOpen = this.toggleDropdown.bind(this);
 
         this.state = {
             isOpen: false,
-            dropdownOpen: false,
             userTooltipOpen: false,
             redirectLogout: false,
             isHomePageStyle: this.props.location.pathname === ROUTES.HOME ? true : false
@@ -228,12 +223,6 @@ class Header extends Component {
         });
     }
 
-    toggleDropdown() {
-        this.setState({
-            dropdownOpen: !this.state.dropdownOpen
-        });
-    }
-
     toggleUserTooltip = () => {
         this.setState({
             userTooltipOpen: !this.state.userTooltipOpen
@@ -285,88 +274,17 @@ class Header extends Component {
 
                         <Collapse isOpen={this.state.isOpen} navbar>
                             <Nav className="mr-auto flex-shrink-0" navbar>
-                                <NavItem className="ml-2 ml-md-0">
-                                    <NavLink tag={RouterNavLink} exact to={ROUTES.PAPERS}>
-                                        Papers
-                                    </NavLink>
-                                </NavItem>
-
-                                <ButtonDropdown isOpen={this.state.dropdownOpen} toggle={this.dropdownOpen} nav inNavbar>
-                                    <DropdownToggle nav className="ml-2">
-                                        Tools <FontAwesomeIcon style={{ marginTop: '4px' }} icon={faChevronDown} pull="right" />
-                                    </DropdownToggle>
-                                    <DropdownMenu right>
-                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.STATS}>
-                                            Statistics
-                                        </DropdownItem>
-                                        <DropdownItem
-                                            tag={RouterNavLink}
-                                            exact
-                                            to={ROUTES.PDF_ANNOTATION}
-                                            onClick={e => this.requireAuthentication(e, ROUTES.PDF_ANNOTATION)}
-                                        >
-                                            PDF annotation{' '}
-                                            <small>
-                                                <Badge color="info">Beta</Badge>
-                                            </small>
-                                        </DropdownItem>
-                                        <DropdownItem
-                                            tag={RouterNavLink}
-                                            exact
-                                            to={ROUTES.CSV_IMPORT}
-                                            onClick={e => this.requireAuthentication(e, ROUTES.CSV_IMPORT)}
-                                        >
-                                            CSV import
-                                        </DropdownItem>
-                                        <DropdownItem divider />
-                                        <DropdownItem header>Advanced tools</DropdownItem>
-
-                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.RESOURCES}>
-                                            Resources
-                                        </DropdownItem>
-                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.PREDICATES}>
-                                            Properties
-                                        </DropdownItem>
-                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.CLASSES}>
-                                            Classes
-                                        </DropdownItem>
-                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.CONTRIBUTION_TEMPLATES}>
-                                            Templates
-                                        </DropdownItem>
-                                        {/*
-                                    <DropdownItem tag={RouterNavLink} exact to={ROUTES.PDF_TEXT_ANNOTATION}>
-                                        PDF text annotation{' '}
-                                        <small>
-                                            <Badge color="danger">Alpha</Badge>
-                                        </small>
-                                    </DropdownItem>
-                                    */}
-                                    </DropdownMenu>
-                                </ButtonDropdown>
-
+                                {/* view menu */}
                                 <UncontrolledButtonDropdown nav inNavbar>
                                     <DropdownToggle nav className="ml-2">
-                                        About <FontAwesomeIcon style={{ marginTop: '4px' }} icon={faChevronDown} pull="right" />
+                                        View <FontAwesomeIcon style={{ marginTop: '4px' }} icon={faChevronDown} pull="right" />
                                     </DropdownToggle>
-                                    <DropdownMenu right>
-                                        <DropdownItem
-                                            tag="a"
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            href="https://projects.tib.eu/orkg/documentation/"
-                                        >
-                                            Features <Icon size="sm" icon={faExternalLinkAlt} />
+                                    <DropdownMenu>
+                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.PAPERS}>
+                                            Papers
                                         </DropdownItem>
-                                        <DropdownItem tag="a" target="_blank" rel="noopener noreferrer" href="https://projects.tib.eu/orkg/">
-                                            Project <Icon size="sm" icon={faExternalLinkAlt} />
-                                        </DropdownItem>
-                                        <DropdownItem
-                                            tag="a"
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            href="https://gitlab.com/TIBHannover/orkg/orkg-frontend/-/wikis/home"
-                                        >
-                                            Documentation <Icon size="sm" icon={faExternalLinkAlt} />
+                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.COMPARISONS}>
+                                            Comparisons
                                         </DropdownItem>
                                         <DropdownItem divider />
                                         <DropdownItem tag={RouterNavLink} exact to={ROUTES.OBSERVATORIES}>
@@ -382,8 +300,80 @@ class Header extends Component {
                                             </small>
                                         </DropdownItem>
                                         <DropdownItem divider />
+
+                                        <DropdownItem header>Advanced views</DropdownItem>
+
+                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.RESOURCES}>
+                                            Resources
+                                        </DropdownItem>
+                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.PREDICATES}>
+                                            Properties
+                                        </DropdownItem>
+                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.CLASSES}>
+                                            Classes
+                                        </DropdownItem>
+                                    </DropdownMenu>
+                                </UncontrolledButtonDropdown>
+
+                                {/* tools menu */}
+                                <UncontrolledButtonDropdown nav inNavbar>
+                                    <DropdownToggle nav className="ml-2">
+                                        Tools <FontAwesomeIcon style={{ marginTop: '4px' }} icon={faChevronDown} pull="right" />
+                                    </DropdownToggle>
+                                    <DropdownMenu>
+                                        <DropdownItem
+                                            tag={RouterNavLink}
+                                            exact
+                                            to={ROUTES.CSV_IMPORT}
+                                            onClick={e => this.requireAuthentication(e, ROUTES.CSV_IMPORT)}
+                                        >
+                                            CSV import
+                                        </DropdownItem>
+                                        <DropdownItem
+                                            tag={RouterNavLink}
+                                            exact
+                                            to={ROUTES.PDF_ANNOTATION}
+                                            onClick={e => this.requireAuthentication(e, ROUTES.PDF_ANNOTATION)}
+                                        >
+                                            Survey table import
+                                        </DropdownItem>
                                         <DropdownItem tag={RouterNavLink} exact to={ROUTES.EXPORT_DATA}>
                                             Export data{' '}
+                                        </DropdownItem>
+                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.CONTRIBUTION_TEMPLATES}>
+                                            Templates
+                                        </DropdownItem>
+                                    </DropdownMenu>
+                                </UncontrolledButtonDropdown>
+
+                                {/* about menu */}
+                                <UncontrolledButtonDropdown nav inNavbar>
+                                    <DropdownToggle nav className="ml-2">
+                                        About <FontAwesomeIcon style={{ marginTop: '4px' }} icon={faChevronDown} pull="right" />
+                                    </DropdownToggle>
+                                    <DropdownMenu>
+                                        <DropdownItem tag="a" target="_blank" rel="noopener noreferrer" href="https://projects.tib.eu/orkg/">
+                                            About ORKG <Icon size="sm" icon={faExternalLinkAlt} />
+                                        </DropdownItem>
+                                        <DropdownItem
+                                            tag="a"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            href="https://projects.tib.eu/orkg/documentation/"
+                                        >
+                                            Features <Icon size="sm" icon={faExternalLinkAlt} />
+                                        </DropdownItem>
+                                        <DropdownItem
+                                            tag="a"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            href="https://gitlab.com/TIBHannover/orkg/orkg-frontend/-/wikis/home"
+                                        >
+                                            Documentation <Icon size="sm" icon={faExternalLinkAlt} />
+                                        </DropdownItem>
+                                        <DropdownItem divider />
+                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.STATS}>
+                                            Statistics
                                         </DropdownItem>
                                     </DropdownMenu>
                                 </UncontrolledButtonDropdown>
