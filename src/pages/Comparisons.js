@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { getStatementsBySubjects } from 'services/backend/statements';
 import { getResourcesByClass } from 'services/backend/resources';
-import { Container, ButtonGroup } from 'reactstrap';
+import { Container, ButtonGroup, ListGroup } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { getComparisonData } from 'utils';
@@ -89,33 +89,35 @@ export default class Comparisons extends Component {
                 </Container>
 
                 <Container className="p-0">
-                    {this.state.statements.length > 0 && (
-                        <div>
-                            {this.state.statements.map(resource => {
-                                return <ComparisonCard comparison={{ ...resource }} key={`pc${resource.id}`} />;
-                            })}
-                        </div>
-                    )}
-                    {this.state.statements.length === 0 && !this.state.isNextPageLoading && (
-                        <div className="text-center mt-4 mb-4">No published comparison</div>
-                    )}
-                    {this.state.isNextPageLoading && (
-                        <div className="text-center mt-4 mb-4">
-                            <Icon icon={faSpinner} spin /> Loading
-                        </div>
-                    )}
-                    {!this.state.isNextPageLoading && this.state.hasNextPage && (
-                        <div
-                            style={{ cursor: 'pointer' }}
-                            className="list-group-item list-group-item-action text-center mt-2"
-                            onClick={!this.state.isNextPageLoading ? this.loadMoreComparisons : undefined}
-                        >
-                            Load more comparisons
-                        </div>
-                    )}
-                    {!this.state.hasNextPage && this.state.isLastPageReached && (
-                        <div className="text-center mt-3">You have reached the last page.</div>
-                    )}
+                    <ListGroup flush className="box rounded" style={{ overflow: 'hidden' }}>
+                        {this.state.statements.length > 0 && (
+                            <div>
+                                {this.state.statements.map(resource => {
+                                    return <ComparisonCard comparison={{ ...resource }} key={`pc${resource.id}`} />;
+                                })}
+                            </div>
+                        )}
+                        {this.state.statements.length === 0 && !this.state.isNextPageLoading && (
+                            <div className="text-center mt-4 mb-4">No published comparison</div>
+                        )}
+                        {this.state.isNextPageLoading && (
+                            <div className="text-center mt-4 mb-4">
+                                <Icon icon={faSpinner} spin /> Loading
+                            </div>
+                        )}
+                        {!this.state.isNextPageLoading && this.state.hasNextPage && (
+                            <div
+                                style={{ cursor: 'pointer' }}
+                                className="list-group-item list-group-item-action text-center mt-2"
+                                onClick={!this.state.isNextPageLoading ? this.loadMoreComparisons : undefined}
+                            >
+                                Load more comparisons
+                            </div>
+                        )}
+                        {!this.state.hasNextPage && this.state.isLastPageReached && (
+                            <div className="text-center mt-3">You have reached the last page.</div>
+                        )}
+                    </ListGroup>
                 </Container>
             </>
         );

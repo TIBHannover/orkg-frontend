@@ -249,7 +249,7 @@ class Search extends Component {
         const allFilters = unionBy(this.defaultsFilters, this.state.selectedFilters, 'id');
         return (
             <div>
-                <Container className="p-0">
+                <Container>
                     <h1 className="h4 mt-4 mb-4">Search results</h1>
                 </Container>
                 <Container className="mt-4">
