@@ -12,7 +12,17 @@ import { ScrollSync, ScrollSyncPane } from 'react-scroll-sync';
 import ReactTable from 'react-table';
 import withFixedColumnsScrollEvent from 'react-table-hoc-fixed-columns';
 import 'react-table-hoc-fixed-columns/lib/styles.css'; // important: this line must be placed after react-table css import
-import { Contribution, Delete, ItemHeader, ItemHeaderInner, Properties, PropertiesInner, ReactTableWrapper, ScrollButton } from './styled';
+import {
+    Contribution,
+    Delete,
+    ItemHeader,
+    ItemHeaderInner,
+    Properties,
+    PropertiesInner,
+    ReactTableWrapper,
+    ScrollButton,
+    ClickableScroll
+} from './styled';
 import TableCell from './TableCell';
 
 const ReactTableFixedColumns = withFixedColumnsScrollEvent(ReactTable);
@@ -118,12 +128,6 @@ class ComparisonTable extends Component {
     }, 100);
 
     render() {
-        const scrollContainerClasses = classNames({
-            'overflowing-left': this.state.showBackButton,
-            'overflowing-right': this.state.showNextButton,
-            'overflowing-both': this.state.showBackButton && this.state.showNextButton
-        });
-
         const customProps = { id: 'comparisonTable' };
 
         let cellPadding = 10;
@@ -137,7 +141,9 @@ class ComparisonTable extends Component {
 
         return (
             <>
-                <ReactTableWrapper className={scrollContainerClasses} smallerFontSize={smallerFontSize}>
+                <ReactTableWrapper smallerFontSize={smallerFontSize}>
+                    {this.state.showNextButton && <ClickableScroll className="right" onClick={this.scrollNext} />}
+                    {this.state.showBackButton && <ClickableScroll className="left" onClick={this.scrollBack} />}
                     <ScrollSync onSync={this.handleScrollCallback}>
                         <ReactTableFixedColumns
                             TheadComponent={component => {

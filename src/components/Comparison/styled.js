@@ -63,37 +63,6 @@ export const ReactTableWrapper = styled.div`
     padding: 10px 0;
     font-size: ${props => (props.smallerFontSize ? '0.95rem' : '1rem')};
 
-    /*&.overflowing-left .rthfc-td-fixed,
-    &.overflowing-left .rthfc-th-fixed {
-        box-shadow: 9px 0px 5px -5px  #d9d9d9 !important;
-    }*/
-
-    /*&.overflowing-right,*/
-
-    &.overflowing-left::before {
-        content: '';
-        position: absolute;
-        left: 250px;
-        top: 10px;
-        height: calc(100% - 35px);
-        width: 10px;
-        box-shadow: rgba(0, 0, 0, 0.18) 9px 0px 5px -5px inset;
-        z-index: 5;
-        pointer-events: none; /* ensure the elements under the shadow are still clickable */
-    }
-
-    &.overflowing-right::after {
-        content: '';
-        position: absolute;
-        right: 0;
-        top: 0;
-        height: 100%;
-        width: 10px;
-        box-shadow: rgba(0, 0, 0, 0.18) -9px 0px 5px -5px inset;
-        z-index: 5;
-        pointer-events: none; /* ensure the elements under the shadow are still clickable */
-    }
-
     & .rt-th.rthfc-th-fixed-left-last {
         border-radius: 11px 11px 0 0;
     }
@@ -244,5 +213,35 @@ export const Delete = styled.div`
 
     &:hover {
         background: #fff;
+    }
+`;
+
+export const ClickableScroll = styled.div`
+    width: 30px;
+    height: 100%;
+    position: absolute;
+    z-index: 10;
+    transition: box-shadow 0.5s;
+
+    &.right {
+        cursor: e-resize;
+        right: 0;
+        top: 0;
+        box-shadow: rgba(0, 0, 0, 0.18) -9px 0px 5px -5px inset;
+
+        &:hover {
+            box-shadow: rgba(0, 0, 0, 0.25) -13px 0px 5px -5px inset;
+        }
+    }
+
+    &.left {
+        cursor: w-resize;
+        left: 250px;
+        top: 10px;
+        box-shadow: rgba(0, 0, 0, 0.18) 9px 0px 5px -5px inset;
+
+        &:hover {
+            box-shadow: rgba(0, 0, 0, 0.25) 13px 0px 5px -5px inset;
+        }
     }
 `;
