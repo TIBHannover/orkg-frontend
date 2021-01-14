@@ -5,9 +5,10 @@ import { Link } from 'react-router-dom';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPlus, faSpinner, faAngleDoubleDown } from '@fortawesome/free-solid-svg-icons';
 import { getAllResources } from 'services/backend/resources';
-import { Container, ListGroup, ListGroupItem } from 'reactstrap';
+import { ButtonGroup, Container, ListGroup, ListGroupItem } from 'reactstrap';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
+import HeaderSearchButton from 'components/HeaderSearchButton/HeaderSearchButton';
 
 export default class Resources extends Component {
     constructor(props) {
@@ -61,15 +62,18 @@ export default class Resources extends Component {
             <>
                 <Container className="d-flex align-items-center">
                     <h1 className="h4 mt-4 mb-4 flex-grow-1">View all resources</h1>
-                    <RequireAuthentication
-                        component={Link}
-                        color="darkblue"
-                        size="sm"
-                        className="btn btn-darkblue btn-sm flex-shrink-0"
-                        to={ROUTES.ADD_RESOURCE}
-                    >
-                        <Icon icon={faPlus} /> Create resource
-                    </RequireAuthentication>
+                    <ButtonGroup>
+                        <RequireAuthentication
+                            component={Link}
+                            color="darkblue"
+                            size="sm"
+                            className="btn btn-darkblue btn-sm flex-shrink-0"
+                            to={ROUTES.ADD_RESOURCE}
+                        >
+                            <Icon icon={faPlus} /> Create resource
+                        </RequireAuthentication>
+                        <HeaderSearchButton placeholder="Search resources..." type="resource" />
+                    </ButtonGroup>
                 </Container>
                 <Container className="p-0">
                     <ListGroup flush className="box rounded" style={{ overflow: 'hidden' }}>
