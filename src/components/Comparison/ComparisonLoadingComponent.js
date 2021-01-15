@@ -33,8 +33,8 @@ const ComparisonLoadingComponent = () => {
                                 </ContentLoader>
                             </BorderTopRadius>
                         </td>
-                        {times(COLUMN_AMOUNT, () => (
-                            <td className="p-0">
+                        {times(COLUMN_AMOUNT, i => (
+                            <td className="p-0" key={i}>
                                 <BorderTopRadius>
                                     <ContentLoader height={20} width={100} speed={2} primaryColor="#E86161" secondaryColor="#ecebeb">
                                         <rect x="0" y="0" rx="0" ry="0" width="100" height="20" />
@@ -51,8 +51,8 @@ const ComparisonLoadingComponent = () => {
                                 </ContentLoader>
                             </BorderBottomRadius>
                         </td>
-                        {times(COLUMN_AMOUNT, () => (
-                            <td className="p-0">
+                        {times(COLUMN_AMOUNT, i => (
+                            <td className="p-0" key={i}>
                                 <BorderBottomRadius>
                                     <ContentLoader height={60} width={100} speed={2} primaryColor="#f3f3f3" secondaryColor="#ecebeb">
                                         <rect x="0" y="0" rx="0" ry="0" width="100" height="60" />
