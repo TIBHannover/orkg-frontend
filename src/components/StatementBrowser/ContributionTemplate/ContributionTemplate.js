@@ -2,7 +2,7 @@ import React from 'react';
 import { ListGroup } from 'reactstrap';
 import { canAddProperty as canAddPropertyAction, doneAnimation } from 'actions/statementBrowser';
 import AddProperty from 'components/StatementBrowser/AddProperty/AddProperty';
-import TemplateHeader from 'components/StatementBrowser/TemplateHeader/TemplateHeaderContainer';
+import TemplateHeader from 'components/StatementBrowser/TemplateHeader/TemplateHeader';
 import StatementItem from 'components/StatementBrowser/StatementItem/StatementItem';
 import { AddPropertyWrapper, AnimationContainer } from './styled';
 import { useDispatch, useSelector } from 'react-redux';

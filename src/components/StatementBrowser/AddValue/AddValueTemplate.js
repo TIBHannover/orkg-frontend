@@ -154,28 +154,26 @@ export default function AddValueTemplate(props) {
     useEffect(() => {
         if (props.valueClass && !defaultDatatypes.map(t => t.id).includes(props.valueClass.id)) {
             setTemplateIsLoading(true);
-            dispatch(
-                fetchTemplatesOfClassIfNeeded(props.valueClass.id).then(() => {
-                    if (classes[props.valueClass.id] && classes[props.valueClass.id].templateIds) {
-                        const templateIds = classes[props.valueClass.id].templateIds;
-                        //check if it's an inline resource
-                        for (const templateId of templateIds) {
-                            const template = templates[templateId];
-                            if (template && template.hasLabelFormat) {
-                                setTemplateIsLoading(false);
-                                setIsInlineResource(template.label);
-                            }
-                            if (template && !template.isFetching) {
-                                setTemplateIsLoading(false);
-                            }
+            dispatch(fetchTemplatesOfClassIfNeeded(props.valueClass.id)).then(() => {
+                if (classes[props.valueClass.id] && classes[props.valueClass.id].templateIds) {
+                    const templateIds = classes[props.valueClass.id].templateIds;
+                    //check if it's an inline resource
+                    for (const templateId of templateIds) {
+                        const template = templates[templateId];
+                        if (template && template.hasLabelFormat) {
+                            setTemplateIsLoading(false);
+                            setIsInlineResource(template.label);
                         }
-                        if (!classes[props.valueClass.id].isFetching) {
-                            // in case there is no templates for the class
+                        if (template && !template.isFetching) {
                             setTemplateIsLoading(false);
                         }
                     }
-                })
-            );
+                    if (!classes[props.valueClass.id].isFetching) {
+                        // in case there is no templates for the class
+                        setTemplateIsLoading(false);
+                    }
+                }
+            });
         } else {
             setTemplateIsLoading(false);
             setIsInlineResource(false);
