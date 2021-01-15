@@ -4,6 +4,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner, faAngleDoubleDown } from '@fortawesome/free-solid-svg-icons';
 import { getAllPredicates } from 'services/backend/predicates';
 import { ButtonGroup, Container, ListGroup, ListGroupItem } from 'reactstrap';
+import { PREDICATE_TYPE_ID } from 'constants/misc';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes';
 import HeaderSearchButton from 'components/HeaderSearchButton/HeaderSearchButton';
@@ -60,7 +61,7 @@ export default class Predicates extends Component {
                 <Container className="d-flex align-items-center">
                     <h1 className="h4 mt-4 mb-4 flex-grow-1">View all properties</h1>
                     <ButtonGroup>
-                        <HeaderSearchButton placeholder="Search properties..." type="predicate" />
+                        <HeaderSearchButton placeholder="Search properties..." type={PREDICATE_TYPE_ID} />
                     </ButtonGroup>
                 </Container>
 

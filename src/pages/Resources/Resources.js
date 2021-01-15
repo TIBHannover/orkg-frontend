@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPlus, faSpinner, faAngleDoubleDown } from '@fortawesome/free-solid-svg-icons';
 import { getAllResources } from 'services/backend/resources';
+import { RESOURCE_TYPE_ID } from 'constants/misc';
 import { ButtonGroup, Container, ListGroup, ListGroupItem } from 'reactstrap';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
@@ -72,7 +73,7 @@ export default class Resources extends Component {
                         >
                             <Icon icon={faPlus} /> Create resource
                         </RequireAuthentication>
-                        <HeaderSearchButton placeholder="Search resources..." type="resource" />
+                        <HeaderSearchButton placeholder="Search resources..." type={RESOURCE_TYPE_ID} />
                     </ButtonGroup>
                 </Container>
                 <Container className="p-0">
