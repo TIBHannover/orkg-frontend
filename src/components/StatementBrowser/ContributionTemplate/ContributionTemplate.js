@@ -1,19 +1,18 @@
 import React from 'react';
 import { ListGroup } from 'reactstrap';
-import { canAddProperty as canAddPropertyGS, doneAnimation } from 'actions/statementBrowser';
+import { canAddProperty as canAddPropertyAction, doneAnimation } from 'actions/statementBrowser';
 import AddProperty from 'components/StatementBrowser/AddProperty/AddProperty';
 import TemplateHeader from 'components/StatementBrowser/TemplateHeader/TemplateHeaderContainer';
-import StatementItem from 'components/StatementBrowser/StatementItem/StatementItemContainer';
+import StatementItem from 'components/StatementBrowser/StatementItem/StatementItem';
 import { AddPropertyWrapper, AnimationContainer } from './styled';
 import { useDispatch, useSelector } from 'react-redux';
-import { Cookies } from 'react-cookie';
 import PropTypes from 'prop-types';
 
 const ContributionTemplate = props => {
     const dispatch = useDispatch();
     const statementBrowser = useSelector(state => state.statementBrowser);
     const { properties, resources } = statementBrowser;
-    const canAddProperty = useSelector(state => canAddPropertyGS(state, props.value.resourceId));
+    const canAddProperty = useSelector(state => canAddPropertyAction(state, props.value.resourceId));
 
     let propertyIds = [];
     let shared = 1;
@@ -54,7 +53,7 @@ const ContributionTemplate = props => {
                             enableEdit={shared <= 1 ? props.enableEdit : false}
                             syncBackend={props.syncBackend}
                             isLastItem={propertyIds.length === index + 1}
-                            showValueHelp={props.cookies && !props.cookies.get('showedValueHelp') && index === 0 ? true : false}
+                            showValueHelp={false}
                             inTemplate={true}
                             contextStyle="Template"
                             resourceId={props.value.resourceId}
@@ -85,8 +84,7 @@ ContributionTemplate.propTypes = {
     selectedResource: PropTypes.string.isRequired,
     syncBackend: PropTypes.bool.isRequired,
     enableEdit: PropTypes.bool.isRequired,
-    isAnimated: PropTypes.bool,
-    cookies: PropTypes.instanceOf(Cookies).isRequired
+    isAnimated: PropTypes.bool
 };
 
 export default ContributionTemplate;

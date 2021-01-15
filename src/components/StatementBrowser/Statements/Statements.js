@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ListGroup, Button } from 'reactstrap';
-import StatementItem from 'components/StatementBrowser/StatementItem/StatementItemContainer';
+import StatementItem from 'components/StatementBrowser/StatementItem/StatementItem';
 import AddProperty from 'components/StatementBrowser/AddProperty/AddProperty';
 import Breadcrumbs from 'components/StatementBrowser/Breadcrumbs/Breadcrumbs';
 import ContributionTemplate from 'components/StatementBrowser/ContributionTemplate/ContributionTemplate';

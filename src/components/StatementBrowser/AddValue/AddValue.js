@@ -1,5 +1,5 @@
 import React from 'react';
-import { createValue, fetchTemplatesOfClassIfNeeded, selectResource, createRequiredPropertiesInResource } from 'actions/statementBrowser';
+import { createValue } from 'actions/statementBrowser';
 import { prefillStatements } from 'actions/addPaper';
 import { createResourceStatement, createLiteralStatement } from 'services/backend/statements';
 import { createLiteral } from 'services/backend/literals';
@@ -14,8 +14,7 @@ import { MISC } from 'constants/graphSettings';
 
 const AddValue = props => {
     const dispatch = useDispatch();
-    const statementBrowser = useSelector(state => state.statementBrowser);
-    const { selectedProperty, classes, properties, templates, openExistingResourcesInDialog } = statementBrowser;
+    const selectedProperty = useSelector(state => state.statementBrowser.selectedProperty);
     const selectedResource = useSelector(state => (props.resourceId ? props.resourceId : state.statementBrowser.selectedResource));
     const predicate = useSelector(state => state.statementBrowser.properties.byId[props.propertyId ? props.propertyId : selectedProperty]);
     const newResources = useSelector(state => {
@@ -191,20 +190,12 @@ const AddValue = props => {
     return (
         <AddValueTemplate
             predicate={predicate}
-            properties={properties}
             propertyId={props.propertyId}
-            selectedProperty={selectedProperty}
             handleValueSelect={(valueType, inputValue) => handleValueSelect(valueType, inputValue)}
             newResources={newResources}
             handleAddValue={handleAddValue}
-            fetchTemplatesOfClassIfNeeded={ClassID => dispatch(fetchTemplatesOfClassIfNeeded(ClassID))}
             components={props.components}
-            classes={classes}
-            templates={templates}
-            selectResource={dispatch(selectResource)}
-            openExistingResourcesInDialog={openExistingResourcesInDialog}
             isDisabled={props.isDisabled}
-            createRequiredPropertiesInResource={dispatch(createRequiredPropertiesInResource)}
             isLiteral={isLiteralField}
             valueClass={valueClass}
         />
