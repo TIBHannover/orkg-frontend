@@ -8,7 +8,8 @@ import ContentLoader from 'react-content-loader';
 import { getClassById } from 'services/backend/classes';
 import { getAllResources, getResourcesByClass } from 'services/backend/resources';
 import { getAllPredicates } from 'services/backend/predicates';
-import ROUTES from 'constants/routes.js';
+import ROUTES from 'constants/routes';
+import { PREDICATE_TYPE_ID, RESOURCE_TYPE_ID } from 'constants/misc';
 import Results from 'components/Search/Results';
 import Filters from 'components/Search/Filters';
 import { getArrayParamFromQueryString } from 'utils';
@@ -58,12 +59,12 @@ class Search extends Component {
             {
                 label: 'Resource',
                 labelPlural: 'Resources',
-                id: 'resource'
+                id: RESOURCE_TYPE_ID
             },
             {
                 label: 'Property',
                 labelPlural: 'Properties',
-                id: 'predicate'
+                id: PREDICATE_TYPE_ID
             }
         ];
 
@@ -154,17 +155,17 @@ class Search extends Component {
         }
         this.setState({ isNextPageLoading: { ...this.state.isNextPageLoading, [filter_type]: true } });
         let request;
-        if (filter_type === 'predicate') {
+        if (filter_type === PREDICATE_TYPE_ID) {
             request = getAllPredicates({
-                page: this.state.currentPage['predicate'] || 1,
+                page: this.state.currentPage[PREDICATE_TYPE_ID] || 1,
                 items: this.itemsPerFilter,
                 sortBy: 'id',
                 desc: true,
                 q: searchQuery
             });
-        } else if (filter_type === 'resource') {
+        } else if (filter_type === RESOURCE_TYPE_ID) {
             request = getAllResources({
-                page: this.state.currentPage['resource'] || 1,
+                page: this.state.currentPage[RESOURCE_TYPE_ID] || 1,
                 items: this.itemsPerFilter,
                 sortBy: 'id',
                 desc: true,
@@ -249,7 +250,7 @@ class Search extends Component {
         const allFilters = unionBy(this.defaultsFilters, this.state.selectedFilters, 'id');
         return (
             <div>
-                <Container className="p-0">
+                <Container>
                     <h1 className="h4 mt-4 mb-4">Search results</h1>
                 </Container>
                 <Container className="mt-4">
