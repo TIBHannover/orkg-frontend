@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useCallback } from 'react';
+import { Fragment, useState, useCallback } from 'react';
 import { StyledResearchFieldsInputFormControl, StyledResearchFieldBrowser } from './styled';
 import PropTypes from 'prop-types';
 import AsyncCreatableSelect from 'react-select/async-creatable';
@@ -157,6 +157,16 @@ function ResearchProblemInput(props) {
                         problemBrowser: iprops.data
                     });
                 }}
+                onKeyDown={e =>
+                    e.keyCode === 13
+                        ? () =>
+                              this.setState({
+                                  problemBrowser: iprops.data
+                              })
+                        : undefined
+                }
+                role="button"
+                tabIndex={0}
             >
                 <components.MultiValueLabel {...iprops} />
             </div>

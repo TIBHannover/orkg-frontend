@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { Container, Button, FormGroup, Label, FormText, ButtonGroup } from 'reactstrap';
 import { getClassById } from 'services/backend/classes';
 import { updateResourceClasses as updateResourceClassesNetwork } from 'services/backend/resources';
 import { getResource } from 'services/backend/resources';
 import { getStatementsBySubjectAndPredicate } from 'services/backend/statements';
-import StatementBrowser from 'components/StatementBrowser/Statements/StatementsContainer';
+import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
 import { EditModeHeader, Title } from 'pages/ViewPaper';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
 import InternalServerError from 'pages/InternalServerError';
@@ -20,7 +20,7 @@ import ROUTES from 'constants/routes.js';
 import { connect, useSelector } from 'react-redux';
 import { resetStatementBrowser } from 'actions/statementBrowser';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faPen, faTrash, faExternalLinkAlt, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faPen, faTrash, faExternalLinkAlt, faTimes, faPlus } from '@fortawesome/free-solid-svg-icons';
 import Confirm from 'components/ConfirmationModal/ConfirmationModal';
 import { CLASSES, PREDICATES, ENTITIES } from 'constants/graphSettings';
 import { toast } from 'react-toastify';
@@ -181,6 +181,16 @@ function Resource(props) {
                     <Container className="d-flex align-items-center">
                         <h1 className="h4 mt-4 mb-4 flex-grow-1">Resource view</h1>
                         <ButtonGroup className="flex-shrink-0">
+                            <RequireAuthentication
+                                size="sm"
+                                component={Button}
+                                color="darkblue"
+                                style={{ marginRight: 2 }}
+                                tag={Link}
+                                to={ROUTES.ADD_RESOURCE}
+                            >
+                                <Icon icon={faPlus} className="mr-1" /> Create resource
+                            </RequireAuthentication>
                             {dedicatedLink && (
                                 <Button
                                     color="darkblue"

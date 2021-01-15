@@ -1,4 +1,4 @@
-export default [
+const defaultProperties = [
     {
         label: 'Has evaluation',
         id: 'HAS_EVALUATION'
@@ -28,3 +28,5 @@ export default [
         id: 'HAS_METRIC'
     }
 ];
+
+export default defaultProperties;

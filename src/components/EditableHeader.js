@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Input, Button } from 'reactstrap';
 import { updateResource } from 'services/backend/resources';
 import { toast } from 'react-toastify';

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Row, Col, CustomInput } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';

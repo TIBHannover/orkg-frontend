@@ -2,7 +2,7 @@ import { CSSTransition } from 'react-transition-group';
 import { ListGroupItem } from 'reactstrap';
 import styled from 'styled-components';
 
-export const AddPropertWrapper = styled(ListGroupItem)`
+export const AddPropertyWrapper = styled(ListGroupItem)`
     border-top: 0 !important;
     padding: 0 !important;
     border-bottom-left-radius: 4px !important;

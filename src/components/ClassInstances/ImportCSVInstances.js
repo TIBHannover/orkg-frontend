@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { createLiteralStatement } from 'services/backend/statements';
 import { createLiteral } from 'services/backend/literals';

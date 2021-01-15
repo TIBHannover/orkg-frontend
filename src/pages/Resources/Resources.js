@@ -1,13 +1,15 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import ShortRecord from 'components/ShortRecord/ShortRecord';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPlus, faSpinner, faAngleDoubleDown } from '@fortawesome/free-solid-svg-icons';
 import { getResources } from 'services/backend/resources';
-import { Container, ListGroup, ListGroupItem } from 'reactstrap';
+import { ButtonGroup, Container, ListGroup, ListGroupItem } from 'reactstrap';
+import { RESOURCE_TYPE_ID } from 'constants/misc';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
+import HeaderSearchButton from 'components/HeaderSearchButton/HeaderSearchButton';
 
 export default class Resources extends Component {
     constructor(props) {
@@ -54,22 +56,21 @@ export default class Resources extends Component {
     render() {
         return (
             <>
-                <Container className="d-flex mt-4 mb-4">
-                    <div className="d-flex flex-grow-1">
-                        <h1 className="h4">View all resources</h1>
-                        <div className="text-muted ml-3 mt-1">{this.state.totalElements} resource</div>
-                    </div>
-                    <div className="flex-shrink-0">
+                <Container className="d-flex align-items-center">
+                    <h1 className="h4 mt-4 mb-4 flex-grow-1">View all resources</h1>
+                    <div className="text-muted ml-3 mt-1">{this.state.totalElements} resource</div>
+                    <ButtonGroup>
                         <RequireAuthentication
                             component={Link}
                             color="darkblue"
                             size="sm"
-                            className="btn btn-darkblue btn-sm"
+                            className="btn btn-darkblue btn-sm flex-shrink-0"
                             to={ROUTES.ADD_RESOURCE}
                         >
                             <Icon icon={faPlus} /> Create resource
                         </RequireAuthentication>
-                    </div>
+                        <HeaderSearchButton placeholder="Search resources..." type={RESOURCE_TYPE_ID} />
+                    </ButtonGroup>
                 </Container>
                 <Container className="p-0">
                     <ListGroup flush className="box rounded" style={{ overflow: 'hidden' }}>

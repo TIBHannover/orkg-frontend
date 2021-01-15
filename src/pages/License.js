@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Container } from 'reactstrap';
 
 class License extends Component {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { getResourcesByClass } from 'services/backend/resources';
 import { Button, Table, Collapse, Input, FormGroup, Label, Form } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -20,6 +20,7 @@ const ClassInstances = props => {
     const [searchQuery, setSearchQuery] = useState('');
     const [totalElements, setTotalElements] = useState(0);
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     const loadInstances = useCallback(
         debounce((page, searchQuery) => {
             setIsLoading(true);

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { getStatementsByObject } from 'services/backend/statements';
 import { Button, Table, Collapse } from 'reactstrap';

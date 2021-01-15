@@ -1,32 +1,37 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import { deleteValue, toggleEditValue, updateValueLabel, isSavingValue, doneSavingValue, deleteProperty } from 'actions/statementBrowser';
 import { Input } from 'reactstrap';
 import { faTrash, faPen, faQuestion } from '@fortawesome/free-solid-svg-icons';
 import StatementOptionButton from 'components/StatementBrowser/StatementOptionButton/StatementOptionButton';
 import { TemplateHeaderStyle } from 'components/StatementBrowser/styled';
 import { deleteStatementById } from 'services/backend/statements';
 import { updateResource } from 'services/backend/resources';
+import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 export default function TemplateHeader(props) {
+    const dispatch = useDispatch();
     const [disableHover, setDisableHover] = useState(false);
     const [draftLabel, setDraftLabel] = useState(props.value.label);
 
     const commitChangeLabel = async () => {
         // Check if the user changed the label
         if (draftLabel !== props.value.label) {
-            props.updateValueLabel({
-                label: draftLabel,
-                valueId: props.id
-            });
+            dispatch(
+                updateValueLabel({
+                    label: draftLabel,
+                    valueId: props.id
+                })
+            );
             if (props.syncBackend) {
-                props.isSavingValue({ id: props.id }); // To show the saving message instead of the value label
+                dispatch(isSavingValue({ id: props.id })); // To show the saving message instead of the value label
                 if (props.resourceId) {
                     await updateResource(props.resourceId, props.value.label);
                     toast.success('Resource label updated successfully');
                 }
-                props.doneSavingValue({ id: props.id });
+                dispatch(doneSavingValue({ id: props.id }));
             }
         }
     };
@@ -36,14 +41,18 @@ export default function TemplateHeader(props) {
             await deleteStatementById(props.value.statementId);
             toast.success('Statement deleted successfully');
         }
-        props.deleteValue({
-            id: props.id,
-            propertyId: props.propertyId
-        });
-        props.deleteProperty({
-            id: props.propertyId,
-            resourceId: props.resourceId
-        });
+        dispatch(
+            deleteValue({
+                id: props.id,
+                propertyId: props.propertyId
+            })
+        );
+        dispatch(
+            deleteProperty({
+                id: props.propertyId,
+                resourceId: props.resourceId
+            })
+        );
     };
 
     const headerClasses = classNames({
@@ -59,7 +68,7 @@ export default function TemplateHeader(props) {
                         <>
                             {props.value.label}{' '}
                             <div className={headerClasses}>
-                                <StatementOptionButton title="Edit label" icon={faPen} action={() => props.toggleEditValue({ id: props.id })} />
+                                <StatementOptionButton title="Edit label" icon={faPen} action={() => dispatch(toggleEditValue({ id: props.id }))} />
                                 <StatementOptionButton
                                     requireConfirmation={true}
                                     confirmationMessage="Are you sure to delete?"
@@ -78,7 +87,7 @@ export default function TemplateHeader(props) {
                                 onKeyDown={e => (e.keyCode === 13 || e.keyCode === 27) && e.target.blur()} // stop editing on enter and escape
                                 onBlur={e => {
                                     commitChangeLabel();
-                                    props.toggleEditValue({ id: props.id });
+                                    dispatch(toggleEditValue({ id: props.id }));
                                 }}
                                 autoFocus
                             />
@@ -101,16 +110,10 @@ export default function TemplateHeader(props) {
 }
 
 TemplateHeader.propTypes = {
-    deleteValue: PropTypes.func.isRequired,
-    deleteProperty: PropTypes.func.isRequired,
     value: PropTypes.object.isRequired,
     id: PropTypes.string.isRequired,
     resourceId: PropTypes.string.isRequired,
     propertyId: PropTypes.string.isRequired,
     statementId: PropTypes.string,
-    syncBackend: PropTypes.bool.isRequired,
-    toggleEditValue: PropTypes.func.isRequired,
-    isSavingValue: PropTypes.func.isRequired,
-    doneSavingValue: PropTypes.func.isRequired,
-    updateValueLabel: PropTypes.func.isRequired
+    syncBackend: PropTypes.bool.isRequired
 };

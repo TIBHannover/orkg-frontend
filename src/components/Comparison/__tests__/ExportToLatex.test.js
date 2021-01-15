@@ -1,4 +1,3 @@
-import React from 'react';
 import { mount } from 'enzyme';
 import ExportToLatex from './../ExportToLatex.js';
 import moment from 'moment';

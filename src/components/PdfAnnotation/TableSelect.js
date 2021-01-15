@@ -1,4 +1,3 @@
-import React from 'react';
 import { Button } from 'reactstrap';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';

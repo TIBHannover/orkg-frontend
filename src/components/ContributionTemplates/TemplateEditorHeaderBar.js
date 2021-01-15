@@ -1,4 +1,3 @@
-import React from 'react';
 import { Container, ButtonGroup, Button } from 'reactstrap';
 import { setEditMode, saveTemplate } from 'actions/addTemplate';
 import PropTypes from 'prop-types';

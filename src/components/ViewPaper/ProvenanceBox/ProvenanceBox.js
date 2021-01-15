@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { StyledItemProvenanceBox, AnimationContainer, StyledActivity, ProvenanceBoxTabs, ErrorMessage, SidebarStyledBox } from './styled';
 import ObservatoryModal from 'components/ObservatoryModal/ObservatoryModal';
 import { TransitionGroup } from 'react-transition-group';
@@ -25,10 +25,24 @@ export default function ProvenanceBox(props) {
             {!isEmpty(props.observatoryInfo) && (
                 <SidebarStyledBox className="box rounded-lg" style={{ minHeight: 430, backgroundColor: '#f8f9fb' }}>
                     <ProvenanceBoxTabs className="clearfix d-flex">
-                        <div id="div1" className={`h6 col-md-6 text-center tab ${activeTab === 1 ? 'active' : ''}`} onClick={() => setActiveTab(1)}>
+                        <div
+                            id="div1"
+                            className={`h6 col-md-6 text-center tab ${activeTab === 1 ? 'active' : ''}`}
+                            onClick={() => setActiveTab(1)}
+                            onKeyDown={e => (e.keyCode === 13 ? setActiveTab(1) : undefined)}
+                            role="button"
+                            tabIndex={0}
+                        >
                             Provenance
                         </div>
-                        <div id="div2" className={`h6 col-md-6 text-center tab ${activeTab === 2 ? 'active' : ''}`} onClick={() => setActiveTab(2)}>
+                        <div
+                            id="div2"
+                            className={`h6 col-md-6 text-center tab ${activeTab === 2 ? 'active' : ''}`}
+                            onClick={() => setActiveTab(2)}
+                            onKeyDown={e => (e.keyCode === 13 ? setActiveTab(2) : undefined)}
+                            role="button"
+                            tabIndex={0}
+                        >
                             Timeline
                         </div>
                     </ProvenanceBoxTabs>

@@ -1,4 +1,4 @@
-import React from 'react';
+import { createRef } from 'react';
 import NativeListener from 'react-native-listener';
 import { BaseEditorComponent } from '@handsontable/react';
 import { InputGroup, DropdownMenu, InputGroupButtonDropdown, Input } from 'reactstrap';
@@ -20,9 +20,9 @@ class EditorComponent extends BaseEditorComponent {
     constructor(props) {
         super(props);
 
-        this.mainElementRef = React.createRef();
-        this.resourceInputRef = React.createRef();
-        this.literalInputRef = React.createRef();
+        this.mainElementRef = createRef();
+        this.resourceInputRef = createRef();
+        this.literalInputRef = createRef();
 
         this.state = {
             value: '',

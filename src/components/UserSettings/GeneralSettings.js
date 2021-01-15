@@ -1,5 +1,5 @@
 import { Form, FormGroup, Label, Input, Button, Alert, FormFeedback } from 'reactstrap';
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import { getUserInformation, updateUserInformation } from 'services/backend/users';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';

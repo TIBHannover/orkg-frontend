@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Container, Button, FormGroup, Input, Label } from 'reactstrap';
 import { getOrganization } from 'services/backend/organizations';
 import { createObservatory } from 'services/backend/observatories';

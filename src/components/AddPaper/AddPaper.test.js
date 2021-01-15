@@ -1,4 +1,3 @@
-import React from 'react';
 import { mount } from 'enzyme';
 import AddPaper from '../../pages/AddPaper';
 import { Provider } from 'react-redux';

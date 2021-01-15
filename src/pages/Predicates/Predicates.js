@@ -1,11 +1,13 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import ShortRecord from 'components/ShortRecord/ShortRecord';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner, faAngleDoubleDown } from '@fortawesome/free-solid-svg-icons';
 import { getPredicates } from 'services/backend/predicates';
-import { Container, ListGroup, ListGroupItem } from 'reactstrap';
+import { ButtonGroup, Container, ListGroup, ListGroupItem } from 'reactstrap';
+import { PREDICATE_TYPE_ID } from 'constants/misc';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes';
+import HeaderSearchButton from 'components/HeaderSearchButton/HeaderSearchButton';
 
 export default class Predicates extends Component {
     constructor(props) {
@@ -51,12 +53,14 @@ export default class Predicates extends Component {
     render() {
         return (
             <>
-                <Container className="d-flex mt-4 mb-4">
-                    <div className="d-flex flex-grow-1">
-                        <h1 className="h4">View all properties</h1>
-                        <div className="text-muted ml-3 mt-1">{this.state.totalElements} property</div>
-                    </div>
+                <Container className="d-flex align-items-center">
+                    <h1 className="h4 mt-4 mb-4 flex-grow-1">View all properties</h1>
+                    <div className="text-muted ml-3 mt-1">{this.state.totalElements} property</div>
+                    <ButtonGroup>
+                        <HeaderSearchButton placeholder="Search properties..." type={PREDICATE_TYPE_ID} />
+                    </ButtonGroup>
                 </Container>
+
                 <Container className="p-0">
                     <ListGroup flush className="box rounded" style={{ overflow: 'hidden' }}>
                         {this.state.predicates.length > 0 && (

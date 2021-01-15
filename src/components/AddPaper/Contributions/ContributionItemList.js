@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
+import { createRef, Component } from 'react';
 import { Input } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faTrash, faPen } from '@fortawesome/free-solid-svg-icons';
-import ROUTES from '../../../constants/routes';
+import ROUTES from 'constants/routes';
 import Tippy from '@tippy.js/react';
 import 'tippy.js/dist/tippy.css';
 import { reverse } from 'named-urls';
@@ -46,7 +46,7 @@ class ContributionItemList extends Component {
             draftLabel: this.props.contribution.label
         };
 
-        this.inputRefs = React.createRef();
+        this.inputRefs = createRef();
     }
 
     componentDidUpdate(prevProps) {
@@ -72,81 +72,92 @@ class ContributionItemList extends Component {
 
     render() {
         const listItem = (
-            <li
-                className={this.props.isSelected ? 'activeContribution' : ''}
-                onClick={
-                    !this.props.paperId
-                        ? () =>
-                              this.props.handleSelectContribution && !this.state.isEditing
-                                  ? this.props.handleSelectContribution(this.props.contribution.id)
-                                  : undefined
-                        : undefined
-                }
-            >
-                <span className="selectContribution">
-                    {this.state.isEditing && (
-                        <StyledInput
-                            bsSize="sm"
-                            innerRef={this.inputRefs}
-                            value={this.state.draftLabel}
-                            onChange={this.handleChangeLabel}
-                            onKeyDown={e => e.keyCode === 13 && e.target.blur()} // Disable multiline Input
-                            onBlur={e => {
-                                this.props.handleChangeContributionLabel(this.props.contribution.id, this.state.draftLabel);
-                                this.toggleEditLabelContribution();
-                            }}
-                            onFocus={e =>
-                                setTimeout(() => {
-                                    document.execCommand('selectAll', false, null);
-                                }, 0)
-                            } // Highlights the entire label when edit
-                        />
-                    )}
-                    {!this.state.isEditing && (
-                        <span>
-                            {/*this.props.paperId && !this.props.isSelected ? (
+            <li className={this.props.isSelected ? 'activeContribution' : ''}>
+                <div
+                    onClick={
+                        !this.props.paperId
+                            ? () =>
+                                  this.props.handleSelectContribution && !this.state.isEditing
+                                      ? this.props.handleSelectContribution(this.props.contribution.id)
+                                      : undefined
+                            : undefined
+                    }
+                    onKeyDown={e =>
+                        e.keyCode === 13 && !this.props.paperId
+                            ? () =>
+                                  this.props.handleSelectContribution && !this.state.isEditing
+                                      ? this.props.handleSelectContribution(this.props.contribution.id)
+                                      : undefined
+                            : undefined
+                    }
+                    role="link"
+                    tabIndex={0}
+                >
+                    <span className="selectContribution">
+                        {this.state.isEditing && (
+                            <StyledInput
+                                bsSize="sm"
+                                innerRef={this.inputRefs}
+                                value={this.state.draftLabel}
+                                onChange={this.handleChangeLabel}
+                                onKeyDown={e => e.keyCode === 13 && e.target.blur()} // Disable multiline Input
+                                onBlur={e => {
+                                    this.props.handleChangeContributionLabel(this.props.contribution.id, this.state.draftLabel);
+                                    this.toggleEditLabelContribution();
+                                }}
+                                onFocus={e =>
+                                    setTimeout(() => {
+                                        document.execCommand('selectAll', false, null);
+                                    }, 0)
+                                } // Highlights the entire label when edit
+                            />
+                        )}
+                        {!this.state.isEditing && (
+                            <span>
+                                {/*this.props.paperId && !this.props.isSelected ? (
                                 <Link to={reverse(ROUTES.VIEW_PAPER, { resourceId: this.props.paperId, contributionId: this.props.contribution.id })}>
                                     {this.props.contribution.label}
                                 </Link>
                             ) : (
                                 this.props.contribution.label
                             )*/}
-                            {this.props.contribution.label}
-                        </span>
-                    )}
-                    {this.props.enableEdit && !this.state.isEditing && (
-                        <>
-                            {this.props.canDelete && (
-                                <span className={`deleteContribution float-right mr-1 ${!this.props.isSelected && 'd-none'}`}>
-                                    <Tippy content="Delete contribution">
+                                {this.props.contribution.label}
+                            </span>
+                        )}
+                        {this.props.enableEdit && !this.state.isEditing && (
+                            <>
+                                {this.props.canDelete && (
+                                    <span className={`deleteContribution float-right mr-1 ${!this.props.isSelected && 'd-none'}`}>
+                                        <Tippy content="Delete contribution">
+                                            <span>
+                                                <Icon
+                                                    icon={faTrash}
+                                                    onClick={e => {
+                                                        e.stopPropagation();
+                                                        this.props.toggleDeleteContribution(this.props.contribution.id);
+                                                    }}
+                                                />
+                                            </span>
+                                        </Tippy>
+                                    </span>
+                                )}
+                                <span className={`deleteContribution float-right mr-1 ml-1 ${!this.props.isSelected && 'd-none'}`}>
+                                    <Tippy content="Edit the contribution label">
                                         <span>
                                             <Icon
-                                                icon={faTrash}
+                                                icon={faPen}
                                                 onClick={e => {
                                                     e.stopPropagation();
-                                                    this.props.toggleDeleteContribution(this.props.contribution.id);
+                                                    this.toggleEditLabelContribution(this.props.contribution.id, e);
                                                 }}
                                             />
                                         </span>
                                     </Tippy>
                                 </span>
-                            )}
-                            <span className={`deleteContribution float-right mr-1 ml-1 ${!this.props.isSelected && 'd-none'}`}>
-                                <Tippy content="Edit the contribution label">
-                                    <span>
-                                        <Icon
-                                            icon={faPen}
-                                            onClick={e => {
-                                                e.stopPropagation();
-                                                this.toggleEditLabelContribution(this.props.contribution.id, e);
-                                            }}
-                                        />
-                                    </span>
-                                </Tippy>
-                            </span>
-                        </>
-                    )}
-                </span>
+                            </>
+                        )}
+                    </span>
+                </div>
             </li>
         );
 

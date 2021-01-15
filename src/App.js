@@ -1,4 +1,4 @@
-import React, { Component, Suspense } from 'react';
+import { Component, Suspense } from 'react';
 import { Switch } from 'react-router-dom';
 import { renderRoutes } from 'react-router-config';
 import routes from './routes.config';

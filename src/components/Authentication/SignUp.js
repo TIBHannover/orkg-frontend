@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Button, Form, FormGroup, Input, Label, Alert, FormFeedback, CustomInput } from 'reactstrap';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';

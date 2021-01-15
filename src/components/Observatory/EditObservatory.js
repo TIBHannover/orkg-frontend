@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { createRef, Component } from 'react';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Input, Label, FormGroup } from 'reactstrap';
 import { updateObservatoryName, updateObservatoryDescription, updateObservatoryResearchField } from 'services/backend/observatories';
 import { isEqual } from 'lodash';
@@ -10,7 +10,7 @@ import AutoComplete from 'components/Autocomplete/Autocomplete';
 class EditObservatory extends Component {
     constructor(props) {
         super(props);
-        this.resourceInputRef = React.createRef();
+        this.resourceInputRef = createRef();
         this.state = {
             label: '',
             description: '',

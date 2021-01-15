@@ -7,6 +7,8 @@ build/
 !build/favicon.ico
 !build/manifest.json
 
+.eslintcache
+
 *.iml
 .vscode
 

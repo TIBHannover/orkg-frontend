@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { renderToString } from 'react-dom/server';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -80,7 +80,14 @@ class Video extends Component {
             } else {
                 return (
                     <>
-                        <span className="btn-link" onClick={this.toggleVideoDialog} style={{ cursor: 'pointer' }}>
+                        <span
+                            className="btn-link"
+                            onClick={this.toggleVideoDialog}
+                            style={{ cursor: 'pointer' }}
+                            onKeyDown={e => (e.keyCode === 13 ? this.toggleVideoDialog : undefined)}
+                            role="button"
+                            tabIndex={0}
+                        >
                             {labelToText} <Icon icon={faVideo} />
                         </span>
                         <Modal isOpen={this.state.showVideoDialog} toggle={this.toggleVideoDialog} size="lg">
