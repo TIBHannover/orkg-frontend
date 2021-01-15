@@ -37,23 +37,28 @@ export const ComparisonTypeButton = styled(Button)`
     }
 `;
 
-export const ScrollButton = styled.div`
-    border-radius: 30px;
-    color: ${props => props.theme.darkblue};
-    width: 30px;
-    height: 30px;
-    font-size: 27px;
-    cursor: pointer;
-    transition: 0.2s filter;
+export const ScrollButton = styled(Button)`
+    &&& {
+        border-radius: 30px;
+        color: ${props => props.theme.darkblue};
+        width: 30px;
+        height: 30px;
+        font-size: 27px;
+        cursor: pointer;
+        transition: 0.2s filter;
+        padding: 0;
+        margin: 0;
 
-    &.next {
-        float: right;
-    }
-    &.back {
-        float: left;
-    }
-    &:hover {
-        filter: brightness(85%);
+        &.next {
+            float: right;
+        }
+        &.back {
+            float: left;
+        }
+        &:hover,
+        &:focus {
+            filter: brightness(85%);
+        }
     }
 `;
 
@@ -61,7 +66,6 @@ export const ReactTableWrapper = styled.div`
     clear: both;
     position: relative;
     padding: 10px 0;
-    font-size: ${props => (props.smallerFontSize ? '0.95rem' : '1rem')};
 
     & .rt-th.rthfc-th-fixed-left-last {
         border-radius: 11px 11px 0 0;
@@ -216,17 +220,20 @@ export const Delete = styled.div`
     }
 `;
 
-export const ClickableScroll = styled.div`
+export const ClickableScrollButton = styled.button`
     width: 30px;
-    height: 100%;
     position: absolute;
     z-index: 10;
     transition: box-shadow 0.5s;
+    background: transparent;
+    border: 0;
+    outline: 0 !important;
 
     &.right {
         cursor: e-resize;
         right: 0;
         top: 0;
+        height: 100%;
         box-shadow: rgba(0, 0, 0, 0.18) -9px 0px 5px -5px inset;
 
         &:hover {
@@ -238,6 +245,8 @@ export const ClickableScroll = styled.div`
         cursor: w-resize;
         left: 250px;
         top: 10px;
+        height: calc(100% - 20px);
+
         box-shadow: rgba(0, 0, 0, 0.18) 9px 0px 5px -5px inset;
 
         &:hover {
