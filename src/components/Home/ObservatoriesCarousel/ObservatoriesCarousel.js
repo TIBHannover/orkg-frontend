@@ -97,7 +97,6 @@ export default function ObservatoriesCarousel() {
                         ['desc', 'desc']
                     );
                     setObservatories(observatoriesData);
-                    console.log(observatoriesData);
                     setIsLoading(false);
                 });
             })

@@ -3,7 +3,7 @@ import { Alert, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Button, Bu
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faEllipsisV, faPlus, faLightbulb, faHistory, faWindowMaximize } from '@fortawesome/free-solid-svg-icons';
 import ComparisonLoadingComponent from 'components/Comparison/ComparisonLoadingComponent';
-import ComparisonTable from 'components/Comparison/ComparisonTable.js';
+import ComparisonTable from 'components/Comparison/Comparison';
 import ExportToLatex from 'components/Comparison/ExportToLatex.js';
 import GeneratePdf from 'components/Comparison/GeneratePdf.js';
 import SelectProperties from 'components/Comparison/SelectProperties';
