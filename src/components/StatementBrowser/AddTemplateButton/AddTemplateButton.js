@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { createRef, Component } from 'react';
 import { Button } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPlus, faSpinner } from '@fortawesome/free-solid-svg-icons';
@@ -37,7 +37,7 @@ class AddTemplateButton extends Component {
         this.state = {
             isAdding: false
         };
-        this.ref = React.createRef();
+        this.ref = createRef();
     }
 
     addTemplate = () => {

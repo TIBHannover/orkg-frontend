@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Container } from 'reactstrap';
 import PropTypes from 'prop-types';
 import { getLongLink } from 'services/similarity/index';

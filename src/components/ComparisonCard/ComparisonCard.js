@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Row, Col, Collapse } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';

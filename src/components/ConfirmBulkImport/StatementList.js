@@ -1,4 +1,3 @@
-import React from 'react';
 import { ListGroup } from 'reactstrap';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes.js';

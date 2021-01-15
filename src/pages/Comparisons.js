@@ -1,13 +1,14 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { getStatementsBySubjects } from 'services/backend/statements';
 import { getResourcesByClass } from 'services/backend/resources';
-import { Container } from 'reactstrap';
+import { Container, ButtonGroup, ListGroup } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { getComparisonData } from 'utils';
 import { find } from 'lodash';
 import ComparisonCard from 'components/ComparisonCard/ComparisonCard';
 import { CLASSES } from 'constants/graphSettings';
+import HeaderSearchButton from 'components/HeaderSearchButton/HeaderSearchButton';
 
 export default class Comparisons extends Component {
     constructor(props) {
@@ -78,38 +79,50 @@ export default class Comparisons extends Component {
     render() {
         return (
             <>
-                <Container className="p-0">
-                    <h1 className="h4 mt-4 mb-4">View all published comparisons</h1>
+                <Container className="d-flex align-items-center">
+                    <h1 className="h4 mt-4 mb-4 flex-grow-1">View all published comparisons</h1>
+                    <div className="flex-shrink-0">
+                        <ButtonGroup>
+                            <HeaderSearchButton placeholder="Search comparisons..." type={CLASSES.COMPARISON} />
+                        </ButtonGroup>
+                    </div>
                 </Container>
 
                 <Container className="p-0">
-                    {this.state.statements.length > 0 && (
-                        <div>
-                            {this.state.statements.map(resource => {
-                                return <ComparisonCard comparison={{ ...resource }} key={`pc${resource.id}`} />;
-                            })}
-                        </div>
-                    )}
-                    {this.state.statements.length === 0 && !this.state.isNextPageLoading && (
-                        <div className="text-center mt-4 mb-4">No published comparison</div>
-                    )}
-                    {this.state.isNextPageLoading && (
-                        <div className="text-center mt-4 mb-4">
-                            <Icon icon={faSpinner} spin /> Loading
-                        </div>
-                    )}
-                    {!this.state.isNextPageLoading && this.state.hasNextPage && (
-                        <div
-                            style={{ cursor: 'pointer' }}
-                            className="list-group-item list-group-item-action text-center mt-2"
-                            onClick={!this.state.isNextPageLoading ? this.loadMoreComparisons : undefined}
-                        >
-                            Load more comparisons
-                        </div>
-                    )}
-                    {!this.state.hasNextPage && this.state.isLastPageReached && (
-                        <div className="text-center mt-3">You have reached the last page.</div>
-                    )}
+                    <ListGroup flush className="box rounded" style={{ overflow: 'hidden' }}>
+                        {this.state.statements.length > 0 && (
+                            <div>
+                                {this.state.statements.map(resource => {
+                                    return <ComparisonCard comparison={{ ...resource }} key={`pc${resource.id}`} />;
+                                })}
+                            </div>
+                        )}
+                        {this.state.statements.length === 0 && !this.state.isNextPageLoading && (
+                            <div className="text-center mt-4 mb-4">No published comparison</div>
+                        )}
+                        {this.state.isNextPageLoading && (
+                            <div className="text-center mt-4 mb-4">
+                                <Icon icon={faSpinner} spin /> Loading
+                            </div>
+                        )}
+                        {!this.state.isNextPageLoading && this.state.hasNextPage && (
+                            <div
+                                style={{ cursor: 'pointer' }}
+                                className="list-group-item list-group-item-action text-center mt-2"
+                                onClick={!this.state.isNextPageLoading ? this.loadMoreComparisons : undefined}
+                                onKeyDown={e =>
+                                    e.keyCode === 13 ? (!this.state.isNextPageLoading ? this.loadMoreComparisons : undefined) : undefined
+                                }
+                                role="button"
+                                tabIndex={0}
+                            >
+                                Load more comparisons
+                            </div>
+                        )}
+                        {!this.state.hasNextPage && this.state.isLastPageReached && (
+                            <div className="text-center mt-3">You have reached the last page.</div>
+                        )}
+                    </ListGroup>
                 </Container>
             </>
         );

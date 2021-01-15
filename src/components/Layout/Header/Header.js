@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { createRef, Component } from 'react';
 import {
     Button,
     UncontrolledButtonDropdown,
@@ -126,7 +126,7 @@ class Header extends Component {
             isHomePageStyle: this.props.location.pathname === ROUTES.HOME ? true : false
         };
 
-        this.userPopup = React.createRef();
+        this.userPopup = createRef();
 
         this.logoutTimeoutId = null; // timeout for autologout
     }

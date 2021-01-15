@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { createRef, Component } from 'react';
 import { Container, Button, Form, FormGroup, Input, Label, Alert } from 'reactstrap';
 import { crossrefUrl, submitGetRequest } from 'network';
 import { createLiteralStatement } from 'services/backend/statements';
@@ -20,7 +20,7 @@ export default class AddResource extends Component {
         super(props);
 
         this.doi = null;
-        this.classesAutocompleteRef = React.createRef();
+        this.classesAutocompleteRef = createRef();
         this.state = {
             redirect: false,
             value: '',

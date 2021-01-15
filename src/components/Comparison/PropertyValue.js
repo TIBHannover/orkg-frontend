@@ -3,7 +3,7 @@ import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowser
 import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
 import { upperFirst } from 'lodash';
 import PropTypes from 'prop-types';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Button } from 'reactstrap';
 
 const PropertyValue = ({ id, label, similar }) => {

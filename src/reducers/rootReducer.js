@@ -8,6 +8,7 @@ import viewPaper from './viewPaper';
 import pdfAnnotation from './pdfAnnotation';
 import addTemplate from './addTemplate';
 
+// eslint-disable-next-line import/no-anonymous-default-export
 export default history =>
     combineReducers({
         router: history ? connectRouter(history) : null,

@@ -1,5 +1,5 @@
 import { Container, Row, Form, FormGroup, Label, Input, Button, TabContent, TabPane, Alert } from 'reactstrap';
-import React, { Component } from 'react';
+import { Component } from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
