@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Container, Row, Col } from 'reactstrap';
 import { withRouter } from 'react-router-dom'; // to access the history object
 import { reverse } from 'named-urls';
@@ -271,18 +271,20 @@ class Search extends Component {
                             <div className="box rounded p-4 h-100">
                                 {this.isLoading() &&
                                     Object.keys(this.state.results).every(v => this.state.results[v] && this.state.results[v].length === 0) && (
-                                        <ContentLoader height={210} speed={2} primaryColor="#f3f3f3" secondaryColor="#ecebeb">
-                                            <rect x="0" y="8" width="50" height="15" />
-                                            <rect x="0" y="25" width="100%" height="15" />
-                                            <rect x="0" y="42" width="100%" height="15" />
-                                            <rect x="0" y="59" width="100%" height="15" />
-                                            <rect x="0" y="76" width="100%" height="15" />
-
-                                            <rect x="0" y={8 + 100} width="50" height="15" />
-                                            <rect x="0" y={25 + 100} width="100%" height="15" />
-                                            <rect x="0" y={42 + 100} width="100%" height="15" />
-                                            <rect x="0" y={59 + 100} width="100%" height="15" />
-                                            <rect x="0" y={76 + 100} width="100%" height="15" />
+                                        <ContentLoader
+                                            height="100%"
+                                            width="100%"
+                                            viewBox="0 0 100 25"
+                                            style={{ width: '100% !important' }}
+                                            speed={2}
+                                            backgroundColor="#f3f3f3"
+                                            foregroundColor="#ecebeb"
+                                        >
+                                            <rect x="0" y="0" width="50" height="3" />
+                                            <rect x="0" y="5" width="100%" height="3" />
+                                            <rect x="0" y="10" width="100%" height="3" />
+                                            <rect x="0" y="15" width="100%" height="3" />
+                                            <rect x="0" y="20" width="100%" height="3" />
                                         </ContentLoader>
                                     )}
 

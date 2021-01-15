@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { changeProperty, isSavingProperty, doneSavingProperty, deleteProperty } from 'actions/statementBrowser';
 import { updateStatement, deleteStatementById } from 'services/backend/statements';
 import { createPredicate } from 'services/backend/predicates';

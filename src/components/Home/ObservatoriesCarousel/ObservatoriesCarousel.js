@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Carousel, CarouselItem, CarouselIndicators, Card, CardBody, CardFooter, CardTitle, CardSubtitle } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import ROUTES from 'constants/routes.js';
@@ -97,7 +97,6 @@ export default function ObservatoriesCarousel() {
                         ['desc', 'desc']
                     );
                     setObservatories(observatoriesData);
-                    console.log(observatoriesData);
                     setIsLoading(false);
                 });
             })
@@ -207,7 +206,15 @@ export default function ObservatoriesCarousel() {
                     </Carousel>
                 ) : (
                     <div style={{ height: '130px' }} className="pt-4 pb-1 pl-4 pr-4">
-                        <ContentLoader speed={2} primaryColor="#f3f3f3" secondaryColor="#ecebeb" ariaLabel={false}>
+                        <ContentLoader
+                            width={300}
+                            height={50}
+                            viewBox="0 0 300 50"
+                            speed={2}
+                            backgroundColor="#f3f3f3"
+                            foregroundColor="#ecebeb"
+                            title={false}
+                        >
                             <rect x="1" y="0" rx="4" ry="4" width="300" height="20" />
                             <rect x="1" y="25" rx="3" ry="3" width="250" height="20" />
                         </ContentLoader>

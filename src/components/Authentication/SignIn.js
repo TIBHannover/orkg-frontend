@@ -1,5 +1,5 @@
 import { Button, Form, FormGroup, Input, Label, Alert } from 'reactstrap';
-import React, { Component } from 'react';
+import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { openAuthDialog, toggleAuthDialog, updateAuth } from 'actions/auth';

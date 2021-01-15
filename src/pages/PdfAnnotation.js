@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Toolbar from 'components/PdfAnnotation/Toolbar';
 import TableSelect from 'components/PdfAnnotation/TableSelect';
 import styled from 'styled-components';

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { getStatementsBySubjects } from 'services/backend/statements';
 import { getResourcesByClass } from 'services/backend/resources';
 import { Container, ButtonGroup, ListGroup } from 'reactstrap';
@@ -110,6 +110,11 @@ export default class Comparisons extends Component {
                                 style={{ cursor: 'pointer' }}
                                 className="list-group-item list-group-item-action text-center mt-2"
                                 onClick={!this.state.isNextPageLoading ? this.loadMoreComparisons : undefined}
+                                onKeyDown={e =>
+                                    e.keyCode === 13 ? (!this.state.isNextPageLoading ? this.loadMoreComparisons : undefined) : undefined
+                                }
+                                role="button"
+                                tabIndex={0}
                             >
                                 Load more comparisons
                             </div>

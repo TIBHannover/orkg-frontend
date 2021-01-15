@@ -1,3 +1,4 @@
-export default {
+const dndTypes = {
     TEMPLATE_COMPONENT: 'TemplateComponent'
 };
+export default dndTypes;

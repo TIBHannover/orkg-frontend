@@ -1,4 +1,3 @@
-import React from 'react';
 import useOntology from 'components/PdfTextAnnotation/hooks/useOntology';
 import Tippy from '@tippy.js/react';
 import { useSelector } from 'react-redux';

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Container, BackButton, BreadcrumbList, BreadcrumbItem } from './styled';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faLink, faArrowRight } from '@fortawesome/free-solid-svg-icons';

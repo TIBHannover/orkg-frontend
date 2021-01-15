@@ -1,11 +1,10 @@
+import { memo, useRef } from 'react';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import PropertyValue from 'components/Comparison/PropertyValue';
 import ROUTES from 'constants/routes';
 import { functions, isEqual, omit } from 'lodash';
 import { reverse } from 'named-urls';
-import PropTypes from 'prop-types';
-import React, { memo, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { ScrollSyncPane } from 'react-scroll-sync';
 import ReactTable from 'react-table';
@@ -13,6 +12,7 @@ import withFixedColumnsScrollEvent from 'react-table-hoc-fixed-columns';
 import 'react-table-hoc-fixed-columns/lib/styles.css'; // important: this line must be placed after react-table css import
 import { Contribution, Delete, ItemHeader, ItemHeaderInner, Properties, PropertiesInner } from './styled';
 import TableCell from './TableCell';
+import PropTypes from 'prop-types';
 
 const ReactTableFixedColumns = withFixedColumnsScrollEvent(ReactTable);
 

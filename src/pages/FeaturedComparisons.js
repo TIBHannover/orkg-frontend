@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { Fragment, useState, useEffect, useCallback } from 'react';
 import { Container, Alert, Row, ButtonGroup } from 'reactstrap';
 import ROUTES from 'constants/routes';
 import FeaturedComparisonsItem from 'components/FeaturedComparisons/FeaturedComparisonsItem';
@@ -143,7 +143,7 @@ const FeaturedComparisons = () => {
                     categories.map(category => {
                         const id = encodeURIComponent(kebabCase(category.label));
                         return (
-                            <React.Fragment key={category.id}>
+                            <Fragment key={category.id}>
                                 <Header id={id} ref={scrollTo} className="h4 mt-4 mb-3">
                                     {category.label}
                                     <a href={`#${id}`} className="ml-2 invisible" onClick={e => handleClick(e, id)}>
@@ -165,7 +165,7 @@ const FeaturedComparisons = () => {
                                             />
                                         ))}
                                 </Row>
-                            </React.Fragment>
+                            </Fragment>
                         );
                     })
                 )}

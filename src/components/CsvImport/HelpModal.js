@@ -1,4 +1,3 @@
-import React from 'react';
 import { Modal, ModalBody, ModalHeader, Table, Alert } from 'reactstrap';
 import PropTypes from 'prop-types';
 import { reverse } from 'named-urls';

@@ -1,4 +1,3 @@
-import React from 'react';
 import { createValue } from 'actions/statementBrowser';
 import { prefillStatements } from 'actions/addPaper';
 import { createResourceStatement, createLiteralStatement } from 'services/backend/statements';

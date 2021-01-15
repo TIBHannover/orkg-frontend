@@ -1,4 +1,3 @@
-import React from 'react';
 import { ListGroup } from 'reactstrap';
 import { canAddProperty as canAddPropertyAction, doneAnimation } from 'actions/statementBrowser';
 import AddProperty from 'components/StatementBrowser/AddProperty/AddProperty';

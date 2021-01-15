@@ -1,4 +1,3 @@
-import React from 'react';
 import { FormGroup, Label, Col, Input, FormText } from 'reactstrap';
 import { setComponents } from 'actions/addTemplate';
 import { connect } from 'react-redux';

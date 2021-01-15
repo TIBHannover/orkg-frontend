@@ -1,5 +1,6 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Container } from 'reactstrap';
+import changelogPath from './CHANGELOG.md';
 import marked from 'marked';
 
 class Changelog extends Component {
@@ -9,9 +10,7 @@ class Changelog extends Component {
     componentDidMount = () => {
         document.title = 'Changelog - ORKG';
 
-        const path = require('./CHANGELOG.md');
-
-        fetch(path)
+        fetch(changelogPath)
             .then(response => {
                 return response.text();
             })

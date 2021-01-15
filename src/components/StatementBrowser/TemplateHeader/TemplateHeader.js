@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { deleteValue, toggleEditValue, updateValueLabel, isSavingValue, doneSavingValue, deleteProperty } from 'actions/statementBrowser';
 import { Input } from 'reactstrap';
 import { faTrash, faPen, faQuestion } from '@fortawesome/free-solid-svg-icons';

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Badge, Button } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faUser, faCalendar, faBars, faTrash, faCheckCircle } from '@fortawesome/free-solid-svg-icons';

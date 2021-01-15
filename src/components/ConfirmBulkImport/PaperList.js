@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { Fragment, useState } from 'react';
 import { Button, ListGroup } from 'reactstrap';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes.js';
@@ -61,7 +61,7 @@ const PaperList = props => {
 
             <ListGroup>
                 {papers.map((paper, i) => (
-                    <React.Fragment key={i}>
+                    <Fragment key={i}>
                         <PaperCardStyled
                             className="list-group-item list-group-item-action"
                             style={{ cursor: 'pointer' }}
@@ -110,7 +110,7 @@ const PaperList = props => {
                                 </ListGroup>
                             </PaperCardStyled>
                         )}
-                    </React.Fragment>
+                    </Fragment>
                 ))}
             </ListGroup>
         </>

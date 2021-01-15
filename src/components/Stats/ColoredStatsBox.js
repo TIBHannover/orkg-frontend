@@ -1,4 +1,3 @@
-import React from 'react';
 import { Col } from 'reactstrap';
 import styled from 'styled-components';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';

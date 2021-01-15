@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Row, Col, Button } from 'reactstrap';
 import ContributionItemList from './ContributionItemList';
 import ContributionsHelpTour from './ContributionsHelpTour';
-import Tooltip from '../../Utils/Tooltip';
+import Tooltip from 'components/Utils/Tooltip';
 import { StyledHorizontalContributionsList } from './styled';
 import { connect } from 'react-redux';
 import {
@@ -16,7 +16,7 @@ import {
     openTour,
     toggleAbstractDialog
 } from 'actions/addPaper';
-import Abstract from './../Abstract/Abstract';
+import Abstract from 'components/AddPaper/Abstract/Abstract';
 import Confirm from 'reactstrap-confirm';
 import Contribution from './Contribution';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
@@ -142,9 +142,19 @@ class Contributions extends Component {
                                 <span>
                                     Specify the research contributions that this paper makes. A paper can have multiple contributions and each
                                     contribution addresses at least one research problem.{' '}
-                                    <span style={{ textDecoration: 'underline', cursor: 'pointer' }} onClick={() => this.handleLearnMore(1)}>
+                                    <div
+                                        style={{ textDecoration: 'underline', cursor: 'pointer' }}
+                                        onClick={() => this.handleLearnMore(1)}
+                                        onKeyDown={e => {
+                                            if (e.keyCode === 13) {
+                                                this.handleLearnMore(1);
+                                            }
+                                        }}
+                                        role="button"
+                                        tabIndex={0}
+                                    >
                                         Learn more
-                                    </span>
+                                    </div>
                                 </span>
                             }
                         >
@@ -176,12 +186,23 @@ class Contributions extends Component {
                                 );
                             })}
 
-                            <li className="addContribution" onClick={this.props.createContribution}>
-                                <Tippy content="Add contribution">
-                                    <span>
-                                        <Icon size="xs" icon={faPlus} />
-                                    </span>
-                                </Tippy>
+                            <li className="addContribution">
+                                <div
+                                    onClick={this.props.createContribution}
+                                    onKeyDown={e => {
+                                        if (e.keyCode === 13) {
+                                            this.props.createContribution();
+                                        }
+                                    }}
+                                    role="button"
+                                    tabIndex={0}
+                                >
+                                    <Tippy content="Add contribution">
+                                        <span>
+                                            <Icon size="xs" icon={faPlus} />
+                                        </span>
+                                    </Tippy>
+                                </div>
                             </li>
                         </StyledHorizontalContributionsList>
                     </Col>

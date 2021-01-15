@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { toggleEditValue } from 'actions/statementBrowser';
 import { InputGroup, InputGroupAddon, Button, FormFeedback } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';

@@ -1,12 +1,12 @@
+import { useEffect, useRef, useState } from 'react';
 import { faArrowCircleLeft, faArrowCircleRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import ComparisonTable from 'components/Comparison/ComparisonTable';
 import { debounce } from 'lodash';
-import PropTypes from 'prop-types';
-import React, { useEffect, useRef, useState } from 'react';
 import { ScrollSync } from 'react-scroll-sync';
 import useResizeObserver from 'use-resize-observer';
 import { ClickableScrollButton, ReactTableWrapper, ScrollButton } from './styled';
+import PropTypes from 'prop-types';
 
 const SCROLL_AMOUNT = 500;
 
