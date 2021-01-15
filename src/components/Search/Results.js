@@ -3,7 +3,8 @@ import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 import { ListGroup, ListGroupItem, Button } from 'reactstrap';
 import ContentLoader from 'react-content-loader';
 import { Link, withRouter } from 'react-router-dom';
-import ROUTES from 'constants/routes.js';
+import ROUTES from 'constants/routes';
+import { PREDICATE_TYPE_ID, RESOURCE_TYPE_ID } from 'constants/misc';
 import { CLASSES } from 'constants/graphSettings';
 import { reverse } from 'named-urls';
 import styled from 'styled-components';
@@ -67,11 +68,11 @@ const Results = props => {
                 link = reverse(ROUTES.CONTRIBUTION_TEMPLATE, { id: resourceId });
                 break;
             }
-            case 'resource': {
+            case RESOURCE_TYPE_ID: {
                 link = reverse(ROUTES.RESOURCE, { id: resourceId });
                 break;
             }
-            case 'predicate': {
+            case PREDICATE_TYPE_ID: {
                 link = reverse(ROUTES.PREDICATE, { id: resourceId });
                 break;
             }

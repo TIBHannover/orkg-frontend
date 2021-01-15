@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import { ButtonDropdown, DropdownToggle, Container, ListGroup, ListGroupItem, DropdownItem, DropdownMenu } from 'reactstrap';
+import { ButtonDropdown, DropdownToggle, Container, ListGroup, ListGroupItem, DropdownItem, DropdownMenu, ButtonGroup } from 'reactstrap';
 import { getStatementsBySubjects } from 'services/backend/statements';
 import { getResourcesByClass } from 'services/backend/resources';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -8,6 +8,7 @@ import PaperCardDynamic from 'components/PaperCard/PaperCardDynamic';
 import { CLASSES } from 'constants/graphSettings';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import HeaderSearchButton from 'components/HeaderSearchButton/HeaderSearchButton';
 
 class Papers extends Component {
     constructor(props) {
@@ -123,22 +124,25 @@ class Papers extends Component {
             <>
                 <Container className="d-flex align-items-center">
                     <h1 className="h4 mt-4 mb-4 flex-grow-1">View all papers</h1>
-                    {!!this.props.user && this.props.user.isCurationAllowed && (
-                        <div className="flex-shrink-0">
-                            <ButtonDropdown size="sm" isOpen={this.state.dropdownOpen} toggle={this.toggle}>
-                                <DropdownToggle caret color="darkblue">
-                                    {this.state.verified === true && 'Verified'}
-                                    {this.state.verified === false && 'Unverified'}
-                                    {this.state.verified === null && 'All'}
-                                </DropdownToggle>
-                                <DropdownMenu>
-                                    <DropdownItem onClick={e => this.setVerifiedFilter(null)}>All</DropdownItem>
-                                    <DropdownItem onClick={e => this.setVerifiedFilter(true)}>Verified</DropdownItem>
-                                    <DropdownItem onClick={e => this.setVerifiedFilter(false)}>Unverified</DropdownItem>
-                                </DropdownMenu>
-                            </ButtonDropdown>
-                        </div>
-                    )}
+                    <div className="flex-shrink-0">
+                        <ButtonGroup>
+                            {!!this.props.user && this.props.user.isCurationAllowed && (
+                                <ButtonDropdown size="sm" isOpen={this.state.dropdownOpen} toggle={this.toggle}>
+                                    <DropdownToggle caret color="darkblue">
+                                        {this.state.verified === true && 'Verified'}
+                                        {this.state.verified === false && 'Unverified'}
+                                        {this.state.verified === null && 'All'}
+                                    </DropdownToggle>
+                                    <DropdownMenu>
+                                        <DropdownItem onClick={e => this.setVerifiedFilter(null)}>All</DropdownItem>
+                                        <DropdownItem onClick={e => this.setVerifiedFilter(true)}>Verified</DropdownItem>
+                                        <DropdownItem onClick={e => this.setVerifiedFilter(false)}>Unverified</DropdownItem>
+                                    </DropdownMenu>
+                                </ButtonDropdown>
+                            )}
+                            {this.state.verified === null && <HeaderSearchButton placeholder="Search papers..." type={CLASSES.PAPER} />}
+                        </ButtonGroup>
+                    </div>
                 </Container>
                 <Container className="p-0">
                     <ListGroup flush className="box rounded" style={{ overflow: 'hidden' }}>

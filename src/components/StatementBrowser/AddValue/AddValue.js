@@ -1,27 +1,58 @@
-import { Component } from 'react';
+import { createValue } from 'actions/statementBrowser';
+import { prefillStatements } from 'actions/addPaper';
 import { createResourceStatement, createLiteralStatement } from 'services/backend/statements';
 import { createLiteral } from 'services/backend/literals';
 import { createPredicate } from 'services/backend/predicates';
 import { createResource } from 'services/backend/resources';
 import AddValueTemplate from './AddValueTemplate';
+import { useDispatch, useSelector } from 'react-redux';
 import { guid } from 'utils';
+import { isLiteral, getValueClass } from './helpers/utils';
 import PropTypes from 'prop-types';
 import { MISC } from 'constants/graphSettings';
 
-export default class AddValue extends Component {
+const AddValue = props => {
+    const dispatch = useDispatch();
+    const selectedProperty = useSelector(state => state.statementBrowser.selectedProperty);
+    const selectedResource = useSelector(state => (props.resourceId ? props.resourceId : state.statementBrowser.selectedResource));
+    const predicate = useSelector(state => state.statementBrowser.properties.byId[props.propertyId ? props.propertyId : selectedProperty]);
+    const newResources = useSelector(state => {
+        const newResourcesList = [];
+
+        for (const key in state.statementBrowser.resources.byId) {
+            const resource = state.statementBrowser.resources.byId[key];
+
+            if (!resource.existingResourceId && resource.label && resource.id) {
+                newResourcesList.push({
+                    id: resource.id,
+                    label: resource.label,
+                    ...(resource.shared ? { shared: resource.shared } : {}),
+                    ...(resource.classes ? { classes: resource.classes } : {})
+                });
+            }
+        }
+        return newResourcesList;
+    });
+
+    const valueClass = getValueClass(props.components);
+    let isLiteralField = isLiteral(props.components);
+    if (predicate.range) {
+        isLiteralField = ['Date', 'Number', 'String'].includes(predicate.range.id) ? true : false;
+    }
+
     /**
      * Create statements for a resource starting from an array of statements
      *
      * @param {Array} data array of statement
      * @return {Object} object of statements to use as an entry for prefillStatements action
      */
-    generateStatementsFromExternalData = data => {
+    const generateStatementsFromExternalData = data => {
         const statements = { properties: [], values: [] };
         const createdProperties = {};
         for (const statement of data) {
-            const propertyID = guid();
+            const _propertyID = guid();
             if (!createdProperties[statement.predicate.id]) {
-                createdProperties[statement.predicate.id] = propertyID;
+                createdProperties[statement.predicate.id] = _propertyID;
                 statements['properties'].push({
                     propertyId: createdProperties[statement.predicate.id],
                     existingPredicateId: statement.predicate.id,
@@ -37,166 +68,149 @@ export default class AddValue extends Component {
         return statements;
     };
 
-    handleValueSelect = async (valueType, { id, value, shared, classes, external, statements }) => {
-        if (this.props.syncBackend) {
-            const predicate = this.props.properties.byId[this.props.propertyId ? this.props.propertyId : this.props.selectedProperty];
+    const handleValueSelect = async (valueType, { id, value, shared, classes, external, statements }) => {
+        if (props.syncBackend) {
             if (external) {
                 // create the object
-                const newObject = await createResource(value, this.props.valueClass ? [this.props.valueClass.id] : []);
-                const newStatement = await createResourceStatement(this.props.selectedResource, predicate.existingPredicateId, newObject.id);
-                this.props.createValue({
-                    label: value,
-                    type: valueType,
-                    propertyId: this.props.propertyId ? this.props.propertyId : this.props.selectedProperty,
-                    existingResourceId: newObject.id,
-                    isExistingValue: true,
-                    statementId: newStatement.id,
-                    shared: newObject.shared,
-                    classes: this.props.valueClass ? [this.props.valueClass.id] : []
-                });
+                const newObject = await createResource(value, valueClass ? [valueClass.id] : []);
+                const newStatement = await createResourceStatement(selectedResource, predicate.existingPredicateId, newObject.id);
+                dispatch(
+                    createValue({
+                        label: value,
+                        type: valueType,
+                        propertyId: props.propertyId ? props.propertyId : selectedProperty,
+                        existingResourceId: newObject.id,
+                        isExistingValue: true,
+                        statementId: newStatement.id,
+                        shared: newObject.shared,
+                        classes: valueClass ? [valueClass.id] : []
+                    })
+                );
                 //create statements
-                this.props.prefillStatements({
-                    statements: this.generateStatementsFromExternalData(statements),
-                    resourceId: newObject.id,
-                    syncBackend: this.props.syncBackend
-                });
+                dispatch(
+                    prefillStatements({
+                        statements: generateStatementsFromExternalData(statements),
+                        resourceId: newObject.id,
+                        syncBackend: props.syncBackend
+                    })
+                );
             } else {
-                const newStatement = await createResourceStatement(this.props.selectedResource, predicate.existingPredicateId, id);
-                this.props.createValue({
-                    label: value,
-                    type: valueType,
-                    propertyId: this.props.propertyId ? this.props.propertyId : this.props.selectedProperty,
-                    classes: classes,
-                    existingResourceId: id,
-                    isExistingValue: true,
-                    statementId: newStatement.id,
-                    shared: shared
-                });
+                const newStatement = await createResourceStatement(selectedResource, predicate.existingPredicateId, id);
+                dispatch(
+                    createValue({
+                        label: value,
+                        type: valueType,
+                        propertyId: props.propertyId ? props.propertyId : selectedProperty,
+                        classes: classes,
+                        existingResourceId: id,
+                        isExistingValue: true,
+                        statementId: newStatement.id,
+                        shared: shared
+                    })
+                );
             }
         } else {
             if (external) {
-                const newObject = await this.handleAddValue(valueType, value, null);
+                const newObject = await handleAddValue(valueType, value, null);
                 // create statements
-                this.props.prefillStatements({
-                    statements: this.generateStatementsFromExternalData(statements),
-                    resourceId: newObject,
-                    syncBackend: this.props.syncBackend
-                });
+                dispatch(
+                    prefillStatements({
+                        statements: generateStatementsFromExternalData(statements),
+                        resourceId: newObject,
+                        syncBackend: props.syncBackend
+                    })
+                );
             } else {
-                this.props.createValue({
-                    label: value,
-                    type: valueType,
-                    propertyId: this.props.propertyId ? this.props.propertyId : this.props.selectedProperty,
-                    classes: classes,
-                    existingResourceId: id,
-                    isExistingValue: true,
-                    shared: shared
-                });
+                dispatch(
+                    createValue({
+                        label: value,
+                        type: valueType,
+                        propertyId: props.propertyId ? props.propertyId : selectedProperty,
+                        classes: classes,
+                        existingResourceId: id,
+                        isExistingValue: true,
+                        shared: shared
+                    })
+                );
             }
         }
     };
 
-    handleAddValue = async (valueType, inputValue, datatype = MISC.DEFAULT_LITERAL_DATATYPE) => {
+    const handleAddValue = async (valueType, inputValue, datatype = MISC.DEFAULT_LITERAL_DATATYPE) => {
         let newObject = null;
         let newStatement = null;
         const valueId = guid();
         const existingResourceId = guid();
-        if (this.props.syncBackend) {
-            const predicate = this.props.properties.byId[this.props.propertyId ? this.props.propertyId : this.props.selectedProperty];
+        if (props.syncBackend) {
             switch (valueType) {
                 case 'object':
-                    newObject = await createResource(inputValue, this.props.valueClass ? [this.props.valueClass.id] : []);
-                    newStatement = await createResourceStatement(this.props.selectedResource, predicate.existingPredicateId, newObject.id);
+                    newObject = await createResource(inputValue, valueClass ? [valueClass.id] : []);
+                    newStatement = await createResourceStatement(selectedResource, predicate.existingPredicateId, newObject.id);
                     break;
                 case 'property':
                     newObject = await createPredicate(inputValue);
-                    newStatement = await createResourceStatement(this.props.selectedResource, predicate.existingPredicateId, newObject.id);
+                    newStatement = await createResourceStatement(selectedResource, predicate.existingPredicateId, newObject.id);
                     break;
                 default:
                     newObject = await createLiteral(inputValue, datatype);
-                    newStatement = await createLiteralStatement(this.props.selectedResource, predicate.existingPredicateId, newObject.id);
+                    newStatement = await createLiteralStatement(selectedResource, predicate.existingPredicateId, newObject.id);
             }
-            this.props.createValue({
-                label: inputValue,
-                type: valueType,
-                ...(valueType === 'literal' && { datatype: datatype }),
-                propertyId: this.props.propertyId ? this.props.propertyId : this.props.selectedProperty,
-                existingResourceId: newObject.id,
-                isExistingValue: true,
-                statementId: newStatement.id,
-                shared: newObject.shared,
-                classes: this.props.valueClass ? [this.props.valueClass.id] : []
-            });
+            dispatch(
+                createValue({
+                    label: inputValue,
+                    type: valueType,
+                    ...(valueType === 'literal' && { datatype: datatype }),
+                    propertyId: props.propertyId ? props.propertyId : selectedProperty,
+                    existingResourceId: newObject.id,
+                    isExistingValue: true,
+                    statementId: newStatement.id,
+                    shared: newObject.shared,
+                    classes: valueClass ? [valueClass.id] : []
+                })
+            );
         } else {
-            this.props.createValue({
-                valueId,
-                label: inputValue,
-                type: valueType,
-                ...(valueType === 'literal' && { datatype: datatype }),
-                propertyId: this.props.propertyId ? this.props.propertyId : this.props.selectedProperty,
-                existingResourceId,
-                isExistingValue: false,
-                classes: this.props.valueClass ? [this.props.valueClass.id] : [],
-                shared: 1
-            });
+            dispatch(
+                createValue({
+                    valueId,
+                    label: inputValue,
+                    type: valueType,
+                    ...(valueType === 'literal' && { datatype: datatype }),
+                    propertyId: props.propertyId ? props.propertyId : selectedProperty,
+                    existingResourceId,
+                    isExistingValue: false,
+                    classes: valueClass ? [valueClass.id] : [],
+                    shared: 1
+                })
+            );
         }
         return newObject ? newObject.id : existingResourceId;
     };
 
-    render() {
-        const predicate = this.props.properties.byId[this.props.propertyId ? this.props.propertyId : this.props.selectedProperty];
-
-        return (
-            <>
-                <AddValueTemplate
-                    predicate={predicate}
-                    properties={this.props.properties}
-                    propertyId={this.props.propertyId}
-                    selectedProperty={this.props.selectedProperty}
-                    handleValueSelect={this.handleValueSelect}
-                    handleInputChange={this.handleInputChange}
-                    newResources={this.props.newResources}
-                    handleAddValue={this.handleAddValue}
-                    fetchTemplatesofClassIfNeeded={this.props.fetchTemplatesofClassIfNeeded}
-                    components={this.props.components}
-                    classes={this.props.classes}
-                    templates={this.props.templates}
-                    selectResource={this.props.selectResource}
-                    openExistingResourcesInDialog={this.props.openExistingResourcesInDialog}
-                    isDisabled={this.props.isDisabled}
-                    createRequiredPropertiesInResource={this.props.createRequiredPropertiesInResource}
-                    isLiteral={this.props.isLiteral}
-                    valueClass={this.props.valueClass}
-                />
-            </>
-        );
-    }
-}
+    return (
+        <AddValueTemplate
+            predicate={predicate}
+            propertyId={props.propertyId}
+            handleValueSelect={(valueType, inputValue) => handleValueSelect(valueType, inputValue)}
+            newResources={newResources}
+            handleAddValue={handleAddValue}
+            components={props.components}
+            isDisabled={props.isDisabled}
+            isLiteral={isLiteralField}
+            valueClass={valueClass}
+        />
+    );
+};
 
 AddValue.propTypes = {
-    createValue: PropTypes.func.isRequired,
-    selectedProperty: PropTypes.string.isRequired,
-    prefillStatements: PropTypes.func.isRequired,
     propertyId: PropTypes.string,
-    selectedResource: PropTypes.string.isRequired,
-    newResources: PropTypes.array.isRequired,
+    resourceId: PropTypes.string,
     syncBackend: PropTypes.bool.isRequired,
-    properties: PropTypes.object.isRequired,
-    contextStyle: PropTypes.string.isRequired,
-    createProperty: PropTypes.func.isRequired,
-    openExistingResourcesInDialog: PropTypes.bool,
-    selectResource: PropTypes.func.isRequired,
-    fetchTemplatesofClassIfNeeded: PropTypes.func.isRequired,
     components: PropTypes.array.isRequired,
-    classes: PropTypes.object.isRequired,
-    templates: PropTypes.object.isRequired,
-    isDisabled: PropTypes.bool.isRequired,
-    createRequiredPropertiesInResource: PropTypes.func.isRequired,
-    isLiteral: PropTypes.bool.isRequired,
-    valueClass: PropTypes.object
+    isDisabled: PropTypes.bool.isRequired
 };
 
 AddValue.defaultProps = {
-    contextStyle: 'StatementBrowser',
     isDisabled: false
 };
+
+export default AddValue;

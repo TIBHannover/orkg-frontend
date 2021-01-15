@@ -1,13 +1,19 @@
 import { useState, useEffect } from 'react';
+import { changeProperty, isSavingProperty, doneSavingProperty, deleteProperty } from 'actions/statementBrowser';
 import { updateStatement, deleteStatementById } from 'services/backend/statements';
 import { createPredicate } from 'services/backend/predicates';
 import { getResource } from 'services/backend/resources';
-import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
+import { useDispatch, useSelector } from 'react-redux';
 import StatementItemTemplate from './StatementItemTemplate';
 import { guid } from 'utils';
+import PropTypes from 'prop-types';
 
 export default function StatementItem(props) {
+    const dispatch = useDispatch();
+    const statementBrowser = useSelector(state => state.statementBrowser);
+    const { selectedResource, properties, values } = statementBrowser;
+
     const [predicateLabel, setPredicateLabel] = useState(props.predicateLabel);
 
     useEffect(() => {
@@ -29,28 +35,30 @@ export default function StatementItem(props) {
     }, [props.predicateLabel]);
 
     const handleDeleteStatement = async () => {
-        const property = props.properties.byId[props.id];
+        const property = properties.byId[props.id];
         if (props.syncBackend) {
             // Delete All related statements
             if (property.valueIds.length > 0) {
                 for (const valueId of property.valueIds) {
-                    const value = props.values.byId[valueId];
+                    const value = values.byId[valueId];
                     deleteStatementById(value.statementId);
                 }
                 toast.success(`${property.valueIds.length} ${property.valueIds.length === 1 ? 'Statement' : 'Statements'} deleted successfully`);
             }
         }
-        props.deleteProperty({
-            id: props.id,
-            resourceId: props.resourceId ? props.resourceId : props.selectedResource
-        });
+        dispatch(
+            deleteProperty({
+                id: props.id,
+                resourceId: props.resourceId ? props.resourceId : selectedResource
+            })
+        );
     };
 
     const handleChange = async (selectedOption, a) => {
-        const property = props.properties.byId[props.id];
+        const property = properties.byId[props.id];
         // Check if the user changed the property
         if (props.predicateLabel !== selectedOption.label || property.existingPredicateId !== selectedOption.id) {
-            props.isSavingProperty({ id: props.id }); // Show the saving message instead of the property label
+            dispatch(isSavingProperty({ id: props.id })); // Show the saving message instead of the property label
             if (a.action === 'select-option') {
                 changePredicate({ ...selectedOption, isExistingProperty: true });
             } else if (a.action === 'create-option') {
@@ -68,41 +76,35 @@ export default function StatementItem(props) {
 
     const changePredicate = async newProperty => {
         if (props.syncBackend) {
-            const predicate = props.properties.byId[props.id];
+            const predicate = properties.byId[props.id];
             const existingPredicateId = predicate ? predicate.existingPredicateId : false;
             if (existingPredicateId) {
                 const values = predicate.valueIds;
                 for (const value of values) {
-                    await updateStatement(props.values.byId[value].statementId, { predicate_id: newProperty.id });
+                    await updateStatement(values.byId[value].statementId, { predicate_id: newProperty.id });
                 }
-                props.changeProperty({ propertyId: props.id, newProperty: newProperty });
+                dispatch(changeProperty({ propertyId: props.id, newProperty: newProperty }));
                 toast.success('Property updated successfully');
             }
         } else {
-            props.changeProperty({ propertyId: props.id, newProperty: newProperty });
+            dispatch(changeProperty({ propertyId: props.id, newProperty: newProperty }));
         }
-        props.doneSavingProperty({ id: props.id });
+        dispatch(doneSavingProperty({ id: props.id }));
     };
 
     return (
         <StatementItemTemplate
             property={props.property}
             id={props.id}
-            selectedProperty={props.selectedProperty}
             isLastItem={props.isLastItem}
             enableEdit={props.enableEdit}
             predicateLabel={predicateLabel}
-            values={props.values}
+            values={values}
             syncBackend={props.syncBackend}
             handleChange={handleChange}
-            toggleEditPropertyLabel={props.toggleEditPropertyLabel}
             inTemplate={props.inTemplate}
             showValueHelp={props.showValueHelp}
             handleDeleteStatement={handleDeleteStatement}
-            propertiesAsLinks={props.propertiesAsLinks}
-            components={props.components}
-            canAddValue={props.canAddValue}
-            canDeleteProperty={props.canDeleteProperty}
             resourceId={props.resourceId}
         />
     );
@@ -116,32 +118,11 @@ StatementItem.propTypes = {
     syncBackend: PropTypes.bool.isRequired,
     isLastItem: PropTypes.bool.isRequired,
     showValueHelp: PropTypes.bool,
-
-    templates: PropTypes.object.isRequired,
-    classes: PropTypes.object.isRequired,
-    resources: PropTypes.object.isRequired,
-    components: PropTypes.array.isRequired,
-    canAddValue: PropTypes.bool.isRequired,
-    canDeleteProperty: PropTypes.bool.isRequired,
-
-    contextStyle: PropTypes.string.isRequired,
     resourceId: PropTypes.string,
-    inTemplate: PropTypes.bool,
-
-    selectedProperty: PropTypes.string.isRequired,
-    selectedResource: PropTypes.string.isRequired,
-    properties: PropTypes.object.isRequired,
-    values: PropTypes.object.isRequired,
-    deleteProperty: PropTypes.func.isRequired,
-    toggleEditPropertyLabel: PropTypes.func.isRequired,
-    changeProperty: PropTypes.func.isRequired,
-    isSavingProperty: PropTypes.func.isRequired,
-    doneSavingProperty: PropTypes.func.isRequired,
-    propertiesAsLinks: PropTypes.bool.isRequired
+    inTemplate: PropTypes.bool
 };
 
 StatementItem.defaultProps = {
     resourceId: null,
-    contextStyle: 'StatementBrowser',
     showValueHelp: false
 };
