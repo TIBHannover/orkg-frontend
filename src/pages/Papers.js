@@ -140,7 +140,7 @@ class Papers extends Component {
                                     </DropdownMenu>
                                 </ButtonDropdown>
                             )}
-                            <HeaderSearchButton placeholder="Search papers..." type={CLASSES.PAPER} />
+                            {this.state.verified === null && <HeaderSearchButton placeholder="Search papers..." type={CLASSES.PAPER} />}
                         </ButtonGroup>
                     </div>
                 </Container>
