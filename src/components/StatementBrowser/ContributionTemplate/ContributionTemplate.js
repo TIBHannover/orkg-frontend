@@ -1,18 +1,24 @@
 import React from 'react';
 import { ListGroup } from 'reactstrap';
-import AddProperty from 'components/StatementBrowser/AddProperty/AddPropertyContainer';
-import TemplateHeader from 'components/StatementBrowser/TemplateHeader/TemplateHeaderContainer';
-import StatementItem from 'components/StatementBrowser/StatementItem/StatementItemContainer';
-import { AddPropertWrapper, AnimationContainer } from './styled';
-import { Cookies } from 'react-cookie';
+import { canAddProperty as canAddPropertyAction, doneAnimation } from 'actions/statementBrowser';
+import AddProperty from 'components/StatementBrowser/AddProperty/AddProperty';
+import TemplateHeader from 'components/StatementBrowser/TemplateHeader/TemplateHeader';
+import StatementItem from 'components/StatementBrowser/StatementItem/StatementItem';
+import { AddPropertyWrapper, AnimationContainer } from './styled';
+import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 
-export default function ContributionTemplate(props) {
+const ContributionTemplate = props => {
+    const dispatch = useDispatch();
+    const statementBrowser = useSelector(state => state.statementBrowser);
+    const { properties, resources } = statementBrowser;
+    const canAddProperty = useSelector(state => canAddPropertyAction(state, props.value.resourceId));
+
     let propertyIds = [];
     let shared = 1;
-    if (Object.keys(props.resources.byId).length !== 0 && props.value.resourceId) {
-        propertyIds = props.resources.byId[props.value.resourceId].propertyIds;
-        shared = props.resources.byId[props.value.resourceId].shared;
+    if (Object.keys(resources.byId).length !== 0 && props.value.resourceId) {
+        propertyIds = resources.byId[props.value.resourceId].propertyIds;
+        shared = resources.byId[props.value.resourceId].shared;
     }
 
     return (
@@ -21,9 +27,9 @@ export default function ContributionTemplate(props) {
             className="mt-3 pb-3"
             in={true}
             timeout={!props.isAnimated ? { enter: 700 } : { enter: 0 }}
-            addEndListener={(node, done) => {
+            addEndListener={() => {
                 if (!props.isAnimated) {
-                    props.doneAnimation({ id: props.propertyId });
+                    dispatch(doneAnimation({ id: props.propertyId }));
                 }
             }}
             appear
@@ -37,7 +43,7 @@ export default function ContributionTemplate(props) {
                     resourceId={props.selectedResource}
                 />
                 {propertyIds.map((propertyId, index) => {
-                    const property = props.properties.byId[propertyId];
+                    const property = properties.byId[propertyId];
                     return (
                         <StatementItem
                             key={'statement-' + index}
@@ -47,52 +53,38 @@ export default function ContributionTemplate(props) {
                             enableEdit={shared <= 1 ? props.enableEdit : false}
                             syncBackend={props.syncBackend}
                             isLastItem={propertyIds.length === index + 1}
-                            showValueHelp={props.cookies && !props.cookies.get('showedValueHelp') && index === 0 ? true : false}
+                            showValueHelp={false}
                             inTemplate={true}
                             contextStyle="Template"
                             resourceId={props.value.resourceId}
                         />
                     );
                 })}
-                <AddPropertWrapper>
+                <AddPropertyWrapper>
                     <div className="row no-gutters">
                         <div className="col-4 propertyHolder" />
                     </div>
                     <AddProperty
-                        isDisabled={!props.canAddProperty}
+                        isDisabled={!canAddProperty}
                         syncBackend={props.syncBackend}
                         inTemplate={true}
                         contextStyle="Template"
                         resourceId={props.value.resourceId}
                     />
-                </AddPropertWrapper>
+                </AddPropertyWrapper>
             </ListGroup>
         </AnimationContainer>
     );
-}
+};
 
 ContributionTemplate.propTypes = {
     id: PropTypes.string.isRequired,
     propertyId: PropTypes.string.isRequired,
     value: PropTypes.object.isRequired,
     selectedResource: PropTypes.string.isRequired,
-    inTemplate: PropTypes.bool.isRequired,
     syncBackend: PropTypes.bool.isRequired,
     enableEdit: PropTypes.bool.isRequired,
-    isAnimated: PropTypes.bool,
-
-    classes: PropTypes.object.isRequired,
-    templates: PropTypes.object.isRequired,
-    canAddProperty: PropTypes.bool.isRequired,
-
-    resources: PropTypes.object.isRequired,
-    properties: PropTypes.object.isRequired,
-    doneAnimation: PropTypes.func.isRequired,
-    cookies: PropTypes.instanceOf(Cookies).isRequired
+    isAnimated: PropTypes.bool
 };
 
-ContributionTemplate.defaultProps = {
-    inTemplate: false,
-    label: 'Type',
-    properties: []
-};
+export default ContributionTemplate;

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Form, FormGroup } from 'reactstrap';
 import { connect } from 'react-redux';
 import SuggestedTemplates from 'components/StatementBrowser/SuggestedTemplates/SuggestedTemplates';
-import StatementBrowser from 'components/StatementBrowser/Statements/StatementsContainer';
+import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
 import { updateResearchProblems, openTour } from 'actions/addPaper';
 import { getReseachProblemsOfContribution } from 'actions/statementBrowser';
 import { StyledHorizontalContribution } from './styled';
