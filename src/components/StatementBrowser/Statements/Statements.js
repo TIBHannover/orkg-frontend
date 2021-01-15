@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ListGroup, Button } from 'reactstrap';
 import StatementItem from 'components/StatementBrowser/StatementItem/StatementItemContainer';
 import AddProperty from 'components/StatementBrowser/AddProperty/AddProperty';
-import Breadcrumbs from 'components/StatementBrowser/Breadcrumbs/BreadcrumbsContainer';
+import Breadcrumbs from 'components/StatementBrowser/Breadcrumbs/Breadcrumbs';
 import ContributionTemplate from 'components/StatementBrowser/ContributionTemplate/ContributionTemplateContainer';
 import PropertySuggestions from 'components/StatementBrowser/PropertySuggestions/PropertySuggestions';
 import SBEditorHelpModal from 'components/StatementBrowser/SBEditorHelpModal/SBEditorHelpModal';
