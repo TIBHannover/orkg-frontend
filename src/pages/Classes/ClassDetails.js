@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Container, Table, ButtonGroup, Button } from 'reactstrap';
 import { getStatementsByObjectAndPredicate } from 'services/backend/statements';
 import { getClassById } from 'services/backend/classes';

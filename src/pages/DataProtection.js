@@ -1,4 +1,3 @@
-import React from 'react';
 import { Container } from 'reactstrap';
 import InfoSheet from 'assets/pdf/infosheet-data-protection.pdf';
 

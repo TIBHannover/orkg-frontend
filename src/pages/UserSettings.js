@@ -1,16 +1,16 @@
 import { Container, Row, TabContent, TabPane } from 'reactstrap';
-import React, { Component } from 'react';
+import { Component } from 'react';
 import styled from 'styled-components';
 import classnames from 'classnames';
 import GeneralSettings from '../components/UserSettings/GeneralSettings';
 import Password from '../components/UserSettings/Password';
 
-export const StyledSettingsMenu = styled.ul`
+export const StyledSettingsMenu = styled.div`
     list-style: none;
     padding: 0;
     padding-top: 15px;
 
-    > li {
+    > div {
         padding: 9px 10px 9px 15px;
         margin-bottom: 5px;
         transition: 0.3s background;
@@ -60,24 +60,27 @@ class UserSettings extends Component {
                     <div className="col-3 justify-content-center">
                         <Container className="box rounded p-3">
                             <StyledSettingsMenu>
-                                <li
-                                    onClick={() => {
-                                        this.toggleTab('general');
-                                    }}
+                                <div
+                                    role="button"
+                                    tabIndex={0}
+                                    onClick={() => this.toggleTab('general')}
                                     className={classnames({
                                         active: this.state.activeTab === 'general' || this.state.activeTab === 'delete'
                                     })}
+                                    onKeyDown={e => (e.keyCode === 13 ? this.toggleTab('general') : undefined)}
                                 >
-                                    <span>General settings</span>
-                                </li>
-                                <li
+                                    General settings
+                                </div>
+
+                                <div
                                     className={classnames({ active: this.state.activeTab === 'password' })}
-                                    onClick={() => {
-                                        this.toggleTab('password');
-                                    }}
+                                    role="button"
+                                    tabIndex={0}
+                                    onClick={() => this.toggleTab('password')}
+                                    onKeyDown={e => (e.keyCode === 13 ? this.toggleTab('password') : undefined)}
                                 >
-                                    <span>Password</span>
-                                </li>
+                                    <div>Password</div>
+                                </div>
                             </StyledSettingsMenu>
                         </Container>
                     </div>

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import { Container, Button, Form, FormGroup, Input, Label, Alert } from 'reactstrap';
 import { toast } from 'react-toastify';

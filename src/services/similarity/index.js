@@ -11,11 +11,8 @@ export const similarityServiceUrl = env('SIMILARITY_SERVICE_URL');
 export const comparisonUrl = `${similarityServiceUrl}compare/`;
 export const similarityUrl = `${similarityServiceUrl}similar/`;
 
-// TODO: call this function
-export const indexContribution = contribution_id => {
-    return fetch(`${similarityServiceUrl}internal/index/${encodeURIComponent(contribution_id)}/`, {
-        method: 'GET'
-    });
+export const indexContribution = contributionId => {
+    return submitGetRequest(`${similarityServiceUrl}internal/index/${contributionId}/`);
 };
 
 export const createShortLink = data => {

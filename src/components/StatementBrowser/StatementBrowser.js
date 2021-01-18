@@ -1,6 +1,6 @@
 import { Provider } from 'react-redux';
 import configureStore from 'store';
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Statements from 'components/StatementBrowser/Statements/Statements';
 import PropTypes from 'prop-types';
 

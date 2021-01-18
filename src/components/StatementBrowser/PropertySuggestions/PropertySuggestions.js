@@ -1,4 +1,3 @@
-import React from 'react';
 import { ListGroup, ListGroupItem, Badge } from 'reactstrap';
 import StatementOptionButton from 'components/StatementBrowser/StatementOptionButton/StatementOptionButton';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';

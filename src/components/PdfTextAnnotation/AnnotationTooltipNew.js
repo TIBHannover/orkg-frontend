@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import useOntology from 'components/PdfTextAnnotation/hooks/useOntology';
@@ -143,12 +143,20 @@ const AnnotationTooltipNew = props => {
                     )}
                 </div>
             ) : (
-                <ContentLoader height={61} speed={2} primaryColor="#6f6b6b" secondaryColor="#989393">
-                    <rect x="0" y="0" rx="15" ry="15" width="135" height="27" />
-                    <rect x="145" y="0" rx="15" ry="15" width="115" height="27" />
-                    <rect x="270" y="0" rx="15" ry="15" width="125" height="27" />
-                    <rect x="0" y="33" rx="15" ry="15" width="115" height="27" />
-                    <rect x="125" y="33" rx="15" ry="15" width="175" height="27" />
+                <ContentLoader
+                    height="100%"
+                    width="100%"
+                    viewBox="0 0 100 10"
+                    style={{ width: '100% !important' }}
+                    speed={2}
+                    backgroundColor="#6f6b6b"
+                    foregroundColor="#989393"
+                >
+                    <rect x="0" y="0" rx="1" ry="1" width="20" height="4" />
+                    <rect x="24" y="0" rx="1" ry="1" width="20" height="4" />
+                    <rect x="48" y="0" rx="1" ry="1" width="20" height="4" />
+                    <rect x="0" y="6" rx="1" ry="1" width="20" height="4" />
+                    <rect x="24" y="6" rx="1" ry="1" width="20" height="4" />
                 </ContentLoader>
             )}
 

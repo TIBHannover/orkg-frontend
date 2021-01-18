@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Button, Input, Modal, ModalBody, ModalHeader, Nav, NavItem, NavLink } from 'reactstrap';
 import { getStatementsBySubject } from 'services/backend/statements';
 import { createShortLink, getComparison } from 'services/similarity/index';

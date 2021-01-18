@@ -1,4 +1,3 @@
-import React from 'react';
 import { Collapse, Input } from 'reactstrap';
 import AuthorsInput from 'components/Utils/AuthorsInput';
 import AutoComplete from 'components/Autocomplete/Autocomplete';

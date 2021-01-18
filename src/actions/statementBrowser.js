@@ -509,7 +509,7 @@ export function createValue(data) {
         });
 
         // Dispatch loading template of classes
-        data.classes && data.classes.map(classID => dispatch(fetchTemplatesofClassIfNeeded(classID)));
+        data.classes && data.classes.map(classID => dispatch(fetchTemplatesOfClassIfNeeded(classID)));
         return Promise.resolve();
     };
 }
@@ -729,7 +729,7 @@ function shouldFetchTemplatesofClass(state, classID) {
  *
  * @param {String} classID - Class ID
  */
-export function fetchTemplatesofClassIfNeeded(classID) {
+export function fetchTemplatesOfClassIfNeeded(classID) {
     return (dispatch, getState) => {
         if (shouldFetchTemplatesofClass(getState(), classID)) {
             dispatch({
@@ -871,13 +871,13 @@ export const fetchStatementsForResource = data => {
                 });
                 if (rootNodeType === 'predicate') {
                     // get templates of classes
-                    const predicateClass = dispatch(fetchTemplatesofClassIfNeeded(CLASSES.PREDICATE));
+                    const predicateClass = dispatch(fetchTemplatesOfClassIfNeeded(CLASSES.PREDICATE));
                     promises = Promise.all([predicateClass, resourceStatementsPromise]);
                 } else {
                     let resourceClasses = response.classes ?? [];
                     // get templates of classes
                     if (resourceClasses && resourceClasses.length > 0) {
-                        resourceClasses = resourceClasses.map(classID => dispatch(fetchTemplatesofClassIfNeeded(classID)));
+                        resourceClasses = resourceClasses.map(classID => dispatch(fetchTemplatesOfClassIfNeeded(classID)));
                     }
                     // set the resource classes (initialize doesn't set the classes)
                     const resourceUpdateClasses = dispatch(updateResourceClasses({ resourceId, classes: response.classes }));
@@ -967,7 +967,7 @@ export const fetchStatementsForResource = data => {
                                 });
 
                                 //Load template of objects
-                                statement.object.classes && statement.object.classes.map(classID => dispatch(fetchTemplatesofClassIfNeeded(classID)));
+                                statement.object.classes && statement.object.classes.map(classID => dispatch(fetchTemplatesOfClassIfNeeded(classID)));
                             }
                         }
 

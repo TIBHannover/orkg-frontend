@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { createRef, Component } from 'react';
 import { Badge, Container, Navbar } from 'reactstrap';
 import { ComparisonBoxButton, ComparisonBox, Header, List, ContributionItem, Title, Number, Remove, StartComparison } from './styled';
 import { faChevronDown, faChevronUp, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
@@ -21,7 +21,7 @@ class ComparisonPopup extends Component {
             showComparisonBox: false
         };
 
-        this.comparisionPopup = React.createRef();
+        this.comparisionPopup = createRef();
     }
 
     componentDidMount() {

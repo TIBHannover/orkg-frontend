@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { Button, Row, Col, Modal, ModalHeader, ModalBody, ModalFooter, FormGroup, CustomInput } from 'reactstrap';
 import { connect } from 'react-redux';
 import Confirm from 'reactstrap-confirm';

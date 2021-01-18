@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Alert, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Button, ButtonGroup, Badge } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faEllipsisV, faPlus, faLightbulb, faHistory, faWindowMaximize } from '@fortawesome/free-solid-svg-icons';
 import ComparisonLoadingComponent from 'components/Comparison/ComparisonLoadingComponent';
-import ComparisonTable from 'components/Comparison/ComparisonTable.js';
+import ComparisonTable from 'components/Comparison/Comparison';
 import ExportToLatex from 'components/Comparison/ExportToLatex.js';
 import GeneratePdf from 'components/Comparison/GeneratePdf.js';
 import SelectProperties from 'components/Comparison/SelectProperties';
@@ -315,7 +315,14 @@ function Comparison(props) {
                                 ) : (
                                     <>
                                         <strong>Error.</strong> The comparison service is unreachable. Please come back later and try again.{' '}
-                                        <span className="btn-link" style={{ cursor: 'pointer' }} onClick={() => handleGoBack}>
+                                        <span
+                                            className="btn-link"
+                                            style={{ cursor: 'pointer' }}
+                                            onClick={() => handleGoBack}
+                                            onKeyDown={e => (e.keyCode === 13 ? handleGoBack : undefined)}
+                                            role="button"
+                                            tabIndex={0}
+                                        >
                                             Go back
                                         </span>{' '}
                                         or <Link to={ROUTES.HOME}>go to the homepage {contributionsList.length}</Link>.

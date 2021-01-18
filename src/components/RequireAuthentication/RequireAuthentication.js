@@ -1,4 +1,3 @@
-import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { openAuthDialog } from 'actions/auth';
 import PropTypes from 'prop-types';

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import { useState, useRef } from 'react';
 import { InputGroup, FormGroup, Label, Col, Input, FormText } from 'reactstrap';
 import { ValuesStyle } from 'components/StatementBrowser/styled';
 import defaultDatatypes from 'components/ContributionTemplates/helpers/defaultDatatypes';

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { createRef, Component } from 'react';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
 import { predicatesUrl } from 'services/backend/predicates';
 import { withTheme } from 'styled-components';
@@ -11,8 +11,8 @@ class AnnotationTooltip extends Component {
     constructor(props) {
         super(props);
 
-        this.tippyInstance = React.createRef();
-        this.reactSelectInstance = React.createRef();
+        this.tippyInstance = createRef();
+        this.reactSelectInstance = createRef();
     }
 
     render() {

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { createRef, Component } from 'react';
 import { getStatementsBySubject, getStatementsBySubjects } from 'services/backend/statements';
 import { connect } from 'react-redux';
 import * as PropTypes from 'prop-types';
@@ -20,8 +20,8 @@ class GraphView extends Component {
     constructor(props) {
         super(props);
 
-        this.child = React.createRef();
-        this.searchComponent = React.createRef();
+        this.child = createRef();
+        this.searchComponent = createRef();
         this.seenDepth = -1;
         this.graphVis = new GraphVis();
 

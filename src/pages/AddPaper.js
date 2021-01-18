@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Container, Button } from 'reactstrap';
 import { compose } from 'redux';
 import ProgressBar from '../components/AddPaper/ProgressBar';

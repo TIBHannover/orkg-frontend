@@ -9,6 +9,7 @@ import pdfAnnotation from './pdfAnnotation';
 import addTemplate from './addTemplate';
 import smartArticle from './smartArticle';
 
+// eslint-disable-next-line import/no-anonymous-default-export
 export default history =>
     combineReducers({
         router: history ? connectRouter(history) : null,

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Modal, ModalHeader, ModalBody, Input, InputGroup, InputGroupAddon, Button, Alert } from 'reactstrap';
 import PropTypes from 'prop-types';
 import { reverse } from 'named-urls';

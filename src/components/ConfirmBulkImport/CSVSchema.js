@@ -1,9 +1,10 @@
 import Joi from '@hapi/joi';
+import REGEX from 'constants/regex';
 import moment from 'moment';
 
 export default function checkDataValidation(data) {
     const header = data && data[0];
-    const values = data && data.slice(1);
+    const values = data && data.slice(1).map(r => r.map(s => (s ? s.trim() : '')));
     const schema = Joi.array();
 
     // Check if paper:title column exists
@@ -62,6 +63,24 @@ export default function checkDataValidation(data) {
                 'string.pattern.base': `Paper #{#key+1} : doesn't have a valid research field ID`
             })
     );
+    // DOI
+    const doiSchema = Joi.array().items(
+        Joi.string()
+            .pattern(new RegExp(REGEX.DOI))
+            .allow('')
+            .messages({
+                'string.pattern.base': `Paper #{#key+1} : Doi must be a valid and without the resolver (e.g. 10.1145/3360901.3364435)`
+            })
+    );
+    // URL
+    const urlSchema = Joi.array().items(
+        Joi.string()
+            .pattern(new RegExp(REGEX.URL))
+            .allow('')
+            .messages({
+                'string.pattern.base': `Paper #{#key+1} : URL must be a valid`
+            })
+    );
     // List of validations
     const validations = [{ context: 'Data', ...schema.validate(data) }, { context: 'Header', ...columns.validate(header, { context: 'Header' }) }];
     // validate paper title
@@ -84,6 +103,15 @@ export default function checkDataValidation(data) {
         const ResearchFieldIndex = header.indexOf('paper:research_field');
         validations.push({ context: 'Research field', ...researchFieldSchema.validate(values.map(v => v[ResearchFieldIndex])) });
     }
-
+    // validate DOI
+    if (header && header.includes('paper:doi')) {
+        const DoiIndex = header.indexOf('paper:doi');
+        validations.push({ context: 'Doi', ...doiSchema.validate(values.map(v => v[DoiIndex])) });
+    }
+    // validate DOI
+    if (header && header.includes('paper:url')) {
+        const UrlIndex = header.indexOf('paper:url');
+        validations.push({ context: 'URL', ...urlSchema.validate(values.map(v => v[UrlIndex])) });
+    }
     return validations;
 }

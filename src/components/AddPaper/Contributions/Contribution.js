@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Form, FormGroup } from 'reactstrap';
 import { connect } from 'react-redux';
 import SuggestedTemplates from 'components/StatementBrowser/SuggestedTemplates/SuggestedTemplates';
