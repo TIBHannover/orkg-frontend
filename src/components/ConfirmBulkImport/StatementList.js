@@ -16,7 +16,7 @@ const ListStatements = props => {
                     <div>
                         <span className="propertyLabel">
                             {idToLabel[property] ? (
-                                <Link to={reverse(ROUTES.PREDICATE, { id: property })} target="_blank">
+                                <Link to={reverse(ROUTES.PROPERTY, { id: property })} target="_blank">
                                     {idToLabel[property]}
                                 </Link>
                             ) : (

@@ -171,7 +171,7 @@ export default class AddResource extends Component {
         return (
             <>
                 <Container className="d-flex align-items-center">
-                    <h1 className="h4 mt-4 mb-4">Create resources</h1>
+                    <h1 className="h4 mt-4 mb-4">Create resource</h1>
                 </Container>
                 <Container className="box rounded pt-4 pb-4 pl-5 pr-5">
                     <Form className="pl-3 pr-3 pt-2">
