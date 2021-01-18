@@ -131,7 +131,7 @@ export default function ObservatoriesCarousel() {
                 <CarouselItem
                     onExiting={() => setAnimating(true)}
                     onExited={() => setAnimating(false)}
-                    className=" pb-1 mb-4"
+                    className="pb-1 mb-4"
                     key={`fp${observatory.id}`}
                 >
                     <ObservatoryCardStyled className="">
