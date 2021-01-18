@@ -27,6 +27,7 @@ import useResearchFieldProblems from 'components/ResearchField/hooks/useResearch
 import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
 import ComparisonCard from 'components/ComparisonCard/ComparisonCard';
 import ExternalDescription from 'components/ResearchProblem/ExternalDescription';
+import ObservatoriesCarousel from 'components/ObservatoriesCarousel/ObservatoriesCarousel';
 import Breadcrumbs from 'components/Breadcrumbs/Breadcrumbs';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
@@ -48,7 +49,7 @@ function ResearchField(props) {
     const [researchFieldData, subResearchFields, isLoading, isFailedLoading, loadResearchFieldData] = useResearchField();
     const [editMode, setEditMode] = useState(false);
     const prevEditMode = usePrevious({ editMode });
-    const [researchFieldObservatories] = useResearchFieldObservatories();
+    const [observatories, isLoadingObservatories] = useResearchFieldObservatories();
     const [papers, isLoadingPapers, hasNextPage, isLastPageReached, loadMorePapers] = useResearchFieldPapers();
     const [comparisons, isLoadingComparisons, hasNextPageComparison, isLastPageReachedComparison, loadMoreComparisons] = useResearchFieldComparison();
     const [
@@ -64,7 +65,6 @@ function ResearchField(props) {
 
     const [isSubResearchFieldsModalOpen, setIsSubResearchFieldsModalOpen] = useState(false);
     const [isProblemsModalOpen, setIsProblemsModalOpen] = useState(false);
-    const [isObservatoriesModalOpen, setIsObservatoriesModalOpen] = useState(false);
 
     const user = useSelector(state => state.auth.user);
 
@@ -288,53 +288,11 @@ function ResearchField(props) {
                                     )}
                                 </div>
                             </Col>
-                            <Col md="4" className="d-flex">
-                                <div className="box rounded-lg p-4 flex-grow-1">
-                                    <h5>Observatories</h5>
-                                    {researchFieldObservatories && researchFieldObservatories.length > 0 && (
-                                        <ul className="pl-1 pt-2">
-                                            {researchFieldObservatories.slice(0, 5).map(observatory => (
-                                                <li key={`obsrf${observatory.id}`}>
-                                                    <Link to={reverse(ROUTES.OBSERVATORY, { id: observatory.id })}>{observatory.name} </Link>
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    )}
-                                    {researchFieldObservatories.length > 5 && (
-                                        <>
-                                            <Button
-                                                onClick={() => setIsObservatoriesModalOpen(v => !v)}
-                                                className="mt-1 mb-2 mr-3 float-right clearfix p-0"
-                                                color="link"
-                                            >
-                                                <small>+ See more</small>
-                                            </Button>
-                                        </>
-                                    )}
-                                    {researchFieldObservatories.length > 5 && (
-                                        <Modal isOpen={isObservatoriesModalOpen} toggle={() => setIsObservatoriesModalOpen(v => !v)} size="lg">
-                                            <ModalHeader toggle={() => setIsObservatoriesModalOpen(v => !v)}>
-                                                Observatories of {researchFieldData && researchFieldData.label}{' '}
-                                            </ModalHeader>
-                                            <ModalBody>
-                                                <div className="pl-3 pr-3">
-                                                    <ListGroup>
-                                                        {researchFieldObservatories.map(observatory => (
-                                                            <ListGroupItem key={`obsrf${observatory.id}`} className="justify-content-between">
-                                                                <Link
-                                                                    onClick={() => setIsObservatoriesModalOpen(false)}
-                                                                    to={reverse(ROUTES.OBSERVATORY, { id: observatory.id })}
-                                                                >
-                                                                    {observatory.name}
-                                                                </Link>
-                                                            </ListGroupItem>
-                                                        ))}
-                                                    </ListGroup>
-                                                </div>
-                                            </ModalBody>
-                                        </Modal>
-                                    )}
-                                    {researchFieldObservatories && researchFieldObservatories.length === 0 && <>No observatories.</>}
+                            <Col md="4" className="">
+                                <div className="box rounded-lg flex-grow-1">
+                                    <h5 className="pt-4 pl-4">Observatories</h5>
+                                    <hr className="mx-3 mt-0" />
+                                    <ObservatoriesCarousel observatories={observatories} isLoading={isLoadingObservatories} />
                                 </div>
                             </Col>
                         </Row>
