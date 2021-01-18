@@ -133,7 +133,7 @@ const SectionMarkdown = props => {
                         onChange={e => setMarkdownValue(e.target.value)}
                         onBlur={handleBlurMarkdown}
                         className="form-control"
-                        inputRef={markdownEditorRef}
+                        ref={markdownEditorRef}
                     />
                 </>
             )}

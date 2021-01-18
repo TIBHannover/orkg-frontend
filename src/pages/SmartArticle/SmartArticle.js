@@ -125,7 +125,7 @@ const SmartArticle = props => {
             {isLoading && (
                 <Container>
                     <div className="box rounded p-5">
-                        <ContentLoader height={42} width={100} speed={2} primaryColor="#f3f3f3" secondaryColor="#ccc">
+                        <ContentLoader height="500" width="100%" speed={2} foregroundColor="#f3f3f3" backgroundColor="#ccc" viewBox="0 0 100 50">
                             {/* title */}
                             <rect x="0" y="0" rx="0" ry="0" width="100" height="5" />
                             {/* authors */}
