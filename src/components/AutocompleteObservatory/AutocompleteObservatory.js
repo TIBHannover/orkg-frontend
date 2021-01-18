@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import Select from 'react-select';
+import Select, { components } from 'react-select';
 import { getAllObservatories } from 'services/backend/observatories';
 import { getAllOrganizations } from 'services/backend/organizations';
 import PropTypes from 'prop-types';
@@ -18,8 +18,7 @@ function AutocompleteObservatory(props) {
                 for (const observatory of data[0]) {
                     for (let i = 0; i < observatory.organization_ids.length; i++) {
                         const org = data[1].find(o1 => o1.id === observatory.organization_ids[i]);
-                        const l = 'Organization: ' + org.name + ' , Observatory: ' + observatory.name;
-                        items.push({ value: observatory.id, label: l, organizationId: org.id });
+                        items.push({ value: observatory.id, label: observatory.name, organizationId: org.id, org: org.name });
                     }
                 }
                 setOptions(items);
@@ -30,7 +29,17 @@ function AutocompleteObservatory(props) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    return <Select cacheOptions options={options} onChange={props.onChange} />;
+    const CustomOption = innerProps => {
+        console.log(innerProps);
+        return (
+            <components.Option {...innerProps}>
+                <div>{innerProps.data.label}</div>
+                <small className="text-muted">{innerProps.data.org}</small>
+            </components.Option>
+        );
+    };
+
+    return <Select components={{ Option: CustomOption }} cacheOptions options={options} onChange={props.onChange} />;
 }
 
 AutocompleteObservatory.propTypes = {
