@@ -24,7 +24,7 @@ export default function FeaturedPapers() {
         const responseJson = await getResourcesByClass({
             id: paperFilter === 'featured' ? CLASSES.FEATURED_PAPER : CLASSES.PAPER,
             sortBy: 'created_at',
-            desc: false,
+            desc: true,
             items: 10
         });
         const ids = responseJson.map(paper => paper.id);
