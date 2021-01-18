@@ -1,4 +1,3 @@
-import React from 'react';
 import { Container } from 'reactstrap';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';

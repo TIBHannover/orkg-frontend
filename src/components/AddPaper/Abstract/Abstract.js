@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Button, Modal, ModalBody, ModalHeader, ModalFooter } from 'reactstrap';
 import { semanticScholarUrl, submitGetRequest } from 'network';
 import { getAnnotations } from 'services/annotation/index';

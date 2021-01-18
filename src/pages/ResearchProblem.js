@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Container, Row, Col, Button, Badge, ListGroup, ListGroupItem, Card, CardBody, CardFooter } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner, faAngleDoubleDown, faAngleDoubleRight } from '@fortawesome/free-solid-svg-icons';

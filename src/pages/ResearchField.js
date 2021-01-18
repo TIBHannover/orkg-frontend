@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
     Container,
     Button,
@@ -96,7 +96,7 @@ function ResearchField(props) {
                             type="resource"
                         />
                     )}
-                    <Breadcrumbs researchFieldId={researchFieldId} />
+                    <Breadcrumbs researchFieldId={researchFieldId} disableLastField />
 
                     <Container className="d-flex align-items-center">
                         <h1 className="h4 mt-4 mb-4 flex-grow-1">Research field</h1>
@@ -367,6 +367,9 @@ function ResearchField(props) {
                                 style={{ cursor: 'pointer' }}
                                 className="list-group-item list-group-item-action text-center mt-2"
                                 onClick={!isLoadingComparisons ? loadMoreComparisons : undefined}
+                                onKeyDown={e => (e.keyCode === 13 ? (!isLoadingComparisons ? loadMoreComparisons : undefined) : undefined)}
+                                role="button"
+                                tabIndex={0}
                             >
                                 Load more comparisons
                             </div>
@@ -420,6 +423,9 @@ function ResearchField(props) {
                                 style={{ cursor: 'pointer' }}
                                 className="list-group-item list-group-item-action text-center mt-2"
                                 onClick={!isLoadingPapers ? loadMorePapers : undefined}
+                                onKeyDown={e => (e.keyCode === 13 ? (!isLoadingPapers ? loadMorePapers : undefined) : undefined)}
+                                role="button"
+                                tabIndex={0}
                             >
                                 Load more papers
                             </div>

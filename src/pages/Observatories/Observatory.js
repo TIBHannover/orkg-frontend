@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Container, Modal, ModalBody, ModalHeader, Button } from 'reactstrap';
 import { Col, Row } from 'reactstrap';
 import { getStatementsBySubjects } from 'services/backend/statements';

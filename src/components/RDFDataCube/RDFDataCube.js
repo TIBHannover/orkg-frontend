@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Modal, ModalHeader, ModalBody, Alert, Dropdown, DropdownItem, DropdownMenu, DropdownToggle } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner, faEllipsisV } from '@fortawesome/free-solid-svg-icons';
@@ -243,7 +243,16 @@ class RDFDataCube extends Component {
                                         Header: columns[h].label,
                                         accessor: h,
                                         sortMethod: (a, b, desc) => sortMethod(a.label, b.label),
-                                        Cell: props => <span onClick={() => this.handleCellClick(props.value)}>{props.value.label}</span>, // Custom cell components!
+                                        Cell: props => (
+                                            <span
+                                                onKeyDown={e => (e.keyCode === 13 ? this.handleCellClick(props.value) : undefined)}
+                                                role="button"
+                                                tabIndex={0}
+                                                onClick={() => this.handleCellClick(props.value)}
+                                            >
+                                                {props.value.label}
+                                            </span>
+                                        ), // Custom cell components!
                                         Filter: ({ filter, onChange }) => (
                                             <input
                                                 type="text"

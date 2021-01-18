@@ -1,4 +1,4 @@
-export default [
+const defaultDatatypes = [
     {
         label: 'Date',
         id: 'Date'
@@ -12,3 +12,5 @@ export default [
         id: 'Number'
     }
 ];
+
+export default defaultDatatypes;

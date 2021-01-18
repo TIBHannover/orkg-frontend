@@ -1,4 +1,3 @@
-import React from 'react';
 import { Modal, ModalHeader, ModalBody, ListGroup, ListGroupItem, Badge, CustomInput } from 'reactstrap';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';

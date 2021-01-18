@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
 import AutoCompleteObservatory from 'components/AutocompleteObservatory/AutocompleteObservatory';
 import { addResourceToObservatory } from 'services/backend/resources';

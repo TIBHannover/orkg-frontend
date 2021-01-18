@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Container, Row } from 'reactstrap';
 import { faStream, faBars, faHeading, faTag } from '@fortawesome/free-solid-svg-icons';
 import ColoredStatsBox from 'components/Stats/ColoredStatsBox';

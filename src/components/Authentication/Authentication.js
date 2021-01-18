@@ -1,5 +1,5 @@
 import { Modal, ModalBody, ModalFooter, ModalHeader, Button } from 'reactstrap';
-import React, { Component } from 'react';
+import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { openAuthDialog, toggleAuthDialog } from '../../actions/auth';

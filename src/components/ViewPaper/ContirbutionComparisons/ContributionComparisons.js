@@ -1,5 +1,4 @@
-import React from 'react';
-import { Container } from 'reactstrap';
+import { Container, Button } from 'reactstrap';
 import ComparisonCard from 'components/ComparisonCard/ComparisonCard';
 import useContributionComparison from './hooks/useContributionComparison';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -69,17 +68,22 @@ function ContributionComparisons(props) {
                 )}
                 {!isLoadingComparisons && hasNextPage && (
                     <StyledLoadMoreButton className="text-right action">
-                        <span className="btn btn-link btn-sm" onClick={!isLoadingComparisons ? loadMoreComparisons : undefined}>
+                        <Button
+                            color="link"
+                            size="sm"
+                            className="btn btn-link btn-sm"
+                            onClick={!isLoadingComparisons ? loadMoreComparisons : undefined}
+                        >
                             + Load more
-                        </span>
+                        </Button>
                     </StyledLoadMoreButton>
                 )}
                 {isLoadingComparisons && (
                     <StyledLoadMoreButton className="text-right action">
-                        <span className="btn btn-link btn-sm">
+                        <Button color="link" size="sm" className="btn btn-link btn-sm">
                             {' '}
                             <Icon icon={faSpinner} spin /> Loading...
-                        </span>
+                        </Button>
                     </StyledLoadMoreButton>
                 )}
                 {!hasNextPage && isLastPageReached && <div className="text-center mt-3">You have reached the last page.</div>}

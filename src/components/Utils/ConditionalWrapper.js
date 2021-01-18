@@ -1,1 +1,2 @@
-export default ({ condition, wrapper, children }) => (condition ? wrapper(children) : children);
+const ConditionalWrapper = ({ condition, wrapper, children }) => (condition ? wrapper(children) : children);
+export default ConditionalWrapper;

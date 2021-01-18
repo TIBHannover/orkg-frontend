@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Alert, Button, Form, FormGroup, Label, Table } from 'reactstrap';
 import ConfirmBulkImport from 'components/ConfirmBulkImport/ConfirmBulkImport';
 import CsvReader from 'react-csv-reader';
@@ -33,7 +33,7 @@ const CsvImport = () => {
     const [isHelpModalOpen, setIsHelpModalOpen] = useState(false);
 
     const handleOnFileLoaded = (_data, fileInfo) => {
-        setData(_data);
+        setData(_data.map(r => r.map(s => (s ? s.trim() : ''))));
         setIsFinished(false);
         setFileName(fileInfo.name);
         validateCsv(_data);

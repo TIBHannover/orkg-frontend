@@ -1,134 +1,131 @@
-import React, { Component } from 'react';
+import { useState } from 'react';
 import { createPredicate } from 'services/backend/predicates';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import AddPropertyTemplate from './AddPropertyTemplate';
-
+import { createProperty } from 'actions/statementBrowser';
+import { uniqBy } from 'lodash';
+import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 
-export default class AddProperty extends Component {
-    constructor(props) {
-        super(props);
+const AddProperty = props => {
+    const [showAddProperty, setShowAddProperty] = useState(false);
+    const [confirmNewPropertyModal, setConfirmNewPropertyModal] = useState(false);
+    const [newPropertyLabel, setNewPropertyLabel] = useState('');
+    const dispatch = useDispatch();
+    const selectedResource = useSelector(state => state.statementBrowser.selectedResource);
+    const newProperties = useSelector(state => {
+        const newPropertiesList = [];
 
-        this.state = {
-            showAddProperty: false,
-            newPredicateValue: '',
-            confirmNewPropertyModal: false,
-            newPropertyLabel: ''
-        };
-    }
+        for (const key in state.statementBrowser.properties.byId) {
+            const property = state.statementBrowser.properties.byId[key];
 
-    handleShowAddProperty = () => {
-        this.setState({
-            showAddProperty: true
-        });
+            if (!property.existingPredicateId) {
+                newPropertiesList.push({
+                    id: null,
+                    label: property.label
+                });
+            }
+        }
+        //  ensure no properties with duplicate Labels exist
+        return uniqBy(newPropertiesList, 'label');
+    });
+
+    const handleShowAddProperty = () => {
+        setShowAddProperty(true);
     };
 
-    handleHideAddProperty = () => {
-        this.setState({
-            showAddProperty: false,
-            newPredicateValue: ''
-        });
+    const handleHideAddProperty = () => {
+        setShowAddProperty(false);
+        setNewPropertyLabel('');
     };
 
-    handleInputChange = e => {
-        this.setState({
-            [e.target.name]: e.target.value
-        });
+    const toggleConfirmNewProperty = propertyLabel => {
+        setConfirmNewPropertyModal(!confirmNewPropertyModal);
+        setNewPropertyLabel(propertyLabel);
     };
 
-    toggleConfirmNewProperty = propertyLabel => {
-        this.setState(prevState => ({
-            confirmNewPropertyModal: !prevState.confirmNewPropertyModal,
-            newPropertyLabel: propertyLabel
-        }));
-    };
+    const handlePropertySelect = ({ id, value: label }) => {
+        setShowAddProperty(false);
 
-    handlePropertySelect = ({ id, value: label }) => {
-        this.setState({
-            showAddProperty: false
-        });
-
-        this.props.createProperty({
-            resourceId: this.props.resourceId ? this.props.resourceId : this.props.selectedResource,
-            existingPredicateId: id,
-            label: label,
-            isTemplate: false,
-            createAndSelect: true
-        });
-    };
-
-    handleNewProperty = async () => {
-        this.setState({
-            showAddProperty: false
-        });
-
-        this.toggleConfirmNewProperty(); // hide dialog
-
-        if (this.props.syncBackend) {
-            const newPredicate = await createPredicate(this.state.newPropertyLabel);
-            this.props.createProperty({
-                resourceId: this.props.resourceId ? this.props.resourceId : this.props.selectedResource,
-                existingPredicateId: newPredicate.id,
-                label: newPredicate.label,
+        dispatch(
+            createProperty({
+                resourceId: props.resourceId ? props.resourceId : selectedResource,
+                existingPredicateId: id,
+                label: label,
                 isTemplate: false,
                 createAndSelect: true
-            });
+            })
+        );
+    };
+
+    const handleNewProperty = async () => {
+        setShowAddProperty(false);
+        toggleConfirmNewProperty(); // hide dialog
+
+        if (props.syncBackend) {
+            const newPredicate = await createPredicate(newPropertyLabel);
+            dispatch(
+                createProperty({
+                    resourceId: props.resourceId ? props.resourceId : selectedResource,
+                    existingPredicateId: newPredicate.id,
+                    label: newPredicate.label,
+                    isTemplate: false,
+                    createAndSelect: true
+                })
+            );
         } else {
-            this.props.createProperty({
-                resourceId: this.props.resourceId ? this.props.resourceId : this.props.selectedResource,
-                label: this.state.newPropertyLabel,
-                isTemplate: false,
-                createAndSelect: true
-            });
+            dispatch(
+                createProperty({
+                    resourceId: props.resourceId ? props.resourceId : selectedResource,
+                    label: newPropertyLabel,
+                    isTemplate: false,
+                    createAndSelect: true
+                })
+            );
         }
     };
 
-    render() {
-        return (
-            <>
-                <AddPropertyTemplate
-                    inTemplate={this.props.inTemplate}
-                    isDisabled={this.props.isDisabled}
-                    showAddProperty={this.state.showAddProperty}
-                    handlePropertySelect={this.handlePropertySelect}
-                    toggleConfirmNewProperty={this.toggleConfirmNewProperty}
-                    handleHideAddProperty={this.handleHideAddProperty}
-                    newProperties={this.props.newProperties}
-                    handleShowAddProperty={this.handleShowAddProperty}
-                />
+    return (
+        <>
+            <AddPropertyTemplate
+                inTemplate={props.inTemplate}
+                isDisabled={props.isDisabled}
+                showAddProperty={showAddProperty}
+                handlePropertySelect={handlePropertySelect}
+                toggleConfirmNewProperty={toggleConfirmNewProperty}
+                handleHideAddProperty={handleHideAddProperty}
+                newProperties={newProperties}
+                handleShowAddProperty={handleShowAddProperty}
+            />
 
-                <Modal isOpen={this.state.confirmNewPropertyModal} toggle={this.toggleConfirmNewProperty}>
-                    <ModalHeader toggle={this.toggleConfirmNewProperty}>Are you sure you need a new property?</ModalHeader>
-                    <ModalBody>
-                        Often there are existing properties that you can use as well. It is better to use existing properties than new ones.
-                    </ModalBody>
-                    <ModalFooter>
-                        <Button color="light" onClick={this.toggleConfirmNewProperty}>
-                            Cancel
-                        </Button>{' '}
-                        <Button color="primary" onClick={this.handleNewProperty}>
-                            Create new property
-                        </Button>
-                    </ModalFooter>
-                </Modal>
-            </>
-        );
-    }
-}
+            <Modal isOpen={confirmNewPropertyModal} toggle={toggleConfirmNewProperty}>
+                <ModalHeader toggle={toggleConfirmNewProperty}>Are you sure you need a new property?</ModalHeader>
+                <ModalBody>
+                    Often there are existing properties that you can use as well. It is better to use existing properties than new ones.
+                </ModalBody>
+                <ModalFooter>
+                    <Button color="light" onClick={toggleConfirmNewProperty}>
+                        Cancel
+                    </Button>{' '}
+                    <Button color="primary" onClick={handleNewProperty}>
+                        Create new property
+                    </Button>
+                </ModalFooter>
+            </Modal>
+        </>
+    );
+};
 
 AddProperty.propTypes = {
-    createProperty: PropTypes.func.isRequired,
-    selectedResource: PropTypes.string.isRequired,
     resourceId: PropTypes.string,
-    newProperties: PropTypes.array.isRequired,
     syncBackend: PropTypes.bool.isRequired,
-    contextStyle: PropTypes.string.isRequired,
     inTemplate: PropTypes.bool.isRequired,
     isDisabled: PropTypes.bool.isRequired
 };
 
 AddProperty.defaultProps = {
-    contextStyle: 'StatementBrowser',
     inTemplate: false,
     isDisabled: false
 };
+
+export default AddProperty;
