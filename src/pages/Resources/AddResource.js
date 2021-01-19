@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Container, Button, FormGroup, Input, Label, FormText } from 'reactstrap';
+import { Container, Button, FormGroup, Input, Label } from 'reactstrap';
 import { useHistory, useLocation } from 'react-router-dom';
 import { createLiteralStatement } from 'services/backend/statements';
 import { classesUrl, getClassById } from 'services/backend/classes';
