@@ -7,7 +7,6 @@ import { toast } from 'react-toastify';
 import { reverse } from 'named-urls';
 import { get_error_message } from 'utils';
 import ROUTES from 'constants/routes';
-import PropTypes from 'prop-types';
 
 const AddClass = () => {
     const isURI = new RegExp(REGEX.URL);
@@ -83,10 +82,6 @@ const AddClass = () => {
             </Container>
         </>
     );
-};
-
-AddClass.propTypes = {
-    location: PropTypes.object.isRequired
 };
 
 export default AddClass;

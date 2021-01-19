@@ -5,7 +5,6 @@ import { useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes';
-import PropTypes from 'prop-types';
 
 const AddProperty = () => {
     const [label, setLabel] = useState('');
@@ -62,10 +61,6 @@ const AddProperty = () => {
             </Container>
         </>
     );
-};
-
-AddProperty.propTypes = {
-    location: PropTypes.object.isRequired
 };
 
 export default AddProperty;
