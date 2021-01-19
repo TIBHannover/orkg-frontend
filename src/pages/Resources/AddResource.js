@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Container, Button, FormGroup, Input, Label } from 'reactstrap';
+import { Container, Button, FormGroup, Input, Label, FormText } from 'reactstrap';
 import { useHistory, useLocation } from 'react-router-dom';
 import { createLiteralStatement } from 'services/backend/statements';
 import { classesUrl, getClassById } from 'services/backend/classes';
@@ -116,14 +116,14 @@ const AddResource = () => {
             <Container className="box rounded pt-4 pb-4 pl-5 pr-5">
                 <div className="pl-3 pr-3 pt-2">
                     <FormGroup>
-                        <Label for="ResourceLabel">Resource title or DOI</Label>
+                        <Label for="ResourceLabel">Resource label or DOI</Label>
                         <Input
                             onChange={e => setLabel(e.target.value)}
                             type="text"
                             name="value"
                             id="ResourceLabel"
                             disabled={isLoading}
-                            placeholder="Resource title or DOI"
+                            placeholder="Resource label or DOI"
                         />
                     </FormGroup>
                     <FormGroup>
