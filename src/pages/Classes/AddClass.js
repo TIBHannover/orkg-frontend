@@ -30,16 +30,18 @@ const AddClass = () => {
                 try {
                     const newClass = await createClass(label, uri ? uri : null);
                     toast.success('Class created successfully');
+                    setIsLoading(false);
                     history.push(reverse(ROUTES.CLASS, { id: newClass.id }));
                 } catch (error) {
                     console.error(error);
+                    setIsLoading(false);
                     toast.error(`${get_error_message(error, 'uri')}`);
                 }
             }
         } else {
+            setIsLoading(false);
             toast.error('Please enter the label of the class');
         }
-        setIsLoading(false);
     };
 
     return (
