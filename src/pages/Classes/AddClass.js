@@ -1,127 +1,89 @@
-import { Component } from 'react';
-import { Container, Button, FormGroup, Input, Label, Alert } from 'reactstrap';
+import { useState, useEffect } from 'react';
+import { Container, Button, FormGroup, Input, Label, FormText } from 'reactstrap';
 import { createClass } from 'services/backend/classes';
-import { Redirect } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
+import REGEX from 'constants/regex';
 import { toast } from 'react-toastify';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes';
 import PropTypes from 'prop-types';
 
-export default class AddClass extends Component {
-    constructor(props) {
-        super(props);
+const AddClass = () => {
+    const isURI = new RegExp(REGEX.URL);
+    const [uri, setUri] = useState('');
+    const [label, setLabel] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+    const history = useHistory();
 
-        this.state = {
-            redirect: false,
-            value: '',
-            /* Possible values: 'edit', 'loading'. */
-            editorState: 'edit',
-            classId: ''
-        };
-    }
-
-    componentDidMount = () => {
+    useEffect(() => {
         // Set document title
         document.title = 'Add Class - ORKG';
-    };
+    }, []);
 
-    setEditorState = editorState => {
-        this.setState({ editorState: editorState });
-    };
-
-    handleAdd = async () => {
-        this.setEditorState('loading');
-        if (this.state.value.trim()) {
-            await this.createNewClass();
-        } else {
-            toast.error('Please enter a class label');
-            this.setEditorState('edit');
-        }
-    };
-
-    handleChange = event => {
-        this.setState({ [event.target.name]: event.target.value.trim() });
-    };
-
-    handleKeyUp = async event => {
-        event.preventDefault();
-        if (event.keyCode === 13) {
-            await this.handleAdd();
-        }
-    };
-
-    createNewClass = async () => {
-        const value = this.state.value;
-        if (value && value.length !== 0) {
-            try {
-                const responseJson = await createClass(value);
-                const classId = responseJson.id;
-
-                this.navigateToClass(classId);
-            } catch (error) {
-                this.setEditorState('edit');
-                console.error(error);
-                toast.error(`Error creating class ${error.message}`);
+    const handleAdd = async () => {
+        setIsLoading(true);
+        if (label.trim() !== '') {
+            if (uri && !isURI.test(uri.trim())) {
+                toast.error('Please enter a valid URI of the class');
+            } else {
+                try {
+                    const newClass = await createClass(label, uri ? uri : null);
+                    toast.success('Class created successfully');
+                    history.push(reverse(ROUTES.CLASS, { id: newClass.id }));
+                } catch (error) {
+                    console.error(error);
+                    toast.error(`Error creating class ${error.message}`);
+                }
             }
+        } else {
+            toast.error('Please enter the label of the class');
         }
+        setIsLoading(false);
     };
 
-    navigateToClass = classId => {
-        this.setEditorState('edit');
-        this.setState({ classId: classId }, () => {
-            this.setState({ redirect: true });
-        });
-    };
-
-    render() {
-        const loading = this.state.editorState === 'loading';
-        if (this.state.redirect) {
-            this.setState({
-                redirect: false,
-                value: '',
-                classId: ''
-            });
-
-            return <Redirect to={reverse(ROUTES.CLASS, { id: this.state.classId })} />;
-        }
-
-        return (
-            <>
-                <Container className="d-flex align-items-center">
-                    <h1 className="h4 mt-4 mb-4">Create class</h1>
-                </Container>
-                <Container className="box rounded pt-4 pb-4 pl-5 pr-5">
-                    <div className="pl-3 pr-3 pt-2">
-                        {this.state.errors && <Alert color="danger">{this.state.errors}</Alert>}
-                        <FormGroup>
-                            <Label for="classLabel">Class title</Label>
-                            <Input
-                                onChange={this.handleChange}
-                                onKeyUp={this.handleKeyUp}
-                                type="text"
-                                name="value"
-                                id="classLabel"
-                                disabled={loading}
-                                placeholder="Class title"
-                            />
-                        </FormGroup>
-                        <Button
-                            color="primary"
-                            onClick={() => {
-                                this.handleAdd();
-                            }}
-                            className="mt-3 mb-2"
-                            disabled={loading}
-                        >
-                            {!loading ? 'Create Class' : <span>Loading</span>}
-                        </Button>
-                    </div>
-                </Container>
-            </>
-        );
-    }
-}
+    return (
+        <>
+            <Container className="d-flex align-items-center">
+                <h1 className="h4 mt-4 mb-4">Create class</h1>
+            </Container>
+            <Container className="box rounded pt-4 pb-4 pl-5 pr-5">
+                <div className="pl-3 pr-3 pt-2">
+                    <FormGroup>
+                        <Label for="classLabel">Class name</Label>
+                        <Input
+                            onChange={e => setLabel(e.target.value)}
+                            type="text"
+                            name="value"
+                            id="classLabel"
+                            disabled={isLoading}
+                            placeholder="Class name"
+                        />
+                    </FormGroup>
+                    <FormGroup>
+                        <Label for="URIInput">URI</Label>
+                        <Input
+                            type="uri"
+                            name="uri"
+                            id="URIInput"
+                            value={uri}
+                            placeholder="Enter the URI of the class"
+                            onChange={e => setUri(e.target.value)}
+                        />
+                        <FormText color="muted">
+                            Please provide the URI of the class if you are using a class defined in an external ontology
+                        </FormText>
+                    </FormGroup>
+                    <Button color="primary" onClick={handleAdd} className="mt-3 mb-2" disabled={isLoading}>
+                        {!isLoading ? 'Create Class' : <span>Loading</span>}
+                    </Button>
+                </div>
+            </Container>
+        </>
+    );
+};
 
 AddClass.propTypes = {
     location: PropTypes.object.isRequired
 };
+
+export default AddClass;
