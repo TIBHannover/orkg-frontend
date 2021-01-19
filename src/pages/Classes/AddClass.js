@@ -5,6 +5,7 @@ import { useHistory } from 'react-router-dom';
 import REGEX from 'constants/regex';
 import { toast } from 'react-toastify';
 import { reverse } from 'named-urls';
+import { get_error_message } from 'utils';
 import ROUTES from 'constants/routes';
 import PropTypes from 'prop-types';
 
@@ -32,7 +33,7 @@ const AddClass = () => {
                     history.push(reverse(ROUTES.CLASS, { id: newClass.id }));
                 } catch (error) {
                     console.error(error);
-                    toast.error(`Error creating class ${error.message}`);
+                    toast.error(`${get_error_message(error, 'uri')}`);
                 }
             }
         } else {
