@@ -169,20 +169,14 @@ const routes = [
         /* TODO: Remove this route (it's temporarily backward compatibility for moving predicates to properties naming */
         path: ROUTES.PREDICATES,
         exact: true,
-        // eslint-disable-next-line react/prop-types
-        component: () => <Redirect to={reverse(ROUTES.PROPERTIES)} />
+        component: () => <Redirect to={{ pathname: reverse(ROUTES.PROPERTIES), state: { status: 301 } }} />
     },
     {
         /* TODO: Remove this route (it's temporarily backward compatibility for moving predicates to properties naming */
         path: ROUTES.PREDICATE + '*',
         exact: true,
         // eslint-disable-next-line react/prop-types
-        component: ({ match }) => (
-            <Redirect
-                // eslint-disable-next-line react/prop-types
-                to={reverse(ROUTES.PROPERTY, { id: match.params.id })}
-            />
-        )
+        component: ({ match }) => <Redirect to={{ pathname: reverse(ROUTES.PROPERTY, { id: match.params.id }), state: { status: 301 } }} />
     },
     {
         path: ROUTES.PAPERS,
