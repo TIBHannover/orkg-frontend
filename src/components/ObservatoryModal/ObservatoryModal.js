@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
 import AutoCompleteObservatory from 'components/AutocompleteObservatory/AutocompleteObservatory';
 import { addResourceToObservatory } from 'services/backend/resources';
@@ -6,14 +6,32 @@ import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 
 const ObservatoryModal = props => {
-    const [observatory, setObservatory] = useState(null);
+    const [observatory, setObservatory] = useState(props.observatory);
+    const [organization, setOrganization] = useState(props.organization);
 
-    const handleInputChange = select => {
+    useEffect(() => {
+        setObservatory(props.observatory);
+    }, [props.observatory]);
+
+    useEffect(() => {
+        setOrganization(props.organization);
+    }, [props.organization]);
+
+    const handleChangeObservatory = select => {
         setObservatory(select);
     };
+
+    const handleChangeOrganization = select => {
+        setOrganization(select);
+    };
+
     const handleSubmit = async () => {
-        if (observatory.organizationId && observatory.value) {
-            await addResourceToObservatory(observatory.value, observatory.organizationId, props.resourceId).then(l => {
+        if (observatory && observatory.id && organization && organization.id) {
+            await addResourceToObservatory({
+                observatory_id: observatory.id,
+                organization_id: organization.id,
+                id: props.resourceId
+            }).then(l => {
                 toast.success(`Observatory added to paper successfully`);
                 props.callBack();
                 props.toggle();
@@ -28,7 +46,12 @@ const ObservatoryModal = props => {
             <ModalHeader toggle={props.toggle}>Assign resource to an Observatory</ModalHeader>
             <ModalBody>
                 <p>Select an observatory:</p>
-                <AutoCompleteObservatory onChange={handleInputChange} />
+                <AutoCompleteObservatory
+                    onChangeObservatory={handleChangeObservatory}
+                    onChangeOrganization={handleChangeOrganization}
+                    observatory={observatory}
+                    organization={organization}
+                />
             </ModalBody>
             <ModalFooter>
                 <Button color="primary" onClick={handleSubmit}>
@@ -43,7 +66,8 @@ ObservatoryModal.propTypes = {
     showDialog: PropTypes.bool.isRequired,
     toggle: PropTypes.func.isRequired,
     resourceId: PropTypes.string.isRequired,
-    value: PropTypes.object,
+    observatory: PropTypes.object,
+    organization: PropTypes.object,
     callBack: PropTypes.func.isRequired
 };
 
