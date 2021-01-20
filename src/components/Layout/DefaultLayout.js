@@ -15,7 +15,7 @@ import env from '@beam-australia/react-env';
 
 const StyledBody = styled.div`
     display: flex;
-    min-height: calc(100vh - 30px);
+    min-height: calc(100vh);
     flex-direction: column;
 `;
 
