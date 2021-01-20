@@ -27,18 +27,18 @@ export default function FeaturedComparisons() {
             desc: false
         });
 
-        const comparisons = responseJson.map(comparison =>
+        const ids = responseJson.map(comparison =>
             getStatementsBySubjectAndPredicate({ subjectId: comparison.id, predicateId: PREDICATES.DESCRIPTION })
         );
 
-        Promise.all(comparisons)
+        Promise.all(ids)
             .then(comparisonsStatements => {
                 const comparisons = comparisonsStatements.map((comparisonStatements, index) => {
                     const resourceSubject = responseJson[index];
                     return getComparisonData(
                         resourceSubject.id,
                         comparisonStatements && resourceSubject.label ? resourceSubject.label : 'No Title',
-                        comparisonStatements.statements
+                        comparisonStatements
                     );
                 });
 
@@ -63,11 +63,11 @@ export default function FeaturedComparisons() {
             items: 8
         });
 
-        const comparisons = responseJson.map(comparison =>
+        const ids = responseJson.map(comparison =>
             getStatementsBySubjectAndPredicate({ subjectId: comparison.id, predicateId: PREDICATES.DESCRIPTION })
         );
 
-        Promise.all(comparisons)
+        Promise.all(ids)
             .then(comparisonsStatements => {
                 const comparisons = comparisonsStatements.map((comparisonStatements, index) => {
                     const resourceSubject = responseJson[index];
