@@ -109,6 +109,8 @@ export default class VisualizationWidget extends Component {
                                     }}
                                 >
                                     <Button
+                                        color="light"
+                                        size="sm"
                                         onClick={() => {
                                             this.setState({ inputTableExpanded: !this.state.inputTableExpanded, enableAnimations: true });
                                         }}

@@ -24,7 +24,11 @@ export default class AbstractCustomizationWidget extends Component {
 
         switch (renderingMethod) {
             case 'Table': {
-                return <Alert color="secondary">Tables don't have customizations</Alert>;
+                return (
+                    <Alert color="secondary" fade={false}>
+                        Tables can't be customized
+                    </Alert>
+                );
             }
             case 'ColumnChart': {
                 return (

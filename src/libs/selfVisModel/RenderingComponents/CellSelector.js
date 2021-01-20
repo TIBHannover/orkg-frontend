@@ -144,7 +144,9 @@ export default class CellSelector extends Component {
     render() {
         return (
             <div className="pt-2">
-                <Alert color="info">Select cells for visualization and map to types.</Alert>
+                <Alert color="info" fade={false}>
+                    Select cells for the visualization and map them to types
+                </Alert>
 
                 {this.props.isLoading ? (
                     <div>Loading...</div>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownToggle } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import styled from 'styled-components';
 
 export const isMounted = ref => {
@@ -210,16 +210,15 @@ export const createValueSelectors = ref => {
                             }}
                         >
                             <DropdownToggle caret color="darkblue">
-                                <div
+                                <span
                                     style={{
                                         maxWidth: '100px',
                                         overflow: 'hidden',
-                                        display: 'inline-block',
                                         lineHeight: '1.5'
                                     }}
                                 >
                                     {ref.state.yAxisSelector[id] ? ref.state.yAxisSelector[id] : possibleValueCandidates[0].label}
-                                </div>
+                                </span>
                             </DropdownToggle>
                             <DropdownMenu>{itemsArray[id]}</DropdownMenu>
                         </Dropdown>
@@ -234,7 +233,7 @@ export const createValueSelectors = ref => {
                                         addYAxisInterval(ref, id);
                                     }}
                                 >
-                                    Add Interval
+                                    <Icon icon={faPlus} /> interval
                                 </Button>
                             )}
                     </div>

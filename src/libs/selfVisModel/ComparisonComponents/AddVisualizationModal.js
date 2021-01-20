@@ -131,7 +131,7 @@ function AddVisualizationModal(props) {
                         Select
                     </TabButton>
                     <TabButton active={processStep === 1} onClick={() => setProcessStep(1)}>
-                        Map &amp; Edit
+                        Map &amp; edit
                     </TabButton>
                     <TabButton active={processStep === 2} onClick={() => setProcessStep(2)}>
                         Visualize
@@ -164,7 +164,7 @@ function AddVisualizationModal(props) {
                 <div className="d-flex justify-content-end">
                     {processStep > 0 && (
                         <Button color="primary" className="mr-2" onClick={() => setProcessStep(processStep - 1)}>
-                            Prev
+                            Previous
                         </Button>
                     )}
                     {processStep <= 1 && (
@@ -190,9 +190,9 @@ function AddVisualizationModal(props) {
                             {!props.initialData.metaData.id && (
                                 <Tippy
                                     hideOnClick={false}
-                                    content="Can not export visualization to a temporal comparison. Please publish comparison first."
+                                    content="Cannot publish visualization to a unpublished comparison. You must publish the comparison first."
                                 >
-                                    <span className="btn btn-primary disabled">Export</span>
+                                    <span className="btn btn-primary disabled">Publish</span>
                                 </Tippy>
                             )}
                         </>

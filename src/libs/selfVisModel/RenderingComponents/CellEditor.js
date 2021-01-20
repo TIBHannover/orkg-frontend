@@ -84,7 +84,9 @@ export default class CellEditor extends Component {
     render() {
         return (
             <div className="pt-2">
-                <Alert color="info">Optionally edit cells values, valid entries are rendered in green</Alert>
+                <Alert color="info" fade={false}>
+                    Optionally edit cells values, valid entries are displayed in green
+                </Alert>
                 <div style={{ height: this.props.height + 'px', overflow: 'auto' }}>
                     {this.props.isLoading ? <div>Loading...</div> : <div>{this.createTable()} </div>}
                 </div>

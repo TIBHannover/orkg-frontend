@@ -54,6 +54,7 @@ export const ValueCell = styled.div`
     width: 150px;
     min-width: 150px;
     height: 30px;
+    line-height: 30px;
     margin: 1px 1px;
 `;
 
@@ -63,11 +64,12 @@ export const ContributionCell = styled(TableCell)`
     display: ruby;
     border-top-left-radius: 5px;
     border-bottom-left-radius: 5px;
-    background: #e86161;
+    background: ${props => props.theme.primary};
     color: white;
     width: 150px;
     min-width: 150px;
     height: 30px;
+    line-height: 30px;
     padding: 0 2px;
     margin: 1px 1px;
 `;
@@ -136,12 +138,12 @@ export const ValueCellValidator = styled(TableCell)`
     overflow: hidden;
     text-overflow: ellipsis;
     display: ruby;
-
     background: ${props => (props.isValid ? '#4caf50' : '#fda9a9')};
     color: black;
     width: 150px;
     min-width: 150px;
     height: 30px;
+    line-height: 30px;
     margin: 1px 1px;
     padding: 0 2px;
 `;

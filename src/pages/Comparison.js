@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Alert, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Button, ButtonGroup, Badge } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faEllipsisV, faPlus, faLightbulb, faHistory, faWindowMaximize, faChartBar } from '@fortawesome/free-solid-svg-icons';
+import { faEllipsisV, faLightbulb, faHistory, faWindowMaximize, faChartBar } from '@fortawesome/free-solid-svg-icons';
 import ComparisonLoadingComponent from 'components/Comparison/ComparisonLoadingComponent';
 import ComparisonTable from 'components/Comparison/Comparison';
 import ExportToLatex from 'components/Comparison/ExportToLatex.js';
@@ -205,20 +205,9 @@ function Comparison(props) {
                 {contributionsList.length > 1 && !isLoadingComparisonResult && !isFailedLoadingComparisonResult && (
                     <div style={{ marginLeft: 'auto' }} className="flex-shrink-0 mt-4">
                         <ButtonGroup className="float-right mb-4 ml-1">
-                            <Button
-                                color="darkblue"
-                                size="sm"
-                                onClick={() => {
-                                    setUseReconstructedData(false);
-                                    setShowVisualizationModal(!showVisualizationModal);
-                                }}
-                                style={{ marginRight: 3 }}
-                            >
-                                <Icon icon={faChartBar} /> <span className="mr-2">Add Visualization</span>
-                            </Button>
                             <Dropdown group isOpen={dropdownDensityOpen} toggle={() => setDropdownDensityOpen(v => !v)} style={{ marginRight: 3 }}>
                                 <DropdownToggle color="darkblue" size="sm">
-                                    <Icon icon={faWindowMaximize} className="mr-1" /> <span className="mr-1">View</span>
+                                    <Icon icon={faWindowMaximize} className="mr-1" /> View
                                 </DropdownToggle>
                                 <DropdownMenu>
                                     <DropdownItem onClick={handleFullWidth}>
@@ -239,13 +228,15 @@ function Comparison(props) {
                                 </DropdownMenu>
                             </Dropdown>
                             <Button
-                                className="flex-shrink-0"
                                 color="darkblue"
                                 size="sm"
+                                onClick={() => {
+                                    setUseReconstructedData(false);
+                                    setShowVisualizationModal(!showVisualizationModal);
+                                }}
                                 style={{ marginRight: 3 }}
-                                onClick={() => setShowAddContribution(v => !v)}
                             >
-                                <Icon icon={faPlus} style={{ margin: '2px 4px 0 0' }} /> Add contribution
+                                <Icon icon={faChartBar} /> Add visualization
                             </Button>
                             <Dropdown group isOpen={dropdownOpen} toggle={() => setDropdownOpen(v => !v)}>
                                 <DropdownToggle color="darkblue" size="sm" className="rounded-right">
@@ -253,6 +244,7 @@ function Comparison(props) {
                                 </DropdownToggle>
                                 <DropdownMenu right>
                                     <DropdownItem header>Customize</DropdownItem>
+                                    <DropdownItem onClick={() => setShowAddContribution(v => !v)}>Add contribution</DropdownItem>
                                     <DropdownItem onClick={() => setShowPropertiesDialog(v => !v)}>Select properties</DropdownItem>
                                     <Dropdown isOpen={dropdownMethodOpen} toggle={() => setDropdownMethodOpen(v => !v)} direction="left">
                                         <DropdownToggle tag="div" className="dropdown-item" style={{ cursor: 'pointer' }}>

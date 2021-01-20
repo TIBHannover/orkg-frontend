@@ -75,11 +75,13 @@ class CustomizationColumnChart extends Component {
                 )}
                 {this.yAxisSelectorMaxCount !== -1 && this.state.yAxisSelectorCount < this.yAxisSelectorMaxCount && (
                     <Button
+                        color="primary"
+                        size="sm"
                         onClick={() => {
                             this.setState({ yAxisSelectorCount: this.state.yAxisSelectorCount + 1 });
                         }}
                     >
-                        Add Y-Axis Value
+                        Add Y-axis value
                     </Button>
                 )}
                 {this.state.errorDataNotSupported && this.renderErrorMessages()}
