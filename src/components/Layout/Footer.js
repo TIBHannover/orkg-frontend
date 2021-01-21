@@ -146,20 +146,19 @@ const Footer = () => (
                 <Row className="mt-4">
                     <PartnerLogoCol md={4} style={{}}>
                         <a href="https://www.tib.eu/en/" target="_blank" rel="noopener noreferrer">
-                            <img src={TIB_LOGO} alt="Logo Technische Informationsbibliothek (TIB)" style={{ borderWidth: 0, height: '60px' }} />
+                            <img src={TIB_LOGO} alt="Logo Technische Informationsbibliothek (TIB)" style={{ borderWidth: 0, height: '50px' }} />
                         </a>
                     </PartnerLogoCol>
                     <Col md={8}>
-                        <small className="text-muted">Supporting organizations:</small>
                         <Row noGutters>
                             <Col md={4} style={{ textAlign: 'center' }}>
                                 <a href="https://www.uni-hannover.de/en/" target="_blank" rel="noopener noreferrer">
-                                    <img src={LUH_LOGO} alt="Logo Leibniz University Hannover" style={{ borderWidth: 0, height: '40px' }} />
+                                    <img src={LUH_LOGO} alt="Logo Leibniz University Hannover" style={{ borderWidth: 0, height: '45px' }} />
                                 </a>
                             </Col>
                             <Col md={4} style={{ textAlign: 'center' }}>
                                 <a href="https://www.l3s.de/en/" target="_blank" rel="noopener noreferrer">
-                                    <img src={L3S_LOGO} alt="Logo L3S Research Center" style={{ borderWidth: 0, height: '45px' }} />
+                                    <img src={L3S_LOGO} alt="Logo L3S Research Center" style={{ borderWidth: 0, height: '50px' }} />
                                 </a>
                             </Col>
                             <Col md={4} style={{ textAlign: 'center' }}>
@@ -167,7 +166,7 @@ const Footer = () => (
                                     <img
                                         src={INFAI_LOGO}
                                         alt="Logo  Institute for Applied Informatics (InfAI)"
-                                        style={{ borderWidth: 0, height: '40px' }}
+                                        style={{ borderWidth: 0, height: '45px' }}
                                     />
                                 </a>
                             </Col>
@@ -177,13 +176,11 @@ const Footer = () => (
                 <hr style={{ width: '50%' }} />
                 <Row>
                     <PartnerLogoCol md={{ size: 3, order: 1, offset: 3 }} style={{ textAlign: 'center' }}>
-                        <a href="https://ec.europa.eu/" target="_blank" rel="noopener noreferrer">
-                            <img
-                                src={EU_LOGO}
-                                alt="Co-funded by the Horizon 2020 programme of the European Union"
-                                style={{ borderWidth: 0, height: '50px' }}
-                            />
-                        </a>
+                        <img
+                            src={EU_LOGO}
+                            alt="Co-funded by the Horizon 2020 programme of the European Union"
+                            style={{ borderWidth: 0, height: '50px' }}
+                        />
                     </PartnerLogoCol>
                     <PartnerLogoCol md={{ size: 3, order: 2, offset: 0 }} style={{ textAlign: 'center' }}>
                         <a
