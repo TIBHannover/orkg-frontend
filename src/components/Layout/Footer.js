@@ -8,6 +8,8 @@ import TIB_LOGO from 'assets/img/poweredby/TIB_Logo_EN.png';
 import LUH_LOGO from 'assets/img/poweredby/LUH.png';
 import L3S_LOGO from 'assets/img/poweredby/L3S.png';
 import INFAI_LOGO from 'assets/img/poweredby/infAI.png';
+import EU_LOGO from 'assets/img/poweredby/co-funded-h2020-horiz_en.png';
+import EOSC_LOGO from 'assets/img/poweredby/EOSC.png';
 import styled from 'styled-components';
 
 const FooterWrapper = styled.div`
@@ -142,24 +144,54 @@ const Footer = () => (
                 </Row>
                 <hr style={{ width: '70%' }} />
                 <Row className="mt-4">
-                    <PartnerLogoCol md={3} style={{}}>
+                    <PartnerLogoCol md={4} style={{}}>
                         <a href="https://www.tib.eu/en/" target="_blank" rel="noopener noreferrer">
-                            <img src={TIB_LOGO} alt="Logo Technische Informationsbibliothek (TIB)" style={{ borderWidth: 0, height: '50px' }} />
+                            <img src={TIB_LOGO} alt="Logo Technische Informationsbibliothek (TIB)" style={{ borderWidth: 0, height: '60px' }} />
                         </a>
                     </PartnerLogoCol>
-                    <PartnerLogoCol md={3} style={{ textAlign: 'center' }}>
-                        <a href="https://www.uni-hannover.de/en/" target="_blank" rel="noopener noreferrer">
-                            <img src={LUH_LOGO} alt="Logo Leibniz University Hannover" style={{ borderWidth: 0, height: '50px' }} />
+                    <Col md={8}>
+                        <small className="text-muted">Supporting organizations:</small>
+                        <Row noGutters>
+                            <Col md={4} style={{ textAlign: 'center' }}>
+                                <a href="https://www.uni-hannover.de/en/" target="_blank" rel="noopener noreferrer">
+                                    <img src={LUH_LOGO} alt="Logo Leibniz University Hannover" style={{ borderWidth: 0, height: '40px' }} />
+                                </a>
+                            </Col>
+                            <Col md={4} style={{ textAlign: 'center' }}>
+                                <a href="https://www.l3s.de/en/" target="_blank" rel="noopener noreferrer">
+                                    <img src={L3S_LOGO} alt="Logo L3S Research Center" style={{ borderWidth: 0, height: '45px' }} />
+                                </a>
+                            </Col>
+                            <Col md={4} style={{ textAlign: 'center' }}>
+                                <a href="https://infai.org/en/" target="_blank" rel="noopener noreferrer">
+                                    <img
+                                        src={INFAI_LOGO}
+                                        alt="Logo  Institute for Applied Informatics (InfAI)"
+                                        style={{ borderWidth: 0, height: '40px' }}
+                                    />
+                                </a>
+                            </Col>
+                        </Row>
+                    </Col>
+                </Row>
+                <hr style={{ width: '50%' }} />
+                <Row>
+                    <PartnerLogoCol md={{ size: 3, order: 1, offset: 3 }} style={{ textAlign: 'center' }}>
+                        <a href="https://ec.europa.eu/" target="_blank" rel="noopener noreferrer">
+                            <img
+                                src={EU_LOGO}
+                                alt="Co-funded by the Horizon 2020 programme of the European Union"
+                                style={{ borderWidth: 0, height: '50px' }}
+                            />
                         </a>
                     </PartnerLogoCol>
-                    <PartnerLogoCol md={3} style={{ textAlign: 'center' }}>
-                        <a href="https://www.l3s.de/en/" target="_blank" rel="noopener noreferrer">
-                            <img src={L3S_LOGO} alt="Logo L3S Research Center" style={{ borderWidth: 0, height: '55px' }} />
-                        </a>
-                    </PartnerLogoCol>
-                    <PartnerLogoCol md={3} style={{ textAlign: 'center' }}>
-                        <a href="https://infai.org/en/" target="_blank" rel="noopener noreferrer">
-                            <img src={INFAI_LOGO} alt="Logo  Institute for Applied Informatics (InfAI)" style={{ borderWidth: 0, height: '50px' }} />
+                    <PartnerLogoCol md={{ size: 3, order: 2, offset: 0 }} style={{ textAlign: 'center' }}>
+                        <a
+                            href="https://marketplace.eosc-portal.eu/services/open-research-knowledge-graph-orkg"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            <img src={EOSC_LOGO} alt="European Open Science Cloud (EOSC)" style={{ borderWidth: 0, height: '45px' }} />
                         </a>
                     </PartnerLogoCol>
                 </Row>
