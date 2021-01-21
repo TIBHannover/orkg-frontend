@@ -109,7 +109,7 @@ function useComparison() {
     };
 
     const loadVisualizations = comparisonID => {
-        getStatementsBySubjectAndPredicate(comparisonID, PREDICATES.HAS_VISUALIZATION_DEFINITION).then(statements => {
+        getStatementsBySubjectAndPredicate({ subjectId: comparisonID, predicateId: PREDICATES.HAS_VISUALIZATION_DEFINITION }).then(statements => {
             const visualizations = filterObjectOfStatementsByPredicate(statements, PREDICATES.HAS_VISUALIZATION_DEFINITION, false);
             setMetaData({ ...metaData, visualizations: visualizations });
         });
@@ -566,7 +566,7 @@ function useComparison() {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isLoadingComparisonResult]);
-    return [
+    return {
         metaData,
         contributions,
         properties,
@@ -605,6 +605,6 @@ function useComparison() {
         loadCreatedBy,
         loadProvenanceInfos,
         loadVisualizations
-    ];
+    };
 }
 export default useComparison;

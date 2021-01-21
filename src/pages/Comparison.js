@@ -42,7 +42,7 @@ import { reverse } from 'named-urls';
 import env from '@beam-australia/react-env';
 
 function Comparison(props) {
-    const [
+    const {
         metaData,
         contributions,
         properties,
@@ -81,7 +81,7 @@ function Comparison(props) {
         loadCreatedBy,
         loadProvenanceInfos,
         loadVisualizations
-    ] = useComparison({});
+    } = useComparison({});
 
     /** adding some additional state for meta data **/
 
@@ -105,7 +105,6 @@ function Comparison(props) {
     const [showExportCitationsDialog, setShowExportCitationsDialog] = useState(false);
     const [showVisualizationModal, setShowVisualizationModal] = useState(false);
     const [applyReconstruction, setUseReconstructedData] = useState(false);
-    const [reloadingFlag, setReloadingFlag] = useState(false);
     const [reloadingSizeFlag, setReloadingSizeFlag] = useState(false);
     /**
      * Is case of an error the user can go to the previous link in history
@@ -116,8 +115,6 @@ function Comparison(props) {
 
     const closeOnExport = () => {
         setShowVisualizationModal(false);
-        loadVisualizations(metaData.id);
-        setReloadingFlag(!reloadingFlag);
     };
 
     const onDismissShiftMouseWheelScroll = () => {
@@ -424,7 +421,6 @@ function Comparison(props) {
                                         <PreviewVisualizationComparison
                                             comparisonId={metaData.id}
                                             expandVisualization={expandVisualization}
-                                            reloadingFlag={reloadingFlag}
                                             reloadingSizeFlag={reloadingSizeFlag}
                                             visualizations={metaData.visualizations}
                                         />
@@ -571,7 +567,6 @@ function Comparison(props) {
                 closeOnExport={closeOnExport}
                 updatePreviewComponent={() => {
                     loadVisualizations(metaData.id);
-                    setReloadingFlag(!reloadingFlag);
                 }}
                 useReconstructedData={applyReconstruction}
             />
