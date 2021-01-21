@@ -89,8 +89,6 @@ export default class CellVE extends Component {
                     this.props.data.cellValueIsValid = newValue;
                     this.setState({ cellValueIsValid: newValue, errorMessage: errorMessage });
                 }
-            } else {
-                this.setState({ cellValueIsValid: false, errorMessage: 'No mapper selected' });
             }
         }
     };

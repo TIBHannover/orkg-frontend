@@ -90,8 +90,8 @@ function PreviewVisualizationComparison(props) {
                         height={4}
                         width={50}
                         speed={2}
-                        primaryColor="#f3f3f3"
-                        secondaryColor="#ecebeb"
+                        primarycolor="#f3f3f3"
+                        secondarycolor="#ecebeb"
                         style={{ borderRadius: '11px', margin: '10px 0' }}
                     >
                         <rect x="0" y="0" rx="0" ry="0" width="50" height="100" />

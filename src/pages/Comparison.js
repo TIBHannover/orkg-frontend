@@ -569,7 +569,10 @@ function Comparison(props) {
                     predicatesList
                 }}
                 closeOnExport={closeOnExport}
-                updatePreviewComponent={() => setReloadingFlag(v => !v)}
+                updatePreviewComponent={() => {
+                    loadVisualizations(metaData.id);
+                    setReloadingFlag(!reloadingFlag);
+                }}
                 useReconstructedData={applyReconstruction}
             />
         </div>
