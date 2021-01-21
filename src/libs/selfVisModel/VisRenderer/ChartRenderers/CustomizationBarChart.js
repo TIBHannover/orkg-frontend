@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button } from 'reactstrap';
+import { Alert, Button } from 'reactstrap';
 import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
 import { createValueSelectors, createLabelSelectors, isMounted, getSelectorsState } from './HelperFunctions';
 import PropTypes from 'prop-types';
@@ -54,7 +54,7 @@ class CustomizationBarChart extends Component {
 
     renderErrorMessages = () => {
         const msg = this.errorCodeMessages[this.errorCodeItem[this.state.errorValue]];
-        return <div> ERROR: {msg}</div>;
+        return <Alert color="danger">{msg}</Alert>;
     };
 
     setErrorCode = val => {
@@ -66,19 +66,23 @@ class CustomizationBarChart extends Component {
             <div>
                 {!this.state.errorDataNotSupported && (
                     <>
-                        <div className="d-flex">Y-Axis:{this.createLabelSelectors()}</div>
-                        <div className="d-flex">
-                            X-Axis:<div className="flex-grow-1">{this.createValueSelectors()}</div>
-                        </div>
+                        Y-axis
+                        {this.createLabelSelectors()}
+                        <hr />
+                        X-axis
+                        {this.createValueSelectors()}
                     </>
                 )}
                 {this.yAxisSelectorMaxCount !== -1 && this.state.yAxisSelectorCount < this.yAxisSelectorMaxCount && (
                     <Button
+                        color="primary"
+                        size="sm"
+                        className="mt-1"
                         onClick={() => {
                             this.setState({ yAxisSelectorCount: this.state.yAxisSelectorCount + 1 });
                         }}
                     >
-                        Add X-Axis Value
+                        Add X-axis value
                     </Button>
                 )}
                 {this.state.errorDataNotSupported && this.renderErrorMessages()}

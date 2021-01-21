@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button } from 'reactstrap';
+import { Alert, Button } from 'reactstrap';
 import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
 import { createValueSelectors, createLabelSelectors, isMounted, getSelectorsState } from './HelperFunctions';
 import PropTypes from 'prop-types';
@@ -55,7 +55,7 @@ class CustomizationColumnChart extends Component {
 
     renderErrorMessages = () => {
         const msg = this.errorCodeMessages[this.errorCodeItem[this.state.errorValue]];
-        return <div> ERROR: {msg}</div>;
+        return <Alert color="danger">{msg}</Alert>;
     };
 
     setErrorCode = val => {
@@ -67,10 +67,9 @@ class CustomizationColumnChart extends Component {
             <div>
                 {!this.state.errorDataNotSupported && (
                     <>
-                        <div className="d-flex">X-Axis:{this.createLabelSelectors()}</div>
-                        <div className="d-flex">
-                            Y-Axis:<div className="flex-grow-1">{this.createValueSelectors()}</div>
-                        </div>
+                        X-axis{this.createLabelSelectors()}
+                        <hr />
+                        Y-axis{this.createValueSelectors()}
                     </>
                 )}
                 {this.yAxisSelectorMaxCount !== -1 && this.state.yAxisSelectorCount < this.yAxisSelectorMaxCount && (

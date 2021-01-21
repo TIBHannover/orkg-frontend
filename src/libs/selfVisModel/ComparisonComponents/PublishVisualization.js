@@ -152,9 +152,9 @@ function PublishVisualization(props) {
 
     return (
         <Modal size="lg" isOpen={props.showDialog} toggle={props.toggle}>
-            <ModalHeader toggle={props.toggle}>Publish Visualization</ModalHeader>
+            <ModalHeader toggle={props.toggle}>Publish visualization</ModalHeader>
             <ModalBody>
-                <Alert color="info">Your visualization will be added to the comparison.</Alert>
+                <Alert color="info">Your visualization will be added to the comparison</Alert>
                 <>
                     {' '}
                     <FormGroup>

@@ -100,17 +100,11 @@ export default class VisualizationWidget extends Component {
                             }}
                         >
                             <div style={{ display: 'flex' }}>
-                                <div
-                                    style={{
-                                        width: '320px',
-                                        minWidth: '320px',
-                                        overflow: 'auto',
-                                        height: this.props.height - 5
-                                    }}
-                                >
+                                <SideBar style={{ height: this.props.height - 5 }}>
                                     <Button
                                         color="light"
                                         size="sm"
+                                        className="ml-3 mt-3"
                                         onClick={() => {
                                             this.setState({ inputTableExpanded: !this.state.inputTableExpanded, enableAnimations: true });
                                         }}
@@ -122,12 +116,14 @@ export default class VisualizationWidget extends Component {
                                             ref={this.refVisualizationSelector}
                                             propagationFunction={this.selectorPropagateUpdates}
                                         />
-                                        <AbstractCustomizationWidget
-                                            ref={this.refAbstractCustomizationWidget}
-                                            propagateUpdates={this.customizerPropagateUpdates}
-                                        />
+                                        <div className="px-3">
+                                            <AbstractCustomizationWidget
+                                                ref={this.refAbstractCustomizationWidget}
+                                                propagateUpdates={this.customizerPropagateUpdates}
+                                            />
+                                        </div>
                                     </div>
-                                </div>
+                                </SideBar>
                                 <AbstractRenderer
                                     ref={this.refAbstractRenderer}
                                     referenceToSelector={this.refVisualizationSelector}
@@ -219,4 +215,13 @@ const ControlWidgetContainer = styled.div`
     animation-duration: 400ms;
     left: ${props => (props.expanded ? props.parentWidth : 0)}px;
     width: ${props => (props.expanded ? props.totalWidth - props.parentWidth : props.totalWidth)}px;
+`;
+
+const SideBar = styled.div`
+    width: 320px;
+    min-width: 320px;
+    overflow: auto;
+    background-color: ${props => props.theme.ultraLightBlue} !important;
+    border: 1px solid ${props => props.theme.ultraLightBlueDarker} !important;
+    border-radius: ${props => props.theme.borderRadius};
 `;

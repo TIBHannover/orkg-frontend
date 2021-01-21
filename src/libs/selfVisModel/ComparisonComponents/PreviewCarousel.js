@@ -105,7 +105,7 @@ export default class PreviewCarouselComponent extends Component {
     render() {
         return (
             <div style={{ paddingTop: '10px', height: '200px' }}>
-                <h2 className="h5 mb-2 mt-2">Chart Visualizations</h2>
+                <h2 className="h5 mb-2 mt-2">Visualizations</h2>
                 <div
                     id="PreviewCarouselContainer"
                     style={{ display: 'flex', width: '100%', overflowX: 'hidden' }}

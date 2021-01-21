@@ -123,7 +123,7 @@ function AddVisualizationModal(props) {
             }}
             style={{ maxWidth: '90%', marginBottom: 0 }}
         >
-            <ModalHeader toggle={props.toggle}>Create visualization of comparison table</ModalHeader>
+            <ModalHeader toggle={props.toggle}>Create comparison visualization</ModalHeader>
             <ModalBody id="selfVisServiceModalBody">
                 <TabButtons>
                     {/*  TAB BUTTONS*/}
@@ -163,7 +163,7 @@ function AddVisualizationModal(props) {
             <ModalFooter className="p-2">
                 <div className="d-flex justify-content-end">
                     {processStep > 0 && (
-                        <Button color="primary" className="mr-2" onClick={() => setProcessStep(processStep - 1)}>
+                        <Button color="light" className="mr-2" onClick={() => setProcessStep(processStep - 1)}>
                             Previous
                         </Button>
                     )}
@@ -183,7 +183,7 @@ function AddVisualizationModal(props) {
                                         setShowPublishVisualizationDialog(!showPublishVisualizationDialog);
                                     }}
                                 >
-                                    Export
+                                    Publish
                                 </RequireAuthentication>
                             )}
 

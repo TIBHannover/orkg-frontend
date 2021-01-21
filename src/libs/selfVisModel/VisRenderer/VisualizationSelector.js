@@ -54,15 +54,8 @@ export default class VisualizationSelector extends Component {
             <Dropdown
                 color="darkblue"
                 size="sm"
-                //    className='mb-4 mt-4'
-                style={{
-                    marginLeft: '10px',
-                    flexGrow: '1',
-                    display: 'flex',
-                    height: 'min-content',
-                    paddingTop: '-5px'
-                }}
                 isOpen={this.state.visSelectionOpen}
+                className="mt-1"
                 toggle={() => {
                     this.setState({
                         visSelectionOpen: !this.state.visSelectionOpen
@@ -80,8 +73,10 @@ export default class VisualizationSelector extends Component {
     /** component rendering entrance point **/
     render() {
         return (
-            <div style={{ padding: '10px' }}>
-                <div style={{ display: 'flex' }}>Visualization Method:{this.createVisualizationSelector()}</div>
+            <div className="px-3">
+                <hr />
+                Visualization method{this.createVisualizationSelector()}
+                <hr />
             </div>
         );
     }

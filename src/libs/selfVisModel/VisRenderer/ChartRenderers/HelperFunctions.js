@@ -3,6 +3,15 @@ import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownToggle } from 're
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import styled from 'styled-components';
+import Tippy from '@tippyjs/react';
+
+const DeleteButton = styled(Button)`
+    &&& {
+        margin: 0 10px 0 0;
+        padding: 0;
+        color: #f87474;
+    }
+`;
 
 export const isMounted = ref => {
     if (ref.props.propagateUpdates) {
@@ -52,7 +61,7 @@ const addYAxisInterval = (ref, id) => {
         yAxisIntervals[id] = [];
     }
 
-    yAxisIntervals[id].push({ isOpen: false, label: 'Select interval property' });
+    yAxisIntervals[id].push({ isOpen: false, label: 'Select interval' });
     ref.setState({ yAxisIntervals: yAxisIntervals });
 };
 
@@ -66,7 +75,7 @@ const removeInterval = (id, intervalId, ref) => {
 
 const createIntervalDropDownSelectors = (ref, id, interval_id, possibleValueCandidates) => {
     const extended = [...possibleValueCandidates];
-    extended.unshift({ label: 'Select interval property' });
+    extended.unshift({ label: 'Select interval' });
 
     const itemsArray = extended.map((pvc, pvc_id) => {
         return (
@@ -86,17 +95,8 @@ const createIntervalDropDownSelectors = (ref, id, interval_id, possibleValueCand
     const isItemOpen = ref.state.yAxisInterValSelectors[id][interval_id].isOpen;
     return (
         <Dropdown
-            color="darkblue"
             size="sm"
-            style={{
-                marginLeft: '10px',
-                marginBottom: '5px',
-                flexGrow: '1',
-                display: 'flex',
-                height: 'min-content',
-                paddingTop: '-5px',
-                width: '80px'
-            }}
+            className="mt-1"
             isOpen={isItemOpen}
             toggle={() => {
                 const yAxisSelectorOpen = ref.state.yAxisInterValSelectors;
@@ -107,7 +107,7 @@ const createIntervalDropDownSelectors = (ref, id, interval_id, possibleValueCand
                 });
             }}
         >
-            <DropdownToggle caret color="darkblue">
+            <DropdownToggle caret color="darkblue" className="text-truncate mw-100">
                 {ref.state.yAxisInterValSelectors[id][interval_id].label}
             </DropdownToggle>
             <DropdownMenu>{itemsArray}</DropdownMenu>
@@ -121,17 +121,17 @@ const createIntervalSelectors = (ref, id, possibleValueCandidates) => {
     if (yAxisIntervals && yAxisIntervals.length > 0) {
         return yAxisIntervals.map((interval, interval_id) => {
             return (
-                <div key={'IntervalKey_' + interval_id} className="d-flex" style={{ marginLeft: '35px', paddingBottom: '5px' }}>
+                <div key={'IntervalKey_' + interval_id} className="ml-4 mt-1">
                     {' '}
-                    <IconWrapper>
-                        <DeleteIcon
-                            icon={faTrash}
-                            onClick={() => {
-                                removeInterval(id, interval_id, ref);
-                            }}
-                        />
-                    </IconWrapper>{' '}
-                    Interval_{interval_id}
+                    <DeleteButton
+                        color="link"
+                        onClick={() => {
+                            removeInterval(id, interval_id, ref);
+                        }}
+                    >
+                        <Icon icon={faTrash} />
+                    </DeleteButton>
+                    Interval {interval_id}
                     {createIntervalDropDownSelectors(ref, id, interval_id, possibleValueCandidates)}
                 </div>
             );
@@ -177,29 +177,20 @@ export const createValueSelectors = ref => {
 
         return itemsArray.map((selector, id) => {
             return (
-                <div key={'ContainerValueItemSelector_' + id}>
+                <div key={'ContainerValueItemSelector_' + id} className="mt-1">
                     <div style={{ display: 'flex' }} key={'ValueItemSelector_' + id}>
                         {id > 0 && (
-                            <IconWrapper>
-                                <DeleteIcon
-                                    icon={faTrash}
-                                    onClick={() => {
-                                        removeSelector(id, ref);
-                                    }}
-                                />
-                            </IconWrapper>
+                            <DeleteButton
+                                color="link"
+                                onClick={() => {
+                                    removeSelector(id, ref);
+                                }}
+                            >
+                                <Icon icon={faTrash} />
+                            </DeleteButton>
                         )}
                         <Dropdown
-                            color="darkblue"
                             size="sm"
-                            //    className='mb-4 mt-4'
-                            style={{
-                                marginLeft: '10px',
-                                marginBottom: '5px',
-                                flexGrow: '1',
-                                display: 'flex',
-                                maxWidth: '150px'
-                            }}
                             isOpen={ref.state.yAxisSelectorOpen[id]}
                             toggle={() => {
                                 const yAxisSelectorOpen = ref.state.yAxisSelectorOpen;
@@ -209,7 +200,7 @@ export const createValueSelectors = ref => {
                                 });
                             }}
                         >
-                            <DropdownToggle caret color="darkblue">
+                            <DropdownToggle caret color="darkblue" className="text-truncate mw-100">
                                 <span
                                     style={{
                                         maxWidth: '100px',
@@ -226,18 +217,25 @@ export const createValueSelectors = ref => {
                             (!ref.state.yAxisInterValSelectors[id] ||
                                 (ref.state.yAxisInterValSelectors[id] &&
                                     ref.state.yAxisInterValSelectors[id].length < possibleValueCandidates.length)) && (
-                                <Button
-                                    size="sm"
-                                    style={{ marginLeft: '5px', padding: '3px', height: ' 32px', minWidth: '82px' }}
-                                    onClick={() => {
-                                        addYAxisInterval(ref, id);
-                                    }}
-                                >
-                                    <Icon icon={faPlus} /> interval
-                                </Button>
+                                <Tippy content="Add interval">
+                                    <span>
+                                        <Button
+                                            size="sm"
+                                            color="primary"
+                                            className="px-2 ml-2"
+                                            //style={{ marginLeft: '5px', padding: '3px', height: ' 32px', minWidth: '82px' }}
+                                            onClick={() => {
+                                                addYAxisInterval(ref, id);
+                                            }}
+                                        >
+                                            <Icon icon={faPlus} />
+                                        </Button>
+                                    </span>
+                                </Tippy>
                             )}
                     </div>
-                    <div>{createIntervalSelectors(ref, id, possibleValueCandidates)}</div>
+                    <div className="mt-2">{createIntervalSelectors(ref, id, possibleValueCandidates)}</div>
+                    <hr />
                 </div>
             );
         });
@@ -274,18 +272,8 @@ export const createLabelSelectors = ref => {
         }
         return (
             <Dropdown
-                color="darkblue"
                 size="sm"
-                //    className='mb-4 mt-4'
-                style={{
-                    marginLeft: '10px',
-                    marginBottom: '5px',
-                    flexGrow: '1',
-                    display: 'flex',
-                    height: 'min-content',
-                    paddingTop: '-5px',
-                    width: '150px'
-                }}
+                className="mt-1"
                 isOpen={ref.state.xAxisSelectorOpen}
                 toggle={() => {
                     ref.setState({
@@ -293,7 +281,7 @@ export const createLabelSelectors = ref => {
                     });
                 }}
             >
-                <DropdownToggle caret color="darkblue">
+                <DropdownToggle caret color="darkblue" className="text-truncate mw-100">
                     {ref.state.xAxisSelector ? ref.state.xAxisSelector : possibleLabelCandidates[0].label}
                 </DropdownToggle>
                 <DropdownMenu>{items}</DropdownMenu>
@@ -301,14 +289,3 @@ export const createLabelSelectors = ref => {
         );
     }
 };
-
-const IconWrapper = styled.span`
-    cursor: pointer;
-    display: inline-block;
-    padding: 0 10px;
-    margin-left: -32px;
-`;
-
-const DeleteIcon = styled(Icon)`
-    color: #f87474;
-`;
