@@ -7,17 +7,17 @@ export default function CellRenderer(props) {
     return (
         <>
             {props.type === 'property' && (
-                <Tippy content={props.data.label ?? 'Error'}>
+                <Tippy content={props.data.label ?? 'Empty'}>
                     <PropertyCell>{props.data.label}</PropertyCell>
                 </Tippy>
             )}
             {props.type === 'contribution' && (
-                <Tippy content={props.data.label ?? 'Error'}>
+                <Tippy content={props.data.label ?? 'Empty'}>
                     <ContributionCell>{props.data.label}</ContributionCell>
                 </Tippy>
             )}
             {props.type === 'value' && (
-                <Tippy content={props.data.label ?? 'Error'}>
+                <Tippy content={props.data.label ?? 'Empty'}>
                     <ValueCell>{props.data.label}</ValueCell>
                 </Tippy>
             )}

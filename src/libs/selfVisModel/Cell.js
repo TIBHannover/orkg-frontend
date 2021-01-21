@@ -33,8 +33,8 @@ export default class Cell {
         // the type of the flag has to be determined and only one of the above applies.
 
         // some additional vars;
-        this.label = 'EMPTY';
-        this.originalLabel = 'EMPTY';
+        this.label = 'Empty';
+        this.originalLabel = 'Empty';
         this.positionContribAnchor = -1;
         this.positionPropertyAnchor = -1;
 
@@ -108,8 +108,10 @@ export default class Cell {
         if (this.propertyAnchorFlag === true) {
             this.propertyAnchor = data;
             this.positionPropertyAnchor = index;
-            this.label = data.label;
-            this.originalLabel = data.label;
+            if (data.label) {
+                this.label = data.label;
+                this.originalLabel = data.label;
+            }
         }
     };
 

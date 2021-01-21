@@ -23,7 +23,7 @@ export default class CellVE extends Component {
         super(props);
         this.selfVisModel = new SelfVisDataModel(); // this access the instance of the data (its a singleton)
 
-        let cellValue = 'undefined';
+        let cellValue = '';
         let isValid = false;
         let err = undefined;
 
@@ -43,6 +43,8 @@ export default class CellVE extends Component {
                 } else {
                     isValid = true;
                 }
+            } else {
+                err = props.data.label ? 'No mapper selected' : 'Empty cell value';
             }
         }
 
@@ -87,6 +89,8 @@ export default class CellVE extends Component {
                     this.props.data.cellValueIsValid = newValue;
                     this.setState({ cellValueIsValid: newValue, errorMessage: errorMessage });
                 }
+            } else {
+                this.setState({ cellValueIsValid: false, errorMessage: 'No mapper selected' });
             }
         }
     };
@@ -209,14 +213,14 @@ export default class CellVE extends Component {
                             <>
                                 {this.state.cellValueIsValid === true
                                     ? this.props.data.label === this.props.data.originalLabel
-                                        ? this.props.data.label
-                                        : this.props.data.originalLabel + ' >> ' + this.props.data.label
+                                        ? this.props.data.label ?? 'Empty'
+                                        : (this.props.data.originalLabel ?? 'Empty') + ' >> ' + (this.props.data.label ?? 'Empty')
                                     : 'ERROR:' +
                                       this.state.errorMessage +
                                       '  (' +
-                                      this.props.data.label +
+                                      (this.props.data.label ?? 'Empty') +
                                       ') >> original label: ' +
-                                      this.props.data.originalLabel}
+                                      (this.props.data.originalLabel ?? 'Empty')}
                                 {this.props.data.label !== this.props.data.originalLabel && (
                                     <div className="text-center">
                                         <Button size="sm" onClick={this.cellUndoChange}>
