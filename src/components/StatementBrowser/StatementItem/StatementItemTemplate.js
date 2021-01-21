@@ -51,7 +51,7 @@ export default function StatementItemTemplate(props) {
                         <div>
                             <div className="propertyLabel">
                                 <Link
-                                    to={reverse(ROUTES.PREDICATE, { id: props.property.existingPredicateId })}
+                                    to={reverse(ROUTES.PROPERTY, { id: props.property.existingPredicateId })}
                                     target={!propertiesAsLinks ? '_blank' : '_self'}
                                     className={!propertiesAsLinks ? 'text-dark' : ''}
                                 >

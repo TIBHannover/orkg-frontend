@@ -1,10 +1,12 @@
 import { Component } from 'react';
-import { Container, ListGroup, ListGroupItem } from 'reactstrap';
+import { Container, ListGroup, ListGroupItem, ButtonGroup } from 'reactstrap';
+import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import ShortRecord from 'components/ShortRecord/ShortRecord';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faSpinner, faAngleDoubleDown } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faSpinner, faAngleDoubleDown } from '@fortawesome/free-solid-svg-icons';
 import { getClasses } from 'services/backend/classes';
 import { reverse } from 'named-urls';
+import { Link } from 'react-router-dom';
 import ROUTES from 'constants/routes';
 
 export default class Classes extends Component {
@@ -51,12 +53,24 @@ export default class Classes extends Component {
     render() {
         return (
             <>
-                <Container className="d-flex mt-4 mb-4">
-                    <div className="d-flex flex-grow-1">
+                <Container className="d-flex align-items-center">
+                    <div className="d-flex flex-grow-1  mt-4 mb-4 ">
                         <h1 className="h4">View all classes</h1>
                         <div className="text-muted ml-3 mt-1">{this.state.totalElements} Class</div>
                     </div>
+                    <ButtonGroup>
+                        <RequireAuthentication
+                            component={Link}
+                            color="darkblue"
+                            size="sm"
+                            className="btn btn-darkblue btn-sm flex-shrink-0"
+                            to={ROUTES.ADD_CLASS}
+                        >
+                            <Icon icon={faPlus} /> Create class
+                        </RequireAuthentication>
+                    </ButtonGroup>
                 </Container>
+
                 <Container className="p-0">
                     <ListGroup flush className="box rounded" style={{ overflow: 'hidden' }}>
                         {this.state.classes.length > 0 && (

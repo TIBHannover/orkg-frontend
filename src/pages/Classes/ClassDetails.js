@@ -103,11 +103,23 @@ function ClassDetails(props) {
                         <Table bordered>
                             <tbody>
                                 <tr>
-                                    <th scope="row">Class ID</th>
+                                    <th scope="row">ID</th>
                                     <td> {props.match.params.id}</td>
                                 </tr>
                                 <tr>
-                                    <th scope="row">Class URI</th>
+                                    <th scope="row">Label</th>
+                                    <td>
+                                        {label ? (
+                                            label
+                                        ) : (
+                                            <i>
+                                                <small>No label</small>
+                                            </i>
+                                        )}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">URI</th>
                                     <td>
                                         <i>{uri && uri !== 'null' ? <a href={uri}>{uri}</a> : 'Not Defined'}</i>
                                     </td>

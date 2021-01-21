@@ -92,7 +92,7 @@ const ObjectStatements = props => {
                                             <Link to={reverse(ROUTES.RESOURCE, { id: statement.subject.id })}>{statement.subject.label}</Link>
                                         </td>
                                         <td>
-                                            <Link to={reverse(ROUTES.PREDICATE, { id: statement.predicate.id })}>{statement.predicate.label}</Link>
+                                            <Link to={reverse(ROUTES.PROPERTY, { id: statement.predicate.id })}>{statement.predicate.label}</Link>
                                         </td>
                                         <td>{statement.object.label}</td>
                                     </tr>

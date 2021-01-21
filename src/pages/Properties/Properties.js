@@ -1,15 +1,17 @@
 import { Component } from 'react';
 import ShortRecord from 'components/ShortRecord/ShortRecord';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faSpinner, faAngleDoubleDown } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faSpinner, faAngleDoubleDown } from '@fortawesome/free-solid-svg-icons';
 import { getPredicates } from 'services/backend/predicates';
+import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import { ButtonGroup, Container, ListGroup, ListGroupItem } from 'reactstrap';
 import { PREDICATE_TYPE_ID } from 'constants/misc';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes';
+import { Link } from 'react-router-dom';
 import HeaderSearchButton from 'components/HeaderSearchButton/HeaderSearchButton';
 
-export default class Predicates extends Component {
+export default class Properties extends Component {
     constructor(props) {
         super(props);
 
@@ -57,6 +59,15 @@ export default class Predicates extends Component {
                     <h1 className="h4 mt-4 mb-4 flex-grow-1">View all properties</h1>
                     <div className="text-muted ml-3 mt-1">{this.state.totalElements} property</div>
                     <ButtonGroup>
+                        <RequireAuthentication
+                            component={Link}
+                            color="darkblue"
+                            size="sm"
+                            className="btn btn-darkblue btn-sm flex-shrink-0"
+                            to={ROUTES.ADD_PROPERTY}
+                        >
+                            <Icon icon={faPlus} /> Create property
+                        </RequireAuthentication>
                         <HeaderSearchButton placeholder="Search properties..." type={PREDICATE_TYPE_ID} />
                     </ButtonGroup>
                 </Container>
@@ -70,7 +81,7 @@ export default class Predicates extends Component {
                                         <ShortRecord
                                             key={predicate.id}
                                             header={predicate.label}
-                                            href={reverse(ROUTES.PREDICATE, { id: predicate.id })}
+                                            href={reverse(ROUTES.PROPERTY, { id: predicate.id })}
                                         >
                                             {predicate.id}
                                         </ShortRecord>
