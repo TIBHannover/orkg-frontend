@@ -44,7 +44,7 @@ const Classes = () => {
     return (
         <>
             <Container className="d-flex align-items-center">
-                <div className="d-flex flex-grow-1  mt-4 mb-4 ">
+                <div className="d-flex flex-grow-1 mt-4 mb-4">
                     <h1 className="h4">View all classes</h1>
                     <div className="text-muted ml-3 mt-1">{totalElements} Class</div>
                 </div>
