@@ -79,7 +79,8 @@ function Comparison(props) {
         setShortLink,
         setAuthors,
         loadCreatedBy,
-        loadProvenanceInfos
+        loadProvenanceInfos,
+        loadVisualizations
     ] = useComparison({});
 
     /** adding some additional state for meta data **/
@@ -115,6 +116,7 @@ function Comparison(props) {
 
     const closeOnExport = () => {
         setShowVisualizationModal(false);
+        loadVisualizations(metaData.id);
         setReloadingFlag(!reloadingFlag);
     };
 

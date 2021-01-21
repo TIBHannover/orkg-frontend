@@ -108,6 +108,12 @@ function useComparison() {
         setPublicURL(newURL);
     };
 
+    const loadVisualizations = comparisonID => {
+        getStatementsBySubjectAndPredicate(comparisonID, PREDICATES.HAS_VISUALIZATION_DEFINITION).then(statements => {
+            const visualizations = filterObjectOfStatementsByPredicate(statements, PREDICATES.HAS_VISUALIZATION_DEFINITION, false);
+            setMetaData({ ...metaData, visualizations: visualizations });
+        });
+    };
     /**
      * Load comparison meta data and comparison config
      *
@@ -597,7 +603,8 @@ function useComparison() {
         setShortLink,
         setAuthors,
         loadCreatedBy,
-        loadProvenanceInfos
+        loadProvenanceInfos,
+        loadVisualizations
     ];
 }
 export default useComparison;
