@@ -24,7 +24,6 @@ const Papers = () => {
 
     useEffect(() => {
         document.title = 'Papers - ORKG';
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const loadMorePapers = () => {
@@ -95,27 +94,27 @@ const Papers = () => {
             <Container className="d-flex align-items-center">
                 <div className="d-flex flex-grow-1 mt-4 mb-4">
                     <h1 className="h4">View all papers</h1>
-                    <div className="text-muted ml-3 mt-1">{totalElements} Paper</div>
+                    <div className="text-muted ml-3 mt-1">
+                        {totalElements === 0 && isNextPageLoading ? <Icon icon={faSpinner} spin /> : totalElements} Paper
+                    </div>
                 </div>
-                <div>
-                    <ButtonGroup>
-                        {!!user && user.isCurationAllowed && (
-                            <ButtonDropdown size="sm" isOpen={dropdownOpen} toggle={toggle}>
-                                <DropdownToggle caret color="darkblue">
-                                    {verified === true && 'Verified'}
-                                    {verified === false && 'Unverified'}
-                                    {verified === null && 'All'}
-                                </DropdownToggle>
-                                <DropdownMenu>
-                                    <DropdownItem onClick={e => changeFilter(null)}>All</DropdownItem>
-                                    <DropdownItem onClick={e => changeFilter(true)}>Verified</DropdownItem>
-                                    <DropdownItem onClick={e => changeFilter(false)}>Unverified</DropdownItem>
-                                </DropdownMenu>
-                            </ButtonDropdown>
-                        )}
-                        {verified === null && <HeaderSearchButton placeholder="Search papers..." type={CLASSES.PAPER} />}
-                    </ButtonGroup>
-                </div>
+                <ButtonGroup>
+                    {!!user && user.isCurationAllowed && (
+                        <ButtonDropdown size="sm" isOpen={dropdownOpen} toggle={toggle}>
+                            <DropdownToggle caret color="darkblue">
+                                {verified === true && 'Verified'}
+                                {verified === false && 'Unverified'}
+                                {verified === null && 'All'}
+                            </DropdownToggle>
+                            <DropdownMenu>
+                                <DropdownItem onClick={e => changeFilter(null)}>All</DropdownItem>
+                                <DropdownItem onClick={e => changeFilter(true)}>Verified</DropdownItem>
+                                <DropdownItem onClick={e => changeFilter(false)}>Unverified</DropdownItem>
+                            </DropdownMenu>
+                        </ButtonDropdown>
+                    )}
+                    {verified === null && <HeaderSearchButton placeholder="Search papers..." type={CLASSES.PAPER} />}
+                </ButtonGroup>
             </Container>
             <Container className="p-0">
                 <ListGroup flush className="box rounded" style={{ overflow: 'hidden' }}>
