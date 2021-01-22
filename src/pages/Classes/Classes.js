@@ -32,11 +32,11 @@ const Classes = () => {
             sortBy: 'created_at',
             desc: true
         }).then(result => {
-            setClasses([...classes, ...result.content]);
+            setClasses(prevClasses => [...prevClasses, ...result.content]);
             setIsNextPageLoading(false);
             setHasNextPage(!result.last);
             setIsLastPageReached(result.last);
-            setPage(page + 1);
+            setPage(prevPage => prevPage + 1);
             setTotalElements(result.totalElements);
         });
     };
@@ -94,7 +94,7 @@ const Classes = () => {
                             <Icon icon={faAngleDoubleDown} /> Load more classes
                         </ListGroupItem>
                     )}
-                    {!hasNextPage && isLastPageReached && (
+                    {!hasNextPage && isLastPageReached && totalElements !== 0 && (
                         <ListGroupItem tag="div" className="text-center">
                             You have reached the last page.
                         </ListGroupItem>

@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { useState, useEffect } from 'react';
 import { ButtonDropdown, DropdownToggle, Container, ListGroup, ListGroupItem, DropdownItem, DropdownMenu, ButtonGroup } from 'reactstrap';
 import { getStatementsBySubjects } from 'services/backend/statements';
 import { getResourcesByClass } from 'services/backend/resources';
@@ -6,186 +6,154 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner, faAngleDoubleDown } from '@fortawesome/free-solid-svg-icons';
 import PaperCardDynamic from 'components/PaperCard/PaperCardDynamic';
 import { CLASSES } from 'constants/graphSettings';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
 import HeaderSearchButton from 'components/HeaderSearchButton/HeaderSearchButton';
 
-class Papers extends Component {
-    constructor(props) {
-        super(props);
+const Papers = () => {
+    const pageSize = 25;
+    const [dropdownOpen, setDropdownOpen] = useState(false);
+    const [verified, setVerified] = useState(null);
+    const [statements, setStatements] = useState([]);
+    const [paperResources, setPaperResources] = useState([]);
+    const [isNextPageLoading, setIsNextPageLoading] = useState(false);
+    const [hasNextPage, setHasNextPage] = useState(false);
+    const [page, setPage] = useState(0);
+    const [isLastPageReached, setIsLastPageReached] = useState(false);
+    const [totalElements, setTotalElements] = useState(0);
+    const user = useSelector(state => state.auth.user);
 
-        this.pageSize = 25;
-        this.componentIsMounted = false;
-
-        this.state = {
-            dropdownOpen: false,
-            verified: null,
-            statements: [],
-            paperResources: [],
-            isNextPageLoading: false,
-            hasNextPage: false,
-            page: 0,
-            isLastPageReached: false
-        };
-    }
-
-    componentDidMount() {
+    useEffect(() => {
         document.title = 'Papers - ORKG';
-        this.componentIsMounted = true;
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
-        this.loadMorePapers();
-    }
-    componentWillUnmount() {
-        this.componentIsMounted = false;
-    }
-
-    loadMorePapers = () => {
-        this.setState({ isNextPageLoading: true });
+    const loadMorePapers = () => {
+        setIsNextPageLoading(true);
         getResourcesByClass({
             id: CLASSES.PAPER,
-            page: this.state.page,
-            items: this.pageSize,
+            page: page,
+            items: pageSize,
             sortBy: 'created_at',
             desc: true,
-            verified: this.state.verified,
-            returnContent: true
-        }).then(papers => {
-            if (papers.length > 0) {
-                // update paper resources for paperCards preview
-                this.setState({
-                    paperResources: [...this.state.paperResources, ...papers],
-                    isNextPageLoading: false,
-                    page: this.state.page + 1,
-                    hasNextPage: papers.length < this.pageSize ? false : true
-                });
-
-                // Fetch the data of each paper
-                this.fetchDataForPapers(papers);
-            }
+            verified: verified
+        }).then(result => {
+            // update paper resources for paperCards preview
+            setPaperResources(prevPaperResources => [...prevPaperResources, ...result.content]);
+            setIsNextPageLoading(false);
+            setHasNextPage(!result.last);
+            setPage(prevPage => prevPage + 1);
+            setIsLastPageReached(result.last);
+            setTotalElements(result.totalElements);
+            // Fetch the data of each paper
+            fetchDataForPapers(result.content);
         });
     };
 
-    fetchDataForPapers = papers => {
+    const fetchDataForPapers = papers => {
         if (papers.length > 0) {
             // Fetch the data of each paper
             getStatementsBySubjects({ ids: papers.map(p => p.id) })
-                .then(papersStatements => {
-                    if (this.componentIsMounted) {
-                        // prevents to update the state when component is not mounted!
-                        this.setState({
-                            statements: [...this.state.statements, ...papersStatements],
-                            isNextPageLoading: false
-                        });
-                    }
+                .then(result => {
+                    // prevents to update the state when component is not mounted!
+                    setStatements(prevStatements => [...prevStatements, ...result]);
+                    setIsNextPageLoading(false);
                 })
                 .catch(error => {
-                    this.setState({
-                        isNextPageLoading: false,
-                        hasNextPage: false,
-                        isLastPageReached: true
-                    });
+                    setIsLastPageReached(true);
+                    setHasNextPage(false);
+                    setIsNextPageLoading(false);
                     console.log(error);
                 });
         } else {
-            this.setState({
-                isNextPageLoading: false,
-                hasNextPage: false,
-                isLastPageReached: true
-            });
+            setIsLastPageReached(true);
+            setHasNextPage(false);
+            setIsNextPageLoading(false);
         }
     };
 
-    renderPaperCards = () => {
-        return this.state.paperResources.map((paper, index) => {
-            const paperCardData = this.state.statements.find(({ id }) => id === paper.id);
-            return this.getPaperCard(paper, paperCardData);
-        });
+    useEffect(() => {
+        loadMorePapers();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [verified]);
+
+    const toggle = () => {
+        setDropdownOpen(!dropdownOpen);
     };
 
-    getPaperCard = (paper, paperData) => {
-        return <PaperCardDynamic paper={{ title: paper.label, id: paper.id, paperData: paperData }} key={`pc${paper.id}`} />;
+    const changeFilter = filter => {
+        setVerified(filter);
+        setPage(0);
+        setPaperResources([]);
+        setStatements([]);
+        setIsNextPageLoading(false);
+        setHasNextPage(false);
+        setIsLastPageReached(false);
     };
 
-    setVerifiedFilter = value => {
-        this.setState(
-            { verified: value, page: 1, statements: [], paperResources: [], isNextPageLoading: false, hasNextPage: false, isLastPageReached: false },
-            () => {
-                this.loadMorePapers();
-            }
-        );
-    };
-
-    toggle = () => {
-        this.setState({ dropdownOpen: !this.state.dropdownOpen });
-    };
-
-    render() {
-        return (
-            <>
-                <Container className="d-flex align-items-center">
-                    <h1 className="h4 mt-4 mb-4 flex-grow-1">View all papers</h1>
-                    <div className="flex-shrink-0">
-                        <ButtonGroup>
-                            {!!this.props.user && this.props.user.isCurationAllowed && (
-                                <ButtonDropdown size="sm" isOpen={this.state.dropdownOpen} toggle={this.toggle}>
-                                    <DropdownToggle caret color="darkblue">
-                                        {this.state.verified === true && 'Verified'}
-                                        {this.state.verified === false && 'Unverified'}
-                                        {this.state.verified === null && 'All'}
-                                    </DropdownToggle>
-                                    <DropdownMenu>
-                                        <DropdownItem onClick={e => this.setVerifiedFilter(null)}>All</DropdownItem>
-                                        <DropdownItem onClick={e => this.setVerifiedFilter(true)}>Verified</DropdownItem>
-                                        <DropdownItem onClick={e => this.setVerifiedFilter(false)}>Unverified</DropdownItem>
-                                    </DropdownMenu>
-                                </ButtonDropdown>
-                            )}
-                            {this.state.verified === null && <HeaderSearchButton placeholder="Search papers..." type={CLASSES.PAPER} />}
-                        </ButtonGroup>
-                    </div>
-                </Container>
-                <Container className="p-0">
-                    <ListGroup flush className="box rounded" style={{ overflow: 'hidden' }}>
-                        {this.state.paperResources.length > 0 && this.renderPaperCards()}
-                        {this.state.paperResources.length === 0 && !this.state.isNextPageLoading && (
-                            <ListGroupItem tag="div" className="text-center">
-                                No Papers
-                            </ListGroupItem>
+    return (
+        <>
+            <Container className="d-flex align-items-center">
+                <div className="d-flex flex-grow-1 mt-4 mb-4">
+                    <h1 className="h4">View all papers</h1>
+                    <div className="text-muted ml-3 mt-1">{totalElements} Paper</div>
+                </div>
+                <div>
+                    <ButtonGroup>
+                        {!!user && user.isCurationAllowed && (
+                            <ButtonDropdown size="sm" isOpen={dropdownOpen} toggle={toggle}>
+                                <DropdownToggle caret color="darkblue">
+                                    {verified === true && 'Verified'}
+                                    {verified === false && 'Unverified'}
+                                    {verified === null && 'All'}
+                                </DropdownToggle>
+                                <DropdownMenu>
+                                    <DropdownItem onClick={e => changeFilter(null)}>All</DropdownItem>
+                                    <DropdownItem onClick={e => changeFilter(true)}>Verified</DropdownItem>
+                                    <DropdownItem onClick={e => changeFilter(false)}>Unverified</DropdownItem>
+                                </DropdownMenu>
+                            </ButtonDropdown>
                         )}
-                        {this.state.isNextPageLoading && (
-                            <ListGroupItem tag="div" className="text-center">
-                                <Icon icon={faSpinner} spin /> Loading
-                            </ListGroupItem>
-                        )}
-                        {!this.state.isNextPageLoading && this.state.hasNextPage && (
-                            <ListGroupItem
-                                style={{ cursor: 'pointer' }}
-                                action
-                                className="text-center"
-                                tag="div"
-                                onClick={!this.state.isNextPageLoading ? this.loadMorePapers : undefined}
-                            >
-                                <Icon icon={faAngleDoubleDown} /> Load more papers
-                            </ListGroupItem>
-                        )}
-                        {!this.state.hasNextPage && this.state.isLastPageReached && (
-                            <ListGroupItem tag="div" className="text-center">
-                                You have reached the last page.
-                            </ListGroupItem>
-                        )}
-                    </ListGroup>
-                </Container>
-            </>
-        );
-    }
-}
-
-const mapStateToProps = state => ({
-    user: state.auth.user
-});
-
-Papers.propTypes = {
-    user: PropTypes.oneOfType([PropTypes.object, PropTypes.number])
+                        {verified === null && <HeaderSearchButton placeholder="Search papers..." type={CLASSES.PAPER} />}
+                    </ButtonGroup>
+                </div>
+            </Container>
+            <Container className="p-0">
+                <ListGroup flush className="box rounded" style={{ overflow: 'hidden' }}>
+                    {paperResources.length > 0 &&
+                        paperResources.map(paper => {
+                            const paperCardData = statements.find(({ id }) => id === paper.id);
+                            return <PaperCardDynamic paper={{ title: paper.label, id: paper.id, paperData: paperCardData }} key={`pc${paper.id}`} />;
+                        })}
+                    {totalElements === 0 && !isNextPageLoading && (
+                        <ListGroupItem tag="div" className="text-center p-4">
+                            No Papers
+                        </ListGroupItem>
+                    )}
+                    {isNextPageLoading && (
+                        <ListGroupItem tag="div" className="text-center">
+                            <Icon icon={faSpinner} spin /> Loading
+                        </ListGroupItem>
+                    )}
+                    {!isNextPageLoading && hasNextPage && (
+                        <ListGroupItem
+                            style={{ cursor: 'pointer' }}
+                            action
+                            className="text-center"
+                            tag="div"
+                            onClick={!isNextPageLoading ? loadMorePapers : undefined}
+                        >
+                            <Icon icon={faAngleDoubleDown} /> Load more papers
+                        </ListGroupItem>
+                    )}
+                    {!hasNextPage && isLastPageReached && totalElements !== 0 && (
+                        <ListGroupItem tag="div" className="text-center">
+                            You have reached the last page.
+                        </ListGroupItem>
+                    )}
+                </ListGroup>
+            </Container>
+        </>
+    );
 };
 
-export default connect(mapStateToProps)(Papers);
+export default Papers;

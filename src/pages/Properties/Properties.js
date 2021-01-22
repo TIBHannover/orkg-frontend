@@ -34,11 +34,11 @@ const Properties = () => {
             sortBy: 'created_at',
             desc: true
         }).then(result => {
-            setProperties([...properties, ...result.content]);
+            setProperties(prevProperties => [...prevProperties, ...result.content]);
             setIsNextPageLoading(false);
             setHasNextPage(!result.last);
             setIsLastPageReached(result.last);
-            setPage(page + 1);
+            setPage(prevPage => prevPage + 1);
             setTotalElements(result.totalElements);
         });
     };
@@ -72,7 +72,7 @@ const Properties = () => {
                         </div>
                     )}
                     {totalElements === 0 && !isNextPageLoading && (
-                        <ListGroupItem tag="div" className="text-center">
+                        <ListGroupItem tag="div" className="text-center p-4">
                             No properties
                         </ListGroupItem>
                     )}
@@ -91,7 +91,7 @@ const Properties = () => {
                             <Icon icon={faAngleDoubleDown} /> Load more properties
                         </ListGroupItem>
                     )}
-                    {!hasNextPage && isLastPageReached && (
+                    {!hasNextPage && isLastPageReached && totalElements !== 0 && (
                         <ListGroupItem tag="div" className="text-center">
                             You have reached the last page.
                         </ListGroupItem>
