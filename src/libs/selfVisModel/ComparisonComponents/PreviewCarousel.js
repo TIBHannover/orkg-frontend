@@ -111,7 +111,12 @@ export default class PreviewCarouselComponent extends Component {
                     style={{ display: 'flex', width: '100%', overflowX: 'hidden' }}
                     onScroll={() => this.executeUpdates()}
                     onWheel={event => {
-                        this.executeWheelEvent(event);
+                        /** event stopPropagation/ event preventDefault is broken in react v 17 **/
+                        // the executeWheel event function should check if we need to scroll within the area or window.
+                        // when scrolling in area it should prevent the scroll event in the window.
+                        // preventing does not happen atm
+                        // >>> FUNCTION CALL commented out <<<
+                        // this.executeWheelEvent(event);
                     }}
                 >
                     {this.props.children}
