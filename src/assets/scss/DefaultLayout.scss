@@ -163,6 +163,7 @@ body {
 // Tippy
 .tippy-box[data-theme~='visualizationPreview'] {
     background-color: #fff;
+    color: $body-color;
     border: 1px solid $primary;
 }
 .tippy-box[data-theme~='visualizationPreview'] .tippy-content {
