@@ -105,7 +105,6 @@ function Comparison(props) {
     const [showExportCitationsDialog, setShowExportCitationsDialog] = useState(false);
     const [showVisualizationModal, setShowVisualizationModal] = useState(false);
     const [applyReconstruction, setUseReconstructedData] = useState(false);
-    const [reloadingSizeFlag, setReloadingSizeFlag] = useState(false);
     /**
      * Is case of an error the user can go to the previous link in history
      */
@@ -123,20 +122,9 @@ function Comparison(props) {
         setHideScrollHint(true);
     };
 
-    const timedSizeValidation = () => {
-        // Quick and Dirty, Todo: check when the expand animation is finished and then set tell the preview to update
-        setTimeout(() => {
-            setReloadingSizeFlag(!reloadingSizeFlag);
-        }, 700);
-    };
-
     const handleFullWidth = () => {
         setFullWidth(v => {
             setCookie('useFullWidthForComparisonTable', !v, { path: env('PUBLIC_URL'), maxAge: 315360000 }); // << TEN YEARS
-
-            // tell the previewComponent to check for its size
-            timedSizeValidation();
-
             return !v;
         });
     };
@@ -421,7 +409,6 @@ function Comparison(props) {
                                         <PreviewVisualizationComparison
                                             comparisonId={metaData.id}
                                             expandVisualization={expandVisualization}
-                                            reloadingSizeFlag={reloadingSizeFlag}
                                             visualizations={metaData.visualizations}
                                         />
                                     )}

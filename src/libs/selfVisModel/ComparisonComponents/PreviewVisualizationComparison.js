@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { getStatementsBySubjects } from 'services/backend/statements';
 import { getVisualization } from 'services/similarity/index';
 import SingleVisualizationComponent from './SingleVisualizationComponent';
-import PreviewCarouselComponent from './PreviewCarousel';
+import PreviewCarouselComponent from './PreviewCarouselComponent';
 import ContentLoader from 'react-content-loader';
 import { getVisualizationData } from 'utils';
 import { find } from 'lodash';
@@ -65,7 +65,7 @@ function PreviewVisualizationComparison(props) {
     return (
         <div>
             {!isLoading && visData && visData.length > 0 && (
-                <PreviewCarouselComponent ref={carouselRef} reloadingSizeFlag={props.reloadingSizeFlag}>
+                <PreviewCarouselComponent innerRef={carouselRef}>
                     {visData.map((data, index) => {
                         return (
                             <SingleVisualizationComponent
@@ -104,7 +104,6 @@ function PreviewVisualizationComparison(props) {
 
 PreviewVisualizationComparison.propTypes = {
     comparisonId: PropTypes.string,
-    reloadingSizeFlag: PropTypes.bool,
     expandVisualization: PropTypes.func,
     visualizations: PropTypes.array
 };
