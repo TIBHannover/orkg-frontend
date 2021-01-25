@@ -1,19 +1,20 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faArrowCircleLeft, faArrowCircleRight } from '@fortawesome/free-solid-svg-icons';
 import useResizeObserver from 'use-resize-observer';
 import PropTypes from 'prop-types';
 
 const PreviewCarouselComponent = props => {
+    const carouselRef = useRef(null);
     const [showArrowLeft, setShowArrowLeft] = useState(false);
     const [showArrowRight, setShowArrowRight] = useState(false);
     // can't use 'useMeasure' from 'react-use' because it doesn't allow setting a custom ref,
     // once merged: https://github.com/streamich/react-use/pull/1516, probably we can use that instead of use-resize-observer
-    const { width: scrollContainerBodyWidth } = useResizeObserver({ ref: props.innerRef });
+    const { width: scrollContainerBodyWidth } = useResizeObserver({ ref: carouselRef });
     const childWidth = 215;
 
     const executeUpdates = () => {
-        const item = props.innerRef.current;
+        const item = carouselRef.current;
         const areaWidth = item.scrollWidth;
         const clientWidth = item.clientWidth;
         const left = item.scrollLeft;
@@ -34,7 +35,7 @@ const PreviewCarouselComponent = props => {
     };
 
     const handleScrollLeft = () => {
-        const item = props.innerRef.current;
+        const item = carouselRef.current;
         item.scrollTo({
             top: 0,
             left: item.scrollLeft - childWidth,
@@ -42,7 +43,7 @@ const PreviewCarouselComponent = props => {
         });
     };
     const handleScrollRight = () => {
-        const item = props.innerRef.current;
+        const item = carouselRef.current;
         item.scrollTo({
             top: 0,
             left: item.scrollLeft + childWidth,
@@ -65,7 +66,7 @@ const PreviewCarouselComponent = props => {
     };
 
     useEffect(() => {
-        const el = props.innerRef.current;
+        const el = carouselRef.current;
         if (el) {
             el.executeUpdates = executeUpdates;
             // add resize event
@@ -88,7 +89,12 @@ const PreviewCarouselComponent = props => {
     return (
         <div style={{ paddingTop: '10px', height: '200px' }}>
             <h2 className="h5 mb-2 mt-2">Visualizations</h2>
-            <div ref={props.innerRef} id="PreviewCarouselContainer" style={{ display: 'flex', width: '100%', overflowX: 'hidden' }}>
+            <div
+                onScroll={() => executeUpdates()}
+                ref={carouselRef}
+                id="PreviewCarouselContainer"
+                style={{ display: 'flex', width: '100%', overflowX: 'hidden' }}
+            >
                 {props.children}
             </div>
             <div style={{ display: 'block', height: '35px' }}>
@@ -118,8 +124,7 @@ const PreviewCarouselComponent = props => {
 };
 
 PreviewCarouselComponent.propTypes = {
-    children: PropTypes.any,
-    innerRef: PropTypes.any
+    children: PropTypes.any
 };
 
 export default PreviewCarouselComponent;

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { useState, useEffect } from 'react';
 import { Chart } from 'react-google-charts';
 import styled from 'styled-components';
 import Tippy from '@tippyjs/react';
@@ -21,128 +21,102 @@ const DescriptionHeader = styled.div`
     height: 32px;
 `;
 
-class SingleVisualizationComponent extends Component {
-    constructor(props) {
-        super(props);
-        // get window dimensions to set the fullWidget into the center of the screen.
-        const width = this.getAvailableWidth();
-        this.state = {
-            isHovering: false,
-            renderingData: undefined,
-            windowHeight: 0.5 * window.innerHeight,
-            windowWidth: 0.8 * width
-        };
-
-        this.selfVisModel = new SelfVisDataModel();
-    }
-
-    componentDidMount() {
-        const renderingData = this.selfVisModel.applyReconstructionModel(this.props.input.reconstructionModel);
-        this.setState({ renderingData: renderingData });
-    }
-
-    componentDidUpdate = prevProps => {
-        if (this.props.input.reconstructionModel.orkgOrigin !== prevProps.input.reconstructionModel.orkgOrigin) {
-            // we need to check if the data input for this component has changed iff then apply reconstructionModel)
-            const renderingData = this.selfVisModel.applyReconstructionModel(this.props.input.reconstructionModel);
-            this.setState({ renderingData: renderingData });
-        }
-        // ensure on hovering that the scrollarea state is always correct
-        this.props.propagateUpdate();
-    };
-
-    getAvailableWidth = () => {
+const SingleVisualizationComponent = props => {
+    const getAvailableWidth = () => {
         const item = document.getElementById('PreviewCarouselContainer');
         return item?.clientWidth;
     };
 
+    // get window dimensions to set the fullWidget into the center of the screen.
+    const width = getAvailableWidth();
+
+    const [isHovering, setIsHovering] = useState(false);
+    const [renderingData, setRenderingData] = useState(undefined);
+    const [windowHeight, setWindowHeight] = useState(0.5 * window.innerHeight);
+    const [windowWidth, setWindowWidth] = useState(0.8 * width);
+    const [selfVisModel] = useState(new SelfVisDataModel());
+
     /** hover over a preview card handler -- currently disabled **/
-    handleMouseEnter = () => {
+    const handleMouseEnter = () => {
         // get window dimensions to set the fullWidget into the center of the screen.
-        const width = this.getAvailableWidth();
-        this.setState({ isHovering: true, windowHeight: 0.4 * window.innerHeight, windowWidth: 0.8 * width });
+        const width = getAvailableWidth();
+        setIsHovering(true);
+        setWindowHeight(0.4 * window.innerHeight);
+        setWindowWidth(0.8 * width);
     };
-    handleMouseLeave = () => {
-        this.setState({ isHovering: false });
+    const handleMouseLeave = () => {
+        setIsHovering(false);
     };
 
-    /** component rendering entrance point **/
-    render() {
-        const visMethod = this.props.input.reconstructionModel.data.visMethod;
-        return (
-            <>
-                <Tippy
-                    onShow={this.handleMouseEnter}
-                    onHide={this.handleMouseLeave}
-                    interactive={true}
-                    placement="bottom"
-                    theme="visualizationPreview"
-                    maxWidth={this.state.windowWidth}
-                    content={
-                        <div
-                            index={this.props.itemIndex}
-                            style={{
-                                overflow: 'hidden',
-                                borderRadius: '4px',
-                                width: this.state.windowWidth - 20 + 'px',
-                                height: this.state.windowHeight + 'px'
-                            }}
-                        >
-                            <DescriptionHeader>
-                                {this.props.input.label.length > 0 ? 'Title: ' + this.props.input.label + ' | ' : ''}
-                                {this.props.input.description.length > 0 ? 'Description: ' + this.props.input.description : ''}
-                                {this.props.input.description.length === 0 &&
-                                    this.props.input.label.length === 0 &&
-                                    'No title and no description available'}
-                            </DescriptionHeader>
-                            {this.state.isHovering && (
-                                <Chart
-                                    chartType={visMethod}
-                                    data={this.state.renderingData}
-                                    width={this.state.windowWidth - 20 + 'px'}
-                                    height={this.state.windowHeight + 'px'}
-                                    options={{
-                                        showRowNumber: true,
-                                        width: '100%'
-                                    }}
-                                />
-                            )}
-                            {!this.state.isHovering && (
-                                <div style={{ width: this.state.windowWidth - 20 + 'px', height: this.state.windowHeight - 50 + 'px' }} />
-                            )}
-                        </div>
-                    }
+    const visMethod = props.input.reconstructionModel.data.visMethod;
+
+    useEffect(() => {
+        // we need to check if the data input for this component has changed iff then apply reconstructionModel)
+        const renderingData = selfVisModel.applyReconstructionModel(props.input.reconstructionModel);
+        setRenderingData(renderingData);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [props.input.reconstructionModel.orkgOrigin]);
+
+    return (
+        <Tippy
+            onShow={handleMouseEnter}
+            onHide={handleMouseLeave}
+            interactive={true}
+            placement="bottom"
+            theme="visualizationPreview"
+            maxWidth={windowWidth}
+            content={
+                <div
+                    index={props.itemIndex}
+                    style={{
+                        overflow: 'hidden',
+                        borderRadius: '4px',
+                        width: windowWidth - 20 + 'px',
+                        height: windowHeight + 'px'
+                    }}
                 >
-                    <VisualizationCard
-                        onClick={() => {
-                            this.selfVisModel.applyReconstructionModel(this.props.input.reconstructionModel);
-                            this.props.expandVisualization(true);
-                        }}
-                        isHovered={this.state.isHovering}
-                    >
-                        <div style={{ padding: '5px', pointerEvents: 'none', minWidth: '200px', minHeight: '100px' }}>
-                            {this.state.renderingData && (
-                                <Chart
-                                    chartType={visMethod}
-                                    data={this.state.renderingData}
-                                    width="200px"
-                                    height="100px"
-                                    options={{ showRowNumber: true }}
-                                />
-                            )}
-                        </div>
-                    </VisualizationCard>
-                </Tippy>
-            </>
-        );
-    }
-}
+                    <DescriptionHeader>
+                        {props.input.label.length > 0 ? 'Title: ' + props.input.label + ' | ' : ''}
+                        {props.input.description.length > 0 ? 'Description: ' + props.input.description : ''}
+                        {props.input.description.length === 0 && props.input.label.length === 0 && 'No title and no description available'}
+                    </DescriptionHeader>
+                    {isHovering && (
+                        <Chart
+                            chartType={visMethod}
+                            data={renderingData}
+                            width={windowWidth - 20 + 'px'}
+                            height={windowHeight + 'px'}
+                            options={{
+                                showRowNumber: true,
+                                width: '100%'
+                            }}
+                        />
+                    )}
+                    {!isHovering && <div style={{ width: windowWidth - 20 + 'px', height: windowHeight - 50 + 'px' }} />}
+                </div>
+            }
+        >
+            <VisualizationCard
+                onClick={() => {
+                    selfVisModel.applyReconstructionModel(props.input.reconstructionModel);
+                    props.expandVisualization(true);
+                }}
+                isHovered={isHovering}
+            >
+                <div style={{ padding: '5px', pointerEvents: 'none', minWidth: '200px', minHeight: '100px' }}>
+                    {renderingData && (
+                        <Chart chartType={visMethod} data={renderingData} width="200px" height="100px" options={{ showRowNumber: true }} />
+                    )}
+                </div>
+            </VisualizationCard>
+        </Tippy>
+    );
+};
 
 SingleVisualizationComponent.propTypes = {
     input: PropTypes.object,
     itemIndex: PropTypes.number,
-    expandVisualization: PropTypes.func,
-    propagateUpdate: PropTypes.func
+    expandVisualization: PropTypes.func
 };
 
 export default SingleVisualizationComponent;

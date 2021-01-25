@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { getStatementsBySubjects } from 'services/backend/statements';
 import { getVisualization } from 'services/similarity/index';
 import SingleVisualizationComponent from './SingleVisualizationComponent';
@@ -11,15 +11,6 @@ import PropTypes from 'prop-types';
 function PreviewVisualizationComparison(props) {
     const [isLoading, setIsLoading] = useState(false);
     const [visData, setVisData] = useState([]);
-    const carouselRef = useRef(null);
-
-    const updateHandler = () => {
-        // ensure that the carousel executes the logic for scroll area functions;
-        if (carouselRef.current) {
-            // timed function (quick and dirty)
-            setTimeout(carouselRef.current.executeUpdates, 300);
-        }
-    };
 
     const fetchVisualizationData = () => {
         if (props.visualizations && props.visualizations.length) {
@@ -45,7 +36,6 @@ function PreviewVisualizationComparison(props) {
                 const visDataObjects = result[0].filter(v => v.reconstructionModel);
                 setIsLoading(false);
                 setVisData(visDataObjects);
-                updateHandler();
             });
         } else {
             setIsLoading(false);
@@ -65,7 +55,7 @@ function PreviewVisualizationComparison(props) {
     return (
         <div>
             {!isLoading && visData && visData.length > 0 && (
-                <PreviewCarouselComponent innerRef={carouselRef}>
+                <PreviewCarouselComponent>
                     {visData.map((data, index) => {
                         return (
                             <SingleVisualizationComponent
@@ -73,12 +63,6 @@ function PreviewVisualizationComparison(props) {
                                 input={data}
                                 itemIndex={index}
                                 expandVisualization={props.expandVisualization}
-                                propagateUpdate={() => {
-                                    if (carouselRef.current) {
-                                        // ensures that on some update the scrollarea is checked
-                                        carouselRef.current.executeUpdates();
-                                    }
-                                }}
                             />
                         );
                     })}
