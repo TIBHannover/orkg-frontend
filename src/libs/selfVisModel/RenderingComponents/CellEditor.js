@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { useState } from 'react';
 import { Alert } from 'reactstrap';
 // TODO: add mouse area selection from :  import Selection from '@simonwep/selection-js';
 import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
@@ -6,23 +6,20 @@ import CellVE from './CellVE';
 import DropDownMapperSelector from './DropdownMapperSelector';
 import PropTypes from 'prop-types';
 
-export default class CellEditor extends Component {
-    constructor(props) {
-        super(props);
-        this.selfVisModel = new SelfVisDataModel(); // this access the instance of the data (its a singleton)
-        this.state = { updateFlipFlop: false };
-    }
+const CellEditor = props => {
+    const [selfVisModel] = useState(new SelfVisDataModel());
+    const [, setUpdateFlipFlop] = useState(false);
 
-    validationCallback = () => {
+    const validationCallback = () => {
         // this is used to trigger the re-rendering of the cells which will then validate them on update;
-        this.setState({ updateFlipFlop: !this.state.updateFlipFlop });
+        setUpdateFlipFlop(prevUpdateFlipFlop => !prevUpdateFlipFlop);
     };
 
     /** Rendering functions for the frame (headers for rows and cols ) **/
-    createTable = () => {
-        const filteredProperties = this.selfVisModel.mrrModel.propertyAnchors.filter(item => item.isSelectedColumnForUse === true);
+    const createTable = () => {
+        const filteredProperties = selfVisModel.mrrModel.propertyAnchors.filter(item => item.isSelectedColumnForUse === true);
         const renderingDimX = filteredProperties.length + 1;
-        const filteredContribs = this.selfVisModel.mrrModel.contributionAnchors.filter(item => item.isSelectedRowForUse === true);
+        const filteredContribs = selfVisModel.mrrModel.contributionAnchors.filter(item => item.isSelectedRowForUse === true);
         const renderingDimY = filteredContribs.length + 1;
 
         const itemsToRender = [];
@@ -39,7 +36,7 @@ export default class CellEditor extends Component {
                         const propertyItem = filteredProperties[j - 1];
                         rowArray.push(
                             <CellVE key={keyVal} type="metaNodeSelectorSimple" data={null}>
-                                <DropDownMapperSelector key={keyVal + 'dropdown'} data={propertyItem} callBack={this.validationCallback} />
+                                <DropDownMapperSelector key={keyVal + 'dropdown'} data={propertyItem} callBack={validationCallback} />
                             </CellVE>
                         );
                     }
@@ -66,7 +63,7 @@ export default class CellEditor extends Component {
                     const contribItem = filteredContribs[i - 1];
                     const rowIndex = contribItem.positionContribAnchor;
                     const colIndex = propertyItem.positionPropertyAnchor;
-                    rowArray.push(<CellVE key={keyVal} type="value" data={this.selfVisModel.modelAccess.getItem(rowIndex, colIndex)} />);
+                    rowArray.push(<CellVE key={keyVal} type="value" data={selfVisModel.modelAccess.getItem(rowIndex, colIndex)} />);
                 }
             }
 
@@ -80,22 +77,21 @@ export default class CellEditor extends Component {
         return itemsToRender;
     };
 
-    /** component rendering entrance point **/
-    render() {
-        return (
-            <div className="pt-2">
-                <Alert color="info" fade={false}>
-                    Optionally edit cells values, valid entries are displayed in green
-                </Alert>
-                <div style={{ height: this.props.height + 'px', overflow: 'auto' }}>
-                    {this.props.isLoading ? <div>Loading...</div> : <div>{this.createTable()} </div>}
-                </div>
+    return (
+        <div className="pt-2">
+            <Alert color="info" fade={false}>
+                Optionally edit cells values, valid entries are displayed in green
+            </Alert>
+            <div style={{ height: props.height + 'px', overflow: 'auto' }}>
+                {props.isLoading ? <div>Loading...</div> : <div>{createTable()} </div>}
             </div>
-        );
-    }
-}
+        </div>
+    );
+};
 
 CellEditor.propTypes = {
     isLoading: PropTypes.bool,
     height: PropTypes.number
 };
+
+export default CellEditor;
