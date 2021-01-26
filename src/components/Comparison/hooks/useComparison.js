@@ -16,7 +16,7 @@ import {
 import { useParams, useLocation, useHistory } from 'react-router-dom';
 import { PREDICATES, CLASSES, MISC } from 'constants/graphSettings';
 import { reverse } from 'named-urls';
-import { flattenDepth } from 'lodash';
+import { flattenDepth, flatten, groupBy, intersection } from 'lodash';
 import arrayMove from 'array-move';
 import ROUTES from 'constants/routes.js';
 import queryString from 'query-string';
@@ -61,8 +61,12 @@ function useComparison() {
     const [authors, setAuthors] = useState([]);
     const [contributions, setContributions] = useState([]);
     const [data, setData] = useState({});
+    const [controllData, setControllData] = useState([]);
     const [errors, setErrors] = useState([]);
     const [matrixData, setMatrixData] = useState([]);
+
+    const [rulesChanaged, setRulesChanaged] = useState(false);
+    const [showRules, setShowRules] = useState(false);
 
     const [hasNextVersions, setHasNextVersions] = useState([]);
     const [createdBy, setCreatedBy] = useState(null);
@@ -304,6 +308,141 @@ function useComparison() {
 
         return comparisonData.properties;
     };
+    /********************** */
+
+    const generateControllData = (contributions, properties, data) => {
+        const contributionIdIndex = contributions.map(item => item.id);
+        const getcontributionIndex = contributionId => contributionIdIndex.findIndex(conid => conid === contributionId);
+        const getPropertyValueByIdAndContrID = (propertyId, contributionId) => {
+            return data[propertyId][getcontributionIndex(contributionId)][0].label;
+        };
+        return [
+            ...properties
+                .filter(property => property.active && data[property.id])
+                .map(property => {
+                    return {
+                        property,
+                        rules: [],
+                        values: groupBy(
+                            flatten(
+                                contributions.map((_, index) => data[property.id][index]).filter(([first]) => Object.keys(first).length !== 0)
+                            ).map(({ path }) => path[0]),
+                            val => getPropertyValueByIdAndContrID(property.id, val)
+                        )
+                    };
+                })
+        ];
+    };
+    const getValuesByPropertyLabel = inputId => controllData.find(item => item.property.id === inputId);
+
+    //**rules Setter and getter */
+    const updateRules = (newRules, propertyId) => {
+        setControllData(pervState => {
+            const newState = [...pervState];
+            const toChangeIndex = newState.findIndex(item => item.property.id === propertyId);
+            const toChange = { ...newState[toChangeIndex] };
+            !((newRules.length === toChange.rules.length) === 0) && setRulesChanaged(true);
+            toChange.rules = newRules;
+            newState[toChangeIndex] = toChange;
+            AllRulesEmpty(newState) ? setShowRules(true) : setShowRules(false);
+            return newState;
+        });
+    };
+
+    const removeRule = ({ propertyId, type }) => {
+        setControllData(pervState => {
+            const newState = [...pervState];
+            const toChangeIndex = newState.findIndex(item => item.property.id === propertyId);
+            const toChange = { ...newState[toChangeIndex] };
+            toChange.rules = toChange.rules.filter(item => item.propertyId !== propertyId && item.type !== type);
+            newState[toChangeIndex] = toChange;
+            applyAllRules(newState);
+            AllRulesEmpty(newState) ? setShowRules(true) : setShowRules(false);
+            return newState;
+        });
+    };
+
+    const AllRulesEmpty = data => [].concat(...data.map(item => item.rules)).length > 0;
+    /** rules applying */
+    const applyOneOf = ({ propertyId, value }) => {
+        const data = getValuesByPropertyLabel(propertyId).values;
+        return [].concat(...value.map(key => data[key]));
+    };
+    const applyGte = ({ propertyId, value }) => {
+        const data = getValuesByPropertyLabel(propertyId).values;
+        return [].concat(
+            ...Object.keys(data)
+                .filter(key => parseFloat(key) >= parseFloat(value))
+                .map(key => data[key])
+        );
+    };
+    const applyLte = ({ propertyId, value }) => {
+        const data = getValuesByPropertyLabel(propertyId).values;
+        return [].concat(
+            ...Object.keys(data)
+                .filter(key => parseFloat(key) <= parseFloat(value))
+                .map(key => data[key])
+        );
+    };
+    const applyGteDate = ({ propertyId, value }) => {
+        const data = getValuesByPropertyLabel(propertyId).values;
+        return [].concat(
+            ...Object.keys(data)
+                .filter(key => key >= value)
+                .map(key => data[key])
+        );
+    };
+    const applyLteDate = ({ propertyId, value }) => {
+        const data = getValuesByPropertyLabel(propertyId).values;
+        return [].concat(
+            ...Object.keys(data)
+                .filter(key => key <= value)
+                .map(key => data[key])
+        );
+    };
+
+    const applyNotEq = ({ propertyId, value }) => {
+        const data = getValuesByPropertyLabel(propertyId).values;
+        return [].concat(
+            ...Object.keys(data)
+                .filter(key => key !== value)
+                .map(key => data[key])
+        );
+    };
+
+    const applyInc = ({ propertyId, value }) => {
+        const data = getValuesByPropertyLabel(propertyId).values;
+        return [].concat(
+            ...Object.keys(data)
+                .filter(key => value.filter(val => key.includes(val)).length > 0)
+                .map(key => data[key])
+        );
+    };
+    const applyRule = ({ type, propertyId, value }) => {
+        if (type === 'oneOf') {
+            return applyOneOf({ propertyId, value });
+        } else if (type === 'gte') {
+            return applyGte({ propertyId, value });
+        } else if (type === 'lte') {
+            return applyLte({ propertyId, value });
+        } else if (type === 'gteDate') {
+            return applyGteDate({ propertyId, value });
+        } else if (type === 'lteDate') {
+            return applyLteDate({ propertyId, value });
+        } else if (type === 'nEqDate' || type === 'nEq') {
+            return applyNotEq({ propertyId, value });
+        } else if (type === 'inc') {
+            return applyInc({ propertyId, value });
+        }
+    };
+    const applyAllRules = newState => {
+        const AllContributionsID = contributions.map(contribution => contribution.id);
+        const contributionIds = []
+            .concat(...newState.map(item => item.rules))
+            .map(applyRule)
+            .reduce((prev, acc) => intersection(prev, acc), AllContributionsID);
+        displayContributions(contributionIds);
+    };
 
     /**
      * Call the comparison service to get the comparison result
@@ -338,8 +477,10 @@ function useComparison() {
                 setContributions(comparisonData.contributions);
                 setProperties(comparisonData.properties);
                 setData(comparisonData.data);
+                setControllData(generateControllData(comparisonData.contributions, comparisonData.properties, comparisonData.data));
                 setIsLoadingComparisonResult(false);
                 setIsFailedLoadingComparisonResult(false);
+
                 if (comparisonData.response_hash) {
                     setResponseHash(comparisonData.response_hash);
                 } else {
@@ -384,6 +525,19 @@ function useComparison() {
     const removeContribution = contributionId => {
         const newContributions = contributions.map(contribution => {
             return contribution.id === contributionId ? { ...contribution, active: !contribution.active } : contribution;
+        });
+        setContributionsList(activatedContributionsToList(newContributions));
+        setContributions(newContributions);
+        setUrlNeedsToUpdate(true);
+    };
+    /**
+     * display certain contributionIds
+     *
+     * @param {array} contributionIds Contribution ids to display
+     */
+    const displayContributions = contributionIds => {
+        const newContributions = contributions.map(contribution => {
+            return contributionIds.includes(contribution.id) ? { ...contribution, active: true } : { ...contribution, active: false };
         });
         setContributionsList(activatedContributionsToList(newContributions));
         setContributions(newContributions);
@@ -562,6 +716,7 @@ function useComparison() {
         contributions,
         properties,
         data,
+        controllData,
         matrixData,
         authors,
         errors,
@@ -577,6 +732,8 @@ function useComparison() {
         isFailedLoadingMetaData,
         isLoadingComparisonResult,
         isFailedLoadingComparisonResult,
+        rulesChanaged,
+        showRules,
         hasNextVersions,
         createdBy,
         provenance,
@@ -588,6 +745,9 @@ function useComparison() {
         toggleTranspose,
         removeContribution,
         addContributions,
+        applyAllRules,
+        updateRules,
+        removeRule,
         generateUrl,
         setResponseHash,
         setUrlNeedsToUpdate,

@@ -37,6 +37,9 @@ import IntelligentMerge from 'assets/img/comparison-intelligent-merge.svg';
 import { NavLink } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import env from '@beam-australia/react-env';
+import FilterModal from 'components/Comparison/FilterModal';
+import AppliedRule from 'components/Comparison/AppliedRule';
+import Label from 'reactstrap/lib/Label';
 
 function Comparison(props) {
     const [
@@ -44,6 +47,7 @@ function Comparison(props) {
         contributions,
         properties,
         data,
+        controllData,
         matrixData,
         authors,
         errors,
@@ -59,6 +63,8 @@ function Comparison(props) {
         isFailedLoadingMetaData,
         isLoadingComparisonResult,
         isFailedLoadingComparisonResult,
+        rulesChanaged,
+        showRules,
         hasNextVersions,
         createdBy,
         provenance,
@@ -70,6 +76,9 @@ function Comparison(props) {
         toggleTranspose,
         removeContribution,
         addContributions,
+        applyAllRules,
+        updateRules,
+        removeRule,
         generateUrl,
         setResponseHash,
         setUrlNeedsToUpdate,
@@ -97,6 +106,10 @@ function Comparison(props) {
     const [showAddContribution, setShowAddContribution] = useState(false);
     const [showComparisonVersions, setShowComparisonVersions] = useState(false);
     const [showExportCitationsDialog, setShowExportCitationsDialog] = useState(false);
+
+    const [showFilterDialog, setShowFilterDialog] = useState(false);
+    const [filterPropertyId, setfilterPropertyId] = useState('');
+    const [filterPropertyIdNotSet, setfilterPropertyIdNotSet] = useState(false);
 
     /**
      * Is case of an error the user can go to the previous link in history
@@ -139,10 +152,31 @@ function Comparison(props) {
         loadProvenanceInfos(comparisonResource.observatory_id, comparisonResource.organization_id);
     };
 
+    const getValuesByPropertyLabel = inputId => controllData.find(item => item.property.id === inputId);
+    const updateRulesFactory = propertyId => newRules => updateRules(newRules, propertyId);
+    const removeRuleFactory = ({ propertyId, type }) => () => removeRule({ propertyId, type });
+
+    const toggleFilterDialog = propertyId => {
+        setfilterPropertyId(propertyId);
+        setfilterPropertyIdNotSet(true);
+        setShowFilterDialog(v => !v);
+        showFilterDialog && rulesChanaged && applyAllRules(controllData);
+    };
+
+    const displayRules = () => {
+        return []
+            .concat(...controllData.map(item => item.rules))
+            .map(({ propertyId, propertyName, type, value }) => (
+                <AppliedRule
+                    key={`${propertyId}#${type}`}
+                    data={{ propertyId, propertyName, type, value, removeRule: removeRuleFactory({ propertyId, type }) }}
+                />
+            ));
+    };
+
     return (
         <div>
             <Breadcrumbs researchFieldId={researchField ? researchField.id : null} />
-
             <ContainerAnimated className="d-flex align-items-center">
                 <h1 className="h4 mt-4 mb-4 flex-grow-1">
                     Contribution comparison{' '}
@@ -299,7 +333,6 @@ function Comparison(props) {
                     </div>
                 )}
             </ContainerAnimated>
-
             <ContainerAnimated className="box rounded pt-4 pb-4 pl-5 pr-5 clearfix" style={containerStyle}>
                 {!isLoadingMetaData && (isFailedLoadingComparisonResult || isFailedLoadingMetaData) && (
                     <div>
@@ -354,17 +387,33 @@ function Comparison(props) {
                                     for horizontal scrolling in the table.
                                 </Alert>
                             )}
-                            {contributionsList.length > 1 && !isLoadingComparisonResult ? (
-                                <div className="mt-1">
-                                    <ComparisonTable
-                                        data={data}
-                                        properties={properties}
-                                        contributions={contributions}
-                                        removeContribution={removeContribution}
-                                        transpose={transpose}
-                                        viewDensity={viewDensity}
-                                    />
+                            {showRules && (
+                                <div className="w-100 p-1 d-flex align-items-center flex-wrap">
+                                    <Label className="w-100 font-weight-bold">Applied Filters:</Label>
+                                    {displayRules()}
                                 </div>
+                            )}
+                            {!isLoadingComparisonResult ? (
+                                contributionsList.length > 0 ? (
+                                    <div className="mt-1">
+                                        <ComparisonTable
+                                            data={data}
+                                            properties={properties}
+                                            contributions={contributions}
+                                            removeContribution={removeContribution}
+                                            transpose={transpose}
+                                            viewDensity={viewDensity}
+                                            toggleFilterDialog={toggleFilterDialog}
+                                        />
+                                    </div>
+                                ) : (
+                                    <div className="">
+                                        <Alert className="mt-2 text-center" color="danger">
+                                            Sorry, that filter combination has no results.{' '}
+                                            <div className="font-weight-bold">please try diffrent criteria</div>
+                                        </Alert>
+                                    </div>
+                                )
                             ) : (
                                 <ComparisonLoadingComponent />
                             )}
@@ -397,11 +446,9 @@ function Comparison(props) {
                     )}
                 </div>
             </ContainerAnimated>
-
             {metaData.id && ((isObject(createdBy) && createdBy.id) || provenance) && (
                 <ProvenanceBox creator={createdBy} provenance={provenance} changeObservatory={getObservatoryInfo} resourceId={metaData.id} />
             )}
-
             <SelectProperties
                 properties={properties}
                 showPropertiesDialog={showPropertiesDialog}
@@ -410,7 +457,6 @@ function Comparison(props) {
                 toggleProperty={toggleProperty}
                 onSortEnd={onSortPropertiesEnd}
             />
-
             <Share
                 showDialog={showShareDialog}
                 toggle={() => setShowShareDialog(v => !v)}
@@ -424,7 +470,6 @@ function Comparison(props) {
                 shortLink={shortLink}
                 setShortLink={setShortLink}
             />
-
             {(metaData?.hasPreviousVersion || (hasNextVersions && hasNextVersions.length > 0)) && (
                 <ComparisonVersions
                     showDialog={showComparisonVersions}
@@ -433,7 +478,6 @@ function Comparison(props) {
                     hasNextVersions={hasNextVersions}
                 />
             )}
-
             <Publish
                 showDialog={showPublishDialog}
                 toggle={() => setShowPublishDialog(v => !v)}
@@ -451,9 +495,7 @@ function Comparison(props) {
                 loadCreatedBy={loadCreatedBy}
                 loadProvenanceInfos={loadProvenanceInfos}
             />
-
             <AddContribution addContributions={addContributions} showDialog={showAddContribution} toggle={() => setShowAddContribution(v => !v)} />
-
             <ExportToLatex
                 data={matrixData}
                 contributions={contributions.filter(c => c.active)}
@@ -473,13 +515,20 @@ function Comparison(props) {
                 shortLink={shortLink}
                 setShortLink={setShortLink}
             />
-
             <ExportCitation
                 showDialog={showExportCitationsDialog}
                 toggle={() => setShowExportCitationsDialog(v => !v)}
                 DOI={metaData?.doi}
                 comparisonId={metaData?.id}
             />
+            {filterPropertyIdNotSet && (
+                <FilterModal
+                    data={getValuesByPropertyLabel(filterPropertyId)}
+                    updateRules={updateRulesFactory(filterPropertyId)}
+                    showFilterDialog={showFilterDialog}
+                    toggleFilteDialog={() => toggleFilterDialog(filterPropertyId)}
+                />
+            )}
         </div>
     );
 }

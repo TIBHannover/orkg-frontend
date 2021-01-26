@@ -1,4 +1,4 @@
-import { faArrowCircleLeft, faArrowCircleRight, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faArrowCircleLeft, faArrowCircleRight, faTimes, faFilter } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';
 import PropertyValue from 'components/Comparison/PropertyValue';
@@ -36,7 +36,6 @@ class ComparisonTable extends Component {
     componentDidMount = () => {
         this.defaultNextButtonState();
     };
-
     shouldComponentUpdate(nextProps, nextState) {
         // remove functions from equality check (mainly targeting "removeContribution"), otherwise it is always false
         const hasPropsChanged = !isEqual(omit(this.props, functions(this.props)), omit(nextProps, functions(nextProps)));
@@ -101,6 +100,14 @@ class ComparisonTable extends Component {
             left: rtTable.scrollLeft - this.scrollAmount,
             behavior: 'smooth'
         });
+    };
+    getValuesNr = values => {
+        return new Set(
+            []
+                .concat(...values)
+                .map(item => item.label)
+                .filter(truethy => truethy)
+        ).size;
     };
 
     // debounce is used to prevent real time overwriting of scroll position via the getSnapshotBeforeUpdate
@@ -213,8 +220,18 @@ class ComparisonTable extends Component {
                                     Cell: props =>
                                         !this.props.transpose ? (
                                             <Properties className="columnProperty">
-                                                <PropertiesInner cellPadding={cellPadding}>
+                                                <PropertiesInner
+                                                    className="d-flex flex-row align-items-start justify-content-between"
+                                                    cellPadding={cellPadding}
+                                                >
                                                     <PropertyValue similar={props.value.similar} label={props.value.label} id={props.value.id} />
+                                                    <Icon
+                                                        className={this.getValuesNr(props.original.values) > 1 ? 'd-block' : 'd-none'}
+                                                        icon={faFilter}
+                                                        onClick={() => {
+                                                            this.props.toggleFilterDialog(props.value.id);
+                                                        }}
+                                                    />
                                                 </PropertiesInner>
                                             </Properties>
                                         ) : (
@@ -292,8 +309,12 @@ class ComparisonTable extends Component {
                                                   id: property.id, // <-here
                                                   Header: props => (
                                                       <ItemHeader key={`property${property.id}`}>
-                                                          <ItemHeaderInner transpose={this.props.transpose}>
+                                                          <ItemHeaderInner
+                                                              className="d-flex flex-row align-items-center justify-content-between"
+                                                              transpose={this.props.transpose}
+                                                          >
                                                               <PropertyValue similar={property.similar} label={property.label} id={property.id} />
+                                                              <Icon icon={faFilter} onClick={() => this.props.toggleFilterDialog(props.original)} />
                                                           </ItemHeaderInner>
                                                       </ItemHeader>
                                                   ),
@@ -336,7 +357,8 @@ ComparisonTable.propTypes = {
     properties: PropTypes.array.isRequired,
     removeContribution: PropTypes.func.isRequired,
     transpose: PropTypes.bool.isRequired,
-    viewDensity: PropTypes.oneOf(['spacious', 'normal', 'compact'])
+    viewDensity: PropTypes.oneOf(['spacious', 'normal', 'compact']),
+    toggleFilterDialog: PropTypes.func.isRequired
 };
 
 export default ComparisonTable;
