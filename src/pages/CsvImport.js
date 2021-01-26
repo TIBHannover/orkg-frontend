@@ -5,7 +5,7 @@ import CsvReader from 'react-csv-reader';
 import styled from 'styled-components';
 import StepContainer from 'components/StepContainer';
 import HelpModal from 'components/CsvImport/HelpModal';
-import Tippy from '@tippy.js/react';
+import Tippy from '@tippyjs/react';
 import checkDataValidation from 'components/ConfirmBulkImport/CSVSchema';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';

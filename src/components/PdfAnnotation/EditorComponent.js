@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 import { setLabelCache } from 'actions/pdfAnnotation';
-import Tippy from '@tippy.js/react';
+import Tippy from '@tippyjs/react';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
 import { CLASSES } from 'constants/graphSettings';
 import { createResource, resourcesUrl } from 'services/backend/resources';

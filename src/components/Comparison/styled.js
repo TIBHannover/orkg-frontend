@@ -113,7 +113,7 @@ export const ReactTableWrapper = styled.div`
         overflow: auto;
     }
     .ReactTable .rt-tbody .rt-tr-group:last-child .rt-td > div div:first-child {
-        border-bottom: 2px solid #d5dae4 !important;
+        //border-bottom: 2px solid #d5dae4 !important;
         border-radius: 0 0 11px 11px !important;
     }
     .ReactTable .disable-scrollbars {

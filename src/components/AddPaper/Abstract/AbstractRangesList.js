@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { updateAnnotationClass, removeAnnotation, toggleEditAnnotation } from 'actions/addPaper';
-import Tippy from '@tippy.js/react';
+import Tippy from '@tippyjs/react';
 import { predicatesUrl } from 'services/backend/predicates';
 import capitalize from 'capitalize';
 import styled, { withTheme } from 'styled-components';
