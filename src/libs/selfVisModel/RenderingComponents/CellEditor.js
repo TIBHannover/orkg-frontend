@@ -3,12 +3,14 @@ import { Alert } from 'reactstrap';
 // TODO: add mouse area selection from :  import Selection from '@simonwep/selection-js';
 import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
 import CellVE from './CellVE';
+import Tippy, { useSingleton } from '@tippyjs/react';
 import DropDownMapperSelector from './DropdownMapperSelector';
 import PropTypes from 'prop-types';
 
 const CellEditor = props => {
     const [selfVisModel] = useState(new SelfVisDataModel());
     const [, setUpdateFlipFlop] = useState(false);
+    const [source, target] = useSingleton();
 
     const validationCallback = () => {
         // this is used to trigger the re-rendering of the cells which will then validate them on update;
@@ -31,11 +33,11 @@ const CellEditor = props => {
                     // renders the cell
                     const keyVal = 'key_cellIdMeta' + i + '_' + j;
                     if (j === 0) {
-                        rowArray.push(<CellVE key={keyVal} type="metaNode" data={null} />);
+                        rowArray.push(<CellVE key={keyVal} type="metaNode" data={null} tippyTarget={target} tippySource={source} />);
                     } else {
                         const propertyItem = filteredProperties[j - 1];
                         rowArray.push(
-                            <CellVE key={keyVal} type="metaNodeSelectorSimple" data={null}>
+                            <CellVE key={keyVal} type="metaNodeSelectorSimple" data={null} tippyTarget={target} tippySource={source}>
                                 <DropDownMapperSelector key={keyVal + 'dropdown'} data={propertyItem} callBack={validationCallback} />
                             </CellVE>
                         );
@@ -48,22 +50,30 @@ const CellEditor = props => {
                 const keyVal = 'key_cellId' + i + '_' + j;
 
                 if (i === 0 && j === 0) {
-                    rowArray.push(<CellVE key={keyVal} type="metaNode" data={null} />);
+                    rowArray.push(<CellVE key={keyVal} type="metaNode" data={null} tippyTarget={target} tippySource={source} />);
                 }
                 if (i === 0 && j !== 0) {
                     const propertyItem = filteredProperties[j - 1];
-                    rowArray.push(<CellVE key={keyVal} type="property" data={propertyItem} />);
+                    rowArray.push(<CellVE key={keyVal} type="property" data={propertyItem} tippyTarget={target} tippySource={source} />);
                 }
                 if (i > 0 && j === 0) {
                     const contribItem = filteredContribs[i - 1];
-                    rowArray.push(<CellVE key={keyVal} type="contribution" data={contribItem} />);
+                    rowArray.push(<CellVE key={keyVal} type="contribution" data={contribItem} tippyTarget={target} tippySource={source} />);
                 }
                 if (i > 0 && j !== 0) {
                     const propertyItem = filteredProperties[j - 1];
                     const contribItem = filteredContribs[i - 1];
                     const rowIndex = contribItem.positionContribAnchor;
                     const colIndex = propertyItem.positionPropertyAnchor;
-                    rowArray.push(<CellVE key={keyVal} type="value" data={selfVisModel.modelAccess.getItem(rowIndex, colIndex)} />);
+                    rowArray.push(
+                        <CellVE
+                            key={keyVal}
+                            type="value"
+                            data={selfVisModel.modelAccess.getItem(rowIndex, colIndex)}
+                            tippyTarget={target}
+                            tippySource={source}
+                        />
+                    );
                 }
             }
 
@@ -79,6 +89,15 @@ const CellEditor = props => {
 
     return (
         <div className="pt-2">
+            {/* This is the tippy that gets used as the tippyTarget */}
+            <Tippy
+                singleton={source}
+                delay={500}
+                interactive={true}
+                interactiveDebounce={75}
+                interactiveBorder={10}
+                moveTransition="transform 0.8s cubic-bezier(0.22, 1, 0.36, 1)"
+            />
             <Alert color="info" fade={false}>
                 Optionally edit cells values, valid entries are displayed in green
             </Alert>

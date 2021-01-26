@@ -11,7 +11,8 @@ import {
     ValueCellValidator,
     PropertyCellInput,
     ContributionCellInput,
-    ValueCellInput
+    ValueCellInput,
+    TippyContainer
 } from './styledComponents';
 import { usePrevious } from 'react-use';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -32,6 +33,7 @@ const CellVE = props => {
     const mapper = propertyCell?.getPropertyMapperType();
 
     const cellValueDoubleClicked = () => {
+        props.tippySource.data.instance.disable();
         setRenderingItem('input');
     };
     const cellValueChanged = event => {
@@ -75,156 +77,140 @@ const CellVE = props => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [JSON.stringify(props.data?.label), props.type, mapper]);
 
+    const tippyContent = props.data ? (
+        props.type === 'value' && renderingItem === 'text' ? (
+            <>
+                {cellValueIsValid === true
+                    ? props.data.label === props.data.originalLabel
+                        ? props.data.label ?? 'Empty'
+                        : (props.data.originalLabel ?? 'Empty') + ' >> ' + (props.data.label ?? 'Empty')
+                    : 'ERROR:' +
+                      errorMessage +
+                      '  (' +
+                      (props.data.label ?? 'Empty') +
+                      ') >> original label: ' +
+                      (props.data.originalLabel ?? 'Empty')}
+                {props.data.label !== props.data.originalLabel && (
+                    <div className="text-center">
+                        <Button size="sm" onClick={cellUndoChange}>
+                            <Icon size="sm" icon={faUndo} /> Undo
+                        </Button>
+                    </div>
+                )}
+            </>
+        ) : (
+            <>
+                {props.data.label === props.data.originalLabel ? props.data.label : props.data.originalLabel + ' >> ' + props.data.label}
+                {props.data.label !== props.data.originalLabel && (
+                    <div className="text-center">
+                        <Button size="sm" onClick={cellUndoChange}>
+                            <Icon size="sm" icon={faUndo} /> Undo
+                        </Button>
+                    </div>
+                )}
+            </>
+        )
+    ) : null;
+
     return (
         <>
-            {/*PROPERTY LABELS */}
-            {props.type === 'property' && renderingItem === 'text' && (
-                <Tippy
-                    interactive={true}
-                    content={
-                        <>
-                            {props.data.label === props.data.originalLabel ? props.data.label : props.data.originalLabel + ' >> ' + props.data.label}
-                            {props.data.label !== props.data.originalLabel && (
-                                <div className="text-center">
-                                    <Button size="sm" onClick={cellUndoChange}>
-                                        <Icon size="sm" icon={faUndo} /> Undo
-                                    </Button>
-                                </div>
-                            )}
-                        </>
-                    }
-                >
-                    <PropertyCellEditor
-                        className="noselect"
-                        onDoubleClick={() => {
-                            cellValueDoubleClicked();
-                        }}
-                    >
-                        {props.data.label}
-                    </PropertyCellEditor>
+            {(props.type === 'value' || props.type === 'property' || props.type === 'contribution') && (
+                <Tippy singleton={props.tippyTarget} content={tippyContent}>
+                    <TippyContainer>
+                        {/*PROPERTY LABELS */}
+                        {props.type === 'property' && renderingItem === 'text' && (
+                            <PropertyCellEditor
+                                className="noselect"
+                                onDoubleClick={() => {
+                                    cellValueDoubleClicked();
+                                }}
+                            >
+                                {props.data.label}
+                            </PropertyCellEditor>
+                        )}
+                        {props.type === 'property' && renderingItem === 'input' && (
+                            <PropertyCellInput
+                                autoFocus={true}
+                                value={cellLabelValue}
+                                onChange={cellValueChanged}
+                                innerRef={inputRefs}
+                                onKeyDown={e => e.keyCode === 13 && e.target.blur()} // Disable multiline Input
+                                onBlur={e => {
+                                    props.data.setLabel(cellLabelValue);
+                                    props.tippySource.data.instance.enable();
+                                    setRenderingItem('text');
+                                }}
+                                onFocus={
+                                    e => {
+                                        e.target.select();
+                                    } // Highlights the entire label when edit
+                                }
+                            />
+                        )}
+                        {/*CONTRIBUTION LABELS */}
+                        {props.type === 'contribution' && renderingItem === 'text' && (
+                            <ContributionCell
+                                className="noselect"
+                                onDoubleClick={() => {
+                                    cellValueDoubleClicked();
+                                }}
+                            >
+                                {props.data.label}
+                            </ContributionCell>
+                        )}
+                        {props.type === 'contribution' && renderingItem === 'input' && (
+                            <ContributionCellInput
+                                autoFocus={true}
+                                value={cellLabelValue}
+                                onChange={cellValueChanged}
+                                innerRef={inputRefs}
+                                onKeyDown={e => e.keyCode === 13 && e.target.blur()} // Disable multiline Input
+                                onBlur={e => {
+                                    props.data.setLabel(cellLabelValue);
+                                    props.tippySource.data.instance.enable();
+                                    setRenderingItem('text');
+                                }}
+                                onFocus={
+                                    e => {
+                                        e.target.select();
+                                    } // Highlights the entire label when edit
+                                }
+                            />
+                        )}
+                        {/*CELL VALUE LABELS */}
+                        {props.type === 'value' && renderingItem === 'text' && (
+                            <ValueCellValidator
+                                className="noselect"
+                                isValid={cellValueIsValid}
+                                onDoubleClick={() => {
+                                    cellValueDoubleClicked();
+                                }}
+                            >
+                                {props.data.label}
+                            </ValueCellValidator>
+                        )}
+                        {props.type === 'value' && renderingItem === 'input' && (
+                            <ValueCellInput
+                                autoFocus={true}
+                                value={cellLabelValue}
+                                onChange={cellValueChanged}
+                                innerRef={inputRefs}
+                                onKeyDown={e => e.keyCode === 13 && e.target.blur()} // Disable multiline Input
+                                onBlur={e => {
+                                    props.data.setLabel(cellLabelValue);
+                                    props.tippySource.data.instance.enable();
+                                    setRenderingItem('text');
+                                }}
+                                onFocus={
+                                    e => {
+                                        e.target.select();
+                                    } // Highlights the entire label when edit
+                                }
+                            />
+                        )}
+                    </TippyContainer>
                 </Tippy>
             )}
-            {props.type === 'property' && renderingItem === 'input' && (
-                <PropertyCellInput
-                    autoFocus={true}
-                    value={cellLabelValue}
-                    onChange={cellValueChanged}
-                    innerRef={inputRefs}
-                    onKeyDown={e => e.keyCode === 13 && e.target.blur()} // Disable multiline Input
-                    onBlur={e => {
-                        props.data.setLabel(cellLabelValue);
-                        setRenderingItem('text');
-                    }}
-                    onFocus={
-                        e => {
-                            e.target.select();
-                        } // Highlights the entire label when edit
-                    }
-                />
-            )}
-
-            {/*CONTRIBUTION LABELS */}
-            {props.type === 'contribution' && renderingItem === 'text' && (
-                <Tippy
-                    interactive={true}
-                    content={
-                        <>
-                            {props.data.label === props.data.originalLabel ? props.data.label : props.data.originalLabel + ' >> ' + props.data.label}
-                            {props.data.label !== props.data.originalLabel && (
-                                <div className="text-center">
-                                    <Button size="sm" onClick={cellUndoChange}>
-                                        <Icon size="sm" icon={faUndo} /> Undo
-                                    </Button>
-                                </div>
-                            )}
-                        </>
-                    }
-                >
-                    <ContributionCell
-                        className="noselect"
-                        onDoubleClick={() => {
-                            cellValueDoubleClicked();
-                        }}
-                    >
-                        {props.data.label}
-                    </ContributionCell>
-                </Tippy>
-            )}
-            {props.type === 'contribution' && renderingItem === 'input' && (
-                <ContributionCellInput
-                    autoFocus={true}
-                    value={cellLabelValue}
-                    onChange={cellValueChanged}
-                    innerRef={inputRefs}
-                    onKeyDown={e => e.keyCode === 13 && e.target.blur()} // Disable multiline Input
-                    onBlur={e => {
-                        props.data.setLabel(cellLabelValue);
-                        setRenderingItem('text');
-                    }}
-                    onFocus={
-                        e => {
-                            e.target.select();
-                        } // Highlights the entire label when edit
-                    }
-                />
-            )}
-            {/*CELL VALUE LABELS */}
-            {props.type === 'value' && renderingItem === 'text' && (
-                <Tippy
-                    interactive={true}
-                    content={
-                        <>
-                            {cellValueIsValid === true
-                                ? props.data.label === props.data.originalLabel
-                                    ? props.data.label ?? 'Empty'
-                                    : (props.data.originalLabel ?? 'Empty') + ' >> ' + (props.data.label ?? 'Empty')
-                                : 'ERROR:' +
-                                  errorMessage +
-                                  '  (' +
-                                  (props.data.label ?? 'Empty') +
-                                  ') >> original label: ' +
-                                  (props.data.originalLabel ?? 'Empty')}
-                            {props.data.label !== props.data.originalLabel && (
-                                <div className="text-center">
-                                    <Button size="sm" onClick={cellUndoChange}>
-                                        <Icon size="sm" icon={faUndo} /> Undo
-                                    </Button>
-                                </div>
-                            )}
-                        </>
-                    }
-                >
-                    <ValueCellValidator
-                        className="noselect"
-                        isValid={cellValueIsValid}
-                        onDoubleClick={() => {
-                            cellValueDoubleClicked();
-                        }}
-                    >
-                        {props.data.label}
-                    </ValueCellValidator>
-                </Tippy>
-            )}
-
-            {props.type === 'value' && renderingItem === 'input' && (
-                <ValueCellInput
-                    autoFocus={true}
-                    value={cellLabelValue}
-                    onChange={cellValueChanged}
-                    innerRef={inputRefs}
-                    onKeyDown={e => e.keyCode === 13 && e.target.blur()} // Disable multiline Input
-                    onBlur={e => {
-                        props.data.setLabel(cellLabelValue);
-                        setRenderingItem('text');
-                    }}
-                    onFocus={
-                        e => {
-                            e.target.select();
-                        } // Highlights the entire label when edit
-                    }
-                />
-            )}
-
             {props.type === 'metaNode' && <MetaCell>{props.children}</MetaCell>}
             {props.type === 'metaNodeSelector' && <MetaMapperSelector>{props.children}</MetaMapperSelector>}
             {props.type === 'metaNodeSelectorSimple' && <MetaMapperSelectorSimple>{props.children}</MetaMapperSelectorSimple>}
@@ -235,7 +221,9 @@ const CellVE = props => {
 CellVE.propTypes = {
     type: PropTypes.string.isRequired,
     data: PropTypes.object,
-    children: PropTypes.any
+    children: PropTypes.any,
+    tippyTarget: PropTypes.object,
+    tippySource: PropTypes.object
 };
 
 export default CellVE;

@@ -1,6 +1,18 @@
 import styled from 'styled-components';
 import { Input } from 'reactstrap';
 
+export const TippyContainer = styled.div`
+    overflow: visible;
+    background: white;
+    display: flex;
+    color: white;
+    width: 150px;
+    min-width: 150px;
+    height: 30px;
+    margin: 0 1px;
+    //margin-left: 0.5px;
+`;
+
 /** adding styled divs for different cell items **/
 export const TableCell = styled.div`
     &.noselect {
