@@ -306,9 +306,7 @@ function useComparison() {
 
         // Get Similar properties by Label
         comparisonData.properties.forEach((property, index) => {
-            if (property.active) {
-                comparisonData.properties[index].similar = similarPropertiesByLabel(property.label, comparisonData.data[property.id]);
-            }
+            comparisonData.properties[index].similar = similarPropertiesByLabel(property.label, comparisonData.data[property.id]);
         });
 
         return comparisonData.properties;
