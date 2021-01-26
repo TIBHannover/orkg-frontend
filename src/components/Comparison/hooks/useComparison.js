@@ -547,7 +547,8 @@ function useComparison() {
                     ...metaData,
                     doi: '',
                     hasPreviousVersion: { id: metaData.id, created_at: metaData.createdAt, createdBy: metaData.createdBy },
-                    id: null
+                    id: null,
+                    visualizations: []
                 });
             }
             setUrlNeedsToUpdate(false);

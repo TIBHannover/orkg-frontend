@@ -38,6 +38,7 @@ function PreviewVisualizationComparison(props) {
                 setVisData(visDataObjects);
             });
         } else {
+            setVisData([]);
             setIsLoading(false);
         }
     };
