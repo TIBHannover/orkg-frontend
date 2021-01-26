@@ -42,7 +42,7 @@ export const PREDICATES = {
     HAS_PROPERTY: 'hasProperty',
     HAS_PREVIOUS_VERSION: 'hasPreviousVersion',
     HAS_SUBJECT: 'hasSubject',
-    HAS_VISUALIZATION_DEFINITION: 'HAS_VISUALIZATION_DEFINITION'
+    HAS_VISUALIZATION: 'hasVisualization'
 };
 
 export const CLASSES = {
@@ -63,7 +63,7 @@ export const CLASSES = {
     QB_DATASET_CLASS: 'QBDataset',
     LOCATION: 'DCLocation',
     SENTENCE: 'Sentence',
-    VISUALIZATION_DEFINITION: 'VISUALIZATION_DEFINITION'
+    VISUALIZATION: 'Visualization'
 };
 
 export const MISC = {

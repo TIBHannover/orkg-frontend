@@ -107,7 +107,7 @@ function Resource(props) {
                             setClasses(classes);
                         })
                         .then(() => {
-                            if (responseJson.classes.includes(CLASSES.VISUALIZATION_DEFINITION)) {
+                            if (responseJson.classes.includes(CLASSES.VISUALIZATION)) {
                                 getVisualization(resourceId).then(model => {
                                     setVisualizationModelForGDC(model);
                                     setHasVisualizationModelForGDC(true);
