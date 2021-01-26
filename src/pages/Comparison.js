@@ -214,17 +214,28 @@ function Comparison(props) {
                                     </DropdownItem>
                                 </DropdownMenu>
                             </Dropdown>
-                            <Button
-                                color="darkblue"
-                                size="sm"
-                                onClick={() => {
-                                    setUseReconstructedData(false);
-                                    setShowVisualizationModal(!showVisualizationModal);
-                                }}
-                                style={{ marginRight: 3 }}
-                            >
-                                <Icon icon={faChartBar} /> Add visualization
-                            </Button>
+                            {!!metaData.id ? (
+                                <Button
+                                    color="darkblue"
+                                    size="sm"
+                                    onClick={() => {
+                                        setUseReconstructedData(false);
+                                        setShowVisualizationModal(!showVisualizationModal);
+                                    }}
+                                    style={{ marginRight: 3 }}
+                                >
+                                    <Icon icon={faChartBar} /> Add visualization
+                                </Button>
+                            ) : (
+                                <Tippy
+                                    hideOnClick={false}
+                                    content="Cannot add visualization to a unpublished comparison. You must publish the comparison first to use this functionality."
+                                >
+                                    <span style={{ marginRight: 3 }} className="btn btn-darkblue btn-sm disabled">
+                                        <Icon icon={faChartBar} /> Add visualization
+                                    </span>
+                                </Tippy>
+                            )}
                             <Dropdown group isOpen={dropdownOpen} toggle={() => setDropdownOpen(v => !v)}>
                                 <DropdownToggle color="darkblue" size="sm" className="rounded-right">
                                     <span className="mr-2">More</span> <Icon icon={faEllipsisV} />
