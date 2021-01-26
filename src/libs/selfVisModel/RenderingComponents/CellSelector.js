@@ -4,10 +4,12 @@ import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
 import CellRenderer from './CellRenderer';
 import DropDownMapperSelector from './DropdownMapperSelector';
 import CheckboxSelector from './CheckBoxSelector';
+import Tippy, { useSingleton } from '@tippyjs/react';
 import PropTypes from 'prop-types';
 
 const CellSelector = props => {
     const [selfVisModel] = useState(new SelfVisDataModel());
+    const [source, target] = useSingleton();
 
     /** some data handlers **/
     const toggleCheckboxForCol = (id, value) => {
@@ -36,10 +38,10 @@ const CellSelector = props => {
                     // renders the cell
                     const keyVal = 'key_cellIdMeta' + i + '_' + j;
                     if (j === 0) {
-                        rowArray.push(<CellRenderer key={keyVal} type="metaNodeHeader" data={null} />);
+                        rowArray.push(<CellRenderer key={keyVal} type="metaNodeHeader" data={null} tippyTarget={target} />);
                     } else {
                         rowArray.push(
-                            <CellRenderer key={keyVal} type="metaNodeSelector" data={null}>
+                            <CellRenderer key={keyVal} type="metaNodeSelector" data={null} tippyTarget={target}>
                                 <ButtonGroup
                                     style={{ borderBottomLeftRadius: '0', borderBottomRightRadius: '0' }}
                                     className="p-0 flex-grow-1"
@@ -82,16 +84,22 @@ const CellSelector = props => {
                 const keyVal = 'key_cellId' + i + '_' + j;
 
                 if (i === 0 && j === 0) {
-                    rowArray.push(<CellRenderer key={keyVal} type="metaNode" data={null} />);
+                    rowArray.push(<CellRenderer key={keyVal} type="metaNode" data={null} tippyTarget={target} />);
                 }
                 if (i === 0 && j !== 0) {
-                    rowArray.push(<CellRenderer key={keyVal} type="property" data={selfVisModel.mrrModel.propertyAnchors[j - 1]} />);
+                    rowArray.push(
+                        <CellRenderer key={keyVal} type="property" data={selfVisModel.mrrModel.propertyAnchors[j - 1]} tippyTarget={target} />
+                    );
                 }
                 if (i > 0 && j === 0) {
-                    rowArray.push(<CellRenderer key={keyVal} type="contribution" data={selfVisModel.mrrModel.contributionAnchors[i - 1]} />);
+                    rowArray.push(
+                        <CellRenderer key={keyVal} type="contribution" data={selfVisModel.mrrModel.contributionAnchors[i - 1]} tippyTarget={target} />
+                    );
                 }
                 if (i > 0 && j !== 0) {
-                    rowArray.push(<CellRenderer key={keyVal} type="value" data={selfVisModel.modelAccess.getItem(i - 1, j - 1)} />);
+                    rowArray.push(
+                        <CellRenderer key={keyVal} type="value" data={selfVisModel.modelAccess.getItem(i - 1, j - 1)} tippyTarget={target} />
+                    );
                 }
             }
 
@@ -143,7 +151,8 @@ const CellSelector = props => {
             <Alert color="info" fade={false}>
                 Select cells for the visualization and map them to types
             </Alert>
-
+            {/* This is the tippy that gets used as the tippyTarget */}
+            <Tippy singleton={source} delay={300} moveTransition="transform 0.8s cubic-bezier(0.22, 1, 0.36, 1)" />
             {props.isLoading ? <div>Loading...</div> : <div style={{ height: props.height + 'px', overflow: 'auto' }}>{createTable()} </div>}
         </div>
     );

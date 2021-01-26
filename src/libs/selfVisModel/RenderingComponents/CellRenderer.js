@@ -1,24 +1,25 @@
-import React from 'react';
-import { PropertyCell, ContributionCell, MetaCell, MetaMapperSelector, MetaMapperSelectorSimple, ValueCell } from './styledComponents';
+import {
+    PropertyCell,
+    ContributionCell,
+    MetaCell,
+    MetaMapperSelector,
+    MetaMapperSelectorSimple,
+    ValueCell,
+    TippyContainer
+} from './styledComponents';
 import Tippy from '@tippyjs/react';
 import PropTypes from 'prop-types';
 
 export default function CellRenderer(props) {
     return (
         <>
-            {props.type === 'property' && (
-                <Tippy content={props.data.label ?? 'Empty'}>
-                    <PropertyCell>{props.data.label}</PropertyCell>
-                </Tippy>
-            )}
-            {props.type === 'contribution' && (
-                <Tippy content={props.data.label ?? 'Empty'}>
-                    <ContributionCell>{props.data.label}</ContributionCell>
-                </Tippy>
-            )}
-            {props.type === 'value' && (
-                <Tippy content={props.data.label ?? 'Empty'}>
-                    <ValueCell>{props.data.label}</ValueCell>
+            {(props.type === 'property' || props.type === 'contribution' || props.type === 'value') && (
+                <Tippy singleton={props.tippyTarget} content={props.data.label ?? 'Empty'}>
+                    <TippyContainer>
+                        {props.type === 'property' && <PropertyCell>{props.data.label}</PropertyCell>}
+                        {props.type === 'contribution' && <ContributionCell>{props.data.label}</ContributionCell>}
+                        {props.type === 'value' && <ValueCell>{props.data.label}</ValueCell>}
+                    </TippyContainer>
                 </Tippy>
             )}
             {props.type === 'metaNode' && <MetaCell />}
@@ -32,5 +33,6 @@ export default function CellRenderer(props) {
 CellRenderer.propTypes = {
     type: PropTypes.string.isRequired,
     data: PropTypes.object,
-    children: PropTypes.any
+    children: PropTypes.any,
+    tippyTarget: PropTypes.object
 };
