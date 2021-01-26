@@ -323,9 +323,14 @@ function Resource(props) {
                             )}
                         </div>
                         <hr />
-                        {/*Adding Visualization Component here */}
-                        {hasVisualizationModelForGDC && <GDCVisualizationRenderer model={visualizationModelForGDC} />}
 
+                        {/*Adding Visualization Component here */}
+                        {hasVisualizationModelForGDC && (
+                            <div className="mb-4">
+                                <GDCVisualizationRenderer model={visualizationModelForGDC} />
+                                <hr />
+                            </div>
+                        )}
                         <h3 className="h5">Statements</h3>
                         <div className="clearfix">
                             <StatementBrowser
