@@ -311,12 +311,7 @@ function useComparison() {
     /********************** */
 
     const generateControllData = (contributions, properties, data) => {
-        const contributionIdIndex = contributions.map(item => item.id);
-        const getcontributionIndex = contributionId => contributionIdIndex.findIndex(conid => conid === contributionId);
-        const getPropertyValueByIdAndContrID = (propertyId, contributionId) => {
-            return data[propertyId][getcontributionIndex(contributionId)][0].label;
-        };
-        return [
+        const toRet = [
             ...properties
                 .filter(property => property.active && data[property.id])
                 .map(property => {
@@ -324,14 +319,18 @@ function useComparison() {
                         property,
                         rules: [],
                         values: groupBy(
-                            flatten(
-                                contributions.map((_, index) => data[property.id][index]).filter(([first]) => Object.keys(first).length !== 0)
-                            ).map(({ path }) => path[0]),
-                            val => getPropertyValueByIdAndContrID(property.id, val)
+                            flatten(contributions.map((_, index) => data[property.id][index]).filter(([first]) => Object.keys(first).length !== 0)),
+                            'label'
                         )
                     };
                 })
         ];
+        toRet.forEach(item => {
+            Object.keys(item.values).forEach(key => {
+                item.values[key] = item.values[key].map(({ path }) => path[0]);
+            });
+        });
+        return toRet;
     };
     const getValuesByPropertyLabel = inputId => controllData.find(item => item.property.id === inputId);
 
