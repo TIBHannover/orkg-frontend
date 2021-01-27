@@ -314,7 +314,13 @@ class ComparisonTable extends Component {
                                                               transpose={this.props.transpose}
                                                           >
                                                               <PropertyValue similar={property.similar} label={property.label} id={property.id} />
-                                                              <Icon icon={faFilter} onClick={() => this.props.toggleFilterDialog(props.original)} />
+                                                              <Icon
+                                                                  className={this.getValuesNr(props.original.values) > 1 ? 'd-block' : 'd-none'}
+                                                                  icon={faFilter}
+                                                                  onClick={() => {
+                                                                      this.props.toggleFilterDialog(props.value.id);
+                                                                  }}
+                                                              />
                                                           </ItemHeaderInner>
                                                       </ItemHeader>
                                                   ),
