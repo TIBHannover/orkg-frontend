@@ -1,6 +1,6 @@
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
-import Tippy from '@tippy.js/react';
+import Tippy from '@tippyjs/react';
 import { components } from 'react-select';
 import styled from 'styled-components';
 import { truncate } from 'lodash';

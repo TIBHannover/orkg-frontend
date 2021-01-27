@@ -31,7 +31,6 @@ export const submitGetRequest = (url, headers, send_token = false) => {
                     });
                 } else {
                     const json = response.json();
-                    //console.log(json);
                     if (json.then) {
                         json.then(resolve).catch(reject);
                     } else {

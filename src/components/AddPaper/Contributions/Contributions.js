@@ -23,7 +23,7 @@ import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faMagic, faPlus } from '@fortawesome/free-solid-svg-icons';
 import styled from 'styled-components';
-import Tippy from '@tippy.js/react';
+import Tippy from '@tippyjs/react';
 import PropTypes from 'prop-types';
 import { updateSettings } from 'actions/statementBrowser';
 

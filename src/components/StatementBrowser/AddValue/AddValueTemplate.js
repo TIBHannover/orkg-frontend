@@ -5,7 +5,6 @@ import { StyledDropdownItem, StyledButton, StyledDropdownToggle, ValueItemStyle 
 import StatementOptionButton from 'components/StatementBrowser/StatementOptionButton/StatementOptionButton';
 import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
 import defaultDatatypes from 'components/ContributionTemplates/helpers/defaultDatatypes';
-import Tippy from '@tippy.js/react';
 import { useDispatch, useSelector } from 'react-redux';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPlus, faBars, faSpinner } from '@fortawesome/free-solid-svg-icons';
@@ -13,8 +12,9 @@ import AutoComplete from 'components/Autocomplete/Autocomplete';
 import useToggle from './helpers/useToggle';
 import validationSchema from './helpers/validationSchema';
 import InputField from 'components/StatementBrowser/InputField/InputField';
-import PropTypes from 'prop-types';
+import Tippy from '@tippyjs/react';
 import { CLASSES, MISC, ENTITIES } from 'constants/graphSettings';
+import PropTypes from 'prop-types';
 
 export default function AddValueTemplate(props) {
     const literalInputRef = useRef(null);

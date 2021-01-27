@@ -1,7 +1,7 @@
 import { ListGroup } from 'reactstrap';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes.js';
-import Tippy from '@tippy.js/react';
+import Tippy from '@tippyjs/react';
 import { StatementsGroupStyle, PropertyStyle, ValuesStyle, ValueItemStyle } from 'components/StatementBrowser/styled';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';

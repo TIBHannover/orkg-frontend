@@ -18,7 +18,7 @@ import styled, { withTheme } from 'styled-components';
 import getExternalData from './3rdPartyRegistries/index';
 import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
-import Tippy from '@tippy.js/react';
+import Tippy from '@tippyjs/react';
 import REGEX from 'constants/regex';
 import NativeListener from 'react-native-listener';
 import CustomOption from './CustomOption';

@@ -15,7 +15,7 @@ import RequireAuthentication from 'components/RequireAuthentication/RequireAuthe
 import NotFound from 'pages/NotFound';
 import { useLocation, Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
-import Tippy from '@tippy.js/react';
+import Tippy from '@tippyjs/react';
 import ROUTES from 'constants/routes.js';
 import { connect, useSelector } from 'react-redux';
 import { resetStatementBrowser } from 'actions/statementBrowser';
@@ -28,6 +28,8 @@ import PropTypes from 'prop-types';
 import { orderBy } from 'lodash';
 import useDeleteResource from 'components/Resource/hooks/useDeleteResource';
 import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
+import { getVisualization } from '../../services/similarity';
+import GDCVisualizationRenderer from 'libs/selfVisModel/RenderingComponents/GDCVisualizationRenderer';
 
 const DEDICATED_PAGE_LINKS = {
     [CLASSES.PAPER]: {
@@ -80,6 +82,8 @@ function Resource(props) {
     const [isLoading, setIsLoading] = useState(true);
     const [editMode, setEditMode] = useState(false);
     const [canBeDeleted, setCanBeDeleted] = useState(false);
+    const [visualizationModelForGDC, setVisualizationModelForGDC] = useState(undefined);
+    const [hasVisualizationModelForGDC, setHasVisualizationModelForGDC] = useState(false);
     const values = useSelector(state => state.statementBrowser.values);
     const properties = useSelector(state => state.statementBrowser.properties);
     const isCurationAllowed = useSelector(state => state.auth.user?.isCurationAllowed);
@@ -103,6 +107,12 @@ function Resource(props) {
                             setClasses(classes);
                         })
                         .then(() => {
+                            if (responseJson.classes.includes(CLASSES.VISUALIZATION)) {
+                                getVisualization(resourceId).then(model => {
+                                    setVisualizationModelForGDC(model);
+                                    setHasVisualizationModelForGDC(true);
+                                });
+                            }
                             if (responseJson.classes.includes(CLASSES.COMPARISON)) {
                                 getStatementsBySubjectAndPredicate({ subjectId: props.match.params.id, predicateId: PREDICATES.HAS_DOI }).then(st => {
                                     if (st.length > 0) {
@@ -313,6 +323,14 @@ function Resource(props) {
                             )}
                         </div>
                         <hr />
+
+                        {/*Adding Visualization Component here */}
+                        {hasVisualizationModelForGDC && (
+                            <div className="mb-4">
+                                <GDCVisualizationRenderer model={visualizationModelForGDC} />
+                                <hr />
+                            </div>
+                        )}
                         <h3 className="h5">Statements</h3>
                         <div className="clearfix">
                             <StatementBrowser
