@@ -96,7 +96,7 @@ const Classes = () => {
                             <Icon icon={faAngleDoubleDown} /> Load more classes
                         </ListGroupItem>
                     )}
-                    {!hasNextPage && isLastPageReached && totalElements !== 0 && (
+                    {!hasNextPage && isLastPageReached && page > 1 && (
                         <ListGroupItem tag="div" className="text-center">
                             You have reached the last page.
                         </ListGroupItem>

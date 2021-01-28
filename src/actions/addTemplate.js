@@ -139,7 +139,7 @@ export const saveTemplate = data => {
         const promises = [];
         let templateResource;
         if (!data.templateID) {
-            templateResource = await createResource(data.label, [CLASSES.CONTRIBUTION_TEMPLATE]);
+            templateResource = await createResource(data.label, [CLASSES.TEMPLATE]);
             templateResource = templateResource.id;
         } else {
             templateResource = data.templateID;
@@ -238,9 +238,9 @@ export const saveTemplate = data => {
 
         Promise.all(promises).then(() => {
             if (data.templateID) {
-                toast.success('Contribution Template updated successfully');
+                toast.success('Template updated successfully');
             } else {
-                toast.success('Contribution Template created successfully');
+                toast.success('Template created successfully');
             }
 
             dispatch(loadTemplate(templateResource)); //reload the template

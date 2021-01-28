@@ -4,7 +4,7 @@ import { fetchTemplatesOfClassIfNeeded, selectResource, createRequiredProperties
 import { StyledDropdownItem, StyledButton, StyledDropdownToggle, ValueItemStyle } from 'components/StatementBrowser/styled';
 import StatementOptionButton from 'components/StatementBrowser/StatementOptionButton/StatementOptionButton';
 import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
-import defaultDatatypes from 'components/ContributionTemplates/helpers/defaultDatatypes';
+import defaultDatatypes from 'components/Templates/helpers/defaultDatatypes';
 import { useDispatch, useSelector } from 'react-redux';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPlus, faBars, faSpinner } from '@fortawesome/free-solid-svg-icons';
@@ -271,7 +271,7 @@ export default function AddValueTemplate(props) {
                         {valueType === 'object' ? (
                             <AutoComplete
                                 entityType={ENTITIES.RESOURCE}
-                                excludeClasses={`${CLASSES.CONTRIBUTION},${CLASSES.PROBLEM},${CLASSES.CONTRIBUTION_TEMPLATE}`}
+                                excludeClasses={`${CLASSES.CONTRIBUTION},${CLASSES.PROBLEM},${CLASSES.TEMPLATE}`}
                                 optionsClass={props.valueClass ? props.valueClass.id : undefined}
                                 placeholder="Enter a resource"
                                 onItemSelected={i => {

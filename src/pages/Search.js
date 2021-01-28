@@ -54,7 +54,7 @@ class Search extends Component {
             {
                 label: 'Template',
                 labelPlural: 'Templates',
-                id: CLASSES.CONTRIBUTION_TEMPLATE
+                id: CLASSES.TEMPLATE
             },
             {
                 label: 'Resource',

@@ -64,8 +64,8 @@ const Results = props => {
                 link = reverse(ROUTES.VENUE_PAGE, { venueId: resourceId });
                 break;
             }
-            case CLASSES.CONTRIBUTION_TEMPLATE: {
-                link = reverse(ROUTES.CONTRIBUTION_TEMPLATE, { id: resourceId });
+            case CLASSES.TEMPLATE: {
+                link = reverse(ROUTES.TEMPLATE, { id: resourceId });
                 break;
             }
             case RESOURCE_TYPE_ID: {

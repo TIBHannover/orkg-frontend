@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react';
 import { InputGroup, FormGroup, Label, Col, Input, FormText } from 'reactstrap';
 import { ValuesStyle } from 'components/StatementBrowser/styled';
-import defaultDatatypes from 'components/ContributionTemplates/helpers/defaultDatatypes';
+import defaultDatatypes from 'components/Templates/helpers/defaultDatatypes';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes.js';

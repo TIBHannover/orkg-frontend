@@ -112,11 +112,21 @@ export const getStatementsBySubjectAndPredicate = ({ subjectId, predicateId, pag
     return submitGetRequest(`${statementsUrl}subject/${subjectId}/predicate/${predicateId}/?${params}`).then(res => res.content);
 };
 
-export const getStatementsByObjectAndPredicate = ({ objectId, predicateId, page = 0, items: size = 9999, sortBy = 'created_at', desc = true }) => {
+export const getStatementsByObjectAndPredicate = ({
+    objectId,
+    predicateId,
+    page = 0,
+    items: size = 9999,
+    sortBy = 'created_at',
+    desc = true,
+    returnContent = true
+}) => {
     const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
     const params = queryString.stringify({ page, size, sort });
 
-    return submitGetRequest(`${statementsUrl}object/${objectId}/predicate/${predicateId}/?${params}`).then(res => res.content);
+    return submitGetRequest(`${statementsUrl}object/${objectId}/predicate/${predicateId}/?${params}`).then(res =>
+        returnContent ? res.content : res
+    );
 };
 
 export const getStatementsByPredicateAndLiteral = ({ predicateId, literal, subjectClass = null, items: size = 9999 }) => {
@@ -301,6 +311,6 @@ export const getTemplatesByClass = classID => {
         objectId: classID,
         predicateId: PREDICATES.TEMPLATE_OF_CLASS
     }).then(statements =>
-        Promise.all(statements.filter(statement => statement.subject.classes?.includes(CLASSES.CONTRIBUTION_TEMPLATE)).map(st => st.subject.id))
+        Promise.all(statements.filter(statement => statement.subject.classes?.includes(CLASSES.TEMPLATE)).map(st => st.subject.id))
     );
 };

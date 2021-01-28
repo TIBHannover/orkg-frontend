@@ -340,7 +340,7 @@ class Header extends Component {
                                         <DropdownItem tag={RouterNavLink} exact to={ROUTES.EXPORT_DATA}>
                                             Export data{' '}
                                         </DropdownItem>
-                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.CONTRIBUTION_TEMPLATES}>
+                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.TEMPLATES}>
                                             Templates
                                         </DropdownItem>
                                     </DropdownMenu>

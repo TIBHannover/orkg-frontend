@@ -62,9 +62,9 @@ const DEDICATED_PAGE_LINKS = {
         route: ROUTES.VENUE_PAGE,
         routeParams: 'venueId'
     },
-    [CLASSES.CONTRIBUTION_TEMPLATE]: {
+    [CLASSES.TEMPLATE]: {
         label: 'Template',
-        route: ROUTES.CONTRIBUTION_TEMPLATE,
+        route: ROUTES.TEMPLATE,
         routeParams: 'id'
     },
     [CLASSES.CONTRIBUTION]: {
