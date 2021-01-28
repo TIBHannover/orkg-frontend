@@ -14,6 +14,7 @@ import Changelog from 'pages/Changelog/Changelog';
 import NotFound from 'pages/NotFound';
 import Papers from 'pages/Papers';
 import Comparisons from 'pages/Comparisons';
+import Visualizations from 'pages/Visualizations/Visualizations';
 import PredicateDetails from 'pages/Predicates/Predicate';
 import ClassDetails from 'pages/Classes/ClassDetails';
 import Classes from 'pages/Classes/Classes';
@@ -150,6 +151,11 @@ const routes = [
         path: ROUTES.COMPARISONS,
         exact: true,
         component: Comparisons
+    },
+    {
+        path: ROUTES.VISUALIZATIONS,
+        exact: true,
+        component: Visualizations
     },
     {
         path: ROUTES.RESEARCH_PROBLEM,

@@ -27,6 +27,7 @@ const routes = {
     COMPARISON: '/comparison/:comparisonId?',
     PAPERS: '/papers',
     COMPARISONS: '/comparisons',
+    VISUALIZATIONS: '/visualizations',
     RESEARCH_PROBLEM: '/problem/:researchProblemId',
     RESEARCH_FIELD: '/field/:researchFieldId',
     VENUE_PAGE: '/venue/:venueId',

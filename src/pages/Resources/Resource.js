@@ -28,7 +28,7 @@ import PropTypes from 'prop-types';
 import { orderBy } from 'lodash';
 import useDeleteResource from 'components/Resource/hooks/useDeleteResource';
 import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
-import { getVisualization } from '../../services/similarity';
+import { getVisualization } from 'services/similarity';
 import GDCVisualizationRenderer from 'libs/selfVisModel/RenderingComponents/GDCVisualizationRenderer';
 
 const DEDICATED_PAGE_LINKS = {
