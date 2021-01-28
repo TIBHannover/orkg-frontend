@@ -108,10 +108,16 @@ function Resource(props) {
                         })
                         .then(() => {
                             if (responseJson.classes.includes(CLASSES.VISUALIZATION)) {
-                                getVisualization(resourceId).then(model => {
-                                    setVisualizationModelForGDC(model);
-                                    setHasVisualizationModelForGDC(true);
-                                });
+                                getVisualization(resourceId)
+                                    .then(model => {
+                                        setVisualizationModelForGDC(model);
+                                        setHasVisualizationModelForGDC(true);
+                                    })
+                                    .catch(() => {
+                                        setVisualizationModelForGDC(undefined);
+                                        setHasVisualizationModelForGDC(false);
+                                        toast.error('Error loading visualization preview');
+                                    });
                             }
                             if (responseJson.classes.includes(CLASSES.COMPARISON)) {
                                 getStatementsBySubjectAndPredicate({ subjectId: props.match.params.id, predicateId: PREDICATES.HAS_DOI }).then(st => {
