@@ -315,7 +315,9 @@ class ComparisonTable extends Component {
                                                           >
                                                               <PropertyValue similar={property.similar} label={property.label} id={property.id} />
                                                               <Icon
-                                                                  className={this.getValuesNr(props.original.values) > 1 ? 'd-block' : 'd-none'}
+                                                                  className={
+                                                                      this.getValuesNr(this.props.data[property.id]) > 1 ? 'd-block' : 'd-none'
+                                                                  }
                                                                   icon={faFilter}
                                                                   onClick={() => {
                                                                       this.props.toggleFilterDialog(props.value.id);

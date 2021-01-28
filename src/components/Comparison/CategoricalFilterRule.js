@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { CustomInput, Button, Badge } from 'reactstrap';
 import PropTypes from 'prop-types';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { faRedoAlt } from '@fortawesome/free-solid-svg-icons';
 
 const CategoricalFilterRule = props => {
-    const { property, values, rules, updateRules } = props.controldata;
+    const { property, values, rules, updateRules, toggleFilteDialog } = props.controldata;
     const { label: propertyName, id: propertyId } = property;
 
     const DEFAULT_MAX_CATEGORIES = 15;
@@ -43,6 +45,14 @@ const CategoricalFilterRule = props => {
         setBtnLabel(pervState => (pervState === SHOW_MORE ? SHOW_LESS : SHOW_MORE));
     };
 
+    const handleReset = () => {
+        updateRules([]);
+        setCategoricalValues(vals.map(value => ({ ...value, checked: false })));
+    };
+    const handleApply = () => {
+        toggleFilteDialog();
+    };
+
     const checkboxList = () => {
         return categoricalValues.slice(0, maxCategoryNumber).map(item => {
             return (
@@ -71,6 +81,15 @@ const CategoricalFilterRule = props => {
             <Button className={getValuesNr() < DEFAULT_MAX_CATEGORIES ? 'd-none' : 'p-0'} color="link" size="sm" onClick={handleButtonChange}>
                 {btnLabel}
             </Button>
+            <div className="d-flex flex-sm-wrap justify-content-end">
+                <Button className="mt-3 mx-1" color="primary" size="sm" onClick={handleReset}>
+                    <Icon icon={faRedoAlt} style={{ margin: '2px 6px 0 0' }} />
+                    Reset
+                </Button>
+                <Button className="mt-3 mx-1" color="secondary" size="sm" onClick={handleApply}>
+                    Apply
+                </Button>
+            </div>
         </div>
     );
 };

@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
-import { Input, FormFeedback, Label } from 'reactstrap';
+import { Input, FormFeedback, Label, Button } from 'reactstrap';
 import PropTypes from 'prop-types';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { faRedoAlt } from '@fortawesome/free-solid-svg-icons';
+import { set } from 'lodash';
 
 const OrdinalFilterRule = props => {
-    const { property, rules, updateRules, typeIsDate, DATE_FORMAT } = props.controldata;
+    const { property, rules, updateRules, typeIsDate, DATE_FORMAT, toggleFilteDialog } = props.controldata;
     const { label: propertyName, id: propertyId } = property;
 
     const type = typeIsDate ? 'datetime' : 'number';
@@ -67,6 +70,18 @@ const OrdinalFilterRule = props => {
         isEmptyOrValid(event.target.value) ? setNeqInvalid(false) : setNeqInvalid(true);
         updateRules(calRules(minInput, maxInput, event.target.value));
     };
+    const handleReset = () => {
+        updateRules([]);
+        setMaxInput('');
+        setMinInput('');
+        setNeqInput('');
+        setMinInvalid(false);
+        setMaxInvalid(false);
+        setNeqInvalid(false);
+    };
+    const handleApply = () => {
+        toggleFilteDialog();
+    };
 
     const w_50 = { width: '50%' };
     return (
@@ -114,6 +129,15 @@ const OrdinalFilterRule = props => {
                     />
                 </div>
                 <FormFeedback className={nEqInvalid ? 'd-block text-right' : 'd-none'}>{invalidText}</FormFeedback>
+            </div>
+            <div className="d-flex flex-sm-wrap justify-content-end">
+                <Button className="mt-3 mx-1" color="primary" size="sm" onClick={handleReset}>
+                    <Icon icon={faRedoAlt} style={{ margin: '2px 6px 0 0' }} />
+                    Reset
+                </Button>
+                <Button className="mt-3 mx-1" color="secondary" size="sm" onClick={handleApply}>
+                    Apply
+                </Button>
             </div>
         </>
     );

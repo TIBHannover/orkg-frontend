@@ -389,7 +389,7 @@ function Comparison(props) {
                             )}
                             {showRules && (
                                 <div className="w-100 p-1 d-flex align-items-center flex-wrap">
-                                    <Label className="w-100 font-weight-bold">Applied Filters:</Label>
+                                    <Label className="w-100 mb-0 font-weight-bold">Applied Filters:</Label>
                                     {displayRules()}
                                 </div>
                             )}

@@ -27,11 +27,13 @@ function FilterModal(props) {
         );
     };
 
-    const generateCatFilter = () => <CategoricalFilterRule controldata={{ property, values, rules, updateRules }} />;
+    const generateCatFilter = () => <CategoricalFilterRule controldata={{ property, values, rules, updateRules, toggleFilteDialog }} />;
 
-    const generateOrdFilter = typeIsDate => <OrdinalFilterRule controldata={{ property, rules, updateRules, typeIsDate: typeIsDate, DATE_FORMAT }} />;
+    const generateOrdFilter = typeIsDate => (
+        <OrdinalFilterRule controldata={{ property, rules, updateRules, typeIsDate: typeIsDate, DATE_FORMAT, toggleFilteDialog }} />
+    );
 
-    const generateTextFilter = () => <TextFilterRule controldata={{ property, values, rules, updateRules }} />;
+    const generateTextFilter = () => <TextFilterRule controldata={{ property, values, rules, updateRules, toggleFilteDialog }} />;
 
     const generateFilter = () => {
         if (isNum()) {
