@@ -286,6 +286,9 @@ class Header extends Component {
                                         <DropdownItem tag={RouterNavLink} exact to={ROUTES.COMPARISONS}>
                                             Comparisons
                                         </DropdownItem>
+                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.RESEARCH_FIELDS}>
+                                            Research fields
+                                        </DropdownItem>
                                         <DropdownItem divider />
                                         <DropdownItem tag={RouterNavLink} exact to={ROUTES.OBSERVATORIES}>
                                             Observatories{' '}

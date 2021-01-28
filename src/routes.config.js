@@ -23,6 +23,7 @@ import ContributionTemplate from 'pages/ContributionTemplates/ContributionTempla
 import ROUTES from 'constants/routes';
 import RedirectShortLinks from 'pages/RedirectShortLinks';
 import ResearchField from 'pages/ResearchField';
+import ResearchFields from 'pages/ResearchFields';
 import ResearchProblem from './pages/ResearchProblem';
 import Resources from 'pages/Resources/Resources';
 import Organizations from 'pages/Organizations/Organizations';
@@ -158,6 +159,10 @@ const routes = [
     {
         path: ROUTES.RESEARCH_FIELD,
         component: ResearchField
+    },
+    {
+        path: ROUTES.RESEARCH_FIELDS,
+        component: ResearchFields
     },
     {
         path: ROUTES.VENUE_PAGE,
