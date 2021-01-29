@@ -5,7 +5,6 @@ import { withTheme } from 'styled-components';
 import PropTypes from 'prop-types';
 import Tippy from '@tippyjs/react';
 import { followCursor } from 'tippy.js';
-import 'tippy.js/dist/tippy.css';
 
 class AnnotationTooltip extends Component {
     constructor(props) {
