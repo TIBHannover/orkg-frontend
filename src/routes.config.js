@@ -15,6 +15,7 @@ import NotFound from 'pages/NotFound';
 import Papers from 'pages/Papers';
 import Comparisons from 'pages/Comparisons';
 import Visualizations from 'pages/Visualizations/Visualizations';
+import Visualization from 'pages/Visualizations/Visualization';
 import PredicateDetails from 'pages/Predicates/Predicate';
 import ClassDetails from 'pages/Classes/ClassDetails';
 import Classes from 'pages/Classes/Classes';
@@ -156,6 +157,10 @@ const routes = [
         path: ROUTES.VISUALIZATIONS,
         exact: true,
         component: Visualizations
+    },
+    {
+        path: ROUTES.VISUALIZATION,
+        component: Visualization
     },
     {
         path: ROUTES.RESEARCH_PROBLEM,

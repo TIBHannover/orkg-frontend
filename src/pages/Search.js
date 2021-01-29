@@ -65,6 +65,11 @@ class Search extends Component {
                 label: 'Venue',
                 labelPlural: 'Venues',
                 id: CLASSES.VENUE
+            },
+            {
+                label: 'Visualization',
+                labelPlural: 'Visualizations',
+                id: CLASSES.VISUALIZATION
             }
         ];
 
