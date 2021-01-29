@@ -187,7 +187,7 @@ const ResearchFieldSelector = ({ selectedResearchField, researchFields, updateRe
                             {find(parents, p => p.id === field.id) ? <b>{field.label}</b> : field.label}
                         </div>
                         {researchFieldStats && (
-                            <div className="d-flex justify-content-end">
+                            <div className="justify-content-end">
                                 <Badge color="light" pill>
                                     {researchFieldStats[field.id]}
                                 </Badge>
