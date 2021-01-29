@@ -22,8 +22,8 @@ import ContributionTemplates from 'pages/ContributionTemplates/ContributionTempl
 import ContributionTemplate from 'pages/ContributionTemplates/ContributionTemplate';
 import ROUTES from 'constants/routes';
 import RedirectShortLinks from 'pages/RedirectShortLinks';
-import ResearchField from 'pages/ResearchField';
-import ResearchFields from 'pages/ResearchFields';
+import ResearchField from 'pages/ResearchFields/ResearchField';
+import ResearchFields from 'pages/ResearchFields/ResearchFields';
 import ResearchProblem from './pages/ResearchProblem';
 import Resources from 'pages/Resources/Resources';
 import Organizations from 'pages/Organizations/Organizations';

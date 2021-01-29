@@ -2,6 +2,7 @@ import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Papers from 'components/ResearchField/Papers';
 import ResearchFieldSelector from 'components/ResearchFieldSelector/ResearchFieldSelector';
+import { getResearchFieldsStats } from 'services/backend/stats';
 import { MISC } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
@@ -14,8 +15,13 @@ const ResearchFields = () => {
     const [selectedResearchField, setSelectedResearchField] = useState('');
     const [researchFields, setResearchFields] = useState([]);
     const [researchFieldLabel, setResearchFieldLabel] = useState('');
+    const [researchFieldStats, setResearchFieldStats] = useState({});
 
     useEffect(() => {
+        getResearchFieldsStats().then(results => {
+            setResearchFieldStats(results);
+        });
+
         document.title = 'Research field taxonomy browser - ORKG';
     }, []);
 
@@ -59,6 +65,7 @@ const ResearchFields = () => {
                             <ResearchFieldSelector
                                 selectedResearchField={selectedResearchField}
                                 researchFields={researchFields}
+                                researchFieldStats={researchFieldStats}
                                 updateResearchField={handleUpdate}
                             />
                         </Col>

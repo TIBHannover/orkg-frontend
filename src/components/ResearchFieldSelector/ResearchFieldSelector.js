@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Button } from 'reactstrap';
+import { Button, Badge } from 'reactstrap';
 import { faMinusSquare, faPlusSquare, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
@@ -44,6 +44,7 @@ const SubList = styled.ul`
 const IndicatorContainer = styled.div`
     width: 30px;
     text-align: center;
+    display: inline-flex;
 `;
 
 const CollapseButton = styled(Button)`
@@ -52,7 +53,7 @@ const CollapseButton = styled(Button)`
     }
 `;
 
-const ResearchFieldSelector = ({ selectedResearchField, researchFields, updateResearchField }) => {
+const ResearchFieldSelector = ({ selectedResearchField, researchFields, updateResearchField, researchFieldStats }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [loadingId, setLoadingId] = useState(null);
 
@@ -177,12 +178,21 @@ const ResearchFieldSelector = ({ selectedResearchField, researchFields, updateRe
             return (
                 <li key={field.id}>
                     <FieldItem onClick={e => handleFieldClick(e, field.id)} color="link" className={selectedResearchField === field.id && 'active'}>
-                        <IndicatorContainer onClick={e => handleFieldClick(e, field.id, false)}>
-                            {field.hasChildren && (
-                                <Icon icon={icon} spin={isLoading} className={selectedResearchField !== field.id ? 'text-darkblue' : ''} />
-                            )}
-                        </IndicatorContainer>
-                        {find(parents, p => p.id === field.id) ? <b>{field.label}</b> : field.label}
+                        <div className="flex-grow-1">
+                            <IndicatorContainer onClick={e => handleFieldClick(e, field.id, false)}>
+                                {field.hasChildren && (
+                                    <Icon icon={icon} spin={isLoading} className={selectedResearchField !== field.id ? 'text-darkblue' : ''} />
+                                )}
+                            </IndicatorContainer>
+                            {find(parents, p => p.id === field.id) ? <b>{field.label}</b> : field.label}
+                        </div>
+                        {researchFieldStats && (
+                            <div className="d-flex justify-content-end">
+                                <Badge color="light" pill>
+                                    {researchFieldStats[field.id]}
+                                </Badge>
+                            </div>
+                        )}
                     </FieldItem>
                     {field.isExpanded && !isLoading && <SubList>{fieldList(field.id)}</SubList>}
                 </li>
@@ -247,7 +257,8 @@ const ResearchFieldSelector = ({ selectedResearchField, researchFields, updateRe
 ResearchFieldSelector.propTypes = {
     selectedResearchField: PropTypes.string,
     researchFields: PropTypes.array,
-    updateResearchField: PropTypes.func
+    updateResearchField: PropTypes.func,
+    researchFieldStats: PropTypes.object
 };
 
 export default ResearchFieldSelector;
