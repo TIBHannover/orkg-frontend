@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import { truncate } from 'lodash';
 import ROUTES from 'constants/routes';
-import Tippy from '@tippy.js/react';
+import Tippy from '@tippyjs/react';
 
 const Breadcrumbs = () => {
     const dispatch = useDispatch();

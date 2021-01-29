@@ -23,7 +23,7 @@ import { selectContribution, updateResearchProblems } from 'actions/viewPaper';
 import { getReseachProblemsOfContribution } from 'actions/statementBrowser';
 import styled from 'styled-components';
 import { StyledHorizontalContributionsList, StyledHorizontalContribution, AddContribution } from 'components/AddPaper/Contributions/styled';
-import Tippy from '@tippy.js/react';
+import Tippy from '@tippyjs/react';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import SuggestedTemplates from 'components/StatementBrowser/SuggestedTemplates/SuggestedTemplates';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';

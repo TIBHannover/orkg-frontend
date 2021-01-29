@@ -7,7 +7,7 @@ import { getAllObservatories, getObservatoriesStats, getUsersByObservatoryId } f
 import { getAllOrganizations } from 'services/backend/organizations';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faStar, faFile, faCubes } from '@fortawesome/free-solid-svg-icons';
-import Tippy from '@tippy.js/react';
+import Tippy from '@tippyjs/react';
 import styled from 'styled-components';
 import Gravatar from 'react-gravatar';
 import { reverse } from 'named-urls';
