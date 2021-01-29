@@ -466,7 +466,7 @@ function Comparison(props) {
                 </div>
             </ContainerAnimated>
 
-            {metaData.id && ((isObject(createdBy) && createdBy.id) || provenance) && (
+            {metaData.id && (
                 <ProvenanceBox creator={createdBy} provenance={provenance} changeObservatory={getObservatoryInfo} resourceId={metaData.id} />
             )}
 
