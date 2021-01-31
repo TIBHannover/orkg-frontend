@@ -348,17 +348,39 @@ function useComparison() {
         });
     };
 
-    const removeRule = ({ propertyId, type }) => {
+    const removeRule = ({ propertyId, type, value }) => {
         setControllData(pervState => {
             const newState = [...pervState];
             const toChangeIndex = newState.findIndex(item => item.property.id === propertyId);
             const toChange = { ...newState[toChangeIndex] };
-            toChange.rules = toChange.rules.filter(item => item.propertyId !== propertyId && item.type !== type);
+            toChange.rules = toChange.rules.filter(item => !(item.propertyId === propertyId && item.type === type && item.value === value));
             newState[toChangeIndex] = toChange;
             applyAllRules(newState);
             AllRulesEmpty(newState) ? setShowRules(true) : setShowRules(false);
             return newState;
         });
+    };
+
+    const getRuleByProperty = propertyId => controllData.find(item => item.property.id === propertyId).rules;
+
+    const strignifyType = type => {
+        if (type === 'oneOf') {
+            return 'is One of:';
+        } else if (type === 'gte') {
+            return '>=';
+        } else if (type === 'gteDate') {
+            return 'is after:';
+        } else if (type === 'lte') {
+            return '<=';
+        } else if (type === 'nEqDate' || type === 'nEq') {
+            return '!=';
+        } else if (type === 'lteDate') {
+            return 'is before:';
+        } else if (type === 'inc') {
+            return 'includes one of:';
+        }
+
+        return type;
     };
 
     const AllRulesEmpty = data => [].concat(...data.map(item => item.rules)).length > 0;
@@ -404,7 +426,7 @@ function useComparison() {
         const data = getValuesByPropertyLabel(propertyId).values;
         return [].concat(
             ...Object.keys(data)
-                .filter(key => key !== value)
+                .filter(key => !value.includes(key))
                 .map(key => data[key])
         );
     };
@@ -747,6 +769,8 @@ function useComparison() {
         applyAllRules,
         updateRules,
         removeRule,
+        getRuleByProperty,
+        strignifyType,
         generateUrl,
         setResponseHash,
         setUrlNeedsToUpdate,

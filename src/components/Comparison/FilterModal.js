@@ -6,7 +6,6 @@ import OrdinalFilterRule from './OrdinalFilterRule.js';
 import TextFilterRule from './TextFilterRule.js';
 
 function FilterModal(props) {
-    //text and min dont need values
     const DATE_FORMAT = /\d{4}-[01]\d-([012]\d|30|31)/;
     const { data, updateRules, showFilterDialog, toggleFilteDialog } = props;
     const { property, values, rules } = data;
@@ -47,7 +46,6 @@ function FilterModal(props) {
         }
         return <></>;
     };
-
     return (
         <Modal isOpen={showFilterDialog} toggle={toggleFilteDialog}>
             <ModalHeader className="text-capitalize" toggle={toggleFilteDialog}>

@@ -2,6 +2,7 @@ import { faArrowCircleLeft, faArrowCircleRight, faTimes, faFilter } from '@forta
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';
 import PropertyValue from 'components/Comparison/PropertyValue';
+import FilterWrapper from 'components/Comparison/FilterWrapper';
 import ROUTES from 'constants/routes';
 import { debounce, functions, isEqual, omit } from 'lodash';
 import { reverse } from 'named-urls';
@@ -225,13 +226,22 @@ class ComparisonTable extends Component {
                                                     cellPadding={cellPadding}
                                                 >
                                                     <PropertyValue similar={props.value.similar} label={props.value.label} id={props.value.id} />
-                                                    <Icon
-                                                        className={this.getValuesNr(props.original.values) > 1 ? 'd-block' : 'd-none'}
-                                                        icon={faFilter}
-                                                        onClick={() => {
-                                                            this.props.toggleFilterDialog(props.value.id);
+                                                    <FilterWrapper
+                                                        data={{
+                                                            rules: this.props.getRuleByProperty(props.value.id),
+                                                            strignifyType: this.props.strignifyType
                                                         }}
-                                                    />
+                                                    >
+                                                        <Icon
+                                                            icon={faFilter}
+                                                            className={this.getValuesNr(props.original.values) > 1 ? 'd-block' : 'd-none'}
+                                                            style={{ cursor: 'pointer' }}
+                                                            color={this.props.getRuleByProperty(props.value.id).length > 0 ? '#e86161' : ''}
+                                                            onClick={() => {
+                                                                this.props.toggleFilterDialog(props.value.id);
+                                                            }}
+                                                        />
+                                                    </FilterWrapper>
                                                 </PropertiesInner>
                                             </Properties>
                                         ) : (
@@ -314,15 +324,24 @@ class ComparisonTable extends Component {
                                                               transpose={this.props.transpose}
                                                           >
                                                               <PropertyValue similar={property.similar} label={property.label} id={property.id} />
-                                                              <Icon
-                                                                  className={
-                                                                      this.getValuesNr(this.props.data[property.id]) > 1 ? 'd-block' : 'd-none'
-                                                                  }
-                                                                  icon={faFilter}
-                                                                  onClick={() => {
-                                                                      this.props.toggleFilterDialog(props.value.id);
+                                                              <FilterWrapper
+                                                                  data={{
+                                                                      rules: this.props.getRuleByProperty(props.value.id),
+                                                                      strignifyType: this.props.strignifyType
                                                                   }}
-                                                              />
+                                                              >
+                                                                  <Icon
+                                                                      icon={faFilter}
+                                                                      className={
+                                                                          this.getValuesNr(this.props.data[property.id]) > 1 ? 'd-block' : 'd-none'
+                                                                      }
+                                                                      style={{ cursor: 'pointer' }}
+                                                                      color={this.props.getRuleByProperty(props.value.id)}
+                                                                      onClick={() => {
+                                                                          this.props.toggleFilterDialog(props.value.id);
+                                                                      }}
+                                                                  />
+                                                              </FilterWrapper>
                                                           </ItemHeaderInner>
                                                       </ItemHeader>
                                                   ),
@@ -366,7 +385,9 @@ ComparisonTable.propTypes = {
     removeContribution: PropTypes.func.isRequired,
     transpose: PropTypes.bool.isRequired,
     viewDensity: PropTypes.oneOf(['spacious', 'normal', 'compact']),
-    toggleFilterDialog: PropTypes.func.isRequired
+    toggleFilterDialog: PropTypes.func.isRequired,
+    strignifyType: PropTypes.func.isRequired,
+    getRuleByProperty: PropTypes.func.isRequired
 };
 
 export default ComparisonTable;

@@ -79,6 +79,8 @@ function Comparison(props) {
         applyAllRules,
         updateRules,
         removeRule,
+        getRuleByProperty,
+        strignifyType,
         generateUrl,
         setResponseHash,
         setUrlNeedsToUpdate,
@@ -109,7 +111,6 @@ function Comparison(props) {
 
     const [showFilterDialog, setShowFilterDialog] = useState(false);
     const [filterPropertyId, setfilterPropertyId] = useState('');
-    const [filterPropertyIdNotSet, setfilterPropertyIdNotSet] = useState(false);
 
     /**
      * Is case of an error the user can go to the previous link in history
@@ -154,11 +155,10 @@ function Comparison(props) {
 
     const getValuesByPropertyLabel = inputId => controllData.find(item => item.property.id === inputId);
     const updateRulesFactory = propertyId => newRules => updateRules(newRules, propertyId);
-    const removeRuleFactory = ({ propertyId, type }) => () => removeRule({ propertyId, type });
+    const removeRuleFactory = ({ propertyId, type, value }) => () => removeRule({ propertyId, type, value });
 
     const toggleFilterDialog = propertyId => {
         setfilterPropertyId(propertyId);
-        setfilterPropertyIdNotSet(true);
         setShowFilterDialog(v => !v);
         showFilterDialog && rulesChanaged && applyAllRules(controllData);
     };
@@ -169,7 +169,7 @@ function Comparison(props) {
             .map(({ propertyId, propertyName, type, value }) => (
                 <AppliedRule
                     key={`${propertyId}#${type}`}
-                    data={{ propertyId, propertyName, type, value, removeRule: removeRuleFactory({ propertyId, type }) }}
+                    data={{ propertyId, propertyName, type: strignifyType(type), value, removeRule: removeRuleFactory({ propertyId, type, value }) }}
                 />
             ));
     };
@@ -404,6 +404,8 @@ function Comparison(props) {
                                             transpose={transpose}
                                             viewDensity={viewDensity}
                                             toggleFilterDialog={toggleFilterDialog}
+                                            getRuleByProperty={getRuleByProperty}
+                                            strignifyType={strignifyType}
                                         />
                                     </div>
                                 ) : (
@@ -521,7 +523,7 @@ function Comparison(props) {
                 DOI={metaData?.doi}
                 comparisonId={metaData?.id}
             />
-            {filterPropertyIdNotSet && (
+            {filterPropertyId && (
                 <FilterModal
                     data={getValuesByPropertyLabel(filterPropertyId)}
                     updateRules={updateRulesFactory(filterPropertyId)}
