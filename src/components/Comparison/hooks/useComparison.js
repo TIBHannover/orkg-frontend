@@ -37,6 +37,7 @@ function useComparison() {
      * @property {String|Object} createdBy Comparison resource creator
      * @property {Array[Object]} resources Comparison related resources
      * @property {Array[Object]} figures Comparison related figures
+     * @property {Array[Object]} visualizations Comparison visualizations
      */
     /**
      * @typedef {Function} MetaDataSetter Set Metadata
@@ -107,6 +108,12 @@ function useComparison() {
         setPublicURL(newURL);
     };
 
+    const loadVisualizations = comparisonID => {
+        getStatementsBySubjectAndPredicate({ subjectId: comparisonID, predicateId: PREDICATES.HAS_VISUALIZATION }).then(statements => {
+            const visualizations = filterObjectOfStatementsByPredicate(statements, PREDICATES.HAS_VISUALIZATION, false);
+            setMetaData({ ...metaData, visualizations: visualizations });
+        });
+    };
     /**
      * Load comparison meta data and comparison config
      *
@@ -135,6 +142,7 @@ function useComparison() {
                         const hasPreviousVersion = filterObjectOfStatementsByPredicate(statements, PREDICATES.HAS_PREVIOUS_VERSION, true);
                         const resources = filterObjectOfStatementsByPredicate(statements, PREDICATES.RELATED_RESOURCES, false);
                         const figures = filterObjectOfStatementsByPredicate(statements, PREDICATES.RELATED_FIGURE, false);
+                        const visualizations = filterObjectOfStatementsByPredicate(statements, PREDICATES.HAS_VISUALIZATION, false);
                         // Load authors
                         let creators = filterObjectOfStatementsByPredicate(statements, PREDICATES.HAS_AUTHOR, false);
                         if (creators) {
@@ -152,7 +160,8 @@ function useComparison() {
                             references: references ? references.map(r => r.label) : [],
                             hasPreviousVersion: hasPreviousVersion,
                             resources: resources ? resources : [],
-                            figures: figures ? figures : []
+                            figures: figures ? figures : [],
+                            visualizations: visualizations ? visualizations : []
                         });
                         // TODO: replace this with ordered feature
                         // Load comparison config
@@ -297,9 +306,7 @@ function useComparison() {
 
         // Get Similar properties by Label
         comparisonData.properties.forEach((property, index) => {
-            if (property.active) {
-                comparisonData.properties[index].similar = similarPropertiesByLabel(property.label, comparisonData.data[property.id]);
-            }
+            comparisonData.properties[index].similar = similarPropertiesByLabel(property.label, comparisonData.data[property.id]);
         });
 
         return comparisonData.properties;
@@ -538,7 +545,8 @@ function useComparison() {
                     ...metaData,
                     doi: '',
                     hasPreviousVersion: { id: metaData.id, created_at: metaData.createdAt, createdBy: metaData.createdBy },
-                    id: null
+                    id: null,
+                    visualizations: []
                 });
             }
             setUrlNeedsToUpdate(false);
@@ -557,7 +565,7 @@ function useComparison() {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isLoadingComparisonResult]);
-    return [
+    return {
         metaData,
         contributions,
         properties,
@@ -594,7 +602,8 @@ function useComparison() {
         setShortLink,
         setAuthors,
         loadCreatedBy,
-        loadProvenanceInfos
-    ];
+        loadProvenanceInfos,
+        loadVisualizations
+    };
 }
 export default useComparison;

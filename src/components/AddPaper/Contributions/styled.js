@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { ListGroupItem } from 'reactstrap';
+import { Button, ListGroupItem } from 'reactstrap';
 
 /*contribution*/
 export const StyledHorizontalContribution = styled.div`
@@ -17,100 +17,88 @@ export const StyledHorizontalContributionsList = styled.ul`
     margin: 0;
     box-sizing: border-box;
 
-    // support for a > li (used in ViewPaper)
-    a {
-        color: inherit;
-
-        li:first-child {
-            border-top-left-radius: 0;
-        }
-        &:first-child li {
-            border-top-left-radius: ${props => props.theme.borderRadius};
-        }
-        &:nth-last-child(2) li {
-            border-top-right-radius: ${props => props.theme.borderRadius};
-        }
+    // first item has border radius left
+    li:first-child .contribution-item {
+        border-top-left-radius: ${props => props.theme.borderRadius};
     }
 
-    &.noEdit {
-        a:last-child li,
-        > li:last-child {
-            border-top-right-radius: ${props => props.theme.borderRadius};
-        }
-        a:nth-last-child(2) li,
-        > li:nth-last-child(2) {
-            border-top-right-radius: 0;
-        }
+    // last item has border radius right
+    // in case in edit mode, the last item is the 'add' button, so use
+    // :nth-last-child to select the second last child
+    &.noEdit li:last-child .contribution-item,
+    &:not(.noEdit) li:nth-last-child(2) .contribution-item {
+        border-top-right-radius: ${props => props.theme.borderRadius};
     }
 
     li {
-        a {
+        display: inline-block;
+        margin-right: 2px;
+
+        .contribution-item {
+            border: 1px solid ${props => props.theme.ultraLightBlueDarker};
+            border-bottom: 0;
+            background-color: ${props => props.theme.ultraLightBlue};
+            position: relative;
+            box-sizing: border-box;
+            padding: 7px 15px 7px 15px;
+            display: block;
+            transition: 0.3s background;
             color: inherit;
-        }
+            outline: 0;
 
-        &:nth-last-child(2) {
-            border-top-right-radius: ${props => props.theme.borderRadius};
+            &.disabled {
+                pointer-events: none;
+                cursor: default;
+            }
+            &:hover {
+                text-decoration: none;
+            }
+            &.active-contribution {
+                background: ${props => props.theme.orkgPrimaryColor};
+                border: 1px solid ${props => props.theme.orkgPrimaryColor};
+                color: #fff;
+                cursor: initial !important;
+            }
+            &.active-contribution a {
+                color: #fff;
+            }
         }
+    }
+`;
 
-        &:first-child {
-            border-top-left-radius: ${props => props.theme.borderRadius};
-        }
-
+export const AddContribution = styled(Button)`
+    &&& {
+        padding: 0;
         border: 1px solid ${props => props.theme.ultraLightBlueDarker};
         background-color: ${props => props.theme.ultraLightBlue};
-        margin-right: 2px;
-        border-bottom: 0;
-        margin-bottom: -1px;
-        position: relative;
-        box-sizing: border-box;
-        -moz-box-sizing: border-box;
-        -webkit-box-sizing: border-box;
-        display: inline-block;
-        padding: 7px 15px 7px 15px;
-        transition: 0.3s background;
+        border-radius: 60px;
+        margin: 0 5px;
         cursor: pointer;
+        outline: 0;
+        color: inherit;
 
-        &.disabled {
-            pointer-events: none;
-            cursor: default;
+        span {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 25px;
+            height: 25px;
         }
 
         &:hover {
-            text-decoration: none;
-        }
-        &.activeContribution {
-            background: ${props => props.theme.orkgPrimaryColor};
-            border: 1px solid ${props => props.theme.orkgPrimaryColor};
-            color: #fff;
-            cursor: initial !important;
-        }
-        &.activeContribution a {
-            color: #fff;
-        }
-        .deleteContribution {
-            cursor: pointer;
-            color: #fff;
-        }
-        &.addContribution {
-            padding: 0;
-            border: 1px solid ${props => props.theme.ultraLightBlueDarker};
-            border-radius: 60px;
-            margin: 0 5px;
-            cursor: pointer;
-
-            span {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                width: 25px;
-                height: 25px;
-            }
-        }
-        &.addContribution:hover {
             background-color: ${props => props.theme.orkgPrimaryColor};
             border: 1px solid ${props => props.theme.orkgPrimaryColor};
             color: #fff;
         }
+    }
+`;
+
+export const ActionButton = styled(Button)`
+    &&& {
+        color: inherit;
+        padding: 0;
+        line-height: 1;
+        margin-top: -3px;
     }
 `;
 

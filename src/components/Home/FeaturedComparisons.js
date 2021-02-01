@@ -2,15 +2,14 @@ import { useState, useEffect } from 'react';
 import { ListGroup, ListGroupItem, Button, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import ROUTES from 'constants/routes.js';
-import { getStatementsBySubjects } from 'services/backend/statements';
+import { getStatementsBySubjectAndPredicate } from 'services/backend/statements';
 import { getResourcesByClass } from 'services/backend/resources';
 import Dotdotdot from 'react-dotdotdot';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { reverse } from 'named-urls';
-import { sortMethod, getComparisonData } from 'utils';
-import { find } from 'lodash';
-import { CLASSES } from 'constants/graphSettings';
+import { getComparisonData } from 'utils';
+import { CLASSES, PREDICATES } from 'constants/graphSettings';
 
 export default function FeaturedComparisons() {
     const [comparisons, setComparisons] = useState([]);
@@ -25,24 +24,26 @@ export default function FeaturedComparisons() {
         const responseJson = await getResourcesByClass({
             id: CLASSES.FEATURED_COMPARISON,
             sortBy: 'created_at',
-            desc: false
+            desc: true
         });
-        const ids = responseJson.map(comparison => comparison.id);
-        getStatementsBySubjects({
-            ids
-        })
+
+        const ids = responseJson.map(comparison =>
+            getStatementsBySubjectAndPredicate({ subjectId: comparison.id, predicateId: PREDICATES.DESCRIPTION })
+        );
+
+        Promise.all(ids)
             .then(comparisonsStatements => {
-                let comparisons = comparisonsStatements.map(comparisonStatements => {
-                    const resourceSubject = find(responseJson, { id: comparisonStatements.id });
+                const comparisons = comparisonsStatements.map((comparisonStatements, index) => {
+                    const resourceSubject = responseJson[index];
                     return getComparisonData(
-                        comparisonStatements.id,
+                        resourceSubject.id,
                         comparisonStatements && resourceSubject.label ? resourceSubject.label : 'No Title',
-                        comparisonStatements.statements
+                        comparisonStatements
                     );
                 });
 
                 // order featured comparison on show only that have onHomePage predicate
-                comparisons = comparisons.filter(c => c.onHomePage).sort((c1, c2) => sortMethod(c1.order, c2.order));
+                //comparisons = comparisons.filter(c => c.onHomePage).sort((c1, c2) => sortMethod(c1.order, c2.order));
                 setComparisons(comparisons);
                 setIsLoading(false);
             })
@@ -62,20 +63,20 @@ export default function FeaturedComparisons() {
             items: 8
         });
 
-        const ids = responseJson.map(comparison => comparison.id);
-        getStatementsBySubjects({
-            ids
-        })
+        const ids = responseJson.map(comparison =>
+            getStatementsBySubjectAndPredicate({ subjectId: comparison.id, predicateId: PREDICATES.DESCRIPTION })
+        );
+
+        Promise.all(ids)
             .then(comparisonsStatements => {
-                const comparisons = comparisonsStatements.map(comparisonStatements => {
-                    const resourceSubject = find(responseJson, { id: comparisonStatements.id });
+                const comparisons = comparisonsStatements.map((comparisonStatements, index) => {
+                    const resourceSubject = responseJson[index];
                     return getComparisonData(
-                        comparisonStatements.id,
+                        resourceSubject.id,
                         comparisonStatements && resourceSubject.label ? resourceSubject.label : 'No Title',
-                        comparisonStatements.statements
+                        comparisonStatements
                     );
                 });
-
                 setComparisons(comparisons);
                 setIsLoading(false);
             })

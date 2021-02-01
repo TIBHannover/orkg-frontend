@@ -44,7 +44,7 @@ class StatementBrowserDialog extends Component {
                             style={{ right: 45, position: 'absolute', top: 12 }}
                             title={`Go to ${this.props.type} page`}
                             className="ml-2"
-                            to={reverse(this.props.type === 'resource' ? ROUTES.RESOURCE : ROUTES.PREDICATE, { id: this.props.id })}
+                            to={reverse(this.props.type === 'resource' ? ROUTES.RESOURCE : ROUTES.PROPERTY, { id: this.props.id })}
                             target="_blank"
                             rel="noopener noreferrer"
                         >
