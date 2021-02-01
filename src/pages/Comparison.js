@@ -117,6 +117,7 @@ function Comparison(props) {
 
     const [showFilterDialog, setShowFilterDialog] = useState(false);
     const [filterPropertyId, setfilterPropertyId] = useState('');
+    const [shouldChangeColor, setShouldChangeColor] = useState(false);
 
     const [showVisualizationModal, setShowVisualizationModal] = useState(false);
     const [applyReconstruction, setUseReconstructedData] = useState(false);
@@ -193,6 +194,7 @@ function Comparison(props) {
     const toggleFilterDialog = propertyId => {
         setfilterPropertyId(propertyId);
         setShowFilterDialog(v => !v);
+        setShouldChangeColor(v => !v);
         showFilterDialog && rulesChanaged && applyAllRules(controllData);
     };
 
@@ -473,6 +475,7 @@ function Comparison(props) {
                                             viewDensity={viewDensity}
                                             toggleFilterDialog={toggleFilterDialog}
                                             getRuleByProperty={getRuleByProperty}
+                                            shouldChangeColor={shouldChangeColor}
                                             strignifyType={strignifyType}
                                         />
                                     </div>
