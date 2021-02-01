@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Alert, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Button, ButtonGroup, Badge } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faEllipsisV, faPlus, faLightbulb, faHistory, faWindowMaximize } from '@fortawesome/free-solid-svg-icons';
+import { faEllipsisV, faLightbulb, faHistory, faWindowMaximize, faChartBar } from '@fortawesome/free-solid-svg-icons';
 import ComparisonLoadingComponent from 'components/Comparison/ComparisonLoadingComponent';
 import ComparisonTable from 'components/Comparison/Comparison';
 import ExportToLatex from 'components/Comparison/ExportToLatex.js';
@@ -26,20 +26,22 @@ import ROUTES from 'constants/routes.js';
 import { useHistory, Link } from 'react-router-dom';
 import { openAuthDialog } from 'actions/auth';
 import { CSVLink } from 'react-csv';
-import { isObject } from 'lodash';
 import { generateRdfDataVocabularyFile } from 'utils';
-import Tippy from '@tippy.js/react';
+import Tippy from '@tippyjs/react';
 import { connect } from 'react-redux';
 import { useCookies } from 'react-cookie';
 import PropTypes from 'prop-types';
 import ExactMatch from 'assets/img/comparison-exact-match.svg';
 import IntelligentMerge from 'assets/img/comparison-intelligent-merge.svg';
+import AddVisualizationModal from 'libs/selfVisModel/ComparisonComponents/AddVisualizationModal';
+import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
+import PreviewVisualizationComparison from 'libs/selfVisModel/ComparisonComponents/PreviewVisualizationComparison';
 import { NavLink } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import env from '@beam-australia/react-env';
 
 function Comparison(props) {
-    const [
+    const {
         metaData,
         contributions,
         properties,
@@ -76,8 +78,11 @@ function Comparison(props) {
         setShortLink,
         setAuthors,
         loadCreatedBy,
-        loadProvenanceInfos
-    ] = useComparison({});
+        loadProvenanceInfos,
+        loadVisualizations
+    } = useComparison({});
+
+    /** adding some additional state for meta data **/
 
     const [cookies, setCookie] = useCookies();
     const history = useHistory();
@@ -97,12 +102,17 @@ function Comparison(props) {
     const [showAddContribution, setShowAddContribution] = useState(false);
     const [showComparisonVersions, setShowComparisonVersions] = useState(false);
     const [showExportCitationsDialog, setShowExportCitationsDialog] = useState(false);
-
+    const [showVisualizationModal, setShowVisualizationModal] = useState(false);
+    const [applyReconstruction, setUseReconstructedData] = useState(false);
     /**
      * Is case of an error the user can go to the previous link in history
      */
     const handleGoBack = () => {
         history.goBack();
+    };
+
+    const closeOnExport = () => {
+        setShowVisualizationModal(false);
     };
 
     const onDismissShiftMouseWheelScroll = () => {
@@ -130,6 +140,27 @@ function Comparison(props) {
         setResponseHash(null);
         setComparisonType(type);
         setDropdownMethodOpen(false);
+    };
+
+    /**
+     * Expand a preview of a visualization
+     *
+     * @param {Boolean} val weather to use reconstructed data
+     */
+    const expandVisualization = val => {
+        setUseReconstructedData(val);
+        if (val === false) {
+            const model = new SelfVisDataModel();
+            model.resetCustomizationModel();
+        }
+        setShowVisualizationModal(true);
+    };
+
+    const integrateData = initData => {
+        const model = new SelfVisDataModel();
+        model.integrateInputData(initData);
+
+        return true;
     };
 
     const getObservatoryInfo = async () => {
@@ -162,7 +193,7 @@ function Comparison(props) {
                         <ButtonGroup className="float-right mb-4 ml-1">
                             <Dropdown group isOpen={dropdownDensityOpen} toggle={() => setDropdownDensityOpen(v => !v)} style={{ marginRight: 3 }}>
                                 <DropdownToggle color="darkblue" size="sm">
-                                    <Icon icon={faWindowMaximize} className="mr-1" /> <span className="mr-1">View</span>
+                                    <Icon icon={faWindowMaximize} className="mr-1" /> View
                                 </DropdownToggle>
                                 <DropdownMenu>
                                     <DropdownItem onClick={handleFullWidth}>
@@ -182,21 +213,35 @@ function Comparison(props) {
                                     </DropdownItem>
                                 </DropdownMenu>
                             </Dropdown>
-                            <Button
-                                className="flex-shrink-0"
-                                color="darkblue"
-                                size="sm"
-                                style={{ marginRight: 3 }}
-                                onClick={() => setShowAddContribution(v => !v)}
-                            >
-                                <Icon icon={faPlus} style={{ margin: '2px 4px 0 0' }} /> Add contribution
-                            </Button>
+                            {!!metaData.id ? (
+                                <Button
+                                    color="darkblue"
+                                    size="sm"
+                                    onClick={() => {
+                                        setUseReconstructedData(false);
+                                        setShowVisualizationModal(!showVisualizationModal);
+                                    }}
+                                    style={{ marginRight: 3 }}
+                                >
+                                    <Icon icon={faChartBar} /> Add visualization
+                                </Button>
+                            ) : (
+                                <Tippy
+                                    hideOnClick={false}
+                                    content="Cannot add visualization to a unpublished comparison. You must publish the comparison first to use this functionality."
+                                >
+                                    <span style={{ marginRight: 3 }} className="btn btn-darkblue btn-sm disabled">
+                                        <Icon icon={faChartBar} /> Add visualization
+                                    </span>
+                                </Tippy>
+                            )}
                             <Dropdown group isOpen={dropdownOpen} toggle={() => setDropdownOpen(v => !v)}>
                                 <DropdownToggle color="darkblue" size="sm" className="rounded-right">
                                     <span className="mr-2">More</span> <Icon icon={faEllipsisV} />
                                 </DropdownToggle>
                                 <DropdownMenu right>
                                     <DropdownItem header>Customize</DropdownItem>
+                                    <DropdownItem onClick={() => setShowAddContribution(v => !v)}>Add contribution</DropdownItem>
                                     <DropdownItem onClick={() => setShowPropertiesDialog(v => !v)}>Select properties</DropdownItem>
                                     <Dropdown isOpen={dropdownMethodOpen} toggle={() => setDropdownMethodOpen(v => !v)} direction="left">
                                         <DropdownToggle tag="div" className="dropdown-item" style={{ cursor: 'pointer' }}>
@@ -345,7 +390,6 @@ function Comparison(props) {
                             {metaData.id && provenance && <ObservatoryBox provenance={provenance} />}
                         </div>
                     )}
-
                     {!isFailedLoadingMetaData && !isFailedLoadingComparisonResult && (
                         <>
                             {contributionsList.length > 3 && (
@@ -363,6 +407,22 @@ function Comparison(props) {
                             )}
                             {contributionsList.length > 1 && !isLoadingComparisonResult ? (
                                 <div className="mt-1">
+                                    {integrateData({
+                                        metaData,
+                                        contributions,
+                                        properties,
+                                        data,
+                                        authors, // do we need this? maybe to add a new author who creates the comparison
+                                        contributionsList,
+                                        predicatesList
+                                    }) && (
+                                        <PreviewVisualizationComparison
+                                            comparisonId={metaData.id}
+                                            expandVisualization={expandVisualization}
+                                            visualizations={metaData.visualizations}
+                                        />
+                                    )}
+
                                     <ComparisonTable
                                         data={data}
                                         properties={properties}
@@ -405,7 +465,7 @@ function Comparison(props) {
                 </div>
             </ContainerAnimated>
 
-            {metaData.id && ((isObject(createdBy) && createdBy.id) || provenance) && (
+            {metaData.id && (
                 <ProvenanceBox creator={createdBy} provenance={provenance} changeObservatory={getObservatoryInfo} resourceId={metaData.id} />
             )}
 
@@ -486,6 +546,26 @@ function Comparison(props) {
                 toggle={() => setShowExportCitationsDialog(v => !v)}
                 DOI={metaData?.doi}
                 comparisonId={metaData?.id}
+            />
+
+            <AddVisualizationModal
+                toggle={() => setShowVisualizationModal(v => !v)}
+                showDialog={showVisualizationModal}
+                // Some data we track as input for the new data model TODO Check what we need
+                initialData={{
+                    metaData,
+                    contributions,
+                    properties,
+                    data,
+                    authors, // do we need this? maybe to add a new author who creates the comparison
+                    contributionsList,
+                    predicatesList
+                }}
+                closeOnExport={closeOnExport}
+                updatePreviewComponent={() => {
+                    loadVisualizations(metaData.id);
+                }}
+                useReconstructedData={applyReconstruction}
             />
         </div>
     );

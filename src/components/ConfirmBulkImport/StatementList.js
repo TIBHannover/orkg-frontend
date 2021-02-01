@@ -1,7 +1,7 @@
 import { ListGroup } from 'reactstrap';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes.js';
-import Tippy from '@tippy.js/react';
+import Tippy from '@tippyjs/react';
 import { StatementsGroupStyle, PropertyStyle, ValuesStyle, ValueItemStyle } from 'components/StatementBrowser/styled';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
@@ -16,7 +16,7 @@ const ListStatements = props => {
                     <div>
                         <span className="propertyLabel">
                             {idToLabel[property] ? (
-                                <Link to={reverse(ROUTES.PREDICATE, { id: property })} target="_blank">
+                                <Link to={reverse(ROUTES.PROPERTY, { id: property })} target="_blank">
                                     {idToLabel[property]}
                                 </Link>
                             ) : (

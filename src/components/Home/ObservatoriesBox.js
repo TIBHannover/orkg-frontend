@@ -4,7 +4,7 @@ import ROUTES from 'constants/routes.js';
 import useObservatories from './hooks/useObservatories';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
-import Tippy from '@tippy.js/react';
+import Tippy from '@tippyjs/react';
 
 export default function ObservatoriesBox() {
     const [observatories, isLoading] = useObservatories(false);
