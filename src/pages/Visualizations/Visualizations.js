@@ -81,9 +81,7 @@ const Visualizations = () => {
     return (
         <>
             <Container className="d-flex align-items-center">
-                <div className="d-flex flex-grow-1 mt-4 mb-4">
-                    <h1 className="h4">View all published visualizations</h1>
-                </div>
+                <h1 className="h4 flex-grow-1 mt-4 mb-4">View all published visualizations</h1>
                 <ButtonGroup>
                     <HeaderSearchButton placeholder="Search visualizations..." type={CLASSES.VISUALIZATION} />
                 </ButtonGroup>
