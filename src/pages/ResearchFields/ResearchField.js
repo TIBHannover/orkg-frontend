@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
     Container,
     Button,
@@ -18,26 +18,36 @@ import {
     ListGroupItem
 } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faSpinner, faEllipsisV, faAngleDoubleDown } from '@fortawesome/free-solid-svg-icons';
+import { faSpinner, faEllipsisV, faAngleDoubleDown, faPen } from '@fortawesome/free-solid-svg-icons';
 import useResearchField from 'components/ResearchField/hooks/useResearchField';
 import useResearchFieldObservatories from 'components/ResearchField/hooks/useResearchFieldObservatories';
-import useResearchFieldPapers from 'components/ResearchField/hooks/useResearchFieldPapers';
-import useResearchFieldComparison from 'components/ResearchField/hooks/useResearchFieldComparison';
 import useResearchFieldProblems from 'components/ResearchField/hooks/useResearchFieldProblems';
-import ComparisonCard from 'components/ComparisonCard/ComparisonCard';
+import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
+import ExternalDescription from 'components/ResearchProblem/ExternalDescription';
+import ObservatoriesCarousel from 'components/ObservatoriesCarousel/ObservatoriesCarousel';
 import Breadcrumbs from 'components/Breadcrumbs/Breadcrumbs';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
 import { reverse } from 'named-urls';
 import { NavLink } from 'react-router-dom';
-import PaperCard from 'components/PaperCard/PaperCard';
 import ROUTES from 'constants/routes';
+import Papers from 'components/ResearchField/Papers';
+import Comparisons from 'components/ResearchField/Comparisons';
+
+function usePrevious(value) {
+    const ref = useRef();
+    useEffect(() => {
+        ref.current = value;
+    });
+    return ref.current;
+}
 
 function ResearchField(props) {
-    const [researchFieldData, subResearchFields, isLoading, isFailedLoading] = useResearchField();
-    const [researchFieldObservatories] = useResearchFieldObservatories();
-    const [papers, isLoadingPapers, hasNextPage, isLastPageReached, loadMorePapers] = useResearchFieldPapers();
-    const [comparisons, isLoadingComparisons, hasNextPageComparison, isLastPageReachedComparison, loadMoreComparisons] = useResearchFieldComparison();
+    const [researchFieldData, subResearchFields, isLoading, isFailedLoading, loadResearchFieldData] = useResearchField();
+    const [editMode, setEditMode] = useState(false);
+    const prevEditMode = usePrevious({ editMode });
+    const [observatories, isLoadingObservatories] = useResearchFieldObservatories();
     const [
         researchProblems,
         isLoadingResearchProblems,
@@ -51,7 +61,15 @@ function ResearchField(props) {
 
     const [isSubResearchFieldsModalOpen, setIsSubResearchFieldsModalOpen] = useState(false);
     const [isProblemsModalOpen, setIsProblemsModalOpen] = useState(false);
-    const [isObservatoriesModalOpen, setIsObservatoriesModalOpen] = useState(false);
+
+    const user = useSelector(state => state.auth.user);
+
+    useEffect(() => {
+        if (!editMode && prevEditMode && prevEditMode.editMode !== editMode) {
+            loadResearchFieldData(researchFieldId);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [editMode]);
 
     return (
         <div>
@@ -63,12 +81,28 @@ function ResearchField(props) {
             {!isLoading && isFailedLoading && <div className="text-center mt-4 mb-4">Failed loading the resource</div>}
             {!isLoading && !isFailedLoading && (
                 <div>
+                    {editMode && (
+                        <StatementBrowserDialog
+                            show={editMode}
+                            toggleModal={() => setEditMode(v => !v)}
+                            id={researchFieldId}
+                            label={researchFieldData.label}
+                            enableEdit={true}
+                            syncBackend={true}
+                            type="resource"
+                        />
+                    )}
                     <Breadcrumbs researchFieldId={researchFieldId} disableLastField />
 
                     <Container className="d-flex align-items-center">
                         <h1 className="h4 mt-4 mb-4 flex-grow-1">Research field</h1>
 
                         <ButtonDropdown isOpen={menuOpen} toggle={() => setMenuOpen(v => !v)} nav inNavbar>
+                            {!!user && user.isCurationAllowed && (
+                                <Button size="sm" className="float-right" onClick={() => setEditMode(v => !v)} color="darkblue">
+                                    <Icon icon={faPen} /> Edit
+                                </Button>
+                            )}
                             <DropdownToggle size="sm" color="darkblue" className="px-3 rounded-right" style={{ marginLeft: 2 }}>
                                 <Icon icon={faEllipsisV} />
                             </DropdownToggle>
@@ -83,6 +117,12 @@ function ResearchField(props) {
                         <Card>
                             <CardBody>
                                 <h3 className="mt-4 mb-4">{researchFieldData && researchFieldData.label}</h3>
+                                {researchFieldData.description && <div className="mb-4">{researchFieldData.description}</div>}
+                                {researchFieldData.sameAs && (
+                                    <ExternalDescription
+                                        query={researchFieldData.sameAs ? researchFieldData.sameAs.label : researchFieldData.label}
+                                    />
+                                )}
                             </CardBody>
                         </Card>
 
@@ -245,52 +285,10 @@ function ResearchField(props) {
                                 </div>
                             </Col>
                             <Col md="4" className="d-flex">
-                                <div className="box rounded-lg p-4 flex-grow-1">
-                                    <h5>Observatories</h5>
-                                    {researchFieldObservatories && researchFieldObservatories.length > 0 && (
-                                        <ul className="pl-1 pt-2">
-                                            {researchFieldObservatories.slice(0, 5).map(observatory => (
-                                                <li key={`obsrf${observatory.id}`}>
-                                                    <Link to={reverse(ROUTES.OBSERVATORY, { id: observatory.id })}>{observatory.name} </Link>
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    )}
-                                    {researchFieldObservatories.length > 5 && (
-                                        <>
-                                            <Button
-                                                onClick={() => setIsObservatoriesModalOpen(v => !v)}
-                                                className="mt-1 mb-2 mr-3 float-right clearfix p-0"
-                                                color="link"
-                                            >
-                                                <small>+ See more</small>
-                                            </Button>
-                                        </>
-                                    )}
-                                    {researchFieldObservatories.length > 5 && (
-                                        <Modal isOpen={isObservatoriesModalOpen} toggle={() => setIsObservatoriesModalOpen(v => !v)} size="lg">
-                                            <ModalHeader toggle={() => setIsObservatoriesModalOpen(v => !v)}>
-                                                Observatories of {researchFieldData && researchFieldData.label}{' '}
-                                            </ModalHeader>
-                                            <ModalBody>
-                                                <div className="pl-3 pr-3">
-                                                    <ListGroup>
-                                                        {researchFieldObservatories.map(observatory => (
-                                                            <ListGroupItem key={`obsrf${observatory.id}`} className="justify-content-between">
-                                                                <Link
-                                                                    onClick={() => setIsObservatoriesModalOpen(false)}
-                                                                    to={reverse(ROUTES.OBSERVATORY, { id: observatory.id })}
-                                                                >
-                                                                    {observatory.name}
-                                                                </Link>
-                                                            </ListGroupItem>
-                                                        ))}
-                                                    </ListGroup>
-                                                </div>
-                                            </ModalBody>
-                                        </Modal>
-                                    )}
-                                    {researchFieldObservatories && researchFieldObservatories.length === 0 && <>No observatories.</>}
+                                <div className="box rounded-lg flex-grow-1">
+                                    <h5 className="pt-4 pl-4">Observatories</h5>
+                                    <hr className="mx-3 mt-0" />
+                                    <ObservatoriesCarousel observatories={observatories} isLoading={isLoadingObservatories} />
                                 </div>
                             </Col>
                         </Row>
@@ -300,93 +298,14 @@ function ResearchField(props) {
                         <h1 className="h4 mt-4 mb-4 flex-grow-1">Comparisons</h1>
                     </Container>
                     <Container className="p-0">
-                        {comparisons.length > 0 && (
-                            <div>
-                                {comparisons.map(comparison => {
-                                    return comparison && <ComparisonCard comparison={{ ...comparison }} key={`pc${comparison.id}`} />;
-                                })}
-                            </div>
-                        )}
-                        {comparisons.length === 0 && !isLoadingComparisons && (
-                            <div className="box rounded-lg p-5 text-center mt-4 mb-4">
-                                There are no published comparisons for this research field, yet.
-                                <br />
-                            </div>
-                        )}
-                        {isLoadingComparisons && (
-                            <div className="text-center mt-4 mb-4">
-                                <Icon icon={faSpinner} spin /> Loading
-                            </div>
-                        )}
-                        {!isLoadingComparisons && hasNextPageComparison && (
-                            <div
-                                style={{ cursor: 'pointer' }}
-                                className="list-group-item list-group-item-action text-center mt-2"
-                                onClick={!isLoadingComparisons ? loadMoreComparisons : undefined}
-                                onKeyDown={e => (e.keyCode === 13 ? (!isLoadingComparisons ? loadMoreComparisons : undefined) : undefined)}
-                                role="button"
-                                tabIndex={0}
-                            >
-                                Load more comparisons
-                            </div>
-                        )}
-                        {!hasNextPageComparison && isLastPageReachedComparison && (
-                            <div className="text-center mt-3">You have reached the last page.</div>
-                        )}
+                        <Comparisons researchFieldId={researchFieldId} />
                     </Container>
 
                     <Container className="p-0">
                         <h1 className="h4 mt-4 mb-4 flex-grow-1">Papers</h1>
                     </Container>
                     <Container className="p-0">
-                        {papers.length > 0 && (
-                            <div>
-                                {papers.map(paper => {
-                                    return (
-                                        paper && (
-                                            <PaperCard
-                                                paper={{
-                                                    id: paper.id,
-                                                    title: paper.label,
-                                                    ...paper
-                                                }}
-                                                key={`pc${paper.id}`}
-                                            />
-                                        )
-                                    );
-                                })}
-                            </div>
-                        )}
-                        {papers.length === 0 && !isLoadingPapers && (
-                            <div className="box rounded-lg p-5 text-center mt-4 mb-4">
-                                There are no papers for this research field, yet.
-                                <br />
-                                <br />
-                                <Link to={ROUTES.ADD_PAPER.GENERAL_DATA}>
-                                    <Button size="sm" color="primary " className="mr-3">
-                                        Add paper
-                                    </Button>
-                                </Link>
-                            </div>
-                        )}
-                        {isLoadingPapers && (
-                            <div className="text-center mt-4 mb-4">
-                                <Icon icon={faSpinner} spin /> Loading
-                            </div>
-                        )}
-                        {!isLoadingPapers && hasNextPage && (
-                            <div
-                                style={{ cursor: 'pointer' }}
-                                className="list-group-item list-group-item-action text-center mt-2"
-                                onClick={!isLoadingPapers ? loadMorePapers : undefined}
-                                onKeyDown={e => (e.keyCode === 13 ? (!isLoadingPapers ? loadMorePapers : undefined) : undefined)}
-                                role="button"
-                                tabIndex={0}
-                            >
-                                Load more papers
-                            </div>
-                        )}
-                        {!hasNextPage && isLastPageReached && <div className="text-center mt-3">You have reached the last page.</div>}
+                        <Papers researchFieldId={researchFieldId} boxShadow />
                     </Container>
                 </div>
             )}

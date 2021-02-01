@@ -173,6 +173,10 @@ export default function ProvenanceBox(props) {
                 callBack={props.changeObservatory}
                 showDialog={showAssignObservatory}
                 resourceId={props.resourceId}
+                observatory={!isEmpty(props.observatoryInfo) ? props.observatoryInfo : null}
+                organization={
+                    !isEmpty(props.observatoryInfo) && !isEmpty(props.observatoryInfo.organization) ? props.observatoryInfo.organization : null
+                }
                 toggle={() => setShowAssignObservatory(v => !v)}
             />
         </div>

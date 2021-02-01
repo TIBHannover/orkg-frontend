@@ -77,7 +77,7 @@ const Results = props => {
                 break;
             }
             case PREDICATE_TYPE_ID: {
-                link = reverse(ROUTES.PREDICATE, { id: resourceId });
+                link = reverse(ROUTES.PROPERTY, { id: resourceId });
                 break;
             }
             default: {
