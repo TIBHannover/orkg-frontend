@@ -11,7 +11,7 @@ import { EditModeHeader, Title } from 'pages/ViewPaper';
 import PropTypes from 'prop-types';
 import { useLocation } from 'react-router-dom';
 
-function Predicate(props) {
+function Property(props) {
     const location = useLocation();
     const [error, setError] = useState(null);
     const [label, setLabel] = useState('');
@@ -104,7 +104,7 @@ function Predicate(props) {
     );
 }
 
-Predicate.propTypes = {
+Property.propTypes = {
     match: PropTypes.shape({
         params: PropTypes.shape({
             id: PropTypes.string.isRequired
@@ -112,4 +112,4 @@ Predicate.propTypes = {
     }).isRequired
 };
 
-export default Predicate;
+export default Property;

@@ -14,10 +14,12 @@ import Changelog from 'pages/Changelog/Changelog';
 import NotFound from 'pages/NotFound';
 import Papers from 'pages/Papers';
 import Comparisons from 'pages/Comparisons';
-import PredicateDetails from 'pages/Predicates/Predicate';
-import ClassDetails from 'pages/Classes/ClassDetails';
 import Classes from 'pages/Classes/Classes';
-import Predicates from 'pages/Predicates/Predicates';
+import ClassDetails from 'pages/Classes/ClassDetails';
+import AddClass from 'pages/Classes/AddClass';
+import Properties from 'pages/Properties/Properties';
+import AddProperty from 'pages/Properties/AddProperty';
+import PropertyDetails from 'pages/Properties/Property';
 import ContributionTemplates from 'pages/ContributionTemplates/ContributionTemplates';
 import ContributionTemplate from 'pages/ContributionTemplates/ContributionTemplate';
 import ROUTES from 'constants/routes';
@@ -62,19 +64,41 @@ const routes = [
         component: Resources
     },
     {
+        path: ROUTES.RESOURCE,
+        component: ResourceDetails
+    },
+    {
         path: ROUTES.ADD_RESOURCE,
         exact: true,
         component: requireAuthentication(AddResource)
     },
     {
-        path: ROUTES.PREDICATES,
+        path: ROUTES.PROPERTIES,
         exact: true,
-        component: Predicates
+        component: Properties
+    },
+    {
+        path: ROUTES.PROPERTY,
+        component: PropertyDetails
+    },
+    {
+        path: ROUTES.ADD_PROPERTY,
+        exact: true,
+        component: requireAuthentication(AddProperty)
     },
     {
         path: ROUTES.CLASSES,
         exact: true,
         component: Classes
+    },
+    {
+        path: ROUTES.CLASS,
+        component: ClassDetails
+    },
+    {
+        path: ROUTES.ADD_CLASS,
+        exact: true,
+        component: requireAuthentication(AddClass)
     },
     {
         path: ROUTES.CONTRIBUTION_TEMPLATES,
@@ -143,6 +167,19 @@ const routes = [
         )
     },
     {
+        /* TODO: Remove this route (it's temporarily backward compatibility for moving predicates to properties naming */
+        path: ROUTES.PREDICATES,
+        exact: true,
+        component: () => <Redirect to={{ pathname: reverse(ROUTES.PROPERTIES), state: { status: 301 } }} />
+    },
+    {
+        /* TODO: Remove this route (it's temporarily backward compatibility for moving predicates to properties naming */
+        path: ROUTES.PREDICATE + '*',
+        exact: true,
+        // eslint-disable-next-line react/prop-types
+        component: ({ match }) => <Redirect to={{ pathname: reverse(ROUTES.PROPERTY, { id: match.params.id }), state: { status: 301 } }} />
+    },
+    {
         path: ROUTES.PAPERS,
         exact: true,
         component: Papers
@@ -197,18 +234,6 @@ const routes = [
         component: Stats
     },
     /* Legacy routes, only used for debugging now */
-    {
-        path: ROUTES.RESOURCE,
-        component: ResourceDetails
-    },
-    {
-        path: ROUTES.PREDICATE,
-        component: PredicateDetails
-    },
-    {
-        path: ROUTES.CLASS,
-        component: ClassDetails
-    },
     {
         path: ROUTES.FEATURED_COMPARISONS,
         component: FeaturedComparisons
