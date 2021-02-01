@@ -24,7 +24,8 @@ import Templates from 'pages/Templates/Templates';
 import Template from 'pages/Templates/Template';
 import ROUTES from 'constants/routes';
 import RedirectShortLinks from 'pages/RedirectShortLinks';
-import ResearchField from 'pages/ResearchField';
+import ResearchField from 'pages/ResearchFields/ResearchField';
+import ResearchFields from 'pages/ResearchFields/ResearchFields';
 import ResearchProblem from './pages/ResearchProblem';
 import Resources from 'pages/Resources/Resources';
 import Organizations from 'pages/Organizations/Organizations';
@@ -195,6 +196,10 @@ const routes = [
     {
         path: ROUTES.RESEARCH_FIELD,
         component: ResearchField
+    },
+    {
+        path: ROUTES.RESEARCH_FIELDS,
+        component: ResearchFields
     },
     {
         path: ROUTES.VENUE_PAGE,

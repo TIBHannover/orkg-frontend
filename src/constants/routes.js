@@ -33,6 +33,7 @@ const routes = {
     COMPARISONS: '/comparisons',
     RESEARCH_PROBLEM: '/problem/:researchProblemId',
     RESEARCH_FIELD: '/field/:researchFieldId',
+    RESEARCH_FIELDS: '/fields',
     VENUE_PAGE: '/venue/:venueId',
     AUTHOR_PAGE: '/author/:authorId',
     LICENSE: '/license',
