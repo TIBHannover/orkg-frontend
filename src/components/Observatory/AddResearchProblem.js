@@ -29,7 +29,7 @@ class AddResearchProblem extends Component {
     createObservatoryResearchProblem = async (id, problemId, organizationId) => {
         this.setState({ isLoadingProblem: true });
         try {
-            await addResourceToObservatory(id, organizationId, problemId).then(a => {
+            await addResourceToObservatory({ observatory_id: id, organization_id: organizationId, id: problemId }).then(a => {
                 toast.success('Research problem added successfully');
                 this.props.updateObservatoryResearchProblem();
                 this.props.toggle();
