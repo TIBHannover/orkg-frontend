@@ -35,7 +35,7 @@ const StyledAlertCookie = styled(Alert)`
         left: 0;
         width: 100%;
         margin: 0 !important;
-        z-index: 999;
+        z-index: 2147483647;
         opacity: 0;
         visibility: hidden;
         border-radius: 0;
