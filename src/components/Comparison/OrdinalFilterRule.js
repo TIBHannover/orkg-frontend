@@ -53,7 +53,7 @@ const OrdinalFilterRule = props => {
     const maxLabel = typeIsDate ? 'is before or at the same date' : 'is less than or equal to';
     const maxRuleType = typeIsDate ? 'lteDate' : 'lte';
 
-    const nEqPlaceHolder = typeIsDate ? 'yyyy-mm-dd...' : 'values...';
+    const nEqPlaceHolder = typeIsDate ? 'date1,date2,...' : 'value1,value2,...';
     const nEqLabel = 'not equal to';
     const nEqRuleType = typeIsDate ? 'nEqDate' : 'nEq';
 
@@ -114,7 +114,7 @@ const OrdinalFilterRule = props => {
         if (!isEmptyOrValid(nEqInuptValue)) {
             return;
         }
-        if (event.key === 'Enter' || event.key === 'Tab') {
+        if (event.key === 'Enter' || event.key === 'Tab' || event.key === ',') {
             setNEqInuptValue('');
             setNEqValue([...nEqValue, createOption(nEqInuptValue)]);
             updateRules(calRules(minInput, maxInput, [...nEqValue, createOption(nEqInuptValue)]));
