@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import useOntology from 'components/PdfTextAnnotation/hooks/useOntology';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';

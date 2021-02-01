@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import ObservatoryCard from 'components/ObservatoryCard/ObservatoryCard';
 import { getAllObservatories, getObservatoriesStats } from 'services/backend/observatories';

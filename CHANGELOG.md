@@ -5,6 +5,30 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [0.26](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.25...V0.26) - 2021-01-13
+
+### Changes
+
+- fix(CsvImport): new properties with new resources [`#474`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/474)
+- ux(homePage): Improve observatoryCarousel [`#475`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/475)
+- fix(CsvImport): Trimming values [`#473`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/473)
+- style(Comparison): move publication year to the front in comparison header [`#471`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/471)
+- style(Header): reorganize menu items [`#472`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/472)
+- style(Resource): add button to create resource [`#470`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/470)
+- style(Comparison): max-width for content loader for full page comparisons [`#468`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/468)
+- fix(SimilarPapers): index contributions after adding new paper [`#467`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/467)
+- style(ResearchFieldCards): add a button to visit research field page [`#469`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/469)
+- feat(ResearchFields): tree selector for research fields [`#466`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/466)
+- feat(CsvImport): support reusing new resources [`#465`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/465)
+- feat(CsvImport): support URLs in CSV import [`#464`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/464)
+- feat(CsvImport): import CSV file with DOIs [`#463`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/463)
+- feat(Breadcrumbs): make last field clickable [`#460`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/460)
+- chore: update dependencies of ORKG widget [`#459`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/459)
+- feat: make properties clickable throughout the UI [`#455`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/455)
+- fix : Issue with display provenance box when the paper is added by an unknown user [`#456`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/456)
+- fix: Add creators when publishing comparison [`#457`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/457)
+
+---
 ## [0.25](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.24...V0.25) - 2020-12-16
 
 ### Changes
@@ -41,7 +65,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - Add accessibility linter rules [`#429`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/429)
 
 ---
-## [0.23](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.22...V0.23) - 2020-11-16
+## [0.23](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.22...V0.23) - 2020-11-17
 
 ### Changes
 

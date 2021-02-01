@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Button, Modal, ModalHeader, ModalBody } from 'reactstrap';
 import styled from 'styled-components';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPlayCircle } from '@fortawesome/free-regular-svg-icons';
-import Tippy from '@tippy.js/react';
+import Tippy from '@tippyjs/react';
 
 const PlayButton = styled(Button)`
     font-size: 0.9rem !important;
@@ -52,7 +52,7 @@ export default class Video extends Component {
         return (
             <div>
                 <PlayButton color="link" className="p-0 m-0" onClick={this.toggleDialog}>
-                    <Tippy content="Play introduction video" distance={50}>
+                    <Tippy content="Play introduction video" offset={[0, 50]}>
                         <span>
                             <Icon icon={faPlayCircle} />
                         </span>

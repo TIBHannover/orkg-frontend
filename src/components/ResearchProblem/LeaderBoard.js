@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Button, Modal, ModalBody, ModalHeader } from 'reactstrap';
 import { TransitionGroup } from 'react-transition-group';
 import ContributorCard from 'components/ContributorCard/ContributorCard';

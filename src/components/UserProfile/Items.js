@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import PaperCard from 'components/PaperCard/PaperCard';
 import ComparisonCard from 'components/ComparisonCard/ComparisonCard';
@@ -149,7 +149,14 @@ const Items = props => {
                         return null;
                     })}
                     {!isLoading && hasNextPage && (
-                        <div style={{ cursor: 'pointer' }} className="list-group-item list-group-item-action text-center" onClick={handleLoadMore}>
+                        <div
+                            style={{ cursor: 'pointer' }}
+                            className="list-group-item list-group-item-action text-center"
+                            onClick={handleLoadMore}
+                            onKeyDown={e => (e.keyCode === 13 ? handleLoadMore : undefined)}
+                            role="button"
+                            tabIndex={0}
+                        >
                             View more {props.filterLabel}
                         </div>
                     )}

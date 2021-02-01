@@ -1,4 +1,3 @@
-import React from 'react';
 import { Badge, NavLink } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faCalendar, faUser } from '@fortawesome/free-solid-svg-icons';
@@ -14,6 +13,7 @@ function ComparisonMetaData(props) {
         <div>
             {props.metaData.title ? (
                 <>
+                    {/*<PreviewComponent comparisonId={props.metaData.id} propagateClick={props.propagateClick} reloadingFlag={props.reloadingFlag} />*/}
                     {props.metaData.description && (
                         <div style={{ lineHeight: 1.5 }} className="h6 mb-2">
                             {props.metaData.description}
@@ -86,6 +86,8 @@ function ComparisonMetaData(props) {
 ComparisonMetaData.propTypes = {
     metaData: PropTypes.object,
     authors: PropTypes.array
+    // reloadingFlag: PropTypes.bool,
+    // propagateClick: PropTypes.func
 };
 
 export default ComparisonMetaData;

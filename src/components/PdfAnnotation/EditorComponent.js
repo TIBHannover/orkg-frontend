@@ -1,4 +1,4 @@
-import React from 'react';
+import { createRef } from 'react';
 import NativeListener from 'react-native-listener';
 import { BaseEditorComponent } from '@handsontable/react';
 import { InputGroup, DropdownMenu, InputGroupButtonDropdown, Input } from 'reactstrap';
@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 import { setLabelCache } from 'actions/pdfAnnotation';
-import Tippy from '@tippy.js/react';
+import Tippy from '@tippyjs/react';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
 import { CLASSES } from 'constants/graphSettings';
 import { createResource, resourcesUrl } from 'services/backend/resources';
@@ -20,9 +20,9 @@ class EditorComponent extends BaseEditorComponent {
     constructor(props) {
         super(props);
 
-        this.mainElementRef = React.createRef();
-        this.resourceInputRef = React.createRef();
-        this.literalInputRef = React.createRef();
+        this.mainElementRef = createRef();
+        this.resourceInputRef = createRef();
+        this.literalInputRef = createRef();
 
         this.state = {
             value: '',

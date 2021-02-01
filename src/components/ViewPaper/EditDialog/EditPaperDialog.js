@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Button, Modal, ModalHeader, ModalBody, ListGroup, CustomInput } from 'reactstrap';
 import {
     createLiteralStatement,
@@ -14,7 +14,7 @@ import { updateResource, createResource } from 'services/backend/resources';
 import { markAsVerified, markAsUnverified } from 'services/backend/papers';
 import REGEX from 'constants/regex';
 import { toast } from 'react-toastify';
-import Tippy from '@tippy.js/react';
+import Tippy from '@tippyjs/react';
 import { connect } from 'react-redux';
 import EditItem from './EditItem';
 import { loadPaper } from 'actions/viewPaper';

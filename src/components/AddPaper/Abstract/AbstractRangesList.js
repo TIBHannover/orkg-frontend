@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
-import { ListGroup, ListGroupItem, Badge } from 'reactstrap';
+import { Component } from 'react';
+import { ListGroup, ListGroupItem, Badge, Button } from 'reactstrap';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { updateAnnotationClass, removeAnnotation, toggleEditAnnotation } from 'actions/addPaper';
-import Tippy from '@tippy.js/react';
+import Tippy from '@tippyjs/react';
 import { predicatesUrl } from 'services/backend/predicates';
 import capitalize from 'capitalize';
 import styled, { withTheme } from 'styled-components';
@@ -16,11 +16,12 @@ import { compose } from 'redux';
 
 const ListGroupItemStyle = styled(ListGroupItem)`
     .rangeOption {
-        display: none;
+        visibility: hidden;
         cursor: pointer;
     }
 
     &:hover .rangeOption {
+        visibility: visible;
         display: inline-block !important;
     }
 `;
@@ -80,20 +81,30 @@ class AbstractRangesList extends Component {
                                                     {range.class.label}
                                                 </Badge>
                                                 <RangeItemOption className="float-right">
-                                                    <span className="rangeOption mr-3" onClick={() => this.props.toggleEditAnnotation(range.id)}>
+                                                    <Button
+                                                        color="link"
+                                                        size="sm"
+                                                        className="rangeOption p-0 mr-3"
+                                                        onClick={() => this.props.toggleEditAnnotation(range.id)}
+                                                    >
                                                         <Tippy content="Edit label">
                                                             <span>
                                                                 <Icon icon={faPen} /> Edit
                                                             </span>
                                                         </Tippy>
-                                                    </span>
-                                                    <span className="rangeOption mr-2" onClick={() => this.props.removeAnnotation(range)}>
+                                                    </Button>
+                                                    <Button
+                                                        color="link"
+                                                        size="sm"
+                                                        className="rangeOption p-0 mr-2"
+                                                        onClick={() => this.props.removeAnnotation(range)}
+                                                    >
                                                         <Tippy content="Delete Annotation">
                                                             <span>
                                                                 <Icon icon={faTrash} /> Delete
                                                             </span>
                                                         </Tippy>
-                                                    </span>
+                                                    </Button>
                                                 </RangeItemOption>
                                             </>
                                         ) : (
@@ -112,12 +123,15 @@ class AbstractRangesList extends Component {
                                                     range_id: range.id,
                                                     isEditing: range.isEditing
                                                 }}
+                                                onBlur={() => {
+                                                    this.props.toggleEditAnnotation(range.id);
+                                                }}
                                                 key={value => value}
                                                 isClearable
                                                 openMenuOnFocus={true}
                                                 autoLoadOption={true}
                                                 allowCreate={true}
-                                                autoFocus={false}
+                                                autoFocus={true}
                                             />
                                         )}
                                     </div>

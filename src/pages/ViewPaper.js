@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Container, Alert, UncontrolledAlert } from 'reactstrap';
 import { getStatementsBySubject, createResourceStatement, deleteStatementById } from 'services/backend/statements';
 import { getUserInformationById } from 'services/backend/users';
@@ -350,12 +350,20 @@ class ViewPaper extends Component {
                                 ${this.state.editMode ? 'rounded-bottom' : 'rounded'}`}
                         >
                             {this.state.loading && (
-                                <ContentLoader height={38} speed={2} primaryColor="#f3f3f3" secondaryColor="#ecebeb">
-                                    <rect x="0" y="10" width="350" height="12" />
-                                    <rect x="0" y="28" rx="5" ry="5" width="30" height="8" />
-                                    <rect x="35" y="28" rx="5" ry="5" width="30" height="8" />
-                                    <rect x="70" y="28" rx="5" ry="5" width="30" height="8" />
-                                    <rect x="105" y="28" rx="5" ry="5" width="30" height="8" />
+                                <ContentLoader
+                                    height="100%"
+                                    width="100%"
+                                    viewBox="0 0 100 10"
+                                    style={{ width: '100% !important' }}
+                                    speed={2}
+                                    backgroundColor="#f3f3f3"
+                                    foregroundColor="#ecebeb"
+                                >
+                                    <rect x="0" y="0" width="80" height="4" />
+                                    <rect x="0" y="6" rx="1" ry="1" width="10" height="2" />
+                                    <rect x="12" y="6" rx="1" ry="1" width="10" height="2" />
+                                    <rect x="24" y="6" rx="1" ry="1" width="10" height="2" />
+                                    <rect x="36" y="6" rx="1" ry="1" width="10" height="2" />
                                 </ContentLoader>
                             )}
                             {!this.state.loading && !this.state.loadingFailed && (

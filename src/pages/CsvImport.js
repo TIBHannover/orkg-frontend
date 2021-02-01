@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Alert, Button, Form, FormGroup, Label, Table } from 'reactstrap';
 import ConfirmBulkImport from 'components/ConfirmBulkImport/ConfirmBulkImport';
 import CsvReader from 'react-csv-reader';
 import styled from 'styled-components';
 import StepContainer from 'components/StepContainer';
 import HelpModal from 'components/CsvImport/HelpModal';
-import Tippy from '@tippy.js/react';
+import Tippy from '@tippyjs/react';
 import checkDataValidation from 'components/ConfirmBulkImport/CSVSchema';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
@@ -33,7 +33,7 @@ const CsvImport = () => {
     const [isHelpModalOpen, setIsHelpModalOpen] = useState(false);
 
     const handleOnFileLoaded = (_data, fileInfo) => {
-        setData(_data);
+        setData(_data.map(r => r.map(s => (s ? s.trim() : ''))));
         setIsFinished(false);
         setFileName(fileInfo.name);
         validateCsv(_data);

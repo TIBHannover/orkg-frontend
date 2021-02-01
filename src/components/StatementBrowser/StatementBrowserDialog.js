@@ -1,10 +1,8 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Modal, ModalHeader, ModalBody, Button } from 'reactstrap';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import Statements from 'components/StatementBrowser/Statements/StatementsContainer';
-import { Provider } from 'react-redux';
-import configureStore from 'store';
+import Statements from 'components/StatementBrowser/StatementBrowser';
 import SameAsStatements from 'pages/SameAsStatements';
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -20,7 +18,6 @@ class StatementBrowserDialog extends Component {
             // clone the original value of openExistingResourcesInDialog
             previousOpenExistingResourcesInDialog: Boolean(JSON.stringify(props.openExistingResourcesInDialog))
         };
-        this.store = configureStore(); //create a new store because the statement browser should be completely independent from the current state
     }
 
     render() {
@@ -58,28 +55,16 @@ class StatementBrowserDialog extends Component {
                     )}
                 </ModalHeader>
                 <ModalBody>
-                    {this.props.newStore ? (
-                        <Provider store={this.store}>
-                            <Statements
-                                rootNodeType={this.props.type === 'resource' ? 'resource' : 'predicate'}
-                                enableEdit={this.props.enableEdit}
-                                syncBackend={this.props.syncBackend}
-                                initialSubjectId={this.props.id}
-                                initialSubjectLabel={this.props.label}
-                                newStore={this.props.newStore}
-                                openExistingResourcesInDialog={false}
-                            />
-                        </Provider>
-                    ) : (
-                        <Statements
-                            rootNodeType={this.props.type === 'resource' ? 'resource' : 'predicate'}
-                            enableEdit={this.props.enableEdit}
-                            initialSubjectId={this.props.id}
-                            initialSubjectLabel={this.props.label}
-                            openExistingResourcesInDialog={false}
-                            newStore={this.props.newStore}
-                        />
-                    )}
+                    <Statements
+                        rootNodeType={this.props.type === 'resource' ? 'resource' : 'predicate'}
+                        enableEdit={this.props.enableEdit}
+                        syncBackend={this.props.syncBackend}
+                        initialSubjectId={this.props.id}
+                        initialSubjectLabel={this.props.label}
+                        openExistingResourcesInDialog={false}
+                        newStore={this.props.newStore}
+                    />
+
                     <SameAsStatements />
                 </ModalBody>
             </Modal>

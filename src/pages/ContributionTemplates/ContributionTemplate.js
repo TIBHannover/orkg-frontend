@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import {
     Container,
     Button,
@@ -30,7 +30,7 @@ import { getParamFromQueryString } from 'utils';
 import styled, { withTheme } from 'styled-components';
 import VisibilitySensor from 'react-visibility-sensor';
 import { EditModeHeader, Title } from 'pages/ViewPaper';
-import Tippy from '@tippy.js/react';
+import Tippy from '@tippyjs/react';
 import { getClassById } from 'services/backend/classes';
 import classnames from 'classnames';
 import { compose } from 'redux';

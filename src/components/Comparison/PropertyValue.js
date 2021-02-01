@@ -1,9 +1,9 @@
-import Tippy from '@tippy.js/react';
+import Tippy from '@tippyjs/react';
 import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
 import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
 import { upperFirst } from 'lodash';
 import PropTypes from 'prop-types';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Button } from 'reactstrap';
 
 const PropertyValue = ({ id, label, similar }) => {

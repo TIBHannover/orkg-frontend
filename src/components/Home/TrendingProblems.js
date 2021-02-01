@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faFire, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { getTopResearchProblems } from 'services/backend/problems';
-import Tippy from '@tippy.js/react';
+import Tippy from '@tippyjs/react';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes';
 

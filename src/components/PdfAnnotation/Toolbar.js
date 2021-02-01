@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Button, ButtonGroup } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSearchMinus, faSearchPlus, faExpandArrowsAlt, faTimesCircle, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
@@ -7,7 +7,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import Confirm from 'reactstrap-confirm';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
-import Tippy from '@tippy.js/react';
+import Tippy from '@tippyjs/react';
 import HelpModal from 'components/PdfAnnotation/HelpModal';
 
 const ToolbarStyled = styled.div`

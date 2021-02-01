@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Container, Card, CardFooter } from 'reactstrap';
 import { getParentResearchFields, getStatementsBySubjectAndPredicate } from 'services/backend/statements';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -118,8 +118,16 @@ function Breadcrumbs(props) {
                             </span>
                         ))}
                     {isLoading && (
-                        <ContentLoader height={1} width={50} speed={2} primaryColor="#dcdee6" secondaryColor="#cdced6">
-                            <rect x="0" y="0" rx="0" ry="0" width="50" height="100" />
+                        <ContentLoader
+                            height="100%"
+                            width="100%"
+                            viewBox="0 0 100 2"
+                            style={{ width: '100% !important' }}
+                            speed={2}
+                            backgroundColor="#dcdee6"
+                            foregroundColor="#cdced6"
+                        >
+                            <rect x="0" y="0" rx="0" ry="0" width="100" height="50" />
                         </ContentLoader>
                     )}
                 </CardFooter>

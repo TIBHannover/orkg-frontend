@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { Container, Button, FormGroup, Label, FormText, ButtonGroup } from 'reactstrap';
 import { classesUrl, getClassById } from 'services/backend/classes';
 import { updateResourceClasses as updateResourceClassesNetwork } from 'services/backend/resources';
 import { getResource } from 'services/backend/resources';
 import { getStatementsBySubjectAndPredicate } from 'services/backend/statements';
-import StatementBrowser from 'components/StatementBrowser/Statements/StatementsContainer';
+import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
 import { EditModeHeader, Title } from 'pages/ViewPaper';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
 import InternalServerError from 'pages/InternalServerError';
@@ -15,12 +15,12 @@ import RequireAuthentication from 'components/RequireAuthentication/RequireAuthe
 import NotFound from 'pages/NotFound';
 import { useLocation, Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
-import Tippy from '@tippy.js/react';
+import Tippy from '@tippyjs/react';
 import ROUTES from 'constants/routes.js';
 import { connect, useSelector } from 'react-redux';
 import { resetStatementBrowser } from 'actions/statementBrowser';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faPen, faTrash, faExternalLinkAlt, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faPen, faTrash, faExternalLinkAlt, faTimes, faPlus } from '@fortawesome/free-solid-svg-icons';
 import Confirm from 'components/ConfirmationModal/ConfirmationModal';
 import { CLASSES, PREDICATES } from 'constants/graphSettings';
 import { toast } from 'react-toastify';
@@ -28,6 +28,8 @@ import PropTypes from 'prop-types';
 import { orderBy } from 'lodash';
 import useDeleteResource from 'components/Resource/hooks/useDeleteResource';
 import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
+import { getVisualization } from '../../services/similarity';
+import GDCVisualizationRenderer from 'libs/selfVisModel/RenderingComponents/GDCVisualizationRenderer';
 
 const DEDICATED_PAGE_LINKS = {
     [CLASSES.PAPER]: {
@@ -80,6 +82,8 @@ function Resource(props) {
     const [isLoading, setIsLoading] = useState(true);
     const [editMode, setEditMode] = useState(false);
     const [canBeDeleted, setCanBeDeleted] = useState(false);
+    const [visualizationModelForGDC, setVisualizationModelForGDC] = useState(undefined);
+    const [hasVisualizationModelForGDC, setHasVisualizationModelForGDC] = useState(false);
     const values = useSelector(state => state.statementBrowser.values);
     const properties = useSelector(state => state.statementBrowser.properties);
     const isCurationAllowed = useSelector(state => state.auth.user?.isCurationAllowed);
@@ -103,6 +107,12 @@ function Resource(props) {
                             setClasses(classes);
                         })
                         .then(() => {
+                            if (responseJson.classes.includes(CLASSES.VISUALIZATION)) {
+                                getVisualization(resourceId).then(model => {
+                                    setVisualizationModelForGDC(model);
+                                    setHasVisualizationModelForGDC(true);
+                                });
+                            }
                             if (responseJson.classes.includes(CLASSES.COMPARISON)) {
                                 getStatementsBySubjectAndPredicate({ subjectId: props.match.params.id, predicateId: PREDICATES.HAS_DOI }).then(st => {
                                     if (st.length > 0) {
@@ -181,6 +191,16 @@ function Resource(props) {
                     <Container className="d-flex align-items-center">
                         <h1 className="h4 mt-4 mb-4 flex-grow-1">Resource view</h1>
                         <ButtonGroup className="flex-shrink-0">
+                            <RequireAuthentication
+                                size="sm"
+                                component={Button}
+                                color="darkblue"
+                                style={{ marginRight: 2 }}
+                                tag={Link}
+                                to={ROUTES.ADD_RESOURCE}
+                            >
+                                <Icon icon={faPlus} className="mr-1" /> Create resource
+                            </RequireAuthentication>
                             {dedicatedLink && (
                                 <Button
                                     color="darkblue"
@@ -303,6 +323,14 @@ function Resource(props) {
                             )}
                         </div>
                         <hr />
+
+                        {/*Adding Visualization Component here */}
+                        {hasVisualizationModelForGDC && (
+                            <div className="mb-4">
+                                <GDCVisualizationRenderer model={visualizationModelForGDC} />
+                                <hr />
+                            </div>
+                        )}
                         <h3 className="h5">Statements</h3>
                         <div className="clearfix">
                             <StatementBrowser

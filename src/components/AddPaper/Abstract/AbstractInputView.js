@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Label, FormFeedback, Alert } from 'reactstrap';
 import Textarea from 'react-textarea-autosize';
-import { updateAbstract } from '../../../actions/addPaper';
+import { updateAbstract } from 'actions/addPaper';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import Tooltip from '../../Utils/Tooltip';
+import Tooltip from 'components/Utils/Tooltip';
 
 class AbstractInputView extends Component {
     handleChange = event => {

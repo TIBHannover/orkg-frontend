@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
     Container,
     Button,
@@ -323,6 +323,9 @@ function ResearchField(props) {
                                 style={{ cursor: 'pointer' }}
                                 className="list-group-item list-group-item-action text-center mt-2"
                                 onClick={!isLoadingComparisons ? loadMoreComparisons : undefined}
+                                onKeyDown={e => (e.keyCode === 13 ? (!isLoadingComparisons ? loadMoreComparisons : undefined) : undefined)}
+                                role="button"
+                                tabIndex={0}
                             >
                                 Load more comparisons
                             </div>
@@ -376,6 +379,9 @@ function ResearchField(props) {
                                 style={{ cursor: 'pointer' }}
                                 className="list-group-item list-group-item-action text-center mt-2"
                                 onClick={!isLoadingPapers ? loadMorePapers : undefined}
+                                onKeyDown={e => (e.keyCode === 13 ? (!isLoadingPapers ? loadMorePapers : undefined) : undefined)}
+                                role="button"
+                                tabIndex={0}
                             >
                                 Load more papers
                             </div>

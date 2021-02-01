@@ -1,4 +1,3 @@
-import React from 'react';
 import { StyledStatementItem } from 'components/StatementBrowser/styled';
 import PropTypes from 'prop-types';
 

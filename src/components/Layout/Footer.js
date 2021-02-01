@@ -1,4 +1,3 @@
-import React from 'react';
 import { Container, Row, Col, Badge } from 'reactstrap';
 import ROUTES from 'constants/routes';
 import { Link } from 'react-router-dom';

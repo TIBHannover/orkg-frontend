@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { createRef, Component } from 'react';
 import { FormGroup, Label, Button, Modal, ModalBody, ModalHeader, ModalFooter } from 'reactstrap';
 import { sortableContainer, sortableElement, sortableHandle } from 'react-sortable-hoc';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -84,14 +84,33 @@ const AuthorTag = styled.div`
 const SortableItem = sortableElement(({ author, index, authorIndex, editAuthor, removeAuthor, itemLabel }) => (
     <AuthorTag>
         <DragHandle />
-        <div className="name" onClick={e => editAuthor(authorIndex)}>
+        <div
+            className="name"
+            onClick={e => editAuthor(authorIndex)}
+            onKeyDown={e => (e.keyCode === 13 ? editAuthor(authorIndex) : undefined)}
+            role="button"
+            tabIndex={0}
+        >
             {author.label}
             {author.orcid && <Icon style={{ margin: '4px' }} icon={faOrcid} />}
         </div>
-        <div style={{ padding: '8px' }} onClick={e => editAuthor(authorIndex)}>
+        <div
+            style={{ padding: '8px' }}
+            onClick={e => editAuthor(authorIndex)}
+            onKeyDown={e => (e.keyCode === 13 ? editAuthor(authorIndex) : undefined)}
+            role="button"
+            tabIndex={0}
+        >
             <Icon icon={faPen} />
         </div>
-        <div title={`Delete ${itemLabel}`} className="delete" onClick={e => removeAuthor(author.id)}>
+        <div
+            title={`Delete ${itemLabel}`}
+            className="delete"
+            onClick={e => removeAuthor(author.id)}
+            onKeyDown={e => (e.keyCode === 13 ? removeAuthor(author.id) : undefined)}
+            role="button"
+            tabIndex={0}
+        >
             <Icon icon={faTimes} />
         </div>
     </AuthorTag>
@@ -111,7 +130,7 @@ class AuthorsInput extends Component {
     constructor(props) {
         super(props);
 
-        this.inputRef = React.createRef();
+        this.inputRef = createRef();
 
         this.state = {
             showAuthorForm: false,

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import 'assets/scss/DefaultLayout.scss';
 import { ToastContainer, Slide } from 'react-toastify';
 import { Alert, Button } from 'reactstrap';
@@ -63,6 +63,14 @@ function CloseToastButton({ closeToast }) {
                 e.stopPropagation();
                 closeToast(e);
             }}
+            onKeyDown={e => {
+                if (e.keyCode === 13) {
+                    e.stopPropagation();
+                    closeToast(e);
+                }
+            }}
+            role="button"
+            tabIndex={0}
         >
             <Icon icon={faTimes} />
         </span>

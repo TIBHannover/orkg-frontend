@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
+import { createRef, Component } from 'react';
 import styled from 'styled-components';
-import Tippy from '@tippy.js/react';
+import Tippy from '@tippyjs/react';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { Button, ButtonGroup } from 'reactstrap';
@@ -33,8 +33,8 @@ class StatementOptionButton extends Component {
     constructor(props) {
         super(props);
 
-        this.yesButtonRef = React.createRef();
-        this.cancelButtonRef = React.createRef();
+        this.yesButtonRef = createRef();
+        this.cancelButtonRef = createRef();
     }
 
     onShow = () => {

@@ -1,4 +1,4 @@
-import Tippy from '@tippy.js/react';
+import Tippy from '@tippyjs/react';
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -10,7 +10,7 @@ const FilterWrapper = props => {
                 .map(({ propertyName, type, value }) => `${propertyName} ${strignifyType(type)} ${Array.isArray(value) ? value.join(', ') : value}`)
                 .join(' ; ')}
             arrow={true}
-            enabled={rules.length > 0}
+            disabled={rules.length === 0}
         >
             <span>{props.children}</span>
         </Tippy>
