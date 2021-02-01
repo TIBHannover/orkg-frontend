@@ -21,23 +21,19 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner, faEllipsisV, faAngleDoubleDown } from '@fortawesome/free-solid-svg-icons';
 import useResearchField from 'components/ResearchField/hooks/useResearchField';
 import useResearchFieldObservatories from 'components/ResearchField/hooks/useResearchFieldObservatories';
-import useResearchFieldPapers from 'components/ResearchField/hooks/useResearchFieldPapers';
-import useResearchFieldComparison from 'components/ResearchField/hooks/useResearchFieldComparison';
 import useResearchFieldProblems from 'components/ResearchField/hooks/useResearchFieldProblems';
-import ComparisonCard from 'components/ComparisonCard/ComparisonCard';
 import Breadcrumbs from 'components/Breadcrumbs/Breadcrumbs';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { reverse } from 'named-urls';
 import { NavLink } from 'react-router-dom';
-import PaperCard from 'components/PaperCard/PaperCard';
 import ROUTES from 'constants/routes';
+import Papers from 'components/ResearchField/Papers';
+import Comparisons from 'components/ResearchField/Comparisons';
 
 function ResearchField(props) {
     const [researchFieldData, subResearchFields, isLoading, isFailedLoading] = useResearchField();
     const [researchFieldObservatories] = useResearchFieldObservatories();
-    const [papers, isLoadingPapers, hasNextPage, isLastPageReached, loadMorePapers] = useResearchFieldPapers();
-    const [comparisons, isLoadingComparisons, hasNextPageComparison, isLastPageReachedComparison, loadMoreComparisons] = useResearchFieldComparison();
     const [
         researchProblems,
         isLoadingResearchProblems,
@@ -300,93 +296,14 @@ function ResearchField(props) {
                         <h1 className="h4 mt-4 mb-4 flex-grow-1">Comparisons</h1>
                     </Container>
                     <Container className="p-0">
-                        {comparisons.length > 0 && (
-                            <div>
-                                {comparisons.map(comparison => {
-                                    return comparison && <ComparisonCard comparison={{ ...comparison }} key={`pc${comparison.id}`} />;
-                                })}
-                            </div>
-                        )}
-                        {comparisons.length === 0 && !isLoadingComparisons && (
-                            <div className="box rounded-lg p-5 text-center mt-4 mb-4">
-                                There are no published comparisons for this research field, yet.
-                                <br />
-                            </div>
-                        )}
-                        {isLoadingComparisons && (
-                            <div className="text-center mt-4 mb-4">
-                                <Icon icon={faSpinner} spin /> Loading
-                            </div>
-                        )}
-                        {!isLoadingComparisons && hasNextPageComparison && (
-                            <div
-                                style={{ cursor: 'pointer' }}
-                                className="list-group-item list-group-item-action text-center mt-2"
-                                onClick={!isLoadingComparisons ? loadMoreComparisons : undefined}
-                                onKeyDown={e => (e.keyCode === 13 ? (!isLoadingComparisons ? loadMoreComparisons : undefined) : undefined)}
-                                role="button"
-                                tabIndex={0}
-                            >
-                                Load more comparisons
-                            </div>
-                        )}
-                        {!hasNextPageComparison && isLastPageReachedComparison && (
-                            <div className="text-center mt-3">You have reached the last page.</div>
-                        )}
+                        <Comparisons researchFieldId={researchFieldId} />
                     </Container>
 
                     <Container className="p-0">
                         <h1 className="h4 mt-4 mb-4 flex-grow-1">Papers</h1>
                     </Container>
                     <Container className="p-0">
-                        {papers.length > 0 && (
-                            <div>
-                                {papers.map(paper => {
-                                    return (
-                                        paper && (
-                                            <PaperCard
-                                                paper={{
-                                                    id: paper.id,
-                                                    title: paper.label,
-                                                    ...paper
-                                                }}
-                                                key={`pc${paper.id}`}
-                                            />
-                                        )
-                                    );
-                                })}
-                            </div>
-                        )}
-                        {papers.length === 0 && !isLoadingPapers && (
-                            <div className="box rounded-lg p-5 text-center mt-4 mb-4">
-                                There are no papers for this research field, yet.
-                                <br />
-                                <br />
-                                <Link to={ROUTES.ADD_PAPER.GENERAL_DATA}>
-                                    <Button size="sm" color="primary " className="mr-3">
-                                        Add paper
-                                    </Button>
-                                </Link>
-                            </div>
-                        )}
-                        {isLoadingPapers && (
-                            <div className="text-center mt-4 mb-4">
-                                <Icon icon={faSpinner} spin /> Loading
-                            </div>
-                        )}
-                        {!isLoadingPapers && hasNextPage && (
-                            <div
-                                style={{ cursor: 'pointer' }}
-                                className="list-group-item list-group-item-action text-center mt-2"
-                                onClick={!isLoadingPapers ? loadMorePapers : undefined}
-                                onKeyDown={e => (e.keyCode === 13 ? (!isLoadingPapers ? loadMorePapers : undefined) : undefined)}
-                                role="button"
-                                tabIndex={0}
-                            >
-                                Load more papers
-                            </div>
-                        )}
-                        {!hasNextPage && isLastPageReached && <div className="text-center mt-3">You have reached the last page.</div>}
+                        <Papers researchFieldId={researchFieldId} boxShadow />
                     </Container>
                 </div>
             )}
