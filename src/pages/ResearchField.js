@@ -288,7 +288,7 @@ function ResearchField(props) {
                                     )}
                                 </div>
                             </Col>
-                            <Col md="4" className="">
+                            <Col md="4" className="d-flex">
                                 <div className="box rounded-lg flex-grow-1">
                                     <h5 className="pt-4 pl-4">Observatories</h5>
                                     <hr className="mx-3 mt-0" />
