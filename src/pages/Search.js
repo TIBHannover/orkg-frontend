@@ -27,16 +27,6 @@ class Search extends Component {
 
         this.defaultsFilters = [
             {
-                label: 'Paper',
-                labelPlural: 'Papers',
-                id: CLASSES.PAPER
-            },
-            {
-                label: 'Research Problem',
-                labelPlural: 'Research Problems',
-                id: CLASSES.PROBLEM
-            },
-            {
                 label: 'Author',
                 labelPlural: 'Authors',
                 id: CLASSES.AUTHOR
@@ -47,14 +37,19 @@ class Search extends Component {
                 id: CLASSES.COMPARISON
             },
             {
-                label: 'Venue',
-                labelPlural: 'Venues',
-                id: CLASSES.VENUE
+                label: 'Paper',
+                labelPlural: 'Papers',
+                id: CLASSES.PAPER
             },
             {
-                label: 'Template',
-                labelPlural: 'Templates',
-                id: CLASSES.CONTRIBUTION_TEMPLATE
+                label: 'Property',
+                labelPlural: 'Properties',
+                id: PREDICATE_TYPE_ID
+            },
+            {
+                label: 'Research Problem',
+                labelPlural: 'Research Problems',
+                id: CLASSES.PROBLEM
             },
             {
                 label: 'Resource',
@@ -62,9 +57,19 @@ class Search extends Component {
                 id: RESOURCE_TYPE_ID
             },
             {
-                label: 'Property',
-                labelPlural: 'Properties',
-                id: PREDICATE_TYPE_ID
+                label: 'Template',
+                labelPlural: 'Templates',
+                id: CLASSES.CONTRIBUTION_TEMPLATE
+            },
+            {
+                label: 'Venue',
+                labelPlural: 'Venues',
+                id: CLASSES.VENUE
+            },
+            {
+                label: 'Visualization',
+                labelPlural: 'Visualizations',
+                id: CLASSES.VISUALIZATION
             }
         ];
 

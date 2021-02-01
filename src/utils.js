@@ -278,11 +278,14 @@ export const getVisualizationData = (id, label, visualizationStatements) => {
     // description
     const description = visualizationStatements.find(statement => statement.predicate.id === PREDICATES.DESCRIPTION);
 
+    const authors = getAuthors(visualizationStatements);
+
     return {
         id,
         label,
         created_at: description ? description.object.created_at : '',
-        description: description ? description.object.label : ''
+        description: description ? description.object.label : '',
+        authorNames: authors.sort((a, b) => a.created_at.localeCompare(b.created_at))
     };
 };
 
