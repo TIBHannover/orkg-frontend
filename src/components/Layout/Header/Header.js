@@ -343,6 +343,14 @@ class Header extends Component {
                                         <DropdownItem tag={RouterNavLink} exact to={ROUTES.CONTRIBUTION_TEMPLATES}>
                                             Templates
                                         </DropdownItem>
+                                        <DropdownItem
+                                            tag={RouterNavLink}
+                                            exact
+                                            to={ROUTES.BULK_CONTRIBUTION_EDITOR}
+                                            onClick={e => this.requireAuthentication(e, ROUTES.BULK_CONTRIBUTION_EDITOR)}
+                                        >
+                                            Bulk contribution editor
+                                        </DropdownItem>
                                     </DropdownMenu>
                                 </UncontrolledButtonDropdown>
 

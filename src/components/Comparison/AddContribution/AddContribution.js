@@ -3,7 +3,7 @@ import { Modal, ModalHeader, ModalBody, ModalFooter, Button, FormGroup, Input, L
 import { getStatementsBySubjectAndPredicate } from 'services/backend/statements';
 import { getResourcesByClass } from 'services/backend/resources';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
+import { faExternalLinkAlt, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import ContentLoader from 'react-content-loader';
 import Tooltip from 'components/Utils/Tooltip';
 import { toast } from 'react-toastify';
@@ -14,6 +14,7 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { debounce } from 'lodash';
 import { PREDICATES, CLASSES } from 'constants/graphSettings';
+import Tippy from '@tippyjs/react';
 
 const StyledLoadMoreButton = styled.div`
     padding-top: 0;
@@ -145,7 +146,6 @@ export default function AddContribution(props) {
         <Modal isOpen={props.showDialog} toggle={props.toggle} size="lg">
             <ModalHeader toggle={props.toggle}>Add contribution</ModalHeader>
             <ModalBody>
-                <p>Use the form below to search for a paper and add its contribution to comparison table</p>
                 <FormGroup>
                     <Label for="title">
                         <Tooltip message="Enter the title of the paper">Paper title</Tooltip>
@@ -178,22 +178,37 @@ export default function AddContribution(props) {
                     )}
                     {paperResult.length > 0 && (
                         <>
-                            <p>
-                                Select contributions from the list then click on the <i>Add to comparison</i> button:
-                            </p>
                             <ListGroup>
                                 {paperResult.map((paper, index) => {
                                     return (
                                         <StyledListGroupItem action key={`result-${index}`} className="pt-2 pb-2">
                                             <Label check className="pr-2 pl-2">
                                                 <Input type="checkbox" onChange={e => togglePaper(paper, e)} /> {paper.label}{' '}
-                                                <Link
-                                                    title="View the paper page"
-                                                    target="_blank"
-                                                    to={reverse(ROUTES.VIEW_PAPER, { resourceId: paper.id })}
-                                                >
-                                                    <Icon icon={faExternalLinkAlt} />
-                                                </Link>
+                                                <Tippy content="Open paper in new window">
+                                                    <span>
+                                                        <Link
+                                                            title="View the paper page"
+                                                            target="_blank"
+                                                            to={reverse(ROUTES.VIEW_PAPER, { resourceId: paper.id })}
+                                                        >
+                                                            <Icon icon={faExternalLinkAlt} />
+                                                        </Link>
+                                                    </span>
+                                                </Tippy>
+                                                {props.allowCreate && (
+                                                    <Tippy content="Create new contribution for this paper">
+                                                        <span className="ml-2">
+                                                            <Button
+                                                                color="link"
+                                                                className="p-0"
+                                                                size="lg"
+                                                                onClick={() => props.onCreateContribution(paper.id)}
+                                                            >
+                                                                <Icon icon={faPlusCircle} />
+                                                            </Button>
+                                                        </span>
+                                                    </Tippy>
+                                                )}
                                             </Label>
                                             {paper.contributions.length > 1 && (
                                                 <ul style={{ listStyle: 'none' }}>
@@ -239,18 +254,25 @@ export default function AddContribution(props) {
                     )}
                 </div>
             </ModalBody>
-            <ModalFooter>
+            <ModalFooter className="d-flex">
+                {props.allowCreate && (
+                    <div className="flex-grow-1">
+                        <Button color="lightblue" onClick={props.onCreatePaper}>
+                            Add new paper
+                        </Button>
+                    </div>
+                )}
                 <Button
                     disabled={selectedContributions.length === 0}
                     color="primary"
                     className="float-right"
                     onClick={() => {
-                        props.addContributions(selectedContributions);
+                        props.onAddContributions(selectedContributions);
                         setSelectedContributions([]);
                         props.toggle();
                     }}
                 >
-                    Add to comparison
+                    Add contribution{selectedContributions.length > 1 && 's'}
                     {selectedContributions.length > 0 && ` (${selectedContributions.length})`}
                 </Button>
             </ModalFooter>
@@ -260,5 +282,14 @@ export default function AddContribution(props) {
 AddContribution.propTypes = {
     showDialog: PropTypes.bool.isRequired,
     toggle: PropTypes.func.isRequired,
-    addContributions: PropTypes.func.isRequired
+    onAddContributions: PropTypes.func.isRequired,
+    allowCreate: PropTypes.bool,
+    onCreateContribution: PropTypes.func,
+    onCreatePaper: PropTypes.func
+};
+
+AddContribution.defaultProps = {
+    allowCreate: false,
+    onCreateContribution: () => {},
+    onCreatePaper: () => {}
 };

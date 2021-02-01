@@ -1,28 +1,16 @@
-import { Collapse, Input } from 'reactstrap';
-import AuthorsInput from 'components/Utils/AuthorsInput';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
-import { StyledStatementItem, StyledListGroupOpen } from './styled';
-import classNames from 'classnames';
-import moment from 'moment';
-import { range } from 'utils';
-import { truncate } from 'lodash';
-import { resourcesUrl } from 'services/backend/resources';
-import PropTypes from 'prop-types';
+import AuthorsInput from 'components/Utils/AuthorsInput';
+import ListItem from 'components/ViewPaper/EditDialog/ListItem';
 import { CLASSES } from 'constants/graphSettings';
+import { truncate } from 'lodash';
+import moment from 'moment';
+import PropTypes from 'prop-types';
+import { Button, Input, InputGroup, InputGroupAddon } from 'reactstrap';
+import { resourcesUrl } from 'services/backend/resources';
+import { range } from 'utils';
 
 const EditItem = props => {
-    const listGroupClass = classNames({
-        statementActive: props.open,
-        statementItem: true,
-        selectable: true,
-        'rounded-bottom': props.isLastItem && !props.open
-    });
-
-    const openBoxClass = classNames({
-        listGroupOpenBorderBottom: props.isLastItem,
-        'rounded-bottom': props.isLastItem
-    });
-
+    const EMPTY_LABEL = 'Empty';
     let input;
     let stringValue;
 
@@ -41,7 +29,7 @@ const EditItem = props => {
                 })}
             </Input>
         );
-        stringValue = props.value ? moment(props.value, 'M').format('MMMM') : 'Not specified';
+        stringValue = props.value ? moment(props.value, 'M').format('MMMM') : EMPTY_LABEL;
     } else if (props.type === 'year') {
         input = (
             <Input type="select" value={props.value} onChange={props.onChange}>
@@ -71,39 +59,39 @@ const EditItem = props => {
                 isClearable={true}
             />
         );
-        stringValue = props.value ? truncate(props.value.label, { length: 60 }) : 'Not specified';
+        stringValue = props.value ? truncate(props.value.label, { length: 60 }) : EMPTY_LABEL;
     } else if (props.type === 'researchField') {
         input = (
-            <AutoComplete
-                allowCreate={false}
-                requestUrl={resourcesUrl}
-                optionsClass={CLASSES.RESEARCH_FIELD}
-                onChange={props.onChange}
-                placeholder="Select a research field"
-                autoFocus
-                cacheOptions
-                value={props.value ? props.value : null}
-                isClearable={false}
-            />
+            <InputGroup>
+                <AutoComplete
+                    allowCreate={false}
+                    requestUrl={resourcesUrl}
+                    optionsClass={CLASSES.RESEARCH_FIELD}
+                    onChange={props.onChange}
+                    placeholder="Search or choose a research field"
+                    autoFocus
+                    cacheOptions
+                    value={props.value ? props.value : null}
+                    isClearable={false}
+                />
+                <InputGroupAddon addonType="append">
+                    <Button color="darkblue">Choose</Button>
+                </InputGroupAddon>
+            </InputGroup>
         );
-        stringValue = props.value && props.value.label ? props.value.label : 'Not specified';
+        stringValue = props.value && props.value.label ? props.value.label : EMPTY_LABEL;
     }
 
     return (
-        <>
-            <StyledStatementItem className={listGroupClass} onClick={props.toggleItem}>
-                {props.open ? (
-                    props.label
-                ) : (
-                    <>
-                        {props.label} : {stringValue ? <i>{stringValue}</i> : 'Not specified'}
-                    </>
-                )}
-            </StyledStatementItem>
-            <Collapse isOpen={props.open}>
-                <StyledListGroupOpen className={openBoxClass}>{input}</StyledListGroupOpen>
-            </Collapse>
-        </>
+        <ListItem
+            toggleItem={props.toggleItem}
+            label={props.label}
+            value={stringValue || EMPTY_LABEL}
+            open={props.open}
+            isLastItem={props.isLastItem}
+        >
+            {input}
+        </ListItem>
     );
 };
 

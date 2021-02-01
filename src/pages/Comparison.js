@@ -520,7 +520,7 @@ function Comparison(props) {
                 loadProvenanceInfos={loadProvenanceInfos}
             />
 
-            <AddContribution addContributions={addContributions} showDialog={showAddContribution} toggle={() => setShowAddContribution(v => !v)} />
+            <AddContribution onAddContributions={addContributions} showDialog={showAddContribution} toggle={() => setShowAddContribution(v => !v)} />
 
             <ExportToLatex
                 data={matrixData}
