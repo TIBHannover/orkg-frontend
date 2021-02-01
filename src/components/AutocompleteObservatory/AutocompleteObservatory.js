@@ -4,6 +4,7 @@ import { getAllObservatories } from 'services/backend/observatories';
 import { getAllOrganizations } from 'services/backend/organizations';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import { Label } from 'reactstrap';
 
 const LogoContainer = styled.div`
     overflow: hidden;
@@ -39,7 +40,6 @@ function AutocompleteObservatory(props) {
             });
         };
         loadOptions();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const onChangeObservatory = selected => {
@@ -60,32 +60,28 @@ function AutocompleteObservatory(props) {
         }
     }, [options, props, props.observatory]);
 
-    const CustomOptionObservatory = innerProps => {
-        return (
-            <components.Option {...innerProps}>
-                <div>{innerProps.data.name}</div>
-                <small className={!innerProps.isSelected ? 'text-muted' : ''}>
-                    {innerProps.data.organizations.length === 1
-                        ? innerProps.data.organizations[0].name
-                        : innerProps.data.organizations.map(or => or.name).join(', ')}
-                </small>
-            </components.Option>
-        );
-    };
+    const CustomOptionObservatory = innerProps => (
+        <components.Option {...innerProps}>
+            <div>{innerProps.data.name}</div>
+            <small className={!innerProps.isSelected ? 'text-muted' : ''}>
+                {innerProps.data.organizations.length === 1
+                    ? innerProps.data.organizations[0].name
+                    : innerProps.data.organizations.map(or => or.name).join(', ')}
+            </small>
+        </components.Option>
+    );
 
-    const CustomOptionOrganization = innerProps => {
-        return (
-            <components.Option {...innerProps}>
-                <div className="d-flex">
-                    <LogoContainer className="mr-2">
-                        <img alt={innerProps.data.name} src={innerProps.data.logo} />
-                    </LogoContainer>
+    const CustomOptionOrganization = innerProps => (
+        <components.Option {...innerProps}>
+            <div className="d-flex">
+                <LogoContainer className="mr-2">
+                    <img alt={innerProps.data.name} src={innerProps.data.logo} />
+                </LogoContainer>
 
-                    {innerProps.data.name}
-                </div>
-            </components.Option>
-        );
-    };
+                {innerProps.data.name}
+            </div>
+        </components.Option>
+    );
 
     return (
         <>
@@ -97,10 +93,11 @@ function AutocompleteObservatory(props) {
                 onChange={onChangeObservatory}
                 getOptionValue={({ id }) => id}
                 getOptionLabel={({ name }) => name}
+                inputId={props.inputId}
             />
 
             <br />
-            <p>Select an organization:</p>
+            <Label for="select-organization">Select an organization</Label>
             <Select
                 value={props.organization}
                 components={{ Option: CustomOptionOrganization }}
@@ -108,6 +105,7 @@ function AutocompleteObservatory(props) {
                 onChange={onChangeOrganization}
                 getOptionValue={({ id }) => id}
                 getOptionLabel={({ name }) => name}
+                inputId="select-organization"
             />
         </>
     );
@@ -117,7 +115,8 @@ AutocompleteObservatory.propTypes = {
     onChangeObservatory: PropTypes.func,
     onChangeOrganization: PropTypes.func,
     observatory: PropTypes.object,
-    organization: PropTypes.object
+    organization: PropTypes.object,
+    inputId: PropTypes.string
 };
 
 export default AutocompleteObservatory;

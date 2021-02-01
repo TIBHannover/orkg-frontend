@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
+import { Modal, ModalHeader, ModalBody, ModalFooter, Button, Label } from 'reactstrap';
 import AutoCompleteObservatory from 'components/AutocompleteObservatory/AutocompleteObservatory';
 import { addResourceToObservatory } from 'services/backend/resources';
 import { toast } from 'react-toastify';
@@ -43,14 +43,15 @@ const ObservatoryModal = props => {
 
     return (
         <Modal isOpen={props.showDialog} toggle={props.toggle}>
-            <ModalHeader toggle={props.toggle}>Assign resource to an Observatory</ModalHeader>
+            <ModalHeader toggle={props.toggle}>Assign resource to an observatory</ModalHeader>
             <ModalBody>
-                <p>Select an observatory:</p>
+                <Label for="select-observatory">Select an observatory</Label>
                 <AutoCompleteObservatory
                     onChangeObservatory={handleChangeObservatory}
                     onChangeOrganization={handleChangeOrganization}
                     observatory={observatory}
                     organization={organization}
+                    inputId="select-observatory"
                 />
             </ModalBody>
             <ModalFooter>
