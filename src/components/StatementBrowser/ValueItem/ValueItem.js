@@ -254,7 +254,7 @@ export default function ValueItem(props) {
                 return props.value.label;
             }
 
-            if (existingResourceId && !resource.isFechted && !resource.isFetching) {
+            if (existingResourceId && !resource.isFetched && !resource.isFetching) {
                 dispatch(
                     fetchStatementsForResource({
                         resourceId: props.value.resourceId,
