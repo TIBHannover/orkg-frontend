@@ -10,6 +10,7 @@ import { faPen, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { EditModeHeader, Title } from 'pages/ViewPaper';
 import PropTypes from 'prop-types';
 import { useLocation } from 'react-router-dom';
+import PropertyStatements from 'components/PropertyStatements/PropertyStatements';
 
 function Property(props) {
     const location = useLocation();
@@ -96,6 +97,7 @@ function Property(props) {
                                     resourcesAsLinks={true}
                                 />
                             </div>
+                            <PropertyStatements propertyId={props.match.params.id} />
                         </div>
                     </Container>
                 </>
