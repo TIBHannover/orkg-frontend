@@ -88,6 +88,13 @@ function Autocomplete(props) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [inputValue]);
 
+    // support for setting the inputValue via the props
+    useEffect(() => {
+        if (props.inputValue !== null) {
+            setInputValue(props.inputValue);
+        }
+    }, [props.inputValue]);
+
     /**
      * Lookup in ORKG backend
      *
@@ -802,7 +809,8 @@ Autocomplete.propTypes = {
     ols: PropTypes.bool,
     inputGroup: PropTypes.bool,
     inputId: PropTypes.string,
-    onChangeInputValue: PropTypes.func
+    onChangeInputValue: PropTypes.func,
+    inputValue: PropTypes.string
 };
 
 Autocomplete.defaultProps = {
@@ -817,6 +825,7 @@ Autocomplete.defaultProps = {
     autoFocus: true,
     ols: false,
     inputGroup: true,
-    inputId: null
+    inputId: null,
+    inputValue: null
 };
 export default withTheme(Autocomplete);

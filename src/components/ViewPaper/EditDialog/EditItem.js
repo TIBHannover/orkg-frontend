@@ -1,15 +1,20 @@
 import AutoComplete from 'components/Autocomplete/Autocomplete';
+import ResearchFieldSelectorModal from 'components/ResearchFieldSelector/ResearchFieldSelectorModal';
 import AuthorsInput from 'components/Utils/AuthorsInput';
 import ListItem from 'components/ViewPaper/EditDialog/ListItem';
 import { CLASSES } from 'constants/graphSettings';
 import { truncate } from 'lodash';
 import moment from 'moment';
 import PropTypes from 'prop-types';
+import { useState } from 'react';
 import { Button, Input, InputGroup, InputGroupAddon } from 'reactstrap';
 import { resourcesUrl } from 'services/backend/resources';
 import { range } from 'utils';
 
 const EditItem = props => {
+    const [isOpenResearchFieldModal, setIsOpenResearchFieldModal] = useState(false);
+    const [inputValue, setInputValue] = useState(null);
+
     const EMPTY_LABEL = 'Empty';
     let input;
     let stringValue;
@@ -61,6 +66,12 @@ const EditItem = props => {
         );
         stringValue = props.value ? truncate(props.value.label, { length: 60 }) : EMPTY_LABEL;
     } else if (props.type === 'researchField') {
+        const handleSelectField = ({ id, label }) => {
+            props.onChange({
+                id,
+                label
+            });
+        };
         input = (
             <InputGroup>
                 <AutoComplete
@@ -73,10 +84,19 @@ const EditItem = props => {
                     cacheOptions
                     value={props.value ? props.value : null}
                     isClearable={false}
+                    onBlur={() => setInputValue('')}
+                    onChangeInputValue={e => setInputValue(e)}
+                    inputValue={inputValue}
                 />
                 <InputGroupAddon addonType="append">
-                    <Button color="darkblue">Choose</Button>
+                    <Button color="darkblue" onClick={() => setIsOpenResearchFieldModal(true)}>
+                        Choose
+                    </Button>
                 </InputGroupAddon>
+
+                {isOpenResearchFieldModal && (
+                    <ResearchFieldSelectorModal isOpen toggle={v => setIsOpenResearchFieldModal(v => !v)} onSelectField={handleSelectField} />
+                )}
             </InputGroup>
         );
         stringValue = props.value && props.value.label ? props.value.label : EMPTY_LABEL;

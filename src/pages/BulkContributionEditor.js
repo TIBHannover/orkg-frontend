@@ -54,7 +54,6 @@ const BulkContributionEditor = () => {
     };
 
     const handleCreatePaper = contributionId => {
-        console.log('contributionId', contributionId);
         handleAddContributions([contributionId]);
         setIsOpenCreatePaper(false);
     };

@@ -336,13 +336,11 @@ class EditPaperDialog extends Component {
         }
     };
 
-    handleResearchFieldChange = async (selected, action) => {
-        if (action.action === 'select-option') {
-            selected.statementId = this.state.researchField && this.state.researchField.statementId ? this.state.researchField.statementId : '';
-            this.setState({
-                researchField: selected
-            });
-        }
+    handleResearchFieldChange = async selected => {
+        selected.statementId = this.state.researchField && this.state.researchField.statementId ? this.state.researchField.statementId : '';
+        this.setState({
+            researchField: selected
+        });
     };
 
     render() {
