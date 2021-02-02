@@ -28,6 +28,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import SuggestedTemplates from 'components/StatementBrowser/SuggestedTemplates/SuggestedTemplates';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { PREDICATES, CLASSES } from 'constants/graphSettings';
+import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
 
 const Title = styled.div`
     font-size: 18px;
@@ -277,7 +278,9 @@ class Contributions extends Component {
                                                             <span key={index}>
                                                                 <Link to={reverse(ROUTES.RESEARCH_PROBLEM, { researchProblemId: problem.id })}>
                                                                     <ResearchProblemButton className="btn btn-link p-0 border-0 align-baseline">
-                                                                        {problem.label}
+                                                                        <DescriptionTooltip id={problem.id} typeId={CLASSES.PROBLEM}>
+                                                                            {problem.label}
+                                                                        </DescriptionTooltip>
                                                                     </ResearchProblemButton>
                                                                 </Link>
                                                                 <br />

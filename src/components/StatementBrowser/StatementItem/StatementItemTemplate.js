@@ -12,6 +12,7 @@ import classNames from 'classnames';
 import ValueItem from 'components/StatementBrowser/ValueItem/ValueItem';
 import AddValue from 'components/StatementBrowser/AddValue/AddValue';
 import StatementOptionButton from 'components/StatementBrowser/StatementOptionButton/StatementOptionButton';
+import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
 import { StatementsGroupStyle, PropertyStyle, ValuesStyle } from 'components/StatementBrowser/styled';
 import { predicatesUrl } from 'services/backend/predicates';
 import defaultProperties from 'components/StatementBrowser/AddProperty/helpers/defaultProperties';
@@ -20,6 +21,7 @@ import { reverse } from 'named-urls';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import ROUTES from 'constants/routes.js';
+import { PREDICATE_TYPE_ID } from 'constants/misc';
 
 export default function StatementItemTemplate(props) {
     const dispatch = useDispatch();
@@ -50,13 +52,19 @@ export default function StatementItemTemplate(props) {
                     {!props.property.isEditing ? (
                         <div>
                             <div className="propertyLabel">
-                                <Link
-                                    to={reverse(ROUTES.PROPERTY, { id: props.property.existingPredicateId })}
-                                    target={!propertiesAsLinks ? '_blank' : '_self'}
-                                    className={!propertiesAsLinks ? 'text-dark' : ''}
-                                >
-                                    {props.predicateLabel}
-                                </Link>
+                                {props.property.existingPredicateId ? (
+                                    <Link
+                                        to={reverse(ROUTES.PROPERTY, { id: props.property.existingPredicateId })}
+                                        target={!propertiesAsLinks ? '_blank' : '_self'}
+                                        className={!propertiesAsLinks ? 'text-dark' : ''}
+                                    >
+                                        <DescriptionTooltip id={props.property.existingPredicateId} typeId={PREDICATE_TYPE_ID}>
+                                            {props.predicateLabel}
+                                        </DescriptionTooltip>
+                                    </Link>
+                                ) : (
+                                    props.predicateLabel
+                                )}
                             </div>
                             {props.enableEdit && (
                                 <div className={propertyOptionsClasses}>
