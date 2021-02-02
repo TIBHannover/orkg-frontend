@@ -5,7 +5,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { getStatementsBySubjectAndPredicate } from 'services/backend/statements';
 import { CLASSES, PREDICATES } from 'constants/graphSettings';
-import { PREDICATE_TYPE_ID, RESOURCE_TYPE_ID } from 'constants/misc';
+import { CLASS_TYPE_ID, PREDICATE_TYPE_ID, RESOURCE_TYPE_ID } from 'constants/misc';
 
 const DescriptionTooltip = props => {
     const [description, setDescription] = useState('');
@@ -36,6 +36,8 @@ const DescriptionTooltip = props => {
                 return 'Property';
             case RESOURCE_TYPE_ID:
                 return 'Resource';
+            case CLASS_TYPE_ID:
+                return 'Class';
             case CLASSES.PROBLEM:
                 return 'Research problem';
             default:

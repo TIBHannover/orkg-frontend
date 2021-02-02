@@ -27,7 +27,13 @@ const PropertyValue = ({ id, label, similar }) => {
             </Button>
 
             {showStatementBrowser && (
-                <StatementBrowserDialog show={true} type="property" toggleModal={() => setShowStatementBrowser(v => !v)} id={id} label={label} />
+                <StatementBrowserDialog
+                    show={true}
+                    type={PREDICATE_TYPE_ID}
+                    toggleModal={() => setShowStatementBrowser(v => !v)}
+                    id={id}
+                    label={label}
+                />
             )}
         </>
     );
