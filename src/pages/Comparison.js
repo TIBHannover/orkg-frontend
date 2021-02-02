@@ -26,7 +26,6 @@ import ROUTES from 'constants/routes.js';
 import { useHistory, Link } from 'react-router-dom';
 import { openAuthDialog } from 'actions/auth';
 import { CSVLink } from 'react-csv';
-import { isObject } from 'lodash';
 import { generateRdfDataVocabularyFile } from 'utils';
 import Tippy from '@tippyjs/react';
 import { connect } from 'react-redux';
@@ -466,7 +465,7 @@ function Comparison(props) {
                 </div>
             </ContainerAnimated>
 
-            {metaData.id && ((isObject(createdBy) && createdBy.id) || provenance) && (
+            {metaData.id && (
                 <ProvenanceBox creator={createdBy} provenance={provenance} changeObservatory={getObservatoryInfo} resourceId={metaData.id} />
             )}
 
