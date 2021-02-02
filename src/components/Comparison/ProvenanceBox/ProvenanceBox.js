@@ -45,6 +45,11 @@ const StyledOrganizationCard = styled.div`
 function ProvenanceBox(props) {
     const [showAssignObservatory, setShowAssignObservatory] = useState(false);
     const user = useSelector(state => state.auth.user);
+
+    if (isEmpty(props.provenance) && !props.creator && (!user || (!!user && !user.isCurationAllowed))) {
+        return null;
+    }
+
     return (
         <div className="container box rounded-lg mt-4">
             <Row>
@@ -113,6 +118,8 @@ function ProvenanceBox(props) {
                     callBack={props.changeObservatory}
                     showDialog={showAssignObservatory}
                     resourceId={props.resourceId}
+                    observatory={!isEmpty(props.provenance) ? props.provenance : null}
+                    organization={!isEmpty(props.provenance) && !isEmpty(props.provenance.organization) ? props.provenance.organization : null}
                     toggle={() => setShowAssignObservatory(v => !v)}
                 />
             </Row>

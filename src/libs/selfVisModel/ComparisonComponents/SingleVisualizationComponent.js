@@ -102,6 +102,7 @@ const SingleVisualizationComponent = props => {
                     props.expandVisualization(true);
                 }}
                 isHovered={isHovering}
+                id={`#Vis${props.input.reconstructionModel.orkgOrigin}`}
             >
                 <div style={{ padding: '5px', pointerEvents: 'none', minWidth: '200px', minHeight: '100px' }}>
                     {renderingData && (

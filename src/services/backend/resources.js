@@ -68,7 +68,7 @@ export const getContributorsByResourceId = id => {
     });
 };
 
-export const addResourceToObservatory = (observatory_id, organization_id, id) => {
+export const addResourceToObservatory = ({ observatory_id, organization_id, id }) => {
     return submitPutRequest(`${resourcesUrl}${id}/observatory`, { 'Content-Type': 'application/json' }, { observatory_id, organization_id });
 };
 

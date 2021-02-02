@@ -28,7 +28,7 @@ import PropTypes from 'prop-types';
 import { orderBy } from 'lodash';
 import useDeleteResource from 'components/Resource/hooks/useDeleteResource';
 import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
-import { getVisualization } from '../../services/similarity';
+import { getVisualization } from 'services/similarity';
 import GDCVisualizationRenderer from 'libs/selfVisModel/RenderingComponents/GDCVisualizationRenderer';
 
 const DEDICATED_PAGE_LINKS = {
@@ -108,10 +108,16 @@ function Resource(props) {
                         })
                         .then(() => {
                             if (responseJson.classes.includes(CLASSES.VISUALIZATION)) {
-                                getVisualization(resourceId).then(model => {
-                                    setVisualizationModelForGDC(model);
-                                    setHasVisualizationModelForGDC(true);
-                                });
+                                getVisualization(resourceId)
+                                    .then(model => {
+                                        setVisualizationModelForGDC(model);
+                                        setHasVisualizationModelForGDC(true);
+                                    })
+                                    .catch(() => {
+                                        setVisualizationModelForGDC(undefined);
+                                        setHasVisualizationModelForGDC(false);
+                                        toast.error('Error loading visualization preview');
+                                    });
                             }
                             if (responseJson.classes.includes(CLASSES.COMPARISON)) {
                                 getStatementsBySubjectAndPredicate({ subjectId: props.match.params.id, predicateId: PREDICATES.HAS_DOI }).then(st => {
