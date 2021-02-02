@@ -85,7 +85,12 @@ const OrdinalFilterRule = props => {
         min !== '' && validateFunc(min) && rules.push({ propertyId, propertyName, type: minRuleType, value: min });
         max !== '' && validateFunc(max) && rules.push({ propertyId, propertyName, type: maxRuleType, value: max });
 
-        const notEqualValues = val.length > 0 && val.map(item => item.label).filter(validateFunc);
+        const notEqualValues =
+            val.length > 0 &&
+            val
+                .map(item => item.label)
+                .filter(validateFunc)
+                .map(parseFloat);
         notEqualValues.length > 0 && rules.push({ propertyId, propertyName, type: nEqRuleType, value: notEqualValues });
         return rules;
     };
@@ -106,9 +111,11 @@ const OrdinalFilterRule = props => {
         setNEqValue(valueWithoutNUll);
         updateRules(calRules(minInput, maxInput, valueWithoutNUll));
     };
-    const handleInputChangeSel = nEqInuptValue => {
-        isEmptyOrValid(nEqInuptValue) ? setNeqInvalid(false) : setNeqInvalid(true);
-        setNEqInuptValue(nEqInuptValue);
+    const handleInputChangeSel = (nEqInuptValue, { action }) => {
+        if (action !== 'input-blur' && action !== 'menu-close') {
+            isEmptyOrValid(nEqInuptValue) ? setNeqInvalid(false) : setNeqInvalid(true);
+            setNEqInuptValue(nEqInuptValue);
+        }
     };
     const handleKeyDownSel = event => {
         if (!isEmptyOrValid(nEqInuptValue)) {
@@ -131,7 +138,9 @@ const OrdinalFilterRule = props => {
         setNEqInuptValue('');
         setNEqValue([]);
     };
+
     const handleApply = () => {
+        updateRules(calRules(minInput, maxInput, [...nEqValue, createOption(nEqInuptValue)]));
         toggleFilteDialog();
     };
 

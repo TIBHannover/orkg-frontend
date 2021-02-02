@@ -433,7 +433,7 @@ function useComparison() {
         const data = getValuesByPropertyLabel(propertyId).values;
         return [].concat(
             ...Object.keys(data)
-                .filter(key => !value.includes(key))
+                .filter(key => !value.includes(parseFloat(key)))
                 .map(key => data[key])
         );
     };
