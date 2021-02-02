@@ -1,7 +1,7 @@
-import Tippy from '@tippyjs/react';
 import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
-import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
+import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
 import { upperFirst } from 'lodash';
+import { PREDICATE_TYPE_ID } from 'constants/misc';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { Button } from 'reactstrap';
@@ -15,18 +15,16 @@ const PropertyValue = ({ id, label, similar }) => {
 
     return (
         <>
-            <ConditionalWrapper
-                condition={similar && similar.length}
-                wrapper={children => (
-                    <Tippy content={`This property is merged with : ${similar.join(', ')}`} arrow={true}>
-                        <span>{children}*</span>
-                    </Tippy>
-                )}
-            >
-                <Button onClick={handleOpenStatementBrowser} color="link" className="text-light m-0 p-0">
+            <Button onClick={handleOpenStatementBrowser} color="link" className="text-light m-0 p-0">
+                <DescriptionTooltip
+                    id={id}
+                    typeId={PREDICATE_TYPE_ID}
+                    extraContent={similar && similar.length ? `This property is merged with : ${similar.join(', ')}` : ''}
+                >
                     {upperFirst(label)}
-                </Button>
-            </ConditionalWrapper>
+                    {similar && similar.length > 0 && '*'}
+                </DescriptionTooltip>
+            </Button>
 
             {showStatementBrowser && (
                 <StatementBrowserDialog show={true} type="property" toggleModal={() => setShowStatementBrowser(v => !v)} id={id} label={label} />
