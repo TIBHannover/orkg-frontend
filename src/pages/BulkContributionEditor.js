@@ -1,41 +1,22 @@
 import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import useBulkContributionEditor from 'components/BulkContributionEditor/hooks/useBulkContributionEditor';
 import AddContribution from 'components/Comparison/AddContribution/AddContribution';
 import CreateContributionModal from 'components/CreateContributionModal/CreateContributionModal';
 import CreatePaperModal from 'components/CreatePaperModal/CreatePaperModal';
-import ROUTES from 'constants/routes';
-import { uniq } from 'lodash';
-import queryString from 'query-string';
 import { useEffect, useState } from 'react';
-import { useHistory, useLocation } from 'react-router';
 import { Alert, Button, Container } from 'reactstrap';
 
 const BulkContributionEditor = () => {
-    const location = useLocation();
-    const history = useHistory();
-
     const [isOpenAddContribution, setIsOpenAddContribution] = useState(false);
     const [isOpenCreateContribution, setIsOpenCreateContribution] = useState(false);
     const [isOpenCreatePaper, setIsOpenCreatePaper] = useState(false);
     const [createContributionPaperId, setCreateContributionPaperId] = useState(null);
-
-    // parse 'contributions' from query string, ensure always an array is returned
-    const parseQueryString = () => {
-        const { contributions } = queryString.parse(location.search, { arrayFormat: 'comma' });
-        const contributionIds = contributions && !Array.isArray(contributions) ? [contributions] : contributions;
-        return uniq(contributionIds) ?? [];
-    };
-
-    const contributionIds = parseQueryString();
+    const { contributionIds, handleAddContributions, handleRemoveContribution, contributions } = useBulkContributionEditor();
 
     useEffect(() => {
         document.title = 'Bulk contribution editor - ORKG';
     }, []);
-
-    const handleAddContributions = ids => {
-        const idsQueryString = [...contributionIds, ...ids].join(',');
-        history.push(`${ROUTES.BULK_CONTRIBUTION_EDITOR}?contributions=${idsQueryString}`);
-    };
 
     const handleOpenCreateContributionModal = paperId => {
         setIsOpenAddContribution(false);
@@ -72,7 +53,7 @@ const BulkContributionEditor = () => {
                 {contributionIds.length === 0 && <Alert color="info">Start adding contributions by clicking the button on the right</Alert>}
                 {contributionIds.map(id => (
                     <div key={id}>
-                        {id}
+                        {id} <Button onClick={() => handleRemoveContribution(id)}>X</Button>
                         <br />
                     </div>
                 ))}
