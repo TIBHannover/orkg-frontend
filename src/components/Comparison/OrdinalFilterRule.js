@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Input, FormFeedback, Label, Button } from 'reactstrap';
+import { Input, FormFeedback, Label, Button, Col, FormGroup } from 'reactstrap';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faRedoAlt } from '@fortawesome/free-solid-svg-icons';
@@ -142,14 +142,12 @@ const OrdinalFilterRule = props => {
         toggleFilterDialog();
     };
 
-    const w_50 = { width: '50%' };
     return (
         <>
-            <div className="w-100">
-                <div className="mt-2 d-flex align-items-baseline">
-                    <Label style={w_50}>{minLabel}</Label>
+            <FormGroup row>
+                <Label sm={6}>{minLabel}</Label>
+                <Col sm={6}>
                     <Input
-                        style={w_50}
                         type={type}
                         id={`min${propertyId}`}
                         placeholder={minPlaceHolder}
@@ -157,12 +155,14 @@ const OrdinalFilterRule = props => {
                         invalid={minInvalid}
                         onChange={handleMinChange}
                     />
-                </div>
-                <FormFeedback className={minInvalid ? 'd-block text-right' : 'd-none'}>{invalidText}</FormFeedback>
-                <div className="mt-3 d-flex align-items-baseline">
-                    <Label style={w_50}>{maxLabel}</Label>
+                    <FormFeedback className={minInvalid ? 'd-block text-right' : 'd-none'}>{invalidText}</FormFeedback>
+                </Col>
+            </FormGroup>
+
+            <FormGroup row>
+                <Label sm={6}>{maxLabel}</Label>
+                <Col sm={6}>
                     <Input
-                        style={w_50}
                         type={type}
                         id={`max${propertyId}`}
                         placeholder={maxPlaceHolder}
@@ -170,30 +170,31 @@ const OrdinalFilterRule = props => {
                         invalid={maxInvalid}
                         onChange={handleMaxChange}
                     />
-                </div>
-                <FormFeedback className={maxInvalid ? 'd-block text-right' : 'd-none'}>{invalidText}</FormFeedback>
-                <div className="mt-3 d-flex align-items-baseline">
-                    <Label style={w_50}>{nEqLabel}</Label>
-                    <div style={{ ...w_50 }}>
-                        <CreatableSelect
-                            styles={customStyles}
-                            components={{
-                                DropdownIndicator: null
-                            }}
-                            inputValue={nEqInputValue}
-                            isClearable
-                            isMulti
-                            menuIsOpen={false}
-                            onChange={handleChangeSel}
-                            onInputChange={handleInputChangeSel}
-                            onKeyDown={handleKeyDownSel}
-                            placeholder={nEqPlaceHolder}
-                            value={nEqValue}
-                        />
-                    </div>
-                </div>
+                    <FormFeedback className={maxInvalid ? 'd-block text-right' : 'd-none'}>{invalidText}</FormFeedback>
+                </Col>
+            </FormGroup>
+
+            <FormGroup row>
+                <Label sm={6}>{nEqLabel}</Label>
+                <Col sm={6}>
+                    <CreatableSelect
+                        styles={customStyles}
+                        components={{
+                            DropdownIndicator: null
+                        }}
+                        inputValue={nEqInputValue}
+                        isClearable
+                        isMulti
+                        menuIsOpen={false}
+                        onChange={handleChangeSel}
+                        onInputChange={handleInputChangeSel}
+                        onKeyDown={handleKeyDownSel}
+                        placeholder={nEqPlaceHolder}
+                        value={nEqValue}
+                    />
+                </Col>
                 <FormFeedback className={nEqInvalid ? 'd-block text-right' : 'd-none'}>{invalidText}</FormFeedback>
-            </div>
+            </FormGroup>
 
             <div className="d-flex flex-sm-wrap justify-content-end">
                 <Button className="mt-3 mx-1" color="secondary" size="sm" onClick={handleReset}>
