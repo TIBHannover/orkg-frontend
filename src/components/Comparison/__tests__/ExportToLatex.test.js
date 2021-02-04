@@ -1,5 +1,5 @@
 import { mount } from 'enzyme';
-import ExportToLatex from './../ExportToLatex.js';
+import ExportToLatex from '../Export/ExportToLatex.js';
 import moment from 'moment';
 
 const network = require('network');

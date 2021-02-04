@@ -4,17 +4,17 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faEllipsisV, faLightbulb, faHistory, faWindowMaximize, faChartBar } from '@fortawesome/free-solid-svg-icons';
 import ComparisonLoadingComponent from 'components/Comparison/ComparisonLoadingComponent';
 import ComparisonTable from 'components/Comparison/Comparison';
-import ExportToLatex from 'components/Comparison/ExportToLatex.js';
-import GeneratePdf from 'components/Comparison/GeneratePdf.js';
+import ExportToLatex from 'components/Comparison/Export/ExportToLatex.js';
+import GeneratePdf from 'components/Comparison/Export/GeneratePdf.js';
 import SelectProperties from 'components/Comparison/SelectProperties';
 import ValuePlugins from 'components/ValuePlugins/ValuePlugins';
 import AddContribution from 'components/Comparison/AddContribution/AddContribution';
 import ProvenanceBox from 'components/Comparison/ProvenanceBox/ProvenanceBox';
 import ObservatoryBox from 'components/Comparison/ProvenanceBox/ObservatoryBox';
 import Breadcrumbs from 'components/Breadcrumbs/Breadcrumbs';
-import RelatedResources from 'components/Comparison/RelatedResources';
-import RelatedFigures from 'components/Comparison/RelatedFigures';
-import ExportCitation from 'components/Comparison/ExportCitation';
+import RelatedResources from 'components/Comparison/RelatedResources/RelatedResources';
+import RelatedFigures from 'components/Comparison/RelatedResources/RelatedFigures';
+import ExportCitation from 'components/Comparison/Export/ExportCitation';
 import ComparisonMetaData from 'components/Comparison/ComparisonMetaData';
 import Share from 'components/Comparison/Share.js';
 import ComparisonVersions from 'components/Comparison/ComparisonVersions.js';
@@ -39,7 +39,7 @@ import PreviewVisualizationComparison from 'libs/selfVisModel/ComparisonComponen
 import { NavLink } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import env from '@beam-australia/react-env';
-import AppliedRule from 'components/Comparison/AppliedRule';
+import AppliedRule from 'components/Comparison/Filters/AppliedRule';
 import Label from 'reactstrap/lib/Label';
 
 function Comparison(props) {
