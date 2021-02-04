@@ -39,7 +39,6 @@ import PreviewVisualizationComparison from 'libs/selfVisModel/ComparisonComponen
 import { NavLink } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import env from '@beam-australia/react-env';
-import FilterModal from 'components/Comparison/FilterModal';
 import AppliedRule from 'components/Comparison/AppliedRule';
 import Label from 'reactstrap/lib/Label';
 
@@ -65,7 +64,6 @@ function Comparison(props) {
         isFailedLoadingMetaData,
         isLoadingComparisonResult,
         isFailedLoadingComparisonResult,
-        rulesChanged,
         showRules,
         hasNextVersions,
         createdBy,
@@ -78,7 +76,6 @@ function Comparison(props) {
         toggleTranspose,
         removeContribution,
         addContributions,
-        applyAllRules,
         updateRules,
         removeRule,
         getRuleByProperty,
@@ -113,10 +110,6 @@ function Comparison(props) {
     const [showAddContribution, setShowAddContribution] = useState(false);
     const [showComparisonVersions, setShowComparisonVersions] = useState(false);
     const [showExportCitationsDialog, setShowExportCitationsDialog] = useState(false);
-
-    const [showFilterDialog, setShowFilterDialog] = useState(false);
-    const [filterPropertyId, setFilterPropertyId] = useState('');
-    const [shouldChangeColor, setShouldChangeColor] = useState(false);
 
     const [showVisualizationModal, setShowVisualizationModal] = useState(false);
     const [applyReconstruction, setUseReconstructedData] = useState(false);
@@ -186,16 +179,7 @@ function Comparison(props) {
         loadProvenanceInfos(comparisonResource.observatory_id, comparisonResource.organization_id);
     };
 
-    const getValuesByPropertyLabel = inputId => controllData.find(item => item.property.id === inputId);
-    const updateRulesFactory = propertyId => newRules => updateRules(newRules, propertyId);
     const removeRuleFactory = ({ propertyId, type, value }) => () => removeRule({ propertyId, type, value });
-
-    const toggleFilterDialog = propertyId => {
-        setFilterPropertyId(propertyId);
-        setShowFilterDialog(v => !v);
-        setShouldChangeColor(v => !v);
-        showFilterDialog && rulesChanged && applyAllRules(controllData);
-    };
 
     const displayRules = () => {
         return []
@@ -472,10 +456,10 @@ function Comparison(props) {
                                             removeContribution={removeContribution}
                                             transpose={transpose}
                                             viewDensity={viewDensity}
-                                            toggleFilterDialog={toggleFilterDialog}
                                             getRuleByProperty={getRuleByProperty}
-                                            shouldChangeColor={shouldChangeColor}
                                             stringifyType={stringifyType}
+                                            controllData={controllData}
+                                            updateRules={updateRules}
                                         />
                                     </div>
                                 ) : (
@@ -594,14 +578,6 @@ function Comparison(props) {
                 DOI={metaData?.doi}
                 comparisonId={metaData?.id}
             />
-            {filterPropertyId && (
-                <FilterModal
-                    data={getValuesByPropertyLabel(filterPropertyId)}
-                    updateRules={updateRulesFactory(filterPropertyId)}
-                    showFilterDialog={showFilterDialog}
-                    toggleFilterDialog={() => toggleFilterDialog(filterPropertyId)}
-                />
-            )}
 
             <AddVisualizationModal
                 toggle={() => setShowVisualizationModal(v => !v)}

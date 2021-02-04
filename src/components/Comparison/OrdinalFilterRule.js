@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Input, FormFeedback, Label, Button } from 'reactstrap';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -40,7 +40,7 @@ const createOption = label => ({
 
 const OrdinalFilterRule = props => {
     //change apply and reset
-    const { property, rules, updateRules, typeIsDate, DATE_FORMAT, toggleFilterDialog } = props.controldata;
+    const { property, rules, updateRules, typeIsDate, DATE_FORMAT, toggleFilterDialog } = props.dataController;
     const { label: propertyName, id: propertyId } = property;
 
     const type = typeIsDate ? 'datetime' : 'number';
@@ -98,20 +98,18 @@ const OrdinalFilterRule = props => {
     const handleMinChange = event => {
         setMinInput(event.target.value);
         isEmptyOrValid(event.target.value) ? setMinInvalid(false) : setMinInvalid(true);
-        updateRules(calRules(event.target.value, maxInput, nEqValue));
     };
 
     const handleMaxChange = event => {
         setMaxInput(event.target.value);
         isEmptyOrValid(event.target.value) ? setMaxInvalid(false) : setMaxInvalid(true);
-        updateRules(calRules(minInput, event.target.value, nEqValue));
     };
 
     const handleChangeSel = value => {
         const valueWithoutNUll = !value ? [] : value;
         setNEqValue(valueWithoutNUll);
-        updateRules(calRules(minInput, maxInput, valueWithoutNUll));
     };
+
     const handleInputChangeSel = (nEqInputValue, { action }) => {
         if (action !== 'input-blur' && action !== 'menu-close') {
             isEmptyOrValid(nEqInputValue) ? setNeqInvalid(false) : setNeqInvalid(true);
@@ -125,7 +123,6 @@ const OrdinalFilterRule = props => {
         if (event.key === 'Enter' || event.key === 'Tab' || event.key === ',') {
             setNEqInputValue('');
             setNEqValue([...nEqValue, createOption(nEqInputValue)]);
-            updateRules(calRules(minInput, maxInput, [...nEqValue, createOption(nEqInputValue)]));
             event.preventDefault();
         }
     };
@@ -199,11 +196,11 @@ const OrdinalFilterRule = props => {
             </div>
 
             <div className="d-flex flex-sm-wrap justify-content-end">
-                <Button className="mt-3 mx-1" color="primary" size="sm" onClick={handleReset}>
+                <Button className="mt-3 mx-1" color="secondary" size="sm" onClick={handleReset}>
                     <Icon icon={faRedoAlt} style={{ margin: '2px 6px 0 0' }} />
                     Reset
                 </Button>
-                <Button className="mt-3 mx-1" color="secondary" size="sm" onClick={handleApply}>
+                <Button className="mt-3 mx-1" color="primary" size="sm" onClick={handleApply}>
                     Apply
                 </Button>
             </div>
@@ -212,6 +209,6 @@ const OrdinalFilterRule = props => {
 };
 
 OrdinalFilterRule.propTypes = {
-    controldata: PropTypes.object.isRequired
+    dataController: PropTypes.object.isRequired
 };
 export default OrdinalFilterRule;

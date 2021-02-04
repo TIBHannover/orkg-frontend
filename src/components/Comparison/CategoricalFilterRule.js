@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { CustomInput, Button, Badge } from 'reactstrap';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faRedoAlt } from '@fortawesome/free-solid-svg-icons';
 
 const CategoricalFilterRule = props => {
-    const { property, values, rules, updateRules, toggleFilterDialog } = props.controldata;
+    const { property, values, rules, updateRules, toggleFilterDialog } = props.dataController;
     const { label: propertyName, id: propertyId } = property;
 
     const DEFAULT_MAX_CATEGORIES = 15;
@@ -39,7 +39,6 @@ const CategoricalFilterRule = props => {
             const toChange = { ...newState[toChangeIndex] };
             toChange.checked = event.target.checked;
             newState[toChangeIndex] = toChange;
-            updateRules(calRules(newState));
             return newState;
         });
     };
@@ -50,10 +49,10 @@ const CategoricalFilterRule = props => {
     };
 
     const handleReset = () => {
-        updateRules([]);
         setCategoricalValues(vals.map(value => ({ ...value, checked: false })));
     };
     const handleApply = () => {
+        updateRules(calRules(categoricalValues));
         toggleFilterDialog();
     };
 
@@ -69,7 +68,6 @@ const CategoricalFilterRule = props => {
                     onChange={handleCheckboxChange}
                     checked={item.checked}
                 >
-                    {' '}
                     <Badge color="light" pill>
                         {values[item.label].length}
                     </Badge>
@@ -86,11 +84,11 @@ const CategoricalFilterRule = props => {
                 {btnLabel}
             </Button>
             <div className="d-flex flex-sm-wrap justify-content-end">
-                <Button className="mt-3 mx-1" color="primary" size="sm" onClick={handleReset}>
+                <Button className="mt-3 mx-1" color="secondary" size="sm" onClick={handleReset}>
                     <Icon icon={faRedoAlt} style={{ margin: '2px 6px 0 0' }} />
                     Reset
                 </Button>
-                <Button className="mt-3 mx-1" color="secondary" size="sm" onClick={handleApply}>
+                <Button className="mt-3 mx-1" color="primary" size="sm" onClick={handleApply}>
                     Apply
                 </Button>
             </div>
@@ -98,6 +96,6 @@ const CategoricalFilterRule = props => {
     );
 };
 CategoricalFilterRule.propTypes = {
-    controldata: PropTypes.object.isRequired
+    dataController: PropTypes.object.isRequired
 };
 export default CategoricalFilterRule;

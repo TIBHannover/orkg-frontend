@@ -1,4 +1,3 @@
-import React from 'react';
 import { Modal, ModalHeader, ModalBody } from 'reactstrap';
 import PropTypes from 'prop-types';
 import CategoricalFilterRule from './CategoricalFilterRule.js';
@@ -26,13 +25,13 @@ function FilterModal(props) {
         );
     };
 
-    const generateCatFilter = () => <CategoricalFilterRule controldata={{ property, values, rules, updateRules, toggleFilterDialog }} />;
+    const generateCategoricalFilter = () => <CategoricalFilterRule dataController={{ property, values, rules, updateRules, toggleFilterDialog }} />;
 
     const generateOrdFilter = typeIsDate => (
-        <OrdinalFilterRule controldata={{ property, rules, updateRules, typeIsDate: typeIsDate, DATE_FORMAT, toggleFilterDialog }} />
+        <OrdinalFilterRule dataController={{ property, rules, updateRules, typeIsDate: typeIsDate, DATE_FORMAT, toggleFilterDialog }} />
     );
 
-    const generateTextFilter = () => <TextFilterRule controldata={{ property, values, rules, updateRules, toggleFilterDialog }} />;
+    const generateTextFilter = () => <TextFilterRule dataController={{ property, values, rules, updateRules, toggleFilterDialog }} />;
 
     const generateFilter = () => {
         if (isNum()) {
@@ -42,15 +41,13 @@ function FilterModal(props) {
         } else if (isText()) {
             return generateTextFilter();
         } else if (isCategory()) {
-            return generateCatFilter();
+            return generateCategoricalFilter();
         }
         return <></>;
     };
     return (
         <Modal isOpen={showFilterDialog} toggle={toggleFilterDialog}>
-            <ModalHeader className="text-capitalize" toggle={toggleFilterDialog}>
-                {propertyName}
-            </ModalHeader>
+            <ModalHeader toggle={toggleFilterDialog}>Filter: {propertyName}</ModalHeader>
             <ModalBody>{generateFilter()}</ModalBody>
         </Modal>
     );

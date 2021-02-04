@@ -1,8 +1,7 @@
-import React, { memo, useRef } from 'react';
-import { faTimes, faFilter } from '@fortawesome/free-solid-svg-icons';
+import { memo, useRef } from 'react';
+import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import PropertyValue from 'components/Comparison/PropertyValue';
-import FilterWrapper from 'components/Comparison/FilterWrapper';
 import ROUTES from 'constants/routes';
 import { functions, isEqual, omit } from 'lodash';
 import { reverse } from 'named-urls';
@@ -33,14 +32,6 @@ const ComparisonTable = props => {
     } else if (props.viewDensity === 'compact') {
         cellPadding = 1;
     }
-    const getValuesNr = values => {
-        return new Set(
-            []
-                .concat(...values)
-                .map(item => item.label)
-                .filter(truthy => truthy)
-        ).size;
-    };
 
     return (
         <ReactTableFixedColumns
@@ -118,23 +109,16 @@ const ComparisonTable = props => {
                         !props.transpose ? (
                             <Properties className="columnProperty">
                                 <PropertiesInner className="d-flex flex-row align-items-start justify-content-between" cellPadding={cellPadding}>
-                                    <PropertyValue similar={cell.value.similar} label={cell.value.label} id={cell.value.id} />
-                                    <FilterWrapper
-                                        data={{
-                                            rules: props.getRuleByProperty(cell.value.id),
-                                            stringifyType: props.stringifyType
-                                        }}
-                                    >
-                                        <Icon
-                                            icon={faFilter}
-                                            className={getValuesNr(cell.original.values) > 1 ? 'd-block' : 'd-none'}
-                                            style={{ cursor: 'pointer' }}
-                                            color={props.getRuleByProperty(cell.value.id).length > 0 ? '#e86161' : ''}
-                                            onClick={() => {
-                                                props.toggleFilterDialog(cell.value.id);
-                                            }}
-                                        />
-                                    </FilterWrapper>
+                                    <PropertyValue
+                                        data={props.data}
+                                        stringifyType={props.stringifyType}
+                                        getRuleByProperty={props.getRuleByProperty}
+                                        controllData={props.controllData}
+                                        updateRules={props.updateRules}
+                                        similar={cell.value.similar}
+                                        label={cell.value.label}
+                                        id={cell.value.id}
+                                    />
                                 </PropertiesInner>
                             </Properties>
                         ) : (
@@ -217,23 +201,16 @@ const ComparisonTable = props => {
                                               className="d-flex flex-row align-items-center justify-content-between"
                                               transpose={props.transpose}
                                           >
-                                              <PropertyValue similar={property.similar} label={property.label} id={property.id} />
-                                              <FilterWrapper
-                                                  data={{
-                                                      rules: props.getRuleByProperty(property.id),
-                                                      stringifyType: props.stringifyType
-                                                  }}
-                                              >
-                                                  <Icon
-                                                      icon={faFilter}
-                                                      className={getValuesNr(props.data[property.id]) > 1 ? 'd-block' : 'd-none'}
-                                                      style={{ cursor: 'pointer' }}
-                                                      color={props.getRuleByProperty(property.id)}
-                                                      onClick={() => {
-                                                          props.toggleFilterDialog(property.id);
-                                                      }}
-                                                  />
-                                              </FilterWrapper>
+                                              <PropertyValue
+                                                  data={props.data}
+                                                  stringifyType={props.stringifyType}
+                                                  getRuleByProperty={props.getRuleByProperty}
+                                                  controllData={props.controllData}
+                                                  updateRules={props.updateRules}
+                                                  similar={property.similar}
+                                                  label={property.label}
+                                                  id={property.id}
+                                              />
                                           </ItemHeaderInner>
                                       </ItemHeader>
                                   ),
@@ -262,10 +239,11 @@ ComparisonTable.propTypes = {
     removeContribution: PropTypes.func.isRequired,
     transpose: PropTypes.bool.isRequired,
     viewDensity: PropTypes.oneOf(['spacious', 'normal', 'compact']),
-    toggleFilterDialog: PropTypes.func.isRequired,
     stringifyType: PropTypes.func.isRequired,
     getRuleByProperty: PropTypes.func.isRequired,
-    scrollContainerBody: PropTypes.object.isRequired
+    scrollContainerBody: PropTypes.object.isRequired,
+    controllData: PropTypes.array.isRequired,
+    updateRules: PropTypes.func.isRequired
 };
 
 export default memo(ComparisonTable, compareProps);

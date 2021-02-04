@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
+import { useState } from 'react';
 import { Button } from 'reactstrap';
-import Select from 'react-select';
-import stopwords from 'stopwords-en';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faRedoAlt } from '@fortawesome/free-solid-svg-icons';
+import Select from 'react-select';
+import stopwords from 'stopwords-en';
+import PropTypes from 'prop-types';
 
 const TextFilterRule = props => {
-    const { property, values, rules, updateRules, toggleFilterDialog } = props.controldata;
+    const { property, values, rules, updateRules, toggleFilterDialog } = props.dataController;
     const { label: propertyName, id: propertyId } = property;
 
     const placeHolder = 'choose one or more keywords';
@@ -31,16 +31,19 @@ const TextFilterRule = props => {
     const calRules = selectedVals => (selectedVals ? [{ propertyId, propertyName, type: 'inc', value: selectedVals.map(({ value }) => value) }] : []);
 
     const handleChange = selectedOption => {
-        updateRules(calRules(selectedOption));
         setSelectedKeys(selectedOption);
     };
+
     const handleReset = () => {
         updateRules([]);
         setSelectedKeys(null);
     };
+
     const handleApply = () => {
+        updateRules(calRules(selectedKeys));
         toggleFilterDialog();
     };
+
     return (
         <>
             <Select
@@ -54,11 +57,11 @@ const TextFilterRule = props => {
                 isMulti
             />
             <div className="d-flex flex-sm-wrap justify-content-end">
-                <Button className="mt-3 mx-1" color="primary" size="sm" onClick={handleReset}>
+                <Button className="mt-3 mx-1" color="secondary" size="sm" onClick={handleReset}>
                     <Icon icon={faRedoAlt} style={{ margin: '2px 6px 0 0' }} />
                     Reset
                 </Button>
-                <Button className="mt-3 mx-1" color="secondary" size="sm" onClick={handleApply}>
+                <Button className="mt-3 mx-1" color="primary" size="sm" onClick={handleApply}>
                     Apply
                 </Button>
             </div>
@@ -66,6 +69,6 @@ const TextFilterRule = props => {
     );
 };
 TextFilterRule.propTypes = {
-    controldata: PropTypes.object.isRequired
+    dataController: PropTypes.object.isRequired
 };
 export default TextFilterRule;

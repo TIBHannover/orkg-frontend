@@ -351,6 +351,7 @@ function useComparison() {
             toChange.rules = newRules;
             newState[toChangeIndex] = toChange;
             AllRulesEmpty(newState) ? setShowRules(true) : setShowRules(false);
+            applyAllRules(newState);
             return newState;
         });
     };
