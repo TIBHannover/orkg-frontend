@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Alert, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Button, ButtonGroup, Badge } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faEllipsisV, faLightbulb, faHistory, faWindowMaximize, faChartBar } from '@fortawesome/free-solid-svg-icons';
+import { faEllipsisV, faLightbulb, faHistory, faWindowMaximize, faChartBar, faFilter } from '@fortawesome/free-solid-svg-icons';
 import ComparisonLoadingComponent from 'components/Comparison/ComparisonLoadingComponent';
 import ComparisonTable from 'components/Comparison/Comparison';
 import ExportToLatex from 'components/Comparison/Export/ExportToLatex.js';
@@ -40,8 +40,6 @@ import { NavLink } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import env from '@beam-australia/react-env';
 import AppliedRule from 'components/Comparison/Filters/AppliedRule';
-import Label from 'reactstrap/lib/Label';
-
 function Comparison(props) {
     const {
         metaData,
@@ -426,9 +424,12 @@ function Comparison(props) {
                                 </Alert>
                             )}
                             {showRules && (
-                                <div className="w-100 p-1 d-flex align-items-center flex-wrap">
-                                    <Label className="w-100 mb-0 font-weight-bold">Applied Filters:</Label>
-                                    {displayRules()}
+                                <div className="mt-3 d-flex" style={{ flexDirection: 'column' }}>
+                                    <h6 className="text-secondary">
+                                        <Icon className="mr-1" size="sm" icon={faFilter} />
+                                        <b>Applied Filters:</b>
+                                    </h6>
+                                    <div className="d-flex flex-wrap">{displayRules()}</div>
                                 </div>
                             )}
                             {!isLoadingComparisonResult ? (
