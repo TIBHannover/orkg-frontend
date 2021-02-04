@@ -40,7 +40,7 @@ const createOption = label => ({
 
 const OrdinalFilterRule = props => {
     //change apply and reset
-    const { property, rules, updateRules, typeIsDate, DATE_FORMAT, toggleFilteDialog } = props.controldata;
+    const { property, rules, updateRules, typeIsDate, DATE_FORMAT, toggleFilterDialog } = props.controldata;
     const { label: propertyName, id: propertyId } = property;
 
     const type = typeIsDate ? 'datetime' : 'number';
@@ -76,7 +76,7 @@ const OrdinalFilterRule = props => {
     const [maxInput, setMaxInput] = useState(maxValue);
     const [maxInvalid, setMaxInvalid] = useState(false);
 
-    const [nEqInuptValue, setNEqInuptValue] = useState('');
+    const [nEqInputValue, setNEqInputValue] = useState('');
     const [nEqValue, setNEqValue] = useState(nEqValueArr);
     const [nEqInvalid, setNeqInvalid] = useState(false);
 
@@ -100,6 +100,7 @@ const OrdinalFilterRule = props => {
         isEmptyOrValid(event.target.value) ? setMinInvalid(false) : setMinInvalid(true);
         updateRules(calRules(event.target.value, maxInput, nEqValue));
     };
+
     const handleMaxChange = event => {
         setMaxInput(event.target.value);
         isEmptyOrValid(event.target.value) ? setMaxInvalid(false) : setMaxInvalid(true);
@@ -111,20 +112,20 @@ const OrdinalFilterRule = props => {
         setNEqValue(valueWithoutNUll);
         updateRules(calRules(minInput, maxInput, valueWithoutNUll));
     };
-    const handleInputChangeSel = (nEqInuptValue, { action }) => {
+    const handleInputChangeSel = (nEqInputValue, { action }) => {
         if (action !== 'input-blur' && action !== 'menu-close') {
-            isEmptyOrValid(nEqInuptValue) ? setNeqInvalid(false) : setNeqInvalid(true);
-            setNEqInuptValue(nEqInuptValue);
+            isEmptyOrValid(nEqInputValue) ? setNeqInvalid(false) : setNeqInvalid(true);
+            setNEqInputValue(nEqInputValue);
         }
     };
     const handleKeyDownSel = event => {
-        if (!isEmptyOrValid(nEqInuptValue)) {
+        if (!isEmptyOrValid(nEqInputValue)) {
             return;
         }
         if (event.key === 'Enter' || event.key === 'Tab' || event.key === ',') {
-            setNEqInuptValue('');
-            setNEqValue([...nEqValue, createOption(nEqInuptValue)]);
-            updateRules(calRules(minInput, maxInput, [...nEqValue, createOption(nEqInuptValue)]));
+            setNEqInputValue('');
+            setNEqValue([...nEqValue, createOption(nEqInputValue)]);
+            updateRules(calRules(minInput, maxInput, [...nEqValue, createOption(nEqInputValue)]));
             event.preventDefault();
         }
     };
@@ -135,13 +136,13 @@ const OrdinalFilterRule = props => {
         setMinInvalid(false);
         setMaxInvalid(false);
         setNeqInvalid(false);
-        setNEqInuptValue('');
+        setNEqInputValue('');
         setNEqValue([]);
     };
 
     const handleApply = () => {
-        updateRules(calRules(minInput, maxInput, [...nEqValue, createOption(nEqInuptValue)]));
-        toggleFilteDialog();
+        updateRules(calRules(minInput, maxInput, [...nEqValue, createOption(nEqInputValue)]));
+        toggleFilterDialog();
     };
 
     const w_50 = { width: '50%' };
@@ -182,7 +183,7 @@ const OrdinalFilterRule = props => {
                             components={{
                                 DropdownIndicator: null
                             }}
-                            inputValue={nEqInuptValue}
+                            inputValue={nEqInputValue}
                             isClearable
                             isMulti
                             menuIsOpen={false}

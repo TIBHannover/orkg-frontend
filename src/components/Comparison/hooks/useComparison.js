@@ -66,7 +66,7 @@ function useComparison() {
     const [errors, setErrors] = useState([]);
     const [matrixData, setMatrixData] = useState([]);
 
-    const [rulesChanaged, setRulesChanaged] = useState(false);
+    const [rulesChanged, setRulesChanged] = useState(false);
     const [showRules, setShowRules] = useState(false);
 
     const [hasNextVersions, setHasNextVersions] = useState([]);
@@ -347,7 +347,7 @@ function useComparison() {
             const newState = [...pervState];
             const toChangeIndex = newState.findIndex(item => item.property.id === propertyId);
             const toChange = { ...newState[toChangeIndex] };
-            !((newRules.length === toChange.rules.length) === 0) && setRulesChanaged(true);
+            !((newRules.length === toChange.rules.length) === 0) && setRulesChanged(true);
             toChange.rules = newRules;
             newState[toChangeIndex] = toChange;
             AllRulesEmpty(newState) ? setShowRules(true) : setShowRules(false);
@@ -370,7 +370,7 @@ function useComparison() {
 
     const getRuleByProperty = propertyId => controllData.find(item => item.property.id === propertyId).rules;
 
-    const strignifyType = type => {
+    const stringifyType = type => {
         if (type === 'oneOf') {
             return 'is One of:';
         } else if (type === 'gte') {
@@ -391,11 +391,13 @@ function useComparison() {
     };
 
     const AllRulesEmpty = data => [].concat(...data.map(item => item.rules)).length > 0;
+
     /** rules applying */
     const applyOneOf = ({ propertyId, value }) => {
         const data = getValuesByPropertyLabel(propertyId).values;
         return [].concat(...value.map(key => data[key]));
     };
+
     const applyGte = ({ propertyId, value }) => {
         const data = getValuesByPropertyLabel(propertyId).values;
         return [].concat(
@@ -404,6 +406,7 @@ function useComparison() {
                 .map(key => data[key])
         );
     };
+
     const applyLte = ({ propertyId, value }) => {
         const data = getValuesByPropertyLabel(propertyId).values;
         return [].concat(
@@ -412,6 +415,7 @@ function useComparison() {
                 .map(key => data[key])
         );
     };
+
     const applyGteDate = ({ propertyId, value }) => {
         const data = getValuesByPropertyLabel(propertyId).values;
         return [].concat(
@@ -420,6 +424,7 @@ function useComparison() {
                 .map(key => data[key])
         );
     };
+
     const applyLteDate = ({ propertyId, value }) => {
         const data = getValuesByPropertyLabel(propertyId).values;
         return [].concat(
@@ -446,6 +451,7 @@ function useComparison() {
                 .map(key => data[key])
         );
     };
+
     const applyRule = ({ type, propertyId, value }) => {
         if (type === 'oneOf') {
             return applyOneOf({ propertyId, value });
@@ -463,6 +469,7 @@ function useComparison() {
             return applyInc({ propertyId, value });
         }
     };
+
     const applyAllRules = newState => {
         const AllContributionsID = contributions.map(contribution => contribution.id);
         const contributionIds = []
@@ -740,6 +747,7 @@ function useComparison() {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isLoadingComparisonResult]);
+
     return {
         metaData,
         contributions,
@@ -761,7 +769,7 @@ function useComparison() {
         isFailedLoadingMetaData,
         isLoadingComparisonResult,
         isFailedLoadingComparisonResult,
-        rulesChanaged,
+        rulesChanged,
         showRules,
         hasNextVersions,
         createdBy,
@@ -778,7 +786,7 @@ function useComparison() {
         updateRules,
         removeRule,
         getRuleByProperty,
-        strignifyType,
+        stringifyType,
         generateUrl,
         setResponseHash,
         setUrlNeedsToUpdate,

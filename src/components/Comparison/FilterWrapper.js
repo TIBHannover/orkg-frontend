@@ -3,11 +3,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 const FilterWrapper = props => {
-    const { rules, strignifyType } = props.data;
+    const { rules, stringifyType } = props.data;
     return (
         <Tippy
             content={rules
-                .map(({ propertyName, type, value }) => `${propertyName} ${strignifyType(type)} ${Array.isArray(value) ? value.join(', ') : value}`)
+                .map(({ propertyName, type, value }) => `${propertyName} ${stringifyType(type)} ${Array.isArray(value) ? value.join(', ') : value}`)
                 .join(' ; ')}
             arrow={true}
             disabled={rules.length === 0}

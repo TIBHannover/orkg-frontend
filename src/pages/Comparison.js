@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Alert, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Button, ButtonGroup, Badge } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faEllipsisV, faLightbulb, faHistory, faWindowMaximize, faChartBar } from '@fortawesome/free-solid-svg-icons';
@@ -65,7 +65,7 @@ function Comparison(props) {
         isFailedLoadingMetaData,
         isLoadingComparisonResult,
         isFailedLoadingComparisonResult,
-        rulesChanaged,
+        rulesChanged,
         showRules,
         hasNextVersions,
         createdBy,
@@ -82,7 +82,7 @@ function Comparison(props) {
         updateRules,
         removeRule,
         getRuleByProperty,
-        strignifyType,
+        stringifyType,
         generateUrl,
         setResponseHash,
         setUrlNeedsToUpdate,
@@ -115,7 +115,7 @@ function Comparison(props) {
     const [showExportCitationsDialog, setShowExportCitationsDialog] = useState(false);
 
     const [showFilterDialog, setShowFilterDialog] = useState(false);
-    const [filterPropertyId, setfilterPropertyId] = useState('');
+    const [filterPropertyId, setFilterPropertyId] = useState('');
     const [shouldChangeColor, setShouldChangeColor] = useState(false);
 
     const [showVisualizationModal, setShowVisualizationModal] = useState(false);
@@ -191,10 +191,10 @@ function Comparison(props) {
     const removeRuleFactory = ({ propertyId, type, value }) => () => removeRule({ propertyId, type, value });
 
     const toggleFilterDialog = propertyId => {
-        setfilterPropertyId(propertyId);
+        setFilterPropertyId(propertyId);
         setShowFilterDialog(v => !v);
         setShouldChangeColor(v => !v);
-        showFilterDialog && rulesChanaged && applyAllRules(controllData);
+        showFilterDialog && rulesChanged && applyAllRules(controllData);
     };
 
     const displayRules = () => {
@@ -203,7 +203,7 @@ function Comparison(props) {
             .map(({ propertyId, propertyName, type, value }) => (
                 <AppliedRule
                     key={`${propertyId}#${type}`}
-                    data={{ propertyId, propertyName, type: strignifyType(type), value, removeRule: removeRuleFactory({ propertyId, type, value }) }}
+                    data={{ propertyId, propertyName, type: stringifyType(type), value, removeRule: removeRuleFactory({ propertyId, type, value }) }}
                 />
             ));
     };
@@ -475,14 +475,14 @@ function Comparison(props) {
                                             toggleFilterDialog={toggleFilterDialog}
                                             getRuleByProperty={getRuleByProperty}
                                             shouldChangeColor={shouldChangeColor}
-                                            strignifyType={strignifyType}
+                                            stringifyType={stringifyType}
                                         />
                                     </div>
                                 ) : (
                                     <div className="">
                                         <Alert className="mt-2 text-center" color="danger">
                                             Sorry, that filter combination has no results.{' '}
-                                            <div className="font-weight-bold">please try diffrent criteria</div>
+                                            <div className="font-weight-bold">please try different criteria</div>
                                         </Alert>
                                     </div>
                                 )
@@ -599,7 +599,7 @@ function Comparison(props) {
                     data={getValuesByPropertyLabel(filterPropertyId)}
                     updateRules={updateRulesFactory(filterPropertyId)}
                     showFilterDialog={showFilterDialog}
-                    toggleFilteDialog={() => toggleFilterDialog(filterPropertyId)}
+                    toggleFilterDialog={() => toggleFilterDialog(filterPropertyId)}
                 />
             )}
 

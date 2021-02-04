@@ -38,7 +38,7 @@ const ComparisonTable = props => {
             []
                 .concat(...values)
                 .map(item => item.label)
-                .filter(truethy => truethy)
+                .filter(truthy => truthy)
         ).size;
     };
 
@@ -122,7 +122,7 @@ const ComparisonTable = props => {
                                     <FilterWrapper
                                         data={{
                                             rules: props.getRuleByProperty(cell.value.id),
-                                            strignifyType: props.strignifyType
+                                            stringifyType: props.stringifyType
                                         }}
                                     >
                                         <Icon
@@ -221,7 +221,7 @@ const ComparisonTable = props => {
                                               <FilterWrapper
                                                   data={{
                                                       rules: props.getRuleByProperty(property.id),
-                                                      strignifyType: props.strignifyType
+                                                      stringifyType: props.stringifyType
                                                   }}
                                               >
                                                   <Icon
@@ -263,7 +263,7 @@ ComparisonTable.propTypes = {
     transpose: PropTypes.bool.isRequired,
     viewDensity: PropTypes.oneOf(['spacious', 'normal', 'compact']),
     toggleFilterDialog: PropTypes.func.isRequired,
-    strignifyType: PropTypes.func.isRequired,
+    stringifyType: PropTypes.func.isRequired,
     getRuleByProperty: PropTypes.func.isRequired,
     scrollContainerBody: PropTypes.object.isRequired
 };

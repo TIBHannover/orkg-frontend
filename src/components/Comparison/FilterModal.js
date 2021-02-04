@@ -7,11 +7,11 @@ import TextFilterRule from './TextFilterRule.js';
 
 function FilterModal(props) {
     const DATE_FORMAT = /\d{4}-[01]\d-([012]\d|30|31)/;
-    const { data, updateRules, showFilterDialog, toggleFilteDialog } = props;
+    const { data, updateRules, showFilterDialog, toggleFilterDialog } = props;
     const { property, values, rules } = data;
     const { label: propertyName } = property;
 
-    const isCateg = () => {
+    const isCategory = () => {
         return Object.keys(values).length > 1;
     };
     const isNum = () => {
@@ -26,13 +26,13 @@ function FilterModal(props) {
         );
     };
 
-    const generateCatFilter = () => <CategoricalFilterRule controldata={{ property, values, rules, updateRules, toggleFilteDialog }} />;
+    const generateCatFilter = () => <CategoricalFilterRule controldata={{ property, values, rules, updateRules, toggleFilterDialog }} />;
 
     const generateOrdFilter = typeIsDate => (
-        <OrdinalFilterRule controldata={{ property, rules, updateRules, typeIsDate: typeIsDate, DATE_FORMAT, toggleFilteDialog }} />
+        <OrdinalFilterRule controldata={{ property, rules, updateRules, typeIsDate: typeIsDate, DATE_FORMAT, toggleFilterDialog }} />
     );
 
-    const generateTextFilter = () => <TextFilterRule controldata={{ property, values, rules, updateRules, toggleFilteDialog }} />;
+    const generateTextFilter = () => <TextFilterRule controldata={{ property, values, rules, updateRules, toggleFilterDialog }} />;
 
     const generateFilter = () => {
         if (isNum()) {
@@ -41,14 +41,14 @@ function FilterModal(props) {
             return generateOrdFilter(true);
         } else if (isText()) {
             return generateTextFilter();
-        } else if (isCateg()) {
+        } else if (isCategory()) {
             return generateCatFilter();
         }
         return <></>;
     };
     return (
-        <Modal isOpen={showFilterDialog} toggle={toggleFilteDialog}>
-            <ModalHeader className="text-capitalize" toggle={toggleFilteDialog}>
+        <Modal isOpen={showFilterDialog} toggle={toggleFilterDialog}>
+            <ModalHeader className="text-capitalize" toggle={toggleFilterDialog}>
                 {propertyName}
             </ModalHeader>
             <ModalBody>{generateFilter()}</ModalBody>
@@ -60,7 +60,7 @@ FilterModal.propTypes = {
     data: PropTypes.object.isRequired,
     updateRules: PropTypes.func.isRequired,
     showFilterDialog: PropTypes.bool.isRequired,
-    toggleFilteDialog: PropTypes.func.isRequired
+    toggleFilterDialog: PropTypes.func.isRequired
 };
 
 export default FilterModal;

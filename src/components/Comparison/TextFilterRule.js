@@ -7,10 +7,10 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faRedoAlt } from '@fortawesome/free-solid-svg-icons';
 
 const TextFilterRule = props => {
-    const { property, values, rules, updateRules, toggleFilteDialog } = props.controldata;
+    const { property, values, rules, updateRules, toggleFilterDialog } = props.controldata;
     const { label: propertyName, id: propertyId } = property;
 
-    const placeHolder = 'choese one or more keywords';
+    const placeHolder = 'choose one or more keywords';
 
     const options = [
         ...new Set(
@@ -39,7 +39,7 @@ const TextFilterRule = props => {
         setSelectedKeys(null);
     };
     const handleApply = () => {
-        toggleFilteDialog();
+        toggleFilterDialog();
     };
     return (
         <>

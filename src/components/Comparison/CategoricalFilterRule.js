@@ -5,12 +5,13 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faRedoAlt } from '@fortawesome/free-solid-svg-icons';
 
 const CategoricalFilterRule = props => {
-    const { property, values, rules, updateRules, toggleFilteDialog } = props.controldata;
+    const { property, values, rules, updateRules, toggleFilterDialog } = props.controldata;
     const { label: propertyName, id: propertyId } = property;
 
     const DEFAULT_MAX_CATEGORIES = 15;
     const SHOW_MORE = 'show more';
     const SHOW_LESS = 'show less';
+
     const getValuesNr = () => Object.keys(values).length;
 
     const [maxCategoryNumber, setMaxCategoryNumber] = useState(DEFAULT_MAX_CATEGORIES);
@@ -24,10 +25,12 @@ const CategoricalFilterRule = props => {
         .sort((a, b) => a.label.localeCompare(b.label));
 
     const [categoricalValues, setCategoricalValues] = useState(vals);
+
     const calRules = list => {
-        const checkedlist = list.filter(item => item.checked);
-        return checkedlist.length > 0 ? [{ propertyId, propertyName, type: 'oneOf', value: checkedlist.map(({ label }) => label) }] : [];
+        const checkedList = list.filter(item => item.checked);
+        return checkedList.length > 0 ? [{ propertyId, propertyName, type: 'oneOf', value: checkedList.map(({ label }) => label) }] : [];
     };
+
     const handleCheckboxChange = event => {
         event.persist();
         setCategoricalValues(pervState => {
@@ -40,6 +43,7 @@ const CategoricalFilterRule = props => {
             return newState;
         });
     };
+
     const handleButtonChange = () => {
         setMaxCategoryNumber(pervState => (pervState === DEFAULT_MAX_CATEGORIES ? categoricalValues.length : DEFAULT_MAX_CATEGORIES));
         setBtnLabel(pervState => (pervState === SHOW_MORE ? SHOW_LESS : SHOW_MORE));
@@ -50,7 +54,7 @@ const CategoricalFilterRule = props => {
         setCategoricalValues(vals.map(value => ({ ...value, checked: false })));
     };
     const handleApply = () => {
-        toggleFilteDialog();
+        toggleFilterDialog();
     };
 
     const checkboxList = () => {
