@@ -7,12 +7,22 @@ import FilterWrapper from 'components/Comparison/FilterWrapper';
 import FilterModal from 'components/Comparison/FilterModal';
 import { faFilter } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import styled from 'styled-components';
 import { upperFirst } from 'lodash';
 import PropTypes from 'prop-types';
+import classNames from 'classnames';
+
+const FilterIcon = styled(Icon)`
+    cursor: pointer;
+    color: ${props => props.theme.ultraLightBlueDarker};
+    &:hover,
+    &.active {
+        color: white;
+    }
+`;
 
 const PropertyValue = ({ id, label, similar, getRuleByProperty, data, stringifyType, controllData, updateRules }) => {
     const [showStatementBrowser, setShowStatementBrowser] = useState(false);
-
     const [showFilterDialog, setShowFilterDialog] = useState(false);
 
     const getValuesByPropertyLabel = inputId => controllData.find(item => item.property.id === inputId);
@@ -32,6 +42,12 @@ const PropertyValue = ({ id, label, similar, getRuleByProperty, data, stringifyT
         ).size;
     };
 
+    const filterIconClasses = classNames({
+        'd-block': getValuesNr(data[id]) > 1,
+        'd-none': getValuesNr(data[id]) <= 1,
+        active: getRuleByProperty(id).length > 0
+    });
+
     return (
         <>
             <ConditionalWrapper
@@ -42,7 +58,7 @@ const PropertyValue = ({ id, label, similar, getRuleByProperty, data, stringifyT
                     </Tippy>
                 )}
             >
-                <Button onClick={handleOpenStatementBrowser} color="link" className="text-light m-0 p-0">
+                <Button onClick={handleOpenStatementBrowser} color="link" className="text-light text-left m-0 p-0">
                     {upperFirst(label)}
                 </Button>
             </ConditionalWrapper>
@@ -53,13 +69,7 @@ const PropertyValue = ({ id, label, similar, getRuleByProperty, data, stringifyT
                     stringifyType: stringifyType
                 }}
             >
-                <Icon
-                    icon={faFilter}
-                    className={getValuesNr(data[id]) > 1 ? 'd-block' : 'd-none'}
-                    style={{ cursor: 'pointer' }}
-                    color={getRuleByProperty(id).length > 0 ? '#e86161' : ''}
-                    onClick={() => setShowFilterDialog(v => !v)}
-                />
+                <FilterIcon size="xs" icon={faFilter} className={filterIconClasses} onClick={() => setShowFilterDialog(v => !v)} />
             </FilterWrapper>
 
             <FilterModal
