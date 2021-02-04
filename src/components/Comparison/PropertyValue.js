@@ -58,7 +58,7 @@ const PropertyValue = ({ id, label, similar, getRuleByProperty, data, stringifyT
                     </Tippy>
                 )}
             >
-                <Button onClick={handleOpenStatementBrowser} color="link" className="text-light text-left m-0 p-0">
+                <Button onClick={handleOpenStatementBrowser} color="link" className="text-left text-light m-0 p-0">
                     {upperFirst(label)}
                 </Button>
             </ConditionalWrapper>
