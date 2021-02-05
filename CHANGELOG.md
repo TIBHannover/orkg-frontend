@@ -5,6 +5,14 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [V0.28](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.27...V0.28) - 2021-02-05
+
+### Changes
+
+- fix: logos in footer are not center aligned [`#498`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/498)
+- lint: Support Windows as development environment [`#496`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/496)
+
+---
 ## [V0.27](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.26...V0.27) - 2021-02-03
 
 ### Changes
