@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import {
     Modal,
     ModalHeader,
@@ -130,14 +130,23 @@ function Publish(props) {
                     authors.classes = authorResource.classes;
                 }
             } else {
-                // Author resource doesn't exist
-                const newLiteral = await createLiteral(author.label);
-                // Create literal of author
-                const authorStatement = await createLiteralStatement(resourceId, PREDICATES.HAS_AUTHOR, newLiteral.id);
-                authors.statementId = authorStatement.id;
-                authors.id = newLiteral.id;
-                authors.class = authorStatement.object._class;
-                authors.classes = authorStatement.object.classes;
+                // Author resource exists
+                if (author.label !== author.id) {
+                    const authorStatement = await createResourceStatement(resourceId, PREDICATES.HAS_AUTHOR, author.id);
+                    authors.statementId = authorStatement.id;
+                    authors.id = author.id;
+                    authors.class = author._class;
+                    authors.classes = author.classes;
+                } else {
+                    // Author resource doesn't exist
+                    const newLiteral = await createLiteral(author.label);
+                    // Create literal of author
+                    const authorStatement = await createLiteralStatement(resourceId, PREDICATES.HAS_AUTHOR, newLiteral.id);
+                    authors.statementId = authorStatement.id;
+                    authors.id = newLiteral.id;
+                    authors.class = authorStatement.object._class;
+                    authors.classes = authorStatement.object.classes;
+                }
             }
         }
     };
@@ -268,7 +277,18 @@ function Publish(props) {
             <ModalHeader toggle={props.toggle}>Publish comparison</ModalHeader>
             <ModalBody>
                 <Alert color="info">
-                    A published comparison is made public to other users. The state of the comparison is saved and a persistent link is created.
+                    {!props.comparisonId && (
+                        <>
+                            A published comparison is made public to other users. The state of the comparison is saved and a persistent link is
+                            created.
+                        </>
+                    )}
+                    {props.comparisonId && !props.doi && (
+                        <>This comparison is already published, you can find the persistent link below, or create a DOI for this comparison.</>
+                    )}
+                    {props.comparisonId && props.doi && (
+                        <>This comparison is already published, you can find the persistent link and the DOI below.</>
+                    )}
                 </Alert>
                 {props.comparisonId && (
                     <FormGroup>
@@ -415,7 +435,7 @@ function Publish(props) {
                                 })}
                         </FormGroup>
                         <FormGroup>
-                            <Label for="subject">
+                            <Label for="research-field">
                                 <Tooltip message="Enter a subject of the comparison">Research Field</Tooltip>
                             </Label>
 
@@ -430,6 +450,7 @@ function Publish(props) {
                                 autoLoadOption={true}
                                 openMenuOnFocus={false}
                                 allowCreate={false}
+                                inputId="research-field"
                             />
                         </FormGroup>
                         <FormGroup>

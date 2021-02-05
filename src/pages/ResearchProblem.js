@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Container, Row, Col, Button, Badge } from 'reactstrap';
+import { useState, useEffect } from 'react';
+import { Container, Row, Col, Button, Badge, ListGroup, ListGroupItem, Card, CardBody, CardFooter } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faSpinner, faAngleDoubleDown, faAngleDoubleRight } from '@fortawesome/free-solid-svg-icons';
 import ResearchProblemHeaderBar from 'components/ResearchProblem/ResearchProblemHeaderBar';
 import useResearchProblem from 'components/ResearchProblem/hooks/useResearchProblem';
 import useResearchProblemPapers from 'components/ResearchProblem/hooks/useResearchProblemPapers';
@@ -15,25 +15,19 @@ import PaperCard from 'components/PaperCard/PaperCard';
 import ExternalDescription from 'components/ResearchProblem/ExternalDescription';
 import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
 import ROUTES from 'constants/routes';
-
-function usePrevious(value) {
-    const ref = useRef();
-    useEffect(() => {
-        ref.current = value;
-    });
-    return ref.current;
-}
+import { usePrevious } from 'react-use';
 
 function ResearchProblem(props) {
-    const [researchProblemData, isLoading, isFailedLoading, loadResearchProblemData] = useResearchProblem();
+    const [researchProblemData, parentResearchProblems, isLoading, isFailedLoading, loadResearchProblemData] = useResearchProblem();
     const [editMode, setEditMode] = useState(false);
     const prevEditMode = usePrevious({ editMode });
     const [contributions, isLoadingPapers, hasNextPage, isLastPageReached, loadMorePapers] = useResearchProblemPapers();
     const [researchFields, isLoadingResearchFields] = useResearchProblemResearchFields();
+    const { researchProblemId } = props.match.params;
 
     useEffect(() => {
         if (!editMode && prevEditMode && prevEditMode.editMode !== editMode) {
-            loadResearchProblemData(props.match.params.researchProblemId);
+            loadResearchProblemData(researchProblemId);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [editMode]);
@@ -52,23 +46,41 @@ function ResearchProblem(props) {
                         <StatementBrowserDialog
                             show={editMode}
                             toggleModal={() => setEditMode(v => !v)}
-                            resourceId={props.match.params.researchProblemId}
-                            resourceLabel={researchProblemData.label}
+                            id={researchProblemId}
+                            label={researchProblemData.label}
                             enableEdit={true}
                             syncBackend={true}
                         />
                     )}
-                    <ResearchProblemHeaderBar toggleEdit={() => setEditMode(v => !v)} title={researchProblemData.label} />
+                    <ResearchProblemHeaderBar toggleEdit={() => setEditMode(v => !v)} title={researchProblemData.label} id={researchProblemId} />
                     <Container className="p-0">
-                        <div className="box rounded-lg clearfix pt-4 pb-4 pl-5 pr-5">
-                            <h3>{researchProblemData && researchProblemData.label}</h3>
-                            {researchProblemData.description && <div className="mb-4">{researchProblemData.description}</div>}
-                            {researchProblemData.sameAs && (
-                                <ExternalDescription
-                                    query={researchProblemData.sameAs ? researchProblemData.sameAs.label : researchProblemData.label}
-                                />
+                        <Card>
+                            <CardBody>
+                                <h3 className="mt-4 mb-4">{researchProblemData && researchProblemData.label}</h3>
+                                {researchProblemData.description && <div className="mb-4">{researchProblemData.description}</div>}
+                                {researchProblemData.sameAs && (
+                                    <ExternalDescription
+                                        query={researchProblemData.sameAs ? researchProblemData.sameAs.label : researchProblemData.label}
+                                    />
+                                )}
+                            </CardBody>
+
+                            {parentResearchProblems.length > 0 && (
+                                <CardFooter>
+                                    {parentResearchProblems.map((field, index) => (
+                                        <span key={field.id}>
+                                            {index !== parentResearchProblems.length - 1 ? (
+                                                <Link to={reverse(ROUTES.RESEARCH_PROBLEM, { researchProblemId: field.id })}>{field.label}</Link>
+                                            ) : (
+                                                field.label
+                                            )}
+                                            {index !== parentResearchProblems.length - 1 && <Icon className="ml-2 mr-2" icon={faAngleDoubleRight} />}
+                                        </span>
+                                    ))}
+                                </CardFooter>
                             )}
-                        </div>
+                        </Card>
+
                         <Row className="mt-3">
                             <Col md="4" className="d-flex">
                                 <div className="box rounded-lg p-4 flex-grow-1">
@@ -160,58 +172,63 @@ function ResearchProblem(props) {
                         */}
                     </Container>
 
-                    <Container className="p-0">
+                    <Container>
                         <h1 className="h4 mt-4 mb-4 flex-grow-1">Papers</h1>
                     </Container>
                     <Container className="p-0">
-                        {contributions.length > 0 && (
-                            <div>
-                                {contributions.map(contribution => {
-                                    return (
-                                        contribution && (
-                                            <PaperCard
-                                                paper={{
-                                                    id: contribution.papers[0].subject.id,
-                                                    title: contribution.papers[0].subject.label,
-                                                    ...contribution.papers[0].data
-                                                }}
-                                                contribution={{ id: contribution.subject.id, title: contribution.subject.label }}
-                                                key={`pc${contribution.id}`}
-                                            />
-                                        )
-                                    );
-                                })}
-                            </div>
-                        )}
-                        {contributions.length === 0 && !isLoadingPapers && (
-                            <div className="text-center mt-4 mb-4">
-                                There are no papers for this research problem, yet.
-                                <br />
-                                Start the graphing in ORKG by sharing a paper.
-                                <br />
-                                <br />
-                                <Link to={ROUTES.ADD_PAPER.GENERAL_DATA}>
-                                    <Button size="sm" color="primary " className="mr-3">
-                                        Share paper
-                                    </Button>
-                                </Link>
-                            </div>
-                        )}
-                        {isLoadingPapers && (
-                            <div className="text-center mt-4 mb-4">
-                                <Icon icon={faSpinner} spin /> Loading
-                            </div>
-                        )}
-                        {!isLoadingPapers && hasNextPage && (
-                            <div
-                                style={{ cursor: 'pointer' }}
-                                className="list-group-item list-group-item-action text-center mt-2"
-                                onClick={!isLoadingPapers ? loadMorePapers : undefined}
-                            >
-                                Load more papers
-                            </div>
-                        )}
-                        {!hasNextPage && isLastPageReached && <div className="text-center mt-3">You have reached the last page.</div>}
+                        <ListGroup flush className="box rounded" style={{ overflow: 'hidden' }}>
+                            {contributions.length > 0 && (
+                                <div>
+                                    {contributions.map(contribution => {
+                                        return (
+                                            contribution && (
+                                                <PaperCard
+                                                    paper={{
+                                                        id: contribution.papers[0].subject.id,
+                                                        title: contribution.papers[0].subject.label,
+                                                        ...contribution.papers[0].data
+                                                    }}
+                                                    contribution={{ id: contribution.subject.id, title: contribution.subject.label }}
+                                                    key={`pc${contribution.id}`}
+                                                />
+                                            )
+                                        );
+                                    })}
+                                </div>
+                            )}
+                            {contributions.length === 0 && !isLoadingPapers && (
+                                <div className="text-center mt-4 mb-4">
+                                    There are no papers for this research problem, yet.
+                                    <br />
+                                    <br />
+                                    <Link to={ROUTES.ADD_PAPER.GENERAL_DATA}>
+                                        <Button size="sm" color="primary " className="mr-3">
+                                            Add paper
+                                        </Button>
+                                    </Link>
+                                </div>
+                            )}
+                            {isLoadingPapers && (
+                                <ListGroupItem tag="div" className="text-center">
+                                    <Icon icon={faSpinner} spin /> Loading
+                                </ListGroupItem>
+                            )}
+                            {!isLoadingPapers && hasNextPage && !isLastPageReached && (
+                                <ListGroupItem
+                                    style={{ cursor: 'pointer' }}
+                                    className="text-center"
+                                    action
+                                    onClick={!isLoadingPapers ? loadMorePapers : undefined}
+                                >
+                                    <Icon icon={faAngleDoubleDown} /> Load more papers
+                                </ListGroupItem>
+                            )}
+                            {!hasNextPage && isLastPageReached && (
+                                <ListGroupItem tag="div" className="text-center">
+                                    You have reached the last page.
+                                </ListGroupItem>
+                            )}
+                        </ListGroup>
                         <ComparisonPopup />
                     </Container>
                 </div>

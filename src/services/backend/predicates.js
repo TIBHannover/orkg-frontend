@@ -16,8 +16,8 @@ export const updatePredicate = (id, label) => {
     return submitPutRequest(`${predicatesUrl}${id}`, { 'Content-Type': 'application/json' }, { label: label });
 };
 
-export const getAllPredicates = ({ page = 1, items = 9999, sortBy = 'created_at', desc = true, q = null }) => {
-    const params = queryString.stringify({ page: page, items: items, sortBy: sortBy, desc: desc, ...(q ? { q: q } : {}) });
+export const getAllPredicates = ({ page = 1, items = 9999, sortBy = 'created_at', desc = true, q = null, exact = false }) => {
+    const params = queryString.stringify({ page, items, sortBy, exact, desc, ...(q ? { q } : {}) });
 
     return submitGetRequest(`${predicatesUrl}?${params}`);
 };

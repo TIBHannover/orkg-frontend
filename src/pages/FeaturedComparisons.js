@@ -1,33 +1,59 @@
-import React, { Component } from 'react';
+import { Fragment, useState, useEffect, useCallback } from 'react';
 import { Container, Alert, Row, ButtonGroup } from 'reactstrap';
 import ROUTES from 'constants/routes';
 import FeaturedComparisonsItem from 'components/FeaturedComparisons/FeaturedComparisonsItem';
 import { getStatementsBySubjects } from 'services/backend/statements';
-import { getResourcesByClass } from 'services/backend/classes';
+import { getResourcesByClass } from 'services/backend/resources';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faLink, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 import { PREDICATES, CLASSES } from 'constants/graphSettings';
+import { kebabCase, isString } from 'lodash';
+import { useLocation, useHistory } from 'react-router';
+import styled from 'styled-components';
 
-class FeaturedComparisons extends Component {
-    state = {
-        loading: false,
-        categories: [],
-        comparisons: []
-    };
+const Header = styled.h2`
+    &:hover a {
+        visibility: visible !important;
+    }
+`;
 
-    componentDidMount = () => {
+const FeaturedComparisons = () => {
+    const [loading, setLoading] = useState(false);
+    const [categories, setCategories] = useState([]);
+    const [comparisons, setComparisons] = useState([]);
+    const location = useLocation();
+    const history = useHistory();
+
+    useEffect(() => {
         document.title = 'Featured comparisons - ORKG';
 
-        this.getFeaturedComparisonCategories();
-        this.getFeaturedComparisons();
+        getFeaturedComparisonCategories();
+        getFeaturedComparisons();
+    }, []);
+
+    const scrollTo = useCallback(
+        header => {
+            const hash = location.hash;
+            const id = isString(hash) ? hash.replace('#', '') : null;
+            if (!header || header.id !== id) {
+                return;
+            }
+            window.scrollTo({
+                behavior: 'smooth',
+                top: header.offsetTop - 90 // a little space between the select element and the top of the page
+            });
+        },
+        [location.hash]
+    );
+
+    const handleClick = (e, id) => {
+        history.push(`#${id}`);
+        e.preventDefault();
     };
 
-    /* TODO: It isn't good practice to store this data in the graph, should be changed later */
-    getFeaturedComparisonCategories = async () => {
-        this.setState({
-            loading: true
-        });
+    const getFeaturedComparisonCategories = async () => {
+        setLoading(true);
 
         const responseJson = await getResourcesByClass({
             id: CLASSES.FEATURED_COMPARISON_CATEGORY,
@@ -40,12 +66,10 @@ class FeaturedComparisons extends Component {
             id: item.id
         }));
 
-        this.setState({
-            categories
-        });
+        setCategories(categories);
     };
 
-    getFeaturedComparisons = async () => {
+    const getFeaturedComparisons = async () => {
         const responseJson = await getResourcesByClass({
             id: CLASSES.FEATURED_COMPARISON,
             sortBy: 'created_at',
@@ -68,16 +92,16 @@ class FeaturedComparisons extends Component {
                     const descriptionStatement = comparisonStatement.statements.filter(
                         statement => statement.predicate.id === PREDICATES.DESCRIPTION
                     );
-                    description = descriptionStatement.length > 0 ? descriptionStatement[0].object.label : '';
+                    description = descriptionStatement.length ? descriptionStatement[0].object.label : '';
 
                     const iconStatement = comparisonStatement.statements.filter(statement => statement.predicate.id === PREDICATES.ICON);
-                    icon = iconStatement.length > 0 ? iconStatement[0].object.label : '';
+                    icon = iconStatement.length ? iconStatement[0].object.label : '';
 
                     const urlStatement = comparisonStatement.statements.filter(statement => statement.predicate.id === PREDICATES.URL);
-                    url = urlStatement.length > 0 ? urlStatement[0].object.label : '';
+                    url = urlStatement.length ? urlStatement[0].object.label : '';
 
                     const typeStatement = comparisonStatement.statements.filter(statement => statement.predicate.id === PREDICATES.TYPE);
-                    type = typeStatement.length > 0 ? typeStatement[0].object.id : '';
+                    type = typeStatement.length ? typeStatement[0].object.id : '';
                 }
             }
 
@@ -91,45 +115,46 @@ class FeaturedComparisons extends Component {
             };
         });
 
-        this.setState({
-            comparisons,
-            loading: false
-        });
+        setComparisons(comparisons);
+        setLoading(false);
     };
 
-    render() {
-        return (
-            <div>
-                <Container className="p-0 d-flex align-items-center">
-                    <h1 className="h4 mt-4 mb-4 flex-grow-1">Featured paper comparisons</h1>
-                    <ButtonGroup className="flex-shrink-0">
-                        <Link to={ROUTES.COMPARISONS} className="btn btn-darkblue flex-shrink-0 btn-sm">
-                            View all comparisons
-                        </Link>
-                    </ButtonGroup>
-                </Container>
-                <Container className="box rounded pt-4 pb-4 pl-5 pr-5">
-                    <Alert color="info">
-                        With the paper data inside the ORKG, you can build powerful paper comparisons. On this page, we list the featured comparisons
-                        that are created using the comparison functionality. The featured comparisons below are organized by category.
-                    </Alert>
+    return (
+        <div>
+            <Container className="p-0 d-flex align-items-center">
+                <h1 className="h4 mt-4 mb-4 flex-grow-1">Featured paper comparisons</h1>
+                <ButtonGroup className="flex-shrink-0">
+                    <Link to={ROUTES.COMPARISONS} className="btn btn-darkblue flex-shrink-0 btn-sm">
+                        View all comparisons
+                    </Link>
+                </ButtonGroup>
+            </Container>
+            <Container className="box rounded pt-4 pb-4 pl-5 pr-5">
+                <Alert color="info" fade={false}>
+                    With the paper data inside the ORKG, you can build powerful paper comparisons. On this page, we list the featured comparisons that
+                    are created using the comparison functionality. The featured comparisons below are organized by category.
+                </Alert>
 
-                    {this.state.loading ? (
-                        <div className="text-center mt-4 mb-4">
-                            <Icon icon={faSpinner} spin /> Loading
-                        </div>
-                    ) : (
-                        this.state.categories.map(category => (
-                            <React.Fragment key={category.id}>
-                                <h2 className="h4 mt-4 mb-3">{category.label}</h2>
+                {loading ? (
+                    <div className="text-center mt-4 mb-4">
+                        <Icon icon={faSpinner} spin /> Loading
+                    </div>
+                ) : (
+                    categories.map(category => {
+                        const id = encodeURIComponent(kebabCase(category.label));
+                        return (
+                            <Fragment key={category.id}>
+                                <Header id={id} ref={scrollTo} className="h4 mt-4 mb-3">
+                                    {category.label}
+                                    <a href={`#${id}`} className="ml-2 invisible" onClick={e => handleClick(e, id)}>
+                                        <Icon icon={faLink} />
+                                    </a>
+                                </Header>
 
                                 <Row>
-                                    {this.state.comparisons.map(comparison => {
-                                        if (comparison.type !== category.id) {
-                                            return <React.Fragment key={comparison.id} />;
-                                        }
-
-                                        return (
+                                    {comparisons
+                                        .filter(comparison => comparison.type === category.id)
+                                        .map(comparison => (
                                             <FeaturedComparisonsItem
                                                 key={comparison.id}
                                                 title={comparison.label}
@@ -138,16 +163,15 @@ class FeaturedComparisons extends Component {
                                                 id={comparison.id}
                                                 link={comparison.url}
                                             />
-                                        );
-                                    })}
+                                        ))}
                                 </Row>
-                            </React.Fragment>
-                        ))
-                    )}
-                </Container>
-            </div>
-        );
-    }
-}
+                            </Fragment>
+                        );
+                    })
+                )}
+            </Container>
+        </div>
+    );
+};
 
 export default FeaturedComparisons;

@@ -1,7 +1,6 @@
-import React from 'react';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
-import Tippy from '@tippy.js/react';
+import Tippy from '@tippyjs/react';
 import { components } from 'react-select';
 import styled from 'styled-components';
 import { truncate } from 'lodash';
@@ -37,6 +36,11 @@ const StyledSelectOption = styled.div`
     }
 `;
 
+const StyledLabel = styled.span`
+    padding: 8px 12px;
+    flex: 1;
+`;
+
 const MAXIMUM_DESCRIPTION_LENGTH = 120;
 
 export default function CustomOption(props) {
@@ -48,7 +52,7 @@ export default function CustomOption(props) {
     return (
         <components.Option {...propsWithoutInnerProps} innerProps={newInnerProps}>
             <StyledSelectOption>
-                <span onClick={onClick} style={{ flex: 1 }}>
+                <StyledLabel onClick={onClick}>
                     {props.children}
                     {truncatedDescription && (
                         <div>
@@ -62,7 +66,7 @@ export default function CustomOption(props) {
                             </i>
                         </div>
                     )}
-                </span>
+                </StyledLabel>
                 <span>
                     {((truncatedDescription && props.data.description.length > MAXIMUM_DESCRIPTION_LENGTH) ||
                         (props.data.tooltipData && props.data.tooltipData.length > 0)) && (
@@ -101,9 +105,9 @@ export default function CustomOption(props) {
                         </div>
                     )}
                     {props.data.id && (
-                        <span onClick={onClick} className="badge">
+                        <div onClick={onClick} className="badge" onKeyDown={e => (e.keyCode === 13 ? onClick : undefined)} role="button" tabIndex={0}>
                             {props.data.id}
-                        </span>
+                        </div>
                     )}
                 </span>
             </StyledSelectOption>

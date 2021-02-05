@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { getResourcesByClass } from 'services/backend/classes';
+import { useState, useEffect, useCallback } from 'react';
+import { getResourcesByClass } from 'services/backend/resources';
 import { Button, Table, Collapse, Input, FormGroup, Label, Form } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
@@ -19,6 +19,7 @@ const ClassInstances = props => {
     const [instances, setInstances] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     const loadInstances = useCallback(
         debounce((page, searchQuery) => {
             setIsLoading(true);

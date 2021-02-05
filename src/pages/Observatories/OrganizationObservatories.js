@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import ShortRecord from 'components/ShortRecord/ShortRecord';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -109,7 +109,7 @@ OrganizationObservatories.propTypes = {
             id: PropTypes.string.isRequired
         }).isRequired
     }).isRequired,
-    user: PropTypes.object
+    user: PropTypes.oneOfType([PropTypes.object, PropTypes.number])
 };
 
 export default connect(

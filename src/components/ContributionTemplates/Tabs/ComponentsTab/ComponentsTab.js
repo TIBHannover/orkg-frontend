@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { Button, Row, Col, Modal, ModalHeader, ModalBody, ModalFooter, FormGroup, CustomInput } from 'reactstrap';
 import { connect } from 'react-redux';
 import Confirm from 'reactstrap-confirm';
@@ -134,7 +134,7 @@ function ComponentsTab(props) {
                     props.components.map((templateProperty, index) => {
                         return (
                             <TemplateComponent
-                                key={`tc${index}`}
+                                key={`tc${templateProperty.property.id}`}
                                 enableEdit={props.editMode}
                                 handleDeleteTemplateComponent={handleDeleteTemplateComponent}
                                 id={index}

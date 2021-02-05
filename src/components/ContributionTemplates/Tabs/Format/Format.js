@@ -1,4 +1,3 @@
-import React from 'react';
 import { FormGroup, Label, FormText, Input, CustomInput, Table } from 'reactstrap';
 import { setHasLabelFormat, setLabelFormat } from 'actions/addTemplate';
 import { connect } from 'react-redux';
@@ -32,7 +31,7 @@ function Format(props) {
                         <FormGroup className="mb-4">
                             <Label>Formatted label</Label>
                             <Input
-                                placeholder={'{P123} to {P456}'}
+                                placeholder="{P123} to {P456}"
                                 value={props.labelFormat}
                                 onChange={handleChangeLabelFormat}
                                 disabled={!props.editMode}
@@ -57,8 +56,8 @@ function Format(props) {
                                 </tr>
                             </thead>
                             <tbody>
-                                {props.components.map((component, index) => (
-                                    <tr key={`row${index}`}>
+                                {props.components.map(component => (
+                                    <tr key={`row${component.property.id}`}>
                                         <th scope="row">{component.property.id}</th>
                                         <td style={{}}>{component.property.label.charAt(0).toUpperCase() + component.property.label.slice(1)}</td>
                                     </tr>

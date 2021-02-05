@@ -1,5 +1,20 @@
-import React, { Component } from 'react';
-import { Button, Row, Col, TabContent, TabPane, Nav, NavItem, NavLink, ButtonGroup } from 'reactstrap';
+import { Component } from 'react';
+import {
+    Container,
+    Button,
+    Row,
+    Col,
+    TabContent,
+    TabPane,
+    Nav,
+    NavItem,
+    NavLink,
+    ButtonGroup,
+    ButtonDropdown,
+    DropdownToggle,
+    DropdownMenu,
+    DropdownItem
+} from 'reactstrap';
 import GeneralSettings from 'components/ContributionTemplates/Tabs/GeneralSettings/GeneralSettings';
 import TemplateEditorHeaderBar from 'components/ContributionTemplates/TemplateEditorHeaderBar';
 import ComponentsTab from 'components/ContributionTemplates/Tabs/ComponentsTab/ComponentsTab';
@@ -10,12 +25,12 @@ import HelpModal from 'components/ContributionTemplates/HelpModal';
 import { StyledContainer } from 'components/ContributionTemplates/styled';
 import { setEditMode, loadTemplate, saveTemplate, setIsLoading, doneLoading, setClass } from 'actions/addTemplate';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faPen, faSpinner, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
+import { faPen, faSpinner, faQuestionCircle, faEllipsisV, faSave } from '@fortawesome/free-solid-svg-icons';
 import { getParamFromQueryString } from 'utils';
 import styled, { withTheme } from 'styled-components';
 import VisibilitySensor from 'react-visibility-sensor';
 import { EditModeHeader, Title } from 'pages/ViewPaper';
-import Tippy from '@tippy.js/react';
+import Tippy from '@tippyjs/react';
 import { getClassById } from 'services/backend/classes';
 import classnames from 'classnames';
 import { compose } from 'redux';
@@ -23,6 +38,7 @@ import { connect } from 'react-redux';
 import ROUTES from 'constants/routes.js';
 import PropTypes from 'prop-types';
 import { reverse } from 'named-urls';
+import { NavLink as RouterNavLink } from 'react-router-dom';
 
 const TabPaneStyled = styled(TabPane)`
     border: 1px solid #ced4da;
@@ -41,6 +57,7 @@ class ContributionTemplate extends Component {
             activeTab: '1',
             error: null,
             showHeaderBar: false,
+            menuOpen: false,
             helpModalOpen: false
         };
     }
@@ -96,124 +113,148 @@ class ContributionTemplate extends Component {
         }
 
         return (
-            <StyledContainer className="clearfix">
-                <div className="mt-4 mb-4 d-flex">
-                    <h1 className="h4 m-0">{!this.props.match.params.id ? 'Create new template' : 'Template'}</h1>
-                    <Tippy content="Open help popup">
-                        <span className="ml-3">
+            <>
+                <Container className="d-flex align-items-center">
+                    <div className="mt-4 mb-4 d-flex flex-grow-1">
+                        <h1 className="h4 m-0">{!this.props.match.params.id ? 'Create new template' : 'Template'}</h1>
+                        <Tippy content="Open help popup">
+                            <span className="ml-3">
+                                <Button
+                                    color="link"
+                                    outline
+                                    size="sm"
+                                    style={{ fontSize: 22, lineHeight: 1 }}
+                                    className="p-0"
+                                    onClick={() => this.toggle('helpModalOpen')}
+                                >
+                                    <Icon icon={faQuestionCircle} className="text-darkblue" />
+                                </Button>
+                            </span>
+                        </Tippy>
+                    </div>
+                    <ButtonGroup className="flex-shrink-0">
+                        {!this.props.editMode && !this.props.isSaving ? (
+                            <RequireAuthentication component={Button} color="darkblue" size="sm" onClick={() => this.props.setEditMode(true)}>
+                                <Icon icon={faPen} /> Edit
+                            </RequireAuthentication>
+                        ) : (
                             <Button
-                                color="link"
-                                outline
-                                size="sm"
-                                style={{ fontSize: 22, lineHeight: 1 }}
-                                className="p-0"
-                                onClick={() => this.toggle('helpModalOpen')}
-                            >
-                                <Icon icon={faQuestionCircle} />
-                            </Button>
-                        </span>
-                    </Tippy>
-                </div>
-                {this.state.showHeaderBar && <TemplateEditorHeaderBar id={this.props.match.params.id} />}
-                {(this.props.editMode || this.props.isSaving) && (
-                    <EditModeHeader className="box rounded-top">
-                        <Title>{this.props.match.params.id ? 'Edit mode' : 'Create template'}</Title>
-                        <ButtonGroup size="sm">
-                            <Button
-                                className="float-left"
                                 disabled={this.props.isSaving}
                                 style={{ marginLeft: 1 }}
-                                color="light"
+                                color="darkblueDarker"
+                                size="sm"
                                 onClick={() => this.props.saveTemplate(this.props.template)}
                             >
                                 {this.props.isSaving && <Icon icon={faSpinner} spin />}
+                                {this.props.editMode && <Icon icon={faSave} />}
                                 {!this.props.isSaving ? ' Save' : ' Saving'}
                             </Button>
-                        </ButtonGroup>
-                    </EditModeHeader>
-                )}
-                <div className={`box clearfix pt-4 pb-4 pl-5 pr-5 ${this.props.editMode ? 'rounded-bottom' : 'rounded'}`}>
-                    <div className="mb-2">
-                        {!this.props.editMode ? (
-                            <h3 className="pb-2 mb-3" style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
-                                {this.props.label}
-                                <RequireAuthentication
-                                    component={Button}
-                                    className="float-right"
-                                    color="darkblue"
-                                    size="sm"
-                                    onClick={() => this.props.setEditMode(true)}
-                                >
-                                    <Icon icon={faPen} /> Edit
-                                </RequireAuthentication>
-                            </h3>
-                        ) : (
-                            ''
                         )}
-                    </div>
+                        {this.props.match.params.id && (
+                            <ButtonDropdown
+                                className="flex-shrink-0"
+                                isOpen={this.state.menuOpen}
+                                toggle={() =>
+                                    this.setState(prevState => ({
+                                        menuOpen: !prevState.menuOpen
+                                    }))
+                                }
+                                nav
+                                inNavbar
+                            >
+                                <DropdownToggle size="sm" color="darkblue" className="px-3 rounded-right" style={{ marginLeft: 2 }}>
+                                    <Icon icon={faEllipsisV} />
+                                </DropdownToggle>
+                                <DropdownMenu right>
+                                    <DropdownItem tag={RouterNavLink} exact to={reverse(ROUTES.RESOURCE, { id: this.props.match.params.id })}>
+                                        View resource
+                                    </DropdownItem>
+                                </DropdownMenu>
+                            </ButtonDropdown>
+                        )}
+                    </ButtonGroup>
+                </Container>
+                <StyledContainer className="p-0">
+                    {this.state.showHeaderBar && <TemplateEditorHeaderBar id={this.props.match.params.id} />}
+                    {(this.props.editMode || this.props.isSaving) && (
+                        <EditModeHeader className="box rounded-top">
+                            <Title>{this.props.match.params.id ? 'Edit mode' : 'Create template'}</Title>
+                        </EditModeHeader>
+                    )}
+                    <div className={`box clearfix pt-4 pb-4 pl-5 pr-5 ${this.props.editMode ? 'rounded-bottom' : 'rounded'}`}>
+                        <div className="mb-2">
+                            {!this.props.editMode ? (
+                                <h3 className="pb-2 mb-3" style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
+                                    {this.props.label}
+                                </h3>
+                            ) : (
+                                ''
+                            )}
+                        </div>
 
-                    <div className="mb-3">
-                        <VisibilitySensor onChange={this.handleShowHeaderBar}>
-                            <Nav tabs>
-                                <NavItemStyled>
-                                    <NavLink
-                                        className={classnames({ active: this.state.activeTab === '1' })}
-                                        onClick={() => {
-                                            this.toggleTab('1');
-                                        }}
-                                    >
-                                        Description
-                                    </NavLink>
-                                </NavItemStyled>
-                                <NavItemStyled>
-                                    <NavLink
-                                        className={classnames({ active: this.state.activeTab === '2' })}
-                                        onClick={() => {
-                                            this.toggleTab('2');
-                                        }}
-                                    >
-                                        Properties
-                                    </NavLink>
-                                </NavItemStyled>
-                                <NavItemStyled>
-                                    <NavLink
-                                        className={classnames({ active: this.state.activeTab === '3' })}
-                                        onClick={() => {
-                                            this.toggleTab('3');
-                                        }}
-                                    >
-                                        Format
-                                    </NavLink>
-                                </NavItemStyled>
-                            </Nav>
-                        </VisibilitySensor>
-                        <TabContent activeTab={this.state.activeTab}>
-                            <TabPaneStyled tabId="1">
-                                <Row>
-                                    <Col sm="12">
-                                        <GeneralSettings />
-                                    </Col>
-                                </Row>
-                            </TabPaneStyled>
-                            <TabPaneStyled tabId="2">
-                                <Row>
-                                    <Col sm="12">
-                                        <ComponentsTab />
-                                    </Col>
-                                </Row>
-                            </TabPaneStyled>
-                            <TabPaneStyled tabId="3">
-                                <Row>
-                                    <Col sm="12">
-                                        <Format />
-                                    </Col>
-                                </Row>
-                            </TabPaneStyled>
-                        </TabContent>
+                        <div className="mb-3">
+                            <VisibilitySensor onChange={this.handleShowHeaderBar}>
+                                <Nav tabs>
+                                    <NavItemStyled>
+                                        <NavLink
+                                            className={classnames({ active: this.state.activeTab === '1' })}
+                                            onClick={() => {
+                                                this.toggleTab('1');
+                                            }}
+                                        >
+                                            Description
+                                        </NavLink>
+                                    </NavItemStyled>
+                                    <NavItemStyled>
+                                        <NavLink
+                                            className={classnames({ active: this.state.activeTab === '2' })}
+                                            onClick={() => {
+                                                this.toggleTab('2');
+                                            }}
+                                        >
+                                            Properties
+                                        </NavLink>
+                                    </NavItemStyled>
+                                    <NavItemStyled>
+                                        <NavLink
+                                            className={classnames({ active: this.state.activeTab === '3' })}
+                                            onClick={() => {
+                                                this.toggleTab('3');
+                                            }}
+                                        >
+                                            Format
+                                        </NavLink>
+                                    </NavItemStyled>
+                                </Nav>
+                            </VisibilitySensor>
+                            <TabContent activeTab={this.state.activeTab}>
+                                <TabPaneStyled tabId="1">
+                                    <Row>
+                                        <Col sm="12">
+                                            <GeneralSettings />
+                                        </Col>
+                                    </Row>
+                                </TabPaneStyled>
+                                <TabPaneStyled tabId="2">
+                                    <Row>
+                                        <Col sm="12">
+                                            <ComponentsTab />
+                                        </Col>
+                                    </Row>
+                                </TabPaneStyled>
+                                <TabPaneStyled tabId="3">
+                                    <Row>
+                                        <Col sm="12">
+                                            <Format />
+                                        </Col>
+                                    </Row>
+                                </TabPaneStyled>
+                            </TabContent>
+                        </div>
                     </div>
-                </div>
-                <HelpModal isOpen={this.state.helpModalOpen} toggle={() => this.toggle('helpModalOpen')} />
-            </StyledContainer>
+                    <HelpModal isOpen={this.state.helpModalOpen} toggle={() => this.toggle('helpModalOpen')} />
+                </StyledContainer>
+            </>
         );
     }
 }
@@ -239,7 +280,7 @@ ContributionTemplate.propTypes = {
     history: PropTypes.object.isRequired,
     template: PropTypes.object.isRequired,
     setClass: PropTypes.func.isRequired,
-    user: PropTypes.object
+    user: PropTypes.oneOfType([PropTypes.object, PropTypes.number])
 };
 
 const mapStateToProps = state => {

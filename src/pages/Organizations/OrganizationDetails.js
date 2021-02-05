@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Container, Row, Col, NavLink, Button, Card, CardTitle } from 'reactstrap';
 import { getUsersByOrganizationId, getAllObservatoriesByOrganizationId, getOrganization } from 'services/backend/organizations';
 import InternalServerError from 'pages/InternalServerError';
@@ -13,7 +13,7 @@ import styled from 'styled-components';
 import Dotdotdot from 'react-dotdotdot';
 import ROUTES from 'constants/routes';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
-import EditOrganization from '../Organizations/EditOrganization';
+import EditOrganization from 'components/Organization/EditOrganization';
 import { reverse } from 'named-urls';
 
 const StyledOrganizationHeader = styled.div`
@@ -159,7 +159,7 @@ class OrganizationDetails extends Component {
                                                 {this.state.label} {this.state.url && <Icon size="sm" icon={faExternalLinkAlt} />}
                                             </h4>
                                         </NavLink>
-                                        {this.props.user && this.props.user.id === this.state.createdBy && (
+                                        {!!this.props.user && (this.props.user.id === this.state.createdBy || this.props.user.isCurationAllowed) && (
                                             <div>
                                                 <Button
                                                     outline
@@ -287,7 +287,7 @@ OrganizationDetails.propTypes = {
             id: PropTypes.string.isRequired
         }).isRequired
     }).isRequired,
-    user: PropTypes.object
+    user: PropTypes.oneOfType([PropTypes.object, PropTypes.number])
 };
 
 const mapStateToProps = state => ({

@@ -19,12 +19,15 @@ const initialState = {
     doi: '',
     doiResourceId: 0,
     researchField: {},
+    verified: false,
     publishedIn: '',
     url: '',
-    urlResourceId: 0
+    urlResourceId: 0,
+    createdBy: null
 };
 //const cookies = new Cookies();
 
+// eslint-disable-next-line import/no-anonymous-default-export
 export default (state = initialState, action) => {
     switch (action.type) {
         case type.LOAD_PAPER: {
@@ -44,9 +47,11 @@ export default (state = initialState, action) => {
                 doi: typeof payload.doi !== 'undefined' ? payload.doi : state.doi,
                 doiResourceId: typeof payload.doiResourceId !== 'undefined' ? payload.doiResourceId : state.doiResourceId,
                 researchField: typeof payload.researchField !== 'undefined' ? payload.researchField : state.researchField,
+                verified: typeof payload.verified !== 'undefined' ? payload.verified : state.verified,
                 publishedIn: typeof payload.publishedIn !== 'undefined' ? payload.publishedIn : state.publishedIn,
                 url: typeof payload.url !== 'undefined' ? payload.url : state.url,
-                urlResourceId: typeof payload.urlResourceId !== 'undefined' ? payload.urlResourceId : state.urlResourceId
+                urlResourceId: typeof payload.urlResourceId !== 'undefined' ? payload.urlResourceId : state.urlResourceId,
+                createdBy: typeof payload.createdBy !== 'undefined' ? payload.createdBy : state.createdBy
             };
         }
 

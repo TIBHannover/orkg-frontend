@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import PropTypes from 'prop-types';
-import { getStatementsBySubject } from 'services/backend/statements';
+import { getStatementsBySubjects } from 'services/backend/statements';
 import { Card, CardImg, CardText, CardBody, CardTitle, Button, CardColumns } from 'reactstrap';
-import { PREDICATES } from 'constants/graphSettings';
+import { getRelatedResourcesData } from 'utils';
 
 class RelatedResources extends Component {
     constructor(props) {
@@ -32,29 +32,16 @@ class RelatedResources extends Component {
     //    Resource -[Image]-> "Literal, base64 encoded image"
     loadResources = async () => {
         if (this.props.resourcesStatements.length > 0) {
-            const relatedResources = [];
-
-            for (const resource of this.props.resourcesStatements) {
-                if (resource._class === 'literal') {
-                    relatedResources.push({
-                        url: resource.label
-                    });
-                } else {
-                    await getStatementsBySubject({ id: resource.id }).then(statements => {
-                        const imageStatement = statements.find(statement => statement.predicate.id === PREDICATES.IMAGE);
-                        const urlStatement = statements.find(statement => statement.predicate.id === PREDICATES.URL);
-                        const descriptionStatement = statements.find(statement => statement.predicate.id === PREDICATES.DESCRIPTION);
-
-                        relatedResources.push({
-                            url: urlStatement ? urlStatement.object.label : '',
-                            image: imageStatement ? imageStatement.object.label : '',
-                            title: resource.label,
-                            description: descriptionStatement ? descriptionStatement.object.label : ''
-                        });
-                    });
-                }
-            }
-
+            let relatedResources = this.props.resourcesStatements
+                .filter(r => r._class === 'literal')
+                .map(resource => ({
+                    url: resource.label
+                }));
+            await getStatementsBySubjects({
+                ids: this.props.resourcesStatements.filter(r => r._class !== 'literal').map(r => r.id)
+            }).then(resourcesStatements => {
+                relatedResources = [...relatedResources, ...getRelatedResourcesData(resourcesStatements)];
+            });
             this.setState({ relatedResources });
         }
     };

@@ -1,4 +1,4 @@
-@import "../../assets/scss/ThemeVariables.scss";
+@import '../../assets/scss/ThemeVariables.scss';
 
 body {
     color: #646464;
@@ -6,11 +6,17 @@ body {
 }
 
 #main-navbar {
-    background: #fff !important;
-    box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.13);
+    &:not(.home-page) {
+        box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.13);
+        background: white;
+    }
+
+    background: transparent;
+    border: 0;
 
     .nav-link {
         color: $darkblue;
+
         &:hover {
             color: $primary;
         }
@@ -29,6 +35,28 @@ body {
             border: 1px solid #ced4da;
             border-left: 0 !important;
             background: $input-bg;
+        }
+    }
+
+    &.home-page {
+        & .nav-link {
+            color: white;
+            &:hover {
+                color: #bbbbbb;
+            }
+        }
+        & .sign-in {
+            color: white;
+            background: #32303b;
+            border-color: #32303b;
+            &:hover {
+                color: white;
+                background: #100f13;
+                border-color: #100f13;
+            }
+        }
+        .search-box .search-icon {
+            color: $darkblue;
         }
     }
 }
@@ -130,4 +158,26 @@ body {
 // ensure all images in the lightbox have a white background (in case they are transparent)
 .ril__image.ril-image-current:not(.ril-not-loaded) {
     background: #fff;
+}
+
+// Tippy
+.tippy-box[data-theme~='visualizationPreview'] {
+    background-color: #fff;
+    color: $body-color;
+    border: 1px solid $primary;
+}
+.tippy-box[data-theme~='visualizationPreview'] .tippy-content {
+    padding: 0;
+}
+.tippy-box[data-theme~='visualizationPreview'][data-placement^='top'] > .tippy-arrow::before {
+    border-top-color: $primary;
+}
+.tippy-box[data-theme~='visualizationPreview'][data-placement^='bottom'] > .tippy-arrow::before {
+    border-bottom-color: $primary;
+}
+.tippy-box[data-theme~='visualizationPreview'][data-placement^='left'] > .tippy-arrow::before {
+    border-left-color: $primary;
+}
+.tippy-box[data-theme~='visualizationPreview'][data-placement^='right'] > .tippy-arrow::before {
+    border-right-color: $primary;
 }

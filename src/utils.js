@@ -2,7 +2,7 @@ import capitalize from 'capitalize';
 import queryString from 'query-string';
 import { flattenDepth, uniq } from 'lodash';
 import rdf from 'rdf';
-import { PREDICATES } from 'constants/graphSettings';
+import { PREDICATES, MISC } from 'constants/graphSettings';
 import { isString } from 'lodash';
 
 export function hashCode(s) {
@@ -160,7 +160,7 @@ export const get_error_message = (errors, field = null) => {
  *
  * @param {Array} paperStatements
  */
-export const getPaperData_ViewPaper = (id, label, paperStatements) => {
+export const getPaperData_ViewPaper = (paperResource, paperStatements) => {
     const researchField = getResearchField(paperStatements);
     const publishedIn = getPublishedIn(paperStatements);
     const [publicationYear, publicationYearResourceId] = getPublicationYear(paperStatements);
@@ -176,8 +176,8 @@ export const getPaperData_ViewPaper = (id, label, paperStatements) => {
     const [url, urlResourceId] = getURL(paperStatements);
 
     return {
-        title: label,
-        paperResourceId: id,
+        title: paperResource.label,
+        paperResourceId: paperResource.id,
         contributions: contributions.sort((a, b) => a.label.localeCompare(b.label)), // sort contributions ascending, so contribution 1, is actually the first one
         authors: authors.reverse(), // statements are ordered desc, so first author is last => thus reverse
         publicationMonth: parseInt(publicationMonth),
@@ -189,7 +189,8 @@ export const getPaperData_ViewPaper = (id, label, paperStatements) => {
         researchField,
         publishedIn,
         url,
-        urlResourceId
+        urlResourceId,
+        createdBy: paperResource.created_by !== MISC.UNKNOWN_ID ? paperResource.created_by : null
     };
 };
 
@@ -225,7 +226,7 @@ export const getPaperData = (id, label, paperStatements) => {
 };
 
 /**
- * Parse comparison statements and return a a comparison object
+ * Parse comparison statements and return a comparison object
  * @param {String} id
  * @param {String } label
  * @param {Array} comparisonStatements
@@ -240,6 +241,18 @@ export const getComparisonData = (id, label, comparisonStatements) => {
     // url
     const url = comparisonStatements.find(statement => statement.predicate.id === PREDICATES.URL);
 
+    // icon
+    const icon = comparisonStatements.find(statement => statement.predicate.id === PREDICATES.ICON);
+
+    // type
+    const type = comparisonStatements.find(statement => statement.predicate.id === PREDICATES.TYPE);
+
+    // order
+    const order = comparisonStatements.find(statement => statement.predicate.id === PREDICATES.ORDER);
+
+    // onHomePage
+    const onHomePage = comparisonStatements.find(statement => statement.predicate.id === PREDICATES.ON_HOMEPAGE);
+
     return {
         id,
         label,
@@ -247,7 +260,32 @@ export const getComparisonData = (id, label, comparisonStatements) => {
         nbContributions: url ? getArrayParamFromQueryString(url.object.label, 'contributions').length : 0,
         url: url ? url.object.label : '',
         reference: reference ? reference.object.label : '',
-        description: description ? description.object.label : ''
+        description: description ? description.object.label : '',
+        icon: icon ? icon.object.label : '',
+        order: order ? order.object.label : Infinity,
+        type: type ? type.object.id : '',
+        onHomePage: onHomePage ? true : false
+    };
+};
+
+/**
+ * Parse visualization statements and return a visualization object
+ * @param {String} id
+ * @param {String } label
+ * @param {Array} visualizationStatements
+ */
+export const getVisualizationData = (id, label, visualizationStatements) => {
+    // description
+    const description = visualizationStatements.find(statement => statement.predicate.id === PREDICATES.DESCRIPTION);
+
+    const authors = getAuthors(visualizationStatements);
+
+    return {
+        id,
+        label,
+        created_at: description ? description.object.created_at : '',
+        description: description ? description.object.label : '',
+        authorNames: authors.sort((a, b) => a.created_at.localeCompare(b.created_at))
     };
 };
 
@@ -321,9 +359,11 @@ export const generateRdfDataVocabularyFile = (data, contributions, properties, m
     //components
     const columns = [
         { id: 'Properties', title: 'Properties' },
-        ...contributions.map((contribution, index) => {
-            return contribution;
-        })
+        ...contributions
+            .filter(c => c.active)
+            .map((contribution, index) => {
+                return contribution;
+            })
     ];
     columns.forEach(function(column, index) {
         if (column.id === 'Properties') {
@@ -358,18 +398,20 @@ export const generateRdfDataVocabularyFile = (data, contributions, properties, m
             gds.add(new rdf.Triple(bno, cubens('dataSet'), ds));
             gds.add(new rdf.Triple(bno, dt['Properties'].toString(), new rdf.Literal(property.label.toString())));
             contributions.map((contribution, index2) => {
-                const cell = data[property.id][index2];
-                if (cell.length > 0) {
-                    cell.map(v => {
-                        if (v.type && v.type === 'resource') {
-                            gds.add(new rdf.Triple(bno, dt[contribution.id].toString(), orkgResource(`${v.resourceId}`)));
-                        } else {
-                            gds.add(new rdf.Triple(bno, dt[contribution.id].toString(), new rdf.Literal(`${v.label ? v.label : ''}`)));
-                        }
-                        return null;
-                    });
-                } else {
-                    gds.add(new rdf.Triple(bno, dt[contribution.id].toString(), new rdf.Literal('Empty')));
+                if (contribution.active) {
+                    const cell = data[property.id][index2];
+                    if (cell.length > 0) {
+                        cell.map(v => {
+                            if (v.type && v.type === 'resource') {
+                                gds.add(new rdf.Triple(bno, dt[contribution.id].toString(), orkgResource(`${v.resourceId}`)));
+                            } else {
+                                gds.add(new rdf.Triple(bno, dt[contribution.id].toString(), new rdf.Literal(`${v.label ? v.label : ''}`)));
+                            }
+                            return null;
+                        });
+                    } else {
+                        gds.add(new rdf.Triple(bno, dt[contribution.id].toString(), new rdf.Literal('Empty')));
+                    }
                 }
                 return null;
             });
@@ -689,6 +731,43 @@ function getOrder(paperStatements) {
         order = Infinity;
     }
     return order;
+}
+
+/**
+ * Parse resources statements and return a related figures objects
+ * @param {Array} resourceStatements
+ */
+export function getRelatedFiguresData(resourcesStatements) {
+    const _figures = resourcesStatements.map(resourceStatements => {
+        const imageStatement = resourceStatements.statements.find(statement => statement.predicate.id === PREDICATES.IMAGE);
+        const alt = resourceStatements.statements.length ? resourceStatements.statements[0]?.subject?.label : null;
+        return {
+            src: imageStatement ? imageStatement.object.label : '',
+            figureId: resourceStatements.id,
+            alt
+        };
+    });
+    return _figures;
+}
+
+/**
+ * Parse resources statements and return a related resources objects
+ * @param {Array} resourceStatements
+ */
+export function getRelatedResourcesData(resourcesStatements) {
+    const _resources = resourcesStatements.map(resourceStatements => {
+        const imageStatement = resourceStatements.statements.find(statement => statement.predicate.id === PREDICATES.IMAGE);
+        const urlStatement = resourceStatements.statements.find(statement => statement.predicate.id === PREDICATES.URL);
+        const descriptionStatement = resourceStatements.statements.find(statement => statement.predicate.id === PREDICATES.DESCRIPTION);
+        return {
+            url: urlStatement ? urlStatement.object.label : '',
+            image: imageStatement ? imageStatement.object.label : '',
+            id: resourceStatements.id,
+            title: resourceStatements.statements[0]?.subject?.label,
+            description: descriptionStatement ? descriptionStatement.object.label : ''
+        };
+    });
+    return _resources;
 }
 
 /**

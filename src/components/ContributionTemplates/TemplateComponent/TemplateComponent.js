@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import { StatementsGroupStyle } from 'components/StatementBrowser/styled';
 import PropTypes from 'prop-types';
 import TemplateComponentProperty from './Property/TemplateComponentProperty';

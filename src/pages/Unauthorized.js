@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { Button, Container } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import ROUTES from 'constants/routes.js';
@@ -20,11 +20,11 @@ const Unauthorized = () => {
     }, []);
 
     const handleSignIn = () => {
-        dispatch(openAuthDialog('signin'));
+        dispatch(openAuthDialog({ action: 'signin' }));
     };
 
     const handleSignUp = () => {
-        dispatch(openAuthDialog('signup'));
+        dispatch(openAuthDialog({ action: 'signup' }));
     };
 
     return (
@@ -61,6 +61,9 @@ const Unauthorized = () => {
                                         textDecoration: 'underline'
                                     }}
                                     onClick={handleSignUp}
+                                    onKeyDown={e => (e.keyCode === 13 ? handleSignUp : undefined)}
+                                    role="button"
+                                    tabIndex={0}
                                 >
                                     Create an account
                                 </span>

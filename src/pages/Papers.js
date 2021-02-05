@@ -1,13 +1,16 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
+import { ButtonDropdown, DropdownToggle, Container, ListGroup, ListGroupItem, DropdownItem, DropdownMenu, ButtonGroup } from 'reactstrap';
 import { getStatementsBySubjects } from 'services/backend/statements';
-import { getResourcesByClass } from 'services/backend/classes';
-import { Container } from 'reactstrap';
+import { getResourcesByClass } from 'services/backend/resources';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faSpinner, faAngleDoubleDown } from '@fortawesome/free-solid-svg-icons';
 import PaperCardDynamic from 'components/PaperCard/PaperCardDynamic';
 import { CLASSES } from 'constants/graphSettings';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import HeaderSearchButton from 'components/HeaderSearchButton/HeaderSearchButton';
 
-export default class Papers extends Component {
+class Papers extends Component {
     constructor(props) {
         super(props);
 
@@ -15,6 +18,8 @@ export default class Papers extends Component {
         this.componentIsMounted = false;
 
         this.state = {
+            dropdownOpen: false,
+            verified: null,
             statements: [],
             paperResources: [],
             isNextPageLoading: false,
@@ -41,7 +46,9 @@ export default class Papers extends Component {
             page: this.state.page,
             items: this.pageSize,
             sortBy: 'created_at',
-            desc: true
+            desc: true,
+            verified: this.state.verified,
+            returnContent: this.state.verified !== null ? true : false
         }).then(papers => {
             if (papers.length > 0) {
                 // update paper resources for paperCards preview
@@ -99,36 +106,86 @@ export default class Papers extends Component {
         return <PaperCardDynamic paper={{ title: paper.label, id: paper.id, paperData: paperData }} key={`pc${paper.id}`} />;
     };
 
+    setVerifiedFilter = value => {
+        this.setState(
+            { verified: value, page: 1, statements: [], paperResources: [], isNextPageLoading: false, hasNextPage: false, isLastPageReached: false },
+            () => {
+                this.loadMorePapers();
+            }
+        );
+    };
+
+    toggle = () => {
+        this.setState({ dropdownOpen: !this.state.dropdownOpen });
+    };
+
     render() {
         return (
             <>
-                <Container className="p-0">
-                    <h1 className="h4 mt-4 mb-4">View all papers</h1>
+                <Container className="d-flex align-items-center">
+                    <h1 className="h4 mt-4 mb-4 flex-grow-1">View all papers</h1>
+                    <div className="flex-shrink-0">
+                        <ButtonGroup>
+                            {!!this.props.user && this.props.user.isCurationAllowed && (
+                                <ButtonDropdown size="sm" isOpen={this.state.dropdownOpen} toggle={this.toggle}>
+                                    <DropdownToggle caret color="darkblue">
+                                        {this.state.verified === true && 'Verified'}
+                                        {this.state.verified === false && 'Unverified'}
+                                        {this.state.verified === null && 'All'}
+                                    </DropdownToggle>
+                                    <DropdownMenu>
+                                        <DropdownItem onClick={e => this.setVerifiedFilter(null)}>All</DropdownItem>
+                                        <DropdownItem onClick={e => this.setVerifiedFilter(true)}>Verified</DropdownItem>
+                                        <DropdownItem onClick={e => this.setVerifiedFilter(false)}>Unverified</DropdownItem>
+                                    </DropdownMenu>
+                                </ButtonDropdown>
+                            )}
+                            {this.state.verified === null && <HeaderSearchButton placeholder="Search papers..." type={CLASSES.PAPER} />}
+                        </ButtonGroup>
+                    </div>
                 </Container>
                 <Container className="p-0">
-                    {this.state.paperResources.length > 0 && <div>{this.renderPaperCards()}</div>}
-                    {this.state.paperResources.length === 0 && !this.state.isNextPageLoading && (
-                        <div className="text-center mt-4 mb-4">No Papers</div>
-                    )}
-                    {this.state.isNextPageLoading && (
-                        <div className="text-center mt-4 mb-4">
-                            <Icon icon={faSpinner} spin /> Loading
-                        </div>
-                    )}
-                    {!this.state.isNextPageLoading && this.state.hasNextPage && (
-                        <div
-                            style={{ cursor: 'pointer' }}
-                            className="list-group-item list-group-item-action text-center mt-2"
-                            onClick={!this.state.isNextPageLoading ? this.loadMorePapers : undefined}
-                        >
-                            Load more papers
-                        </div>
-                    )}
-                    {!this.state.hasNextPage && this.state.isLastPageReached && (
-                        <div className="text-center mt-3">You have reached the last page.</div>
-                    )}
+                    <ListGroup flush className="box rounded" style={{ overflow: 'hidden' }}>
+                        {this.state.paperResources.length > 0 && this.renderPaperCards()}
+                        {this.state.paperResources.length === 0 && !this.state.isNextPageLoading && (
+                            <ListGroupItem tag="div" className="text-center">
+                                No Papers
+                            </ListGroupItem>
+                        )}
+                        {this.state.isNextPageLoading && (
+                            <ListGroupItem tag="div" className="text-center">
+                                <Icon icon={faSpinner} spin /> Loading
+                            </ListGroupItem>
+                        )}
+                        {!this.state.isNextPageLoading && this.state.hasNextPage && (
+                            <ListGroupItem
+                                style={{ cursor: 'pointer' }}
+                                action
+                                className="text-center"
+                                tag="div"
+                                onClick={!this.state.isNextPageLoading ? this.loadMorePapers : undefined}
+                            >
+                                <Icon icon={faAngleDoubleDown} /> Load more papers
+                            </ListGroupItem>
+                        )}
+                        {!this.state.hasNextPage && this.state.isLastPageReached && (
+                            <ListGroupItem tag="div" className="text-center">
+                                You have reached the last page.
+                            </ListGroupItem>
+                        )}
+                    </ListGroup>
                 </Container>
             </>
         );
     }
 }
+
+const mapStateToProps = state => ({
+    user: state.auth.user
+});
+
+Papers.propTypes = {
+    user: PropTypes.oneOfType([PropTypes.object, PropTypes.number])
+};
+
+export default connect(mapStateToProps)(Papers);

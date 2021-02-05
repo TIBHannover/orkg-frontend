@@ -41,7 +41,8 @@ export const PREDICATES = {
     COMPARE_CONTRIBUTION: 'compareContribution',
     HAS_PROPERTY: 'hasProperty',
     HAS_PREVIOUS_VERSION: 'hasPreviousVersion',
-    HAS_SUBJECT: 'hasSubject'
+    HAS_SUBJECT: 'hasSubject',
+    HAS_VISUALIZATION: 'hasVisualization'
 };
 
 export const CLASSES = {
@@ -61,10 +62,12 @@ export const CLASSES = {
     PREDICATE: 'Predicates',
     QB_DATASET_CLASS: 'QBDataset',
     LOCATION: 'DCLocation',
-    SENTENCE: 'Sentence'
+    SENTENCE: 'Sentence',
+    VISUALIZATION: 'Visualization'
 };
 
 export const MISC = {
     RESEARCH_FIELD_MAIN: 'R11',
-    DEFAULT_LITERAL_DATATYPE: 'xsd:string'
+    DEFAULT_LITERAL_DATATYPE: 'xsd:string',
+    UNKNOWN_ID: '00000000-0000-0000-0000-000000000000'
 };

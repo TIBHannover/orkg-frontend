@@ -1,7 +1,8 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Container, Alert, UncontrolledAlert } from 'reactstrap';
 import { getStatementsBySubject, createResourceStatement, deleteStatementById } from 'services/backend/statements';
 import { getUserInformationById } from 'services/backend/users';
+import { getIsVerified } from 'services/backend/papers';
 import { getObservatoryAndOrganizationInformation } from 'services/backend/observatories';
 import { getResource, updateResource, createResource, getContributorsByResourceId } from 'services/backend/resources';
 import { connect } from 'react-redux';
@@ -11,6 +12,7 @@ import Contributions from 'components/ViewPaper/Contributions';
 import PropTypes from 'prop-types';
 import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
 import PaperHeader from 'components/ViewPaper/PaperHeader';
+import Breadcrumbs from 'components/Breadcrumbs/Breadcrumbs';
 import { resetStatementBrowser, updateContributionLabel } from 'actions/statementBrowser';
 import { loadPaper, selectContribution, setPaperAuthors } from 'actions/viewPaper';
 import GizmoGraphViewModal from 'components/ViewPaper/GraphView/GizmoGraphViewModal';
@@ -23,7 +25,7 @@ import PaperMenuBar from 'components/ViewPaper/PaperHeaderBar/PaperMenuBar';
 import styled from 'styled-components';
 import SharePaper from 'components/ViewPaper/SharePaper';
 import { getPaperData_ViewPaper } from 'utils';
-import { PREDICATES, CLASSES } from 'constants/graphSettings';
+import { PREDICATES, CLASSES, MISC } from 'constants/graphSettings';
 
 export const EditModeHeader = styled(Container)`
     background-color: #80869b !important;
@@ -45,15 +47,20 @@ export const Title = styled.div`
 class ViewPaper extends Component {
     state = {
         loading: true,
-        loading_failed: false,
-        unfoundContribution: false,
+        loadingFailed: false,
+        loadingContributionFailed: false,
         contributions: [],
         selectedContribution: '',
         showGraphModal: false,
         editMode: false,
         observatoryInfo: {},
         contributors: [],
-        showHeaderBar: false
+        showHeaderBar: false,
+        isLoadingObservatory: false,
+        failedLoading: false,
+        observatories: [],
+        organizationId: '',
+        observatoryId: ''
     };
 
     componentDidMount() {
@@ -85,15 +92,18 @@ class ViewPaper extends Component {
     loadPaperData = () => {
         this.setState({ loading: true });
         const resourceId = this.props.match.params.resourceId;
-
         this.props.resetStatementBrowser();
         getResource(resourceId)
             .then(paperResource => {
-                this.processObservatoryInformation(paperResource, resourceId);
+                if (!paperResource.classes.includes(CLASSES.PAPER)) {
+                    this.setState({ loading: false, loadingFailed: true });
+                    return;
+                }
 
-                getStatementsBySubject({ id: resourceId })
-                    .then(paperStatements => {
-                        this.processPaperStatements(paperResource, paperStatements);
+                this.processObservatoryInformation(paperResource, resourceId);
+                Promise.all([getStatementsBySubject({ id: resourceId }), getIsVerified(resourceId).catch(() => false)])
+                    .then(([paperStatements, verified]) => {
+                        this.processPaperStatements(paperResource, paperStatements, verified);
                     })
                     .then(() => {
                         // read ORCID of authors
@@ -105,15 +115,15 @@ class ViewPaper extends Component {
                             .catch(error => {
                                 console.log(error);
                                 if (error.message === 'No Contribution found') {
-                                    this.setState({ unfoundContribution: true, loading: false, loading_failed: false });
+                                    this.setState({ loadingContributionFailed: true, loading: false, loadingFailed: false });
                                 } else {
-                                    this.setState({ loading: false, loading_failed: true });
+                                    this.setState({ loading: false, loadingFailed: true });
                                 }
                             });
                     });
             })
             .catch(error => {
-                this.setState({ loading: false, loading_failed: true });
+                this.setState({ loading: false, loadingFailed: true });
             });
     };
 
@@ -176,22 +186,31 @@ class ViewPaper extends Component {
         }
     };
 
+    getObservatoryInfo = () => {
+        const resourceId = this.props.match.params.resourceId;
+        getResource(resourceId)
+            .then(paperResource => {
+                this.processObservatoryInformation(paperResource, resourceId);
+            })
+            .catch(error => {
+                this.setState({ loading: false, loading_failed: true });
+            });
+    };
+
     /** PROCESSING HELPER :  Helper functions to increase code readability**/
     processObservatoryInformation(paperResource, resourceId) {
-        if (
-            paperResource.observatory_id &&
-            paperResource.observatory_id !== '00000000-0000-0000-0000-000000000000' &&
-            paperResource.created_by &&
-            paperResource.created_by !== '00000000-0000-0000-0000-000000000000'
-        ) {
+        if (paperResource.observatory_id && paperResource.observatory_id !== MISC.UNKNOWN_ID) {
             const observatory = getObservatoryAndOrganizationInformation(paperResource.observatory_id, paperResource.organization_id);
-            const creator = getUserInformationById(paperResource.created_by);
+            const creator =
+                paperResource.created_by && paperResource.created_by !== MISC.UNKNOWN_ID
+                    ? getUserInformationById(paperResource.created_by).catch(e => {})
+                    : undefined;
             Promise.all([observatory, creator]).then(data => {
                 this.setState({
                     observatoryInfo: {
                         ...data[0],
                         created_at: paperResource.created_at,
-                        created_by: data[1],
+                        created_by: data[1] !== undefined ? data[1] : null,
                         extraction_method: paperResource.extraction_method
                     }
                 });
@@ -211,12 +230,12 @@ class ViewPaper extends Component {
         }
     }
 
-    processPaperStatements = (paperResource, paperStatements) => {
-        const paperData = getPaperData_ViewPaper(paperResource.id, paperResource.label, paperStatements);
+    processPaperStatements = (paperResource, paperStatements, verified) => {
+        const paperData = getPaperData_ViewPaper(paperResource, paperStatements);
 
         // Set document title
         document.title = `${paperResource.label} - ORKG`;
-        this.props.loadPaper(paperData);
+        this.props.loadPaper({ ...paperData, verified: verified });
         this.setState({
             loading: false,
             contributions: paperData.contributions
@@ -292,21 +311,30 @@ class ViewPaper extends Component {
 
         return (
             <div>
-                {!this.state.loading && this.state.loading_failed && <NotFound />}
-                {!this.state.loading_failed && (
+                {!this.state.loading && this.state.loadingFailed && <NotFound />}
+                {!this.state.loadingFailed && (
                     <>
                         {this.state.showHeaderBar && (
                             <PaperHeaderBar
                                 paperLink={paperLink}
                                 editMode={this.state.editMode}
                                 toggle={this.toggle}
+                                id={this.props.match.params.resourceId}
                                 paperTitle={this.props.viewPaper.title}
                             />
                         )}
+
+                        <Breadcrumbs researchFieldId={this.props.viewPaper.researchField.id} />
+
                         <VisibilitySensor onChange={this.handleShowHeaderBar}>
                             <Container className="d-flex align-items-center">
                                 <h1 className="h4 mt-4 mb-4 flex-grow-1">View paper</h1>
-                                <PaperMenuBar editMode={this.state.editMode} paperLink={paperLink} toggle={this.toggle} />
+                                <PaperMenuBar
+                                    editMode={this.state.editMode}
+                                    paperLink={paperLink}
+                                    toggle={this.toggle}
+                                    id={this.props.match.params.resourceId}
+                                />
                             </Container>
                         </VisibilitySensor>
 
@@ -322,15 +350,23 @@ class ViewPaper extends Component {
                                 ${this.state.editMode ? 'rounded-bottom' : 'rounded'}`}
                         >
                             {this.state.loading && (
-                                <ContentLoader height={38} speed={2} primaryColor="#f3f3f3" secondaryColor="#ecebeb">
-                                    <rect x="0" y="10" width="350" height="12" />
-                                    <rect x="0" y="28" rx="5" ry="5" width="30" height="8" />
-                                    <rect x="35" y="28" rx="5" ry="5" width="30" height="8" />
-                                    <rect x="70" y="28" rx="5" ry="5" width="30" height="8" />
-                                    <rect x="105" y="28" rx="5" ry="5" width="30" height="8" />
+                                <ContentLoader
+                                    height="100%"
+                                    width="100%"
+                                    viewBox="0 0 100 10"
+                                    style={{ width: '100% !important' }}
+                                    speed={2}
+                                    backgroundColor="#f3f3f3"
+                                    foregroundColor="#ecebeb"
+                                >
+                                    <rect x="0" y="0" width="80" height="4" />
+                                    <rect x="0" y="6" rx="1" ry="1" width="10" height="2" />
+                                    <rect x="12" y="6" rx="1" ry="1" width="10" height="2" />
+                                    <rect x="24" y="6" rx="1" ry="1" width="10" height="2" />
+                                    <rect x="36" y="6" rx="1" ry="1" width="10" height="2" />
                                 </ContentLoader>
                             )}
-                            {!this.state.loading && !this.state.loading_failed && (
+                            {!this.state.loading && !this.state.loadingFailed && (
                                 <>
                                     {comingFromWizard && (
                                         <UncontrolledAlert color="info">
@@ -344,7 +380,7 @@ class ViewPaper extends Component {
                                     <PaperHeader editMode={this.state.editMode} />
                                 </>
                             )}
-                            {!this.state.loading_failed && !this.state.unfoundContribution && (
+                            {!this.state.loadingFailed && !this.state.loadingContributionFailed && (
                                 <>
                                     <hr className="mt-3" />
                                     <SharePaper title={this.props.viewPaper.title} />
@@ -361,12 +397,13 @@ class ViewPaper extends Component {
                                         toggleDeleteContribution={this.toggleDeleteContribution}
                                         observatoryInfo={this.state.observatoryInfo}
                                         contributors={this.state.contributors}
+                                        changeObservatory={this.getObservatoryInfo}
                                     />
 
                                     <ComparisonPopup />
                                 </>
                             )}
-                            {!this.state.loading_failed && this.state.unfoundContribution && (
+                            {!this.state.loadingFailed && this.state.loadingContributionFailed && (
                                 <>
                                     <hr className="mt-4 mb-5" />
                                     <Alert color="danger">Failed to load contributions.</Alert>
@@ -399,11 +436,13 @@ ViewPaper.propTypes = {
     location: PropTypes.object.isRequired,
     viewPaper: PropTypes.object.isRequired,
     loadPaper: PropTypes.func.isRequired,
-    setPaperAuthors: PropTypes.func.isRequired
+    setPaperAuthors: PropTypes.func.isRequired,
+    user: PropTypes.oneOfType([PropTypes.object, PropTypes.number])
 };
 
 const mapStateToProps = state => ({
-    viewPaper: state.viewPaper
+    viewPaper: state.viewPaper,
+    user: state.auth.user
 });
 
 const mapDispatchToProps = dispatch => ({

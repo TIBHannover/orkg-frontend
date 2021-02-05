@@ -1,11 +1,11 @@
-import React, { Fragment, useState, useCallback } from 'react';
+import { Fragment, useState, useCallback } from 'react';
 import { StyledResearchFieldsInputFormControl, StyledResearchFieldBrowser } from './styled';
 import PropTypes from 'prop-types';
 import AsyncCreatableSelect from 'react-select/async-creatable';
 import { components } from 'react-select';
 import { connect } from 'react-redux';
 import { guid, compareOption } from 'utils';
-import { getResourcesByClass } from 'services/backend/classes';
+import { getResourcesByClass } from 'services/backend/resources';
 import styled from 'styled-components';
 import { CLASSES } from 'constants/graphSettings';
 
@@ -156,6 +156,16 @@ function ResearchProblemInput(props) {
                         problemBrowser: iprops.data
                     });
                 }}
+                onKeyDown={e =>
+                    e.keyCode === 13
+                        ? () =>
+                              this.setState({
+                                  problemBrowser: iprops.data
+                              })
+                        : undefined
+                }
+                role="button"
+                tabIndex={0}
             >
                 <components.MultiValueLabel {...iprops} />
             </div>

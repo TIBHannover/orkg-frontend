@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Container, Modal, ModalBody, ModalHeader, Button } from 'reactstrap';
 import { Col, Row } from 'reactstrap';
 import { getStatementsBySubjects } from 'services/backend/statements';
@@ -14,17 +14,22 @@ import InternalServerError from 'pages/InternalServerError';
 import ContributorCard from 'components/ContributorCard/ContributorCard';
 import PaperCard from 'components/PaperCard/PaperCard';
 import ComparisonCard from 'components/ComparisonCard/ComparisonCard';
+import EditObservatory from 'components/Observatory/EditObservatory';
+import RelatedResourcesCard from 'components/Observatory/RelatedResourcesCard';
+import AddResearchProblem from 'components/Observatory/AddResearchProblem';
 import NotFound from 'pages/NotFound';
 import PropTypes from 'prop-types';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import { Link } from 'react-router-dom';
-import { faPen } from '@fortawesome/free-solid-svg-icons';
+import { faPen, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { getPaperData, getComparisonData } from 'utils';
 import { find } from 'lodash';
+import capitalize from 'capitalize';
 import { connect } from 'react-redux';
-import EditObservatory from '../Observatories/EditObservatory';
+import { filterObjectOfStatementsByPredicate } from 'utils';
+import { PREDICATES } from 'constants/graphSettings';
 
 class Observatory extends Component {
     constructor(props) {
@@ -34,7 +39,7 @@ class Observatory extends Component {
             error: null,
             label: '',
             description: '',
-            researchField: '',
+            researchField: null,
             isContributorsModalOpen: false,
             isLoading: false,
             isLoadingContributors: false,
@@ -48,7 +53,8 @@ class Observatory extends Component {
             papersList: [],
             organizationsList: [],
             comparisonsList: [],
-            showEditDialog: false
+            showEditDialog: false,
+            showAddResearchProblemDialog: false
         };
     }
 
@@ -125,11 +131,18 @@ class Observatory extends Component {
                 }).then(resourcesStatements => {
                     const comparisonsData = resourcesStatements.map(resourceStatements => {
                         const comparisonSubject = find(comparisons, { id: resourceStatements.id });
-                        return getComparisonData(
+                        const resources = filterObjectOfStatementsByPredicate(resourceStatements.statements, PREDICATES.RELATED_RESOURCES, false);
+                        const figures = filterObjectOfStatementsByPredicate(resourceStatements.statements, PREDICATES.RELATED_FIGURE, false);
+
+                        const data = getComparisonData(
                             resourceStatements.id,
                             resourceStatements && comparisonSubject.label ? comparisonSubject.label : 'No Title',
                             resourceStatements.statements
                         );
+
+                        data.resources = resources;
+                        data.figures = figures;
+                        return data;
                     });
                     this.setState({
                         comparisonsList: comparisonsData,
@@ -154,6 +167,10 @@ class Observatory extends Component {
             .catch(error => {
                 this.setState({ error: error, isLoadingProblems: false });
             });
+    };
+
+    updateObservatoryResearchProblem = () => {
+        this.loadProblems();
     };
 
     loadContributors = () => {
@@ -203,7 +220,7 @@ class Observatory extends Component {
 
                         <Container className="box rounded-lg clearfix pt-4 pb-4 pl-5 pr-5">
                             <h3>{this.state.label}</h3>
-                            {this.props.user && (
+                            {!!this.props.user && this.props.user.isCurationAllowed && (
                                 <Button
                                     color="darkblue"
                                     size="sm"
@@ -215,9 +232,14 @@ class Observatory extends Component {
                             )}
                             {this.state.description}
                             <br />
-                            <div className="flex-grow-1">
-                                <small>Research field: {this.state.researchField}</small>
-                            </div>
+                            {this.state.researchField && this.state.researchField.id && (
+                                <div className="flex-grow-1 mt-2">
+                                    Research field:
+                                    <Link className="ml-2" to={reverse(ROUTES.RESEARCH_FIELD, { researchFieldId: this.state.researchField.id })}>
+                                        {this.state.researchField && this.state.researchField.label}
+                                    </Link>
+                                </div>
+                            )}
                         </Container>
 
                         <Container>
@@ -225,6 +247,16 @@ class Observatory extends Component {
                                 <Col md={4} sm={12} style={{ minHeight: '300px' }} className="d-flex px-0 pr-3">
                                     <div className="box rounded-lg p-4 flex-grow-1">
                                         <h5>Research Problems</h5>
+                                        {!!this.props.user && this.props.user.isCurationAllowed && (
+                                            <Button
+                                                outline
+                                                size="sm"
+                                                style={{ float: 'right', marginTop: '-33px' }}
+                                                onClick={() => this.toggle('showAddResearchProblemDialog')}
+                                            >
+                                                <Icon icon={faPlus} /> Add
+                                            </Button>
+                                        )}
                                         {!this.state.isLoadingProblems ? (
                                             <div className="mb-4 mt-2">
                                                 {this.state.problemsList.length > 0 ? (
@@ -236,7 +268,7 @@ class Observatory extends Component {
                                                                         <Link
                                                                             to={reverse(ROUTES.RESEARCH_PROBLEM, { researchProblemId: problem.id })}
                                                                         >
-                                                                            {problem.label}
+                                                                            {capitalize(problem.label)}
                                                                         </Link>
                                                                     </li>
                                                                 );
@@ -391,13 +423,31 @@ class Observatory extends Component {
                         </Container>
 
                         <Container className="box rounded-lg p-4">
+                            <h5>Figures</h5>
+                            {!this.state.isLoadingComparisons ? (
+                                <div className="mb-4 mt-4">
+                                    {this.state.comparisonsList.length > 0 ? (
+                                        <RelatedResourcesCard figureStatements={this.state.comparisonsList} />
+                                    ) : (
+                                        <div className="text-center mt-4 mb-4">No Figures</div>
+                                    )}
+                                </div>
+                            ) : (
+                                <div className="text-center mt-4 mb-4">Loading figures ...</div>
+                            )}
+                        </Container>
+                        <br />
+
+                        <Container className="box rounded-lg p-4">
                             <h5>Comparisons</h5>
                             {!this.state.isLoadingComparisons ? (
                                 <div className="mb-4 mt-4">
                                     {this.state.comparisonsList.length > 0 ? (
                                         <div>
                                             {this.state.comparisonsList.map(comparison => {
-                                                return <ComparisonCard comparison={{ ...comparison }} key={`pc${comparison.id}`} />;
+                                                return (
+                                                    <ComparisonCard comparison={{ ...comparison }} key={`pc${comparison.id}`} loadResources={true} />
+                                                );
                                             })}
                                         </div>
                                     ) : (
@@ -445,6 +495,14 @@ class Observatory extends Component {
                     researchField={this.state.researchField}
                     updateObservatoryMetadata={this.updateObservatoryMetadata}
                 />
+
+                <AddResearchProblem
+                    showDialog={this.state.showAddResearchProblemDialog}
+                    toggle={() => this.toggle('showAddResearchProblemDialog')}
+                    id={this.props.match.params.id}
+                    organizationId={this.state.organizationsList.length > 0 ? this.state.organizationsList[0]['id'] : ''}
+                    updateObservatoryResearchProblem={this.updateObservatoryResearchProblem}
+                />
             </>
         );
     };
@@ -460,7 +518,7 @@ Observatory.propTypes = {
             id: PropTypes.string.isRequired
         }).isRequired
     }).isRequired,
-    user: PropTypes.object
+    user: PropTypes.oneOfType([PropTypes.object, PropTypes.number])
 };
 
 export default connect(mapStateToProps)(Observatory);

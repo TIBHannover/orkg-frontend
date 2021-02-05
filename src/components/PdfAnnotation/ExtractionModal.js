@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Modal, ModalHeader, ModalBody, ModalFooter, Button, Alert } from 'reactstrap';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -37,12 +37,13 @@ const ExtractionModal = props => {
     const toggleHelpModal = () => {
         setHelpModalOpen(!helpModalOpen);
     };
+
     return (
         <>
             <Modal isOpen={props.isOpen} toggle={props.toggle} style={{ maxWidth: '95%' }}>
                 <ModalHeader toggle={props.toggle}>
                     Table extraction{' '}
-                    <Button color="link" pill outline size="sm" style={{ fontSize: 18, lineHeight: 1 }} className="p-0" onClick={toggleHelpModal}>
+                    <Button color="link" outline size="sm" style={{ fontSize: 18, lineHeight: 1 }} className="p-0" onClick={toggleHelpModal}>
                         <Icon icon={faQuestionCircle} />
                     </Button>
                 </ModalHeader>

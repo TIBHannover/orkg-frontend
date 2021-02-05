@@ -1,11 +1,11 @@
-import React from 'react';
+import { Component } from 'react';
 import { Tooltip as ReactstrapTooltip } from 'reactstrap';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { guid } from '../../utils';
 
-class Tooltip extends React.Component {
+class Tooltip extends Component {
     constructor(props) {
         super(props);
 

@@ -1,4 +1,3 @@
-import React from 'react';
 import { ButtonGroup, Button } from 'reactstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { changeZoom } from 'actions/pdfTextAnnotation';

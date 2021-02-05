@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Container, Button, FormGroup, Label, FormText } from 'reactstrap';
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { Container, Button, FormGroup, Label, FormText, ButtonGroup } from 'reactstrap';
 import { classesUrl, getClassById } from 'services/backend/classes';
 import { updateResourceClasses as updateResourceClassesNetwork } from 'services/backend/resources';
 import { getResource } from 'services/backend/resources';
 import { getStatementsBySubjectAndPredicate } from 'services/backend/statements';
-import StatementBrowser from 'components/StatementBrowser/Statements/StatementsContainer';
+import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
 import { EditModeHeader, Title } from 'pages/ViewPaper';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
 import InternalServerError from 'pages/InternalServerError';
@@ -13,35 +13,90 @@ import EditableHeader from 'components/EditableHeader';
 import ObjectStatements from 'components/ObjectStatements/ObjectStatements';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import NotFound from 'pages/NotFound';
-import { useLocation } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
-import Tippy from '@tippy.js/react';
+import Tippy from '@tippyjs/react';
 import ROUTES from 'constants/routes.js';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import { resetStatementBrowser } from 'actions/statementBrowser';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faPen } from '@fortawesome/free-solid-svg-icons';
+import { faPen, faTrash, faExternalLinkAlt, faTimes, faPlus } from '@fortawesome/free-solid-svg-icons';
 import Confirm from 'components/ConfirmationModal/ConfirmationModal';
 import { CLASSES, PREDICATES } from 'constants/graphSettings';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import { orderBy } from 'lodash';
+import useDeleteResource from 'components/Resource/hooks/useDeleteResource';
+import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
+import { getVisualization } from 'services/similarity';
+import GDCVisualizationRenderer from 'libs/selfVisModel/RenderingComponents/GDCVisualizationRenderer';
 
+const DEDICATED_PAGE_LINKS = {
+    [CLASSES.PAPER]: {
+        label: 'Paper',
+        route: ROUTES.VIEW_PAPER,
+        routeParams: 'resourceId'
+    },
+    [CLASSES.PROBLEM]: {
+        label: 'Research problem',
+        route: ROUTES.RESEARCH_PROBLEM,
+        routeParams: 'researchProblemId'
+    },
+    [CLASSES.COMPARISON]: {
+        label: 'Comparison',
+        route: ROUTES.COMPARISON,
+        routeParams: 'comparisonId'
+    },
+    [CLASSES.AUTHOR]: {
+        label: 'Author',
+        route: ROUTES.AUTHOR_PAGE,
+        routeParams: 'authorId'
+    },
+    [CLASSES.RESEARCH_FIELD]: {
+        label: 'Research field',
+        route: ROUTES.RESEARCH_FIELD,
+        routeParams: 'researchFieldId'
+    },
+    [CLASSES.VENUE]: {
+        label: 'Venue',
+        route: ROUTES.VENUE_PAGE,
+        routeParams: 'venueId'
+    },
+    [CLASSES.CONTRIBUTION_TEMPLATE]: {
+        label: 'Template',
+        route: ROUTES.CONTRIBUTION_TEMPLATE,
+        routeParams: 'id'
+    },
+    [CLASSES.CONTRIBUTION]: {
+        label: 'Contribution',
+        route: ROUTES.CONTRIBUTION,
+        routeParams: 'id'
+    }
+};
 function Resource(props) {
+    const resourceId = props.match.params.id;
     const location = useLocation();
     const [error, setError] = useState(null);
     const [label, setLabel] = useState('');
     const [classes, setClasses] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [editMode, setEditMode] = useState(false);
+    const [canBeDeleted, setCanBeDeleted] = useState(false);
+    const [visualizationModelForGDC, setVisualizationModelForGDC] = useState(undefined);
+    const [hasVisualizationModelForGDC, setHasVisualizationModelForGDC] = useState(false);
+    const values = useSelector(state => state.statementBrowser.values);
+    const properties = useSelector(state => state.statementBrowser.properties);
+    const isCurationAllowed = useSelector(state => state.auth.user?.isCurationAllowed);
+    const showDeleteButton = editMode && isCurationAllowed;
+    const [hasObjectStatement, setHasObjectStatement] = useState(false);
+    const { deleteResource } = useDeleteResource({ resourceId, redirect: true });
     const [canEdit, setCanEdit] = useState(false);
     const classesAutocompleteRef = useRef(null);
 
     useEffect(() => {
         const findResource = async () => {
             setIsLoading(true);
-            getResource(props.match.params.id)
+            getResource(resourceId)
                 .then(responseJson => {
                     document.title = `${responseJson.label} - Resource - ORKG`;
                     const classesCalls = responseJson.classes.map(classResource => getClassById(classResource));
@@ -52,6 +107,18 @@ function Resource(props) {
                             setClasses(classes);
                         })
                         .then(() => {
+                            if (responseJson.classes.includes(CLASSES.VISUALIZATION)) {
+                                getVisualization(resourceId)
+                                    .then(model => {
+                                        setVisualizationModelForGDC(model);
+                                        setHasVisualizationModelForGDC(true);
+                                    })
+                                    .catch(() => {
+                                        setVisualizationModelForGDC(undefined);
+                                        setHasVisualizationModelForGDC(false);
+                                        toast.error('Error loading visualization preview');
+                                    });
+                            }
                             if (responseJson.classes.includes(CLASSES.COMPARISON)) {
                                 getStatementsBySubjectAndPredicate({ subjectId: props.match.params.id, predicateId: PREDICATES.HAS_DOI }).then(st => {
                                     if (st.length > 0) {
@@ -76,7 +143,11 @@ function Resource(props) {
                 });
         };
         findResource();
-    }, [location, props.match.params.id]);
+    }, [location, props.match.params.id, resourceId]);
+
+    useEffect(() => {
+        setCanBeDeleted((values.allIds.length === 0 || properties.allIds.length === 0) && !hasObjectStatement);
+    }, [values, properties, hasObjectStatement]);
 
     const handleClassSelect = async (selected, action) => {
         if (action.action === 'create-option') {
@@ -96,7 +167,7 @@ function Resource(props) {
         // (When a key changes, React will create a new component instance rather than update the current one)
         props.resetStatementBrowser();
         setClasses(newClasses);
-        await updateResourceClassesNetwork(props.match.params.id, newClasses.map(c => c.id));
+        await updateResourceClassesNetwork(resourceId, newClasses.map(c => c.id));
         toast.success('Resource classes updated successfully');
     };
 
@@ -104,23 +175,83 @@ function Resource(props) {
         setLabel(event.value);
     };
 
+    const getDedicatedLink = useCallback(() => {
+        for (const _class of classes) {
+            if (_class.id in DEDICATED_PAGE_LINKS) {
+                // only for a link for the first class occurrence (to prevent problems when a
+                // resource has multiple classes form the list), so return
+                return DEDICATED_PAGE_LINKS[_class.id];
+            }
+        }
+        return;
+    }, [classes]);
+
+    const dedicatedLink = getDedicatedLink();
+
     return (
         <>
             {isLoading && <Container className="box rounded pt-4 pb-4 pl-5 pr-5 mt-5 clearfix">Loading ...</Container>}
             {!isLoading && error && <>{error.statusCode === 404 ? <NotFound /> : <InternalServerError />}</>}
             {!isLoading && !error && (
-                <Container className="mt-5 clearfix">
+                <>
+                    <Container className="d-flex align-items-center">
+                        <h1 className="h4 mt-4 mb-4 flex-grow-1">Resource view</h1>
+                        <ButtonGroup className="flex-shrink-0">
+                            <RequireAuthentication
+                                size="sm"
+                                component={Button}
+                                color="darkblue"
+                                style={{ marginRight: 2 }}
+                                tag={Link}
+                                to={ROUTES.ADD_RESOURCE}
+                            >
+                                <Icon icon={faPlus} className="mr-1" /> Create resource
+                            </RequireAuthentication>
+                            {dedicatedLink && (
+                                <Button
+                                    color="darkblue"
+                                    size="sm"
+                                    tag={Link}
+                                    to={reverse(dedicatedLink.route, { [dedicatedLink.routeParams]: props.match.params.id })}
+                                    style={{ marginRight: 2 }}
+                                >
+                                    <Icon icon={faExternalLinkAlt} className="mr-1" /> {dedicatedLink.label} view
+                                </Button>
+                            )}
+                            {canEdit ? (
+                                !editMode ? (
+                                    <RequireAuthentication
+                                        component={Button}
+                                        className="float-right"
+                                        color="darkblue"
+                                        size="sm"
+                                        onClick={() => setEditMode(v => !v)}
+                                    >
+                                        <Icon icon={faPen} /> Edit
+                                    </RequireAuthentication>
+                                ) : (
+                                    <Button className="flex-shrink-0" color="darkblueDarker" size="sm" onClick={() => setEditMode(v => !v)}>
+                                        <Icon icon={faTimes} /> Stop editing
+                                    </Button>
+                                )
+                            ) : (
+                                <Tippy hideOnClick={false} content="This resource can not be edited because it has a published DOI.">
+                                    <span className="btn btn-darkblue btn-sm disabled">
+                                        <Icon icon={faPen} /> <span>Edit</span>
+                                    </span>
+                                </Tippy>
+                            )}
+                        </ButtonGroup>
+                    </Container>
+
                     {editMode && canEdit && (
                         <EditModeHeader className="box rounded-top">
                             <Title>
                                 Edit mode <span className="pl-2">Every change you make is automatically saved</span>
                             </Title>
-                            <Button className="float-left" style={{ marginLeft: 1 }} color="light" size="sm" onClick={() => setEditMode(v => !v)}>
-                                Stop editing
-                            </Button>
                         </EditModeHeader>
                     )}
-                    <div className={`box clearfix pt-4 pb-4 pl-5 pr-5 ${editMode ? 'rounded-bottom' : 'rounded'}`}>
+                    <Container className={`box clearfix pt-4 pb-4 pl-5 pr-5 ${editMode ? 'rounded-bottom' : 'rounded'}`}>
                         <div className="mb-2">
                             {!editMode || !canEdit ? (
                                 <div className="pb-2 mb-3">
@@ -129,23 +260,6 @@ function Resource(props) {
                                             <i>
                                                 <small>No label</small>
                                             </i>
-                                        )}
-                                        {canEdit ? (
-                                            <RequireAuthentication
-                                                component={Button}
-                                                className="float-right"
-                                                color="darkblue"
-                                                size="sm"
-                                                onClick={() => setEditMode(v => !v)}
-                                            >
-                                                <Icon icon={faPen} /> Edit
-                                            </RequireAuthentication>
-                                        ) : (
-                                            <Button className="float-right" color="darkblue" size="sm" disabled={true}>
-                                                <Tippy content="This resource can not be edited because it has a published DOI.">
-                                                    <span>Edit</span>
-                                                </Tippy>
-                                            </Button>
                                         )}
                                     </h3>
                                     {classes.length > 0 && (
@@ -167,8 +281,29 @@ function Resource(props) {
                             ) : (
                                 <>
                                     <EditableHeader id={props.match.params.id} value={label} onChange={handleHeaderChange} />
-                                    <FormGroup className="mb-4">
-                                        <Label>Classes:</Label>
+                                    {showDeleteButton && (
+                                        <ConditionalWrapper
+                                            condition={!canBeDeleted}
+                                            wrapper={children => (
+                                                <Tippy content="The resource cannot be deleted because it is used in statements (either as subject or object)">
+                                                    <span>{children}</span>
+                                                </Tippy>
+                                            )}
+                                        >
+                                            <Button
+                                                color="danger"
+                                                size="sm"
+                                                className="mt-2"
+                                                style={{ marginLeft: 'auto' }}
+                                                onClick={deleteResource}
+                                                disabled={!canBeDeleted}
+                                            >
+                                                <Icon icon={faTrash} /> Delete resource
+                                            </Button>
+                                        </ConditionalWrapper>
+                                    )}
+                                    <FormGroup className="mb-4 mt-3">
+                                        <Label for="classes-autocomplete">Classes</Label>
                                         <AutoComplete
                                             requestUrl={classesUrl}
                                             onChange={(selected, action) => {
@@ -185,6 +320,8 @@ function Resource(props) {
                                             innerRef={classesAutocompleteRef}
                                             isMulti
                                             autoFocus={false}
+                                            ols={true}
+                                            inputId="classes-autocomplete"
                                         />
                                         {editMode && <FormText>Specify the classes of the resource.</FormText>}
                                     </FormGroup>
@@ -192,6 +329,14 @@ function Resource(props) {
                             )}
                         </div>
                         <hr />
+
+                        {/*Adding Visualization Component here */}
+                        {hasVisualizationModelForGDC && (
+                            <div className="mb-4">
+                                <GDCVisualizationRenderer model={visualizationModelForGDC} />
+                                <hr />
+                            </div>
+                        )}
                         <h3 className="h5">Statements</h3>
                         <div className="clearfix">
                             <StatementBrowser
@@ -199,8 +344,8 @@ function Resource(props) {
                                 enableEdit={editMode && canEdit}
                                 syncBackend={editMode}
                                 openExistingResourcesInDialog={false}
-                                initialResourceId={props.match.params.id}
-                                initialResourceLabel={label}
+                                initialSubjectId={resourceId}
+                                initialSubjectLabel={label}
                                 newStore={true}
                                 propertiesAsLinks={true}
                                 resourcesAsLinks={true}
@@ -208,9 +353,9 @@ function Resource(props) {
 
                             <SameAsStatements />
                         </div>
-                        <ObjectStatements resourceId={props.match.params.id} />
-                    </div>
-                </Container>
+                        <ObjectStatements resourceId={props.match.params.id} setHasObjectStatement={setHasObjectStatement} />
+                    </Container>
+                </>
             )}
         </>
     );

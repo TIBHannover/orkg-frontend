@@ -1,18 +1,16 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import PaperCard from 'components/PaperCard/PaperCard';
 import ComparisonCard from 'components/ComparisonCard/ComparisonCard';
-import { getStatementsBySubjects, getStatementsBySubjectAndPredicate } from 'services/backend/statements';
-import { getResourcesByClass } from 'services/backend/classes';
+import { getStatementsBySubjects } from 'services/backend/statements';
 import { getPaperData, getComparisonData } from 'utils';
 import { find } from 'lodash';
 import { Button } from 'reactstrap';
-import Confirm from 'reactstrap-confirm';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { updateResourceClasses } from 'services/backend/resources';
-import { toast } from 'react-toastify';
-import { PREDICATES, CLASSES } from 'constants/graphSettings';
+import { getResourcesByClass } from 'services/backend/resources';
+import useDeletePapers from 'components/ViewPaper/hooks/useDeletePapers';
+import { CLASSES } from 'constants/graphSettings';
 
 const Items = props => {
     const pageSize = 5;
@@ -21,6 +19,20 @@ const Items = props => {
     const [page, setPage] = useState(0);
     const [resources, setResources] = useState([]);
     const [selectedItems, setSelectedItems] = useState([]);
+
+    const finishLoadingCallback = () => {
+        // reload the papers, in case page is already 0, manually call loadItems()
+        if (page === 0) {
+            loadItems();
+        } else {
+            setPage(0);
+        }
+    };
+
+    const [deletePapers, loadingDeletePapers] = useDeletePapers({
+        paperIds: selectedItems,
+        finishLoadingCallback
+    });
 
     const loadItems = useCallback(() => {
         setIsLoading(true);
@@ -76,6 +88,14 @@ const Items = props => {
     }, [page, props.filterClass, props.userId]);
 
     useEffect(() => {
+        if (loadingDeletePapers) {
+            setIsLoading(true);
+            setResources([]);
+            setSelectedItems([]);
+        }
+    }, [loadingDeletePapers]);
+
+    useEffect(() => {
         loadItems();
     }, [loadItems]);
 
@@ -95,44 +115,6 @@ const Items = props => {
     const handleLoadMore = () => {
         if (!isLoading) {
             setPage(page + 1);
-        }
-    };
-
-    const handleDelete = async () => {
-        const confirm = await Confirm({
-            title: 'Are you sure?',
-            message: `Are you sure you want to remove ${selectedItems.length} papers from the ORKG? Deleting papers is bad practice so we encourage you to use this operation with caution!`,
-            cancelColor: 'light'
-        });
-
-        if (confirm) {
-            setIsLoading(true);
-            setResources([]);
-            setSelectedItems([]);
-
-            const promises = selectedItems.map(id => {
-                // set the class of paper to DeletedPapers
-                const promisePaper = updateResourceClasses(id, [CLASSES.PAPER_DELETED]);
-                // set the class of paper of contributions to DeletedContribution
-                const promisesContributions = getStatementsBySubjectAndPredicate({
-                    subjectId: id,
-                    predicateId: PREDICATES.HAS_CONTRIBUTION
-                }).then(contributions =>
-                    Promise.all(contributions.map(contribution => updateResourceClasses(contribution.object.id, [CLASSES.CONTRIBUTION_DELETED])))
-                );
-                return Promise.all([promisePaper, promisesContributions]);
-            });
-
-            await Promise.all(promises);
-
-            toast.success(`Successfully deleted ${selectedItems.length} paper${selectedItems.length !== 1 ? 's' : ''}`);
-
-            // reload the papers, in case page is already 0, manually call loadItems()
-            if (page === 0) {
-                loadItems();
-            } else {
-                setPage(0);
-            }
         }
     };
 
@@ -167,7 +149,14 @@ const Items = props => {
                         return null;
                     })}
                     {!isLoading && hasNextPage && (
-                        <div style={{ cursor: 'pointer' }} className="list-group-item list-group-item-action text-center" onClick={handleLoadMore}>
+                        <div
+                            style={{ cursor: 'pointer' }}
+                            className="list-group-item list-group-item-action text-center"
+                            onClick={handleLoadMore}
+                            onKeyDown={e => (e.keyCode === 13 ? handleLoadMore : undefined)}
+                            role="button"
+                            tabIndex={0}
+                        >
                             View more {props.filterLabel}
                         </div>
                     )}
@@ -181,7 +170,7 @@ const Items = props => {
             )}
 
             {selectedItems.length > 0 && (
-                <Button size="sm" color="darkblue" className="mt-2" onClick={handleDelete}>
+                <Button size="sm" color="danger" className="mt-2" onClick={deletePapers}>
                     Delete selected {props.filterLabel} ({selectedItems.length})
                 </Button>
             )}

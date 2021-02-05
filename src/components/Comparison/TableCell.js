@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import StatementBrowserDialog from '../StatementBrowser/StatementBrowserDialog';
 import ValuePlugins from '../ValuePlugins/ValuePlugins';
-import Tippy from '@tippy.js/react';
+import Tippy from '@tippyjs/react';
 
 const Item = styled.div`
     padding-right: 10px;
@@ -68,20 +68,25 @@ class TableCell extends Component {
                         {this.props.data.map((date, index) =>
                             Object.keys(date).length > 0 ? (
                                 date.type === 'resource' ? (
-                                    <span key={`value-${index}`}>
+                                    <span key={`value-${date.resourceId}`}>
                                         {index > 0 && <ItemInnerSeparator />}
                                         <Tippy content={`Path of this value : ${date.pathLabels.slice(1).join(' / ')}`} arrow={true}>
-                                            <span
+                                            <div
                                                 className="btn-link"
                                                 onClick={() => this.openStatementBrowser(date.resourceId, date.label)}
                                                 style={{ cursor: 'pointer' }}
+                                                onKeyDown={e =>
+                                                    e.keyCode === 13 ? this.openStatementBrowser(date.resourceId, date.label) : undefined
+                                                }
+                                                role="button"
+                                                tabIndex={0}
                                             >
                                                 <ValuePlugins type="resource">{date.label}</ValuePlugins>
-                                            </span>
+                                            </div>
                                         </Tippy>
                                     </span>
                                 ) : (
-                                    <span key={`value-${index}`}>
+                                    <span key={`value-${date.label}`}>
                                         {index > 0 && <ItemInnerSeparator />}
                                         <Tippy content={`Path of this value : ${date.pathLabels.slice(1).join(' / ')}`} arrow={true}>
                                             <span>
@@ -105,8 +110,8 @@ class TableCell extends Component {
                     <StatementBrowserDialog
                         show={this.state.modal}
                         toggleModal={() => this.toggle('modal')}
-                        resourceId={this.state.dialogResourceId}
-                        resourceLabel={this.state.dialogResourceLabel}
+                        id={this.state.dialogResourceId}
+                        label={this.state.dialogResourceLabel}
                     />
                 )}
             </>

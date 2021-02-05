@@ -1,17 +1,18 @@
-// import { include } from 'named-urls'
-
-export default {
+const routes = {
     HOME: '/',
-    SIGNOUT: '/signout',
     USER_SETTINGS: '/settings',
     USER_PROFILE: '/u/:userId',
     RESOURCES: '/resources',
     RESOURCE: '/resource/:id',
     ADD_RESOURCE: '/addResource',
+    PROPERTIES: '/properties',
+    PROPERTY: '/property/:id',
+    ADD_PROPERTY: '/addProperty',
     PREDICATES: '/predicates',
     PREDICATE: '/predicate/:id',
     CLASSES: '/classes',
     CLASS: '/class/:id',
+    ADD_CLASS: '/addClass',
     CONTRIBUTION_TEMPLATES: '/templates',
     CONTRIBUTION_TEMPLATE: '/template/:id?',
     ORGANIZATIONS: '/organizations',
@@ -25,12 +26,16 @@ export default {
         GENERAL_DATA: '/add-paper'
     },
     VIEW_PAPER: '/paper/:resourceId/:contributionId?',
+    CONTRIBUTION: '/contribution/:id',
     COMPARISON_SHORTLINK: '/c/:shortCode',
     COMPARISON: '/comparison/:comparisonId?',
     PAPERS: '/papers',
     COMPARISONS: '/comparisons',
+    VISUALIZATIONS: '/visualizations',
+    VISUALIZATION: '/visualization/:id?',
     RESEARCH_PROBLEM: '/problem/:researchProblemId',
     RESEARCH_FIELD: '/field/:researchFieldId',
+    RESEARCH_FIELDS: '/fields',
     VENUE_PAGE: '/venue/:venueId',
     AUTHOR_PAGE: '/author/:authorId',
     LICENSE: '/license',
@@ -44,5 +49,7 @@ export default {
     EXPORT_DATA: '/export-data',
     FEATURED_COMPARISONS: '/featured-comparisons',
     PDF_TEXT_ANNOTATION: '/pdf-text-annotation',
-    PDF_ANNOTATION: '/pdf-annotation'
+    PDF_ANNOTATION: '/pdf-annotation',
+    CSV_IMPORT: '/csv-import'
 };
+export default routes;

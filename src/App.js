@@ -1,16 +1,17 @@
-import React, { Component } from 'react';
+import { Component, Suspense } from 'react';
 import { Switch } from 'react-router-dom';
 import { renderRoutes } from 'react-router-config';
-import routes from './routes.config';
-import DefaultLayout from './components/Layout/DefaultLayout';
-import './assets/scss/CustomBootstrap.scss';
+import routes from 'routes.config';
+import DefaultLayout from 'components/Layout/DefaultLayout';
+import 'assets/scss/CustomBootstrap.scss';
 import 'react-toastify/dist/ReactToastify.css';
+import 'tippy.js/dist/tippy.css';
 import { MatomoContext } from '@datapunt/matomo-tracker-react';
 import { ConnectedRouter } from 'connected-react-router';
 import PropTypes from 'prop-types';
 import { withCookies } from 'react-cookie';
 import { detect } from 'detect-browser';
-import ScrollToTop from './components/ScrollToTop';
+import ScrollToTop from 'components/ScrollToTop';
 import MetaTags from 'react-meta-tags';
 import { Alert } from 'reactstrap';
 import env from '@beam-australia/react-env';
@@ -71,7 +72,10 @@ class App extends Component {
                                 </Alert>
                             </>
                         )}
-                        <Switch>{renderRoutes(routes)}</Switch>
+                        {/* Suspense is used for when the component is lazy loaded */}
+                        <Suspense fallback={<div className="mt-5 mb-2 text-center">Loading...</div>}>
+                            <Switch>{renderRoutes(routes)}</Switch>
+                        </Suspense>
                     </DefaultLayout>
                 </ScrollToTop>
             </ConnectedRouter>

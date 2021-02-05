@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import { useState, useRef } from 'react';
 import { InputGroup, FormGroup, Label, Col, Input, FormText } from 'reactstrap';
 import { ValuesStyle } from 'components/StatementBrowser/styled';
 import defaultDatatypes from 'components/ContributionTemplates/helpers/defaultDatatypes';
@@ -66,6 +66,7 @@ function TemplateComponentValue(props) {
                         linkButtonTippy="Go to class page"
                         cssClasses="form-control-sm"
                         autoFocus={false}
+                        ols={true}
                     />
                 </InputGroup>
                 <div className="mt-2">

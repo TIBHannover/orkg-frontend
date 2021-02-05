@@ -1,38 +1,42 @@
-import React, { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { resourcesUrl } from 'services/backend/resources';
 import { InputGroup, InputGroupAddon, DropdownMenu, InputGroupButtonDropdown, FormFeedback } from 'reactstrap';
+import { fetchTemplatesOfClassIfNeeded, selectResource, createRequiredPropertiesInResource } from 'actions/statementBrowser';
 import { StyledDropdownItem, StyledButton, StyledDropdownToggle, ValueItemStyle } from 'components/StatementBrowser/styled';
 import StatementOptionButton from 'components/StatementBrowser/StatementOptionButton/StatementOptionButton';
 import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
 import defaultDatatypes from 'components/ContributionTemplates/helpers/defaultDatatypes';
-import Tippy from '@tippy.js/react';
+import { useDispatch, useSelector } from 'react-redux';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPlus, faBars, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
-import useTogggle from './helpers/useToggle';
+import useToggle from './helpers/useToggle';
 import validationSchema from './helpers/validationSchema';
 import InputField from 'components/StatementBrowser/InputField/InputField';
-import PropTypes from 'prop-types';
+import Tippy from '@tippyjs/react';
 import { CLASSES, MISC } from 'constants/graphSettings';
+import PropTypes from 'prop-types';
 
 export default function AddValueTemplate(props) {
     const literalInputRef = useRef(null);
     const resourceInputRef = useRef(null);
-
+    const dispatch = useDispatch();
+    const statementBrowser = useSelector(state => state.statementBrowser);
+    const { classes, templates, openExistingResourcesInDialog } = statementBrowser;
     const [modal, setModal] = useState(false);
     const [dialogResourceId, setDialogResourceId] = useState(null);
     const [dialogResourceLabel, setDialogResourceLabel] = useState(null);
 
     const [valueType, setValueType] = useState(props.isLiteral ? 'literal' : 'object');
     const [inputValue, setInputValue] = useState('');
-    const [dropdownValueTypeOpen, setDropdownValueTypeOpen] = useTogggle(false);
-    const [showAddValue, setShowAddValue] = useTogggle(false);
+    const [dropdownValueTypeOpen, setDropdownValueTypeOpen] = useToggle(false);
+    const [showAddValue, setShowAddValue] = useToggle(false);
     const [isValid, setIsValid] = useState(true);
     const [formFeedback, setFormFeedback] = useState(null);
     const [templateIsLoading, setTemplateIsLoading] = useState(false); // to show loading indicator of the template if the value class has a template
 
     // uniqueLabel is set to true when it's a research problem
-    const [uniqueLabel, setuniqueLabel] = useState(props.valueClass && props.valueClass.id === CLASSES.PROBLEM ? true : false);
+    const [uniqueLabel, setUniqueLabel] = useState(props.valueClass && props.valueClass.id === CLASSES.PROBLEM ? true : false);
     const [disabledCreate, setDisabledCreate] = useState(false);
 
     const handleCreateExistingLabel = (inputValue, selectOptions) => {
@@ -71,7 +75,7 @@ export default function AddValueTemplate(props) {
     }, [props.isLiteral]);
 
     useEffect(() => {
-        setuniqueLabel(props.valueClass && props.valueClass.id === CLASSES.PROBLEM ? true : false);
+        setUniqueLabel(props.valueClass && props.valueClass.id === CLASSES.PROBLEM ? true : false);
     }, [props.valueClass]);
 
     useEffect(() => {
@@ -150,12 +154,12 @@ export default function AddValueTemplate(props) {
     useEffect(() => {
         if (props.valueClass && !defaultDatatypes.map(t => t.id).includes(props.valueClass.id)) {
             setTemplateIsLoading(true);
-            props.fetchTemplatesofClassIfNeeded(props.valueClass.id).then(() => {
-                if (props.classes[props.valueClass.id] && props.classes[props.valueClass.id].templateIds) {
-                    const templateIds = props.classes[props.valueClass.id].templateIds;
+            dispatch(fetchTemplatesOfClassIfNeeded(props.valueClass.id)).then(() => {
+                if (classes[props.valueClass.id] && classes[props.valueClass.id].templateIds) {
+                    const templateIds = classes[props.valueClass.id].templateIds;
                     //check if it's an inline resource
                     for (const templateId of templateIds) {
-                        const template = props.templates[templateId];
+                        const template = templates[templateId];
                         if (template && template.hasLabelFormat) {
                             setTemplateIsLoading(false);
                             setIsInlineResource(template.label);
@@ -164,7 +168,7 @@ export default function AddValueTemplate(props) {
                             setTemplateIsLoading(false);
                         }
                     }
-                    if (!props.classes[props.valueClass.id].isFetching) {
+                    if (!classes[props.valueClass.id].isFetching) {
                         // in case there is no templates for the class
                         setTemplateIsLoading(false);
                     }
@@ -174,6 +178,7 @@ export default function AddValueTemplate(props) {
             setTemplateIsLoading(false);
             setIsInlineResource(false);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props]);
 
     const resourceTooltip = (
@@ -190,8 +195,8 @@ export default function AddValueTemplate(props) {
                 <StatementBrowserDialog
                     show={modal}
                     toggleModal={() => setModal(prev => !prev)}
-                    resourceId={dialogResourceId}
-                    resourceLabel={dialogResourceLabel}
+                    id={dialogResourceId}
+                    label={dialogResourceLabel}
                     newStore={false}
                     enableEdit={true}
                 />
@@ -210,19 +215,23 @@ export default function AddValueTemplate(props) {
                                 // 1 - create a resource
                                 props.handleAddValue(valueType, isInlineResource).then(resourceId => {
                                     // 2 - open the dialog on that resource
-                                    if (props.openExistingResourcesInDialog) {
-                                        props.createRequiredPropertiesInResource(resourceId).then(() => {
-                                            setDialogResourceId(resourceId);
-                                            setDialogResourceLabel(isInlineResource);
-                                            setModal(true);
-                                        });
+                                    if (openExistingResourcesInDialog) {
+                                        dispatch(
+                                            createRequiredPropertiesInResource(resourceId).then(() => {
+                                                setDialogResourceId(resourceId);
+                                                setDialogResourceLabel(isInlineResource);
+                                                setModal(true);
+                                            })
+                                        );
                                     } else {
-                                        props.selectResource({
-                                            increaseLevel: true,
-                                            resourceId: resourceId,
-                                            label: isInlineResource,
-                                            propertyLabel: props.predicate.label
-                                        });
+                                        dispatch(
+                                            selectResource({
+                                                increaseLevel: true,
+                                                resourceId: resourceId,
+                                                label: isInlineResource,
+                                                propertyLabel: props.predicate.label
+                                            })
+                                        );
                                     }
                                 });
                             } else {
@@ -329,7 +338,7 @@ export default function AddValueTemplate(props) {
                                 }}
                             >
                                 {disabledCreate ? (
-                                    <Tippy content="Please use the existing research problem that has this label." arrow={true}>
+                                    <Tippy hideOnClick={false} content="Please use the existing research problem that has this label." arrow={true}>
                                         <span>Create</span>
                                     </Tippy>
                                 ) : (
@@ -350,13 +359,7 @@ AddValueTemplate.propTypes = {
     handleValueSelect: PropTypes.func.isRequired,
     newResources: PropTypes.array.isRequired,
     handleAddValue: PropTypes.func.isRequired,
-    fetchTemplatesofClassIfNeeded: PropTypes.func.isRequired,
     components: PropTypes.array.isRequired,
-    templates: PropTypes.object.isRequired,
-    classes: PropTypes.object.isRequired,
-    selectResource: PropTypes.func.isRequired,
-    openExistingResourcesInDialog: PropTypes.bool,
-    createRequiredPropertiesInResource: PropTypes.func.isRequired,
     isDisabled: PropTypes.bool,
     isLiteral: PropTypes.bool.isRequired,
     valueClass: PropTypes.object

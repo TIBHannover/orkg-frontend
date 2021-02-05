@@ -1,4 +1,3 @@
-import React from 'react';
 import { Container } from 'reactstrap';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
@@ -47,7 +46,7 @@ function PaperHeaderBar(props) {
                             props.paperTitle
                         )}
                     </div>
-                    <PaperMenuBar editMode={props.editMode} paperLink={props.paperLink} toggle={props.toggle} />
+                    <PaperMenuBar id={props.id} editMode={props.editMode} paperLink={props.paperLink} toggle={props.toggle} />
                 </Container>
             </PaperHeaderBarContainer>
         </AnimationContainer>
@@ -57,7 +56,8 @@ PaperHeaderBar.propTypes = {
     editMode: PropTypes.bool.isRequired,
     paperLink: PropTypes.string,
     toggle: PropTypes.func.isRequired,
-    paperTitle: PropTypes.string.isRequired
+    paperTitle: PropTypes.string.isRequired,
+    id: PropTypes.string
 };
 
 export default PaperHeaderBar;

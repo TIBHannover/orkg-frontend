@@ -1,16 +1,16 @@
-import React, { Component } from 'react';
-import { Container, Col, Row, FormGroup, Label, Form, Input } from 'reactstrap';
+import { Component } from 'react';
+import { Container, Col, Row, FormGroup, Label, Form, Input, ListGroup, ListGroupItem, Alert } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faAngleDoubleDown, faPlus, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 import { getStatementsByObjectAndPredicate } from 'services/backend/statements';
 import { classesUrl } from 'services/backend/classes';
-import { getResourcesByClass } from 'services/backend/classes';
-import { resourcesUrl } from 'services/backend/resources';
+import { resourcesUrl, getResourcesByClass } from 'services/backend/resources';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
 import TemplateCard from 'components/ContributionTemplates/TemplateCard';
 import { reverse } from 'named-urls';
+import { debounce } from 'lodash';
 import ROUTES from 'constants/routes';
 import { CLASSES, PREDICATES } from 'constants/graphSettings';
 
@@ -26,7 +26,7 @@ export default class ContributionTemplates extends Component {
             hasNextPage: false,
             page: 1,
             isLastPageReached: false,
-            filterReseachField: null,
+            filterResearchField: null,
             filterResearchProblem: null,
             filterClass: null,
             filterLabel: ''
@@ -41,12 +41,12 @@ export default class ContributionTemplates extends Component {
 
     componentDidUpdate = (prevProps, prevState) => {
         if (
-            prevState.filterReseachField !== this.state.filterReseachField ||
+            prevState.filterResearchField !== this.state.filterResearchField ||
             prevState.filterResearchProblem !== this.state.filterResearchProblem ||
             prevState.filterClass !== this.state.filterClass ||
             prevState.filterLabel !== this.state.filterLabel
         ) {
-            this.setState({ contributionTemplates: [], isNextPageLoading: false, hasNextPage: false, page: 1, isLastPageReached: false }, () =>
+            this.setState({ contributionTemplates: [], isNextPageLoading: true, hasNextPage: false, page: 1, isLastPageReached: false }, () =>
                 this.loadMoreContributionTemplates()
             );
         }
@@ -76,7 +76,7 @@ export default class ContributionTemplates extends Component {
 
     handleResearchFieldSelect = selected => {
         this.setState({
-            filterReseachField: !selected ? null : selected,
+            filterResearchField: !selected ? null : selected,
             filterResearchProblem: null,
             filterClass: null,
             filterLabel: ''
@@ -86,7 +86,7 @@ export default class ContributionTemplates extends Component {
     handleResearchProblemSelect = selected => {
         this.setState({
             filterResearchProblem: !selected ? null : selected,
-            filterReseachField: null,
+            filterResearchField: null,
             filterClass: null,
             filterLabel: ''
         });
@@ -95,7 +95,7 @@ export default class ContributionTemplates extends Component {
     handleClassSelect = selected => {
         this.setState({
             filterResearchProblem: null,
-            filterReseachField: null,
+            filterResearchField: null,
             filterClass: !selected ? null : selected,
             filterLabel: ''
         });
@@ -104,17 +104,17 @@ export default class ContributionTemplates extends Component {
     handleLabelFilter = e => {
         this.setState({
             filterResearchProblem: null,
-            filterReseachField: null,
+            filterResearchField: null,
             filterClass: null,
             filterLabel: e.target.value
         });
     };
 
-    loadMoreContributionTemplates = () => {
+    loadMoreContributionTemplates = debounce(() => {
         this.setState({ isNextPageLoading: true });
         let templates = [];
-        if (this.state.filterReseachField) {
-            templates = this.getTemplatesOfResourceId(this.state.filterReseachField.id, PREDICATES.TEMPLATE_OF_RESEARCH_FIELD);
+        if (this.state.filterResearchField) {
+            templates = this.getTemplatesOfResourceId(this.state.filterResearchField.id, PREDICATES.TEMPLATE_OF_RESEARCH_FIELD);
         } else if (this.state.filterResearchProblem) {
             templates = this.getTemplatesOfResourceId(this.state.filterResearchProblem.id, PREDICATES.TEMPLATE_OF_RESEARCH_PROBLEM);
         } else if (this.state.filterClass) {
@@ -132,36 +132,50 @@ export default class ContributionTemplates extends Component {
 
         templates.then(contributionTemplates => {
             if (contributionTemplates.length > 0) {
-                this.setState({
-                    contributionTemplates: [...this.state.contributionTemplates, ...contributionTemplates],
+                this.setState(prev => ({
+                    contributionTemplates: [...(prev.page === 1 ? [] : prev.contributionTemplates), ...contributionTemplates],
                     isNextPageLoading: false,
                     hasNextPage: contributionTemplates.length < this.pageSize ? false : true,
                     page: this.state.page + 1
-                });
+                }));
             } else {
                 this.setState({
                     isNextPageLoading: false,
                     hasNextPage: false,
-                    isLastPageReached: true
+                    isLastPageReached: this.state.page !== 1 ? true : false
                 });
             }
         });
-    };
+    }, 500);
 
     render() {
         return (
             <>
-                <Container className="p-0">
-                    <h1 className="h4 mt-4 mb-4">View all contribution templates</h1>
+                <Container className="d-flex align-items-center">
+                    <h1 className="h4 mt-4 mb-4 flex-grow-1">View all contribution templates</h1>
+                    <RequireAuthentication
+                        component={Link}
+                        color="darkblue"
+                        size="sm"
+                        className="btn btn-darkblue btn-sm flex-shrink-0"
+                        to={reverse(ROUTES.CONTRIBUTION_TEMPLATE)}
+                    >
+                        <Icon icon={faPlus} /> Create template
+                    </RequireAuthentication>
                 </Container>
-                <Container className="box rounded pt-4 pb-4 pl-5 pr-5 clearfix">
-                    <div className="clearfix">
-                        You can use one of this filters to get the related template.
-                        <RequireAuthentication component={Link} className="float-right mb-2 mt-2 clearfix" to={reverse(ROUTES.CONTRIBUTION_TEMPLATE)}>
-                            <span className="fa fa-plus" /> Create new template
-                        </RequireAuthentication>
-                    </div>
-
+                <Container className="box rounded pt-4 pb-2 pl-5 pr-5 clearfix">
+                    <Alert color="info" fade={false}>
+                        Templates allows to specify the structure of content types, and they can be used when describing research contributions.
+                        Further information about templates can be also found in the{' '}
+                        <a
+                            href="https://gitlab.com/TIBHannover/orkg/orkg-frontend/-/wikis/Templates-for-structuring-contribution-descriptions"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            ORKG wiki
+                        </a>
+                        .
+                    </Alert>
                     <Form className="mb-3">
                         <Row form>
                             <Col md={6}>
@@ -172,7 +186,7 @@ export default class ContributionTemplates extends Component {
                                         optionsClass={CLASSES.RESEARCH_FIELD}
                                         placeholder="Select or type to enter a research field"
                                         onChange={this.handleResearchFieldSelect}
-                                        value={this.state.filterReseachField}
+                                        value={this.state.filterResearchField}
                                         autoLoadOption={true}
                                         openMenuOnFocus={true}
                                         allowCreate={false}
@@ -224,33 +238,48 @@ export default class ContributionTemplates extends Component {
                             </Col>
                         </Row>
                     </Form>
-                    {this.state.contributionTemplates.length > 0 && (
-                        <div>
-                            {this.state.contributionTemplates.map(contributionTemplate => {
-                                return <TemplateCard key={contributionTemplate.id} template={contributionTemplate} />;
-                            })}
-                        </div>
-                    )}
-                    {this.state.contributionTemplates.length === 0 && !this.state.isNextPageLoading && (
-                        <div className="text-center mt-4 mb-4">No contribution templates</div>
-                    )}
-                    {this.state.isNextPageLoading && (
-                        <div className="text-center mt-4 mb-4">
-                            <Icon icon={faSpinner} spin /> Loading
-                        </div>
-                    )}
-                    {!this.state.isNextPageLoading && this.state.hasNextPage && (
-                        <div
-                            style={{ cursor: 'pointer' }}
-                            className="list-group-item list-group-item-action text-center mt-2"
-                            onClick={!this.state.isNextPageLoading ? this.loadMoreContributionTemplates : undefined}
-                        >
-                            Load more contribution templates
-                        </div>
-                    )}
-                    {!this.state.hasNextPage && this.state.isLastPageReached && (
-                        <div className="text-center mt-3">You have reached the last page.</div>
-                    )}
+                </Container>
+                <Container className="p-0 mt-4">
+                    <ListGroup flush className="box rounded" style={{ overflow: 'hidden' }}>
+                        {this.state.contributionTemplates.length > 0 && (
+                            <div>
+                                {this.state.contributionTemplates.map(contributionTemplate => {
+                                    return <TemplateCard key={contributionTemplate.id} template={contributionTemplate} />;
+                                })}
+                            </div>
+                        )}
+                        {this.state.contributionTemplates.length === 0 && !this.state.isNextPageLoading && (
+                            <ListGroupItem tag="div" className="text-center">
+                                No contribution templates
+                                {(this.state.filterResearchField ||
+                                    this.state.filterResearchProblem ||
+                                    this.state.filterClass ||
+                                    this.state.filterLabel) &&
+                                    ' match this filter'}
+                                .
+                            </ListGroupItem>
+                        )}
+                        {this.state.isNextPageLoading && (
+                            <ListGroupItem tag="div" className="text-center">
+                                <Icon icon={faSpinner} spin /> Loading
+                            </ListGroupItem>
+                        )}
+                        {!this.state.isNextPageLoading && this.state.hasNextPage && (
+                            <ListGroupItem
+                                style={{ cursor: 'pointer' }}
+                                className="text-center"
+                                action
+                                onClick={!this.state.isNextPageLoading ? this.loadMoreContributionTemplates : undefined}
+                            >
+                                <Icon icon={faAngleDoubleDown} /> Load more templates
+                            </ListGroupItem>
+                        )}
+                        {!this.state.hasNextPage && this.state.isLastPageReached && (
+                            <ListGroupItem tag="div" className="text-center">
+                                You have reached the last page.
+                            </ListGroupItem>
+                        )}
+                    </ListGroup>
                 </Container>
             </>
         );

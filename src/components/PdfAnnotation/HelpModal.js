@@ -1,4 +1,3 @@
-import React from 'react';
 import { Alert, Modal, ModalHeader, ModalBody } from 'reactstrap';
 import PropTypes from 'prop-types';
 import image from 'assets/img/help/survey1.png';

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Container } from 'reactstrap';
 import ROUTES from 'constants/routes';
 import { Link } from 'react-router-dom';
@@ -8,7 +7,7 @@ export default function DataProtection() {
 
     return (
         <div>
-            <Container className="p-0">
+            <Container>
                 <h1 className="h4 mt-4 mb-4">Terms of use </h1>
             </Container>
             <Container className="box rounded pt-4 pb-4 pl-5 pr-5">
@@ -147,7 +146,7 @@ export default function DataProtection() {
                     4.5 TIB manually curates ORKG content, including metadata. In such activities, TIB also resolves personal identifiers of creators
                     in order to reduce the ambiguity of personal names.
                 </p>
-                <p>5. Rights and obligations of the TIB</p>
+                <h3>5. Rights and obligations of the TIB</h3>
                 <p>
                     5.1 ORKG content created by Registered Users is licensed to TIB under the licence CC0 1.0 Universal (
                     <a href="https://creativecommons.org/publicdomain/zero/1.0/deed.en" target="_blank" rel="noopener noreferrer">
@@ -168,30 +167,35 @@ export default function DataProtection() {
                     trusting the content of the platform or its use.
                 </p>
                 <p>
-                    5.3 The TIB reserves the right to change the functionality, the appearance and these Special Conditions ORKG at any time.
+                    5.4 The TIB reserves the right to change the functionality, the appearance and these Special Conditions ORKG at any time.
                     Registered Users will be informed of the changes two weeks in advance by email. By continuing to use the platform after the
                     deadline, users agree to the changes.
                 </p>
                 <p>
-                    5.4 The TIB is entitled to terminate its service at any time. In this case, the TIB reserves the right to delete the content.
+                    5.5 The TIB is entitled to terminate its service at any time. In this case, the TIB reserves the right to delete the content.
                     However, this does not result in an obligation to delete the content.
                 </p>
                 <p>
-                    5.5 In principle, the TIB is only liable for damage caused by intent or gross negligence. In case of injuries to life, body or
+                    5.6 The TIB provides scientific information in all areas of engineering as well as chemistry, information technology, mathematics
+                    and physics to the public. If content by Registered Users does not satisfy the quality criteria TIB generally applies to
+                    scientific information, TIB may exclude the content from its services without prior notice.
+                </p>
+                <p>
+                    5.7 In principle, the TIB is only liable for damage caused by intent or gross negligence. In case of injuries to life, body or
                     health statutory provisions apply.
                 </p>
-                <p>5.6 Liability for damage from unauthorized use of password-protected logins by third parties is not accepted.</p>
+                <p>5.8 Liability for damage from unauthorized use of password-protected logins by third parties is not accepted.</p>
                 <p>
-                    5.7 Insofar as liability is limited or excluded, this also applies in favor of executive employees (m / f), representatives (m /
+                    5.9 Insofar as liability is limited or excluded, this also applies in favor of executive employees (m / f), representatives (m /
                     f) and vicarious agents (m / f) of the TIB.
                 </p>
                 <p>
-                    5.8 If there are concrete indications of a violation of these Special Conditions ORKG, the TIB is entitled to delete content,
+                    5.10 If there are concrete indications of a violation of these Special Conditions ORKG, the TIB is entitled to delete content,
                     restrict the use of the services or block the Registered User concerned. When choosing a measure, the legitimate interests of the
                     Registered User are taken into account, in particular whether there are indications that the Registered User was not responsible
                     for the violation.
                 </p>
-                <p>5.9 Content that contains a legal violation according to 3.3 or 3.4 may be blocked or deleted by the TIB.</p>
+                <p>5.11 Content that contains a legal violation according to 3.3 or 3.4 may be blocked or deleted by the TIB.</p>
                 <h3>6. Miscellaneous</h3>
                 <p>6.1 The usage relationship and these Special Conditions ORKG are subject to German law.</p>
                 <p>6.2 The place of jurisdiction is Hannover.</p>

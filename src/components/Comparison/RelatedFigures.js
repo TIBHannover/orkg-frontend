@@ -1,21 +1,42 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { getStatementsBySubjects } from 'services/backend/statements';
 import { Card, CardImg, CardColumns } from 'reactstrap';
 import Lightbox from 'react-image-lightbox';
 import 'react-image-lightbox/style.css';
-import { find } from 'lodash';
 import styled from 'styled-components';
-import { PREDICATES } from 'constants/graphSettings';
+import { isString } from 'lodash';
+import { getRelatedFiguresData } from 'utils';
+import { useLocation } from 'react-router';
 
 const CardStyled = styled(Card)`
     cursor: pointer;
     overflow: hidden;
+    .blink-figure {
+        color: #fff;
+        padding: 5px;
+        display: inline-block;
+        border-radius: 5px;
+        animation: blinkingBackground 5s infinite;
+    }
+    @keyframes blinkingBackground {
+        from {
+            background-color: #e86161;
+        }
+        50% {
+            background-color: #fff;
+        }
+        to {
+            background-color: #e86161;
+        }
+    }
 `;
+
 const RelatedFigures = props => {
     const [isOpen, setIsOpen] = useState(false);
     const [photoIndex, setPhotoIndex] = useState(0);
     const [figures, setFigures] = useState([]);
+    const location = useLocation();
 
     const openLightBox = (index = 0) => {
         setIsOpen(!isOpen);
@@ -32,17 +53,7 @@ const RelatedFigures = props => {
                 ids: props.figureStatements.map(resource => resource.id)
             })
                 .then(figuresStatements => {
-                    const _figures = figuresStatements.map(figureStatements => {
-                        const figureTitle = find(props.figureStatements, { id: figureStatements.id });
-                        const imageStatement = figureStatements.statements.find(statement => statement.predicate.id === PREDICATES.IMAGE);
-                        const descriptionStatement = figureStatements.statements.find(statement => statement.predicate.id === PREDICATES.DESCRIPTION);
-                        return {
-                            src: imageStatement ? imageStatement.object.label : '',
-                            title: figureTitle.label,
-                            description: descriptionStatement ? descriptionStatement.object.label : ''
-                        };
-                    });
-                    setFigures(_figures);
+                    setFigures(getRelatedFiguresData(figuresStatements));
                 })
                 .catch(err => {
                     console.log(err);
@@ -53,15 +64,39 @@ const RelatedFigures = props => {
         loadResources();
     }, [props.figureStatements]);
 
+    const scrollTo = useCallback(
+        header => {
+            const hash = location.hash;
+            const id = isString(hash) ? hash.replace('#', '') : null;
+            if (!header || header.id !== id) {
+                return;
+            }
+            window.scrollTo({
+                behavior: 'smooth',
+                top: header.offsetTop - 90
+            });
+        },
+        [location.hash]
+    );
+
     if (props.figureStatements.length > 0) {
         return (
             <>
                 <h3 className="mt-5 h5">Related figures</h3>{' '}
                 <CardColumns>
-                    {figures.map((url, index) => (
-                        <CardStyled key={`figure${index}`} onClick={() => openLightBox(index)}>
-                            <CardImg top width="100%" src={url.src} alt="Card image cap" />
-                        </CardStyled>
+                    {figures.map((figure, index) => (
+                        <span key={`figure${figure.figureId}`} ref={scrollTo} id={figure.figureId}>
+                            <CardStyled onClick={() => openLightBox(index)}>
+                                <CardImg
+                                    id={figure.figureId}
+                                    top
+                                    width="100%"
+                                    src={figure.src}
+                                    alt={`figure #${figure.figureId}`}
+                                    className={location.hash === '#' + figure.figureId ? 'blink-figure' : ''}
+                                />
+                            </CardStyled>
+                        </span>
                     ))}
                 </CardColumns>
                 {isOpen && (

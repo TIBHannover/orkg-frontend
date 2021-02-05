@@ -1,4 +1,3 @@
-import React from 'react';
 import { Input, InputGroup, InputGroupAddon, Button, Form, Label } from 'reactstrap';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
 import { withRouter } from 'react-router-dom';
@@ -22,7 +21,7 @@ const Filters = props => {
         const value = decodeURIComponent(props.value);
         if (isString(value) && value.length >= MINIMUM_LENGTH_PATTERN && (value.match(RESOURCE_PATTERN) || value.match(PROPERTY_PATTERN))) {
             const id = value.substring(1);
-            props.history.push(reverse(value.match(RESOURCE_PATTERN) ? ROUTES.RESOURCE : ROUTES.PREDICATE, { id }));
+            props.history.push(reverse(value.match(RESOURCE_PATTERN) ? ROUTES.RESOURCE : ROUTES.PROPERTY, { id }));
         } else {
             props.history.push(
                 reverse(ROUTES.SEARCH, { searchTerm: encodeURIComponent(value) }) + '?types=' + props.selectedFilters.map(sf => sf.id).join(',')
@@ -63,7 +62,7 @@ const Filters = props => {
                 />
             ))}
             <br />
-            <Label>Other filters</Label>
+            <Label for="other-filters">Other filters</Label>
             <AutoComplete
                 requestUrl={classesUrl}
                 onChange={(_, action) => {
@@ -83,6 +82,7 @@ const Filters = props => {
                 isClearable
                 isMulti={true}
                 autoFocus={false}
+                inputId="other-filters"
             />
         </Form>
     );

@@ -1,4 +1,4 @@
-import React from 'react';
+import { lazy } from 'react';
 import { Redirect } from 'react-router-dom';
 import ResourceDetails from 'pages/Resources/Resource';
 import AddPaper from 'pages/AddPaper';
@@ -14,15 +14,20 @@ import Changelog from 'pages/Changelog/Changelog';
 import NotFound from 'pages/NotFound';
 import Papers from 'pages/Papers';
 import Comparisons from 'pages/Comparisons';
-import PredicateDetails from 'pages/Predicates/Predicate';
+import Visualizations from 'pages/Visualizations/Visualizations';
+import Visualization from 'pages/Visualizations/Visualization';
 import ClassDetails from 'pages/Classes/ClassDetails';
 import Classes from 'pages/Classes/Classes';
-import Predicates from 'pages/Predicates/Predicates';
+import AddClass from 'pages/Classes/AddClass';
+import Properties from 'pages/Properties/Properties';
+import AddProperty from 'pages/Properties/AddProperty';
+import PropertyDetails from 'pages/Properties/Property';
 import ContributionTemplates from 'pages/ContributionTemplates/ContributionTemplates';
 import ContributionTemplate from 'pages/ContributionTemplates/ContributionTemplate';
 import ROUTES from 'constants/routes';
 import RedirectShortLinks from 'pages/RedirectShortLinks';
-import ResearchField from 'pages/ResearchField';
+import ResearchField from 'pages/ResearchFields/ResearchField';
+import ResearchFields from 'pages/ResearchFields/ResearchFields';
 import ResearchProblem from './pages/ResearchProblem';
 import Resources from 'pages/Resources/Resources';
 import Organizations from 'pages/Organizations/Organizations';
@@ -38,11 +43,16 @@ import Stats from 'pages/Stats';
 import UserSettings from 'pages/UserSettings';
 import UserProfile from 'pages/UserProfile';
 import FeaturedComparisons from 'pages/FeaturedComparisons';
-import PdfTextAnnotation from 'pages/PdfTextAnnotation';
-import PdfAnnotation from 'pages/PdfAnnotation';
 import ExportData from 'pages/ExportData';
+import Contribution from 'pages/Contribution';
+import CsvImport from 'pages/CsvImport';
 import requireAuthentication from 'requireAuthentication';
 import { reverse } from 'named-urls';
+
+// use lazy loading of pages that contain large dependencies
+// run "npm run analyze" to ensure the listed dependencies are not loaded elsewhere and thus end up in the bundle
+const PdfTextAnnotation = lazy(() => import('pages/PdfTextAnnotation')); // for dependency "react-pdf-highlighter" ~1.16MB
+const PdfAnnotation = lazy(() => import('pages/PdfAnnotation')); // for dependency "handsontable" ~887.4KB
 
 const routes = [
     {
@@ -56,19 +66,41 @@ const routes = [
         component: Resources
     },
     {
+        path: ROUTES.RESOURCE,
+        component: ResourceDetails
+    },
+    {
         path: ROUTES.ADD_RESOURCE,
         exact: true,
         component: requireAuthentication(AddResource)
     },
     {
-        path: ROUTES.PREDICATES,
+        path: ROUTES.PROPERTIES,
         exact: true,
-        component: Predicates
+        component: Properties
+    },
+    {
+        path: ROUTES.PROPERTY,
+        component: PropertyDetails
+    },
+    {
+        path: ROUTES.ADD_PROPERTY,
+        exact: true,
+        component: requireAuthentication(AddProperty)
     },
     {
         path: ROUTES.CLASSES,
         exact: true,
         component: Classes
+    },
+    {
+        path: ROUTES.CLASS,
+        component: ClassDetails
+    },
+    {
+        path: ROUTES.ADD_CLASS,
+        exact: true,
+        component: requireAuthentication(AddClass)
     },
     {
         path: ROUTES.CONTRIBUTION_TEMPLATES,
@@ -137,6 +169,19 @@ const routes = [
         )
     },
     {
+        /* TODO: Remove this route (it's temporarily backward compatibility for moving predicates to properties naming */
+        path: ROUTES.PREDICATES,
+        exact: true,
+        component: () => <Redirect to={{ pathname: reverse(ROUTES.PROPERTIES), state: { status: 301 } }} />
+    },
+    {
+        /* TODO: Remove this route (it's temporarily backward compatibility for moving predicates to properties naming */
+        path: ROUTES.PREDICATE + '*',
+        exact: true,
+        // eslint-disable-next-line react/prop-types
+        component: ({ match }) => <Redirect to={{ pathname: reverse(ROUTES.PROPERTY, { id: match.params.id }), state: { status: 301 } }} />
+    },
+    {
         path: ROUTES.PAPERS,
         exact: true,
         component: Papers
@@ -147,12 +192,25 @@ const routes = [
         component: Comparisons
     },
     {
+        path: ROUTES.VISUALIZATIONS,
+        exact: true,
+        component: Visualizations
+    },
+    {
+        path: ROUTES.VISUALIZATION,
+        component: Visualization
+    },
+    {
         path: ROUTES.RESEARCH_PROBLEM,
         component: ResearchProblem
     },
     {
         path: ROUTES.RESEARCH_FIELD,
         component: ResearchField
+    },
+    {
+        path: ROUTES.RESEARCH_FIELDS,
+        component: ResearchFields
     },
     {
         path: ROUTES.VENUE_PAGE,
@@ -187,18 +245,6 @@ const routes = [
         component: Stats
     },
     /* Legacy routes, only used for debugging now */
-    {
-        path: ROUTES.RESOURCE,
-        component: ResourceDetails
-    },
-    {
-        path: ROUTES.PREDICATE,
-        component: PredicateDetails
-    },
-    {
-        path: ROUTES.CLASS,
-        component: ClassDetails
-    },
     {
         path: ROUTES.FEATURED_COMPARISONS,
         component: FeaturedComparisons
@@ -242,8 +288,16 @@ const routes = [
         component: requireAuthentication(PdfAnnotation)
     },
     {
+        path: ROUTES.CONTRIBUTION,
+        component: Contribution
+    },
+    {
         path: ROUTES.EXPORT_DATA,
         component: ExportData
+    },
+    {
+        path: ROUTES.CSV_IMPORT,
+        component: requireAuthentication(CsvImport)
     },
     /* Don't add routes below this line */
     {

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Input, Button } from 'reactstrap';
 import { updateResource } from 'services/backend/resources';
 import { toast } from 'react-toastify';
@@ -47,7 +47,7 @@ class EditableHeader extends Component {
 
     render() {
         return (
-            <div className=" pb-2 mb-3">
+            <div className="pb-2">
                 {this.state.editorState === 'view' && (
                     <div>
                         <h3>
@@ -56,8 +56,8 @@ class EditableHeader extends Component {
                                     <small>No label</small>
                                 </i>
                             )}
-                            <Button className="float-right" color="link" onClick={this.handleEditClick}>
-                                <Icon icon={faPen} /> edit
+                            <Button className="float-right" size="sm" color="darkblue" onClick={this.handleEditClick}>
+                                <Icon icon={faPen} /> Edit
                             </Button>
                         </h3>
                     </div>
@@ -67,10 +67,10 @@ class EditableHeader extends Component {
                         <Input value={this.state.value} onChange={this.handleChange} />
                         <div className="float-right">
                             <Button color="link" onClick={this.handleSubmitClick}>
-                                <Icon icon={faCheck} /> publish
+                                <Icon icon={faCheck} /> Save
                             </Button>
                             <Button color="link" onClick={this.handleCancelClick}>
-                                <Icon icon={faTimes} /> cancel
+                                <Icon icon={faTimes} /> Cancel
                             </Button>
                         </div>
                     </div>

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Card, CardBody } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import ROUTES from 'constants/routes';
@@ -13,8 +12,19 @@ const ObservatoryCardStyled = styled.div`
         font-size: smaller;
     }
 
+    .orgLogo {
+        margin-top: 10px;
+        border: 1px;
+        padding: 2px;
+    }
+
     .observatoryName {
         font-weight: bold;
+    }
+    &:hover {
+        .observatoryName {
+            text-decoration: underline;
+        }
     }
 `;
 
@@ -23,29 +33,29 @@ function ObservatoryCard(props) {
         <ObservatoryCardStyled className="col-6 mb-4">
             {!props.observatory.logo && (
                 <Card className="h-100">
-                    <CardBody>
-                        {props.observatory.organization_ids.map(o => (
-                            <span style={{ marginLeft: '10px' }}>
-                                <img
-                                    className="justify-content-center"
-                                    style={{ marginTop: '10px', border: '1px', padding: '2px' }}
-                                    key={`imageLogo${o.id}`}
-                                    height="45px"
-                                    src={o.logo}
-                                    alt={`${o.name} logo`}
-                                />
-                            </span>
-                        ))}{' '}
-                        <div className="mt-2">
-                            <Link to={reverse(ROUTES.OBSERVATORY, { id: props.observatory.id })}>
+                    <Link to={reverse(ROUTES.OBSERVATORY, { id: props.observatory.id })} style={{ textDecoration: 'none' }}>
+                        <CardBody>
+                            {props.observatory.organization_ids.map(o => (
+                                <span key={o.id} style={{ marginLeft: '10px' }}>
+                                    <img
+                                        className="justify-content-center orgLogo"
+                                        key={`imageLogo${o.id}`}
+                                        height="45px"
+                                        src={o.logo}
+                                        alt={`${o.name} logo`}
+                                    />
+                                </span>
+                            ))}{' '}
+                            <div className="mt-2">
                                 <div className="observatoryName">{props.observatory.name}</div>
-                            </Link>
-                            <div className="observatoryStats">
-                                Papers: <b>{props.observatory.numPapers}</b> <br />
-                                Comparisons: <b>{props.observatory.numComparisons}</b>
+
+                                <div className="observatoryStats text-muted">
+                                    Papers: <b>{props.observatory.numPapers}</b> <br />
+                                    Comparisons: <b>{props.observatory.numComparisons}</b>
+                                </div>
                             </div>
-                        </div>
-                    </CardBody>
+                        </CardBody>
+                    </Link>
                 </Card>
             )}
         </ObservatoryCardStyled>

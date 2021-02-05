@@ -1,15 +1,17 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Alert, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Button, ButtonGroup, Badge } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faEllipsisV, faPlus, faLightbulb, faBezierCurve, faHistory, faWindowMaximize } from '@fortawesome/free-solid-svg-icons';
+import { faEllipsisV, faLightbulb, faHistory, faWindowMaximize, faChartBar } from '@fortawesome/free-solid-svg-icons';
 import ComparisonLoadingComponent from 'components/Comparison/ComparisonLoadingComponent';
-import ComparisonTable from 'components/Comparison/ComparisonTable.js';
+import ComparisonTable from 'components/Comparison/Comparison';
 import ExportToLatex from 'components/Comparison/ExportToLatex.js';
 import GeneratePdf from 'components/Comparison/GeneratePdf.js';
 import SelectProperties from 'components/Comparison/SelectProperties';
 import ValuePlugins from 'components/ValuePlugins/ValuePlugins';
 import AddContribution from 'components/Comparison/AddContribution/AddContribution';
 import ProvenanceBox from 'components/Comparison/ProvenanceBox/ProvenanceBox';
+import ObservatoryBox from 'components/Comparison/ProvenanceBox/ObservatoryBox';
+import Breadcrumbs from 'components/Breadcrumbs/Breadcrumbs';
 import RelatedResources from 'components/Comparison/RelatedResources';
 import RelatedFigures from 'components/Comparison/RelatedFigures';
 import ExportCitation from 'components/Comparison/ExportCitation';
@@ -19,22 +21,27 @@ import ComparisonVersions from 'components/Comparison/ComparisonVersions.js';
 import Publish from 'components/Comparison/Publish.js';
 import { ContainerAnimated, ComparisonTypeButton } from 'components/Comparison/styled';
 import useComparison from 'components/Comparison/hooks/useComparison';
+import { getResource } from 'services/backend/resources';
 import ROUTES from 'constants/routes.js';
 import { useHistory, Link } from 'react-router-dom';
 import { openAuthDialog } from 'actions/auth';
 import { CSVLink } from 'react-csv';
-import { isObject } from 'lodash';
 import { generateRdfDataVocabularyFile } from 'utils';
-import Tippy from '@tippy.js/react';
+import Tippy from '@tippyjs/react';
 import { connect } from 'react-redux';
 import { useCookies } from 'react-cookie';
 import PropTypes from 'prop-types';
 import ExactMatch from 'assets/img/comparison-exact-match.svg';
 import IntelligentMerge from 'assets/img/comparison-intelligent-merge.svg';
+import AddVisualizationModal from 'libs/selfVisModel/ComparisonComponents/AddVisualizationModal';
+import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
+import PreviewVisualizationComparison from 'libs/selfVisModel/ComparisonComponents/PreviewVisualizationComparison';
+import { NavLink } from 'react-router-dom';
+import { reverse } from 'named-urls';
 import env from '@beam-australia/react-env';
 
 function Comparison(props) {
-    const [
+    const {
         metaData,
         contributions,
         properties,
@@ -57,6 +64,7 @@ function Comparison(props) {
         hasNextVersions,
         createdBy,
         provenance,
+        researchField,
         setMetaData,
         setComparisonType,
         toggleProperty,
@@ -70,8 +78,11 @@ function Comparison(props) {
         setShortLink,
         setAuthors,
         loadCreatedBy,
-        loadProvenanceInfos
-    ] = useComparison({});
+        loadProvenanceInfos,
+        loadVisualizations
+    } = useComparison({});
+
+    /** adding some additional state for meta data **/
 
     const [cookies, setCookie] = useCookies();
     const history = useHistory();
@@ -91,12 +102,17 @@ function Comparison(props) {
     const [showAddContribution, setShowAddContribution] = useState(false);
     const [showComparisonVersions, setShowComparisonVersions] = useState(false);
     const [showExportCitationsDialog, setShowExportCitationsDialog] = useState(false);
-
+    const [showVisualizationModal, setShowVisualizationModal] = useState(false);
+    const [applyReconstruction, setUseReconstructedData] = useState(false);
     /**
      * Is case of an error the user can go to the previous link in history
      */
     const handleGoBack = () => {
         history.goBack();
+    };
+
+    const closeOnExport = () => {
+        setShowVisualizationModal(false);
     };
 
     const onDismissShiftMouseWheelScroll = () => {
@@ -126,8 +142,38 @@ function Comparison(props) {
         setDropdownMethodOpen(false);
     };
 
+    /**
+     * Expand a preview of a visualization
+     *
+     * @param {Boolean} val weather to use reconstructed data
+     */
+    const expandVisualization = val => {
+        setUseReconstructedData(val);
+        if (val === false) {
+            const model = new SelfVisDataModel();
+            model.resetCustomizationModel();
+        }
+        setShowVisualizationModal(true);
+    };
+
+    const integrateData = initData => {
+        const model = new SelfVisDataModel();
+        model.integrateInputData(initData);
+
+        return true;
+    };
+
+    const getObservatoryInfo = async () => {
+        const resourceId = metaData.id;
+        const comparisonResource = await getResource(resourceId);
+        await loadCreatedBy(comparisonResource.created_by);
+        loadProvenanceInfos(comparisonResource.observatory_id, comparisonResource.organization_id);
+    };
+
     return (
         <div>
+            <Breadcrumbs researchFieldId={researchField ? researchField.id : null} />
+
             <ContainerAnimated className="d-flex align-items-center">
                 <h1 className="h4 mt-4 mb-4 flex-grow-1">
                     Contribution comparison{' '}
@@ -147,12 +193,13 @@ function Comparison(props) {
                         <ButtonGroup className="float-right mb-4 ml-1">
                             <Dropdown group isOpen={dropdownDensityOpen} toggle={() => setDropdownDensityOpen(v => !v)} style={{ marginRight: 3 }}>
                                 <DropdownToggle color="darkblue" size="sm">
-                                    <Icon icon={faWindowMaximize} className="mr-1" /> <span className="mr-1">View</span>
+                                    <Icon icon={faWindowMaximize} className="mr-1" /> View
                                 </DropdownToggle>
                                 <DropdownMenu>
                                     <DropdownItem onClick={handleFullWidth}>
                                         <span className="mr-2">{fullWidth ? 'Reduced width' : 'Full width'}</span>
                                     </DropdownItem>
+                                    <DropdownItem onClick={() => toggleTranspose(v => !v)}>Transpose table</DropdownItem>
                                     <DropdownItem divider />
                                     <DropdownItem header>View density</DropdownItem>
                                     <DropdownItem active={viewDensity === 'spacious'} onClick={() => handleViewDensity('spacious')}>
@@ -166,23 +213,62 @@ function Comparison(props) {
                                     </DropdownItem>
                                 </DropdownMenu>
                             </Dropdown>
-                            <Button
-                                className="flex-shrink-0"
-                                color="darkblue"
-                                size="sm"
-                                style={{ marginRight: 3 }}
-                                onClick={() => setShowAddContribution(v => !v)}
-                            >
-                                <Icon icon={faPlus} style={{ margin: '2px 4px 0 0' }} /> Add contribution
-                            </Button>
+                            {!!metaData.id ? (
+                                <Button
+                                    color="darkblue"
+                                    size="sm"
+                                    onClick={() => {
+                                        setUseReconstructedData(false);
+                                        setShowVisualizationModal(!showVisualizationModal);
+                                    }}
+                                    style={{ marginRight: 3 }}
+                                >
+                                    <Icon icon={faChartBar} /> Add visualization
+                                </Button>
+                            ) : (
+                                <Tippy
+                                    hideOnClick={false}
+                                    content="Cannot add visualization to a unpublished comparison. You must publish the comparison first to use this functionality."
+                                >
+                                    <span style={{ marginRight: 3 }} className="btn btn-darkblue btn-sm disabled">
+                                        <Icon icon={faChartBar} /> Add visualization
+                                    </span>
+                                </Tippy>
+                            )}
                             <Dropdown group isOpen={dropdownOpen} toggle={() => setDropdownOpen(v => !v)}>
                                 <DropdownToggle color="darkblue" size="sm" className="rounded-right">
                                     <span className="mr-2">More</span> <Icon icon={faEllipsisV} />
                                 </DropdownToggle>
-                                <DropdownMenu>
+                                <DropdownMenu right>
                                     <DropdownItem header>Customize</DropdownItem>
+                                    <DropdownItem onClick={() => setShowAddContribution(v => !v)}>Add contribution</DropdownItem>
                                     <DropdownItem onClick={() => setShowPropertiesDialog(v => !v)}>Select properties</DropdownItem>
-                                    <DropdownItem onClick={() => toggleTranspose(v => !v)}>Transpose table</DropdownItem>
+                                    <Dropdown isOpen={dropdownMethodOpen} toggle={() => setDropdownMethodOpen(v => !v)} direction="left">
+                                        <DropdownToggle tag="div" className="dropdown-item" style={{ cursor: 'pointer' }}>
+                                            Comparison method
+                                        </DropdownToggle>
+                                        <DropdownMenu>
+                                            <div className="d-flex px-2">
+                                                <ComparisonTypeButton
+                                                    color="link"
+                                                    className="p-0 m-1"
+                                                    onClick={() => handleChangeType('merge')}
+                                                    active={comparisonType !== 'path'}
+                                                >
+                                                    <img src={IntelligentMerge} alt="Intelligent merge example" />
+                                                </ComparisonTypeButton>
+
+                                                <ComparisonTypeButton
+                                                    color="link"
+                                                    className="p-0 m-1"
+                                                    onClick={() => handleChangeType('path')}
+                                                    active={comparisonType === 'path'}
+                                                >
+                                                    <img src={ExactMatch} alt="Exact match example" />
+                                                </ComparisonTypeButton>
+                                            </div>
+                                        </DropdownMenu>
+                                    </Dropdown>
                                     <DropdownItem divider />
                                     <DropdownItem header>Export</DropdownItem>
                                     <DropdownItem onClick={() => setShowLatexDialog(v => !v)}>Export as LaTeX</DropdownItem>
@@ -227,7 +313,7 @@ function Comparison(props) {
                                     <DropdownItem
                                         onClick={e => {
                                             if (!props.user) {
-                                                props.openAuthDialog('signin', true);
+                                                props.openAuthDialog({ action: 'signin', signInRequired: true });
                                             } else {
                                                 setShowPublishDialog(v => !v);
                                             }
@@ -241,6 +327,14 @@ function Comparison(props) {
                                             <DropdownItem divider />
                                             <DropdownItem onClick={() => setShowComparisonVersions(v => !v)}>
                                                 <Icon icon={faHistory} /> <span className="mr-2">History</span>
+                                            </DropdownItem>
+                                        </>
+                                    )}
+                                    {metaData?.id && (
+                                        <>
+                                            <DropdownItem divider />
+                                            <DropdownItem tag={NavLink} exact to={reverse(ROUTES.RESOURCE, { id: metaData.id })}>
+                                                View resource
                                             </DropdownItem>
                                         </>
                                     )}
@@ -266,7 +360,14 @@ function Comparison(props) {
                                 ) : (
                                     <>
                                         <strong>Error.</strong> The comparison service is unreachable. Please come back later and try again.{' '}
-                                        <span className="btn-link" style={{ cursor: 'pointer' }} onClick={() => handleGoBack}>
+                                        <span
+                                            className="btn-link"
+                                            style={{ cursor: 'pointer' }}
+                                            onClick={() => handleGoBack}
+                                            onKeyDown={e => (e.keyCode === 13 ? handleGoBack : undefined)}
+                                            role="button"
+                                            tabIndex={0}
+                                        >
                                             Go back
                                         </span>{' '}
                                         or <Link to={ROUTES.HOME}>go to the homepage {contributionsList.length}</Link>.
@@ -280,40 +381,15 @@ function Comparison(props) {
                 <>
                     {!isFailedLoadingMetaData && !isFailedLoadingComparisonResult && (
                         <div className="p-0 d-flex align-items-start">
-                            <h2 className="h4 mb-4 mt-4 flex-grow-1">{metaData.title ? metaData.title : 'Compare'}</h2>
+                            <div className="flex-grow-1">
+                                <h2 className="h4 mb-4 mt-4">{metaData.title ? metaData.title : 'Compare'}</h2>
 
-                            <ButtonGroup className=" mb-4 mt-4  flex-shrink-0">
-                                <Dropdown group isOpen={dropdownMethodOpen} toggle={() => setDropdownMethodOpen(v => !v)}>
-                                    <DropdownToggle color="lightblue" size="sm" className="rounded-right">
-                                        <span className="mr-2">Method: {comparisonType === 'path' ? 'Exact match' : 'Intelligent merge'}</span>{' '}
-                                        <Icon icon={faBezierCurve} />
-                                    </DropdownToggle>
-                                    <DropdownMenu right>
-                                        <div className="d-flex px-2">
-                                            <ComparisonTypeButton
-                                                color="link"
-                                                className="p-0 m-1"
-                                                onClick={() => handleChangeType('merge')}
-                                                active={comparisonType !== 'path'}
-                                            >
-                                                <img src={IntelligentMerge} alt="Intelligent merge example" />
-                                            </ComparisonTypeButton>
+                                {!isFailedLoadingMetaData && <ComparisonMetaData authors={authors} metaData={metaData} />}
+                            </div>
 
-                                            <ComparisonTypeButton
-                                                color="link"
-                                                className="p-0 m-1"
-                                                onClick={() => handleChangeType('path')}
-                                                active={comparisonType === 'path'}
-                                            >
-                                                <img src={ExactMatch} alt="Exact match example" />
-                                            </ComparisonTypeButton>
-                                        </div>
-                                    </DropdownMenu>
-                                </Dropdown>
-                            </ButtonGroup>
+                            {metaData.id && provenance && <ObservatoryBox provenance={provenance} />}
                         </div>
                     )}
-                    {!isFailedLoadingMetaData && <ComparisonMetaData authors={authors} metaData={metaData} />}
                     {!isFailedLoadingMetaData && !isFailedLoadingComparisonResult && (
                         <>
                             {contributionsList.length > 3 && (
@@ -331,6 +407,22 @@ function Comparison(props) {
                             )}
                             {contributionsList.length > 1 && !isLoadingComparisonResult ? (
                                 <div className="mt-1">
+                                    {integrateData({
+                                        metaData,
+                                        contributions,
+                                        properties,
+                                        data,
+                                        authors, // do we need this? maybe to add a new author who creates the comparison
+                                        contributionsList,
+                                        predicatesList
+                                    }) && (
+                                        <PreviewVisualizationComparison
+                                            comparisonId={metaData.id}
+                                            expandVisualization={expandVisualization}
+                                            visualizations={metaData.visualizations}
+                                        />
+                                    )}
+
                                     <ComparisonTable
                                         data={data}
                                         properties={properties}
@@ -348,8 +440,12 @@ function Comparison(props) {
                 </>
 
                 <div className="mt-3 clearfix">
-                    <RelatedResources resourcesStatements={metaData.resources ? metaData.resources : []} />
-                    <RelatedFigures figureStatements={metaData.figures ? metaData.figures : []} />
+                    {contributionsList.length > 1 && !isLoadingComparisonResult && (
+                        <>
+                            <RelatedResources resourcesStatements={metaData.resources ? metaData.resources : []} />
+                            <RelatedFigures figureStatements={metaData.figures ? metaData.figures : []} />
+                        </>
+                    )}
                     {!isFailedLoadingMetaData && metaData.references && metaData.references.length > 0 && (
                         <div style={{ lineHeight: 1.5 }}>
                             <h3 className="mt-5 h5">Data sources</h3>
@@ -369,7 +465,9 @@ function Comparison(props) {
                 </div>
             </ContainerAnimated>
 
-            {metaData.id && ((isObject(createdBy) && createdBy.id) || provenance) && <ProvenanceBox creator={createdBy} provenance={provenance} />}
+            {metaData.id && (
+                <ProvenanceBox creator={createdBy} provenance={provenance} changeObservatory={getObservatoryInfo} resourceId={metaData.id} />
+            )}
 
             <SelectProperties
                 properties={properties}
@@ -425,7 +523,7 @@ function Comparison(props) {
 
             <ExportToLatex
                 data={matrixData}
-                contributions={contributions}
+                contributions={contributions.filter(c => c.active)}
                 properties={properties}
                 showDialog={showLatexDialog}
                 toggle={() => setShowLatexDialog(v => !v)}
@@ -449,6 +547,26 @@ function Comparison(props) {
                 DOI={metaData?.doi}
                 comparisonId={metaData?.id}
             />
+
+            <AddVisualizationModal
+                toggle={() => setShowVisualizationModal(v => !v)}
+                showDialog={showVisualizationModal}
+                // Some data we track as input for the new data model TODO Check what we need
+                initialData={{
+                    metaData,
+                    contributions,
+                    properties,
+                    data,
+                    authors, // do we need this? maybe to add a new author who creates the comparison
+                    contributionsList,
+                    predicatesList
+                }}
+                closeOnExport={closeOnExport}
+                updatePreviewComponent={() => {
+                    loadVisualizations(metaData.id);
+                }}
+                useReconstructedData={applyReconstruction}
+            />
         </div>
     );
 }
@@ -458,12 +576,12 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    openAuthDialog: (action, signInRequired) => dispatch(openAuthDialog(action, signInRequired))
+    openAuthDialog: payload => dispatch(openAuthDialog(payload))
 });
 
 Comparison.propTypes = {
     openAuthDialog: PropTypes.func.isRequired,
-    user: PropTypes.object
+    user: PropTypes.oneOfType([PropTypes.object, PropTypes.number])
 };
 
 export default connect(

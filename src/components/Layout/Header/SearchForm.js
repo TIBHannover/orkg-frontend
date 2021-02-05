@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
@@ -34,7 +34,7 @@ const SearchForm = props => {
         if (isString(value) && value.length >= MINIMUM_LENGTH_PATTERN && (value.match(RESOURCE_PATTERN) || value.match(PROPERTY_PATTERN))) {
             const id = value.substring(1);
             setValue('');
-            route = reverse(value.match(RESOURCE_PATTERN) ? ROUTES.RESOURCE : ROUTES.PREDICATE, { id });
+            route = reverse(value.match(RESOURCE_PATTERN) ? ROUTES.RESOURCE : ROUTES.PROPERTY, { id });
         } else {
             route = reverse(ROUTES.SEARCH, { searchTerm: encodeURIComponent(value) });
         }

@@ -10,12 +10,10 @@ import env from '@beam-australia/react-env';
 export const similarityServiceUrl = env('SIMILARITY_SERVICE_URL');
 export const comparisonUrl = `${similarityServiceUrl}compare/`;
 export const similarityUrl = `${similarityServiceUrl}similar/`;
+export const visualizationServiceUrl = `${similarityServiceUrl}visualization/`;
 
-// TODO: call this function
-export const indexContribution = contribution_id => {
-    return fetch(`${similarityServiceUrl}internal/index/${encodeURIComponent(contribution_id)}/`, {
-        method: 'GET'
-    });
+export const indexContribution = contributionId => {
+    return submitGetRequest(`${similarityServiceUrl}internal/index/${contributionId}/`);
 };
 
 export const createShortLink = data => {
@@ -52,4 +50,13 @@ export const getComparison = ({ contributionIds = [], type = null, response_hash
 
 export const getSimilarContribution = id => {
     return submitGetRequest(`${similarityUrl}${encodeURIComponent(id)}/`);
+};
+
+export const getVisualization = resourceId => {
+    return submitGetRequest(`${visualizationServiceUrl}?resourceId=${encodeURI(resourceId)}`, {
+        'Content-Type': 'application/json'
+    });
+};
+export const addVisualization = data => {
+    return submitPostRequest(`${visualizationServiceUrl}`, { 'Content-Type': 'application/json' }, data);
 };

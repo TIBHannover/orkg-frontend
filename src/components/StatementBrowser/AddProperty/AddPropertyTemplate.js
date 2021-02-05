@@ -1,4 +1,3 @@
-import React from 'react';
 import { predicatesUrl } from 'services/backend/predicates';
 import { InputGroupAddon, Button, InputGroup } from 'reactstrap';
 import { AddPropertyStyle, AddPropertyContentStyle, AddPropertyFormStyle, StyledButton } from 'components/StatementBrowser/styled';
@@ -7,7 +6,7 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
 import defaultProperties from './helpers/defaultProperties';
 import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
-import Tippy from '@tippy.js/react';
+import Tippy from '@tippyjs/react';
 import PropTypes from 'prop-types';
 
 export default function AddPropertyTemplate(props) {
@@ -60,8 +59,9 @@ export default function AddPropertyTemplate(props) {
                                 allowCreate
                                 defaultOptions={defaultProperties}
                                 onBlur={() => {
-                                    props.handleHideAddProperty();
+                                    //props.handleHideAddProperty();
                                 }}
+                                inputGroup={false}
                             />
                             <InputGroupAddon addonType="append">
                                 <StyledButton outline onClick={() => props.handleHideAddProperty()}>

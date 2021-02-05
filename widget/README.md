@@ -1,10 +1,10 @@
 # ORKG Widget Documentation
 
-bundle size: **11.3 kB**
+bundle size: **8.23 kB**
 
 ### How to use:
 
-Place the following code on your website and set the paramater data-doi.
+Place the following code on your website and set the parameter data-doi.
 
 ```html
 <div class="orkg-widget" data-doi="10.1007/s00799-015-0158-y"></div>

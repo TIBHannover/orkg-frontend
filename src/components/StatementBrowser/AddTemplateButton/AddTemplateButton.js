@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
+import { createRef, Component } from 'react';
 import { Button } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPlus, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import TemplateDetailsTooltip from './TemplateDetailsTooltip';
 import { fillResourceWithTemplate } from 'actions/statementBrowser';
 import { connect } from 'react-redux';
-import Tippy from '@tippy.js/react';
+import Tippy from '@tippyjs/react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
@@ -37,7 +37,7 @@ class AddTemplateButton extends Component {
         this.state = {
             isAdding: false
         };
-        this.ref = React.createRef();
+        this.ref = createRef();
     }
 
     addTemplate = () => {

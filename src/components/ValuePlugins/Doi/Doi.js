@@ -1,15 +1,14 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import { renderToString } from 'react-dom/server';
+import REGEX from 'constants/regex';
 
 class Doi extends Component {
     constructor(props) {
         super(props);
-        // eslint-disable-next-line no-useless-escape
-        const expression = /^10.\d{4,9}\/[-._;()/:A-Z0-9]+$/i;
-        this.supportedValues = new RegExp(expression);
+        this.supportedValues = new RegExp(REGEX.DOI);
     }
 
     render() {

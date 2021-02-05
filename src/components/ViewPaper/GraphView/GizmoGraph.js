@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import * as PropTypes from 'prop-types';
 
 class GizMOGraph extends Component {

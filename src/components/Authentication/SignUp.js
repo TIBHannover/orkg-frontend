@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Button, Form, FormGroup, Input, Label, Alert, FormFeedback, CustomInput } from 'reactstrap';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -73,7 +73,8 @@ class SignUp extends Component {
                                     id: userData.id,
                                     token: userToken,
                                     email: userData.email,
-                                    tokenExpire: token_expires_in
+                                    tokenExpire: token_expires_in,
+                                    isCurationAllowed: userData.is_curation_allowed
                                 }
                             });
                             this.props.toggleAuthDialog();

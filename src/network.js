@@ -3,6 +3,7 @@ import env from '@beam-australia/react-env';
 
 export const crossrefUrl = env('CROSSREF_URL');
 export const semanticScholarUrl = env('SEMANTICSCHOLAR_URL');
+export const olsBaseUrl = env('OLS_BASE_URL');
 
 export const submitGetRequest = (url, headers, send_token = false) => {
     if (!url) {
@@ -31,7 +32,6 @@ export const submitGetRequest = (url, headers, send_token = false) => {
                     });
                 } else {
                     const json = response.json();
-                    //console.log(json);
                     if (json.then) {
                         json.then(resolve).catch(reject);
                     } else {
@@ -112,11 +112,16 @@ export const submitPutRequest = (url, headers, data, jsonStringify = true) => {
                         reject(new Error(`Error response. (${response.status}) ${response.statusText}`));
                     }
                 } else {
-                    const json = response.json();
-                    if (json.then) {
-                        json.then(resolve).catch(reject);
+                    if (response.status === 204) {
+                        // HTTP 204 No Content success status
+                        return resolve();
                     } else {
-                        return resolve(json);
+                        const json = response.json();
+                        if (json.then) {
+                            json.then(resolve).catch(reject);
+                        } else {
+                            return resolve(json);
+                        }
                     }
                 }
             })
@@ -129,8 +134,15 @@ export const submitDeleteRequest = (url, headers, data) => {
         throw new Error('Cannot submit DELETE request. URL is null or undefined.');
     }
 
+    const cookies = new Cookies();
+    const token = cookies.get('token') ? cookies.get('token') : null;
+    const myHeaders = new Headers(headers);
+    if (token) {
+        myHeaders.append('Authorization', `Bearer ${token}`);
+    }
+
     return new Promise((resolve, reject) => {
-        fetch(url, { method: 'DELETE', headers: headers, body: JSON.stringify(data) })
+        fetch(url, { method: 'DELETE', headers: myHeaders, body: JSON.stringify(data) })
             .then(response => {
                 if (!response.ok) {
                     reject(new Error(`Error response. (${response.status}) ${response.statusText}`));
