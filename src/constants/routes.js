@@ -31,6 +31,8 @@ const routes = {
     COMPARISON: '/comparison/:comparisonId?',
     PAPERS: '/papers',
     COMPARISONS: '/comparisons',
+    VISUALIZATIONS: '/visualizations',
+    VISUALIZATION: '/visualization/:id?',
     RESEARCH_PROBLEM: '/problem/:researchProblemId',
     RESEARCH_FIELD: '/field/:researchFieldId',
     RESEARCH_FIELDS: '/fields',

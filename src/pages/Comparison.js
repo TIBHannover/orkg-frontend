@@ -433,7 +433,7 @@ function Comparison(props) {
                                 </div>
                             )}
                             {!isLoadingComparisonResult ? (
-                                contributionsList.length > 0 ? (
+                                contributionsList.length > 1 ? (
                                     <div className="mt-1">
                                         {integrateData({
                                             metaData,
@@ -450,6 +450,7 @@ function Comparison(props) {
                                                 visualizations={metaData.visualizations}
                                             />
                                         )}
+
                                         <ComparisonTable
                                             data={data}
                                             properties={properties}
@@ -464,12 +465,9 @@ function Comparison(props) {
                                         />
                                     </div>
                                 ) : (
-                                    <div className="">
-                                        <Alert className="mt-2 text-center" color="danger">
-                                            Sorry, that filter combination has no results.{' '}
-                                            <div className="font-weight-bold">please try different criteria</div>
-                                        </Alert>
-                                    </div>
+                                    <Alert className="mt-3 text-center" color="danger">
+                                        Sorry, this comparison doesn't have the minimum amount of research contributions to compare on
+                                    </Alert>
                                 )
                             ) : (
                                 <ComparisonLoadingComponent />

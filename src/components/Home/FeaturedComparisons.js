@@ -24,7 +24,8 @@ export default function FeaturedComparisons() {
         const responseJson = await getResourcesByClass({
             id: CLASSES.FEATURED_COMPARISON,
             sortBy: 'created_at',
-            desc: true
+            desc: true,
+            items: 10
         });
 
         const ids = responseJson.map(comparison =>
