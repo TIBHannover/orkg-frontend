@@ -126,20 +126,25 @@ export const ReactTableWrapper = styled.div`
             height: 0;
         }
     }
-    /*
-    TEMP: disable
-    .ReactTable .rt-tr:hover .rt-td > div > div {
-        background: #e7eaf1;
+    &:not(.bulk-editor) {
+        .ReactTable .rt-tr:hover .rt-td > div > div {
+            background: #e7eaf1;
+        }
+        .ReactTable .rt-tr:hover .rthfc-td-fixed-left > .columnProperty > div {
+            background: #8b91a5;
+        }
+        .ReactTable .rt-tr:hover .rthfc-td-fixed-left > .columnContribution > div:first-child {
+            color: #e86161;
+            background: #d77171;
+        }
     }
-    .ReactTable .rt-tr:hover .rthfc-td-fixed-left > .columnProperty > div {
-        background: #8b91a5;
-    }
-    .ReactTable .rt-tr:hover .rthfc-td-fixed-left > .columnContribution > div:first-child {
-        color: #e86161;
-        background: #d77171;
-    }*/
-    .ReactTable .rt-tr .rt-td > div > div:hover {
-        background: #f0f2f7;
+    &.bulk-editor {
+        .ReactTable .rt-tr .rt-td:not(.rthfc-td-fixed-left) > div > div:hover {
+            background: #f0f2f7;
+        }
+        .ReactTable .rt-tr .rthfc-td-fixed-left > .columnProperty > div:hover {
+            background: #8b91a5;
+        }
     }
 `;
 

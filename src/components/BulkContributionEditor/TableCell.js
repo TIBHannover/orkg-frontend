@@ -9,13 +9,13 @@ const TableCell = ({ values }) => {
     const [disableCreate, setDisableCreate] = useState(false);
 
     return (
-        <Item>
-            <ItemInner cellPadding={1} onMouseEnter={() => setIsHovering(true)} onMouseLeave={() => setIsHovering(false)}>
+        <Item className="position-relative">
+            <ItemInner cellPadding={10} onMouseEnter={() => setIsHovering(true)} onMouseLeave={() => setIsHovering(false)}>
                 {values.map((value, index) => {
                     if (Object.keys(value).length === 0) {
-                        return <div key={`value-${index}`} style={{ paddingTop: 20 }} />;
+                        return null;
                     }
-                    return <TableCellValue key={`value-${index}`} value={value} index={index} setDisableCreate={setDisableCreate} />;
+                    return <TableCellValue key={`value-${value.statementId}`} value={value} index={index} setDisableCreate={setDisableCreate} />;
                 })}
                 <TableCellValueCreate isVisible={isHovering && !disableCreate} />
             </ItemInner>

@@ -25,12 +25,7 @@ const TableCellValue = ({ value, index, setDisableCreate }) => {
     return !isEditing ? (
         <>
             {index > 0 && <ItemInnerSeparator className="my-0" />}
-            <div
-                className="position-relative"
-                onMouseEnter={() => setIsHovering(true)}
-                onMouseLeave={() => setIsHovering(false)}
-                style={{ padding: '10px 0' }}
-            >
+            <div className="position-relative" onMouseEnter={() => setIsHovering(true)} onMouseLeave={() => setIsHovering(false)}>
                 <div onDoubleClick={handleStartEdit}>{value.label}</div>
                 <TableCellButtons isHovering={isHovering} onEdit={handleStartEdit} onDelete={() => {}} backgroundColor="rgba(240, 242, 247, 0.8)" />
             </div>
@@ -38,36 +33,35 @@ const TableCellValue = ({ value, index, setDisableCreate }) => {
     ) : (
         <div style={{ minHeight: 38, paddingTop: 4 }}>
             {value.type === 'resource' && (
-                <div style={{ position: 'absolute', width: 215, zIndex: 3 }}>
-                    <AutoComplete
-                        requestUrl={resourcesUrl}
-                        excludeClasses={`${CLASSES.CONTRIBUTION},${CLASSES.PROBLEM},${CLASSES.CONTRIBUTION_TEMPLATE}`}
-                        //optionsClass={props.valueClass ? props.valueClass.id : undefined}
-                        placeholder="Enter a resource"
-                        onItemSelected={i => {
-                            //props.handleValueSelect(valueType, i);
-                            //setShowAddValue(false);
-                        }}
-                        onInput={(e, value) => setInputValue(e ? e.target.value : value)}
-                        value={inputValue}
-                        onBlur={handleStopEdit}
-                        //additionalData={props.newResources}
-                        //autoLoadOption={props.valueClass ? true : false}
-                        openMenuOnFocus={true}
-                        cssClasses="form-control-sm"
-                        onKeyDown={e => {
-                            /*if (e.keyCode === 27) {
+                <AutoComplete
+                    requestUrl={resourcesUrl}
+                    excludeClasses={`${CLASSES.CONTRIBUTION},${CLASSES.PROBLEM},${CLASSES.CONTRIBUTION_TEMPLATE}`}
+                    //optionsClass={props.valueClass ? props.valueClass.id : undefined}
+                    menuPortalTarget={document.body} // use a portal to ensure the menu isn't blocked by other elements
+                    placeholder="Enter a resource"
+                    onItemSelected={i => {
+                        //props.handleValueSelect(valueType, i);
+                        //setShowAddValue(false);
+                    }}
+                    onInput={(e, value) => setInputValue(e ? e.target.value : value)}
+                    value={inputValue}
+                    onBlur={handleStopEdit}
+                    //additionalData={props.newResources}
+                    //autoLoadOption={props.valueClass ? true : false}
+                    openMenuOnFocus={true}
+                    cssClasses="form-control-sm"
+                    onKeyDown={e => {
+                        /*if (e.keyCode === 27) {
                             // escape
                             setShowAddValue(false);
                         } else if (e.keyCode === 13 && !isMenuOpen()) {
                             props.handleAddValue(valueType, inputValue);
                             setShowAddValue(false);
                         }*/
-                        }}
-                        //innerRef={ref => (resourceInputRef.current = ref)}
-                        //handleCreateExistingLabel={handleCreateExistingLabel}
-                    />
-                </div>
+                    }}
+                    //innerRef={ref => (resourceInputRef.current = ref)}
+                    //handleCreateExistingLabel={handleCreateExistingLabel}
+                />
             )}
             {value.type === 'literal' && (
                 <InputField

@@ -2,6 +2,8 @@ import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import TableCell from 'components/BulkContributionEditor/TableCell';
 import TableCellButtons from 'components/BulkContributionEditor/TableCellButtons';
+import TableColumnHeader from 'components/BulkContributionEditor/TableColumnHeader';
+import TableRowHeader from 'components/BulkContributionEditor/TableRowHeader';
 import { Contribution, Delete, ItemHeader, ItemHeaderInner, Properties, PropertiesInner, ReactTableWrapper } from 'components/Comparison/styled';
 import ROUTES from 'constants/routes';
 import { functions, isEqual, omit } from 'lodash';
@@ -102,43 +104,14 @@ const EditorTable = props => {
                 ),
                 accessor: 'property',
                 fixed: 'left',
-                Cell: cell => (
-                    <Properties className="columnProperty">
-                        <PropertiesInner cellPadding={10}>
-                            {cell.value.label}
-                            <TableCellButtons isHovering={true} onEdit={() => {}} onDelete={() => {}} backgroundColor="rgba(128, 134, 155, 0.8)" />
-                        </PropertiesInner>
-                    </Properties>
-                ),
+                Cell: cell => <TableRowHeader property={cell.value} />,
                 width: 250
             },
             ...Object.keys(props.data.contributions).map((contributionId, i) => {
                 const contribution = props.data.contributions[contributionId];
                 return {
                     id: contribution.id,
-                    Header: () => (
-                        <ItemHeader key={contribution.id}>
-                            <ItemHeaderInner>
-                                <Link
-                                    to={reverse(ROUTES.VIEW_PAPER, {
-                                        resourceId: contribution.paperId, //contribution.paperId,
-                                        contributionId: contribution.id //contribution.id
-                                    })}
-                                >
-                                    {contribution.title ? contribution.title : <em>No title</em>}
-                                </Link>
-                                <br />
-                                <Contribution>
-                                    {contribution.year && `${contribution.year} - `}
-                                    {contribution.contributionLabel}
-                                </Contribution>
-                            </ItemHeaderInner>
-
-                            <Delete>
-                                <Icon icon={faTimes} />
-                            </Delete>
-                        </ItemHeader>
-                    ),
+                    Header: () => <TableColumnHeader contribution={contribution} key={contribution.id} />,
                     accessor: d => {
                         return d.values[i];
                     },
@@ -146,7 +119,6 @@ const EditorTable = props => {
                         const values = cell.value;
 
                         return <TableCell values={cell.value} />;
-                        // return <TableCell data={cell.value} />;
                     },
                     width: 250
                 };
@@ -157,7 +129,7 @@ const EditorTable = props => {
     const handleScrollCallback = () => {};
 
     return (
-        <ReactTableWrapper>
+        <ReactTableWrapper className="bulk-editor">
             <ScrollSync onSync={handleScrollCallback}>
                 <ReactTableFixedColumns
                     TheadComponent={component => {
@@ -179,7 +151,7 @@ const EditorTable = props => {
                         return (
                             <ScrollSyncPane group="one">
                                 {/* paddingBottom for the 'add value' bottom, which is positioned partially below the table */}
-                                <div style={{ overflow: 'auto', paddingBottom: 10 }}>
+                                <div style={{ overflow: 'auto', paddingBottom: 15 }}>
                                     {' '}
                                     {/*ref={props.scrollContainerBody}  */}
                                     <div className={`rt-tbody ${component.className}`} style={component.style}>

@@ -6,8 +6,7 @@ import styled from 'styled-components';
 const ButtonsContainer = styled.div`
     position: absolute;
     right: 0;
-    top: 0px;
-    //background: rgba(240, 242, 247, 0.8);
+    top: -10px;
     padding: 6px;
     border-radius: 6px;
 `;

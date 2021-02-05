@@ -648,7 +648,8 @@ function Autocomplete(props) {
         }),
         menu: provided => ({
             ...provided,
-            zIndex: 10
+            zIndex: 10,
+            fontSize: '0.875rem'
         }),
         option: provided => ({
             ...provided,
@@ -739,6 +740,7 @@ function Autocomplete(props) {
                     onBlur={props.onBlur}
                     onKeyDown={props.onKeyDown}
                     selectRef={props.innerRef}
+                    menuPortalTarget={props.menuPortalTarget}
                     components={{
                         Option: Option,
                         Menu: Menu,
@@ -810,7 +812,8 @@ Autocomplete.propTypes = {
     inputGroup: PropTypes.bool,
     inputId: PropTypes.string,
     onChangeInputValue: PropTypes.func,
-    inputValue: PropTypes.string
+    inputValue: PropTypes.string,
+    menuPortalTarget: PropTypes.object
 };
 
 Autocomplete.defaultProps = {
@@ -826,6 +829,7 @@ Autocomplete.defaultProps = {
     ols: false,
     inputGroup: true,
     inputId: null,
-    inputValue: null
+    inputValue: null,
+    menuPortalTarget: null
 };
 export default withTheme(Autocomplete);

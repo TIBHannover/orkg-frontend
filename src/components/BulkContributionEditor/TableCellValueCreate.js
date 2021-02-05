@@ -35,7 +35,7 @@ const TableCellValueCreate = ({ isVisible }) => {
     return (
         <>
             {!isAdding && isVisible && (
-                <div className="position-relative">
+                <div className="h-100" onDoubleClick={() => setIsAdding(true)}>
                     <CreateButtonContainer>
                         <StatementOptionButton title="Add value" icon={faPlus} action={() => setIsAdding(true)} />
                     </CreateButtonContainer>
@@ -43,7 +43,7 @@ const TableCellValueCreate = ({ isVisible }) => {
             )}
             {isAdding && (
                 <div ref={refContainer} style={{ height: 35 }}>
-                    <InputGroup size="sm" style={{ position: 'absolute', width: 295 }}>
+                    <InputGroup size="sm" style={{ width: 295 }}>
                         {type === 'resource' ? (
                             <AutoComplete
                                 requestUrl={resourcesUrl}
@@ -54,6 +54,7 @@ const TableCellValueCreate = ({ isVisible }) => {
                                     //props.handleValueSelect(valueType, i);
                                     //setShowAddValue(false);
                                 }}
+                                menuPortalTarget={document.body}
                                 onInput={(e, value) => setValue(e ? e.target.value : value)}
                                 value={value}
                                 //onBlur={() => setIsAdding(false)}
