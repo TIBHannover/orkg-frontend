@@ -24,7 +24,7 @@ export default function ValueItemTemplate(props) {
     const { resourcesAsLinks, openExistingResourcesInDialog } = statementBrowser;
 
     let valueClass = getValueClass(props.components);
-    valueClass = valueClass ? valueClass : props.predicate.range ? props.predicate.range : null;
+    valueClass = valueClass ? valueClass : props.predicate?.range ? props.predicate.range : null;
     const isInlineResource = useSelector(state => isInlineResourceUtil(state, valueClass));
 
     const [disableHover, setDisableHover] = useState(false);
@@ -190,7 +190,7 @@ ValueItemTemplate.propTypes = {
     showHelp: PropTypes.bool,
     enableEdit: PropTypes.bool.isRequired,
     getLabel: PropTypes.func.isRequired,
-    predicate: PropTypes.object.isRequired,
+    predicate: PropTypes.object,
     components: PropTypes.array.isRequired,
     commitChangeLabel: PropTypes.func.isRequired,
     handleDatasetClick: PropTypes.func.isRequired,

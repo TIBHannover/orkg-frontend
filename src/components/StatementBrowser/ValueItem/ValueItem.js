@@ -148,7 +148,7 @@ export default function ValueItem(props) {
                 increaseLevel: true,
                 resourceId: props.value.resourceId,
                 label: props.value.label,
-                propertyLabel: properties.byId[props.propertyId].label
+                propertyLabel: properties.byId[props.propertyId]?.label
             })
         );
     };
@@ -167,7 +167,7 @@ export default function ValueItem(props) {
                 increaseLevel: true,
                 resourceId: ressource.id,
                 label: ressource.rlabel ? ressource.rlabel : ressource.label,
-                propertyLabel: properties.byId[props.propertyId].label
+                propertyLabel: properties.byId[props.propertyId]?.label
             })
         );
 
@@ -221,7 +221,7 @@ export default function ValueItem(props) {
         for (const propertyId of resource.propertyIds) {
             const property = properties.byId[propertyId];
             valueObject[property.existingPredicateId] =
-                property.valueIds && property.valueIds.length > 0 ? values.byId[property.valueIds[0]].label : property.label;
+                property?.valueIds && property.valueIds.length > 0 ? values.byId[property.valueIds[0]].label : property.label;
         }
         if (Object.keys(valueObject).length > 0) {
             return format(labelFormat, valueObject);
@@ -275,7 +275,7 @@ export default function ValueItem(props) {
         <>
             <ValueItemTemplate
                 isProperty={[PREDICATES.TEMPLATE_COMPONENT_PROPERTY, PREDICATES.TEMPLATE_OF_PREDICATE].includes(
-                    properties.byId[props.propertyId].existingPredicateId
+                    properties.byId[props.propertyId]?.existingPredicateId
                 )}
                 id={props.id}
                 value={value}
