@@ -435,7 +435,7 @@ function Comparison(props) {
                                     </div>
                                 ) : (
                                     <Alert className="mt-3 text-center" color="danger">
-                                        Sorry, this comparison doesn't have the minimum amount of research contributions to compare on..
+                                        Sorry, this comparison doesn't have the minimum amount of research contributions to compare on
                                     </Alert>
                                 )
                             ) : (
