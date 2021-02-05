@@ -37,19 +37,19 @@ const AddValue = props => {
 
     const getIsLiteralField = () => {
         let result = isLiteral(props.components);
-        if (predicate.range) {
+        if (predicate && predicate.range) {
             result = ['Date', 'Number', 'String'].includes(predicate.range.id) ? true : false;
         }
         return result;
     };
 
     const [valueClass, setValueClass] = useState(
-        getValueClass(props.components) ? getValueClass(props.components) : predicate.range ? predicate.range : null
+        getValueClass(props.components) ? getValueClass(props.components) : predicate?.range ? predicate.range : null
     );
     const [isLiteralField, setIsLiteralField] = useState(getIsLiteralField());
 
     useEffect(() => {
-        setValueClass(getValueClass(props.components) ? getValueClass(props.components) : predicate.range ? predicate.range : null);
+        setValueClass(getValueClass(props.components) ? getValueClass(props.components) : predicate?.range ? predicate.range : null);
         setIsLiteralField(getIsLiteralField());
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [JSON.stringify(props.components)]);
