@@ -5,7 +5,7 @@ import StatementBrowserDialog from '../StatementBrowser/StatementBrowserDialog';
 import ValuePlugins from '../ValuePlugins/ValuePlugins';
 import Tippy from '@tippyjs/react';
 
-const Item = styled.div`
+export const Item = styled.div`
     padding-right: 10px;
     padding: 0 10px !important;
     margin: 0;
@@ -14,7 +14,7 @@ const Item = styled.div`
     height: 100%;
 `;
 
-const ItemInner = styled.div`
+export const ItemInner = styled.div`
     padding: ${props => props.cellPadding}px 5px;
     border-left: 2px solid #d5dae4;
     border-right: 2px solid #d5dae4;
@@ -24,7 +24,7 @@ const ItemInner = styled.div`
     word-wrap: break-word;
 `;
 
-const ItemInnerSeparator = styled.hr`
+export const ItemInnerSeparator = styled.hr`
     margin: 5px auto;
     width: 50%;
 `;
@@ -70,7 +70,7 @@ class TableCell extends Component {
                                 date.type === 'resource' ? (
                                     <span key={`value-${date.resourceId}`}>
                                         {index > 0 && <ItemInnerSeparator />}
-                                        <Tippy content={`Path of this value : ${date.pathLabels.slice(1).join(' / ')}`} arrow={true}>
+                                        <Tippy content={`Path of this value : ${date.pathLabels?.slice(1).join(' / ')}`} arrow={true}>
                                             <div
                                                 className="btn-link"
                                                 onClick={() => this.openStatementBrowser(date.resourceId, date.label)}
@@ -88,7 +88,7 @@ class TableCell extends Component {
                                 ) : (
                                     <span key={`value-${date.label}`}>
                                         {index > 0 && <ItemInnerSeparator />}
-                                        <Tippy content={`Path of this value : ${date.pathLabels.slice(1).join(' / ')}`} arrow={true}>
+                                        <Tippy content={`Path of this value : ${date.pathLabels?.slice(1).join(' / ')}`} arrow={true}>
                                             <span>
                                                 <ValuePlugins type="literal" options={{ inModal: true }}>
                                                     {date.label}

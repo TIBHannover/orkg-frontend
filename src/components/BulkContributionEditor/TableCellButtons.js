@@ -1,0 +1,37 @@
+import { faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
+import StatementOptionButton from 'components/StatementBrowser/StatementOptionButton/StatementOptionButton';
+import PropTypes from 'prop-types';
+import styled from 'styled-components';
+
+const ButtonsContainer = styled.div`
+    position: absolute;
+    right: 0;
+    top: 0px;
+    //background: rgba(240, 242, 247, 0.8);
+    padding: 6px;
+    border-radius: 6px;
+`;
+
+const TableCellValueButtons = ({ isHovering, onEdit, onDelete, backgroundColor }) => {
+    return (
+        <ButtonsContainer style={{ visibility: isHovering ? 'visible' : 'hidden', backgroundColor }}>
+            <StatementOptionButton title="Edit" icon={faPen} action={onEdit} />
+            <StatementOptionButton
+                requireConfirmation={true}
+                title="Delete"
+                confirmationMessage="Are you sure to delete?"
+                icon={faTrash}
+                action={onDelete}
+            />
+        </ButtonsContainer>
+    );
+};
+
+TableCellValueButtons.propTypes = {
+    isHovering: PropTypes.bool,
+    onEdit: PropTypes.func,
+    onDelete: PropTypes.func,
+    backgroundColor: PropTypes.string
+};
+
+export default TableCellValueButtons;

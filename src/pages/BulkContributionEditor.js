@@ -1,5 +1,6 @@
 import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import EditorTable from 'components/BulkContributionEditor/EditorTable';
 import useBulkContributionEditor from 'components/BulkContributionEditor/hooks/useBulkContributionEditor';
 import AddContribution from 'components/Comparison/AddContribution/AddContribution';
 import CreateContributionModal from 'components/CreateContributionModal/CreateContributionModal';
@@ -57,6 +58,7 @@ const BulkContributionEditor = () => {
                         <br />
                     </div>
                 ))}
+                <EditorTable data={contributions} />
             </Container>
 
             {/* Used conditions to show the modals, to reset the components after closing */}

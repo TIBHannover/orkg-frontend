@@ -112,7 +112,7 @@ export const ReactTableWrapper = styled.div`
         top: 0px;
         overflow: auto;
     }
-    .ReactTable .rt-tbody .rt-tr-group:last-child .rt-td > div div:first-child {
+    .ReactTable .rt-tbody .rt-tr-group:last-child .rt-td > div > div:first-child {
         //border-bottom: 2px solid #d5dae4 !important;
         border-radius: 0 0 11px 11px !important;
     }
@@ -126,6 +126,8 @@ export const ReactTableWrapper = styled.div`
             height: 0;
         }
     }
+    /*
+    TEMP: disable
     .ReactTable .rt-tr:hover .rt-td > div > div {
         background: #e7eaf1;
     }
@@ -135,6 +137,9 @@ export const ReactTableWrapper = styled.div`
     .ReactTable .rt-tr:hover .rthfc-td-fixed-left > .columnContribution > div:first-child {
         color: #e86161;
         background: #d77171;
+    }*/
+    .ReactTable .rt-tr .rt-td > div > div:hover {
+        background: #f0f2f7;
     }
 `;
 
