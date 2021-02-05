@@ -38,7 +38,6 @@ const FooterCol = styled(Col)`
 `;
 
 const PartnerLogoCol = styled(Col)`
-    margin: 10px 0;
     text-align: center;
 `;
 

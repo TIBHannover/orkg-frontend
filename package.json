@@ -114,8 +114,8 @@
         "test": "react-scripts test --env=jsdom",
         "eject": "react-scripts eject",
         "flow": "flow",
-        "lint": "eslint 'src/**/*.{js,jsx}'",
-        "lint:fix": "eslint 'src/**/*.{js,jsx}' --fix",
+        "lint": "eslint src/**/*.{js,jsx}",
+        "lint:fix": "eslint src/**/*.{js,jsx} --fix",
         "version": "auto-changelog && git add CHANGELOG.md"
     },
     "devDependencies": {

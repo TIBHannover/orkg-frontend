@@ -25,7 +25,8 @@ export default function FeaturedComparisons() {
             id: CLASSES.FEATURED_COMPARISON,
             sortBy: 'created_at',
             desc: true,
-            returnContent: true
+            returnContent: true,
+            items: 10
         });
 
         const ids = responseJson.map(comparison =>

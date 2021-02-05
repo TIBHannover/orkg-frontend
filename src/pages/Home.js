@@ -39,7 +39,7 @@ export default function Home() {
                         </div>
                         <TrendingProblems style={{ flexDirection: 'column', display: 'flex', flexGrow: '1' }} />
                     </Col>
-                    <Col md={5} sm={12} style={{ display: 'flex', flexDirection: 'column' }}>
+                    <Col className="mt-3 mt-md-0" md={5} sm={12} style={{ display: 'flex', flexDirection: 'column' }}>
                         <ObservatoriesBox />
                         <FeaturedItemsBox />
                     </Col>
