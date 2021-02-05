@@ -175,8 +175,11 @@ function useComparison() {
                         } else {
                             setPredicatesList(filterObjectOfStatementsByPredicate(statements, PREDICATES.HAS_PROPERTY, false)?.map(p => p.id));
                             setContributionsList(
-                                filterObjectOfStatementsByPredicate(statements, PREDICATES.COMPARE_CONTRIBUTION, false)?.map(c => c.id)
+                                filterObjectOfStatementsByPredicate(statements, PREDICATES.COMPARE_CONTRIBUTION, false)?.map(c => c.id) ?? []
                             );
+                        }
+                        if (!filterObjectOfStatementsByPredicate(statements, PREDICATES.COMPARE_CONTRIBUTION, false)?.map(c => c.id)) {
+                            setIsLoadingComparisonResult(false);
                         }
                         setIsLoadingMetaData(false);
                         setIsFailedLoadingMetaData(false);

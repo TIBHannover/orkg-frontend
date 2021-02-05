@@ -405,33 +405,39 @@ function Comparison(props) {
                                     for horizontal scrolling in the table.
                                 </Alert>
                             )}
-                            {contributionsList.length > 1 && !isLoadingComparisonResult ? (
-                                <div className="mt-1">
-                                    {integrateData({
-                                        metaData,
-                                        contributions,
-                                        properties,
-                                        data,
-                                        authors, // do we need this? maybe to add a new author who creates the comparison
-                                        contributionsList,
-                                        predicatesList
-                                    }) && (
-                                        <PreviewVisualizationComparison
-                                            comparisonId={metaData.id}
-                                            expandVisualization={expandVisualization}
-                                            visualizations={metaData.visualizations}
-                                        />
-                                    )}
+                            {!isLoadingComparisonResult ? (
+                                contributionsList.length > 1 ? (
+                                    <div className="mt-1">
+                                        {integrateData({
+                                            metaData,
+                                            contributions,
+                                            properties,
+                                            data,
+                                            authors, // do we need this? maybe to add a new author who creates the comparison
+                                            contributionsList,
+                                            predicatesList
+                                        }) && (
+                                            <PreviewVisualizationComparison
+                                                comparisonId={metaData.id}
+                                                expandVisualization={expandVisualization}
+                                                visualizations={metaData.visualizations}
+                                            />
+                                        )}
 
-                                    <ComparisonTable
-                                        data={data}
-                                        properties={properties}
-                                        contributions={contributions}
-                                        removeContribution={removeContribution}
-                                        transpose={transpose}
-                                        viewDensity={viewDensity}
-                                    />
-                                </div>
+                                        <ComparisonTable
+                                            data={data}
+                                            properties={properties}
+                                            contributions={contributions}
+                                            removeContribution={removeContribution}
+                                            transpose={transpose}
+                                            viewDensity={viewDensity}
+                                        />
+                                    </div>
+                                ) : (
+                                    <Alert className="mt-3 text-center" color="danger">
+                                        Sorry, this comparison doesn't have the minimum amount of research contributions to compare on..
+                                    </Alert>
+                                )
                             ) : (
                                 <ComparisonLoadingComponent />
                             )}
