@@ -10,6 +10,7 @@ import { useClickAway } from 'react-use';
 import { DropdownMenu, Input, InputGroup, InputGroupButtonDropdown } from 'reactstrap';
 import { resourcesUrl } from 'services/backend/resources';
 import styled from 'styled-components';
+import { upperFirst } from 'lodash';
 
 const CreateButtonContainer = styled.div`
     position: absolute;
@@ -21,27 +22,27 @@ const CreateButtonContainer = styled.div`
 
 const TableCellValueCreate = ({ isVisible }) => {
     const [value, setValue] = useState('');
-    const [type, setType] = useState('resource');
-    const [isAdding, setIsAdding] = useState(false);
+    const [type, setType] = useState('literal');
+    const [isCreating, setIsCreating] = useState(false);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const refContainer = useRef(null);
 
     useClickAway(refContainer, () => {
-        if (isAdding) {
-            setIsAdding(false);
+        if (isCreating) {
+            setIsCreating(false);
         }
     });
 
     return (
         <>
-            {!isAdding && isVisible && (
-                <div className="h-100" onDoubleClick={() => setIsAdding(true)}>
+            {!isCreating && isVisible && (
+                <div className="h-100" onDoubleClick={() => setIsCreating(true)}>
                     <CreateButtonContainer>
-                        <StatementOptionButton title="Add value" icon={faPlus} action={() => setIsAdding(true)} />
+                        <StatementOptionButton title="Add value" icon={faPlus} action={() => setIsCreating(true)} />
                     </CreateButtonContainer>
                 </div>
             )}
-            {isAdding && (
+            {isCreating && (
                 <div ref={refContainer} style={{ height: 35 }}>
                     <InputGroup size="sm" style={{ width: 295 }}>
                         {type === 'resource' ? (
@@ -57,7 +58,7 @@ const TableCellValueCreate = ({ isVisible }) => {
                                 menuPortalTarget={document.body}
                                 onInput={(e, value) => setValue(e ? e.target.value : value)}
                                 value={value}
-                                //onBlur={() => setIsAdding(false)}
+                                //onBlur={() => setIsCreating(false)}
                                 //additionalData={props.newResources}
                                 //autoLoadOption={props.valueClass ? true : false}
                                 openMenuOnFocus={true}
@@ -82,15 +83,13 @@ const TableCellValueCreate = ({ isVisible }) => {
                                 bsSize="sm"
                                 value={value}
                                 onChange={e => setValue(e.target.value)}
-                                //innerRef={this.literalInputRef}
-                                //onKeyDown={e => e.keyCode === 13 && this.finishEditing()}
                                 autoFocus
                             />
                         )}
 
                         <InputGroupButtonDropdown addonType="append" isOpen={isDropdownOpen} toggle={() => setIsDropdownOpen(v => !v)}>
                             <StyledDropdownToggle disableBorderRadiusLeft={true}>
-                                <small>{type.charAt(0).toUpperCase() + type.slice(1) + ' '}</small>
+                                <small>{upperFirst(type)} </small>
                                 <Icon size="xs" icon={faBars} />
                             </StyledDropdownToggle>
                             <DropdownMenu>

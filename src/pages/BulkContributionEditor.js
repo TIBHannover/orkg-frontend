@@ -1,5 +1,6 @@
 import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import CreateProperty from 'components/BulkContributionEditor/CreateProperty';
 import EditorTable from 'components/BulkContributionEditor/EditorTable';
 import useBulkContributionEditor from 'components/BulkContributionEditor/hooks/useBulkContributionEditor';
 import AddContribution from 'components/Comparison/AddContribution/AddContribution';
@@ -13,11 +14,17 @@ const BulkContributionEditor = () => {
     const [isOpenCreateContribution, setIsOpenCreateContribution] = useState(false);
     const [isOpenCreatePaper, setIsOpenCreatePaper] = useState(false);
     const [createContributionPaperId, setCreateContributionPaperId] = useState(null);
-    const { contributionIds, handleAddContributions, handleRemoveContribution, contributions } = useBulkContributionEditor();
+    const { contributionIds, handleAddContributions, contributions, fetchContributions } = useBulkContributionEditor();
 
     useEffect(() => {
         document.title = 'Bulk contribution editor - ORKG';
     }, []);
+
+    useEffect(() => {
+        if (contributionIds.length) {
+            fetchContributions();
+        }
+    }, [contributionIds, fetchContributions]);
 
     const handleOpenCreateContributionModal = paperId => {
         setIsOpenAddContribution(false);
@@ -52,13 +59,8 @@ const BulkContributionEditor = () => {
                     </Button>
                 </div>
                 {contributionIds.length === 0 && <Alert color="info">Start adding contributions by clicking the button on the right</Alert>}
-                {contributionIds.map(id => (
-                    <div key={id}>
-                        {id} <Button onClick={() => handleRemoveContribution(id)}>X</Button>
-                        <br />
-                    </div>
-                ))}
                 <EditorTable data={contributions} />
+                <CreateProperty />
             </Container>
 
             {/* Used conditions to show the modals, to reset the components after closing */}

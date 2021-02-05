@@ -2,10 +2,9 @@ import { CLASSES, PREDICATES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import { uniq } from 'lodash';
 import queryString from 'query-string';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useHistory, useLocation } from 'react-router';
 import { getStatementsByObjectAndPredicate, getStatementsBySubjects } from 'services/backend/statements';
-import { getComparison } from 'services/similarity';
 
 const useBulkContributionEditor = () => {
     const location = useLocation();
@@ -75,13 +74,13 @@ const useBulkContributionEditor = () => {
             const _contributions = await getComparison({ contributionIds, type: 'path', response_hash: null, save_response: false });
             setContributions(_contributions);
         }*/
-    }, [contributionIds, contributions]);
+    }, [contributionIds]);
 
-    useEffect(() => {
+    /*useEffect(() => {
         if (contributionIds.length) {
             fetchContributions();
         }
-    }, [contributionIds, fetchContributions]);
+    }, [contributionIds, fetchContributions]);*/
 
     const handleAddContributions = ids => {
         const idsQueryString = [...contributionIds, ...ids].join(',');
@@ -93,7 +92,7 @@ const useBulkContributionEditor = () => {
         history.push(`${ROUTES.BULK_CONTRIBUTION_EDITOR}?contributions=${idsQueryString}`);
     };
 
-    return { contributionIds, contributions, handleAddContributions, handleRemoveContribution };
+    return { contributionIds, contributions, handleAddContributions, handleRemoveContribution, fetchContributions };
 };
 
 export default useBulkContributionEditor;

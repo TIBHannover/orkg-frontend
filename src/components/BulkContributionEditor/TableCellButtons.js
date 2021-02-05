@@ -11,9 +11,9 @@ const ButtonsContainer = styled.div`
     border-radius: 6px;
 `;
 
-const TableCellValueButtons = ({ isHovering, onEdit, onDelete, backgroundColor }) => {
+const TableCellValueButtons = ({ isHovering, onEdit, onDelete, backgroundColor, style }) => {
     return (
-        <ButtonsContainer style={{ visibility: isHovering ? 'visible' : 'hidden', backgroundColor }}>
+        <ButtonsContainer style={{ visibility: isHovering ? 'visible' : 'hidden', backgroundColor, ...style }}>
             <StatementOptionButton title="Edit" icon={faPen} action={onEdit} />
             <StatementOptionButton
                 requireConfirmation={true}
@@ -21,6 +21,7 @@ const TableCellValueButtons = ({ isHovering, onEdit, onDelete, backgroundColor }
                 confirmationMessage="Are you sure to delete?"
                 icon={faTrash}
                 action={onDelete}
+                appendTo={document.body}
             />
         </ButtonsContainer>
     );
@@ -30,7 +31,12 @@ TableCellValueButtons.propTypes = {
     isHovering: PropTypes.bool,
     onEdit: PropTypes.func,
     onDelete: PropTypes.func,
-    backgroundColor: PropTypes.string
+    backgroundColor: PropTypes.string,
+    style: PropTypes.object
+};
+
+TableCellValueButtons.defaultProps = {
+    style: {}
 };
 
 export default TableCellValueButtons;

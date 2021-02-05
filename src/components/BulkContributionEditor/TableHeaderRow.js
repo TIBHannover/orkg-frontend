@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { predicatesUrl } from 'services/backend/predicates';
 
-const TableRowHeader = ({ property }) => {
+const TableHeaderRow = ({ property }) => {
     const [isHovering, setIsHovering] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
     const [inputValue, setInputValue] = useState(property.label);
@@ -72,8 +72,8 @@ const TableRowHeader = ({ property }) => {
     );
 };
 
-TableRowHeader.propTypes = {
+TableHeaderRow.propTypes = {
     property: PropTypes.object
 };
 
-export default TableRowHeader;
+export default TableHeaderRow;

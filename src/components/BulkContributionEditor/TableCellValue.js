@@ -1,10 +1,10 @@
 import AutoComplete from 'components/Autocomplete/Autocomplete';
 import TableCellButtons from 'components/BulkContributionEditor/TableCellButtons';
 import { ItemInnerSeparator } from 'components/Comparison/TableCell';
-import InputField from 'components/StatementBrowser/InputField/InputField';
 import { CLASSES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
+import { Input } from 'reactstrap';
 import { resourcesUrl } from 'services/backend/resources';
 
 const TableCellValue = ({ value, index, setDisableCreate }) => {
@@ -31,7 +31,7 @@ const TableCellValue = ({ value, index, setDisableCreate }) => {
             </div>
         </>
     ) : (
-        <div style={{ minHeight: 38, paddingTop: 4 }}>
+        <div>
             {value.type === 'resource' && (
                 <AutoComplete
                     requestUrl={resourcesUrl}
@@ -64,14 +64,7 @@ const TableCellValue = ({ value, index, setDisableCreate }) => {
                 />
             )}
             {value.type === 'literal' && (
-                <InputField
-                    components={[]}
-                    inputValue={inputValue}
-                    setInputValue={setInputValue}
-                    onKeyDown={e => (e.keyCode === 13 || e.keyCode === 27) && e.target.blur()} // stop editing on enter and escape
-                    onBlur={handleStopEdit}
-                    isValid={true}
-                />
+                <Input type="text" bsSize="sm" value={inputValue} autoFocus onChange={setInputValue} onBlur={handleStopEdit} />
             )}
         </div>
     );

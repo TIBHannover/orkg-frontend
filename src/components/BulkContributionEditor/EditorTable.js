@@ -1,16 +1,10 @@
-import { faTimes } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import TableCell from 'components/BulkContributionEditor/TableCell';
-import TableCellButtons from 'components/BulkContributionEditor/TableCellButtons';
-import TableColumnHeader from 'components/BulkContributionEditor/TableColumnHeader';
-import TableRowHeader from 'components/BulkContributionEditor/TableRowHeader';
-import { Contribution, Delete, ItemHeader, ItemHeaderInner, Properties, PropertiesInner, ReactTableWrapper } from 'components/Comparison/styled';
-import ROUTES from 'constants/routes';
+import TableHeaderColumn from 'components/BulkContributionEditor/TableHeaderColumn';
+import TableHeaderRow from 'components/BulkContributionEditor/TableHeaderRow';
+import { Properties, PropertiesInner, ReactTableWrapper } from 'components/Comparison/styled';
 import { functions, isEqual, omit } from 'lodash';
-import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import { memo, useRef } from 'react';
-import { Link } from 'react-router-dom';
 import { ScrollSync, ScrollSyncPane } from 'react-scroll-sync';
 import ReactTable from 'react-table';
 import withFixedColumnsScrollEvent from 'react-table-hoc-fixed-columns';
@@ -104,22 +98,16 @@ const EditorTable = props => {
                 ),
                 accessor: 'property',
                 fixed: 'left',
-                Cell: cell => <TableRowHeader property={cell.value} />,
+                Cell: cell => <TableHeaderRow property={cell.value} />,
                 width: 250
             },
             ...Object.keys(props.data.contributions).map((contributionId, i) => {
                 const contribution = props.data.contributions[contributionId];
                 return {
                     id: contribution.id,
-                    Header: () => <TableColumnHeader contribution={contribution} key={contribution.id} />,
-                    accessor: d => {
-                        return d.values[i];
-                    },
-                    Cell: cell => {
-                        const values = cell.value;
-
-                        return <TableCell values={cell.value} />;
-                    },
+                    Header: () => <TableHeaderColumn contribution={contribution} key={contribution.id} />,
+                    accessor: d => d.values[i],
+                    Cell: cell => <TableCell values={cell.value} />,
                     width: 250
                 };
             })
@@ -128,39 +116,35 @@ const EditorTable = props => {
 
     const handleScrollCallback = () => {};
 
+    const TheadComponent = component => (
+        <ScrollSyncPane group="one">
+            <div ref={scrollContainerHead} className="disable-scrollbars" style={{ overflow: 'auto', top: '71px', position: 'sticky', zIndex: '3' }}>
+                <div className={`comparison-thead ${component.className}`} style={component.style}>
+                    {component.children}
+                </div>
+            </div>
+        </ScrollSyncPane>
+    );
+
+    const TbodyComponent = component => (
+        <ScrollSyncPane group="one">
+            {/* paddingBottom for the 'add value' bottom, which is positioned partially below the table */}
+            <div style={{ overflow: 'auto', paddingBottom: 15 }}>
+                {' '}
+                {/*ref={props.scrollContainerBody}  */}
+                <div className={`rt-tbody ${component.className}`} style={component.style}>
+                    {component.children}
+                </div>
+            </div>
+        </ScrollSyncPane>
+    );
+
     return (
         <ReactTableWrapper className="bulk-editor">
             <ScrollSync onSync={handleScrollCallback}>
                 <ReactTableFixedColumns
-                    TheadComponent={component => {
-                        return (
-                            <ScrollSyncPane group="one">
-                                <div
-                                    ref={scrollContainerHead}
-                                    className="disable-scrollbars"
-                                    style={{ overflow: 'auto', top: '71px', position: 'sticky', zIndex: '3' }}
-                                >
-                                    <div className={`comparison-thead ${component.className}`} style={component.style}>
-                                        {component.children}
-                                    </div>
-                                </div>
-                            </ScrollSyncPane>
-                        );
-                    }}
-                    TbodyComponent={component => {
-                        return (
-                            <ScrollSyncPane group="one">
-                                {/* paddingBottom for the 'add value' bottom, which is positioned partially below the table */}
-                                <div style={{ overflow: 'auto', paddingBottom: 15 }}>
-                                    {' '}
-                                    {/*ref={props.scrollContainerBody}  */}
-                                    <div className={`rt-tbody ${component.className}`} style={component.style}>
-                                        {component.children}
-                                    </div>
-                                </div>
-                            </ScrollSyncPane>
-                        );
-                    }}
+                    TheadComponent={TheadComponent}
+                    TbodyComponent={TbodyComponent}
                     getProps={() => customProps}
                     resizable={false}
                     sortable={false}
@@ -168,7 +152,7 @@ const EditorTable = props => {
                     data={data}
                     columns={columns}
                     style={{
-                        height: 'max-content' // This will force the table body to overflow and scroll, since there is not enough room
+                        height: 'max-content'
                     }}
                     showPagination={false}
                 />

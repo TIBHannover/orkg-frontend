@@ -120,6 +120,7 @@ class StatementOptionButton extends Component {
                     onHide={this.onHide}
                     onCreate={this.onCreate}
                     interactive={true}
+                    appendTo={this.props.appendTo}
                     trigger="click"
                     content={
                         <div className="text-center p-1" style={{ color: '#fff', fontSize: '0.95rem', wordBreak: 'normal' }}>
@@ -173,11 +174,13 @@ StatementOptionButton.propTypes = {
     requireConfirmation: PropTypes.bool,
     confirmationMessage: PropTypes.string,
     onVisibilityChange: PropTypes.func,
-    isDisabled: PropTypes.bool
+    isDisabled: PropTypes.bool,
+    appendTo: PropTypes.oneOfType([PropTypes.object, PropTypes.string])
 };
 
 StatementOptionButton.defaultProps = {
-    requireConfirmation: false
+    requireConfirmation: false,
+    appendTo: 'parent'
 };
 
 export default StatementOptionButton;
