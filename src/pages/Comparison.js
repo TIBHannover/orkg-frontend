@@ -223,7 +223,7 @@ function Comparison(props) {
                                     }}
                                     style={{ marginRight: 3 }}
                                 >
-                                    <Icon icon={faChartBar} /> Add visualization
+                                    <Icon icon={faChartBar} /> Visualize
                                 </Button>
                             ) : (
                                 <Tippy
