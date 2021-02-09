@@ -34,6 +34,10 @@ const CellVE = props => {
 
     const cellValueDoubleClicked = () => {
         props.tippySource.data.instance.disable();
+        // disable cell value edit **This is a draft**
+        if (props.type === 'value') {
+            return;
+        }
         setRenderingItem('input');
     };
     const cellValueChanged = event => {
