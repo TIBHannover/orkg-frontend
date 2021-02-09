@@ -313,7 +313,7 @@ function Comparison(props) {
                                             tag="a"
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            href={`https://mybinder.org/v2/gl/reddine%2Forkg-notebooks/HEAD?urlpath=notebooks%2Fcomparison%2Fcomparison.ipynb%3Fcomparison_id%3D%22${metaData.id}%22%26autorun%3Dtrue`}
+                                            href={`https://mybinder.org/v2/gl/TIBHannover%2Forkg%2Forkg-notebook-boilerplate/HEAD?urlpath=notebooks%2FComparison.ipynb%3Fcomparison_id%3D%22${metaData.id}%22%26autorun%3Dtrue`}
                                         >
                                             Jupyter Notebook <Icon size="sm" icon={faExternalLinkAlt} />
                                         </DropdownItem>
