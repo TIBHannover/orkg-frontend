@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Input, FormFeedback, Label, Button, Col, FormGroup } from 'reactstrap';
 import PropTypes from 'prop-types';
+import { FILTER_TYPES } from 'constants/comparisonFilterTypes';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faRedoAlt } from '@fortawesome/free-solid-svg-icons';
 import CreatableSelect from 'react-select/creatable';
@@ -47,15 +48,15 @@ const OrdinalFilterRule = props => {
 
     const minPlaceHolder = typeIsDate ? 'yyyy-mm-dd' : 'min';
     const minLabel = typeIsDate ? 'is after or at the same date' : 'is greater than or equal to';
-    const minRuleType = typeIsDate ? 'gteDate' : 'gte';
+    const minRuleType = typeIsDate ? FILTER_TYPES.GTE_DATE : FILTER_TYPES.GTE;
 
     const maxPlaceHolder = typeIsDate ? 'yyyy-mm-dd' : 'max';
     const maxLabel = typeIsDate ? 'is before or at the same date' : 'is less than or equal to';
-    const maxRuleType = typeIsDate ? 'lteDate' : 'lte';
+    const maxRuleType = typeIsDate ? FILTER_TYPES.LTE_DATE : FILTER_TYPES.LTE;
 
     const nEqPlaceHolder = typeIsDate ? 'date1,date2,...' : 'value1,value2,...';
     const nEqLabel = 'not equal to';
-    const nEqRuleType = typeIsDate ? 'nEqDate' : 'nEq';
+    const nEqRuleType = typeIsDate ? FILTER_TYPES.NEQ_DATE : FILTER_TYPES.NEQ;
 
     const invalidText = typeIsDate ? 'should match the format: yyyy-mm-dd' : 'should be Number';
     const validateFunc = str => (typeIsDate ? isDate(str) : isNum(str));

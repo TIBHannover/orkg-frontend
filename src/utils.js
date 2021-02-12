@@ -3,6 +3,7 @@ import queryString from 'query-string';
 import { flattenDepth, uniq } from 'lodash';
 import rdf from 'rdf';
 import { PREDICATES, MISC } from 'constants/graphSettings';
+import { FILTER_TYPES } from 'constants/comparisonFilterTypes';
 import { isString } from 'lodash';
 
 export function hashCode(s) {
@@ -804,22 +805,26 @@ export function truncStringPortion(str, firstCharCount = str.length, endCharCoun
  * @return {String} String
  */
 export const stringifyType = type => {
-    if (type === 'oneOf') {
-        return 'is One of:';
-    } else if (type === 'gte') {
-        return '>=';
-    } else if (type === 'gteDate') {
-        return 'is after:';
-    } else if (type === 'lte') {
-        return '<=';
-    } else if (type === 'nEqDate' || type === 'nEq') {
-        return '!=';
-    } else if (type === 'lteDate') {
-        return 'is before:';
-    } else if (type === 'inc') {
-        return 'includes one of:';
+    switch (type) {
+        case FILTER_TYPES.ONE_OF:
+            return 'is One of:';
+        case FILTER_TYPES.GTE:
+            return '>=';
+        case FILTER_TYPES.GTE_DATE:
+            return 'is after:';
+        case FILTER_TYPES.LTE:
+            return '<=';
+        case FILTER_TYPES.NEQ_DATE:
+            return '!=';
+        case FILTER_TYPES.NEQ:
+            return '!=';
+        case FILTER_TYPES.LTE_DATE:
+            return 'is before:';
+        case FILTER_TYPES.INC:
+            return 'includes one of:';
+        default:
+            return type;
     }
-    return type;
 };
 
 /**
@@ -912,19 +917,24 @@ const applyInc = ({ filterControlData, propertyId, value }) => {
 };
 
 export const applyRule = ({ filterControlData, type, propertyId, value }) => {
-    if (type === 'oneOf') {
-        return applyOneOf({ filterControlData, propertyId, value });
-    } else if (type === 'gte') {
-        return applyGte({ filterControlData, propertyId, value });
-    } else if (type === 'lte') {
-        return applyLte({ filterControlData, propertyId, value });
-    } else if (type === 'gteDate') {
-        return applyGteDate({ filterControlData, propertyId, value });
-    } else if (type === 'lteDate') {
-        return applyLteDate({ filterControlData, propertyId, value });
-    } else if (type === 'nEqDate' || type === 'nEq') {
-        return applyNotEq({ filterControlData, propertyId, value });
-    } else if (type === 'inc') {
-        return applyInc({ filterControlData, propertyId, value });
+    switch (type) {
+        case FILTER_TYPES.ONE_OF:
+            return applyOneOf({ filterControlData, propertyId, value });
+        case FILTER_TYPES.GTE:
+            return applyGte({ filterControlData, propertyId, value });
+        case FILTER_TYPES.GTE_DATE:
+            return applyGteDate({ filterControlData, propertyId, value });
+        case FILTER_TYPES.LTE:
+            return applyLte({ filterControlData, propertyId, value });
+        case FILTER_TYPES.NEQ_DATE:
+            return applyNotEq({ filterControlData, propertyId, value });
+        case FILTER_TYPES.NEQ:
+            return applyNotEq({ filterControlData, propertyId, value });
+        case FILTER_TYPES.LTE_DATE:
+            return applyLteDate({ filterControlData, propertyId, value });
+        case FILTER_TYPES.INC:
+            return applyInc({ filterControlData, propertyId, value });
+        default:
+            return [];
     }
 };

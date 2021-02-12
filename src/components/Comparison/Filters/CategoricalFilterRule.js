@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { CustomInput, Button, Badge } from 'reactstrap';
 import PropTypes from 'prop-types';
+import { FILTER_TYPES } from 'constants/comparisonFilterTypes';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faRedoAlt } from '@fortawesome/free-solid-svg-icons';
 
@@ -20,7 +21,7 @@ const CategoricalFilterRule = props => {
     const vals = Object.keys(values)
         .map(key => ({
             label: key,
-            checked: rules.filter(item => item.propertyId === propertyId && item.type === 'oneOf' && item.value.includes(key)).length > 0
+            checked: rules.filter(item => item.propertyId === propertyId && item.type === FILTER_TYPES.ONE_OF && item.value.includes(key)).length > 0
         }))
         .sort((a, b) => a.label.localeCompare(b.label));
 
@@ -28,7 +29,7 @@ const CategoricalFilterRule = props => {
 
     const calRules = list => {
         const checkedList = list.filter(item => item.checked);
-        return checkedList.length > 0 ? [{ propertyId, propertyName, type: 'oneOf', value: checkedList.map(({ label }) => label) }] : [];
+        return checkedList.length > 0 ? [{ propertyId, propertyName, type: FILTER_TYPES.ONE_OF, value: checkedList.map(({ label }) => label) }] : [];
     };
 
     const handleCheckboxChange = event => {
