@@ -92,10 +92,11 @@ const CellEditor = props => {
             {/* This is the tippy that gets used as the tippyTarget */}
             <Tippy
                 singleton={source}
-                delay={500}
+                delay={700}
                 interactive={true}
-                interactiveDebounce={75}
+                interactiveDebounce={10}
                 interactiveBorder={10}
+                offset={[0, 0]}
                 moveTransition="transform 0.8s cubic-bezier(0.22, 1, 0.36, 1)"
             />
             <Alert color="info" fade={false}>

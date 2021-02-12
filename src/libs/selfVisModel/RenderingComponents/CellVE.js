@@ -35,9 +35,7 @@ const CellVE = props => {
     const cellValueDoubleClicked = () => {
         props.tippySource.data.instance.disable();
         // disable cell value edit **This is a draft**
-        if (props.type === 'value') {
-            return;
-        }
+
         setRenderingItem('input');
     };
     const cellValueChanged = event => {
@@ -96,7 +94,7 @@ const CellVE = props => {
                       (props.data.originalLabel ?? 'Empty')}
                 {props.data.label !== props.data.originalLabel && (
                     <div className="text-center">
-                        <Button size="sm" onClick={cellUndoChange}>
+                        <Button size="sm" onClick={cellUndoChange} style={{ padding: '4px 8px' }}>
                             <Icon size="sm" icon={faUndo} /> Undo
                         </Button>
                     </div>
@@ -107,7 +105,7 @@ const CellVE = props => {
                 {props.data.label === props.data.originalLabel ? props.data.label : props.data.originalLabel + ' >> ' + props.data.label}
                 {props.data.label !== props.data.originalLabel && (
                     <div className="text-center">
-                        <Button size="sm" onClick={cellUndoChange}>
+                        <Button size="sm" onClick={cellUndoChange} style={{ padding: '4px 8px' }}>
                             <Icon size="sm" icon={faUndo} /> Undo
                         </Button>
                     </div>
