@@ -22,7 +22,7 @@ const FilterIcon = styled(Icon)`
     }
 `;
 
-const PropertyValue = ({ id, label, similar, data, filterControlData, updateRulesOfProperty }) => {
+const PropertyValue = ({ id, label, similar, filterControlData, updateRulesOfProperty }) => {
     const [showStatementBrowser, setShowStatementBrowser] = useState(false);
     const [showFilterDialog, setShowFilterDialog] = useState(false);
 
@@ -34,18 +34,13 @@ const PropertyValue = ({ id, label, similar, data, filterControlData, updateRule
         setShowStatementBrowser(true);
     };
 
-    const getValuesNr = values => {
-        return new Set(
-            []
-                .concat(...values)
-                .map(item => item.label)
-                .filter(truthy => truthy)
-        ).size;
+    const getValuesNr = () => {
+        return Object.keys(getValuesByPropertyLabel(id).values).length;
     };
 
     const filterIconClasses = classNames({
-        'd-block': getValuesNr(data[id]) > 1,
-        'd-none': getValuesNr(data[id]) <= 1,
+        'd-block': getValuesNr() > 1,
+        'd-none': getValuesNr() <= 1,
         active: getRuleByProperty(filterControlData, id).length > 0
     });
 
@@ -90,7 +85,6 @@ PropertyValue.propTypes = {
     label: PropTypes.string.isRequired,
     id: PropTypes.string.isRequired,
     similar: PropTypes.array,
-    data: PropTypes.object.isRequired,
     filterControlData: PropTypes.array.isRequired,
     updateRulesOfProperty: PropTypes.func.isRequired
 };
