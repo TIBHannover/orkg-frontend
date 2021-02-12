@@ -127,7 +127,7 @@ const CellVE = props => {
                                     cellValueDoubleClicked();
                                 }}
                             >
-                                {props.data.label}
+                                {props.data.label !== props.data.originalLabel ? <b>{props.data.label}</b> : props.data.label}
                             </PropertyCellEditor>
                         )}
                         {props.type === 'property' && renderingItem === 'input' && (
@@ -157,7 +157,7 @@ const CellVE = props => {
                                     cellValueDoubleClicked();
                                 }}
                             >
-                                {props.data.label}
+                                {props.data.label !== props.data.originalLabel ? <b>{props.data.label}</b> : props.data.label}
                             </ContributionCell>
                         )}
                         {props.type === 'contribution' && renderingItem === 'input' && (
@@ -188,7 +188,7 @@ const CellVE = props => {
                                     cellValueDoubleClicked();
                                 }}
                             >
-                                {props.data.label}
+                                {props.data.label !== props.data.originalLabel ? <b>{props.data.label}</b> : props.data.label}
                             </ValueCellValidator>
                         )}
                         {props.type === 'value' && renderingItem === 'input' && (
