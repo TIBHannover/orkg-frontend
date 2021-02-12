@@ -843,7 +843,16 @@ export const getRuleByProperty = (filterControlData, propertyId) => filterContro
  * @param {String} propertyId Property ID
  * @return {Array} values
  */
-const getValuesByProperty = (filterControlData, propertyId) => filterControlData.find(item => item.property.id === propertyId).values;
+export const getValuesByProperty = (filterControlData, propertyId) => filterControlData.find(item => item.property.id === propertyId).values;
+
+/**
+ * get data for each property
+ *
+ * @param {Array} filterControlData filters array
+ * @param {String} propertyId Property ID
+ * @return {Array} Data of the property
+ */
+export const getDataByProperty = (filterControlData, propertyId) => filterControlData.find(item => item.property.id === propertyId);
 
 /**
  * Check if the filters is empty

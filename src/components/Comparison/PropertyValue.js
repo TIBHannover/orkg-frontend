@@ -7,7 +7,7 @@ import FilterWrapper from 'components/Comparison/Filters/FilterWrapper';
 import FilterModal from 'components/Comparison/Filters/FilterModal';
 import { faFilter } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { getRuleByProperty } from 'utils';
+import { getRuleByProperty, getValuesByProperty, getDataByProperty } from 'utils';
 import styled from 'styled-components';
 import { upperFirst } from 'lodash';
 import PropTypes from 'prop-types';
@@ -26,8 +26,6 @@ const PropertyValue = ({ id, label, similar, filterControlData, updateRulesOfPro
     const [showStatementBrowser, setShowStatementBrowser] = useState(false);
     const [showFilterDialog, setShowFilterDialog] = useState(false);
 
-    const getValuesByPropertyLabel = inputId => filterControlData.find(item => item.property.id === inputId);
-
     const updateRulesFactory = newRules => updateRulesOfProperty(newRules, id);
 
     const handleOpenStatementBrowser = () => {
@@ -35,7 +33,7 @@ const PropertyValue = ({ id, label, similar, filterControlData, updateRulesOfPro
     };
 
     const getValuesNr = () => {
-        return Object.keys(getValuesByPropertyLabel(id).values).length;
+        return Object.keys(getValuesByProperty(filterControlData, id)).length;
     };
 
     const filterIconClasses = classNames({
@@ -68,7 +66,7 @@ const PropertyValue = ({ id, label, similar, filterControlData, updateRulesOfPro
             </FilterWrapper>
 
             <FilterModal
-                data={getValuesByPropertyLabel(id)}
+                data={getDataByProperty(filterControlData, id)}
                 updateRulesOfProperty={updateRulesFactory}
                 showFilterDialog={showFilterDialog}
                 toggleFilterDialog={() => setShowFilterDialog(v => !v)}
