@@ -110,7 +110,6 @@ const ComparisonTable = props => {
                             <Properties className="columnProperty">
                                 <PropertiesInner className="d-flex flex-row align-items-start justify-content-between" cellPadding={cellPadding}>
                                     <PropertyValue
-                                        data={props.data}
                                         filterControlData={props.filterControlData}
                                         updateRulesOfProperty={props.updateRulesOfProperty}
                                         similar={cell.value.similar}
@@ -200,7 +199,6 @@ const ComparisonTable = props => {
                                               transpose={props.transpose}
                                           >
                                               <PropertyValue
-                                                  data={props.data}
                                                   filterControlData={props.filterControlData}
                                                   updateRulesOfProperty={props.updateRulesOfProperty}
                                                   similar={property.similar}
