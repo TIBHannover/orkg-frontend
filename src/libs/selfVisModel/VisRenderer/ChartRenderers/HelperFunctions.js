@@ -80,6 +80,7 @@ const createIntervalDropDownSelectors = (ref, id, interval_id, possibleValueCand
     const itemsArray = extended.map((pvc, pvc_id) => {
         return (
             <DropdownItem
+                className="text-truncate mw-100"
                 key={'N_XSelectionDropdownItemIndexKey_' + id + '_' + interval_id + '_' + pvc_id}
                 onClick={() => {
                     const intervalSelectors = ref.state.yAxisInterValSelectors;
@@ -87,7 +88,22 @@ const createIntervalDropDownSelectors = (ref, id, interval_id, possibleValueCand
                     ref.setState({ yAxisInterValSelectors: intervalSelectors });
                 }}
             >
-                {pvc.label}
+                {/*qnd text length handler */}
+
+                <Tippy content={pvc.label} placement="right" disabled={pvc.label.length < 30}>
+                    <span
+                        className="d-inline-block"
+                        style={{
+                            maxWidth: '220px',
+                            overflow: 'hidden',
+                            lineHeight: '1.5',
+                            whiteSpace: 'nowrap',
+                            textOverflow: 'ellipsis'
+                        }}
+                    >
+                        {pvc.label}
+                    </span>
+                </Tippy>
             </DropdownItem>
         );
     });
@@ -108,7 +124,24 @@ const createIntervalDropDownSelectors = (ref, id, interval_id, possibleValueCand
             }}
         >
             <DropdownToggle caret color="darkblue" className="text-truncate mw-100">
-                {ref.state.yAxisInterValSelectors[id][interval_id].label}
+                <Tippy
+                    content={ref.state.yAxisInterValSelectors[id][interval_id].label}
+                    placement="right"
+                    disabled={ref.state.yAxisInterValSelectors[id][interval_id].label.length < 30}
+                >
+                    <span
+                        className="d-inline-block"
+                        style={{
+                            maxWidth: '150px',
+                            overflow: 'hidden',
+                            lineHeight: '1.5',
+                            whiteSpace: 'nowrap',
+                            textOverflow: 'ellipsis'
+                        }}
+                    >
+                        {ref.state.yAxisInterValSelectors[id][interval_id].label}
+                    </span>
+                </Tippy>
             </DropdownToggle>
             <DropdownMenu>{itemsArray}</DropdownMenu>
         </Dropdown>
@@ -160,7 +193,20 @@ export const createValueSelectors = ref => {
                             ref.setState({ yAxisSelector: yAxisSelector });
                         }}
                     >
-                        {item.label}
+                        <Tippy content={item.label} placement="right" disabled={item.label.length < 30}>
+                            <span
+                                className="d-inline-block"
+                                style={{
+                                    maxWidth: '220px',
+                                    overflow: 'hidden',
+                                    lineHeight: '1.5',
+                                    whiteSpace: 'nowrap',
+                                    textOverflow: 'ellipsis'
+                                }}
+                            >
+                                {item.label}
+                            </span>
+                        </Tippy>
                     </DropdownItem>
                 );
             });
@@ -200,16 +246,29 @@ export const createValueSelectors = ref => {
                                 });
                             }}
                         >
-                            <DropdownToggle caret color="darkblue" className="text-truncate mw-100">
-                                <span
-                                    style={{
-                                        maxWidth: '100px',
-                                        overflow: 'hidden',
-                                        lineHeight: '1.5'
-                                    }}
+                            <DropdownToggle caret color="darkblue" className="text-truncate mw-100 ">
+                                <Tippy
+                                    content={ref.state.yAxisSelector[id] ? ref.state.yAxisSelector[id] : possibleValueCandidates[0].label}
+                                    placement="right"
+                                    disabled={
+                                        ref.state.yAxisSelector[id]
+                                            ? ref.state.yAxisSelector[id].length < 30
+                                            : possibleValueCandidates[0].label.length < 30
+                                    }
                                 >
-                                    {ref.state.yAxisSelector[id] ? ref.state.yAxisSelector[id] : possibleValueCandidates[0].label}
-                                </span>
+                                    <span
+                                        className="d-inline-block"
+                                        style={{
+                                            maxWidth: '150px',
+                                            overflow: 'hidden',
+                                            lineHeight: '1.5',
+                                            whiteSpace: 'nowrap',
+                                            textOverflow: 'ellipsis'
+                                        }}
+                                    >
+                                        {ref.state.yAxisSelector[id] ? ref.state.yAxisSelector[id] : possibleValueCandidates[0].label}
+                                    </span>
+                                </Tippy>
                             </DropdownToggle>
                             <DropdownMenu>{itemsArray[id]}</DropdownMenu>
                         </Dropdown>
@@ -262,7 +321,20 @@ export const createLabelSelectors = ref => {
                         ref.setState({ xAxisSelector: item.label });
                     }}
                 >
-                    {item.label}
+                    <Tippy content={item.label} placement="right" disabled={item.label.length < 30}>
+                        <span
+                            className="d-inline-block"
+                            style={{
+                                maxWidth: '150px',
+                                overflow: 'hidden',
+                                lineHeight: '1.5',
+                                whiteSpace: 'nowrap',
+                                textOverflow: 'ellipsis'
+                            }}
+                        >
+                            {item.label}
+                        </span>
+                    </Tippy>
                 </DropdownItem>
             );
         });
@@ -282,7 +354,24 @@ export const createLabelSelectors = ref => {
                 }}
             >
                 <DropdownToggle caret color="darkblue" className="text-truncate mw-100">
-                    {ref.state.xAxisSelector ? ref.state.xAxisSelector : possibleLabelCandidates[0].label}
+                    <Tippy
+                        content={ref.state.xAxisSelector ? ref.state.xAxisSelector : possibleLabelCandidates[0].label}
+                        placement="right"
+                        disabled={ref.state.xAxisSelector ? ref.state.xAxisSelector.length < 30 : possibleLabelCandidates[0].label.length < 30}
+                    >
+                        <span
+                            className="d-inline-block"
+                            style={{
+                                maxWidth: '150px',
+                                overflow: 'hidden',
+                                lineHeight: '1.5',
+                                whiteSpace: 'nowrap',
+                                textOverflow: 'ellipsis'
+                            }}
+                        >
+                            {ref.state.xAxisSelector ? ref.state.xAxisSelector : possibleLabelCandidates[0].label}
+                        </span>
+                    </Tippy>
                 </DropdownToggle>
                 <DropdownMenu>{items}</DropdownMenu>
             </Dropdown>
