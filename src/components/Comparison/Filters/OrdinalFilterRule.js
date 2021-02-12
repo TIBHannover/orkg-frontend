@@ -40,7 +40,7 @@ const createOption = label => ({
 
 const OrdinalFilterRule = props => {
     //change apply and reset
-    const { property, rules, updateRules, typeIsDate, DATE_FORMAT, toggleFilterDialog } = props.dataController;
+    const { property, rules, updateRulesOfProperty, typeIsDate, DATE_FORMAT, toggleFilterDialog } = props.dataController;
     const { label: propertyName, id: propertyId } = property;
 
     const type = typeIsDate ? 'datetime' : 'number';
@@ -138,7 +138,7 @@ const OrdinalFilterRule = props => {
     };
 
     const handleApply = () => {
-        updateRules(calRules(minInput, maxInput, [...nEqValue, createOption(nEqInputValue)]));
+        updateRulesOfProperty(calRules(minInput, maxInput, [...nEqValue, createOption(nEqInputValue)]));
         toggleFilterDialog();
     };
 

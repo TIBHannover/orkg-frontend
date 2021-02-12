@@ -832,9 +832,99 @@ export const stringifyType = type => {
 export const getRuleByProperty = (filterControlData, propertyId) => filterControlData.find(item => item.property.id === propertyId).rules;
 
 /**
+ * get Values by property
+ *
+ * @param {Array} filterControlData filters array
+ * @param {String} propertyId Property ID
+ * @return {Array} values
+ */
+const getValuesByProperty = (filterControlData, propertyId) => filterControlData.find(item => item.property.id === propertyId).values;
+
+/**
  * Check if the filters is empty
  *
  * @param {Array} data filters array
  * @return {Boolean} Whether the filters are empty or not
  */
 export const areAllRulesEmpty = data => [].concat(...data.map(item => item.rules)).length > 0;
+
+/**
+ * Comparison filter rules applying
+ *
+ */
+const applyOneOf = ({ filterControlData, propertyId, value }) => {
+    const data = getValuesByProperty(filterControlData, propertyId);
+    return [].concat(...value.map(key => data[key]));
+};
+
+const applyGte = ({ filterControlData, propertyId, value }) => {
+    const data = getValuesByProperty(filterControlData, propertyId);
+    return [].concat(
+        ...Object.keys(data)
+            .filter(key => parseFloat(key) >= parseFloat(value))
+            .map(key => data[key])
+    );
+};
+
+const applyLte = ({ filterControlData, propertyId, value }) => {
+    const data = getValuesByProperty(filterControlData, propertyId);
+    return [].concat(
+        ...Object.keys(data)
+            .filter(key => parseFloat(key) <= parseFloat(value))
+            .map(key => data[key])
+    );
+};
+
+const applyGteDate = ({ filterControlData, propertyId, value }) => {
+    const data = getValuesByProperty(filterControlData, propertyId);
+    return [].concat(
+        ...Object.keys(data)
+            .filter(key => key >= value)
+            .map(key => data[key])
+    );
+};
+
+const applyLteDate = ({ filterControlData, propertyId, value }) => {
+    const data = getValuesByProperty(filterControlData, propertyId);
+    return [].concat(
+        ...Object.keys(data)
+            .filter(key => key <= value)
+            .map(key => data[key])
+    );
+};
+
+const applyNotEq = ({ filterControlData, propertyId, value }) => {
+    const data = getValuesByProperty(filterControlData, propertyId);
+    return [].concat(
+        ...Object.keys(data)
+            .filter(key => !value.includes(parseFloat(key)))
+            .map(key => data[key])
+    );
+};
+
+const applyInc = ({ filterControlData, propertyId, value }) => {
+    const data = getValuesByProperty(filterControlData, propertyId);
+    return [].concat(
+        ...Object.keys(data)
+            .filter(key => value.filter(val => key.includes(val)).length > 0)
+            .map(key => data[key])
+    );
+};
+
+export const applyRule = ({ filterControlData, type, propertyId, value }) => {
+    if (type === 'oneOf') {
+        return applyOneOf({ filterControlData, propertyId, value });
+    } else if (type === 'gte') {
+        return applyGte({ filterControlData, propertyId, value });
+    } else if (type === 'lte') {
+        return applyLte({ filterControlData, propertyId, value });
+    } else if (type === 'gteDate') {
+        return applyGteDate({ filterControlData, propertyId, value });
+    } else if (type === 'lteDate') {
+        return applyLteDate({ filterControlData, propertyId, value });
+    } else if (type === 'nEqDate' || type === 'nEq') {
+        return applyNotEq({ filterControlData, propertyId, value });
+    } else if (type === 'inc') {
+        return applyInc({ filterControlData, propertyId, value });
+    }
+};

@@ -74,7 +74,7 @@ function Comparison(props) {
         toggleTranspose,
         removeContribution,
         addContributions,
-        updateRules,
+        updateRulesOfProperty,
         removeRule,
         generateUrl,
         setResponseHash,
@@ -457,7 +457,7 @@ function Comparison(props) {
                                             transpose={transpose}
                                             viewDensity={viewDensity}
                                             filterControlData={filterControlData}
-                                            updateRules={updateRules}
+                                            updateRulesOfProperty={updateRulesOfProperty}
                                         />
                                     </div>
                                 ) : (

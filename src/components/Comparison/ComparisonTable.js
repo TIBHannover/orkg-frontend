@@ -112,7 +112,7 @@ const ComparisonTable = props => {
                                     <PropertyValue
                                         data={props.data}
                                         filterControlData={props.filterControlData}
-                                        updateRules={props.updateRules}
+                                        updateRulesOfProperty={props.updateRulesOfProperty}
                                         similar={cell.value.similar}
                                         label={cell.value.label}
                                         id={cell.value.id}
@@ -202,7 +202,7 @@ const ComparisonTable = props => {
                                               <PropertyValue
                                                   data={props.data}
                                                   filterControlData={props.filterControlData}
-                                                  updateRules={props.updateRules}
+                                                  updateRulesOfProperty={props.updateRulesOfProperty}
                                                   similar={property.similar}
                                                   label={property.label}
                                                   id={property.id}
@@ -237,7 +237,7 @@ ComparisonTable.propTypes = {
     viewDensity: PropTypes.oneOf(['spacious', 'normal', 'compact']),
     scrollContainerBody: PropTypes.object.isRequired,
     filterControlData: PropTypes.array.isRequired,
-    updateRules: PropTypes.func.isRequired
+    updateRulesOfProperty: PropTypes.func.isRequired
 };
 
 export default memo(ComparisonTable, compareProps);

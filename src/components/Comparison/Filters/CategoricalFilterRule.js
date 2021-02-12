@@ -5,7 +5,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faRedoAlt } from '@fortawesome/free-solid-svg-icons';
 
 const CategoricalFilterRule = props => {
-    const { property, values, rules, updateRules, toggleFilterDialog } = props.dataController;
+    const { property, values, rules, updateRulesOfProperty, toggleFilterDialog } = props.dataController;
     const { label: propertyName, id: propertyId } = property;
 
     const DEFAULT_MAX_CATEGORIES = 15;
@@ -52,7 +52,7 @@ const CategoricalFilterRule = props => {
         setCategoricalValues(vals.map(value => ({ ...value, checked: false })));
     };
     const handleApply = () => {
-        updateRules(calRules(categoricalValues));
+        updateRulesOfProperty(calRules(categoricalValues));
         toggleFilterDialog();
     };
 

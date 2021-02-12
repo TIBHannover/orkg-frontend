@@ -11,7 +11,8 @@ import {
     filterSubjectOfStatementsByPredicate,
     getArrayParamFromQueryString,
     getParamFromQueryString,
-    get_error_message
+    get_error_message,
+    applyRule
 } from 'utils';
 import { useParams, useLocation, useHistory } from 'react-router-dom';
 import { PREDICATES, CLASSES, MISC } from 'constants/graphSettings';
@@ -86,7 +87,7 @@ function useComparison() {
     const [contributionsList, setContributionsList] = useState([]);
     const [predicatesList, setPredicatesList] = useState([]);
 
-    //
+    // reference to previous comparison type
     const prevComparisonType = usePrevious(comparisonType);
 
     // loading indicators
@@ -345,10 +346,13 @@ function useComparison() {
         return controlData;
     };
 
-    const getValuesByPropertyLabel = inputId => filterControlData.find(item => item.property.id === inputId);
-
-    //**rules Setter and getter */
-    const updateRules = (newRules, propertyId) => {
+    /**
+     * Update filter control data of a property
+     *
+     * @param {Array} rules Array of rules
+     * @param {Array} propertyId property ID
+     */
+    const updateRulesOfProperty = (newRules, propertyId) => {
         setFilterControlData(pervState => {
             const newState = [...pervState];
             const toChangeIndex = newState.findIndex(item => item.property.id === propertyId);
@@ -360,6 +364,13 @@ function useComparison() {
         });
     };
 
+    /**
+     * Remove a rule from filter control data of a property
+     *
+     * @param {Array} propertyId property ID
+     * @param {String} type Filter type
+     * @param {String} value Filter value
+     */
     const removeRule = ({ propertyId, type, value }) => {
         setFilterControlData(pervState => {
             const newState = [...pervState];
@@ -372,89 +383,16 @@ function useComparison() {
         });
     };
 
-    /** rules applying */
-    const applyOneOf = ({ propertyId, value }) => {
-        const data = getValuesByPropertyLabel(propertyId).values;
-        return [].concat(...value.map(key => data[key]));
-    };
-
-    const applyGte = ({ propertyId, value }) => {
-        const data = getValuesByPropertyLabel(propertyId).values;
-        return [].concat(
-            ...Object.keys(data)
-                .filter(key => parseFloat(key) >= parseFloat(value))
-                .map(key => data[key])
-        );
-    };
-
-    const applyLte = ({ propertyId, value }) => {
-        const data = getValuesByPropertyLabel(propertyId).values;
-        return [].concat(
-            ...Object.keys(data)
-                .filter(key => parseFloat(key) <= parseFloat(value))
-                .map(key => data[key])
-        );
-    };
-
-    const applyGteDate = ({ propertyId, value }) => {
-        const data = getValuesByPropertyLabel(propertyId).values;
-        return [].concat(
-            ...Object.keys(data)
-                .filter(key => key >= value)
-                .map(key => data[key])
-        );
-    };
-
-    const applyLteDate = ({ propertyId, value }) => {
-        const data = getValuesByPropertyLabel(propertyId).values;
-        return [].concat(
-            ...Object.keys(data)
-                .filter(key => key <= value)
-                .map(key => data[key])
-        );
-    };
-
-    const applyNotEq = ({ propertyId, value }) => {
-        const data = getValuesByPropertyLabel(propertyId).values;
-        return [].concat(
-            ...Object.keys(data)
-                .filter(key => !value.includes(parseFloat(key)))
-                .map(key => data[key])
-        );
-    };
-
-    const applyInc = ({ propertyId, value }) => {
-        const data = getValuesByPropertyLabel(propertyId).values;
-        return [].concat(
-            ...Object.keys(data)
-                .filter(key => value.filter(val => key.includes(val)).length > 0)
-                .map(key => data[key])
-        );
-    };
-
-    const applyRule = ({ type, propertyId, value }) => {
-        if (type === 'oneOf') {
-            return applyOneOf({ propertyId, value });
-        } else if (type === 'gte') {
-            return applyGte({ propertyId, value });
-        } else if (type === 'lte') {
-            return applyLte({ propertyId, value });
-        } else if (type === 'gteDate') {
-            return applyGteDate({ propertyId, value });
-        } else if (type === 'lteDate') {
-            return applyLteDate({ propertyId, value });
-        } else if (type === 'nEqDate' || type === 'nEq') {
-            return applyNotEq({ propertyId, value });
-        } else if (type === 'inc') {
-            return applyInc({ propertyId, value });
-        }
-    };
-
+    /**
+     * Apply filter control data rules
+     *
+     * @param {Array} newState Filter Control Data
+     */
     const applyAllRules = newState => {
         const AllContributionsID = contributions.map(contribution => contribution.id);
         const contributionIds = []
             .concat(...newState.map(item => item.rules))
-            .map(applyRule)
+            .map(c => applyRule({ filterControlData, ...c }))
             .reduce((prev, acc) => intersection(prev, acc), AllContributionsID);
         displayContributions(contributionIds);
     };
@@ -545,6 +483,7 @@ function useComparison() {
         setContributions(newContributions);
         setUrlNeedsToUpdate(true);
     };
+
     /**
      * display certain contributionIds
      *
@@ -761,7 +700,7 @@ function useComparison() {
         removeContribution,
         addContributions,
         applyAllRules,
-        updateRules,
+        updateRulesOfProperty,
         removeRule,
         generateUrl,
         setResponseHash,

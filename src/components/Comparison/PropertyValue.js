@@ -22,13 +22,13 @@ const FilterIcon = styled(Icon)`
     }
 `;
 
-const PropertyValue = ({ id, label, similar, data, filterControlData, updateRules }) => {
+const PropertyValue = ({ id, label, similar, data, filterControlData, updateRulesOfProperty }) => {
     const [showStatementBrowser, setShowStatementBrowser] = useState(false);
     const [showFilterDialog, setShowFilterDialog] = useState(false);
 
     const getValuesByPropertyLabel = inputId => filterControlData.find(item => item.property.id === inputId);
 
-    const updateRulesFactory = newRules => updateRules(newRules, id);
+    const updateRulesFactory = newRules => updateRulesOfProperty(newRules, id);
 
     const handleOpenStatementBrowser = () => {
         setShowStatementBrowser(true);
@@ -74,7 +74,7 @@ const PropertyValue = ({ id, label, similar, data, filterControlData, updateRule
 
             <FilterModal
                 data={getValuesByPropertyLabel(id)}
-                updateRules={updateRulesFactory}
+                updateRulesOfProperty={updateRulesFactory}
                 showFilterDialog={showFilterDialog}
                 toggleFilterDialog={() => setShowFilterDialog(v => !v)}
             />
@@ -92,7 +92,7 @@ PropertyValue.propTypes = {
     similar: PropTypes.array,
     data: PropTypes.object.isRequired,
     filterControlData: PropTypes.array.isRequired,
-    updateRules: PropTypes.func.isRequired
+    updateRulesOfProperty: PropTypes.func.isRequired
 };
 
 PropertyValue.defaultProps = {

@@ -6,7 +6,7 @@ import TextFilterRule from './TextFilterRule.js';
 
 function FilterModal(props) {
     const DATE_FORMAT = /\d{4}-[01]\d-([012]\d|30|31)/;
-    const { data, updateRules, showFilterDialog, toggleFilterDialog } = props;
+    const { data, updateRulesOfProperty, showFilterDialog, toggleFilterDialog } = props;
     const { property, values, rules } = data;
     const { label: propertyName } = property;
 
@@ -25,13 +25,15 @@ function FilterModal(props) {
         );
     };
 
-    const generateCategoricalFilter = () => <CategoricalFilterRule dataController={{ property, values, rules, updateRules, toggleFilterDialog }} />;
-
-    const generateOrdFilter = typeIsDate => (
-        <OrdinalFilterRule dataController={{ property, rules, updateRules, typeIsDate: typeIsDate, DATE_FORMAT, toggleFilterDialog }} />
+    const generateCategoricalFilter = () => (
+        <CategoricalFilterRule dataController={{ property, values, rules, updateRulesOfProperty, toggleFilterDialog }} />
     );
 
-    const generateTextFilter = () => <TextFilterRule dataController={{ property, values, rules, updateRules, toggleFilterDialog }} />;
+    const generateOrdFilter = typeIsDate => (
+        <OrdinalFilterRule dataController={{ property, rules, updateRulesOfProperty, typeIsDate: typeIsDate, DATE_FORMAT, toggleFilterDialog }} />
+    );
+
+    const generateTextFilter = () => <TextFilterRule dataController={{ property, values, rules, updateRulesOfProperty, toggleFilterDialog }} />;
 
     const generateFilter = () => {
         if (isNum()) {
@@ -55,7 +57,7 @@ function FilterModal(props) {
 
 FilterModal.propTypes = {
     data: PropTypes.object.isRequired,
-    updateRules: PropTypes.func.isRequired,
+    updateRulesOfProperty: PropTypes.func.isRequired,
     showFilterDialog: PropTypes.bool.isRequired,
     toggleFilterDialog: PropTypes.func.isRequired
 };

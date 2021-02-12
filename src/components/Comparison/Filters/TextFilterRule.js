@@ -7,7 +7,7 @@ import stopwords from 'stopwords-en';
 import PropTypes from 'prop-types';
 
 const TextFilterRule = props => {
-    const { property, values, rules, updateRules, toggleFilterDialog } = props.dataController;
+    const { property, values, rules, updateRulesOfProperty, toggleFilterDialog } = props.dataController;
     const { label: propertyName, id: propertyId } = property;
 
     const placeHolder = 'choose one or more keywords';
@@ -35,12 +35,12 @@ const TextFilterRule = props => {
     };
 
     const handleReset = () => {
-        updateRules([]);
+        updateRulesOfProperty([]);
         setSelectedKeys(null);
     };
 
     const handleApply = () => {
-        updateRules(calRules(selectedKeys));
+        updateRulesOfProperty(calRules(selectedKeys));
         toggleFilterDialog();
     };
 
