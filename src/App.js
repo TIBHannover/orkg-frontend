@@ -6,6 +6,7 @@ import DefaultLayout from 'components/Layout/DefaultLayout';
 import 'assets/scss/CustomBootstrap.scss';
 import 'react-toastify/dist/ReactToastify.css';
 import 'tippy.js/dist/tippy.css';
+import 'react-datepicker/dist/react-datepicker.css';
 import { MatomoContext } from '@datapunt/matomo-tracker-react';
 import { ConnectedRouter } from 'connected-react-router';
 import PropTypes from 'prop-types';
