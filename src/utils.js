@@ -796,3 +796,45 @@ export function truncStringPortion(str, firstCharCount = str.length, endCharCoun
         return str.slice(0, firstCharCount) + '.'.repeat(dotCount) + str.slice(str.length - endCharCount);
     }
 }
+
+/**
+ * Stringify filter type of comparison
+ *
+ * @param {String} type filter
+ * @return {String} String
+ */
+export const stringifyType = type => {
+    if (type === 'oneOf') {
+        return 'is One of:';
+    } else if (type === 'gte') {
+        return '>=';
+    } else if (type === 'gteDate') {
+        return 'is after:';
+    } else if (type === 'lte') {
+        return '<=';
+    } else if (type === 'nEqDate' || type === 'nEq') {
+        return '!=';
+    } else if (type === 'lteDate') {
+        return 'is before:';
+    } else if (type === 'inc') {
+        return 'includes one of:';
+    }
+    return type;
+};
+
+/**
+ * get Rules by property id
+ *
+ * @param {Array} filterControlData filters array
+ * @param {String} propertyId Property ID
+ * @return {Array} Rules
+ */
+export const getRuleByProperty = (filterControlData, propertyId) => filterControlData.find(item => item.property.id === propertyId).rules;
+
+/**
+ * Check if the filters is empty
+ *
+ * @param {Array} data filters array
+ * @return {Boolean} Whether the filters are empty or not
+ */
+export const areAllRulesEmpty = data => [].concat(...data.map(item => item.rules)).length > 0;

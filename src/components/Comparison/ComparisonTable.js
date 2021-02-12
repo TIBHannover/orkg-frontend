@@ -111,9 +111,7 @@ const ComparisonTable = props => {
                                 <PropertiesInner className="d-flex flex-row align-items-start justify-content-between" cellPadding={cellPadding}>
                                     <PropertyValue
                                         data={props.data}
-                                        stringifyType={props.stringifyType}
-                                        getRuleByProperty={props.getRuleByProperty}
-                                        controllData={props.controllData}
+                                        filterControlData={props.filterControlData}
                                         updateRules={props.updateRules}
                                         similar={cell.value.similar}
                                         label={cell.value.label}
@@ -203,9 +201,7 @@ const ComparisonTable = props => {
                                           >
                                               <PropertyValue
                                                   data={props.data}
-                                                  stringifyType={props.stringifyType}
-                                                  getRuleByProperty={props.getRuleByProperty}
-                                                  controllData={props.controllData}
+                                                  filterControlData={props.filterControlData}
                                                   updateRules={props.updateRules}
                                                   similar={property.similar}
                                                   label={property.label}
@@ -239,10 +235,8 @@ ComparisonTable.propTypes = {
     removeContribution: PropTypes.func.isRequired,
     transpose: PropTypes.bool.isRequired,
     viewDensity: PropTypes.oneOf(['spacious', 'normal', 'compact']),
-    stringifyType: PropTypes.func.isRequired,
-    getRuleByProperty: PropTypes.func.isRequired,
     scrollContainerBody: PropTypes.object.isRequired,
-    controllData: PropTypes.array.isRequired,
+    filterControlData: PropTypes.array.isRequired,
     updateRules: PropTypes.func.isRequired
 };
 

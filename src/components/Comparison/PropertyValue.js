@@ -7,6 +7,7 @@ import FilterWrapper from 'components/Comparison/Filters/FilterWrapper';
 import FilterModal from 'components/Comparison/Filters/FilterModal';
 import { faFilter } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { getRuleByProperty } from 'utils';
 import styled from 'styled-components';
 import { upperFirst } from 'lodash';
 import PropTypes from 'prop-types';
@@ -21,11 +22,11 @@ const FilterIcon = styled(Icon)`
     }
 `;
 
-const PropertyValue = ({ id, label, similar, getRuleByProperty, data, stringifyType, controllData, updateRules }) => {
+const PropertyValue = ({ id, label, similar, data, filterControlData, updateRules }) => {
     const [showStatementBrowser, setShowStatementBrowser] = useState(false);
     const [showFilterDialog, setShowFilterDialog] = useState(false);
 
-    const getValuesByPropertyLabel = inputId => controllData.find(item => item.property.id === inputId);
+    const getValuesByPropertyLabel = inputId => filterControlData.find(item => item.property.id === inputId);
 
     const updateRulesFactory = newRules => updateRules(newRules, id);
 
@@ -45,7 +46,7 @@ const PropertyValue = ({ id, label, similar, getRuleByProperty, data, stringifyT
     const filterIconClasses = classNames({
         'd-block': getValuesNr(data[id]) > 1,
         'd-none': getValuesNr(data[id]) <= 1,
-        active: getRuleByProperty(id).length > 0
+        active: getRuleByProperty(filterControlData, id).length > 0
     });
 
     return (
@@ -65,8 +66,7 @@ const PropertyValue = ({ id, label, similar, getRuleByProperty, data, stringifyT
 
             <FilterWrapper
                 data={{
-                    rules: getRuleByProperty(id),
-                    stringifyType: stringifyType
+                    rules: getRuleByProperty(filterControlData, id)
                 }}
             >
                 <FilterIcon size="xs" icon={faFilter} className={filterIconClasses} onClick={() => setShowFilterDialog(v => !v)} />
@@ -91,9 +91,7 @@ PropertyValue.propTypes = {
     id: PropTypes.string.isRequired,
     similar: PropTypes.array,
     data: PropTypes.object.isRequired,
-    stringifyType: PropTypes.func.isRequired,
-    getRuleByProperty: PropTypes.func.isRequired,
-    controllData: PropTypes.array.isRequired,
+    filterControlData: PropTypes.array.isRequired,
     updateRules: PropTypes.func.isRequired
 };
 

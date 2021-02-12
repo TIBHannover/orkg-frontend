@@ -1,9 +1,10 @@
 import Tippy from '@tippyjs/react';
 import React from 'react';
+import { stringifyType } from 'utils';
 import PropTypes from 'prop-types';
 
 const FilterWrapper = props => {
-    const { rules, stringifyType } = props.data;
+    const { rules } = props.data;
     return (
         <Tippy
             content={rules

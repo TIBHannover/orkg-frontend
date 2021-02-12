@@ -26,7 +26,7 @@ import ROUTES from 'constants/routes.js';
 import { useHistory, Link } from 'react-router-dom';
 import { openAuthDialog } from 'actions/auth';
 import { CSVLink } from 'react-csv';
-import { generateRdfDataVocabularyFile } from 'utils';
+import { generateRdfDataVocabularyFile, areAllRulesEmpty } from 'utils';
 import Tippy from '@tippyjs/react';
 import { connect } from 'react-redux';
 import { useCookies } from 'react-cookie';
@@ -40,13 +40,14 @@ import { NavLink } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import env from '@beam-australia/react-env';
 import AppliedRule from 'components/Comparison/Filters/AppliedRule';
+
 function Comparison(props) {
     const {
         metaData,
         contributions,
         properties,
         data,
-        controllData,
+        filterControlData,
         matrixData,
         authors,
         errors,
@@ -62,7 +63,6 @@ function Comparison(props) {
         isFailedLoadingMetaData,
         isLoadingComparisonResult,
         isFailedLoadingComparisonResult,
-        showRules,
         hasNextVersions,
         createdBy,
         provenance,
@@ -76,8 +76,6 @@ function Comparison(props) {
         addContributions,
         updateRules,
         removeRule,
-        getRuleByProperty,
-        stringifyType,
         generateUrl,
         setResponseHash,
         setUrlNeedsToUpdate,
@@ -181,11 +179,11 @@ function Comparison(props) {
 
     const displayRules = () => {
         return []
-            .concat(...controllData.map(item => item.rules))
+            .concat(...filterControlData.map(item => item.rules))
             .map(({ propertyId, propertyName, type, value }) => (
                 <AppliedRule
                     key={`${propertyId}#${type}`}
-                    data={{ propertyId, propertyName, type: stringifyType(type), value, removeRule: removeRuleFactory({ propertyId, type, value }) }}
+                    data={{ propertyId, propertyName, type: type, value, removeRule: removeRuleFactory({ propertyId, type, value }) }}
                 />
             ));
     };
@@ -423,7 +421,7 @@ function Comparison(props) {
                                     for horizontal scrolling in the table.
                                 </Alert>
                             )}
-                            {showRules && (
+                            {areAllRulesEmpty(filterControlData) && (
                                 <div className="mt-3 d-flex" style={{ flexDirection: 'column' }}>
                                     <h6 className="text-secondary">
                                         <Icon className="mr-1" size="sm" icon={faFilter} />
@@ -458,9 +456,7 @@ function Comparison(props) {
                                             removeContribution={removeContribution}
                                             transpose={transpose}
                                             viewDensity={viewDensity}
-                                            getRuleByProperty={getRuleByProperty}
-                                            stringifyType={stringifyType}
-                                            controllData={controllData}
+                                            filterControlData={filterControlData}
                                             updateRules={updateRules}
                                         />
                                     </div>

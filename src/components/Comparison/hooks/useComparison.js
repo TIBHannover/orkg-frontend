@@ -62,12 +62,9 @@ function useComparison() {
     const [authors, setAuthors] = useState([]);
     const [contributions, setContributions] = useState([]);
     const [data, setData] = useState({});
-    const [controllData, setControllData] = useState([]);
+    const [filterControlData, setFilterControlData] = useState([]);
     const [errors, setErrors] = useState([]);
     const [matrixData, setMatrixData] = useState([]);
-
-    const [rulesChanged, setRulesChanged] = useState(false);
-    const [showRules, setShowRules] = useState(false);
 
     const [hasNextVersions, setHasNextVersions] = useState([]);
     const [createdBy, setCreatedBy] = useState(null);
@@ -318,83 +315,62 @@ function useComparison() {
 
         return comparisonData.properties;
     };
-    /********************** */
 
-    const generateControllData = (contributions, properties, data) => {
-        const toRet = [
-            ...properties
-                .filter(property => property.active && data[property.id])
-                .map(property => {
-                    return {
-                        property,
-                        rules: [],
-                        values: groupBy(
-                            flatten(contributions.map((_, index) => data[property.id][index]).filter(([first]) => Object.keys(first).length !== 0)),
-                            'label'
-                        )
-                    };
-                })
+    /**
+     * Generate Filter Control Data
+     *
+     * @param {Array} contributions Array of contributions
+     * @param {Array} properties Array of properties
+     * @param {Object} data Comparison Data object
+     * @return {Array} Filter Control Data
+     */
+    const generateFilterControlData = (contributions, properties, data) => {
+        const controlData = [
+            ...properties.map(property => {
+                return {
+                    property,
+                    rules: [],
+                    values: groupBy(
+                        flatten(contributions.map((_, index) => data[property.id][index]).filter(([first]) => Object.keys(first).length !== 0)),
+                        'label'
+                    )
+                };
+            })
         ];
-        toRet.forEach(item => {
+        controlData.forEach(item => {
             Object.keys(item.values).forEach(key => {
                 item.values[key] = item.values[key].map(({ path }) => path[0]);
             });
         });
-        return toRet;
+        return controlData;
     };
-    const getValuesByPropertyLabel = inputId => controllData.find(item => item.property.id === inputId);
+
+    const getValuesByPropertyLabel = inputId => filterControlData.find(item => item.property.id === inputId);
 
     //**rules Setter and getter */
     const updateRules = (newRules, propertyId) => {
-        setControllData(pervState => {
+        setFilterControlData(pervState => {
             const newState = [...pervState];
             const toChangeIndex = newState.findIndex(item => item.property.id === propertyId);
             const toChange = { ...newState[toChangeIndex] };
-            !((newRules.length === toChange.rules.length) === 0) && setRulesChanged(true);
             toChange.rules = newRules;
             newState[toChangeIndex] = toChange;
-            AllRulesEmpty(newState) ? setShowRules(true) : setShowRules(false);
             applyAllRules(newState);
             return newState;
         });
     };
 
     const removeRule = ({ propertyId, type, value }) => {
-        setControllData(pervState => {
+        setFilterControlData(pervState => {
             const newState = [...pervState];
             const toChangeIndex = newState.findIndex(item => item.property.id === propertyId);
             const toChange = { ...newState[toChangeIndex] };
             toChange.rules = toChange.rules.filter(item => !(item.propertyId === propertyId && item.type === type && item.value === value));
             newState[toChangeIndex] = toChange;
             applyAllRules(newState);
-            AllRulesEmpty(newState) ? setShowRules(true) : setShowRules(false);
             return newState;
         });
     };
-
-    const getRuleByProperty = propertyId => controllData.find(item => item.property.id === propertyId).rules;
-
-    const stringifyType = type => {
-        if (type === 'oneOf') {
-            return 'is One of:';
-        } else if (type === 'gte') {
-            return '>=';
-        } else if (type === 'gteDate') {
-            return 'is after:';
-        } else if (type === 'lte') {
-            return '<=';
-        } else if (type === 'nEqDate' || type === 'nEq') {
-            return '!=';
-        } else if (type === 'lteDate') {
-            return 'is before:';
-        } else if (type === 'inc') {
-            return 'includes one of:';
-        }
-
-        return type;
-    };
-
-    const AllRulesEmpty = data => [].concat(...data.map(item => item.rules)).length > 0;
 
     /** rules applying */
     const applyOneOf = ({ propertyId, value }) => {
@@ -516,7 +492,7 @@ function useComparison() {
                 setContributions(comparisonData.contributions);
                 setProperties(comparisonData.properties);
                 setData(comparisonData.data);
-                setControllData(generateControllData(comparisonData.contributions, comparisonData.properties, comparisonData.data));
+                setFilterControlData(generateFilterControlData(comparisonData.contributions, comparisonData.properties, comparisonData.data));
                 setIsLoadingComparisonResult(false);
                 setIsFailedLoadingComparisonResult(false);
 
@@ -757,7 +733,7 @@ function useComparison() {
         contributions,
         properties,
         data,
-        controllData,
+        filterControlData,
         matrixData,
         authors,
         errors,
@@ -773,8 +749,6 @@ function useComparison() {
         isFailedLoadingMetaData,
         isLoadingComparisonResult,
         isFailedLoadingComparisonResult,
-        rulesChanged,
-        showRules,
         hasNextVersions,
         createdBy,
         provenance,
@@ -789,8 +763,6 @@ function useComparison() {
         applyAllRules,
         updateRules,
         removeRule,
-        getRuleByProperty,
-        stringifyType,
         generateUrl,
         setResponseHash,
         setUrlNeedsToUpdate,
