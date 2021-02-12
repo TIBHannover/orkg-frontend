@@ -12,6 +12,7 @@
         "@fortawesome/react-fontawesome": "^0.1.14",
         "@handsontable/react": "^4.0.0",
         "@hapi/joi": "^17.1.1",
+        "@hapi/joi-date": "^2.0.1",
         "@tippyjs/react": "^4.2.0",
         "@trainiac/html2canvas": "^1.0.0",
         "@xobotyi/scrollbar-width": "^1.9.5",

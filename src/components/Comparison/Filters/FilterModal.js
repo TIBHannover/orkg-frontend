@@ -2,10 +2,11 @@ import { Modal, ModalHeader, ModalBody } from 'reactstrap';
 import PropTypes from 'prop-types';
 import CategoricalFilterRule from './CategoricalFilterRule.js';
 import OrdinalFilterRule from './OrdinalFilterRule.js';
+import Joi from '@hapi/joi';
+import JoiDate from '@hapi/joi-date';
 import TextFilterRule from './TextFilterRule.js';
 
 function FilterModal(props) {
-    const DATE_FORMAT = /\d{4}-[01]\d-([012]\d|30|31)/;
     const { data, updateRulesOfProperty, showFilterDialog, toggleFilterDialog } = props;
     const { property, values, rules } = data;
     const { label: propertyName } = property;
@@ -17,7 +18,17 @@ function FilterModal(props) {
         return Object.keys(values).length === Object.keys(values).filter(value => !isNaN(value) && !isNaN(parseFloat(value))).length;
     };
     const isDate = () => {
-        return Object.keys(values).length === Object.keys(values).filter(value => value.match(DATE_FORMAT)).length;
+        return (
+            Object.keys(values).length ===
+            Object.keys(values).filter(value => {
+                const { error } = Joi.extend(JoiDate)
+                    .date()
+                    .format('YYYY-MM-DD')
+                    .required()
+                    .validate(value);
+                return !error ? true : false;
+            }).length
+        );
     };
     const isText = () => {
         return (
@@ -30,7 +41,7 @@ function FilterModal(props) {
     );
 
     const generateOrdFilter = typeIsDate => (
-        <OrdinalFilterRule dataController={{ property, rules, updateRulesOfProperty, typeIsDate: typeIsDate, DATE_FORMAT, toggleFilterDialog }} />
+        <OrdinalFilterRule dataController={{ property, rules, updateRulesOfProperty, typeIsDate: typeIsDate, toggleFilterDialog }} />
     );
 
     const generateTextFilter = () => <TextFilterRule dataController={{ property, values, rules, updateRulesOfProperty, toggleFilterDialog }} />;

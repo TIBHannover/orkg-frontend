@@ -5,6 +5,10 @@ import { FILTER_TYPES } from 'constants/comparisonFilterTypes';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faRedoAlt } from '@fortawesome/free-solid-svg-icons';
 import CreatableSelect from 'react-select/creatable';
+import DatePicker from 'components/DatePicker/DatePicker';
+import Joi from '@hapi/joi';
+import JoiDate from '@hapi/joi-date';
+import moment from 'moment';
 
 const customStyles = {
     control: (provided, state) => {
@@ -41,7 +45,7 @@ const createOption = label => ({
 
 const OrdinalFilterRule = props => {
     //change apply and reset
-    const { property, rules, updateRulesOfProperty, typeIsDate, DATE_FORMAT, toggleFilterDialog } = props.dataController;
+    const { property, rules, updateRulesOfProperty, typeIsDate, toggleFilterDialog } = props.dataController;
     const { label: propertyName, id: propertyId } = property;
 
     const type = typeIsDate ? 'datetime' : 'number';
@@ -60,9 +64,17 @@ const OrdinalFilterRule = props => {
 
     const invalidText = typeIsDate ? 'should match the format: yyyy-mm-dd' : 'should be Number';
     const validateFunc = str => (typeIsDate ? isDate(str) : isNum(str));
-    const isDate = str => str.match(DATE_FORMAT);
+    const isDate = str => {
+        const { error } = Joi.extend(JoiDate)
+            .date()
+            .format('YYYY-MM-DD')
+            .required()
+            .validate(str);
+        return !error ? true : false;
+    };
+
     const isNum = str => !isNaN(str) && !isNaN(parseFloat(str));
-    const isEmptyOrValid = str => str === '' || validateFunc(str);
+    const isEmptyOrValid = str => !str || validateFunc(str);
 
     const minRule = rules.find(item => item.propertyId === propertyId && item.type === minRuleType);
     const maxRule = rules.find(item => item.propertyId === propertyId && item.type === maxRuleType);
@@ -71,10 +83,10 @@ const OrdinalFilterRule = props => {
     const maxValue = typeof maxRule === 'undefined' ? '' : maxRule.value;
     const nEqValueArr = typeof nEqRule === 'undefined' ? [] : nEqRule.value.map(createOption);
 
-    const [minInput, setMinInput] = useState(minValue);
+    const [minInput, setMinInput] = useState(minValue && typeIsDate ? moment(minValue, 'YYYY-MM-DD').toDate() : minValue);
     const [minInvalid, setMinInvalid] = useState(false);
 
-    const [maxInput, setMaxInput] = useState(maxValue);
+    const [maxInput, setMaxInput] = useState(maxValue && typeIsDate ? moment(maxValue, 'YYYY-MM-DD').toDate() : maxValue);
     const [maxInvalid, setMaxInvalid] = useState(false);
 
     const [nEqInputValue, setNEqInputValue] = useState('');
@@ -139,7 +151,13 @@ const OrdinalFilterRule = props => {
     };
 
     const handleApply = () => {
-        updateRulesOfProperty(calRules(minInput, maxInput, [...nEqValue, createOption(nEqInputValue)]));
+        updateRulesOfProperty(
+            calRules(
+                !typeIsDate ? minInput : moment(minInput, 'YYYY-MM-DD').format('YYYY-MM-DD'),
+                !typeIsDate ? maxInput : moment(maxInput, 'YYYY-MM-DD').format('YYYY-MM-DD'),
+                [...nEqValue, createOption(nEqInputValue)]
+            )
+        );
         toggleFilterDialog();
     };
 
@@ -148,14 +166,28 @@ const OrdinalFilterRule = props => {
             <FormGroup row>
                 <Label sm={6}>{minLabel}</Label>
                 <Col sm={6}>
-                    <Input
-                        type={type}
-                        id={`min${propertyId}`}
-                        placeholder={minPlaceHolder}
-                        value={minInput}
-                        invalid={minInvalid}
-                        onChange={handleMinChange}
-                    />
+                    {!typeIsDate && (
+                        <Input
+                            type={type}
+                            id={`min${propertyId}`}
+                            placeholder={minPlaceHolder}
+                            value={minInput}
+                            invalid={minInvalid}
+                            onChange={handleMinChange}
+                        />
+                    )}
+                    {typeIsDate && (
+                        <DatePicker
+                            dateFormat="yyyy-MM-dd"
+                            isClearable
+                            selected={minInput}
+                            placeholder={minPlaceHolder}
+                            onChange={date => {
+                                setMinInput(date);
+                                isEmptyOrValid(date) ? setMinInvalid(false) : setMinInvalid(true);
+                            }}
+                        />
+                    )}
                     <FormFeedback className={minInvalid ? 'd-block text-right' : 'd-none'}>{invalidText}</FormFeedback>
                 </Col>
             </FormGroup>
@@ -163,14 +195,28 @@ const OrdinalFilterRule = props => {
             <FormGroup row>
                 <Label sm={6}>{maxLabel}</Label>
                 <Col sm={6}>
-                    <Input
-                        type={type}
-                        id={`max${propertyId}`}
-                        placeholder={maxPlaceHolder}
-                        value={maxInput}
-                        invalid={maxInvalid}
-                        onChange={handleMaxChange}
-                    />
+                    {!typeIsDate && (
+                        <Input
+                            type={type}
+                            id={`max${propertyId}`}
+                            placeholder={maxPlaceHolder}
+                            value={maxInput}
+                            invalid={maxInvalid}
+                            onChange={handleMaxChange}
+                        />
+                    )}
+                    {typeIsDate && (
+                        <DatePicker
+                            dateFormat="yyyy-MM-dd"
+                            isClearable
+                            selected={maxInput}
+                            placeholder={maxPlaceHolder}
+                            onChange={date => {
+                                setMaxInput(date);
+                                isEmptyOrValid(date) ? setMaxInvalid(false) : setMaxInvalid(true);
+                            }}
+                        />
+                    )}
                     <FormFeedback className={maxInvalid ? 'd-block text-right' : 'd-none'}>{invalidText}</FormFeedback>
                 </Col>
             </FormGroup>
