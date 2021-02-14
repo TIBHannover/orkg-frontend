@@ -1,10 +1,11 @@
+import useBulkContributionEditor from 'components/BulkContributionEditor/hooks/useBulkContributionEditor';
 import TableCell from 'components/BulkContributionEditor/TableCell';
 import TableHeaderColumn from 'components/BulkContributionEditor/TableHeaderColumn';
 import TableHeaderRow from 'components/BulkContributionEditor/TableHeaderRow';
 import { Properties, PropertiesInner, ReactTableWrapper } from 'components/Comparison/styled';
-import { functions, isEqual, omit } from 'lodash';
 import PropTypes from 'prop-types';
-import { memo, useRef } from 'react';
+import { useRef } from 'react';
+import { useSelector } from 'react-redux';
 import { ScrollSync, ScrollSyncPane } from 'react-scroll-sync';
 import ReactTable from 'react-table';
 import withFixedColumnsScrollEvent from 'react-table-hoc-fixed-columns';
@@ -12,80 +13,29 @@ import 'react-table-hoc-fixed-columns/lib/styles.css'; // important: this line m
 
 const ReactTableFixedColumns = withFixedColumnsScrollEvent(ReactTable);
 
-const compareProps = (prevProps, nextProps) => {
-    // remove functions from equality check (mainly targeting "removeContribution"), otherwise it is always false
-    return isEqual(omit(prevProps, functions(prevProps)), omit(nextProps, functions(nextProps)));
-};
-
 const EditorTable = props => {
     const scrollContainerHead = useRef(null);
-    const customProps = { id: 'comparisonTable' };
-    console.log('data', props.data);
-    /*const data = [
-        {
-            property: {
-                label: 'test',
-                id: 'R100'
-            },
-            values: [
-                [
-                    {
-                        label: 'test',
-                        resourceId: 'R3100',
-                        type: 'resource',
-                        pathLabels: ['test']
-                    }
-                ],
-                [
-                    {
-                        label: 'test322323',
-                        resourceId: 'R3100',
-                        type: 'resource',
-                        pathLabels: ['test']
-                    }
-                ]
-            ]
-        },
-        {
-            property: {
-                label: 'test22',
-                id: 'R1003'
-            },
-            values: [
-                [
-                    {
-                        label: 'test5',
-                        resourceId: 'R1020',
-                        type: 'resource',
-                        pathLabels: ['test']
-                    }
-                ],
-                [
-                    {
-                        label: 'tes4',
-                        resourceId: 'R1020',
-                        type: 'resource',
-                        pathLabels: ['test']
-                    }
-                ]
-            ]
-        }
-    ];*/
+    const { contributions, statements, properties, resources, literals } = useSelector(state => state.bulkContributionEditor);
+    const { getStatementsByPropertyIdAndContributionId } = useBulkContributionEditor();
+
+    const statementsByPropertyIdAndContributionId = getStatementsByPropertyIdAndContributionId(statements);
+
     let data = [];
     let columns = [];
-    if (props.data) {
-        data = Object.keys(props.data.properties).map((propertyId, index) => {
-            const property = props.data.properties[propertyId];
-            const returnObj = {
-                property: property,
-                values: Object.keys(props.data.contributions).map((contributionId, index2) => {
-                    const contribution = props.data.contributions[contributionId];
-                    return contribution.contributionData[propertyId] || [{}];
-                })
-            };
-            return returnObj;
-        });
-        console.log('data', data);
+
+    if (Object.keys(statements).length) {
+        data = Object.keys(properties).map(propertyId => ({
+            property: properties[propertyId],
+            values: Object.keys(contributions).map(
+                contributionId =>
+                    statementsByPropertyIdAndContributionId?.[propertyId]?.[contributionId]?.map(statementId => ({
+                        ...(statements[statementId].type === 'resource'
+                            ? resources[statements[statementId].objectId]
+                            : literals[statements[statementId].objectId]),
+                        statementId
+                    })) || [{}]
+            )
+        }));
 
         columns = [
             {
@@ -101,8 +51,8 @@ const EditorTable = props => {
                 Cell: cell => <TableHeaderRow property={cell.value} />,
                 width: 250
             },
-            ...Object.keys(props.data.contributions).map((contributionId, i) => {
-                const contribution = props.data.contributions[contributionId];
+            ...Object.keys(contributions).map((contributionId, i) => {
+                const contribution = contributions[contributionId];
                 return {
                     id: contribution.id,
                     Header: () => <TableHeaderColumn contribution={contribution} key={contribution.id} />,
@@ -145,7 +95,7 @@ const EditorTable = props => {
                 <ReactTableFixedColumns
                     TheadComponent={TheadComponent}
                     TbodyComponent={TbodyComponent}
-                    getProps={() => customProps}
+                    getProps={() => ({ id: 'comparisonTable' })}
                     resizable={false}
                     sortable={false}
                     pageSize={data.length}
@@ -165,4 +115,4 @@ EditorTable.propTypes = {
     data: PropTypes.object
 };
 
-export default memo(EditorTable, compareProps);
+export default EditorTable;

@@ -7,6 +7,7 @@ import pdfTextAnnotation from './pdfTextAnnotation';
 import viewPaper from './viewPaper';
 import pdfAnnotation from './pdfAnnotation';
 import addTemplate from './addTemplate';
+import bulkContributionEditor from './bulkContributionEditor';
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default history =>
@@ -18,5 +19,6 @@ export default history =>
         pdfAnnotation,
         auth,
         addTemplate,
-        pdfTextAnnotation
+        pdfTextAnnotation,
+        bulkContributionEditor
     });

@@ -1,86 +1,24 @@
-import { CLASSES, PREDICATES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import { uniq } from 'lodash';
 import queryString from 'query-string';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useHistory, useLocation } from 'react-router';
-import { getStatementsByObjectAndPredicate, getStatementsBySubjects } from 'services/backend/statements';
 
 const useBulkContributionEditor = () => {
     const location = useLocation();
     const history = useHistory();
-    const [contributions, setContributions] = useState(null);
+    const [contributionIds, setContributionIds] = useState([]);
 
     // parse 'contributions' from query string, ensure always an array is returned
-    const parseQueryString = () => {
+    const parseQueryString = useCallback(() => {
         const { contributions } = queryString.parse(location.search, { arrayFormat: 'comma' });
         const contributionIds = contributions && !Array.isArray(contributions) ? [contributions] : contributions;
         return uniq(contributionIds) ?? [];
-    };
+    }, [location.search]);
 
-    const contributionIds = parseQueryString();
-
-    const fetchContributions = useCallback(async () => {
-        // TODO: should be optimized, and fetch all paper data (authors, publication date etc.)
-        const contributionStatements = await getStatementsBySubjects({ ids: contributionIds });
-
-        const table = {
-            contributions: {},
-            data: {},
-            properties: {}
-        };
-
-        for (const contributionId of contributionIds) {
-            const paperStatements = await getStatementsByObjectAndPredicate({ objectId: contributionId, predicateId: PREDICATES.HAS_CONTRIBUTION });
-            const { label: paperTitle, id: paperId } = paperStatements.find(statement => statement.subject.classes.includes(CLASSES.PAPER))?.subject;
-            const { label: contributionTitle } = paperStatements.find(statement => statement.object.classes.includes(CLASSES.CONTRIBUTION))?.object;
-            const { statements } = contributionStatements.find(result => result.id === contributionId) || [];
-
-            /*_contributions.push({
-                paper: {
-                    title: paperTitle,
-                    id: paperId
-                },
-                contributionStatements: statements
-            });*/
-
-            const contributionData = {};
-            for (const statement of statements) {
-                const property = statement.predicate;
-                if (!(property.id in table.properties)) {
-                    table.properties[property.id] = property;
-                }
-                const object = statement.object;
-                if (!(object.id in table.data)) {
-                    table.data[object.id] = object;
-                }
-                if (!(property.id in contributionData)) {
-                    contributionData[property.id] = [];
-                }
-                contributionData[property.id].push({ ...object, statementId: statement.id, type: object._class, resourceId: object.id });
-                // table.properties[]
-            }
-            table.contributions[contributionId] = {
-                id: contributionId,
-                title: paperTitle,
-                paperId: paperId,
-                contributionLabel: contributionTitle,
-                year: '1970',
-                contributionData
-            };
-        }
-        setContributions(table);
-        /*if (!contributions) {
-            const _contributions = await getComparison({ contributionIds, type: 'path', response_hash: null, save_response: false });
-            setContributions(_contributions);
-        }*/
-    }, [contributionIds]);
-
-    /*useEffect(() => {
-        if (contributionIds.length) {
-            fetchContributions();
-        }
-    }, [contributionIds, fetchContributions]);*/
+    useEffect(() => {
+        setContributionIds(parseQueryString());
+    }, [parseQueryString]);
 
     const handleAddContributions = ids => {
         const idsQueryString = [...contributionIds, ...ids].join(',');
@@ -92,7 +30,27 @@ const useBulkContributionEditor = () => {
         history.push(`${ROUTES.BULK_CONTRIBUTION_EDITOR}?contributions=${idsQueryString}`);
     };
 
-    return { contributionIds, contributions, handleAddContributions, handleRemoveContribution, fetchContributions };
+    // make an object that supports retrieving statements by propertyId and contributionId
+    const getStatementsByPropertyIdAndContributionId = statements => {
+        const statementsObject = {};
+        for (const [statementId, statement] of Object.entries(statements)) {
+            if (!(statement.propertyId in statementsObject)) {
+                statementsObject[statement.propertyId] = {};
+            }
+            if (!(statement.contributionId in statementsObject[statement.propertyId])) {
+                statementsObject[statement.propertyId][statement.contributionId] = [];
+            }
+            statementsObject[statement.propertyId][statement.contributionId].push(statementId);
+        }
+        return statementsObject;
+    };
+
+    return {
+        contributionIds,
+        handleAddContributions,
+        handleRemoveContribution,
+        getStatementsByPropertyIdAndContributionId
+    };
 };
 
 export default useBulkContributionEditor;
