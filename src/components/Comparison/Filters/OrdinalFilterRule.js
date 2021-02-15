@@ -1,43 +1,16 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { Input, FormFeedback, Label, Button, Col, FormGroup } from 'reactstrap';
 import PropTypes from 'prop-types';
 import { FILTER_TYPES } from 'constants/comparisonFilterTypes';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faRedoAlt } from '@fortawesome/free-solid-svg-icons';
 import CreatableSelect from 'react-select/creatable';
+import { components } from 'react-select';
 import DatePicker from 'components/DatePicker/DatePicker';
 import Joi from '@hapi/joi';
 import JoiDate from '@hapi/joi-date';
 import moment from 'moment';
 
-const customStyles = {
-    control: (provided, state) => {
-        return {
-            ...provided,
-            backgroundColor: '#f7f7f7 !important',
-            border: '1px solid #ced4da',
-            color: '#5b6987',
-            borderRadius: '6px',
-            fontSize: '1rem',
-            lineHeight: '12px',
-            boxShadow: state.isFocused ? '0 0 0 0.2rem rgb(232 97 97 / 25%)' : '',
-            ':hover': {
-                border: '1px solid #ced4da'
-            },
-            ':focus': {
-                border: '1px solid #ced4da',
-                boxShadow: '0 0 0 0.2rem rgb(232 97 97 / 25%)'
-            }
-        };
-    },
-    container: provided => {
-        return {
-            ...provided,
-            height: '10%',
-            backgroundColor: '#ffffff'
-        };
-    }
-};
 const createOption = label => ({
     label,
     value: label
@@ -103,7 +76,7 @@ const OrdinalFilterRule = props => {
             val
                 .map(item => item.label)
                 .filter(validateFunc)
-                .map(parseFloat);
+                .map(v => (typeIsDate ? v : parseFloat(v)));
         notEqualValues.length > 0 && rules.push({ propertyId, propertyName, type: nEqRuleType, value: notEqualValues });
         return rules;
     };
@@ -129,13 +102,14 @@ const OrdinalFilterRule = props => {
             setNEqInputValue(nEqInputValue);
         }
     };
+
     const handleKeyDownSel = event => {
         if (!isEmptyOrValid(nEqInputValue)) {
             return;
         }
         if (event.key === 'Enter' || event.key === 'Tab' || event.key === ',') {
             setNEqInputValue('');
-            setNEqValue([...nEqValue, createOption(nEqInputValue)]);
+            setNEqValue(nEqValue => [...nEqValue, createOption(nEqInputValue)]);
             event.preventDefault();
         }
     };
@@ -159,6 +133,44 @@ const OrdinalFilterRule = props => {
             )
         );
         toggleFilterDialog();
+    };
+
+    const handleDatePickerOnChange = useCallback(date => {
+        setNEqInputValue('');
+        setNEqValue(nEqValue => [...nEqValue, createOption(moment(date, 'YYYY-MM-DD').format('YYYY-MM-DD'))]);
+    }, []);
+
+    const CustomInput = useCallback(
+        ({ onChange, ...innerProps }) => {
+            if (typeIsDate) {
+                return (
+                    <DatePicker
+                        onChange={handleDatePickerOnChange}
+                        cssClasses="form-control-sm"
+                        dateFormat="yyyy-MM-dd"
+                        selected={nEqInputValue}
+                        placeholder={nEqPlaceHolder}
+                        renderCustomHeader={false}
+                        {...innerProps}
+                    />
+                );
+            }
+            return <components.Input {...innerProps} onChange={onChange} />;
+        },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        []
+    );
+
+    const customStyles = {
+        valueContainer: provided => ({
+            ...provided,
+            overflow: typeIsDate ? 'visible' : 'hidden',
+            '& input': {
+                backgroundColor: 'transparent !important',
+                border: '0 !important',
+                boxShadow: 'none !important'
+            }
+        })
     };
 
     return (
@@ -227,7 +239,8 @@ const OrdinalFilterRule = props => {
                     <CreatableSelect
                         styles={customStyles}
                         components={{
-                            DropdownIndicator: null
+                            DropdownIndicator: null,
+                            Input: CustomInput
                         }}
                         inputValue={nEqInputValue}
                         isClearable

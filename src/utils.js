@@ -916,6 +916,15 @@ const applyNotEq = ({ filterControlData, propertyId, value }) => {
     );
 };
 
+const applyNotEqDate = ({ filterControlData, propertyId, value }) => {
+    const data = getValuesByProperty(filterControlData, propertyId);
+    return [].concat(
+        ...Object.keys(data)
+            .filter(key => !value.includes(key))
+            .map(key => data[key])
+    );
+};
+
 const applyInc = ({ filterControlData, propertyId, value }) => {
     const data = getValuesByProperty(filterControlData, propertyId);
     return [].concat(
@@ -936,7 +945,7 @@ export const applyRule = ({ filterControlData, type, propertyId, value }) => {
         case FILTER_TYPES.LTE:
             return applyLte({ filterControlData, propertyId, value });
         case FILTER_TYPES.NEQ_DATE:
-            return applyNotEq({ filterControlData, propertyId, value });
+            return applyNotEqDate({ filterControlData, propertyId, value });
         case FILTER_TYPES.NEQ:
             return applyNotEq({ filterControlData, propertyId, value });
         case FILTER_TYPES.LTE_DATE:
