@@ -1,16 +1,18 @@
 import { faBars, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import AutoComplete from 'components/Autocomplete/Autocomplete';
+import { createLiteralValue, createResourceValue } from 'actions/bulkContributionEditor';
+import Autocomplete from 'components/Autocomplete/Autocomplete';
 import StatementOptionButton from 'components/StatementBrowser/StatementOptionButton/StatementOptionButton';
 import { StyledDropdownItem, StyledDropdownToggle } from 'components/StatementBrowser/styled';
 import { CLASSES } from 'constants/graphSettings';
+import { upperFirst } from 'lodash';
 import PropTypes from 'prop-types';
 import { useRef, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { useClickAway } from 'react-use';
 import { DropdownMenu, Input, InputGroup, InputGroupButtonDropdown } from 'reactstrap';
 import { resourcesUrl } from 'services/backend/resources';
 import styled from 'styled-components';
-import { upperFirst } from 'lodash';
 
 const CreateButtonContainer = styled.div`
     position: absolute;
@@ -20,18 +22,47 @@ const CreateButtonContainer = styled.div`
     z-index: 1;
 `;
 
-const TableCellValueCreate = ({ isVisible }) => {
+const TableCellValueCreate = ({ isVisible, contributionId, propertyId }) => {
     const [value, setValue] = useState('');
     const [type, setType] = useState('literal');
     const [isCreating, setIsCreating] = useState(false);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const refContainer = useRef(null);
+    const dispatch = useDispatch();
 
     useClickAway(refContainer, () => {
         if (isCreating) {
             setIsCreating(false);
         }
+        if (type === 'literal' && value.trim()) {
+            handleCreateLiteral();
+        }
     });
+
+    const handleChangeAutocomplete = async (selected, { action }) => {
+        if (action !== 'create-option' && action !== 'select-option') {
+            return;
+        }
+
+        dispatch(
+            createResourceValue({
+                contributionId,
+                propertyId,
+                resourceId: selected.id ?? null,
+                resourceLabel: value,
+                action
+            })
+        );
+    };
+
+    const handleCreateLiteral = () =>
+        dispatch(
+            createLiteralValue({
+                contributionId,
+                propertyId,
+                label: value
+            })
+        );
 
     return (
         <>
@@ -46,34 +77,17 @@ const TableCellValueCreate = ({ isVisible }) => {
                 <div ref={refContainer} style={{ height: 35 }}>
                     <InputGroup size="sm" style={{ width: 295 }}>
                         {type === 'resource' ? (
-                            <AutoComplete
+                            <Autocomplete
                                 requestUrl={resourcesUrl}
                                 excludeClasses={`${CLASSES.CONTRIBUTION},${CLASSES.PROBLEM},${CLASSES.CONTRIBUTION_TEMPLATE}`}
-                                //optionsClass={props.valueClass ? props.valueClass.id : undefined}
                                 placeholder="Enter a resource"
-                                onItemSelected={i => {
-                                    //props.handleValueSelect(valueType, i);
-                                    //setShowAddValue(false);
-                                }}
+                                onChange={handleChangeAutocomplete}
                                 menuPortalTarget={document.body}
                                 onInput={(e, value) => setValue(e ? e.target.value : value)}
                                 value={value}
-                                //onBlur={() => setIsCreating(false)}
-                                //additionalData={props.newResources}
-                                //autoLoadOption={props.valueClass ? true : false}
-                                openMenuOnFocus={true}
+                                openMenuOnFocus
+                                allowCreate
                                 cssClasses="form-control-sm"
-                                onKeyDown={e => {
-                                    /*if (e.keyCode === 27) {
-                                    // escape
-                                    setShowAddValue(false);
-                                } else if (e.keyCode === 13 && !isMenuOpen()) {
-                                    props.handleAddValue(valueType, inputValue);
-                                    setShowAddValue(false);
-                                }*/
-                                }}
-                                //innerRef={ref => (resourceInputRef.current = ref)}
-                                //handleCreateExistingLabel={handleCreateExistingLabel}
                             />
                         ) : (
                             <Input
@@ -105,7 +119,9 @@ const TableCellValueCreate = ({ isVisible }) => {
 };
 
 TableCellValueCreate.propTypes = {
-    isVisible: PropTypes.bool
+    isVisible: PropTypes.bool,
+    contributionId: PropTypes.string.isRequired,
+    propertyId: PropTypes.string.isRequired
 };
 
 export default TableCellValueCreate;

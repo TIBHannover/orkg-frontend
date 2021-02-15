@@ -13,7 +13,7 @@ import 'react-table-hoc-fixed-columns/lib/styles.css'; // important: this line m
 
 const ReactTableFixedColumns = withFixedColumnsScrollEvent(ReactTable);
 
-const EditorTable = props => {
+const EditorTable = () => {
     const scrollContainerHead = useRef(null);
     const { contributions, statements, properties, resources, literals } = useSelector(state => state.bulkContributionEditor);
     const { getStatementsByPropertyIdAndContributionId } = useBulkContributionEditor();
@@ -57,7 +57,7 @@ const EditorTable = props => {
                     id: contribution.id,
                     Header: () => <TableHeaderColumn contribution={contribution} key={contribution.id} />,
                     accessor: d => d.values[i],
-                    Cell: cell => <TableCell values={cell.value} />,
+                    Cell: cell => <TableCell values={cell.value} contributionId={cell.column.id} propertyId={cell.row.property.id} />,
                     width: 250
                 };
             })

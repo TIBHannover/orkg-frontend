@@ -4,7 +4,7 @@ import { Item, ItemInner } from 'components/Comparison/TableCell';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 
-const TableCell = ({ values }) => {
+const TableCell = ({ values, contributionId, propertyId }) => {
     const [isHovering, setIsHovering] = useState(false);
     const [disableCreate, setDisableCreate] = useState(false);
 
@@ -17,14 +17,16 @@ const TableCell = ({ values }) => {
                     }
                     return <TableCellValue key={`value-${value.statementId}`} value={value} index={index} setDisableCreate={setDisableCreate} />;
                 })}
-                <TableCellValueCreate isVisible={isHovering && !disableCreate} />
+                <TableCellValueCreate isVisible={isHovering && !disableCreate} contributionId={contributionId} propertyId={propertyId} />
             </ItemInner>
         </Item>
     );
 };
 
 TableCell.propTypes = {
-    values: PropTypes.array
+    values: PropTypes.array,
+    contributionId: PropTypes.string.isRequired,
+    propertyId: PropTypes.string.isRequired
 };
 
 export default TableCell;
