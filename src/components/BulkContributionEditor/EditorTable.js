@@ -9,7 +9,8 @@ import { useSelector } from 'react-redux';
 import { ScrollSync, ScrollSyncPane } from 'react-scroll-sync';
 import ReactTable from 'react-table';
 import withFixedColumnsScrollEvent from 'react-table-hoc-fixed-columns';
-import 'react-table-hoc-fixed-columns/lib/styles.css'; // important: this line must be placed after react-table css import
+import 'react-table-hoc-fixed-columns/lib/styles.css';
+import { sortBy } from 'lodash';
 
 const ReactTableFixedColumns = withFixedColumnsScrollEvent(ReactTable);
 
@@ -28,14 +29,19 @@ const EditorTable = () => {
             property: properties[propertyId],
             values: Object.keys(contributions).map(
                 contributionId =>
-                    statementsByPropertyIdAndContributionId?.[propertyId]?.[contributionId]?.map(statementId => ({
-                        ...(statements[statementId].type === 'resource'
-                            ? resources[statements[statementId].objectId]
-                            : literals[statements[statementId].objectId]),
-                        statementId
-                    })) || [{}]
+                    sortBy(
+                        statementsByPropertyIdAndContributionId?.[propertyId]?.[contributionId]?.map(statementId => ({
+                            ...(statements[statementId].type === 'resource'
+                                ? resources[statements[statementId].objectId]
+                                : literals[statements[statementId].objectId]),
+                            statementId
+                        })),
+                        value => value?.label?.trim().toLowerCase()
+                    ) || [{}]
             )
         }));
+
+        data = sortBy(data, date => date.property.label.trim().toLowerCase());
 
         columns = [
             {
