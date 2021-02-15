@@ -1,8 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import { Badge } from 'reactstrap';
 import { Chart } from 'react-google-charts';
-import styled from 'styled-components';
-import Tippy from '@tippyjs/react';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { faCalendar, faUser } from '@fortawesome/free-solid-svg-icons';
 import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
+import moment from 'moment';
+import Tippy from '@tippyjs/react';
+import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
 const VisualizationCard = styled.div`
@@ -18,7 +22,6 @@ const DescriptionHeader = styled.div`
     background: ${props => props.theme.primary};
     padding: 5px;
     text-overflow: ellipsis;
-    height: 32px;
 `;
 
 const SingleVisualizationComponent = props => {
@@ -51,7 +54,7 @@ const SingleVisualizationComponent = props => {
     const visMethod = props.input.reconstructionModel.data.visMethod;
     const customizationState = props.input.reconstructionModel.data.reconstructionData.customizationState;
     // console.log(customizationState);
-    // console.log('costmization State: ', customizationState.xAxisLabel, customizationState.yAxisLabel);
+    // console.log('customization State: ', customizationState.xAxisLabel, customizationState.yAxisLabel);
     useEffect(() => {
         // we need to check if the data input for this component has changed iff then apply reconstructionModel)
         const renderingData = selfVisModel.applyReconstructionModel(props.input.reconstructionModel);
@@ -59,7 +62,6 @@ const SingleVisualizationComponent = props => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.input.reconstructionModel.orkgOrigin]);
 
-    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
     return (
         <Tippy
             onShow={handleMouseEnter}
@@ -78,12 +80,7 @@ const SingleVisualizationComponent = props => {
                         // height: windowHeight + 100 + 'px'
                     }}
                 >
-                    <DescriptionHeader>
-                        {/*{props.input.label.length > 0 ? 'Title: ' + props.input.label + ' | ' : ''}*/}
-                        {/*{props.input.description.length > 0 ? 'Description: ' + props.input.description : ''}*/}
-                        {props.input.label.length > 0 ? 'Title: ' + props.input.label : ''}
-                        {props.input.description.length === 0 && props.input.label.length === 0 && 'No title and no description available'}
-                    </DescriptionHeader>
+                    <DescriptionHeader>{props.input.label.length > 0 ? 'Title: ' + props.input.label : 'No Title'}</DescriptionHeader>
                     {isHovering && (
                         <Chart
                             chartType={visMethod}
@@ -104,22 +101,28 @@ const SingleVisualizationComponent = props => {
                     )}
                     <hr className="m-1" />
 
-                    <div className="d-flex pl-2 pr-2">
-                        <div style={{ width: '50%', borderRight: '2px solid #ddd', paddingRight: '5px' }}>
-                            <b>Description:</b> <br /> <span>{props.input.description}</span>{' '}
+                    <div className="d-flex">
+                        <div className="col-6 p-2 mb-2" style={{ borderRight: '2px solid #ddd' }}>
+                            <b>Description:</b> <br /> <span>{props.input.description ? props.input.description : 'No Description'}</span>{' '}
                         </div>
-                        <div className="ml-2" style={{ width: '47%' }}>
-                            <b>Meta Information:</b> <br />{' '}
-                            <span>Created on: {new Date(props.input.created_at).toLocaleDateString(undefined, options)}</span>
+                        <div className="col-6 p-2 mb-2">
+                            <b>Meta Information:</b> <br />
+                            <div className="mb-2">
+                                <i>Created on: </i>
+                                <span className="badge badge-lightblue mr-2">
+                                    <Icon icon={faCalendar} className="text-primary" />{' '}
+                                    {props.input.created_at ? moment(props.input.created_at).format('dddd, MMMM Do YYYY') : ''}
+                                </span>
+                            </div>
                             {props.input.authorNames && props.input.authorNames.length > 0 && (
-                                <div>
-                                    Created by:{' '}
-                                    {props.input.authorNames.map((item, index) => {
-                                        if (index === props.input.authorNames.length - 1) {
-                                            return <>{item.label} </>;
-                                        } else {
-                                            return <>{item.label}, </>;
-                                        }
+                                <div className="mb-2">
+                                    <i>Created by: </i>
+                                    {props.input.authorNames.map(item => {
+                                        return (
+                                            <Badge key={`author${item.id}`} color="lightblue" className="mr-2 mb-2">
+                                                <Icon icon={faUser} className="text-primary" /> {item.label}
+                                            </Badge>
+                                        );
                                     })}
                                 </div>
                             )}
