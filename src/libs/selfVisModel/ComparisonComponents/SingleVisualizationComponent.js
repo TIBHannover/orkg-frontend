@@ -6,6 +6,10 @@ import { faCalendar, faUser } from '@fortawesome/free-solid-svg-icons';
 import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
 import moment from 'moment';
 import Tippy from '@tippyjs/react';
+import { RESOURCE_TYPE_ID } from 'constants/misc';
+import ROUTES from 'constants/routes.js';
+import { Link } from 'react-router-dom';
+import { reverse } from 'named-urls';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
@@ -117,12 +121,26 @@ const SingleVisualizationComponent = props => {
                             {props.input.authorNames && props.input.authorNames.length > 0 && (
                                 <div className="mb-2">
                                     <i>Created by: </i>
-                                    {props.input.authorNames.map(item => {
-                                        return (
-                                            <Badge key={`author${item.id}`} color="lightblue" className="mr-2 mb-2">
-                                                <Icon icon={faUser} className="text-primary" /> {item.label}
-                                            </Badge>
-                                        );
+                                    {props.input.authorNames.map(author => {
+                                        if (author && author.class === RESOURCE_TYPE_ID) {
+                                            return (
+                                                <Link
+                                                    className="d-inline-block mr-2 mb-2"
+                                                    to={reverse(ROUTES.AUTHOR_PAGE, { authorId: author.id })}
+                                                    key={`author${author.id}`}
+                                                >
+                                                    <Badge color="lightblue">
+                                                        <Icon icon={faUser} className="text-primary" /> {author.label}
+                                                    </Badge>
+                                                </Link>
+                                            );
+                                        } else {
+                                            return (
+                                                <Badge key={`author${author.id}`} color="lightblue" className="mr-2 mb-2">
+                                                    <Icon icon={faUser} /> {author.label}
+                                                </Badge>
+                                            );
+                                        }
                                     })}
                                 </div>
                             )}
