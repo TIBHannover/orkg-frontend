@@ -54,6 +54,8 @@ export default class SelfVisDataMode {
             const customizationState = { ...this.loadCustomizationState() };
             const stateForGDC = {
                 xAxis: customizationState.xAxisSelector,
+                xAxisLabel: customizationState.xAxisLabel,
+                yAxisLabel: customizationState.yAxisLabel,
                 yAxis: customizationState.yAxisSelector,
                 yAxisIntervals: customizationState.yAxisInterValSelectors
             };
@@ -186,6 +188,8 @@ export default class SelfVisDataMode {
             errorDataNotSupported: false,
             errorMessage: undefined,
             xAxisSelector: undefined,
+            xAxisLabel: undefined,
+            yAxisLabel: undefined,
             xAxisSelectorOpen: false,
             yAxisSelector: [],
             yAxisInterValSelectors: {},
@@ -266,7 +270,9 @@ export default class SelfVisDataMode {
         const stateForGDC = {
             xAxis: reconstructionObject.customizationState.xAxisSelector,
             yAxis: reconstructionObject.customizationState.yAxisSelector,
-            yAxisIntervals: reconstructionObject.customizationState.yAxisInterValSelectors
+            yAxisIntervals: reconstructionObject.customizationState.yAxisInterValSelectors,
+            xAxisLabel: reconstructionObject.customizationState.xAxisLabel,
+            yAxisLabel: reconstructionObject.customizationState.yAxisLabel
         };
 
         const resultingData = this._googleChartsData.createDataFromSelectors(stateForGDC);

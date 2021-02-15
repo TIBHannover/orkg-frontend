@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownToggle } from 'reactstrap';
+import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Input } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import styled from 'styled-components';
@@ -50,7 +50,9 @@ export const getSelectorsState = ref => {
     return {
         xAxis: ref.state.xAxisSelector,
         yAxis: ref.state.yAxisSelector,
-        yAxisIntervals: ref.state.yAxisInterValSelectors
+        yAxisIntervals: ref.state.yAxisInterValSelectors,
+        xAxisLabel: ref.state.xAxisLabel,
+        yAxisLabel: ref.state.yAxisLabel
     };
 };
 
@@ -123,7 +125,7 @@ const createIntervalDropDownSelectors = (ref, id, interval_id, possibleValueCand
                 });
             }}
         >
-            <DropdownToggle caret color="darkblue" className="text-truncate mw-100">
+            <TippyDropdownToggle caret color="darkblue" className="text-truncate mw-100">
                 <Tippy
                     content={ref.state.yAxisInterValSelectors[id][interval_id].label}
                     placement="right"
@@ -142,7 +144,7 @@ const createIntervalDropDownSelectors = (ref, id, interval_id, possibleValueCand
                         {ref.state.yAxisInterValSelectors[id][interval_id].label}
                     </span>
                 </Tippy>
-            </DropdownToggle>
+            </TippyDropdownToggle>
             <DropdownMenu>{itemsArray}</DropdownMenu>
         </Dropdown>
     );
@@ -190,7 +192,11 @@ export const createValueSelectors = ref => {
                         onClick={() => {
                             const yAxisSelector = ref.state.yAxisSelector;
                             yAxisSelector[i] = item.label;
-                            ref.setState({ yAxisSelector: yAxisSelector });
+                            if (i !== 0) {
+                                ref.setState({ yAxisSelector: yAxisSelector });
+                            } else {
+                                ref.setState({ yAxisSelector: yAxisSelector, yAxisLabel: item.label });
+                            }
                         }}
                     >
                         <Tippy content={item.label} placement="right" disabled={item.label.length < 30}>
@@ -246,7 +252,7 @@ export const createValueSelectors = ref => {
                                 });
                             }}
                         >
-                            <DropdownToggle caret color="darkblue" className="text-truncate mw-100 ">
+                            <TippyDropdownToggle caret color="darkblue" className="text-truncate mw-100 ">
                                 <Tippy
                                     content={ref.state.yAxisSelector[id] ? ref.state.yAxisSelector[id] : possibleValueCandidates[0].label}
                                     placement="right"
@@ -269,7 +275,7 @@ export const createValueSelectors = ref => {
                                         {ref.state.yAxisSelector[id] ? ref.state.yAxisSelector[id] : possibleValueCandidates[0].label}
                                     </span>
                                 </Tippy>
-                            </DropdownToggle>
+                            </TippyDropdownToggle>
                             <DropdownMenu>{itemsArray[id]}</DropdownMenu>
                         </Dropdown>
                         {possibleValueCandidates.length > 1 &&
@@ -301,6 +307,77 @@ export const createValueSelectors = ref => {
     }
 };
 
+// export const createValueEditor = ref => {
+//     const label = ref.state.yAxisLabel;
+//     const chached = ref.state.cachedXAxisSelector;
+//
+//     return createEditorForAxis(label, cached);
+//
+//     let initValue = '';
+//     if (ref.state.yAxisLabel === null) {
+//         if (ref && ref.state.yAxisLabel && ref.state.yAxisLabel.length > 0) {
+//             initValue = ref.state.yAxisLabel;
+//         }
+//         if (initValue.length === 0) {
+//             initValue = ref.cachedXAxisSelector.yAxisSelector;
+//         }
+//     }
+//     return (
+//         <Input
+//             value={ref.state.yAxisLabel ? ref.state.yAxisLabel : initValue}
+//             onChange={event => {
+//                 ref.setState({
+//                     yAxisLabel: event.target.value
+//                 });
+//             }}
+//         />
+//     );
+// };
+
+export const createLabelEditor = ref => {
+    let initValue = '';
+    if (ref.state.xAxisLabel === undefined) {
+        if (ref.cachedXAxisSelector) {
+            initValue = ref.cachedXAxisSelector.xAxisSelector ? ref.cachedXAxisSelector.xAxisSelector : '';
+        }
+    }
+    return (
+        <Input
+            value={ref.state.xAxisLabel ? ref.state.xAxisLabel : initValue}
+            onChange={event => {
+                ref.setState({
+                    xAxisLabel: event.target.value
+                });
+            }}
+        />
+    );
+};
+//
+export const createValueEditor = ref => {
+    let initValue = '';
+    if (ref.state.yAxisLabel === undefined) {
+        if (ref.yAxisSelector) {
+            initValue = ref.yAxisSelector[0] ? ref.yAxisSelector[0] : '';
+        }
+        if (!ref.yAxisSelector) {
+            if (ref.cachedYAxisSelector) {
+                initValue = ref.cachedYAxisSelector.yAxisSelector[0] ? ref.cachedYAxisSelector.yAxisSelector[0] : '';
+            }
+        }
+    }
+
+    return (
+        <Input
+            value={ref.state.yAxisLabel ? ref.state.yAxisLabel : initValue}
+            onChange={event => {
+                ref.setState({
+                    yAxisLabel: event.target.value
+                });
+            }}
+        />
+    );
+};
+
 export const createLabelSelectors = ref => {
     // we get the default selection from the model;
     // find properties that map to strings;
@@ -318,7 +395,7 @@ export const createLabelSelectors = ref => {
                 <DropdownItem
                     key={'XSelectionDropdownItemIndexKey_' + id}
                     onClick={() => {
-                        ref.setState({ xAxisSelector: item.label });
+                        ref.setState({ xAxisSelector: item.label, xAxisLabel: item.label });
                     }}
                 >
                     <Tippy content={item.label} placement="right" disabled={item.label.length < 30}>
@@ -353,7 +430,7 @@ export const createLabelSelectors = ref => {
                     });
                 }}
             >
-                <DropdownToggle caret color="darkblue" className="text-truncate mw-100">
+                <TippyDropdownToggle caret color="darkblue" className="text-truncate mw-100">
                     <Tippy
                         content={ref.state.xAxisSelector ? ref.state.xAxisSelector : possibleLabelCandidates[0].label}
                         placement="right"
@@ -372,9 +449,16 @@ export const createLabelSelectors = ref => {
                             {ref.state.xAxisSelector ? ref.state.xAxisSelector : possibleLabelCandidates[0].label}
                         </span>
                     </Tippy>
-                </DropdownToggle>
+                </TippyDropdownToggle>
                 <DropdownMenu>{items}</DropdownMenu>
             </Dropdown>
         );
     }
 };
+
+// some adjustments for caret position with tippy
+const TippyDropdownToggle = styled(DropdownToggle)`
+    ::after {
+        vertical-align: 0.555em !important;
+    }
+`;

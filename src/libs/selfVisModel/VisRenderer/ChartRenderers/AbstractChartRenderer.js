@@ -39,6 +39,23 @@ class AbstractChartRenderer extends Component {
 
     render() {
         const renderingData = this.createRenderingData();
+        let XLabel = '';
+        let YLabel = '';
+
+        if (this.props.customizationState) {
+            if (this.props.customizationState.xAxisLabel === undefined) {
+                XLabel = this.props.customizationState.xAxis;
+            } else {
+                XLabel = this.props.customizationState.xAxisLabel;
+            }
+
+            if (this.props.customizationState.yAxisLabel === undefined) {
+                YLabel = this.props.customizationState.yAxis[0];
+            } else {
+                YLabel = this.props.customizationState.yAxisLabel;
+            }
+        }
+        // addLabels to charts
         return (
             <div style={{ padding: '10px' }}>
                 {renderingData ? (
@@ -48,7 +65,15 @@ class AbstractChartRenderer extends Component {
                         data={renderingData}
                         width="100%"
                         height={this.props.visualizationHeight - 10}
-                        options={{ showRowNumber: true }}
+                        options={{
+                            showRowNumber: true,
+                            hAxis: {
+                                title: XLabel
+                            },
+                            vAxis: {
+                                title: YLabel
+                            }
+                        }}
                     />
                 ) : (
                     <div>No Rendering Data Yet</div>

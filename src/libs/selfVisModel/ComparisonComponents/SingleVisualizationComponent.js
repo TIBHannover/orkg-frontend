@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Chart } from 'react-google-charts';
 import styled from 'styled-components';
 import Tippy from '@tippyjs/react';
@@ -49,7 +49,9 @@ const SingleVisualizationComponent = props => {
     };
 
     const visMethod = props.input.reconstructionModel.data.visMethod;
-
+    const customizationState = props.input.reconstructionModel.data.reconstructionData.customizationState;
+    // console.log(customizationState);
+    // console.log('costmization State: ', customizationState.xAxisLabel, customizationState.yAxisLabel);
     useEffect(() => {
         // we need to check if the data input for this component has changed iff then apply reconstructionModel)
         const renderingData = selfVisModel.applyReconstructionModel(props.input.reconstructionModel);
@@ -57,6 +59,7 @@ const SingleVisualizationComponent = props => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.input.reconstructionModel.orkgOrigin]);
 
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
     return (
         <Tippy
             onShow={handleMouseEnter}
@@ -71,13 +74,14 @@ const SingleVisualizationComponent = props => {
                     style={{
                         overflow: 'hidden',
                         borderRadius: '4px',
-                        width: windowWidth - 20 + 'px',
-                        height: windowHeight + 'px'
+                        width: windowWidth + 'px'
+                        // height: windowHeight + 100 + 'px'
                     }}
                 >
                     <DescriptionHeader>
-                        {props.input.label.length > 0 ? 'Title: ' + props.input.label + ' | ' : ''}
-                        {props.input.description.length > 0 ? 'Description: ' + props.input.description : ''}
+                        {/*{props.input.label.length > 0 ? 'Title: ' + props.input.label + ' | ' : ''}*/}
+                        {/*{props.input.description.length > 0 ? 'Description: ' + props.input.description : ''}*/}
+                        {props.input.label.length > 0 ? 'Title: ' + props.input.label : ''}
                         {props.input.description.length === 0 && props.input.label.length === 0 && 'No title and no description available'}
                     </DescriptionHeader>
                     {isHovering && (
@@ -85,13 +89,42 @@ const SingleVisualizationComponent = props => {
                             chartType={visMethod}
                             data={renderingData}
                             width={windowWidth - 20 + 'px'}
-                            height={windowHeight + 'px'}
+                            height={windowHeight - 50 + 'px'}
                             options={{
                                 showRowNumber: true,
-                                width: '100%'
+                                width: '100%',
+                                hAxis: {
+                                    title: customizationState.xAxisLabel
+                                },
+                                vAxis: {
+                                    title: customizationState.yAxisLabel
+                                }
                             }}
                         />
                     )}
+                    <hr className="m-1" />
+
+                    <div className="d-flex pl-2 pr-2">
+                        <div style={{ width: '50%', borderRight: '2px solid #ddd', paddingRight: '5px' }}>
+                            <b>Description:</b> <br /> <span>{props.input.description}</span>{' '}
+                        </div>
+                        <div className="ml-2" style={{ width: '47%' }}>
+                            <b>Meta Information:</b> <br />{' '}
+                            <span>Created on: {new Date(props.input.created_at).toLocaleDateString(undefined, options)}</span>
+                            {props.input.authorNames && props.input.authorNames.length > 0 && (
+                                <div>
+                                    Created by:{' '}
+                                    {props.input.authorNames.map((item, index) => {
+                                        if (index === props.input.authorNames.length - 1) {
+                                            return <>{item.label} </>;
+                                        } else {
+                                            return <>{item.label}, </>;
+                                        }
+                                    })}
+                                </div>
+                            )}
+                        </div>
+                    </div>
                     {!isHovering && <div style={{ width: windowWidth - 20 + 'px', height: windowHeight - 50 + 'px' }} />}
                 </div>
             }
@@ -106,7 +139,23 @@ const SingleVisualizationComponent = props => {
             >
                 <div style={{ padding: '5px', pointerEvents: 'none', minWidth: '200px', minHeight: '100px' }}>
                     {renderingData && (
-                        <Chart chartType={visMethod} data={renderingData} width="200px" height="100px" options={{ showRowNumber: true }} />
+                        <Chart
+                            chartType={visMethod}
+                            data={renderingData}
+                            width="200px"
+                            height="100px"
+                            options={{
+                                width: '100%',
+                                chartArea: { height: '50%' },
+                                showRowNumber: true,
+                                hAxis: {
+                                    title: customizationState.xAxisLabel
+                                },
+                                vAxis: {
+                                    title: customizationState.yAxisLabel
+                                }
+                            }}
+                        />
                     )}
                 </div>
             </VisualizationCard>

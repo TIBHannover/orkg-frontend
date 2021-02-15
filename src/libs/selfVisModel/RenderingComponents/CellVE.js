@@ -32,10 +32,14 @@ const CellVE = props => {
     const propertyCell = selfVisModel.mrrModel.propertyAnchors[(props.data?.positionPropertyAnchor)];
     const mapper = propertyCell?.getPropertyMapperType();
 
+    const disableCellValueEdit = true; // this flag is used to disable the editing of the cell values, headers still editable
+
     const cellValueDoubleClicked = () => {
         props.tippySource.data.instance.disable();
         // disable cell value edit **This is a draft**
-
+        if (disableCellValueEdit && props.type === 'value') {
+            return;
+        }
         setRenderingItem('input');
     };
     const cellValueChanged = event => {
