@@ -246,7 +246,12 @@ export const updateProperty = ({ id, statementIds, action, newId = null, newLabe
 };
 
 // contributions
-export const updateContribution = ({ title, year }) => dispatch => {};
+export const updateContribution = payload => dispatch => {
+    dispatch({
+        type: type.BULK_CONTRIBUTION_EDITOR_CONTRIBUTION_UPDATE,
+        payload
+    });
+};
 
 export const startLoading = () => ({
     type: type.BULK_CONTRIBUTION_EDITOR_LOADING_START

@@ -9,14 +9,14 @@ import EditItem from 'components/ViewPaper/EditDialog/EditItem';
 
 const EditPaperDialog = ({ paperData, isOpen, toggle, afterUpdate }) => {
     const [openItem, setOpenItem] = useState('title');
-    const [title, setTitle] = useState(paperData.paper.label);
-    const [month, setMonth] = useState(paperData.month.label);
-    const [year, setYear] = useState(paperData.year.label);
-    const [authors, setAuthors] = useState(paperData.authors);
-    const [doi, setDoi] = useState(paperData.doi.label);
+    const [title, setTitle] = useState(paperData.paper?.label);
+    const [month, setMonth] = useState(paperData.month?.label);
+    const [year, setYear] = useState(paperData.year?.label);
+    const [authors, setAuthors] = useState(paperData.authors ?? []);
+    const [doi, setDoi] = useState(paperData.doi?.label);
     const [publishedIn, setPublishedIn] = useState(paperData.publishedIn);
     const [researchField, setResearchField] = useState(paperData.researchField);
-    const [url, setUrl] = useState(paperData.url.label);
+    const [url, setUrl] = useState(paperData.url?.label);
     const [isVerified, setIsVerified] = useState(!!paperData.isVerified);
     const { editPaper, isLoadingEdit } = useEditPaper();
     const user = useSelector(state => state.auth.user);

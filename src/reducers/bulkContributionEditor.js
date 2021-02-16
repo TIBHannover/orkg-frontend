@@ -28,6 +28,14 @@ export default function reducer(state = initialState, action) {
             return dotProp.set(state, 'contributions', omit(state.contributions, contributionIds));
         }
 
+        case type.BULK_CONTRIBUTION_EDITOR_CONTRIBUTION_UPDATE: {
+            const { id, title, year } = action.payload;
+            return dotProp.merge(state, `contributions.${id}`, {
+                title,
+                year
+            });
+        }
+
         case type.BULK_CONTRIBUTION_EDITOR_LITERAL_UPDATE: {
             const { id, label } = action.payload;
             return dotProp.set(state, `literals.${id}.label`, label);

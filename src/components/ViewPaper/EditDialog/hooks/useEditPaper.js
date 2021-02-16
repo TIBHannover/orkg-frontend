@@ -6,20 +6,21 @@ import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { createLiteral as createLiteralApi, updateLiteral } from 'services/backend/literals';
 import { markAsUnverified, markAsVerified } from 'services/backend/papers';
-import { createResource, updateResource } from 'services/backend/resources';
+import { createResource, getResource, updateResource } from 'services/backend/resources';
 import {
     createLiteralStatement,
     createResourceStatement,
     deleteStatementById,
     deleteStatementsByIds,
     getStatementsByPredicateAndLiteral,
+    getStatementsBySubject,
     updateStatement
 } from 'services/backend/statements';
+import { getIsVerified } from 'services/backend/papers';
 
 const useEditPaper = () => {
     const [isLoadingEdit, setIsLoadingEdit] = useState(false);
     const [isLoadingAuthors, setIsLoadingAuthors] = useState(false);
-
     const user = useSelector(state => state.auth.user);
 
     const editPaper = async ({ paper, month, year, authors, prevAuthors, doi, publishedIn, researchField, url, isVerified }) => {
@@ -113,6 +114,38 @@ const useEditPaper = () => {
         return updatedData;
     };
 
+    const loadPaperData = async id => {
+        const paper = await getResource(id);
+        const paperStatements = await getStatementsBySubject({ id });
+        const isVerified = await getIsVerified(id);
+
+        const data = {
+            paper,
+            authors: [],
+            isVerified
+        };
+
+        const propertyIdToKey = {
+            [PREDICATES.HAS_PUBLICATION_MONTH]: 'month',
+            [PREDICATES.HAS_PUBLICATION_YEAR]: 'year',
+            [PREDICATES.HAS_DOI]: 'doi',
+            [PREDICATES.HAS_VENUE]: 'publishedIn',
+            [PREDICATES.HAS_RESEARCH_FIELD]: 'researchField',
+            [PREDICATES.URL]: 'url'
+        };
+
+        for (const { predicate: property, object } of paperStatements) {
+            if (property.id in propertyIdToKey) {
+                data[propertyIdToKey[property.id]] = object;
+            }
+            if (property.id === PREDICATES.HAS_AUTHOR) {
+                data.authors.push(object);
+            }
+        }
+
+        return data;
+    };
+
     const updateOrCreateLiteral = async ({ id = null, label, predicateId, paperId }) => {
         if (id) {
             updateLiteral(id, label);
@@ -203,7 +236,7 @@ const useEditPaper = () => {
         return authorsUpdated;
     };
 
-    return { editPaper, updateAuthors, isLoadingEdit, isLoadingAuthors };
+    return { editPaper, updateAuthors, loadPaperData, isLoadingEdit, isLoadingAuthors };
 };
 
 export default useEditPaper;
