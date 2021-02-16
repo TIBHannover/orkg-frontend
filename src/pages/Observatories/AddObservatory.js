@@ -28,6 +28,7 @@ class AddObservatory extends Component {
             observatoryId: '',
             researchField: '',
             organizationName: '',
+            url: '',
             isLoadingOrganization: true,
             errorLoadingOrganization: null
         };
@@ -55,11 +56,12 @@ class AddObservatory extends Component {
         const value = this.state.value;
         const description = this.state.description;
         const researchField = this.state.researchField.id;
+        const uriName = this.state.url;
 
-        if (value && value.length !== 0 && description && description.length !== 0 && researchField) {
+        if (value && value.length !== 0 && description && description.length !== 0 && researchField && uriName.length !== 0) {
             try {
-                const observatory = await createObservatory(value, this.props.match.params.id, description, researchField);
-                this.navigateToObservatory(observatory.id);
+                const observatory = await createObservatory(value, this.props.match.params.id, description, researchField, uriName);
+                this.navigateToObservatory(observatory.uri_name);
             } catch (error) {
                 this.setState({ editorState: 'edit' });
                 console.error(error);
@@ -73,6 +75,14 @@ class AddObservatory extends Component {
 
     handleChange = event => {
         this.setState({ [event.target.name]: event.target.value.trim() });
+        if (event.target.name === 'value') {
+            this.setState({
+                url: event.target.value
+                    .trim()
+                    .replace(/['"]+/g, '')
+                    .replace(/ /g, '_')
+            });
+        }
     };
 
     navigateToObservatory = observatoryId => {
@@ -117,6 +127,18 @@ class AddObservatory extends Component {
                                             id="ObservatoryLabel"
                                             disabled={loading}
                                             placeholder="Observatory name"
+                                        />
+                                    </FormGroup>
+                                    <FormGroup>
+                                        <Label for="ObservatoryURL">Observatory URL</Label>
+                                        <Input
+                                            onChange={this.handleChange}
+                                            type="text"
+                                            name="url"
+                                            id="ObservatoryURL"
+                                            disabled={loading}
+                                            placeholder="Observatory URL"
+                                            value={this.state.url}
                                         />
                                     </FormGroup>
                                     <FormGroup>
