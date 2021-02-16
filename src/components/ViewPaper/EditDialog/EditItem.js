@@ -8,7 +8,7 @@ import moment from 'moment';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { Button, Input, InputGroup, InputGroupAddon } from 'reactstrap';
-import { resourcesUrl } from 'services/backend/resources';
+import { createResource, resourcesUrl } from 'services/backend/resources';
 import { range } from 'utils';
 
 const EditItem = props => {
@@ -51,12 +51,30 @@ const EditItem = props => {
         const authors = props.value.map(author => author.label);
         stringValue = authors.length > 2 ? `${authors.slice(0, 2).join(', ')} et al.` : authors.join(', ');
     } else if (props.type === 'publishedIn') {
+        const handleChange = async (selected, action) => {
+            if (action.action === 'select-option') {
+                props.onChange(selected);
+            } else if (action.action === 'create-option') {
+                const newVenue = await createResource(selected.label, [CLASSES.VENUE]);
+                props.onChange({
+                    ...selected,
+                    id: newVenue.id
+                });
+            } else if (action.action === 'clear') {
+                props.onChange({
+                    ...selected,
+                    id: null,
+                    label: null
+                });
+            }
+        };
+
         input = (
             <AutoComplete
                 allowCreate
                 requestUrl={resourcesUrl}
                 optionsClass={CLASSES.VENUE}
-                onChange={props.onChange}
+                onChange={handleChange}
                 placeholder="Select or type to enter a venue"
                 autoFocus
                 cacheOptions
