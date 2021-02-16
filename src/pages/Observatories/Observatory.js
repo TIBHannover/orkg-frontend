@@ -37,6 +37,7 @@ class Observatory extends Component {
 
         this.state = {
             error: null,
+            observatory_id: '',
             label: '',
             description: '',
             researchField: null,
@@ -58,17 +59,17 @@ class Observatory extends Component {
         };
     }
 
-    componentDidMount() {
-        this.loadObservatory();
+    async componentDidMount() {
+        await this.loadObservatory();
         this.loadContributors();
         this.loadPapers();
         this.loadComparisons();
         this.loadProblems();
     }
 
-    componentDidUpdate = prevProps => {
+    componentDidUpdate = async prevProps => {
         if (this.props.match.params.id !== prevProps.match.params.id) {
-            this.loadObservatory();
+            await this.loadObservatory();
             this.loadContributors();
             this.loadPapers();
             this.loadComparisons();
@@ -76,12 +77,15 @@ class Observatory extends Component {
         }
     };
 
-    loadObservatory = () => {
+    loadObservatory = async () => {
         this.setState({ isLoading: true });
-        getObservatoryById(this.props.match.params.id)
+        console.log(this.props.match.params.id);
+        await getObservatoryById(this.props.match.params.id)
             .then(observatory => {
+                console.log(observatory);
                 document.title = `${observatory.name} - Details`;
                 this.setState({
+                    observatory_id: observatory.id,
                     label: observatory.name,
                     description: observatory.description,
                     isLoading: false,
@@ -96,7 +100,10 @@ class Observatory extends Component {
 
     loadPapers = () => {
         this.setState({ isLoadingPapers: true });
-        getResourcesByObservatoryId(this.props.match.params.id)
+        //getResourcesByObservatoryId(this.props.match.params.id)
+        console.log('1');
+        console.log(this.state.observatory_id);
+        getResourcesByObservatoryId(this.state.observatory_id)
             .then(papers => {
                 // Fetch the data of each comparison
                 return getStatementsBySubjects({
@@ -123,7 +130,8 @@ class Observatory extends Component {
 
     loadComparisons = () => {
         this.setState({ isLoadingComparisons: true });
-        getComparisonsByObservatoryId(this.props.match.params.id)
+        //getComparisonsByObservatoryId(this.props.match.params.id)
+        getComparisonsByObservatoryId(this.state.observatory_id)
             .then(comparisons => {
                 // Fetch the data of each comparison
                 return getStatementsBySubjects({
@@ -157,7 +165,8 @@ class Observatory extends Component {
 
     loadProblems = () => {
         this.setState({ isLoadingProblems: true });
-        getProblemsByObservatoryId(this.props.match.params.id)
+        //getProblemsByObservatoryId(this.props.match.params.id)
+        getProblemsByObservatoryId(this.state.observatory_id)
             .then(problems => {
                 this.setState({
                     problemsList: problems,
@@ -175,7 +184,8 @@ class Observatory extends Component {
 
     loadContributors = () => {
         this.setState({ isLoadingContributors: true });
-        getUsersByObservatoryId(this.props.match.params.id)
+        //getUsersByObservatoryId(this.props.match.params.id)
+        getUsersByObservatoryId(this.state.observatory_id)
             .then(contributors => {
                 this.setState({
                     contributors: contributors,
@@ -490,7 +500,8 @@ class Observatory extends Component {
                     showDialog={this.state.showEditDialog}
                     toggle={() => this.toggle('showEditDialog')}
                     label={this.state.label}
-                    id={this.props.match.params.id}
+                    //id={this.props.match.params.id}
+                    id={this.state.observatory_id}
                     description={this.state.description}
                     researchField={this.state.researchField}
                     updateObservatoryMetadata={this.updateObservatoryMetadata}
@@ -499,7 +510,8 @@ class Observatory extends Component {
                 <AddResearchProblem
                     showDialog={this.state.showAddResearchProblemDialog}
                     toggle={() => this.toggle('showAddResearchProblemDialog')}
-                    id={this.props.match.params.id}
+                    //id={this.props.match.params.id}
+                    id={this.state.observatory_id}
                     organizationId={this.state.organizationsList.length > 0 ? this.state.organizationsList[0]['id'] : ''}
                     updateObservatoryResearchProblem={this.updateObservatoryResearchProblem}
                 />

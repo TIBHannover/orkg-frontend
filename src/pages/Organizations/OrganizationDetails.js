@@ -208,7 +208,7 @@ class OrganizationDetails extends Component {
                                                             return (
                                                                 <Card body key={`c${index}`} className="mt-1 border-0 p-0">
                                                                     <CardTitle>
-                                                                        <Link to={reverse(ROUTES.OBSERVATORY, { id: observatory.id })}>
+                                                                        <Link to={reverse(ROUTES.OBSERVATORY, { id: observatory.uri_name })}>
                                                                             {observatory.name}
                                                                         </Link>
                                                                     </CardTitle>
