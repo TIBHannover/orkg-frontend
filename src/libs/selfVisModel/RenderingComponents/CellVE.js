@@ -31,7 +31,6 @@ const CellVE = props => {
 
     const propertyCell = selfVisModel.mrrModel.propertyAnchors[(props.data?.positionPropertyAnchor)];
     const mapper = propertyCell?.getPropertyMapperType();
-
     const disableCellValueEdit = true; // this flag is used to disable the editing of the cell values, headers still editable
 
     const cellValueDoubleClicked = () => {
@@ -59,24 +58,30 @@ const CellVE = props => {
             let isValid = false;
             let err = undefined;
             if (mapper) {
-                // call the validator for this cell value;
-                const { error } = validateCellMapping(mapper, props.data.label);
-                let errorMessage = undefined;
-                if (error) {
-                    errorMessage = error.message;
-                    isValid = false;
+                // add handler for default mapper selector (if no mapper is selected remove col from gdc model and set validationFlag to false)
+                if (mapper === 'Select Mapper') {
+                    props.data.cellValueIsValid = false;
+                    setCellValueIsValid(false);
                 } else {
-                    isValid = true;
-                }
-                const newValue = isValid;
-                const oldValue = prevCellValueIsValid;
-                if (newValue !== oldValue) {
-                    props.data.cellValueIsValid = newValue;
-                    setCellValueIsValid(newValue);
-                    setErrorMessage(errorMessage);
+                    const { error } = validateCellMapping(mapper, props.data.label);
+                    let errorMessage = undefined;
+                    if (error) {
+                        errorMessage = error.message;
+                        isValid = false;
+                    } else {
+                        isValid = true;
+                    }
+                    const newValue = isValid;
+                    const oldValue = prevCellValueIsValid;
+                    if (newValue !== oldValue) {
+                        props.data.cellValueIsValid = newValue;
+                        setCellValueIsValid(newValue);
+                        setErrorMessage(errorMessage);
+                    }
                 }
             } else {
                 err = props.data.label ? 'No mapper selected' : 'Empty cell value';
+
                 setErrorMessage(err);
             }
         }

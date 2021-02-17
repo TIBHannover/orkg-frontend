@@ -285,7 +285,9 @@ export default class SelfVisDataMode {
 
     createGDCDataModel = () => {
         // filter the propertyAnchors by selectionFlag;
-        const filteredProperties = this.mrrModel.propertyAnchors.filter(item => item.isSelectedColumnForUse === true);
+        const filteredProperties = this.mrrModel.propertyAnchors.filter(
+            item => item.isSelectedColumnForUse === true && item.propertyMapperType !== 'Select Mapper'
+        );
         // now figure out how many rows we do have;
         const filteredContribs = this.mrrModel.contributionAnchors.filter(item => item.isSelectedRowForUse === true);
 
