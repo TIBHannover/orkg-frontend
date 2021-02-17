@@ -6,10 +6,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faRedoAlt } from '@fortawesome/free-solid-svg-icons';
 import CreatableSelect from 'react-select/creatable';
 import { components } from 'react-select';
-import DatePicker from 'components/DatePicker/DatePicker';
 import Joi from '@hapi/joi';
-import JoiDate from '@hapi/joi-date';
-import moment from 'moment';
 
 const createOption = label => ({
     label,
@@ -21,7 +18,7 @@ const OrdinalFilterRule = props => {
     const { property, rules, updateRulesOfProperty, typeIsDate, toggleFilterDialog } = props.dataController;
     const { label: propertyName, id: propertyId } = property;
 
-    const type = typeIsDate ? 'datetime' : 'number';
+    const type = typeIsDate ? 'date' : 'number';
 
     const minPlaceHolder = typeIsDate ? 'yyyy-mm-dd' : 'min';
     const minLabel = typeIsDate ? 'is after or at the same date' : 'is greater than or equal to';
@@ -31,16 +28,15 @@ const OrdinalFilterRule = props => {
     const maxLabel = typeIsDate ? 'is before or at the same date' : 'is less than or equal to';
     const maxRuleType = typeIsDate ? FILTER_TYPES.LTE_DATE : FILTER_TYPES.LTE;
 
-    const nEqPlaceHolder = typeIsDate ? 'date1,date2,...' : 'value1,value2,...';
+    const nEqPlaceHolder = typeIsDate ? null : 'value1,value2,...';
     const nEqLabel = 'not equal to';
     const nEqRuleType = typeIsDate ? FILTER_TYPES.NEQ_DATE : FILTER_TYPES.NEQ;
 
     const invalidText = typeIsDate ? 'should match the format: yyyy-mm-dd' : 'should be Number';
     const validateFunc = str => (typeIsDate ? isDate(str) : isNum(str));
     const isDate = str => {
-        const { error } = Joi.extend(JoiDate)
-            .date()
-            .format('YYYY-MM-DD')
+        const { error } = Joi.date()
+
             .required()
             .validate(str);
         return !error ? true : false;
@@ -56,10 +52,10 @@ const OrdinalFilterRule = props => {
     const maxValue = typeof maxRule === 'undefined' ? '' : maxRule.value;
     const nEqValueArr = typeof nEqRule === 'undefined' ? [] : nEqRule.value.map(createOption);
 
-    const [minInput, setMinInput] = useState(minValue && typeIsDate ? moment(minValue, 'YYYY-MM-DD').toDate() : minValue);
+    const [minInput, setMinInput] = useState(minValue);
     const [minInvalid, setMinInvalid] = useState(false);
 
-    const [maxInput, setMaxInput] = useState(maxValue && typeIsDate ? moment(maxValue, 'YYYY-MM-DD').toDate() : maxValue);
+    const [maxInput, setMaxInput] = useState(maxValue);
     const [maxInvalid, setMaxInvalid] = useState(false);
 
     const [nEqInputValue, setNEqInputValue] = useState('');
@@ -125,37 +121,21 @@ const OrdinalFilterRule = props => {
     };
 
     const handleApply = () => {
-        updateRulesOfProperty(
-            calRules(
-                !typeIsDate ? minInput : moment(minInput, 'YYYY-MM-DD').format('YYYY-MM-DD'),
-                !typeIsDate ? maxInput : moment(maxInput, 'YYYY-MM-DD').format('YYYY-MM-DD'),
-                [...nEqValue, createOption(nEqInputValue)]
-            )
-        );
+        updateRulesOfProperty(calRules(minInput, maxInput, [...nEqValue, createOption(nEqInputValue)]));
         toggleFilterDialog();
     };
 
-    const handleDatePickerOnChange = useCallback(date => {
+    const handleDatePickerOnChange = useCallback(event => {
         setNEqInputValue('');
-        setNEqValue(nEqValue => [...nEqValue, createOption(moment(date, 'YYYY-MM-DD').format('YYYY-MM-DD'))]);
+        setNEqValue(nEqValue => [...nEqValue, createOption(event.target.value)]);
     }, []);
 
     const CustomInput = useCallback(
-        ({ onChange, ...innerProps }) => {
+        ({ ...innerProps }) => {
             if (typeIsDate) {
-                return (
-                    <DatePicker
-                        onChange={handleDatePickerOnChange}
-                        cssClasses="form-control-sm"
-                        dateFormat="yyyy-MM-dd"
-                        selected={nEqInputValue}
-                        placeholder={nEqPlaceHolder}
-                        renderCustomHeader={false}
-                        {...innerProps}
-                    />
-                );
+                return <Input value={innerProps.value} className="form-control-sm" onChange={handleDatePickerOnChange} type="date" />;
             }
-            return <components.Input {...innerProps} onChange={onChange} />;
+            return <components.Input {...innerProps} />;
         },
         // eslint-disable-next-line react-hooks/exhaustive-deps
         []
@@ -164,7 +144,6 @@ const OrdinalFilterRule = props => {
     const customStyles = {
         valueContainer: provided => ({
             ...provided,
-            overflow: typeIsDate ? 'visible' : 'hidden',
             '& input': {
                 backgroundColor: 'transparent !important',
                 border: '0 !important',
@@ -178,28 +157,14 @@ const OrdinalFilterRule = props => {
             <FormGroup row>
                 <Label sm={6}>{minLabel}</Label>
                 <Col sm={6}>
-                    {!typeIsDate && (
-                        <Input
-                            type={type}
-                            id={`min${propertyId}`}
-                            placeholder={minPlaceHolder}
-                            value={minInput}
-                            invalid={minInvalid}
-                            onChange={handleMinChange}
-                        />
-                    )}
-                    {typeIsDate && (
-                        <DatePicker
-                            dateFormat="yyyy-MM-dd"
-                            isClearable
-                            selected={minInput}
-                            placeholder={minPlaceHolder}
-                            onChange={date => {
-                                setMinInput(date);
-                                isEmptyOrValid(date) ? setMinInvalid(false) : setMinInvalid(true);
-                            }}
-                        />
-                    )}
+                    <Input
+                        type={type}
+                        id={`min${propertyId}`}
+                        placeholder={minPlaceHolder}
+                        value={minInput}
+                        invalid={minInvalid}
+                        onChange={handleMinChange}
+                    />
                     <FormFeedback className={minInvalid ? 'd-block text-right' : 'd-none'}>{invalidText}</FormFeedback>
                 </Col>
             </FormGroup>
@@ -207,28 +172,15 @@ const OrdinalFilterRule = props => {
             <FormGroup row>
                 <Label sm={6}>{maxLabel}</Label>
                 <Col sm={6}>
-                    {!typeIsDate && (
-                        <Input
-                            type={type}
-                            id={`max${propertyId}`}
-                            placeholder={maxPlaceHolder}
-                            value={maxInput}
-                            invalid={maxInvalid}
-                            onChange={handleMaxChange}
-                        />
-                    )}
-                    {typeIsDate && (
-                        <DatePicker
-                            dateFormat="yyyy-MM-dd"
-                            isClearable
-                            selected={maxInput}
-                            placeholder={maxPlaceHolder}
-                            onChange={date => {
-                                setMaxInput(date);
-                                isEmptyOrValid(date) ? setMaxInvalid(false) : setMaxInvalid(true);
-                            }}
-                        />
-                    )}
+                    <Input
+                        type={type}
+                        id={`max${propertyId}`}
+                        placeholder={maxPlaceHolder}
+                        value={maxInput}
+                        invalid={maxInvalid}
+                        onChange={handleMaxChange}
+                    />
+
                     <FormFeedback className={maxInvalid ? 'd-block text-right' : 'd-none'}>{invalidText}</FormFeedback>
                 </Col>
             </FormGroup>
