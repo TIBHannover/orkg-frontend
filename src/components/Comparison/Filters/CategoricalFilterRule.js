@@ -1,9 +1,8 @@
-import { useState } from 'react';
-import { CustomInput, Button, Badge } from 'reactstrap';
-import PropTypes from 'prop-types';
+import FilterModalFooter from 'components/Comparison/Filters/FilterModalFooter';
 import { FILTER_TYPES } from 'constants/comparisonFilterTypes';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faRedoAlt } from '@fortawesome/free-solid-svg-icons';
+import PropTypes from 'prop-types';
+import { useState } from 'react';
+import { Badge, Button, CustomInput, ModalBody } from 'reactstrap';
 
 const CategoricalFilterRule = props => {
     const { property, values, rules, updateRulesOfProperty, toggleFilterDialog } = props.dataController;
@@ -69,7 +68,7 @@ const CategoricalFilterRule = props => {
                     onChange={handleCheckboxChange}
                     checked={item.checked}
                 >
-                    <Badge color="light" pill>
+                    <Badge color="light" className="ml-2" pill>
                         {values[item.label].length}
                     </Badge>
                 </CustomInput>
@@ -78,22 +77,18 @@ const CategoricalFilterRule = props => {
     };
 
     return (
-        <div className="ml-2">
-            {checkboxList()}
+        <>
+            <ModalBody>
+                <div className="ml-2">
+                    {checkboxList()}
 
-            <Button className={getValuesNr() < DEFAULT_MAX_CATEGORIES ? 'd-none' : 'p-0'} color="link" size="sm" onClick={handleButtonChange}>
-                {btnLabel}
-            </Button>
-            <div className="d-flex flex-sm-wrap justify-content-end">
-                <Button className="mt-3 mx-1" color="secondary" size="sm" onClick={handleReset}>
-                    <Icon icon={faRedoAlt} style={{ margin: '2px 6px 0 0' }} />
-                    Reset
-                </Button>
-                <Button className="mt-3 mx-1" color="primary" size="sm" onClick={handleApply}>
-                    Apply
-                </Button>
-            </div>
-        </div>
+                    <Button className={getValuesNr() < DEFAULT_MAX_CATEGORIES ? 'd-none' : 'p-0'} color="link" size="sm" onClick={handleButtonChange}>
+                        {btnLabel}
+                    </Button>
+                </div>
+            </ModalBody>
+            <FilterModalFooter handleApply={handleApply} handleCancel={toggleFilterDialog} handleReset={handleReset} />
+        </>
     );
 };
 CategoricalFilterRule.propTypes = {

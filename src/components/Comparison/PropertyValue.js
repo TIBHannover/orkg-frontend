@@ -13,12 +13,14 @@ import { upperFirst } from 'lodash';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
-const FilterIcon = styled(Icon)`
-    cursor: pointer;
-    color: ${props => props.theme.ultraLightBlueDarker};
-    &:hover,
-    &.active {
-        color: white;
+const FilterButton = styled(Button)`
+    &&& {
+        padding: 0 5px;
+        color: ${props => props.theme.ultraLightBlueDarker};
+        &:hover,
+        &.active {
+            color: white;
+        }
     }
 `;
 
@@ -36,7 +38,7 @@ const PropertyValue = ({ id, label, similar, filterControlData, updateRulesOfPro
         return Object.keys(getValuesByProperty(filterControlData, id)).length;
     };
 
-    const filterIconClasses = classNames({
+    const filterButtonClasses = classNames({
         'd-block': getValuesNr() > 1,
         'd-none': getValuesNr() <= 1,
         active: getRuleByProperty(filterControlData, id).length > 0
@@ -62,7 +64,9 @@ const PropertyValue = ({ id, label, similar, filterControlData, updateRulesOfPro
                     rules: getRuleByProperty(filterControlData, id)
                 }}
             >
-                <FilterIcon size="xs" icon={faFilter} className={filterIconClasses} onClick={() => setShowFilterDialog(v => !v)} />
+                <FilterButton color="link" onClick={() => setShowFilterDialog(v => !v)} className={filterButtonClasses}>
+                    <Icon size="xs" icon={faFilter} />
+                </FilterButton>
             </FilterWrapper>
 
             <FilterModal

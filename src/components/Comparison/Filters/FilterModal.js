@@ -61,7 +61,7 @@ function FilterModal(props) {
     return (
         <Modal isOpen={showFilterDialog} toggle={toggleFilterDialog}>
             <ModalHeader toggle={toggleFilterDialog}>Filter: {propertyName}</ModalHeader>
-            <ModalBody>{generateFilter()}</ModalBody>
+            {generateFilter()}
         </Modal>
     );
 }

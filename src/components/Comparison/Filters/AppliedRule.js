@@ -1,16 +1,20 @@
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { stringifyType } from 'utils';
-import { Badge } from 'reactstrap';
+import { Badge, Button } from 'reactstrap';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
-const RemoveFilterIcon = styled(Icon)`
-    cursor: pointer;
-    color: ${props => props.theme.darkblue};
-    &:hover,
-    &.active {
-        color: red;
+const DeleteButton = styled(Button)`
+    &&& {
+        color: ${props => props.theme.darkblue};
+        padding: 0;
+        line-height: 1;
+        border: 0;
+        &:hover,
+        &.active {
+            color: red;
+        }
     }
 `;
 
@@ -24,7 +28,9 @@ const AppliedRule = props => {
             <span className="font-italic">{stringifyType(type)}</span>
             &nbsp;
             {value.toString()}
-            <RemoveFilterIcon icon={faTimes} className="ml-2" onClick={removeRule} />
+            <DeleteButton color="link" className="ml-2">
+                <Icon icon={faTimes} onClick={removeRule} />
+            </DeleteButton>
         </Badge>
     );
 };

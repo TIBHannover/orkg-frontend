@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { Input, FormFeedback, Label, Button, Col, FormGroup } from 'reactstrap';
+import { Input, FormFeedback, Label, Button, Col, FormGroup, ModalBody, ModalFooter } from 'reactstrap';
 import PropTypes from 'prop-types';
 import { FILTER_TYPES } from 'constants/comparisonFilterTypes';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -7,6 +7,7 @@ import { faRedoAlt } from '@fortawesome/free-solid-svg-icons';
 import CreatableSelect from 'react-select/creatable';
 import { components } from 'react-select';
 import Joi from '@hapi/joi';
+import FilterModalFooter from 'components/Comparison/Filters/FilterModalFooter';
 
 const createOption = label => ({
     label,
@@ -21,18 +22,18 @@ const OrdinalFilterRule = props => {
     const type = typeIsDate ? 'date' : 'number';
 
     const minPlaceHolder = typeIsDate ? 'yyyy-mm-dd' : 'min';
-    const minLabel = typeIsDate ? 'is after or at the same date' : 'is greater than or equal to';
+    const minLabel = typeIsDate ? 'Is after or at the same date' : 'Is greater than or equal to';
     const minRuleType = typeIsDate ? FILTER_TYPES.GTE_DATE : FILTER_TYPES.GTE;
 
     const maxPlaceHolder = typeIsDate ? 'yyyy-mm-dd' : 'max';
-    const maxLabel = typeIsDate ? 'is before or at the same date' : 'is less than or equal to';
+    const maxLabel = typeIsDate ? 'Is before or at the same date' : 'Is less than or equal to';
     const maxRuleType = typeIsDate ? FILTER_TYPES.LTE_DATE : FILTER_TYPES.LTE;
 
     const nEqPlaceHolder = typeIsDate ? null : 'value1,value2,...';
-    const nEqLabel = 'not equal to';
+    const nEqLabel = 'Not equal to';
     const nEqRuleType = typeIsDate ? FILTER_TYPES.NEQ_DATE : FILTER_TYPES.NEQ;
 
-    const invalidText = typeIsDate ? 'should match the format: yyyy-mm-dd' : 'should be Number';
+    const invalidText = typeIsDate ? 'Should match the format: yyyy-mm-dd' : 'Should be Number';
     const validateFunc = str => (typeIsDate ? isDate(str) : isNum(str));
     const isDate = str => {
         const { error } = Joi.date()
@@ -139,6 +140,7 @@ const OrdinalFilterRule = props => {
             if (typeIsDate) {
                 return (
                     <Input
+                        id={innerProps.id}
                         value={innerProps.value}
                         className="form-control-sm"
                         onBlur={handleDatePickerOnBlur}
@@ -165,69 +167,69 @@ const OrdinalFilterRule = props => {
 
     return (
         <>
-            <FormGroup row>
-                <Label sm={6}>{minLabel}</Label>
-                <Col sm={6}>
-                    <Input
-                        type={type}
-                        id={`min${propertyId}`}
-                        placeholder={minPlaceHolder}
-                        value={minInput}
-                        invalid={minInvalid}
-                        onChange={handleMinChange}
-                    />
-                    <FormFeedback className={minInvalid ? 'd-block text-right' : 'd-none'}>{invalidText}</FormFeedback>
-                </Col>
-            </FormGroup>
+            <ModalBody>
+                <FormGroup row>
+                    <Label sm={6} for={`min${propertyId}`}>
+                        {minLabel}
+                    </Label>
+                    <Col sm={6}>
+                        <Input
+                            type={type}
+                            id={`min${propertyId}`}
+                            placeholder={minPlaceHolder}
+                            value={minInput}
+                            invalid={minInvalid}
+                            onChange={handleMinChange}
+                        />
+                        <FormFeedback className={minInvalid ? 'd-block text-right' : 'd-none'}>{invalidText}</FormFeedback>
+                    </Col>
+                </FormGroup>
 
-            <FormGroup row>
-                <Label sm={6}>{maxLabel}</Label>
-                <Col sm={6}>
-                    <Input
-                        type={type}
-                        id={`max${propertyId}`}
-                        placeholder={maxPlaceHolder}
-                        value={maxInput}
-                        invalid={maxInvalid}
-                        onChange={handleMaxChange}
-                    />
+                <FormGroup row>
+                    <Label sm={6} for={`max${propertyId}`}>
+                        {maxLabel}
+                    </Label>
+                    <Col sm={6}>
+                        <Input
+                            type={type}
+                            id={`max${propertyId}`}
+                            placeholder={maxPlaceHolder}
+                            value={maxInput}
+                            invalid={maxInvalid}
+                            onChange={handleMaxChange}
+                        />
 
-                    <FormFeedback className={maxInvalid ? 'd-block text-right' : 'd-none'}>{invalidText}</FormFeedback>
-                </Col>
-            </FormGroup>
+                        <FormFeedback className={maxInvalid ? 'd-block text-right' : 'd-none'}>{invalidText}</FormFeedback>
+                    </Col>
+                </FormGroup>
 
-            <FormGroup row>
-                <Label sm={6}>{nEqLabel}</Label>
-                <Col sm={6}>
-                    <CreatableSelect
-                        styles={customStyles}
-                        components={{
-                            DropdownIndicator: null,
-                            Input: CustomInput
-                        }}
-                        inputValue={nEqInputValue}
-                        isClearable
-                        isMulti
-                        menuIsOpen={false}
-                        onChange={handleChangeSel}
-                        onInputChange={handleInputChangeSel}
-                        onKeyDown={handleKeyDownSel}
-                        placeholder={nEqPlaceHolder}
-                        value={nEqValue}
-                    />
-                </Col>
-                <FormFeedback className={nEqInvalid ? 'd-block text-right' : 'd-none'}>{invalidText}</FormFeedback>
-            </FormGroup>
-
-            <div className="d-flex flex-sm-wrap justify-content-end">
-                <Button className="mt-3 mx-1" color="secondary" size="sm" onClick={handleReset}>
-                    <Icon icon={faRedoAlt} style={{ margin: '2px 6px 0 0' }} />
-                    Reset
-                </Button>
-                <Button className="mt-3 mx-1" color="primary" size="sm" onClick={handleApply}>
-                    Apply
-                </Button>
-            </div>
+                <FormGroup row>
+                    <Label sm={6} for={`not-equal${propertyId}`}>
+                        {nEqLabel}
+                    </Label>
+                    <Col sm={6}>
+                        <CreatableSelect
+                            inputId={`not-equal${propertyId}`}
+                            styles={customStyles}
+                            components={{
+                                DropdownIndicator: null,
+                                Input: CustomInput
+                            }}
+                            inputValue={nEqInputValue}
+                            isClearable
+                            isMulti
+                            menuIsOpen={false}
+                            onChange={handleChangeSel}
+                            onInputChange={handleInputChangeSel}
+                            onKeyDown={handleKeyDownSel}
+                            placeholder={nEqPlaceHolder}
+                            value={nEqValue}
+                        />
+                    </Col>
+                    <FormFeedback className={nEqInvalid ? 'd-block text-right' : 'd-none'}>{invalidText}</FormFeedback>
+                </FormGroup>
+            </ModalBody>
+            <FilterModalFooter handleApply={handleApply} handleCancel={toggleFilterDialog} handleReset={handleReset} />
         </>
     );
 };

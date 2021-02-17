@@ -1,11 +1,10 @@
-import { useState } from 'react';
-import { Button } from 'reactstrap';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faRedoAlt } from '@fortawesome/free-solid-svg-icons';
+import FilterModalFooter from 'components/Comparison/Filters/FilterModalFooter';
 import { FILTER_TYPES } from 'constants/comparisonFilterTypes';
-import Select from 'react-select';
-import stopwords from 'stopwords-en';
 import PropTypes from 'prop-types';
+import { useState } from 'react';
+import Select from 'react-select';
+import { ModalBody } from 'reactstrap';
+import stopwords from 'stopwords-en';
 
 const TextFilterRule = props => {
     const { property, values, rules, updateRulesOfProperty, toggleFilterDialog } = props.dataController;
@@ -48,25 +47,19 @@ const TextFilterRule = props => {
 
     return (
         <>
-            <Select
-                className="mt-2 w-100"
-                value={selectedKeys}
-                id={`input${propertyId}`}
-                placeholder={placeHolder}
-                onChange={handleChange}
-                options={options}
-                isSearchable
-                isMulti
-            />
-            <div className="d-flex flex-sm-wrap justify-content-end">
-                <Button className="mt-3 mx-1" color="secondary" size="sm" onClick={handleReset}>
-                    <Icon icon={faRedoAlt} style={{ margin: '2px 6px 0 0' }} />
-                    Reset
-                </Button>
-                <Button className="mt-3 mx-1" color="primary" size="sm" onClick={handleApply}>
-                    Apply
-                </Button>
-            </div>
+            <ModalBody>
+                <Select
+                    className="mt-2 w-100"
+                    value={selectedKeys}
+                    id={`input${propertyId}`}
+                    placeholder={placeHolder}
+                    onChange={handleChange}
+                    options={options}
+                    isSearchable
+                    isMulti
+                />
+            </ModalBody>
+            <FilterModalFooter handleApply={handleApply} handleCancel={toggleFilterDialog} handleReset={handleReset} />
         </>
     );
 };
