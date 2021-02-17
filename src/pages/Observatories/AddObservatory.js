@@ -57,8 +57,9 @@ class AddObservatory extends Component {
         const description = this.state.description;
         const researchField = this.state.researchField.id;
         const uriName = this.state.url;
+        const regex = /^[A-Za-z0-9-_]+$/;
 
-        if (value && value.length !== 0 && description && description.length !== 0 && researchField && uriName.length !== 0) {
+        if (value && value.length !== 0 && description && description.length !== 0 && researchField && uriName.length !== 0 && regex.test(uriName)) {
             try {
                 const observatory = await createObservatory(value, this.props.match.params.id, description, researchField, uriName);
                 this.navigateToObservatory(observatory.uri_name);
@@ -68,7 +69,7 @@ class AddObservatory extends Component {
                 toast.error(`Error creating observatory ${error.message}`);
             }
         } else {
-            toast.error(`Please enter an observatory name, description and research field`);
+            toast.error(`Please enter an observatory name, description, research field and valid URL`);
             this.setState({ editorState: 'edit' });
         }
     };
