@@ -125,15 +125,27 @@ const OrdinalFilterRule = props => {
         toggleFilterDialog();
     };
 
-    const handleDatePickerOnChange = useCallback(event => {
+    const handleDatePickerOnBlur = useCallback(event => {
+        const value = event.target.value;
+        if (!value) {
+            return;
+        }
         setNEqInputValue('');
-        setNEqValue(nEqValue => [...nEqValue, createOption(event.target.value)]);
+        setNEqValue(nEqValue => [...nEqValue, createOption(value)]);
     }, []);
 
     const CustomInput = useCallback(
         ({ ...innerProps }) => {
             if (typeIsDate) {
-                return <Input value={innerProps.value} className="form-control-sm" onChange={handleDatePickerOnChange} type="date" />;
+                return (
+                    <Input
+                        value={innerProps.value}
+                        className="form-control-sm"
+                        onBlur={handleDatePickerOnBlur}
+                        onInput={e => setNEqInputValue(e.target.value)}
+                        type="date"
+                    />
+                );
             }
             return <components.Input {...innerProps} />;
         },
@@ -146,8 +158,7 @@ const OrdinalFilterRule = props => {
             ...provided,
             '& input': {
                 backgroundColor: 'transparent !important',
-                border: '0 !important',
-                boxShadow: 'none !important'
+                border: '0 !important'
             }
         })
     };
