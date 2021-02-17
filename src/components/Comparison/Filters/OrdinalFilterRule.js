@@ -1,13 +1,11 @@
-import { useState, useCallback } from 'react';
-import { Input, FormFeedback, Label, Button, Col, FormGroup, ModalBody, ModalFooter } from 'reactstrap';
-import PropTypes from 'prop-types';
-import { FILTER_TYPES } from 'constants/comparisonFilterTypes';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faRedoAlt } from '@fortawesome/free-solid-svg-icons';
-import CreatableSelect from 'react-select/creatable';
-import { components } from 'react-select';
 import Joi from '@hapi/joi';
 import FilterModalFooter from 'components/Comparison/Filters/FilterModalFooter';
+import { FILTER_TYPES } from 'constants/comparisonFilterTypes';
+import PropTypes from 'prop-types';
+import { useCallback, useState } from 'react';
+import { components } from 'react-select';
+import CreatableSelect from 'react-select/creatable';
+import { Col, FormFeedback, FormGroup, Input, Label, ModalBody } from 'reactstrap';
 
 const createOption = label => ({
     label,

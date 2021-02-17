@@ -1,9 +1,8 @@
-import { Modal, ModalHeader, ModalBody } from 'reactstrap';
+import { Modal, ModalHeader } from 'reactstrap';
 import PropTypes from 'prop-types';
 import CategoricalFilterRule from './CategoricalFilterRule.js';
 import OrdinalFilterRule from './OrdinalFilterRule.js';
 import Joi from '@hapi/joi';
-import JoiDate from '@hapi/joi-date';
 import TextFilterRule from './TextFilterRule.js';
 
 function FilterModal(props) {
@@ -21,9 +20,7 @@ function FilterModal(props) {
         return (
             Object.keys(values).length ===
             Object.keys(values).filter(value => {
-                const { error } = Joi.extend(JoiDate)
-                    .date()
-                    .format('YYYY-MM-DD')
+                const { error } = Joi.date()
                     .required()
                     .validate(value);
                 return !error ? true : false;
