@@ -68,10 +68,10 @@ class AbstractChartRenderer extends Component {
                         options={{
                             showRowNumber: true,
                             hAxis: {
-                                title: XLabel
+                                title: this.props.visualizationMethod === 'BarChart' ? YLabel : XLabel
                             },
                             vAxis: {
-                                title: YLabel
+                                title: this.props.visualizationMethod === 'BarChart' ? XLabel : YLabel
                             }
                         }}
                     />

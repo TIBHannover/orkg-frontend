@@ -95,10 +95,10 @@ const SingleVisualizationComponent = props => {
                                 showRowNumber: true,
                                 width: '100%',
                                 hAxis: {
-                                    title: customizationState.xAxisLabel
+                                    title: visMethod === 'BarChart' ? customizationState.yAxisLabel : customizationState.xAxisLabel
                                 },
                                 vAxis: {
-                                    title: customizationState.yAxisLabel
+                                    title: visMethod === 'BarChart' ? customizationState.xAxisLabel : customizationState.yAxisLabel
                                 }
                             }}
                         />
@@ -170,10 +170,10 @@ const SingleVisualizationComponent = props => {
                                 chartArea: { height: '50%' },
                                 showRowNumber: true,
                                 hAxis: {
-                                    title: customizationState.xAxisLabel
+                                    title: visMethod === 'BarChart' ? customizationState.yAxisLabel : customizationState.xAxisLabel
                                 },
                                 vAxis: {
-                                    title: customizationState.yAxisLabel
+                                    title: visMethod === 'BarChart' ? customizationState.xAxisLabel : customizationState.yAxisLabel
                                 }
                             }}
                         />
