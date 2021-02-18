@@ -15,7 +15,7 @@ import 'react-table-hoc-fixed-columns/lib/styles.css';
 const ReactTableFixedColumns = withFixedColumnsScrollEvent(ReactTable);
 
 const EditorTable = ({ scrollContainerBody }) => {
-    const { contributions, statements, properties, resources, literals } = useSelector(state => state.bulkContributionEditor);
+    const { contributions, papers, statements, properties, resources, literals } = useSelector(state => state.bulkContributionEditor);
     const { getStatementsByPropertyIdAndContributionId } = useBulkContributionEditor();
 
     const statementsByPropertyIdAndContributionId = getStatementsByPropertyIdAndContributionId(statements);
@@ -59,8 +59,8 @@ const EditorTable = ({ scrollContainerBody }) => {
             ...Object.keys(contributions).map((contributionId, i) => {
                 const contribution = contributions[contributionId];
                 return {
-                    id: contribution.id,
-                    Header: () => <TableHeaderColumn contribution={contribution} key={contribution.id} />,
+                    id: contributionId,
+                    Header: () => <TableHeaderColumn contribution={contribution} paper={papers[contribution.paperId]} key={contributionId} />,
                     accessor: d => d.values[i],
                     Cell: cell => <TableCell values={cell.value} contributionId={cell.column.id} propertyId={cell.row.property.id} />,
                     width: 250

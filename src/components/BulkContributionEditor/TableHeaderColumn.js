@@ -1,7 +1,7 @@
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
-import { updateContribution } from 'actions/bulkContributionEditor';
+import { updatePaper } from 'actions/bulkContributionEditor';
 import useBulkContributionEditor from 'components/BulkContributionEditor/hooks/useBulkContributionEditor';
 import { Contribution, Delete, ItemHeader, ItemHeaderInner } from 'components/Comparison/styled';
 import EditPaperDialog from 'components/ViewPaper/EditDialog/EditPaperDialog';
@@ -12,7 +12,7 @@ import { useDispatch } from 'react-redux';
 import 'react-table-hoc-fixed-columns/lib/styles.css'; // important: this line must be placed after react-table css import
 import { Button } from 'reactstrap';
 
-const TableHeaderColumn = ({ contribution }) => {
+const TableHeaderColumn = ({ contribution, paper }) => {
     const [isOpenEditModal, setIsOpenEditModal] = useState(false);
     const [data, setData] = useState(null);
     const { handleRemoveContribution } = useBulkContributionEditor();
@@ -24,8 +24,8 @@ const TableHeaderColumn = ({ contribution }) => {
 
         // load the paper data if it isn't fetched already
         if (!data) {
-            const paper = await loadPaperData(contribution.paperId);
-            setData(paper);
+            const paperData = await loadPaperData(paper.id);
+            setData(paperData);
         }
     };
 
@@ -33,10 +33,9 @@ const TableHeaderColumn = ({ contribution }) => {
         setData(newData);
         setIsOpenEditModal(false);
         dispatch(
-            updateContribution({
-                id: contribution.id,
-                title: newData.paper?.label,
-                year: newData.year?.label || null
+            updatePaper({
+                id: paper.id,
+                title: newData.paper?.label
             })
         );
     };
@@ -47,14 +46,11 @@ const TableHeaderColumn = ({ contribution }) => {
                 <Tippy content="Edit paper's metadata">
                     <div>
                         <Button color="link" className="text-darkblueDarker p-0 text-left" onClick={handleEditPaper}>
-                            {contribution.title ? contribution.title : <em>No title</em>}
+                            {paper.label || <em>No title</em>}
                         </Button>
                     </div>
                 </Tippy>
-                <Contribution className="bulk-editor">
-                    {contribution.year && `${contribution.year} - `}
-                    {contribution.contributionLabel}
-                </Contribution>
+                <Contribution className="bulk-editor">{contribution.label}</Contribution>
 
                 <Delete className="bulk-editor" onClick={() => handleRemoveContribution(contribution.id)}>
                     <Tippy content="Remove contribution from bulk editor">
@@ -73,7 +69,8 @@ const TableHeaderColumn = ({ contribution }) => {
 };
 
 TableHeaderColumn.propTypes = {
-    contribution: PropTypes.object
+    contribution: PropTypes.object.isRequired,
+    paper: PropTypes.object.isRequired
 };
 
 export default TableHeaderColumn;

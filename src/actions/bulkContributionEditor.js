@@ -20,6 +20,7 @@ export const loadContributions = contributionIds => async dispatch => {
     const statements = {};
     const contributions = {};
     const properties = {};
+    const papers = {};
 
     dispatch(startLoading());
 
@@ -27,17 +28,12 @@ export const loadContributions = contributionIds => async dispatch => {
 
     for (const contributionId of contributionIds) {
         const paperStatements = await getStatementsByObjectAndPredicate({ objectId: contributionId, predicateId: PREDICATES.HAS_CONTRIBUTION });
-        const { label: paperTitle, id: paperId } = paperStatements.find(statement => statement.subject.classes.includes(CLASSES.PAPER))?.subject;
-        const { label: contributionTitle } = paperStatements.find(statement => statement.object.classes.includes(CLASSES.CONTRIBUTION))?.object;
+        const paper = paperStatements.find(statement => statement.subject.classes.includes(CLASSES.PAPER))?.subject;
+        const contribution = paperStatements.find(statement => statement.object.classes.includes(CLASSES.CONTRIBUTION))?.object;
         const { statements: contributionStatements } = contributionsStatements.find(result => result.id === contributionId) || [];
 
-        contributions[contributionId] = {
-            id: contributionId,
-            title: paperTitle,
-            paperId: paperId,
-            contributionLabel: contributionTitle,
-            year: '1970'
-        };
+        contributions[contributionId] = { ...contribution, paperId: paper.id };
+        papers[paper.id] = paper;
 
         for (const { id, predicate: property, object } of contributionStatements) {
             statements[id] = {
@@ -63,7 +59,8 @@ export const loadContributions = contributionIds => async dispatch => {
             statements,
             resources,
             literals,
-            properties
+            properties,
+            papers
         }
     });
     dispatch(finishLoading());
@@ -245,10 +242,9 @@ export const updateProperty = ({ id, statementIds, action, newId = null, newLabe
     });
 };
 
-// contributions
-export const updateContribution = payload => dispatch => {
+export const updatePaper = payload => dispatch => {
     dispatch({
-        type: type.BULK_CONTRIBUTION_EDITOR_CONTRIBUTION_UPDATE,
+        type: type.BULK_CONTRIBUTION_EDITOR_PAPER_UPDATE,
         payload
     });
 };

@@ -8,18 +8,20 @@ const initialState = {
     resources: {},
     literals: {},
     properties: {},
+    papers: {},
     isLoading: false
 };
 
 export default function reducer(state = initialState, action) {
     switch (action.type) {
         case type.BULK_CONTRIBUTION_EDITOR_CONTRIBUTIONS_LOAD: {
-            const { contributions, statements, resources, literals, properties } = action.payload;
+            const { contributions, statements, resources, literals, properties, papers } = action.payload;
 
             let newState = dotProp.merge({ ...state }, 'contributions', contributions);
             newState = dotProp.merge(newState, 'statements', statements);
             newState = dotProp.merge(newState, 'resources', resources);
             newState = dotProp.merge(newState, 'literals', literals);
+            newState = dotProp.merge(newState, 'papers', papers);
             return dotProp.merge(newState, 'properties', properties);
         }
 
@@ -28,12 +30,9 @@ export default function reducer(state = initialState, action) {
             return dotProp.set(state, 'contributions', omit(state.contributions, contributionIds));
         }
 
-        case type.BULK_CONTRIBUTION_EDITOR_CONTRIBUTION_UPDATE: {
-            const { id, title, year } = action.payload;
-            return dotProp.merge(state, `contributions.${id}`, {
-                title,
-                year
-            });
+        case type.BULK_CONTRIBUTION_EDITOR_PAPER_UPDATE: {
+            const { id, title } = action.payload;
+            return dotProp.set(state, `papers.${id}.label`, title);
         }
 
         case type.BULK_CONTRIBUTION_EDITOR_LITERAL_UPDATE: {
