@@ -103,6 +103,9 @@ const Footer = () => (
                                 </a>
                             </li>
                             <li>
+                                <Link to={ROUTES.EXPORT_DATA}>Data Access</Link>
+                            </li>
+                            <li>
                                 <Link to={ROUTES.CHANGELOG}>Changelog</Link>
                             </li>
                             <li>

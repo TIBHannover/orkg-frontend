@@ -356,7 +356,7 @@ class Header extends Component {
                                             Survey table import
                                         </DropdownItem>
                                         <DropdownItem tag={RouterNavLink} exact to={ROUTES.EXPORT_DATA}>
-                                            Export data{' '}
+                                            Data Access
                                         </DropdownItem>
                                         <DropdownItem tag={RouterNavLink} exact to={ROUTES.CONTRIBUTION_TEMPLATES}>
                                             Templates
