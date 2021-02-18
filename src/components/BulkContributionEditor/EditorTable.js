@@ -2,20 +2,19 @@ import useBulkContributionEditor from 'components/BulkContributionEditor/hooks/u
 import TableCell from 'components/BulkContributionEditor/TableCell';
 import TableHeaderColumn from 'components/BulkContributionEditor/TableHeaderColumn';
 import TableHeaderRow from 'components/BulkContributionEditor/TableHeaderRow';
-import { Properties, PropertiesInner, ReactTableWrapper } from 'components/Comparison/styled';
+import { Properties, PropertiesInner } from 'components/Comparison/styled';
+import { sortBy } from 'lodash';
 import PropTypes from 'prop-types';
-import { useRef } from 'react';
+import { memo } from 'react';
 import { useSelector } from 'react-redux';
-import { ScrollSync, ScrollSyncPane } from 'react-scroll-sync';
+import { ScrollSyncPane } from 'react-scroll-sync';
 import ReactTable from 'react-table';
 import withFixedColumnsScrollEvent from 'react-table-hoc-fixed-columns';
 import 'react-table-hoc-fixed-columns/lib/styles.css';
-import { sortBy } from 'lodash';
 
 const ReactTableFixedColumns = withFixedColumnsScrollEvent(ReactTable);
 
-const EditorTable = () => {
-    const scrollContainerHead = useRef(null);
+const EditorTable = ({ scrollContainerBody }) => {
     const { contributions, statements, properties, resources, literals } = useSelector(state => state.bulkContributionEditor);
     const { getStatementsByPropertyIdAndContributionId } = useBulkContributionEditor();
 
@@ -70,11 +69,9 @@ const EditorTable = () => {
         ];
     }
 
-    const handleScrollCallback = () => {};
-
     const TheadComponent = component => (
         <ScrollSyncPane group="one">
-            <div ref={scrollContainerHead} className="disable-scrollbars" style={{ overflow: 'auto', top: '71px', position: 'sticky', zIndex: '3' }}>
+            <div className="disable-scrollbars" style={{ overflow: 'auto', top: '71px', position: 'sticky', zIndex: '3' }}>
                 <div className={`comparison-thead ${component.className}`} style={component.style}>
                     {component.children}
                 </div>
@@ -85,9 +82,7 @@ const EditorTable = () => {
     const TbodyComponent = component => (
         <ScrollSyncPane group="one">
             {/* paddingBottom for the 'add value' bottom, which is positioned partially below the table */}
-            <div style={{ overflow: 'auto', paddingBottom: 15 }}>
-                {' '}
-                {/*ref={props.scrollContainerBody}  */}
+            <div style={{ overflow: 'auto', paddingBottom: 15 }} ref={scrollContainerBody}>
                 <div className={`rt-tbody ${component.className}`} style={component.style}>
                     {component.children}
                 </div>
@@ -96,29 +91,26 @@ const EditorTable = () => {
     );
 
     return (
-        <ReactTableWrapper className="bulk-editor">
-            <ScrollSync onSync={handleScrollCallback}>
-                <ReactTableFixedColumns
-                    TheadComponent={TheadComponent}
-                    TbodyComponent={TbodyComponent}
-                    getProps={() => ({ id: 'comparisonTable' })}
-                    resizable={false}
-                    sortable={false}
-                    pageSize={data.length}
-                    data={data}
-                    columns={columns}
-                    style={{
-                        height: 'max-content'
-                    }}
-                    showPagination={false}
-                />
-            </ScrollSync>
-        </ReactTableWrapper>
+        <ReactTableFixedColumns
+            TheadComponent={TheadComponent}
+            TbodyComponent={TbodyComponent}
+            getProps={() => ({ id: 'comparisonTable' })}
+            resizable={false}
+            sortable={false}
+            pageSize={data.length}
+            data={data}
+            columns={columns}
+            style={{
+                height: 'max-content'
+            }}
+            showPagination={false}
+        />
     );
 };
 
 EditorTable.propTypes = {
-    data: PropTypes.object
+    data: PropTypes.object,
+    scrollContainerBody: PropTypes.object.isRequired
 };
 
-export default EditorTable;
+export default memo(EditorTable);

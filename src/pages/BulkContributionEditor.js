@@ -5,6 +5,7 @@ import CreateProperty from 'components/BulkContributionEditor/CreateProperty';
 import EditorTable from 'components/BulkContributionEditor/EditorTable';
 import useBulkContributionEditor from 'components/BulkContributionEditor/hooks/useBulkContributionEditor';
 import AddContribution from 'components/Comparison/AddContribution/AddContribution';
+import TableScrollContainer from 'components/Comparison/TableScrollContainer';
 import CreateContributionModal from 'components/CreateContributionModal/CreateContributionModal';
 import CreatePaperModal from 'components/CreatePaperModal/CreatePaperModal';
 import { useEffect, useState } from 'react';
@@ -61,6 +62,8 @@ const BulkContributionEditor = () => {
         setIsOpenCreatePaper(false);
     };
 
+    const contributionAmount = Object.keys(contributions).length;
+    const containerStyle = { maxWidth: contributionAmount > 3 ? 'fit-content' : undefined };
     return (
         <>
             <Container>
@@ -68,18 +71,19 @@ const BulkContributionEditor = () => {
                     <h1 className="h4">Bulk contribution editor</h1> {isLoading && <Icon icon={faSpinner} spin className="ml-2" />}
                 </div>
             </Container>
-            <Container className="box rounded pt-4 pb-4 pl-5 pr-5" style={{ maxWidth: 1400 }}>
+            <Container className="box rounded pt-4 pb-4 pl-5 pr-5" style={containerStyle}>
                 <div className="d-flex justify-content-end mb-3">
                     <Button color="lightblue" onClick={() => setIsOpenAddContribution(true)}>
                         <Icon icon={faPlusCircle} className="text-darkblue" /> Add contribution
                     </Button>
                 </div>
                 {contributionIds.length === 0 && <Alert color="info">Start adding contributions by clicking the button on the right</Alert>}
-                <EditorTable />
+                <TableScrollContainer className="bulk-editor">
+                    <EditorTable />
+                </TableScrollContainer>
                 <CreateProperty />
             </Container>
 
-            {/* Used conditions to show the modals, to reset the components after closing */}
             {isOpenAddContribution && (
                 <AddContribution
                     allowCreate

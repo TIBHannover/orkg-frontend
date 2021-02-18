@@ -8,7 +8,7 @@ const TableCellValueResource = ({ value }) => {
 
     return (
         <>
-            <Button color="link" className="p-0" onClick={() => setIsModalOpen(true)}>
+            <Button color="link" className="p-0 text-wrap" style={{ maxWidth: '100%' }} onClick={() => setIsModalOpen(true)}>
                 {value.label}
             </Button>
             {isModelOpen && (

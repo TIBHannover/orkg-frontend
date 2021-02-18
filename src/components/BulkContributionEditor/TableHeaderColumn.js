@@ -43,20 +43,20 @@ const TableHeaderColumn = ({ contribution }) => {
 
     return (
         <ItemHeader key={contribution.id}>
-            <ItemHeaderInner className="position-relative">
+            <ItemHeaderInner className="position-relative bulk-editor">
                 <Tippy content="Edit paper's metadata">
                     <div>
-                        <Button color="link" className="text-white p-0 text-left" onClick={handleEditPaper}>
+                        <Button color="link" className="text-darkblueDarker p-0 text-left" onClick={handleEditPaper}>
                             {contribution.title ? contribution.title : <em>No title</em>}
                         </Button>
                     </div>
                 </Tippy>
-                <Contribution>
+                <Contribution className="bulk-editor">
                     {contribution.year && `${contribution.year} - `}
                     {contribution.contributionLabel}
                 </Contribution>
 
-                <Delete style={{ right: -5 }} onClick={() => handleRemoveContribution(contribution.id)}>
+                <Delete className="bulk-editor" onClick={() => handleRemoveContribution(contribution.id)}>
                     <Tippy content="Remove contribution from bulk editor">
                         <span>
                             <Icon icon={faTimes} />

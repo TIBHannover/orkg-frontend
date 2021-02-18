@@ -48,6 +48,7 @@ export const ScrollButton = styled(Button)`
         transition: 0.2s filter;
         padding: 0;
         margin: 0;
+        line-height: 1;
 
         &.next {
             float: right;
@@ -204,11 +205,17 @@ export const ItemHeaderInner = styled.div`
     a {
         color: #fff !important;
     }
+    &.bulk-editor {
+        background: ${props => props.theme.themeColors.lightblue};
+    }
 `;
 
 export const Contribution = styled.div`
     color: #ffa5a5;
     font-size: 85%;
+    &.bulk-editor {
+        color: ${props => props.theme.themeColors.darkblue};
+    }
 `;
 
 export const Delete = styled.button`
@@ -228,6 +235,14 @@ export const Delete = styled.button`
 
     &:hover {
         background: #fff;
+    }
+    &.bulk-editor {
+        color: ${props => props.theme.themeColors.lightblue};
+        right: -5px;
+        background: ${props => props.theme.themeColors.darkblue};
+        &:hover {
+            background: ${props => props.theme.themeColors.darkblueDarker};
+        }
     }
 `;
 

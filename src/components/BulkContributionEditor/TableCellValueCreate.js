@@ -67,7 +67,7 @@ const TableCellValueCreate = ({ isVisible, contributionId, propertyId }) => {
     return (
         <>
             {!isCreating && isVisible && (
-                <div className="h-100" onDoubleClick={() => setIsCreating(true)}>
+                <div onDoubleClick={() => setIsCreating(true)}>
                     <CreateButtonContainer>
                         <StatementOptionButton title="Add value" icon={faPlus} action={() => setIsCreating(true)} />
                     </CreateButtonContainer>
