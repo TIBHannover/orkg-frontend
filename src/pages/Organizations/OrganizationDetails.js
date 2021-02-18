@@ -58,27 +58,28 @@ class OrganizationDetails extends Component {
             observatories: [],
             isLoadingContributors: false,
             createdBy: '',
-            showEditDialog: false
+            showEditDialog: false,
+            organizationId: ''
         };
     }
 
-    componentDidMount() {
-        this.findOrg();
+    async componentDidMount() {
+        await this.findOrg();
         this.loadObservatories();
         this.loadContributors();
     }
 
-    componentDidUpdate = prevProps => {
+    componentDidUpdate = async prevProps => {
         if (this.props.match.params.id !== prevProps.match.params.id) {
-            this.findOrg();
+            await this.findOrg();
             this.loadObservatories();
             this.loadContributors();
         }
     };
 
-    findOrg = () => {
+    findOrg = async () => {
         this.setState({ isLoading: true });
-        getOrganization(this.props.match.params.id)
+        await getOrganization(this.props.match.params.id)
             .then(responseJson => {
                 document.title = `${responseJson.name} - Organization - ORKG`;
                 this.setState({
@@ -86,7 +87,8 @@ class OrganizationDetails extends Component {
                     url: responseJson.homepage,
                     logo: responseJson.logo,
                     isLoading: false,
-                    createdBy: responseJson.created_by
+                    createdBy: responseJson.created_by,
+                    organizationId: responseJson.id
                 });
             })
             .catch(error => {
@@ -96,7 +98,8 @@ class OrganizationDetails extends Component {
 
     loadContributors = () => {
         this.setState({ isLoadingContributors: true });
-        getUsersByOrganizationId(this.props.match.params.id)
+        //getUsersByOrganizationId(this.props.match.params.id)
+        getUsersByOrganizationId(this.state.organizationId)
             .then(contributors => {
                 this.setState({
                     contributors: contributors,
@@ -110,7 +113,8 @@ class OrganizationDetails extends Component {
 
     loadObservatories = () => {
         this.setState({ isLoadingObservatories: true });
-        getAllObservatoriesByOrganizationId(this.props.match.params.id)
+        //getAllObservatoriesByOrganizationId(this.props.match.params.id)
+        getAllObservatoriesByOrganizationId(this.state.organizationId)
             .then(observatories => {
                 if (observatories.length > 0) {
                     this.setState({
@@ -271,7 +275,8 @@ class OrganizationDetails extends Component {
                     showDialog={this.state.showEditDialog}
                     toggle={() => this.toggle('showEditDialog')}
                     label={this.state.label}
-                    id={this.props.match.params.id}
+                    //id={this.props.match.params.id}
+                    id={this.state.organizationId}
                     url={this.state.url}
                     previewSrc={this.state.logo}
                     updateOrganizationMetadata={this.updateOrganizationMetadata}

@@ -29,23 +29,24 @@ class AddObservatory extends Component {
             researchField: '',
             organizationName: '',
             isLoadingOrganization: true,
-            errorLoadingOrganization: null
+            errorLoadingOrganization: null,
+            organizationId: ''
         };
     }
 
-    componentDidMount() {
-        this.getOrganization(this.props.match.params.id);
+    async componentDidMount() {
+        await this.getOrganization(this.props.match.params.id);
     }
 
-    getOrganization = id => {
+    getOrganization = async id => {
         this.setState({ isLoadingOrganization: true });
-        getOrganization(id)
+        await getOrganization(id)
             .then(organization => {
                 document.title = `${organization.name} - ORKG`;
-                this.setState({ organizationName: organization.name, isLoadingOrganization: false });
+                this.setState({ organizationName: organization.name, isLoadingOrganization: false, organizationId: organization.id });
             })
             .catch(err => {
-                this.setState({ organizationName: '', isLoadingOrganization: false, errorLoadingOrganization: err });
+                this.setState({ organizationName: '', isLoadingOrganization: false, errorLoadingOrganization: err, organizationId: '' });
                 console.error(err);
             });
     };
@@ -58,7 +59,7 @@ class AddObservatory extends Component {
 
         if (value && value.length !== 0 && description && description.length !== 0 && researchField) {
             try {
-                const observatory = await createObservatory(value, this.props.match.params.id, description, researchField);
+                const observatory = await createObservatory(value, this.state.organizationId, description, researchField);
                 this.navigateToObservatory(observatory.id);
             } catch (error) {
                 this.setState({ editorState: 'edit' });

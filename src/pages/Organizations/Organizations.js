@@ -69,7 +69,7 @@ class Organizations extends Component {
                     {this.state.organizations.length > 0 && (
                         <div className="mt-3 row justify-content-center">
                             {this.state.organizations.map(organization => {
-                                return <OrganizationCard key={organization.id} organization={{ ...organization }} />;
+                                return <OrganizationCard key={organization.uri_name} organization={{ ...organization }} />;
                             })}
                         </div>
                     )}

@@ -21,6 +21,7 @@ class AddOrganization extends Component {
             url: '',
             organizationId: '',
             previewSrc: '',
+            organizationNamedUrl: '',
             editorState: 'edit'
         };
     }
@@ -34,17 +35,25 @@ class AddOrganization extends Component {
         const value = this.state.value;
         const image = this.state.previewSrc;
         const url = this.state.url;
+        const namedUrl = this.state.organizationNamedUrl;
+        const regex = /^[A-Za-z0-9-_]+$/;
+
         if (value && value.length !== 0) {
             if (url && url.match(/[-a-zA-Z0-9@:%_+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_+.~#?&//=]*)?/gi)) {
                 if (image.length !== 0) {
-                    try {
-                        const responseJson = await createOrganization(value, image[0], this.props.user.id, url);
-                        const organizationId = responseJson.id;
-                        this.navigateToOrganization(organizationId);
-                    } catch (error) {
+                    if (regex.test(namedUrl)) {
+                        try {
+                            const responseJson = await createOrganization(value, image[0], this.props.user.id, url, namedUrl);
+                            const organizationId = responseJson.uri_name;
+                            this.navigateToOrganization(organizationId);
+                        } catch (error) {
+                            this.setState({ editorState: 'edit' });
+                            console.error(error);
+                            toast.error(`Error creating organization ${error.message}`);
+                        }
+                    } else {
+                        toast.error(`Please enter a valid named URL`);
                         this.setState({ editorState: 'edit' });
-                        console.error(error);
-                        toast.error(`Error creating organization ${error.message}`);
                     }
                 } else {
                     toast.error(`Please upload an organization logo`);
@@ -62,6 +71,15 @@ class AddOrganization extends Component {
 
     handleChange = event => {
         this.setState({ [event.target.name]: event.target.value.trim() });
+        console.log(event.target.name);
+        if (event.target.name === 'value') {
+            this.setState({
+                organizationNamedUrl: event.target.value
+                    .trim()
+                    .replace(/['"]+/g, '')
+                    .replace(/ /g, '_')
+            });
+        }
     };
 
     navigateToOrganization = organizationId => {
@@ -120,6 +138,19 @@ class AddOrganization extends Component {
                                     id="ResourceLabel"
                                     disabled={loading}
                                     placeholder="Organization Name"
+                                />
+                            </FormGroup>
+
+                            <FormGroup>
+                                <Label for="OrganizationURL">Organization Named URL</Label>
+                                <Input
+                                    onChange={this.handleChange}
+                                    type="text"
+                                    name="organizationNamedUrl"
+                                    id="OrganizationUrl"
+                                    disabled={loading}
+                                    placeholder="Organization URL"
+                                    value={this.state.organizationNamedUrl}
                                 />
                             </FormGroup>
 

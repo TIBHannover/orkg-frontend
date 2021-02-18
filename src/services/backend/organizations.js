@@ -11,8 +11,12 @@ export const getOrganization = id => {
     return submitGetRequest(`${organizationsUrl}${encodeURIComponent(id)}/`);
 };
 
-export const createOrganization = (organizationName, organizationLogo, createdBy, url) => {
-    return submitPostRequest(organizationsUrl, { 'Content-Type': 'application/json' }, { organizationName, organizationLogo, createdBy, url });
+export const createOrganization = (organizationName, organizationLogo, createdBy, url, uriName) => {
+    return submitPostRequest(
+        organizationsUrl,
+        { 'Content-Type': 'application/json' },
+        { organizationName, organizationLogo, createdBy, url, uriName }
+    );
 };
 
 export const updateOrganizationName = (id, value) => {
