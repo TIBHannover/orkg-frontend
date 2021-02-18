@@ -17,10 +17,11 @@ const BulkContributionEditor = () => {
     const [isOpenCreateContribution, setIsOpenCreateContribution] = useState(false);
     const [isOpenCreatePaper, setIsOpenCreatePaper] = useState(false);
     const [createContributionPaperId, setCreateContributionPaperId] = useState(null);
-    const { contributionIds, handleAddContributions } = useBulkContributionEditor();
+    const { getContributionIds, handleAddContributions } = useBulkContributionEditor();
     const contributions = useSelector(state => state.bulkContributionEditor.contributions);
     const isLoading = useSelector(state => state.bulkContributionEditor.isLoading);
     const dispatch = useDispatch();
+    const contributionIds = getContributionIds();
 
     useEffect(() => {
         document.title = 'Bulk contribution editor - ORKG';
@@ -71,7 +72,7 @@ const BulkContributionEditor = () => {
                     <h1 className="h4">Bulk contribution editor</h1> {isLoading && <Icon icon={faSpinner} spin className="ml-2" />}
                 </div>
             </Container>
-            <Container className="box rounded pt-4 pb-4 pl-5 pr-5" style={containerStyle}>
+            <Container className="box rounded p-4" style={containerStyle}>
                 <div className="d-flex justify-content-end mb-3">
                     <Button color="lightblue" onClick={() => setIsOpenAddContribution(true)}>
                         <Icon icon={faPlusCircle} className="text-darkblue" /> Add contribution

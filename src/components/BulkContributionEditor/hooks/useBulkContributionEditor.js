@@ -1,32 +1,28 @@
 import ROUTES from 'constants/routes';
 import { uniq } from 'lodash';
 import queryString from 'query-string';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback } from 'react';
 import { useHistory, useLocation } from 'react-router';
 
 const useBulkContributionEditor = () => {
     const location = useLocation();
     const history = useHistory();
-    const [contributionIds, setContributionIds] = useState([]);
 
-    // parse 'contributions' from query string, ensure always an array is returned
-    const parseQueryString = useCallback(() => {
+    const getContributionIds = useCallback(() => {
         const { contributions } = queryString.parse(location.search, { arrayFormat: 'comma' });
         const contributionIds = contributions && !Array.isArray(contributions) ? [contributions] : contributions;
         return uniq(contributionIds) ?? [];
     }, [location.search]);
 
-    useEffect(() => {
-        setContributionIds(parseQueryString());
-    }, [parseQueryString]);
-
     const handleAddContributions = ids => {
-        const idsQueryString = [...contributionIds, ...ids].join(',');
+        const idsQueryString = [...getContributionIds(), ...ids].join(',');
         history.push(`${ROUTES.BULK_CONTRIBUTION_EDITOR}?contributions=${idsQueryString}`);
     };
 
     const handleRemoveContribution = id => {
-        const idsQueryString = contributionIds.filter(_id => _id !== id).join(',');
+        const idsQueryString = getContributionIds()
+            .filter(_id => _id !== id)
+            .join(',');
         history.push(`${ROUTES.BULK_CONTRIBUTION_EDITOR}?contributions=${idsQueryString}`);
     };
 
@@ -46,10 +42,10 @@ const useBulkContributionEditor = () => {
     };
 
     return {
-        contributionIds,
         handleAddContributions,
         handleRemoveContribution,
-        getStatementsByPropertyIdAndContributionId
+        getStatementsByPropertyIdAndContributionId,
+        getContributionIds
     };
 };
 
