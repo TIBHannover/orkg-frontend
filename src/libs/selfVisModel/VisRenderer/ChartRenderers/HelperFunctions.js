@@ -229,7 +229,7 @@ export const createValueSelectors = ref => {
 
         return itemsArray.map((selector, id) => {
             return (
-                <div key={'ContainerValueItemSelector_' + id} className="mt-1">
+                <div className="mt-2 mb-1" key={'ContainerValueItemSelector_' + id}>
                     <div style={{ display: 'flex' }} key={'ValueItemSelector_' + id}>
                         {id > 0 && (
                             <DeleteButton

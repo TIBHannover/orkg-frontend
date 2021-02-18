@@ -97,10 +97,9 @@ class CustomizationBarChart extends Component {
                 {!this.state.errorDataNotSupported && (
                     <>
                         Y-axis{this.createLabelSelectors()}
-                        Label{this.createLabelEditor()}
+                        <div className="mt-2">Label{this.createLabelEditor()}</div>
                         <hr />
-                        X-axis Label{this.createValueEditor()}
-                        <hr />
+                        X-axis Label<div className="mt-2">{this.createValueEditor()}</div>
                         {this.createValueSelectors()}
                     </>
                 )}
