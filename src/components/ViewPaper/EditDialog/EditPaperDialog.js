@@ -1,25 +1,46 @@
+import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
+import EditItem from 'components/ViewPaper/EditDialog/EditItem';
 import useEditPaper from 'components/ViewPaper/EditDialog/hooks/useEditPaper';
+import ROUTES from 'constants/routes';
+import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import LoadingOverlay from 'react-loading-overlay';
 import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { Button, CustomInput, ListGroup, Modal, ModalBody, ModalHeader } from 'reactstrap';
-import EditItem from 'components/ViewPaper/EditDialog/EditItem';
 
-const EditPaperDialog = ({ paperData, isOpen, toggle, afterUpdate }) => {
+const EditPaperDialog = ({ paperData, isOpen, toggle, afterUpdate, showPaperLink }) => {
     const [openItem, setOpenItem] = useState('title');
-    const [title, setTitle] = useState(paperData.paper?.label);
-    const [month, setMonth] = useState(paperData.month?.label);
-    const [year, setYear] = useState(paperData.year?.label);
-    const [authors, setAuthors] = useState(paperData.authors ?? []);
-    const [doi, setDoi] = useState(paperData.doi?.label);
-    const [publishedIn, setPublishedIn] = useState(paperData.publishedIn);
-    const [researchField, setResearchField] = useState(paperData.researchField);
-    const [url, setUrl] = useState(paperData.url?.label);
-    const [isVerified, setIsVerified] = useState(!!paperData.isVerified);
+    const [title, setTitle] = useState('');
+    const [month, setMonth] = useState(0);
+    const [year, setYear] = useState(0);
+    const [authors, setAuthors] = useState([]);
+    const [doi, setDoi] = useState('');
+    const [publishedIn, setPublishedIn] = useState('');
+    const [researchField, setResearchField] = useState('');
+    const [url, setUrl] = useState('');
+    const [isVerified, setIsVerified] = useState(false);
+
     const { editPaper, isLoadingEdit } = useEditPaper();
     const user = useSelector(state => state.auth.user);
+
+    useEffect(() => {
+        if (!paperData) {
+            return;
+        }
+        setTitle(paperData.paper?.label);
+        setMonth(paperData.month?.label);
+        setYear(paperData.year?.label);
+        setAuthors(paperData.authors ?? []);
+        setDoi(paperData.doi?.label);
+        setPublishedIn(paperData.publishedIn);
+        setResearchField(paperData.researchField);
+        setUrl(paperData.url?.label);
+        setIsVerified(!!paperData.isVerified);
+    }, [paperData]);
 
     const handleSave = async () => {
         // merge the local state labels with the props 'paperData'
@@ -112,13 +133,15 @@ const EditPaperDialog = ({ paperData, isOpen, toggle, afterUpdate }) => {
     };
 
     const toggleItem = item => setOpenItem(openItem !== item ? item : null);
+    // show loading indicator if: 1) is loading, 2) paperData is not yet available
+    const isLoading = isLoadingEdit || !paperData;
 
     return (
         <Modal isOpen={isOpen} toggle={toggle} size="lg">
             <LoadingOverlay
-                active={isLoadingEdit}
+                active={isLoading}
                 spinner
-                text="Saving..."
+                text="Loading..."
                 styles={{
                     overlay: base => ({
                         ...base,
@@ -132,7 +155,22 @@ const EditPaperDialog = ({ paperData, isOpen, toggle, afterUpdate }) => {
                     })
                 }}
             >
-                <ModalHeader toggle={toggle}>Edit general data</ModalHeader>
+                <ModalHeader toggle={toggle}>
+                    Edit paper
+                    {showPaperLink && (
+                        <Link
+                            style={{ right: 45, position: 'absolute', top: 12 }}
+                            className="ml-2"
+                            to={reverse(ROUTES.VIEW_PAPER, { resourceId: paperData?.paper?.id })}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            <Button color="link" className="p-0">
+                                Open paper <Icon icon={faExternalLinkAlt} className="mr-1" />
+                            </Button>
+                        </Link>
+                    )}
+                </ModalHeader>
                 <ModalBody>
                     <ListGroup className="listGroupEnlarge">
                         {Object.entries(FIELDS).map(([itemName, item], index) => (
@@ -165,7 +203,7 @@ const EditPaperDialog = ({ paperData, isOpen, toggle, afterUpdate }) => {
                             </Tippy>
                         )}
 
-                        <Button disabled={isLoadingEdit} color="primary" className=" mt-2 mb-2" onClick={handleSave}>
+                        <Button disabled={isLoading} color="primary" className=" mt-2 mb-2" onClick={handleSave}>
                             Save
                         </Button>
                     </div>
@@ -189,12 +227,14 @@ EditPaperDialog.propTypes = {
         url: PropTypes.object,
         isVerified: PropTypes.bool
     }),
-    afterUpdate: PropTypes.func
+    afterUpdate: PropTypes.func,
+    showPaperLink: PropTypes.bool
 };
 
 EditPaperDialog.defaultProps = {
     afterUpdate: null,
-    id: null
+    id: null,
+    showPaperLink: false
 };
 
 export default EditPaperDialog;

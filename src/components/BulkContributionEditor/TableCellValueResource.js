@@ -11,7 +11,9 @@ const TableCellValueResource = ({ value }) => {
             <Button color="link" className="p-0" onClick={() => setIsModalOpen(true)}>
                 {value.label}
             </Button>
-            {isModelOpen && <StatementBrowserDialog show toggleModal={v => setIsModalOpen(!v)} id={value.id} label={value.label} />}
+            {isModelOpen && (
+                <StatementBrowserDialog toggleModal={v => setIsModalOpen(!v)} id={value.id} label={value.label} show enableEdit syncBackend />
+            )}
         </>
     );
 };

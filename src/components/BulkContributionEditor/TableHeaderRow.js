@@ -7,18 +7,25 @@ import { predicatesUrl } from 'services/backend/predicates';
 import Confirm from 'reactstrap-confirm';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteProperty, updateProperty } from 'actions/bulkContributionEditor';
+import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
+import { upperFirst } from 'lodash';
+import { Button } from 'reactstrap';
+import useConfirmPropertyModal from 'components/StatementBrowser/AddProperty/hooks/useConfirmPropertyModal';
 
 const TableHeaderRow = ({ property }) => {
+    const [isOpenStatementBrowser, setIsOpenStatementBrowser] = useState(false);
     const [isHovering, setIsHovering] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
     const [inputValue, setInputValue] = useState(property.label);
     const statements = useSelector(state => state.bulkContributionEditor.statements);
     const statementIds = Object.keys(statements).filter(statementId => statements[statementId].propertyId === property.id);
     const dispatch = useDispatch();
+    const { confirmProperty } = useConfirmPropertyModal();
 
     const handleStartEdit = () => {
         setIsEditing(true);
     };
+
     const handleStopEdit = () => {
         setIsEditing(false);
         setIsHovering(false);
@@ -47,7 +54,9 @@ const TableHeaderRow = ({ property }) => {
     };
 
     const handleChangeAutocomplete = async (selected, { action }) => {
-        if (action !== 'create-option' && action !== 'select-option') {
+        const confirmedProperty = await confirmProperty();
+
+        if ((action !== 'create-option' && action !== 'select-option') || !confirmedProperty) {
             return;
         }
 
@@ -63,24 +72,39 @@ const TableHeaderRow = ({ property }) => {
     };
 
     return !isEditing ? (
-        <Properties
-            className="columnProperty"
-            onMouseEnter={() => setIsHovering(true)}
-            onMouseLeave={() => setIsHovering(false)}
-            onDoubleClick={handleStartEdit}
-        >
-            <PropertiesInner cellPadding={10}>
-                <div className="position-relative">
-                    {property.label}
-                    <TableCellButtons
-                        isHovering={isHovering}
-                        onEdit={handleStartEdit}
-                        onDelete={handleDelete}
-                        backgroundColor="rgba(139, 145, 165, 0.8)"
-                    />
-                </div>
-            </PropertiesInner>
-        </Properties>
+        <>
+            <Properties
+                className="columnProperty"
+                onMouseEnter={() => setIsHovering(true)}
+                onMouseLeave={() => setIsHovering(false)}
+                onDoubleClick={handleStartEdit}
+            >
+                <PropertiesInner cellPadding={10}>
+                    <div className="position-relative">
+                        <Button onClick={() => setIsOpenStatementBrowser(true)} color="link" className="text-light m-0 p-0">
+                            {upperFirst(property.label)}
+                        </Button>
+                        <TableCellButtons
+                            isHovering={isHovering}
+                            onEdit={handleStartEdit}
+                            onDelete={handleDelete}
+                            backgroundColor="rgba(139, 145, 165, 0.8)"
+                        />
+                    </div>
+                </PropertiesInner>
+            </Properties>
+            {isOpenStatementBrowser && (
+                <StatementBrowserDialog
+                    type="property"
+                    toggleModal={() => setIsOpenStatementBrowser(v => !v)}
+                    id={property.id}
+                    label={property.label}
+                    show
+                    enableEdit
+                    syncBackend
+                />
+            )}
+        </>
     ) : (
         <Properties>
             <PropertiesInner cellPadding={10}>
@@ -94,6 +118,7 @@ const TableHeaderRow = ({ property }) => {
                     cssClasses="form-control-sm"
                     onChange={handleChangeAutocomplete}
                     menuPortalTarget={document.body} // use a portal to ensure the menu isn't blocked by other elements
+                    allowCreate
                 />
             </PropertiesInner>
         </Properties>

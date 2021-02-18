@@ -1,17 +1,16 @@
-import { useState } from 'react';
-import { createPredicate } from 'services/backend/predicates';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-import AddPropertyTemplate from './AddPropertyTemplate';
 import { createProperty } from 'actions/statementBrowser';
+import useConfirmPropertyModal from 'components/StatementBrowser/AddProperty/hooks/useConfirmPropertyModal';
 import { uniqBy } from 'lodash';
-import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
+import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { createPredicate } from 'services/backend/predicates';
+import AddPropertyTemplate from './AddPropertyTemplate';
 
 const AddProperty = props => {
     const [showAddProperty, setShowAddProperty] = useState(false);
-    const [confirmNewPropertyModal, setConfirmNewPropertyModal] = useState(false);
-    const [newPropertyLabel, setNewPropertyLabel] = useState('');
     const dispatch = useDispatch();
+    const { confirmProperty } = useConfirmPropertyModal();
     const selectedResource = useSelector(state => state.statementBrowser.selectedResource);
     const newProperties = useSelector(state => {
         const newPropertiesList = [];
@@ -36,12 +35,14 @@ const AddProperty = props => {
 
     const handleHideAddProperty = () => {
         setShowAddProperty(false);
-        setNewPropertyLabel('');
     };
 
-    const toggleConfirmNewProperty = propertyLabel => {
-        setConfirmNewPropertyModal(!confirmNewPropertyModal);
-        setNewPropertyLabel(propertyLabel);
+    const toggleConfirmNewProperty = async label => {
+        const confirmNewProperty = await confirmProperty();
+
+        if (confirmNewProperty) {
+            handleNewProperty(label);
+        }
     };
 
     const handlePropertySelect = ({ id, value: label }) => {
@@ -58,12 +59,11 @@ const AddProperty = props => {
         );
     };
 
-    const handleNewProperty = async () => {
+    const handleNewProperty = async label => {
         setShowAddProperty(false);
-        toggleConfirmNewProperty(); // hide dialog
 
         if (props.syncBackend) {
-            const newPredicate = await createPredicate(newPropertyLabel);
+            const newPredicate = await createPredicate(label);
             dispatch(
                 createProperty({
                     resourceId: props.resourceId ? props.resourceId : selectedResource,
@@ -77,7 +77,7 @@ const AddProperty = props => {
             dispatch(
                 createProperty({
                     resourceId: props.resourceId ? props.resourceId : selectedResource,
-                    label: newPropertyLabel,
+                    label,
                     isTemplate: false,
                     createAndSelect: true
                 })
@@ -97,21 +97,6 @@ const AddProperty = props => {
                 newProperties={newProperties}
                 handleShowAddProperty={handleShowAddProperty}
             />
-
-            <Modal isOpen={confirmNewPropertyModal} toggle={toggleConfirmNewProperty}>
-                <ModalHeader toggle={toggleConfirmNewProperty}>Are you sure you need a new property?</ModalHeader>
-                <ModalBody>
-                    Often there are existing properties that you can use as well. It is better to use existing properties than new ones.
-                </ModalBody>
-                <ModalFooter>
-                    <Button color="light" onClick={toggleConfirmNewProperty}>
-                        Cancel
-                    </Button>{' '}
-                    <Button color="primary" onClick={handleNewProperty}>
-                        Create new property
-                    </Button>
-                </ModalFooter>
-            </Modal>
         </>
     );
 };

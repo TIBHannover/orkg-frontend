@@ -211,8 +211,9 @@ export const Contribution = styled.div`
     font-size: 85%;
 `;
 
-export const Delete = styled.div`
+export const Delete = styled.button`
     position: absolute;
+    border: 0;
     top: 0px;
     right: 5px;
     background: #ffa3a3;

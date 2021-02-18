@@ -2,6 +2,7 @@ import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { createProperty } from 'actions/bulkContributionEditor';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
+import useConfirmPropertyModal from 'components/StatementBrowser/AddProperty/hooks/useConfirmPropertyModal';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Button } from 'reactstrap';
@@ -11,9 +12,12 @@ export const CreateProperty = () => {
     const [isCreating, setIsCreating] = useState(false);
     const [inputValue, setInputValue] = useState('');
     const dispatch = useDispatch();
+    const { confirmProperty } = useConfirmPropertyModal();
 
     const handleChangeAutocomplete = async (selected, { action }) => {
-        if (action !== 'create-option' && action !== 'select-option') {
+        const confirmedProperty = await confirmProperty();
+
+        if ((action !== 'create-option' && action !== 'select-option') || !confirmedProperty) {
             return;
         }
 
