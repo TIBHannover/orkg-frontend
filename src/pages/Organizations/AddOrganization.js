@@ -10,6 +10,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes';
+import Tooltip from 'components/Utils/Tooltip';
 
 class AddOrganization extends Component {
     constructor(props) {
@@ -142,16 +143,21 @@ class AddOrganization extends Component {
                             </FormGroup>
 
                             <FormGroup>
-                                <Label for="OrganizationURL">Organization Named URL</Label>
-                                <Input
-                                    onChange={this.handleChange}
-                                    type="text"
-                                    name="organizationNamedUrl"
-                                    id="OrganizationUrl"
-                                    disabled={loading}
-                                    placeholder="Organization URL"
-                                    value={this.state.organizationNamedUrl}
-                                />
+                                <div>
+                                    <Label for="OrganizationURL">
+                                        Organization Named URL
+                                        <Tooltip message="Only underscores ( _ ) and dashes ( - ) are allowed" />
+                                    </Label>
+                                    <Input
+                                        onChange={this.handleChange}
+                                        type="text"
+                                        name="organizationNamedUrl"
+                                        id="OrganizationUrl"
+                                        disabled={loading}
+                                        placeholder="Organization URL"
+                                        value={this.state.organizationNamedUrl}
+                                    />
+                                </div>
                             </FormGroup>
 
                             <FormGroup>
@@ -165,9 +171,11 @@ class AddOrganization extends Component {
                                     placeholder="https://www.example.com"
                                 />
                             </FormGroup>
-                            <div>
-                                <img src={this.state.previewSrc} style={{ width: '20%', height: '20%' }} className="Avatar" alt="" />
-                            </div>
+                            {this.state.previewSrc.length > 0 && (
+                                <div>
+                                    <img src={this.state.previewSrc} style={{ width: '20%', height: '20%' }} className="Avatar" alt="" />
+                                </div>
+                            )}
                             <FormGroup>
                                 <Label>Logo</Label>
                                 <br />
