@@ -12,7 +12,8 @@ import {
     getArrayParamFromQueryString,
     getParamFromQueryString,
     get_error_message,
-    applyRule
+    applyRule,
+    getRuleByProperty
 } from 'utils';
 import { useParams, useLocation, useHistory } from 'react-router-dom';
 import { PREDICATES, CLASSES, MISC } from 'constants/graphSettings';
@@ -332,12 +333,7 @@ function useComparison() {
                     property,
                     rules: [],
                     values: groupBy(
-                        flatten(
-                            contributions
-                                .filter(c => c.active)
-                                .map((_, index) => data[property.id][index])
-                                .filter(([first]) => Object.keys(first).length !== 0)
-                        ),
+                        flatten(contributions.map((_, index) => data[property.id][index]).filter(([first]) => Object.keys(first).length !== 0)),
                         'label'
                     )
                 };
@@ -485,7 +481,7 @@ function useComparison() {
         const newContributions = contributions
             .filter(c => c.id !== contributionId)
             .map(contribution => {
-                return { ...contribution, active: true };
+                return { ...contribution, active: contribution.active };
             });
         const newData = cloneDeep(data);
         let newProperties = cloneDeep(properties);
@@ -503,7 +499,14 @@ function useComparison() {
         setContributions(newContributions);
         setData(newData);
         setProperties(newProperties);
-        setFilterControlData(generateFilterControlData(newContributions, newProperties, newData));
+        setFilterControlData(prevFilterControlData => {
+            // keep existing filter rules
+            const newFilterControlData = generateFilterControlData(newContributions, newProperties, newData).map(filter => {
+                filter.rules = getRuleByProperty(prevFilterControlData, filter.property.id);
+                return filter;
+            });
+            return newFilterControlData;
+        });
         setUrlNeedsToUpdate(true);
     };
 
