@@ -223,15 +223,15 @@ function Comparison(props) {
                                     }}
                                     style={{ marginRight: 3 }}
                                 >
-                                    <Icon icon={faChartBar} /> Add visualization
+                                    <Icon icon={faChartBar} className="mr-1" /> Visualize
                                 </Button>
                             ) : (
                                 <Tippy
                                     hideOnClick={false}
-                                    content="Cannot add visualization to a unpublished comparison. You must publish the comparison first to use this functionality."
+                                    content="Cannot use self-visualization-service for unpublished comparison. You must publish the comparison first to use this functionality."
                                 >
                                     <span style={{ marginRight: 3 }} className="btn btn-darkblue btn-sm disabled">
-                                        <Icon icon={faChartBar} /> Add visualization
+                                        <Icon icon={faChartBar} className="mr-1" /> Visualize
                                     </span>
                                 </Tippy>
                             )}
