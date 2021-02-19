@@ -151,52 +151,59 @@ export default class SelfVisDataMode {
     };
 
     resetCustomizationModel = () => {
-        // applySelection in the contribution anchors;
-        this.mrrModel.contributionAnchors.forEach(anchor => {
-            const position = anchor.positionContribAnchor;
-            if (this.mrrModel.contributionAnchors[position]) {
-                // set this to be selected in the model;
-                this.mrrModel.contributionAnchors[position].isSelectedRowForUse = false;
-                this.mrrModel.contributionAnchors[position].label = anchor.originalLabel;
-            }
-        });
+        if (!this.mrrModel) {
+            // read it
+            this.__parseInput();
+        }
 
-        this.mrrModel.propertyAnchors.forEach(anchor => {
-            const position = anchor.positionPropertyAnchor;
-            if (this.mrrModel.propertyAnchors[position]) {
-                // set this to be selected in the model;
-                this.mrrModel.propertyAnchors[position].isSelectedColumnForUse = false;
-                this.mrrModel.propertyAnchors[position].propertyMapperType = '';
-                this.mrrModel.propertyAnchors[position].label = anchor.originalLabel;
-            }
-        });
-        this.mrrModel.dataItems.forEach(cell => {
-            const rowIndex = cell.positionContribAnchor;
-            const colIndex = cell.positionPropertyAnchor;
-            const item = this.modelAccess.getItem(rowIndex, colIndex);
-            item.setItemSelected(false);
-            if (cell.label) {
-                item.setLabel(cell.originalLabel);
-            }
-            item.cellValueIsValid = false;
-        });
+        if (this.mrrModel) {
+            // applySelection in the contribution anchors;
+            this.mrrModel.contributionAnchors.forEach(anchor => {
+                const position = anchor.positionContribAnchor;
+                if (this.mrrModel.contributionAnchors[position]) {
+                    // set this to be selected in the model;
+                    this.mrrModel.contributionAnchors[position].isSelectedRowForUse = false;
+                    this.mrrModel.contributionAnchors[position].label = anchor.originalLabel;
+                }
+            });
 
-        this.setRenderingMethod('Table'); // << Default rendering Method
+            this.mrrModel.propertyAnchors.forEach(anchor => {
+                const position = anchor.positionPropertyAnchor;
+                if (this.mrrModel.propertyAnchors[position]) {
+                    // set this to be selected in the model;
+                    this.mrrModel.propertyAnchors[position].isSelectedColumnForUse = false;
+                    this.mrrModel.propertyAnchors[position].propertyMapperType = '';
+                    this.mrrModel.propertyAnchors[position].label = anchor.originalLabel;
+                }
+            });
+            this.mrrModel.dataItems.forEach(cell => {
+                const rowIndex = cell.positionContribAnchor;
+                const colIndex = cell.positionPropertyAnchor;
+                const item = this.modelAccess.getItem(rowIndex, colIndex);
+                item.setItemSelected(false);
+                if (cell.label) {
+                    item.setLabel(cell.originalLabel);
+                }
+                item.cellValueIsValid = false;
+            });
 
-        // rest the customizationState
-        this.saveCustomizationState({
-            errorDataNotSupported: false,
-            errorMessage: undefined,
-            xAxisSelector: undefined,
-            xAxisLabel: undefined,
-            yAxisLabel: undefined,
-            xAxisSelectorOpen: false,
-            yAxisSelector: [],
-            yAxisInterValSelectors: {},
-            yAxisSelectorOpen: [],
-            yAxisSelectorCount: 1
-        });
-        this.createGDCDataModel();
+            this.setRenderingMethod('Table'); // << Default rendering Method
+
+            // rest the customizationState
+            this.saveCustomizationState({
+                errorDataNotSupported: false,
+                errorMessage: undefined,
+                xAxisSelector: undefined,
+                xAxisLabel: undefined,
+                yAxisLabel: undefined,
+                xAxisSelectorOpen: false,
+                yAxisSelector: [],
+                yAxisInterValSelectors: {},
+                yAxisSelectorOpen: [],
+                yAxisSelectorCount: 1
+            });
+            this.createGDCDataModel();
+        }
     };
 
     applyReconstructionModel = model => {
