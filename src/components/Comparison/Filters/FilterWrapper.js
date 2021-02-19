@@ -17,7 +17,7 @@ const FilterWrapper = props => {
                     .join(' ; ')
             );
         } else {
-            setContent('No different values to filter on.');
+            setContent('No different values to filter on');
         }
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
