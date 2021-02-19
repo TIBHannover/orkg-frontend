@@ -1,14 +1,7 @@
-import { useState } from 'react';
-import {
-    toggleEditPropertyLabel,
-    getComponentsByResourceIDAndPredicateID,
-    canAddValue as canAddValueAction,
-    canDeleteProperty as canDeletePropertyAction
-} from 'actions/statementBrowser';
+import { toggleEditPropertyLabel } from 'actions/statementBrowser';
 import { faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { ListGroup, InputGroup } from 'reactstrap';
 import PropTypes from 'prop-types';
-import classNames from 'classnames';
 import ValueItem from 'components/StatementBrowser/ValueItem/ValueItem';
 import AddValue from 'components/StatementBrowser/AddValue/AddValue';
 import StatementOptionButton from 'components/StatementBrowser/StatementOptionButton/StatementOptionButton';
@@ -18,31 +11,21 @@ import defaultProperties from 'components/StatementBrowser/AddProperty/helpers/d
 import AutoComplete from 'components/Autocomplete/Autocomplete';
 import { reverse } from 'named-urls';
 import { Link } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import useStatementItemTemplate from './hooks/useStatementItemTemplate';
 import ROUTES from 'constants/routes.js';
 
 export default function StatementItemTemplate(props) {
-    const dispatch = useDispatch();
-    const components = useSelector(state =>
-        getComponentsByResourceIDAndPredicateID(
-            state,
-            props.resourceId ? props.resourceId : state.statementBrowser.selectedResource,
-            props.property.existingPredicateId
-        )
-    );
-    const canAddValue = useSelector(state =>
-        canAddValueAction(state, props.resourceId ? props.resourceId : state.statementBrowser.selectedResource, props.id)
-    );
-    const canDeleteProperty = useSelector(state =>
-        canDeletePropertyAction(state, props.resourceId ? props.resourceId : state.statementBrowser.selectedResource, props.id)
-    );
-    const propertiesAsLinks = useSelector(state => state.statementBrowser.propertiesAsLinks);
-    const [disableHover, setDisableHover] = useState(false);
+    const {
+        propertiesAsLinks,
+        propertyOptionsClasses,
+        canDeleteProperty,
+        dispatch,
+        setDisableHover,
+        values,
+        components,
+        canAddValue
+    } = useStatementItemTemplate(props);
 
-    const propertyOptionsClasses = classNames({
-        propertyOptions: true,
-        disableHover: disableHover
-    });
     return (
         <StatementsGroupStyle className={`${props.inTemplate ? 'inTemplate' : 'noTemplate'}`}>
             <div className="row no-gutters">
@@ -113,7 +96,7 @@ export default function StatementItemTemplate(props) {
                     <ListGroup flush className="px-3">
                         {props.property.valueIds.length > 0 &&
                             props.property.valueIds.map((valueId, index) => {
-                                const value = props.values.byId[valueId];
+                                const value = values.byId[valueId];
                                 return (
                                     <ValueItem
                                         value={value}
@@ -156,7 +139,6 @@ StatementItemTemplate.propTypes = {
     isLastItem: PropTypes.bool.isRequired,
     enableEdit: PropTypes.bool.isRequired,
     predicateLabel: PropTypes.string.isRequired,
-    values: PropTypes.object.isRequired,
     syncBackend: PropTypes.bool.isRequired,
     handleChange: PropTypes.func.isRequired,
     inTemplate: PropTypes.bool,

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Alert, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Button, ButtonGroup, Badge } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faEllipsisV, faLightbulb, faHistory, faWindowMaximize, faChartBar, faFilter } from '@fortawesome/free-solid-svg-icons';
+import { faEllipsisV, faLightbulb, faHistory, faWindowMaximize, faChartBar, faExternalLinkAlt, faFilter } from '@fortawesome/free-solid-svg-icons';
 import ComparisonLoadingComponent from 'components/Comparison/ComparisonLoadingComponent';
 import ComparisonTable from 'components/Comparison/Comparison';
 import ExportToLatex from 'components/Comparison/Export/ExportToLatex.js';
@@ -240,15 +240,15 @@ function Comparison(props) {
                                     }}
                                     style={{ marginRight: 3 }}
                                 >
-                                    <Icon icon={faChartBar} /> Add visualization
+                                    <Icon icon={faChartBar} className="mr-1" /> Visualize
                                 </Button>
                             ) : (
                                 <Tippy
                                     hideOnClick={false}
-                                    content="Cannot add visualization to a unpublished comparison. You must publish the comparison first to use this functionality."
+                                    content="Cannot use self-visualization-service for unpublished comparison. You must publish the comparison first to use this functionality."
                                 >
                                     <span style={{ marginRight: 3 }} className="btn btn-darkblue btn-sm disabled">
-                                        <Icon icon={faChartBar} /> Add visualization
+                                        <Icon icon={faChartBar} className="mr-1" /> Visualize
                                     </span>
                                 </Tippy>
                             )}
@@ -324,6 +324,16 @@ function Comparison(props) {
                                     </DropdownItem>
                                     {metaData?.id && metaData?.doi && (
                                         <DropdownItem onClick={() => setShowExportCitationsDialog(v => !v)}>Export Citation</DropdownItem>
+                                    )}
+                                    {metaData?.id && (
+                                        <DropdownItem
+                                            tag="a"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            href={`https://mybinder.org/v2/gl/TIBHannover%2Forkg%2Forkg-notebook-boilerplate/HEAD?urlpath=notebooks%2FComparison.ipynb%3Fcomparison_id%3D%22${metaData.id}%22%26autorun%3Dtrue`}
+                                        >
+                                            Jupyter Notebook <Icon size="sm" icon={faExternalLinkAlt} />
+                                        </DropdownItem>
                                     )}
                                     <DropdownItem divider />
                                     <DropdownItem onClick={() => setShowShareDialog(v => !v)}>Share link</DropdownItem>
