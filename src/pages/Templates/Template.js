@@ -68,6 +68,7 @@ class Template extends Component {
         } else {
             this.getDefaultClass();
             this.props.setEditMode(true);
+            document.title = `Create Contribution Template - ORKG`;
         }
     }
 
@@ -77,6 +78,9 @@ class Template extends Component {
         }
         if (this.props.match.params.id && this.props.match.params.id !== prevProps.match.params.id) {
             this.props.loadTemplate(this.props.match.params.id);
+        }
+        if (this.props.label !== prevProps.label) {
+            document.title = `${this.props.label ? this.props.label + ' - ' : ''}Contribution Template - ORKG`;
         }
     }
 

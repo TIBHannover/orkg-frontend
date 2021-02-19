@@ -348,7 +348,7 @@ export default function AddValueTemplate(props) {
 }
 
 AddValueTemplate.propTypes = {
-    predicate: PropTypes.object.isRequired,
+    predicate: PropTypes.object,
     handleValueSelect: PropTypes.func.isRequired,
     newResources: PropTypes.array.isRequired,
     handleAddValue: PropTypes.func.isRequired,

@@ -93,7 +93,8 @@ function Publish(props) {
         setDescription(props.metaData && props.metaData.description ? props.metaData.description : '');
         setReferences(props.metaData?.references && props.metaData.references.length > 0 ? props.metaData.references : ['']);
         setSubject(props.metaData && props.metaData.subject ? props.metaData.subject : undefined);
-    }, [props.metaData]);
+        setComparisonCreators(props.authors ? props.authors : []);
+    }, [props.metaData, props.authors]);
 
     // TODO: improve code by using reduce function and unify code with paper edit dialog
     const saveCreators = async (creators, resourceId) => {
@@ -340,9 +341,8 @@ function Publish(props) {
                     <FormGroup>
                         <div>
                             <Tooltip
-                                message={`A DOI ${env('DATACITE_DOI_PREFIX')}/${
-                                    props.comparisonId
-                                } will be assigned to published comparison and it cannot be changed in future.`}
+                                message={`A DOI ${env('DATACITE_DOI_PREFIX')}/${props.comparisonId} 
+                                will be assigned to published comparison and it cannot be changed in future.`}
                             >
                                 <StyledCustomInput
                                     onChange={e => {

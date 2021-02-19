@@ -8,7 +8,7 @@ import { getEntity, getEntities } from 'services/backend/misc';
 import { createClass, getClasses } from 'services/backend/classes';
 import { getResourcesByClass } from 'services/backend/resources';
 import { olsBaseUrl, selectTerms, getAllOntologies, getOntologyTerms, getTermMatchingAcrossOntologies } from 'services/ols/index';
-import { AsyncPaginate, withAsyncPaginate } from 'react-select-async-paginate';
+import { AsyncPaginateBase } from 'react-select-async-paginate';
 import Creatable from 'react-select/creatable';
 import PropTypes from 'prop-types';
 import { truncate } from 'lodash';
@@ -627,7 +627,7 @@ function Autocomplete(props) {
     };
 
     // Creatable with adding new options : https://codesandbox.io/s/6pznz
-    const Select = props.allowCreate && !props.ols ? withAsyncPaginate(Creatable) : AsyncPaginate;
+    const Select = props.allowCreate && !props.ols ? Creatable : undefined;
 
     return (
         <ConditionalWrapper
@@ -665,7 +665,8 @@ function Autocomplete(props) {
                 showDialog={ontologySelectorIsOpen}
             />
             <StyledAutoCompleteInputFormControl className={`form-control ${props.cssClasses ? props.cssClasses : 'default'} border-0`}>
-                <Select
+                <AsyncPaginateBase
+                    SelectComponent={Select}
                     key={JSON.stringify(selectedOntologies.map(o => o.id))}
                     value={props.value}
                     loadOptions={loadOptions}

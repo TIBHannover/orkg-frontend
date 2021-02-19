@@ -161,6 +161,8 @@ function AddVisualizationModal(props) {
                 />
             </ModalBody>
             <ModalFooter className="p-2">
+                {/*Added hint to select at least one mapper at the top*/}
+                {processStep === 1 && <div style={{ position: 'absolute', left: 0 }}>Please select at least one mapper at the top of a column.</div>}
                 <div className="d-flex justify-content-end">
                     {processStep > 0 && (
                         <Button color="light" className="mr-2" onClick={() => setProcessStep(processStep - 1)}>

@@ -31,9 +31,14 @@ const CellVE = props => {
 
     const propertyCell = selfVisModel.mrrModel.propertyAnchors[(props.data?.positionPropertyAnchor)];
     const mapper = propertyCell?.getPropertyMapperType();
+    const disableCellValueEdit = false; // this flag is used to disable the editing of the cell values, headers still editable
 
     const cellValueDoubleClicked = () => {
         props.tippySource.data.instance.disable();
+        // disable cell value edit **This is a draft**
+        if (disableCellValueEdit && props.type === 'value') {
+            return;
+        }
         setRenderingItem('input');
     };
     const cellValueChanged = event => {
@@ -53,24 +58,30 @@ const CellVE = props => {
             let isValid = false;
             let err = undefined;
             if (mapper) {
-                // call the validator for this cell value;
-                const { error } = validateCellMapping(mapper, props.data.label);
-                let errorMessage = undefined;
-                if (error) {
-                    errorMessage = error.message;
-                    isValid = false;
+                // add handler for default mapper selector (if no mapper is selected remove col from gdc model and set validationFlag to false)
+                if (mapper === 'Select Mapper') {
+                    props.data.cellValueIsValid = false;
+                    setCellValueIsValid(false);
                 } else {
-                    isValid = true;
-                }
-                const newValue = isValid;
-                const oldValue = prevCellValueIsValid;
-                if (newValue !== oldValue) {
-                    props.data.cellValueIsValid = newValue;
-                    setCellValueIsValid(newValue);
-                    setErrorMessage(errorMessage);
+                    const { error } = validateCellMapping(mapper, props.data.label);
+                    let errorMessage = undefined;
+                    if (error) {
+                        errorMessage = error.message;
+                        isValid = false;
+                    } else {
+                        isValid = true;
+                    }
+                    const newValue = isValid;
+                    const oldValue = prevCellValueIsValid;
+                    if (newValue !== oldValue) {
+                        props.data.cellValueIsValid = newValue;
+                        setCellValueIsValid(newValue);
+                        setErrorMessage(errorMessage);
+                    }
                 }
             } else {
                 err = props.data.label ? 'No mapper selected' : 'Empty cell value';
+
                 setErrorMessage(err);
             }
         }
@@ -92,7 +103,7 @@ const CellVE = props => {
                       (props.data.originalLabel ?? 'Empty')}
                 {props.data.label !== props.data.originalLabel && (
                     <div className="text-center">
-                        <Button size="sm" onClick={cellUndoChange}>
+                        <Button size="sm" onClick={cellUndoChange} style={{ padding: '4px 8px' }}>
                             <Icon size="sm" icon={faUndo} /> Undo
                         </Button>
                     </div>
@@ -103,7 +114,7 @@ const CellVE = props => {
                 {props.data.label === props.data.originalLabel ? props.data.label : props.data.originalLabel + ' >> ' + props.data.label}
                 {props.data.label !== props.data.originalLabel && (
                     <div className="text-center">
-                        <Button size="sm" onClick={cellUndoChange}>
+                        <Button size="sm" onClick={cellUndoChange} style={{ padding: '4px 8px' }}>
                             <Icon size="sm" icon={faUndo} /> Undo
                         </Button>
                     </div>
@@ -125,7 +136,7 @@ const CellVE = props => {
                                     cellValueDoubleClicked();
                                 }}
                             >
-                                {props.data.label}
+                                {props.data.label !== props.data.originalLabel ? <b>{props.data.label}</b> : props.data.label}
                             </PropertyCellEditor>
                         )}
                         {props.type === 'property' && renderingItem === 'input' && (
@@ -155,7 +166,7 @@ const CellVE = props => {
                                     cellValueDoubleClicked();
                                 }}
                             >
-                                {props.data.label}
+                                {props.data.label !== props.data.originalLabel ? <b>{props.data.label}</b> : props.data.label}
                             </ContributionCell>
                         )}
                         {props.type === 'contribution' && renderingItem === 'input' && (
@@ -186,7 +197,7 @@ const CellVE = props => {
                                     cellValueDoubleClicked();
                                 }}
                             >
-                                {props.data.label}
+                                {props.data.label !== props.data.originalLabel ? <b>{props.data.label}</b> : props.data.label}
                             </ValueCellValidator>
                         )}
                         {props.type === 'value' && renderingItem === 'input' && (
