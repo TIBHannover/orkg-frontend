@@ -181,3 +181,8 @@ body {
 .tippy-box[data-theme~='visualizationPreview'][data-placement^='right'] > .tippy-arrow::before {
     border-right-color: $primary;
 }
+
+// Datepicker
+.react-datepicker__close-icon::after {
+    background-color: $darkblue !important;
+}
