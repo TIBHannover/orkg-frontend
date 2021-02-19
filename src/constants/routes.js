@@ -8,8 +8,6 @@ const routes = {
     PROPERTIES: '/properties',
     PROPERTY: '/property/:id',
     ADD_PROPERTY: '/addProperty',
-    PREDICATES: '/predicates',
-    PREDICATE: '/predicate/:id',
     CLASSES: '/classes',
     CLASS: '/class/:id',
     ADD_CLASS: '/addClass',
@@ -41,15 +39,18 @@ const routes = {
     LICENSE: '/license',
     DATA_PROTECTION: '/data-protection',
     TERMS_OF_USE: '/terms-of-use',
-    /* Legacy routes, only used for debugging now */
-    SEARCH: '/search/:searchTerm?',
-    TPDL: '/tpdl',
-    STATS: '/stats',
+    DATA: '/data',
     CHANGELOG: '/changelog',
-    EXPORT_DATA: '/export-data',
+    STATS: '/stats',
+    SEARCH: '/search/:searchTerm?',
     FEATURED_COMPARISONS: '/featured-comparisons',
     PDF_TEXT_ANNOTATION: '/pdf-text-annotation',
     PDF_ANNOTATION: '/pdf-annotation',
-    CSV_IMPORT: '/csv-import'
+    CSV_IMPORT: '/csv-import',
+    /* Legacy routes */
+    PREDICATES: '/predicates',
+    PREDICATE: '/predicate/:id',
+    TPDL: '/tpdl',
+    EXPORT_DATA: '/export-data'
 };
 export default routes;
