@@ -4,13 +4,14 @@ import { loadContributions, removeContributions } from 'actions/bulkContribution
 import CreateProperty from 'components/BulkContributionEditor/CreateProperty';
 import EditorTable from 'components/BulkContributionEditor/EditorTable';
 import useBulkContributionEditor from 'components/BulkContributionEditor/hooks/useBulkContributionEditor';
+import TableLoadingIndicator from 'components/BulkContributionEditor/TableLoadingIndicator';
 import AddContribution from 'components/Comparison/AddContribution/AddContribution';
 import TableScrollContainer from 'components/Comparison/TableScrollContainer';
 import CreateContributionModal from 'components/CreateContributionModal/CreateContributionModal';
 import CreatePaperModal from 'components/CreatePaperModal/CreatePaperModal';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Alert, Button, Container } from 'reactstrap';
+import { Alert, Button, ButtonGroup, Container } from 'reactstrap';
 
 const BulkContributionEditor = () => {
     const [isOpenAddContribution, setIsOpenAddContribution] = useState(false);
@@ -63,25 +64,35 @@ const BulkContributionEditor = () => {
         setIsOpenCreatePaper(false);
     };
 
-    const contributionAmount = Object.keys(contributions).length;
+    const contributionAmount = contributionIds.length;
     const containerStyle = { maxWidth: contributionAmount > 3 ? 'fit-content' : undefined };
+
+    // if is loading and there are no contributions in the store, it means it is loading for the first time
+    const isLoadingInit = Object.keys(contributions).length === 0 && isLoading;
+
     return (
         <>
-            <Container>
-                <div className="d-flex mt-4 mb-4 align-items-center">
+            <Container className="d-flex align-items-center">
+                <div className="d-flex mt-4 mb-4 align-items-center flex-grow-1">
                     <h1 className="h4">Bulk contribution editor</h1> {isLoading && <Icon icon={faSpinner} spin className="ml-2" />}
                 </div>
+                <ButtonGroup>
+                    <Button color="darkblue" size="sm" onClick={() => setIsOpenAddContribution(true)}>
+                        <Icon icon={faPlusCircle} /> Add contribution
+                    </Button>
+                </ButtonGroup>
             </Container>
             <Container className="box rounded p-4" style={containerStyle}>
-                <div className="d-flex justify-content-end mb-3">
-                    <Button color="lightblue" onClick={() => setIsOpenAddContribution(true)}>
-                        <Icon icon={faPlusCircle} className="text-darkblue" /> Add contribution
-                    </Button>
-                </div>
-                {contributionIds.length === 0 && <Alert color="info">Start adding contributions by clicking the button on the right</Alert>}
-                <TableScrollContainer className="bulk-editor">
-                    <EditorTable />
-                </TableScrollContainer>
+                {contributionAmount === 0 && <Alert color="info">Start adding contributions by clicking the button on the right</Alert>}
+
+                {isLoadingInit && <TableLoadingIndicator contributionAmount={contributionAmount} />}
+
+                {!isLoadingInit && contributionAmount > 0 && (
+                    <TableScrollContainer className="bulk-editor">
+                        <EditorTable />
+                    </TableScrollContainer>
+                )}
+
                 <CreateProperty />
             </Container>
 

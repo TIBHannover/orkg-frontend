@@ -33,7 +33,7 @@ export const CreateProperty = () => {
     };
 
     return !isCreating ? (
-        <Button color="darkblue" onClick={() => setIsCreating(true)}>
+        <Button color="darkblue" size="sm" onClick={() => setIsCreating(true)}>
             <Icon icon={faPlusCircle} /> Add property
         </Button>
     ) : (

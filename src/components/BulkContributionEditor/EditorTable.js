@@ -5,7 +5,7 @@ import TableHeaderRow from 'components/BulkContributionEditor/TableHeaderRow';
 import { Properties, PropertiesInner } from 'components/Comparison/styled';
 import { sortBy } from 'lodash';
 import PropTypes from 'prop-types';
-import { memo } from 'react';
+import { memo, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { ScrollSyncPane } from 'react-scroll-sync';
 import ReactTable from 'react-table';
@@ -79,15 +79,19 @@ const EditorTable = ({ scrollContainerBody }) => {
         </ScrollSyncPane>
     );
 
-    const TbodyComponent = component => (
-        <ScrollSyncPane group="one">
-            {/* paddingBottom for the 'add value' bottom, which is positioned partially below the table */}
-            <div style={{ overflow: 'auto', paddingBottom: 15 }} ref={scrollContainerBody}>
-                <div className={`rt-tbody ${component.className}`} style={component.style}>
-                    {component.children}
+    // useCallback to ensure the scroll position is preserved when the data is updating
+    const TbodyComponent = useCallback(
+        component => (
+            <ScrollSyncPane group="one">
+                {/* paddingBottom for the 'add value' bottom, which is positioned partially below the table */}
+                <div style={{ overflow: 'auto', paddingBottom: 15 }} ref={scrollContainerBody}>
+                    <div className={`rt-tbody ${component.className}`} style={component.style}>
+                        {component.children}
+                    </div>
                 </div>
-            </div>
-        </ScrollSyncPane>
+            </ScrollSyncPane>
+        ),
+        [scrollContainerBody]
     );
 
     return (

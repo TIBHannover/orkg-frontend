@@ -79,7 +79,8 @@ function Comparison(props) {
         setAuthors,
         loadCreatedBy,
         loadProvenanceInfos,
-        loadVisualizations
+        loadVisualizations,
+        handleBulkEdit
     } = useComparison({});
 
     /** adding some additional state for meta data **/
@@ -269,6 +270,8 @@ function Comparison(props) {
                                             </div>
                                         </DropdownMenu>
                                     </Dropdown>
+                                    <DropdownItem onClick={handleBulkEdit}>Bulk edit contributions</DropdownItem>
+
                                     <DropdownItem divider />
                                     <DropdownItem header>Export</DropdownItem>
                                     <DropdownItem onClick={() => setShowLatexDialog(v => !v)}>Export as LaTeX</DropdownItem>

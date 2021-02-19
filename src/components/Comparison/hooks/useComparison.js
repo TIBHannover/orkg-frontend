@@ -21,6 +21,7 @@ import arrayMove from 'array-move';
 import ROUTES from 'constants/routes.js';
 import queryString from 'query-string';
 import { usePrevious } from 'react-use';
+import Confirm from 'reactstrap-confirm';
 
 function useComparison() {
     const location = useLocation();
@@ -84,6 +85,7 @@ function useComparison() {
     const [responseHash, setResponseHash] = useState(null);
     const [contributionsList, setContributionsList] = useState([]);
     const [predicatesList, setPredicatesList] = useState([]);
+    const [shouldFetchLiveComparison, setShouldFetchLiveComparison] = useState(false);
 
     //
     const prevComparisonType = usePrevious(comparisonType);
@@ -500,6 +502,42 @@ function useComparison() {
         setMatrixData([header, ...rows]);
     };
 
+    const handleBulkEdit = async () => {
+        if (metaData?.id) {
+            const isConfirmed = await Confirm({
+                title: 'This is a published comparison',
+                message: `The comparison you are viewing is published, which means it cannot be modified. To make changes, fetch the live comparison data and try this action again`,
+                cancelColor: 'light',
+                confirmText: 'Fetch live data'
+            });
+
+            if (isConfirmed) {
+                setUrlNeedsToUpdate(true);
+                setResponseHash(null);
+                setShouldFetchLiveComparison(true);
+            }
+        } else {
+            const isConfirmed = await Confirm({
+                title: 'Bulk edit contribution data',
+                message: `You are about the edit the contributions displayed in the comparison. Changing this data does not only affect this comparison, but also other parts of the ORKG`,
+                cancelColor: 'light',
+                confirmText: 'Continue'
+            });
+
+            if (isConfirmed) {
+                history.push(reverse(ROUTES.BULK_CONTRIBUTION_EDITOR) + `?contributions=${contributionsList.join(',')}`);
+            }
+        }
+    };
+
+    useEffect(() => {
+        // only is there is no hash, live comparison data can be fetched
+        if (shouldFetchLiveComparison && !responseHash) {
+            setShouldFetchLiveComparison(false);
+            getComparisonResult();
+        }
+    }, [getComparisonResult, responseHash, shouldFetchLiveComparison]);
+
     useEffect(() => {
         if (comparisonId !== undefined) {
             loadComparisonMetaData(comparisonId);
@@ -603,7 +641,8 @@ function useComparison() {
         setAuthors,
         loadCreatedBy,
         loadProvenanceInfos,
-        loadVisualizations
+        loadVisualizations,
+        handleBulkEdit
     };
 }
 export default useComparison;
