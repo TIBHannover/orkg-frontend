@@ -1,6 +1,6 @@
 import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { memo, useState } from 'react';
 import { Button } from 'reactstrap';
 
 const TableCellValueResource = ({ value }) => {
@@ -22,4 +22,4 @@ TableCellValueResource.propTypes = {
     value: PropTypes.object
 };
 
-export default TableCellValueResource;
+export default memo(TableCellValueResource);

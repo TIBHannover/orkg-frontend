@@ -6,7 +6,7 @@ import { ItemInnerSeparator } from 'components/Comparison/TableCell';
 import ValuePlugins from 'components/ValuePlugins/ValuePlugins';
 import { CLASSES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { memo, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Input } from 'reactstrap';
 import { resourcesUrl } from 'services/backend/resources';
@@ -27,7 +27,7 @@ const TableCellValue = ({ value, index, setDisableCreate }) => {
         setDisableCreate(false);
     };
 
-    const handleLiteralBlur = () => {
+    const handleUpdate = () => {
         handleStopEdit();
 
         // check if input is dirty
@@ -60,16 +60,20 @@ const TableCellValue = ({ value, index, setDisableCreate }) => {
         );
     };
 
+    const handleKeyPress = e => {
+        if (e.key === 'Enter') {
+            handleUpdate();
+        }
+    };
+
     return !isEditing ? (
         <>
             {index > 0 && <ItemInnerSeparator className="my-0" />}
             <div className="position-relative" onMouseEnter={() => setIsHovering(true)} onMouseLeave={() => setIsHovering(false)}>
-                <div onDoubleClick={handleStartEdit}>
-                    <ValuePlugins type={value._class} options={{ inModal: true }}>
-                        {value._class === 'resource' && <TableCellValueResource value={value} />}
-                        {value._class === 'literal' && value.label}
-                    </ValuePlugins>
-                </div>
+                <ValuePlugins type={value._class} options={{ inModal: true }}>
+                    {value._class === 'resource' && <TableCellValueResource value={value} />}
+                    {value._class === 'literal' && <div onDoubleClick={handleStartEdit}>{value.label}</div>}
+                </ValuePlugins>
                 <TableCellButtons
                     isHovering={isHovering}
                     onEdit={handleStartEdit}
@@ -102,7 +106,8 @@ const TableCellValue = ({ value, index, setDisableCreate }) => {
                     value={inputValue}
                     autoFocus
                     onChange={e => setInputValue(e.target.value)}
-                    onBlur={handleLiteralBlur}
+                    onBlur={handleUpdate}
+                    onKeyPress={handleKeyPress}
                 />
             )}
         </div>
@@ -115,4 +120,4 @@ TableCellValue.propTypes = {
     setDisableCreate: PropTypes.func
 };
 
-export default TableCellValue;
+export default memo(TableCellValue);

@@ -7,7 +7,7 @@ import { StyledDropdownItem, StyledDropdownToggle } from 'components/StatementBr
 import { CLASSES } from 'constants/graphSettings';
 import { upperFirst } from 'lodash';
 import PropTypes from 'prop-types';
-import { useRef, useState } from 'react';
+import { memo, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useClickAway } from 'react-use';
 import { DropdownMenu, Input, InputGroup, InputGroupButtonDropdown } from 'reactstrap';
@@ -22,7 +22,7 @@ const CreateButtonContainer = styled.div`
     z-index: 1;
 `;
 
-const TableCellValueCreate = ({ isVisible, contributionId, propertyId }) => {
+const TableCellValueCreate = ({ isVisible, contributionId, propertyId, isEmptyCell }) => {
     const [value, setValue] = useState('');
     const [type, setType] = useState('literal');
     const [isCreating, setIsCreating] = useState(false);
@@ -31,13 +31,17 @@ const TableCellValueCreate = ({ isVisible, contributionId, propertyId }) => {
     const dispatch = useDispatch();
 
     useClickAway(refContainer, () => {
+        createValue();
+    });
+
+    const createValue = () => {
         if (isCreating) {
             setIsCreating(false);
         }
         if (type === 'literal' && value.trim()) {
             handleCreateLiteral();
         }
-    });
+    };
 
     const handleChangeAutocomplete = async (selected, { action }) => {
         if (action !== 'create-option' && action !== 'select-option') {
@@ -64,10 +68,15 @@ const TableCellValueCreate = ({ isVisible, contributionId, propertyId }) => {
             })
         );
 
+    const handleKeyPress = e => {
+        if (e.key === 'Enter') {
+            createValue();
+        }
+    };
     return (
         <>
             {!isCreating && isVisible && (
-                <div onDoubleClick={() => setIsCreating(true)}>
+                <div className={isEmptyCell ? 'h-100' : ''} onDoubleClick={() => setIsCreating(true)}>
                     <CreateButtonContainer>
                         <StatementOptionButton title="Add value" icon={faPlus} action={() => setIsCreating(true)} />
                     </CreateButtonContainer>
@@ -97,6 +106,7 @@ const TableCellValueCreate = ({ isVisible, contributionId, propertyId }) => {
                                 bsSize="sm"
                                 value={value}
                                 onChange={e => setValue(e.target.value)}
+                                onKeyPress={handleKeyPress}
                                 autoFocus
                             />
                         )}
@@ -121,7 +131,8 @@ const TableCellValueCreate = ({ isVisible, contributionId, propertyId }) => {
 TableCellValueCreate.propTypes = {
     isVisible: PropTypes.bool,
     contributionId: PropTypes.string.isRequired,
-    propertyId: PropTypes.string.isRequired
+    propertyId: PropTypes.string.isRequired,
+    isEmptyCell: PropTypes.bool.isRequired
 };
 
-export default TableCellValueCreate;
+export default memo(TableCellValueCreate);

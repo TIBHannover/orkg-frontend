@@ -1,9 +1,4 @@
 import useBulkContributionEditor from 'components/BulkContributionEditor/hooks/useBulkContributionEditor';
-import TableCell from 'components/BulkContributionEditor/TableCell';
-import TableHeaderColumn from 'components/BulkContributionEditor/TableHeaderColumn';
-import TableHeaderRow from 'components/BulkContributionEditor/TableHeaderRow';
-import { Properties, PropertiesInner } from 'components/Comparison/styled';
-import { sortBy } from 'lodash';
 import PropTypes from 'prop-types';
 import { memo, useCallback } from 'react';
 import { useSelector } from 'react-redux';
@@ -16,58 +11,8 @@ const ReactTableFixedColumns = withFixedColumnsScrollEvent(ReactTable);
 
 const EditorTable = ({ scrollContainerBody }) => {
     const { contributions, papers, statements, properties, resources, literals } = useSelector(state => state.bulkContributionEditor);
-    const { getStatementsByPropertyIdAndContributionId } = useBulkContributionEditor();
-
-    const statementsByPropertyIdAndContributionId = getStatementsByPropertyIdAndContributionId(statements);
-
-    let data = [];
-    let columns = [];
-
-    if (Object.keys(statements).length) {
-        data = Object.keys(properties).map(propertyId => ({
-            property: properties[propertyId],
-            values: Object.keys(contributions).map(
-                contributionId =>
-                    sortBy(
-                        statementsByPropertyIdAndContributionId?.[propertyId]?.[contributionId]?.map(statementId => ({
-                            ...(statements[statementId].type === 'resource'
-                                ? resources[statements[statementId].objectId]
-                                : literals[statements[statementId].objectId]),
-                            statementId
-                        })),
-                        value => value?.label?.trim().toLowerCase()
-                    ) || [{}]
-            )
-        }));
-
-        data = sortBy(data, date => date.property.label.trim().toLowerCase());
-
-        columns = [
-            {
-                Header: (
-                    <Properties>
-                        <PropertiesInner transpose={false} className="first">
-                            Properties
-                        </PropertiesInner>
-                    </Properties>
-                ),
-                accessor: 'property',
-                fixed: 'left',
-                Cell: cell => <TableHeaderRow property={cell.value} />,
-                width: 250
-            },
-            ...Object.keys(contributions).map((contributionId, i) => {
-                const contribution = contributions[contributionId];
-                return {
-                    id: contributionId,
-                    Header: () => <TableHeaderColumn contribution={contribution} paper={papers[contribution.paperId]} key={contributionId} />,
-                    accessor: d => d.values[i],
-                    Cell: cell => <TableCell values={cell.value} contributionId={cell.column.id} propertyId={cell.row.property.id} />,
-                    width: 250
-                };
-            })
-        ];
-    }
+    const { generateTableMatrix } = useBulkContributionEditor();
+    const { data, columns } = generateTableMatrix({ contributions, papers, statements, properties, resources, literals });
 
     const TheadComponent = component => (
         <ScrollSyncPane group="one">

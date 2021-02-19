@@ -1,6 +1,7 @@
 import { faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
 import StatementOptionButton from 'components/StatementBrowser/StatementOptionButton/StatementOptionButton';
 import PropTypes from 'prop-types';
+import { memo } from 'react';
 import styled from 'styled-components';
 
 const ButtonsContainer = styled.div`
@@ -39,4 +40,4 @@ TableCellValueButtons.defaultProps = {
     style: {}
 };
 
-export default TableCellValueButtons;
+export default memo(TableCellValueButtons);

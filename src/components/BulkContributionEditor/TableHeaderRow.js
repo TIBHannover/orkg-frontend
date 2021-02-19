@@ -2,7 +2,7 @@ import Autocomplete from 'components/Autocomplete/Autocomplete';
 import TableCellButtons from 'components/BulkContributionEditor/TableCellButtons';
 import { Properties, PropertiesInner } from 'components/Comparison/styled';
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { memo, useState } from 'react';
 import { predicatesUrl } from 'services/backend/predicates';
 import Confirm from 'reactstrap-confirm';
 import { useDispatch, useSelector } from 'react-redux';
@@ -129,4 +129,4 @@ TableHeaderRow.propTypes = {
     property: PropTypes.object
 };
 
-export default TableHeaderRow;
+export default memo(TableHeaderRow);

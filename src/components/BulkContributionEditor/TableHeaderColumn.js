@@ -7,7 +7,7 @@ import { Contribution, Delete, ItemHeader, ItemHeaderInner } from 'components/Co
 import EditPaperDialog from 'components/ViewPaper/EditDialog/EditPaperDialog';
 import useEditPaper from 'components/ViewPaper/EditDialog/hooks/useEditPaper';
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { memo, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import 'react-table-hoc-fixed-columns/lib/styles.css'; // important: this line must be placed after react-table css import
 import { Button } from 'reactstrap';
@@ -73,4 +73,4 @@ TableHeaderColumn.propTypes = {
     paper: PropTypes.object.isRequired
 };
 
-export default TableHeaderColumn;
+export default memo(TableHeaderColumn);

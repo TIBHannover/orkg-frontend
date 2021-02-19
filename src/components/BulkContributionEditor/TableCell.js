@@ -2,7 +2,7 @@ import TableCellValue from 'components/BulkContributionEditor/TableCellValue';
 import TableCellValueCreate from 'components/BulkContributionEditor/TableCellValueCreate';
 import { Item, ItemInner } from 'components/Comparison/TableCell';
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { memo, useState } from 'react';
 
 const TableCell = ({ values, contributionId, propertyId }) => {
     const [isHovering, setIsHovering] = useState(false);
@@ -17,7 +17,12 @@ const TableCell = ({ values, contributionId, propertyId }) => {
                     }
                     return <TableCellValue key={`value-${value.statementId}`} value={value} index={index} setDisableCreate={setDisableCreate} />;
                 })}
-                <TableCellValueCreate isVisible={isHovering && !disableCreate} contributionId={contributionId} propertyId={propertyId} />
+                <TableCellValueCreate
+                    isVisible={isHovering && !disableCreate}
+                    contributionId={contributionId}
+                    propertyId={propertyId}
+                    isEmptyCell={values.length === 0}
+                />
             </ItemInner>
         </Item>
     );
@@ -29,4 +34,4 @@ TableCell.propTypes = {
     propertyId: PropTypes.string.isRequired
 };
 
-export default TableCell;
+export default memo(TableCell);
