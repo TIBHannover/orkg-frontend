@@ -169,7 +169,7 @@ export function createRequiredPropertiesInResource(resourceId) {
  * @param {String} resourceId Resource ID
  * @return {String[]} list of template IDs
  */
-export function getReseachProblemsOfContribution(state, resourceId) {
+export function getResearchProblemsOfContribution(state, resourceId) {
     if (!resourceId) {
         return [];
     }
@@ -192,7 +192,7 @@ export function getReseachProblemsOfContribution(state, resourceId) {
 }
 
 /**
- * Get tempalte IDs by resource ID
+ * Get template IDs by resource ID
  *
  * @param {Object} state Current state of the Store
  * @param {String} resourceId Resource ID
@@ -306,7 +306,7 @@ export function createProperty(data) {
             const resource = getState().statementBrowser.resources.byId[data.resourceId];
 
             if (resource && resource.propertyIds) {
-                const isExstingProperty = resource.propertyIds.find(p => {
+                const isExistingProperty = resource.propertyIds.find(p => {
                     if (getState().statementBrowser.properties.byId[p].existingPredicateId === data.existingPredicateId) {
                         if (data.range) {
                             // if the range is set check the equality also
@@ -318,7 +318,7 @@ export function createProperty(data) {
                         return false;
                     }
                 });
-                if (isExstingProperty) {
+                if (isExistingProperty) {
                     // Property already exists
                     return null;
                 }
@@ -724,7 +724,7 @@ export function fillResourceWithTemplate({ templateID, selectedResource, syncBac
  * @param {String} classID - Class ID
  * @return {Boolean} if the class template should be fetched or not
  */
-function shouldFetchTemplatesofClass(state, classID) {
+function shouldFetchTemplatesOfClass(state, classID) {
     const classObj = state.statementBrowser.classes[classID];
     if (!classObj) {
         return true;
@@ -740,7 +740,7 @@ function shouldFetchTemplatesofClass(state, classID) {
  */
 export function fetchTemplatesOfClassIfNeeded(classID) {
     return (dispatch, getState) => {
-        if (shouldFetchTemplatesofClass(getState(), classID)) {
+        if (shouldFetchTemplatesOfClass(getState(), classID)) {
             dispatch({
                 type: type.IS_FETCHING_TEMPLATES_OF_CLASS,
                 classID
@@ -751,7 +751,7 @@ export function fetchTemplatesOfClassIfNeeded(classID) {
                     classID
                 });
 
-                return await Promise.all(templateIds.map(tempalteId => dispatch(fetchTemplateIfNeeded(tempalteId))));
+                return await Promise.all(templateIds.map(templateId => dispatch(fetchTemplateIfNeeded(templateId))));
             });
         } else {
             // Let the calling code know there's nothing to wait for.
@@ -824,7 +824,7 @@ export const updateContributionLabel = data => dispatch => {
  */
 function shouldFetchStatementsForResource(state, resourceId, depth) {
     const resource = state.statementBrowser.resources.byId[resourceId];
-    if (!resource || !resource.isFechted || (resource.isFechted && resource.fetshedDepth < depth)) {
+    if (!resource || !resource.isFetched || (resource.isFetched && resource.fetchedDepth < depth)) {
         return true;
     } else {
         return false;
@@ -833,7 +833,7 @@ function shouldFetchStatementsForResource(state, resourceId, depth) {
 
 // TODO: support literals (currently not working in backend)
 /**
- * Fetch statemments of a resource
+ * Fetch statements of a resource
  *
  * @param {Object} data
  * @param {String} data.resourceId - Resource ID
@@ -910,7 +910,7 @@ export const fetchStatementsForResource = data => {
                     .then(() => dispatch(createRequiredPropertiesInResource(resourceId)))
                     .then(existingProperties => {
                         // all the template of classes are loaded
-                        // add the required proerty first
+                        // add the required property first
                         const researchProblems = [];
 
                         // Sort predicates and values by label

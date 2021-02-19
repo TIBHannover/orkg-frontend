@@ -20,7 +20,7 @@ import { connect } from 'react-redux';
 import { reverse } from 'named-urls';
 import { toast } from 'react-toastify';
 import { selectContribution, updateResearchProblems } from 'actions/viewPaper';
-import { getReseachProblemsOfContribution } from 'actions/statementBrowser';
+import { getResearchProblemsOfContribution } from 'actions/statementBrowser';
 import styled from 'styled-components';
 import { StyledHorizontalContributionsList, StyledHorizontalContribution, AddContribution } from 'components/AddPaper/Contributions/styled';
 import Tippy from '@tippyjs/react';
@@ -442,7 +442,7 @@ const mapStateToProps = (state, ownProps) => {
 
     // All the research problem ids (concatination of the research problem input field and the statement browser)
     const researchProblemsIds = [
-        ...getReseachProblemsOfContribution(
+        ...getResearchProblemsOfContribution(
             state,
             state.addPaper.contributions.byId[ownProps.selectedContribution]
                 ? state.addPaper.contributions.byId[ownProps.selectedContribution].resourceId

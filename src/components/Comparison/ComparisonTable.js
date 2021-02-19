@@ -108,8 +108,14 @@ const ComparisonTable = props => {
                     Cell: cell =>
                         !props.transpose ? (
                             <Properties className="columnProperty">
-                                <PropertiesInner cellPadding={cellPadding}>
-                                    <PropertyValue similar={cell.value.similar} label={cell.value.label} id={cell.value.id} />
+                                <PropertiesInner className="d-flex flex-row align-items-start justify-content-between" cellPadding={cellPadding}>
+                                    <PropertyValue
+                                        filterControlData={props.filterControlData}
+                                        updateRulesOfProperty={props.updateRulesOfProperty}
+                                        similar={cell.value.similar}
+                                        label={cell.value.label}
+                                        id={cell.value.id}
+                                    />
                                 </PropertiesInner>
                             </Properties>
                         ) : (
@@ -188,8 +194,17 @@ const ComparisonTable = props => {
                                   id: property.id, // <-here
                                   Header: () => (
                                       <ItemHeader key={`property${property.id}`}>
-                                          <ItemHeaderInner transpose={props.transpose}>
-                                              <PropertyValue similar={property.similar} label={property.label} id={property.id} />
+                                          <ItemHeaderInner
+                                              className="d-flex flex-row align-items-center justify-content-between"
+                                              transpose={props.transpose}
+                                          >
+                                              <PropertyValue
+                                                  filterControlData={props.filterControlData}
+                                                  updateRulesOfProperty={props.updateRulesOfProperty}
+                                                  similar={property.similar}
+                                                  label={property.label}
+                                                  id={property.id}
+                                              />
                                           </ItemHeaderInner>
                                       </ItemHeader>
                                   ),
@@ -218,7 +233,9 @@ ComparisonTable.propTypes = {
     removeContribution: PropTypes.func.isRequired,
     transpose: PropTypes.bool.isRequired,
     viewDensity: PropTypes.oneOf(['spacious', 'normal', 'compact']),
-    scrollContainerBody: PropTypes.object.isRequired
+    scrollContainerBody: PropTypes.object.isRequired,
+    filterControlData: PropTypes.array.isRequired,
+    updateRulesOfProperty: PropTypes.func.isRequired
 };
 
 export default memo(ComparisonTable, compareProps);

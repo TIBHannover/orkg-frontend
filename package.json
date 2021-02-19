@@ -79,7 +79,7 @@
         "react-router": "^5.2.0",
         "react-router-config": "^5.0.1",
         "react-router-dom": "^5.2.0",
-        "react-scripts": "4.0.1",
+        "react-scripts": "4.0.2",
         "react-scroll-sync": "^0.8.0",
         "react-select": "^3.2.0",
         "react-select-async-paginate": "^0.5.1",
@@ -99,6 +99,7 @@
         "redux-thunk": "^2.3.0",
         "sbd": "^1.0.18",
         "source-map-explorer": "^2.5.2",
+        "stopwords-en": "^0.3.0",
         "strict-mode": "^1.1.4",
         "string-format": "^2.0.0",
         "styled-components": "^5.2.1",
@@ -114,8 +115,8 @@
         "test": "react-scripts test --env=jsdom",
         "eject": "react-scripts eject",
         "flow": "flow",
-        "lint": "eslint 'src/**/*.{js,jsx}'",
-        "lint:fix": "eslint 'src/**/*.{js,jsx}' --fix",
+        "lint": "eslint src/**/*.js",
+        "lint:fix": "eslint src/**/*.js --fix",
         "version": "auto-changelog && git add CHANGELOG.md"
     },
     "devDependencies": {

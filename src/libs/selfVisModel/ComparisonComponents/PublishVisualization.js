@@ -58,14 +58,23 @@ function PublishVisualization(props) {
                     authors.classes = authorResource.classes;
                 }
             } else {
-                // Author resource doesn't exist
-                const newLiteral = await createLiteral(author.label);
-                // Create literal of author
-                const authorStatement = await createLiteralStatement(resourceId, PREDICATES.HAS_AUTHOR, newLiteral.id);
-                authors.statementId = authorStatement.id;
-                authors.id = newLiteral.id;
-                authors.class = authorStatement.object._class;
-                authors.classes = authorStatement.object.classes;
+                // Author resource exists
+                if (author.label !== author.id) {
+                    const authorStatement = await createResourceStatement(resourceId, PREDICATES.HAS_AUTHOR, author.id);
+                    authors.statementId = authorStatement.id;
+                    authors.id = author.id;
+                    authors.class = author._class;
+                    authors.classes = author.classes;
+                } else {
+                    // Author resource doesn't exist
+                    const newLiteral = await createLiteral(author.label);
+                    // Create literal of author
+                    const authorStatement = await createLiteralStatement(resourceId, PREDICATES.HAS_AUTHOR, newLiteral.id);
+                    authors.statementId = authorStatement.id;
+                    authors.id = newLiteral.id;
+                    authors.class = authorStatement.object._class;
+                    authors.classes = authorStatement.object.classes;
+                }
             }
         }
     };

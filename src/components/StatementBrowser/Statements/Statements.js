@@ -23,12 +23,17 @@ import {
 } from 'actions/statementBrowser';
 
 const Statements = props => {
-    const statementBrowser = useSelector(state => state.statementBrowser);
-    const { level, resources, properties, values, selectedResource } = statementBrowser;
-    const canAddProperty = canAddPropertyFunction({ statementBrowser }, selectedResource);
-    const suggestedProperties = getSuggestedProperties({ statementBrowser }, selectedResource);
+    const selectedResource = useSelector(state => state.statementBrowser.selectedResource);
+    const values = useSelector(state => state.statementBrowser.values);
+    const properties = useSelector(state => state.statementBrowser.properties);
+    const level = useSelector(state => state.statementBrowser.level);
+
+    const canAddProperty = useSelector(state => canAddPropertyFunction(state, selectedResource));
+    const suggestedProperties = useSelector(state => getSuggestedProperties(state, selectedResource));
+    const resource = useSelector(state => selectedResource && state.statementBrowser.resources.byId[selectedResource]);
     const dispatch = useDispatch();
     const [cookies] = useCookies(['showedValueHelp']);
+    const [helpModalOpen, setHelpModalOpen] = useState(false);
 
     useEffect(() => {
         if (props.initialSubjectId) {
@@ -78,14 +83,12 @@ const Statements = props => {
         props.rootNodeType
     ]);
 
-    const [helpModalOpen, setHelpModalOpen] = useState(false);
-
     const statements = () => {
         let propertyIds = [];
         let shared = 1;
-        if (Object.keys(resources.byId).length !== 0 && selectedResource) {
-            propertyIds = resources.byId[selectedResource] ? resources.byId[selectedResource].propertyIds : [];
-            shared = resources.byId[selectedResource] ? resources.byId[selectedResource].shared : 0;
+        if (resource && selectedResource) {
+            propertyIds = resource ? resource.propertyIds : [];
+            shared = resource ? resource.shared : 0;
         }
 
         return (
@@ -94,7 +97,7 @@ const Statements = props => {
                     <div className="text-muted mb-2">Classes: {props.resources.byId[props.selectedResource].classes.join(',')}</div>
                 )*/}
                 <ListGroup className="listGroupEnlarge">
-                    {selectedResource && !resources.byId[selectedResource].isFetching ? (
+                    {selectedResource && !resource.isFetching ? (
                         propertyIds.length > 0 ? (
                             propertyIds.map((propertyId, index) => {
                                 const property = properties.byId[propertyId];

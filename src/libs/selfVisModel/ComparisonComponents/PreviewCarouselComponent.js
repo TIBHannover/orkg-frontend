@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faArrowCircleLeft, faArrowCircleRight } from '@fortawesome/free-solid-svg-icons';
 import useResizeObserver from 'use-resize-observer';
@@ -51,14 +51,23 @@ const PreviewCarouselComponent = props => {
         });
     };
 
-    const executeWheelEvent = event => {
-        event.preventDefault();
-        if (event.deltaY > 0) {
-            handleScrollLeft();
-        } else {
-            handleScrollRight();
-        }
-    };
+    const executeWheelEvent = useCallback(
+        event => {
+            // wheel event has two semantics;
+            // 1) when we don't have enough space to render all cards, the wheel event will be blocked on the main widget
+            // and executed in the preview component. This is checked by testing if the arrow buttons are rendered;
+            // 2) otherwise we have a normal wheel event on the main widget, and the page scrolls down.
+            if (showArrowLeft || showArrowRight) {
+                event.preventDefault();
+                if (event.deltaY > 0) {
+                    handleScrollLeft();
+                } else {
+                    handleScrollRight();
+                }
+            }
+        },
+        [showArrowLeft, showArrowRight]
+    );
 
     // just a wrapper function for better code reading
     const resizeEvent = () => {
@@ -79,7 +88,7 @@ const PreviewCarouselComponent = props => {
             };
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [showArrowRight, showArrowRight]);
 
     useEffect(() => {
         executeUpdates();

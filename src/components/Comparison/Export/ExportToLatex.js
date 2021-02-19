@@ -10,7 +10,7 @@ import MakeLatex from 'make-latex';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import ROUTES from 'constants/routes.js';
-import Tooltip from '../Utils/Tooltip';
+import Tooltip from '../../Utils/Tooltip';
 import { faClipboard } from '@fortawesome/free-regular-svg-icons';
 import moment from 'moment';
 import { reverse } from 'named-urls';

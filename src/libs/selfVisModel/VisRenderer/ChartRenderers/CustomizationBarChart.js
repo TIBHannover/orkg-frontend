@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Alert, Button } from 'reactstrap';
 import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
-import { createValueSelectors, createLabelSelectors, isMounted, getSelectorsState } from './HelperFunctions';
+import { createValueSelectors, createLabelSelectors, isMounted, getSelectorsState, createLabelEditor, createValueEditor } from './HelperFunctions';
 import PropTypes from 'prop-types';
 
 class CustomizationBarChart extends Component {
@@ -40,7 +40,30 @@ class CustomizationBarChart extends Component {
     componentDidUpdate = () => {
         if (this.props.propagateUpdates) {
             this.props.propagateUpdates(getSelectorsState(this));
-            this.selfVisModel.saveCustomizationState({ ...this.state, errorDataNotSupported: false, errorMessage: undefined, errorValue: -1 });
+
+            const customizationState = {
+                ...this.state,
+                errorDataNotSupported: false,
+                errorMessage: undefined,
+                errorValue: -1
+            };
+            if (customizationState.xAxisLabel === undefined) {
+                if (this.state.cachedXAxisSelector) {
+                    customizationState.xAxisLabel = this.state.cachedXAxisSelector.xAxisSelector ? this.state.cachedXAxisSelector.xAxisSelector : '';
+                } else {
+                    customizationState.xAxisLabel = customizationState.xAxisSelector;
+                }
+            }
+            if (customizationState.yAxisLabel === undefined) {
+                if (this.state.cachedYAxisSelector) {
+                    customizationState.yAxisLabel = this.state.cachedXAxisSelector.yAxisSelector
+                        ? this.state.cachedXAxisSelector.xAxisSelector[0]
+                        : '';
+                } else {
+                    customizationState.yAxisLabel = customizationState.yAxisSelector[0];
+                }
+            }
+            this.selfVisModel.saveCustomizationState(customizationState);
         }
     };
 
@@ -50,6 +73,13 @@ class CustomizationBarChart extends Component {
 
     createLabelSelectors = () => {
         return createLabelSelectors(this);
+    };
+
+    createLabelEditor = () => {
+        return createLabelEditor(this);
+    };
+    createValueEditor = () => {
+        return createValueEditor(this);
     };
 
     renderErrorMessages = () => {
@@ -66,10 +96,10 @@ class CustomizationBarChart extends Component {
             <div>
                 {!this.state.errorDataNotSupported && (
                     <>
-                        Y-axis
-                        {this.createLabelSelectors()}
+                        Y-axis{this.createLabelSelectors()}
+                        <div className="mt-2">Label{this.createLabelEditor()}</div>
                         <hr />
-                        X-axis
+                        X-axis Label<div className="mt-2">{this.createValueEditor()}</div>
                         {this.createValueSelectors()}
                     </>
                 )}

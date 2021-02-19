@@ -2,6 +2,7 @@ import { createRef, Component } from 'react';
 import { Input } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faTrash, faPen } from '@fortawesome/free-solid-svg-icons';
+import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
 import ROUTES from 'constants/routes';
 import Tippy from '@tippyjs/react';
 import { reverse } from 'named-urls';
@@ -152,19 +153,26 @@ class ContributionItemList extends Component {
             </li>
         ) : (
             <li>
-                <button
-                    className={listClasses}
-                    onClick={
-                        !isViewPaperPage
-                            ? () =>
-                                  this.props.handleSelectContribution && !this.state.isEditing
-                                      ? this.props.handleSelectContribution(this.props.contribution.id)
-                                      : undefined
-                            : undefined
-                    }
+                <ConditionalWrapper
+                    condition={!this.props.isSelected}
+                    wrapper={children => (
+                        <button
+                            className={listClasses}
+                            onClick={
+                                !isViewPaperPage
+                                    ? () =>
+                                          this.props.handleSelectContribution && !this.state.isEditing
+                                              ? this.props.handleSelectContribution(this.props.contribution.id)
+                                              : undefined
+                                    : undefined
+                            }
+                        >
+                            {children}
+                        </button>
+                    )}
                 >
-                    {listItem}
-                </button>
+                    <div className={this.props.isSelected ? listClasses : undefined}>{listItem}</div>
+                </ConditionalWrapper>
             </li>
         );
     }
