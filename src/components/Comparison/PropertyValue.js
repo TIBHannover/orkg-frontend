@@ -39,8 +39,7 @@ const PropertyValue = ({ id, label, similar, filterControlData, updateRulesOfPro
     };
 
     const filterButtonClasses = classNames({
-        'd-block': getValuesNr() > 1,
-        'd-none': getValuesNr() <= 1,
+        'd-block': true,
         active: getRuleByProperty(filterControlData, id).length > 0
     });
 
@@ -61,10 +60,11 @@ const PropertyValue = ({ id, label, similar, filterControlData, updateRulesOfPro
 
             <FilterWrapper
                 data={{
-                    rules: getRuleByProperty(filterControlData, id)
+                    rules: getRuleByProperty(filterControlData, id),
+                    disabled: getValuesNr() <= 1 && getRuleByProperty(filterControlData, id).length === 0
                 }}
             >
-                <FilterButton color="link" onClick={() => setShowFilterDialog(v => !v)} className={filterButtonClasses}>
+                <FilterButton color="link" disabled={getValuesNr() <= 1} onClick={() => setShowFilterDialog(v => !v)} className={filterButtonClasses}>
                     <Icon size="xs" icon={faFilter} />
                 </FilterButton>
             </FilterWrapper>
