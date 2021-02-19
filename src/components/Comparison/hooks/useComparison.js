@@ -17,7 +17,7 @@ import {
 import { useParams, useLocation, useHistory } from 'react-router-dom';
 import { PREDICATES, CLASSES, MISC } from 'constants/graphSettings';
 import { reverse } from 'named-urls';
-import { flattenDepth, flatten, groupBy, intersection } from 'lodash';
+import { flattenDepth, flatten, groupBy, intersection, findIndex, cloneDeep, isEmpty } from 'lodash';
 import arrayMove from 'array-move';
 import ROUTES from 'constants/routes.js';
 import queryString from 'query-string';
@@ -332,7 +332,12 @@ function useComparison() {
                     property,
                     rules: [],
                     values: groupBy(
-                        flatten(contributions.map((_, index) => data[property.id][index]).filter(([first]) => Object.keys(first).length !== 0)),
+                        flatten(
+                            contributions
+                                .filter(c => c.active)
+                                .map((_, index) => data[property.id][index])
+                                .filter(([first]) => Object.keys(first).length !== 0)
+                        ),
                         'label'
                     )
                 };
@@ -476,11 +481,29 @@ function useComparison() {
      * @param {String} contributionId Contribution id to remove
      */
     const removeContribution = contributionId => {
-        const newContributions = contributions.map(contribution => {
-            return contribution.id === contributionId ? { ...contribution, active: !contribution.active } : contribution;
-        });
+        const cIndex = findIndex(contributions, c => c.id === contributionId);
+        const newContributions = contributions
+            .filter(c => c.id !== contributionId)
+            .map(contribution => {
+                return { ...contribution, active: true };
+            });
+        const newData = cloneDeep(data);
+        let newProperties = cloneDeep(properties);
+        for (const property in newData) {
+            // remove the contribution from data
+            if (flatten(newData[property][cIndex]).filter(v => !isEmpty(v)).length !== 0) {
+                // decrement the contribution amount from properties if it has some values
+                const pIndex = newProperties.findIndex(p => p.id === property);
+                newProperties[pIndex].contributionAmount = newProperties[pIndex].contributionAmount - 1;
+            }
+            newData[property].splice(cIndex, 1);
+        }
+        newProperties = extendAndSortProperties({ data: newData, properties: newProperties });
         setContributionsList(activatedContributionsToList(newContributions));
         setContributions(newContributions);
+        setData(newData);
+        setProperties(newProperties);
+        setFilterControlData(generateFilterControlData(newContributions, newProperties, newData));
         setUrlNeedsToUpdate(true);
     };
 
