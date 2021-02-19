@@ -5,6 +5,23 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [V0.30](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.29...V0.30) - 2021-02-19
+
+### Changes
+
+- fix: Downgrade react-select-async-paginate [`#510`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/510)
+- feat: Add faceted search on comparison page [`#492`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/492)
+- feat: Add export to jupyter notebook button [`#499`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/499)
+- fix: Too many re-renders. [`#508`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/508)
+- feat: Add SPARQL endpoint [`#509`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/509)
+- fix: Self-Vis-Service feedback and smaller issues [`#502`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/502)
+- fix(eslint): remove eslint for jsx files [`#506`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/506)
+- update: react scripts [`#501`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/501)
+- docs: add readme PDF annotation tool [`#505`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/505)
+- fix: Comparison creators are missing from Publish metadata [`#503`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/503)
+- ci: Add cache control headers for static files nginx config [`#402`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/402)
+
+---
 ## [V0.29](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.28...V0.29) - 2021-02-05
 
 ### Changes
