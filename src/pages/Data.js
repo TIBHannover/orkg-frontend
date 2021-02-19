@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import { Container, Button } from 'reactstrap';
 
-class ExportData extends Component {
+class Data extends Component {
     componentDidMount = () => {
         document.title = 'Data Access - ORKG';
     };
@@ -55,4 +55,4 @@ class ExportData extends Component {
     }
 }
 
-export default ExportData;
+export default Data;
