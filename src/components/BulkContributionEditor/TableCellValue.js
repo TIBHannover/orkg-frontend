@@ -49,6 +49,7 @@ const TableCellValue = ({ value, index, setDisableCreate }) => {
         if (action !== 'create-option' && action !== 'select-option') {
             return;
         }
+        handleStopEdit();
 
         dispatch(
             updateResource({

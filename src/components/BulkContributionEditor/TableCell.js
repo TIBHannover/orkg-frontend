@@ -1,6 +1,7 @@
 import TableCellValue from 'components/BulkContributionEditor/TableCellValue';
 import TableCellValueCreate from 'components/BulkContributionEditor/TableCellValueCreate';
 import { Item, ItemInner } from 'components/Comparison/TableCell';
+import { isEqual } from 'lodash';
 import PropTypes from 'prop-types';
 import { memo, useState } from 'react';
 
@@ -34,4 +35,6 @@ TableCell.propTypes = {
     propertyId: PropTypes.string.isRequired
 };
 
-export default memo(TableCell);
+const propsAreEqual = (prevProps, nextProps) => isEqual(prevProps, nextProps);
+
+export default memo(TableCell, propsAreEqual);

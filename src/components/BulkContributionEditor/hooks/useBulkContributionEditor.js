@@ -45,6 +45,8 @@ const useBulkContributionEditor = () => {
         return statementsObject;
     };
 
+    const Cell = useCallback(cell => <TableCell values={cell.value} contributionId={cell.column.id} propertyId={cell.row.property.id} />, []);
+
     const generateTableMatrix = useCallback(({ contributions, papers, statements, properties, resources, literals }) => {
         const statementsByPropertyIdAndContributionId = getStatementsByPropertyIdAndContributionId(statements);
 
@@ -90,7 +92,7 @@ const useBulkContributionEditor = () => {
                         id: contributionId,
                         Header: () => <TableHeaderColumn contribution={contribution} paper={papers[contribution.paperId]} key={contributionId} />,
                         accessor: d => d.values[i],
-                        Cell: cell => <TableCell values={cell.value} contributionId={cell.column.id} propertyId={cell.row.property.id} />,
+                        Cell: Cell,
                         width: 250
                     };
                 })

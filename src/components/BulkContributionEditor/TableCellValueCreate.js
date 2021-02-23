@@ -31,13 +31,11 @@ const TableCellValueCreate = ({ isVisible, contributionId, propertyId, isEmptyCe
     const dispatch = useDispatch();
 
     useClickAway(refContainer, () => {
+        setIsCreating(false);
         createValue();
     });
 
     const createValue = () => {
-        if (isCreating) {
-            setIsCreating(false);
-        }
         if (type === 'literal' && value.trim()) {
             handleCreateLiteral();
         }
@@ -57,9 +55,10 @@ const TableCellValueCreate = ({ isVisible, contributionId, propertyId, isEmptyCe
                 action
             })
         );
+        closeCreate();
     };
 
-    const handleCreateLiteral = () =>
+    const handleCreateLiteral = () => {
         dispatch(
             createLiteralValue({
                 contributionId,
@@ -67,12 +66,21 @@ const TableCellValueCreate = ({ isVisible, contributionId, propertyId, isEmptyCe
                 label: value
             })
         );
+        closeCreate();
+    };
 
     const handleKeyPress = e => {
         if (e.key === 'Enter') {
             createValue();
         }
     };
+
+    const closeCreate = () => {
+        setIsCreating(false);
+        setType('literal');
+        setValue('');
+    };
+
     return (
         <>
             {!isCreating && isVisible && (
