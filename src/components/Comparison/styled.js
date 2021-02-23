@@ -158,6 +158,11 @@ export const Properties = styled.div`
     width: 250px;
     position: relative;
     background: #fff;
+
+    // for bulk editor, show edit/delete buttons on hover
+    &:hover .cell-buttons {
+        display: block;
+    }
 `;
 
 export const PropertiesInner = styled.div`

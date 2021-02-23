@@ -22,6 +22,10 @@ export const ItemInner = styled.div`
     text-align: center;
     height: 100%;
     word-wrap: break-word;
+
+    &:hover .create-button {
+        display: block;
+    }
 `;
 
 export const ItemInnerSeparator = styled.hr`

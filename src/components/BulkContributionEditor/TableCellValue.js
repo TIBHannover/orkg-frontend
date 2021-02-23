@@ -10,11 +10,17 @@ import { memo, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Input } from 'reactstrap';
 import { resourcesUrl } from 'services/backend/resources';
+import styled from 'styled-components';
+
+const Value = styled.div`
+    &:hover .cell-buttons {
+        display: block;
+    }
+`;
 
 const TableCellValue = ({ value, index, setDisableCreate }) => {
     const [isEditing, setIsEditing] = useState(false);
     const [inputValue, setInputValue] = useState(value.label);
-    const [isHovering, setIsHovering] = useState(false);
     const dispatch = useDispatch();
 
     const handleStartEdit = () => {
@@ -23,7 +29,6 @@ const TableCellValue = ({ value, index, setDisableCreate }) => {
     };
     const handleStopEdit = () => {
         setIsEditing(false);
-        setIsHovering(false);
         setDisableCreate(false);
     };
 
@@ -70,18 +75,13 @@ const TableCellValue = ({ value, index, setDisableCreate }) => {
     return !isEditing ? (
         <>
             {index > 0 && <ItemInnerSeparator className="my-0" />}
-            <div className="position-relative" onMouseEnter={() => setIsHovering(true)} onMouseLeave={() => setIsHovering(false)}>
+            <Value className="position-relative">
                 <ValuePlugins type={value._class} options={{ inModal: true }}>
                     {value._class === 'resource' && <TableCellValueResource value={value} />}
                     {value._class === 'literal' && <div onDoubleClick={handleStartEdit}>{value.label}</div>}
                 </ValuePlugins>
-                <TableCellButtons
-                    isHovering={isHovering}
-                    onEdit={handleStartEdit}
-                    onDelete={handleDelete}
-                    backgroundColor="rgba(240, 242, 247, 0.8)"
-                />
-            </div>
+                <TableCellButtons onEdit={handleStartEdit} onDelete={handleDelete} backgroundColor="rgba(240, 242, 247, 0.8)" />
+            </Value>
         </>
     ) : (
         <div>

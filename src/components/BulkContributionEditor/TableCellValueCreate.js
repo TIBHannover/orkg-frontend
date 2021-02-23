@@ -20,6 +20,7 @@ const CreateButtonContainer = styled.div`
     left: 50%;
     margin-left: -15px;
     z-index: 1;
+    display: none;
 `;
 
 const TableCellValueCreate = ({ isVisible, contributionId, propertyId, isEmptyCell }) => {
@@ -85,7 +86,7 @@ const TableCellValueCreate = ({ isVisible, contributionId, propertyId, isEmptyCe
         <>
             {!isCreating && isVisible && (
                 <div className={isEmptyCell ? 'h-100' : ''} onDoubleClick={() => setIsCreating(true)}>
-                    <CreateButtonContainer>
+                    <CreateButtonContainer className="create-button">
                         <StatementOptionButton title="Add value" icon={faPlus} action={() => setIsCreating(true)} />
                     </CreateButtonContainer>
                 </div>

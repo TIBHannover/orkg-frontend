@@ -14,7 +14,6 @@ import useConfirmPropertyModal from 'components/StatementBrowser/AddProperty/hoo
 
 const TableHeaderRow = ({ property }) => {
     const [isOpenStatementBrowser, setIsOpenStatementBrowser] = useState(false);
-    const [isHovering, setIsHovering] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
     const [inputValue, setInputValue] = useState(property.label);
     const statements = useSelector(state => state.bulkContributionEditor.statements);
@@ -28,7 +27,6 @@ const TableHeaderRow = ({ property }) => {
 
     const handleStopEdit = () => {
         setIsEditing(false);
-        setIsHovering(false);
     };
 
     const handleDelete = async () => {
@@ -73,23 +71,13 @@ const TableHeaderRow = ({ property }) => {
 
     return !isEditing ? (
         <>
-            <Properties
-                className="columnProperty"
-                onMouseEnter={() => setIsHovering(true)}
-                onMouseLeave={() => setIsHovering(false)}
-                onDoubleClick={handleStartEdit}
-            >
+            <Properties className="columnProperty" onDoubleClick={handleStartEdit}>
                 <PropertiesInner cellPadding={10}>
                     <div className="position-relative">
                         <Button onClick={() => setIsOpenStatementBrowser(true)} color="link" className="text-light m-0 p-0">
                             {upperFirst(property.label)}
                         </Button>
-                        <TableCellButtons
-                            isHovering={isHovering}
-                            onEdit={handleStartEdit}
-                            onDelete={handleDelete}
-                            backgroundColor="rgba(139, 145, 165, 0.8)"
-                        />
+                        <TableCellButtons onEdit={handleStartEdit} onDelete={handleDelete} backgroundColor="rgba(139, 145, 165, 0.8)" />
                     </div>
                 </PropertiesInner>
             </Properties>
