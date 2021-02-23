@@ -9,8 +9,11 @@ import AddContribution from 'components/Comparison/AddContribution/AddContributi
 import TableScrollContainer from 'components/Comparison/TableScrollContainer';
 import CreateContributionModal from 'components/CreateContributionModal/CreateContributionModal';
 import CreatePaperModal from 'components/CreatePaperModal/CreatePaperModal';
+import routes from 'constants/routes';
+import { reverse } from 'named-urls';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { Alert, Button, ButtonGroup, Container } from 'reactstrap';
 
 const BulkContributionEditor = () => {
@@ -77,6 +80,15 @@ const BulkContributionEditor = () => {
                     <h1 className="h4">Bulk contribution editor</h1> {isLoading && <Icon icon={faSpinner} spin className="ml-2" />}
                 </div>
                 <ButtonGroup>
+                    <Button
+                        tag={Link}
+                        to={`${reverse(routes.COMPARISON)}?contributions=${contributionIds.join(',')}`}
+                        color="darkblue"
+                        size="sm"
+                        style={{ marginRight: 2 }}
+                    >
+                        Make comparison
+                    </Button>
                     <Button color="darkblue" size="sm" onClick={() => setIsOpenAddContribution(true)}>
                         <Icon icon={faPlusCircle} /> Add contribution
                     </Button>
