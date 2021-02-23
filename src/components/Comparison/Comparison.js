@@ -5,7 +5,7 @@ import ComparisonTable from 'components/Comparison/ComparisonTable';
 import { debounce } from 'lodash';
 import { ScrollSync } from 'react-scroll-sync';
 import useResizeObserver from 'use-resize-observer';
-import { ClickableScrollButton, ReactTableWrapper, ScrollButton } from './styled';
+import { ClickableScrollButton, ScrollButton } from './styled';
 import PropTypes from 'prop-types';
 
 const SCROLL_AMOUNT = 500;
@@ -58,24 +58,24 @@ const Comparison = props => {
 
     return (
         <>
-            <ReactTableWrapper>
+            <div style={{ clear: 'both', position: 'relative' }}>
                 {showNextButton && <ClickableScrollButton className="right" onClick={scrollNext} />}
                 {showBackButton && <ClickableScrollButton className="left" onClick={scrollBack} />}
 
                 <ScrollSync onSync={handleScrollCallback}>
-                    <ComparisonTable {...props} scrollContainerBody={scrollContainerBody} handleScrollCallback={handleScrollCallback} />
+                    <ComparisonTable {...props} scrollContainerBody={scrollContainerBody} />
                 </ScrollSync>
-            </ReactTableWrapper>
+            </div>
 
             <div className="clearfix">
                 {showBackButton && (
                     <ScrollButton color="link" onClick={scrollBack} className="back">
-                        <Icon icon={faArrowCircleLeft} />
+                        <Icon icon={faArrowCircleLeft} size="2x" />
                     </ScrollButton>
                 )}
                 {showNextButton && (
                     <ScrollButton color="link" onClick={scrollNext} className="next">
-                        <Icon icon={faArrowCircleRight} />
+                        <Icon icon={faArrowCircleRight} size="2x" />
                     </ScrollButton>
                 )}
             </div>
