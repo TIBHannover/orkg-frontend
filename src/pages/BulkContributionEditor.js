@@ -77,7 +77,7 @@ const BulkContributionEditor = () => {
         <>
             <Container className="d-flex align-items-center">
                 <div className="d-flex mt-4 mb-4 align-items-center flex-grow-1">
-                    <h1 className="h4">Bulk contribution editor</h1> {isLoading && <Icon icon={faSpinner} spin className="ml-2" />}
+                    <h1 className="h4 m-0">Bulk contribution editor</h1> {isLoading && <Icon icon={faSpinner} spin className="ml-2" />}
                 </div>
                 <ButtonGroup>
                     <Button
@@ -86,26 +86,34 @@ const BulkContributionEditor = () => {
                         color="darkblue"
                         size="sm"
                         style={{ marginRight: 2 }}
+                        disabled={contributionAmount < 2}
                     >
                         Make comparison
                     </Button>
+
                     <Button color="darkblue" size="sm" onClick={() => setIsOpenAddContribution(true)}>
                         <Icon icon={faPlusCircle} /> Add contribution
                     </Button>
                 </ButtonGroup>
             </Container>
             <Container className="box rounded p-4" style={containerStyle}>
-                {contributionAmount === 0 && <Alert color="info">Start adding contributions by clicking the button on the right</Alert>}
+                {contributionAmount === 0 && (
+                    <Alert color="info">
+                        Start adding contributions by clicking the button <em>Add contribution</em> on the right
+                    </Alert>
+                )}
 
                 {isLoadingInit && <TableLoadingIndicator contributionAmount={contributionAmount} />}
 
                 {!isLoadingInit && contributionAmount > 0 && (
-                    <TableScrollContainer className="bulk-editor">
-                        <EditorTable />
-                    </TableScrollContainer>
-                )}
+                    <>
+                        <TableScrollContainer className="bulk-editor">
+                            <EditorTable />
+                        </TableScrollContainer>
 
-                <CreateProperty />
+                        <CreateProperty />
+                    </>
+                )}
             </Container>
 
             {isOpenAddContribution && (
