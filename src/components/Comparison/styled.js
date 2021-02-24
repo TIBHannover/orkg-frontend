@@ -80,6 +80,32 @@ export const ReactTableWrapper = styled.div`
         }
     }
 
+    &:not(.bulk-editor) {
+        .table {
+            .tr:hover .td > div > div {
+                background: #e7eaf1;
+            }
+            .tr:hover .td .columnProperty > div {
+                background: #8b91a5;
+            }
+            .tr:hover .td .columnContribution > div:first-child {
+                color: #e86161;
+                background: #d77171;
+            }
+        }
+    }
+
+    &.bulk-editor {
+        .table {
+            .tr .td:not(.sticky) > div > div:hover {
+                background: #f0f2f7;
+            }
+            .tr div[data-sticky-td] > .columnProperty > div:hover {
+                background: #8b91a5;
+            }
+        }
+    }
+
     .table {
         position: relative;
         scroll-behavior: smooth;
@@ -100,32 +126,10 @@ export const ReactTableWrapper = styled.div`
             }
         }
 
-        .comparisonBody .tr:last-child .td > div div:first-child {
-            //border-bottom: 2px solid #d5dae4 !important;
+        .comparisonBody .tr:last-child .td > div > div:first-child {
             border-radius: 0 0 11px 11px !important;
         }
 
-        &:not(.bulk-editor) {
-            .tr:hover .td > div > div {
-                background: #e7eaf1;
-            }
-            .tr:hover .td .columnProperty > div {
-                background: #8b91a5;
-            }
-            .tr:hover .td .columnContribution > div:first-child {
-                color: #e86161;
-                background: #d77171;
-            }
-        }
-
-        &.bulk-editor {
-            .tr .td:not(.sticky) > div > div:hover {
-                background: #f0f2f7;
-            }
-            .tr .sticky > .columnProperty > div:hover {
-                background: #8b91a5;
-            }
-        }
         &.sticky {
             overflow: scroll;
 

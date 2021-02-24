@@ -1,8 +1,7 @@
 import useBulkContributionEditor from 'components/BulkContributionEditor/hooks/useBulkContributionEditor';
 import PropTypes from 'prop-types';
-import { memo, useCallback, useMemo } from 'react';
+import { memo, useMemo } from 'react';
 import { useSelector } from 'react-redux';
-import { ReactTableWrapper } from 'components/Comparison/styled';
 import { ScrollSyncPane } from 'react-scroll-sync';
 import { useTable, useFlexLayout } from 'react-table';
 import { useSticky } from 'react-table-sticky';
@@ -40,44 +39,42 @@ const EditorTable = ({ scrollContainerBody }) => {
     );
 
     return (
-        <ReactTableWrapper>
-            <div id="comparisonTable" {...getTableProps()} className="table sticky mb-0" style={{ height: 'max-content' }}>
-                <ScrollSyncPane group="one">
-                    <div style={{ overflow: 'auto', top: '71px', position: 'sticky', zIndex: '3' }} className="disable-scrollbars">
-                        {headerGroups.map(headerGroup => (
-                            <div className="header" {...headerGroup.getHeaderGroupProps()}>
-                                {headerGroup.headers.map(column => (
-                                    <div {...column.getHeaderProps()} className="th">
-                                        {column.render('Header')}
-                                    </div>
-                                ))}
-                            </div>
-                        ))}
-                    </div>
-                </ScrollSyncPane>
-                <ScrollSyncPane group="one">
-                    {/* paddingBottom for the 'add value' bottom, which is positioned partially below the table */}
-                    <div ref={scrollContainerBody} style={{ overflow: 'auto', paddingBottom: 15 }}>
-                        <div {...getTableBodyProps()} className="comparisonBody" style={{ width: '100%' }}>
-                            {rows.map((row, i) => {
-                                prepareRow(row);
-                                return (
-                                    <div {...row.getRowProps()} className="tr">
-                                        {row.cells.map(cell => {
-                                            return (
-                                                <div {...cell.getCellProps()} className="td">
-                                                    {cell.render('Cell')}
-                                                </div>
-                                            );
-                                        })}
-                                    </div>
-                                );
-                            })}
+        <div id="comparisonTable" {...getTableProps()} className="table sticky mb-0" style={{ height: 'max-content' }}>
+            <ScrollSyncPane group="one">
+                <div style={{ overflow: 'auto', top: '71px', position: 'sticky', zIndex: '3' }} className="disable-scrollbars">
+                    {headerGroups.map(headerGroup => (
+                        <div className="header" {...headerGroup.getHeaderGroupProps()}>
+                            {headerGroup.headers.map(column => (
+                                <div {...column.getHeaderProps()} className="th">
+                                    {column.render('Header')}
+                                </div>
+                            ))}
                         </div>
+                    ))}
+                </div>
+            </ScrollSyncPane>
+            <ScrollSyncPane group="one">
+                {/* paddingBottom for the 'add value' bottom, which is positioned partially below the table */}
+                <div ref={scrollContainerBody} style={{ overflow: 'auto', paddingBottom: 15 }}>
+                    <div {...getTableBodyProps()} className="comparisonBody" style={{ width: '100%' }}>
+                        {rows.map((row, i) => {
+                            prepareRow(row);
+                            return (
+                                <div {...row.getRowProps()} className="tr">
+                                    {row.cells.map(cell => {
+                                        return (
+                                            <div {...cell.getCellProps()} className="td">
+                                                {cell.render('Cell')}
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            );
+                        })}
                     </div>
-                </ScrollSyncPane>
-            </div>
-        </ReactTableWrapper>
+                </div>
+            </ScrollSyncPane>
+        </div>
     );
 };
 
