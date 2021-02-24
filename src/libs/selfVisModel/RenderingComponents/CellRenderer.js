@@ -16,9 +16,19 @@ export default function CellRenderer(props) {
             {(props.type === 'property' || props.type === 'contribution' || props.type === 'value') && (
                 <Tippy singleton={props.tippyTarget} content={props.data.label ?? 'Empty'}>
                     <TippyContainer>
-                        {props.type === 'property' && <PropertyCell>{props.data.label}</PropertyCell>}
-                        {props.type === 'contribution' && <ContributionCell>{props.data.label}</ContributionCell>}
-                        {props.type === 'value' && <ValueCell>{props.data.label}</ValueCell>}
+                        {props.type === 'property' && (
+                            <PropertyCell>
+                                {props.data.label !== props.data.originalLabel ? <b>{props.data.label}</b> : props.data.label}
+                            </PropertyCell>
+                        )}
+                        {props.type === 'contribution' && (
+                            <ContributionCell>
+                                {props.data.label !== props.data.originalLabel ? <b>{props.data.label}</b> : props.data.label}
+                            </ContributionCell>
+                        )}
+                        {props.type === 'value' && (
+                            <ValueCell>{props.data.label !== props.data.originalLabel ? <b>{props.data.label}</b> : props.data.label}</ValueCell>
+                        )}
                     </TippyContainer>
                 </Tippy>
             )}

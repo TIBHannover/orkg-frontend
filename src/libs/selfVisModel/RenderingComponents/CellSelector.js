@@ -152,7 +152,7 @@ const CellSelector = props => {
                 Select cells for the visualization and map them to types
             </Alert>
             {/* This is the tippy that gets used as the tippyTarget */}
-            <Tippy singleton={source} delay={300} moveTransition="transform 0.8s cubic-bezier(0.22, 1, 0.36, 1)" />
+            <Tippy singleton={source} delay={300} offset={[0, 0]} moveTransition="transform 0.8s cubic-bezier(0.22, 1, 0.36, 1)" />
             {props.isLoading ? <div>Loading...</div> : <div style={{ height: props.height + 'px', overflow: 'auto' }}>{createTable()} </div>}
         </div>
     );

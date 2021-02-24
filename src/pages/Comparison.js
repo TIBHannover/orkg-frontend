@@ -1,20 +1,20 @@
 import { useState } from 'react';
 import { Alert, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Button, ButtonGroup, Badge } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faEllipsisV, faLightbulb, faHistory, faWindowMaximize, faChartBar } from '@fortawesome/free-solid-svg-icons';
+import { faEllipsisV, faLightbulb, faHistory, faWindowMaximize, faChartBar, faExternalLinkAlt, faFilter } from '@fortawesome/free-solid-svg-icons';
 import ComparisonLoadingComponent from 'components/Comparison/ComparisonLoadingComponent';
 import ComparisonTable from 'components/Comparison/Comparison';
-import ExportToLatex from 'components/Comparison/ExportToLatex.js';
-import GeneratePdf from 'components/Comparison/GeneratePdf.js';
+import ExportToLatex from 'components/Comparison/Export/ExportToLatex.js';
+import GeneratePdf from 'components/Comparison/Export/GeneratePdf.js';
 import SelectProperties from 'components/Comparison/SelectProperties';
 import ValuePlugins from 'components/ValuePlugins/ValuePlugins';
 import AddContribution from 'components/Comparison/AddContribution/AddContribution';
 import ProvenanceBox from 'components/Comparison/ProvenanceBox/ProvenanceBox';
 import ObservatoryBox from 'components/Comparison/ProvenanceBox/ObservatoryBox';
 import Breadcrumbs from 'components/Breadcrumbs/Breadcrumbs';
-import RelatedResources from 'components/Comparison/RelatedResources';
-import RelatedFigures from 'components/Comparison/RelatedFigures';
-import ExportCitation from 'components/Comparison/ExportCitation';
+import RelatedResources from 'components/Comparison/RelatedResources/RelatedResources';
+import RelatedFigures from 'components/Comparison/RelatedResources/RelatedFigures';
+import ExportCitation from 'components/Comparison/Export/ExportCitation';
 import ComparisonMetaData from 'components/Comparison/ComparisonMetaData';
 import Share from 'components/Comparison/Share.js';
 import ComparisonVersions from 'components/Comparison/ComparisonVersions.js';
@@ -26,7 +26,7 @@ import ROUTES from 'constants/routes.js';
 import { useHistory, Link } from 'react-router-dom';
 import { openAuthDialog } from 'actions/auth';
 import { CSVLink } from 'react-csv';
-import { generateRdfDataVocabularyFile } from 'utils';
+import { generateRdfDataVocabularyFile, areAllRulesEmpty } from 'utils';
 import Tippy from '@tippyjs/react';
 import { connect } from 'react-redux';
 import { useCookies } from 'react-cookie';
@@ -39,6 +39,7 @@ import PreviewVisualizationComparison from 'libs/selfVisModel/ComparisonComponen
 import { NavLink } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import env from '@beam-australia/react-env';
+import AppliedRule from 'components/Comparison/Filters/AppliedRule';
 
 function Comparison(props) {
     const {
@@ -46,6 +47,7 @@ function Comparison(props) {
         contributions,
         properties,
         data,
+        filterControlData,
         matrixData,
         authors,
         errors,
@@ -72,6 +74,8 @@ function Comparison(props) {
         toggleTranspose,
         removeContribution,
         addContributions,
+        updateRulesOfProperty,
+        removeRule,
         generateUrl,
         setResponseHash,
         setUrlNeedsToUpdate,
@@ -102,6 +106,7 @@ function Comparison(props) {
     const [showAddContribution, setShowAddContribution] = useState(false);
     const [showComparisonVersions, setShowComparisonVersions] = useState(false);
     const [showExportCitationsDialog, setShowExportCitationsDialog] = useState(false);
+
     const [showVisualizationModal, setShowVisualizationModal] = useState(false);
     const [applyReconstruction, setUseReconstructedData] = useState(false);
     /**
@@ -170,10 +175,22 @@ function Comparison(props) {
         loadProvenanceInfos(comparisonResource.observatory_id, comparisonResource.organization_id);
     };
 
+    const removeRuleFactory = ({ propertyId, type, value }) => () => removeRule({ propertyId, type, value });
+
+    const displayRules = () => {
+        return []
+            .concat(...filterControlData.map(item => item.rules))
+            .map(({ propertyId, propertyName, type, value }) => (
+                <AppliedRule
+                    key={`${propertyId}#${type}`}
+                    data={{ propertyId, propertyName, type: type, value, removeRule: removeRuleFactory({ propertyId, type, value }) }}
+                />
+            ));
+    };
+
     return (
         <div>
             <Breadcrumbs researchFieldId={researchField ? researchField.id : null} />
-
             <ContainerAnimated className="d-flex align-items-center">
                 <h1 className="h4 mt-4 mb-4 flex-grow-1">
                     Contribution comparison{' '}
@@ -223,15 +240,15 @@ function Comparison(props) {
                                     }}
                                     style={{ marginRight: 3 }}
                                 >
-                                    <Icon icon={faChartBar} /> Add visualization
+                                    <Icon icon={faChartBar} className="mr-1" /> Visualize
                                 </Button>
                             ) : (
                                 <Tippy
                                     hideOnClick={false}
-                                    content="Cannot add visualization to a unpublished comparison. You must publish the comparison first to use this functionality."
+                                    content="Cannot use self-visualization-service for unpublished comparison. You must publish the comparison first to use this functionality."
                                 >
                                     <span style={{ marginRight: 3 }} className="btn btn-darkblue btn-sm disabled">
-                                        <Icon icon={faChartBar} /> Add visualization
+                                        <Icon icon={faChartBar} className="mr-1" /> Visualize
                                     </span>
                                 </Tippy>
                             )}
@@ -308,6 +325,16 @@ function Comparison(props) {
                                     {metaData?.id && metaData?.doi && (
                                         <DropdownItem onClick={() => setShowExportCitationsDialog(v => !v)}>Export Citation</DropdownItem>
                                     )}
+                                    {metaData?.id && (
+                                        <DropdownItem
+                                            tag="a"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            href={`https://mybinder.org/v2/gl/TIBHannover%2Forkg%2Forkg-notebook-boilerplate/HEAD?urlpath=notebooks%2FComparison.ipynb%3Fcomparison_id%3D%22${metaData.id}%22%26autorun%3Dtrue`}
+                                        >
+                                            Jupyter Notebook <Icon size="sm" icon={faExternalLinkAlt} />
+                                        </DropdownItem>
+                                    )}
                                     <DropdownItem divider />
                                     <DropdownItem onClick={() => setShowShareDialog(v => !v)}>Share link</DropdownItem>
                                     <DropdownItem
@@ -344,7 +371,6 @@ function Comparison(props) {
                     </div>
                 )}
             </ContainerAnimated>
-
             <ContainerAnimated className="box rounded pt-4 pb-4 pl-5 pr-5 clearfix" style={containerStyle}>
                 {!isLoadingMetaData && (isFailedLoadingComparisonResult || isFailedLoadingMetaData) && (
                     <div>
@@ -405,6 +431,15 @@ function Comparison(props) {
                                     for horizontal scrolling in the table.
                                 </Alert>
                             )}
+                            {areAllRulesEmpty(filterControlData) && (
+                                <div className="mt-3 d-flex" style={{ flexDirection: 'column' }}>
+                                    <h6 className="text-secondary">
+                                        <Icon className="mr-1" size="sm" icon={faFilter} />
+                                        <b>Applied Filters:</b>
+                                    </h6>
+                                    <div className="d-flex flex-wrap">{displayRules()}</div>
+                                </div>
+                            )}
                             {!isLoadingComparisonResult ? (
                                 contributionsList.length > 1 ? (
                                     <div className="mt-1">
@@ -431,6 +466,8 @@ function Comparison(props) {
                                             removeContribution={removeContribution}
                                             transpose={transpose}
                                             viewDensity={viewDensity}
+                                            filterControlData={filterControlData}
+                                            updateRulesOfProperty={updateRulesOfProperty}
                                         />
                                     </div>
                                 ) : (
@@ -474,7 +511,6 @@ function Comparison(props) {
             {metaData.id && (
                 <ProvenanceBox creator={createdBy} provenance={provenance} changeObservatory={getObservatoryInfo} resourceId={metaData.id} />
             )}
-
             <SelectProperties
                 properties={properties}
                 showPropertiesDialog={showPropertiesDialog}
@@ -483,7 +519,6 @@ function Comparison(props) {
                 toggleProperty={toggleProperty}
                 onSortEnd={onSortPropertiesEnd}
             />
-
             <Share
                 showDialog={showShareDialog}
                 toggle={() => setShowShareDialog(v => !v)}
@@ -497,7 +532,6 @@ function Comparison(props) {
                 shortLink={shortLink}
                 setShortLink={setShortLink}
             />
-
             {(metaData?.hasPreviousVersion || (hasNextVersions && hasNextVersions.length > 0)) && (
                 <ComparisonVersions
                     showDialog={showComparisonVersions}
@@ -506,7 +540,6 @@ function Comparison(props) {
                     hasNextVersions={hasNextVersions}
                 />
             )}
-
             <Publish
                 showDialog={showPublishDialog}
                 toggle={() => setShowPublishDialog(v => !v)}
@@ -524,9 +557,7 @@ function Comparison(props) {
                 loadCreatedBy={loadCreatedBy}
                 loadProvenanceInfos={loadProvenanceInfos}
             />
-
             <AddContribution addContributions={addContributions} showDialog={showAddContribution} toggle={() => setShowAddContribution(v => !v)} />
-
             <ExportToLatex
                 data={matrixData}
                 contributions={contributions.filter(c => c.active)}
@@ -546,7 +577,6 @@ function Comparison(props) {
                 shortLink={shortLink}
                 setShortLink={setShortLink}
             />
-
             <ExportCitation
                 showDialog={showExportCitationsDialog}
                 toggle={() => setShowExportCitationsDialog(v => !v)}
