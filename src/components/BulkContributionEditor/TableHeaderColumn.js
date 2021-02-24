@@ -9,7 +9,6 @@ import useEditPaper from 'components/ViewPaper/EditDialog/hooks/useEditPaper';
 import PropTypes from 'prop-types';
 import { memo, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import 'react-table-hoc-fixed-columns/lib/styles.css'; // important: this line must be placed after react-table css import
 import { Button } from 'reactstrap';
 
 const TableHeaderColumn = ({ contribution, paper }) => {
