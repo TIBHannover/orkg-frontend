@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { createValue } from 'actions/statementBrowser';
 import { prefillStatements } from 'actions/addPaper';
 import { createResourceStatement, createLiteralStatement } from 'services/backend/statements';
@@ -34,11 +35,24 @@ const AddValue = props => {
         return newResourcesList;
     });
 
-    const valueClass = getValueClass(props.components);
-    let isLiteralField = isLiteral(props.components);
-    if (predicate.range) {
-        isLiteralField = ['Date', 'Number', 'String'].includes(predicate.range.id) ? true : false;
-    }
+    const getIsLiteralField = () => {
+        let result = isLiteral(props.components);
+        if (predicate && predicate.range) {
+            result = ['Date', 'Number', 'String'].includes(predicate.range.id) ? true : false;
+        }
+        return result;
+    };
+
+    const [valueClass, setValueClass] = useState(
+        getValueClass(props.components) ? getValueClass(props.components) : predicate?.range ? predicate.range : null
+    );
+    const [isLiteralField, setIsLiteralField] = useState(getIsLiteralField());
+
+    useEffect(() => {
+        setValueClass(getValueClass(props.components) ? getValueClass(props.components) : predicate?.range ? predicate.range : null);
+        setIsLiteralField(getIsLiteralField());
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [JSON.stringify(props.components)]);
 
     /**
      * Create statements for a resource starting from an array of statements

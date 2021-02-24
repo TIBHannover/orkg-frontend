@@ -14,8 +14,10 @@ import Changelog from 'pages/Changelog/Changelog';
 import NotFound from 'pages/NotFound';
 import Papers from 'pages/Papers';
 import Comparisons from 'pages/Comparisons';
-import Classes from 'pages/Classes/Classes';
+import Visualizations from 'pages/Visualizations/Visualizations';
+import Visualization from 'pages/Visualizations/Visualization';
 import ClassDetails from 'pages/Classes/ClassDetails';
+import Classes from 'pages/Classes/Classes';
 import AddClass from 'pages/Classes/AddClass';
 import Properties from 'pages/Properties/Properties';
 import AddProperty from 'pages/Properties/AddProperty';
@@ -41,7 +43,7 @@ import Stats from 'pages/Stats';
 import UserSettings from 'pages/UserSettings';
 import UserProfile from 'pages/UserProfile';
 import FeaturedComparisons from 'pages/FeaturedComparisons';
-import ExportData from 'pages/ExportData';
+import Data from 'pages/Data';
 import Contribution from 'pages/Contribution';
 import CsvImport from 'pages/CsvImport';
 import requireAuthentication from 'requireAuthentication';
@@ -191,6 +193,15 @@ const routes = [
         component: Comparisons
     },
     {
+        path: ROUTES.VISUALIZATIONS,
+        exact: true,
+        component: Visualizations
+    },
+    {
+        path: ROUTES.VISUALIZATION,
+        component: Visualization
+    },
+    {
         path: ROUTES.RESEARCH_PROBLEM,
         component: ResearchProblem
     },
@@ -283,7 +294,11 @@ const routes = [
     },
     {
         path: ROUTES.EXPORT_DATA,
-        component: ExportData
+        component: () => <Redirect to={{ pathname: reverse(ROUTES.DATA), state: { status: 301 } }} />
+    },
+    {
+        path: ROUTES.DATA,
+        component: Data
     },
     {
         path: ROUTES.CSV_IMPORT,

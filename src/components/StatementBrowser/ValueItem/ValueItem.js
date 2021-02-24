@@ -16,8 +16,6 @@ import { createResource as createResourceAPICall, updateResource } from 'service
 import { updateLiteral } from 'services/backend/literals';
 import { toast } from 'react-toastify';
 import { guid } from 'utils';
-import { uniq } from 'lodash';
-import format from 'string-format';
 import ValueItemTemplate from './ValueItemTemplate';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -25,8 +23,11 @@ import { PREDICATES } from 'constants/graphSettings';
 
 export default function ValueItem(props) {
     const dispatch = useDispatch();
-    const statementBrowser = useSelector(state => state.statementBrowser);
-    const { resources, values, properties, openExistingResourcesInDialog, classes, templates } = statementBrowser;
+
+    const value = useSelector(state => state.statementBrowser.values.byId[props.id]);
+    const property = useSelector(state => state.statementBrowser.properties[props.propertyId]);
+    const openExistingResourcesInDialog = useSelector(state => state.statementBrowser.openExistingResourcesInDialog);
+    const resource = useSelector(state => state.statementBrowser.resources.byId[props.value.resourceId]);
 
     const [modal, setModal] = useState(false);
     const [modalDataset, setModalDataset] = useState(false);
@@ -130,7 +131,6 @@ export default function ValueItem(props) {
     };
 
     const handleResourceClick = async e => {
-        const resource = resources.byId[props.value.resourceId];
         const existingResourceId = resource.existingResourceId;
 
         if (existingResourceId) {
@@ -148,7 +148,7 @@ export default function ValueItem(props) {
                 increaseLevel: true,
                 resourceId: props.value.resourceId,
                 label: props.value.label,
-                propertyLabel: properties.byId[props.propertyId].label
+                propertyLabel: property?.label
             })
         );
     };
@@ -167,7 +167,7 @@ export default function ValueItem(props) {
                 increaseLevel: true,
                 resourceId: ressource.id,
                 label: ressource.rlabel ? ressource.rlabel : ressource.label,
-                propertyLabel: properties.byId[props.propertyId].label
+                propertyLabel: property?.label
             })
         );
 
@@ -180,7 +180,6 @@ export default function ValueItem(props) {
     };
 
     const handleExistingResourceClick = async () => {
-        const resource = resources.byId[props.value.resourceId];
         const existingResourceId = resource.existingResourceId ? resource.existingResourceId : props.value.resourceId;
 
         // Load template of this class
@@ -191,16 +190,12 @@ export default function ValueItem(props) {
     };
 
     const handleDatasetClick = () => {
-        const resource = resources.byId[props.value.resourceId];
         const existingResourceId = resource.existingResourceId;
 
         setModalDataset(true);
         setDialogResourceId(existingResourceId);
         setDialogResourceLabel(resource.label);
     };
-
-    const resource = resources.byId[props.value.resourceId];
-    const value = values.byId[props.id];
 
     const existingResourceId = resource ? resource.existingResourceId : false;
     let handleOnClick = null;
@@ -215,72 +210,14 @@ export default function ValueItem(props) {
         handleOnClick = handleResourceClick;
     }
 
-    const generatedFormattedLabel = labelFormat => {
-        const resource = resources.byId[props.value.resourceId];
-        const valueObject = {};
-        for (const propertyId of resource.propertyIds) {
-            const property = properties.byId[propertyId];
-            valueObject[property.existingPredicateId] =
-                property.valueIds && property.valueIds.length > 0 ? values.byId[property.valueIds[0]].label : property.label;
-        }
-        if (Object.keys(valueObject).length > 0) {
-            return format(labelFormat, valueObject);
-        } else {
-            return props.value.label;
-        }
-    };
-
-    const getLabel = () => {
-        if (props.value.classes) {
-            // get all template ids
-            let templateIds = [];
-            for (const c of props.value.classes) {
-                if (classes[c]) {
-                    templateIds = templateIds.concat(classes[c].templateIds);
-                }
-            }
-            templateIds = uniq(templateIds);
-            // check if it formatted label
-            let hasLabelFormat = false;
-            let labelFormat = '';
-            for (const templateId of templateIds) {
-                const template = templates[templateId];
-                if (template && template.hasLabelFormat) {
-                    hasLabelFormat = true;
-                    labelFormat = template.labelFormat;
-                }
-            }
-            if (!hasLabelFormat) {
-                return props.value.label;
-            }
-
-            if (existingResourceId && !resource.isFechted && !resource.isFetching) {
-                dispatch(
-                    fetchStatementsForResource({
-                        resourceId: props.value.resourceId,
-                        existingResourceId
-                    })
-                ).then(() => {
-                    return generatedFormattedLabel(labelFormat);
-                });
-            } else {
-                return generatedFormattedLabel(labelFormat);
-            }
-        } else {
-            return props.value.label;
-        }
-    };
-
     return (
         <>
             <ValueItemTemplate
-                isProperty={[PREDICATES.TEMPLATE_COMPONENT_PROPERTY, PREDICATES.TEMPLATE_OF_PREDICATE].includes(
-                    properties.byId[props.propertyId].existingPredicateId
-                )}
+                isProperty={[PREDICATES.TEMPLATE_COMPONENT_PROPERTY, PREDICATES.TEMPLATE_OF_PREDICATE].includes(property?.existingPredicateId)}
                 id={props.id}
                 value={value}
                 resource={resource}
-                predicate={properties.byId[props.propertyId]}
+                predicate={property}
                 handleOnClick={handleOnClick}
                 handleChangeResource={handleChangeResource}
                 commitChangeLabel={commitChangeLabel}
@@ -288,7 +225,6 @@ export default function ValueItem(props) {
                 enableEdit={props.enableEdit}
                 handleDeleteValue={handleDeleteValue}
                 showHelp={props.showHelp}
-                getLabel={getLabel}
                 components={props.components}
             />
 

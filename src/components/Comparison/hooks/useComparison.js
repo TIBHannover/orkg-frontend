@@ -11,12 +11,14 @@ import {
     filterSubjectOfStatementsByPredicate,
     getArrayParamFromQueryString,
     getParamFromQueryString,
-    get_error_message
+    get_error_message,
+    applyRule,
+    getRuleByProperty
 } from 'utils';
 import { useParams, useLocation, useHistory } from 'react-router-dom';
 import { PREDICATES, CLASSES, MISC } from 'constants/graphSettings';
 import { reverse } from 'named-urls';
-import { flattenDepth } from 'lodash';
+import { flattenDepth, flatten, groupBy, intersection, findIndex, cloneDeep, isEmpty } from 'lodash';
 import arrayMove from 'array-move';
 import ROUTES from 'constants/routes.js';
 import queryString from 'query-string';
@@ -63,6 +65,7 @@ function useComparison() {
     const [authors, setAuthors] = useState([]);
     const [contributions, setContributions] = useState([]);
     const [data, setData] = useState({});
+    const [filterControlData, setFilterControlData] = useState([]);
     const [errors, setErrors] = useState([]);
     const [matrixData, setMatrixData] = useState([]);
 
@@ -87,7 +90,7 @@ function useComparison() {
     const [predicatesList, setPredicatesList] = useState([]);
     const [shouldFetchLiveComparison, setShouldFetchLiveComparison] = useState(false);
 
-    //
+    // reference to previous comparison type
     const prevComparisonType = usePrevious(comparisonType);
 
     // loading indicators
@@ -177,8 +180,11 @@ function useComparison() {
                         } else {
                             setPredicatesList(filterObjectOfStatementsByPredicate(statements, PREDICATES.HAS_PROPERTY, false)?.map(p => p.id));
                             setContributionsList(
-                                filterObjectOfStatementsByPredicate(statements, PREDICATES.COMPARE_CONTRIBUTION, false)?.map(c => c.id)
+                                filterObjectOfStatementsByPredicate(statements, PREDICATES.COMPARE_CONTRIBUTION, false)?.map(c => c.id) ?? []
                             );
+                        }
+                        if (!filterObjectOfStatementsByPredicate(statements, PREDICATES.COMPARE_CONTRIBUTION, false)?.map(c => c.id)) {
+                            setIsLoadingComparisonResult(false);
                         }
                         setIsLoadingMetaData(false);
                         setIsFailedLoadingMetaData(false);
@@ -318,6 +324,86 @@ function useComparison() {
     );
 
     /**
+     * Generate Filter Control Data
+     *
+     * @param {Array} contributions Array of contributions
+     * @param {Array} properties Array of properties
+     * @param {Object} data Comparison Data object
+     * @return {Array} Filter Control Data
+     */
+    const generateFilterControlData = (contributions, properties, data) => {
+        const controlData = [
+            ...properties.map(property => {
+                return {
+                    property,
+                    rules: [],
+                    values: groupBy(
+                        flatten(contributions.map((_, index) => data[property.id][index]).filter(([first]) => Object.keys(first).length !== 0)),
+                        'label'
+                    )
+                };
+            })
+        ];
+        controlData.forEach(item => {
+            Object.keys(item.values).forEach(key => {
+                item.values[key] = item.values[key].map(({ path }) => path[0]);
+            });
+        });
+        return controlData;
+    };
+
+    /**
+     * Update filter control data of a property
+     *
+     * @param {Array} rules Array of rules
+     * @param {Array} propertyId property ID
+     */
+    const updateRulesOfProperty = (newRules, propertyId) => {
+        setFilterControlData(pervState => {
+            const newState = [...pervState];
+            const toChangeIndex = newState.findIndex(item => item.property.id === propertyId);
+            const toChange = { ...newState[toChangeIndex] };
+            toChange.rules = newRules;
+            newState[toChangeIndex] = toChange;
+            applyAllRules(newState);
+            return newState;
+        });
+    };
+
+    /**
+     * Remove a rule from filter control data of a property
+     *
+     * @param {Array} propertyId property ID
+     * @param {String} type Filter type
+     * @param {String} value Filter value
+     */
+    const removeRule = ({ propertyId, type, value }) => {
+        setFilterControlData(pervState => {
+            const newState = [...pervState];
+            const toChangeIndex = newState.findIndex(item => item.property.id === propertyId);
+            const toChange = { ...newState[toChangeIndex] };
+            toChange.rules = toChange.rules.filter(item => !(item.propertyId === propertyId && item.type === type && item.value === value));
+            newState[toChangeIndex] = toChange;
+            applyAllRules(newState);
+            return newState;
+        });
+    };
+
+    /**
+     * Apply filter control data rules
+     *
+     * @param {Array} newState Filter Control Data
+     */
+    const applyAllRules = newState => {
+        const AllContributionsID = contributions.map(contribution => contribution.id);
+        const contributionIds = []
+            .concat(...newState.map(item => item.rules))
+            .map(c => applyRule({ filterControlData, ...c }))
+            .reduce((prev, acc) => intersection(prev, acc), AllContributionsID);
+        displayContributions(contributionIds);
+    };
+
+    /**
      * Call the comparison service to get the comparison result
      */
     const getComparisonResult = useCallback(() => {
@@ -350,8 +436,10 @@ function useComparison() {
                 setContributions(comparisonData.contributions);
                 setProperties(comparisonData.properties);
                 setData(comparisonData.data);
+                setFilterControlData(generateFilterControlData(comparisonData.contributions, comparisonData.properties, comparisonData.data));
                 setIsLoadingComparisonResult(false);
                 setIsFailedLoadingComparisonResult(false);
+
                 if (comparisonData.response_hash) {
                     setResponseHash(comparisonData.response_hash);
                 } else {
@@ -394,8 +482,47 @@ function useComparison() {
      * @param {String} contributionId Contribution id to remove
      */
     const removeContribution = contributionId => {
+        const cIndex = findIndex(contributions, c => c.id === contributionId);
+        const newContributions = contributions
+            .filter(c => c.id !== contributionId)
+            .map(contribution => {
+                return { ...contribution, active: contribution.active };
+            });
+        const newData = cloneDeep(data);
+        let newProperties = cloneDeep(properties);
+        for (const property in newData) {
+            // remove the contribution from data
+            if (flatten(newData[property][cIndex]).filter(v => !isEmpty(v)).length !== 0) {
+                // decrement the contribution amount from properties if it has some values
+                const pIndex = newProperties.findIndex(p => p.id === property);
+                newProperties[pIndex].contributionAmount = newProperties[pIndex].contributionAmount - 1;
+            }
+            newData[property].splice(cIndex, 1);
+        }
+        newProperties = extendAndSortProperties({ data: newData, properties: newProperties });
+        setContributionsList(activatedContributionsToList(newContributions));
+        setContributions(newContributions);
+        setData(newData);
+        setProperties(newProperties);
+        setFilterControlData(prevFilterControlData => {
+            // keep existing filter rules
+            const newFilterControlData = generateFilterControlData(newContributions, newProperties, newData).map(filter => {
+                filter.rules = getRuleByProperty(prevFilterControlData, filter.property.id);
+                return filter;
+            });
+            return newFilterControlData;
+        });
+        setUrlNeedsToUpdate(true);
+    };
+
+    /**
+     * display certain contributionIds
+     *
+     * @param {array} contributionIds Contribution ids to display
+     */
+    const displayContributions = contributionIds => {
         const newContributions = contributions.map(contribution => {
-            return contribution.id === contributionId ? { ...contribution, active: !contribution.active } : contribution;
+            return contributionIds.includes(contribution.id) ? { ...contribution, active: true } : { ...contribution, active: false };
         });
         setContributionsList(activatedContributionsToList(newContributions));
         setContributions(newContributions);
@@ -606,11 +733,13 @@ function useComparison() {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isLoadingComparisonResult]);
+
     return {
         metaData,
         contributions,
         properties,
         data,
+        filterControlData,
         matrixData,
         authors,
         errors,
@@ -637,6 +766,9 @@ function useComparison() {
         toggleTranspose,
         removeContribution,
         addContributions,
+        applyAllRules,
+        updateRulesOfProperty,
+        removeRule,
         generateUrl,
         setResponseHash,
         setUrlNeedsToUpdate,

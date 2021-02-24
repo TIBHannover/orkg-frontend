@@ -56,6 +56,17 @@ const GlobalStyle = createGlobalStyle`
             margin-right: ${props => props.scrollbarWidth}px
         }
     }
+    @media (min-width: 481px) and (max-width: 1100px) {
+        .woot-widget-bubble.woot-elements--right{
+            bottom: ${props => (!props.cookieInfoDismissed ? '80px' : '14px')}
+        }
+    }  
+    @media (max-width: 480px) {
+        .woot-widget-bubble.woot-elements--right{
+            bottom: ${props => (!props.cookieInfoDismissed ? '150px' : '14px')}
+        }
+    }  
+    
 `;
 
 const StyledLink = styled(Link)`
@@ -255,11 +266,12 @@ class Header extends Component {
         }
         const email = this.props.user && this.props.user.email ? this.props.user.email : 'example@example.com';
         const greeting = greetingTime(new Date());
+        const cookieInfoDismissed = cookies.get('cookieInfoDismissed') ? cookies.get('cookieInfoDismissed') : null;
 
         return (
             <StyledTopBar className={this.state.isHomePageStyle ? 'home-page' : ''}>
                 <Navbar className={this.state.isHomePageStyle ? 'home-page' : ''} expand="md" fixed="top" id="main-navbar">
-                    <GlobalStyle scrollbarWidth={scrollbarWidth(true)} />
+                    <GlobalStyle scrollbarWidth={scrollbarWidth(true)} cookieInfoDismissed={cookieInfoDismissed} />
 
                     <div
                         style={{ display: 'flex', width: '100%', transition: 'width 1s ease-in-out' }}
@@ -285,6 +297,9 @@ class Header extends Component {
                                         </DropdownItem>
                                         <DropdownItem tag={RouterNavLink} exact to={ROUTES.COMPARISONS}>
                                             Comparisons
+                                        </DropdownItem>
+                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.VISUALIZATIONS}>
+                                            Visualizations
                                         </DropdownItem>
                                         <DropdownItem tag={RouterNavLink} exact to={ROUTES.RESEARCH_FIELDS}>
                                             Research fields
@@ -340,8 +355,8 @@ class Header extends Component {
                                         >
                                             Survey table import
                                         </DropdownItem>
-                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.EXPORT_DATA}>
-                                            Export data{' '}
+                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.DATA}>
+                                            Data Access
                                         </DropdownItem>
                                         <DropdownItem tag={RouterNavLink} exact to={ROUTES.CONTRIBUTION_TEMPLATES}>
                                             Templates

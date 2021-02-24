@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import SuggestedTemplates from 'components/StatementBrowser/SuggestedTemplates/SuggestedTemplates';
 import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
 import { updateResearchProblems, openTour } from 'actions/addPaper';
-import { getReseachProblemsOfContribution } from 'actions/statementBrowser';
+import { getResearchProblemsOfContribution } from 'actions/statementBrowser';
 import { StyledHorizontalContribution } from './styled';
 import PropTypes from 'prop-types';
 
@@ -95,7 +95,7 @@ const mapStateToProps = (state, ownProps) => {
     return {
         resourceId: state.addPaper.contributions.byId[ownProps.id] ? state.addPaper.contributions.byId[ownProps.id].resourceId : null,
         resourceLabel: state.addPaper.contributions.byId[ownProps.id] ? state.addPaper.contributions.byId[ownProps.id].label : null,
-        researchProblems: getReseachProblemsOfContribution(
+        researchProblems: getResearchProblemsOfContribution(
             state,
             state.addPaper.contributions.byId[ownProps.id] ? state.addPaper.contributions.byId[ownProps.id].resourceId : null
         ),

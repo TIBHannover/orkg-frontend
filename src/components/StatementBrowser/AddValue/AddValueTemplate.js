@@ -39,6 +39,8 @@ export default function AddValueTemplate(props) {
     const [uniqueLabel, setUniqueLabel] = useState(props.valueClass && props.valueClass.id === CLASSES.PROBLEM ? true : false);
     const [disabledCreate, setDisabledCreate] = useState(false);
 
+    const [isInlineResource, setIsInlineResource] = useState(false);
+
     const handleCreateExistingLabel = (inputValue, selectOptions) => {
         //check if label exists
         if (
@@ -61,28 +63,6 @@ export default function AddValueTemplate(props) {
             setDisabledCreate(false);
         }
     };
-
-    useEffect(() => {
-        if (valueType === 'literal' && literalInputRef.current) {
-            literalInputRef.current.focus();
-        } else if (resourceInputRef.current && (valueType === 'object' || valueType === 'property')) {
-            resourceInputRef.current.focus();
-        }
-    }, [valueType]);
-
-    useEffect(() => {
-        setValueType(props.isLiteral ? 'literal' : 'object');
-    }, [props.isLiteral]);
-
-    useEffect(() => {
-        setUniqueLabel(props.valueClass && props.valueClass.id === CLASSES.PROBLEM ? true : false);
-    }, [props.valueClass]);
-
-    useEffect(() => {
-        if (!showAddValue) {
-            setInputValue('');
-        }
-    }, [showAddValue]);
 
     /* Select component reference can be used to check if menu is opened */
     const isMenuOpen = () => {
@@ -149,9 +129,23 @@ export default function AddValueTemplate(props) {
         }
     };
 
-    const [isInlineResource, setIsInlineResource] = useState(false);
+    useEffect(() => {
+        if (valueType === 'literal' && literalInputRef.current) {
+            literalInputRef.current.focus();
+        } else if (resourceInputRef.current && (valueType === 'object' || valueType === 'property')) {
+            resourceInputRef.current.focus();
+        }
+    }, [valueType]);
 
     useEffect(() => {
+        if (!showAddValue) {
+            setInputValue('');
+        }
+    }, [showAddValue]);
+
+    useEffect(() => {
+        setValueType(props.isLiteral ? 'literal' : 'object');
+        setUniqueLabel(props.valueClass && props.valueClass.id === CLASSES.PROBLEM ? true : false);
         if (props.valueClass && !defaultDatatypes.map(t => t.id).includes(props.valueClass.id)) {
             setTemplateIsLoading(true);
             dispatch(fetchTemplatesOfClassIfNeeded(props.valueClass.id)).then(() => {
@@ -355,7 +349,7 @@ export default function AddValueTemplate(props) {
 }
 
 AddValueTemplate.propTypes = {
-    predicate: PropTypes.object.isRequired,
+    predicate: PropTypes.object,
     handleValueSelect: PropTypes.func.isRequired,
     newResources: PropTypes.array.isRequired,
     handleAddValue: PropTypes.func.isRequired,

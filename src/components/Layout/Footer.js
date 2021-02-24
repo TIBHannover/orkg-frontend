@@ -38,7 +38,6 @@ const FooterCol = styled(Col)`
 `;
 
 const PartnerLogoCol = styled(Col)`
-    margin: 10px 0;
     text-align: center;
 `;
 
@@ -102,6 +101,9 @@ const Footer = () => (
                                 <a href="https://gitlab.com/TIBHannover/orkg/orkg-frontend/-/wikis/home" target="_blank" rel="noopener noreferrer">
                                     Documentation
                                 </a>
+                            </li>
+                            <li>
+                                <Link to={ROUTES.DATA}>Data Access</Link>
                             </li>
                             <li>
                                 <Link to={ROUTES.CHANGELOG}>Changelog</Link>
