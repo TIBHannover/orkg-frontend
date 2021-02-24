@@ -43,11 +43,11 @@ const TableHeaderColumn = ({ contribution, paper }) => {
         <ItemHeader key={contribution.id}>
             <ItemHeaderInner className="position-relative bulk-editor">
                 <Tippy content="Edit paper's metadata">
-                    <div>
+                    <span>
                         <Button color="link" className="text-darkblueDarker p-0 text-left" onClick={handleEditPaper}>
                             {paper.label || <em>No title</em>}
                         </Button>
-                    </div>
+                    </span>
                 </Tippy>
                 <Contribution className="bulk-editor">{contribution.label}</Contribution>
 
