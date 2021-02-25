@@ -5,6 +5,13 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [V0.30.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.30...V0.30.1) - 2021-02-25
+
+### Changes
+
+- fix: Deleting property statement browser results in error [`#514`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/514)
+
+---
 ## [V0.30](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.29...V0.30) - 2021-02-19
 
 ### Changes
