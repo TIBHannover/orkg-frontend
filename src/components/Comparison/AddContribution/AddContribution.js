@@ -151,7 +151,14 @@ export default function AddContribution(props) {
                         <Tooltip message="Enter the title of the paper">Paper title</Tooltip>
                     </Label>
                     <InputGroup>
-                        <Input value={searchPaper} type="text" name="title" id="title" onChange={e => setSearchPaper(e.target.value)} />
+                        <Input
+                            value={searchPaper}
+                            placeholder="Search contributions by paper title..."
+                            type="text"
+                            name="title"
+                            id="title"
+                            onChange={e => setSearchPaper(e.target.value)}
+                        />
                     </InputGroup>
                 </FormGroup>
                 <div>
@@ -173,11 +180,21 @@ export default function AddContribution(props) {
                     )}
                     {!isNextPageLoading && searchPaper && paperResult.length === 0 && (
                         <div>
-                            <div className="text-center mt-4 mb-4">There are no results, please try a different search term</div>
+                            <div className="text-center mt-4 mb-4">
+                                There are no results, please try a different search term {props.allowCreate && 'or click on "Add new paper".'}
+                            </div>
                         </div>
                     )}
                     {paperResult.length > 0 && (
                         <>
+                            <p>
+                                Select from the following list the contributions that you want to add.
+                                {props.allowCreate && (
+                                    <>
+                                        or you click on <Icon icon={faPlusCircle} /> if you want to create a new contribution for an existing paper
+                                    </>
+                                )}
+                            </p>
                             <ListGroup>
                                 {paperResult.map((paper, index) => {
                                     return (
