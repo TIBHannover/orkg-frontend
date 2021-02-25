@@ -77,7 +77,7 @@ const BulkContributionEditor = () => {
         <>
             <Container className="d-flex align-items-center">
                 <div className="d-flex mt-4 mb-4 align-items-center flex-grow-1">
-                    <h1 className="h4 m-0">Bulk contribution editor</h1> {isLoading && <Icon icon={faSpinner} spin className="ml-2" />}
+                    <h1 className="h4 m-0">Bulk contribution editor</h1>
                 </div>
                 <ButtonGroup>
                     <Button
