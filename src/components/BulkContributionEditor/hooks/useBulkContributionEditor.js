@@ -1,7 +1,7 @@
 import TableCell from 'components/BulkContributionEditor/TableCell';
 import TableHeaderColumn from 'components/BulkContributionEditor/TableHeaderColumn';
+import TableHeaderColumnFirst from 'components/BulkContributionEditor/TableHeaderColumnFirst';
 import TableHeaderRow from 'components/BulkContributionEditor/TableHeaderRow';
-import { Properties, PropertiesInner } from 'components/Comparison/styled';
 import ROUTES from 'constants/routes';
 import { sortBy, uniq } from 'lodash';
 import queryString from 'query-string';
@@ -78,13 +78,7 @@ const useBulkContributionEditor = () => {
 
                 columns = [
                     {
-                        Header: (
-                            <Properties>
-                                <PropertiesInner transpose={false} className="first">
-                                    Properties
-                                </PropertiesInner>
-                            </Properties>
-                        ),
+                        Header: <TableHeaderColumnFirst />,
                         accessor: 'property',
                         sticky: 'left',
                         Cell: cell => <TableHeaderRow property={cell.value} />
