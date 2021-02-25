@@ -25,7 +25,7 @@ export default function ValueItem(props) {
     const dispatch = useDispatch();
 
     const value = useSelector(state => state.statementBrowser.values.byId[props.id]);
-    const property = useSelector(state => state.statementBrowser.properties[props.propertyId]);
+    const property = useSelector(state => state.statementBrowser.properties.byId[props.propertyId]);
     const openExistingResourcesInDialog = useSelector(state => state.statementBrowser.openExistingResourcesInDialog);
     const resource = useSelector(state => state.statementBrowser.resources.byId[props.value.resourceId]);
 
