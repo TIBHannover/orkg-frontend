@@ -18,12 +18,13 @@ function Property(props) {
     const [label, setLabel] = useState('');
     const [isLoading, setIsLoading] = useState(true);
     const [editMode, setEditMode] = useState(false);
+    const propertyId = props.match.params.id;
 
     useEffect(() => {
         const findPredicate = async () => {
             setIsLoading(true);
             try {
-                const responseJson = await getPredicate(props.match.params.id);
+                const responseJson = await getPredicate(propertyId);
                 document.title = `${responseJson.label} - Property - ORKG`;
 
                 setLabel(responseJson.label);
@@ -36,7 +37,7 @@ function Property(props) {
             }
         };
         findPredicate();
-    }, [location, props.match.params.id]);
+    }, [location, propertyId]);
 
     return (
         <>
@@ -90,14 +91,14 @@ function Property(props) {
                                     enableEdit={editMode}
                                     syncBackend={editMode}
                                     openExistingResourcesInDialog={false}
-                                    initialSubjectId={props.match.params.id}
+                                    initialSubjectId={propertyId}
                                     initialSubjectLabel={label}
                                     newStore={true}
                                     propertiesAsLinks={true}
                                     resourcesAsLinks={true}
                                 />
                             </div>
-                            <PropertyStatements propertyId={props.match.params.id} />
+                            <PropertyStatements propertyId={propertyId} />
                         </div>
                     </Container>
                 </>

@@ -17,33 +17,32 @@ const PropertyStatements = props => {
     const [page, setPage] = useState(0);
     const [statements, setStatements] = useState([]);
 
-    const loadStatements = useCallback(() => {
+    const loadStatements = useCallback(async () => {
         setIsLoading(true);
 
-        getStatementsByPredicate({
+        const statements = await getStatementsByPredicate({
             id: propertyId,
             page: page + 1,
             items: pageSize,
             sortBy: 'id',
             desc: true
-        }).then(result => {
-            // Resources
-            if (page === 0 && result.length === 0) {
-                setHasPropertyStatement(false);
-            } else {
-                setHasPropertyStatement(true);
-            }
-
-            if (result.length === 0) {
-                setIsLoading(false);
-                setHasNextPage(false);
-                return;
-            } else {
-                setStatements(prevStatements => [...prevStatements, ...result]);
-                setIsLoading(false);
-                setHasNextPage(result.length < pageSize || result.length === 0 ? false : true);
-            }
         });
+
+        if (page === 0 && statements.length === 0) {
+            setHasPropertyStatement(false);
+        } else {
+            setHasPropertyStatement(true);
+        }
+
+        if (statements.length === 0) {
+            setIsLoading(false);
+            setHasNextPage(false);
+            return;
+        } else {
+            setStatements(prevStatements => [...prevStatements, ...statements]);
+            setIsLoading(false);
+            setHasNextPage(statements.length < pageSize || statements.length === 0 ? false : true);
+        }
     }, [page, propertyId, setHasPropertyStatement]);
 
     useEffect(() => {
@@ -76,7 +75,7 @@ const PropertyStatements = props => {
             <Collapse isOpen={showPropertyStatements}>
                 {statements.length > 0 && (
                     <div>
-                        <h3 className="h5 mt-3">Statements of this property</h3>
+                        <h3 className="h5 mt-3">Statements using this property</h3>
                         <Table size="sm" bordered>
                             <thead>
                                 <tr>
@@ -98,8 +97,12 @@ const PropertyStatements = props => {
                                     </tr>
                                 ))}
                                 {!isLoading && hasNextPage && (
-                                    <tr style={{ cursor: 'pointer' }} className="text-center" onClick={handleLoadMore}>
-                                        <td colSpan="3">View more statements of the property</td>
+                                    <tr className="text-center">
+                                        <td colspan="3">
+                                            <Button color="lightblue" size="sm" onClick={handleLoadMore}>
+                                                Load more statements
+                                            </Button>
+                                        </td>
                                     </tr>
                                 )}
                             </tbody>
