@@ -46,6 +46,7 @@ import FeaturedComparisons from 'pages/FeaturedComparisons';
 import Data from 'pages/Data';
 import Contribution from 'pages/Contribution';
 import CsvImport from 'pages/CsvImport';
+import AddComparison from 'pages/AddComparison';
 import requireAuthentication from 'requireAuthentication';
 import { reverse } from 'named-urls';
 import ContributionEditor from 'pages/ContributionEditor';
@@ -307,6 +308,10 @@ const routes = [
     {
         path: ROUTES.CONTRIBUTION_EDITOR,
         component: requireAuthentication(ContributionEditor)
+    },
+    {
+        path: ROUTES.ADD_COMPARISON,
+        component: AddComparison
     },
     /* Don't add routes below this line */
     {

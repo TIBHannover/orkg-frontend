@@ -48,6 +48,7 @@ const routes = {
     PDF_ANNOTATION: '/pdf-annotation',
     CSV_IMPORT: '/csv-import',
     CONTRIBUTION_EDITOR: '/contribution-editor',
+    ADD_COMPARISON: '/add-comparison',
     /* Legacy routes */
     PREDICATES: '/predicates',
     PREDICATE: '/predicate/:id',
