@@ -1,73 +1,131 @@
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { useState } from 'react';
+import { Container, Button, ListGroup, FormGroup, Label, Input } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { faSpinner, faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import PaperCard from 'components/PaperCard/PaperCard';
 import useResearchFieldPapers from 'components/ResearchField/hooks/useResearchFieldPapers';
 import ROUTES from 'constants/routes';
-import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { Button, ListGroup } from 'reactstrap';
+import { SmallButton } from 'components/styled';
+import Tippy from '@tippyjs/react';
+import PropTypes from 'prop-types';
 
-const Papers = ({ researchFieldId, boxShadow }) => {
-    const [papers, isLoadingPapers, hasNextPage, isLastPageReached, loadMorePapers] = useResearchFieldPapers({ researchFieldId });
+const Papers = ({ id, boxShadow }) => {
+    const [papers, isLoadingPapers, hasNextPage, isLastPageReached, loadMorePapers] = useResearchFieldPapers({ researchFieldId: id });
+    const [tippy, setTippy] = useState({});
+    const [sort, setSort] = useState('newest');
+    const [includeSubFields, setIncludeSubFields] = useState(true);
 
     return (
         <>
-            {papers.length > 0 && (
-                <ListGroup className={boxShadow ? 'box' : ''}>
-                    {papers.map(paper => {
-                        return (
-                            paper && (
-                                <PaperCard
-                                    paper={{
-                                        id: paper.id,
-                                        title: paper.label,
-                                        ...paper
+            <Container className="d-flex align-items-center mt-4 mb-4">
+                <h1 className="h4 flex-grow-1">Papers</h1>
+                <Tippy
+                    interactive={true}
+                    trigger="click"
+                    placement="bottom-end"
+                    onCreate={instance => setTippy(instance)}
+                    content={
+                        <div className="p-2">
+                            <FormGroup>
+                                <Label for="sortPapers">Sort</Label>
+                                <Input
+                                    value={sort}
+                                    onChange={e => {
+                                        tippy.hide();
+                                        setSort(e.target.value);
                                     }}
-                                    key={`pc${paper.id}`}
-                                />
-                            )
-                        );
-                    })}
-                    {!isLoadingPapers && hasNextPage && (
-                        <div
-                            style={{ cursor: 'pointer' }}
-                            className="list-group-item list-group-item-action text-center"
-                            onClick={!isLoadingPapers ? loadMorePapers : undefined}
-                            onKeyDown={e => (e.keyCode === 13 ? (!isLoadingPapers ? loadMorePapers : undefined) : undefined)}
-                            role="button"
-                            tabIndex={0}
-                        >
-                            Load more papers
+                                    bsSize="sm"
+                                    type="select"
+                                    name="sort"
+                                    id="sortPapers"
+                                >
+                                    <option value="newest">Newest first</option>
+                                    <option value="oldest">Oldest first</option>
+                                </Input>
+                            </FormGroup>
+                            <FormGroup check>
+                                <Label check>
+                                    <Input
+                                        onChange={e => {
+                                            tippy.hide();
+                                            setIncludeSubFields(e.target.checked);
+                                        }}
+                                        checked={includeSubFields}
+                                        type="checkbox"
+                                        style={{ marginTop: '0.1rem' }}
+                                    />
+                                    Include subfields
+                                </Label>
+                            </FormGroup>
                         </div>
-                    )}
-                    {!hasNextPage && isLastPageReached && <div className="text-center mt-3">You have reached the last page.</div>}
-                </ListGroup>
-            )}
-            {papers.length === 0 && !isLoadingPapers && (
-                <div className={boxShadow ? 'container box rounded' : ''}>
-                    <div className="p-5 text-center mt-4 mb-4">
-                        There are no papers for this research field, yet.
-                        <br />
-                        <br />
-                        <Link to={ROUTES.ADD_PAPER.GENERAL_DATA}>
-                            <Button size="sm" color="primary " className="mr-3">
-                                Add paper
-                            </Button>
-                        </Link>
+                    }
+                >
+                    <span>
+                        <SmallButton className="flex-shrink-0 pl-3 pr-3" style={{ marginLeft: 'auto' }} size="sm">
+                            View <Icon icon={faChevronDown} />
+                        </SmallButton>
+                    </span>
+                </Tippy>
+            </Container>
+            <Container className="p-0">
+                {papers.length > 0 && (
+                    <ListGroup className={boxShadow ? 'box' : ''}>
+                        {papers.map(paper => {
+                            return (
+                                paper && (
+                                    <PaperCard
+                                        paper={{
+                                            id: paper.id,
+                                            title: paper.label,
+                                            ...paper
+                                        }}
+                                        key={`pc${paper.id}`}
+                                    />
+                                )
+                            );
+                        })}
+                        {!isLoadingPapers && hasNextPage && (
+                            <div
+                                style={{ cursor: 'pointer' }}
+                                className="list-group-item list-group-item-action text-center"
+                                onClick={!isLoadingPapers ? loadMorePapers : undefined}
+                                onKeyDown={e => (e.keyCode === 13 ? (!isLoadingPapers ? loadMorePapers : undefined) : undefined)}
+                                role="button"
+                                tabIndex={0}
+                            >
+                                Load more papers
+                            </div>
+                        )}
+                        {!hasNextPage && isLastPageReached && <div className="text-center mt-3">You have reached the last page.</div>}
+                    </ListGroup>
+                )}
+                {papers.length === 0 && !isLoadingPapers && (
+                    <div className={boxShadow ? 'container box rounded' : ''}>
+                        <div className="p-5 text-center mt-4 mb-4">
+                            There are no papers for this research field, yet.
+                            <br />
+                            <br />
+                            <Link to={ROUTES.ADD_PAPER.GENERAL_DATA}>
+                                <Button size="sm" color="primary " className="mr-3">
+                                    Add paper
+                                </Button>
+                            </Link>
+                        </div>
                     </div>
-                </div>
-            )}
-            {isLoadingPapers && (
-                <div className="text-center mt-4 mb-4">
-                    <Icon icon={faSpinner} spin /> Loading
-                </div>
-            )}
+                )}
+                {isLoadingPapers && (
+                    <div className="text-center mt-4 mb-4">
+                        <Icon icon={faSpinner} spin /> Loading
+                    </div>
+                )}
+            </Container>
         </>
     );
 };
 
 Papers.propTypes = {
-    researchFieldId: PropTypes.string.isRequired,
+    id: PropTypes.string.isRequired,
     boxShadow: PropTypes.bool
 };
 
