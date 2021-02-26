@@ -1,5 +1,5 @@
-import TableCellValue from 'components/BulkContributionEditor/TableCellValue';
-import TableCellValueCreate from 'components/BulkContributionEditor/TableCellValueCreate';
+import TableCellValue from 'components/ContributionEditor/TableCellValue';
+import TableCellValueCreate from 'components/ContributionEditor/TableCellValueCreate';
 import { Item, ItemInner } from 'components/Comparison/TableCell';
 import { isEqual } from 'lodash';
 import PropTypes from 'prop-types';

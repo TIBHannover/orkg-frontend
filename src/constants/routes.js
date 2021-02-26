@@ -47,7 +47,7 @@ const routes = {
     PDF_TEXT_ANNOTATION: '/pdf-text-annotation',
     PDF_ANNOTATION: '/pdf-annotation',
     CSV_IMPORT: '/csv-import',
-    BULK_CONTRIBUTION_EDITOR: '/bulk-contribution-editor',
+    CONTRIBUTION_EDITOR: '/contribution-editor',
     /* Legacy routes */
     PREDICATES: '/predicates',
     PREDICATE: '/predicate/:id',

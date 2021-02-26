@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import { usePrevious } from 'react-use';
 
 const TableHeaderColumnFirst = () => {
-    const isLoading = useSelector(state => state.bulkContributionEditor.isLoading);
+    const isLoading = useSelector(state => state.contributionEditor.isLoading);
     const [isDone, setIsDone] = useState(false);
     const prevIsLoading = usePrevious(isLoading);
 

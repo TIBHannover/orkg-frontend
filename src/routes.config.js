@@ -48,7 +48,7 @@ import Contribution from 'pages/Contribution';
 import CsvImport from 'pages/CsvImport';
 import requireAuthentication from 'requireAuthentication';
 import { reverse } from 'named-urls';
-import BulkContributionEditor from 'pages/BulkContributionEditor';
+import ContributionEditor from 'pages/ContributionEditor';
 
 // use lazy loading of pages that contain large dependencies
 // run "npm run analyze" to ensure the listed dependencies are not loaded elsewhere and thus end up in the bundle
@@ -305,8 +305,8 @@ const routes = [
         component: requireAuthentication(CsvImport)
     },
     {
-        path: ROUTES.BULK_CONTRIBUTION_EDITOR,
-        component: requireAuthentication(BulkContributionEditor)
+        path: ROUTES.CONTRIBUTION_EDITOR,
+        component: requireAuthentication(ContributionEditor)
     },
     /* Don't add routes below this line */
     {

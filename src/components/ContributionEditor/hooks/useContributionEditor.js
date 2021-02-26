@@ -1,14 +1,14 @@
-import TableCell from 'components/BulkContributionEditor/TableCell';
-import TableHeaderColumn from 'components/BulkContributionEditor/TableHeaderColumn';
-import TableHeaderColumnFirst from 'components/BulkContributionEditor/TableHeaderColumnFirst';
-import TableHeaderRow from 'components/BulkContributionEditor/TableHeaderRow';
+import TableCell from 'components/ContributionEditor/TableCell';
+import TableHeaderColumn from 'components/ContributionEditor/TableHeaderColumn';
+import TableHeaderColumnFirst from 'components/ContributionEditor/TableHeaderColumnFirst';
+import TableHeaderRow from 'components/ContributionEditor/TableHeaderRow';
 import ROUTES from 'constants/routes';
 import { sortBy, uniq } from 'lodash';
 import queryString from 'query-string';
 import { useCallback } from 'react';
 import { useHistory, useLocation } from 'react-router';
 
-const useBulkContributionEditor = () => {
+const useContributionEditor = () => {
     const location = useLocation();
     const history = useHistory();
 
@@ -20,14 +20,14 @@ const useBulkContributionEditor = () => {
 
     const handleAddContributions = ids => {
         const idsQueryString = [...getContributionIds(), ...ids].join(',');
-        history.push(`${ROUTES.BULK_CONTRIBUTION_EDITOR}?contributions=${idsQueryString}`);
+        history.push(`${ROUTES.CONTRIBUTION_EDITOR}?contributions=${idsQueryString}`);
     };
 
     const handleRemoveContribution = id => {
         const idsQueryString = getContributionIds()
             .filter(_id => _id !== id)
             .join(',');
-        history.push(`${ROUTES.BULK_CONTRIBUTION_EDITOR}?contributions=${idsQueryString}`);
+        history.push(`${ROUTES.CONTRIBUTION_EDITOR}?contributions=${idsQueryString}`);
     };
 
     // make an object that supports retrieving statements by propertyId and contributionId
@@ -108,4 +108,4 @@ const useBulkContributionEditor = () => {
     };
 };
 
-export default useBulkContributionEditor;
+export default useContributionEditor;

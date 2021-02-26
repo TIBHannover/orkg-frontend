@@ -1,14 +1,14 @@
-import useBulkContributionEditor from 'components/BulkContributionEditor/hooks/useBulkContributionEditor';
+import useContributionEditor from 'components/ContributionEditor/hooks/useContributionEditor';
 import PropTypes from 'prop-types';
 import { memo, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { ScrollSyncPane } from 'react-scroll-sync';
-import { useTable, useFlexLayout } from 'react-table';
+import { useFlexLayout, useTable } from 'react-table';
 import { useSticky } from 'react-table-sticky';
 
 const EditorTable = ({ scrollContainerBody }) => {
-    const { contributions, papers, statements, properties, resources, literals } = useSelector(state => state.bulkContributionEditor);
-    const { generateTableMatrix } = useBulkContributionEditor();
+    const { contributions, papers, statements, properties, resources, literals } = useSelector(state => state.contributionEditor);
+    const { generateTableMatrix } = useContributionEditor();
     const { data, columns } = useMemo(() => generateTableMatrix({ contributions, papers, statements, properties, resources, literals }), [
         contributions,
         generateTableMatrix,

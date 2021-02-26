@@ -1,8 +1,8 @@
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
-import { updatePaper } from 'actions/bulkContributionEditor';
-import useBulkContributionEditor from 'components/BulkContributionEditor/hooks/useBulkContributionEditor';
+import { updatePaper } from 'actions/contributionEditor';
+import useContributionEditor from 'components/ContributionEditor/hooks/useContributionEditor';
 import { Contribution, Delete, ItemHeader, ItemHeaderInner } from 'components/Comparison/styled';
 import EditPaperDialog from 'components/ViewPaper/EditDialog/EditPaperDialog';
 import useEditPaper from 'components/ViewPaper/EditDialog/hooks/useEditPaper';
@@ -14,7 +14,7 @@ import { Button } from 'reactstrap';
 const TableHeaderColumn = ({ contribution, paper }) => {
     const [isOpenEditModal, setIsOpenEditModal] = useState(false);
     const [data, setData] = useState(null);
-    const { handleRemoveContribution } = useBulkContributionEditor();
+    const { handleRemoveContribution } = useContributionEditor();
     const { loadPaperData } = useEditPaper();
     const dispatch = useDispatch();
 
@@ -41,7 +41,7 @@ const TableHeaderColumn = ({ contribution, paper }) => {
 
     return (
         <ItemHeader key={contribution.id}>
-            <ItemHeaderInner className="position-relative bulk-editor">
+            <ItemHeaderInner className="position-relative contribution-editor">
                 <Tippy content="Edit paper's metadata">
                     <span>
                         <Button color="link" className="text-darkblueDarker p-0 text-left" onClick={handleEditPaper}>
@@ -49,10 +49,10 @@ const TableHeaderColumn = ({ contribution, paper }) => {
                         </Button>
                     </span>
                 </Tippy>
-                <Contribution className="bulk-editor">{contribution.label}</Contribution>
+                <Contribution className="contribution-editor">{contribution.label}</Contribution>
 
-                <Delete className="bulk-editor" onClick={() => handleRemoveContribution(contribution.id)}>
-                    <Tippy content="Remove contribution from bulk editor">
+                <Delete className="contribution-editor" onClick={() => handleRemoveContribution(contribution.id)}>
+                    <Tippy content="Remove contribution from contribution editor">
                         <span>
                             <Icon icon={faTimes} />
                         </span>

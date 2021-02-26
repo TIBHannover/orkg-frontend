@@ -1,6 +1,6 @@
 import { faBars, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { createLiteralValue, createResourceValue } from 'actions/bulkContributionEditor';
+import { createLiteralValue, createResourceValue } from 'actions/contributionEditor';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
 import StatementOptionButton from 'components/StatementBrowser/StatementOptionButton/StatementOptionButton';
 import { StyledDropdownItem, StyledDropdownToggle } from 'components/StatementBrowser/styled';

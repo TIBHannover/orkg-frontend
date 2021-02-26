@@ -1,12 +1,12 @@
 import Autocomplete from 'components/Autocomplete/Autocomplete';
-import TableCellButtons from 'components/BulkContributionEditor/TableCellButtons';
+import TableCellButtons from 'components/ContributionEditor/TableCellButtons';
 import { Properties, PropertiesInner } from 'components/Comparison/styled';
 import PropTypes from 'prop-types';
 import { memo, useState } from 'react';
 import { predicatesUrl } from 'services/backend/predicates';
 import Confirm from 'reactstrap-confirm';
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteProperty, updateProperty } from 'actions/bulkContributionEditor';
+import { deleteProperty, updateProperty } from 'actions/contributionEditor';
 import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
 import { upperFirst } from 'lodash';
 import { Button } from 'reactstrap';
@@ -16,7 +16,7 @@ const TableHeaderRow = ({ property }) => {
     const [isOpenStatementBrowser, setIsOpenStatementBrowser] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
     const [inputValue, setInputValue] = useState(property.label);
-    const statements = useSelector(state => state.bulkContributionEditor.statements);
+    const statements = useSelector(state => state.contributionEditor.statements);
     const statementIds = Object.keys(statements).filter(statementId => statements[statementId].propertyId === property.id);
     const dispatch = useDispatch();
     const { confirmProperty } = useConfirmPropertyModal();
@@ -35,7 +35,7 @@ const TableHeaderRow = ({ property }) => {
             message: (
                 <span>
                     The property <strong>{property.label}</strong> and its corresponding values will be deleted for <strong>all contributions</strong>{' '}
-                    currently in the bulk editor
+                    currently in the editor
                 </span>
             ),
             cancelColor: 'light'

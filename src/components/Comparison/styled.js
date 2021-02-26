@@ -80,7 +80,7 @@ export const ReactTableWrapper = styled.div`
         }
     }
 
-    &:not(.bulk-editor) {
+    &:not(.contribution-editor) {
         .table {
             .tr:hover .td > div > div {
                 background: #e7eaf1;
@@ -95,7 +95,7 @@ export const ReactTableWrapper = styled.div`
         }
     }
 
-    &.bulk-editor {
+    &.contribution-editor {
         .table {
             .tr .td:not(.sticky) > div > div:hover {
                 background: #f0f2f7;
@@ -151,7 +151,7 @@ export const Properties = styled.div`
     position: relative;
     background: #fff;
 
-    // for bulk editor, show edit/delete buttons on hover
+    // for contribution editor, show edit/delete buttons on hover
     &:hover .cell-buttons {
         display: block;
     }
@@ -199,7 +199,7 @@ export const ItemHeaderInner = styled.div`
     a {
         color: #fff !important;
     }
-    &.bulk-editor {
+    &.contribution-editor {
         background: ${props => props.theme.themeColors.lightblue};
     }
 `;
@@ -207,7 +207,7 @@ export const ItemHeaderInner = styled.div`
 export const Contribution = styled.div`
     color: #ffa5a5;
     font-size: 85%;
-    &.bulk-editor {
+    &.contribution-editor {
         color: ${props => props.theme.themeColors.darkblue};
     }
 `;
@@ -230,7 +230,7 @@ export const Delete = styled.button`
     &:hover {
         background: #fff;
     }
-    &.bulk-editor {
+    &.contribution-editor {
         color: ${props => props.theme.themeColors.lightblue};
         right: -5px;
         background: ${props => props.theme.themeColors.darkblue};

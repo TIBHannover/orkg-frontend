@@ -1,6 +1,6 @@
 import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { createProperty } from 'actions/bulkContributionEditor';
+import { createProperty } from 'actions/contributionEditor';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
 import useConfirmPropertyModal from 'components/StatementBrowser/AddProperty/hooks/useConfirmPropertyModal';
 import { useState } from 'react';

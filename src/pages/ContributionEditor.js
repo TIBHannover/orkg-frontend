@@ -1,10 +1,10 @@
-import { faPlusCircle, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { loadContributions, removeContributions } from 'actions/bulkContributionEditor';
-import CreateProperty from 'components/BulkContributionEditor/CreateProperty';
-import EditorTable from 'components/BulkContributionEditor/EditorTable';
-import useBulkContributionEditor from 'components/BulkContributionEditor/hooks/useBulkContributionEditor';
-import TableLoadingIndicator from 'components/BulkContributionEditor/TableLoadingIndicator';
+import { loadContributions, removeContributions } from 'actions/contributionEditor';
+import CreateProperty from 'components/ContributionEditor/CreateProperty';
+import EditorTable from 'components/ContributionEditor/EditorTable';
+import useContributionEditor from 'components/ContributionEditor/hooks/useContributionEditor';
+import TableLoadingIndicator from 'components/ContributionEditor/TableLoadingIndicator';
 import AddContribution from 'components/Comparison/AddContribution/AddContribution';
 import TableScrollContainer from 'components/Comparison/TableScrollContainer';
 import CreateContributionModal from 'components/CreateContributionModal/CreateContributionModal';
@@ -16,19 +16,19 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Alert, Button, ButtonGroup, Container } from 'reactstrap';
 
-const BulkContributionEditor = () => {
+const ContributionEditor = () => {
     const [isOpenAddContribution, setIsOpenAddContribution] = useState(false);
     const [isOpenCreateContribution, setIsOpenCreateContribution] = useState(false);
     const [isOpenCreatePaper, setIsOpenCreatePaper] = useState(false);
     const [createContributionPaperId, setCreateContributionPaperId] = useState(null);
-    const { getContributionIds, handleAddContributions } = useBulkContributionEditor();
-    const contributions = useSelector(state => state.bulkContributionEditor.contributions);
-    const isLoading = useSelector(state => state.bulkContributionEditor.isLoading);
+    const { getContributionIds, handleAddContributions } = useContributionEditor();
+    const contributions = useSelector(state => state.contributionEditor.contributions);
+    const isLoading = useSelector(state => state.contributionEditor.isLoading);
     const dispatch = useDispatch();
     const contributionIds = getContributionIds();
 
     useEffect(() => {
-        document.title = 'Bulk contribution editor - ORKG';
+        document.title = 'Contribution editor - ORKG';
     }, []);
 
     // handle changes of the query string param 'contributions'
@@ -77,7 +77,7 @@ const BulkContributionEditor = () => {
         <>
             <Container className="d-flex align-items-center">
                 <div className="d-flex mt-4 mb-4 align-items-center flex-grow-1">
-                    <h1 className="h4 m-0">Bulk contribution editor</h1>
+                    <h1 className="h4 m-0">Contribution editor</h1>
                 </div>
                 <ButtonGroup>
                     <Button
@@ -107,7 +107,7 @@ const BulkContributionEditor = () => {
 
                 {!isLoadingInit && contributionAmount > 0 && (
                     <>
-                        <TableScrollContainer className="bulk-editor">
+                        <TableScrollContainer className="contribution-editor">
                             <EditorTable />
                         </TableScrollContainer>
 
@@ -141,4 +141,4 @@ const BulkContributionEditor = () => {
     );
 };
 
-export default BulkContributionEditor;
+export default ContributionEditor;

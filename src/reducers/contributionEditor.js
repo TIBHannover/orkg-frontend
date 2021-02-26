@@ -14,7 +14,7 @@ const initialState = {
 
 export default function reducer(state = initialState, action) {
     switch (action.type) {
-        case type.BULK_CONTRIBUTION_EDITOR_CONTRIBUTIONS_LOAD: {
+        case type.CONTRIBUTION_EDITOR_CONTRIBUTIONS_LOAD: {
             const { contributions, statements, resources, literals, properties, papers } = action.payload;
 
             let newState = dotProp.merge({ ...state }, 'contributions', contributions);
@@ -25,30 +25,30 @@ export default function reducer(state = initialState, action) {
             return dotProp.merge(newState, 'properties', properties);
         }
 
-        case type.BULK_CONTRIBUTION_EDITOR_CONTRIBUTIONS_REMOVE: {
+        case type.CONTRIBUTION_EDITOR_CONTRIBUTIONS_REMOVE: {
             const { contributionIds } = action.payload;
             return dotProp.set(state, 'contributions', omit(state.contributions, contributionIds));
         }
 
-        case type.BULK_CONTRIBUTION_EDITOR_PAPER_UPDATE: {
+        case type.CONTRIBUTION_EDITOR_PAPER_UPDATE: {
             const { id, title } = action.payload;
             return dotProp.set(state, `papers.${id}.label`, title);
         }
 
-        case type.BULK_CONTRIBUTION_EDITOR_LITERAL_UPDATE: {
+        case type.CONTRIBUTION_EDITOR_LITERAL_UPDATE: {
             const { id, label } = action.payload;
             return dotProp.set(state, `literals.${id}.label`, label);
         }
 
-        case type.BULK_CONTRIBUTION_EDITOR_LOADING_START: {
+        case type.CONTRIBUTION_EDITOR_LOADING_START: {
             return dotProp.set(state, `isLoading`, true);
         }
 
-        case type.BULK_CONTRIBUTION_EDITOR_LOADING_FINISH: {
+        case type.CONTRIBUTION_EDITOR_LOADING_FINISH: {
             return dotProp.set(state, `isLoading`, false);
         }
 
-        case type.BULK_CONTRIBUTION_EDITOR_RESOURCE_CREATE: {
+        case type.CONTRIBUTION_EDITOR_RESOURCE_CREATE: {
             const { statementId, contributionId, propertyId, resource } = action.payload;
 
             const newState = dotProp.merge({ ...state }, `statements.${statementId}`, {
@@ -61,7 +61,7 @@ export default function reducer(state = initialState, action) {
             return dotProp.merge(newState, `resources.${resource.id}`, resource);
         }
 
-        case type.BULK_CONTRIBUTION_EDITOR_LITERAL_CREATE: {
+        case type.CONTRIBUTION_EDITOR_LITERAL_CREATE: {
             const { statementId, contributionId, propertyId, literal } = action.payload;
 
             const newState = dotProp.merge({ ...state }, `statements.${statementId}`, {
@@ -74,29 +74,29 @@ export default function reducer(state = initialState, action) {
             return dotProp.merge(newState, `literals.${literal.id}`, literal);
         }
 
-        case type.BULK_CONTRIBUTION_EDITOR_PROPERTY_CREATE: {
+        case type.CONTRIBUTION_EDITOR_PROPERTY_CREATE: {
             const { property } = action.payload;
             return dotProp.merge({ ...state }, `properties.${property.id}`, property);
         }
 
-        case type.BULK_CONTRIBUTION_EDITOR_STATEMENT_DELETE: {
+        case type.CONTRIBUTION_EDITOR_STATEMENT_DELETE: {
             const { id } = action.payload;
             return dotProp.delete(state, `statements.${id}`);
         }
 
-        case type.BULK_CONTRIBUTION_EDITOR_RESOURCE_UPDATE: {
+        case type.CONTRIBUTION_EDITOR_RESOURCE_UPDATE: {
             const { id, resource } = action.payload;
             const newState = dotProp.set({ ...state }, `statements.${id}.objectId`, resource.id);
             return dotProp.set(newState, `resources.${resource.id}`, resource);
         }
 
-        case type.BULK_CONTRIBUTION_EDITOR_PROPERTY_DELETE: {
+        case type.CONTRIBUTION_EDITOR_PROPERTY_DELETE: {
             const { id, statementIds } = action.payload;
             const newState = dotProp.delete({ ...state }, `properties.${id}`);
             return dotProp.set(newState, 'statements', omit(state.statements, statementIds));
         }
 
-        case type.BULK_CONTRIBUTION_EDITOR_PROPERTY_UPDATE: {
+        case type.CONTRIBUTION_EDITOR_PROPERTY_UPDATE: {
             const { id, newProperty, statementIds } = action.payload;
 
             let newState = dotProp.delete({ ...state }, `properties.${id}`);

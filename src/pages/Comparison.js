@@ -84,7 +84,7 @@ function Comparison(props) {
         loadCreatedBy,
         loadProvenanceInfos,
         loadVisualizations,
-        handleBulkEdit
+        handleEditContributions
     } = useComparison({});
 
     /** adding some additional state for meta data **/
@@ -287,7 +287,7 @@ function Comparison(props) {
                                             </div>
                                         </DropdownMenu>
                                     </Dropdown>
-                                    <DropdownItem onClick={handleBulkEdit}>Bulk edit contributions</DropdownItem>
+                                    <DropdownItem onClick={handleEditContributions}>Edit contributions</DropdownItem>
 
                                     <DropdownItem divider />
                                     <DropdownItem header>Export</DropdownItem>

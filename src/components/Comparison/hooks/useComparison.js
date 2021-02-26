@@ -632,7 +632,7 @@ function useComparison() {
         setMatrixData([header, ...rows]);
     };
 
-    const handleBulkEdit = async () => {
+    const handleEditContributions = async () => {
         if (metaData?.id) {
             const isConfirmed = await Confirm({
                 title: 'This is a published comparison',
@@ -648,14 +648,14 @@ function useComparison() {
             }
         } else {
             const isConfirmed = await Confirm({
-                title: 'Bulk edit contribution data',
+                title: 'Edit contribution data',
                 message: `You are about the edit the contributions displayed in the comparison. Changing this data does not only affect this comparison, but also other parts of the ORKG`,
                 cancelColor: 'light',
                 confirmText: 'Continue'
             });
 
             if (isConfirmed) {
-                history.push(reverse(ROUTES.BULK_CONTRIBUTION_EDITOR) + `?contributions=${contributionsList.join(',')}`);
+                history.push(reverse(ROUTES.CONTRIBUTION_EDITOR) + `?contributions=${contributionsList.join(',')}`);
             }
         }
     };
@@ -777,7 +777,7 @@ function useComparison() {
         loadCreatedBy,
         loadProvenanceInfos,
         loadVisualizations,
-        handleBulkEdit
+        handleEditContributions
     };
 }
 export default useComparison;

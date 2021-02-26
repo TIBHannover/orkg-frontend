@@ -53,7 +53,7 @@ export const loadContributions = contributionIds => async dispatch => {
     }
 
     dispatch({
-        type: type.BULK_CONTRIBUTION_EDITOR_CONTRIBUTIONS_LOAD,
+        type: type.CONTRIBUTION_EDITOR_CONTRIBUTIONS_LOAD,
         payload: {
             contributions,
             statements,
@@ -68,7 +68,7 @@ export const loadContributions = contributionIds => async dispatch => {
 
 export const removeContributions = contributionIds => dispatch =>
     dispatch({
-        type: type.BULK_CONTRIBUTION_EDITOR_CONTRIBUTIONS_REMOVE,
+        type: type.CONTRIBUTION_EDITOR_CONTRIBUTIONS_REMOVE,
         payload: {
             contributionIds
         }
@@ -90,7 +90,7 @@ export const updateResource = ({ statementId, action, resourceId = null, resourc
     });
 
     dispatch({
-        type: type.BULK_CONTRIBUTION_EDITOR_RESOURCE_UPDATE,
+        type: type.CONTRIBUTION_EDITOR_RESOURCE_UPDATE,
         payload: {
             id: statementId,
             resource
@@ -101,7 +101,7 @@ export const updateResource = ({ statementId, action, resourceId = null, resourc
 export const updateLiteral = payload => async dispatch => {
     dispatch(startLoading());
     dispatch({
-        type: type.BULK_CONTRIBUTION_EDITOR_LITERAL_UPDATE,
+        type: type.CONTRIBUTION_EDITOR_LITERAL_UPDATE,
         payload: payload
     });
 
@@ -114,7 +114,7 @@ export const deleteStatement = id => dispatch => {
     deleteStatementById(id);
 
     dispatch({
-        type: type.BULK_CONTRIBUTION_EDITOR_STATEMENT_DELETE,
+        type: type.CONTRIBUTION_EDITOR_STATEMENT_DELETE,
         payload: {
             id
         }
@@ -149,7 +149,7 @@ export const createResourceValue = ({ contributionId, propertyId, action, resour
     const newStatement = await createResourceStatement(contributionId, propertyId, resource.id);
 
     dispatch({
-        type: type.BULK_CONTRIBUTION_EDITOR_RESOURCE_CREATE,
+        type: type.CONTRIBUTION_EDITOR_RESOURCE_CREATE,
         payload: {
             statementId: newStatement.id,
             contributionId,
@@ -175,7 +175,7 @@ export const createLiteralValue = ({ contributionId, propertyId, label }) => asy
     const newStatement = await createLiteralStatement(contributionId, propertyId, literal.id);
 
     dispatch({
-        type: type.BULK_CONTRIBUTION_EDITOR_LITERAL_CREATE,
+        type: type.CONTRIBUTION_EDITOR_LITERAL_CREATE,
         payload: {
             statementId: newStatement.id,
             contributionId,
@@ -194,7 +194,7 @@ export const createProperty = ({ action, id = null, label = null }) => async dis
     }
 
     dispatch({
-        type: type.BULK_CONTRIBUTION_EDITOR_PROPERTY_CREATE,
+        type: type.CONTRIBUTION_EDITOR_PROPERTY_CREATE,
         payload: {
             property
         }
@@ -205,7 +205,7 @@ export const deleteProperty = ({ id, statementIds }) => dispatch => {
     deleteStatementsByIds(statementIds);
 
     dispatch({
-        type: type.BULK_CONTRIBUTION_EDITOR_PROPERTY_DELETE,
+        type: type.CONTRIBUTION_EDITOR_PROPERTY_DELETE,
         payload: {
             id,
             statementIds
@@ -233,7 +233,7 @@ export const updateProperty = ({ id, statementIds, action, newId = null, newLabe
     updateStatements(statementIds, { predicate_id: property.id });
 
     dispatch({
-        type: type.BULK_CONTRIBUTION_EDITOR_PROPERTY_UPDATE,
+        type: type.CONTRIBUTION_EDITOR_PROPERTY_UPDATE,
         payload: {
             id,
             newProperty: property,
@@ -244,15 +244,15 @@ export const updateProperty = ({ id, statementIds, action, newId = null, newLabe
 
 export const updatePaper = payload => dispatch => {
     dispatch({
-        type: type.BULK_CONTRIBUTION_EDITOR_PAPER_UPDATE,
+        type: type.CONTRIBUTION_EDITOR_PAPER_UPDATE,
         payload
     });
 };
 
 export const startLoading = () => ({
-    type: type.BULK_CONTRIBUTION_EDITOR_LOADING_START
+    type: type.CONTRIBUTION_EDITOR_LOADING_START
 });
 
 export const finishLoading = () => ({
-    type: type.BULK_CONTRIBUTION_EDITOR_LOADING_FINISH
+    type: type.CONTRIBUTION_EDITOR_LOADING_FINISH
 });

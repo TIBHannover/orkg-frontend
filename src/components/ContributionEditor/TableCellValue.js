@@ -1,7 +1,7 @@
-import { deleteStatement, updateLiteral, updateResource } from 'actions/bulkContributionEditor';
+import { deleteStatement, updateLiteral, updateResource } from 'actions/contributionEditor';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
-import TableCellButtons from 'components/BulkContributionEditor/TableCellButtons';
-import TableCellValueResource from 'components/BulkContributionEditor/TableCellValueResource';
+import TableCellButtons from 'components/ContributionEditor/TableCellButtons';
+import TableCellValueResource from 'components/ContributionEditor/TableCellValueResource';
 import { ItemInnerSeparator } from 'components/Comparison/TableCell';
 import ValuePlugins from 'components/ValuePlugins/ValuePlugins';
 import { CLASSES } from 'constants/graphSettings';
