@@ -4,18 +4,16 @@ import PropTypes from 'prop-types';
 
 const Authors = ({ authors, maxAuthors }) => {
     return (
-        <>
-            {authors && authors.length > 0 && (
-                <>
-                    <Icon size="sm" icon={faUser} />{' '}
-                    {authors
-                        .slice(0, maxAuthors)
-                        .map(a => a.label)
-                        .join(', ')}
-                    {authors.length > maxAuthors && ' et al.'}
-                </>
-            )}
-        </>
+        authors?.length > 0 && (
+            <>
+                <Icon size="sm" icon={faUser} />{' '}
+                {authors
+                    .slice(0, maxAuthors)
+                    .map(a => a.label)
+                    .join(', ')}
+                {authors.length > maxAuthors && ' et al.'}
+            </>
+        )
     );
 };
 
