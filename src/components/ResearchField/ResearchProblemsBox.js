@@ -29,6 +29,7 @@ const ResearchProblemsBox = ({ id }) => {
                         ))}
                     </ul>
                 )}
+                {researchProblems && researchProblems.length === 0 && <>No research problems.</>}
             </div>
             {researchProblems.length > 5 && (
                 <div className="text-center">
@@ -37,7 +38,6 @@ const ResearchProblemsBox = ({ id }) => {
                     </SmallButton>
                 </div>
             )}
-            {researchProblems && researchProblems.length === 0 && <>No research problems.</>}
         </div>
     );
 };
