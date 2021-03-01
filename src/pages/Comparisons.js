@@ -45,11 +45,7 @@ export default class Comparisons extends Component {
                 getStatementsBySubjects({ ids: comparisons.map(p => p.id) })
                     .then(comparisonsStatements => {
                         const statements = comparisonsStatements.map(comparisonStatements => {
-                            return getComparisonData(
-                                comparisonStatements.id,
-                                find(comparisons, { id: comparisonStatements.id }).label,
-                                comparisonStatements.statements
-                            );
+                            return getComparisonData(find(comparisons, { id: comparisonStatements.id }), comparisonStatements.statements);
                         });
                         this.setState({
                             statements: [...this.state.statements, ...statements],

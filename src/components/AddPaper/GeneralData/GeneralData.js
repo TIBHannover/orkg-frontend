@@ -179,7 +179,7 @@ class GeneralData extends Component {
                 .then(result => {
                     getStatementsBySubject({ id: result.id }).then(paperStatements => {
                         this.setState({
-                            existingPaper: { ...getPaperData(result.id, result.title, paperStatements), title: result.title }
+                            existingPaper: { ...getPaperData(result, paperStatements), title: result.title }
                         });
                     });
                 })

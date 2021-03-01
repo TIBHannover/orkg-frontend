@@ -202,7 +202,7 @@ export const getPaperData_ViewPaper = (paperResource, paperStatements) => {
  * @param {Array} paperStatements
  */
 
-export const getPaperData = (id, label, paperStatements) => {
+export const getPaperData = (resource, paperStatements) => {
     // research field
     const researchField = getResearchField(paperStatements);
     const publicationYear = getPublicationYear(paperStatements)[0]; // gets year[0] and resourceId[1]
@@ -213,8 +213,8 @@ export const getPaperData = (id, label, paperStatements) => {
     const order = getOrder(paperStatements);
 
     return {
-        id,
-        label,
+        id: resource.id,
+        label: resource.label ? resource.label : 'No Title',
         publicationYear,
         publicationMonth,
         researchField,
@@ -222,7 +222,8 @@ export const getPaperData = (id, label, paperStatements) => {
         doiResourceId,
         authorNames: authors.sort((a, b) => a.created_at.localeCompare(b.created_at)),
         contributions: contributions.sort((a, b) => a.label.localeCompare(b.label)),
-        order
+        order,
+        created_by: resource.created_by !== MISC.UNKNOWN_ID ? resource.created_by : null
     };
 };
 
@@ -232,7 +233,7 @@ export const getPaperData = (id, label, paperStatements) => {
  * @param {String } label
  * @param {Array} comparisonStatements
  */
-export const getComparisonData = (id, label, comparisonStatements) => {
+export const getComparisonData = (resource, comparisonStatements) => {
     // description
     const description = comparisonStatements.find(statement => statement.predicate.id === PREDICATES.DESCRIPTION);
 
@@ -254,9 +255,12 @@ export const getComparisonData = (id, label, comparisonStatements) => {
     // onHomePage
     const onHomePage = comparisonStatements.find(statement => statement.predicate.id === PREDICATES.ON_HOMEPAGE);
 
+    // subject
+    const subject = comparisonStatements.find(statement => statement.predicate.id === PREDICATES.HAS_SUBJECT);
+
     return {
-        id,
-        label,
+        id: resource.id,
+        label: resource.label ? resource.label : 'No Title',
         created_at: url ? url.object.created_at : '',
         nbContributions: url ? getArrayParamFromQueryString(url.object.label, 'contributions').length : 0,
         url: url ? url.object.label : '',
@@ -265,7 +269,9 @@ export const getComparisonData = (id, label, comparisonStatements) => {
         icon: icon ? icon.object.label : '',
         order: order ? order.object.label : Infinity,
         type: type ? type.object.id : '',
-        onHomePage: onHomePage ? true : false
+        onHomePage: onHomePage ? true : false,
+        researchField: subject ? subject.object : null,
+        created_by: resource.created_by !== MISC.UNKNOWN_ID ? resource.created_by : null
     };
 };
 
@@ -669,7 +675,7 @@ function getPublishedIn(paperStatements) {
     return publishedIn;
 }
 
-function getResearchField(paperStatements) {
+export function getResearchField(paperStatements) {
     let researchField = paperStatements.filter(statement => statement.predicate.id === PREDICATES.HAS_RESEARCH_FIELD);
     if (researchField.length > 0) {
         researchField = { ...researchField[0].object, statementId: researchField[0].id };

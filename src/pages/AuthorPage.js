@@ -105,11 +105,7 @@ class AuthorPage extends Component {
                                 /**  returns an empty resource for a paper >> handle in renderer **/
                                 return undefined;
                             } else {
-                                return getPaperData(
-                                    paperStatements.id,
-                                    paperSubject && paperSubject.label ? paperSubject.label : 'No Title',
-                                    paperStatements.statements
-                                );
+                                return getPaperData(paperSubject, paperStatements.statements);
                             }
                         });
 

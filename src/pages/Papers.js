@@ -5,7 +5,7 @@ import { getResourcesByClass } from 'services/backend/resources';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner, faAngleDoubleDown } from '@fortawesome/free-solid-svg-icons';
 import PaperCardDynamic from 'components/PaperCard/PaperCardDynamic';
-import { CLASSES } from 'constants/graphSettings';
+import { CLASSES, MISC } from 'constants/graphSettings';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import HeaderSearchButton from 'components/HeaderSearchButton/HeaderSearchButton';
@@ -103,7 +103,17 @@ class Papers extends Component {
     };
 
     getPaperCard = (paper, paperData) => {
-        return <PaperCardDynamic paper={{ title: paper.label, id: paper.id, paperData: paperData }} key={`pc${paper.id}`} />;
+        return (
+            <PaperCardDynamic
+                paper={{
+                    ...paper,
+                    created_by: paper.created_by !== MISC.UNKNOWN_ID ? paper.created_by : null,
+                    title: paper.label,
+                    paperData: paperData
+                }}
+                key={`pc${paper.id}`}
+            />
+        );
     };
 
     setVerifiedFilter = value => {

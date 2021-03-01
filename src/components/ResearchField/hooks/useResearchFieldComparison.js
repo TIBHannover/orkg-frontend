@@ -38,11 +38,7 @@ function useResearchFieldComparison({ researchFieldId }) {
                         .then(comparisonsStatements => {
                             const comparisons = comparisonsStatements.map(comparisonStatements => {
                                 const resourceSubject = find(result.map(p => p.subject), { id: comparisonStatements.id });
-                                return getComparisonData(
-                                    comparisonStatements.id,
-                                    comparisonStatements && resourceSubject.label ? resourceSubject.label : 'No Title',
-                                    comparisonStatements.statements
-                                );
+                                return getComparisonData(resourceSubject, comparisonStatements.statements);
                             });
 
                             setComparisons(prevResources => [...prevResources, ...comparisons]);

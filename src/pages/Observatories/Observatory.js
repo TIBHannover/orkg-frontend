@@ -104,11 +104,7 @@ class Observatory extends Component {
                 }).then(resourcesStatements => {
                     const papersData = resourcesStatements.map(resourceStatements => {
                         const paperSubject = find(papers, { id: resourceStatements.id });
-                        return getPaperData(
-                            resourceStatements.id,
-                            resourceStatements && paperSubject.label ? paperSubject.label : 'No Title',
-                            resourceStatements.statements
-                        );
+                        return getPaperData(paperSubject, resourceStatements.statements);
                     });
                     this.setState({
                         papersList: papersData,
@@ -134,11 +130,7 @@ class Observatory extends Component {
                         const resources = filterObjectOfStatementsByPredicate(resourceStatements.statements, PREDICATES.RELATED_RESOURCES, false);
                         const figures = filterObjectOfStatementsByPredicate(resourceStatements.statements, PREDICATES.RELATED_FIGURE, false);
 
-                        const data = getComparisonData(
-                            resourceStatements.id,
-                            resourceStatements && comparisonSubject.label ? comparisonSubject.label : 'No Title',
-                            resourceStatements.statements
-                        );
+                        const data = getComparisonData(comparisonSubject, resourceStatements.statements);
 
                         data.resources = resources;
                         data.figures = figures;

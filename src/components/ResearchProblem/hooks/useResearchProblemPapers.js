@@ -40,7 +40,7 @@ function useResearchProblemPapers() {
                                     .filter(paper => paper.subject.classes.includes(CLASSES.PAPER))
                                     .map(paper => {
                                         return getStatementsBySubject({ id: paper.subject.id }).then(paperStatements => {
-                                            return { ...paper, data: getPaperData(paper.subject.id, paper.subject.label, paperStatements) };
+                                            return { ...paper, data: getPaperData(paper.subject, paperStatements) };
                                         });
                                     });
                                 return Promise.all(papersData).then(results => {

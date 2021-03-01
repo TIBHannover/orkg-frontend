@@ -8,6 +8,8 @@ import { faCalendar, faFile } from '@fortawesome/free-solid-svg-icons';
 import ROUTES from 'constants/routes.js';
 import PropTypes from 'prop-types';
 import moment from 'moment';
+import UserAvatar from 'components/UserAvatar/UserAvatar';
+import RelativeBreadcrumbs from 'components/RelativeBreadcrumbs/RelativeBreadcrumbs';
 import { getStatementsBySubjects } from 'services/backend/statements';
 import { getRelatedFiguresData, getRelatedResourcesData } from 'utils';
 
@@ -140,16 +142,22 @@ class ComparisonCard extends Component {
                         )}
                     </Col>
 
-                    <Col md={3} style={{ marginTop: '8px' }}>
-                        {!this.state.openBox &&
-                            this.state.relatedFigures.slice(0, 2).map(url => (
-                                <ResourceItem key={url.figureId} style={{ float: 'right', padding: '3px' }}>
-                                    <div>
-                                        <Img src={url.src} alt={url.alt} />
-                                    </div>
-                                </ResourceItem>
-                            ))}
-                    </Col>
+                    <div className="col-3 text-right d-flex align-items-end" style={{ flexDirection: 'column' }}>
+                        <div style={{ flex: 1 }}>
+                            <RelativeBreadcrumbs researchField={this.props.comparison.researchField} />
+                            <div style={{ marginTop: '8px' }}>
+                                {!this.state.openBox &&
+                                    this.state.relatedFigures.slice(0, 2).map(url => (
+                                        <ResourceItem key={url.figureId} style={{ float: 'right', padding: '3px' }}>
+                                            <div>
+                                                <Img src={url.src} alt={url.alt} />
+                                            </div>
+                                        </ResourceItem>
+                                    ))}
+                            </div>
+                        </div>
+                        <UserAvatar userId={this.props.comparison.created_by} />
+                    </div>
                 </Row>
                 <Collapse isOpen={this.state.openBox}>
                     <hr />
@@ -203,7 +211,12 @@ ComparisonCard.propTypes = {
         reference: PropTypes.string,
         created_at: PropTypes.string,
         resources: PropTypes.array,
-        figures: PropTypes.array
+        figures: PropTypes.array,
+        researchField: PropTypes.shape({
+            id: PropTypes.string.isRequired,
+            label: PropTypes.string
+        }),
+        created_by: PropTypes.string
     }).isRequired,
     rounded: PropTypes.string,
     loadResources: PropTypes.bool

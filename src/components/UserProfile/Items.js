@@ -5,7 +5,7 @@ import ComparisonCard from 'components/ComparisonCard/ComparisonCard';
 import { getStatementsBySubjects } from 'services/backend/statements';
 import { getPaperData, getComparisonData } from 'utils';
 import { find } from 'lodash';
-import { Button } from 'reactstrap';
+import { Button, ListGroup } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { getResourcesByClass } from 'services/backend/resources';
@@ -59,18 +59,10 @@ const Items = props => {
                     const resources = resourcesStatements.map(resourceStatements => {
                         const resourceSubject = find(result, { id: resourceStatements.id });
                         if (props.filterClass === CLASSES.PAPER) {
-                            return getPaperData(
-                                resourceStatements.id,
-                                resourceStatements && resourceSubject.label ? resourceSubject.label : 'No Title',
-                                resourceStatements.statements
-                            );
+                            return getPaperData(resourceSubject, resourceStatements.statements);
                         }
                         if (props.filterClass === CLASSES.COMPARISON) {
-                            return getComparisonData(
-                                resourceStatements.id,
-                                resourceStatements && resourceSubject.label ? resourceSubject.label : 'No Title',
-                                resourceStatements.statements
-                            );
+                            return getComparisonData(resourceSubject, resourceStatements.statements);
                         }
                         return null;
                     });
@@ -127,7 +119,7 @@ const Items = props => {
     return (
         <div>
             {resources.length > 0 && (
-                <div>
+                <ListGroup className="box">
                     {resources.map(resource => {
                         if (props.filterClass === CLASSES.PAPER) {
                             const paperId = resource.id;
@@ -160,13 +152,16 @@ const Items = props => {
                             View more {props.filterLabel}
                         </div>
                     )}
-                </div>
+                </ListGroup>
             )}
 
             {isLoading && loadingIndicator}
 
             {resources.length === 0 && !isLoading && (
-                <div className="text-center mb-2">This user hasn't added any {props.filterLabel} to ORKG yet.</div>
+                <div className="box rounded-lg p-5 text-center mt-4 mb-4">
+                    This user hasn't added any {props.filterLabel} to ORKG yet.
+                    <br />
+                </div>
             )}
 
             {selectedItems.length > 0 && (

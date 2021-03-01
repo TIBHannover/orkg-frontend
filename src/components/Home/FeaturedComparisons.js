@@ -36,11 +36,7 @@ export default function FeaturedComparisons() {
             .then(comparisonsStatements => {
                 const comparisons = comparisonsStatements.map((comparisonStatements, index) => {
                     const resourceSubject = responseJson[index];
-                    return getComparisonData(
-                        resourceSubject.id,
-                        comparisonStatements && resourceSubject.label ? resourceSubject.label : 'No Title',
-                        comparisonStatements
-                    );
+                    return getComparisonData(resourceSubject, comparisonStatements);
                 });
 
                 // order featured comparison on show only that have onHomePage predicate
@@ -72,11 +68,7 @@ export default function FeaturedComparisons() {
             .then(comparisonsStatements => {
                 const comparisons = comparisonsStatements.map((comparisonStatements, index) => {
                     const resourceSubject = responseJson[index];
-                    return getComparisonData(
-                        resourceSubject.id,
-                        comparisonStatements && resourceSubject.label ? resourceSubject.label : 'No Title',
-                        comparisonStatements
-                    );
+                    return getComparisonData(resourceSubject, comparisonStatements);
                 });
                 setComparisons(comparisons);
                 setIsLoading(false);

@@ -33,11 +33,7 @@ export default function FeaturedPapers() {
             .then(papersStatements => {
                 const papers = papersStatements.map((paperStatements, index) => {
                     const resourceSubject = responseJson[index];
-                    return getPaperData(
-                        resourceSubject.id,
-                        paperStatements && resourceSubject.label ? resourceSubject.label : 'No Title',
-                        paperStatements
-                    );
+                    return getPaperData(resourceSubject, paperStatements);
                 });
 
                 setPapers(papers);
