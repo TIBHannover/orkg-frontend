@@ -37,7 +37,7 @@ class AddOrganization extends Component {
         const image = this.state.previewSrc;
         const url = this.state.url;
         const namedUrl = this.state.organizationNamedUrl;
-        const regex = /^[A-Za-z0-9-_]+$/;
+        const regex = /^[a-z0-9-]+$/;
 
         if (value && value.length !== 0) {
             if (url && url.match(/[-a-zA-Z0-9@:%_+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_+.~#?&//=]*)?/gi)) {
@@ -53,7 +53,7 @@ class AddOrganization extends Component {
                             toast.error(`Error creating organization ${error.message}`);
                         }
                     } else {
-                        toast.error(`Please enter a valid named URL`);
+                        toast.error(`Only dashes (-) and lower case letters are allowed in named URL`);
                         this.setState({ editorState: 'edit' });
                     }
                 } else {
@@ -72,13 +72,10 @@ class AddOrganization extends Component {
 
     handleChange = event => {
         this.setState({ [event.target.name]: event.target.value.trim() });
-        console.log(event.target.name);
+        const slugify = require('slugify');
         if (event.target.name === 'value') {
             this.setState({
-                organizationNamedUrl: event.target.value
-                    .trim()
-                    .replace(/['"]+/g, '')
-                    .replace(/ /g, '_')
+                organizationNamedUrl: slugify(event.target.value.trim(), { replacement: '-', remove: /[*+~%\<>/;.(){}?,'"!:@#_^|]/g, lower: true })
             });
         }
     };
@@ -146,7 +143,7 @@ class AddOrganization extends Component {
                                 <div>
                                     <Label for="OrganizationURL">
                                         Organization Named URL
-                                        <Tooltip message="Only underscores ( _ ) and dashes ( - ) are allowed" />
+                                        <Tooltip message="Only dashes ( - ) and lower case letters are allowed" />
                                     </Label>
                                     <Input
                                         onChange={this.handleChange}
