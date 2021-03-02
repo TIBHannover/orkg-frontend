@@ -8,3 +8,20 @@ export const getResearchProblemsByResearchFieldId = ({ id, page = 0, items = 1 }
     const params = queryString.stringify({ page: page, size: items });
     return submitGetRequest(`${fieldsUrl}${encodeURIComponent(id)}/problems?${params}`);
 };
+
+/*
+http://www.localhost:8080/api/research-fields/{id}/subfields/problems
+http://www.localhost:8080/api/research-fields/{id}/subfields/contributors
+http://www.localhost:8080/api/research-fields/{id}/subfields/comparisons
+http://www.localhost:8080/api/research-fields/{id}/subfields/papers
+*/
+
+export const getComparisonsByResearchFieldId = ({ id, page = 0, items = 1, subfields = true }) => {
+    const params = queryString.stringify({ page: page, size: items });
+    return submitGetRequest(`${fieldsUrl}${encodeURIComponent(id)}/${subfields ? 'subfields/' : ''}comparisons?${params}`);
+};
+
+export const getPapersByResearchFieldId = ({ id, page = 0, items = 9999, sortBy = 'created_at', desc = true, subfields = true }) => {
+    const params = queryString.stringify({ page: page, size: items });
+    return submitGetRequest(`${fieldsUrl}${encodeURIComponent(id)}/${subfields ? 'subfields/' : ''}papers?${params}`);
+};
