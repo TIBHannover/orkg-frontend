@@ -159,10 +159,10 @@ const UserProfile = props => {
                         </div>
                         <div className="col-10 box rounded p-4">
                             <div className="row">
-                                <div className="col-8">
-                                    <h2 className="h3">{userData.display_name}</h2>
+                                <div className="col-8 d-flex" style={{ flexDirection: 'column' }}>
+                                    <h2 className="h3 flex-grow-1">{userData.display_name}</h2>
                                     {observatoryData && (
-                                        <div className="mt-3">
+                                        <div className="mt-3 align-items-end">
                                             <b className="d-block">Member of the observatory</b>
                                             <Link to={reverse(ROUTES.OBSERVATORY, { id: observatoryData?.id })} className="text-center">
                                                 {observatoryData?.name}
