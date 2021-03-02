@@ -3,7 +3,7 @@ import { ListGroup, Button } from 'reactstrap';
 import StatementItem from 'components/StatementBrowser/StatementItem/StatementItem';
 import AddProperty from 'components/StatementBrowser/AddProperty/AddProperty';
 import Breadcrumbs from 'components/StatementBrowser/Breadcrumbs/Breadcrumbs';
-import ContributionTemplate from 'components/StatementBrowser/ContributionTemplate/ContributionTemplate';
+import Template from 'components/StatementBrowser/Template/Template';
 import PropertySuggestions from 'components/StatementBrowser/PropertySuggestions/PropertySuggestions';
 import SBEditorHelpModal from 'components/StatementBrowser/SBEditorHelpModal/SBEditorHelpModal';
 import NoData from 'components/StatementBrowser/NoData/NoData';
@@ -119,7 +119,7 @@ const Statements = props => {
                                     return property.valueIds.map(valueId => {
                                         const value = values.byId[valueId];
                                         return (
-                                            <ContributionTemplate
+                                            <Template
                                                 key={`template-v${valueId}`}
                                                 id={valueId}
                                                 value={value}

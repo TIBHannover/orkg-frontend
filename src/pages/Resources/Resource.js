@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Container, Button, FormGroup, Label, FormText, ButtonGroup } from 'reactstrap';
-import { classesUrl, getClassById } from 'services/backend/classes';
+import { getClassById } from 'services/backend/classes';
 import { updateResourceClasses as updateResourceClassesNetwork } from 'services/backend/resources';
 import { getResource } from 'services/backend/resources';
 import { getStatementsBySubjectAndPredicate } from 'services/backend/statements';
@@ -22,7 +22,7 @@ import { resetStatementBrowser } from 'actions/statementBrowser';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPen, faTrash, faExternalLinkAlt, faTimes, faPlus } from '@fortawesome/free-solid-svg-icons';
 import Confirm from 'components/ConfirmationModal/ConfirmationModal';
-import { CLASSES, PREDICATES } from 'constants/graphSettings';
+import { CLASSES, PREDICATES, ENTITIES } from 'constants/graphSettings';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import { orderBy } from 'lodash';
@@ -62,9 +62,9 @@ const DEDICATED_PAGE_LINKS = {
         route: ROUTES.VENUE_PAGE,
         routeParams: 'venueId'
     },
-    [CLASSES.CONTRIBUTION_TEMPLATE]: {
+    [CLASSES.TEMPLATE]: {
         label: 'Template',
-        route: ROUTES.CONTRIBUTION_TEMPLATE,
+        route: ROUTES.TEMPLATE,
         routeParams: 'id'
     },
     [CLASSES.CONTRIBUTION]: {
@@ -305,7 +305,7 @@ function Resource(props) {
                                     <FormGroup className="mb-4 mt-3">
                                         <Label for="classes-autocomplete">Classes</Label>
                                         <AutoComplete
-                                            requestUrl={classesUrl}
+                                            entityType={ENTITIES.CLASS}
                                             onChange={(selected, action) => {
                                                 // blur the field allows to focus and open the menu again
                                                 classesAutocompleteRef.current && classesAutocompleteRef.current.blur();

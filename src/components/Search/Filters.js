@@ -4,7 +4,7 @@ import { withRouter } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { CustomInput } from 'reactstrap';
-import { classesUrl } from 'services/backend/classes';
+import { ENTITIES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes.js';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
@@ -64,7 +64,7 @@ const Filters = props => {
             <br />
             <Label for="other-filters">Other filters</Label>
             <AutoComplete
-                requestUrl={classesUrl}
+                entityType={ENTITIES.CLASS}
                 onChange={(_, action) => {
                     if (action.action === 'select-option') {
                         props.toggleFilter(action.option);

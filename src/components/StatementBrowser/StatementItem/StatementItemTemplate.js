@@ -6,9 +6,9 @@ import ValueItem from 'components/StatementBrowser/ValueItem/ValueItem';
 import AddValue from 'components/StatementBrowser/AddValue/AddValue';
 import StatementOptionButton from 'components/StatementBrowser/StatementOptionButton/StatementOptionButton';
 import { StatementsGroupStyle, PropertyStyle, ValuesStyle } from 'components/StatementBrowser/styled';
-import { predicatesUrl } from 'services/backend/predicates';
 import defaultProperties from 'components/StatementBrowser/AddProperty/helpers/defaultProperties';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
+import { ENTITIES } from 'constants/graphSettings';
 import { reverse } from 'named-urls';
 import { Link } from 'react-router-dom';
 import useStatementItemTemplate from './hooks/useStatementItemTemplate';
@@ -73,8 +73,8 @@ export default function StatementItemTemplate(props) {
                         <div>
                             <InputGroup size="sm">
                                 <AutoComplete
+                                    entityType={ENTITIES.PREDICATE}
                                     cssClasses="form-control-sm"
-                                    requestUrl={predicatesUrl}
                                     placeholder={props.predicateLabel}
                                     onChange={(selectedOption, a) => {
                                         props.handleChange(selectedOption, a);

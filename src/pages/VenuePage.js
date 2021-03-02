@@ -24,7 +24,7 @@ class VenuePage extends Component {
             loading: true,
             isNextPageLoading: false,
             hasNextPage: false,
-            page: 1,
+            page: 0,
             venue: null,
             papers: [],
             isLastPageReached: false,
@@ -43,7 +43,7 @@ class VenuePage extends Component {
                 loading: true,
                 isNextPageLoading: false,
                 hasNextPage: false,
-                page: 1,
+                page: 0,
                 venue: null,
                 papers: [],
                 isLastPageReached: false

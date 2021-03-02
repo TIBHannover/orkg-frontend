@@ -6,9 +6,8 @@ import classNames from 'classnames';
 import moment from 'moment';
 import { range } from 'utils';
 import { truncate } from 'lodash';
-import { resourcesUrl } from 'services/backend/resources';
 import PropTypes from 'prop-types';
-import { CLASSES } from 'constants/graphSettings';
+import { CLASSES, ENTITIES } from 'constants/graphSettings';
 
 const EditItem = props => {
     const listGroupClass = classNames({
@@ -61,7 +60,7 @@ const EditItem = props => {
         input = (
             <AutoComplete
                 allowCreate
-                requestUrl={resourcesUrl}
+                entityType={ENTITIES.RESOURCE}
                 optionsClass={CLASSES.VENUE}
                 onChange={props.onChange}
                 placeholder="Select or type to enter a venue"
@@ -76,7 +75,7 @@ const EditItem = props => {
         input = (
             <AutoComplete
                 allowCreate={false}
-                requestUrl={resourcesUrl}
+                entityType={ENTITIES.RESOURCE}
                 optionsClass={CLASSES.RESEARCH_FIELD}
                 onChange={props.onChange}
                 placeholder="Select a research field"

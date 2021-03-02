@@ -67,7 +67,8 @@ export default function AddContribution(props) {
             sortBy: 'id',
             desc: true,
             q: searchQuery,
-            id: CLASSES.PAPER
+            id: CLASSES.PAPER,
+            returnContent: true
         })
             .then(results => {
                 if (results.length > 0) {

@@ -58,7 +58,7 @@ export const CLASSES = {
     COMPARISON: 'Comparison',
     FEATURED_COMPARISON: 'FeaturedComparison',
     FEATURED_COMPARISON_CATEGORY: 'FeaturedComparisonCategory',
-    CONTRIBUTION_TEMPLATE: 'ContributionTemplate',
+    TEMPLATE: 'ContributionTemplate',
     PREDICATE: 'Predicates',
     QB_DATASET_CLASS: 'QBDataset',
     LOCATION: 'DCLocation',
@@ -70,4 +70,10 @@ export const MISC = {
     RESEARCH_FIELD_MAIN: 'R11',
     DEFAULT_LITERAL_DATATYPE: 'xsd:string',
     UNKNOWN_ID: '00000000-0000-0000-0000-000000000000'
+};
+
+export const ENTITIES = {
+    CLASS: 'class',
+    PREDICATE: 'predicate',
+    RESOURCE: 'resource'
 };
