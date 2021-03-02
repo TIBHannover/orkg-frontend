@@ -13,7 +13,7 @@ COPY package.json package-lock.json ./
 RUN npm install react-scripts@4.0.2 opencollective -g
 
 # install the dependencies
-RUN npm ci 
+RUN npm ci --legacy-peer-deps
 
 COPY . ./
 
