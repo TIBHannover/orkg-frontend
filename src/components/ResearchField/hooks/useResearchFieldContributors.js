@@ -1,16 +1,13 @@
-import { find } from 'lodash';
 import { useCallback, useEffect, useState } from 'react';
-import { getStatementsBySubjects } from 'services/backend/statements';
-import { getPapersByResearchFieldId } from 'services/backend/researchFields';
-import { getPaperData } from 'utils';
+import { getContributorsByResearchFieldId } from 'services/backend/researchFields';
 
-function useResearchFieldPapers({ researchFieldId, initialSort, initialIncludeSubFields }) {
+function useResearchFieldContributors({ researchFieldId, initialSort, initialIncludeSubFields }) {
     const pageSize = 10;
     const [isLoading, setIsLoading] = useState(false);
     const [hasNextPage, setHasNextPage] = useState(false);
     const [isLastPageReached, setIsLastPageReached] = useState(false);
     const [page, setPage] = useState(0);
-    const [papers, setPapers] = useState([]);
+    const [contributors, setContributors] = useState([]);
     const [sort, setSort] = useState(initialSort);
     const [totalElements, setTotalElements] = useState(0);
     const [includeSubFields, setIncludeSubFields] = useState(initialIncludeSubFields);
@@ -18,8 +15,8 @@ function useResearchFieldPapers({ researchFieldId, initialSort, initialIncludeSu
     const loadData = useCallback(
         page => {
             setIsLoading(true);
-            // Papers
-            getPapersByResearchFieldId({
+            // Contributors
+            getContributorsByResearchFieldId({
                 id: researchFieldId,
                 page: page,
                 items: pageSize,
@@ -29,31 +26,13 @@ function useResearchFieldPapers({ researchFieldId, initialSort, initialIncludeSu
             })
                 .then(result => {
                     // Fetch the data of each paper
-                    getStatementsBySubjects({
-                        ids: result.content.map(p => p.resourceId)
-                    })
-                        .then(papersStatements => {
-                            const papers = papersStatements.map(paperStatements => {
-                                const paperSubject = find(result.content.map(p => ({ ...p, created_by: p.createdBy, id: p.resourceId })), {
-                                    id: paperStatements.id
-                                });
-                                return getPaperData(paperSubject, paperStatements.statements);
-                            });
 
-                            setPapers(prevResources => [...prevResources, ...papers]);
-                            setIsLoading(false);
-                            setHasNextPage(!result.last);
-                            setIsLastPageReached(result.last);
-                            setTotalElements(result.totalElements);
-                            setPage(page + 1);
-                        })
-                        .catch(error => {
-                            setIsLoading(false);
-                            setHasNextPage(false);
-                            setIsLastPageReached(page > 1 ? true : false);
-
-                            console.log(error);
-                        });
+                    setContributors(prevResources => [...prevResources, ...result.content]);
+                    setIsLoading(false);
+                    setHasNextPage(!result.last);
+                    setIsLastPageReached(result.last);
+                    setTotalElements(result.totalElements);
+                    setPage(page + 1);
                 })
                 .catch(error => {
                     setIsLoading(false);
@@ -68,7 +47,7 @@ function useResearchFieldPapers({ researchFieldId, initialSort, initialIncludeSu
 
     // reset resources when the researchFieldId has changed
     useEffect(() => {
-        setPapers([]);
+        setContributors([]);
         setHasNextPage(false);
         setIsLastPageReached(false);
         setPage(0);
@@ -86,7 +65,7 @@ function useResearchFieldPapers({ researchFieldId, initialSort, initialIncludeSu
     };
 
     return {
-        papers,
+        contributors,
         isLoading,
         hasNextPage,
         isLastPageReached,
@@ -99,4 +78,4 @@ function useResearchFieldPapers({ researchFieldId, initialSort, initialIncludeSu
         setSort
     };
 }
-export default useResearchFieldPapers;
+export default useResearchFieldContributors;

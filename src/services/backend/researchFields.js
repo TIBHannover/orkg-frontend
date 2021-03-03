@@ -26,3 +26,9 @@ export const getPapersByResearchFieldId = ({ id, page = 0, items = 9999, sortBy 
     const params = queryString.stringify({ page: page, size: items /*, sort, desc*/ });
     return submitGetRequest(`${fieldsUrl}${encodeURIComponent(id)}/${subfields ? 'subfields/' : ''}papers?${params}`);
 };
+
+export const getContributorsByResearchFieldId = ({ id, page = 0, items = 9999, sortBy = 'created_at', desc = true, subfields = true }) => {
+    const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
+    const params = queryString.stringify({ page: page, size: items /*, sort, desc*/ });
+    return submitGetRequest(`${fieldsUrl}${encodeURIComponent(id)}/${subfields ? 'subfields/' : ''}contributors?${params}`);
+};

@@ -14,63 +14,21 @@ import {
 } from 'reactstrap';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
-import { SubTitle, SubtitleSeparator, SmallDropdownToggle } from 'components/styled';
+import { SubTitle, SubtitleSeparator } from 'components/styled';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faPen, faEllipsisV, faEllipsisH, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faPen, faEllipsisV, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import useResearchField from 'components/ResearchField/hooks/useResearchField';
 import ExternalDescription from 'components/ResearchProblem/ExternalDescription';
+import Contributors from './Contributors';
 import { NavLink } from 'react-router-dom';
 import ROUTES from 'constants/routes.js';
-import styled from 'styled-components';
-import Tippy from '@tippyjs/react';
 import { Link } from 'react-router-dom';
-import Gravatar from 'react-gravatar';
 import { reverse } from 'named-urls';
 import { usePrevious } from 'react-use';
 import PropTypes from 'prop-types';
 
-const StyledGravatar = styled(Gravatar)`
-    border: 2px solid ${props => props.theme.ultraLightBlueDarker};
-    cursor: pointer;
-    &:hover {
-        border: 2px solid ${props => props.theme.primary};
-    }
-`;
-
-const StyledDotGravatar = styled.div`
-    width: 48px;
-    height: 48px;
-    display: inline-block;
-    text-align: center;
-    line-height: 48px;
-    color: ${props => props.theme.darkblue};
-    border: 2px solid ${props => props.theme.ultraLightBlueDarker};
-    cursor: pointer;
-    vertical-align: sub;
-    &:hover {
-        border: 2px solid ${props => props.theme.primary};
-    }
-
-    background-color: ${props => props.theme.ultraLightBlueDarker};
-`;
-
-const Contributors = styled.div`
-    display: inline-block;
-
-    & > div {
-        display: inline-block;
-        margin-right: 10px;
-        margin-bottom: 10px;
-    }
-
-    & > div:last-child {
-        margin-right: 0;
-    }
-`;
-
 const ResearchFieldHeader = ({ id }) => {
     const [menuOpen, setMenuOpen] = useState(false);
-    const [menuOpenContributors, setMenuOpenContributors] = useState(false);
     const [editMode, setEditMode] = useState(false);
     const [researchFieldData, subResearchFields, isLoading, isFailedLoading, loadResearchFieldData] = useResearchField();
     const prevEditMode = usePrevious({ editMode });
@@ -80,15 +38,6 @@ const ResearchFieldHeader = ({ id }) => {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [editMode]);
-
-    const contributors = [
-        { id: '1', display_name: 'Yaser', gravatar_id: 'c94d1787dd7d06e0f8d44e9473a855a9' },
-        { id: '2', display_name: 'Vitalis', gravatar_id: '043bc0ff7214a8e15c996407f12ba7e6' },
-        { id: '3', display_name: 'Salamon', gravatar_id: 'd5e9582206dda1c846c25322e87cb3e7' },
-        { id: '4', display_name: 'Soren', gravatar_id: 'e21ea840d3036874743af19952438dad' },
-        { id: '5', display_name: 'Markus', gravatar_id: '5fa0d96b353bae1f74b632bf8c329d65' },
-        { id: '6', display_name: 'Kheir Eddine', gravatar_id: 'e8903e2256c7c313f66a745c6615ea93' }
-    ];
 
     return (
         <>
@@ -169,47 +118,7 @@ const ResearchFieldHeader = ({ id }) => {
                             </CardBody>
                             <hr className="m-0" />
                             <CardBody>
-                                <div className="d-flex mb-3">
-                                    <CardTitle tag="h5" className="flex-grow-1">
-                                        Contributors
-                                    </CardTitle>
-                                    <div className="align-self-center">
-                                        <ButtonDropdown
-                                            isOpen={menuOpenContributors}
-                                            toggle={() => setMenuOpenContributors(v => !v)}
-                                            className="flex-shrink-0"
-                                            style={{ marginLeft: 'auto' }}
-                                            size="sm"
-                                        >
-                                            <SmallDropdownToggle caret size="sm" color="lightblue">
-                                                Last 30 days
-                                            </SmallDropdownToggle>
-                                            <DropdownMenu>
-                                                <DropdownItem>Last 30 days</DropdownItem>
-                                                <DropdownItem>All time</DropdownItem>
-                                            </DropdownMenu>
-                                        </ButtonDropdown>
-                                    </div>
-                                </div>
-
-                                <Contributors>
-                                    {contributors.slice(0, 18).map(contributor => (
-                                        <div key={`contributor${contributor.id}`}>
-                                            <Tippy offset={[0, 20]} placement="bottom" content={contributor.display_name}>
-                                                <Link to={reverse(ROUTES.USER_PROFILE, { userId: contributor.id })}>
-                                                    <StyledGravatar className="rounded-circle" md5={contributor.gravatar_id} size={48} />
-                                                </Link>
-                                            </Tippy>
-                                        </div>
-                                    ))}
-                                    {contributors.length > 18 && (
-                                        <Tippy key="contributor" content="View More">
-                                            <StyledDotGravatar className="rounded-circle">
-                                                <Icon icon={faEllipsisH} />
-                                            </StyledDotGravatar>
-                                        </Tippy>
-                                    )}
-                                </Contributors>
+                                <Contributors id={id} />
                             </CardBody>
                         </Card>
                     </Container>

@@ -14,3 +14,15 @@ export const getResearchFieldsStats = () => {
 export const getComparisonsCountByObservatoryId = id => {
     return submitGetRequest(`${statsUrl}${encodeURIComponent(id)}/observatoryComparisonsCount`);
 };
+
+export const getTopContributors = id => {
+    return submitGetRequest(`${statsUrl}/top/contributors`);
+};
+
+export const getChangelogs = id => {
+    return submitGetRequest(`${statsUrl}/top/changelog`);
+};
+
+export const getTopResearchProblems = id => {
+    return submitGetRequest(`${statsUrl}/top/research-problems`);
+};
