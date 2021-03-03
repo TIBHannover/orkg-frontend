@@ -39,34 +39,38 @@ const PaperCard = props => {
             }
         >
             <div className="row">
-                <div className="col-9">
+                <div className="col-9 d-flex">
                     {props.selectable && (
-                        <div style={{ marginRight: -10 }} className="pl-2">
+                        <div style={{ marginRight: -10 }} className="pr-2">
                             <CustomInput type="checkbox" onChange={props.onSelect} checked={props.selected} id={props.paper.id + 'input'} />
                         </div>
                     )}
-                    {props.contribution && (
-                        <>
-                            <Link to={reverse(ROUTES.VIEW_PAPER, { resourceId: props.paper.id, contributionId: props.contribution.id })}>
+                    <div className="d-block">
+                        {props.contribution && (
+                            <>
+                                <Link to={reverse(ROUTES.VIEW_PAPER, { resourceId: props.paper.id, contributionId: props.contribution.id })}>
+                                    {props.paper.title ? props.paper.title : <em>No title</em>}
+                                </Link>{' '}
+                                - <span className="text-muted">{props.contribution.title}</span>
+                            </>
+                        )}
+                        {!props.contribution && (
+                            <Link to={reverse(ROUTES.VIEW_PAPER, { resourceId: props.paper.id })}>
                                 {props.paper.title ? props.paper.title : <em>No title</em>}
-                            </Link>{' '}
-                            - <span className="text-muted">{props.contribution.title}</span>
-                        </>
-                    )}
-                    {!props.contribution && (
-                        <Link to={reverse(ROUTES.VIEW_PAPER, { resourceId: props.paper.id })}>
-                            {props.paper.title ? props.paper.title : <em>No title</em>}
-                        </Link>
-                    )}
-                    <br />
-                    <small>
-                        <Authors authors={props.paper.authorNames} />
-                        {(props.paper.publicationMonth || props.paper.publicationYear) && <Icon size="sm" icon={faCalendar} className="ml-2 mr-1" />}
-                        {props.paper.publicationMonth && props.paper.publicationMonth > 0
-                            ? moment(props.paper.publicationMonth, 'M').format('MMMM')
-                            : ''}{' '}
-                        {props.paper.publicationYear}
-                    </small>
+                            </Link>
+                        )}
+                        <br />
+                        <small>
+                            <Authors authors={props.paper.authorNames} />
+                            {(props.paper.publicationMonth || props.paper.publicationYear) && (
+                                <Icon size="sm" icon={faCalendar} className="ml-2 mr-1" />
+                            )}
+                            {props.paper.publicationMonth && props.paper.publicationMonth > 0
+                                ? moment(props.paper.publicationMonth, 'M').format('MMMM')
+                                : ''}{' '}
+                            {props.paper.publicationYear}
+                        </small>
+                    </div>
                 </div>
                 <div className="col-3 text-right d-flex align-items-end" style={{ flexDirection: 'column' }}>
                     <div style={{ flex: 1 }}>
