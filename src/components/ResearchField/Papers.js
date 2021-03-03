@@ -11,15 +11,31 @@ import Tippy from '@tippyjs/react';
 import PropTypes from 'prop-types';
 
 const Papers = ({ id, boxShadow }) => {
-    const [papers, isLoadingPapers, hasNextPage, isLastPageReached, loadMorePapers] = useResearchFieldPapers({ researchFieldId: id });
+    const {
+        papers,
+        sort,
+        includeSubFields,
+        isLoadingPapers,
+        hasNextPage,
+        isLastPageReached,
+        totalElements,
+        page,
+        handleLoadMore,
+        setSort,
+        setIncludeSubFields
+    } = useResearchFieldPapers({ researchFieldId: id, initialSort: 'newest', initialIncludeSubFields: true });
     const [tippy, setTippy] = useState({});
-    const [sort, setSort] = useState('newest');
-    const [includeSubFields, setIncludeSubFields] = useState(true);
 
     return (
         <>
             <Container className="d-flex align-items-center mt-4 mb-4">
-                <h1 className="h4 flex-grow-1">Papers</h1>
+                <div className="d-flex flex-grow-1">
+                    <h1 className="h4">Papers</h1>
+                    <div className="text-muted ml-3 mt-1">
+                        {totalElements === 0 && isLoadingPapers ? <Icon icon={faSpinner} spin /> : totalElements} Paper
+                    </div>
+                </div>
+
                 <Tippy
                     interactive={true}
                     trigger="click"
@@ -39,6 +55,7 @@ const Papers = ({ id, boxShadow }) => {
                                     type="select"
                                     name="sort"
                                     id="sortPapers"
+                                    disabled={isLoadingPapers}
                                 >
                                     <option value="newest">Newest first</option>
                                     <option value="oldest">Oldest first</option>
@@ -54,6 +71,7 @@ const Papers = ({ id, boxShadow }) => {
                                         checked={includeSubFields}
                                         type="checkbox"
                                         style={{ marginTop: '0.1rem' }}
+                                        disabled={isLoadingPapers}
                                     />
                                     Include subfields
                                 </Label>
@@ -89,15 +107,15 @@ const Papers = ({ id, boxShadow }) => {
                             <div
                                 style={{ cursor: 'pointer' }}
                                 className="list-group-item list-group-item-action text-center"
-                                onClick={!isLoadingPapers ? loadMorePapers : undefined}
-                                onKeyDown={e => (e.keyCode === 13 ? (!isLoadingPapers ? loadMorePapers : undefined) : undefined)}
+                                onClick={!isLoadingPapers ? handleLoadMore : undefined}
+                                onKeyDown={e => (e.keyCode === 13 ? (!isLoadingPapers ? handleLoadMore : undefined) : undefined)}
                                 role="button"
                                 tabIndex={0}
                             >
                                 Load more papers
                             </div>
                         )}
-                        {!hasNextPage && isLastPageReached && <div className="text-center mt-3">You have reached the last page.</div>}
+                        {!hasNextPage && isLastPageReached && page !== 1 && <div className="text-center mt-3">You have reached the last page.</div>}
                     </ListGroup>
                 )}
                 {papers.length === 0 && !isLoadingPapers && (
@@ -115,7 +133,7 @@ const Papers = ({ id, boxShadow }) => {
                     </div>
                 )}
                 {isLoadingPapers && (
-                    <div className="text-center mt-4 mb-4">
+                    <div className={`text-center mt-4 mb-4 ${page === 0 ? 'p-5 container box rounded' : ''}`}>
                         <Icon icon={faSpinner} spin /> Loading
                     </div>
                 )}

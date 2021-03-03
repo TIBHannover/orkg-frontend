@@ -22,6 +22,7 @@ export const getComparisonsByResearchFieldId = ({ id, page = 0, items = 1, subfi
 };
 
 export const getPapersByResearchFieldId = ({ id, page = 0, items = 9999, sortBy = 'created_at', desc = true, subfields = true }) => {
-    const params = queryString.stringify({ page: page, size: items });
+    const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
+    const params = queryString.stringify({ page: page, size: items /*, sort, desc*/ });
     return submitGetRequest(`${fieldsUrl}${encodeURIComponent(id)}/${subfields ? 'subfields/' : ''}papers?${params}`);
 };

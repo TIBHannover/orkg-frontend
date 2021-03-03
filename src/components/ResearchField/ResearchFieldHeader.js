@@ -194,13 +194,8 @@ const ResearchFieldHeader = ({ id }) => {
 
                                 <Contributors>
                                     {contributors.slice(0, 18).map(contributor => (
-                                        <div>
-                                            <Tippy
-                                                offset={[0, 20]}
-                                                placement="bottom"
-                                                key={`contributor${contributor.id}`}
-                                                content={contributor.display_name}
-                                            >
+                                        <div key={`contributor${contributor.id}`}>
+                                            <Tippy offset={[0, 20]} placement="bottom" content={contributor.display_name}>
                                                 <Link to={reverse(ROUTES.USER_PROFILE, { userId: contributor.id })}>
                                                     <StyledGravatar className="rounded-circle" md5={contributor.gravatar_id} size={48} />
                                                 </Link>

@@ -37,12 +37,12 @@ const StyledActivity = styled.div`
 
 const LastUpdatesBox = ({ id }) => {
     const activities = [
-        { time: '10 july 2019', user: 'Clifton Fullerton', action: 'added paper' },
-        { time: '10 july 2019', user: 'Clifton Fullerton', action: 'added paper' },
-        { time: '10 july 2019', user: 'Clifton Fullerton', action: 'added paper' },
-        { time: '10 july 2019', user: 'Clifton Fullerton', action: 'added paper' },
-        { time: '10 july 2019', user: 'Clifton Fullerton', action: 'added paper' },
-        { time: '10 july 2019', user: 'Clifton Fullerton', action: 'added paper' }
+        { id: 1, time: '10 july 2019', user: 'Clifton Fullerton', action: 'added paper' },
+        { id: 2, time: '10 july 2019', user: 'Clifton Fullerton', action: 'added paper' },
+        { id: 3, time: '10 july 2019', user: 'Clifton Fullerton', action: 'added paper' },
+        { id: 4, time: '10 july 2019', user: 'Clifton Fullerton', action: 'added paper' },
+        { id: 5, time: '10 july 2019', user: 'Clifton Fullerton', action: 'added paper' },
+        { id: 6, time: '10 july 2019', user: 'Clifton Fullerton', action: 'added paper' }
     ];
 
     return (
@@ -53,7 +53,7 @@ const LastUpdatesBox = ({ id }) => {
                     {activities &&
                         activities.length > 0 &&
                         activities.slice(0, 3).map(activity => (
-                            <StyledActivity className="pl-3 pb-3">
+                            <StyledActivity key={`sss${activity.id}`} className="pl-3 pb-3">
                                 <div className="time">{activity.time}</div>
                                 <div className="action">
                                     {activity.user} {activity.action}
