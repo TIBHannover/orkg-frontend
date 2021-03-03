@@ -6,6 +6,8 @@ import PaperCard from 'components/PaperCard/PaperCard';
 import useResearchFieldPapers from 'components/ResearchField/hooks/useResearchFieldPapers';
 import ROUTES from 'constants/routes';
 import { Link } from 'react-router-dom';
+import ContentLoader from 'react-content-loader';
+import { SubTitle, SubtitleSeparator } from 'components/styled';
 import { SmallButton } from 'components/styled';
 import Tippy from '@tippyjs/react';
 import PropTypes from 'prop-types';
@@ -15,7 +17,7 @@ const Papers = ({ id, boxShadow }) => {
         papers,
         sort,
         includeSubFields,
-        isLoadingPapers,
+        isLoading,
         hasNextPage,
         isLastPageReached,
         totalElements,
@@ -30,10 +32,15 @@ const Papers = ({ id, boxShadow }) => {
         <>
             <Container className="d-flex align-items-center mt-4 mb-4">
                 <div className="d-flex flex-grow-1">
-                    <h1 className="h4">Papers</h1>
-                    <div className="text-muted ml-3 mt-1">
-                        {totalElements === 0 && isLoadingPapers ? <Icon icon={faSpinner} spin /> : totalElements} Paper
-                    </div>
+                    <h1 className="h5 flex-shrink-0 mb-0">Papers</h1>
+                    <>
+                        <SubtitleSeparator />
+                        <SubTitle className="mb-0">
+                            <small className="text-muted mb-0 text-small">
+                                {totalElements === 0 && isLoading ? <Icon icon={faSpinner} spin /> : <>{`${totalElements} paper`}</>}
+                            </small>
+                        </SubTitle>
+                    </>
                 </div>
 
                 <Tippy
@@ -55,7 +62,7 @@ const Papers = ({ id, boxShadow }) => {
                                     type="select"
                                     name="sort"
                                     id="sortPapers"
-                                    disabled={isLoadingPapers}
+                                    disabled={isLoading}
                                 >
                                     <option value="newest">Newest first</option>
                                     <option value="oldest">Oldest first</option>
@@ -71,7 +78,7 @@ const Papers = ({ id, boxShadow }) => {
                                         checked={includeSubFields}
                                         type="checkbox"
                                         style={{ marginTop: '0.1rem' }}
-                                        disabled={isLoadingPapers}
+                                        disabled={isLoading}
                                     />
                                     Include subfields
                                 </Label>
@@ -103,12 +110,12 @@ const Papers = ({ id, boxShadow }) => {
                                 )
                             );
                         })}
-                        {!isLoadingPapers && hasNextPage && (
+                        {!isLoading && hasNextPage && (
                             <div
                                 style={{ cursor: 'pointer' }}
                                 className="list-group-item list-group-item-action text-center"
-                                onClick={!isLoadingPapers ? handleLoadMore : undefined}
-                                onKeyDown={e => (e.keyCode === 13 ? (!isLoadingPapers ? handleLoadMore : undefined) : undefined)}
+                                onClick={!isLoading ? handleLoadMore : undefined}
+                                onKeyDown={e => (e.keyCode === 13 ? (!isLoading ? handleLoadMore : undefined) : undefined)}
                                 role="button"
                                 tabIndex={0}
                             >
@@ -118,7 +125,7 @@ const Papers = ({ id, boxShadow }) => {
                         {!hasNextPage && isLastPageReached && page !== 1 && <div className="text-center mt-3">You have reached the last page.</div>}
                     </ListGroup>
                 )}
-                {papers.length === 0 && !isLoadingPapers && (
+                {papers.length === 0 && !isLoading && (
                     <div className={boxShadow ? 'container box rounded' : ''}>
                         <div className="p-5 text-center mt-4 mb-4">
                             There are no papers for this research field, yet.
@@ -132,9 +139,29 @@ const Papers = ({ id, boxShadow }) => {
                         </div>
                     </div>
                 )}
-                {isLoadingPapers && (
+                {isLoading && (
                     <div className={`text-center mt-4 mb-4 ${page === 0 ? 'p-5 container box rounded' : ''}`}>
-                        <Icon icon={faSpinner} spin /> Loading
+                        {page !== 0 && (
+                            <>
+                                <Icon icon={faSpinner} spin /> Loading
+                            </>
+                        )}
+                        {page === 0 && (
+                            <div className="text-left">
+                                <ContentLoader
+                                    speed={2}
+                                    width={400}
+                                    height={50}
+                                    viewBox="0 0 400 50"
+                                    style={{ width: '100% !important' }}
+                                    backgroundColor="#f3f3f3"
+                                    foregroundColor="#ecebeb"
+                                >
+                                    <rect x="0" y="0" rx="3" ry="3" width="400" height="20" />
+                                    <rect x="0" y="25" rx="3" ry="3" width="300" height="20" />
+                                </ContentLoader>
+                            </div>
+                        )}
                     </div>
                 )}
             </Container>

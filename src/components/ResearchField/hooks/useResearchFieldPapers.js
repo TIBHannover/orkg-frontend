@@ -6,7 +6,7 @@ import { getPaperData } from 'utils';
 
 function useResearchFieldPapers({ researchFieldId, initialSort, initialIncludeSubFields }) {
     const pageSize = 10;
-    const [isLoadingPapers, setIsLoadingPapers] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const [hasNextPage, setHasNextPage] = useState(false);
     const [isLastPageReached, setIsLastPageReached] = useState(false);
     const [page, setPage] = useState(0);
@@ -17,7 +17,7 @@ function useResearchFieldPapers({ researchFieldId, initialSort, initialIncludeSu
 
     const loadPapers = useCallback(
         page => {
-            setIsLoadingPapers(true);
+            setIsLoading(true);
             // Papers
             getPapersByResearchFieldId({
                 id: researchFieldId,
@@ -40,14 +40,14 @@ function useResearchFieldPapers({ researchFieldId, initialSort, initialIncludeSu
                         });
 
                         setPapers(prevResources => [...prevResources, ...papers]);
-                        setIsLoadingPapers(false);
+                        setIsLoading(false);
                         setHasNextPage(!result.last);
                         setIsLastPageReached(result.last);
                         setTotalElements(result.totalElements);
                         setPage(page + 1);
                     })
                     .catch(error => {
-                        setIsLoadingPapers(false);
+                        setIsLoading(false);
                         setHasNextPage(false);
                         setIsLastPageReached(page > 1 ? true : false);
 
@@ -72,14 +72,14 @@ function useResearchFieldPapers({ researchFieldId, initialSort, initialIncludeSu
     }, [loadPapers]);
 
     const handleLoadMore = () => {
-        if (!isLoadingPapers) {
+        if (!isLoading) {
             loadPapers(page);
         }
     };
 
     return {
         papers,
-        isLoadingPapers,
+        isLoading,
         hasNextPage,
         isLastPageReached,
         sort,
