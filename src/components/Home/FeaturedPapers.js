@@ -1,14 +1,15 @@
 import { useState, useEffect } from 'react';
-import { ListGroup, ListGroupItem, Button, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import { ListGroup, Button, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import ROUTES from 'constants/routes.js';
-import { getStatementsBySubjectAndPredicate } from 'services/backend/statements';
+import { getStatementsBySubjects } from 'services/backend/statements';
 import { getResourcesByClass } from 'services/backend/resources';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { reverse } from 'named-urls';
 import { getPaperData } from 'utils';
-import { CLASSES, PREDICATES } from 'constants/graphSettings';
+import { find } from 'lodash';
+import PaperCard from 'components/PaperCard/PaperCard';
+import { CLASSES } from 'constants/graphSettings';
 
 export default function FeaturedPapers() {
     const [papers, setPapers] = useState([]);
@@ -24,17 +25,19 @@ export default function FeaturedPapers() {
             id: paperFilter === 'featured' ? CLASSES.FEATURED_PAPER : CLASSES.PAPER,
             sortBy: 'created_at',
             desc: true,
-            items: 10,
+            items: 14,
             returnContent: true
         });
 
-        const ids = responseJson.map(paper => getStatementsBySubjectAndPredicate({ subjectId: paper.id, predicateId: PREDICATES.HAS_AUTHOR }));
-
-        Promise.all(ids)
+        getStatementsBySubjects({
+            ids: responseJson.map(p => p.id)
+        })
             .then(papersStatements => {
-                const papers = papersStatements.map((paperStatements, index) => {
-                    const resourceSubject = responseJson[index];
-                    return getPaperData(resourceSubject, paperStatements);
+                const papers = papersStatements.map(paperStatements => {
+                    const paperSubject = find(responseJson, {
+                        id: paperStatements.id
+                    });
+                    return getPaperData(paperSubject, paperStatements.statements);
                 });
 
                 setPapers(papers);
@@ -51,8 +54,8 @@ export default function FeaturedPapers() {
     }, [filter]);
 
     return (
-        <div className="pl-3 pr-3 pt-2 pb-3">
-            <div className="d-flex justify-content-end mb-2">
+        <div className="pt-2 pb-3">
+            <div className="d-flex justify-content-end mb-2 mr-2">
                 <ButtonDropdown size="sm" isOpen={dropdownOpen} toggle={toggle}>
                     <DropdownToggle caret color="lightblue">
                         {filter === 'featured' && 'Featured'}
@@ -68,21 +71,23 @@ export default function FeaturedPapers() {
                 papers.length > 0 ? (
                     <>
                         <ListGroup>
-                            {papers.map((paper, index) => (
-                                <ListGroupItem key={index} className="p-0 m-0 mb-4" style={{ border: 0 }}>
-                                    <h5 className="h6">
-                                        <Link to={reverse(ROUTES.VIEW_PAPER, { resourceId: paper.id })} style={{ color: 'inherit' }}>
-                                            {paper.label ? paper.label : <em>No title</em>}
-                                        </Link>
-                                    </h5>
-                                    {paper.authorNames && paper.authorNames.length > 0 && (
-                                        <span className="badge badge-lightblue"> {paper.authorNames[0].label}</span>
-                                    )}
-                                </ListGroupItem>
-                            ))}
+                            {papers.map(paper => {
+                                return (
+                                    paper && (
+                                        <PaperCard
+                                            paper={{
+                                                id: paper.id,
+                                                title: paper.label,
+                                                ...paper
+                                            }}
+                                            key={`pc${paper.id}`}
+                                        />
+                                    )
+                                );
+                            })}
                         </ListGroup>
 
-                        <div className="text-center">
+                        <div className="text-center mt-2">
                             <Link to={ROUTES.PAPERS}>
                                 <Button color="primary" className="mr-3" size="sm">
                                     View more

@@ -6,9 +6,11 @@ import { faStream } from '@fortawesome/free-solid-svg-icons';
 import ResearchFieldCards from 'components/Home/ResearchFieldCards';
 import ObservatoriesBox from 'components/Home/ObservatoriesBox';
 import FeaturedItemsBox from 'components/Home/FeaturedItemsBox';
-
+import LastUpdatesBox from 'components/Home/LastUpdatesBox';
+import Benefits from 'components/Home/Benefits';
+import ContributorsBox from 'components/Home/ContributorsBox';
+import Breadcrumbs from 'components/Breadcrumbs/Breadcrumbs';
 import { toast } from 'react-toastify';
-import TrendingProblems from 'components/Home/TrendingProblems';
 
 export default function Home() {
     const location = useLocation();
@@ -27,24 +29,44 @@ export default function Home() {
     }
 
     return (
-        <div>
-            <Container style={{ marginTop: -50 }}>
-                <Row>
-                    <Col md={7} sm={12} style={{ display: 'flex', flexDirection: 'column' }}>
-                        <div className="box rounded-lg p-3">
-                            <h2 className="h5">
-                                <Icon icon={faStream} className="text-primary" /> Browse by research field
-                            </h2>
-                            <ResearchFieldCards />
-                        </div>
-                        <TrendingProblems style={{ flexDirection: 'column', display: 'flex', flexGrow: '1' }} />
-                    </Col>
-                    <Col className="mt-3 mt-md-0" md={5} sm={12} style={{ display: 'flex', flexDirection: 'column' }}>
-                        <ObservatoriesBox />
+        <Container style={{ marginTop: -70 }}>
+            <Row>
+                <Col md="12">
+                    <div className="box rounded-lg p-3">
+                        <h2 className="h5">
+                            <Icon icon={faStream} className="text-primary" /> Browse by research field
+                        </h2>
+                        <ResearchFieldCards />
+                    </div>
+                </Col>
+            </Row>
+            <div className="mt-3 ">
+                <Breadcrumbs researchFieldId="R375" />
+            </div>
+            <Row>
+                <Col md="8">
+                    <div className="mt-3 mt-md-0" style={{ display: 'flex', flexDirection: 'column' }}>
                         <FeaturedItemsBox />
-                    </Col>
-                </Row>
-            </Container>
-        </div>
+                    </div>
+                </Col>
+                <Col md="4">
+                    <div className="mt-3 box rounded" style={{ display: 'flex', flexDirection: 'column' }}>
+                        <Benefits />
+                    </div>
+
+                    <div className="mt-3" style={{ display: 'flex', flexDirection: 'column' }}>
+                        <ObservatoriesBox />
+                    </div>
+
+                    <div className="mt-3" style={{ display: 'flex', flexDirection: 'column' }}>
+                        <ContributorsBox id="R12" />
+                    </div>
+
+                    <div className="mt-3" style={{ display: 'flex', flexDirection: 'column' }}>
+                        <LastUpdatesBox id="R12" />
+                    </div>
+                </Col>
+            </Row>
+        </Container>
     );
 }

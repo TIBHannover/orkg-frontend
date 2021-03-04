@@ -2,7 +2,10 @@ import capitalize from 'capitalize';
 import queryString from 'query-string';
 import { flattenDepth, uniq } from 'lodash';
 import rdf from 'rdf';
-import { PREDICATES, MISC } from 'constants/graphSettings';
+import ROUTES from 'constants/routes';
+import { PREDICATES, MISC, CLASSES } from 'constants/graphSettings';
+import { reverse } from 'named-urls';
+import { PREDICATE_TYPE_ID, RESOURCE_TYPE_ID } from 'constants/misc';
 import { FILTER_TYPES } from 'constants/comparisonFilterTypes';
 import { isString } from 'lodash';
 
@@ -961,4 +964,60 @@ export const applyRule = ({ filterControlData, type, propertyId, value }) => {
         default:
             return [];
     }
+};
+
+/**
+ * Get resource link based on class
+ *
+ * @param {String} classId class ID
+ * @param {String} resourceId Resource ID
+ * @result {String} Link of the resource
+ */
+export const getResourceLink = (classId, resourceId) => {
+    let link = '';
+
+    switch (classId) {
+        case CLASSES.PAPER: {
+            link = reverse(ROUTES.VIEW_PAPER, { resourceId: resourceId });
+            break;
+        }
+        case CLASSES.PROBLEM: {
+            link = reverse(ROUTES.RESEARCH_PROBLEM, { researchProblemId: resourceId });
+            break;
+        }
+        case CLASSES.AUTHOR: {
+            link = reverse(ROUTES.AUTHOR_PAGE, { authorId: resourceId });
+            break;
+        }
+        case CLASSES.COMPARISON: {
+            link = reverse(ROUTES.COMPARISON, { comparisonId: resourceId });
+            break;
+        }
+        case CLASSES.VENUE: {
+            link = reverse(ROUTES.VENUE_PAGE, { venueId: resourceId });
+            break;
+        }
+        case CLASSES.TEMPLATE: {
+            link = reverse(ROUTES.TEMPLATE, { id: resourceId });
+            break;
+        }
+        case CLASSES.VISUALIZATION: {
+            link = reverse(ROUTES.VISUALIZATION, { id: resourceId });
+            break;
+        }
+        case RESOURCE_TYPE_ID: {
+            link = reverse(ROUTES.RESOURCE, { id: resourceId });
+            break;
+        }
+        case PREDICATE_TYPE_ID: {
+            link = reverse(ROUTES.PROPERTY, { id: resourceId });
+            break;
+        }
+        default: {
+            link = reverse(ROUTES.RESOURCE, { id: resourceId });
+            break;
+        }
+    }
+
+    return link;
 };

@@ -151,9 +151,9 @@ const RelativeBreadcrumbs = ({ researchField }) => {
             </li>
 
             <li>
-                <Tippy content={researchField.label} disabled={researchField.label?.length <= 25}>
+                <Tippy content={researchField.label} disabled={researchField.label?.length <= 15}>
                     <Link to={reverse(ROUTES.RESEARCH_FIELD, { researchFieldId: researchField.id })}>
-                        {truncate(researchField.label, { length: 25 })}
+                        {truncate(researchField.label, { length: 15 })}
                     </Link>
                 </Tippy>
             </li>
@@ -165,7 +165,8 @@ RelativeBreadcrumbs.propTypes = {
     researchField: PropTypes.shape({
         id: PropTypes.string.isRequired,
         label: PropTypes.string
-    })
+    }),
+    maximumLabelLength: PropTypes.number
 };
 
 export default RelativeBreadcrumbs;

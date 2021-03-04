@@ -1,5 +1,6 @@
 import { url } from 'constants/misc';
 import { submitGetRequest } from 'network';
+import queryString from 'query-string';
 
 export const statsUrl = `${url}stats/`;
 
@@ -16,13 +17,17 @@ export const getComparisonsCountByObservatoryId = id => {
 };
 
 export const getTopContributors = id => {
-    return submitGetRequest(`${statsUrl}/top/contributors`);
+    return submitGetRequest(`${statsUrl}top/contributors`);
 };
 
-export const getChangelogs = id => {
-    return submitGetRequest(`${statsUrl}/top/changelog`);
+export const getChangelogs = ({ page = 0, items = 9999, sortBy = 'created_at', desc = true, subfields = true }) => {
+    const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
+    const params = queryString.stringify({ page: page, size: items /*, sort, desc*/ });
+    return submitGetRequest(`${statsUrl}top/changelog?${params}`);
 };
 
-export const getTopResearchProblems = id => {
-    return submitGetRequest(`${statsUrl}/top/research-problems`);
+export const getTopResearchProblems = ({ page = 0, items = 9999, sortBy = 'created_at', desc = true, subfields = true }) => {
+    const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
+    const params = queryString.stringify({ page: page, size: items /*, sort, desc*/ });
+    return submitGetRequest(`${statsUrl}top/research-problems?${params}`);
 };

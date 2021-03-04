@@ -1,15 +1,15 @@
 import { useState, useEffect } from 'react';
-import { ListGroup, ListGroupItem, Button, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import { ListGroup, Button, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import ROUTES from 'constants/routes.js';
-import { getStatementsBySubjectAndPredicate } from 'services/backend/statements';
+import { getStatementsBySubjects } from 'services/backend/statements';
 import { getResourcesByClass } from 'services/backend/resources';
-import Dotdotdot from 'react-dotdotdot';
+import ComparisonCard from 'components/ComparisonCard/ComparisonCard';
+import { find } from 'lodash';
+import { getComparisonData } from 'utils';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { reverse } from 'named-urls';
-import { getComparisonData } from 'utils';
-import { CLASSES, PREDICATES } from 'constants/graphSettings';
+import { CLASSES } from 'constants/graphSettings';
 
 export default function FeaturedComparisons() {
     const [comparisons, setComparisons] = useState([]);
@@ -26,20 +26,19 @@ export default function FeaturedComparisons() {
             sortBy: 'created_at',
             desc: true,
             returnContent: true,
-            items: 10
+            items: 14
         });
 
-        const ids = responseJson.map(comparison =>
-            getStatementsBySubjectAndPredicate({ subjectId: comparison.id, predicateId: PREDICATES.DESCRIPTION })
-        );
-
-        Promise.all(ids)
+        getStatementsBySubjects({
+            ids: responseJson.map(p => p.id)
+        })
             .then(comparisonsStatements => {
-                const comparisons = comparisonsStatements.map((comparisonStatements, index) => {
-                    const resourceSubject = responseJson[index];
-                    return getComparisonData(resourceSubject, comparisonStatements);
+                const comparisons = comparisonsStatements.map(comparisonStatements => {
+                    const paperSubject = find(responseJson, {
+                        id: comparisonStatements.id
+                    });
+                    return getComparisonData(paperSubject, comparisonStatements.statements);
                 });
-
                 // order featured comparison on show only that have onHomePage predicate
                 //comparisons = comparisons.filter(c => c.onHomePage).sort((c1, c2) => sortMethod(c1.order, c2.order));
                 setComparisons(comparisons);
@@ -58,19 +57,19 @@ export default function FeaturedComparisons() {
             id: CLASSES.COMPARISON,
             sortBy: 'created_at',
             desc: true,
-            items: 8,
+            items: 14,
             returnContent: true
         });
 
-        const ids = responseJson.map(comparison =>
-            getStatementsBySubjectAndPredicate({ subjectId: comparison.id, predicateId: PREDICATES.DESCRIPTION })
-        );
-
-        Promise.all(ids)
+        getStatementsBySubjects({
+            ids: responseJson.map(p => p.id)
+        })
             .then(comparisonsStatements => {
-                const comparisons = comparisonsStatements.map((comparisonStatements, index) => {
-                    const resourceSubject = responseJson[index];
-                    return getComparisonData(resourceSubject, comparisonStatements);
+                const comparisons = comparisonsStatements.map(comparisonStatements => {
+                    const paperSubject = find(responseJson, {
+                        id: comparisonStatements.id
+                    });
+                    return getComparisonData(paperSubject, comparisonStatements.statements);
                 });
                 setComparisons(comparisons);
                 setIsLoading(false);
@@ -94,8 +93,8 @@ export default function FeaturedComparisons() {
     }, []);
 
     return (
-        <div className="pl-3 pr-3 pt-2 pb-3">
-            <div className="d-flex justify-content-end mb-2">
+        <div className="pt-2 pb-3">
+            <div className="mr-2 d-flex justify-content-end mb-2">
                 <ButtonDropdown size="sm" isOpen={dropdownOpen} toggle={toggle}>
                     <DropdownToggle caret color="lightblue">
                         {filter === 'featured' && 'Featured'}
@@ -111,16 +110,9 @@ export default function FeaturedComparisons() {
                 comparisons.length > 0 ? (
                     <>
                         <ListGroup>
-                            {comparisons.map((comparison, index) => (
-                                <ListGroupItem key={index} className="p-0 m-0 mb-2" style={{ border: 0 }}>
-                                    <Link to={reverse(ROUTES.COMPARISON, { comparisonId: comparison.id })}>
-                                        {comparison.label ? comparison.label : <em>No title</em>}
-                                    </Link>
-                                    <div style={{ fontSize: '13px' }} className="text-muted">
-                                        <Dotdotdot clamp={3}>{comparison.description}</Dotdotdot>
-                                    </div>
-                                </ListGroupItem>
-                            ))}
+                            {comparisons.map(comparison => {
+                                return comparison && <ComparisonCard comparison={{ ...comparison }} key={`pc${comparison.id}`} />;
+                            })}
                         </ListGroup>
 
                         <div className="text-center">

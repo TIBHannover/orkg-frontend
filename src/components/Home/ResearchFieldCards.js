@@ -9,6 +9,7 @@ import { reverse } from 'named-urls';
 import { Button } from 'reactstrap';
 import ROUTES from 'constants/routes.js';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
+import Breadcrumbs from 'components/Breadcrumbs/Breadcrumbs';
 import { PREDICATES, MISC, CLASSES } from 'constants/graphSettings';
 
 /* Bootstrap card column is not working correctly working with vertical alignment,
@@ -21,7 +22,7 @@ const Card = styled.div`
     border: 0 !important;
     border-radius: 12px !important;
     min-height: 85px;
-    flex: 0 0 calc(33% - 20px) !important;
+    flex: 0 0 calc(20% - 20px) !important;
     margin: 10px;
     transition: opacity 0.2s;
     justify-content: center;
@@ -197,6 +198,7 @@ class ResearchFieldCards extends Component {
 
         return (
             <div className="mt-3">
+                {/**
                 <div className="d-flex justify-content-between align-items-start">
                     <div>
                         {this.state.breadcrumb.map((field, index) => (
@@ -211,7 +213,7 @@ class ResearchFieldCards extends Component {
                         </Button>
                     )}
                 </div>
-
+*/}
                 <hr className="mt-3 mb-3" />
                 <div>
                     <TransitionGroup id="research-field-cards" className="mt-2 justify-content-center d-flex flex-wrap" exit={false}>
@@ -231,42 +233,6 @@ class ResearchFieldCards extends Component {
                         })}
                     </TransitionGroup>
                 </div>
-                {showPapers && (
-                    <div className="mt-3">
-                        <h2 className="h5">
-                            <Link to={researchFieldLink}>{currentField.label}</Link> papers
-                        </h2>
-
-                        {!this.state.papers && (
-                            <div className="mt-5 text-center">
-                                <Icon icon={faSpinner} spin /> Loading
-                            </div>
-                        )}
-
-                        {this.state.papers && this.state.papers.length === 0 ? <div className="mt-5 text-center">No papers found</div> : null}
-
-                        {this.state.papers && (
-                            <>
-                                <ul className="mt-3">
-                                    {this.state.papers.map((paper, index) => (
-                                        <li key={index}>
-                                            <Link to={reverse(ROUTES.VIEW_PAPER, { resourceId: paper.subject.id })}>
-                                                {paper.subject.label ? paper.subject.label : <i>No title</i>}
-                                            </Link>
-                                        </li>
-                                    ))}
-                                </ul>
-                                {this.state.papers.length >= MAX_PAPER_AMOUNT && (
-                                    <div className="text-center">
-                                        <Button tag={Link} to={researchFieldLink} size="sm" color="primary">
-                                            View more papers
-                                        </Button>
-                                    </div>
-                                )}
-                            </>
-                        )}
-                    </div>
-                )}
             </div>
         );
     }
