@@ -57,12 +57,12 @@ class AddObservatory extends Component {
         const description = this.state.description;
         const researchField = this.state.researchField.id;
         const uriName = this.state.url;
-        const regex = /^[A-Za-z0-9-_]+$/;
+        const regex = /^[a-z0-9-]+$/;
 
         if (value && value.length !== 0 && description && description.length !== 0 && researchField && uriName.length !== 0 && regex.test(uriName)) {
             try {
                 const observatory = await createObservatory(value, this.props.match.params.id, description, researchField, uriName);
-                this.navigateToObservatory(observatory.uri_name);
+                this.navigateToObservatory(observatory.display_id);
             } catch (error) {
                 this.setState({ editorState: 'edit' });
                 console.error(error);
@@ -76,12 +76,10 @@ class AddObservatory extends Component {
 
     handleChange = event => {
         this.setState({ [event.target.name]: event.target.value.trim() });
+        const slugify = require('slugify');
         if (event.target.name === 'value') {
             this.setState({
-                url: event.target.value
-                    .trim()
-                    .replace(/['"]+/g, '')
-                    .replace(/ /g, '_')
+                url: slugify(event.target.value.trim(), { replacement: '-', remove: /[*+~%<>/;.(){}?,'"!:@#_^|]/g, lower: true })
             });
         }
     };

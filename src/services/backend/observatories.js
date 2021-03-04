@@ -48,11 +48,11 @@ export const getObservatoriesStats = id => {
     return submitGetRequest(`${observatoriesUrl}stats/observatories`);
 };
 
-export const createObservatory = (observatoryName, organizationId, description, researchField, uriName) => {
+export const createObservatory = (observatory_name, organization_id, description, research_field, display_id) => {
     return submitPostRequest(
         observatoriesUrl,
         { 'Content-Type': 'application/json' },
-        { observatoryName, organizationId, description, researchField, uriName }
+        { observatory_name, organization_id, description, research_field, display_id }
     );
 };
 
