@@ -42,7 +42,7 @@ function OrganizationCard(props) {
                     </Link>
                     <CardBody>
                         <CardTitle className="text-center">
-                            <Link to={reverse(ROUTES.ORGANIZATION, { id: props.organization.uri_name })}>{props.organization.name}</Link>
+                            <Link to={reverse(ROUTES.ORGANIZATION, { id: props.organization.display_id })}>{props.organization.name}</Link>
                         </CardTitle>
                     </CardBody>
                 </StyledOrganizationCard>
@@ -51,7 +51,7 @@ function OrganizationCard(props) {
                 <Card className="h-100">
                     <CardBody className="d-flex">
                         <CardTitle className="align-self-center text-center flex-grow-1">
-                            <Link to={reverse(ROUTES.ORGANIZATION, { id: props.organization.uri_name })}>{props.organization.name}</Link>
+                            <Link to={reverse(ROUTES.ORGANIZATION, { id: props.organization.display_id })}>{props.organization.name}</Link>
                         </CardTitle>
                     </CardBody>
                 </Card>

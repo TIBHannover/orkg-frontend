@@ -45,7 +45,7 @@ class AddOrganization extends Component {
                     if (regex.test(namedUrl)) {
                         try {
                             const responseJson = await createOrganization(value, image[0], this.props.user.id, url, namedUrl);
-                            const organizationId = responseJson.uri_name;
+                            const organizationId = responseJson.display_id;
                             this.navigateToOrganization(organizationId);
                         } catch (error) {
                             this.setState({ editorState: 'edit' });
