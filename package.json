@@ -98,6 +98,7 @@
         "redux": "^4.0.5",
         "redux-thunk": "^2.3.0",
         "sbd": "^1.0.18",
+        "slugify": "^1.4.7",
         "source-map-explorer": "^2.5.2",
         "stopwords-en": "^0.3.0",
         "strict-mode": "^1.1.4",

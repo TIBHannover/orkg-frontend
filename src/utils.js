@@ -5,6 +5,8 @@ import rdf from 'rdf';
 import { PREDICATES, MISC } from 'constants/graphSettings';
 import { FILTER_TYPES } from 'constants/comparisonFilterTypes';
 import { isString } from 'lodash';
+import slugify from 'slugify';
+import { reverse } from 'named-urls';
 
 export function hashCode(s) {
     return s.split('').reduce((a, b) => {
@@ -955,4 +957,14 @@ export const applyRule = ({ filterControlData, type, propertyId, value }) => {
         default:
             return [];
     }
+};
+
+/**
+ * Use reverse from 'named-urls' and automatically slugifies the slug param
+ * @param route name of the route
+ * @param params route params to pass
+ * @param params.slug the slug for this param
+ */
+export const reverseWithSlug = (route, params) => {
+    return reverse(route, { ...params, slug: params.slug ? slugify(params.slug) : undefined });
 };

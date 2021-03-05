@@ -10,6 +10,7 @@ import EditPaperDialog from './EditDialog/EditPaperDialog';
 import { CLASSES } from 'constants/graphSettings';
 import { useSelector, shallowEqual } from 'react-redux';
 import useDeletePapers from 'components/ViewPaper/hooks/useDeletePapers';
+import { reverseWithSlug } from 'utils';
 
 const PaperHeader = props => {
     const viewPaper = useSelector(state => state.viewPaper, shallowEqual);
@@ -37,7 +38,9 @@ const PaperHeader = props => {
                 ''
             )}
             {viewPaper.researchField && viewPaper.researchField.id && (
-                <Link to={reverse(ROUTES.RESEARCH_FIELD, { researchFieldId: viewPaper.researchField.id })}>
+                <Link
+                    to={reverseWithSlug(ROUTES.RESEARCH_FIELD, { researchFieldId: viewPaper.researchField.id, slug: viewPaper.researchField.label })}
+                >
                     <span className="badge badge-lightblue mr-2 mb-2">
                         <Icon icon={faBars} className="text-primary" /> {viewPaper.researchField.label}
                     </span>
