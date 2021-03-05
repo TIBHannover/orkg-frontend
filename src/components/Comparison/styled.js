@@ -182,6 +182,7 @@ export const PropertiesInner = styled.div`
 export const ItemHeader = styled.div`
     min-height: 50px;
     padding: 0 10px !important;
+    background-color: #fff;
     margin: 0;
     height: 100%;
     position: relative;
