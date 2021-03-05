@@ -15,7 +15,15 @@ const TableCell = ({ values, contributionId, propertyId }) => {
                     if (Object.keys(value).length === 0) {
                         return null;
                     }
-                    return <TableCellValue key={`value-${value.statementId}`} value={value} index={index} setDisableCreate={setDisableCreate} />;
+                    return (
+                        <TableCellValue
+                            propertyId={propertyId}
+                            key={`value-${value.statementId}`}
+                            value={value}
+                            index={index}
+                            setDisableCreate={setDisableCreate}
+                        />
+                    );
                 })}
                 <TableCellValueCreate
                     isVisible={!disableCreate}

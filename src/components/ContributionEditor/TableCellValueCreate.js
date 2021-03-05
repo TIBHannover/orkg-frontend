@@ -4,7 +4,7 @@ import { createLiteralValue, createResourceValue } from 'actions/contributionEdi
 import Autocomplete from 'components/Autocomplete/Autocomplete';
 import StatementOptionButton from 'components/StatementBrowser/StatementOptionButton/StatementOptionButton';
 import { StyledDropdownItem, StyledDropdownToggle } from 'components/StatementBrowser/styled';
-import { CLASSES } from 'constants/graphSettings';
+import { CLASSES, PREDICATES } from 'constants/graphSettings';
 import { upperFirst } from 'lodash';
 import PropTypes from 'prop-types';
 import { memo, useRef, useState } from 'react';
@@ -25,7 +25,7 @@ const CreateButtonContainer = styled.div`
 
 const TableCellValueCreate = ({ isVisible, contributionId, propertyId, isEmptyCell }) => {
     const [value, setValue] = useState('');
-    const [type, setType] = useState('literal');
+    const [type, setType] = useState(propertyId === PREDICATES.HAS_RESEARCH_PROBLEM ? 'resource' : 'literal');
     const [isCreating, setIsCreating] = useState(false);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const refContainer = useRef(null);
@@ -53,7 +53,8 @@ const TableCellValueCreate = ({ isVisible, contributionId, propertyId, isEmptyCe
                 propertyId,
                 resourceId: selected.id ?? null,
                 resourceLabel: value,
-                action
+                action,
+                classes: propertyId === PREDICATES.HAS_RESEARCH_PROBLEM ? [CLASSES.PROBLEM] : []
             })
         );
         closeCreate();
@@ -78,7 +79,7 @@ const TableCellValueCreate = ({ isVisible, contributionId, propertyId, isEmptyCe
 
     const closeCreate = () => {
         setIsCreating(false);
-        setType('literal');
+        setType(propertyId === PREDICATES.HAS_RESEARCH_PROBLEM ? 'resource' : 'literal');
         setValue('');
     };
 
@@ -96,9 +97,10 @@ const TableCellValueCreate = ({ isVisible, contributionId, propertyId, isEmptyCe
                     <InputGroup size="sm" style={{ width: 295 }}>
                         {type === 'resource' ? (
                             <Autocomplete
+                                optionsClass={propertyId === PREDICATES.HAS_RESEARCH_PROBLEM ? CLASSES.PROBLEM : undefined}
                                 requestUrl={resourcesUrl}
                                 excludeClasses={`${CLASSES.CONTRIBUTION},${CLASSES.PROBLEM},${CLASSES.CONTRIBUTION_TEMPLATE}`}
-                                placeholder="Enter a resource"
+                                placeholder={propertyId === PREDICATES.HAS_RESEARCH_PROBLEM ? 'Enter a research problem' : 'Enter a resource'}
                                 onChange={handleChangeAutocomplete}
                                 menuPortalTarget={document.body}
                                 onInput={(e, value) => setValue(e ? e.target.value : value)}
@@ -119,17 +121,18 @@ const TableCellValueCreate = ({ isVisible, contributionId, propertyId, isEmptyCe
                                 autoFocus
                             />
                         )}
-
-                        <InputGroupButtonDropdown addonType="append" isOpen={isDropdownOpen} toggle={() => setIsDropdownOpen(v => !v)}>
-                            <StyledDropdownToggle disableBorderRadiusLeft={true}>
-                                <small>{upperFirst(type)} </small>
-                                <Icon size="xs" icon={faBars} />
-                            </StyledDropdownToggle>
-                            <DropdownMenu>
-                                <StyledDropdownItem onClick={() => setType('resource')}>Resource</StyledDropdownItem>
-                                <StyledDropdownItem onClick={() => setType('literal')}>Literal</StyledDropdownItem>
-                            </DropdownMenu>
-                        </InputGroupButtonDropdown>
+                        {propertyId !== PREDICATES.HAS_RESEARCH_PROBLEM && (
+                            <InputGroupButtonDropdown addonType="append" isOpen={isDropdownOpen} toggle={() => setIsDropdownOpen(v => !v)}>
+                                <StyledDropdownToggle disableBorderRadiusLeft={true}>
+                                    <small>{upperFirst(type)} </small>
+                                    <Icon size="xs" icon={faBars} />
+                                </StyledDropdownToggle>
+                                <DropdownMenu>
+                                    <StyledDropdownItem onClick={() => setType('resource')}>Resource</StyledDropdownItem>
+                                    <StyledDropdownItem onClick={() => setType('literal')}>Literal</StyledDropdownItem>
+                                </DropdownMenu>
+                            </InputGroupButtonDropdown>
+                        )}
                     </InputGroup>
                 </div>
             )}

@@ -4,7 +4,7 @@ import TableCellButtons from 'components/ContributionEditor/TableCellButtons';
 import TableCellValueResource from 'components/ContributionEditor/TableCellValueResource';
 import { ItemInnerSeparator } from 'components/Comparison/TableCell';
 import ValuePlugins from 'components/ValuePlugins/ValuePlugins';
-import { CLASSES } from 'constants/graphSettings';
+import { CLASSES, PREDICATES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
 import { memo, useState } from 'react';
 import { useDispatch } from 'react-redux';
@@ -18,7 +18,7 @@ const Value = styled.div`
     }
 `;
 
-const TableCellValue = ({ value, index, setDisableCreate }) => {
+const TableCellValue = ({ value, index, setDisableCreate, propertyId }) => {
     const [isEditing, setIsEditing] = useState(false);
     const [inputValue, setInputValue] = useState(value.label);
     const dispatch = useDispatch();
@@ -87,10 +87,11 @@ const TableCellValue = ({ value, index, setDisableCreate }) => {
         <div>
             {value._class === 'resource' && (
                 <Autocomplete
+                    optionsClass={propertyId === PREDICATES.HAS_RESEARCH_PROBLEM ? CLASSES.PROBLEM : undefined}
                     requestUrl={resourcesUrl}
                     excludeClasses={`${CLASSES.CONTRIBUTION},${CLASSES.PROBLEM},${CLASSES.CONTRIBUTION_TEMPLATE}`}
                     menuPortalTarget={document.body} // use a portal to ensure the menu isn't blocked by other elements
-                    placeholder="Enter a resource"
+                    placeholder={propertyId === PREDICATES.HAS_RESEARCH_PROBLEM ? 'Enter a research problem' : 'Enter a resource'}
                     onChange={handleChangeAutocomplete}
                     onInput={(e, value) => setInputValue(e ? e.target.value : value)}
                     value={inputValue}
@@ -119,7 +120,8 @@ const TableCellValue = ({ value, index, setDisableCreate }) => {
 TableCellValue.propTypes = {
     value: PropTypes.object.isRequired,
     index: PropTypes.number.isRequired,
-    setDisableCreate: PropTypes.func.isRequired
+    setDisableCreate: PropTypes.func.isRequired,
+    propertyId: PropTypes.string.isRequired
 };
 
 export default memo(TableCellValue);

@@ -74,11 +74,12 @@ export const removeContributions = contributionIds => dispatch =>
         }
     });
 
-export const updateResource = ({ statementId, action, resourceId = null, resourceLabel = null }) => async dispatch => {
+export const updateResource = ({ statementId, action, resourceId = null, resourceLabel = null, classes = [] }) => async dispatch => {
     const resource = await getOrCreateResource({
         action,
         id: resourceId,
-        label: resourceLabel
+        label: resourceLabel,
+        classes
     });
 
     if (!resource) {
@@ -121,10 +122,10 @@ export const deleteStatement = id => dispatch => {
     });
 };
 
-const getOrCreateResource = async ({ action, id, label }) => {
+const getOrCreateResource = async ({ action, id, label, classes = [] }) => {
     let resource;
     if (action === 'create-option') {
-        resource = await createResource(label);
+        resource = await createResource(label, classes);
     } else if (action === 'select-option') {
         resource = await getResource(id);
     }
@@ -132,13 +133,21 @@ const getOrCreateResource = async ({ action, id, label }) => {
     return resource;
 };
 
-export const createResourceValue = ({ contributionId, propertyId, action, resourceId = null, resourceLabel = null }) => async dispatch => {
+export const createResourceValue = ({
+    contributionId,
+    propertyId,
+    action,
+    classes = [],
+    resourceId = null,
+    resourceLabel = null
+}) => async dispatch => {
     dispatch(startLoading());
 
     const resource = await getOrCreateResource({
         action,
         id: resourceId,
-        label: resourceLabel
+        label: resourceLabel,
+        classes
     });
 
     if (!resource) {
