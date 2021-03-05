@@ -19,16 +19,15 @@ const FilterButton = styled(Button)`
         color: ${props => props.theme.ultraLightBlueDarker};
         &:hover,
         &.active {
-            color: ${props => props.theme.primary};
+            color: ${props => props.theme.darkblueDarker};
         }
 
         & .cross {
             position: absolute;
-            right: 24px;
+            right: 22px;
             top: 12px;
             width: 12px;
             height: 12px;
-            opacity: 0.3;
         }
         & .cross:hover {
             opacity: 1;
@@ -40,7 +39,7 @@ const FilterButton = styled(Button)`
             content: ' ';
             height: 12px;
             width: 2px;
-            background-color: #333;
+            background-color: ${props => props.theme.darkblueDarker};
         }
         & .cross:before {
             transform: rotate(45deg);
