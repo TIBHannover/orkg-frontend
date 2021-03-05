@@ -53,7 +53,15 @@ const DescriptionTooltip = props => {
                     {renderTypeLabel()} : {props.id}
                     <br />
                     Description:{' '}
-                    {!isLoading ? description ? description : <small class="font-italic">No description yet</small> : <Icon icon={faSpinner} spin />}
+                    {!isLoading ? (
+                        description ? (
+                            description
+                        ) : (
+                            <small className="font-italic">No description yet</small>
+                        )
+                    ) : (
+                        <Icon icon={faSpinner} spin />
+                    )}
                     {props.extraContent && (
                         <>
                             <br />
