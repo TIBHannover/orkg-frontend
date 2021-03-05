@@ -74,7 +74,7 @@ const TableHeaderRow = ({ property }) => {
             <Properties className="columnProperty" onDoubleClick={handleStartEdit}>
                 <PropertiesInner cellPadding={10}>
                     <div className="position-relative">
-                        <Button onClick={() => setIsOpenStatementBrowser(true)} color="link" className="text-light m-0 p-0">
+                        <Button onClick={() => setIsOpenStatementBrowser(true)} color="link" className="text-light m-0 p-0 text-left">
                             {upperFirst(property.label)}
                         </Button>
                         <TableCellButtons onEdit={handleStartEdit} onDelete={handleDelete} backgroundColor="rgba(139, 145, 165, 0.8)" />
