@@ -59,6 +59,7 @@ export default function AddContribution(props) {
         if (searchQuery.length === 0) {
             setPaperResult([]);
             setCurrentPage(1);
+            setIsNextPageLoading(false);
             return;
         }
         setIsNextPageLoading(true);
@@ -138,6 +139,7 @@ export default function AddContribution(props) {
         setHasNextPage(false);
         setCurrentPage(1);
         setSelectedContributions([]);
+        setIsNextPageLoading(true);
         debouncedGetLoadMoreResults(searchPaper, 1);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [searchPaper]);
@@ -162,7 +164,7 @@ export default function AddContribution(props) {
                     </InputGroup>
                 </FormGroup>
                 <div>
-                    {isNextPageLoading && paperResult.length === 0 && (
+                    {isNextPageLoading && searchPaper && paperResult.length === 0 && (
                         <ContentLoader
                             style={{ width: '100% !important' }}
                             width="100%"
