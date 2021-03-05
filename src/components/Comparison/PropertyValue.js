@@ -19,7 +19,34 @@ const FilterButton = styled(Button)`
         color: ${props => props.theme.ultraLightBlueDarker};
         &:hover,
         &.active {
-            color: white;
+            color: ${props => props.theme.primary};
+        }
+
+        & .cross {
+            position: absolute;
+            right: 24px;
+            top: 12px;
+            width: 12px;
+            height: 12px;
+            opacity: 0.3;
+        }
+        & .cross:hover {
+            opacity: 1;
+        }
+        & .cross:before,
+        & .cross:after {
+            position: absolute;
+            left: 15px;
+            content: ' ';
+            height: 12px;
+            width: 2px;
+            background-color: #333;
+        }
+        & .cross:before {
+            transform: rotate(45deg);
+        }
+        & .cross:after {
+            transform: rotate(-45deg);
         }
     }
 `;
@@ -66,6 +93,7 @@ const PropertyValue = ({ id, label, similar, filterControlData, updateRulesOfPro
             >
                 <FilterButton color="link" disabled={getValuesNr() <= 1} onClick={() => setShowFilterDialog(v => !v)} className={filterButtonClasses}>
                     <Icon size="xs" icon={faFilter} />
+                    {getValuesNr() <= 1 && <div className="cross" />}
                 </FilterButton>
             </FilterWrapper>
 
