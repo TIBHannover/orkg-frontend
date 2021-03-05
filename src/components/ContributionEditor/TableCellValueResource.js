@@ -19,7 +19,7 @@ const TableCellValueResource = ({ value }) => {
 };
 
 TableCellValueResource.propTypes = {
-    value: PropTypes.object
+    value: PropTypes.object.isRequired
 };
 
 export default memo(TableCellValueResource);

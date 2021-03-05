@@ -138,7 +138,7 @@ const TableCellValueCreate = ({ isVisible, contributionId, propertyId, isEmptyCe
 };
 
 TableCellValueCreate.propTypes = {
-    isVisible: PropTypes.bool,
+    isVisible: PropTypes.bool.isRequired,
     contributionId: PropTypes.string.isRequired,
     propertyId: PropTypes.string.isRequired,
     isEmptyCell: PropTypes.bool.isRequired

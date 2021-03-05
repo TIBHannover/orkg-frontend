@@ -13,7 +13,7 @@ const ButtonsContainer = styled.div`
     display: none;
 `;
 
-const TableCellValueButtons = ({ onEdit, onDelete, backgroundColor, style }) => {
+const TableCellButtons = ({ onEdit, onDelete, backgroundColor, style }) => {
     return (
         <ButtonsContainer style={{ backgroundColor, ...style }} className="cell-buttons">
             <StatementOptionButton title="Edit" icon={faPen} action={onEdit} />
@@ -29,15 +29,15 @@ const TableCellValueButtons = ({ onEdit, onDelete, backgroundColor, style }) => 
     );
 };
 
-TableCellValueButtons.propTypes = {
-    onEdit: PropTypes.func,
-    onDelete: PropTypes.func,
-    backgroundColor: PropTypes.string,
+TableCellButtons.propTypes = {
+    onEdit: PropTypes.func.isRequired,
+    onDelete: PropTypes.func.isRequired,
+    backgroundColor: PropTypes.string.isRequired,
     style: PropTypes.object
 };
 
-TableCellValueButtons.defaultProps = {
+TableCellButtons.defaultProps = {
     style: {}
 };
 
-export default memo(TableCellValueButtons);
+export default memo(TableCellButtons);

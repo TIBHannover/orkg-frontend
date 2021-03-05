@@ -109,6 +109,7 @@ const TableCellValue = ({ value, index, setDisableCreate }) => {
                     onChange={e => setInputValue(e.target.value)}
                     onBlur={handleUpdate}
                     onKeyPress={handleKeyPress}
+                    placeholder="Enter a literal"
                 />
             )}
         </div>
@@ -116,9 +117,9 @@ const TableCellValue = ({ value, index, setDisableCreate }) => {
 };
 
 TableCellValue.propTypes = {
-    value: PropTypes.object,
-    index: PropTypes.number,
-    setDisableCreate: PropTypes.func
+    value: PropTypes.object.isRequired,
+    index: PropTypes.number.isRequired,
+    setDisableCreate: PropTypes.func.isRequired
 };
 
 export default memo(TableCellValue);

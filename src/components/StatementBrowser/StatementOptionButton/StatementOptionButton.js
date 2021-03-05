@@ -92,7 +92,7 @@ class StatementOptionButton extends Component {
     render() {
         const tippyTarget = (
             <span>
-                <OptionButton disabled={this.props.isDisabled} color="link" className="p-0" onClick={this.handleClick}>
+                <OptionButton disabled={this.props.isDisabled} color="link" className="p-0" onClick={this.handleClick} aria-label={this.props.title}>
                     <span
                         className="icon-wrapper"
                         style={{

@@ -733,6 +733,7 @@ function Autocomplete(props) {
                     inputValue={inputValue || ''}
                     styles={customStyles}
                     placeholder={props.placeholder}
+                    aria-label={props.placeholder}
                     autoFocus={props.autoFocus}
                     cacheOptions={false}
                     cache={false}

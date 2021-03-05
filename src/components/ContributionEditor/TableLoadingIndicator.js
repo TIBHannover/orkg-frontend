@@ -46,7 +46,7 @@ const TableLoadingIndicator = ({ contributionAmount }) => {
                             </BorderTopRadius>
                         </td>
                         {times(contributionAmount, i => (
-                            <td className="p-0" key={i}>
+                            <td className="p-0" key={i} data-testid="contentLoader">
                                 <BorderTopRadius>
                                     <ContentLoader
                                         height={50}
