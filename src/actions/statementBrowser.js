@@ -3,10 +3,12 @@ import { guid } from 'utils';
 import { prefillStatements } from './addPaper';
 import { orderBy, uniq, isEqual } from 'lodash';
 import { PREDICATES, MISC, CLASSES } from 'constants/graphSettings';
+import { CLASS_TYPE_ID, PREDICATE_TYPE_ID, RESOURCE_TYPE_ID } from 'constants/misc';
 import { getResource } from 'services/backend/resources';
 import { getPredicate } from 'services/backend/predicates';
 import { getStatementsBySubject, getTemplateById, getTemplatesByClass } from 'services/backend/statements';
 import { createResource as createResourceApi } from 'services/backend/resources';
+import { getClassById } from 'services/backend/classes.js';
 
 export const updateSettings = data => dispatch => {
     dispatch({
@@ -31,13 +33,20 @@ export const initializeWithoutContribution = data => dispatch => {
     const label = data.label;
     const resourceId = data.resourceId;
     const rootNodeType = data.rootNodeType;
+    let classes = [];
+    if (rootNodeType === PREDICATE_TYPE_ID) {
+        classes = [CLASSES.PREDICATE];
+    }
+    if (rootNodeType === CLASS_TYPE_ID) {
+        classes = [CLASSES.CLASS];
+    }
 
     dispatch(
         createResource({
             label: label,
             existingResourceId: resourceId,
             resourceId: resourceId,
-            ...(rootNodeType === 'predicate' ? { classes: [CLASSES.PREDICATE] } : {})
+            classes: classes
         })
     );
 
@@ -844,7 +853,7 @@ export const fetchStatementsForResource = data => {
         depth = 0;
     }
 
-    rootNodeType = rootNodeType ?? 'resource';
+    rootNodeType = rootNodeType ?? RESOURCE_TYPE_ID;
 
     let resourceStatements = [];
 
@@ -856,10 +865,19 @@ export const fetchStatementsForResource = data => {
                 resourceId: resourceId
             });
             let subject;
-            if (rootNodeType === 'predicate') {
-                subject = getPredicate(existingResourceId);
-            } else {
-                subject = getResource(existingResourceId);
+
+            switch (rootNodeType) {
+                case PREDICATE_TYPE_ID:
+                    subject = getPredicate(existingResourceId);
+                    break;
+                case RESOURCE_TYPE_ID:
+                    subject = getResource(existingResourceId);
+                    break;
+                case CLASS_TYPE_ID:
+                    subject = getClassById(existingResourceId);
+                    break;
+                default:
+                    subject = getResource(existingResourceId); // code block
             }
 
             return subject.then(response => {
@@ -869,10 +887,14 @@ export const fetchStatementsForResource = data => {
                     resourceStatements = response;
                     return Promise.resolve();
                 });
-                if (rootNodeType === 'predicate') {
+                if (rootNodeType === PREDICATE_TYPE_ID) {
                     // get templates of classes
                     const predicateClass = dispatch(fetchTemplatesOfClassIfNeeded(CLASSES.PREDICATE));
                     promises = Promise.all([predicateClass, resourceStatementsPromise]);
+                } else if (rootNodeType === CLASS_TYPE_ID) {
+                    // get templates of classes
+                    const classClass = dispatch(fetchTemplatesOfClassIfNeeded(CLASSES.CLASS));
+                    promises = Promise.all([classClass, resourceStatementsPromise]);
                 } else {
                     let resourceClasses = response.classes ?? [];
                     // get templates of classes

@@ -30,6 +30,8 @@ import useDeleteResource from 'components/Resource/hooks/useDeleteResource';
 import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
 import { getVisualization } from 'services/similarity';
 import GDCVisualizationRenderer from 'libs/selfVisModel/RenderingComponents/GDCVisualizationRenderer';
+import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
+import { CLASS_TYPE_ID } from 'constants/misc';
 
 const DEDICATED_PAGE_LINKS = {
     [CLASSES.PAPER]: {
@@ -270,8 +272,10 @@ function Resource(props) {
 
                                                 return (
                                                     <i key={index}>
-                                                        <Link to={reverse(ROUTES.CLASS, { id: classObject.id })}>{classObject.label}</Link>
-                                                        {separator}
+                                                        <DescriptionTooltip id={classObject.id} typeId={CLASS_TYPE_ID}>
+                                                            <Link to={reverse(ROUTES.CLASS, { id: classObject.id })}>{classObject.label}</Link>
+                                                            {separator}
+                                                        </DescriptionTooltip>
                                                     </i>
                                                 );
                                             })}
