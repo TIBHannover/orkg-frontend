@@ -15,7 +15,7 @@ export const CreateProperty = () => {
     const { confirmProperty } = useConfirmPropertyModal();
 
     const handleChangeAutocomplete = async (selected, { action }) => {
-        const confirmedProperty = await confirmProperty();
+        const confirmedProperty = action === 'create-option' ? await confirmProperty() : true;
 
         if ((action !== 'create-option' && action !== 'select-option') || !confirmedProperty) {
             return;
