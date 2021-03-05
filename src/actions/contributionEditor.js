@@ -13,6 +13,7 @@ import { CLASSES, PREDICATES } from 'constants/graphSettings';
 import * as type from 'actions/types';
 import { createResource, getResource } from 'services/backend/resources';
 import { createPredicate, getPredicate } from 'services/backend/predicates';
+import { toast } from 'react-toastify';
 
 export const loadContributions = contributionIds => async dispatch => {
     const resources = {};
@@ -88,7 +89,7 @@ export const updateResource = ({ statementId, action, resourceId = null, resourc
 
     updateStatement(statementId, {
         object_id: resource.id
-    });
+    }).catch(e => toast.error(`Error updating statement, please refresh the page`));
 
     dispatch({
         type: type.CONTRIBUTION_EDITOR_RESOURCE_UPDATE,
@@ -112,7 +113,7 @@ export const updateLiteral = payload => async dispatch => {
 };
 
 export const deleteStatement = id => dispatch => {
-    deleteStatementById(id);
+    deleteStatementById(id).catch(e => toast.error(`Error deleting statement, please refresh the page`));
 
     dispatch({
         type: type.CONTRIBUTION_EDITOR_STATEMENT_DELETE,
@@ -211,7 +212,7 @@ export const createProperty = ({ action, id = null, label = null }) => async dis
 };
 
 export const deleteProperty = ({ id, statementIds }) => dispatch => {
-    deleteStatementsByIds(statementIds);
+    deleteStatementsByIds(statementIds).catch(e => toast.error(`Error deleting statements, please refresh the page`));
 
     dispatch({
         type: type.CONTRIBUTION_EDITOR_PROPERTY_DELETE,
@@ -239,7 +240,7 @@ export const updateProperty = ({ id, statementIds, action, newId = null, newLabe
         return;
     }
 
-    updateStatements(statementIds, { predicate_id: property.id });
+    updateStatements(statementIds, { predicate_id: property.id }).catch(e => toast.error(`Error updating statements, please refresh the page`));
 
     dispatch({
         type: type.CONTRIBUTION_EDITOR_PROPERTY_UPDATE,
