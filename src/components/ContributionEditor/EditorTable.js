@@ -21,7 +21,7 @@ const EditorTable = ({ scrollContainerBody }) => {
 
     const defaultColumn = useMemo(
         () => ({
-            minWidth: 250,
+            minWidth: 300,
             width: 1,
             maxWidth: 2
         }),

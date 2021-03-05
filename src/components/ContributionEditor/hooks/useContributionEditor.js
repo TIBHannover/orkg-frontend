@@ -81,6 +81,7 @@ const useContributionEditor = () => {
                         Header: <TableHeaderColumnFirst />,
                         accessor: 'property',
                         sticky: 'left',
+                        minWidth: 250,
                         Cell: cell => <TableHeaderRow property={cell.value} />
                     },
                     ...Object.keys(contributions).map((contributionId, i) => {
