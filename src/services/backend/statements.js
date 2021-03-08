@@ -85,12 +85,7 @@ export const getStatementsBySubjects = ({ ids, page = 0, items: size = 9999, sor
     const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
     const params = queryString.stringify({ ids: ids.join(), page: page, size, sort });
 
-    return submitGetRequest(`${statementsUrl}subjects/?${params}`).then(res =>
-        res.map(subjectStatements => ({
-            ...subjectStatements,
-            statements: subjectStatements.statements.content
-        }))
-    );
+    return submitGetRequest(`${statementsUrl}subjects/?${params}`);
 };
 
 export const getStatementsByObject = async ({ id, page = 0, items: size = 9999, sortBy = 'created_at', desc = true }) => {
