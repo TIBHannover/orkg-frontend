@@ -46,8 +46,10 @@ import FeaturedComparisons from 'pages/FeaturedComparisons';
 import Data from 'pages/Data';
 import Contribution from 'pages/Contribution';
 import CsvImport from 'pages/CsvImport';
+import AddComparison from 'pages/AddComparison';
 import requireAuthentication from 'requireAuthentication';
 import { reverse } from 'named-urls';
+import ContributionEditor from 'pages/ContributionEditor';
 
 // use lazy loading of pages that contain large dependencies
 // run "npm run analyze" to ensure the listed dependencies are not loaded elsewhere and thus end up in the bundle
@@ -302,6 +304,14 @@ const routes = [
     {
         path: ROUTES.CSV_IMPORT,
         component: requireAuthentication(CsvImport)
+    },
+    {
+        path: ROUTES.CONTRIBUTION_EDITOR,
+        component: requireAuthentication(ContributionEditor)
+    },
+    {
+        path: ROUTES.ADD_COMPARISON,
+        component: AddComparison
     },
     /* Don't add routes below this line */
     {

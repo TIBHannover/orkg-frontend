@@ -5,6 +5,24 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [V0.31](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.30.1...V0.31) - 2021-03-08
+
+### Changes
+
+- feat: contribution editor [`#490`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/490)
+- feat: Add tooltip showing the description of properties/classes [`#494`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/494)
+- update colors [`#517`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/517)
+- style: Comparison filter icon [`#511`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/511)
+- refactor: Paper card, max number of authors [`#512`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/512)
+
+---
+## [V0.30.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.30...V0.30.1) - 2021-02-25
+
+### Changes
+
+- fix: Deleting property statement browser results in error [`#514`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/514)
+
+---
 ## [V0.30](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.29...V0.30) - 2021-02-19
 
 ### Changes

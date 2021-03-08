@@ -23,6 +23,7 @@ import arrayMove from 'array-move';
 import ROUTES from 'constants/routes.js';
 import queryString from 'query-string';
 import { usePrevious } from 'react-use';
+import Confirm from 'reactstrap-confirm';
 
 function useComparison() {
     const location = useLocation();
@@ -87,6 +88,7 @@ function useComparison() {
     const [responseHash, setResponseHash] = useState(null);
     const [contributionsList, setContributionsList] = useState([]);
     const [predicatesList, setPredicatesList] = useState([]);
+    const [shouldFetchLiveComparison, setShouldFetchLiveComparison] = useState(false);
 
     // reference to previous comparison type
     const prevComparisonType = usePrevious(comparisonType);
@@ -279,44 +281,47 @@ function useComparison() {
      * @param {Object} comparisonData Comparison Data result
      * @return {Array} list of properties extended and sorted
      */
-    const extendAndSortProperties = comparisonData => {
-        // if there are properties in the query string
-        if (predicatesList.length > 0) {
-            // Create an extended version of propertyIds (ADD the IDs of similar properties)
-            const extendedPropertyIds = extendPropertyIds(predicatesList, comparisonData.data);
-            // sort properties based on query string (is not presented in query string, sort at the bottom)
-            // TODO: sort by label when is not active
-            comparisonData.properties.sort((a, b) => {
-                const index1 = extendedPropertyIds.indexOf(a.id) !== -1 ? extendedPropertyIds.indexOf(a.id) : 1000;
-                const index2 = extendedPropertyIds.indexOf(b.id) !== -1 ? extendedPropertyIds.indexOf(b.id) : 1000;
-                return index1 - index2;
-            });
-            // hide properties based on query string
+    const extendAndSortProperties = useCallback(
+        comparisonData => {
+            // if there are properties in the query string
+            if (predicatesList.length > 0) {
+                // Create an extended version of propertyIds (ADD the IDs of similar properties)
+                const extendedPropertyIds = extendPropertyIds(predicatesList, comparisonData.data);
+                // sort properties based on query string (is not presented in query string, sort at the bottom)
+                // TODO: sort by label when is not active
+                comparisonData.properties.sort((a, b) => {
+                    const index1 = extendedPropertyIds.indexOf(a.id) !== -1 ? extendedPropertyIds.indexOf(a.id) : 1000;
+                    const index2 = extendedPropertyIds.indexOf(b.id) !== -1 ? extendedPropertyIds.indexOf(b.id) : 1000;
+                    return index1 - index2;
+                });
+                // hide properties based on query string
+                comparisonData.properties.forEach((property, index) => {
+                    if (!extendedPropertyIds.includes(property.id)) {
+                        comparisonData.properties[index].active = false;
+                    } else {
+                        comparisonData.properties[index].active = true;
+                    }
+                });
+            } else {
+                //no properties ids in the url, but the ones from the api still need to be sorted
+                comparisonData.properties.sort((a, b) => {
+                    if (a.active === b.active) {
+                        return a.label.toLowerCase().localeCompare(b.label.toLowerCase());
+                    } else {
+                        return !a.active ? 1 : -1;
+                    }
+                });
+            }
+
+            // Get Similar properties by Label
             comparisonData.properties.forEach((property, index) => {
-                if (!extendedPropertyIds.includes(property.id)) {
-                    comparisonData.properties[index].active = false;
-                } else {
-                    comparisonData.properties[index].active = true;
-                }
+                comparisonData.properties[index].similar = similarPropertiesByLabel(property.label, comparisonData.data[property.id]);
             });
-        } else {
-            //no properties ids in the url, but the ones from the api still need to be sorted
-            comparisonData.properties.sort((a, b) => {
-                if (a.active === b.active) {
-                    return a.label.toLowerCase().localeCompare(b.label.toLowerCase());
-                } else {
-                    return !a.active ? 1 : -1;
-                }
-            });
-        }
 
-        // Get Similar properties by Label
-        comparisonData.properties.forEach((property, index) => {
-            comparisonData.properties[index].similar = similarPropertiesByLabel(property.label, comparisonData.data[property.id]);
-        });
-
-        return comparisonData.properties;
-    };
+            return comparisonData.properties;
+        },
+        [predicatesList]
+    );
 
     /**
      * Generate Filter Control Data
@@ -401,7 +406,7 @@ function useComparison() {
     /**
      * Call the comparison service to get the comparison result
      */
-    const getComparisonResult = () => {
+    const getComparisonResult = useCallback(() => {
         setIsLoadingComparisonResult(true);
         getComparison({ contributionIds: contributionsList, type: comparisonType, response_hash: responseHash, save_response: false })
             .then(comparisonData => {
@@ -447,7 +452,7 @@ function useComparison() {
                 setIsLoadingComparisonResult(false);
                 setIsFailedLoadingComparisonResult(true);
             });
-    };
+    }, [comparisonType, contributionsList, extendAndSortProperties, responseHash]);
 
     /**
      * Toggle a property from the table
@@ -627,6 +632,42 @@ function useComparison() {
         setMatrixData([header, ...rows]);
     };
 
+    const handleEditContributions = async () => {
+        if (metaData?.id) {
+            const isConfirmed = await Confirm({
+                title: 'This is a published comparison',
+                message: `The comparison you are viewing is published, which means it cannot be modified. To make changes, fetch the live comparison data and try this action again`,
+                cancelColor: 'light',
+                confirmText: 'Fetch live data'
+            });
+
+            if (isConfirmed) {
+                setUrlNeedsToUpdate(true);
+                setResponseHash(null);
+                setShouldFetchLiveComparison(true);
+            }
+        } else {
+            const isConfirmed = await Confirm({
+                title: 'Edit contribution data',
+                message: `You are about the edit the contributions displayed in the comparison. Changing this data does not only affect this comparison, but also other parts of the ORKG`,
+                cancelColor: 'light',
+                confirmText: 'Continue'
+            });
+
+            if (isConfirmed) {
+                history.push(reverse(ROUTES.CONTRIBUTION_EDITOR) + `?contributions=${contributionsList.join(',')}`);
+            }
+        }
+    };
+
+    useEffect(() => {
+        // only is there is no hash, live comparison data can be fetched
+        if (shouldFetchLiveComparison && !responseHash) {
+            setShouldFetchLiveComparison(false);
+            getComparisonResult();
+        }
+    }, [getComparisonResult, responseHash, shouldFetchLiveComparison]);
+
     useEffect(() => {
         if (comparisonId !== undefined) {
             loadComparisonMetaData(comparisonId);
@@ -735,7 +776,8 @@ function useComparison() {
         setAuthors,
         loadCreatedBy,
         loadProvenanceInfos,
-        loadVisualizations
+        loadVisualizations,
+        handleEditContributions
     };
 }
 export default useComparison;
