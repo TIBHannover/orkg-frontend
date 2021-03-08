@@ -4,11 +4,11 @@ import AuthorsInput from 'components/Utils/AuthorsInput';
 import ListItem from 'components/ViewPaper/EditDialog/ListItem';
 import { CLASSES, ENTITIES } from 'constants/graphSettings';
 import { truncate } from 'lodash';
-import moment from 'moment';
 import PropTypes from 'prop-types';
+import moment from 'moment';
 import { useState } from 'react';
 import { Button, Input, InputGroup, InputGroupAddon } from 'reactstrap';
-import { createResource, resourcesUrl } from 'services/backend/resources';
+import { createResource } from 'services/backend/resources';
 import { range } from 'utils';
 
 const EditItem = props => {
@@ -94,7 +94,7 @@ const EditItem = props => {
             <InputGroup>
                 <AutoComplete
                     allowCreate={false}
-                    requestUrl={resourcesUrl}
+                    entityType={ENTITIES.RESOURCE}
                     optionsClass={CLASSES.RESEARCH_FIELD}
                     onChange={props.onChange}
                     placeholder="Search or choose a research field"
