@@ -6,6 +6,8 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faExternalLinkAlt, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import ContentLoader from 'react-content-loader';
 import Tooltip from 'components/Utils/Tooltip';
+import { getPaperByDOI } from 'services/backend/misc';
+import REGEX from 'constants/regex';
 import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
@@ -63,49 +65,85 @@ export default function AddContribution(props) {
             return;
         }
         setIsNextPageLoading(true);
-        getResourcesByClass({
-            page: page || currentPage,
-            items: numberOfPaper,
-            sortBy: 'id',
-            desc: true,
-            q: searchQuery,
-            id: CLASSES.PAPER
-        })
-            .then(results => {
-                if (results.length > 0) {
-                    const paper = results.map(resource =>
-                        getStatementsBySubjectAndPredicate({
-                            subjectId: resource.id,
-                            predicateId: PREDICATES.HAS_CONTRIBUTION
-                        }).then(contributions => {
+
+        // The entry is a DOI, check if it exists in the database
+        if (searchQuery.trim().match(new RegExp(REGEX.DOI))) {
+            getPaperByDOI(searchQuery.trim())
+                .then(result =>
+                    getStatementsBySubjectAndPredicate({
+                        subjectId: result.id,
+                        predicateId: PREDICATES.HAS_CONTRIBUTION
+                    })
+                        .then(contributions => {
                             return {
-                                ...resource,
+                                ...result,
                                 contributions: contributions
                                     .sort((a, b) => {
                                         return a.object.label.localeCompare(b.object.label);
                                     })
-                                    .map(contribution => ({ ...contribution.object, checked: false }))
+                                    .map(contribution => ({ ...contribution.object, checked: false })),
+                                label: result.title
                             };
                         })
-                    );
-                    Promise.all(paper).then(paperData => {
-                        setPaperResult([...(page === 1 ? [] : paperResult), ...paperData]);
-                        setIsNextPageLoading(false);
-                        setHasNextPage(results.length < numberOfPaper ? false : true);
-                        setCurrentPage(page);
-                    });
-                } else {
+                        .then(paperData => {
+                            setPaperResult([paperData]);
+                            setIsNextPageLoading(false);
+                            setHasNextPage(false);
+                            setCurrentPage(1);
+                        })
+                )
+                .catch(() => {
                     if (page === 1) {
                         setPaperResult([]);
                     }
                     setIsNextPageLoading(false);
                     setHasNextPage(false);
-                }
+                });
+        } else {
+            getResourcesByClass({
+                page: page || currentPage,
+                items: numberOfPaper,
+                sortBy: 'id',
+                desc: true,
+                q: searchQuery,
+                id: CLASSES.PAPER
             })
-            .catch(error => {
-                console.log(error);
-                toast.error('Something went wrong while loading search results.');
-            });
+                .then(results => {
+                    if (results.length > 0) {
+                        const paper = results.map(resource =>
+                            getStatementsBySubjectAndPredicate({
+                                subjectId: resource.id,
+                                predicateId: PREDICATES.HAS_CONTRIBUTION
+                            }).then(contributions => {
+                                return {
+                                    ...resource,
+                                    contributions: contributions
+                                        .sort((a, b) => {
+                                            return a.object.label.localeCompare(b.object.label);
+                                        })
+                                        .map(contribution => ({ ...contribution.object, checked: false }))
+                                };
+                            })
+                        );
+                        Promise.all(paper).then(paperData => {
+                            setPaperResult([...(page === 1 ? [] : paperResult), ...paperData]);
+                            setIsNextPageLoading(false);
+                            setHasNextPage(results.length < numberOfPaper ? false : true);
+                            setCurrentPage(page);
+                        });
+                    } else {
+                        if (page === 1) {
+                            setPaperResult([]);
+                        }
+                        setIsNextPageLoading(false);
+                        setHasNextPage(false);
+                    }
+                })
+                .catch(error => {
+                    console.log(error);
+                    toast.error('Something went wrong while loading search results.');
+                });
+        }
     };
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -155,7 +193,7 @@ export default function AddContribution(props) {
                     <InputGroup>
                         <Input
                             value={searchPaper}
-                            placeholder="Search contributions by paper title..."
+                            placeholder="Search contributions by paper title or DOI..."
                             type="text"
                             name="title"
                             id="title"
