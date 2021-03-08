@@ -1,28 +1,21 @@
-import { Collapse, Input } from 'reactstrap';
-import AuthorsInput from 'components/Utils/AuthorsInput';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
-import { StyledStatementItem, StyledListGroupOpen } from './styled';
-import classNames from 'classnames';
-import moment from 'moment';
-import { range } from 'utils';
-import { truncate } from 'lodash';
-import { resourcesUrl } from 'services/backend/resources';
-import PropTypes from 'prop-types';
+import ResearchFieldSelectorModal from 'components/ResearchFieldSelector/ResearchFieldSelectorModal';
+import AuthorsInput from 'components/Utils/AuthorsInput';
+import ListItem from 'components/ViewPaper/EditDialog/ListItem';
 import { CLASSES } from 'constants/graphSettings';
+import { truncate } from 'lodash';
+import moment from 'moment';
+import PropTypes from 'prop-types';
+import { useState } from 'react';
+import { Button, Input, InputGroup, InputGroupAddon } from 'reactstrap';
+import { createResource, resourcesUrl } from 'services/backend/resources';
+import { range } from 'utils';
 
 const EditItem = props => {
-    const listGroupClass = classNames({
-        statementActive: props.open,
-        statementItem: true,
-        selectable: true,
-        'rounded-bottom': props.isLastItem && !props.open
-    });
+    const [isOpenResearchFieldModal, setIsOpenResearchFieldModal] = useState(false);
+    const [inputValue, setInputValue] = useState(null);
 
-    const openBoxClass = classNames({
-        listGroupOpenBorderBottom: props.isLastItem,
-        'rounded-bottom': props.isLastItem
-    });
-
+    const EMPTY_LABEL = 'Empty';
     let input;
     let stringValue;
 
@@ -41,7 +34,7 @@ const EditItem = props => {
                 })}
             </Input>
         );
-        stringValue = props.value ? moment(props.value, 'M').format('MMMM') : 'Not specified';
+        stringValue = props.value ? moment(props.value, 'M').format('MMMM') : EMPTY_LABEL;
     } else if (props.type === 'year') {
         input = (
             <Input type="select" value={props.value} onChange={props.onChange}>
@@ -58,12 +51,30 @@ const EditItem = props => {
         const authors = props.value.map(author => author.label);
         stringValue = authors.length > 2 ? `${authors.slice(0, 2).join(', ')} et al.` : authors.join(', ');
     } else if (props.type === 'publishedIn') {
+        const handleChange = async (selected, action) => {
+            if (action.action === 'select-option') {
+                props.onChange(selected);
+            } else if (action.action === 'create-option') {
+                const newVenue = await createResource(selected.label, [CLASSES.VENUE]);
+                props.onChange({
+                    ...selected,
+                    id: newVenue.id
+                });
+            } else if (action.action === 'clear') {
+                props.onChange({
+                    ...selected,
+                    id: null,
+                    label: null
+                });
+            }
+        };
+
         input = (
             <AutoComplete
                 allowCreate
                 requestUrl={resourcesUrl}
                 optionsClass={CLASSES.VENUE}
-                onChange={props.onChange}
+                onChange={handleChange}
                 placeholder="Select or type to enter a venue"
                 autoFocus
                 cacheOptions
@@ -71,39 +82,54 @@ const EditItem = props => {
                 isClearable={true}
             />
         );
-        stringValue = props.value ? truncate(props.value.label, { length: 60 }) : 'Not specified';
+        stringValue = props.value ? truncate(props.value.label, { length: 60 }) : EMPTY_LABEL;
     } else if (props.type === 'researchField') {
+        const handleSelectField = ({ id, label }) => {
+            props.onChange({
+                id,
+                label
+            });
+        };
         input = (
-            <AutoComplete
-                allowCreate={false}
-                requestUrl={resourcesUrl}
-                optionsClass={CLASSES.RESEARCH_FIELD}
-                onChange={props.onChange}
-                placeholder="Select a research field"
-                autoFocus
-                cacheOptions
-                value={props.value ? props.value : null}
-                isClearable={false}
-            />
+            <InputGroup>
+                <AutoComplete
+                    allowCreate={false}
+                    requestUrl={resourcesUrl}
+                    optionsClass={CLASSES.RESEARCH_FIELD}
+                    onChange={props.onChange}
+                    placeholder="Search or choose a research field"
+                    autoFocus
+                    cacheOptions
+                    value={props.value ? props.value : null}
+                    isClearable={false}
+                    onBlur={() => setInputValue('')}
+                    onChangeInputValue={e => setInputValue(e)}
+                    inputValue={inputValue}
+                />
+                <InputGroupAddon addonType="append">
+                    <Button color="darkblue" onClick={() => setIsOpenResearchFieldModal(true)}>
+                        Choose
+                    </Button>
+                </InputGroupAddon>
+
+                {isOpenResearchFieldModal && (
+                    <ResearchFieldSelectorModal isOpen toggle={v => setIsOpenResearchFieldModal(v => !v)} onSelectField={handleSelectField} />
+                )}
+            </InputGroup>
         );
-        stringValue = props.value && props.value.label ? props.value.label : 'Not specified';
+        stringValue = props.value && props.value.label ? props.value.label : EMPTY_LABEL;
     }
 
     return (
-        <>
-            <StyledStatementItem className={listGroupClass} onClick={props.toggleItem}>
-                {props.open ? (
-                    props.label
-                ) : (
-                    <>
-                        {props.label} : {stringValue ? <i>{stringValue}</i> : 'Not specified'}
-                    </>
-                )}
-            </StyledStatementItem>
-            <Collapse isOpen={props.open}>
-                <StyledListGroupOpen className={openBoxClass}>{input}</StyledListGroupOpen>
-            </Collapse>
-        </>
+        <ListItem
+            toggleItem={props.toggleItem}
+            label={props.label}
+            value={stringValue || EMPTY_LABEL}
+            open={props.open}
+            isLastItem={props.isLastItem}
+        >
+            {input}
+        </ListItem>
     );
 };
 

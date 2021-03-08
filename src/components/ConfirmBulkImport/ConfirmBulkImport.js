@@ -21,7 +21,7 @@ const ConfirmBulkImport = props => {
     }, [data, makePaperList]);
 
     const comparisonUrl = createdContributions
-        ? reverse(ROUTES.COMPARISON) + '?contributions=' + createdContributions.map(entry => entry.contributionId)
+        ? reverse(ROUTES.CONTRIBUTION_EDITOR) + '?contributions=' + createdContributions.map(entry => entry.contributionId)
         : null;
 
     const progressPercentage =
@@ -59,9 +59,9 @@ const ConfirmBulkImport = props => {
                 {isFinished && (
                     <>
                         <Alert color="success">Import successful, {createdContributions.length} papers are imported</Alert>
-                        The imported papers can be viewed in a comparison <br />
+                        The imported papers can be viewed in the contribution editor <br />
                         <Button tag={Link} to={comparisonUrl} target="_blank" color="primary" className="mt-3">
-                            View comparison
+                            Contribution editor
                         </Button>
                     </>
                 )}
