@@ -77,9 +77,13 @@ export const getStatementsBySubject = ({ id, page = 0, items: size = 9999, sortB
     return submitGetRequest(`${statementsUrl}subject/${encodeURIComponent(id)}/?${params}`).then(res => res.content);
 };
 
+export const getStatementsBundleBySubject = ({ id }) => {
+    return submitGetRequest(`${statementsUrl}${encodeURIComponent(id)}/bundle`);
+};
+
 export const getStatementsBySubjects = ({ ids, page = 0, items: size = 9999, sortBy = 'created_at', desc = true }) => {
     const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
-    const params = queryString.stringify({ ids: ids.join(), page, size, sort });
+    const params = queryString.stringify({ ids: ids.join(), page: page, size, sort });
 
     return submitGetRequest(`${statementsUrl}subjects/?${params}`).then(res =>
         res.map(subjectStatements => ({

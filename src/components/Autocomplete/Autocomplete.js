@@ -90,6 +90,13 @@ function Autocomplete(props) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [inputValue]);
 
+    // support for setting the inputValue via the props
+    useEffect(() => {
+        if (props.inputValue !== null) {
+            setInputValue(props.inputValue);
+        }
+    }, [props.inputValue]);
+
     /**
      * Lookup in ORKG backend
      *
@@ -600,7 +607,8 @@ function Autocomplete(props) {
         }),
         menu: provided => ({
             ...provided,
-            zIndex: 10
+            zIndex: 10,
+            fontSize: '0.875rem'
         }),
         option: provided => ({
             ...provided,
@@ -684,6 +692,7 @@ function Autocomplete(props) {
                     inputValue={inputValue || ''}
                     styles={customStyles}
                     placeholder={props.placeholder}
+                    aria-label={props.placeholder}
                     autoFocus={props.autoFocus}
                     cacheOptions={false}
                     cache={false}
@@ -692,6 +701,7 @@ function Autocomplete(props) {
                     onBlur={props.onBlur}
                     onKeyDown={props.onKeyDown}
                     selectRef={props.innerRef}
+                    menuPortalTarget={props.menuPortalTarget}
                     components={{
                         Option: Option,
                         Menu: Menu,
@@ -763,7 +773,9 @@ Autocomplete.propTypes = {
     ols: PropTypes.bool,
     inputGroup: PropTypes.bool,
     inputId: PropTypes.string,
-    onChangeInputValue: PropTypes.func
+    onChangeInputValue: PropTypes.func,
+    inputValue: PropTypes.string,
+    menuPortalTarget: PropTypes.object
 };
 
 Autocomplete.defaultProps = {
@@ -778,6 +790,8 @@ Autocomplete.defaultProps = {
     autoFocus: true,
     ols: false,
     inputGroup: true,
-    inputId: null
+    inputId: null,
+    inputValue: null,
+    menuPortalTarget: null
 };
 export default withTheme(Autocomplete);

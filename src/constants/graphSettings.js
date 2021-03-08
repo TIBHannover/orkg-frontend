@@ -60,6 +60,7 @@ export const CLASSES = {
     FEATURED_COMPARISON_CATEGORY: 'FeaturedComparisonCategory',
     TEMPLATE: 'ContributionTemplate',
     PREDICATE: 'Predicates',
+    CLASS: 'Classes',
     QB_DATASET_CLASS: 'QBDataset',
     LOCATION: 'DCLocation',
     SENTENCE: 'Sentence',

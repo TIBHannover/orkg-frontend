@@ -8,6 +8,7 @@ import PropertySuggestions from 'components/StatementBrowser/PropertySuggestions
 import SBEditorHelpModal from 'components/StatementBrowser/SBEditorHelpModal/SBEditorHelpModal';
 import NoData from 'components/StatementBrowser/NoData/NoData';
 import { StyledLevelBox, StyledStatementItem } from 'components/StatementBrowser/styled';
+import { RESOURCE_TYPE_ID } from 'constants/misc';
 import { useCookies } from 'react-cookie';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
@@ -208,7 +209,7 @@ Statements.defaultProps = {
     resourcesAsLinks: false,
     initOnLocationChange: true,
     keyToKeepStateOnLocationChange: null,
-    rootNodeType: 'resource'
+    rootNodeType: RESOURCE_TYPE_ID
 };
 
 export default Statements;

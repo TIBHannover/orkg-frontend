@@ -5,7 +5,7 @@ import { getResourcesByClass } from 'services/backend/resources';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner, faAngleDoubleDown } from '@fortawesome/free-solid-svg-icons';
 import PaperCardDynamic from 'components/PaperCard/PaperCardDynamic';
-import { CLASSES, MISC } from 'constants/graphSettings';
+import { CLASSES } from 'constants/graphSettings';
 import { useSelector } from 'react-redux';
 import HeaderSearchButton from 'components/HeaderSearchButton/HeaderSearchButton';
 
