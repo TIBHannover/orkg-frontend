@@ -369,6 +369,9 @@ class Header extends Component {
                                         >
                                             Contribution editor
                                         </DropdownItem>
+                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.TOOLS}>
+                                            Tools overview
+                                        </DropdownItem>
                                     </DropdownMenu>
                                 </UncontrolledButtonDropdown>
 
