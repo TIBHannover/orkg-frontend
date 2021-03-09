@@ -24,17 +24,17 @@ function useResearchFieldPapers({ researchFieldId, initialSort, initialIncludeSu
                 page: page,
                 items: pageSize,
                 sortBy: 'created_at',
-                desc: sort === 'newest' ? false : true,
+                desc: sort === 'newest' ? true : false,
                 subfields: includeSubFields
             })
                 .then(result => {
                     // Fetch the data of each paper
                     getStatementsBySubjects({
-                        ids: result.content.map(p => p.resourceId)
+                        ids: result.content.map(p => p.id)
                     })
                         .then(papersStatements => {
                             const papers = papersStatements.map(paperStatements => {
-                                const paperSubject = find(result.content.map(p => ({ ...p, created_by: p.createdBy, id: p.resourceId })), {
+                                const paperSubject = find(result.content, {
                                     id: paperStatements.id
                                 });
                                 return getPaperData(paperSubject, paperStatements.statements);
