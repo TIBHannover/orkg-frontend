@@ -3,6 +3,24 @@ import { Button, Carousel, CarouselItem, CarouselIndicators, Card, CardBody, Car
 import { Link } from 'react-router-dom';
 import ROUTES from 'constants/routes';
 import styled from 'styled-components';
+import { useDispatch, useSelector } from 'react-redux';
+import { openAuthDialog } from 'actions/auth';
+import {
+    UncontrolledButtonDropdown,
+    Collapse,
+    DropdownItem,
+    DropdownMenu,
+    DropdownToggle,
+    Nav,
+    Navbar,
+    NavbarToggler,
+    Tooltip,
+    ButtonGroup,
+    Row,
+    Badge
+} from 'reactstrap';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { faSpinner, faThList, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { reverse } from 'named-urls';
 
 const CarouselContainer = styled.div`
@@ -82,7 +100,8 @@ const items = [
 export default function Benefits() {
     const [activeIndex, setActiveIndex] = useState(0);
     const [animating, setAnimating] = useState(false);
-
+    const dispatch = useDispatch();
+    const user = useSelector(state => state.auth.user);
     const next = () => {
         if (animating) {
             return;
@@ -109,14 +128,14 @@ export default function Benefits() {
                 <CarouselItem onExiting={() => setAnimating(true)} onExited={() => setAnimating(false)} className="pb-1 mb-4" key={`fp${index}`}>
                     <ObservatoryCardStyled className="">
                         <Card style={{ border: 0, minHeight: '220px' }}>
-                            <Link to={reverse(ROUTES.OBSERVATORY, { id: item.index })} style={{ textDecoration: 'none' }}>
-                                <CardBody className="pt-0 mb-0">
-                                    <CardTitle tag="h5">{item.title}</CardTitle>
-                                    <CardSubtitle tag="h6" className="mb-1 text-muted">
-                                        {item.description}
-                                    </CardSubtitle>
-                                </CardBody>
-                            </Link>
+                            <CardBody className="pt-0 mb-0 d-flex justify-content-center align-items-center" style={{ flexDirection: 'column' }}>
+                                <CardTitle tag="h5" className="pt-0">
+                                    {item.title}
+                                </CardTitle>
+                                <CardSubtitle tag="h6" className="mb-1 text-muted">
+                                    {item.description}
+                                </CardSubtitle>
+                            </CardBody>
                         </Card>
                     </ObservatoryCardStyled>
                 </CarouselItem>
@@ -126,14 +145,40 @@ export default function Benefits() {
 
     return (
         <>
-            <h2 className="h5 pt-3 pl-3 pr-3 pb-0">
-                <span>Join ORKG!</span>
+            <div className="d-flex align-items-center pt-3 pl-3 pr-3 pb-0">
+                <div className="flex-grow-1">
+                    <h2 className="h6 mb-0 mt-0">{!!user ? 'Start contributing!' : 'Join ORKG!'}</h2>
+                </div>
+                <div className="flex-shrink-0">
+                    {!!user && (
+                        <UncontrolledButtonDropdown size="sm">
+                            <Button size="sm" color="lightblue" tag={Link} to={ROUTES.ADD_PAPER.GENERAL_DATA}>
+                                <Icon className="mr-1" icon={faPlus} />
+                                Add paper
+                            </Button>
 
-                <Button size="sm" to={ROUTES.OBSERVATORIES} style={{ fontSize: '0.9rem', float: 'right' }}>
-                    <span>Signup</span>
-                </Button>
-            </h2>
-            <hr className="mx-3 mt-0" />
+                            <DropdownToggle split color="darkblue" />
+                            <DropdownMenu right>
+                                <DropdownItem tag={Link} to={ROUTES.ADD_COMPARISON}>
+                                    Add comparison
+                                </DropdownItem>
+                            </DropdownMenu>
+                        </UncontrolledButtonDropdown>
+                    )}
+                    {!!!user && (
+                        <Button
+                            size="sm"
+                            onClick={() => {
+                                dispatch(openAuthDialog({ action: 'signup' }));
+                            }}
+                        >
+                            <span>Signup</span>
+                        </Button>
+                    )}
+                </div>
+            </div>
+
+            <hr className="mx-3 mt-1" />
             <div>
                 <CarouselContainer>
                     <Carousel activeIndex={activeIndex} next={next} previous={previous}>

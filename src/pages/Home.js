@@ -58,7 +58,7 @@ export default function Home() {
                     </div>
                 </Col>
                 <Col md="4">
-                    <div className="mt-3 box rounded" style={{ display: 'flex', flexDirection: 'column' }}>
+                    <div className="mt-3 box rounded" style={{ display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
                         <Benefits />
                     </div>
 
