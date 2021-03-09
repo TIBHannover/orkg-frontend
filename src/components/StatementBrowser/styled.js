@@ -243,6 +243,8 @@ export const AddPropertyFormStyle = styled.div`
 export const StatementsGroupStyle = styled(ListGroupItem)`
     position: relative;
     padding: 0 !important;
+    border-top: 1px solid rgba(0, 0, 0, 0.125) !important;
+
     :last-of-type {
         border-bottom-left-radius: 4px;
         border-bottom-right-radius: 4px;
@@ -251,7 +253,6 @@ export const StatementsGroupStyle = styled(ListGroupItem)`
         border-top: 0;
     }
     &.noTemplate {
-        border-top: 1px solid rgba(0, 0, 0, 0.125);
         border-radius: 4px !important;
         margin-top: 0.75rem;
 

@@ -9,6 +9,6 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 export const history = createBrowserHistory({ basename: env('PUBLIC_URL') });
 
-export default function configureStore() {
-    return createStore(rootReducer(history), composeEnhancers(applyMiddleware(thunk, routerMiddleware(history))));
+export default function configureStore(initialState = {}) {
+    return createStore(rootReducer(history), initialState, composeEnhancers(applyMiddleware(thunk, routerMiddleware(history))));
 }

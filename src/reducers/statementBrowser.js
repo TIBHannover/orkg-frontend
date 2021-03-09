@@ -10,7 +10,7 @@ const initialState = {
     level: 0,
     isFetchingStatements: false,
     openExistingResourcesInDialog: false,
-    propertiesAsLinks: false,
+    propertiesAsLinks: false, // if false the link appears in black font color and opens in a new window
     resourcesAsLinks: false,
     initOnLocationChange: true,
     keyToKeepStateOnLocationChange: null,
@@ -37,6 +37,7 @@ const initialState = {
     selectedContributionId: ''
 };
 
+// eslint-disable-next-line import/no-anonymous-default-export
 export default (state = initialState, action) => {
     switch (action.type) {
         case type.CREATE_RESOURCE: {
@@ -504,8 +505,8 @@ export default (state = initialState, action) => {
         case type.SET_STATEMENT_IS_FECHTED: {
             const { resourceId, depth } = action;
 
-            let newState = dotProp.set(state, `resources.byId.${resourceId}.isFechted`, true);
-            newState = dotProp.set(newState, `resources.byId.${resourceId}.fetshedDepth`, depth);
+            let newState = dotProp.set(state, `resources.byId.${resourceId}.isFetched`, true);
+            newState = dotProp.set(newState, `resources.byId.${resourceId}.fetchedDepth`, depth);
             newState = dotProp.set(newState, `resources.byId.${resourceId}.isFetching`, false);
 
             return {
@@ -518,7 +519,7 @@ export default (state = initialState, action) => {
             let newState = dotProp.set(state, `isFetchingStatements`, true);
             if (resourceId) {
                 newState = dotProp.set(newState, `resources.byId.${resourceId}.isFetching`, true);
-                newState = dotProp.set(newState, `resources.byId.${resourceId}.isFechted`, false);
+                newState = dotProp.set(newState, `resources.byId.${resourceId}.isFetched`, false);
             }
 
             return {

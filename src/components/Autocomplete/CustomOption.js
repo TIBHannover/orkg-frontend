@@ -1,7 +1,6 @@
-import React from 'react';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
-import Tippy from '@tippy.js/react';
+import Tippy from '@tippyjs/react';
 import { components } from 'react-select';
 import styled from 'styled-components';
 import { truncate } from 'lodash';
@@ -106,9 +105,9 @@ export default function CustomOption(props) {
                         </div>
                     )}
                     {props.data.id && (
-                        <span onClick={onClick} className="badge">
+                        <div onClick={onClick} className="badge" onKeyDown={e => (e.keyCode === 13 ? onClick : undefined)} role="button" tabIndex={0}>
                             {props.data.id}
-                        </span>
+                        </div>
                     )}
                 </span>
             </StyledSelectOption>

@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
+import { createRef, Component } from 'react';
 import styled from 'styled-components';
-import Tippy from '@tippy.js/react';
+import Tippy from '@tippyjs/react';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { Button, ButtonGroup } from 'reactstrap';
@@ -33,8 +33,8 @@ class StatementOptionButton extends Component {
     constructor(props) {
         super(props);
 
-        this.yesButtonRef = React.createRef();
-        this.cancelButtonRef = React.createRef();
+        this.yesButtonRef = createRef();
+        this.cancelButtonRef = createRef();
     }
 
     onShow = () => {
@@ -92,7 +92,7 @@ class StatementOptionButton extends Component {
     render() {
         const tippyTarget = (
             <span>
-                <OptionButton disabled={this.props.isDisabled} color="link" className="p-0" onClick={this.handleClick}>
+                <OptionButton disabled={this.props.isDisabled} color="link" className="p-0" onClick={this.handleClick} aria-label={this.props.title}>
                     <span
                         className="icon-wrapper"
                         style={{
@@ -120,6 +120,7 @@ class StatementOptionButton extends Component {
                     onHide={this.onHide}
                     onCreate={this.onCreate}
                     interactive={true}
+                    appendTo={this.props.appendTo}
                     trigger="click"
                     content={
                         <div className="text-center p-1" style={{ color: '#fff', fontSize: '0.95rem', wordBreak: 'normal' }}>
@@ -173,11 +174,13 @@ StatementOptionButton.propTypes = {
     requireConfirmation: PropTypes.bool,
     confirmationMessage: PropTypes.string,
     onVisibilityChange: PropTypes.func,
-    isDisabled: PropTypes.bool
+    isDisabled: PropTypes.bool,
+    appendTo: PropTypes.oneOfType([PropTypes.object, PropTypes.string])
 };
 
 StatementOptionButton.defaultProps = {
-    requireConfirmation: false
+    requireConfirmation: false,
+    appendTo: 'parent'
 };
 
 export default StatementOptionButton;

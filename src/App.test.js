@@ -1,9 +1,7 @@
-import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import { Provider } from 'react-redux';
 import configureStore, { history } from './store';
-import { AppContainer } from 'react-hot-loader';
 import { ThemeProvider } from 'styled-components';
 import { shallow } from 'enzyme';
 
@@ -59,13 +57,11 @@ it('renders without crashing', () => {
     const store = configureStore();
 
     ReactDOM.render(
-        <AppContainer>
-            <Provider store={store}>
-                <ThemeProvider theme={theme}>
-                    <App history={history} />
-                </ThemeProvider>
-            </Provider>
-        </AppContainer>,
+        <Provider store={store}>
+            <ThemeProvider theme={theme}>
+                <App history={history} />
+            </ThemeProvider>
+        </Provider>,
         div
     );
 });

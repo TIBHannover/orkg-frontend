@@ -1,5 +1,5 @@
 import { Button, Form, FormGroup, Input, Label, Alert } from 'reactstrap';
-import React, { Component } from 'react';
+import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { openAuthDialog, toggleAuthDialog, updateAuth } from 'actions/auth';
@@ -100,20 +100,7 @@ class SignIn extends Component {
                         />
                     </FormGroup>
                     <FormGroup>
-                        <Label for="Password">
-                            Password{' '}
-                            {/*
-                            <span
-                                className="ml-1"
-                                style={{ cursor: 'pointer', color: 'inherit', textDecoration: 'underline' }}
-                                onClick={() => {
-                                    this.props.openAuthDialog('forgotpassword');
-                                }}
-                            >
-                                Forgot?
-                            </span>
-                            */}
-                        </Label>
+                        <Label for="Password">Password</Label>
                         <Input
                             onChange={this.handleInputChange}
                             value={this.state.password}

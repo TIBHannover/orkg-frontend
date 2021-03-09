@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { Alert, Button, Modal, ModalHeader, ModalBody, ModalFooter, Progress } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -21,7 +21,7 @@ const ConfirmBulkImport = props => {
     }, [data, makePaperList]);
 
     const comparisonUrl = createdContributions
-        ? reverse(ROUTES.COMPARISON) + '?contributions=' + createdContributions.map(entry => entry.contributionId)
+        ? reverse(ROUTES.CONTRIBUTION_EDITOR) + '?contributions=' + createdContributions.map(entry => entry.contributionId)
         : null;
 
     const progressPercentage =
@@ -59,9 +59,9 @@ const ConfirmBulkImport = props => {
                 {isFinished && (
                     <>
                         <Alert color="success">Import successful, {createdContributions.length} papers are imported</Alert>
-                        The imported papers can be viewed in a comparison <br />
+                        The imported papers can be viewed in the contribution editor <br />
                         <Button tag={Link} to={comparisonUrl} target="_blank" color="primary" className="mt-3">
-                            View comparison
+                            Contribution editor
                         </Button>
                     </>
                 )}

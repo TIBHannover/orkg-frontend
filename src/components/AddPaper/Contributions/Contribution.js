@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Form, FormGroup } from 'reactstrap';
 import { connect } from 'react-redux';
 import SuggestedTemplates from 'components/StatementBrowser/SuggestedTemplates/SuggestedTemplates';
-import StatementBrowser from 'components/StatementBrowser/Statements/StatementsContainer';
+import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
 import { updateResearchProblems, openTour } from 'actions/addPaper';
-import { getReseachProblemsOfContribution } from 'actions/statementBrowser';
+import { getResearchProblemsOfContribution } from 'actions/statementBrowser';
 import { StyledHorizontalContribution } from './styled';
 import PropTypes from 'prop-types';
 
@@ -67,8 +67,8 @@ class Contribution extends Component {
                                 enableEdit={true}
                                 syncBackend={false}
                                 openExistingResourcesInDialog={false}
-                                initialResourceId={this.props.resourceId}
-                                initialResourceLabel={this.props.resourceLabel}
+                                initialSubjectId={this.props.resourceId}
+                                initialSubjectLabel={this.props.resourceLabel}
                                 templatesFound={false}
                             />
                         </FormGroup>
@@ -95,7 +95,7 @@ const mapStateToProps = (state, ownProps) => {
     return {
         resourceId: state.addPaper.contributions.byId[ownProps.id] ? state.addPaper.contributions.byId[ownProps.id].resourceId : null,
         resourceLabel: state.addPaper.contributions.byId[ownProps.id] ? state.addPaper.contributions.byId[ownProps.id].label : null,
-        researchProblems: getReseachProblemsOfContribution(
+        researchProblems: getResearchProblemsOfContribution(
             state,
             state.addPaper.contributions.byId[ownProps.id] ? state.addPaper.contributions.byId[ownProps.id].resourceId : null
         ),

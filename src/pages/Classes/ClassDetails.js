@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Container, Table, ButtonGroup, Button } from 'reactstrap';
 import { getStatementsByObjectAndPredicate } from 'services/backend/statements';
 import { getClassById } from 'services/backend/classes';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faPlus, faFileCsv } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faFileCsv, faPen, faTimes } from '@fortawesome/free-solid-svg-icons';
+import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
 import ClassInstances from 'components/ClassInstances/ClassInstances';
 import ImportCSVInstances from 'components/ClassInstances/ImportCSVInstances';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
@@ -14,6 +15,7 @@ import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes.js';
 import { useLocation } from 'react-router-dom';
+import { CLASS_TYPE_ID } from 'constants/misc';
 import { CLASSES, PREDICATES } from 'constants/graphSettings';
 
 function ClassDetails(props) {
@@ -25,6 +27,7 @@ function ClassDetails(props) {
     const [uri, setURI] = useState('');
     const [isLoading, setIsLoading] = useState(true);
     const [modalImportIsOpen, setModalImportIsOpen] = useState(false);
+    const [editMode, setEditMode] = useState(false);
 
     useEffect(() => {
         const findClass = async () => {
@@ -103,11 +106,23 @@ function ClassDetails(props) {
                         <Table bordered>
                             <tbody>
                                 <tr>
-                                    <th scope="row">Class ID</th>
+                                    <th scope="row">ID</th>
                                     <td> {props.match.params.id}</td>
                                 </tr>
                                 <tr>
-                                    <th scope="row">Class URI</th>
+                                    <th scope="row">Label</th>
+                                    <td>
+                                        {label ? (
+                                            label
+                                        ) : (
+                                            <i>
+                                                <small>No label</small>
+                                            </i>
+                                        )}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">URI</th>
                                     <td>
                                         <i>{uri && uri !== 'null' ? <a href={uri}>{uri}</a> : 'Not Defined'}</i>
                                     </td>
@@ -129,6 +144,40 @@ function ClassDetails(props) {
                                 </tr>
                             </tbody>
                         </Table>
+                        <hr />
+
+                        <div className="d-flex align-items-center">
+                            <h1 className="h5 mt-4 mb-4 flex-grow-1">Statements</h1>
+                            {!editMode ? (
+                                <RequireAuthentication
+                                    component={Button}
+                                    className="flex-shrink-0"
+                                    color="darkblue"
+                                    size="sm"
+                                    onClick={() => setEditMode(v => !v)}
+                                >
+                                    <Icon icon={faPen} /> Edit
+                                </RequireAuthentication>
+                            ) : (
+                                <Button className="flex-shrink-0" color="darkblueDarker" size="sm" onClick={() => setEditMode(v => !v)}>
+                                    <Icon icon={faTimes} /> Stop editing
+                                </Button>
+                            )}
+                        </div>
+                        <div className="clearfix">
+                            <StatementBrowser
+                                rootNodeType={CLASS_TYPE_ID}
+                                enableEdit={editMode}
+                                syncBackend={editMode}
+                                openExistingResourcesInDialog={false}
+                                initialSubjectId={props.match.params.id}
+                                initialSubjectLabel={label}
+                                newStore={true}
+                                propertiesAsLinks={true}
+                                resourcesAsLinks={true}
+                            />
+                        </div>
+
                         <ClassInstances classId={props.match.params.id} key={keyInstances} />
                         <ImportCSVInstances
                             classId={props.match.params.id}

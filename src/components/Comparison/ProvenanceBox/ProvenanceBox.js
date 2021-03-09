@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Row, Card, CardBody, CardTitle } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
@@ -45,6 +45,11 @@ const StyledOrganizationCard = styled.div`
 function ProvenanceBox(props) {
     const [showAssignObservatory, setShowAssignObservatory] = useState(false);
     const user = useSelector(state => state.auth.user);
+
+    if (isEmpty(props.provenance) && !props.creator && (!user || (!!user && !user.isCurationAllowed))) {
+        return null;
+    }
+
     return (
         <div className="container box rounded-lg mt-4">
             <Row>
@@ -84,7 +89,7 @@ function ProvenanceBox(props) {
                     <div className="col-4">
                         <div className={!props.provenance.organization.logo ? 'm-4' : ''}>
                             {props.provenance.organization.logo && (
-                                <StyledOrganizationCard className="card h-100">
+                                <StyledOrganizationCard className="card h-100 border-0">
                                     <Link className="logoContainer" to={reverse(ROUTES.ORGANIZATION, { id: props.provenance.organization.id })}>
                                         <img
                                             className="mx-auto p-2"
@@ -113,6 +118,8 @@ function ProvenanceBox(props) {
                     callBack={props.changeObservatory}
                     showDialog={showAssignObservatory}
                     resourceId={props.resourceId}
+                    observatory={!isEmpty(props.provenance) ? props.provenance : null}
+                    organization={!isEmpty(props.provenance) && !isEmpty(props.provenance.organization) ? props.provenance.organization : null}
                     toggle={() => setShowAssignObservatory(v => !v)}
                 />
             </Row>

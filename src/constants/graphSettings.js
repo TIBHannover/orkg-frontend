@@ -41,7 +41,8 @@ export const PREDICATES = {
     COMPARE_CONTRIBUTION: 'compareContribution',
     HAS_PROPERTY: 'hasProperty',
     HAS_PREVIOUS_VERSION: 'hasPreviousVersion',
-    HAS_SUBJECT: 'hasSubject'
+    HAS_SUBJECT: 'hasSubject',
+    HAS_VISUALIZATION: 'hasVisualization'
 };
 
 export const CLASSES = {
@@ -59,9 +60,11 @@ export const CLASSES = {
     FEATURED_COMPARISON_CATEGORY: 'FeaturedComparisonCategory',
     CONTRIBUTION_TEMPLATE: 'ContributionTemplate',
     PREDICATE: 'Predicates',
+    CLASS: 'Classes',
     QB_DATASET_CLASS: 'QBDataset',
     LOCATION: 'DCLocation',
-    SENTENCE: 'Sentence'
+    SENTENCE: 'Sentence',
+    VISUALIZATION: 'Visualization'
 };
 
 export const MISC = {

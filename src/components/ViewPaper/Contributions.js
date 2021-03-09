@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Alert, Col, Container, Form, FormGroup, Row, Button } from 'reactstrap';
 import { deleteStatementById, createResourceStatement } from 'services/backend/statements';
 import { getResource } from 'services/backend/resources';
@@ -11,7 +11,7 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import ROUTES from 'constants/routes';
 import SimilarContributions from './SimilarContributions';
-import StatementBrowser from 'components/StatementBrowser/Statements/StatementsContainer';
+import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
 import ResearchProblemInput from 'components/AddPaper/Contributions/ResearchProblemInput';
 import ContributionItemList from 'components/AddPaper/Contributions/ContributionItemList';
 import ContributionComparisons from 'components/ViewPaper/ContirbutionComparisons/ContributionComparisons';
@@ -20,14 +20,15 @@ import { connect } from 'react-redux';
 import { reverse } from 'named-urls';
 import { toast } from 'react-toastify';
 import { selectContribution, updateResearchProblems } from 'actions/viewPaper';
-import { getReseachProblemsOfContribution } from 'actions/statementBrowser';
+import { getResearchProblemsOfContribution } from 'actions/statementBrowser';
 import styled from 'styled-components';
-import { StyledHorizontalContributionsList, StyledHorizontalContribution } from '../AddPaper/Contributions/styled';
-import Tippy from '@tippy.js/react';
+import { StyledHorizontalContributionsList, StyledHorizontalContribution, AddContribution } from 'components/AddPaper/Contributions/styled';
+import Tippy from '@tippyjs/react';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import SuggestedTemplates from 'components/StatementBrowser/SuggestedTemplates/SuggestedTemplates';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { PREDICATES, CLASSES } from 'constants/graphSettings';
+import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
 
 const Title = styled.div`
     font-size: 18px;
@@ -179,7 +180,15 @@ class Contributions extends Component {
                         <Col md="9">
                             {this.state.loading && (
                                 <div>
-                                    <ContentLoader height={6} width={100} speed={2} primaryColor="#f3f3f3" secondaryColor="#ecebeb">
+                                    <ContentLoader
+                                        height="100%"
+                                        width="100%"
+                                        viewBox="0 0 100 6"
+                                        style={{ width: '100% !important' }}
+                                        speed={2}
+                                        backgroundColor="#f3f3f3"
+                                        foregroundColor="#ecebeb"
+                                    >
                                         <rect x="0" y="0" rx="1" ry="1" width={20} height="5" />
                                         <rect x="21" y="0" rx="1" ry="1" width={20} height="5" />
                                         <rect x="42" y="0" rx="1" ry="1" width={20} height="5" />
@@ -204,12 +213,14 @@ class Contributions extends Component {
                                         );
                                     })}
                                     {this.props.enableEdit && (
-                                        <li className="addContribution" onClick={() => this.props.handleCreateContribution()}>
-                                            <Tippy content="Add contribution">
-                                                <span>
-                                                    <Icon size="xs" icon={faPlus} />
-                                                </span>
-                                            </Tippy>
+                                        <li>
+                                            <AddContribution color="link" onClick={() => this.props.handleCreateContribution()}>
+                                                <Tippy content="Add contribution">
+                                                    <span>
+                                                        <Icon size="xs" icon={faPlus} />
+                                                    </span>
+                                                </Tippy>
+                                            </AddContribution>
                                         </li>
                                     )}
                                 </StyledHorizontalContributionsList>
@@ -245,9 +256,17 @@ class Contributions extends Component {
                                             <Title style={{ marginTop: 0 }}>Research problems</Title>
                                             {this.state.loading && (
                                                 <div>
-                                                    <ContentLoader height={7} width={100} speed={2} primaryColor="#f3f3f3" secondaryColor="#ecebeb">
-                                                        <rect x="0" y="0" width="40" height="3" />
-                                                        <rect x="0" y="4" width="40" height="3" />
+                                                    <ContentLoader
+                                                        height="100%"
+                                                        width="100%"
+                                                        viewBox="0 0 100 5"
+                                                        style={{ width: '100% !important' }}
+                                                        speed={2}
+                                                        backgroundColor="#f3f3f3"
+                                                        foregroundColor="#ecebeb"
+                                                    >
+                                                        <rect x="0" y="0" width="40" height="2" />
+                                                        <rect x="0" y="3" width="40" height="2" />
                                                     </ContentLoader>
                                                 </div>
                                             )}
@@ -259,7 +278,9 @@ class Contributions extends Component {
                                                             <span key={index}>
                                                                 <Link to={reverse(ROUTES.RESEARCH_PROBLEM, { researchProblemId: problem.id })}>
                                                                     <ResearchProblemButton className="btn btn-link p-0 border-0 align-baseline">
-                                                                        {problem.label}
+                                                                        <DescriptionTooltip id={problem.id} typeId={CLASSES.PROBLEM}>
+                                                                            {problem.label}
+                                                                        </DescriptionTooltip>
                                                                     </ResearchProblemButton>
                                                                 </Link>
                                                                 <br />
@@ -295,8 +316,16 @@ class Contributions extends Component {
                                             <Title>Contribution data</Title>
                                             {this.state.loading && (
                                                 <div>
-                                                    <ContentLoader height={6} width={100} speed={2} primaryColor="#f3f3f3" secondaryColor="#ecebeb">
-                                                        <rect x="0" y="0" rx="2" ry="2" width="90" height="6" />
+                                                    <ContentLoader
+                                                        height="100%"
+                                                        width="100%"
+                                                        viewBox="0 0 100 6"
+                                                        style={{ width: '100% !important' }}
+                                                        speed={2}
+                                                        backgroundColor="#f3f3f3"
+                                                        foregroundColor="#ecebeb"
+                                                    >
+                                                        <rect x="0" y="0" rx="1" ry="1" width="90" height="6" />
                                                     </ContentLoader>
                                                 </div>
                                             )}
@@ -316,7 +345,15 @@ class Contributions extends Component {
                                             <Title>Similar contributions</Title>
                                             {this.state.isSimilaireContributionsLoading && (
                                                 <div>
-                                                    <ContentLoader height={10} width={100} speed={2} primaryColor="#f3f3f3" secondaryColor="#ecebeb">
+                                                    <ContentLoader
+                                                        height="100%"
+                                                        width="100%"
+                                                        viewBox="0 0 100 10"
+                                                        style={{ width: '100% !important' }}
+                                                        speed={2}
+                                                        backgroundColor="#f3f3f3"
+                                                        foregroundColor="#ecebeb"
+                                                    >
                                                         <rect x="0" y="0" rx="2" ry="2" width="32" height="10" />
                                                         <rect x="33" y="0" rx="2" ry="2" width="32" height="10" />
                                                         <rect x="66" y="0" rx="2" ry="2" width="32" height="10" />
@@ -405,7 +442,7 @@ const mapStateToProps = (state, ownProps) => {
 
     // All the research problem ids (concatination of the research problem input field and the statement browser)
     const researchProblemsIds = [
-        ...getReseachProblemsOfContribution(
+        ...getResearchProblemsOfContribution(
             state,
             state.addPaper.contributions.byId[ownProps.selectedContribution]
                 ? state.addPaper.contributions.byId[ownProps.selectedContribution].resourceId

@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { InputGroup, InputGroupAddon, Button } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faClipboard, faLink, faAtom } from '@fortawesome/free-solid-svg-icons';
@@ -17,7 +17,7 @@ import styled, { withTheme } from 'styled-components';
 import getExternalData from './3rdPartyRegistries/index';
 import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
-import Tippy from '@tippy.js/react';
+import Tippy from '@tippyjs/react';
 import REGEX from 'constants/regex';
 import NativeListener from 'react-native-listener';
 import CustomOption from './CustomOption';
@@ -80,6 +80,20 @@ function Autocomplete(props) {
         }
         return prevOptions;
     };
+
+    useEffect(() => {
+        if (props.onChangeInputValue) {
+            props.onChangeInputValue(inputValue);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [inputValue]);
+
+    // support for setting the inputValue via the props
+    useEffect(() => {
+        if (props.inputValue !== null) {
+            setInputValue(props.inputValue);
+        }
+    }, [props.inputValue]);
 
     /**
      * Lookup in ORKG backend
@@ -634,7 +648,8 @@ function Autocomplete(props) {
         }),
         menu: provided => ({
             ...provided,
-            zIndex: 10
+            zIndex: 10,
+            fontSize: '0.875rem'
         }),
         option: provided => ({
             ...provided,
@@ -700,8 +715,8 @@ function Autocomplete(props) {
             />
             <StyledAutoCompleteInputFormControl className={`form-control ${props.cssClasses ? props.cssClasses : 'default'} border-0`}>
                 <AsyncPaginateBase
-                    key={JSON.stringify(selectedOntologies.map(o => o.id))}
                     SelectComponent={Select}
+                    key={JSON.stringify(selectedOntologies.map(o => o.id))}
                     value={props.value}
                     loadOptions={loadOptions}
                     additional={defaultAdditional}
@@ -718,6 +733,7 @@ function Autocomplete(props) {
                     inputValue={inputValue || ''}
                     styles={customStyles}
                     placeholder={props.placeholder}
+                    aria-label={props.placeholder}
                     autoFocus={props.autoFocus}
                     cacheOptions={false}
                     cache={false}
@@ -726,6 +742,7 @@ function Autocomplete(props) {
                     onBlur={props.onBlur}
                     onKeyDown={props.onKeyDown}
                     selectRef={props.innerRef}
+                    menuPortalTarget={props.menuPortalTarget}
                     components={{
                         Option: Option,
                         Menu: Menu,
@@ -795,7 +812,10 @@ Autocomplete.propTypes = {
     autoFocus: PropTypes.bool,
     ols: PropTypes.bool,
     inputGroup: PropTypes.bool,
-    inputId: PropTypes.string
+    inputId: PropTypes.string,
+    onChangeInputValue: PropTypes.func,
+    inputValue: PropTypes.string,
+    menuPortalTarget: PropTypes.object
 };
 
 Autocomplete.defaultProps = {
@@ -810,6 +830,8 @@ Autocomplete.defaultProps = {
     autoFocus: true,
     ols: false,
     inputGroup: true,
-    inputId: null
+    inputId: null,
+    inputValue: null,
+    menuPortalTarget: null
 };
 export default withTheme(Autocomplete);

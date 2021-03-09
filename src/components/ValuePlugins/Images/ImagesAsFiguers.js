@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { renderToString } from 'react-dom/server';
 import styled from 'styled-components';
@@ -46,7 +46,7 @@ class ImageAsFigure extends Component {
 }
 
 ImageAsFigure.propTypes = {
-    children: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,
+    children: PropTypes.oneOfType([PropTypes.string, PropTypes.object, PropTypes.node]).isRequired,
     type: PropTypes.oneOf(['resource', 'literal']),
     options: PropTypes.object.isRequired
 };

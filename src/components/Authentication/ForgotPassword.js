@@ -1,5 +1,5 @@
 import { Alert, Button, Form, FormGroup, Input, Label } from 'reactstrap';
-import React, { Component } from 'react';
+import { Component } from 'react';
 
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';

@@ -37,113 +37,39 @@ export const ComparisonTypeButton = styled(Button)`
     }
 `;
 
-export const ScrollButton = styled.div`
-    border-radius: 30px;
-    color: ${props => props.theme.darkblue};
-    width: 30px;
-    height: 30px;
-    font-size: 27px;
-    cursor: pointer;
-    transition: 0.2s filter;
+export const ScrollButton = styled(Button)`
+    &&& {
+        border-radius: 30px;
+        color: ${props => props.theme.darkblue};
+        width: 30px;
+        height: 30px;
+        cursor: pointer;
+        transition: 0.2s filter;
+        padding: 0;
+        margin: 0;
+        line-height: 1;
+        border: 0;
 
-    &.next {
-        float: right;
-    }
-    &.back {
-        float: left;
-    }
-    &:hover {
-        filter: brightness(85%);
+        &.next {
+            float: right;
+        }
+        &.back {
+            float: left;
+        }
+        &:hover,
+        &:focus {
+            filter: brightness(85%);
+        }
     }
 `;
 
 export const ReactTableWrapper = styled.div`
-    clear: both;
+    /* This is required to make the table full-width */
     position: relative;
-    padding: 10px 0;
-    font-size: ${props => (props.smallerFontSize ? '0.95rem' : '1rem')};
+    display: flex;
+    flex-direction: column;
 
-    /*&.overflowing-left .rthfc-td-fixed,
-    &.overflowing-left .rthfc-th-fixed {
-        box-shadow: 9px 0px 5px -5px  #d9d9d9 !important;
-    }*/
-
-    /*&.overflowing-right,*/
-
-    &.overflowing-left::before {
-        content: '';
-        position: absolute;
-        left: 250px;
-        top: 10px;
-        height: calc(100% - 35px);
-        width: 10px;
-        box-shadow: rgba(0, 0, 0, 0.18) 9px 0px 5px -5px inset;
-        z-index: 5;
-        pointer-events: none; /* ensure the elements under the shadow are still clickable */
-    }
-
-    &.overflowing-right::after {
-        content: '';
-        position: absolute;
-        right: 0;
-        top: 0;
-        height: 100%;
-        width: 10px;
-        box-shadow: rgba(0, 0, 0, 0.18) -9px 0px 5px -5px inset;
-        z-index: 5;
-        pointer-events: none; /* ensure the elements under the shadow are still clickable */
-    }
-
-    & .rt-th.rthfc-th-fixed-left-last {
-        border-radius: 11px 11px 0 0;
-    }
-    & .rthfc-td-fixed-left-last {
-        border-radius: 0 0 11px 11px !important;
-    }
-
-    .rthfc .-filters .rt-th.rthfc-th-fixed-left-last,
-    .rthfc .rt-th.rthfc-th-fixed-left-last,
-    .rthfc .rt-td.rthfc-td-fixed-left-last,
-    .ReactTable .rt-tbody .rt-td,
-    .ReactTable {
-        border: 0;
-    }
-    .ReactTable .rt-th,
-    .ReactTable .rt-td,
-    .ReactTable .rt-thead .rt-th,
-    .ReactTable .rt-thead .rt-td {
-        padding: 0;
-        border: 0;
-        overflow: initial;
-        white-space: initial;
-    }
-    .ReactTable .rt-th > div {
-        height: 100%;
-    }
-    .ReactTable .rt-tbody .rt-tr-group {
-        border: 0;
-    }
-    .ReactTable .rt-thead .rt-tr {
-        text-align: left;
-        position: sticky;
-        top: 0;
-        background: white;
-    }
-    .ReactTable .rt-table {
-        position: relative;
-        scroll-behavior: smooth;
-        overflow: visible !important;
-    }
-    .ReactTable .rt-thead.-header {
-        box-shadow: none;
-        top: 0px;
-        overflow: auto;
-    }
-    .ReactTable .rt-tbody .rt-tr-group:last-child .rt-td > div div:first-child {
-        border-bottom: 2px solid #d5dae4 !important;
-        border-radius: 0 0 11px 11px !important;
-    }
-    .ReactTable .disable-scrollbars {
+    .disable-scrollbars {
         scrollbar-width: none; /* Firefox */
         -ms-overflow-style: none; /* IE 10+ */
         &::-webkit-scrollbar {
@@ -153,27 +79,82 @@ export const ReactTableWrapper = styled.div`
             height: 0;
         }
     }
-    .ReactTable .rt-tr:hover .rt-td > div > div {
-        background: #e7eaf1;
+
+    &:not(.contribution-editor) {
+        .table {
+            .tr:hover .td > div > div {
+                background: #e7eaf1;
+            }
+            .tr:hover .td .columnProperty > div {
+                background: #8b91a5;
+            }
+            .tr:hover .td .columnContribution > div:first-child {
+                color: #e86161;
+                background: #d77171;
+            }
+        }
     }
-    .ReactTable .rt-tr:hover .rthfc-td-fixed-left > .columnProperty > div {
-        background: #8b91a5;
+
+    &.contribution-editor {
+        .table {
+            .tr .td:not(.sticky) > div > div:hover {
+                background: #f0f2f7;
+            }
+            .tr div[data-sticky-td] > .columnProperty > div:hover {
+                background: #8b91a5;
+            }
+        }
     }
-    .ReactTable .rt-tr:hover .rthfc-td-fixed-left > .columnContribution > div:first-child {
-        color: #e86161;
-        background: #d77171;
+
+    .table {
+        position: relative;
+        scroll-behavior: smooth;
+        overflow: visible !important;
+        flex: auto 1;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        width: 100%;
+        border-collapse: collapse;
+        .tr {
+            flex: 1 0 auto;
+            display: inline-flex;
+            :last-child {
+                .td {
+                    border-bottom: 0;
+                }
+            }
+        }
+
+        .comparisonBody .tr:last-child .td > div > div:first-child {
+            border-radius: 0 0 11px 11px !important;
+        }
+
+        &.sticky {
+            overflow: scroll;
+
+            .header {
+                top: 0;
+            }
+
+            .comparisonBody {
+                position: relative;
+                z-index: 0;
+            }
+        }
     }
 `;
-
 export const Properties = styled.div`
     padding: 0 0 0 0 !important;
     margin: 0;
-    margin-right: 10px !important;
-    display: inline-block;
     height: 100%;
-    width: 250px;
     position: relative;
     background: #fff;
+
+    // for contribution editor, show edit/delete buttons on hover
+    &:hover .cell-buttons {
+        display: block;
+    }
 `;
 
 export const PropertiesInner = styled.div`
@@ -199,13 +180,11 @@ export const PropertiesInner = styled.div`
 `;
 
 export const ItemHeader = styled.div`
-    padding-right: 10px;
     min-height: 50px;
     padding: 0 10px !important;
+    background-color: #fff;
     margin: 0;
-    display: inline-block;
     height: 100%;
-    width: 250px;
     position: relative;
 `;
 
@@ -221,15 +200,22 @@ export const ItemHeaderInner = styled.div`
     a {
         color: #fff !important;
     }
+    &.contribution-editor {
+        background: ${props => props.theme.themeColors.lightblue};
+    }
 `;
 
 export const Contribution = styled.div`
     color: #ffa5a5;
     font-size: 85%;
+    &.contribution-editor {
+        color: ${props => props.theme.themeColors.darkblue};
+    }
 `;
 
-export const Delete = styled.div`
+export const Delete = styled.button`
     position: absolute;
+    border: 0;
     top: 0px;
     right: 5px;
     background: #ffa3a3;
@@ -244,5 +230,48 @@ export const Delete = styled.div`
 
     &:hover {
         background: #fff;
+    }
+    &.contribution-editor {
+        color: ${props => props.theme.themeColors.lightblue};
+        right: -5px;
+        background: ${props => props.theme.themeColors.darkblue};
+        &:hover {
+            background: ${props => props.theme.themeColors.darkblueDarker};
+        }
+    }
+`;
+
+export const ClickableScrollButton = styled.button`
+    width: 30px;
+    position: absolute;
+    z-index: 10;
+    transition: box-shadow 0.5s;
+    background: transparent;
+    border: 0;
+    outline: 0 !important;
+
+    &.right {
+        cursor: e-resize;
+        right: 0;
+        top: 0;
+        height: 100%;
+        box-shadow: rgba(0, 0, 0, 0.18) -9px 0px 5px -5px inset;
+
+        &:hover {
+            box-shadow: rgba(0, 0, 0, 0.25) -13px 0px 5px -5px inset;
+        }
+    }
+
+    &.left {
+        cursor: w-resize;
+        left: 250px;
+        top: 10px;
+        height: calc(100% - 20px);
+
+        box-shadow: rgba(0, 0, 0, 0.18) 9px 0px 5px -5px inset;
+
+        &:hover {
+            box-shadow: rgba(0, 0, 0, 0.25) 13px 0px 5px -5px inset;
+        }
     }
 `;

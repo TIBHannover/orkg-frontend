@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { createRef, useState, useEffect } from 'react';
 import { ListGroup, ListGroupItem } from 'reactstrap';
 import Confirm from 'reactstrap-confirm';
 import { setTableData } from 'actions/pdfAnnotation';
@@ -15,7 +15,7 @@ function useExtractionModal(props) {
     const [loading, setLoading] = useState(false);
     const [importError, setImportError] = useState(false);
     const [importedData, setImportedData] = useState(null);
-    const editorRef = React.createRef();
+    const editorRef = createRef();
     const dispatch = useDispatch();
     const pdf = useSelector(state => state.pdfAnnotation.pdf);
     const tableData = useSelector(state => state.pdfAnnotation.tableData[props.id]);

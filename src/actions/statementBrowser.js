@@ -3,10 +3,12 @@ import { guid } from 'utils';
 import { prefillStatements } from './addPaper';
 import { orderBy, uniq, isEqual } from 'lodash';
 import { PREDICATES, MISC, CLASSES } from 'constants/graphSettings';
+import { CLASS_TYPE_ID, PREDICATE_TYPE_ID, RESOURCE_TYPE_ID } from 'constants/misc';
 import { getResource } from 'services/backend/resources';
 import { getPredicate } from 'services/backend/predicates';
 import { getStatementsBySubject, getTemplateById, getTemplatesByClass } from 'services/backend/statements';
 import { createResource as createResourceApi } from 'services/backend/resources';
+import { getClassById } from 'services/backend/classes.js';
 
 export const updateSettings = data => dispatch => {
     dispatch({
@@ -31,13 +33,20 @@ export const initializeWithoutContribution = data => dispatch => {
     const label = data.label;
     const resourceId = data.resourceId;
     const rootNodeType = data.rootNodeType;
+    let classes = [];
+    if (rootNodeType === PREDICATE_TYPE_ID) {
+        classes = [CLASSES.PREDICATE];
+    }
+    if (rootNodeType === CLASS_TYPE_ID) {
+        classes = [CLASSES.CLASS];
+    }
 
     dispatch(
         createResource({
             label: label,
             existingResourceId: resourceId,
             resourceId: resourceId,
-            ...(rootNodeType === 'predicate' ? { classes: [CLASSES.PREDICATE] } : {})
+            classes: classes
         })
     );
 
@@ -160,7 +169,7 @@ export function createRequiredPropertiesInResource(resourceId) {
  * @param {String} resourceId Resource ID
  * @return {String[]} list of template IDs
  */
-export function getReseachProblemsOfContribution(state, resourceId) {
+export function getResearchProblemsOfContribution(state, resourceId) {
     if (!resourceId) {
         return [];
     }
@@ -183,7 +192,7 @@ export function getReseachProblemsOfContribution(state, resourceId) {
 }
 
 /**
- * Get tempalte IDs by resource ID
+ * Get template IDs by resource ID
  *
  * @param {Object} state Current state of the Store
  * @param {String} resourceId Resource ID
@@ -297,7 +306,7 @@ export function createProperty(data) {
             const resource = getState().statementBrowser.resources.byId[data.resourceId];
 
             if (resource && resource.propertyIds) {
-                const isExstingProperty = resource.propertyIds.find(p => {
+                const isExistingProperty = resource.propertyIds.find(p => {
                     if (getState().statementBrowser.properties.byId[p].existingPredicateId === data.existingPredicateId) {
                         if (data.range) {
                             // if the range is set check the equality also
@@ -309,7 +318,7 @@ export function createProperty(data) {
                         return false;
                     }
                 });
-                if (isExstingProperty) {
+                if (isExistingProperty) {
                     // Property already exists
                     return null;
                 }
@@ -509,7 +518,7 @@ export function createValue(data) {
         });
 
         // Dispatch loading template of classes
-        data.classes && data.classes.map(classID => dispatch(fetchTemplatesofClassIfNeeded(classID)));
+        data.classes && data.classes.map(classID => dispatch(fetchTemplatesOfClassIfNeeded(classID)));
         return Promise.resolve();
     };
 }
@@ -715,7 +724,7 @@ export function fillResourceWithTemplate({ templateID, selectedResource, syncBac
  * @param {String} classID - Class ID
  * @return {Boolean} if the class template should be fetched or not
  */
-function shouldFetchTemplatesofClass(state, classID) {
+function shouldFetchTemplatesOfClass(state, classID) {
     const classObj = state.statementBrowser.classes[classID];
     if (!classObj) {
         return true;
@@ -729,9 +738,9 @@ function shouldFetchTemplatesofClass(state, classID) {
  *
  * @param {String} classID - Class ID
  */
-export function fetchTemplatesofClassIfNeeded(classID) {
+export function fetchTemplatesOfClassIfNeeded(classID) {
     return (dispatch, getState) => {
-        if (shouldFetchTemplatesofClass(getState(), classID)) {
+        if (shouldFetchTemplatesOfClass(getState(), classID)) {
             dispatch({
                 type: type.IS_FETCHING_TEMPLATES_OF_CLASS,
                 classID
@@ -742,7 +751,7 @@ export function fetchTemplatesofClassIfNeeded(classID) {
                     classID
                 });
 
-                return await Promise.all(templateIds.map(tempalteId => dispatch(fetchTemplateIfNeeded(tempalteId))));
+                return await Promise.all(templateIds.map(templateId => dispatch(fetchTemplateIfNeeded(templateId))));
             });
         } else {
             // Let the calling code know there's nothing to wait for.
@@ -815,7 +824,7 @@ export const updateContributionLabel = data => dispatch => {
  */
 function shouldFetchStatementsForResource(state, resourceId, depth) {
     const resource = state.statementBrowser.resources.byId[resourceId];
-    if (!resource || !resource.isFechted || (resource.isFechted && resource.fetshedDepth < depth)) {
+    if (!resource || !resource.isFetched || (resource.isFetched && resource.fetchedDepth < depth)) {
         return true;
     } else {
         return false;
@@ -824,7 +833,7 @@ function shouldFetchStatementsForResource(state, resourceId, depth) {
 
 // TODO: support literals (currently not working in backend)
 /**
- * Fetch statemments of a resource
+ * Fetch statements of a resource
  *
  * @param {Object} data
  * @param {String} data.resourceId - Resource ID
@@ -844,7 +853,7 @@ export const fetchStatementsForResource = data => {
         depth = 0;
     }
 
-    rootNodeType = rootNodeType ?? 'resource';
+    rootNodeType = rootNodeType ?? RESOURCE_TYPE_ID;
 
     let resourceStatements = [];
 
@@ -856,10 +865,19 @@ export const fetchStatementsForResource = data => {
                 resourceId: resourceId
             });
             let subject;
-            if (rootNodeType === 'predicate') {
-                subject = getPredicate(existingResourceId);
-            } else {
-                subject = getResource(existingResourceId);
+
+            switch (rootNodeType) {
+                case PREDICATE_TYPE_ID:
+                    subject = getPredicate(existingResourceId);
+                    break;
+                case RESOURCE_TYPE_ID:
+                    subject = getResource(existingResourceId);
+                    break;
+                case CLASS_TYPE_ID:
+                    subject = getClassById(existingResourceId);
+                    break;
+                default:
+                    subject = getResource(existingResourceId); // code block
             }
 
             return subject.then(response => {
@@ -869,15 +887,19 @@ export const fetchStatementsForResource = data => {
                     resourceStatements = response;
                     return Promise.resolve();
                 });
-                if (rootNodeType === 'predicate') {
+                if (rootNodeType === PREDICATE_TYPE_ID) {
                     // get templates of classes
-                    const predicateClass = dispatch(fetchTemplatesofClassIfNeeded(CLASSES.PREDICATE));
+                    const predicateClass = dispatch(fetchTemplatesOfClassIfNeeded(CLASSES.PREDICATE));
                     promises = Promise.all([predicateClass, resourceStatementsPromise]);
+                } else if (rootNodeType === CLASS_TYPE_ID) {
+                    // get templates of classes
+                    const classClass = dispatch(fetchTemplatesOfClassIfNeeded(CLASSES.CLASS));
+                    promises = Promise.all([classClass, resourceStatementsPromise]);
                 } else {
                     let resourceClasses = response.classes ?? [];
                     // get templates of classes
                     if (resourceClasses && resourceClasses.length > 0) {
-                        resourceClasses = resourceClasses.map(classID => dispatch(fetchTemplatesofClassIfNeeded(classID)));
+                        resourceClasses = resourceClasses.map(classID => dispatch(fetchTemplatesOfClassIfNeeded(classID)));
                     }
                     // set the resource classes (initialize doesn't set the classes)
                     const resourceUpdateClasses = dispatch(updateResourceClasses({ resourceId, classes: response.classes }));
@@ -888,7 +910,7 @@ export const fetchStatementsForResource = data => {
                     .then(() => dispatch(createRequiredPropertiesInResource(resourceId)))
                     .then(existingProperties => {
                         // all the template of classes are loaded
-                        // add the required proerty first
+                        // add the required property first
                         const researchProblems = [];
 
                         // Sort predicates and values by label
@@ -967,7 +989,7 @@ export const fetchStatementsForResource = data => {
                                 });
 
                                 //Load template of objects
-                                statement.object.classes && statement.object.classes.map(classID => dispatch(fetchTemplatesofClassIfNeeded(classID)));
+                                statement.object.classes && statement.object.classes.map(classID => dispatch(fetchTemplatesOfClassIfNeeded(classID)));
                             }
                         }
 

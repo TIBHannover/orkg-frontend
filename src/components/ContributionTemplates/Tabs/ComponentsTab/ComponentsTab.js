@@ -1,7 +1,6 @@
-import React, { useState, useCallback } from 'react';
-import { Button, Row, Col, Modal, ModalHeader, ModalBody, ModalFooter, FormGroup, CustomInput } from 'reactstrap';
+import { useState, useCallback } from 'react';
+import { Row, Col, FormGroup, CustomInput } from 'reactstrap';
 import { connect } from 'react-redux';
-import Confirm from 'reactstrap-confirm';
 import ConfirmClass from 'components/ConfirmationModal/ConfirmationModal';
 import { setComponents, setIsStrictTemplate } from 'actions/addTemplate';
 import { createPredicate } from 'services/backend/predicates';
@@ -9,11 +8,11 @@ import TemplateComponent from 'components/ContributionTemplates/TemplateComponen
 import AddPropertyTemplate from 'components/StatementBrowser/AddProperty/AddPropertyTemplate';
 import update from 'immutability-helper';
 import PropTypes from 'prop-types';
+import useConfirmPropertyModal from 'components/StatementBrowser/AddProperty/hooks/useConfirmPropertyModal';
 
 function ComponentsTab(props) {
     const [showAddProperty, setShowAddProperty] = useState(false);
-    const [newPropertyLabel, setNewPropertyLabel] = useState('');
-    const [confirmNewPropertyModal, setConfirmNewPropertyModal] = useState(false);
+    const { confirmProperty } = useConfirmPropertyModal();
 
     const handleDeleteTemplateComponent = index => {
         props.setComponents(props.components.filter((item, j) => index !== j));
@@ -21,12 +20,8 @@ function ComponentsTab(props) {
 
     const handlePropertiesSelect = async (selected, action, index) => {
         if (action.action === 'create-option') {
-            const result = await Confirm({
-                title: 'Are you sure you need a new property?',
-                message: 'Often there are existing properties that you can use as well. It is better to use existing properties than new ones.',
-                cancelColor: 'light'
-            });
-            if (result) {
+            const confirmedProperty = await confirmProperty();
+            if (confirmedProperty) {
                 const newPredicate = await createPredicate(selected.label);
                 selected = { id: newPredicate.id, label: selected.label };
                 const templateComponents = props.components.map((item, j) => {
@@ -79,16 +74,16 @@ function ComponentsTab(props) {
         setShowAddProperty(false);
     };
 
-    const toggleConfirmNewProperty = propertyLabel => {
-        if (!confirmNewPropertyModal) {
-            setNewPropertyLabel(propertyLabel);
+    const toggleConfirmNewProperty = async label => {
+        const confirmNewProperty = await confirmProperty();
+
+        if (confirmNewProperty) {
+            handleCreateNewProperty(label);
         }
-        setConfirmNewPropertyModal(prev => !prev);
     };
 
-    const handleCreateNewProperty = async () => {
-        const newPredicate = await createPredicate(newPropertyLabel);
-        toggleConfirmNewProperty(); // hide dialog
+    const handleCreateNewProperty = async label => {
+        const newPredicate = await createPredicate(label);
         const templateComponents = [
             ...props.components,
             {
@@ -166,20 +161,6 @@ function ComponentsTab(props) {
                             }}
                             newProperties={[]}
                         />
-                        <Modal isOpen={confirmNewPropertyModal} toggle={toggleConfirmNewProperty}>
-                            <ModalHeader toggle={toggleConfirmNewProperty}>Are you sure you need a new property?</ModalHeader>
-                            <ModalBody>
-                                Often there are existing properties that you can use as well. It is better to use existing properties than new ones.
-                            </ModalBody>
-                            <ModalFooter>
-                                <Button color="light" onClick={toggleConfirmNewProperty}>
-                                    Cancel
-                                </Button>{' '}
-                                <Button color="primary" onClick={handleCreateNewProperty}>
-                                    Create new property
-                                </Button>
-                            </ModalFooter>
-                        </Modal>
                     </>
                 )}
                 <FormGroup className="mt-3">

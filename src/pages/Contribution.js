@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Container } from 'reactstrap';
 import ROUTES from 'constants/routes';
 import PropTypes from 'prop-types';
-import { getStatementsByObject } from 'services/backend/statements';
-import { CLASSES } from 'constants/graphSettings';
+import { getStatementsByObjectAndPredicate } from 'services/backend/statements';
+import { CLASSES, PREDICATES } from 'constants/graphSettings';
 import { reverse } from 'named-urls';
 import { Redirect } from 'react-router-dom';
 import NotFound from 'pages/NotFound';
@@ -17,9 +17,7 @@ export default function Contribution(props) {
     const [paperId, setPaperId] = useState(null);
 
     useEffect(() => {
-        getStatementsByObject({
-            id: contributionId
-        }).then(statements => {
+        getStatementsByObjectAndPredicate({ objectId: contributionId, predicateId: PREDICATES.HAS_CONTRIBUTION }).then(statements => {
             // check if statements are found and if "contributionId" has the contribution class
             if (!statements.length || !statements[0].object.classes.includes(CLASSES.CONTRIBUTION)) {
                 setError(true);

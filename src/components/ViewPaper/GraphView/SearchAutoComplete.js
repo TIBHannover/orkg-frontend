@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faCrosshairs, faEye, faSpinner } from '@fortawesome/free-solid-svg-icons';
@@ -285,6 +285,21 @@ class SearchAutoComplete extends Component {
                                             this
                                         );
                                     }}
+                                    onKeyDown={e =>
+                                        e.keyCode === 13
+                                            ? this.handleDropdownItemClick(
+                                                  false,
+                                                  e,
+                                                  expandIconDisabled,
+                                                  item.visible,
+                                                  callHaloVis,
+                                                  callExpandHaloVis,
+                                                  this
+                                              )
+                                            : undefined
+                                    }
+                                    role="button"
+                                    tabIndex={0}
                                 >
                                     {finalItemLabel}
                                 </div>

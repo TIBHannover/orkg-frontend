@@ -1,7 +1,6 @@
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import { FormGroup, Label, FormText, Input } from 'reactstrap';
 import { connect } from 'react-redux';
-import Confirm from 'reactstrap-confirm';
 import { setLabel, setPredicate, setClass, setResearchFields, setResearchProblems, setIsStrictTemplate } from 'actions/addTemplate';
 import { classesUrl } from 'services/backend/classes';
 import { createPredicate, predicatesUrl } from 'services/backend/predicates';
@@ -12,11 +11,13 @@ import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes.js';
 import PropTypes from 'prop-types';
 import { CLASSES } from 'constants/graphSettings';
+import useConfirmPropertyModal from 'components/StatementBrowser/AddProperty/hooks/useConfirmPropertyModal';
 
 function GeneralSettings(props) {
     const inputRef = useRef(null);
     const classAutocompleteRef = useRef(null);
     const predicateAutocompleteRef = useRef(null);
+    const { confirmProperty } = useConfirmPropertyModal();
 
     const handleChangeLabel = event => {
         props.setLabel(event.target.value);
@@ -26,12 +27,8 @@ function GeneralSettings(props) {
         if (action === 'select-option') {
             props.setPredicate(selected);
         } else if (action === 'create-option') {
-            const result = await Confirm({
-                title: 'Are you sure you need a new property?',
-                message: 'Often there are existing properties that you can use as well. It is better to use existing properties than new ones.',
-                cancelColor: 'light'
-            });
-            if (result) {
+            const confirmedProperty = await confirmProperty();
+            if (confirmedProperty) {
                 const newPredicate = await createPredicate(selected.label);
                 selected.id = newPredicate.id;
                 props.setPredicate(selected);

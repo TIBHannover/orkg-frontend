@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import ContentLoader from 'react-content-loader';
 import { getStatementsByObjectAndPredicate, getParentResearchFields } from 'services/backend/statements';
 import Tooltip from 'components/Utils/Tooltip';
@@ -95,11 +95,19 @@ export default function SuggestedTemplates(props) {
     return (
         <>
             {isLoading && (
-                <ContentLoader height={50} speed={2} primaryColor="#f3f3f3" secondaryColor="#ecebeb">
-                    <rect x="0" y="18" rx="7" ry="7" width="55" height="18" />
-                    <rect x="60" y="18" rx="7" ry="7" width="55" height="18" />
-                    <rect x="120" y="18" rx="7" ry="7" width="55" height="18" />
-                    <rect x="180" y="18" rx="7" ry="7" width="55" height="18" />
+                <ContentLoader
+                    height="100%"
+                    width="100%"
+                    viewBox="0 0 100 5"
+                    style={{ width: '100% !important' }}
+                    speed={2}
+                    backgroundColor="#f3f3f3"
+                    foregroundColor="#ecebeb"
+                >
+                    <rect x="0" y="0" rx="1" ry="1" width="10" height="3" />
+                    <rect x="12" y="0" rx="1" ry="1" width="10" height="3" />
+                    <rect x="24" y="0" rx="1" ry="1" width="10" height="3" />
+                    <rect x="36" y="0" rx="1" ry="1" width="10" height="3" />
                 </ContentLoader>
             )}
 

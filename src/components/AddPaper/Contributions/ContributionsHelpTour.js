@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
-import { Modal, ModalHeader, ModalBody } from 'reactstrap';
+import { Component } from 'react';
+import { Modal, ModalHeader, ModalBody, Button } from 'reactstrap';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import { closeTour, openTour } from '../../../actions/addPaper';
+import { closeTour, openTour } from 'actions/addPaper';
 import Tour from 'reactour';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
@@ -22,7 +22,7 @@ class ContributionsHelpTour extends Component {
 
     componentDidMount() {
         // check if a cookie of take a tour exist
-        if (this.props.cookies && this.props.cookies.get('taketour') === 'take' && !this.props.cookies.get('showedContributions')) {
+        if (this.props.cookies && this.props.cookies.get('takeTour') === 'take' && !this.props.cookies.get('showedContributions')) {
             this.props.openTour();
             this.props.cookies.set('showedContributions', true, { path: env('PUBLIC_URL'), maxAge: 604800 });
         }
@@ -85,9 +85,9 @@ class ContributionsHelpTour extends Component {
                                               The data is entered in a <strong>property and value </strong> structure. First you choose a property
                                               (e.g. method) and afterwards you add a value to this property (e.g. semi-structured interviews). <br />
                                               <br />
-                                              <span className="btn btn-link p-0" onClick={this.toggleVideoDialog}>
+                                              <Button color="link" className="p-0" onClick={this.toggleVideoDialog}>
                                                   Open example video
-                                              </span>
+                                              </Button>
                                           </span>
                                       ),
                                       style: { borderTop: '4px solid #E86161' },

@@ -1,13 +1,13 @@
-import React from 'react';
 import { Row, Col, CustomInput } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faUser, faCalendar } from '@fortawesome/free-solid-svg-icons';
+import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 import ROUTES from 'constants/routes.js';
 import AddToComparison from 'components/ViewPaper/AddToComparison';
+import Authors from './Authors';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 
@@ -58,11 +58,7 @@ const PaperCard = props => {
                     )}
                     <br />
                     <small>
-                        {props.paper.authorNames && props.paper.authorNames.length > 0 && (
-                            <>
-                                <Icon size="sm" icon={faUser} /> {props.paper.authorNames.map(a => a.label).join(', ')}
-                            </>
-                        )}
+                        <Authors authors={props.paper.authorNames} />
                         {(props.paper.publicationMonth || props.paper.publicationYear) && <Icon size="sm" icon={faCalendar} className="ml-2 mr-1" />}
                         {props.paper.publicationMonth && props.paper.publicationMonth > 0
                             ? moment(props.paper.publicationMonth, 'M').format('MMMM')

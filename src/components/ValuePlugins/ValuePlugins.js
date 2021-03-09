@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import PropTypes from 'prop-types';
 import Boolean from './Boolean/Boolean';
 import Link from './Link/Link';
@@ -29,7 +29,7 @@ class ValuePlugins extends Component {
 }
 
 ValuePlugins.propTypes = {
-    children: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,
+    children: PropTypes.oneOfType([PropTypes.string, PropTypes.object, PropTypes.node]).isRequired,
     type: PropTypes.oneOf(['resource', 'literal']),
     options: PropTypes.object.isRequired
 };

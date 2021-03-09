@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import 'assets/scss/DefaultLayout.scss';
 import { ToastContainer, Slide } from 'react-toastify';
 import { Alert, Button } from 'reactstrap';
@@ -15,14 +15,13 @@ import env from '@beam-australia/react-env';
 
 const StyledBody = styled.div`
     display: flex;
-    min-height: calc(100vh - 30px);
+    min-height: calc(100vh);
     flex-direction: column;
-    padding-top: 73px;
-    margin-top: 30px;
 `;
 
 const StyledAppContent = styled.div`
     flex: 1 0 auto;
+    padding-top: 30px;
 `;
 
 const StyledFooter = styled.div`
@@ -30,30 +29,32 @@ const StyledFooter = styled.div`
 `;
 
 const StyledAlertCookie = styled(Alert)`
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    margin: 0 !important;
-    z-index: 999;
-    opacity: 0;
-    visibility: hidden;
-    border-radius: 0;
-    transform: translateY(100%);
-    transition: all 300ms ease-out;
-    background: #202226;
-    border: 0;
-    color: #fff;
+    &&& {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        margin: 0 !important;
+        z-index: 2147483647;
+        opacity: 0;
+        visibility: hidden;
+        border-radius: 0;
+        transform: translateY(100%);
+        transition: all 300ms ease-out;
+        background: #202226;
+        border: 0;
+        color: #fff;
 
-    &.show {
-        opacity: 1;
-        visibility: visible;
-        transform: translateY(0%);
-        transition-delay: 1000ms;
-    }
+        &.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0%);
+            transition-delay: 1000ms;
+        }
 
-    & a {
-        text-decoration: underline;
+        & a {
+            text-decoration: underline;
+        }
     }
 `;
 
@@ -64,6 +65,14 @@ function CloseToastButton({ closeToast }) {
                 e.stopPropagation();
                 closeToast(e);
             }}
+            onKeyDown={e => {
+                if (e.keyCode === 13) {
+                    e.stopPropagation();
+                    closeToast(e);
+                }
+            }}
+            role="button"
+            tabIndex={0}
         >
             <Icon icon={faTimes} />
         </span>

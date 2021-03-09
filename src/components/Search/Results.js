@@ -1,10 +1,10 @@
-import React from 'react';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
-import { ListGroup, ListGroupItem } from 'reactstrap';
+import { ListGroup, ListGroupItem, Button } from 'reactstrap';
 import ContentLoader from 'react-content-loader';
 import { Link, withRouter } from 'react-router-dom';
-import ROUTES from 'constants/routes.js';
+import ROUTES from 'constants/routes';
+import { PREDICATE_TYPE_ID, RESOURCE_TYPE_ID } from 'constants/misc';
 import { CLASSES } from 'constants/graphSettings';
 import { reverse } from 'named-urls';
 import styled from 'styled-components';
@@ -13,7 +13,7 @@ import moment from 'moment';
 
 const StyledLoadMoreButton = styled.div`
     padding-top: 0;
-    & span {
+    & button {
         cursor: pointer;
         border: 1px solid rgba(0, 0, 0, 0.125);
         border-top: 0;
@@ -22,7 +22,7 @@ const StyledLoadMoreButton = styled.div`
         border-bottom-right-radius: 6px;
         border-bottom-left-radius: 6px;
     }
-    &.action:hover span {
+    &.action:hover button {
         z-index: 1;
         color: #495057;
         text-decoration: underline;
@@ -68,12 +68,16 @@ const Results = props => {
                 link = reverse(ROUTES.CONTRIBUTION_TEMPLATE, { id: resourceId });
                 break;
             }
-            case 'resource': {
+            case CLASSES.VISUALIZATION: {
+                link = reverse(ROUTES.VISUALIZATION, { id: resourceId });
+                break;
+            }
+            case RESOURCE_TYPE_ID: {
                 link = reverse(ROUTES.RESOURCE, { id: resourceId });
                 break;
             }
-            case 'predicate': {
-                link = reverse(ROUTES.PREDICATE, { id: resourceId });
+            case PREDICATE_TYPE_ID: {
+                link = reverse(ROUTES.PROPERTY, { id: resourceId });
                 break;
             }
             default: {
@@ -87,19 +91,21 @@ const Results = props => {
 
     return (
         <div>
-            {props.loading && props.items === 0 && (
-                <ContentLoader height={210} speed={2} primaryColor="#f3f3f3" secondaryColor="#ecebeb">
-                    <rect x="0" y="8" width="50" height="15" />
-                    <rect x="0" y="25" width="100%" height="15" />
-                    <rect x="0" y="42" width="100%" height="15" />
-                    <rect x="0" y="59" width="100%" height="15" />
-                    <rect x="0" y="76" width="100%" height="15" />
-
-                    <rect x="0" y={8 + 100} width="50" height="15" />
-                    <rect x="0" y={25 + 100} width="100%" height="15" />
-                    <rect x="0" y={42 + 100} width="100%" height="15" />
-                    <rect x="0" y={59 + 100} width="100%" height="15" />
-                    <rect x="0" y={76 + 100} width="100%" height="15" />
+            {props.loading && (
+                <ContentLoader
+                    height="100%"
+                    width="100%"
+                    viewBox="0 0 100 25"
+                    style={{ width: '100% !important' }}
+                    speed={2}
+                    backgroundColor="#f3f3f3"
+                    foregroundColor="#ecebeb"
+                >
+                    <rect x="0" y="0" width="50" height="3" />
+                    <rect x="0" y="5" width="100%" height="3" />
+                    <rect x="0" y="10" width="100%" height="3" />
+                    <rect x="0" y="15" width="100%" height="3" />
+                    <rect x="0" y="20" width="100%" height="3" />
                 </ContentLoader>
             )}
 
@@ -135,16 +141,16 @@ const Results = props => {
                         </ListGroup>
                         {!props.loading && props.hasNextPage && (
                             <StyledLoadMoreButton className="text-right action">
-                                <span className="btn btn-link btn-sm" onClick={props.loadMore}>
+                                <Button color="link" size="sm" onClick={props.loadMore}>
                                     + Load more
-                                </span>
+                                </Button>
                             </StyledLoadMoreButton>
                         )}
                         {props.loading && props.hasNextPage && (
                             <StyledLoadMoreButton className="text-right action">
-                                <span className="btn btn-link btn-sm" onClick={props.loadMore}>
+                                <Button color="link" size="sm" onClick={props.loadMore}>
                                     Loading...
-                                </span>
+                                </Button>
                             </StyledLoadMoreButton>
                         )}
                     </div>

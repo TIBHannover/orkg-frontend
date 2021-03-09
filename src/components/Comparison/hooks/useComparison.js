@@ -11,15 +11,19 @@ import {
     filterSubjectOfStatementsByPredicate,
     getArrayParamFromQueryString,
     getParamFromQueryString,
-    get_error_message
+    get_error_message,
+    applyRule,
+    getRuleByProperty
 } from 'utils';
 import { useParams, useLocation, useHistory } from 'react-router-dom';
 import { PREDICATES, CLASSES, MISC } from 'constants/graphSettings';
 import { reverse } from 'named-urls';
-import { flattenDepth } from 'lodash';
+import { flattenDepth, flatten, groupBy, intersection, findIndex, cloneDeep, isEmpty } from 'lodash';
 import arrayMove from 'array-move';
 import ROUTES from 'constants/routes.js';
 import queryString from 'query-string';
+import { usePrevious } from 'react-use';
+import Confirm from 'reactstrap-confirm';
 
 function useComparison() {
     const location = useLocation();
@@ -36,6 +40,7 @@ function useComparison() {
      * @property {String|Object} createdBy Comparison resource creator
      * @property {Array[Object]} resources Comparison related resources
      * @property {Array[Object]} figures Comparison related figures
+     * @property {Array[Object]} visualizations Comparison visualizations
      */
     /**
      * @typedef {Function} MetaDataSetter Set Metadata
@@ -60,6 +65,7 @@ function useComparison() {
     const [authors, setAuthors] = useState([]);
     const [contributions, setContributions] = useState([]);
     const [data, setData] = useState({});
+    const [filterControlData, setFilterControlData] = useState([]);
     const [errors, setErrors] = useState([]);
     const [matrixData, setMatrixData] = useState([]);
 
@@ -82,6 +88,10 @@ function useComparison() {
     const [responseHash, setResponseHash] = useState(null);
     const [contributionsList, setContributionsList] = useState([]);
     const [predicatesList, setPredicatesList] = useState([]);
+    const [shouldFetchLiveComparison, setShouldFetchLiveComparison] = useState(false);
+
+    // reference to previous comparison type
+    const prevComparisonType = usePrevious(comparisonType);
 
     // loading indicators
     const [isLoadingMetaData, setIsLoadingMetaData] = useState(false);
@@ -103,6 +113,12 @@ function useComparison() {
         setPublicURL(newURL);
     };
 
+    const loadVisualizations = comparisonID => {
+        getStatementsBySubjectAndPredicate({ subjectId: comparisonID, predicateId: PREDICATES.HAS_VISUALIZATION }).then(statements => {
+            const visualizations = filterObjectOfStatementsByPredicate(statements, PREDICATES.HAS_VISUALIZATION, false);
+            setMetaData({ ...metaData, visualizations: visualizations });
+        });
+    };
     /**
      * Load comparison meta data and comparison config
      *
@@ -131,6 +147,7 @@ function useComparison() {
                         const hasPreviousVersion = filterObjectOfStatementsByPredicate(statements, PREDICATES.HAS_PREVIOUS_VERSION, true);
                         const resources = filterObjectOfStatementsByPredicate(statements, PREDICATES.RELATED_RESOURCES, false);
                         const figures = filterObjectOfStatementsByPredicate(statements, PREDICATES.RELATED_FIGURE, false);
+                        const visualizations = filterObjectOfStatementsByPredicate(statements, PREDICATES.HAS_VISUALIZATION, false);
                         // Load authors
                         let creators = filterObjectOfStatementsByPredicate(statements, PREDICATES.HAS_AUTHOR, false);
                         if (creators) {
@@ -148,7 +165,8 @@ function useComparison() {
                             references: references ? references.map(r => r.label) : [],
                             hasPreviousVersion: hasPreviousVersion,
                             resources: resources ? resources : [],
-                            figures: figures ? figures : []
+                            figures: figures ? figures : [],
+                            visualizations: visualizations ? visualizations : []
                         });
                         // TODO: replace this with ordered feature
                         // Load comparison config
@@ -162,8 +180,11 @@ function useComparison() {
                         } else {
                             setPredicatesList(filterObjectOfStatementsByPredicate(statements, PREDICATES.HAS_PROPERTY, false)?.map(p => p.id));
                             setContributionsList(
-                                filterObjectOfStatementsByPredicate(statements, PREDICATES.COMPARE_CONTRIBUTION, false)?.map(c => c.id)
+                                filterObjectOfStatementsByPredicate(statements, PREDICATES.COMPARE_CONTRIBUTION, false)?.map(c => c.id) ?? []
                             );
+                        }
+                        if (!filterObjectOfStatementsByPredicate(statements, PREDICATES.COMPARE_CONTRIBUTION, false)?.map(c => c.id)) {
+                            setIsLoadingComparisonResult(false);
                         }
                         setIsLoadingMetaData(false);
                         setIsFailedLoadingMetaData(false);
@@ -260,51 +281,132 @@ function useComparison() {
      * @param {Object} comparisonData Comparison Data result
      * @return {Array} list of properties extended and sorted
      */
-    const extendAndSortProperties = comparisonData => {
-        // if there are properties in the query string
-        if (predicatesList.length > 0) {
-            // Create an extended version of propertyIds (ADD the IDs of similar properties)
-            const extendedPropertyIds = extendPropertyIds(predicatesList, comparisonData.data);
-            // sort properties based on query string (is not presented in query string, sort at the bottom)
-            // TODO: sort by label when is not active
-            comparisonData.properties.sort((a, b) => {
-                const index1 = extendedPropertyIds.indexOf(a.id) !== -1 ? extendedPropertyIds.indexOf(a.id) : 1000;
-                const index2 = extendedPropertyIds.indexOf(b.id) !== -1 ? extendedPropertyIds.indexOf(b.id) : 1000;
-                return index1 - index2;
-            });
-            // hide properties based on query string
-            comparisonData.properties.forEach((property, index) => {
-                if (!extendedPropertyIds.includes(property.id)) {
-                    comparisonData.properties[index].active = false;
-                } else {
-                    comparisonData.properties[index].active = true;
-                }
-            });
-        } else {
-            //no properties ids in the url, but the ones from the api still need to be sorted
-            comparisonData.properties.sort((a, b) => {
-                if (a.active === b.active) {
-                    return a.label.toLowerCase().localeCompare(b.label.toLowerCase());
-                } else {
-                    return !a.active ? 1 : -1;
-                }
-            });
-        }
-
-        // Get Similar properties by Label
-        comparisonData.properties.forEach((property, index) => {
-            if (property.active) {
-                comparisonData.properties[index].similar = similarPropertiesByLabel(property.label, comparisonData.data[property.id]);
+    const extendAndSortProperties = useCallback(
+        comparisonData => {
+            // if there are properties in the query string
+            if (predicatesList.length > 0) {
+                // Create an extended version of propertyIds (ADD the IDs of similar properties)
+                const extendedPropertyIds = extendPropertyIds(predicatesList, comparisonData.data);
+                // sort properties based on query string (is not presented in query string, sort at the bottom)
+                // TODO: sort by label when is not active
+                comparisonData.properties.sort((a, b) => {
+                    const index1 = extendedPropertyIds.indexOf(a.id) !== -1 ? extendedPropertyIds.indexOf(a.id) : 1000;
+                    const index2 = extendedPropertyIds.indexOf(b.id) !== -1 ? extendedPropertyIds.indexOf(b.id) : 1000;
+                    return index1 - index2;
+                });
+                // hide properties based on query string
+                comparisonData.properties.forEach((property, index) => {
+                    if (!extendedPropertyIds.includes(property.id)) {
+                        comparisonData.properties[index].active = false;
+                    } else {
+                        comparisonData.properties[index].active = true;
+                    }
+                });
+            } else {
+                //no properties ids in the url, but the ones from the api still need to be sorted
+                comparisonData.properties.sort((a, b) => {
+                    if (a.active === b.active) {
+                        return a.label.toLowerCase().localeCompare(b.label.toLowerCase());
+                    } else {
+                        return !a.active ? 1 : -1;
+                    }
+                });
             }
-        });
 
-        return comparisonData.properties;
+            // Get Similar properties by Label
+            comparisonData.properties.forEach((property, index) => {
+                comparisonData.properties[index].similar = similarPropertiesByLabel(property.label, comparisonData.data[property.id]);
+            });
+
+            return comparisonData.properties;
+        },
+        [predicatesList]
+    );
+
+    /**
+     * Generate Filter Control Data
+     *
+     * @param {Array} contributions Array of contributions
+     * @param {Array} properties Array of properties
+     * @param {Object} data Comparison Data object
+     * @return {Array} Filter Control Data
+     */
+    const generateFilterControlData = (contributions, properties, data) => {
+        const controlData = [
+            ...properties.map(property => {
+                return {
+                    property,
+                    rules: [],
+                    values: groupBy(
+                        flatten(contributions.map((_, index) => data[property.id][index]).filter(([first]) => Object.keys(first).length !== 0)),
+                        'label'
+                    )
+                };
+            })
+        ];
+        controlData.forEach(item => {
+            Object.keys(item.values).forEach(key => {
+                item.values[key] = item.values[key].map(({ path }) => path[0]);
+            });
+        });
+        return controlData;
+    };
+
+    /**
+     * Update filter control data of a property
+     *
+     * @param {Array} rules Array of rules
+     * @param {Array} propertyId property ID
+     */
+    const updateRulesOfProperty = (newRules, propertyId) => {
+        setFilterControlData(pervState => {
+            const newState = [...pervState];
+            const toChangeIndex = newState.findIndex(item => item.property.id === propertyId);
+            const toChange = { ...newState[toChangeIndex] };
+            toChange.rules = newRules;
+            newState[toChangeIndex] = toChange;
+            applyAllRules(newState);
+            return newState;
+        });
+    };
+
+    /**
+     * Remove a rule from filter control data of a property
+     *
+     * @param {Array} propertyId property ID
+     * @param {String} type Filter type
+     * @param {String} value Filter value
+     */
+    const removeRule = ({ propertyId, type, value }) => {
+        setFilterControlData(pervState => {
+            const newState = [...pervState];
+            const toChangeIndex = newState.findIndex(item => item.property.id === propertyId);
+            const toChange = { ...newState[toChangeIndex] };
+            toChange.rules = toChange.rules.filter(item => !(item.propertyId === propertyId && item.type === type && item.value === value));
+            newState[toChangeIndex] = toChange;
+            applyAllRules(newState);
+            return newState;
+        });
+    };
+
+    /**
+     * Apply filter control data rules
+     *
+     * @param {Array} newState Filter Control Data
+     */
+    const applyAllRules = newState => {
+        const AllContributionsID = contributions.map(contribution => contribution.id);
+        const contributionIds = []
+            .concat(...newState.map(item => item.rules))
+            .map(c => applyRule({ filterControlData, ...c }))
+            .reduce((prev, acc) => intersection(prev, acc), AllContributionsID);
+        displayContributions(contributionIds);
     };
 
     /**
      * Call the comparison service to get the comparison result
      */
-    const getComparisonResult = () => {
+    const getComparisonResult = useCallback(() => {
         setIsLoadingComparisonResult(true);
         getComparison({ contributionIds: contributionsList, type: comparisonType, response_hash: responseHash, save_response: false })
             .then(comparisonData => {
@@ -334,8 +436,10 @@ function useComparison() {
                 setContributions(comparisonData.contributions);
                 setProperties(comparisonData.properties);
                 setData(comparisonData.data);
+                setFilterControlData(generateFilterControlData(comparisonData.contributions, comparisonData.properties, comparisonData.data));
                 setIsLoadingComparisonResult(false);
                 setIsFailedLoadingComparisonResult(false);
+
                 if (comparisonData.response_hash) {
                     setResponseHash(comparisonData.response_hash);
                 } else {
@@ -348,7 +452,7 @@ function useComparison() {
                 setIsLoadingComparisonResult(false);
                 setIsFailedLoadingComparisonResult(true);
             });
-    };
+    }, [comparisonType, contributionsList, extendAndSortProperties, responseHash]);
 
     /**
      * Toggle a property from the table
@@ -378,8 +482,47 @@ function useComparison() {
      * @param {String} contributionId Contribution id to remove
      */
     const removeContribution = contributionId => {
+        const cIndex = findIndex(contributions, c => c.id === contributionId);
+        const newContributions = contributions
+            .filter(c => c.id !== contributionId)
+            .map(contribution => {
+                return { ...contribution, active: contribution.active };
+            });
+        const newData = cloneDeep(data);
+        let newProperties = cloneDeep(properties);
+        for (const property in newData) {
+            // remove the contribution from data
+            if (flatten(newData[property][cIndex]).filter(v => !isEmpty(v)).length !== 0) {
+                // decrement the contribution amount from properties if it has some values
+                const pIndex = newProperties.findIndex(p => p.id === property);
+                newProperties[pIndex].contributionAmount = newProperties[pIndex].contributionAmount - 1;
+            }
+            newData[property].splice(cIndex, 1);
+        }
+        newProperties = extendAndSortProperties({ data: newData, properties: newProperties });
+        setContributionsList(activatedContributionsToList(newContributions));
+        setContributions(newContributions);
+        setData(newData);
+        setProperties(newProperties);
+        setFilterControlData(prevFilterControlData => {
+            // keep existing filter rules
+            const newFilterControlData = generateFilterControlData(newContributions, newProperties, newData).map(filter => {
+                filter.rules = getRuleByProperty(prevFilterControlData, filter.property.id);
+                return filter;
+            });
+            return newFilterControlData;
+        });
+        setUrlNeedsToUpdate(true);
+    };
+
+    /**
+     * display certain contributionIds
+     *
+     * @param {array} contributionIds Contribution ids to display
+     */
+    const displayContributions = contributionIds => {
         const newContributions = contributions.map(contribution => {
-            return contribution.id === contributionId ? { ...contribution, active: !contribution.active } : contribution;
+            return contributionIds.includes(contribution.id) ? { ...contribution, active: true } : { ...contribution, active: false };
         });
         setContributionsList(activatedContributionsToList(newContributions));
         setContributions(newContributions);
@@ -489,6 +632,42 @@ function useComparison() {
         setMatrixData([header, ...rows]);
     };
 
+    const handleEditContributions = async () => {
+        if (metaData?.id) {
+            const isConfirmed = await Confirm({
+                title: 'This is a published comparison',
+                message: `The comparison you are viewing is published, which means it cannot be modified. To make changes, fetch the live comparison data and try this action again`,
+                cancelColor: 'light',
+                confirmText: 'Fetch live data'
+            });
+
+            if (isConfirmed) {
+                setUrlNeedsToUpdate(true);
+                setResponseHash(null);
+                setShouldFetchLiveComparison(true);
+            }
+        } else {
+            const isConfirmed = await Confirm({
+                title: 'Edit contribution data',
+                message: `You are about the edit the contributions displayed in the comparison. Changing this data does not only affect this comparison, but also other parts of the ORKG`,
+                cancelColor: 'light',
+                confirmText: 'Continue'
+            });
+
+            if (isConfirmed) {
+                history.push(reverse(ROUTES.CONTRIBUTION_EDITOR) + `?contributions=${contributionsList.join(',')}`);
+            }
+        }
+    };
+
+    useEffect(() => {
+        // only is there is no hash, live comparison data can be fetched
+        if (shouldFetchLiveComparison && !responseHash) {
+            setShouldFetchLiveComparison(false);
+            getComparisonResult();
+        }
+    }, [getComparisonResult, responseHash, shouldFetchLiveComparison]);
+
     useEffect(() => {
         if (comparisonId !== undefined) {
             loadComparisonMetaData(comparisonId);
@@ -511,7 +690,10 @@ function useComparison() {
      *  2/ Comparison type changed
      */
     useEffect(() => {
-        if (contributionsList.length > 0 && !contributionsList.every(id => contributions.map(c => c.id).includes(id))) {
+        if (
+            contributionsList.length > 0 &&
+            (prevComparisonType !== comparisonType || !contributionsList.every(id => contributions.map(c => c.id).includes(id)))
+        ) {
             getComparisonResult();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -531,7 +713,8 @@ function useComparison() {
                     ...metaData,
                     doi: '',
                     hasPreviousVersion: { id: metaData.id, created_at: metaData.createdAt, createdBy: metaData.createdBy },
-                    id: null
+                    id: null,
+                    visualizations: []
                 });
             }
             setUrlNeedsToUpdate(false);
@@ -550,11 +733,13 @@ function useComparison() {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isLoadingComparisonResult]);
-    return [
+
+    return {
         metaData,
         contributions,
         properties,
         data,
+        filterControlData,
         matrixData,
         authors,
         errors,
@@ -581,13 +766,18 @@ function useComparison() {
         toggleTranspose,
         removeContribution,
         addContributions,
+        applyAllRules,
+        updateRulesOfProperty,
+        removeRule,
         generateUrl,
         setResponseHash,
         setUrlNeedsToUpdate,
         setShortLink,
         setAuthors,
         loadCreatedBy,
-        loadProvenanceInfos
-    ];
+        loadProvenanceInfos,
+        loadVisualizations,
+        handleEditContributions
+    };
 }
 export default useComparison;

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { Fragment, useState } from 'react';
 import { Button, ListGroup } from 'reactstrap';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes.js';
@@ -61,7 +61,7 @@ const PaperList = props => {
 
             <ListGroup>
                 {papers.map((paper, i) => (
-                    <React.Fragment key={i}>
+                    <Fragment key={i}>
                         <PaperCardStyled
                             className="list-group-item list-group-item-action"
                             style={{ cursor: 'pointer' }}
@@ -84,11 +84,8 @@ const PaperList = props => {
                                 </div>
                             </div>
                             <small>
-                                {paper.authors.length && (
-                                    <>
-                                        <Icon size="sm" icon={faUser} /> {paper.authors.map(a => a.label).join(' • ')}
-                                    </>
-                                )}
+                                <Icon size="sm" icon={faUser} />{' '}
+                                {paper.authors.length > 0 ? paper.authors.map(a => a.label).join(' • ') : <i className="ml-1">No authors provided</i>}
                                 {(paper.publicationMonth || paper.publicationYear) && <Icon size="sm" icon={faCalendar} className="ml-2 mr-1" />}
                                 {paper.publicationMonth && paper.publicationMonth > 0 ? moment(paper.publicationMonth, 'M').format('MMMM') : ''}{' '}
                                 {paper.publicationYear}
@@ -113,7 +110,7 @@ const PaperList = props => {
                                 </ListGroup>
                             </PaperCardStyled>
                         )}
-                    </React.Fragment>
+                    </Fragment>
                 ))}
             </ListGroup>
         </>

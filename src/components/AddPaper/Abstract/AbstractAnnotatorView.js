@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import Tooltip from '../../Utils/Tooltip';
 import { Badge, Alert } from 'reactstrap';
 import capitalize from 'capitalize';
-import Tippy from '@tippy.js/react';
+import Tippy from '@tippyjs/react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import AbstractAnnotator from './AbstractAnnotator';

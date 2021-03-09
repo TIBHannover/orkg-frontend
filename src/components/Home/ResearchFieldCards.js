@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faAngleDoubleRight, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import styled from 'styled-components/macro';
@@ -192,17 +192,25 @@ class ResearchFieldCards extends Component {
         }
 
         const showPapers = this.state.breadcrumb.length > 1;
-        const researchFieldLink = this.state.breadcrumb.length
-            ? reverse(ROUTES.RESEARCH_FIELD, { researchFieldId: this.state.breadcrumb[this.state.breadcrumb.length - 1].id })
-            : null;
+        const currentField = this.state.breadcrumb[this.state.breadcrumb.length - 1];
+        const researchFieldLink = this.state.breadcrumb.length ? reverse(ROUTES.RESEARCH_FIELD, { researchFieldId: currentField.id }) : null;
 
         return (
             <div className="mt-3">
-                {this.state.breadcrumb.map((field, index) => (
-                    <BreadcrumbLink key={field.id} onClick={() => this.handleClickBreadcrumb(field.id, field.label)}>
-                        {field.label} {index !== this.state.breadcrumb.length - 1 && <Icon icon={faAngleDoubleRight} />}
-                    </BreadcrumbLink>
-                ))}
+                <div className="d-flex justify-content-between align-items-start">
+                    <div>
+                        {this.state.breadcrumb.map((field, index) => (
+                            <BreadcrumbLink key={field.id} onClick={() => this.handleClickBreadcrumb(field.id, field.label)}>
+                                {field.label} {index !== this.state.breadcrumb.length - 1 && <Icon icon={faAngleDoubleRight} />}
+                            </BreadcrumbLink>
+                        ))}
+                    </div>
+                    {currentField && currentField.id !== MISC.RESEARCH_FIELD_MAIN && (
+                        <Button tag={Link} to={researchFieldLink} color="light" size="sm" className="flex-shrink-0">
+                            Visit field page
+                        </Button>
+                    )}
+                </div>
 
                 <hr className="mt-3 mb-3" />
                 <div>
@@ -226,7 +234,7 @@ class ResearchFieldCards extends Component {
                 {showPapers && (
                     <div className="mt-3">
                         <h2 className="h5">
-                            <Link to={researchFieldLink}>{this.state.breadcrumb[this.state.breadcrumb.length - 1].label}</Link> papers
+                            <Link to={researchFieldLink}>{currentField.label}</Link> papers
                         </h2>
 
                         {!this.state.papers && (
@@ -242,7 +250,9 @@ class ResearchFieldCards extends Component {
                                 <ul className="mt-3">
                                     {this.state.papers.map((paper, index) => (
                                         <li key={index}>
-                                            <Link to={reverse(ROUTES.VIEW_PAPER, { resourceId: paper.subject.id })}>{paper.subject.label}</Link>
+                                            <Link to={reverse(ROUTES.VIEW_PAPER, { resourceId: paper.subject.id })}>
+                                                {paper.subject.label ? paper.subject.label : <i>No title</i>}
+                                            </Link>
                                         </li>
                                     ))}
                                 </ul>

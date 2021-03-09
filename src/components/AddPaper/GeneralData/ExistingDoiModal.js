@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Modal, ModalHeader, ModalBody, ModalFooter, Alert, Button } from 'reactstrap';
 import PropTypes from 'prop-types';
 import PaperCard from 'components/PaperCard/PaperCard';

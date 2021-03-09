@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Container, Row, Col, NavLink, Button, Card, CardTitle } from 'reactstrap';
 import { getUsersByOrganizationId, getAllObservatoriesByOrganizationId, getOrganization } from 'services/backend/organizations';
 import InternalServerError from 'pages/InternalServerError';

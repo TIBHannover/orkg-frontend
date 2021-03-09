@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { getStatementsByObject } from 'services/backend/statements';
 import { Button, Table, Collapse } from 'reactstrap';
@@ -92,7 +92,7 @@ const ObjectStatements = props => {
                                             <Link to={reverse(ROUTES.RESOURCE, { id: statement.subject.id })}>{statement.subject.label}</Link>
                                         </td>
                                         <td>
-                                            <Link to={reverse(ROUTES.PREDICATE, { id: statement.predicate.id })}>{statement.predicate.label}</Link>
+                                            <Link to={reverse(ROUTES.PROPERTY, { id: statement.predicate.id })}>{statement.predicate.label}</Link>
                                         </td>
                                         <td>{statement.object.label}</td>
                                     </tr>

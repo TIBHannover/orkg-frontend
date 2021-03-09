@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import {
     Container,
     Button,
@@ -30,7 +30,7 @@ import { getParamFromQueryString } from 'utils';
 import styled, { withTheme } from 'styled-components';
 import VisibilitySensor from 'react-visibility-sensor';
 import { EditModeHeader, Title } from 'pages/ViewPaper';
-import Tippy from '@tippy.js/react';
+import Tippy from '@tippyjs/react';
 import { getClassById } from 'services/backend/classes';
 import classnames from 'classnames';
 import { compose } from 'redux';
@@ -68,6 +68,7 @@ class ContributionTemplate extends Component {
         } else {
             this.getDefaultClass();
             this.props.setEditMode(true);
+            document.title = `Create Contribution Template - ORKG`;
         }
     }
 
@@ -77,6 +78,9 @@ class ContributionTemplate extends Component {
         }
         if (this.props.match.params.id && this.props.match.params.id !== prevProps.match.params.id) {
             this.props.loadTemplate(this.props.match.params.id);
+        }
+        if (this.props.label !== prevProps.label) {
+            document.title = `${this.props.label ? this.props.label + ' - ' : ''}Contribution Template - ORKG`;
         }
     }
 

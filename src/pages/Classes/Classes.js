@@ -1,10 +1,12 @@
-import React, { Component } from 'react';
-import { Container, ListGroup, ListGroupItem } from 'reactstrap';
+import { Component } from 'react';
+import { Container, ListGroup, ListGroupItem, ButtonGroup } from 'reactstrap';
+import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import ShortRecord from 'components/ShortRecord/ShortRecord';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faSpinner, faAngleDoubleDown } from '@fortawesome/free-solid-svg-icons';
+import { faSpinner, faAngleDoubleDown, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { getAllClasses } from 'services/backend/classes';
 import { reverse } from 'named-urls';
+import { Link } from 'react-router-dom';
 import ROUTES from 'constants/routes';
 
 export default class Classes extends Component {
@@ -56,9 +58,21 @@ export default class Classes extends Component {
     render() {
         return (
             <>
-                <Container>
-                    <h1 className="h4 mt-4 mb-4">View all classes</h1>
+                <Container className="d-flex align-items-center">
+                    <h1 className="h4 mt-4 mb-4 flex-grow-1">View all classes</h1>
+                    <ButtonGroup>
+                        <RequireAuthentication
+                            component={Link}
+                            color="darkblue"
+                            size="sm"
+                            className="btn btn-darkblue btn-sm flex-shrink-0"
+                            to={ROUTES.ADD_CLASS}
+                        >
+                            <Icon icon={faPlus} /> Create class
+                        </RequireAuthentication>
+                    </ButtonGroup>
                 </Container>
+
                 <Container className="p-0">
                     <ListGroup flush className="box rounded" style={{ overflow: 'hidden' }}>
                         {this.state.classes.length > 0 && (

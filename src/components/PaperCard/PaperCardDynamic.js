@@ -1,11 +1,12 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Row, Col } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import styled from 'styled-components';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faUser, faCalendar } from '@fortawesome/free-solid-svg-icons';
+import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 import ROUTES from 'constants/routes.js';
+import Authors from './Authors';
 import PropTypes from 'prop-types';
 import { getPublicationMonth, getPublicationYear, getAuthors } from 'utils';
 import moment from 'moment';
@@ -90,11 +91,7 @@ class PaperCardDynamic extends Component {
                         <br />
                         {!this.state.isLoading && (
                             <small>
-                                {this.state.optimizedPaperObject.authorNames && this.state.optimizedPaperObject.authorNames.length > 0 && (
-                                    <>
-                                        <Icon size="sm" icon={faUser} /> {this.state.optimizedPaperObject.authorNames.map(a => a.label).join(', ')}
-                                    </>
-                                )}
+                                <Authors authors={this.state.optimizedPaperObject.authorNames} />
                                 {(this.state.optimizedPaperObject.publicationMonth || this.state.optimizedPaperObject.publicationYear) && (
                                     <Icon size="sm" icon={faCalendar} className="ml-2 mr-1" />
                                 )}
@@ -109,16 +106,17 @@ class PaperCardDynamic extends Component {
                             <div style={{ display: 'ruby' }}>
                                 <span>Loading</span>
                                 <ContentLoader
-                                    style={{ marginTop: '-8px', width: '8%' }}
-                                    height={12}
-                                    width={50}
+                                    style={{ marginTop: '-8px', width: '8% !important' }}
+                                    height={30}
+                                    width="8%"
+                                    viewBox="0 0 100 30"
                                     speed={2}
-                                    primaryColor="#f3f3f3"
-                                    secondaryColor="#ccc"
+                                    backgroundColor="#f3f3f3"
+                                    foregroundColor="#ccc"
                                 >
-                                    <circle cx="5" cy="9" r="2" />
-                                    <circle cx="10" cy="9" r="2" />
-                                    <circle cx="15" cy="9" r="2" />
+                                    <circle cx="6" cy="18" r="4" />
+                                    <circle cx="16" cy="18" r="4" />
+                                    <circle cx="26" cy="18" r="4" />
                                 </ContentLoader>
                             </div>
                         )}

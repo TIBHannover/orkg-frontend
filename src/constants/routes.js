@@ -1,16 +1,16 @@
-// import { include } from 'named-urls'
-
-export default {
+const routes = {
     HOME: '/',
     USER_SETTINGS: '/settings',
     USER_PROFILE: '/u/:userId',
     RESOURCES: '/resources',
     RESOURCE: '/resource/:id',
     ADD_RESOURCE: '/addResource',
-    PREDICATES: '/predicates',
-    PREDICATE: '/predicate/:id',
+    PROPERTIES: '/properties',
+    PROPERTY: '/property/:id',
+    ADD_PROPERTY: '/addProperty',
     CLASSES: '/classes',
     CLASS: '/class/:id',
+    ADD_CLASS: '/addClass',
     CONTRIBUTION_TEMPLATES: '/templates',
     CONTRIBUTION_TEMPLATE: '/template/:id?',
     ORGANIZATIONS: '/organizations',
@@ -29,22 +29,31 @@ export default {
     COMPARISON: '/comparison/:comparisonId?',
     PAPERS: '/papers',
     COMPARISONS: '/comparisons',
+    VISUALIZATIONS: '/visualizations',
+    VISUALIZATION: '/visualization/:id?',
     RESEARCH_PROBLEM: '/problem/:researchProblemId',
     RESEARCH_FIELD: '/field/:researchFieldId',
+    RESEARCH_FIELDS: '/fields',
     VENUE_PAGE: '/venue/:venueId',
     AUTHOR_PAGE: '/author/:authorId',
     LICENSE: '/license',
     DATA_PROTECTION: '/data-protection',
     TERMS_OF_USE: '/terms-of-use',
-    /* Legacy routes, only used for debugging now */
-    SEARCH: '/search/:searchTerm?',
-    TPDL: '/tpdl',
-    STATS: '/stats',
+    DATA: '/data',
     CHANGELOG: '/changelog',
-    EXPORT_DATA: '/export-data',
+    STATS: '/stats',
+    SEARCH: '/search/:searchTerm?',
     FEATURED_COMPARISONS: '/featured-comparisons',
     PDF_TEXT_ANNOTATION: '/pdf-text-annotation',
     PDF_ANNOTATION: '/pdf-annotation',
     CSV_IMPORT: '/csv-import',
-    TOOLS: '/tools'
+    TOOLS: '/tools',
+    CONTRIBUTION_EDITOR: '/contribution-editor',
+    ADD_COMPARISON: '/add-comparison',
+    /* Legacy routes */
+    PREDICATES: '/predicates',
+    PREDICATE: '/predicate/:id',
+    TPDL: '/tpdl',
+    EXPORT_DATA: '/export-data'
 };
+export default routes;

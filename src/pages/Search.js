@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Container, Row, Col } from 'reactstrap';
 import { withRouter } from 'react-router-dom'; // to access the history object
 import { reverse } from 'named-urls';
@@ -8,7 +8,8 @@ import ContentLoader from 'react-content-loader';
 import { getClassById } from 'services/backend/classes';
 import { getAllResources, getResourcesByClass } from 'services/backend/resources';
 import { getAllPredicates } from 'services/backend/predicates';
-import ROUTES from 'constants/routes.js';
+import ROUTES from 'constants/routes';
+import { PREDICATE_TYPE_ID, RESOURCE_TYPE_ID } from 'constants/misc';
 import Results from 'components/Search/Results';
 import Filters from 'components/Search/Filters';
 import { getArrayParamFromQueryString } from 'utils';
@@ -26,16 +27,6 @@ class Search extends Component {
 
         this.defaultsFilters = [
             {
-                label: 'Paper',
-                labelPlural: 'Papers',
-                id: CLASSES.PAPER
-            },
-            {
-                label: 'Research Problem',
-                labelPlural: 'Research Problems',
-                id: CLASSES.PROBLEM
-            },
-            {
                 label: 'Author',
                 labelPlural: 'Authors',
                 id: CLASSES.AUTHOR
@@ -46,9 +37,24 @@ class Search extends Component {
                 id: CLASSES.COMPARISON
             },
             {
-                label: 'Venue',
-                labelPlural: 'Venues',
-                id: CLASSES.VENUE
+                label: 'Paper',
+                labelPlural: 'Papers',
+                id: CLASSES.PAPER
+            },
+            {
+                label: 'Property',
+                labelPlural: 'Properties',
+                id: PREDICATE_TYPE_ID
+            },
+            {
+                label: 'Research Problem',
+                labelPlural: 'Research Problems',
+                id: CLASSES.PROBLEM
+            },
+            {
+                label: 'Resource',
+                labelPlural: 'Resources',
+                id: RESOURCE_TYPE_ID
             },
             {
                 label: 'Template',
@@ -56,14 +62,14 @@ class Search extends Component {
                 id: CLASSES.CONTRIBUTION_TEMPLATE
             },
             {
-                label: 'Resource',
-                labelPlural: 'Resources',
-                id: 'resource'
+                label: 'Venue',
+                labelPlural: 'Venues',
+                id: CLASSES.VENUE
             },
             {
-                label: 'Property',
-                labelPlural: 'Properties',
-                id: 'predicate'
+                label: 'Visualization',
+                labelPlural: 'Visualizations',
+                id: CLASSES.VISUALIZATION
             }
         ];
 
@@ -154,17 +160,17 @@ class Search extends Component {
         }
         this.setState({ isNextPageLoading: { ...this.state.isNextPageLoading, [filter_type]: true } });
         let request;
-        if (filter_type === 'predicate') {
+        if (filter_type === PREDICATE_TYPE_ID) {
             request = getAllPredicates({
-                page: this.state.currentPage['predicate'] || 1,
+                page: this.state.currentPage[PREDICATE_TYPE_ID] || 1,
                 items: this.itemsPerFilter,
                 sortBy: 'id',
                 desc: true,
                 q: searchQuery
             });
-        } else if (filter_type === 'resource') {
+        } else if (filter_type === RESOURCE_TYPE_ID) {
             request = getAllResources({
-                page: this.state.currentPage['resource'] || 1,
+                page: this.state.currentPage[RESOURCE_TYPE_ID] || 1,
                 items: this.itemsPerFilter,
                 sortBy: 'id',
                 desc: true,
@@ -249,7 +255,7 @@ class Search extends Component {
         const allFilters = unionBy(this.defaultsFilters, this.state.selectedFilters, 'id');
         return (
             <div>
-                <Container className="p-0">
+                <Container>
                     <h1 className="h4 mt-4 mb-4">Search results</h1>
                 </Container>
                 <Container className="mt-4">
@@ -270,18 +276,20 @@ class Search extends Component {
                             <div className="box rounded p-4 h-100">
                                 {this.isLoading() &&
                                     Object.keys(this.state.results).every(v => this.state.results[v] && this.state.results[v].length === 0) && (
-                                        <ContentLoader height={210} speed={2} primaryColor="#f3f3f3" secondaryColor="#ecebeb">
-                                            <rect x="0" y="8" width="50" height="15" />
-                                            <rect x="0" y="25" width="100%" height="15" />
-                                            <rect x="0" y="42" width="100%" height="15" />
-                                            <rect x="0" y="59" width="100%" height="15" />
-                                            <rect x="0" y="76" width="100%" height="15" />
-
-                                            <rect x="0" y={8 + 100} width="50" height="15" />
-                                            <rect x="0" y={25 + 100} width="100%" height="15" />
-                                            <rect x="0" y={42 + 100} width="100%" height="15" />
-                                            <rect x="0" y={59 + 100} width="100%" height="15" />
-                                            <rect x="0" y={76 + 100} width="100%" height="15" />
+                                        <ContentLoader
+                                            height="100%"
+                                            width="100%"
+                                            viewBox="0 0 100 25"
+                                            style={{ width: '100% !important' }}
+                                            speed={2}
+                                            backgroundColor="#f3f3f3"
+                                            foregroundColor="#ecebeb"
+                                        >
+                                            <rect x="0" y="0" width="50" height="3" />
+                                            <rect x="0" y="5" width="100%" height="3" />
+                                            <rect x="0" y="10" width="100%" height="3" />
+                                            <rect x="0" y="15" width="100%" height="3" />
+                                            <rect x="0" y="20" width="100%" height="3" />
                                         </ContentLoader>
                                     )}
 
