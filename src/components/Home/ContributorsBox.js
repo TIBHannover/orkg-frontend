@@ -2,58 +2,58 @@ import useTopContributors from 'components/Home/hooks/useTopContributors';
 import ContributorCard from 'components/ContributorCard/ContributorCard';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faAward } from '@fortawesome/free-solid-svg-icons';
+import ContentLoader from 'react-content-loader';
 import PropTypes from 'prop-types';
 
-const ContributorsBox = ({ id }) => {
-    const { contributors } = useTopContributors();
+const ContributorsBox = ({ researchFieldId }) => {
+    const { contributors, isLoading } = useTopContributors({ researchFieldId, pageSize: 5 });
     return (
         <div className="box rounded-lg p-3 flex-grow-1 d-flex flex-column">
             <h5>
                 <Icon icon={faAward} className="text-primary" /> Top Contributors
             </h5>
             <div className="flex-grow-1">
-                {contributors && contributors.length > 0 && (
-                    <div>
-                        {contributors.slice(0, 5).map((contributor, index) => (
+                {!isLoading && contributors && contributors.length > 0 && (
+                    <div className="mt-2">
+                        {contributors.map((contributor, index) => (
                             <div className="pt-1 pl-2 pr-2" key={`rp${index}`}>
                                 <ContributorCard
                                     contributor={{
-                                        ...{
-                                            id: contributor.profile.id,
-                                            display_name: contributor.profile.displayName,
-                                            gravatar_id: contributor.profile.gravatarId
-                                        },
-                                        subTitle: `${contributor.contributionsCount} contributions`
+                                        ...contributor.profile,
+                                        subTitle: `${contributor.contributions_count} contributions`
                                     }}
                                 />
-                                {index <= 4 && <hr className="mb-0 mt-1" />}
-                            </div>
-                        ))}
-                        {contributors.slice(0, 2).map((contributor, index) => (
-                            <div className="pt-1 pl-2 pr-2" key={`rpc${index}`}>
-                                <ContributorCard
-                                    contributor={{
-                                        ...{
-                                            id: contributor.profile.id,
-                                            display_name: contributor.profile.displayName,
-                                            gravatar_id: contributor.profile.gravatarId
-                                        },
-                                        subTitle: `${contributor.contributionsCount} contributions`
-                                    }}
-                                />
-                                {index < 1 && <hr className="mb-0 mt-1" />}
+                                {contributors.length - 1 !== index && <hr className="mb-0 mt-1" />}
                             </div>
                         ))}
                     </div>
                 )}
-                {contributors && contributors.length === 0 && <>No contributors.</>}
+                {!isLoading && contributors && contributors.length === 0 && (
+                    <div className="mt-4 mb-4">
+                        No contributors in this research field yet.
+                        <br />
+                        <i> be the first contributor!</i>.
+                    </div>
+                )}
+                {isLoading && (
+                    <div className="mt-4 mb-4">
+                        <ContentLoader height={130} width={200} primaryColor="#d9d9d9" secondaryColor="#ecebeb">
+                            <rect x="90" y="12" rx="3" ry="3" width="123" height="7" />
+                            <rect x="90" y="30" rx="3" ry="3" width="171" height="6" />
+                            <circle cx="44" cy="30" r="30" />
+                            <circle cx="44" cy="100" r="30" />
+                            <rect x="90" y="82" rx="3" ry="3" width="123" height="7" />
+                            <rect x="90" y="100" rx="3" ry="3" width="171" height="6" />
+                        </ContentLoader>
+                    </div>
+                )}
             </div>
         </div>
     );
 };
 
 ContributorsBox.propTypes = {
-    id: PropTypes.string.isRequired
+    researchFieldId: PropTypes.string.isRequired
 };
 
 export default ContributorsBox;

@@ -7,6 +7,7 @@ import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import { MISC, CLASSES } from 'constants/graphSettings';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
 import { resourcesUrl } from 'services/backend/resources';
+import ContentLoader from 'react-content-loader';
 import PropTypes from 'prop-types';
 
 /* Bootstrap card column is not working correctly working with vertical alignment,
@@ -112,7 +113,7 @@ const ResearchFieldCards = ({ selectedResearchField, handleFieldSelect, research
                     />
                 </div>
             </div>
-            {researchFields.length > 0 && (
+            {!isLoading && researchFields.length > 0 && (
                 <div className="mt-3">
                     <hr className="mt-3 mb-3" />
                     <div>
@@ -128,6 +129,27 @@ const ResearchFieldCards = ({ selectedResearchField, handleFieldSelect, research
                                 );
                             })}
                         </TransitionGroup>
+                    </div>
+                </div>
+            )}
+            {isLoading && (
+                <div className="mt-3">
+                    <hr className="mt-3 mb-3" />
+                    <div>
+                        <ContentLoader
+                            height="10%"
+                            width="100%"
+                            viewBox="0 0 100 10"
+                            style={{ width: '100% !important' }}
+                            backgroundColor="#f3f3f3"
+                            foregroundColor="#ecebeb"
+                        >
+                            <rect x="2" y="0" rx="2" ry="2" width="15" height="7" />
+                            <rect x="22" y="0" rx="2" ry="2" width="15" height="7" />
+                            <rect x="42" y="0" rx="2" ry="2" width="15" height="7" />
+                            <rect x="62" y="0" rx="2" ry="2" width="15" height="7" />
+                            <rect x="82" y="0" rx="2" ry="2" width="15" height="7" />
+                        </ContentLoader>
                     </div>
                 </div>
             )}

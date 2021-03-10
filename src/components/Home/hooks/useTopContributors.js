@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
 import { getTopContributors } from 'services/backend/stats';
+import { MISC } from 'constants/graphSettings';
 
-function useResearchFieldProblems() {
-    const pageSize = 30;
+function useTopContributors({ researchFieldId, pageSize = 30 }) {
     const [isLoading, setIsLoading] = useState(false);
     const [hasNextPage, setHasNextPage] = useState(false);
     const [isLastPageReached, setIsLastPageReached] = useState(false);
@@ -10,39 +10,39 @@ function useResearchFieldProblems() {
     const [contributors, setContributors] = useState([]);
     const [totalElements, setTotalElements] = useState(0);
 
-    const loadData = useCallback(page => {
-        setIsLoading(true);
-        // Papers
-        getTopContributors({
-            page: page,
-            items: pageSize,
-            sortBy: 'created_at'
-        })
-            .then(result => {
-                setContributors(prevResources => [...prevResources, ...result.content]);
-                setIsLoading(false);
-                setHasNextPage(!result.last);
-                setIsLastPageReached(result.last);
-                setTotalElements(result.totalElements);
-                setPage(page + 1);
+    const loadData = useCallback(
+        page => {
+            setIsLoading(true);
+            getTopContributors({
+                researchFieldId: researchFieldId === MISC.RESEARCH_FIELD_MAIN ? null : researchFieldId,
+                page: page,
+                items: pageSize,
+                sortBy: 'id'
             })
-            .catch(error => {
-                setIsLoading(false);
-                setHasNextPage(false);
-                setIsLastPageReached(page > 1 ? true : false);
+                .then(result => {
+                    setContributors(prevResources => [...prevResources, ...result.content]);
+                    setIsLoading(false);
+                    setHasNextPage(!result.last);
+                    setIsLastPageReached(result.last);
+                    setTotalElements(result.totalElements);
+                    setPage(page + 1);
+                })
+                .catch(error => {
+                    setIsLoading(false);
+                    setHasNextPage(false);
+                    setIsLastPageReached(page > 1 ? true : false);
+                });
+        },
+        [researchFieldId, pageSize]
+    );
 
-                console.log(error);
-            });
-    }, []);
-
-    // reset resources when the researchFieldId has changed
     useEffect(() => {
         setContributors([]);
         setHasNextPage(false);
         setIsLastPageReached(false);
         setPage(0);
         setTotalElements(0);
-    }, []);
+    }, [researchFieldId]);
 
     useEffect(() => {
         loadData(0);
@@ -64,4 +64,4 @@ function useResearchFieldProblems() {
         handleLoadMore
     };
 }
-export default useResearchFieldProblems;
+export default useTopContributors;

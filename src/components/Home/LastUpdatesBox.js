@@ -52,9 +52,9 @@ const LastUpdatesBox = () => {
                         activities.length > 0 &&
                         activities.slice(0, 3).map(activity => (
                             <StyledActivity key={`sss${activity.id}`} className="pl-3 pb-3">
-                                <div className="time">{moment(activity.createdAt).fromNow()}</div>
+                                <div className="time">{moment(activity.created_at).fromNow()}</div>
                                 <div className="action">
-                                    {activity.profile?.id ? activity.profile.displayName : <i>Anonymous user</i>} added{' '}
+                                    {activity.profile?.id ? activity.profile.display_name : <i>Anonymous user</i>} added{' '}
                                     <Link to={getResourceLink(activity.classes[0], activity.id)}> {truncate(activity.label, { length: 50 })}</Link>
                                 </div>
                             </StyledActivity>

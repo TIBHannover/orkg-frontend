@@ -67,7 +67,7 @@ export default function Home() {
                     </div>
 
                     <div className="mt-3" style={{ display: 'flex', flexDirection: 'column' }}>
-                        <ContributorsBox id={selectedResearchField.id} />
+                        <ContributorsBox researchFieldId={selectedResearchField.id} />
                     </div>
 
                     <div className="mt-3" style={{ display: 'flex', flexDirection: 'column' }}>
