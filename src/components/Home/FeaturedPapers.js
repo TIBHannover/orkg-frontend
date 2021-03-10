@@ -27,7 +27,7 @@ const FeaturedPapers = ({ researchFieldId }) => {
         researchFieldId: researchFieldId,
         initialSort: 'featured',
         initialIncludeSubFields: true,
-        pageSize: 15
+        pageSize: 10
     });
     const [tippy, setTippy] = useState({});
 
@@ -93,16 +93,13 @@ const FeaturedPapers = ({ researchFieldId }) => {
                         <ListGroupStyled>
                             {papers.map(paper => {
                                 return (
-                                    paper && (
-                                        <PaperCard
-                                            paper={{
-                                                id: paper.id,
-                                                title: paper.label,
-                                                ...paper
-                                            }}
-                                            key={`pc${paper.id}`}
-                                        />
-                                    )
+                                    <PaperCard
+                                        paper={{
+                                            ...paper,
+                                            title: paper.label
+                                        }}
+                                        key={`pc${paper.id}`}
+                                    />
                                 );
                             })}
                         </ListGroupStyled>

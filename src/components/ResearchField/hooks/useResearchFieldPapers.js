@@ -26,7 +26,7 @@ function useResearchFieldPapers({ researchFieldId, initialSort, initialIncludeSu
                 papersService = getResourcesByClass({
                     id: sort === 'featured' ? CLASSES.FEATURED_PAPER : CLASSES.PAPER,
                     sortBy: 'created_at',
-                    desc: sort === 'newest' ? true : false,
+                    desc: sort === 'newest' || sort === 'featured' ? true : false,
                     items: pageSize
                 });
             } else {

@@ -16,8 +16,9 @@ http://www.localhost:8080/api/research-fields/{id}/subfields/comparisons
 http://www.localhost:8080/api/research-fields/{id}/subfields/papers
 */
 
-export const getComparisonsByResearchFieldId = ({ id, page = 0, items = 1, subfields = true }) => {
-    const params = queryString.stringify({ page: page, size: items });
+export const getComparisonsByResearchFieldId = ({ id, page = 0, items = 9999, sortBy = 'created_at', desc = true, subfields = true }) => {
+    const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
+    const params = queryString.stringify({ page: page, size: items, sort });
     return submitGetRequest(`${fieldsUrl}${encodeURIComponent(id)}/${subfields ? 'subfields/' : ''}comparisons?${params}`);
 };
 

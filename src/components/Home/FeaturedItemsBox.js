@@ -44,7 +44,7 @@ const SidebarStyledBox = styled.div`
 `;
 
 const FeaturedItemsBox = ({ researchFieldId }) => {
-    const [activeTab, setActiveState] = useState(1);
+    const [activeTab, setActiveState] = useState(2);
 
     return (
         <SidebarStyledBox className="box rounded-lg mt-3">

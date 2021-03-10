@@ -11,6 +11,7 @@ import moment from 'moment';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
 import RelativeBreadcrumbs from 'components/RelativeBreadcrumbs/RelativeBreadcrumbs';
 import { getStatementsBySubjects } from 'services/backend/statements';
+import { truncate } from 'lodash';
 import { getRelatedFiguresData, getRelatedResourcesData } from 'utils';
 
 const PaperCardStyled = styled.div`
@@ -137,7 +138,7 @@ class ComparisonCard extends Component {
                         )}
                         {this.props.comparison.description && (
                             <div>
-                                <small className="text-muted">{this.props.comparison.description}</small>
+                                <small className="text-muted">{truncate(this.props.comparison.description, { length: 150 })}</small>
                             </div>
                         )}
                     </Col>
