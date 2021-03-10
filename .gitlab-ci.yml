@@ -13,3 +13,13 @@ container_scanning:
   variables:
     # Change image name to match our repository naming convention
     CI_APPLICATION_REPOSITORY: $CI_REGISTRY_IMAGE
+
+javascript:
+  stage: test
+  script:
+    - 'jest --ci --reporters=default --reporters=jest-junit'
+  artifacts:
+    when: always
+    reports:
+      junit:
+        - junit.xml
