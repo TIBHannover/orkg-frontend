@@ -9,6 +9,10 @@ import Autocomplete from 'components/Autocomplete/Autocomplete';
 import { resourcesUrl } from 'services/backend/resources';
 import ContentLoader from 'react-content-loader';
 import PropTypes from 'prop-types';
+import ROUTES from 'constants/routes';
+import { reverse } from 'named-urls';
+import { Link } from 'react-router-dom';
+import { Button } from 'reactstrap';
 
 /* Bootstrap card column is not working correctly working with vertical alignment,
 thus used custom styling here */
@@ -94,7 +98,18 @@ const ResearchFieldCards = ({ selectedResearchField, handleFieldSelect, research
                 <h1 className="col-8 h5 flex-shrink-0 mb-0">
                     <Icon icon={faStream} className="text-primary" /> Browse by research field
                 </h1>
-                <div className="col-4 flex-end">
+                <div className="col-4 flex-end d-flex">
+                    {selectedResearchField.id !== MISC.RESEARCH_FIELD_MAIN && (
+                        <Button
+                            tag={Link}
+                            to={reverse(ROUTES.RESEARCH_FIELD, { researchFieldId: selectedResearchField.id })}
+                            color="light"
+                            size="sm"
+                            className="flex-shrink-0 mr-2"
+                        >
+                            Visit field page
+                        </Button>
+                    )}
                     <Autocomplete
                         requestUrl={resourcesUrl}
                         optionsClass={CLASSES.RESEARCH_FIELD}
