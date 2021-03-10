@@ -1,25 +1,47 @@
 import { useState } from 'react';
-import { Container, ListGroup, FormGroup, Label, Input } from 'reactstrap';
+import { Button, Container, ListGroup, FormGroup, Label, Input } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner, faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import ComparisonCard from 'components/ComparisonCard/ComparisonCard';
 import useResearchFieldComparison from 'components/ResearchField/hooks/useResearchFieldComparison';
-import { SmallButton } from 'components/styled';
+import { SmallButton, SubTitle, SubtitleSeparator } from 'components/styled';
 import Tippy from '@tippyjs/react';
+import ROUTES from 'constants/routes';
+import ContentLoader from 'react-content-loader';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
-const Comparisons = ({ id }) => {
-    const [comparisons, isLoadingComparisons, hasNextPageComparison, isLastPageReachedComparison, loadMoreComparisons] = useResearchFieldComparison({
-        researchFieldId: id
-    });
+const Comparisons = ({ id, boxShadow }) => {
+    const {
+        comparisons,
+        sort,
+        includeSubFields,
+        isLoading,
+        hasNextPage,
+        isLastPageReached,
+        totalElements,
+        page,
+        handleLoadMore,
+        setSort,
+        setIncludeSubFields
+    } = useResearchFieldComparison({ researchFieldId: id, initialSort: 'newest', initialIncludeSubFields: true });
     const [tippy, setTippy] = useState({});
-    const [sort, setSort] = useState('newest');
-    const [includeSubFields, setIncludeSubFields] = useState(true);
 
     return (
         <>
             <Container className="d-flex align-items-center mt-4 mb-4">
-                <h1 className="h4 flex-grow-1">Comparisons</h1>
+                <div className="d-flex flex-grow-1">
+                    <h1 className="h5 flex-shrink-0 mb-0">Comparisons</h1>
+                    <>
+                        <SubtitleSeparator />
+                        <SubTitle className="mb-0">
+                            <small className="text-muted mb-0 text-small">
+                                {totalElements === 0 && isLoading ? <Icon icon={faSpinner} spin /> : <>{`${totalElements} Comparison`}</>}
+                            </small>
+                        </SubTitle>
+                    </>
+                </div>
+
                 <Tippy
                     interactive={true}
                     trigger="click"
@@ -39,6 +61,7 @@ const Comparisons = ({ id }) => {
                                     type="select"
                                     name="sort"
                                     id="sortComparisons"
+                                    disabled={isLoading}
                                 >
                                     <option value="newest">Newest first</option>
                                     <option value="oldest">Oldest first</option>
@@ -54,6 +77,7 @@ const Comparisons = ({ id }) => {
                                         checked={includeSubFields}
                                         type="checkbox"
                                         style={{ marginTop: '0.1rem' }}
+                                        disabled={isLoading}
                                     />
                                     Include subfields
                                 </Label>
@@ -70,36 +94,62 @@ const Comparisons = ({ id }) => {
             </Container>
             <Container className="p-0">
                 {comparisons.length > 0 && (
-                    <ListGroup className="box">
+                    <ListGroup className={boxShadow ? 'box' : ''}>
                         {comparisons.map(comparison => {
                             return comparison && <ComparisonCard comparison={{ ...comparison }} key={`pc${comparison.id}`} />;
                         })}
-                        {!isLoadingComparisons && hasNextPageComparison && (
+                        {!isLoading && hasNextPage && (
                             <div
                                 style={{ cursor: 'pointer' }}
-                                className="list-group-item list-group-item-action text-center mt-2"
-                                onClick={!isLoadingComparisons ? loadMoreComparisons : undefined}
-                                onKeyDown={e => (e.keyCode === 13 ? (!isLoadingComparisons ? loadMoreComparisons : undefined) : undefined)}
+                                className="list-group-item list-group-item-action text-center"
+                                onClick={!isLoading ? handleLoadMore : undefined}
+                                onKeyDown={e => (e.keyCode === 13 ? (!isLoading ? handleLoadMore : undefined) : undefined)}
                                 role="button"
                                 tabIndex={0}
                             >
                                 Load more comparisons
                             </div>
                         )}
-                        {!hasNextPageComparison && isLastPageReachedComparison && (
-                            <div className="text-center mt-3">You have reached the last page.</div>
-                        )}
+                        {!hasNextPage && isLastPageReached && page !== 1 && <div className="text-center mt-3">You have reached the last page.</div>}
                     </ListGroup>
                 )}
-                {comparisons.length === 0 && !isLoadingComparisons && (
-                    <div className="box rounded-lg p-5 text-center mt-4 mb-4">
-                        There are no published comparisons for this research field, yet.
-                        <br />
+                {comparisons.length === 0 && !isLoading && (
+                    <div className={boxShadow ? 'container box rounded' : ''}>
+                        <div className="p-5 text-center mt-4 mb-4">
+                            There are no comparisons for this research field, yet.
+                            <br />
+                            <br />
+                            <Link to={ROUTES.ADD_COMPARISON}>
+                                <Button size="sm" color="primary " className="mr-3">
+                                    Add comparison
+                                </Button>
+                            </Link>
+                        </div>
                     </div>
                 )}
-                {isLoadingComparisons && (
-                    <div className="text-center mt-4 mb-4">
-                        <Icon icon={faSpinner} spin /> Loading
+                {isLoading && (
+                    <div className={`text-center mt-4 mb-4 ${page === 0 ? 'p-5 container box rounded' : ''}`}>
+                        {page !== 0 && (
+                            <>
+                                <Icon icon={faSpinner} spin /> Loading
+                            </>
+                        )}
+                        {page === 0 && (
+                            <div className="text-left">
+                                <ContentLoader
+                                    speed={2}
+                                    width={400}
+                                    height={50}
+                                    viewBox="0 0 400 50"
+                                    style={{ width: '100% !important' }}
+                                    backgroundColor="#f3f3f3"
+                                    foregroundColor="#ecebeb"
+                                >
+                                    <rect x="0" y="0" rx="3" ry="3" width="400" height="20" />
+                                    <rect x="0" y="25" rx="3" ry="3" width="300" height="20" />
+                                </ContentLoader>
+                            </div>
+                        )}
                     </div>
                 )}
             </Container>
@@ -108,7 +158,12 @@ const Comparisons = ({ id }) => {
 };
 
 Comparisons.propTypes = {
-    id: PropTypes.string.isRequired
+    id: PropTypes.string.isRequired,
+    boxShadow: PropTypes.bool
+};
+
+Comparisons.defaultProps = {
+    boxShadow: false
 };
 
 export default Comparisons;

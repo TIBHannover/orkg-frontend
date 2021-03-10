@@ -6,11 +6,11 @@ import useResearchFieldObservatories from 'components/ResearchField/hooks/useRes
 import LastUpdatesBox from 'components/ResearchField/LastUpdatesBox';
 import Comparisons from 'components/ResearchField/Comparisons';
 import Papers from 'components/ResearchField/Papers';
+import { useParams } from 'react-router-dom';
 import ResearchProblemsBox from 'components/ResearchField/ResearchProblemsBox';
-import PropTypes from 'prop-types';
 
-function ResearchField(props) {
-    const { researchFieldId } = props.match.params;
+const ResearchField = () => {
+    const { researchFieldId } = useParams();
 
     const [observatories, isLoadingObservatories] = useResearchFieldObservatories();
 
@@ -37,18 +37,10 @@ function ResearchField(props) {
                 </Row>
             </Container>
 
-            <Comparisons id={researchFieldId} />
+            <Comparisons id={researchFieldId} boxShadow />
             <Papers id={researchFieldId} boxShadow />
         </>
     );
-}
-
-ResearchField.propTypes = {
-    match: PropTypes.shape({
-        params: PropTypes.shape({
-            researchFieldId: PropTypes.string
-        }).isRequired
-    }).isRequired
 };
 
 export default ResearchField;

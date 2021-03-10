@@ -116,7 +116,9 @@ const FeaturedComparisons = ({ researchFieldId }) => {
                     </>
                 ) : (
                     <div className="text-center">
-                        {sort === 'featured' ? 'No featured comparison found' : 'There are no published comparison for this research field, yet.'}
+                        {sort === 'featured' && researchFieldId === MISC.RESEARCH_FIELD_MAI
+                            ? 'No featured comparison found'
+                            : 'There are no published comparison for this research field, yet.'}
                     </div>
                 ))}
             {isLoading && (
