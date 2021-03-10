@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
 import { getChangelogs } from 'services/backend/stats';
+import { MISC } from 'constants/graphSettings';
 
-function useTopChangelog() {
-    const pageSize = 30;
+function useTopChangelog({ researchFieldId, pageSize = 30, sortBy = 'id', desc = true }) {
     const [isLoading, setIsLoading] = useState(false);
     const [hasNextPage, setHasNextPage] = useState(false);
     const [isLastPageReached, setIsLastPageReached] = useState(false);
@@ -10,30 +10,34 @@ function useTopChangelog() {
     const [activities, setActivities] = useState([]);
     const [totalElements, setTotalElements] = useState(0);
 
-    const loadData = useCallback(page => {
-        setIsLoading(true);
-        // Papers
-        getChangelogs({
-            page: page,
-            items: pageSize,
-            sortBy: 'created_at'
-        })
-            .then(result => {
-                setActivities(prevResources => [...prevResources, ...result.content]);
-                setIsLoading(false);
-                setHasNextPage(!result.last);
-                setIsLastPageReached(result.last);
-                setTotalElements(result.totalElements);
-                setPage(page + 1);
+    const loadData = useCallback(
+        page => {
+            setIsLoading(true);
+            getChangelogs({
+                researchFieldId: researchFieldId === MISC.RESEARCH_FIELD_MAIN ? null : researchFieldId,
+                page: page,
+                items: pageSize,
+                sortBy,
+                desc
             })
-            .catch(error => {
-                setIsLoading(false);
-                setHasNextPage(false);
-                setIsLastPageReached(page > 1 ? true : false);
+                .then(result => {
+                    setActivities(prevResources => [...prevResources, ...result.content]);
+                    setIsLoading(false);
+                    setHasNextPage(!result.last);
+                    setIsLastPageReached(result.last);
+                    setTotalElements(result.totalElements);
+                    setPage(page + 1);
+                })
+                .catch(error => {
+                    setIsLoading(false);
+                    setHasNextPage(false);
+                    setIsLastPageReached(page > 1 ? true : false);
 
-                console.log(error);
-            });
-    }, []);
+                    console.log(error);
+                });
+        },
+        [researchFieldId, pageSize, sortBy, desc]
+    );
 
     // reset resources when the researchFieldId has changed
     useEffect(() => {
@@ -42,7 +46,7 @@ function useTopChangelog() {
         setIsLastPageReached(false);
         setPage(0);
         setTotalElements(0);
-    }, []);
+    }, [researchFieldId]);
 
     useEffect(() => {
         loadData(0);

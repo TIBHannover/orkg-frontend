@@ -28,7 +28,7 @@ const ContributorsBox = ({ researchFieldId }) => {
                         ))}
                     </div>
                 )}
-                {!isLoading && contributors && contributors.length === 0 && (
+                {!isLoading && contributors?.length === 0 && (
                     <div className="mt-4 mb-4">
                         No contributors in this research field yet.
                         <br />
@@ -37,7 +37,7 @@ const ContributorsBox = ({ researchFieldId }) => {
                 )}
                 {isLoading && (
                     <div className="mt-4 mb-4">
-                        <ContentLoader height={130} width={200} primaryColor="#d9d9d9" secondaryColor="#ecebeb">
+                        <ContentLoader height={130} width={200} foregroundColor="#d9d9d9" backgroundColor="#ecebeb">
                             <rect x="90" y="12" rx="3" ry="3" width="123" height="7" />
                             <rect x="90" y="30" rx="3" ry="3" width="171" height="6" />
                             <circle cx="44" cy="30" r="30" />

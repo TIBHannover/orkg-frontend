@@ -22,10 +22,10 @@ export const getTopContributors = ({ researchFieldId = null, page = 0, items = 9
     return submitGetRequest(`${statsUrl}${researchFieldId ? `research-field/${researchFieldId}/` : ''}top/contributors?${params}`);
 };
 
-export const getChangelogs = ({ page = 0, items = 9999, sortBy = 'created_at', desc = true, subfields = true }) => {
+export const getChangelogs = ({ researchFieldId = null, page = 0, items = 9999, sortBy = 'id', desc = true }) => {
     const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
-    const params = queryString.stringify({ page: page, size: items /*, sort, desc*/ });
-    return submitGetRequest(`${statsUrl}top/changelog?${params}`);
+    const params = queryString.stringify({ page: page, size: items, sort });
+    return submitGetRequest(`${statsUrl}${researchFieldId ? `research-field/${researchFieldId}/` : ''}top/changelog?${params}`);
 };
 
 export const getTopResearchProblems = ({ page = 0, items = 9999, sortBy = 'created_at', desc = true, subfields = true }) => {

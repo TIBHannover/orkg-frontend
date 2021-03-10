@@ -71,7 +71,7 @@ export default function Home() {
                     </div>
 
                     <div className="mt-3" style={{ display: 'flex', flexDirection: 'column' }}>
-                        <LastUpdatesBox id={selectedResearchField.id} />
+                        <LastUpdatesBox researchFieldId={selectedResearchField.id} />
                     </div>
                 </Col>
             </Row>

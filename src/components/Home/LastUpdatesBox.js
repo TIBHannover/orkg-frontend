@@ -1,5 +1,5 @@
-import { SmallButton } from 'components/styled';
 import styled from 'styled-components';
+import ContentLoader from 'react-content-loader';
 import useTopChangelog from './hooks/useTopChangelog';
 import moment from 'moment';
 import { Link } from 'react-router-dom';
@@ -40,40 +40,55 @@ const StyledActivity = styled.div`
     }
 `;
 
-const LastUpdatesBox = () => {
-    const { activities } = useTopChangelog();
-
+const LastUpdatesBox = ({ researchFieldId }) => {
+    const { activities, isLoading } = useTopChangelog({ researchFieldId, pageSize: 3 });
     return (
         <div className="box rounded-lg p-3 flex-grow-1 d-flex flex-column">
             <h5>Last updates</h5>
             <div className="mt-3 flex-grow-1">
                 <div>
-                    {activities &&
-                        activities.length > 0 &&
-                        activities.slice(0, 3).map(activity => (
+                    {!isLoading &&
+                        activities?.length > 0 &&
+                        activities.map(activity => (
                             <StyledActivity key={`sss${activity.id}`} className="pl-3 pb-3">
                                 <div className="time">{moment(activity.created_at).fromNow()}</div>
                                 <div className="action">
                                     {activity.profile?.id ? activity.profile.display_name : <i>Anonymous user</i>} added{' '}
-                                    <Link to={getResourceLink(activity.classes[0], activity.id)}> {truncate(activity.label, { length: 50 })}</Link>
+                                    <Link to={getResourceLink(activity.classes?.length > 0 ? activity.classes[0] : '', activity.id)}>
+                                        {' '}
+                                        {truncate(activity.label, { length: 50 })}
+                                    </Link>
                                 </div>
                             </StyledActivity>
                         ))}
+                    {!isLoading && activities?.length === 0 && (
+                        <div className="mt-4 mb-4">
+                            No updates in this research field yet.
+                            <br />
+                            <i> be the first to start building the knowledge!</i>.
+                        </div>
+                    )}
+                    {isLoading && (
+                        <div className="mt-4 mb-4">
+                            <ContentLoader height={130} width={200} foregroundColor="#d9d9d9" backgroundColor="#ecebeb">
+                                <rect x="30" y="5" rx="3" ry="3" width="150" height="6" />
+                                <rect x="30" y="15" rx="3" ry="3" width="100" height="5" />
+                                <rect x="30" y="35" rx="3" ry="3" width="150" height="6" />
+                                <rect x="30" y="45" rx="3" ry="3" width="150" height="5" />
+                                <rect x="30" y="65" rx="3" ry="3" width="100" height="6" />
+                                <rect x="30" y="75" rx="3" ry="3" width="150" height="5" />
+                                <rect x="14" y="0" rx="3" ry="3" width="3" height="100" />
+                            </ContentLoader>
+                        </div>
+                    )}
                 </div>
             </div>
-            {activities.length > 3 && (
-                <div className="text-center">
-                    <SmallButton onClick={() => null} color="lightblue">
-                        View more
-                    </SmallButton>
-                </div>
-            )}
         </div>
     );
 };
 
 LastUpdatesBox.propTypes = {
-    id: PropTypes.string.isRequired
+    researchFieldId: PropTypes.string.isRequired
 };
 
 export default LastUpdatesBox;

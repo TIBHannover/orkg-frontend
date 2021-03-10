@@ -1005,6 +1005,10 @@ export const getResourceLink = (classId, resourceId) => {
             link = reverse(ROUTES.VISUALIZATION, { id: resourceId });
             break;
         }
+        case CLASSES.CONTRIBUTION: {
+            link = reverse(ROUTES.CONTRIBUTION, { id: resourceId });
+            break;
+        }
         case RESOURCE_TYPE_ID: {
             link = reverse(ROUTES.RESOURCE, { id: resourceId });
             break;
