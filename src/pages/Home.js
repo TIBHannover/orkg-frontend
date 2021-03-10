@@ -54,7 +54,7 @@ export default function Home() {
             <Row>
                 <Col md="8">
                     <div className="mt-3 mt-md-0" style={{ display: 'flex', flexDirection: 'column' }}>
-                        <FeaturedItemsBox />
+                        <FeaturedItemsBox researchFieldId={selectedResearchField.id} />
                     </div>
                 </Col>
                 <Col md="4">

@@ -3,6 +3,7 @@ import FeaturedComparisons from './FeaturedComparisons';
 import FeaturedPapers from './FeaturedPapers';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import styled from 'styled-components';
+import PropTypes from 'prop-types';
 
 const AnimationContainer = styled(CSSTransition)`
     &.fadeIn-enter {
@@ -42,8 +43,8 @@ const SidebarStyledBox = styled.div`
     }
 `;
 
-export default function FeaturedItemsBox() {
-    const [activeTab, setActiveState] = useState(2);
+const FeaturedItemsBox = ({ researchFieldId }) => {
+    const [activeTab, setActiveState] = useState(1);
 
     return (
         <SidebarStyledBox className="box rounded-lg mt-3">
@@ -70,14 +71,20 @@ export default function FeaturedItemsBox() {
             <TransitionGroup exit={false}>
                 {activeTab === 1 ? (
                     <AnimationContainer key={1} classNames="fadeIn" timeout={{ enter: 700, exit: 0 }}>
-                        <FeaturedPapers />
+                        <FeaturedPapers researchFieldId={researchFieldId} />
                     </AnimationContainer>
                 ) : (
                     <AnimationContainer key={2} classNames="fadeIn" timeout={{ enter: 700, exit: 0 }}>
-                        <FeaturedComparisons />
+                        <FeaturedComparisons researchFieldId={researchFieldId} />
                     </AnimationContainer>
                 )}
             </TransitionGroup>
         </SidebarStyledBox>
     );
-}
+};
+
+FeaturedItemsBox.propTypes = {
+    researchFieldId: PropTypes.string.isRequired
+};
+
+export default FeaturedItemsBox;

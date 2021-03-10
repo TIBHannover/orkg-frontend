@@ -1,76 +1,96 @@
-import { useState, useEffect } from 'react';
-import { ListGroup, Button, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import { useState } from 'react';
+import { FormGroup, Label, Input, ListGroup, Button } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import ROUTES from 'constants/routes.js';
-import { getStatementsBySubjects } from 'services/backend/statements';
-import { getResourcesByClass } from 'services/backend/resources';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { getPaperData } from 'utils';
-import { find } from 'lodash';
+import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import PaperCard from 'components/PaperCard/PaperCard';
-import { CLASSES } from 'constants/graphSettings';
+import PropTypes from 'prop-types';
+import styled from 'styled-components';
+import { MISC } from 'constants/graphSettings';
+import ContentLoader from 'react-content-loader';
+import useResearchFieldPapers from 'components/ResearchField/hooks/useResearchFieldPapers';
+import { SmallButton } from 'components/styled';
+import { reverse } from 'named-urls';
+import Tippy from '@tippyjs/react';
 
-export default function FeaturedPapers() {
-    const [papers, setPapers] = useState([]);
-    const [isLoading, setIsLoading] = useState(false);
-    const [filter, setFilter] = useState('featured');
-    const [dropdownOpen, setOpen] = useState(false);
+const ListGroupStyled = styled(ListGroup)`
+    &&& .list-group-item {
+        border-radius: 0;
+        border-right-width: 0;
+        border-left-width: 0;
+    }
+`;
 
-    const toggle = () => setOpen(!dropdownOpen);
-
-    const loadPapers = async paperFilter => {
-        setIsLoading(true);
-        const responseJson = await getResourcesByClass({
-            id: paperFilter === 'featured' ? CLASSES.FEATURED_PAPER : CLASSES.PAPER,
-            sortBy: 'created_at',
-            desc: true,
-            items: 14,
-            returnContent: true
-        });
-
-        getStatementsBySubjects({
-            ids: responseJson.map(p => p.id)
-        })
-            .then(papersStatements => {
-                const papers = papersStatements.map(paperStatements => {
-                    const paperSubject = find(responseJson, {
-                        id: paperStatements.id
-                    });
-                    return getPaperData(paperSubject, paperStatements.statements);
-                });
-
-                setPapers(papers);
-                setIsLoading(false);
-            })
-            .catch(() => {
-                setPapers([]);
-                setIsLoading(false);
-            });
-    };
-
-    useEffect(() => {
-        loadPapers(filter);
-    }, [filter]);
+const FeaturedPapers = ({ researchFieldId }) => {
+    const { papers, sort, includeSubFields, isLoading, setSort, setIncludeSubFields } = useResearchFieldPapers({
+        researchFieldId: researchFieldId,
+        initialSort: 'featured',
+        initialIncludeSubFields: true,
+        pageSize: 15
+    });
+    const [tippy, setTippy] = useState({});
 
     return (
         <div className="pt-2 pb-3">
             <div className="d-flex justify-content-end mb-2 mr-2">
-                <ButtonDropdown size="sm" isOpen={dropdownOpen} toggle={toggle}>
-                    <DropdownToggle caret color="lightblue">
-                        {filter === 'featured' && 'Featured'}
-                        {filter === 'latest' && 'Latest'}
-                    </DropdownToggle>
-                    <DropdownMenu right>
-                        <DropdownItem onClick={() => setFilter('featured')}>Featured</DropdownItem>
-                        <DropdownItem onClick={() => setFilter('latest')}>Latest</DropdownItem>
-                    </DropdownMenu>
-                </ButtonDropdown>
+                <Tippy
+                    interactive={true}
+                    trigger="click"
+                    placement="bottom-end"
+                    onCreate={instance => setTippy(instance)}
+                    content={
+                        <div className="p-2">
+                            <FormGroup>
+                                <Label for="sortPapers">Sort</Label>
+                                <Input
+                                    value={sort}
+                                    onChange={e => {
+                                        tippy.hide();
+                                        setSort(e.target.value);
+                                    }}
+                                    bsSize="sm"
+                                    type="select"
+                                    name="sort"
+                                    id="sortPapers"
+                                    disabled={isLoading}
+                                >
+                                    <option value="newest">Newest first</option>
+                                    <option value="oldest">Oldest first</option>
+                                    {researchFieldId === MISC.RESEARCH_FIELD_MAIN && <option value="featured">Featured</option>}
+                                </Input>
+                            </FormGroup>
+                            {researchFieldId !== MISC.RESEARCH_FIELD_MAIN && (
+                                <FormGroup check>
+                                    <Label check>
+                                        <Input
+                                            onChange={e => {
+                                                tippy.hide();
+                                                setIncludeSubFields(e.target.checked);
+                                            }}
+                                            checked={includeSubFields}
+                                            type="checkbox"
+                                            style={{ marginTop: '0.1rem' }}
+                                            disabled={isLoading}
+                                        />
+                                        Include subfields
+                                    </Label>
+                                </FormGroup>
+                            )}
+                        </div>
+                    }
+                >
+                    <span>
+                        <SmallButton color="lightblue" className="flex-shrink-0 pl-3 pr-3" style={{ marginLeft: 'auto' }} size="sm">
+                            View <Icon icon={faChevronDown} />
+                        </SmallButton>
+                    </span>
+                </Tippy>
             </div>
-            {!isLoading ? (
-                papers.length > 0 ? (
+            {!isLoading &&
+                (papers.length > 0 ? (
                     <>
-                        <ListGroup>
+                        <ListGroupStyled>
                             {papers.map(paper => {
                                 return (
                                     paper && (
@@ -85,24 +105,51 @@ export default function FeaturedPapers() {
                                     )
                                 );
                             })}
-                        </ListGroup>
+                        </ListGroupStyled>
 
                         <div className="text-center mt-2">
-                            <Link to={ROUTES.PAPERS}>
-                                <Button color="primary" className="mr-3" size="sm">
-                                    View more
-                                </Button>
-                            </Link>
+                            <Button
+                                tag={Link}
+                                to={
+                                    researchFieldId !== MISC.RESEARCH_FIELD_MAIN
+                                        ? reverse(ROUTES.RESEARCH_FIELD, { researchFieldId: researchFieldId })
+                                        : ROUTES.PAPERS
+                                }
+                                color="primary"
+                                size="sm"
+                                className="flex-shrink-0 mr-2"
+                            >
+                                View more
+                            </Button>
                         </div>
                     </>
                 ) : (
-                    <div className="text-center">{filter === 'featured' ? 'No featured paper found' : 'No paper found'}</div>
-                )
-            ) : (
-                <div className="text-center">
-                    <Icon icon={faSpinner} spin /> Loading
+                    <div className="text-center mt-4 mb-4">
+                        {sort === 'featured' ? 'No featured paper found' : ' There are no papers for this research field, yet.'}
+                    </div>
+                ))}
+            {isLoading && (
+                <div className="p-3 text-left">
+                    <ContentLoader
+                        speed={2}
+                        width={400}
+                        height={50}
+                        viewBox="0 0 400 50"
+                        style={{ width: '100% !important' }}
+                        backgroundColor="#f3f3f3"
+                        foregroundColor="#ecebeb"
+                    >
+                        <rect x="0" y="0" rx="3" ry="3" width="400" height="20" />
+                        <rect x="0" y="25" rx="3" ry="3" width="300" height="20" />
+                    </ContentLoader>
                 </div>
             )}
         </div>
     );
-}
+};
+
+FeaturedPapers.propTypes = {
+    researchFieldId: PropTypes.string.isRequired
+};
+
+export default FeaturedPapers;
