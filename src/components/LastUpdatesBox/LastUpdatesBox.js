@@ -1,47 +1,19 @@
-import styled from 'styled-components';
+import { useState } from 'react';
 import ContentLoader from 'react-content-loader';
-import useTopChangelog from './hooks/useTopChangelog';
+import useTopChangelog from 'components/LastUpdatesBox/hooks/useTopChangelog';
+import { SmallButton } from 'components/styled';
+import LastUpdatesModal from './LastUpdatesModal';
+import { StyledActivity } from './styled';
 import moment from 'moment';
 import { Link } from 'react-router-dom';
 import { getResourceLink } from 'utils';
 import { truncate } from 'lodash';
 import PropTypes from 'prop-types';
 
-const StyledActivity = styled.div`
-    border-left: 3px solid ${props => props.theme.ultraLightBlueDarker};
-    color: ${props => props.theme.bodyColor};
-    position: relative;
-    font-size: 15px;
-    .time {
-        color: ${props => props.theme.darkblueDarker};
-        margin-top: -0.2rem;
-        margin-bottom: 0.2rem;
-        font-size: 16px;
-    }
-    .time::before {
-        width: 0.7rem;
-        height: 0.7rem;
-        margin-left: -1.45rem;
-        margin-right: 0.5rem;
-        border-radius: 14px;
-        content: '';
-        background-color: ${props => props.theme.ultraLightBlueDarker};
-        display: inline-block;
-        position: absolute;
-        margin-top: 3px;
-    }
-    a {
-        color: ${props => props.theme.ORKGPrimaryColor};
-    }
-
-    &:last-child {
-        border-left: none;
-        padding-left: 1.2rem !important;
-    }
-`;
-
 const LastUpdatesBox = ({ researchFieldId }) => {
-    const { activities, isLoading } = useTopChangelog({ researchFieldId, pageSize: 3 });
+    const { activities, isLoading } = useTopChangelog({ researchFieldId, pageSize: 4 });
+    const [openModal, setOpenModal] = useState(false);
+
     return (
         <div className="box rounded-lg p-3 flex-grow-1 d-flex flex-column">
             <h5>Last updates</h5>
@@ -49,8 +21,8 @@ const LastUpdatesBox = ({ researchFieldId }) => {
                 <div>
                     {!isLoading &&
                         activities?.length > 0 &&
-                        activities.map(activity => (
-                            <StyledActivity key={`sss${activity.id}`} className="pl-3 pb-3">
+                        activities.slice(0, 3).map(activity => (
+                            <StyledActivity key={`log${activity.id}`} className="pl-3 pb-3">
                                 <div className="time">{moment(activity.created_at).fromNow()}</div>
                                 <div className="action">
                                     {activity.profile?.id ? activity.profile.display_name : <i>Anonymous user</i>} added{' '}
@@ -61,6 +33,14 @@ const LastUpdatesBox = ({ researchFieldId }) => {
                                 </div>
                             </StyledActivity>
                         ))}
+
+                    {!isLoading && activities.length > 3 && (
+                        <div className="text-center">
+                            <SmallButton onClick={() => setOpenModal(v => !v)} color="lightblue">
+                                View more
+                            </SmallButton>
+                        </div>
+                    )}
                     {!isLoading && activities?.length === 0 && (
                         <div className="mt-4 mb-4">
                             No updates in this research field yet.
@@ -80,6 +60,9 @@ const LastUpdatesBox = ({ researchFieldId }) => {
                                 <rect x="14" y="0" rx="3" ry="3" width="3" height="100" />
                             </ContentLoader>
                         </div>
+                    )}
+                    {activities.length > 3 && openModal && (
+                        <LastUpdatesModal openModal={openModal} setOpenModal={setOpenModal} researchFieldId={researchFieldId} />
                     )}
                 </div>
             </div>

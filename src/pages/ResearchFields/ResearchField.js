@@ -3,7 +3,7 @@ import Breadcrumbs from 'components/Breadcrumbs/Breadcrumbs';
 import ResearchFieldHeader from 'components/ResearchField/ResearchFieldHeader';
 import ObservatoriesCarousel from 'components/ObservatoriesCarousel/ObservatoriesCarousel';
 import useResearchFieldObservatories from 'components/ResearchField/hooks/useResearchFieldObservatories';
-import LastUpdatesBox from 'components/ResearchField/LastUpdatesBox';
+import LastUpdatesBox from 'components/LastUpdatesBox/LastUpdatesBox';
 import Comparisons from 'components/ResearchField/Comparisons';
 import Papers from 'components/ResearchField/Papers';
 import { useParams } from 'react-router-dom';

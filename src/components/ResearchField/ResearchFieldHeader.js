@@ -16,11 +16,12 @@ import RequireAuthentication from 'components/RequireAuthentication/RequireAuthe
 import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
 import { SubTitle, SubtitleSeparator } from 'components/styled';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faPen, faEllipsisV, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faPen, faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 import useResearchField from 'components/ResearchField/hooks/useResearchField';
 import ExternalDescription from 'components/ResearchProblem/ExternalDescription';
-import Contributors from './Contributors';
+import Contributors from 'components/TopContributors/Contributors';
 import { NavLink } from 'react-router-dom';
+import ContentLoader from 'react-content-loader';
 import ROUTES from 'constants/routes.js';
 import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
@@ -42,9 +43,37 @@ const ResearchFieldHeader = ({ id }) => {
     return (
         <>
             {isLoading && (
-                <div className="text-center mt-4 mb-4">
-                    <Icon icon={faSpinner} spin /> Loading
-                </div>
+                <>
+                    <div className="mt-4 mb-4 container">
+                        <ContentLoader
+                            speed={2}
+                            width={400}
+                            height={20}
+                            viewBox="0 0 400 20"
+                            style={{ width: '100% !important' }}
+                            backgroundColor="#f3f3f3"
+                            foregroundColor="#ecebeb"
+                        >
+                            <rect x="0" y="0" rx="3" ry="3" width="400" height="20" />
+                        </ContentLoader>
+                    </div>
+                    <div className="text-center mt-4 mb-4 p-5 container box rounded">
+                        <div className="text-left">
+                            <ContentLoader
+                                speed={2}
+                                width={400}
+                                height={50}
+                                viewBox="0 0 400 50"
+                                style={{ width: '100% !important' }}
+                                backgroundColor="#f3f3f3"
+                                foregroundColor="#ecebeb"
+                            >
+                                <rect x="0" y="0" rx="3" ry="3" width="400" height="20" />
+                                <rect x="0" y="25" rx="3" ry="3" width="300" height="20" />
+                            </ContentLoader>
+                        </div>
+                    </div>
+                </>
             )}
             {!isLoading && !isFailedLoading && (
                 <>
@@ -91,34 +120,43 @@ const ResearchFieldHeader = ({ id }) => {
                             <CardBody>
                                 <CardTitle tag="h5">Description</CardTitle>
                                 {researchFieldData.description && <div className="mb-4">{researchFieldData.description}</div>}
+                                {!researchFieldData.description && <div className="mb-4">No description for this research field yet!</div>}
                                 {researchFieldData.sameAs && (
                                     <ExternalDescription
                                         query={researchFieldData.sameAs ? researchFieldData.sameAs.label : researchFieldData.label}
                                     />
                                 )}
                             </CardBody>
+
+                            {subResearchFields && subResearchFields.length > 0 && (
+                                <>
+                                    <hr className="m-0" />
+                                    <CardBody>
+                                        <CardTitle tag="h5">Subfields</CardTitle>
+                                        <div>
+                                            {subResearchFields.slice(0, 9).map(subfield => (
+                                                <Link
+                                                    key={`index${subfield.id}`}
+                                                    to={reverse(ROUTES.RESEARCH_FIELD, { researchFieldId: subfield.id })}
+                                                >
+                                                    <Badge color="lightblue" className="mr-2 mb-2">
+                                                        {subfield.label}
+                                                    </Badge>
+                                                </Link>
+                                            ))}
+                                            {subResearchFields.length > 5 && (
+                                                <Button color="link" size="sm">
+                                                    Show more subfields
+                                                </Button>
+                                            )}
+                                        </div>
+                                    </CardBody>
+                                </>
+                            )}
+
                             <hr className="m-0" />
                             <CardBody>
-                                <CardTitle tag="h5">Subfields</CardTitle>
-                                <div>
-                                    {subResearchFields.slice(0, 9).map(subfield => (
-                                        <Link key={`index${subfield.id}`} to={reverse(ROUTES.RESEARCH_FIELD, { researchFieldId: subfield.id })}>
-                                            <Badge color="lightblue" className="mr-2 mb-2">
-                                                {subfield.label}
-                                            </Badge>
-                                        </Link>
-                                    ))}
-                                    {subResearchFields.length > 5 && (
-                                        <Button color="link" size="sm">
-                                            Show more subfields
-                                        </Button>
-                                    )}
-                                    {subResearchFields && subResearchFields.length === 0 && <>No sub research fields.</>}
-                                </div>
-                            </CardBody>
-                            <hr className="m-0" />
-                            <CardBody>
-                                <Contributors id={id} />
+                                <Contributors researchFieldId={id} />
                             </CardBody>
                         </Card>
                     </Container>

@@ -1,12 +1,17 @@
-import useTopContributors from 'components/Home/hooks/useTopContributors';
+import { useState } from 'react';
+import useTopContributors from 'components/TopContributors/hooks/useTopContributors';
 import ContributorCard from 'components/ContributorCard/ContributorCard';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faAward } from '@fortawesome/free-solid-svg-icons';
+import ContributorsModal from './ContributorsModal';
 import ContentLoader from 'react-content-loader';
+import { SmallButton } from 'components/styled';
 import PropTypes from 'prop-types';
 
 const ContributorsBox = ({ researchFieldId }) => {
-    const { contributors, isLoading } = useTopContributors({ researchFieldId, pageSize: 5 });
+    const { contributors, isLoading } = useTopContributors({ researchFieldId, pageSize: 4 });
+    const [openModal, setOpenModal] = useState(false);
+
     return (
         <div className="box rounded-lg p-3 flex-grow-1 d-flex flex-column">
             <h5>
@@ -15,15 +20,15 @@ const ContributorsBox = ({ researchFieldId }) => {
             <div className="flex-grow-1">
                 {!isLoading && contributors && contributors.length > 0 && (
                     <div className="mt-2">
-                        {contributors.map((contributor, index) => (
+                        {contributors.slice(0, 2).map((contributor, index) => (
                             <div className="pt-1 pl-2 pr-2" key={`rp${index}`}>
                                 <ContributorCard
                                     contributor={{
                                         ...contributor.profile,
-                                        subTitle: `${contributor.contributions_count} contributions`
+                                        subTitle: `${contributor.contributions_count} contribution${!!contributor.contributions_count > 1 ? 's' : ''}`
                                     }}
                                 />
-                                {contributors.length - 1 !== index && <hr className="mb-0 mt-1" />}
+                                {contributors.slice(0, 2).length - 1 !== index && <hr className="mb-0 mt-1" />}
                             </div>
                         ))}
                     </div>
@@ -33,6 +38,13 @@ const ContributorsBox = ({ researchFieldId }) => {
                         No contributors in this research field yet.
                         <br />
                         <i> be the first contributor!</i>.
+                    </div>
+                )}
+                {!isLoading && contributors?.length > 2 && (
+                    <div className="text-center mt-3">
+                        <SmallButton onClick={() => setOpenModal(v => !v)} color="lightblue">
+                            View more
+                        </SmallButton>
                     </div>
                 )}
                 {isLoading && (
@@ -46,6 +58,9 @@ const ContributorsBox = ({ researchFieldId }) => {
                             <rect x="90" y="100" rx="3" ry="3" width="171" height="6" />
                         </ContentLoader>
                     </div>
+                )}
+                {contributors.length > 2 && openModal && (
+                    <ContributorsModal openModal={openModal} setOpenModal={setOpenModal} researchFieldId={researchFieldId} />
                 )}
             </div>
         </div>
