@@ -1025,3 +1025,62 @@ export const getResourceLink = (classId, resourceId) => {
 
     return link;
 };
+
+/**
+ * Get resource type label based on class
+ *
+ * @param {String} classId class ID
+ * @result {String} resource label
+ */
+export const getResourceTypeLabel = classId => {
+    let label = 'resource';
+
+    switch (classId) {
+        case CLASSES.PAPER: {
+            label = 'paper';
+            break;
+        }
+        case CLASSES.PROBLEM: {
+            label = 'research problem';
+            break;
+        }
+        case CLASSES.AUTHOR: {
+            label = 'author';
+            break;
+        }
+        case CLASSES.COMPARISON: {
+            label = 'comparison';
+            break;
+        }
+        case CLASSES.VENUE: {
+            label = 'venue';
+            break;
+        }
+        case CLASSES.TEMPLATE: {
+            label = 'template';
+            break;
+        }
+        case CLASSES.VISUALIZATION: {
+            label = 'visualization';
+            break;
+        }
+        case CLASSES.CONTRIBUTION: {
+            label = 'contribution';
+            break;
+        }
+        case RESOURCE_TYPE_ID: {
+            label = 'resource';
+            break;
+        }
+        case PREDICATE_TYPE_ID: {
+            label = 'predicate';
+            break;
+        }
+        default: {
+            label = 'resource';
+            break;
+        }
+    }
+
+    return label;
+};

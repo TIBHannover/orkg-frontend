@@ -6,7 +6,7 @@ import LastUpdatesModal from './LastUpdatesModal';
 import { StyledActivity } from './styled';
 import moment from 'moment';
 import { Link } from 'react-router-dom';
-import { getResourceLink } from 'utils';
+import { getResourceLink, getResourceTypeLabel } from 'utils';
 import { truncate } from 'lodash';
 import PropTypes from 'prop-types';
 
@@ -25,9 +25,9 @@ const LastUpdatesBox = ({ researchFieldId }) => {
                             <StyledActivity key={`log${activity.id}`} className="pl-3 pb-3">
                                 <div className="time">{moment(activity.created_at).fromNow()}</div>
                                 <div className="action">
-                                    {activity.profile?.id ? activity.profile.display_name : <i>Anonymous user</i>} added{' '}
+                                    {activity.profile?.id ? activity.profile.display_name : <i>Anonymous user</i>} added
+                                    {` ${getResourceTypeLabel(activity.classes?.length > 0 ? activity.classes[0] : '')} `}
                                     <Link to={getResourceLink(activity.classes?.length > 0 ? activity.classes[0] : '', activity.id)}>
-                                        {' '}
                                         {truncate(activity.label, { length: 50 })}
                                     </Link>
                                 </div>
