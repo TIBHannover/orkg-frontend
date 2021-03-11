@@ -45,6 +45,7 @@ const ContributorsBox = ({ researchFieldId }) => {
                         <SmallButton onClick={() => setOpenModal(v => !v)} color="lightblue">
                             View more
                         </SmallButton>
+                        {openModal && <ContributorsModal openModal={openModal} setOpenModal={setOpenModal} researchFieldId={researchFieldId} />}
                     </div>
                 )}
                 {isLoading && (
@@ -58,9 +59,6 @@ const ContributorsBox = ({ researchFieldId }) => {
                             <rect x="90" y="100" rx="3" ry="3" width="171" height="6" />
                         </ContentLoader>
                     </div>
-                )}
-                {contributors.length > 2 && openModal && (
-                    <ContributorsModal openModal={openModal} setOpenModal={setOpenModal} researchFieldId={researchFieldId} />
                 )}
             </div>
         </div>

@@ -1,17 +1,16 @@
 import { useState, useEffect, useCallback } from 'react';
 import { getResearchProblemsByResearchFieldId } from 'services/backend/researchFields';
-import { useParams } from 'react-router-dom';
+import { orderBy } from 'lodash';
 
-function useResearchFieldProblems() {
-    const pageSize = 10;
-    const { researchFieldId } = useParams();
+function useResearchFieldProblems({ researchFieldId, pageSize = 10 }) {
     const [isLoading, setIsLoading] = useState(false);
     const [hasNextPage, setHasNextPage] = useState(false);
     const [isLastPageReached, setIsLastPageReached] = useState(false);
     const [page, setPage] = useState(0);
     const [problems, setProblems] = useState([]);
+    const [totalElements, setTotalElements] = useState(0);
 
-    const loadProblems = useCallback(
+    const loadData = useCallback(
         page => {
             setIsLoading(true);
             // Get the problems of research field
@@ -21,17 +20,12 @@ function useResearchFieldProblems() {
                 items: pageSize
             })
                 .then(result => {
-                    if (result.length > 0) {
-                        setProblems(prevResources => [...prevResources, ...result]);
-                        setIsLoading(false);
-                        setHasNextPage(result.length < pageSize || result.length === 0 ? false : true);
-                        setIsLastPageReached(false);
-                        setPage(page + 1);
-                    } else {
-                        setIsLoading(false);
-                        setHasNextPage(false);
-                        setIsLastPageReached(page > 1 ? true : false);
-                    }
+                    setProblems(prevResources => orderBy([...prevResources, ...result.content], ['papers'], ['desc']));
+                    setIsLoading(false);
+                    setHasNextPage(!result.last);
+                    setIsLastPageReached(result.last);
+                    setTotalElements(result.totalElements);
+                    setPage(page + 1);
                 })
                 .catch(error => {
                     setProblems([]);
@@ -40,7 +34,7 @@ function useResearchFieldProblems() {
                     setIsLastPageReached(page > 1 ? true : false);
                 });
         },
-        [researchFieldId]
+        [pageSize, researchFieldId]
     );
 
     // reset resources when the researchProblemId has changed
@@ -48,19 +42,28 @@ function useResearchFieldProblems() {
         setProblems([]);
         setHasNextPage(false);
         setIsLastPageReached(false);
-        setPage(1);
+        setPage(0);
+        setTotalElements(0);
     }, [researchFieldId]);
 
     useEffect(() => {
-        loadProblems(1);
-    }, [loadProblems]);
+        loadData(0);
+    }, [loadData]);
 
     const handleLoadMore = () => {
         if (!isLoading) {
-            loadProblems(page);
+            loadData(page);
         }
     };
 
-    return [problems, isLoading, hasNextPage, isLastPageReached, page, handleLoadMore];
+    return {
+        problems,
+        isLoading,
+        hasNextPage,
+        isLastPageReached,
+        totalElements,
+        page,
+        handleLoadMore
+    };
 }
 export default useResearchFieldProblems;

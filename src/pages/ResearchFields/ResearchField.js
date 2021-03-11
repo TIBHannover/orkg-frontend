@@ -7,7 +7,7 @@ import LastUpdatesBox from 'components/LastUpdatesBox/LastUpdatesBox';
 import Comparisons from 'components/ResearchField/Comparisons';
 import Papers from 'components/ResearchField/Papers';
 import { useParams } from 'react-router-dom';
-import ResearchProblemsBox from 'components/ResearchField/ResearchProblemsBox';
+import ResearchProblemsBox from 'components/ResearchProblemsBox/ResearchProblemsBox';
 
 const ResearchField = () => {
     const { researchFieldId } = useParams();
@@ -22,10 +22,10 @@ const ResearchField = () => {
             <Container className="p-0">
                 <Row className="mt-3">
                     <Col md="4" className="d-flex">
-                        <ResearchProblemsBox id={researchFieldId} />
+                        <ResearchProblemsBox researchFieldId={researchFieldId} />
                     </Col>
                     <Col md="4" className="d-flex">
-                        <LastUpdatesBox id={researchFieldId} />
+                        <LastUpdatesBox researchFieldId={researchFieldId} />
                     </Col>
                     <Col md="4">
                         <div className="box rounded-lg flex-grow-1" style={{ overflow: 'hidden' }}>

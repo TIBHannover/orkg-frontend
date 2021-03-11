@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { getTopContributors } from 'services/backend/stats';
+import { orderBy } from 'lodash';
 import { MISC } from 'constants/graphSettings';
 
 function useTopContributors({ researchFieldId, pageSize = 30 }) {
@@ -20,7 +21,7 @@ function useTopContributors({ researchFieldId, pageSize = 30 }) {
                 sortBy: 'id'
             })
                 .then(result => {
-                    setContributors(prevResources => [...prevResources, ...result.content]);
+                    setContributors(prevResources => orderBy([...prevResources, ...result.content], ['contributions_count'], ['desc']));
                     setIsLoading(false);
                     setHasNextPage(!result.last);
                     setIsLastPageReached(result.last);

@@ -54,7 +54,9 @@ const ContributorsAvatars = styled.div`
 `;
 
 const Contributors = ({ researchFieldId }) => {
+    /*
     const [menuOpenContributors, setMenuOpenContributors] = useState(false);
+    */
     const { contributors, isLoading } = useTopContributors({ researchFieldId, pageSize: 19 });
     const [openModal, setOpenModal] = useState(false);
 
@@ -65,21 +67,23 @@ const Contributors = ({ researchFieldId }) => {
                     Contributors
                 </CardTitle>
                 <div className="align-self-center">
-                    <ButtonDropdown
-                        isOpen={menuOpenContributors}
-                        toggle={() => setMenuOpenContributors(v => !v)}
-                        className="flex-shrink-0"
-                        style={{ marginLeft: 'auto' }}
-                        size="sm"
-                    >
-                        <SmallDropdownToggle caret size="sm" color="lightblue">
-                            Last 30 days
-                        </SmallDropdownToggle>
-                        <DropdownMenu>
-                            <DropdownItem>Last 30 days</DropdownItem>
-                            <DropdownItem>All time</DropdownItem>
-                        </DropdownMenu>
-                    </ButtonDropdown>
+                    {/*!isLoading && contributors && contributors.length > 0 && (
+                        <ButtonDropdown
+                            isOpen={menuOpenContributors}
+                            toggle={() => setMenuOpenContributors(v => !v)}
+                            className="flex-shrink-0"
+                            style={{ marginLeft: 'auto' }}
+                            size="sm"
+                        >
+                            <SmallDropdownToggle caret size="sm" color="lightblue">
+                                Last 30 days
+                            </SmallDropdownToggle>
+                            <DropdownMenu>
+                                <DropdownItem>Last 30 days</DropdownItem>
+                                <DropdownItem>All time</DropdownItem>
+                            </DropdownMenu>
+                        </ButtonDropdown>
+                    )*/}
                 </div>
             </div>
             {!isLoading && contributors && contributors.length > 0 && (

@@ -7,7 +7,7 @@ import ContributorCard from 'components/ContributorCard/ContributorCard';
 import PropTypes from 'prop-types';
 
 const ContributorsModal = ({ researchFieldId, openModal, setOpenModal }) => {
-    const { contributors, isLoading } = useTopContributors({ researchFieldId, pageSize: 3 });
+    const { contributors, isLoading } = useTopContributors({ researchFieldId, pageSize: 30 });
 
     return (
         <Modal isOpen={openModal} toggle={() => setOpenModal(v => !v)} size="lg">
@@ -16,26 +16,27 @@ const ContributorsModal = ({ researchFieldId, openModal, setOpenModal }) => {
             </ModalHeader>
             <ModalBody>
                 <div className="pl-3 pr-3">
-                    {contributors.map((contributor, index) => {
-                        return (
-                            <div className="pt-2 pb-2" key={`rp${index}`}>
-                                <div className="d-flex">
-                                    <div className="pl-4 pr-4 pt-2">{index + 1}.</div>
-                                    <div>
-                                        <ContributorCard
-                                            contributor={{
-                                                ...contributor.profile,
-                                                subTitle: `${contributor.contributions_count} contribution${
-                                                    contributor.contributions_count > 1 ? 's' : ''
-                                                }`
-                                            }}
-                                        />
+                    {!isLoading &&
+                        contributors.map((contributor, index) => {
+                            return (
+                                <div className="pt-2 pb-2" key={`rp${index}`}>
+                                    <div className="d-flex">
+                                        <div className="pl-4 pr-4 pt-2">{index + 1}.</div>
+                                        <div>
+                                            <ContributorCard
+                                                contributor={{
+                                                    ...contributor.profile,
+                                                    subTitle: `${contributor.contributions_count} contribution${
+                                                        contributor.contributions_count > 1 ? 's' : ''
+                                                    }`
+                                                }}
+                                            />
+                                        </div>
                                     </div>
+                                    {contributors.length - 1 !== index && <hr className="mb-0 mt-3" />}
                                 </div>
-                                {contributors.length - 1 !== index && <hr className="mb-0 mt-3" />}
-                            </div>
-                        );
-                    })}
+                            );
+                        })}
                     {isLoading && (
                         <div className="mt-4 mb-4">
                             <ContentLoader height={130} width={200} foregroundColor="#d9d9d9" backgroundColor="#ecebeb">
