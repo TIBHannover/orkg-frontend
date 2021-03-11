@@ -19,6 +19,7 @@ jest:
     stage: test
     needs: [] # speed up, doesn't depend on other jobs
     script:
+        - cp default.env .env
         - npm install
         - npm run test:ci
     artifacts:
