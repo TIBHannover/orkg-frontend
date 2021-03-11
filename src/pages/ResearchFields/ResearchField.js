@@ -12,7 +12,7 @@ import ResearchProblemsBox from 'components/ResearchField/ResearchProblemsBox';
 const ResearchField = () => {
     const { researchFieldId } = useParams();
 
-    const [observatories, isLoadingObservatories] = useResearchFieldObservatories();
+    const [observatories, isLoadingObservatories] = useResearchFieldObservatories({ researchFieldId });
 
     return (
         <>
