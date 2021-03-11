@@ -1,27 +1,28 @@
 stages:
-  - containerize
-  - release
-  - test
-  
+    - containerize
+    - release
+    - test
+
 include:
-  - remote: https://gitlab.com/TIBHannover/gitlab-ci-templates/raw/master/templates/Docker.gitlab-ci.yml
-  - remote: https://gitlab.com/TIBHannover/gitlab-ci-templates/raw/master/templates/Docker-Release.gitlab-ci.yml
-  - template: Container-Scanning.gitlab-ci.yml
-  - template: Dependency-Scanning.gitlab-ci.yml
+    - remote: https://gitlab.com/TIBHannover/gitlab-ci-templates/raw/master/templates/Docker.gitlab-ci.yml
+    - remote: https://gitlab.com/TIBHannover/gitlab-ci-templates/raw/master/templates/Docker-Release.gitlab-ci.yml
+    - template: Container-Scanning.gitlab-ci.yml
+    - template: Dependency-Scanning.gitlab-ci.yml
 
 container_scanning:
-  variables:
-    # Change image name to match our repository naming convention
-    CI_APPLICATION_REPOSITORY: $CI_REGISTRY_IMAGE
+    variables:
+        # Change image name to match our repository naming convention
+        CI_APPLICATION_REPOSITORY: $CI_REGISTRY_IMAGE
 
 jest:
-  image: node:lts-buster
-  stage: test
-  script:
-    - npm install
-    - npm run test:ci
-  artifacts:
-    when: always
-    reports:
-      junit:
-        - junit.xml
+    image: node:lts-buster
+    stage: test
+    needs: [] # speed up, doesn't depend on other jobs
+    script:
+        - npm install
+        - npm run test:ci
+    artifacts:
+        when: always
+        reports:
+            junit:
+                - junit.xml
