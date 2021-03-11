@@ -63,7 +63,7 @@ export default function Home() {
                     </div>
 
                     <div className="mt-3" style={{ display: 'flex', flexDirection: 'column' }}>
-                        <ObservatoriesBox />
+                        <ObservatoriesBox researchFieldId={selectedResearchField.id} />
                     </div>
 
                     <div className="mt-3" style={{ display: 'flex', flexDirection: 'column' }}>
