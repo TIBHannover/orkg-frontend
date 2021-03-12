@@ -145,7 +145,7 @@ const ResearchFieldHeader = ({ id }) => {
                                                     </Badge>
                                                 </Link>
                                             ))}
-                                            {subResearchFields.length > 5 &&
+                                            {subResearchFields.length > 9 &&
                                                 showMoreFields &&
                                                 subResearchFields.slice(9).map(subfield => (
                                                     <Link
@@ -157,7 +157,7 @@ const ResearchFieldHeader = ({ id }) => {
                                                         </Badge>
                                                     </Link>
                                                 ))}
-                                            {subResearchFields.length > 5 && (
+                                            {subResearchFields.length > 9 && (
                                                 <Button onClick={() => setShowMoreFields(v => !v)} color="link" size="sm">
                                                     {showMoreFields ? 'Show less subfields' : 'Show more subfields'}
                                                 </Button>

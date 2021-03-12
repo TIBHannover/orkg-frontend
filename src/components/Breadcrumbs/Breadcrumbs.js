@@ -98,7 +98,10 @@ function Breadcrumbs(props) {
     return (
         <Container className="p-0">
             <Card className="border-0">
-                <CardFooter className="rounded border-top-0" style={{ fontSize: '95%', backgroundColor: '#dcdee6' }}>
+                <CardFooter
+                    className={`rounded border-top-0 ${props.backgroundWhite ? 'p-0' : ''}`}
+                    style={{ fontSize: '95%', backgroundColor: props.backgroundWhite ? '#fff' : '#dcdee6' }}
+                >
                     {props.researchFieldId &&
                         !isLoading &&
                         parentResearchFields.map((field, index) => (
@@ -145,9 +148,8 @@ function Breadcrumbs(props) {
                             width="100%"
                             viewBox="0 0 100 2"
                             style={{ width: '100% !important' }}
-                            speed={2}
-                            backgroundColor="#dcdee6"
-                            foregroundColor="#cdced6"
+                            backgroundColor={props.backgroundWhite ? '#f3f3f3' : '#dcdee6'}
+                            foregroundColor={props.backgroundWhite ? '#ecebeb' : '#cdced6'}
                         >
                             <rect x="0" y="0" rx="0" ry="0" width="100" height="50" />
                         </ContentLoader>
@@ -161,11 +163,13 @@ function Breadcrumbs(props) {
 Breadcrumbs.propTypes = {
     researchFieldId: PropTypes.string,
     disableLastField: PropTypes.bool,
-    onFieldClick: PropTypes.func
+    onFieldClick: PropTypes.func,
+    backgroundWhite: PropTypes.bool
 };
 
 Breadcrumbs.defaultProps = {
-    disableLastField: false
+    disableLastField: false,
+    backgroundWhite: false
 };
 
 export default Breadcrumbs;

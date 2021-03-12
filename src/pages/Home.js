@@ -8,7 +8,6 @@ import LastUpdatesBox from 'components/LastUpdatesBox/LastUpdatesBox';
 import Benefits from 'components/Home/Benefits';
 import ContributorsBox from 'components/TopContributors/ContributorsBox';
 import useResearchFieldSelector from 'components/Home/hooks/useResearchFieldSelector';
-import Breadcrumbs from 'components/Breadcrumbs/Breadcrumbs';
 import { MISC } from 'constants/graphSettings';
 import { toast } from 'react-toastify';
 
@@ -46,11 +45,7 @@ export default function Home() {
                     </div>
                 </Col>
             </Row>
-            <div className="mt-3 ">
-                {MISC.RESEARCH_FIELD_MAIN !== selectedResearchField.id && (
-                    <Breadcrumbs researchFieldId={selectedResearchField.id} onFieldClick={handleFieldSelect} disableLastField />
-                )}
-            </div>
+            {selectedResearchField.id !== MISC.RESEARCH_FIELD_MAIN && <div className="h4 mt-4 mb-2 pl-3">{selectedResearchField.label}</div>}
             <Row>
                 <Col md="8">
                     <div className="mt-3 mt-md-0" style={{ display: 'flex', flexDirection: 'column' }}>

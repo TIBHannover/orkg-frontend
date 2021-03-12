@@ -11,6 +11,7 @@ import ContentLoader from 'react-content-loader';
 import PropTypes from 'prop-types';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
+import Breadcrumbs from 'components/Breadcrumbs/Breadcrumbs';
 import { Link } from 'react-router-dom';
 import { Button } from 'reactstrap';
 
@@ -65,6 +66,21 @@ const PaperAmount = styled.div`
     text-align: center;
 `;
 
+const ArrowCards = styled.div`
+    background: transparent;
+    position: absolute;
+    left: 0px;
+    transform: translate(89px);
+    bottom: -15px;
+    width: 0;
+    height: 0;
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
+    border-top: 15px solid #fff;
+    -webkit-filter: drop-shadow(1px 1px 0px rgba(0, 0, 0, 0.13));
+    filter: drop-shadow(1px 1px 0px rgba(0, 0, 0, 0.13));
+`;
+
 const AnimationContainer = styled(CSSTransition)`
     //transition: 0.3s background-color, 0.3s border-color;
 
@@ -82,6 +98,7 @@ const AnimationContainer = styled(CSSTransition)`
 const ResearchFieldCards = ({ selectedResearchField, handleFieldSelect, researchFields, isLoading }) => {
     const [stats, setStats] = useState(null);
     const rfAutocompleteRef = useRef(null);
+    const [showMoreFields, setShowMoreFields] = useState(false);
     useEffect(() => {
         fetchResearchFieldsStats();
     }, []);
@@ -94,7 +111,7 @@ const ResearchFieldCards = ({ selectedResearchField, handleFieldSelect, research
 
     return (
         <>
-            <div className="row">
+            <div className="row" style={{ position: 'relative' }}>
                 <h1 className="col-8 h5 flex-shrink-0 mb-0">
                     <Icon icon={faStream} className="text-primary" /> Browse by research field
                 </h1>
@@ -128,12 +145,18 @@ const ResearchFieldCards = ({ selectedResearchField, handleFieldSelect, research
                     />
                 </div>
             </div>
+            <hr className="mt-3 mb-1" />
+            {MISC.RESEARCH_FIELD_MAIN !== selectedResearchField.id && (
+                <>
+                    <Breadcrumbs backgroundWhite researchFieldId={selectedResearchField.id} onFieldClick={handleFieldSelect} disableLastField />
+                    <hr className="mt-1 mb-1" />
+                </>
+            )}
             {!isLoading && researchFields.length > 0 && (
                 <div className="mt-3">
-                    <hr className="mt-3 mb-3" />
                     <div>
                         <TransitionGroup id="research-field-cards" className="mt-2 justify-content-center d-flex flex-wrap" exit={false}>
-                            {researchFields.map(field => {
+                            {researchFields.slice(0, 9).map(field => {
                                 return (
                                     <AnimationContainer key={field.id} classNames="fadeIn" timeout={{ enter: 500, exit: 0 }}>
                                         <Card role="button" disabled={stats[field.id] === 0} onClick={() => handleFieldSelect(field)}>
@@ -143,13 +166,28 @@ const ResearchFieldCards = ({ selectedResearchField, handleFieldSelect, research
                                     </AnimationContainer>
                                 );
                             })}
+                            {researchFields.length > 9 &&
+                                showMoreFields &&
+                                researchFields.slice(9).map(field => (
+                                    <AnimationContainer key={field.id} classNames="fadeIn" timeout={{ enter: 500, exit: 0 }}>
+                                        <Card role="button" disabled={stats[field.id] === 0} onClick={() => handleFieldSelect(field)}>
+                                            <CardTitle className="card-title m-0 text-center">{field.label}</CardTitle>
+                                            <PaperAmount>{stats[field.id]} papers</PaperAmount>
+                                        </Card>
+                                    </AnimationContainer>
+                                ))}
+                            {researchFields.length > 9 && (
+                                <Button onClick={() => setShowMoreFields(v => !v)} color="link" size="sm">
+                                    {showMoreFields ? 'Show less fields' : 'Show more fields'}
+                                </Button>
+                            )}
                         </TransitionGroup>
                     </div>
                 </div>
             )}
+            {selectedResearchField.id !== MISC.RESEARCH_FIELD_MAIN && <ArrowCards />}
             {isLoading && (
                 <div className="mt-3">
-                    <hr className="mt-3 mb-3" />
                     <div>
                         <ContentLoader
                             height="10%"
