@@ -31,6 +31,7 @@ import PropTypes from 'prop-types';
 const ResearchFieldHeader = ({ id }) => {
     const [menuOpen, setMenuOpen] = useState(false);
     const [editMode, setEditMode] = useState(false);
+    const [showMoreFields, setShowMoreFields] = useState(false);
     const [researchFieldData, subResearchFields, isLoading, isFailedLoading, loadResearchFieldData] = useResearchField();
     const prevEditMode = usePrevious({ editMode });
     useEffect(() => {
@@ -144,9 +145,21 @@ const ResearchFieldHeader = ({ id }) => {
                                                     </Badge>
                                                 </Link>
                                             ))}
+                                            {subResearchFields.length > 5 &&
+                                                showMoreFields &&
+                                                subResearchFields.slice(9).map(subfield => (
+                                                    <Link
+                                                        key={`index${subfield.id}`}
+                                                        to={reverse(ROUTES.RESEARCH_FIELD, { researchFieldId: subfield.id })}
+                                                    >
+                                                        <Badge color="lightblue" className="mr-2 mb-2">
+                                                            {subfield.label}
+                                                        </Badge>
+                                                    </Link>
+                                                ))}
                                             {subResearchFields.length > 5 && (
-                                                <Button color="link" size="sm">
-                                                    Show more subfields
+                                                <Button onClick={() => setShowMoreFields(v => !v)} color="link" size="sm">
+                                                    {showMoreFields ? 'Show less subfields' : 'Show more subfields'}
                                                 </Button>
                                             )}
                                         </div>
