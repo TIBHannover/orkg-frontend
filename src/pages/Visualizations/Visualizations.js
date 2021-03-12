@@ -15,7 +15,7 @@ const Visualizations = () => {
     const [visualizations, setVisualizations] = useState([]);
     const [isNextPageLoading, setIsNextPageLoading] = useState(false);
     const [hasNextPage, setHasNextPage] = useState(false);
-    const [page, setPage] = useState(1);
+    const [page, setPage] = useState(0);
     const [isLastPageReached, setIsLastPageReached] = useState(false);
     //const [totalElements, setTotalElements] = useState(0);
 
@@ -33,7 +33,8 @@ const Visualizations = () => {
             page: page,
             items: pageSize,
             sortBy: 'created_at',
-            desc: true
+            desc: true,
+            returnContent: true
         }).then(result => {
             if (result.length > 0) {
                 // Fetch the data of each visualization
@@ -114,7 +115,7 @@ const Visualizations = () => {
                             Load more visualizations
                         </div>
                     )}
-                    {!hasNextPage && isLastPageReached && page > 2 && <div className="text-center mt-3">You have reached the last page.</div>}
+                    {!hasNextPage && isLastPageReached && page > 1 && <div className="text-center mt-3">You have reached the last page.</div>}
                 </ListGroup>
             </Container>
         </>
