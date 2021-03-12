@@ -48,7 +48,7 @@ const StyledListGroupItem = styled(ListGroupItem)`
 
 export default function AddContribution(props) {
     const [searchPaper, setSearchPaper] = useState('');
-    const [currentPage, setCurrentPage] = useState(1);
+    const [currentPage, setCurrentPage] = useState(0);
     const [isNextPageLoading, setIsNextPageLoading] = useState(false);
     const [hasNextPage, setHasNextPage] = useState(false);
 
@@ -179,7 +179,7 @@ export default function AddContribution(props) {
         setCurrentPage(1);
         setSelectedContributions([]);
         setIsNextPageLoading(true);
-        debouncedGetLoadMoreResults(searchPaper, 1);
+        debouncedGetLoadMoreResults(searchPaper, 0);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [searchPaper]);
 
