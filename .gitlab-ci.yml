@@ -1,6 +1,7 @@
 stages:
     - test
     - containerize
+    - verify
     - release
 
 include:
@@ -8,11 +9,6 @@ include:
     - remote: https://gitlab.com/TIBHannover/gitlab-ci-templates/raw/master/templates/Docker-Release.gitlab-ci.yml
     - template: Container-Scanning.gitlab-ci.yml
     - template: Dependency-Scanning.gitlab-ci.yml
-
-container_scanning:
-    variables:
-        # Change image name to match our repository naming convention
-        CI_APPLICATION_REPOSITORY: $CI_REGISTRY_IMAGE
 
 jest:
     image: node:lts-buster
@@ -27,3 +23,12 @@ jest:
         reports:
             junit:
                 - junit.xml
+
+container_scanning:
+    stage: verify
+    variables:
+        # Change image name to match our repository naming convention
+        CI_APPLICATION_REPOSITORY: $CI_REGISTRY_IMAGE
+
+dependency_scanning:
+    stage: verify
