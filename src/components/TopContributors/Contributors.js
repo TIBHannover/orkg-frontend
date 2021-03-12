@@ -98,7 +98,7 @@ const Contributors = ({ researchFieldId }) => {
                                         {contributor.profile.display_name}
                                         <br />
                                         <i>
-                                            {contributor.contributions_count} contribution{contributor.contributions_count > 1 ? 's' : ''}
+                                            {contributor.contributions} contribution{contributor.contributions > 1 ? 's' : ''}
                                         </i>
                                     </>
                                 }
