@@ -1,4 +1,5 @@
 import TableScrollContainer from 'components/Comparison/TableScrollContainer';
+import { PREDICATES } from 'constants/graphSettings';
 import { fireEvent, render, screen, waitFor, within } from 'testUtils';
 import EditTable from '../EditorTable';
 import { contribution, contributionLiteralOnly } from '../__mocks__/ComparisonData';
@@ -86,6 +87,8 @@ describe('literals', () => {
 describe('resources', () => {
     test('should update table when resources is updated', async () => {
         setup(contribution);
+        // wait until loaded
+        await waitFor(() => screen.getByRole('button', { name: PREDICATES.HAS_RESEARCH_PROBLEM }));
 
         const cell = screen.getByRole('cell', { name: /test resource 2/i, hidden: true });
 

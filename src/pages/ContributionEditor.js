@@ -33,6 +33,9 @@ const ContributionEditor = () => {
 
     // handle changes of the query string param 'contributions'
     useEffect(() => {
+        if (isLoading) {
+            return;
+        }
         // check if new contributions should be loaded
         const contributionIdsToLoad = contributionIds.filter(id => !(id in contributions));
         if (contributionIdsToLoad.length) {
@@ -44,7 +47,7 @@ const ContributionEditor = () => {
         if (contributionIdsToRemove.length) {
             dispatch(removeContributions(contributionIdsToRemove));
         }
-    }, [contributionIds, contributions, dispatch]);
+    }, [contributionIds, contributions, dispatch, isLoading]);
 
     const handleOpenCreateContributionModal = paperId => {
         setIsOpenAddContribution(false);

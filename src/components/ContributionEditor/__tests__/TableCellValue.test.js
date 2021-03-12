@@ -10,7 +10,7 @@ const setup = className => {
         statementId: 'S1'
     };
 
-    render(<TableCellValue value={value} index={0} setDisableCreate={setDisableCreate} />);
+    render(<TableCellValue value={value} index={0} setDisableCreate={setDisableCreate} propertyId="P1" />);
 
     return { label, setDisableCreate };
 };

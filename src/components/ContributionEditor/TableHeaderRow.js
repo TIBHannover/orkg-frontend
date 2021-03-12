@@ -11,6 +11,7 @@ import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowser
 import { upperFirst } from 'lodash';
 import { Button } from 'reactstrap';
 import useConfirmPropertyModal from 'components/StatementBrowser/AddProperty/hooks/useConfirmPropertyModal';
+import { PREDICATES } from 'constants/graphSettings';
 
 const TableHeaderRow = ({ property }) => {
     const [isOpenStatementBrowser, setIsOpenStatementBrowser] = useState(false);
@@ -69,6 +70,8 @@ const TableHeaderRow = ({ property }) => {
         );
     };
 
+    const isResearchProblem = property.id === PREDICATES.HAS_RESEARCH_PROBLEM;
+
     return !isEditing ? (
         <>
             <Properties className="columnProperty" onDoubleClick={handleStartEdit}>
@@ -77,7 +80,11 @@ const TableHeaderRow = ({ property }) => {
                         <Button onClick={() => setIsOpenStatementBrowser(true)} color="link" className="text-light m-0 p-0 text-left">
                             {upperFirst(property.label)}
                         </Button>
-                        <TableCellButtons onEdit={handleStartEdit} onDelete={handleDelete} backgroundColor="rgba(139, 145, 165, 0.8)" />
+                        <TableCellButtons
+                            onEdit={!isResearchProblem ? handleStartEdit : null}
+                            onDelete={!isResearchProblem ? handleDelete : null}
+                            backgroundColor="rgba(139, 145, 165, 0.8)"
+                        />
                     </div>
                 </PropertiesInner>
             </Properties>

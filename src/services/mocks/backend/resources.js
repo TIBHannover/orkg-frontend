@@ -33,7 +33,7 @@ const resources = [
             ])
         )
     ),
-    rest.get(`${resourcesUrl}/:id`, (req, res, ctx) => {
+    rest.get(`${resourcesUrl}:id`, (req, res, ctx) => {
         const { id } = req.params;
 
         return res(
