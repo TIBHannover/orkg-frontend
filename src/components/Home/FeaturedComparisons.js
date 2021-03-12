@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { FormGroup, Label, Input, ListGroup, Button } from 'reactstrap';
+import { FormGroup, Label, Input, ListGroup, Button, UncontrolledButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import ROUTES from 'constants/routes.js';
 import ComparisonCard from 'components/ComparisonCard/ComparisonCard';
@@ -11,6 +11,7 @@ import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import { MISC } from 'constants/graphSettings';
 import { SmallButton } from 'components/styled';
 import Tippy from '@tippyjs/react';
+import { stringifySort } from 'utils';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
@@ -34,58 +35,77 @@ const FeaturedComparisons = ({ researchFieldId }) => {
     return (
         <div className="pt-2 pb-3">
             <div className="mr-2 d-flex justify-content-end mb-2">
-                <Tippy
-                    interactive={true}
-                    trigger="click"
-                    placement="bottom-end"
-                    onCreate={instance => setTippy(instance)}
-                    content={
-                        <div className="p-2">
-                            <FormGroup>
-                                <Label for="sortPapers">Sort</Label>
-                                <Input
-                                    value={sort}
-                                    onChange={e => {
-                                        tippy.hide();
-                                        setSort(e.target.value);
-                                    }}
-                                    bsSize="sm"
-                                    type="select"
-                                    name="sort"
-                                    id="sortPapers"
-                                    disabled={isLoading}
-                                >
-                                    <option value="newest">Newest first</option>
-                                    <option value="oldest">Oldest first</option>
-                                    {researchFieldId === MISC.RESEARCH_FIELD_MAIN && <option value="featured">Featured</option>}
-                                </Input>
-                            </FormGroup>
-                            {researchFieldId !== MISC.RESEARCH_FIELD_MAIN && (
-                                <FormGroup check>
-                                    <Label check>
-                                        <Input
-                                            onChange={e => {
-                                                tippy.hide();
-                                                setIncludeSubFields(e.target.checked);
-                                            }}
-                                            checked={includeSubFields}
-                                            type="checkbox"
-                                            style={{ marginTop: '0.1rem' }}
-                                            disabled={isLoading}
-                                        />
-                                        Include subfields
-                                    </Label>
+                {researchFieldId === MISC.RESEARCH_FIELD_MAIN && (
+                    <UncontrolledButtonDropdown>
+                        <DropdownToggle caret className="pl-3 pr-3" size="sm" color="lightblue">
+                            {stringifySort(sort)}
+                        </DropdownToggle>
+                        <DropdownMenu>
+                            <DropdownItem disabled={isLoading} onClick={() => setSort('newest')}>
+                                Newest first
+                            </DropdownItem>
+                            <DropdownItem disabled={isLoading} onClick={() => setSort('oldest')}>
+                                Oldest first
+                            </DropdownItem>
+                            <DropdownItem disabled={isLoading} onClick={() => setSort('featured')}>
+                                Featured
+                            </DropdownItem>
+                        </DropdownMenu>
+                    </UncontrolledButtonDropdown>
+                )}
+                {researchFieldId !== MISC.RESEARCH_FIELD_MAIN && (
+                    <Tippy
+                        interactive={true}
+                        trigger="click"
+                        placement="bottom-end"
+                        onCreate={instance => setTippy(instance)}
+                        content={
+                            <div className="p-2">
+                                <FormGroup>
+                                    <Label for="sortPapers">Sort</Label>
+                                    <Input
+                                        value={sort}
+                                        onChange={e => {
+                                            tippy.hide();
+                                            setSort(e.target.value);
+                                        }}
+                                        bsSize="sm"
+                                        type="select"
+                                        name="sort"
+                                        id="sortPapers"
+                                        disabled={isLoading}
+                                    >
+                                        <option value="newest">Newest first</option>
+                                        <option value="oldest">Oldest first</option>
+                                    </Input>
                                 </FormGroup>
-                            )}
-                        </div>
-                    }
-                >
-                    <span>
-                        <SmallButton color="lightblue" className="flex-shrink-0 pl-3 pr-3" style={{ marginLeft: 'auto' }} size="sm">
-                            View <Icon icon={faChevronDown} />
-                        </SmallButton>
-                    </span>
-                </Tippy>
+                                {researchFieldId !== MISC.RESEARCH_FIELD_MAIN && (
+                                    <FormGroup check>
+                                        <Label check>
+                                            <Input
+                                                onChange={e => {
+                                                    tippy.hide();
+                                                    setIncludeSubFields(e.target.checked);
+                                                }}
+                                                checked={includeSubFields}
+                                                type="checkbox"
+                                                style={{ marginTop: '0.1rem' }}
+                                                disabled={isLoading}
+                                            />
+                                            Include subfields
+                                        </Label>
+                                    </FormGroup>
+                                )}
+                            </div>
+                        }
+                    >
+                        <span>
+                            <SmallButton color="lightblue" className="flex-shrink-0 pl-3 pr-3" style={{ marginLeft: 'auto' }} size="sm">
+                                {stringifySort(sort)} <Icon icon={faChevronDown} />
+                            </SmallButton>
+                        </span>
+                    </Tippy>
+                )}
             </div>
             {!isLoading &&
                 (comparisons.length > 0 ? (

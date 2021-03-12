@@ -9,6 +9,7 @@ import { Link } from 'react-router-dom';
 import ContentLoader from 'react-content-loader';
 import { SubTitle, SubtitleSeparator } from 'components/styled';
 import { SmallButton } from 'components/styled';
+import { stringifySort } from 'utils';
 import Tippy from '@tippyjs/react';
 import PropTypes from 'prop-types';
 
@@ -88,7 +89,7 @@ const Papers = ({ id, boxShadow }) => {
                 >
                     <span>
                         <SmallButton className="flex-shrink-0 pl-3 pr-3" style={{ marginLeft: 'auto' }} size="sm">
-                            View <Icon icon={faChevronDown} />
+                            {stringifySort(sort)} <Icon icon={faChevronDown} />
                         </SmallButton>
                     </span>
                 </Tippy>

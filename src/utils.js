@@ -1084,3 +1084,32 @@ export const getResourceTypeLabel = classId => {
 
     return label;
 };
+
+/**
+ * Stringify sort value
+ *
+ * @param {String} sort sort value
+ * @result {String} Label
+ */
+export const stringifySort = sort => {
+    let label = 'Newest first';
+    switch (sort) {
+        case 'newest': {
+            label = 'Newest first';
+            break;
+        }
+        case 'oldest': {
+            label = 'Oldest first';
+            break;
+        }
+        case 'featured': {
+            label = 'Featured';
+            break;
+        }
+        default: {
+            label = 'Newest first';
+            break;
+        }
+    }
+    return label;
+};

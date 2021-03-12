@@ -8,6 +8,7 @@ import { SmallButton, SubTitle, SubtitleSeparator } from 'components/styled';
 import Tippy from '@tippyjs/react';
 import ROUTES from 'constants/routes';
 import ContentLoader from 'react-content-loader';
+import { stringifySort } from 'utils';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
@@ -87,7 +88,7 @@ const Comparisons = ({ id, boxShadow }) => {
                 >
                     <span>
                         <SmallButton className="flex-shrink-0 pl-3 pr-3" style={{ marginLeft: 'auto' }} size="sm">
-                            View <Icon icon={faChevronDown} />
+                            {stringifySort(sort)} <Icon icon={faChevronDown} />
                         </SmallButton>
                     </span>
                 </Tippy>

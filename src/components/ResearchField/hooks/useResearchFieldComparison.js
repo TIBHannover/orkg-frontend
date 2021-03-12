@@ -87,6 +87,10 @@ function useResearchFieldComparison({ researchFieldId, initialSort, initialInclu
         setIsLastPageReached(false);
         setPage(0);
         setTotalElements(0);
+        if (researchFieldId !== MISC.RESEARCH_FIELD_MAIN && sort === 'featured') {
+            // Because filtering featured comparison based on research field is not supported
+            setSort('newest');
+        }
     }, [researchFieldId, sort, includeSubFields]);
 
     useEffect(() => {

@@ -37,7 +37,6 @@ const FeaturedTabs = styled.div`
 
 const SidebarStyledBox = styled.div`
     flex-grow: 1;
-    overflow: hidden;
     @media (max-width: 768px) {
         margin-top: 20px;
     }
