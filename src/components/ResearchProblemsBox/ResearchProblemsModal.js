@@ -7,26 +7,38 @@ import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 
 const ResearchProblemsModal = ({ researchFieldId, openModal, setOpenModal }) => {
-    const { problems, isLoading } = useResearchFieldProblems({ researchFieldId, pageSize: 10 });
+    const { problems, isLoading, hasNextPage, isLastPageReached, page, handleLoadMore } = useResearchFieldProblems({ researchFieldId, pageSize: 10 });
 
     return (
         <Modal isOpen={openModal} toggle={() => setOpenModal(v => !v)} size="lg">
             <ModalHeader toggle={() => setOpenModal(v => !v)}>Research problems</ModalHeader>
             <ModalBody>
                 <div className="pl-3 pr-3">
-                    {!isLoading &&
-                        problems.map((rp, index) => (
-                            <div className="pt-2 pb-2" key={`rp${rp.problem.id}`}>
-                                <div className="d-flex">
-                                    <div>
-                                        <Link to={reverse(ROUTES.RESEARCH_PROBLEM, { researchProblemId: rp.problem.id })}>{rp.problem.label} </Link>
-                                        <br />
-                                        {rp.papers} paper
-                                    </div>
+                    {problems.map((rp, index) => (
+                        <div className="pt-2 pb-2" key={`rp${rp.problem.id}`}>
+                            <div className="d-flex">
+                                <div>
+                                    <Link to={reverse(ROUTES.RESEARCH_PROBLEM, { researchProblemId: rp.problem.id })}>{rp.problem.label} </Link>
+                                    <br />
+                                    {rp.papers} paper
                                 </div>
-                                {problems.length - 1 !== index && <hr className="mb-0 mt-3" />}
                             </div>
-                        ))}
+                            {problems.length - 1 !== index && <hr className="mb-0 mt-3" />}
+                        </div>
+                    ))}
+                    {!isLoading && hasNextPage && (
+                        <div
+                            style={{ cursor: 'pointer' }}
+                            className="list-group-item list-group-item-action text-center"
+                            onClick={!isLoading ? handleLoadMore : undefined}
+                            onKeyDown={e => (e.keyCode === 13 ? (!isLoading ? handleLoadMore : undefined) : undefined)}
+                            role="button"
+                            tabIndex={0}
+                        >
+                            Load more research problems
+                        </div>
+                    )}
+                    {!hasNextPage && isLastPageReached && page !== 1 && <div className="text-center mt-3">You have reached the last page.</div>}
                     {isLoading && (
                         <div className="mt-4 mb-4">
                             <ContentLoader
