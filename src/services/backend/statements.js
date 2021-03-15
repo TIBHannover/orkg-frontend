@@ -55,10 +55,11 @@ export const updateStatements = (statementIds, { subject_id = null, predicate_id
     );
 };
 
-export const getAllStatements = ({ page = 1, items = 9999, sortBy = 'created_at', desc = true }) => {
-    const params = queryString.stringify({ page: page, items: items, sortBy: sortBy, desc: desc });
+export const getAllStatements = ({ page = 0, items: size = 9999, sortBy = 'created_at', desc = true }) => {
+    const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
+    const params = queryString.stringify({ page, size, sort });
 
-    return submitGetRequest(`${statementsUrl}?${params}`);
+    return submitGetRequest(`${statementsUrl}?${params}`).then(res => res.content);
 };
 
 export const deleteStatementById = id => {
@@ -69,57 +70,77 @@ export const deleteStatementsByIds = ids => {
     return submitDeleteRequest(`${statementsUrl}?ids=${ids.join()}`);
 };
 
-export const getStatementsBySubject = ({ id, page = 1, items = 9999, sortBy = 'created_at', desc = true }) => {
-    const params = queryString.stringify({ page: page, items: items, sortBy: sortBy, desc: desc });
+export const getStatementsBySubject = ({ id, page = 0, items: size = 9999, sortBy = 'created_at', desc = true }) => {
+    const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
+    const params = queryString.stringify({ page, size, sort });
 
-    return submitGetRequest(`${statementsUrl}subject/${encodeURIComponent(id)}/?${params}`);
+    return submitGetRequest(`${statementsUrl}subject/${encodeURIComponent(id)}/?${params}`).then(res => res.content);
 };
 
 export const getStatementsBundleBySubject = ({ id }) => {
     return submitGetRequest(`${statementsUrl}${encodeURIComponent(id)}/bundle`);
 };
 
-export const getStatementsBySubjects = ({ ids, page = 1, items = 9999, sortBy = 'created_at', desc = true }) => {
-    const params = queryString.stringify({ ids: ids.join(), page: page, items: items, sortBy: sortBy, desc: desc });
-
-    return submitGetRequest(`${statementsUrl}subjects/?${params}`);
+export const getStatementsBySubjects = ({ ids, page = 0, items: size = 9999, sortBy = 'created_at', desc = true }) => {
+    const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
+    const params = queryString.stringify({ ids: ids.join(), page, size, sort });
+    return submitGetRequest(`${statementsUrl}subjects/?${params}`).then(res =>
+        res.map(subjectStatements => ({
+            ...subjectStatements,
+            statements: subjectStatements.statements.content
+        }))
+    );
 };
 
-export const getStatementsByObject = async ({ id, page = 1, items = 9999, sortBy = 'created_at', desc = true }) => {
-    const params = queryString.stringify({ page: page, items: items, sortBy: sortBy, desc: desc });
+export const getStatementsByObject = async ({ id, page = 0, items: size = 9999, sortBy = 'created_at', desc = true }) => {
+    const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
+    const params = queryString.stringify({ page, size, sort });
 
-    const statements = await submitGetRequest(`${statementsUrl}object/${encodeURIComponent(id)}/?${params}`);
+    const statements = await submitGetRequest(`${statementsUrl}object/${encodeURIComponent(id)}/?${params}`).then(res => res.content);
 
     return statements;
 };
 
-export const getStatementsByPredicate = ({ id, page = 1, items = 9999, sortBy = 'created_at', desc = true }) => {
-    const params = queryString.stringify({ page: page, items: items, sortBy: sortBy, desc: desc });
+export const getStatementsByPredicate = ({ id, page = 0, items: size = 9999, sortBy = 'created_at', desc = true }) => {
+    const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
+    const params = queryString.stringify({ page, size, sort });
 
-    return submitGetRequest(`${statementsUrl}predicate/${encodeURIComponent(id)}/?${params}`);
+    return submitGetRequest(`${statementsUrl}predicate/${encodeURIComponent(id)}/?${params}`).then(res => res.content);
 };
 
-export const getStatementsBySubjectAndPredicate = ({ subjectId, predicateId, page = 1, items = 9999, sortBy = 'created_at', desc = true }) => {
-    const params = queryString.stringify({ page: page, items: items, sortBy: sortBy, desc: desc });
+export const getStatementsBySubjectAndPredicate = ({ subjectId, predicateId, page = 0, items: size = 9999, sortBy = 'created_at', desc = true }) => {
+    const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
+    const params = queryString.stringify({ page, size, sort });
 
-    return submitGetRequest(`${statementsUrl}subject/${subjectId}/predicate/${predicateId}/?${params}`);
+    return submitGetRequest(`${statementsUrl}subject/${subjectId}/predicate/${predicateId}/?${params}`).then(res => res.content);
 };
 
-export const getStatementsByObjectAndPredicate = ({ objectId, predicateId, page = 1, items = 9999, sortBy = 'created_at', desc = true }) => {
-    const params = queryString.stringify({ page: page, items: items, sortBy: sortBy, desc: desc });
+export const getStatementsByObjectAndPredicate = ({
+    objectId,
+    predicateId,
+    page = 0,
+    items: size = 9999,
+    sortBy = 'created_at',
+    desc = true,
+    returnContent = true
+}) => {
+    const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
+    const params = queryString.stringify({ page, size, sort });
 
-    return submitGetRequest(`${statementsUrl}object/${objectId}/predicate/${predicateId}/?${params}`);
+    return submitGetRequest(`${statementsUrl}object/${objectId}/predicate/${predicateId}/?${params}`).then(res =>
+        returnContent ? res.content : res
+    );
 };
 
-export const getStatementsByPredicateAndLiteral = ({ predicateId, literal, subjectClass = null, items = 9999 }) => {
+export const getStatementsByPredicateAndLiteral = ({ predicateId, literal, subjectClass = null, items: size = 9999 }) => {
     const params = queryString.stringify(
-        { items: items, subjectClass: subjectClass },
+        { size, subjectClass: subjectClass },
         {
             skipNull: true,
             skipEmptyString: true
         }
     );
-    return submitGetRequest(`${statementsUrl}predicate/${predicateId}/literal/${literal}/?${params}`);
+    return submitGetRequest(`${statementsUrl}predicate/${predicateId}/literal/${literal}/?${params}`).then(res => res.content);
 };
 
 /**
@@ -293,6 +314,6 @@ export const getTemplatesByClass = classID => {
         objectId: classID,
         predicateId: PREDICATES.TEMPLATE_OF_CLASS
     }).then(statements =>
-        Promise.all(statements.filter(statement => statement.subject.classes?.includes(CLASSES.CONTRIBUTION_TEMPLATE)).map(st => st.subject.id))
+        Promise.all(statements.filter(statement => statement.subject.classes?.includes(CLASSES.TEMPLATE)).map(st => st.subject.id))
     );
 };

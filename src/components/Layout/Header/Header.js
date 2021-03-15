@@ -358,7 +358,7 @@ class Header extends Component {
                                         <DropdownItem tag={RouterNavLink} exact to={ROUTES.DATA}>
                                             Data Access
                                         </DropdownItem>
-                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.CONTRIBUTION_TEMPLATES}>
+                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.TEMPLATES}>
                                             Templates
                                         </DropdownItem>
                                         <DropdownItem

@@ -28,7 +28,7 @@ class TemplateCard extends Component {
                 <Row>
                     <Col sm={12}>
                         {this.props.template && (
-                            <Link to={reverse(ROUTES.CONTRIBUTION_TEMPLATE, { id: this.props.template.id })}>
+                            <Link to={reverse(ROUTES.TEMPLATE, { id: this.props.template.id })}>
                                 {this.props.template.label ? this.props.template.label : <em>No title</em>}
                             </Link>
                         )}
