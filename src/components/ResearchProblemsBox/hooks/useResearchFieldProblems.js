@@ -22,7 +22,6 @@ function useResearchFieldProblems({ researchFieldId, initialSort /*, initialIncl
                 /*subfields: includeSubFields*/
             })
                 .then(result => {
-                    console.log(result);
                     setProblems(prevResources => [...prevResources, ...result.content]);
                     setIsLoading(false);
                     setHasNextPage(!result.last);
