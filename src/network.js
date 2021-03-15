@@ -3,7 +3,6 @@ import env from '@beam-australia/react-env';
 
 export const crossrefUrl = env('CROSSREF_URL');
 export const semanticScholarUrl = env('SEMANTICSCHOLAR_URL');
-export const olsBaseUrl = env('OLS_BASE_URL');
 
 export const submitGetRequest = (url, headers, send_token = false) => {
     if (!url) {
