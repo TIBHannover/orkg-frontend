@@ -3,6 +3,7 @@ import FeaturedComparisons from './FeaturedComparisons';
 import FeaturedPapers from './FeaturedPapers';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import styled from 'styled-components';
+import Tippy from '@tippyjs/react';
 import PropTypes from 'prop-types';
 
 const AnimationContainer = styled(CSSTransition)`
@@ -48,15 +49,17 @@ const FeaturedItemsBox = ({ researchFieldId }) => {
     return (
         <SidebarStyledBox className="box rounded-lg mt-3">
             <FeaturedTabs className="clearfix d-flex">
-                <div
-                    role="button"
-                    tabIndex="0"
-                    onKeyDown={e => e.keyCode === 13 && setActiveState(2)}
-                    className={`h6 col-md-6 text-center tab ${activeTab === 2 ? 'active' : ''}`}
-                    onClick={() => setActiveState(2)}
-                >
-                    Comparisons
-                </div>
+                <Tippy content="Comparisons in ORKG provide an overview of state-of-the-art literature for a particular topic.">
+                    <div
+                        role="button"
+                        tabIndex="0"
+                        onKeyDown={e => e.keyCode === 13 && setActiveState(2)}
+                        className={`h6 col-md-6 text-center tab ${activeTab === 2 ? 'active' : ''}`}
+                        onClick={() => setActiveState(2)}
+                    >
+                        Comparisons
+                    </div>
+                </Tippy>
                 <div
                     role="button"
                     tabIndex="0"
