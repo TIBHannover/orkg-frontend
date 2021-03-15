@@ -66,44 +66,42 @@ const useContributionEditor = () => {
             let data = [];
             let columns = [];
 
-            if (Object.keys(statements).length) {
-                data = Object.keys(properties).map(propertyId => ({
-                    property: properties[propertyId],
-                    values: Object.keys(contributions).map(
-                        contributionId =>
-                            sortBy(
-                                statementsByPropertyIdAndContributionId?.[propertyId]?.[contributionId]?.map(statementId => ({
-                                    ...(statements[statementId].type === 'resource'
-                                        ? resources[statements[statementId].objectId]
-                                        : literals[statements[statementId].objectId]),
-                                    statementId
-                                })),
-                                value => value?.label?.trim().toLowerCase()
-                            ) || [{}]
-                    )
-                }));
+            data = Object.keys(properties).map(propertyId => ({
+                property: properties[propertyId],
+                values: Object.keys(contributions).map(
+                    contributionId =>
+                        sortBy(
+                            statementsByPropertyIdAndContributionId?.[propertyId]?.[contributionId]?.map(statementId => ({
+                                ...(statements[statementId].type === 'resource'
+                                    ? resources[statements[statementId].objectId]
+                                    : literals[statements[statementId].objectId]),
+                                statementId
+                            })),
+                            value => value?.label?.trim().toLowerCase()
+                        ) || [{}]
+                )
+            }));
 
-                data = sortBy(data, date => date.property.label.trim().toLowerCase());
+            data = sortBy(data, date => date.property.label.trim().toLowerCase());
 
-                columns = [
-                    {
-                        Header: <TableHeaderColumnFirst />,
-                        accessor: 'property',
-                        sticky: 'left',
-                        minWidth: 250,
-                        Cell: cell => <TableHeaderRow property={cell.value} />
-                    },
-                    ...Object.keys(contributions).map((contributionId, i) => {
-                        const contribution = contributions[contributionId];
-                        return {
-                            id: contributionId,
-                            Header: () => <TableHeaderColumn contribution={contribution} paper={papers[contribution.paperId]} key={contributionId} />,
-                            accessor: d => d.values[i],
-                            Cell: Cell
-                        };
-                    })
-                ];
-            }
+            columns = [
+                {
+                    Header: <TableHeaderColumnFirst />,
+                    accessor: 'property',
+                    sticky: 'left',
+                    minWidth: 250,
+                    Cell: cell => <TableHeaderRow property={cell.value} />
+                },
+                ...Object.keys(contributions).map((contributionId, i) => {
+                    const contribution = contributions[contributionId];
+                    return {
+                        id: contributionId,
+                        Header: () => <TableHeaderColumn contribution={contribution} paper={papers[contribution.paperId]} key={contributionId} />,
+                        accessor: d => d.values[i],
+                        Cell: Cell
+                    };
+                })
+            ];
 
             return { data, columns };
         },
