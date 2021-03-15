@@ -3,7 +3,6 @@ import TableCellButtons from 'components/ContributionEditor/TableCellButtons';
 import { Properties, PropertiesInner } from 'components/Comparison/styled';
 import PropTypes from 'prop-types';
 import { memo, useState } from 'react';
-import { predicatesUrl } from 'services/backend/predicates';
 import Confirm from 'reactstrap-confirm';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteProperty, updateProperty } from 'actions/contributionEditor';
@@ -11,7 +10,7 @@ import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowser
 import { upperFirst } from 'lodash';
 import { Button } from 'reactstrap';
 import useConfirmPropertyModal from 'components/StatementBrowser/AddProperty/hooks/useConfirmPropertyModal';
-import { PREDICATES } from 'constants/graphSettings';
+import { PREDICATES, ENTITIES } from 'constants/graphSettings';
 
 const TableHeaderRow = ({ property }) => {
     const [isOpenStatementBrowser, setIsOpenStatementBrowser] = useState(false);
@@ -104,7 +103,7 @@ const TableHeaderRow = ({ property }) => {
         <Properties>
             <PropertiesInner cellPadding={10}>
                 <Autocomplete
-                    requestUrl={predicatesUrl}
+                    entityType={ENTITIES.PREDICATE}
                     placeholder="Enter a property"
                     onInput={(e, value) => setInputValue(e ? e.target.value : value)}
                     value={inputValue}

@@ -4,14 +4,13 @@ import { createLiteralValue, createResourceValue } from 'actions/contributionEdi
 import Autocomplete from 'components/Autocomplete/Autocomplete';
 import StatementOptionButton from 'components/StatementBrowser/StatementOptionButton/StatementOptionButton';
 import { StyledDropdownItem, StyledDropdownToggle } from 'components/StatementBrowser/styled';
-import { CLASSES, PREDICATES } from 'constants/graphSettings';
+import { CLASSES, PREDICATES, ENTITIES } from 'constants/graphSettings';
 import { upperFirst } from 'lodash';
 import PropTypes from 'prop-types';
 import { memo, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useClickAway } from 'react-use';
 import { DropdownMenu, Input, InputGroup, InputGroupButtonDropdown } from 'reactstrap';
-import { resourcesUrl } from 'services/backend/resources';
 import styled from 'styled-components';
 
 const CreateButtonContainer = styled.div`
@@ -98,7 +97,7 @@ const TableCellValueCreate = ({ isVisible, contributionId, propertyId, isEmptyCe
                         {type === 'resource' ? (
                             <Autocomplete
                                 optionsClass={propertyId === PREDICATES.HAS_RESEARCH_PROBLEM ? CLASSES.PROBLEM : undefined}
-                                requestUrl={resourcesUrl}
+                                entityType={ENTITIES.RESOURCE}
                                 excludeClasses={`${CLASSES.CONTRIBUTION},${CLASSES.PROBLEM},${CLASSES.CONTRIBUTION_TEMPLATE}`}
                                 placeholder={propertyId === PREDICATES.HAS_RESEARCH_PROBLEM ? 'Enter a research problem' : 'Enter a resource'}
                                 onChange={handleChangeAutocomplete}
