@@ -47,6 +47,8 @@ import ExportData from 'pages/ExportData';
 import Contribution from 'pages/Contribution';
 import CsvImport from 'pages/CsvImport';
 import requireAuthentication from 'requireAuthentication';
+import Benchmarks from 'pages/Benchmarks/Benchmarks';
+import Benchmark from 'pages/Benchmark/Benchmark';
 import { reverse } from 'named-urls';
 
 // use lazy loading of pages that contain large dependencies
@@ -298,6 +300,15 @@ const routes = [
     {
         path: ROUTES.CSV_IMPORT,
         component: requireAuthentication(CsvImport)
+    },
+    {
+        path: ROUTES.BENCHMARKS,
+        exact: true,
+        component: Benchmarks
+    },
+    {
+        path: ROUTES.BENCHMARK,
+        component: Benchmark
     },
     /* Don't add routes below this line */
     {

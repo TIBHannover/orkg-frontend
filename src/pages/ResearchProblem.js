@@ -6,12 +6,15 @@ import ResearchProblemHeaderBar from 'components/ResearchProblem/ResearchProblem
 import useResearchProblem from 'components/ResearchProblem/hooks/useResearchProblem';
 import useResearchProblemPapers from 'components/ResearchProblem/hooks/useResearchProblemPapers';
 import useResearchProblemResearchFields from 'components/ResearchProblem/hooks/useResearchProblemResearchFields';
+import useResearchProblemBenchmarks from 'components/ResearchProblem/hooks/useResearchProblemBenchmarks';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { reverse } from 'named-urls';
 //import LeaderBoard from 'components/ResearchProblem/LeaderBoard';
 import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
 import PaperCard from 'components/PaperCard/PaperCard';
+import BenchmarkSectionCard from 'components/BenchmarkCard/BenchmarkSectionCard';
+import BenchmarksCarousel from 'components/BenchmarksCarousel/BenchmarksCarousel';
 import ExternalDescription from 'components/ResearchProblem/ExternalDescription';
 import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
 import ROUTES from 'constants/routes';
@@ -23,6 +26,10 @@ function ResearchProblem(props) {
     const prevEditMode = usePrevious({ editMode });
     const [contributions, isLoadingPapers, hasNextPage, isLastPageReached, loadMorePapers] = useResearchProblemPapers();
     const [researchFields, isLoadingResearchFields] = useResearchProblemResearchFields();
+    //const [researchProblemBenchmarksData, isLoadingBenchmarks, hasNextBenchmark, isLastBenchmarkReached, loadMoreBenchmarks] = useResearchProblemBenchmarks();
+    //replace the below line with something as the above, because we want to enable a pagination sort of a feature
+    const [researchProblemBenchmarksData, isLoadingData] = useResearchProblemBenchmarks();
+    //const { researchProblemBenchmarksData, isLoadingData, isFailedLoadingData } = useResearchProblemBenchmarks();
     const { researchProblemId } = props.match.params;
 
     useEffect(() => {
@@ -52,7 +59,12 @@ function ResearchProblem(props) {
                             syncBackend={true}
                         />
                     )}
-                    <ResearchProblemHeaderBar toggleEdit={() => setEditMode(v => !v)} title={researchProblemData.label} id={researchProblemId} />
+                    <ResearchProblemHeaderBar
+                        toggleEdit={() => setEditMode(v => !v)}
+                        header="Research Problem"
+                        title={researchProblemData.label}
+                        id={researchProblemId}
+                    />
                     <Container className="p-0">
                         <Card>
                             <CardBody>
@@ -171,9 +183,33 @@ function ResearchProblem(props) {
                         </Row>
                         */}
                     </Container>
-
                     <Container>
-                        <h1 className="h4 mt-4 mb-4 flex-grow-1">Papers</h1>
+                        <h1 className="h4 mt-4 mb-4 flex-grow-1">Benchmarks</h1>
+                    </Container>
+                    <Container>
+                        <BenchmarksCarousel research_problem_benchmarks={researchProblemBenchmarksData} show={6} />
+                    </Container>
+                    {/*
+                    <Container>
+                        <Row>
+                            {researchProblemBenchmarksData.length > 0 &&
+                                researchProblemBenchmarksData.map(researchProblemBenchmarksData => {
+                                    return (
+                                        researchProblemBenchmarksData && (
+                                            //old section card which causes extra research problems to spill into the next line                         
+                                            <BenchmarkSectionCard
+                                                //this researchProblemBenchmarksData.id is actually the research problem id of the page
+                                                key={`pc${researchProblemId}`}
+                                                research_problem_benchmark={researchProblemBenchmarksData}
+                                            />
+                                        )
+                                    );
+                                })}
+                        </Row>
+                    </Container>
+                    */}
+                    <Container>
+                        <h1 className="h4 mt-4 mb-4 flex-grow-y1">Papers</h1>
                     </Container>
                     <Container className="p-0">
                         <ListGroup flush className="box rounded" style={{ overflow: 'hidden' }}>

@@ -42,7 +42,13 @@ export const PREDICATES = {
     HAS_PROPERTY: 'hasProperty',
     HAS_PREVIOUS_VERSION: 'hasPreviousVersion',
     HAS_SUBJECT: 'hasSubject',
-    HAS_VISUALIZATION: 'hasVisualization'
+    HAS_VISUALIZATION: 'hasVisualization',
+    HAS_BENCHMARK: 'hasBenchmark',
+    HAS_MODEL: 'hasModel',
+    HAS_DATASET: 'hasDataset',
+    HAS_EVALUATION: 'HasEvaluation',
+    HAS_METRIC: 'HAS_METRIC',
+    HAS_VALUE: 'HAS_VALUE'
 };
 
 export const CLASSES = {
@@ -63,7 +69,12 @@ export const CLASSES = {
     QB_DATASET_CLASS: 'QBDataset',
     LOCATION: 'DCLocation',
     SENTENCE: 'Sentence',
-    VISUALIZATION: 'Visualization'
+    VISUALIZATION: 'Visualization',
+    BENCHMARK: 'Benchmark',
+    MODEL: 'Model',
+    DATASET: 'Dataset',
+    EVALUATION: 'Evaluation',
+    METRIC: 'Metric'
 };
 
 export const MISC = {

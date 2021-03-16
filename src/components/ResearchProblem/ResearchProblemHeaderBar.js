@@ -37,7 +37,7 @@ function ResearchProblemHeaderBar(props) {
             )}
             <VisibilitySensor onChange={handleShowHeaderBar}>
                 <Container className="d-flex align-items-center">
-                    <h1 className="h4 mt-4 mb-4 flex-grow-1">Research problem</h1>
+                    <h1 className="h4 mt-4 mb-4 flex-grow-1">{props.header}</h1>
                     <ButtonGroup>
                         <RequireAuthentication
                             component={Button}
@@ -66,6 +66,7 @@ function ResearchProblemHeaderBar(props) {
 }
 
 ResearchProblemHeaderBar.propTypes = {
+    header: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
     id: PropTypes.string.isRequired,
     toggleEdit: PropTypes.func.isRequired
