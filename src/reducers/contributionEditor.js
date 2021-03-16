@@ -109,6 +109,12 @@ export default function reducer(state = initialState, action) {
             return newState;
         }
 
+        case '@@router/LOCATION_CHANGE': {
+            return {
+                ...initialState
+            };
+        }
+
         default: {
             return state;
         }

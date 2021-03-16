@@ -1,11 +1,10 @@
 import { useState, useRef, useEffect } from 'react';
-import { resourcesUrl } from 'services/backend/resources';
 import { InputGroup, InputGroupAddon, DropdownMenu, InputGroupButtonDropdown, FormFeedback } from 'reactstrap';
 import { fetchTemplatesOfClassIfNeeded, selectResource, createRequiredPropertiesInResource } from 'actions/statementBrowser';
 import { StyledDropdownItem, StyledButton, StyledDropdownToggle, ValueItemStyle } from 'components/StatementBrowser/styled';
 import StatementOptionButton from 'components/StatementBrowser/StatementOptionButton/StatementOptionButton';
 import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
-import defaultDatatypes from 'components/ContributionTemplates/helpers/defaultDatatypes';
+import defaultDatatypes from 'components/Templates/helpers/defaultDatatypes';
 import { useDispatch, useSelector } from 'react-redux';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPlus, faBars, faSpinner } from '@fortawesome/free-solid-svg-icons';
@@ -14,7 +13,7 @@ import useToggle from './helpers/useToggle';
 import validationSchema from './helpers/validationSchema';
 import InputField from 'components/StatementBrowser/InputField/InputField';
 import Tippy from '@tippyjs/react';
-import { CLASSES, MISC } from 'constants/graphSettings';
+import { CLASSES, MISC, ENTITIES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
 
 export default function AddValueTemplate(props) {
@@ -265,8 +264,8 @@ export default function AddValueTemplate(props) {
                         )}
                         {valueType === 'object' ? (
                             <AutoComplete
-                                requestUrl={resourcesUrl}
-                                excludeClasses={`${CLASSES.CONTRIBUTION},${CLASSES.PROBLEM},${CLASSES.CONTRIBUTION_TEMPLATE}`}
+                                entityType={ENTITIES.RESOURCE}
+                                excludeClasses={`${CLASSES.CONTRIBUTION},${CLASSES.PROBLEM},${CLASSES.TEMPLATE}`}
                                 optionsClass={props.valueClass ? props.valueClass.id : undefined}
                                 placeholder="Enter a resource"
                                 onItemSelected={i => {

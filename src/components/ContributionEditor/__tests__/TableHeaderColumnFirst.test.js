@@ -1,15 +1,13 @@
 import { render, screen } from 'testUtils';
 import TableHeaderColumnFirst from '../TableHeaderColumnFirst';
 
-test('should show no loading and done labels by default', () => {
+test('should show saved label by default', () => {
     render(<TableHeaderColumnFirst />, {
         initialState: {
             contributionEditor: { isLoading: false }
         }
     });
-
-    expect(screen.queryByText(/loading/i)).not.toBeInTheDocument();
-    expect(screen.queryByText(/done/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/saved/i)).toBeInTheDocument();
 });
 
 test('should show the loading label on loading', () => {
@@ -20,5 +18,5 @@ test('should show the loading label on loading', () => {
     });
 
     expect(screen.getByText(/loading/i)).toBeInTheDocument();
-    expect(screen.queryByText(/done/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/saved/i)).not.toBeInTheDocument();
 });

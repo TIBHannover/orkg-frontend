@@ -170,7 +170,7 @@ StatementOptionButton.propTypes = {
     icon: PropTypes.object.isRequired,
     iconWrapperSize: PropTypes.string,
     iconSize: PropTypes.string,
-    action: PropTypes.func.isRequired,
+    action: PropTypes.func,
     requireConfirmation: PropTypes.bool,
     confirmationMessage: PropTypes.string,
     onVisibilityChange: PropTypes.func,
@@ -180,7 +180,8 @@ StatementOptionButton.propTypes = {
 
 StatementOptionButton.defaultProps = {
     requireConfirmation: false,
-    appendTo: 'parent'
+    appendTo: 'parent',
+    action: () => {}
 };
 
 export default StatementOptionButton;

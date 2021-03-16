@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { useState, useEffect } from 'react';
 import { getStatementsBySubjects } from 'services/backend/statements';
 import { getResourcesByClass } from 'services/backend/resources';
 import { Container, ButtonGroup, ListGroup } from 'reactstrap';
@@ -10,121 +10,109 @@ import ComparisonCard from 'components/ComparisonCard/ComparisonCard';
 import { CLASSES } from 'constants/graphSettings';
 import HeaderSearchButton from 'components/HeaderSearchButton/HeaderSearchButton';
 
-export default class Comparisons extends Component {
-    constructor(props) {
-        super(props);
+const Comparisons = () => {
+    const pageSize = 25;
+    const [comparisons, setComparisons] = useState([]);
+    const [isNextPageLoading, setIsNextPageLoading] = useState(false);
+    const [hasNextPage, setHasNextPage] = useState(false);
+    const [page, setPage] = useState(0);
+    const [isLastPageReached, setIsLastPageReached] = useState(false);
+    const [totalElements, setTotalElements] = useState(0);
 
-        this.pageSize = 25;
-
-        this.state = {
-            statements: [],
-            isNextPageLoading: false,
-            hasNextPage: false,
-            page: 1,
-            isLastPageReached: false
-        };
-    }
-
-    componentDidMount() {
+    useEffect(() => {
         document.title = 'Published comparisons - ORKG';
 
-        this.loadMoreComparisons();
-    }
+        loadMoreComparisons();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
-    loadMoreComparisons = () => {
-        this.setState({ isNextPageLoading: true });
+    const loadMoreComparisons = () => {
+        setIsNextPageLoading(true);
         getResourcesByClass({
             id: CLASSES.COMPARISON,
-            page: this.state.page,
-            items: this.pageSize,
+            page: page,
+            items: pageSize,
             sortBy: 'created_at',
             desc: true
-        }).then(comparisons => {
-            if (comparisons.length > 0) {
+        }).then(result => {
+            if (result.content.length > 0) {
                 // Fetch the data of each paper
-                getStatementsBySubjects({ ids: comparisons.map(p => p.id) })
+                getStatementsBySubjects({ ids: result.content.map(p => p.id) })
                     .then(comparisonsStatements => {
-                        const statements = comparisonsStatements.map(comparisonStatements => {
+                        const comparisonsData = comparisonsStatements.map(comparisonStatements => {
                             return getComparisonData(
                                 comparisonStatements.id,
-                                find(comparisons, { id: comparisonStatements.id }).label,
+                                find(result.content, { id: comparisonStatements.id }).label,
                                 comparisonStatements.statements
                             );
                         });
-                        this.setState({
-                            statements: [...this.state.statements, ...statements],
-                            isNextPageLoading: false,
-                            hasNextPage: statements.length < this.pageSize ? false : true,
-                            page: this.state.page + 1
-                        });
+                        setComparisons(prevComparisons => [...prevComparisons, ...comparisonsData]);
+                        setIsNextPageLoading(false);
+                        setHasNextPage(!result.last);
+                        setPage(prevPage => prevPage + 1);
+                        setIsLastPageReached(result.last);
+                        setTotalElements(result.totalElements);
                     })
                     .catch(error => {
-                        this.setState({
-                            isNextPageLoading: false,
-                            hasNextPage: false,
-                            isLastPageReached: true
-                        });
+                        setIsLastPageReached(true);
+                        setHasNextPage(false);
+                        setIsNextPageLoading(false);
                         console.log(error);
                     });
             } else {
-                this.setState({
-                    isNextPageLoading: false,
-                    hasNextPage: false,
-                    isLastPageReached: true
-                });
+                setIsLastPageReached(true);
+                setHasNextPage(false);
+                setIsNextPageLoading(false);
+                setTotalElements(0);
             }
         });
     };
 
-    render() {
-        return (
-            <>
-                <Container className="d-flex align-items-center">
-                    <h1 className="h4 mt-4 mb-4 flex-grow-1">View all published comparisons</h1>
-                    <div className="flex-shrink-0">
-                        <ButtonGroup>
-                            <HeaderSearchButton placeholder="Search comparisons..." type={CLASSES.COMPARISON} />
-                        </ButtonGroup>
+    return (
+        <>
+            <Container className="d-flex align-items-center">
+                <div className="d-flex flex-grow-1 mt-4 mb-4">
+                    <h1 className="h4">View all published comparisons</h1>
+                    <div className="text-muted ml-3 mt-1">
+                        {totalElements === 0 && isNextPageLoading ? <Icon icon={faSpinner} spin /> : totalElements} comparison
                     </div>
-                </Container>
+                </div>
+                <ButtonGroup>
+                    <HeaderSearchButton placeholder="Search comparisons..." type={CLASSES.COMPARISON} />
+                </ButtonGroup>
+            </Container>
 
-                <Container className="p-0">
-                    <ListGroup flush className="box rounded" style={{ overflow: 'hidden' }}>
-                        {this.state.statements.length > 0 && (
-                            <div>
-                                {this.state.statements.map(resource => {
-                                    return <ComparisonCard comparison={{ ...resource }} key={`pc${resource.id}`} />;
-                                })}
-                            </div>
-                        )}
-                        {this.state.statements.length === 0 && !this.state.isNextPageLoading && (
-                            <div className="text-center mt-4 mb-4">No published comparison</div>
-                        )}
-                        {this.state.isNextPageLoading && (
-                            <div className="text-center mt-4 mb-4">
-                                <Icon icon={faSpinner} spin /> Loading
-                            </div>
-                        )}
-                        {!this.state.isNextPageLoading && this.state.hasNextPage && (
-                            <div
-                                style={{ cursor: 'pointer' }}
-                                className="list-group-item list-group-item-action text-center mt-2"
-                                onClick={!this.state.isNextPageLoading ? this.loadMoreComparisons : undefined}
-                                onKeyDown={e =>
-                                    e.keyCode === 13 ? (!this.state.isNextPageLoading ? this.loadMoreComparisons : undefined) : undefined
-                                }
-                                role="button"
-                                tabIndex={0}
-                            >
-                                Load more comparisons
-                            </div>
-                        )}
-                        {!this.state.hasNextPage && this.state.isLastPageReached && (
-                            <div className="text-center mt-3">You have reached the last page.</div>
-                        )}
-                    </ListGroup>
-                </Container>
-            </>
-        );
-    }
-}
+            <Container className="p-0">
+                <ListGroup flush className="box rounded" style={{ overflow: 'hidden' }}>
+                    {comparisons.length > 0 && (
+                        <div>
+                            {comparisons.map(comparison => {
+                                return <ComparisonCard comparison={comparison} key={`pc${comparison.id}`} />;
+                            })}
+                        </div>
+                    )}
+                    {comparisons.length === 0 && !isNextPageLoading && <div className="text-center mt-4 mb-4">No published comparison</div>}
+                    {isNextPageLoading && (
+                        <div className="text-center mt-4 mb-4">
+                            <Icon icon={faSpinner} spin /> Loading
+                        </div>
+                    )}
+                    {!isNextPageLoading && hasNextPage && (
+                        <div
+                            style={{ cursor: 'pointer' }}
+                            className="list-group-item list-group-item-action text-center mt-2"
+                            onClick={!isNextPageLoading ? loadMoreComparisons : undefined}
+                            onKeyDown={e => (e.keyCode === 13 ? (!isNextPageLoading ? loadMoreComparisons : undefined) : undefined)}
+                            role="button"
+                            tabIndex={0}
+                        >
+                            Load more comparisons
+                        </div>
+                    )}
+                    {!hasNextPage && isLastPageReached && <div className="text-center mt-3">You have reached the last page.</div>}
+                </ListGroup>
+            </Container>
+        </>
+    );
+};
+export default Comparisons;
