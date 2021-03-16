@@ -9,7 +9,8 @@ const initialState = {
     literals: {},
     properties: {},
     papers: {},
-    isLoading: false
+    isLoading: false,
+    hasFailed: false
 };
 
 export default function reducer(state = initialState, action) {
@@ -94,6 +95,11 @@ export default function reducer(state = initialState, action) {
             const { id, statementIds } = action.payload;
             const newState = dotProp.delete({ ...state }, `properties.${id}`);
             return dotProp.set(newState, 'statements', omit(state.statements, statementIds));
+        }
+
+        case type.CONTRIBUTION_EDITOR_SET_HAS_FAILED: {
+            const { hasFailed } = action.payload;
+            return dotProp.set({ ...state }, `hasFailed`, hasFailed);
         }
 
         case type.CONTRIBUTION_EDITOR_PROPERTY_UPDATE: {

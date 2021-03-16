@@ -24,6 +24,7 @@ const ContributionEditor = () => {
     const { getContributionIds, handleAddContributions } = useContributionEditor();
     const contributions = useSelector(state => state.contributionEditor.contributions);
     const isLoading = useSelector(state => state.contributionEditor.isLoading);
+    const hasFailed = useSelector(state => state.contributionEditor.hasFailed);
     const dispatch = useDispatch();
     const contributionIds = getContributionIds();
 
@@ -33,7 +34,7 @@ const ContributionEditor = () => {
 
     // handle changes of the query string param 'contributions'
     useEffect(() => {
-        if (isLoading) {
+        if (hasFailed || isLoading) {
             return;
         }
         // check if new contributions should be loaded
@@ -47,7 +48,7 @@ const ContributionEditor = () => {
         if (contributionIdsToRemove.length) {
             dispatch(removeContributions(contributionIdsToRemove));
         }
-    }, [contributionIds, contributions, dispatch, isLoading]);
+    }, [contributionIds, contributions, dispatch, hasFailed, isLoading]);
 
     const handleOpenCreateContributionModal = paperId => {
         setIsOpenAddContribution(false);
@@ -99,15 +100,15 @@ const ContributionEditor = () => {
                 </ButtonGroup>
             </Container>
             <Container className="box rounded p-4">
-                {contributionAmount === 0 && (
+                {!hasFailed && contributionAmount === 0 && (
                     <Alert color="info">
                         Start adding contributions by clicking the button <em>Add contribution</em> on the right
                     </Alert>
                 )}
 
-                {isLoadingInit && <TableLoadingIndicator contributionAmount={contributionAmount} />}
+                {!hasFailed && isLoadingInit && <TableLoadingIndicator contributionAmount={contributionAmount} />}
 
-                {!isLoadingInit && contributionAmount > 0 && (
+                {!hasFailed && !isLoadingInit && contributionAmount > 0 && (
                     <>
                         <TableScrollContainer className="contribution-editor">
                             <EditorTable />
@@ -116,6 +117,7 @@ const ContributionEditor = () => {
                         <CreateProperty />
                     </>
                 )}
+                {hasFailed && <Alert color="danger">An error has occurred while loading the specified contributions</Alert>}
             </Container>
 
             {isOpenAddContribution && (
