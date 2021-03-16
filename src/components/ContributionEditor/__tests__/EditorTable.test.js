@@ -88,7 +88,7 @@ describe('resources', () => {
     test('should update table when resources is updated', async () => {
         setup(contribution);
         // wait until loaded
-        await waitFor(() => screen.getByRole('button', { name: PREDICATES.HAS_RESEARCH_PROBLEM }));
+        await waitFor(() => screen.getByRole('button', { name: PREDICATES.HAS_RESEARCH_PROBLEM }), { timeout: 2000 });
 
         const cell = screen.getByRole('cell', { name: /test resource 2/i, hidden: true });
 
