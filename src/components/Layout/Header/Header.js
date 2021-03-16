@@ -342,7 +342,8 @@ class Header extends Component {
                                         <DropdownItem tag={RouterNavLink} exact to={ROUTES.TOOLS}>
                                             Tools overview
                                         </DropdownItem>
-                                        <DropdownItem header>&mdash; Data entry &mdash;</DropdownItem>
+                                        <DropdownItem divider />
+                                        <DropdownItem header>Data entry</DropdownItem>
                                         <DropdownItem
                                             tag={RouterNavLink}
                                             exact
@@ -370,7 +371,8 @@ class Header extends Component {
                                         <DropdownItem tag={RouterNavLink} exact to={ROUTES.TEMPLATES}>
                                             Templates
                                         </DropdownItem>
-                                        <DropdownItem header>&mdash; Data export &mdash;</DropdownItem>
+                                        <DropdownItem divider />
+                                        <DropdownItem header>Data export</DropdownItem>
                                         <DropdownItem tag={RouterNavLink} exact to={ROUTES.DATA}>
                                             Data Access
                                         </DropdownItem>
