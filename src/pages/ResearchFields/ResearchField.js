@@ -34,6 +34,7 @@ import { NavLink } from 'react-router-dom';
 import ROUTES from 'constants/routes';
 import Papers from 'components/ResearchField/Papers';
 import Comparisons from 'components/ResearchField/Comparisons';
+import { RESOURCE_TYPE_ID } from 'constants/misc';
 
 function usePrevious(value) {
     const ref = useRef();
@@ -89,7 +90,7 @@ function ResearchField(props) {
                             label={researchFieldData.label}
                             enableEdit={true}
                             syncBackend={true}
-                            type="resource"
+                            type={RESOURCE_TYPE_ID}
                         />
                     )}
                     <Breadcrumbs researchFieldId={researchFieldId} disableLastField />

@@ -56,6 +56,17 @@ const GlobalStyle = createGlobalStyle`
             margin-right: ${props => props.scrollbarWidth}px
         }
     }
+    @media (min-width: 481px) and (max-width: 1100px) {
+        .woot-widget-bubble.woot-elements--right{
+            bottom: ${props => (!props.cookieInfoDismissed ? '80px' : '14px')}
+        }
+    }  
+    @media (max-width: 480px) {
+        .woot-widget-bubble.woot-elements--right{
+            bottom: ${props => (!props.cookieInfoDismissed ? '150px' : '14px')}
+        }
+    }  
+    
 `;
 
 const StyledLink = styled(Link)`
@@ -255,11 +266,12 @@ class Header extends Component {
         }
         const email = this.props.user && this.props.user.email ? this.props.user.email : 'example@example.com';
         const greeting = greetingTime(new Date());
+        const cookieInfoDismissed = cookies.get('cookieInfoDismissed') ? cookies.get('cookieInfoDismissed') : null;
 
         return (
             <StyledTopBar className={this.state.isHomePageStyle ? 'home-page' : ''}>
                 <Navbar className={this.state.isHomePageStyle ? 'home-page' : ''} expand="md" fixed="top" id="main-navbar">
-                    <GlobalStyle scrollbarWidth={scrollbarWidth(true)} />
+                    <GlobalStyle scrollbarWidth={scrollbarWidth(true)} cookieInfoDismissed={cookieInfoDismissed} />
 
                     <div
                         style={{ display: 'flex', width: '100%', transition: 'width 1s ease-in-out' }}
@@ -343,11 +355,19 @@ class Header extends Component {
                                         >
                                             Survey table import
                                         </DropdownItem>
-                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.EXPORT_DATA}>
-                                            Export data{' '}
+                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.DATA}>
+                                            Data Access
                                         </DropdownItem>
-                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.CONTRIBUTION_TEMPLATES}>
+                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.TEMPLATES}>
                                             Templates
+                                        </DropdownItem>
+                                        <DropdownItem
+                                            tag={RouterNavLink}
+                                            exact
+                                            to={ROUTES.CONTRIBUTION_EDITOR}
+                                            onClick={e => this.requireAuthentication(e, ROUTES.CONTRIBUTION_EDITOR)}
+                                        >
+                                            Contribution editor
                                         </DropdownItem>
                                     </DropdownMenu>
                                 </UncontrolledButtonDropdown>
@@ -387,16 +407,30 @@ class Header extends Component {
 
                             <SearchForm placeholder="Search..." />
 
-                            <RequireAuthentication
-                                component={Button}
-                                color={!this.state.isHomePageStyle ? 'primary' : 'light'}
-                                className="mr-3 pl-4 pr-4 flex-shrink-0"
-                                tag={Link}
-                                to={ROUTES.ADD_PAPER.GENERAL_DATA}
-                            >
-                                <FontAwesomeIcon className="mr-1" icon={faPlus} />
-                                Add paper
-                            </RequireAuthentication>
+                            <UncontrolledButtonDropdown className="mr-3 flex-shrink-0">
+                                <RequireAuthentication
+                                    component={Button}
+                                    color={!this.state.isHomePageStyle ? 'primary' : 'light'}
+                                    className="pl-4 pr-4"
+                                    tag={Link}
+                                    to={ROUTES.ADD_PAPER.GENERAL_DATA}
+                                >
+                                    <FontAwesomeIcon className="mr-1" icon={faPlus} />
+                                    Add paper
+                                </RequireAuthentication>
+
+                                <DropdownToggle
+                                    split
+                                    color={!this.state.isHomePageStyle ? 'primary' : 'light'}
+                                    className="px-2"
+                                    style={{ marginLeft: 1 }}
+                                />
+                                <DropdownMenu right>
+                                    <DropdownItem tag={RouterNavLink} exact to={ROUTES.ADD_COMPARISON}>
+                                        Add comparison
+                                    </DropdownItem>
+                                </DropdownMenu>
+                            </UncontrolledButtonDropdown>
 
                             {!!this.props.user && (
                                 <div>

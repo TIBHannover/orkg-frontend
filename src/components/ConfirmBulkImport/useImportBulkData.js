@@ -5,7 +5,7 @@ import { getStatementsBySubject } from 'services/backend/statements';
 import { getPaperByDOI } from 'services/backend/misc';
 import { createResource, getResourcesByClass } from 'services/backend/resources';
 import { getResource } from 'services/backend/resources';
-import { getPredicate, getAllPredicates, createPredicate } from 'services/backend/predicates';
+import { getPredicate, getPredicates, createPredicate } from 'services/backend/predicates';
 import { saveFullPaper } from 'services/backend/papers';
 import { toast } from 'react-toastify';
 
@@ -96,9 +96,9 @@ const useImportBulkData = ({ data, onFinish }) => {
                 // no property id found
                 if (!propertyId) {
                     // property label already exists, get the ID
-                    const fetchedPredicate = await getAllPredicates({ q: property, exact: true });
-                    if (fetchedPredicate.length) {
-                        propertyId = fetchedPredicate[0].id;
+                    const fetchedPredicate = await getPredicates({ q: property, exact: true });
+                    if (fetchedPredicate.totalElements) {
+                        propertyId = fetchedPredicate.content[0].id;
                         _idToLabel[propertyId] = property;
                         valueToId[property] = propertyId;
                     } else {
@@ -206,7 +206,8 @@ const useImportBulkData = ({ data, onFinish }) => {
         const paperResources = await getResourcesByClass({
             id: CLASSES.PAPER,
             q: title,
-            exact: true
+            exact: true,
+            returnContent: true
         });
 
         return paperResources.length ? paperResources[0].id : null;

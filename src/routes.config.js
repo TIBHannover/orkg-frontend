@@ -22,8 +22,8 @@ import AddClass from 'pages/Classes/AddClass';
 import Properties from 'pages/Properties/Properties';
 import AddProperty from 'pages/Properties/AddProperty';
 import PropertyDetails from 'pages/Properties/Property';
-import ContributionTemplates from 'pages/ContributionTemplates/ContributionTemplates';
-import ContributionTemplate from 'pages/ContributionTemplates/ContributionTemplate';
+import Templates from 'pages/Templates/Templates';
+import Template from 'pages/Templates/Template';
 import ROUTES from 'constants/routes';
 import RedirectShortLinks from 'pages/RedirectShortLinks';
 import ResearchField from 'pages/ResearchFields/ResearchField';
@@ -43,11 +43,13 @@ import Stats from 'pages/Stats';
 import UserSettings from 'pages/UserSettings';
 import UserProfile from 'pages/UserProfile';
 import FeaturedComparisons from 'pages/FeaturedComparisons';
-import ExportData from 'pages/ExportData';
+import Data from 'pages/Data';
 import Contribution from 'pages/Contribution';
 import CsvImport from 'pages/CsvImport';
+import AddComparison from 'pages/AddComparison';
 import requireAuthentication from 'requireAuthentication';
 import { reverse } from 'named-urls';
+import ContributionEditor from 'pages/ContributionEditor';
 
 // use lazy loading of pages that contain large dependencies
 // run "npm run analyze" to ensure the listed dependencies are not loaded elsewhere and thus end up in the bundle
@@ -103,14 +105,14 @@ const routes = [
         component: requireAuthentication(AddClass)
     },
     {
-        path: ROUTES.CONTRIBUTION_TEMPLATES,
+        path: ROUTES.TEMPLATES,
         exact: true,
-        component: ContributionTemplates
+        component: Templates
     },
     {
-        path: ROUTES.CONTRIBUTION_TEMPLATE,
+        path: ROUTES.TEMPLATE,
         exact: true,
-        component: ContributionTemplate
+        component: Template
     },
     {
         path: ROUTES.USER_SETTINGS,
@@ -293,11 +295,23 @@ const routes = [
     },
     {
         path: ROUTES.EXPORT_DATA,
-        component: ExportData
+        component: () => <Redirect to={{ pathname: reverse(ROUTES.DATA), state: { status: 301 } }} />
+    },
+    {
+        path: ROUTES.DATA,
+        component: Data
     },
     {
         path: ROUTES.CSV_IMPORT,
         component: requireAuthentication(CsvImport)
+    },
+    {
+        path: ROUTES.CONTRIBUTION_EDITOR,
+        component: requireAuthentication(ContributionEditor)
+    },
+    {
+        path: ROUTES.ADD_COMPARISON,
+        component: AddComparison
     },
     /* Don't add routes below this line */
     {

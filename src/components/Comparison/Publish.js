@@ -19,7 +19,7 @@ import PropTypes from 'prop-types';
 import { createLiteralStatement, createResourceStatement, getStatementsByPredicateAndLiteral } from 'services/backend/statements';
 import { generateDOIForComparison } from 'services/backend/misc';
 import { createLiteral } from 'services/backend/literals';
-import { createResource, resourcesUrl } from 'services/backend/resources';
+import { createResource } from 'services/backend/resources';
 import { getComparison } from 'services/similarity/index';
 import Tooltip from 'components/Utils/Tooltip';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
@@ -32,7 +32,7 @@ import { reverse } from 'named-urls';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { PREDICATES, CLASSES } from 'constants/graphSettings';
+import { PREDICATES, CLASSES, ENTITIES } from 'constants/graphSettings';
 import env from '@beam-australia/react-env';
 
 const StyledCustomInput = styled(CustomInput)`
@@ -93,7 +93,8 @@ function Publish(props) {
         setDescription(props.metaData && props.metaData.description ? props.metaData.description : '');
         setReferences(props.metaData?.references && props.metaData.references.length > 0 ? props.metaData.references : ['']);
         setSubject(props.metaData && props.metaData.subject ? props.metaData.subject : undefined);
-    }, [props.metaData]);
+        setComparisonCreators(props.authors ? props.authors : []);
+    }, [props.metaData, props.authors]);
 
     // TODO: improve code by using reduce function and unify code with paper edit dialog
     const saveCreators = async (creators, resourceId) => {
@@ -340,9 +341,8 @@ function Publish(props) {
                     <FormGroup>
                         <div>
                             <Tooltip
-                                message={`A DOI ${env('DATACITE_DOI_PREFIX')}/${
-                                    props.comparisonId
-                                } will be assigned to published comparison and it cannot be changed in future.`}
+                                message={`A DOI ${env('DATACITE_DOI_PREFIX')}/${props.comparisonId} 
+                                will be assigned to published comparison and it cannot be changed in future.`}
                             >
                                 <StyledCustomInput
                                     onChange={e => {
@@ -440,7 +440,7 @@ function Publish(props) {
                             </Label>
 
                             <Autocomplete
-                                requestUrl={resourcesUrl}
+                                entityType={ENTITIES.RESOURCE}
                                 optionsClass={CLASSES.RESEARCH_FIELD}
                                 placeholder="Enter a research field"
                                 onItemSelected={i => {

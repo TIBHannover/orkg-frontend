@@ -2,6 +2,20 @@ import PropTypes from 'prop-types';
 import { Chart } from 'react-google-charts';
 
 const GDCVisualizationRenderer = props => {
+    // adding pre-processing step to render date items correctly;
+
+    // this replace the date string with a new Date() obj
+    // no need to create new model, it is directly updated as reference
+    const strModel = props.model.data.googleChartsData;
+    strModel.cols.forEach((item, index) => {
+        if (item.type === 'date') {
+            strModel.rows.forEach(rowItem => {
+                const dateItem = rowItem.c[index];
+                dateItem.v = new Date(dateItem.v); // overwrite the date item
+            });
+        }
+    });
+
     return (
         <div>
             <Chart

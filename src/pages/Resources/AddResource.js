@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Container, Button, FormGroup, Input, Label } from 'reactstrap';
 import { useHistory, useLocation } from 'react-router-dom';
 import { createLiteralStatement } from 'services/backend/statements';
-import { classesUrl, getClassById } from 'services/backend/classes';
+import { getClassById } from 'services/backend/classes';
 import { createLiteral } from 'services/backend/literals';
 import { createResource } from 'services/backend/resources';
 import ConfirmClass from 'components/ConfirmationModal/ConfirmationModal';
@@ -12,7 +12,7 @@ import { reverse } from 'named-urls';
 import REGEX from 'constants/regex';
 import Cite from 'citation-js';
 import ROUTES from 'constants/routes';
-import { PREDICATES } from 'constants/graphSettings';
+import { PREDICATES, ENTITIES } from 'constants/graphSettings';
 import { getArrayParamFromQueryString } from 'utils';
 
 const AddResource = () => {
@@ -130,7 +130,7 @@ const AddResource = () => {
                         <Label for="select-classes">Classes</Label>
                         {!isLoadingDefaultClasses && (
                             <AutoComplete
-                                requestUrl={classesUrl}
+                                entityType={ENTITIES.CLASS}
                                 onChange={(selected, action) => {
                                     // blur the field allows to focus and open the menu again
                                     classesAutocompleteRef.current && classesAutocompleteRef.current.blur();

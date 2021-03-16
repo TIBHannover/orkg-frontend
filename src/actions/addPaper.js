@@ -361,7 +361,7 @@ export const getResourceObject = (data, resourceId, newProperties) => {
                             return {
                                 '@temp': `_${value.resourceId}`,
                                 label: value.label,
-                                class: value.classes && value.classes.length > 0 ? value.classes[0] : null,
+                                classes: value.classes && value.classes.length > 0 ? value.classes : null,
                                 values: Object.assign({}, getResourceObject(data, value.resourceId, newProperties))
                             };
                         } else {
