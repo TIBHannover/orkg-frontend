@@ -92,7 +92,7 @@ class StatementOptionButton extends Component {
     render() {
         const tippyTarget = (
             <span>
-                <OptionButton disabled={this.props.isDisabled} color="link" className="p-0" onClick={this.handleClick}>
+                <OptionButton disabled={this.props.isDisabled} color="link" className="p-0" onClick={this.handleClick} aria-label={this.props.title}>
                     <span
                         className="icon-wrapper"
                         style={{
@@ -120,6 +120,7 @@ class StatementOptionButton extends Component {
                     onHide={this.onHide}
                     onCreate={this.onCreate}
                     interactive={true}
+                    appendTo={this.props.appendTo}
                     trigger="click"
                     content={
                         <div className="text-center p-1" style={{ color: '#fff', fontSize: '0.95rem', wordBreak: 'normal' }}>
@@ -169,15 +170,18 @@ StatementOptionButton.propTypes = {
     icon: PropTypes.object.isRequired,
     iconWrapperSize: PropTypes.string,
     iconSize: PropTypes.string,
-    action: PropTypes.func.isRequired,
+    action: PropTypes.func,
     requireConfirmation: PropTypes.bool,
     confirmationMessage: PropTypes.string,
     onVisibilityChange: PropTypes.func,
-    isDisabled: PropTypes.bool
+    isDisabled: PropTypes.bool,
+    appendTo: PropTypes.oneOfType([PropTypes.object, PropTypes.string])
 };
 
 StatementOptionButton.defaultProps = {
-    requireConfirmation: false
+    requireConfirmation: false,
+    appendTo: 'parent',
+    action: () => {}
 };
 
 export default StatementOptionButton;

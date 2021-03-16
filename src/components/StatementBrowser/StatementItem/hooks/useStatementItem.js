@@ -11,7 +11,7 @@ function useStatementItem(props) {
     const dispatch = useDispatch();
 
     const selectedResource = useSelector(state => state.statementBrowser.selectedResource);
-    const property = useSelector(state => state.statementBrowser.properties[props.id]);
+    const property = useSelector(state => state.statementBrowser.properties.byId[props.id]);
     const values = useSelector(state => state.statementBrowser.values);
 
     const [predicateLabel, setPredicateLabel] = useState(props.predicateLabel);
@@ -37,7 +37,7 @@ function useStatementItem(props) {
     const handleDeleteStatement = useCallback(async () => {
         if (props.syncBackend) {
             // Delete All related statements
-            if (property.valueIds.length > 0) {
+            if (property && property.valueIds.length > 0) {
                 for (const valueId of property.valueIds) {
                     const value = values.byId[valueId];
                     deleteStatementById(value.statementId);

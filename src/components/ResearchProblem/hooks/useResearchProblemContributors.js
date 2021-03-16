@@ -8,7 +8,7 @@ function useResearchProblemContributors() {
     const [isLoading, setIsLoading] = useState(false);
     const [hasNextPage, setHasNextPage] = useState(false);
     const [isLastPageReached, setIsLastPageReached] = useState(false);
-    const [page, setPage] = useState(1);
+    const [page, setPage] = useState(0);
     const [contributors, setContributors] = useState([]);
 
     const loadContributors = useCallback(
