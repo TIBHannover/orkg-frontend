@@ -1,6 +1,6 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
-import { getStatementsByPredicate } from 'services/backend/statements';
+import usePropertyStatements from './hooks/usePropertyStatements';
 import { Button, Table, Collapse } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
@@ -8,57 +8,13 @@ import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes.js';
 import { Link } from 'react-router-dom';
 
-const PropertyStatements = props => {
-    const pageSize = 10;
-    const { propertyId, setHasPropertyStatement } = props;
+const PropertyStatements = ({ propertyId }) => {
+    const { statements, isLoading, hasNextPage, totalElements, handleLoadMore } = usePropertyStatements({
+        propertyId: propertyId,
+        pageSize: 10
+    });
+
     const [showPropertyStatements, setShowPropertyStatements] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
-    const [hasNextPage, setHasNextPage] = useState(false);
-    const [page, setPage] = useState(0);
-    const [statements, setStatements] = useState([]);
-
-    const loadStatements = useCallback(async () => {
-        setIsLoading(true);
-
-        const statements = await getStatementsByPredicate({
-            id: propertyId,
-            page: page + 1,
-            items: pageSize,
-            sortBy: 'id',
-            desc: true
-        });
-
-        if (page === 0 && statements.length === 0) {
-            setHasPropertyStatement(false);
-        } else {
-            setHasPropertyStatement(true);
-        }
-
-        if (statements.length === 0) {
-            setIsLoading(false);
-            setHasNextPage(false);
-            return;
-        } else {
-            setStatements(prevStatements => [...prevStatements, ...statements]);
-            setIsLoading(false);
-            setHasNextPage(statements.length < pageSize || statements.length === 0 ? false : true);
-        }
-    }, [page, propertyId, setHasPropertyStatement]);
-
-    useEffect(() => {
-        loadStatements();
-    }, [loadStatements]);
-
-    // reset resources when the userId has changed
-    useEffect(() => {
-        setStatements([]);
-    }, [propertyId]);
-
-    const handleLoadMore = () => {
-        if (!isLoading) {
-            setPage(page + 1);
-        }
-    };
 
     const loadingIndicator = (
         <div className="text-center mt-3 mb-4">
@@ -75,7 +31,10 @@ const PropertyStatements = props => {
             <Collapse isOpen={showPropertyStatements}>
                 {statements.length > 0 && (
                     <div>
-                        <h3 className="h5 mt-3">Statements using this property</h3>
+                        <h3 className="h5 mt-3">
+                            {totalElements === 1 ? `There is ${totalElements} statement` : `There are ${totalElements} statements`} using this
+                            property
+                        </h3>
                         <Table size="sm" bordered>
                             <thead>
                                 <tr>
@@ -99,7 +58,7 @@ const PropertyStatements = props => {
                                 {!isLoading && hasNextPage && (
                                     <tr className="text-center">
                                         <td colspan="3">
-                                            <Button color="lightblue" size="sm" onClick={handleLoadMore}>
+                                            <Button color="lightblue" size="sm" onClick={!isLoading ? handleLoadMore : undefined}>
                                                 Load more statements
                                             </Button>
                                         </td>
@@ -119,12 +78,7 @@ const PropertyStatements = props => {
 };
 
 PropertyStatements.propTypes = {
-    propertyId: PropTypes.string.isRequired,
-    setHasPropertyStatement: PropTypes.func
-};
-
-PropertyStatements.defaultProps = {
-    setHasPropertyStatement: () => {}
+    propertyId: PropTypes.string.isRequired
 };
 
 export default PropertyStatements;
