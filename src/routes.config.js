@@ -46,6 +46,7 @@ import FeaturedComparisons from 'pages/FeaturedComparisons';
 import Data from 'pages/Data';
 import Contribution from 'pages/Contribution';
 import CsvImport from 'pages/CsvImport';
+import Tools from 'pages/Tools';
 import AddComparison from 'pages/AddComparison';
 import requireAuthentication from 'requireAuthentication';
 import { reverse } from 'named-urls';
@@ -312,6 +313,10 @@ const routes = [
     {
         path: ROUTES.ADD_COMPARISON,
         component: AddComparison
+    },
+    {
+        path: ROUTES.TOOLS,
+        component: Tools
     },
     /* Don't add routes below this line */
     {
