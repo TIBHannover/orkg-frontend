@@ -100,11 +100,8 @@ describe('resources', () => {
         await waitFor(() => screen.getByText(/create "updated resource"/i));
 
         fireEvent.click(screen.getByText(/create "updated resource"/i));
-        screen.debug(undefined, 30000);
 
         await waitFor(() => screen.getByRole('button', { name: /updated resource/i, hidden: true }, { timeout: 5000 }));
-        screen.debug(undefined, 30000);
-
         expect(screen.getByRole('button', { name: /updated resource/i, hidden: true })).toBeInTheDocument();
     });
 
