@@ -8,6 +8,7 @@ configure({ adapter: new Adapter() });
 
 beforeAll(() => {
     server.listen();
+    jest.setTimeout(20000);
 });
 
 afterEach(() => {
