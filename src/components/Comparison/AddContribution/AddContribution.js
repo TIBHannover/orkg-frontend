@@ -189,7 +189,7 @@ export default function AddContribution(props) {
             <ModalBody>
                 <FormGroup>
                     <Label for="title">
-                        <Tooltip message="Enter the title of the paper">Paper title</Tooltip>
+                        <Tooltip message="Enter the title of the paper or DOI">Paper title or DOI</Tooltip>
                     </Label>
                     <InputGroup>
                         <Input
