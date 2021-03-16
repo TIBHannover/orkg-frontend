@@ -22,7 +22,7 @@ const ObjectStatements = props => {
 
         getStatementsByObject({
             id: resourceId,
-            page: page + 1,
+            page: page,
             items: pageSize,
             sortBy: 'id',
             desc: true

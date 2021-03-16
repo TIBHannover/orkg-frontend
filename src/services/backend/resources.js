@@ -28,18 +28,28 @@ export const deleteResource = id => {
     return submitDeleteRequest(`${resourcesUrl}${id}`, { 'Content-Type': 'application/json' });
 };
 
-export const getAllResources = ({ page = 1, items = 9999, sortBy = 'created_at', desc = true, q = null, exclude = null, exact = false }) => {
+export const getResources = ({
+    page = 0,
+    items: size = 9999,
+    sortBy = 'created_at',
+    desc = true,
+    q = null,
+    exclude = null,
+    exact = false,
+    returnContent = false
+}) => {
+    const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
     const params = queryString.stringify({
         page,
-        items,
-        sortBy,
+        size,
+        sort,
         desc,
         exact,
         ...(q ? { q } : {}),
         ...(exclude ? { exclude } : {})
     });
 
-    return submitGetRequest(`${resourcesUrl}?${params}`);
+    return submitGetRequest(`${resourcesUrl}?${params}`).then(res => (returnContent ? res.content : res));
 };
 
 export const getContributorsByResourceId = id => {
@@ -64,8 +74,8 @@ export const addResourceToObservatory = ({ observatory_id, organization_id, id }
 
 export const getResourcesByClass = async ({
     id,
-    page = 1,
-    items = 9999,
+    page = 0,
+    items: size = 9999,
     sortBy = 'created_at',
     desc = true,
     q = null,
@@ -74,8 +84,9 @@ export const getResourcesByClass = async ({
     verified = null,
     returnContent = false
 }) => {
+    const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
     const params = queryString.stringify(
-        { page, items, sortBy, desc, creator, exact, ...(q ? { q } : {}), verified },
+        { page, size, sort, desc, creator, exact, ...(q ? { q } : {}), verified },
         {
             skipNull: true,
             skipEmptyString: true

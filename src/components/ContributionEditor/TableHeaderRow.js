@@ -3,7 +3,6 @@ import TableCellButtons from 'components/ContributionEditor/TableCellButtons';
 import { Properties, PropertiesInner } from 'components/Comparison/styled';
 import PropTypes from 'prop-types';
 import { memo, useState } from 'react';
-import { predicatesUrl } from 'services/backend/predicates';
 import Confirm from 'reactstrap-confirm';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteProperty, updateProperty } from 'actions/contributionEditor';
@@ -11,6 +10,7 @@ import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowser
 import { upperFirst } from 'lodash';
 import { Button } from 'reactstrap';
 import useConfirmPropertyModal from 'components/StatementBrowser/AddProperty/hooks/useConfirmPropertyModal';
+import { PREDICATES, ENTITIES } from 'constants/graphSettings';
 
 const TableHeaderRow = ({ property }) => {
     const [isOpenStatementBrowser, setIsOpenStatementBrowser] = useState(false);
@@ -69,6 +69,8 @@ const TableHeaderRow = ({ property }) => {
         );
     };
 
+    const isResearchProblem = property.id === PREDICATES.HAS_RESEARCH_PROBLEM;
+
     return !isEditing ? (
         <>
             <Properties className="columnProperty" onDoubleClick={handleStartEdit}>
@@ -77,7 +79,11 @@ const TableHeaderRow = ({ property }) => {
                         <Button onClick={() => setIsOpenStatementBrowser(true)} color="link" className="text-light m-0 p-0 text-left">
                             {upperFirst(property.label)}
                         </Button>
-                        <TableCellButtons onEdit={handleStartEdit} onDelete={handleDelete} backgroundColor="rgba(139, 145, 165, 0.8)" />
+                        <TableCellButtons
+                            onEdit={!isResearchProblem ? handleStartEdit : null}
+                            onDelete={!isResearchProblem ? handleDelete : null}
+                            backgroundColor="rgba(139, 145, 165, 0.8)"
+                        />
                     </div>
                 </PropertiesInner>
             </Properties>
@@ -97,7 +103,7 @@ const TableHeaderRow = ({ property }) => {
         <Properties>
             <PropertiesInner cellPadding={10}>
                 <Autocomplete
-                    requestUrl={predicatesUrl}
+                    entityType={ENTITIES.PREDICATE}
                     placeholder="Enter a property"
                     onInput={(e, value) => setInputValue(e ? e.target.value : value)}
                     value={inputValue}

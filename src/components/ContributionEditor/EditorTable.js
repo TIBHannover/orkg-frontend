@@ -39,7 +39,7 @@ const EditorTable = ({ scrollContainerBody }) => {
     );
 
     return (
-        <div id="comparisonTable" {...getTableProps()} className="table sticky mb-0" style={{ height: 'max-content' }}>
+        <div role="table" id="comparisonTable" {...getTableProps()} className="table sticky mb-0" style={{ height: 'max-content' }}>
             <ScrollSyncPane group="one">
                 <div style={{ overflow: 'auto', top: '71px', position: 'sticky', zIndex: '3' }} className="disable-scrollbars">
                     {headerGroups.map(headerGroup => (

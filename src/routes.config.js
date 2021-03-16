@@ -22,8 +22,8 @@ import AddClass from 'pages/Classes/AddClass';
 import Properties from 'pages/Properties/Properties';
 import AddProperty from 'pages/Properties/AddProperty';
 import PropertyDetails from 'pages/Properties/Property';
-import ContributionTemplates from 'pages/ContributionTemplates/ContributionTemplates';
-import ContributionTemplate from 'pages/ContributionTemplates/ContributionTemplate';
+import Templates from 'pages/Templates/Templates';
+import Template from 'pages/Templates/Template';
 import ROUTES from 'constants/routes';
 import RedirectShortLinks from 'pages/RedirectShortLinks';
 import ResearchField from 'pages/ResearchFields/ResearchField';
@@ -106,14 +106,14 @@ const routes = [
         component: requireAuthentication(AddClass)
     },
     {
-        path: ROUTES.CONTRIBUTION_TEMPLATES,
+        path: ROUTES.TEMPLATES,
         exact: true,
-        component: ContributionTemplates
+        component: Templates
     },
     {
-        path: ROUTES.CONTRIBUTION_TEMPLATE,
+        path: ROUTES.TEMPLATE,
         exact: true,
-        component: ContributionTemplate
+        component: Template
     },
     {
         path: ROUTES.USER_SETTINGS,

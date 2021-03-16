@@ -646,7 +646,7 @@ export function fillResourceWithTemplate({ templateID, selectedResource, syncBac
     return async (dispatch, getState) => {
         return dispatch(fetchTemplateIfNeeded(templateID)).then(async templateDate => {
             const template = templateDate;
-            // Check if it's a contribution template
+            // Check if it's a template
             if (template && template.predicate) {
                 // TODO : handle the case where the template isFetching
                 if (template.predicate.id === PREDICATES.HAS_CONTRIBUTION) {
