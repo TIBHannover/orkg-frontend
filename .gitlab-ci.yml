@@ -1,25 +1,34 @@
 stages:
-  - containerize
-  - release
-  - test
-  
+    - test
+    - containerize
+    - verify
+    - release
+
 include:
-  - remote: https://gitlab.com/TIBHannover/gitlab-ci-templates/raw/master/templates/Docker.gitlab-ci.yml
-  - remote: https://gitlab.com/TIBHannover/gitlab-ci-templates/raw/master/templates/Docker-Release.gitlab-ci.yml
-  - template: Container-Scanning.gitlab-ci.yml
-  - template: Dependency-Scanning.gitlab-ci.yml
+    - remote: https://gitlab.com/TIBHannover/gitlab-ci-templates/raw/master/templates/Docker.gitlab-ci.yml
+    - remote: https://gitlab.com/TIBHannover/gitlab-ci-templates/raw/master/templates/Docker-Release.gitlab-ci.yml
+    - template: Container-Scanning.gitlab-ci.yml
+    - template: Dependency-Scanning.gitlab-ci.yml
+
+jest:
+    image: node:lts-buster
+    stage: test
+    needs: [] # speed up, doesn't depend on other jobs
+    script:
+        - cp default.env .env
+        - npm install
+        - npm run test:ci
+    artifacts:
+        when: always
+        reports:
+            junit:
+                - junit.xml
 
 container_scanning:
-  variables:
-    # Change image name to match our repository naming convention
-    CI_APPLICATION_REPOSITORY: $CI_REGISTRY_IMAGE
+    stage: verify
+    variables:
+        # Change image name to match our repository naming convention
+        CI_APPLICATION_REPOSITORY: $CI_REGISTRY_IMAGE
 
-javascript:
-  stage: test
-  script:
-    - 'jest --ci --reporters=default --reporters=jest-junit'
-  artifacts:
-    when: always
-    reports:
-      junit:
-        - junit.xml
+dependency_scanning:
+    stage: verify
