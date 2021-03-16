@@ -1,16 +1,22 @@
 import { Component } from 'react';
 import { Redirect } from 'react-router-dom';
-import { Container, Button, Form, FormGroup, Input, Label, Alert } from 'reactstrap';
+import { Container, Button, Form, FormGroup, Input, Label, InputGroup, InputGroupAddon } from 'reactstrap';
 import { toast } from 'react-toastify';
 import { createOrganization } from 'services/backend/organizations';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { openAuthDialog } from 'actions/auth';
 import PropTypes from 'prop-types';
+import REGEX from 'constants/regex';
 import { connect } from 'react-redux';
 import { reverse } from 'named-urls';
+import slugify from 'slugify';
 import ROUTES from 'constants/routes';
 import Tooltip from 'components/Utils/Tooltip';
+
+const publicOrganizationRoute = `${window.location.protocol}//${window.location.host}${window.location.pathname
+    .replace(reverse(ROUTES.ADD_ORGANIZATION), reverse(ROUTES.ORGANIZATION, { id: ' ' }))
+    .replace(/\/$/, '')}`;
 
 class AddOrganization extends Component {
     constructor(props) {
@@ -18,11 +24,11 @@ class AddOrganization extends Component {
 
         this.state = {
             redirect: false,
-            value: '',
-            url: '',
-            organizationId: '',
-            previewSrc: '',
-            organizationNamedUrl: '',
+            name: '',
+            website: '',
+            display_id: '',
+            permalink: '',
+            logo: '',
             editorState: 'edit'
         };
     }
@@ -33,75 +39,67 @@ class AddOrganization extends Component {
 
     createNewOrganization = async () => {
         this.setState({ editorState: 'loading' });
-        const value = this.state.value;
-        const image = this.state.previewSrc;
-        const url = this.state.url;
-        const namedUrl = this.state.organizationNamedUrl;
-        const regex = /^[a-z0-9-]+$/;
+        const { name, logo, website, permalink } = this.state;
 
-        if (value && value.length !== 0) {
-            if (url && url.match(/[-a-zA-Z0-9@:%_+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_+.~#?&//=]*)?/gi)) {
-                if (image.length !== 0) {
-                    if (regex.test(namedUrl)) {
-                        try {
-                            const responseJson = await createOrganization(value, image[0], this.props.user.id, url, namedUrl);
-                            const organizationId = responseJson.display_id;
-                            this.navigateToOrganization(organizationId);
-                        } catch (error) {
-                            this.setState({ editorState: 'edit' });
-                            console.error(error);
-                            toast.error(`Error creating organization ${error.message}`);
-                        }
-                    } else {
-                        toast.error(`Only dashes (-) and lower case letters are allowed in named URL`);
-                        this.setState({ editorState: 'edit' });
-                    }
-                } else {
-                    toast.error(`Please upload an organization logo`);
-                    this.setState({ editorState: 'edit' });
-                }
-            } else {
-                toast.error(`Please enter a valid URL`);
-                this.setState({ editorState: 'edit' });
-            }
-        } else {
+        if (!name && name.length === 0) {
             toast.error(`Please enter an organization name`);
             this.setState({ editorState: 'edit' });
+            return;
+        }
+        if (!new RegExp(REGEX.OBSERVATORY_ORGANIZATION_PERMALINK).test(permalink)) {
+            toast.error(`Only dashes (-), numbers, and letters are allowed in the permalink field`);
+            this.setState({ editorState: 'edit' });
+            return;
+        }
+        if (!website && !new RegExp(REGEX.URL).test(website)) {
+            toast.error(`Please enter a valid website URL`);
+            this.setState({ editorState: 'edit' });
+            return;
+        }
+        if (logo.length === 0) {
+            toast.error(`Please upload an organization logo`);
+            this.setState({ editorState: 'edit' });
+            return;
+        }
+
+        try {
+            const responseJson = await createOrganization(name, logo[0], this.props.user.id, website, permalink);
+            const organizationId = responseJson.display_id;
+            this.navigateToOrganization(organizationId);
+        } catch (error) {
+            this.setState({ editorState: 'edit' });
+            console.error(error);
+            toast.error(`Error creating organization ${error.message}`);
         }
     };
 
     handleChange = event => {
         this.setState({ [event.target.name]: event.target.value.trim() });
-        const slugify = require('slugify');
-        if (event.target.name === 'value') {
+        if (event.target.name === 'name') {
             this.setState({
-                organizationNamedUrl: slugify(event.target.value.trim(), { replacement: '-', remove: /[*+~%\<>/;.(){}?,'"!:@#_^|]/g, lower: true })
+                permalink: slugify(event.target.value.trim(), { replacement: '-', remove: /[*+~%\<>/;.(){}?,'"!:@#_^|]/g, lower: false })
             });
         }
     };
 
-    navigateToOrganization = organizationId => {
-        this.setState({ editorState: 'edit', organizationId: organizationId }, () => {
+    navigateToOrganization = display_id => {
+        this.setState({ editorState: 'edit', display_id: display_id }, () => {
             this.setState({ redirect: true });
         });
     };
 
     handlePreview = async e => {
         e.preventDefault();
-
         const file = e.target.files[0];
         const reader = new FileReader();
-
         if (e.target.files.length === 0) {
             return;
         }
-
         reader.onloadend = e => {
             this.setState({
-                previewSrc: [reader.result]
+                logo: [reader.result]
             });
         };
-
         reader.readAsDataURL(file);
     };
 
@@ -110,12 +108,13 @@ class AddOrganization extends Component {
         if (this.state.redirect) {
             this.setState({
                 redirect: false,
-                value: '',
-                organizationId: '',
-                url: ''
+                name: '',
+                display_id: '',
+                website: '',
+                permalink: ''
             });
 
-            return <Redirect to={reverse(ROUTES.ORGANIZATION, { id: this.state.organizationId })} />;
+            return <Redirect to={reverse(ROUTES.ORGANIZATION, { id: this.state.display_id })} />;
         }
 
         return (
@@ -124,66 +123,75 @@ class AddOrganization extends Component {
                     <h3 className="h4 my-4 flex-grow-1">Create new organization</h3>
                 </Container>
                 <Container className="box rounded pt-4 pb-4 pl-5 pr-5">
-                    {!!this.props.user && this.props.user.isCurationAllowed ? (
+                    {!!this.props.user && this.props.user.isCurationAllowed && (
                         <Form className="pl-3 pr-3 pt-2">
-                            {this.state.errors && <Alert color="danger">{this.state.errors}</Alert>}
                             <FormGroup>
-                                <Label for="ResourceLabel">Organization Name</Label>
+                                <Label for="organizationName">Name</Label>
                                 <Input
                                     onChange={this.handleChange}
                                     type="text"
-                                    name="value"
-                                    id="ResourceLabel"
+                                    name="name"
+                                    id="organizationName"
                                     disabled={loading}
-                                    placeholder="Organization Name"
+                                    value={this.state.name}
+                                    placeholder="Organization name"
                                 />
                             </FormGroup>
 
                             <FormGroup>
                                 <div>
-                                    <Label for="OrganizationURL">
-                                        Organization Named URL
-                                        <Tooltip message="Only dashes ( - ) and lower case letters are allowed" />
+                                    <Label for="organizationPermalink">
+                                        Permalink
+                                        <Tooltip message="Permalink field allows to identify the organization page on ORKG in an easy-to-read form. Only dashes ( - ) and lower case letters are allowed" />
                                     </Label>
-                                    <Input
-                                        onChange={this.handleChange}
-                                        type="text"
-                                        name="organizationNamedUrl"
-                                        id="OrganizationUrl"
-                                        disabled={loading}
-                                        placeholder="Organization URL"
-                                        value={this.state.organizationNamedUrl}
-                                    />
+                                    <InputGroup>
+                                        <InputGroupAddon addonType="prepend">{publicOrganizationRoute}</InputGroupAddon>
+                                        <Input
+                                            onChange={this.handleChange}
+                                            type="text"
+                                            name="permalink"
+                                            id="organizationPermalink"
+                                            disabled={loading}
+                                            placeholder="name"
+                                            value={this.state.permalink}
+                                        />
+                                    </InputGroup>
                                 </div>
                             </FormGroup>
 
                             <FormGroup>
-                                <Label for="OrganizationUrl">Organization URL</Label>
+                                <Label for="organizationWebsite">Website</Label>
                                 <Input
                                     onChange={this.handleChange}
                                     type="text"
-                                    name="url"
-                                    id="OrganizationUrl"
+                                    name="website"
+                                    id="organizationWebsite"
                                     disabled={loading}
+                                    value={this.state.website}
                                     placeholder="https://www.example.com"
                                 />
                             </FormGroup>
-                            {this.state.previewSrc.length > 0 && (
-                                <div>
-                                    <img src={this.state.previewSrc} style={{ width: '20%', height: '20%' }} className="Avatar" alt="" />
-                                </div>
-                            )}
-                            <FormGroup>
-                                <Label>Logo</Label>
-                                <br />
-                                <Input type="file" onChange={this.handlePreview} />
-                            </FormGroup>
 
-                            <Button color="primary" onClick={this.createNewOrganization} outline className="mt-4 mb-2" block disabled={loading}>
-                                {!loading ? 'Create Organization' : <span>Loading</span>}
-                            </Button>
+                            <FormGroup>
+                                <Label for="organizationLogo">Logo</Label>
+                                <br />
+                                {this.state.logo.length > 0 && (
+                                    <div className="mb-2">
+                                        <img src={this.state.logo} style={{ width: '20%', height: '20%' }} alt="organization logo" />
+                                    </div>
+                                )}
+                                <Input type="file" id="organizationLogo" onChange={this.handlePreview} />
+                            </FormGroup>
+                            <hr />
+                            <div className="text-right">
+                                <Button color="primary" onClick={this.createNewOrganization} className="mb-2" disabled={loading}>
+                                    {!loading ? 'Create organization' : <span>Loading</span>}
+                                </Button>
+                            </div>
                         </Form>
-                    ) : (
+                    )}
+
+                    {(!!!this.props.user || !this.props.user.isCurationAllowed) && (
                         <>
                             <Button color="link" className="p-0 mb-2 mt-2 clearfix" onClick={() => this.props.openAuthDialog({ action: 'signin' })}>
                                 <Icon className="mr-1" icon={faUser} /> Signin to create organization
