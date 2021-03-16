@@ -48,7 +48,7 @@ const StyledListGroupItem = styled(ListGroupItem)`
 
 export default function AddContribution(props) {
     const [searchPaper, setSearchPaper] = useState('');
-    const [currentPage, setCurrentPage] = useState(1);
+    const [currentPage, setCurrentPage] = useState(0);
     const [isNextPageLoading, setIsNextPageLoading] = useState(false);
     const [hasNextPage, setHasNextPage] = useState(false);
 
@@ -106,7 +106,8 @@ export default function AddContribution(props) {
                 sortBy: 'id',
                 desc: true,
                 q: searchQuery,
-                id: CLASSES.PAPER
+                id: CLASSES.PAPER,
+                returnContent: true
             })
                 .then(results => {
                     if (results.length > 0) {
@@ -178,7 +179,7 @@ export default function AddContribution(props) {
         setCurrentPage(1);
         setSelectedContributions([]);
         setIsNextPageLoading(true);
-        debouncedGetLoadMoreResults(searchPaper, 1);
+        debouncedGetLoadMoreResults(searchPaper, 0);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [searchPaper]);
 
@@ -188,7 +189,7 @@ export default function AddContribution(props) {
             <ModalBody>
                 <FormGroup>
                     <Label for="title">
-                        <Tooltip message="Enter the title of the paper">Paper title</Tooltip>
+                        <Tooltip message="Enter the title of the paper or DOI">Paper title or DOI</Tooltip>
                     </Label>
                     <InputGroup>
                         <Input

@@ -339,6 +339,19 @@ class Header extends Component {
                                         Tools <FontAwesomeIcon style={{ marginTop: '4px' }} icon={faChevronDown} pull="right" />
                                     </DropdownToggle>
                                     <DropdownMenu>
+                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.TOOLS}>
+                                            Tools overview
+                                        </DropdownItem>
+                                        <DropdownItem divider />
+                                        <DropdownItem header>Data entry</DropdownItem>
+                                        <DropdownItem
+                                            tag={RouterNavLink}
+                                            exact
+                                            to={ROUTES.CONTRIBUTION_EDITOR}
+                                            onClick={e => this.requireAuthentication(e, ROUTES.CONTRIBUTION_EDITOR)}
+                                        >
+                                            Contribution editor
+                                        </DropdownItem>
                                         <DropdownItem
                                             tag={RouterNavLink}
                                             exact
@@ -355,19 +368,13 @@ class Header extends Component {
                                         >
                                             Survey table import
                                         </DropdownItem>
-                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.DATA}>
-                                            Data Access
-                                        </DropdownItem>
-                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.CONTRIBUTION_TEMPLATES}>
+                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.TEMPLATES}>
                                             Templates
                                         </DropdownItem>
-                                        <DropdownItem
-                                            tag={RouterNavLink}
-                                            exact
-                                            to={ROUTES.CONTRIBUTION_EDITOR}
-                                            onClick={e => this.requireAuthentication(e, ROUTES.CONTRIBUTION_EDITOR)}
-                                        >
-                                            Contribution editor
+                                        <DropdownItem divider />
+                                        <DropdownItem header>Data export</DropdownItem>
+                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.DATA}>
+                                            Data Access
                                         </DropdownItem>
                                     </DropdownMenu>
                                 </UncontrolledButtonDropdown>

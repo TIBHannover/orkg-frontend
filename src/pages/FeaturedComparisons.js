@@ -58,7 +58,8 @@ const FeaturedComparisons = () => {
         const responseJson = await getResourcesByClass({
             id: CLASSES.FEATURED_COMPARISON_CATEGORY,
             sortBy: 'created_at',
-            desc: false
+            desc: false,
+            returnContent: true
         });
 
         const categories = responseJson.map(item => ({
@@ -73,7 +74,8 @@ const FeaturedComparisons = () => {
         const responseJson = await getResourcesByClass({
             id: CLASSES.FEATURED_COMPARISON,
             sortBy: 'created_at',
-            desc: false
+            desc: false,
+            returnContent: true
         });
 
         const ids = responseJson.map(comparison => comparison.id);

@@ -7,7 +7,7 @@ import { AddPropertyWrapper, AnimationContainer } from './styled';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 
-const ContributionTemplate = props => {
+const Template = props => {
     const dispatch = useDispatch();
     const statementBrowser = useSelector(state => state.statementBrowser);
     const { properties, resources } = statementBrowser;
@@ -76,7 +76,7 @@ const ContributionTemplate = props => {
     );
 };
 
-ContributionTemplate.propTypes = {
+Template.propTypes = {
     id: PropTypes.string.isRequired,
     propertyId: PropTypes.string.isRequired,
     value: PropTypes.object.isRequired,
@@ -86,4 +86,4 @@ ContributionTemplate.propTypes = {
     isAnimated: PropTypes.bool
 };
 
-export default ContributionTemplate;
+export default Template;

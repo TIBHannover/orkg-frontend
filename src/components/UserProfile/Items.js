@@ -39,11 +39,12 @@ const Items = props => {
 
         getResourcesByClass({
             id: props.filterClass,
-            page: page + 1,
+            page: page,
             items: pageSize,
             sortBy: 'id',
             desc: true,
-            creator: props.userId
+            creator: props.userId,
+            returnContent: true
         }).then(result => {
             // Resources
             if (result.length === 0) {

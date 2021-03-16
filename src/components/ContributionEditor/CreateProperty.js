@@ -2,11 +2,11 @@ import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { createProperty } from 'actions/contributionEditor';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
+import { ENTITIES } from 'constants/graphSettings';
 import useConfirmPropertyModal from 'components/StatementBrowser/AddProperty/hooks/useConfirmPropertyModal';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Button } from 'reactstrap';
-import { predicatesUrl } from 'services/backend/predicates';
 
 export const CreateProperty = () => {
     const [isCreating, setIsCreating] = useState(false);
@@ -39,7 +39,7 @@ export const CreateProperty = () => {
     ) : (
         <div style={{ maxWidth: 300 }}>
             <Autocomplete
-                requestUrl={predicatesUrl}
+                entityType={ENTITIES.PREDICATE}
                 placeholder="Enter a property"
                 onChange={handleChangeAutocomplete}
                 onInput={(e, value) => setInputValue(e ? e.target.value : value)}
