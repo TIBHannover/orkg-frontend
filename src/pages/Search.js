@@ -160,6 +160,7 @@ class Search extends Component {
         if (!searchQuery || searchQuery.length === 0) {
             return;
         }
+        searchQuery = decodeURIComponent(searchQuery);
         this.setState({ isNextPageLoading: { ...this.state.isNextPageLoading, [filterType]: true } });
 
         let results = [];
@@ -200,7 +201,7 @@ class Search extends Component {
             }
 
             // for papers, try to find a DOI
-            if (filterType === CLASSES.PAPER && REGEX.DOI.test(decodeURIComponent(searchQuery))) {
+            if (filterType === CLASSES.PAPER && REGEX.DOI.test(searchQuery)) {
                 try {
                     const paper = await getPaperByDOI(searchQuery);
                     results.push({ label: paper.title, id: paper.id, class: CLASSES.PAPER });
