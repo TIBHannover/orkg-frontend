@@ -95,7 +95,7 @@ const Papers = () => {
                 <div className="d-flex flex-grow-1 mt-4 mb-4">
                     <h1 className="h4">View all papers</h1>
                     <div className="text-muted ml-3 mt-1">
-                        {totalElements === 0 && isNextPageLoading ? <Icon icon={faSpinner} spin /> : totalElements} Paper
+                        {totalElements === 0 && isNextPageLoading ? <Icon icon={faSpinner} spin /> : totalElements} papers
                     </div>
                 </div>
                 <ButtonGroup>

@@ -49,7 +49,7 @@ const Properties = () => {
                 <div className="d-flex flex-grow-1 mt-4 mb-4">
                     <h1 className="h4">View all properties</h1>
                     <div className="text-muted ml-3 mt-1">
-                        {totalElements === 0 && isNextPageLoading ? <Icon icon={faSpinner} spin /> : totalElements} Property
+                        {totalElements === 0 && isNextPageLoading ? <Icon icon={faSpinner} spin /> : totalElements} properties
                     </div>
                 </div>
                 <ButtonGroup>
