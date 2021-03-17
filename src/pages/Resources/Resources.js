@@ -33,14 +33,21 @@ const Resources = () => {
             items: pageSize,
             sortBy: 'created_at',
             desc: true
-        }).then(result => {
-            setResources(prevResources => [...prevResources, ...result.content]);
-            setIsNextPageLoading(false);
-            setHasNextPage(!result.last);
-            setIsLastPageReached(result.last);
-            setPage(prevPage => prevPage + 1);
-            setTotalElements(result.totalElements);
-        });
+        })
+            .then(result => {
+                setResources(prevResources => [...prevResources, ...result.content]);
+                setIsNextPageLoading(false);
+                setHasNextPage(!result.last);
+                setIsLastPageReached(result.last);
+                setPage(prevPage => prevPage + 1);
+                setTotalElements(result.totalElements);
+            })
+            .catch(error => {
+                setIsNextPageLoading(false);
+                setHasNextPage(false);
+                setIsLastPageReached(false);
+                console.log(error);
+            });
     };
 
     return (
@@ -99,7 +106,7 @@ const Resources = () => {
                             <Icon icon={faAngleDoubleDown} /> Load more resources
                         </ListGroupItem>
                     )}
-                    {!hasNextPage && isLastPageReached && page > 1 && (
+                    {!hasNextPage && isLastPageReached && page > 1 && totalElements !== 0 && (
                         <ListGroupItem tag="div" className="text-center">
                             You have reached the last page.
                         </ListGroupItem>

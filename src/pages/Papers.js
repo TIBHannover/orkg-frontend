@@ -35,17 +35,24 @@ const Papers = () => {
             sortBy: 'created_at',
             desc: true,
             verified: verified
-        }).then(result => {
-            // update paper resources for paperCards preview
-            setPaperResources(prevPaperResources => [...prevPaperResources, ...result.content]);
-            setIsNextPageLoading(false);
-            setHasNextPage(!result.last);
-            setPage(prevPage => prevPage + 1);
-            setIsLastPageReached(result.last);
-            setTotalElements(result.totalElements);
-            // Fetch the data of each paper
-            fetchDataForPapers(result.content);
-        });
+        })
+            .then(result => {
+                // update paper resources for paperCards preview
+                setPaperResources(prevPaperResources => [...prevPaperResources, ...result.content]);
+                setIsNextPageLoading(false);
+                setHasNextPage(!result.last);
+                setPage(prevPage => prevPage + 1);
+                setIsLastPageReached(result.last);
+                setTotalElements(result.totalElements);
+                // Fetch the data of each paper
+                fetchDataForPapers(result.content);
+            })
+            .catch(error => {
+                setIsNextPageLoading(false);
+                setHasNextPage(false);
+                setIsLastPageReached(false);
+                console.log(error);
+            });
     };
 
     const fetchDataForPapers = papers => {
