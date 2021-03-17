@@ -83,7 +83,7 @@ const HeaderSearchButton = ({ placeholder, type }) => {
     };
 
     const goToResults = () => {
-        history.push(reverse(ROUTES.SEARCH, { searchTerm: value }) + `?types=${type}`);
+        history.push(reverse(ROUTES.SEARCH, { searchTerm: encodeURIComponent(value) }) + `?types=${type}`);
     };
 
     return isSearchOpen ? (
