@@ -72,6 +72,7 @@ const ContributionEditor = () => {
     };
 
     const contributionAmount = contributionIds.length;
+    const containerStyle = contributionAmount > 3 ? { maxWidth: 'calc(100% - 20px)' } : undefined;
 
     // if is loading and there are no contributions in the store, it means it is loading for the first time
     const isLoadingInit = Object.keys(contributions).length === 0 && isLoading;
@@ -99,7 +100,7 @@ const ContributionEditor = () => {
                     </Button>
                 </ButtonGroup>
             </Container>
-            <Container className="box rounded p-4">
+            <Container className="box rounded p-4" style={containerStyle}>
                 {!hasFailed && contributionAmount === 0 && (
                     <Alert color="info">
                         Start adding contributions by clicking the button <em>Add contribution</em> on the right
