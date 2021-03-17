@@ -75,7 +75,7 @@ class Search extends Component {
             }
         ];
 
-        this.ignoredClasses = [CLASSES.CONTRIBUTION];
+        this.ignored_classes = [CLASSES.CONTRIBUTION];
 
         const selectedFiltersStrings = getArrayParamFromQueryString(decodeURIComponent(this.props.location.search), 'types');
         // ensure the array format is accepted by the autocomplete component
@@ -156,16 +156,16 @@ class Search extends Component {
         return Object.keys(this.state.isNextPageLoading).some(v => this.state.isNextPageLoading[v] === true) || this.state.loadingFilterClasses;
     };
 
-    loadMoreResults = async (searchQuery, filterType) => {
+    loadMoreResults = async (searchQuery, filter_type) => {
         if (!searchQuery || searchQuery.length === 0) {
             return;
         }
-        this.setState({ isNextPageLoading: { ...this.state.isNextPageLoading, [filterType]: true } });
+        this.setState({ isNextPageLoading: { ...this.state.isNextPageLoading, [filter_type]: true } });
 
         let results = [];
 
         try {
-            if (filterType === PREDICATE_TYPE_ID) {
+            if (filter_type === PREDICATE_TYPE_ID) {
                 results = await getPredicates({
                     page: this.state.currentPage[PREDICATE_TYPE_ID] || 0,
                     items: this.itemsPerFilter,
@@ -174,7 +174,7 @@ class Search extends Component {
                     q: searchQuery,
                     returnContent: true
                 });
-            } else if (filterType === RESOURCE_TYPE_ID) {
+            } else if (filter_type === RESOURCE_TYPE_ID) {
                 results = await getResources({
                     page: this.state.currentPage[RESOURCE_TYPE_ID] || 0,
                     items: this.itemsPerFilter,
@@ -183,24 +183,24 @@ class Search extends Component {
                     q: searchQuery,
                     exclude: this.defaultsFilters
                         .map(df => df.id)
-                        .concat(this.ignoredClasses)
+                        .concat(this.ignored_classes)
                         .join(','),
                     returnContent: true
                 });
             } else {
                 results = await getResourcesByClass({
-                    page: this.state.currentPage[filterType] || 0,
+                    page: this.state.currentPage[filter_type] || 0,
                     items: this.itemsPerFilter,
                     sortBy: 'id',
                     desc: true,
                     q: searchQuery,
-                    id: filterType,
+                    id: filter_type,
                     returnContent: true
                 });
             }
 
             // for papers, try to find a DOI
-            if (filterType === CLASSES.PAPER && REGEX.DOI.test(decodeURIComponent(searchQuery))) {
+            if (filter_type === CLASSES.PAPER && REGEX.DOI.test(decodeURIComponent(searchQuery))) {
                 try {
                     const paper = await getPaperByDOI(searchQuery);
                     results.push({ label: paper.title, id: paper.id, class: CLASSES.PAPER });
@@ -212,17 +212,17 @@ class Search extends Component {
 
         if (results.length > 0) {
             this.setState(state => {
-                state.results[filterType] = [...(state.results[filterType] || []), ...results];
-                state.isNextPageLoading[filterType] = false;
-                state.hasNextPage[filterType] = results.length < this.itemsPerFilter ? false : true;
-                state.currentPage[filterType] = (state.currentPage[filterType] || 0) + 1;
+                state.results[filter_type] = [...(state.results[filter_type] || []), ...results];
+                state.isNextPageLoading[filter_type] = false;
+                state.hasNextPage[filter_type] = results.length < this.itemsPerFilter ? false : true;
+                state.currentPage[filter_type] = (state.currentPage[filter_type] || 0) + 1;
                 return state;
             });
         } else {
             this.setState(state => {
-                state.isNextPageLoading[filterType] = false;
-                state.hasNextPage[filterType] = false;
-                state.isLastPageReached[filterType] = true;
+                state.isNextPageLoading[filter_type] = false;
+                state.hasNextPage[filter_type] = false;
+                state.isLastPageReached[filter_type] = true;
                 return state;
             });
         }
