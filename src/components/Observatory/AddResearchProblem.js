@@ -3,9 +3,8 @@ import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Label, FormGroup } 
 import { addResourceToObservatory } from 'services/backend/resources';
 import { toast } from 'react-toastify';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
-import { resourcesUrl } from 'services/backend/resources';
 import PropTypes from 'prop-types';
-import { CLASSES } from 'constants/graphSettings';
+import { CLASSES, ENTITIES } from 'constants/graphSettings';
 
 class AddResearchProblem extends Component {
     constructor(props) {
@@ -55,7 +54,7 @@ class AddResearchProblem extends Component {
                             <FormGroup>
                                 <Label for="ResearchProblem">Research problem</Label>
                                 <AutoComplete
-                                    requestUrl={resourcesUrl}
+                                    entityType={ENTITIES.RESOURCE}
                                     optionsClass={CLASSES.PROBLEM}
                                     placeholder="Select a research problem"
                                     onItemSelected={async rp => {

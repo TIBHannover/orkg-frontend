@@ -19,7 +19,7 @@ import {
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner, faEllipsisV, faSortUp, faSortDown } from '@fortawesome/free-solid-svg-icons';
 import { getStatementsBySubject, getStatementsByObject } from 'services/backend/statements';
-import { getRDFDataCubeVocabularyClasses } from 'services/backend/classes';
+import { getClasses } from 'services/backend/classes';
 import { useTable, usePagination, useSortBy, useFilters } from 'react-table';
 import { sortMethod } from 'utils';
 import CUBE from 'olap-cube';
@@ -187,7 +187,7 @@ const RDFDataCube = props => {
         let resources = {};
         if (props.resourceId) {
             // Get all the classes
-            let classes = await getRDFDataCubeVocabularyClasses();
+            let classes = await getClasses({ q: 'qb:', returnContent: true });
             // Convert to an object { class_label: class_ID }
             classes = Object.assign({}, ...classes.map(item => ({ [item.label]: item.id })));
             // Get Data Structure Definition (DSD)
