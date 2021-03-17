@@ -73,7 +73,7 @@ const PropertyValue = ({ id, label, similar, filterControlData, updateRulesOfPro
 
     return (
         <>
-            <Button onClick={handleOpenStatementBrowser} color="link" className="text-light m-0 p-0">
+            <Button onClick={handleOpenStatementBrowser} color="link" className="text-left text-light m-0 p-0">
                 <DescriptionTooltip
                     id={id}
                     typeId={PREDICATE_TYPE_ID}
