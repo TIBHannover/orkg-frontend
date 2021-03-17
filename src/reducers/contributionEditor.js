@@ -9,7 +9,8 @@ const initialState = {
     literals: {},
     properties: {},
     papers: {},
-    isLoading: false
+    isLoading: false,
+    hasFailed: false
 };
 
 export default function reducer(state = initialState, action) {
@@ -96,6 +97,11 @@ export default function reducer(state = initialState, action) {
             return dotProp.set(newState, 'statements', omit(state.statements, statementIds));
         }
 
+        case type.CONTRIBUTION_EDITOR_SET_HAS_FAILED: {
+            const { hasFailed } = action.payload;
+            return dotProp.set({ ...state }, `hasFailed`, hasFailed);
+        }
+
         case type.CONTRIBUTION_EDITOR_PROPERTY_UPDATE: {
             const { id, newProperty, statementIds } = action.payload;
 
@@ -107,6 +113,12 @@ export default function reducer(state = initialState, action) {
             }
 
             return newState;
+        }
+
+        case '@@router/LOCATION_CHANGE': {
+            return {
+                ...initialState
+            };
         }
 
         default: {

@@ -31,14 +31,21 @@ const Classes = () => {
             items: pageSize,
             sortBy: 'created_at',
             desc: true
-        }).then(result => {
-            setClasses(prevClasses => [...prevClasses, ...result.content]);
-            setIsNextPageLoading(false);
-            setHasNextPage(!result.last);
-            setIsLastPageReached(result.last);
-            setPage(prevPage => prevPage + 1);
-            setTotalElements(result.totalElements);
-        });
+        })
+            .then(result => {
+                setClasses(prevClasses => [...prevClasses, ...result.content]);
+                setIsNextPageLoading(false);
+                setHasNextPage(!result.last);
+                setIsLastPageReached(result.last);
+                setPage(prevPage => prevPage + 1);
+                setTotalElements(result.totalElements);
+            })
+            .catch(error => {
+                setIsNextPageLoading(false);
+                setHasNextPage(false);
+                setIsLastPageReached(false);
+                console.log(error);
+            });
     };
 
     return (
@@ -47,7 +54,7 @@ const Classes = () => {
                 <div className="d-flex flex-grow-1 mt-4 mb-4">
                     <h1 className="h4">View all classes</h1>
                     <div className="text-muted ml-3 mt-1">
-                        {totalElements === 0 && isNextPageLoading ? <Icon icon={faSpinner} spin /> : totalElements} Class
+                        {totalElements === 0 && isNextPageLoading ? <Icon icon={faSpinner} spin /> : totalElements} classes
                     </div>
                 </div>
                 <ButtonGroup>
@@ -96,7 +103,7 @@ const Classes = () => {
                             <Icon icon={faAngleDoubleDown} /> Load more classes
                         </ListGroupItem>
                     )}
-                    {!hasNextPage && isLastPageReached && page > 1 && (
+                    {!hasNextPage && isLastPageReached && page > 1 && totalElements !== 0 && (
                         <ListGroupItem tag="div" className="text-center">
                             You have reached the last page.
                         </ListGroupItem>

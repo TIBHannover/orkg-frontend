@@ -33,14 +33,21 @@ const Properties = () => {
             items: pageSize,
             sortBy: 'created_at',
             desc: true
-        }).then(result => {
-            setProperties(prevProperties => [...prevProperties, ...result.content]);
-            setIsNextPageLoading(false);
-            setHasNextPage(!result.last);
-            setIsLastPageReached(result.last);
-            setPage(prevPage => prevPage + 1);
-            setTotalElements(result.totalElements);
-        });
+        })
+            .then(result => {
+                setProperties(prevProperties => [...prevProperties, ...result.content]);
+                setIsNextPageLoading(false);
+                setHasNextPage(!result.last);
+                setIsLastPageReached(result.last);
+                setPage(prevPage => prevPage + 1);
+                setTotalElements(result.totalElements);
+            })
+            .catch(error => {
+                setIsNextPageLoading(false);
+                setHasNextPage(false);
+                setIsLastPageReached(false);
+                console.log(error);
+            });
     };
 
     return (
@@ -49,7 +56,7 @@ const Properties = () => {
                 <div className="d-flex flex-grow-1 mt-4 mb-4">
                     <h1 className="h4">View all properties</h1>
                     <div className="text-muted ml-3 mt-1">
-                        {totalElements === 0 && isNextPageLoading ? <Icon icon={faSpinner} spin /> : totalElements} Property
+                        {totalElements === 0 && isNextPageLoading ? <Icon icon={faSpinner} spin /> : totalElements} properties
                     </div>
                 </div>
                 <ButtonGroup>
@@ -93,7 +100,7 @@ const Properties = () => {
                             <Icon icon={faAngleDoubleDown} /> Load more properties
                         </ListGroupItem>
                     )}
-                    {!hasNextPage && isLastPageReached && page > 1 && (
+                    {!hasNextPage && isLastPageReached && page > 1 && totalElements !== 0 && (
                         <ListGroupItem tag="div" className="text-center">
                             You have reached the last page.
                         </ListGroupItem>

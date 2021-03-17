@@ -27,6 +27,9 @@ class StatementBrowserDialog extends Component {
             case PREDICATE_TYPE_ID:
                 route = ROUTES.PROPERTY;
                 break;
+            case 'property':
+                route = ROUTES.PROPERTY;
+                break;
             case CLASS_TYPE_ID:
                 route = ROUTES.CLASS;
                 break;

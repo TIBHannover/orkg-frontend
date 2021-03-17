@@ -57,7 +57,9 @@ const render = (ui, { initialState, store = configureStore(initialState), ...ren
     const wrapper = ({ children }) => (
         <Provider store={store}>
             <ThemeProvider theme={theme}>
-                <ConnectedRouter history={history}>{children}</ConnectedRouter>
+                <ConnectedRouter history={history} noInitialPop>
+                    {children}
+                </ConnectedRouter>
             </ThemeProvider>
         </Provider>
     );

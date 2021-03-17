@@ -25,7 +25,7 @@ class ShortRecord extends Component {
             <StyledShortRecord className="list-group-item list-group-item-action">
                 <Row>
                     <Col sm={12}>
-                        <Link to={this.props.href}>{this.props.header}</Link>
+                        <Link to={this.props.href}>{this.props.header ? this.props.header : <i>No label</i>}</Link>
                         <br />
                         <small>{this.props.children}</small>
                     </Col>
