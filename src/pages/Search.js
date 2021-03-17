@@ -75,7 +75,7 @@ class Search extends Component {
             }
         ];
 
-        this.ignoredClasses = [CLASSES.CONTRIBUTION];
+        this.ignoredClasses = [CLASSES.CONTRIBUTION, CLASSES.CONTRIBUTION_DELETED, CLASSES.PAPER_DELETED];
 
         const selectedFiltersStrings = getArrayParamFromQueryString(decodeURIComponent(this.props.location.search), 'types');
         // ensure the array format is accepted by the autocomplete component
