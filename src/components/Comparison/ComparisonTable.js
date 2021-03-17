@@ -192,7 +192,7 @@ const ComparisonTable = props => {
                           };
                       }))
         ];
-    }, [props.transpose, props.properties, props.contributions]);
+    }, [props.transpose, props.properties, props.contributions, props.viewDensity]);
 
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable(
         {
