@@ -16,6 +16,8 @@ import { getArrayParamFromQueryString } from 'utils';
 import { unionBy } from 'lodash';
 import { toast } from 'react-toastify';
 import { CLASSES } from 'constants/graphSettings';
+import { getPaperByDOI } from 'services/backend/misc';
+import REGEX from 'constants/regex';
 
 class Search extends Component {
     constructor(props) {
@@ -154,68 +156,76 @@ class Search extends Component {
         return Object.keys(this.state.isNextPageLoading).some(v => this.state.isNextPageLoading[v] === true) || this.state.loadingFilterClasses;
     };
 
-    loadMoreResults = (searchQuery, filter_type) => {
+    loadMoreResults = async (searchQuery, filter_type) => {
         if (!searchQuery || searchQuery.length === 0) {
             return;
         }
         this.setState({ isNextPageLoading: { ...this.state.isNextPageLoading, [filter_type]: true } });
-        let request;
-        if (filter_type === PREDICATE_TYPE_ID) {
-            request = getPredicates({
-                page: this.state.currentPage[PREDICATE_TYPE_ID] || 1,
-                items: this.itemsPerFilter,
-                sortBy: 'id',
-                desc: true,
-                q: searchQuery,
-                returnContent: true
-            });
-        } else if (filter_type === RESOURCE_TYPE_ID) {
-            request = getResources({
-                page: this.state.currentPage[RESOURCE_TYPE_ID] || 1,
-                items: this.itemsPerFilter,
-                sortBy: 'id',
-                desc: true,
-                q: searchQuery,
-                exclude: this.defaultsFilters
-                    .map(df => df.id)
-                    .concat(this.ignored_classes)
-                    .join(','),
-                returnContent: true
+
+        let results = [];
+
+        try {
+            if (filter_type === PREDICATE_TYPE_ID) {
+                results = await getPredicates({
+                    page: this.state.currentPage[PREDICATE_TYPE_ID] || 0,
+                    items: this.itemsPerFilter,
+                    sortBy: 'id',
+                    desc: true,
+                    q: searchQuery,
+                    returnContent: true
+                });
+            } else if (filter_type === RESOURCE_TYPE_ID) {
+                results = await getResources({
+                    page: this.state.currentPage[RESOURCE_TYPE_ID] || 0,
+                    items: this.itemsPerFilter,
+                    sortBy: 'id',
+                    desc: true,
+                    q: searchQuery,
+                    exclude: this.defaultsFilters
+                        .map(df => df.id)
+                        .concat(this.ignored_classes)
+                        .join(','),
+                    returnContent: true
+                });
+            } else {
+                results = await getResourcesByClass({
+                    page: this.state.currentPage[filter_type] || 0,
+                    items: this.itemsPerFilter,
+                    sortBy: 'id',
+                    desc: true,
+                    q: searchQuery,
+                    id: filter_type,
+                    returnContent: true
+                });
+            }
+
+            // for papers, try to find a DOI
+            if (filter_type === CLASSES.PAPER && REGEX.DOI.test(decodeURIComponent(searchQuery))) {
+                try {
+                    const paper = await getPaperByDOI(searchQuery);
+                    results.push({ label: paper.title, id: paper.id, class: CLASSES.PAPER });
+                } catch (e) {}
+            }
+        } catch (e) {
+            toast.error('Something went wrong while loading search results.');
+        }
+
+        if (results.length > 0) {
+            this.setState(state => {
+                state.results[filter_type] = [...(state.results[filter_type] || []), ...results];
+                state.isNextPageLoading[filter_type] = false;
+                state.hasNextPage[filter_type] = results.length < this.itemsPerFilter ? false : true;
+                state.currentPage[filter_type] = (state.currentPage[filter_type] || 0) + 1;
+                return state;
             });
         } else {
-            request = getResourcesByClass({
-                page: this.state.currentPage[filter_type] || 1,
-                items: this.itemsPerFilter,
-                sortBy: 'id',
-                desc: true,
-                q: searchQuery,
-                id: filter_type,
-                returnContent: true
+            this.setState(state => {
+                state.isNextPageLoading[filter_type] = false;
+                state.hasNextPage[filter_type] = false;
+                state.isLastPageReached[filter_type] = true;
+                return state;
             });
         }
-        request
-            .then(results => {
-                if (results.length > 0) {
-                    this.setState(state => {
-                        state.results[filter_type] = [...(state.results[filter_type] || []), ...results];
-                        state.isNextPageLoading[filter_type] = false;
-                        state.hasNextPage[filter_type] = results.length < this.itemsPerFilter ? false : true;
-                        state.currentPage[filter_type] = (state.currentPage[filter_type] || 1) + 1;
-                        return state;
-                    });
-                } else {
-                    this.setState(state => {
-                        state.isNextPageLoading[filter_type] = false;
-                        state.hasNextPage[filter_type] = false;
-                        state.isLastPageReached[filter_type] = true;
-                        return state;
-                    });
-                }
-            })
-            .catch(error => {
-                console.log(error);
-                toast.error('Something went wrong while loading search results.');
-            });
     };
 
     toggleFilter = async filterClass => {
