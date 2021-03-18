@@ -30,6 +30,7 @@ import SuggestedTemplates from 'components/StatementBrowser/SuggestedTemplates/S
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { PREDICATES, CLASSES } from 'constants/graphSettings';
 import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
+import { reverseWithSlug } from 'utils';
 
 const Title = styled.div`
     font-size: 18px;
@@ -277,7 +278,12 @@ class Contributions extends Component {
                                                         this.props.researchProblems.length > 0 &&
                                                         this.props.researchProblems.map((problem, index) => (
                                                             <span key={index}>
-                                                                <Link to={reverse(ROUTES.RESEARCH_PROBLEM, { researchProblemId: problem.id })}>
+                                                                <Link
+                                                                    to={reverseWithSlug(ROUTES.RESEARCH_PROBLEM, {
+                                                                        researchProblemId: problem.id,
+                                                                        slug: problem.label
+                                                                    })}
+                                                                >
                                                                     <ResearchProblemButton className="btn btn-link p-0 border-0 align-baseline">
                                                                         <DescriptionTooltip id={problem.id} typeId={CLASSES.PROBLEM}>
                                                                             {problem.label}

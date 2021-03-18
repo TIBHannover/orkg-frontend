@@ -10,6 +10,7 @@ import { Button } from 'reactstrap';
 import ROUTES from 'constants/routes.js';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import { PREDICATES, MISC, CLASSES } from 'constants/graphSettings';
+import { reverseWithSlug } from 'utils';
 
 /* Bootstrap card column is not working correctly working with vertical alignment,
 thus used custom styling here */
@@ -193,7 +194,9 @@ class ResearchFieldCards extends Component {
 
         const showPapers = this.state.breadcrumb.length > 1;
         const currentField = this.state.breadcrumb[this.state.breadcrumb.length - 1];
-        const researchFieldLink = this.state.breadcrumb.length ? reverse(ROUTES.RESEARCH_FIELD, { researchFieldId: currentField.id }) : null;
+        const researchFieldLink = this.state.breadcrumb.length
+            ? reverseWithSlug(ROUTES.RESEARCH_FIELD, { researchFieldId: currentField.id, slug: currentField.label })
+            : null;
 
         return (
             <div className="mt-3">

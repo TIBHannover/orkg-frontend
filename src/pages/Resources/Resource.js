@@ -32,6 +32,7 @@ import { getVisualization } from 'services/similarity';
 import GDCVisualizationRenderer from 'libs/selfVisModel/RenderingComponents/GDCVisualizationRenderer';
 import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
 import { CLASS_TYPE_ID } from 'constants/misc';
+import { reverseWithSlug } from 'utils';
 
 const DEDICATED_PAGE_LINKS = {
     [CLASSES.PAPER]: {
@@ -42,7 +43,8 @@ const DEDICATED_PAGE_LINKS = {
     [CLASSES.PROBLEM]: {
         label: 'Research problem',
         route: ROUTES.RESEARCH_PROBLEM,
-        routeParams: 'researchProblemId'
+        routeParams: 'researchProblemId',
+        hasSlug: true
     },
     [CLASSES.COMPARISON]: {
         label: 'Comparison',
@@ -57,7 +59,8 @@ const DEDICATED_PAGE_LINKS = {
     [CLASSES.RESEARCH_FIELD]: {
         label: 'Research field',
         route: ROUTES.RESEARCH_FIELD,
-        routeParams: 'researchFieldId'
+        routeParams: 'researchFieldId',
+        hasSlug: true
     },
     [CLASSES.VENUE]: {
         label: 'Venue',
@@ -214,7 +217,10 @@ function Resource(props) {
                                     color="darkblue"
                                     size="sm"
                                     tag={Link}
-                                    to={reverse(dedicatedLink.route, { [dedicatedLink.routeParams]: props.match.params.id })}
+                                    to={reverseWithSlug(dedicatedLink.route, {
+                                        [dedicatedLink.routeParams]: props.match.params.id,
+                                        slug: dedicatedLink.hasSlug ? label : undefined
+                                    })}
                                     style={{ marginRight: 2 }}
                                 >
                                     <Icon icon={faExternalLinkAlt} className="mr-1" /> {dedicatedLink.label} view

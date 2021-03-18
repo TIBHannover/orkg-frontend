@@ -9,6 +9,7 @@ import { reverse } from 'named-urls';
 import { useCallback, useEffect, useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { Button, ButtonDropdown, Col, Container, DropdownItem, DropdownMenu, DropdownToggle, Row } from 'reactstrap';
+import { reverseWithSlug } from 'utils';
 
 const ResearchFields = () => {
     const [menuOpen, setMenuOpen] = useState(false);
@@ -78,7 +79,10 @@ const ResearchFields = () => {
                                         {selectedResearchField !== MISC.RESEARCH_FIELD_MAIN && (
                                             <Button
                                                 tag={Link}
-                                                to={reverse(ROUTES.RESEARCH_FIELD, { researchFieldId: selectedResearchField })}
+                                                to={reverseWithSlug(ROUTES.RESEARCH_FIELD, {
+                                                    researchFieldId: selectedResearchField,
+                                                    slug: researchFieldLabel
+                                                })}
                                                 color="light"
                                                 size="sm"
                                                 className="flex-shrink-0 ml-2"
