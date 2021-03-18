@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Badge } from 'reactstrap';
+//import { Badge } from 'reactstrap';
 import { SmallButton } from 'components/styled';
 import ROUTES from 'constants/routes.js';
 import { Link } from 'react-router-dom';
@@ -22,15 +22,15 @@ const ResearchProblemsBox = ({ researchFieldId }) => {
                 {!isLoading && totalElements > 0 && (
                     <div className="pl-3 pt-2">
                         {problems.map(rp => (
-                            <li key={`rp${rp.problem.id}`}>
-                                <Tippy content={rp.problem.label} disabled={rp.problem.label?.length <= 70}>
-                                    <Link to={reverse(ROUTES.RESEARCH_PROBLEM, { researchProblemId: rp.problem.id })}>
-                                        {truncate(rp.problem.label, { length: 70 })}{' '}
-                                        <small>
+                            <li key={`rp${rp.id}`}>
+                                <Tippy content={rp.label} disabled={rp.label?.length <= 70}>
+                                    <Link to={reverse(ROUTES.RESEARCH_PROBLEM, { researchProblemId: rp.id })}>
+                                        {truncate(rp.label, { length: 70 })}
+                                        {/** <small>
                                             <Badge className="ml-1" color="info" pill>
                                                 {rp.papers}
                                             </Badge>
-                                        </small>
+                                        </small>*/}
                                     </Link>
                                 </Tippy>
                             </li>

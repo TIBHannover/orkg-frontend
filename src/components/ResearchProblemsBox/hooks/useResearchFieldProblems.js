@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
-import { getResearchProblemsByResearchFieldIdCountingPapers } from 'services/backend/researchFields';
+import { getResearchProblemsByResearchFieldId } from 'services/backend/researchFields';
 
-function useResearchFieldProblems({ researchFieldId, initialSort /*, initialIncludeSubFields,*/, pageSize = 10 }) {
+function useResearchFieldProblems({ researchFieldId, initialSort, initialIncludeSubFields, pageSize = 10 }) {
     const [isLoading, setIsLoading] = useState(false);
     const [hasNextPage, setHasNextPage] = useState(false);
     const [isLastPageReached, setIsLastPageReached] = useState(false);
@@ -9,17 +9,19 @@ function useResearchFieldProblems({ researchFieldId, initialSort /*, initialIncl
     const [problems, setProblems] = useState([]);
     const [sort, setSort] = useState(initialSort);
     const [totalElements, setTotalElements] = useState(0);
-    //const [includeSubFields, setIncludeSubFields] = useState(initialIncludeSubFields);
+    const [includeSubFields, setIncludeSubFields] = useState(initialIncludeSubFields);
 
     const loadData = useCallback(
         page => {
             setIsLoading(true);
             // Get the problems of research field
-            getResearchProblemsByResearchFieldIdCountingPapers({
+            getResearchProblemsByResearchFieldId({
                 id: researchFieldId,
                 page: page,
-                items: pageSize
-                /*subfields: includeSubFields*/
+                items: pageSize,
+                sortBy: 'created_at',
+                desc: sort === 'newest' ? true : false,
+                subfields: includeSubFields
             })
                 .then(result => {
                     setProblems(prevResources => [...prevResources, ...result.content]);
@@ -36,7 +38,7 @@ function useResearchFieldProblems({ researchFieldId, initialSort /*, initialIncl
                     setIsLastPageReached(page > 1 ? true : false);
                 });
         },
-        [/*includeSubFields,*/ researchFieldId, pageSize]
+        [includeSubFields, sort, researchFieldId, pageSize]
     );
 
     // reset resources when the researchFieldId has changed
@@ -46,7 +48,7 @@ function useResearchFieldProblems({ researchFieldId, initialSort /*, initialIncl
         setIsLastPageReached(false);
         setPage(0);
         setTotalElements(0);
-    }, [researchFieldId /*, includeSubFields*/]);
+    }, [researchFieldId, includeSubFields, sort]);
 
     useEffect(() => {
         loadData(0);
@@ -64,11 +66,11 @@ function useResearchFieldProblems({ researchFieldId, initialSort /*, initialIncl
         hasNextPage,
         isLastPageReached,
         sort,
-        /*includeSubFields,*/
+        includeSubFields,
         totalElements,
         page,
         handleLoadMore,
-        /*setIncludeSubFields,*/
+        setIncludeSubFields,
         setSort
     };
 }

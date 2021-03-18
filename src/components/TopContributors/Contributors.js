@@ -103,7 +103,7 @@ const Contributors = ({ researchFieldId }) => {
                             </Tippy>
                         </div>
                     ))}
-                    {contributors.length > 1 && (
+                    {contributors.length > 18 && (
                         <Tippy key="contributor" content="View More">
                             <StyledDotGravatar onClick={() => setOpenModal(v => !v)} className="rounded-circle">
                                 <Icon icon={faEllipsisH} />

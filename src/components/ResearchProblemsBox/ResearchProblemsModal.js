@@ -1,5 +1,6 @@
 import ContentLoader from 'react-content-loader';
 import useResearchFieldProblems from 'components/ResearchProblemsBox/hooks/useResearchFieldProblems';
+import ProblemsDropdownFilter from './ProblemsDropdownFilter';
 import { Modal, ModalBody, ModalHeader } from 'reactstrap';
 import ROUTES from 'constants/routes.js';
 import { Link } from 'react-router-dom';
@@ -7,20 +8,47 @@ import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 
 const ResearchProblemsModal = ({ researchFieldId, openModal, setOpenModal }) => {
-    const { problems, isLoading, hasNextPage, isLastPageReached, page, handleLoadMore } = useResearchFieldProblems({ researchFieldId, pageSize: 10 });
+    const {
+        problems,
+        page,
+        sort,
+        includeSubFields,
+        isLoading,
+        hasNextPage,
+        isLastPageReached,
+        setSort,
+        setIncludeSubFields,
+        handleLoadMore
+    } = useResearchFieldProblems({
+        researchFieldId,
+        pageSize: 10,
+        initialSort: 'newest',
+        initialIncludeSubFields: true
+    });
 
     return (
         <Modal isOpen={openModal} toggle={() => setOpenModal(v => !v)} size="lg">
-            <ModalHeader toggle={() => setOpenModal(v => !v)}>Research problems</ModalHeader>
+            <ModalHeader toggle={() => setOpenModal(v => !v)}>
+                Research problems
+                <div style={{ display: 'inline-block', marginLeft: '20px' }}>
+                    <ProblemsDropdownFilter
+                        sort={sort}
+                        isLoading={isLoading}
+                        includeSubFields={includeSubFields}
+                        setSort={setSort}
+                        setIncludeSubFields={setIncludeSubFields}
+                    />
+                </div>
+            </ModalHeader>
             <ModalBody>
                 <div className="pl-3 pr-3">
                     {problems.map((rp, index) => (
-                        <div className="pt-2 pb-2" key={`rp${rp.problem.id}`}>
+                        <div className="pt-2 pb-2" key={`rp${rp.id}`}>
                             <div className="d-flex">
                                 <div>
-                                    <Link to={reverse(ROUTES.RESEARCH_PROBLEM, { researchProblemId: rp.problem.id })}>{rp.problem.label} </Link>
+                                    <Link to={reverse(ROUTES.RESEARCH_PROBLEM, { researchProblemId: rp.id })}>{rp.label} </Link>
                                     <br />
-                                    {rp.papers} paper
+                                    {/* {rp.papers} paper */}
                                 </div>
                             </div>
                             {problems.length - 1 !== index && <hr className="mb-0 mt-3" />}
