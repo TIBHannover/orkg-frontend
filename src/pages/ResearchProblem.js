@@ -8,7 +8,6 @@ import useResearchProblemPapers from 'components/ResearchProblem/hooks/useResear
 import useResearchProblemResearchFields from 'components/ResearchProblem/hooks/useResearchProblemResearchFields';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { reverse } from 'named-urls';
 //import LeaderBoard from 'components/ResearchProblem/LeaderBoard';
 import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
 import PaperCard from 'components/PaperCard/PaperCard';
@@ -74,7 +73,11 @@ function ResearchProblem(props) {
                                     {parentResearchProblems.map((field, index) => (
                                         <span key={field.id}>
                                             {index !== parentResearchProblems.length - 1 ? (
-                                                <Link to={reverse(ROUTES.RESEARCH_PROBLEM, { researchProblemId: field.id })}>{field.label}</Link>
+                                                <Link
+                                                    to={reverseWithSlug(ROUTES.RESEARCH_PROBLEM, { researchProblemId: field.id, slug: field.label })}
+                                                >
+                                                    {field.label}
+                                                </Link>
                                             ) : (
                                                 field.label
                                             )}
@@ -93,7 +96,14 @@ function ResearchProblem(props) {
                                         <>
                                             {researchProblemData.subProblems.map(subP => (
                                                 <div key={`subrp${subP.id}`}>
-                                                    <Link to={reverse(ROUTES.RESEARCH_PROBLEM, { researchProblemId: subP.id })}>{subP.label}</Link>
+                                                    <Link
+                                                        to={reverseWithSlug(ROUTES.RESEARCH_PROBLEM, {
+                                                            researchProblemId: subP.id,
+                                                            slug: subP.label
+                                                        })}
+                                                    >
+                                                        {subP.label}
+                                                    </Link>
                                                 </div>
                                             ))}
                                         </>
@@ -151,7 +161,14 @@ function ResearchProblem(props) {
                                         <>
                                             {researchProblemData.superProblems.map(supP => (
                                                 <div key={`suprp${supP.id}`}>
-                                                    <Link to={reverse(ROUTES.RESEARCH_PROBLEM, { researchProblemId: supP.id })}>{supP.label}</Link>
+                                                    <Link
+                                                        to={reverseWithSlug(ROUTES.RESEARCH_PROBLEM, {
+                                                            researchProblemId: supP.id,
+                                                            slug: supP.label
+                                                        })}
+                                                    >
+                                                        {supP.label}
+                                                    </Link>
                                                 </div>
                                             ))}
                                         </>

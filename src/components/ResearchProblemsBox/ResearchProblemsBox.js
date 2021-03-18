@@ -5,10 +5,10 @@ import ROUTES from 'constants/routes.js';
 import { Link } from 'react-router-dom';
 import ContentLoader from 'react-content-loader';
 import useResearchFieldProblems from 'components/ResearchProblemsBox/hooks/useResearchFieldProblems';
-import { reverse } from 'named-urls';
 import ResearchProblemsModal from './ResearchProblemsModal';
 import { truncate } from 'lodash';
 import PropTypes from 'prop-types';
+import { reverseWithSlug } from 'utils';
 import Tippy from '@tippyjs/react';
 
 const ResearchProblemsBox = ({ researchFieldId }) => {
@@ -24,7 +24,7 @@ const ResearchProblemsBox = ({ researchFieldId }) => {
                         {problems.map(rp => (
                             <li key={`rp${rp.id}`}>
                                 <Tippy content={rp.label} disabled={rp.label?.length <= 70}>
-                                    <Link to={reverse(ROUTES.RESEARCH_PROBLEM, { researchProblemId: rp.id })}>
+                                    <Link to={reverseWithSlug(ROUTES.RESEARCH_PROBLEM, { researchProblemId: rp.id, slug: rp.label })}>
                                         {truncate(rp.label, { length: 70 })}
                                         {/** <small>
                                             <Badge className="ml-1" color="info" pill>

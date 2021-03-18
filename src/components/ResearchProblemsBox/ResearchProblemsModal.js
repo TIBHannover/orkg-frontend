@@ -4,7 +4,7 @@ import ProblemsDropdownFilter from './ProblemsDropdownFilter';
 import { Modal, ModalBody, ModalHeader } from 'reactstrap';
 import ROUTES from 'constants/routes.js';
 import { Link } from 'react-router-dom';
-import { reverse } from 'named-urls';
+import { reverseWithSlug } from 'utils';
 import PropTypes from 'prop-types';
 
 const ResearchProblemsModal = ({ researchFieldId, openModal, setOpenModal }) => {
@@ -46,7 +46,9 @@ const ResearchProblemsModal = ({ researchFieldId, openModal, setOpenModal }) => 
                         <div className="pt-2 pb-2" key={`rp${rp.id}`}>
                             <div className="d-flex">
                                 <div>
-                                    <Link to={reverse(ROUTES.RESEARCH_PROBLEM, { researchProblemId: rp.id })}>{rp.label} </Link>
+                                    <Link to={reverseWithSlug(ROUTES.RESEARCH_PROBLEM, { researchProblemId: rp.id, slug: rp.label })}>
+                                        {rp.label}{' '}
+                                    </Link>
                                     <br />
                                     {/* {rp.papers} paper */}
                                 </div>

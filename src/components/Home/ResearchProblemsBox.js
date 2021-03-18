@@ -3,7 +3,7 @@ import { SmallButton } from 'components/styled';
 import ROUTES from 'constants/routes.js';
 import { Link } from 'react-router-dom';
 import useResearchFieldProblems from 'components/Home/hooks/useResearchFieldProblems';
-import { reverse } from 'named-urls';
+import { reverseWithSlug } from 'utils';
 import PropTypes from 'prop-types';
 
 const ResearchProblemsBox = ({ id }) => {
@@ -17,7 +17,7 @@ const ResearchProblemsBox = ({ id }) => {
                     <ul className="pl-3 pt-2">
                         {researchProblems.slice(0, 5).map(rp => (
                             <li key={`rp${rp.id}`}>
-                                <Link to={reverse(ROUTES.RESEARCH_PROBLEM, { researchProblemId: rp.id })}>
+                                <Link to={reverseWithSlug(ROUTES.RESEARCH_PROBLEM, { researchProblemId: rp.id, slug: rp.label })}>
                                     {rp.researchProblem}{' '}
                                     <small>
                                         <Badge className="ml-1" color="info" pill>

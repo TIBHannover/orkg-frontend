@@ -9,6 +9,7 @@ import { getParentResearchFields } from 'services/backend/statements';
 import { truncate } from 'lodash';
 import PropTypes from 'prop-types';
 import Tippy from '@tippyjs/react';
+import { reverseWithSlug } from 'utils';
 
 const BreadcrumbStyled = styled.ul`
     list-style: none;
@@ -129,7 +130,9 @@ const RelativeBreadcrumbs = ({ researchField }) => {
                                         <span key={field.id}>
                                             <Link
                                                 to={
-                                                    index === 0 ? reverse(ROUTES.HOME) : reverse(ROUTES.RESEARCH_FIELD, { researchFieldId: field.id })
+                                                    index === 0
+                                                        ? reverse(ROUTES.HOME)
+                                                        : reverseWithSlug(ROUTES.RESEARCH_FIELD, { researchFieldId: field.id, slug: field.label })
                                                 }
                                             >
                                                 {index === 0 ? <Icon className="mr-1" icon={faHome} /> : field.label}
@@ -144,7 +147,7 @@ const RelativeBreadcrumbs = ({ researchField }) => {
                         </div>
                     }
                 >
-                    <Link to={reverse(ROUTES.RESEARCH_FIELD, { researchFieldId: researchField.id })}>
+                    <Link to={reverseWithSlug(ROUTES.RESEARCH_FIELD, { researchFieldId: researchField.id, slug: researchField.label })}>
                         <Icon size="sm" icon={faEllipsisH} className="ml-2 mr-1" />
                     </Link>
                 </Tippy>
@@ -152,7 +155,7 @@ const RelativeBreadcrumbs = ({ researchField }) => {
 
             <li>
                 <Tippy content={researchField.label} disabled={researchField.label?.length <= 15}>
-                    <Link to={reverse(ROUTES.RESEARCH_FIELD, { researchFieldId: researchField.id })}>
+                    <Link to={reverseWithSlug(ROUTES.RESEARCH_FIELD, { researchFieldId: researchField.id, slug: researchField.label })}>
                         {truncate(researchField.label, { length: 15 })}
                     </Link>
                 </Tippy>
