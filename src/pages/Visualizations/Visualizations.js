@@ -11,13 +11,13 @@ import { CLASSES, PREDICATES } from 'constants/graphSettings';
 import HeaderSearchButton from 'components/HeaderSearchButton/HeaderSearchButton';
 
 const Visualizations = () => {
-    const pageSize = 25;
+    const pageSize = 1;
     const [visualizations, setVisualizations] = useState([]);
     const [isNextPageLoading, setIsNextPageLoading] = useState(false);
     const [hasNextPage, setHasNextPage] = useState(false);
-    const [page, setPage] = useState(1);
+    const [page, setPage] = useState(0);
     const [isLastPageReached, setIsLastPageReached] = useState(false);
-    //const [totalElements, setTotalElements] = useState(0);
+    const [totalElements, setTotalElements] = useState(0);
 
     useEffect(() => {
         document.title = 'Visualizations - ORKG';
@@ -35,53 +35,51 @@ const Visualizations = () => {
             sortBy: 'created_at',
             desc: true
         }).then(result => {
-            if (result.length > 0) {
-                // Fetch the data of each visualization
-                getStatementsBySubjects({ ids: result.map(p => p.id) })
-                    .then(visualizationsStatements => {
-                        const visualizationsCalls = visualizationsStatements.map(visualizationStatements => {
-                            // Fetch the comparison id of each visualization
-                            return getStatementsByObjectAndPredicate({
-                                objectId: visualizationStatements.id,
-                                predicateId: PREDICATES.HAS_VISUALIZATION
-                            }).then(comparisonStatement => ({
-                                comparisonId: comparisonStatement.length > 0 ? comparisonStatement[0].subject.id : null,
-                                ...getVisualizationData(
-                                    visualizationStatements.id,
-                                    find(result, { id: visualizationStatements.id }).label,
-                                    visualizationStatements.statements
-                                )
-                            }));
-                        });
-                        return Promise.all(visualizationsCalls);
-                    })
-                    .then(visualizationsData => {
-                        setVisualizations(prevVisualizations => [...prevVisualizations, ...visualizationsData]);
-                        setIsNextPageLoading(false);
-                        setHasNextPage(visualizationsData.length < pageSize ? false : true);
-                        setPage(prevPage => prevPage + 1);
-                        //setIsLastPageReached(result.last);
-                        //setTotalElements(result.totalElements);
-                    })
-                    .catch(error => {
-                        setIsLastPageReached(true);
-                        setHasNextPage(false);
-                        setIsNextPageLoading(false);
-                        console.log(error);
+            // Fetch the data of each visualization
+            getStatementsBySubjects({ ids: result.content.map(p => p.id) })
+                .then(visualizationsStatements => {
+                    const visualizationsCalls = visualizationsStatements.map(visualizationStatements => {
+                        // Fetch the comparison id of each visualization
+                        return getStatementsByObjectAndPredicate({
+                            objectId: visualizationStatements.id,
+                            predicateId: PREDICATES.HAS_VISUALIZATION
+                        }).then(comparisonStatement => ({
+                            comparisonId: comparisonStatement.length > 0 ? comparisonStatement[0].subject.id : null,
+                            ...getVisualizationData(
+                                visualizationStatements.id,
+                                find(result.content, { id: visualizationStatements.id }).label,
+                                visualizationStatements.statements
+                            )
+                        }));
                     });
-            } else {
-                setIsLastPageReached(true);
-                setHasNextPage(false);
-                setIsNextPageLoading(false);
-                //setTotalElements(0);
-            }
+                    return Promise.all(visualizationsCalls);
+                })
+                .then(visualizationsData => {
+                    setVisualizations(prevVisualizations => [...prevVisualizations, ...visualizationsData]);
+                    setIsNextPageLoading(false);
+                    setHasNextPage(!result.last);
+                    setPage(prevPage => prevPage + 1);
+                    setIsLastPageReached(result.last);
+                    setTotalElements(result.totalElements);
+                })
+                .catch(error => {
+                    setIsLastPageReached(true);
+                    setHasNextPage(false);
+                    setIsNextPageLoading(false);
+                    console.log(error);
+                });
         });
     };
 
     return (
         <>
             <Container className="d-flex align-items-center">
-                <h1 className="h4 flex-grow-1 mt-4 mb-4">View all published visualizations</h1>
+                <div className="d-flex flex-grow-1 mt-4 mb-4">
+                    <h1 className="h4">View all published visualizations</h1>
+                    <div className="text-muted ml-3 mt-1">
+                        {totalElements === 0 && isNextPageLoading ? <Icon icon={faSpinner} spin /> : totalElements} visualizations
+                    </div>
+                </div>
                 <ButtonGroup>
                     <HeaderSearchButton placeholder="Search visualizations..." type={CLASSES.VISUALIZATION} />
                 </ButtonGroup>
@@ -114,7 +112,9 @@ const Visualizations = () => {
                             Load more visualizations
                         </div>
                     )}
-                    {!hasNextPage && isLastPageReached && page > 2 && <div className="text-center mt-3">You have reached the last page.</div>}
+                    {!hasNextPage && isLastPageReached && page > 1 && totalElements !== 0 && (
+                        <div className="text-center mt-3">You have reached the last page.</div>
+                    )}
                 </ListGroup>
             </Container>
         </>

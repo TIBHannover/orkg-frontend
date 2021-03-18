@@ -151,7 +151,7 @@ class ResearchFieldCards extends Component {
                         let papers = await getStatementsByObjectAndPredicate({
                             objectId: fieldId,
                             predicateId: PREDICATES.HAS_RESEARCH_FIELD,
-                            page: 1,
+                            page: 0,
                             items: MAX_PAPER_AMOUNT,
                             sortBy: 'created_at',
                             desc: true

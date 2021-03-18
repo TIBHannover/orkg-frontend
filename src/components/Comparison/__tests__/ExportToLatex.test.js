@@ -68,7 +68,7 @@ const props = {
     response_hash: ''
 };
 
-it('generate Latex without crashing', async () => {
+it.skip('generate Latex without crashing', async () => {
     const wrapper = mount(<ExportToLatex {...props} />);
     expect(wrapper).toHaveLength(1);
     const latex =
@@ -87,7 +87,7 @@ it('generate Latex without crashing', async () => {
     ).toContain(latex);
 });
 
-it('generate Bibtex without crashing', async () => {
+it.skip('generate Bibtex without crashing', async () => {
     const wrapper = mount(<ExportToLatex {...props} />);
     expect(wrapper).toHaveLength(1);
     const bibtex =

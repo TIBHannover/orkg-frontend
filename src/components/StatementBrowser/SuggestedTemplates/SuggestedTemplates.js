@@ -23,10 +23,10 @@ export default function SuggestedTemplates(props) {
      */
     const getTemplatesOfResourceId = useCallback((resourceId, predicateId) => {
         return getStatementsByObjectAndPredicate({ objectId: resourceId, predicateId: predicateId }).then(statements => {
-            // Filter statement with subjects of type Contribution Template
+            // Filter statement with subjects of type Template
             const source = statements.length > 0 ? statements[0].object : '';
             return statements
-                .filter(statement => statement.subject.classes.includes(CLASSES.CONTRIBUTION_TEMPLATE))
+                .filter(statement => statement.subject.classes.includes(CLASSES.TEMPLATE))
                 .map(st => ({ id: st.subject.id, label: st.subject.label, source })); // return the template Object
         });
     }, []);
