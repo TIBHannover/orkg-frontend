@@ -1,10 +1,9 @@
 import capitalize from 'capitalize';
 import queryString from 'query-string';
-import { flattenDepth, uniq } from 'lodash';
+import { flattenDepth, uniq, isString, find, flatten, last } from 'lodash';
 import rdf from 'rdf';
 import { PREDICATES, MISC } from 'constants/graphSettings';
 import { FILTER_TYPES } from 'constants/comparisonFilterTypes';
-import { isString } from 'lodash';
 import slugifyString from 'slugify';
 import { reverse } from 'named-urls';
 
@@ -974,3 +973,19 @@ export const slugify = input => {
  * @param params.slug the slug for this param
  */
 export const reverseWithSlug = (route, params) => reverse(route, { ...params, slug: params.slug ? slugify(params.slug) : undefined });
+
+/**
+ * Get property object from comparison data
+ * (This function is useful to make the property clickable when using the comparison type "path")
+ * @param {Array} data Comparison data
+ * @param {Object} value The property path
+ * @return {Object} The property object
+ */
+export const getPropertyObjectFromData = (data, value) => {
+    const notEmptyCell = find(flatten(data[value.id]), function(v) {
+        return v?.path?.length > 0;
+    });
+    return notEmptyCell && notEmptyCell.path?.length && notEmptyCell.pathLabels?.length
+        ? { id: last(notEmptyCell.path), label: last(notEmptyCell.pathLabels) }
+        : value;
+};
