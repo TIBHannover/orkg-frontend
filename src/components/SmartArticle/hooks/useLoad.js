@@ -20,10 +20,10 @@ const useHeaderBar = () => {
                 return;
             }
 
-            const { bundle: paperStatements } = await getStatementsBundleBySubject({
+            const { statements: paperStatements } = await getStatementsBundleBySubject({
                 id
             });
-            const contributionResources = getObjectsByPredicateAndLevel(paperStatements, PREDICATES.HAS_CONTRIBUTION, 0);
+            const contributionResources = getObjectsByPredicateAndSubject(paperStatements, PREDICATES.HAS_CONTRIBUTION, id);
 
             if (contributionResources.length === 0) {
                 console.log('no contributions found');
@@ -38,8 +38,8 @@ const useHeaderBar = () => {
                 notFound();
                 return;
             }
-            const authorResources = getObjectsByPredicateAndLevel(paperStatements, PREDICATES.HAS_AUTHOR, 0);
-            const sectionResources = getObjectsByPredicateAndLevel(paperStatements, PREDICATES.HAS_SECTION, 1);
+            const authorResources = getObjectsByPredicateAndSubject(paperStatements, PREDICATES.HAS_AUTHOR, id);
+            const sectionResources = getObjectsByPredicateAndSubject(paperStatements, PREDICATES.HAS_SECTION, contributionResource.id);
 
             for (const [index, section] of sectionResources.entries()) {
                 const sectionStatements = getStatementsBySubjectId(paperStatements, section.id);
@@ -51,13 +51,13 @@ const useHeaderBar = () => {
                 // orcid
                 const orcidStatements = getStatementsBySubjectId(paperStatements, author.id);
                 if (orcidStatements.length) {
-                    const orcidStatement = orcidStatements.find(({ statement }) => statement.predicate.id === PREDICATES.HAS_ORCID);
-                    const orcid = orcidStatement ? orcidStatement.statement.object.label : '';
+                    const orcidStatement = orcidStatements.find(statement => statement.predicate.id === PREDICATES.HAS_ORCID);
+                    const orcid = orcidStatement ? orcidStatement.object.label : '';
                     authorResources[index].orcid = orcid;
                 }
 
                 // statementId
-                const statementId = getStatementsByObjectId(paperStatements, author.id)[0].statement.id;
+                const statementId = getStatementsByObjectId(paperStatements, author.id)[0]?.id;
                 authorResources[index].statementId = statementId;
             }
 
@@ -70,8 +70,8 @@ const useHeaderBar = () => {
                 let contentLink = null;
 
                 if (type === CLASSES.RESOURCE_SECTION || type === CLASSES.PROPERTY_SECTION || type === CLASSES.COMPARISON_SECTION) {
-                    const linkStatement = section.statements.find(({ statement }) => statement.predicate.id === PREDICATES.HAS_LINK);
-                    const link = linkStatement?.statement?.object;
+                    const linkStatement = section.statements.find(statement => statement.predicate.id === PREDICATES.HAS_LINK);
+                    const link = linkStatement?.object;
 
                     contentLink = {
                         id: section?.id,
@@ -79,8 +79,8 @@ const useHeaderBar = () => {
                         label: link?.label
                     };
                 } else {
-                    const contentStatement = section.statements.find(({ statement }) => statement.predicate.id === PREDICATES.HAS_CONTENT);
-                    const content = contentStatement?.statement?.object;
+                    const contentStatement = section.statements.find(statement => statement.predicate.id === PREDICATES.HAS_CONTENT);
+                    const content = contentStatement?.object;
                     markdown = {
                         id: content?.id,
                         label: content?.label
@@ -100,7 +100,6 @@ const useHeaderBar = () => {
                     contentLink
                 });
             }
-
             dispatch(
                 loadArticle({
                     paper: {
@@ -123,22 +122,19 @@ const useHeaderBar = () => {
         setIsLoading(false);
     };
 
-    const getObjectsByPredicateAndLevel = (statements, predicateId, level) => {
+    const getObjectsByPredicateAndSubject = (statements, predicateId, subjectId) => {
         return statements
-            .filter(statement => statement.statement.predicate.id === predicateId && statement.level === level)
-            .map(({ statement }) => statement.object);
+            .filter(statement => statement.predicate.id === predicateId && statement.subject.id === subjectId)
+            .map(statement => statement.object);
     };
 
     const getStatementsBySubjectId = (statements, subjectId) => {
-        return statements.filter(statement => statement.statement.subject.id === subjectId);
+        return statements.filter(statement => statement.subject.id === subjectId);
     };
 
     const getStatementsByObjectId = (statements, objectId) => {
-        return statements.filter(statement => statement.statement.object.id === objectId);
+        return statements.filter(statement => statement.object.id === objectId);
     };
-
-    //const getStatementsBySubjectClassId = ({ bundle: statements }, classId) =>
-    //    statements.filter(({ statement }) => statement.subject.classes.includes(classId)).map(({ statement }) => statement);
 
     return { load, isLoading, isNotFound };
 };
