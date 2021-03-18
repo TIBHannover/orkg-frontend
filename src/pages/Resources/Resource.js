@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Container, Button, FormGroup, Label, FormText, ButtonGroup } from 'reactstrap';
-import { classesUrl, getClassById } from 'services/backend/classes';
+import { getClassById } from 'services/backend/classes';
 import { updateResourceClasses as updateResourceClassesNetwork } from 'services/backend/resources';
 import { getResource } from 'services/backend/resources';
 import { getStatementsBySubjectAndPredicate } from 'services/backend/statements';
@@ -15,19 +15,23 @@ import RequireAuthentication from 'components/RequireAuthentication/RequireAuthe
 import NotFound from 'pages/NotFound';
 import { useLocation, Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
-import Tippy from '@tippy.js/react';
+import Tippy from '@tippyjs/react';
 import ROUTES from 'constants/routes.js';
 import { connect, useSelector } from 'react-redux';
 import { resetStatementBrowser } from 'actions/statementBrowser';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPen, faTrash, faExternalLinkAlt, faTimes, faPlus } from '@fortawesome/free-solid-svg-icons';
 import Confirm from 'components/ConfirmationModal/ConfirmationModal';
-import { CLASSES, PREDICATES } from 'constants/graphSettings';
+import { CLASSES, PREDICATES, ENTITIES } from 'constants/graphSettings';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import { orderBy } from 'lodash';
 import useDeleteResource from 'components/Resource/hooks/useDeleteResource';
 import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
+import { getVisualization } from 'services/similarity';
+import GDCVisualizationRenderer from 'libs/selfVisModel/RenderingComponents/GDCVisualizationRenderer';
+import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
+import { CLASS_TYPE_ID } from 'constants/misc';
 
 const DEDICATED_PAGE_LINKS = {
     [CLASSES.PAPER]: {
@@ -60,9 +64,9 @@ const DEDICATED_PAGE_LINKS = {
         route: ROUTES.VENUE_PAGE,
         routeParams: 'venueId'
     },
-    [CLASSES.CONTRIBUTION_TEMPLATE]: {
+    [CLASSES.TEMPLATE]: {
         label: 'Template',
-        route: ROUTES.CONTRIBUTION_TEMPLATE,
+        route: ROUTES.TEMPLATE,
         routeParams: 'id'
     },
     [CLASSES.CONTRIBUTION]: {
@@ -80,6 +84,8 @@ function Resource(props) {
     const [isLoading, setIsLoading] = useState(true);
     const [editMode, setEditMode] = useState(false);
     const [canBeDeleted, setCanBeDeleted] = useState(false);
+    const [visualizationModelForGDC, setVisualizationModelForGDC] = useState(undefined);
+    const [hasVisualizationModelForGDC, setHasVisualizationModelForGDC] = useState(false);
     const values = useSelector(state => state.statementBrowser.values);
     const properties = useSelector(state => state.statementBrowser.properties);
     const isCurationAllowed = useSelector(state => state.auth.user?.isCurationAllowed);
@@ -103,6 +109,18 @@ function Resource(props) {
                             setClasses(classes);
                         })
                         .then(() => {
+                            if (responseJson.classes.includes(CLASSES.VISUALIZATION)) {
+                                getVisualization(resourceId)
+                                    .then(model => {
+                                        setVisualizationModelForGDC(model);
+                                        setHasVisualizationModelForGDC(true);
+                                    })
+                                    .catch(() => {
+                                        setVisualizationModelForGDC(undefined);
+                                        setHasVisualizationModelForGDC(false);
+                                        toast.error('Error loading visualization preview');
+                                    });
+                            }
                             if (responseJson.classes.includes(CLASSES.COMPARISON)) {
                                 getStatementsBySubjectAndPredicate({ subjectId: props.match.params.id, predicateId: PREDICATES.HAS_DOI }).then(st => {
                                     if (st.length > 0) {
@@ -254,8 +272,10 @@ function Resource(props) {
 
                                                 return (
                                                     <i key={index}>
-                                                        <Link to={reverse(ROUTES.CLASS, { id: classObject.id })}>{classObject.label}</Link>
-                                                        {separator}
+                                                        <DescriptionTooltip id={classObject.id} typeId={CLASS_TYPE_ID}>
+                                                            <Link to={reverse(ROUTES.CLASS, { id: classObject.id })}>{classObject.label}</Link>
+                                                            {separator}
+                                                        </DescriptionTooltip>
                                                     </i>
                                                 );
                                             })}
@@ -289,7 +309,7 @@ function Resource(props) {
                                     <FormGroup className="mb-4 mt-3">
                                         <Label for="classes-autocomplete">Classes</Label>
                                         <AutoComplete
-                                            requestUrl={classesUrl}
+                                            entityType={ENTITIES.CLASS}
                                             onChange={(selected, action) => {
                                                 // blur the field allows to focus and open the menu again
                                                 classesAutocompleteRef.current && classesAutocompleteRef.current.blur();
@@ -313,6 +333,14 @@ function Resource(props) {
                             )}
                         </div>
                         <hr />
+
+                        {/*Adding Visualization Component here */}
+                        {hasVisualizationModelForGDC && (
+                            <div className="mb-4">
+                                <GDCVisualizationRenderer model={visualizationModelForGDC} />
+                                <hr />
+                            </div>
+                        )}
                         <h3 className="h5">Statements</h3>
                         <div className="clearfix">
                             <StatementBrowser

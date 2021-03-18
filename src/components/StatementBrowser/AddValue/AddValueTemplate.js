@@ -1,12 +1,10 @@
 import { useState, useRef, useEffect } from 'react';
-import { resourcesUrl } from 'services/backend/resources';
 import { InputGroup, InputGroupAddon, DropdownMenu, InputGroupButtonDropdown, FormFeedback } from 'reactstrap';
 import { fetchTemplatesOfClassIfNeeded, selectResource, createRequiredPropertiesInResource } from 'actions/statementBrowser';
 import { StyledDropdownItem, StyledButton, StyledDropdownToggle, ValueItemStyle } from 'components/StatementBrowser/styled';
 import StatementOptionButton from 'components/StatementBrowser/StatementOptionButton/StatementOptionButton';
 import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
-import defaultDatatypes from 'components/ContributionTemplates/helpers/defaultDatatypes';
-import Tippy from '@tippy.js/react';
+import defaultDatatypes from 'components/Templates/helpers/defaultDatatypes';
 import { useDispatch, useSelector } from 'react-redux';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPlus, faBars, faSpinner } from '@fortawesome/free-solid-svg-icons';
@@ -14,8 +12,9 @@ import AutoComplete from 'components/Autocomplete/Autocomplete';
 import useToggle from './helpers/useToggle';
 import validationSchema from './helpers/validationSchema';
 import InputField from 'components/StatementBrowser/InputField/InputField';
+import Tippy from '@tippyjs/react';
+import { CLASSES, MISC, ENTITIES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
-import { CLASSES, MISC } from 'constants/graphSettings';
 
 export default function AddValueTemplate(props) {
     const literalInputRef = useRef(null);
@@ -39,6 +38,8 @@ export default function AddValueTemplate(props) {
     const [uniqueLabel, setUniqueLabel] = useState(props.valueClass && props.valueClass.id === CLASSES.PROBLEM ? true : false);
     const [disabledCreate, setDisabledCreate] = useState(false);
 
+    const [isInlineResource, setIsInlineResource] = useState(false);
+
     const handleCreateExistingLabel = (inputValue, selectOptions) => {
         //check if label exists
         if (
@@ -61,28 +62,6 @@ export default function AddValueTemplate(props) {
             setDisabledCreate(false);
         }
     };
-
-    useEffect(() => {
-        if (valueType === 'literal' && literalInputRef.current) {
-            literalInputRef.current.focus();
-        } else if (resourceInputRef.current && (valueType === 'object' || valueType === 'property')) {
-            resourceInputRef.current.focus();
-        }
-    }, [valueType]);
-
-    useEffect(() => {
-        setValueType(props.isLiteral ? 'literal' : 'object');
-    }, [props.isLiteral]);
-
-    useEffect(() => {
-        setUniqueLabel(props.valueClass && props.valueClass.id === CLASSES.PROBLEM ? true : false);
-    }, [props.valueClass]);
-
-    useEffect(() => {
-        if (!showAddValue) {
-            setInputValue('');
-        }
-    }, [showAddValue]);
 
     /* Select component reference can be used to check if menu is opened */
     const isMenuOpen = () => {
@@ -149,9 +128,23 @@ export default function AddValueTemplate(props) {
         }
     };
 
-    const [isInlineResource, setIsInlineResource] = useState(false);
+    useEffect(() => {
+        if (valueType === 'literal' && literalInputRef.current) {
+            literalInputRef.current.focus();
+        } else if (resourceInputRef.current && (valueType === 'object' || valueType === 'property')) {
+            resourceInputRef.current.focus();
+        }
+    }, [valueType]);
 
     useEffect(() => {
+        if (!showAddValue) {
+            setInputValue('');
+        }
+    }, [showAddValue]);
+
+    useEffect(() => {
+        setValueType(props.isLiteral ? 'literal' : 'object');
+        setUniqueLabel(props.valueClass && props.valueClass.id === CLASSES.PROBLEM ? true : false);
         if (props.valueClass && !defaultDatatypes.map(t => t.id).includes(props.valueClass.id)) {
             setTemplateIsLoading(true);
             dispatch(fetchTemplatesOfClassIfNeeded(props.valueClass.id)).then(() => {
@@ -271,8 +264,8 @@ export default function AddValueTemplate(props) {
                         )}
                         {valueType === 'object' ? (
                             <AutoComplete
-                                requestUrl={resourcesUrl}
-                                excludeClasses={`${CLASSES.CONTRIBUTION},${CLASSES.PROBLEM},${CLASSES.CONTRIBUTION_TEMPLATE}`}
+                                entityType={ENTITIES.RESOURCE}
+                                excludeClasses={`${CLASSES.CONTRIBUTION},${CLASSES.PROBLEM},${CLASSES.TEMPLATE}`}
                                 optionsClass={props.valueClass ? props.valueClass.id : undefined}
                                 placeholder="Enter a resource"
                                 onItemSelected={i => {
@@ -355,7 +348,7 @@ export default function AddValueTemplate(props) {
 }
 
 AddValueTemplate.propTypes = {
-    predicate: PropTypes.object.isRequired,
+    predicate: PropTypes.object,
     handleValueSelect: PropTypes.func.isRequired,
     newResources: PropTypes.array.isRequired,
     handleAddValue: PropTypes.func.isRequired,

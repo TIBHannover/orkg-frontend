@@ -1,12 +1,15 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { toggleEditValue } from 'actions/statementBrowser';
 import { InputGroup, InputGroupAddon, Button, FormFeedback } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { fetchStatementsForResource } from 'actions/statementBrowser';
 import { faTrash, faPen, faExternalLinkAlt, faTable } from '@fortawesome/free-solid-svg-icons';
 import StatementOptionButton from 'components/StatementBrowser/StatementOptionButton/StatementOptionButton';
 import { StyledButton, ValueItemStyle } from 'components/StatementBrowser/styled';
 import Pulse from 'components/Utils/Pulse';
 import classNames from 'classnames';
+import { uniq } from 'lodash';
+import format from 'string-format';
 import ValuePlugins from 'components/ValuePlugins/ValuePlugins';
 import validationSchema from 'components/StatementBrowser/AddValue/helpers/validationSchema';
 import InputField from 'components/StatementBrowser/InputField/InputField';
@@ -24,8 +27,34 @@ export default function ValueItemTemplate(props) {
     const { resourcesAsLinks, openExistingResourcesInDialog } = statementBrowser;
 
     let valueClass = getValueClass(props.components);
-    valueClass = valueClass ? valueClass : props.predicate.range ? props.predicate.range : null;
+    valueClass = valueClass ? valueClass : props.predicate?.range ? props.predicate.range : null;
     const isInlineResource = useSelector(state => isInlineResourceUtil(state, valueClass));
+
+    const values = useSelector(state => state.statementBrowser.values);
+    const properties = useSelector(state => state.statementBrowser.properties);
+    const { hasLabelFormat, labelFormat } = useSelector(state => {
+        // get all template ids
+        let templateIds = [];
+        for (const c of props.value.classes) {
+            if (state.statementBrowser.classes[c]) {
+                templateIds = templateIds.concat(state.statementBrowser.classes[c].templateIds);
+            }
+        }
+        templateIds = uniq(templateIds);
+        // check if it formatted label
+        let hasLabelFormat = false;
+        let labelFormat = '';
+        for (const templateId of templateIds) {
+            const template = state.statementBrowser.templates[templateId];
+            if (template && template.hasLabelFormat) {
+                hasLabelFormat = true;
+                labelFormat = template.labelFormat;
+            }
+        }
+        return { hasLabelFormat, labelFormat };
+    });
+
+    const resource = useSelector(state => state.statementBrowser.resources.byId[props.value.resourceId]);
 
     const [disableHover, setDisableHover] = useState(false);
     const [draftLabel, setDraftLabel] = useState(props.value.label);
@@ -76,6 +105,44 @@ export default function ValueItemTemplate(props) {
         }
     };
 
+    const generatedFormattedLabel = labelFormat => {
+        const valueObject = {};
+        for (const propertyId of resource.propertyIds) {
+            const property = properties.byId[propertyId];
+            valueObject[property.existingPredicateId] =
+                property?.valueIds && property.valueIds.length > 0 ? values.byId[property.valueIds[0]].label : property.label;
+        }
+        if (Object.keys(valueObject).length > 0) {
+            return format(labelFormat, valueObject);
+        } else {
+            return props.value.label;
+        }
+    };
+
+    const getLabel = useCallback(() => {
+        const existingResourceId = resource ? resource.existingResourceId : false;
+        if (props.value.classes) {
+            if (!hasLabelFormat) {
+                return props.value.label;
+            }
+            if (existingResourceId && !resource.isFetched && !resource.isFetching && props.value.type !== 'literal') {
+                dispatch(
+                    fetchStatementsForResource({
+                        resourceId: props.value.resourceId,
+                        existingResourceId
+                    })
+                ).then(() => {
+                    return generatedFormattedLabel(labelFormat);
+                });
+            } else {
+                return generatedFormattedLabel(labelFormat);
+            }
+        } else {
+            return props.value.label;
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [resource, hasLabelFormat, labelFormat]);
+
     return (
         <ValueItemStyle>
             {!props.value.isEditing ? (
@@ -84,10 +151,10 @@ export default function ValueItemTemplate(props) {
                         <Button className="p-0 text-left" color="link" onClick={props.handleOnClick} style={{ userSelect: 'text' }}>
                             {props.showHelp && props.value.type === 'object' ? (
                                 <Pulse content="Click on the resource to browse it">
-                                    <ValuePlugins type="resource">{props.getLabel() || ''}</ValuePlugins>
+                                    <ValuePlugins type="resource">{getLabel() || ''}</ValuePlugins>
                                 </Pulse>
                             ) : (
-                                <ValuePlugins type="resource">{props.getLabel() || ''}</ValuePlugins>
+                                <ValuePlugins type="resource">{getLabel() || ''}</ValuePlugins>
                             )}
 
                             {props.resource && props.resource.existingResourceId && openExistingResourcesInDialog ? (
@@ -110,7 +177,7 @@ export default function ValueItemTemplate(props) {
                     )}
 
                     {!props.resource && props.value.type === 'predicate' && resourcesAsLinks && (
-                        <Link to={reverse(ROUTES.PREDICATE, { id: props.value.resourceId })}>{props.value.label}</Link>
+                        <Link to={reverse(ROUTES.PROPERTY, { id: props.value.resourceId })}>{props.value.label}</Link>
                     )}
 
                     {props.resource && props.resource.isFetching && props.value.type === 'object' && 'Loading...'}
@@ -189,8 +256,7 @@ ValueItemTemplate.propTypes = {
     handleOnClick: PropTypes.func,
     showHelp: PropTypes.bool,
     enableEdit: PropTypes.bool.isRequired,
-    getLabel: PropTypes.func.isRequired,
-    predicate: PropTypes.object.isRequired,
+    predicate: PropTypes.object,
     components: PropTypes.array.isRequired,
     commitChangeLabel: PropTypes.func.isRequired,
     handleDatasetClick: PropTypes.func.isRequired,

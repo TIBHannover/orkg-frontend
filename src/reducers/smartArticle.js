@@ -9,7 +9,7 @@ const initialState = {
     isLoading: false
 };
 
-export default (state = initialState, action) => {
+const smartArticle = (state = initialState, action) => {
     switch (action.type) {
         case type.ARTICLE_WRITER_LOAD: {
             const { paper, authorResources, sections, contributionId } = action.payload;
@@ -127,3 +127,5 @@ export default (state = initialState, action) => {
         }
     }
 };
+
+export default smartArticle;

@@ -29,7 +29,7 @@ class ValuePlugins extends Component {
 }
 
 ValuePlugins.propTypes = {
-    children: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,
+    children: PropTypes.oneOfType([PropTypes.string, PropTypes.object, PropTypes.node]).isRequired,
     type: PropTypes.oneOf(['resource', 'literal']),
     options: PropTypes.object.isRequired
 };

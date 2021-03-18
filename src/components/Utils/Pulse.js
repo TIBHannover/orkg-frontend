@@ -1,6 +1,6 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
-import Tippy from '@tippy.js/react';
+import Tippy from '@tippyjs/react';
 import { withCookies, Cookies } from 'react-cookie';
 import env from '@beam-australia/react-env';
 

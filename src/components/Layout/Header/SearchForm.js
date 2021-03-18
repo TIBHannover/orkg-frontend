@@ -34,7 +34,7 @@ const SearchForm = props => {
         if (isString(value) && value.length >= MINIMUM_LENGTH_PATTERN && (value.match(RESOURCE_PATTERN) || value.match(PROPERTY_PATTERN))) {
             const id = value.substring(1);
             setValue('');
-            route = reverse(value.match(RESOURCE_PATTERN) ? ROUTES.RESOURCE : ROUTES.PREDICATE, { id });
+            route = reverse(value.match(RESOURCE_PATTERN) ? ROUTES.RESOURCE : ROUTES.PROPERTY, { id });
         } else {
             route = reverse(ROUTES.SEARCH, { searchTerm: encodeURIComponent(value) });
         }

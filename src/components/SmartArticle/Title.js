@@ -1,4 +1,4 @@
-import Tippy from '@tippy.js/react';
+import Tippy from '@tippyjs/react';
 import { updateTitle } from 'actions/smartArticle';
 import { SectionStyled, SectionTypeStyled, EditableTitle } from 'components/SmartArticle/styled';
 import React, { useState, useEffect } from 'react';

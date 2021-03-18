@@ -4,7 +4,7 @@ import { withRouter } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { CustomInput } from 'reactstrap';
-import { classesUrl } from 'services/backend/classes';
+import { ENTITIES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes.js';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
@@ -21,7 +21,7 @@ const Filters = props => {
         const value = decodeURIComponent(props.value);
         if (isString(value) && value.length >= MINIMUM_LENGTH_PATTERN && (value.match(RESOURCE_PATTERN) || value.match(PROPERTY_PATTERN))) {
             const id = value.substring(1);
-            props.history.push(reverse(value.match(RESOURCE_PATTERN) ? ROUTES.RESOURCE : ROUTES.PREDICATE, { id }));
+            props.history.push(reverse(value.match(RESOURCE_PATTERN) ? ROUTES.RESOURCE : ROUTES.PROPERTY, { id }));
         } else {
             props.history.push(
                 reverse(ROUTES.SEARCH, { searchTerm: encodeURIComponent(value) }) + '?types=' + props.selectedFilters.map(sf => sf.id).join(',')
@@ -64,7 +64,7 @@ const Filters = props => {
             <br />
             <Label for="other-filters">Other filters</Label>
             <AutoComplete
-                requestUrl={classesUrl}
+                entityType={ENTITIES.CLASS}
                 onChange={(_, action) => {
                     if (action.action === 'select-option') {
                         props.toggleFilter(action.option);

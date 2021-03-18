@@ -4,7 +4,7 @@ import { Container, Row, Col } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faStream } from '@fortawesome/free-solid-svg-icons';
 import ResearchFieldCards from 'components/Home/ResearchFieldCards';
-import ObservatoriesCarousel from 'components/Home/ObservatoriesCarousel/ObservatoriesCarousel';
+import ObservatoriesBox from 'components/Home/ObservatoriesBox';
 import FeaturedItemsBox from 'components/Home/FeaturedItemsBox';
 
 import { toast } from 'react-toastify';
@@ -39,8 +39,8 @@ export default function Home() {
                         </div>
                         <TrendingProblems style={{ flexDirection: 'column', display: 'flex', flexGrow: '1' }} />
                     </Col>
-                    <Col md={5} sm={12} style={{ display: 'flex', flexDirection: 'column' }}>
-                        <ObservatoriesCarousel />
+                    <Col className="mt-3 mt-md-0" md={5} sm={12} style={{ display: 'flex', flexDirection: 'column' }}>
+                        <ObservatoriesBox />
                         <FeaturedItemsBox />
                     </Col>
                 </Row>

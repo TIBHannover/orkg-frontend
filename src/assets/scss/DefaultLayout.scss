@@ -169,3 +169,30 @@ body {
     outline: 0 !important;
     transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
+
+// Tippy
+.tippy-box[data-theme~='visualizationPreview'] {
+    background-color: #fff;
+    color: $body-color;
+    border: 1px solid $primary;
+}
+.tippy-box[data-theme~='visualizationPreview'] .tippy-content {
+    padding: 0;
+}
+.tippy-box[data-theme~='visualizationPreview'][data-placement^='top'] > .tippy-arrow::before {
+    border-top-color: $primary;
+}
+.tippy-box[data-theme~='visualizationPreview'][data-placement^='bottom'] > .tippy-arrow::before {
+    border-bottom-color: $primary;
+}
+.tippy-box[data-theme~='visualizationPreview'][data-placement^='left'] > .tippy-arrow::before {
+    border-left-color: $primary;
+}
+.tippy-box[data-theme~='visualizationPreview'][data-placement^='right'] > .tippy-arrow::before {
+    border-right-color: $primary;
+}
+
+// Datepicker
+.react-datepicker__close-icon::after {
+    background-color: $darkblue !important;
+}

@@ -1,6 +1,6 @@
 import { faQuestionCircle, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import Tippy from '@tippy.js/react';
+import Tippy from '@tippyjs/react';
 import useSave from 'components/SmartArticle/hooks/useSave';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';

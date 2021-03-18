@@ -3,7 +3,6 @@ import env from '@beam-australia/react-env';
 
 export const crossrefUrl = env('CROSSREF_URL');
 export const semanticScholarUrl = env('SEMANTICSCHOLAR_URL');
-export const olsBaseUrl = env('OLS_BASE_URL');
 
 export const submitGetRequest = (url, headers, send_token = false) => {
     if (!url) {
@@ -32,7 +31,6 @@ export const submitGetRequest = (url, headers, send_token = false) => {
                     });
                 } else {
                     const json = response.json();
-                    //console.log(json);
                     if (json.then) {
                         json.then(resolve).catch(reject);
                     } else {

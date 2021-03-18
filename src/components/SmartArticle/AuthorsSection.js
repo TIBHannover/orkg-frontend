@@ -1,6 +1,6 @@
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import Tippy from '@tippy.js/react';
+import Tippy from '@tippyjs/react';
 import AuthorsList from 'components/SmartArticle/AuthorsList';
 import AuthorsModal from 'components/SmartArticle/AuthorsModal';
 import { SectionStyled, SectionTypeStyled } from 'components/SmartArticle/styled';

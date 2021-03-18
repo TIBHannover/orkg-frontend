@@ -1,11 +1,10 @@
 import { createRef, Component } from 'react';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
-import { predicatesUrl } from 'services/backend/predicates';
+import { ENTITIES } from 'constants/graphSettings';
 import { withTheme } from 'styled-components';
 import PropTypes from 'prop-types';
-import Tippy from '@tippy.js/react';
+import Tippy from '@tippyjs/react';
 import { followCursor } from 'tippy.js';
-import 'tippy.js/dist/tippy.css';
 
 class AnnotationTooltip extends Component {
     constructor(props) {
@@ -33,7 +32,7 @@ class AnnotationTooltip extends Component {
                     content={
                         <div style={{ width: '300px' }}>
                             <AutoComplete
-                                requestUrl={predicatesUrl}
+                                entityType={ENTITIES.PREDICATE}
                                 defaultOptions={this.props.defaultOptions}
                                 placeholder="Select or type to enter a property"
                                 onChange={(e, a) => {

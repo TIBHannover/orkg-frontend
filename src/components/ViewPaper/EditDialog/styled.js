@@ -1,15 +1,15 @@
 import styled from 'styled-components';
-import { ListGroupItem } from 'reactstrap';
+import { ListGroupItem, Collapse } from 'reactstrap';
 
 /*listGroupOpen*/
-export const StyledListGroupOpen = styled.div`
+export const StyledListGroupOpen = styled(Collapse)`
     border-left-width: ${props => props.theme.borderWidth};
     border-right-width: ${props => props.theme.borderWidth};
     border-left-style: solid;
     border-right-style: solid;
     border-left-color: #dfdfdf; /*don't use default color, since it is partially transparent $list-group-border-color;$list-group-border-color;*/
     border-right-color: #dfdfdf; /*don't use default color, since it is partially transparent $list-group-border-color; $list-group-border-color;*/
-    padding: 10px 20px;
+    padding: 0 !important; // set padding to 0 to ensure that Collapse height can be zero during the animation
 
     &.listGroupOpenBorderBottom {
         border-bottom-width: ${props => props.theme.borderWidth};

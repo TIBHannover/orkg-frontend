@@ -1,17 +1,15 @@
-import { useState, useEffect, useCallback } from 'react';
-import { getStatementsByObjectAndPredicate, getStatementsBySubjects } from 'services/backend/statements';
-import { useParams } from 'react-router-dom';
-import { getComparisonData } from 'utils';
-import { find } from 'lodash';
 import { CLASSES, PREDICATES } from 'constants/graphSettings';
+import { find } from 'lodash';
+import { useCallback, useEffect, useState } from 'react';
+import { getStatementsByObjectAndPredicate, getStatementsBySubjects } from 'services/backend/statements';
+import { getComparisonData } from 'utils';
 
-function useResearchFieldComparison() {
+function useResearchFieldComparison({ researchFieldId }) {
     const pageSize = 10;
-    const { researchFieldId } = useParams();
     const [isLoading, setIsLoading] = useState(false);
     const [hasNextPage, setHasNextPage] = useState(false);
     const [isLastPageReached, setIsLastPageReached] = useState(false);
-    const [page, setPage] = useState(1);
+    const [page, setPage] = useState(0);
     const [comparisons, setComparisons] = useState([]);
 
     const loadComparisons = useCallback(

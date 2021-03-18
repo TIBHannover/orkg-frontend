@@ -2,14 +2,13 @@ import { useState, useEffect } from 'react';
 import { ListGroup, ListGroupItem, Button, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import ROUTES from 'constants/routes.js';
-import { getStatementsBySubjects } from 'services/backend/statements';
+import { getStatementsBySubjectAndPredicate } from 'services/backend/statements';
 import { getResourcesByClass } from 'services/backend/resources';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { reverse } from 'named-urls';
 import { getPaperData } from 'utils';
-import { find } from 'lodash';
-import { CLASSES } from 'constants/graphSettings';
+import { CLASSES, PREDICATES } from 'constants/graphSettings';
 
 export default function FeaturedPapers() {
     const [papers, setPapers] = useState([]);
@@ -24,20 +23,21 @@ export default function FeaturedPapers() {
         const responseJson = await getResourcesByClass({
             id: paperFilter === 'featured' ? CLASSES.FEATURED_PAPER : CLASSES.PAPER,
             sortBy: 'created_at',
-            desc: false,
-            items: 10
+            desc: true,
+            items: 10,
+            returnContent: true
         });
-        const ids = responseJson.map(paper => paper.id);
-        getStatementsBySubjects({
-            ids
-        })
+
+        const ids = responseJson.map(paper => getStatementsBySubjectAndPredicate({ subjectId: paper.id, predicateId: PREDICATES.HAS_AUTHOR }));
+
+        Promise.all(ids)
             .then(papersStatements => {
-                const papers = papersStatements.map(paperStatements => {
-                    const resourceSubject = find(responseJson, { id: paperStatements.id });
+                const papers = papersStatements.map((paperStatements, index) => {
+                    const resourceSubject = responseJson[index];
                     return getPaperData(
-                        paperStatements.id,
+                        resourceSubject.id,
                         paperStatements && resourceSubject.label ? resourceSubject.label : 'No Title',
-                        paperStatements.statements
+                        paperStatements
                     );
                 });
 

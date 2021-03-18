@@ -6,8 +6,8 @@ import dotProp from 'dot-prop-immutable';
 import PropTypes from 'prop-types';
 import ContentLoader from 'react-content-loader';
 import { getClassById } from 'services/backend/classes';
-import { getAllResources, getResourcesByClass } from 'services/backend/resources';
-import { getAllPredicates } from 'services/backend/predicates';
+import { getResources, getResourcesByClass } from 'services/backend/resources';
+import { getPredicates } from 'services/backend/predicates';
 import ROUTES from 'constants/routes';
 import { PREDICATE_TYPE_ID, RESOURCE_TYPE_ID } from 'constants/misc';
 import Results from 'components/Search/Results';
@@ -27,16 +27,6 @@ class Search extends Component {
 
         this.defaultsFilters = [
             {
-                label: 'Paper',
-                labelPlural: 'Papers',
-                id: CLASSES.PAPER
-            },
-            {
-                label: 'Research Problem',
-                labelPlural: 'Research Problems',
-                id: CLASSES.PROBLEM
-            },
-            {
                 label: 'Author',
                 labelPlural: 'Authors',
                 id: CLASSES.AUTHOR
@@ -47,14 +37,19 @@ class Search extends Component {
                 id: CLASSES.COMPARISON
             },
             {
-                label: 'Venue',
-                labelPlural: 'Venues',
-                id: CLASSES.VENUE
+                label: 'Paper',
+                labelPlural: 'Papers',
+                id: CLASSES.PAPER
             },
             {
-                label: 'Template',
-                labelPlural: 'Templates',
-                id: CLASSES.CONTRIBUTION_TEMPLATE
+                label: 'Property',
+                labelPlural: 'Properties',
+                id: PREDICATE_TYPE_ID
+            },
+            {
+                label: 'Research Problem',
+                labelPlural: 'Research Problems',
+                id: CLASSES.PROBLEM
             },
             {
                 label: 'Resource',
@@ -62,9 +57,19 @@ class Search extends Component {
                 id: RESOURCE_TYPE_ID
             },
             {
-                label: 'Property',
-                labelPlural: 'Properties',
-                id: PREDICATE_TYPE_ID
+                label: 'Template',
+                labelPlural: 'Templates',
+                id: CLASSES.TEMPLATE
+            },
+            {
+                label: 'Venue',
+                labelPlural: 'Venues',
+                id: CLASSES.VENUE
+            },
+            {
+                label: 'Visualization',
+                labelPlural: 'Visualizations',
+                id: CLASSES.VISUALIZATION
             }
         ];
 
@@ -156,15 +161,16 @@ class Search extends Component {
         this.setState({ isNextPageLoading: { ...this.state.isNextPageLoading, [filter_type]: true } });
         let request;
         if (filter_type === PREDICATE_TYPE_ID) {
-            request = getAllPredicates({
+            request = getPredicates({
                 page: this.state.currentPage[PREDICATE_TYPE_ID] || 1,
                 items: this.itemsPerFilter,
                 sortBy: 'id',
                 desc: true,
-                q: searchQuery
+                q: searchQuery,
+                returnContent: true
             });
         } else if (filter_type === RESOURCE_TYPE_ID) {
-            request = getAllResources({
+            request = getResources({
                 page: this.state.currentPage[RESOURCE_TYPE_ID] || 1,
                 items: this.itemsPerFilter,
                 sortBy: 'id',
@@ -173,7 +179,8 @@ class Search extends Component {
                 exclude: this.defaultsFilters
                     .map(df => df.id)
                     .concat(this.ignored_classes)
-                    .join(',')
+                    .join(','),
+                returnContent: true
             });
         } else {
             request = getResourcesByClass({
@@ -182,7 +189,8 @@ class Search extends Component {
                 sortBy: 'id',
                 desc: true,
                 q: searchQuery,
-                id: filter_type
+                id: filter_type,
+                returnContent: true
             });
         }
         request

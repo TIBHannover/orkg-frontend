@@ -17,33 +17,31 @@ const ObjectStatements = props => {
     const [page, setPage] = useState(0);
     const [statements, setStatements] = useState([]);
 
-    const loadStatements = useCallback(() => {
+    const loadStatements = useCallback(async () => {
         setIsLoading(true);
 
-        getStatementsByObject({
+        const statements = await getStatementsByObject({
             id: resourceId,
-            page: page + 1,
+            page: page,
             items: pageSize,
             sortBy: 'id',
             desc: true
-        }).then(result => {
-            // Resources
-            if (page === 0 && result.length === 0) {
-                setHasObjectStatement(false);
-            } else {
-                setHasObjectStatement(true);
-            }
-
-            if (result.length === 0) {
-                setIsLoading(false);
-                setHasNextPage(false);
-                return;
-            } else {
-                setStatements(prevStatements => [...prevStatements, ...result]);
-                setIsLoading(false);
-                setHasNextPage(result.length < pageSize || result.length === 0 ? false : true);
-            }
         });
+
+        if (page === 0 && statements.length === 0) {
+            setHasObjectStatement(false);
+        } else {
+            setHasObjectStatement(true);
+        }
+
+        if (statements.length === 0) {
+            setIsLoading(false);
+            setHasNextPage(false);
+        } else {
+            setStatements(prevStatements => [...prevStatements, ...statements]);
+            setIsLoading(false);
+            setHasNextPage(statements.length < pageSize || statements.length === 0 ? false : true);
+        }
     }, [page, resourceId, setHasObjectStatement]);
 
     useEffect(() => {
@@ -92,14 +90,18 @@ const ObjectStatements = props => {
                                             <Link to={reverse(ROUTES.RESOURCE, { id: statement.subject.id })}>{statement.subject.label}</Link>
                                         </td>
                                         <td>
-                                            <Link to={reverse(ROUTES.PREDICATE, { id: statement.predicate.id })}>{statement.predicate.label}</Link>
+                                            <Link to={reverse(ROUTES.PROPERTY, { id: statement.predicate.id })}>{statement.predicate.label}</Link>
                                         </td>
                                         <td>{statement.object.label}</td>
                                     </tr>
                                 ))}
                                 {!isLoading && hasNextPage && (
-                                    <tr style={{ cursor: 'pointer' }} className="text-center" onClick={handleLoadMore}>
-                                        <td colSpan="3">View more object statements</td>
+                                    <tr className="text-center">
+                                        <td colspan="3">
+                                            <Button color="lightblue" size="sm" onClick={handleLoadMore}>
+                                                Load more statements
+                                            </Button>
+                                        </td>
                                     </tr>
                                 )}
                             </tbody>

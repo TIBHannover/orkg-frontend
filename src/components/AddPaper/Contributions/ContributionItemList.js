@@ -2,16 +2,17 @@ import { createRef, Component } from 'react';
 import { Input } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faTrash, faPen } from '@fortawesome/free-solid-svg-icons';
+import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
 import ROUTES from 'constants/routes';
-import Tippy from '@tippy.js/react';
-import 'tippy.js/dist/tippy.css';
+import Tippy from '@tippyjs/react';
 import { reverse } from 'named-urls';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import classNames from 'classnames';
+import { ActionButton } from 'components/AddPaper/Contributions/styled';
 
-/*contributionsList*/
 export const StyledInput = styled(Input)`
     background: #fff;
     color: ${props => props.theme.orkgPrimaryColor};
@@ -72,102 +73,108 @@ class ContributionItemList extends Component {
 
     render() {
         const listItem = (
-            <li className={this.props.isSelected ? 'activeContribution' : ''}>
-                <div
-                    onClick={
-                        !this.props.paperId
-                            ? () =>
-                                  this.props.handleSelectContribution && !this.state.isEditing
-                                      ? this.props.handleSelectContribution(this.props.contribution.id)
-                                      : undefined
-                            : undefined
-                    }
-                    onKeyDown={e =>
-                        e.keyCode === 13 && !this.props.paperId
-                            ? () =>
-                                  this.props.handleSelectContribution && !this.state.isEditing
-                                      ? this.props.handleSelectContribution(this.props.contribution.id)
-                                      : undefined
-                            : undefined
-                    }
-                    role="link"
-                    tabIndex={0}
-                >
-                    <span className="selectContribution">
-                        {this.state.isEditing && (
-                            <StyledInput
-                                bsSize="sm"
-                                innerRef={this.inputRefs}
-                                value={this.state.draftLabel}
-                                onChange={this.handleChangeLabel}
-                                onKeyDown={e => e.keyCode === 13 && e.target.blur()} // Disable multiline Input
-                                onBlur={e => {
-                                    this.props.handleChangeContributionLabel(this.props.contribution.id, this.state.draftLabel);
-                                    this.toggleEditLabelContribution();
-                                }}
-                                onFocus={e =>
-                                    setTimeout(() => {
-                                        document.execCommand('selectAll', false, null);
-                                    }, 0)
-                                } // Highlights the entire label when edit
-                            />
-                        )}
-                        {!this.state.isEditing && (
-                            <span>
-                                {/*this.props.paperId && !this.props.isSelected ? (
-                                <Link to={reverse(ROUTES.VIEW_PAPER, { resourceId: this.props.paperId, contributionId: this.props.contribution.id })}>
-                                    {this.props.contribution.label}
-                                </Link>
-                            ) : (
-                                this.props.contribution.label
-                            )*/}
-                                {this.props.contribution.label}
+            <span className="selectContribution">
+                {this.state.isEditing && (
+                    <StyledInput
+                        bsSize="sm"
+                        innerRef={this.inputRefs}
+                        value={this.state.draftLabel}
+                        onChange={this.handleChangeLabel}
+                        onKeyDown={e => e.keyCode === 13 && e.target.blur()} // Disable multiline Input
+                        onBlur={e => {
+                            this.props.handleChangeContributionLabel(this.props.contribution.id, this.state.draftLabel);
+                            this.toggleEditLabelContribution();
+                        }}
+                        onFocus={e =>
+                            setTimeout(() => {
+                                document.execCommand('selectAll', false, null);
+                            }, 0)
+                        } // Highlights the entire label when edit
+                    />
+                )}
+                {!this.state.isEditing && <span>{this.props.contribution.label}</span>}
+                {this.props.enableEdit && !this.state.isEditing && (
+                    <>
+                        {this.props.canDelete && this.props.isSelected && (
+                            <span className="float-right mr-1">
+                                <Tippy content="Delete contribution">
+                                    <span>
+                                        <ActionButton
+                                            color="link"
+                                            onClick={e => {
+                                                e.stopPropagation();
+                                                this.props.toggleDeleteContribution(this.props.contribution.id);
+                                            }}
+                                        >
+                                            <Icon icon={faTrash} />
+                                        </ActionButton>
+                                    </span>
+                                </Tippy>
                             </span>
                         )}
-                        {this.props.enableEdit && !this.state.isEditing && (
-                            <>
-                                {this.props.canDelete && (
-                                    <span className={`deleteContribution float-right mr-1 ${!this.props.isSelected && 'd-none'}`}>
-                                        <Tippy content="Delete contribution">
-                                            <span>
-                                                <Icon
-                                                    icon={faTrash}
-                                                    onClick={e => {
-                                                        e.stopPropagation();
-                                                        this.props.toggleDeleteContribution(this.props.contribution.id);
-                                                    }}
-                                                />
-                                            </span>
-                                        </Tippy>
+                        {this.props.isSelected && (
+                            <span className="float-right mr-1 ml-1">
+                                <Tippy content="Edit the contribution label">
+                                    <span>
+                                        <ActionButton
+                                            color="link"
+                                            onClick={e => {
+                                                e.stopPropagation();
+                                                this.toggleEditLabelContribution(this.props.contribution.id, e);
+                                            }}
+                                        >
+                                            <Icon icon={faPen} />
+                                        </ActionButton>
                                     </span>
-                                )}
-                                <span className={`deleteContribution float-right mr-1 ml-1 ${!this.props.isSelected && 'd-none'}`}>
-                                    <Tippy content="Edit the contribution label">
-                                        <span>
-                                            <Icon
-                                                icon={faPen}
-                                                onClick={e => {
-                                                    e.stopPropagation();
-                                                    this.toggleEditLabelContribution(this.props.contribution.id, e);
-                                                }}
-                                            />
-                                        </span>
-                                    </Tippy>
-                                </span>
-                            </>
+                                </Tippy>
+                            </span>
                         )}
-                    </span>
-                </div>
+                    </>
+                )}
+            </span>
+        );
+
+        const listClasses = classNames({
+            'contribution-item': true,
+            'active-contribution': this.props.isSelected
+        });
+
+        const isViewPaperPage = this.props.paperId;
+        const shouldRenderLink = isViewPaperPage && !this.props.isSelected && !this.state.isEditing;
+
+        return shouldRenderLink ? (
+            <li>
+                <Link
+                    className={listClasses}
+                    to={reverse(ROUTES.VIEW_PAPER, { resourceId: this.props.paperId, contributionId: this.props.contribution.id })}
+                >
+                    {listItem}
+                </Link>
+            </li>
+        ) : (
+            <li>
+                <ConditionalWrapper
+                    condition={!this.props.isSelected}
+                    wrapper={children => (
+                        <button
+                            className={listClasses}
+                            onClick={
+                                !isViewPaperPage
+                                    ? () =>
+                                          this.props.handleSelectContribution && !this.state.isEditing
+                                              ? this.props.handleSelectContribution(this.props.contribution.id)
+                                              : undefined
+                                    : undefined
+                            }
+                        >
+                            {children}
+                        </button>
+                    )}
+                >
+                    <div className={this.props.isSelected ? listClasses : undefined}>{listItem}</div>
+                </ConditionalWrapper>
             </li>
         );
-
-        return this.props.paperId && !this.props.isSelected && !this.state.isEditing ? (
-            <Link to={reverse(ROUTES.VIEW_PAPER, { resourceId: this.props.paperId, contributionId: this.props.contribution.id })}>{listItem}</Link>
-        ) : (
-            listItem
-        );
-
-        //return listItem;
     }
 }
 

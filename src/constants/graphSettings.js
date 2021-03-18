@@ -44,7 +44,8 @@ export const PREDICATES = {
     HAS_SUBJECT: 'hasSubject',
     IS_LISTED: 'isListed',
     HAS_SECTION: 'HasSection',
-    HAS_LINK: 'HasLink'
+    HAS_LINK: 'HasLink',
+    HAS_VISUALIZATION: 'hasVisualization'
 };
 
 export const CLASSES = {
@@ -60,8 +61,9 @@ export const CLASSES = {
     COMPARISON: 'Comparison',
     FEATURED_COMPARISON: 'FeaturedComparison',
     FEATURED_COMPARISON_CATEGORY: 'FeaturedComparisonCategory',
-    CONTRIBUTION_TEMPLATE: 'ContributionTemplate',
+    TEMPLATE: 'ContributionTemplate',
     PREDICATE: 'Predicates',
+    CLASS: 'Classes',
     QB_DATASET_CLASS: 'QBDataset',
     LOCATION: 'DCLocation',
     SENTENCE: 'Sentence',
@@ -70,17 +72,24 @@ export const CLASSES = {
     CONTRIBUTION_SMART_ARTICLE: 'ContributionSmartArticle',
     RESOURCE_SECTION: 'ResourceSection',
     PROPERTY_SECTION: 'PropertySection',
-    COMPARISON_SECTION: 'ComparisonSection'
+    COMPARISON_SECTION: 'ComparisonSection',
     /*FABIO_SCHOLARLY_WORK: 'ScholarlyWork',
     DOCO_FRONT_MATTER: 'FrontMatter',
     DOCO_BACK_MATTER: 'BackMatter',
     DOCO_BODY_MATTER: 'BodyMatter',
     DOCO_TITLE: 'Title',
     DOCO_LIST_OF_AUTHORS: 'ListOfAuthors'*/
+    VISUALIZATION: 'Visualization'
 };
 
 export const MISC = {
     RESEARCH_FIELD_MAIN: 'R11',
     DEFAULT_LITERAL_DATATYPE: 'xsd:string',
     UNKNOWN_ID: '00000000-0000-0000-0000-000000000000'
+};
+
+export const ENTITIES = {
+    CLASS: 'class',
+    PREDICATE: 'predicate',
+    RESOURCE: 'resource'
 };

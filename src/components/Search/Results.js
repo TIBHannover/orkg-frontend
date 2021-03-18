@@ -64,8 +64,12 @@ const Results = props => {
                 link = reverse(ROUTES.VENUE_PAGE, { venueId: resourceId });
                 break;
             }
-            case CLASSES.CONTRIBUTION_TEMPLATE: {
-                link = reverse(ROUTES.CONTRIBUTION_TEMPLATE, { id: resourceId });
+            case CLASSES.TEMPLATE: {
+                link = reverse(ROUTES.TEMPLATE, { id: resourceId });
+                break;
+            }
+            case CLASSES.VISUALIZATION: {
+                link = reverse(ROUTES.VISUALIZATION, { id: resourceId });
                 break;
             }
             case RESOURCE_TYPE_ID: {
@@ -73,7 +77,7 @@ const Results = props => {
                 break;
             }
             case PREDICATE_TYPE_ID: {
-                link = reverse(ROUTES.PREDICATE, { id: resourceId });
+                link = reverse(ROUTES.PROPERTY, { id: resourceId });
                 break;
             }
             default: {

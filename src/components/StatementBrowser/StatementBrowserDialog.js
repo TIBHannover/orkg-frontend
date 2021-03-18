@@ -7,6 +7,7 @@ import SameAsStatements from 'pages/SameAsStatements';
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { updateSettings } from 'actions/statementBrowser';
+import { CLASS_TYPE_ID, PREDICATE_TYPE_ID, RESOURCE_TYPE_ID } from 'constants/misc';
 import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes';
@@ -21,6 +22,21 @@ class StatementBrowserDialog extends Component {
     }
 
     render() {
+        let route = ROUTES.RESOURCE;
+        switch (this.props.type) {
+            case PREDICATE_TYPE_ID:
+                route = ROUTES.PROPERTY;
+                break;
+            case 'property':
+                route = ROUTES.PROPERTY;
+                break;
+            case CLASS_TYPE_ID:
+                route = ROUTES.CLASS;
+                break;
+            default:
+                route = ROUTES.RESOURCE;
+                break;
+        }
         return (
             <Modal
                 isOpen={this.props.show}
@@ -44,7 +60,7 @@ class StatementBrowserDialog extends Component {
                             style={{ right: 45, position: 'absolute', top: 12 }}
                             title={`Go to ${this.props.type} page`}
                             className="ml-2"
-                            to={reverse(this.props.type === 'resource' ? ROUTES.RESOURCE : ROUTES.PREDICATE, { id: this.props.id })}
+                            to={reverse(route, { id: this.props.id })}
                             target="_blank"
                             rel="noopener noreferrer"
                         >
@@ -56,7 +72,7 @@ class StatementBrowserDialog extends Component {
                 </ModalHeader>
                 <ModalBody>
                     <Statements
-                        rootNodeType={this.props.type === 'resource' ? 'resource' : 'predicate'}
+                        rootNodeType={this.props.type === RESOURCE_TYPE_ID ? RESOURCE_TYPE_ID : PREDICATE_TYPE_ID}
                         enableEdit={this.props.enableEdit}
                         syncBackend={this.props.syncBackend}
                         initialSubjectId={this.props.id}
@@ -89,7 +105,7 @@ StatementBrowserDialog.defaultProps = {
     newStore: true,
     enableEdit: false,
     syncBackend: false,
-    type: 'resource'
+    type: RESOURCE_TYPE_ID
 };
 
 const mapStateToProps = state => {

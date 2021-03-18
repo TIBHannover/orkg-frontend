@@ -1,6 +1,6 @@
 import { faBold, faCode, faImage, faItalic, faLink, faList, faListOl, faQuoteLeft, faUnderline } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import Tippy from '@tippy.js/react';
+import Tippy from '@tippyjs/react';
 import { updateSectionMarkdown } from 'actions/smartArticle';
 import MarkdownRenderer from 'components/SmartArticle/MarkdownRenderer';
 import { MarkdownPlaceholder } from 'components/SmartArticle/styled';

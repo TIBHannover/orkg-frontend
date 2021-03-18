@@ -3,7 +3,7 @@ import { Row, Col, Button } from 'reactstrap';
 import ContributionItemList from './ContributionItemList';
 import ContributionsHelpTour from './ContributionsHelpTour';
 import Tooltip from 'components/Utils/Tooltip';
-import { StyledHorizontalContributionsList } from './styled';
+import { AddContribution, StyledHorizontalContributionsList } from './styled';
 import { connect } from 'react-redux';
 import {
     nextStep,
@@ -23,7 +23,7 @@ import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faMagic, faPlus } from '@fortawesome/free-solid-svg-icons';
 import styled from 'styled-components';
-import Tippy from '@tippy.js/react';
+import Tippy from '@tippyjs/react';
 import PropTypes from 'prop-types';
 import { updateSettings } from 'actions/statementBrowser';
 
@@ -186,23 +186,14 @@ class Contributions extends Component {
                                 );
                             })}
 
-                            <li className="addContribution">
-                                <div
-                                    onClick={this.props.createContribution}
-                                    onKeyDown={e => {
-                                        if (e.keyCode === 13) {
-                                            this.props.createContribution();
-                                        }
-                                    }}
-                                    role="button"
-                                    tabIndex={0}
-                                >
+                            <li>
+                                <AddContribution color="link" onClick={this.props.createContribution}>
                                     <Tippy content="Add contribution">
                                         <span>
                                             <Icon size="xs" icon={faPlus} />
                                         </span>
                                     </Tippy>
-                                </div>
+                                </AddContribution>
                             </li>
                         </StyledHorizontalContributionsList>
                     </Col>

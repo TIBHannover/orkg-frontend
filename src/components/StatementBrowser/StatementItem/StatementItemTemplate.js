@@ -1,48 +1,33 @@
-import { useState } from 'react';
-import {
-    toggleEditPropertyLabel,
-    getComponentsByResourceIDAndPredicateID,
-    canAddValue as canAddValueAction,
-    canDeleteProperty as canDeletePropertyAction
-} from 'actions/statementBrowser';
+import { toggleEditPropertyLabel } from 'actions/statementBrowser';
 import { faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { ListGroup, InputGroup } from 'reactstrap';
 import PropTypes from 'prop-types';
-import classNames from 'classnames';
 import ValueItem from 'components/StatementBrowser/ValueItem/ValueItem';
 import AddValue from 'components/StatementBrowser/AddValue/AddValue';
 import StatementOptionButton from 'components/StatementBrowser/StatementOptionButton/StatementOptionButton';
+import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
 import { StatementsGroupStyle, PropertyStyle, ValuesStyle } from 'components/StatementBrowser/styled';
-import { predicatesUrl } from 'services/backend/predicates';
 import defaultProperties from 'components/StatementBrowser/AddProperty/helpers/defaultProperties';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
+import { ENTITIES } from 'constants/graphSettings';
 import { reverse } from 'named-urls';
 import { Link } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import useStatementItemTemplate from './hooks/useStatementItemTemplate';
 import ROUTES from 'constants/routes.js';
+import { PREDICATE_TYPE_ID } from 'constants/misc';
 
 export default function StatementItemTemplate(props) {
-    const dispatch = useDispatch();
-    const components = useSelector(state =>
-        getComponentsByResourceIDAndPredicateID(
-            state,
-            props.resourceId ? props.resourceId : state.statementBrowser.selectedResource,
-            props.property.existingPredicateId
-        )
-    );
-    const canAddValue = useSelector(state =>
-        canAddValueAction(state, props.resourceId ? props.resourceId : state.statementBrowser.selectedResource, props.id)
-    );
-    const canDeleteProperty = useSelector(state =>
-        canDeletePropertyAction(state, props.resourceId ? props.resourceId : state.statementBrowser.selectedResource, props.id)
-    );
-    const propertiesAsLinks = useSelector(state => state.statementBrowser.propertiesAsLinks);
-    const [disableHover, setDisableHover] = useState(false);
+    const {
+        propertiesAsLinks,
+        propertyOptionsClasses,
+        canDeleteProperty,
+        dispatch,
+        setDisableHover,
+        values,
+        components,
+        canAddValue
+    } = useStatementItemTemplate(props);
 
-    const propertyOptionsClasses = classNames({
-        propertyOptions: true,
-        disableHover: disableHover
-    });
     return (
         <StatementsGroupStyle className={`${props.inTemplate ? 'inTemplate' : 'noTemplate'}`}>
             <div className="row no-gutters">
@@ -50,13 +35,19 @@ export default function StatementItemTemplate(props) {
                     {!props.property.isEditing ? (
                         <div>
                             <div className="propertyLabel">
-                                <Link
-                                    to={reverse(ROUTES.PREDICATE, { id: props.property.existingPredicateId })}
-                                    target={!propertiesAsLinks ? '_blank' : '_self'}
-                                    className={!propertiesAsLinks ? 'text-dark' : ''}
-                                >
-                                    {props.predicateLabel}
-                                </Link>
+                                {props.property.existingPredicateId ? (
+                                    <Link
+                                        to={reverse(ROUTES.PROPERTY, { id: props.property.existingPredicateId })}
+                                        target={!propertiesAsLinks ? '_blank' : '_self'}
+                                        className={!propertiesAsLinks ? 'text-dark' : ''}
+                                    >
+                                        <DescriptionTooltip id={props.property.existingPredicateId} typeId={PREDICATE_TYPE_ID}>
+                                            {props.predicateLabel}
+                                        </DescriptionTooltip>
+                                    </Link>
+                                ) : (
+                                    props.predicateLabel
+                                )}
                             </div>
                             {props.enableEdit && (
                                 <div className={propertyOptionsClasses}>
@@ -90,8 +81,8 @@ export default function StatementItemTemplate(props) {
                         <div>
                             <InputGroup size="sm">
                                 <AutoComplete
+                                    entityType={ENTITIES.PREDICATE}
                                     cssClasses="form-control-sm"
-                                    requestUrl={predicatesUrl}
                                     placeholder={props.predicateLabel}
                                     onChange={(selectedOption, a) => {
                                         props.handleChange(selectedOption, a);
@@ -113,7 +104,7 @@ export default function StatementItemTemplate(props) {
                     <ListGroup flush className="px-3">
                         {props.property.valueIds.length > 0 &&
                             props.property.valueIds.map((valueId, index) => {
-                                const value = props.values.byId[valueId];
+                                const value = values.byId[valueId];
                                 return (
                                     <ValueItem
                                         value={value}
@@ -156,7 +147,6 @@ StatementItemTemplate.propTypes = {
     isLastItem: PropTypes.bool.isRequired,
     enableEdit: PropTypes.bool.isRequired,
     predicateLabel: PropTypes.string.isRequired,
-    values: PropTypes.object.isRequired,
     syncBackend: PropTypes.bool.isRequired,
     handleChange: PropTypes.func.isRequired,
     inTemplate: PropTypes.bool,

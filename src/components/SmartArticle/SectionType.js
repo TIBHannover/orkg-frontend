@@ -1,4 +1,4 @@
-import Tippy from '@tippy.js/react';
+import Tippy from '@tippyjs/react';
 import { updateSectionType } from 'actions/smartArticle';
 import useOntology from 'components/PdfTextAnnotation/hooks/useOntology';
 import { SectionTypeContainerStyled, SectionTypeStyled } from 'components/SmartArticle/styled';

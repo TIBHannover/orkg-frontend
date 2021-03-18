@@ -7,11 +7,11 @@ import { connect } from 'react-redux';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 import { setLabelCache } from 'actions/pdfAnnotation';
-import Tippy from '@tippy.js/react';
+import Tippy from '@tippyjs/react';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
-import { CLASSES } from 'constants/graphSettings';
-import { createResource, resourcesUrl } from 'services/backend/resources';
-import { createPredicate, predicatesUrl } from 'services/backend/predicates';
+import { CLASSES, ENTITIES } from 'constants/graphSettings';
+import { createResource } from 'services/backend/resources';
+import { createPredicate } from 'services/backend/predicates';
 import moment from 'moment';
 import { range } from 'utils';
 import { isString } from 'lodash';
@@ -233,8 +233,8 @@ class EditorComponent extends BaseEditorComponent {
                     <InputGroup size="sm">
                         {this.state.valueType === 'resource' || this.state.type === 'property' ? (
                             <AutoComplete
-                                requestUrl={this.state.type === 'property' ? predicatesUrl : resourcesUrl}
-                                excludeClasses={`${CLASSES.CONTRIBUTION},${CLASSES.PROBLEM},${CLASSES.CONTRIBUTION_TEMPLATE}`}
+                                entityType={this.state.type === 'property' ? ENTITIES.PREDICATE : ENTITIES.RESOURCE}
+                                excludeClasses={`${CLASSES.CONTRIBUTION},${CLASSES.PROBLEM},${CLASSES.TEMPLATE}`}
                                 optionsClass={this.state.valueClass ? this.state.valueClass : undefined}
                                 placeholder={this.state.type === 'property' ? 'Enter a property' : 'Enter a resource'}
                                 onChange={async i => {

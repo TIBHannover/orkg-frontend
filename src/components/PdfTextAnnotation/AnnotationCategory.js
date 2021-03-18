@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { upperFirst } from 'lodash';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faQuestionCircle, faQuoteLeft, faTrash, faExclamationTriangle, faPen } from '@fortawesome/free-solid-svg-icons';
-import Tippy from '@tippy.js/react';
+import Tippy from '@tippyjs/react';
 import { Button } from 'reactstrap';
 import { useSelector } from 'react-redux';
 import { filter } from 'lodash';

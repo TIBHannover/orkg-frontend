@@ -20,14 +20,15 @@ import { connect } from 'react-redux';
 import { reverse } from 'named-urls';
 import { toast } from 'react-toastify';
 import { selectContribution, updateResearchProblems } from 'actions/viewPaper';
-import { getReseachProblemsOfContribution } from 'actions/statementBrowser';
+import { getResearchProblemsOfContribution } from 'actions/statementBrowser';
 import styled from 'styled-components';
-import { StyledHorizontalContributionsList, StyledHorizontalContribution } from 'components/AddPaper/Contributions/styled';
-import Tippy from '@tippy.js/react';
+import { StyledHorizontalContributionsList, StyledHorizontalContribution, AddContribution } from 'components/AddPaper/Contributions/styled';
+import Tippy from '@tippyjs/react';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import SuggestedTemplates from 'components/StatementBrowser/SuggestedTemplates/SuggestedTemplates';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { PREDICATES, CLASSES } from 'constants/graphSettings';
+import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
 
 const Title = styled.div`
     font-size: 18px;
@@ -212,19 +213,14 @@ class Contributions extends Component {
                                         );
                                     })}
                                     {this.props.enableEdit && (
-                                        <li className="addContribution">
-                                            <div
-                                                onClick={() => this.props.handleCreateContribution()}
-                                                onKeyDown={e => (e.keyCode === 13 ? this.props.handleCreateContribution() : undefined)}
-                                                role="button"
-                                                tabIndex={0}
-                                            >
+                                        <li>
+                                            <AddContribution color="link" onClick={() => this.props.handleCreateContribution()}>
                                                 <Tippy content="Add contribution">
                                                     <span>
                                                         <Icon size="xs" icon={faPlus} />
                                                     </span>
                                                 </Tippy>
-                                            </div>
+                                            </AddContribution>
                                         </li>
                                     )}
                                 </StyledHorizontalContributionsList>
@@ -282,7 +278,9 @@ class Contributions extends Component {
                                                             <span key={index}>
                                                                 <Link to={reverse(ROUTES.RESEARCH_PROBLEM, { researchProblemId: problem.id })}>
                                                                     <ResearchProblemButton className="btn btn-link p-0 border-0 align-baseline">
-                                                                        {problem.label}
+                                                                        <DescriptionTooltip id={problem.id} typeId={CLASSES.PROBLEM}>
+                                                                            {problem.label}
+                                                                        </DescriptionTooltip>
                                                                     </ResearchProblemButton>
                                                                 </Link>
                                                                 <br />
@@ -444,7 +442,7 @@ const mapStateToProps = (state, ownProps) => {
 
     // All the research problem ids (concatination of the research problem input field and the statement browser)
     const researchProblemsIds = [
-        ...getReseachProblemsOfContribution(
+        ...getResearchProblemsOfContribution(
             state,
             state.addPaper.contributions.byId[ownProps.selectedContribution]
                 ? state.addPaper.contributions.byId[ownProps.selectedContribution].resourceId
