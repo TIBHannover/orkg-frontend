@@ -963,7 +963,7 @@ export const applyRule = ({ filterControlData, type, propertyId, value }) => {
  * @param input string that should be slugified
  */
 export const slugify = input => {
-    return slugifyString(input, '_');
+    return slugifyString(input.replace('/', ' '), '_');
 };
 
 /**
