@@ -55,7 +55,7 @@ const ComparisonTable = props => {
                       };
                   }))
         ];
-    }, [props.transpose, props.properties, props.contributions]);
+    }, [props.transpose, props.properties, props.contributions, props.data]);
 
     const defaultColumn = useMemo(
         () => ({
@@ -67,6 +67,9 @@ const ComparisonTable = props => {
     );
 
     const columns = useMemo(() => {
+        if (props.filterControlData.length === 0) {
+            return [];
+        }
         return [
             {
                 Header: (
@@ -190,7 +193,9 @@ const ComparisonTable = props => {
                           };
                       }))
         ];
-    }, [props.transpose, props.properties, props.contributions]);
+        // TODO: remove disable lint rule: useCallback for removeContribution and add used dependencies
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [props.transpose, props.properties, props.contributions, props.filterControlData]);
 
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable(
         {

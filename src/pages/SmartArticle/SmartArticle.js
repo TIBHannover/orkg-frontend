@@ -1,4 +1,4 @@
-import { faCheckCircle, faDownload, faPen, faSpinner, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faCheckCircle, faDownload, faEllipsisV, faPen, faSpinner, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import AddSection from 'components/SmartArticle/AddSection';
@@ -13,8 +13,11 @@ import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import ContentLoader from 'react-content-loader';
 import { useSelector } from 'react-redux';
-import { Button, ButtonGroup, Container } from 'reactstrap';
+import { Button, ButtonGroup, Container, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledButtonDropdown } from 'reactstrap';
 import { createGlobalStyle } from 'styled-components';
+import { NavLink } from 'react-router-dom';
+import ROUTES from 'constants/routes';
+import { reverse } from 'named-urls';
 
 const GlobalStyle = createGlobalStyle`
     // ensure printing only prints the contents and no other elements
@@ -107,6 +110,16 @@ const SmartArticle = props => {
                                     <Icon icon={faTimes} /> Stop editing
                                 </Button>
                             )}
+                            <UncontrolledButtonDropdown>
+                                <DropdownToggle size="sm" color="darkblue" className="px-3 rounded-right" style={{ marginLeft: 2 }}>
+                                    <Icon icon={faEllipsisV} />
+                                </DropdownToggle>
+                                <DropdownMenu right>
+                                    <DropdownItem tag={NavLink} exact to={reverse(ROUTES.RESOURCE, { id })}>
+                                        View resource
+                                    </DropdownItem>
+                                </DropdownMenu>
+                            </UncontrolledButtonDropdown>
                         </ButtonGroup>
                     </div>
                 </div>

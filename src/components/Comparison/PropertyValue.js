@@ -1,9 +1,7 @@
 import { useState } from 'react';
 import { Button } from 'reactstrap';
-import Tippy from '@tippyjs/react';
 import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
 import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
-import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
 import FilterWrapper from 'components/Comparison/Filters/FilterWrapper';
 import FilterModal from 'components/Comparison/Filters/FilterModal';
 import { faFilter } from '@fortawesome/free-solid-svg-icons';
