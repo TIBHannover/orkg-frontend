@@ -2,7 +2,7 @@ import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import { Redirect, useParams } from 'react-router-dom';
 import { usePrevious } from 'react-use';
-import slugify from 'slugify';
+import { slugify } from 'utils';
 
 /**
  * Component to check if query param slug is valid, and makes a redirect if not
