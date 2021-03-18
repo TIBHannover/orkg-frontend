@@ -16,6 +16,7 @@ import ResearchProblemInput from 'components/AddPaper/Contributions/ResearchProb
 import ContributionItemList from 'components/AddPaper/Contributions/ContributionItemList';
 import ContributionComparisons from 'components/ViewPaper/ContirbutionComparisons/ContributionComparisons';
 import ProvenanceBox from 'components/ViewPaper/ProvenanceBox/ProvenanceBox';
+import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import { connect } from 'react-redux';
 import { reverse } from 'named-urls';
 import { toast } from 'react-toastify';
@@ -289,14 +290,15 @@ class Contributions extends Component {
                                                     {this.props.researchProblems && this.props.researchProblems.length === 0 && (
                                                         <i>
                                                             No research problems added yet. Please contribute by{' '}
-                                                            <Button
-                                                                color="link"
-                                                                style={{ verticalAlign: 'initial', fontStyle: 'italic' }}
+                                                            <RequireAuthentication
+                                                                component={Button}
                                                                 className="m-0 p-0"
+                                                                style={{ verticalAlign: 'initial', fontStyle: 'italic' }}
+                                                                color="link"
                                                                 onClick={() => this.props.toggleEditMode()}
                                                             >
                                                                 editing
-                                                            </Button>{' '}
+                                                            </RequireAuthentication>{' '}
                                                             the paper.
                                                         </i>
                                                     )}

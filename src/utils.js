@@ -1,13 +1,12 @@
 import capitalize from 'capitalize';
 import queryString from 'query-string';
-import { flattenDepth, uniq } from 'lodash';
+import { flattenDepth, uniq, isString, find, flatten, last } from 'lodash';
 import rdf from 'rdf';
 import ROUTES from 'constants/routes';
 import { PREDICATES, MISC, CLASSES } from 'constants/graphSettings';
 import { reverse } from 'named-urls';
 import { PREDICATE_TYPE_ID, RESOURCE_TYPE_ID } from 'constants/misc';
 import { FILTER_TYPES } from 'constants/comparisonFilterTypes';
-import { isString } from 'lodash';
 
 export function hashCode(s) {
     return s.split('').reduce((a, b) => {
@@ -1120,4 +1119,20 @@ export const stringifySort = sort => {
         }
     }
     return label;
+};
+
+/**
+ * Get property object from comparison data
+ * (This function is useful to make the property clickable when using the comparison type "path")
+ * @param {Array} data Comparison data
+ * @param {Object} value The property path
+ * @return {Object} The property object
+ */
+export const getPropertyObjectFromData = (data, value) => {
+    const notEmptyCell = find(flatten(data[value.id]), function(v) {
+        return v?.path?.length > 0;
+    });
+    return notEmptyCell && notEmptyCell.path?.length && notEmptyCell.pathLabels?.length
+        ? { id: last(notEmptyCell.path), label: last(notEmptyCell.pathLabels) }
+        : value;
 };
