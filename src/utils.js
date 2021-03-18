@@ -7,6 +7,7 @@ import { PREDICATES, MISC, CLASSES } from 'constants/graphSettings';
 import { reverse } from 'named-urls';
 import { PREDICATE_TYPE_ID, RESOURCE_TYPE_ID } from 'constants/misc';
 import { FILTER_TYPES } from 'constants/comparisonFilterTypes';
+import slugifyString from 'slugify';
 
 export function hashCode(s) {
     return s.split('').reduce((a, b) => {
@@ -1120,6 +1121,22 @@ export const stringifySort = sort => {
     }
     return label;
 };
+
+/**
+ * Use reverse from 'named-urls' and automatically slugifies the slug param
+ * @param input string that should be slugified
+ */
+export const slugify = input => {
+    return slugifyString(input.replace('/', ' '), '_');
+};
+
+/**
+ * Use reverse from 'named-urls' and automatically slugifies the slug param
+ * @param route name of the route
+ * @param params route params to pass
+ * @param params.slug the slug for this param
+ */
+export const reverseWithSlug = (route, params) => reverse(route, { ...params, slug: params.slug ? slugify(params.slug) : undefined });
 
 /**
  * Get property object from comparison data

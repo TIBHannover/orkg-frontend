@@ -27,6 +27,8 @@ import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import { usePrevious } from 'react-use';
 import PropTypes from 'prop-types';
+import CheckSlug from 'components/CheckSlug/CheckSlug';
+import { reverseWithSlug } from 'utils';
 
 const ResearchFieldHeader = ({ id }) => {
     const [menuOpen, setMenuOpen] = useState(false);
@@ -43,6 +45,7 @@ const ResearchFieldHeader = ({ id }) => {
 
     return (
         <>
+            {!isLoading && !isFailedLoading && <CheckSlug label={researchFieldData.label} route={ROUTES.RESEARCH_FIELD} />}
             {isLoading && (
                 <>
                     <div className="mt-4 mb-4 container">
@@ -138,7 +141,10 @@ const ResearchFieldHeader = ({ id }) => {
                                             {subResearchFields.slice(0, 9).map(subfield => (
                                                 <Link
                                                     key={`index${subfield.id}`}
-                                                    to={reverse(ROUTES.RESEARCH_FIELD, { researchFieldId: subfield.id })}
+                                                    to={reverseWithSlug(ROUTES.RESEARCH_FIELD, {
+                                                        researchFieldId: subfield.id,
+                                                        slug: subfield.label
+                                                    })}
                                                 >
                                                     <Badge color="lightblue" className="mr-2 mb-2">
                                                         {subfield.label}
@@ -150,7 +156,10 @@ const ResearchFieldHeader = ({ id }) => {
                                                 subResearchFields.slice(9).map(subfield => (
                                                     <Link
                                                         key={`index${subfield.id}`}
-                                                        to={reverse(ROUTES.RESEARCH_FIELD, { researchFieldId: subfield.id })}
+                                                        to={reverseWithSlug(ROUTES.RESEARCH_FIELD, {
+                                                            researchFieldId: subfield.id,
+                                                            slug: subfield.label
+                                                        })}
                                                     >
                                                         <Badge color="lightblue" className="mr-2 mb-2">
                                                             {subfield.label}

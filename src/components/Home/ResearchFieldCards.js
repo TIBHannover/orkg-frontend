@@ -10,10 +10,10 @@ import { resourcesUrl } from 'services/backend/resources';
 import ContentLoader from 'react-content-loader';
 import PropTypes from 'prop-types';
 import ROUTES from 'constants/routes';
-import { reverse } from 'named-urls';
 import Breadcrumbs from 'components/Breadcrumbs/Breadcrumbs';
 import { Link } from 'react-router-dom';
 import { Button } from 'reactstrap';
+import { reverseWithSlug } from 'utils';
 
 /* Bootstrap card column is not working correctly working with vertical alignment,
 thus used custom styling here */
@@ -119,7 +119,10 @@ const ResearchFieldCards = ({ selectedResearchField, handleFieldSelect, research
                     {selectedResearchField.id !== MISC.RESEARCH_FIELD_MAIN && (
                         <Button
                             tag={Link}
-                            to={reverse(ROUTES.RESEARCH_FIELD, { researchFieldId: selectedResearchField.id })}
+                            to={reverseWithSlug(ROUTES.RESEARCH_FIELD, {
+                                researchFieldId: selectedResearchField.id,
+                                slug: selectedResearchField.label
+                            })}
                             color="light"
                             size="sm"
                             className="flex-shrink-0 mr-2"

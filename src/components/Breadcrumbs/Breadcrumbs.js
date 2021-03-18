@@ -10,6 +10,7 @@ import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
+import { reverseWithSlug } from 'utils';
 
 const StyledDropdownItem = styled(DropdownItem)`
     &:active,
@@ -67,7 +68,13 @@ function Breadcrumbs(props) {
                 </Button>
             );
         } else {
-            return <Link to={index === 0 ? reverse(ROUTES.HOME) : reverse(ROUTES.RESEARCH_FIELD, { researchFieldId: field.id })}>{children}</Link>;
+            return (
+                <Link
+                    to={index === 0 ? reverse(ROUTES.HOME) : reverseWithSlug(ROUTES.RESEARCH_FIELD, { researchFieldId: field.id, slug: field.label })}
+                >
+                    {children}
+                </Link>
+            );
         }
     };
 
@@ -83,7 +90,7 @@ function Breadcrumbs(props) {
                 <StyledDropdownItem
                     tag={NavLink}
                     key={`rf-${field.id}`}
-                    to={reverse(ROUTES.RESEARCH_FIELD, { researchFieldId: field.id })}
+                    to={reverseWithSlug(ROUTES.RESEARCH_FIELD, { researchFieldId: field.id, slug: field.label })}
                     className="text-primary"
                 >
                     {children}

@@ -16,6 +16,8 @@ import ExternalDescription from 'components/ResearchProblem/ExternalDescription'
 import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
 import ROUTES from 'constants/routes';
 import { usePrevious } from 'react-use';
+import CheckSlug from 'components/CheckSlug/CheckSlug';
+import { reverseWithSlug } from 'utils';
 
 function ResearchProblem(props) {
     const [researchProblemData, parentResearchProblems, isLoading, isFailedLoading, loadResearchProblemData] = useResearchProblem();
@@ -34,6 +36,8 @@ function ResearchProblem(props) {
 
     return (
         <div>
+            <CheckSlug label={researchProblemData.label} route={ROUTES.RESEARCH_PROBLEM} />
+
             {isLoading && (
                 <div className="text-center mt-4 mb-4">
                     <Icon icon={faSpinner} spin /> Loading
@@ -115,8 +119,9 @@ function ResearchProblem(props) {
                                                         return (
                                                             <li key={`rf${researchField.field.id}`}>
                                                                 <Link
-                                                                    to={reverse(ROUTES.RESEARCH_FIELD, {
-                                                                        researchFieldId: researchField.field.id
+                                                                    to={reverseWithSlug(ROUTES.RESEARCH_FIELD, {
+                                                                        researchFieldId: researchField.field.id,
+                                                                        slug: researchField.field.label
                                                                     })}
                                                                 >
                                                                     {researchField.field.label}
