@@ -87,10 +87,13 @@ function useResearchFieldPapers({ researchFieldId, initialSort, initialIncludeSu
         setIsLastPageReached(false);
         setPage(0);
         setTotalElements(0);
+        /*
+        TODO: Remove the featured sort with it's not the main research field
         if (researchFieldId !== MISC.RESEARCH_FIELD_MAIN && sort === 'featured') {
             // Because filtering featured comparison based on research field is not supported
             setSort('newest');
         }
+        */
     }, [researchFieldId, sort, includeSubFields]);
 
     useEffect(() => {
