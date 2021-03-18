@@ -37,7 +37,7 @@ const Comparisons = ({ id, boxShadow }) => {
                         <SubtitleSeparator />
                         <SubTitle className="mb-0">
                             <small className="text-muted mb-0 text-small">
-                                {totalElements === 0 && isLoading ? <Icon icon={faSpinner} spin /> : <>{`${totalElements} Comparison`}</>}
+                                {totalElements === 0 && isLoading ? <Icon icon={faSpinner} spin /> : <>{`${totalElements} comparisons`}</>}
                             </small>
                         </SubTitle>
                     </>

@@ -35,15 +35,23 @@ function useResearchFieldObservatories({ researchFieldId }) {
 
                 obsCalls
                     .then(data => {
-                        let observatoriesData = data[0]
-                            .filter(ob => {
-                                const obsStat = data[1].find(el => el.observatory_id === ob.id);
-                                return obsStat && (obsStat.comparisons > 0 || obsStat.resources > 0);
-                            })
-                            .map(ob => {
+                        let observatoriesData;
+                        if (researchFieldId !== MISC.RESEARCH_FIELD_MAIN) {
+                            observatoriesData = data[0].map(ob => {
                                 const obsStat = data[1].find(el => el.observatory_id === ob.id);
                                 return { ...ob, ...obsStat, orgs: data[2].filter(o => ob.organization_ids.includes(o.id)) };
                             });
+                        } else {
+                            observatoriesData = data[0]
+                                .filter(ob => {
+                                    const obsStat = data[1].find(el => el.observatory_id === ob.id);
+                                    return obsStat && (obsStat.comparisons > 0 || obsStat.resources > 0);
+                                })
+                                .map(ob => {
+                                    const obsStat = data[1].find(el => el.observatory_id === ob.id);
+                                    return { ...ob, ...obsStat, orgs: data[2].filter(o => ob.organization_ids.includes(o.id)) };
+                                });
+                        }
                         const cont = observatoriesData.map(o => getUsersByObservatoryId(o.id));
                         Promise.all(cont).then(c => {
                             observatoriesData = orderBy(

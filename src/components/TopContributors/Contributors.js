@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { ButtonDropdown, DropdownMenu, DropdownItem, CardTitle, Button } from 'reactstrap';
-import { SmallDropdownToggle } from 'components/styled';
+import { CardTitle } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faEllipsisH } from '@fortawesome/free-solid-svg-icons';
-import useTopContributors from 'components/TopContributors/hooks/useTopContributors';
+import useContributors from 'components/TopContributors/hooks/useContributors';
+import ContributorsDropdownFilter from './ContributorsDropdownFilter';
 import ContentLoader from 'react-content-loader';
 import ContributorsModal from './ContributorsModal';
 import ROUTES from 'constants/routes.js';
@@ -54,10 +54,12 @@ const ContributorsAvatars = styled.div`
 `;
 
 const Contributors = ({ researchFieldId }) => {
-    /*
-    const [menuOpenContributors, setMenuOpenContributors] = useState(false);
-    */
-    const { contributors, isLoading } = useTopContributors({ researchFieldId, pageSize: 19 });
+    const { contributors, sort, includeSubFields, isLoading, setSort, setIncludeSubFields } = useContributors({
+        researchFieldId,
+        pageSize: 19,
+        initialSort: 'top',
+        includeSubFields: true
+    });
     const [openModal, setOpenModal] = useState(false);
 
     return (
@@ -67,23 +69,13 @@ const Contributors = ({ researchFieldId }) => {
                     Contributors
                 </CardTitle>
                 <div className="align-self-center">
-                    {/*!isLoading && contributors && contributors.length > 0 && (
-                        <ButtonDropdown
-                            isOpen={menuOpenContributors}
-                            toggle={() => setMenuOpenContributors(v => !v)}
-                            className="flex-shrink-0"
-                            style={{ marginLeft: 'auto' }}
-                            size="sm"
-                        >
-                            <SmallDropdownToggle caret size="sm" color="lightblue">
-                                Last 30 days
-                            </SmallDropdownToggle>
-                            <DropdownMenu>
-                                <DropdownItem>Last 30 days</DropdownItem>
-                                <DropdownItem>All time</DropdownItem>
-                            </DropdownMenu>
-                        </ButtonDropdown>
-                    )*/}
+                    <ContributorsDropdownFilter
+                        sort={sort}
+                        isLoading={isLoading}
+                        includeSubFields={includeSubFields}
+                        setSort={setSort}
+                        setIncludeSubFields={setIncludeSubFields}
+                    />
                 </div>
             </div>
             {!isLoading && contributors && contributors.length > 0 && (
@@ -97,9 +89,11 @@ const Contributors = ({ researchFieldId }) => {
                                     <>
                                         {contributor.profile.display_name}
                                         <br />
-                                        <i>
-                                            {contributor.contributions} contribution{contributor.contributions > 1 ? 's' : ''}
-                                        </i>
+                                        {contributor.contributions !== null && (
+                                            <i>
+                                                {contributor.contributions} contribution{contributor.contributions > 1 ? 's' : ''}
+                                            </i>
+                                        )}
                                     </>
                                 }
                             >
@@ -124,8 +118,14 @@ const Contributors = ({ researchFieldId }) => {
                     <i> be the first contributor!</i>.
                 </div>
             )}
-            {contributors.length > 1 && openModal && (
-                <ContributorsModal openModal={openModal} setOpenModal={setOpenModal} researchFieldId={researchFieldId} />
+            {contributors.length > 18 && openModal && (
+                <ContributorsModal
+                    initialSort={sort}
+                    initialIncludeSubFields={includeSubFields}
+                    openModal={openModal}
+                    setOpenModal={setOpenModal}
+                    researchFieldId={researchFieldId}
+                />
             )}
             {isLoading && (
                 <div className="mt-4 mb-4" style={{ width: '100% !important' }}>

@@ -123,9 +123,9 @@ function ObservatoriesCarousel(props) {
                                 </div>
                                 <CardFooterStyled className="text-muted">
                                     <small>
-                                        <Icon icon={faCubes} className="mr-1" /> {observatory.comparisons} comparisons
+                                        <Icon icon={faCubes} className="mr-1" /> {observatory.comparisons ?? 0} comparisons
                                         <Icon icon={faFile} className="mr-1 ml-2" />
-                                        {observatory.resources} papers
+                                        {observatory.resources ?? 0} papers
                                     </small>
                                     <div className="float-right" style={{ height: '25px' }}>
                                         {observatory.contributors.slice(0, 5).map(contributor => (

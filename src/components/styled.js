@@ -23,9 +23,3 @@ export const SmallButton = styled(Button)`
         padding: 0.2rem 0.75rem;
     }
 `;
-
-export const SmallDropdownToggle = styled(DropdownToggle)`
-    &&& {
-        padding: 0.2rem 0.75rem;
-    }
-`;

@@ -34,8 +34,7 @@ export const getResearchProblemsByResearchFieldId = ({ id, page = 0, items = 999
     return submitGetRequest(`${fieldsUrl}${encodeURIComponent(id)}/${subfields ? 'subfields/' : ''}research-problems?${params}`);
 };
 
-export const getContributorsByResearchFieldId = ({ id, page = 0, items = 9999, sortBy = 'created_at', desc = true, subfields = true }) => {
-    const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
-    const params = queryString.stringify({ page: page, size: items /*, sort, desc*/ });
+export const getContributorsByResearchFieldId = ({ id, page = 0, items = 9999, subfields = true }) => {
+    const params = queryString.stringify({ page: page, size: items });
     return submitGetRequest(`${fieldsUrl}${encodeURIComponent(id)}/${subfields ? 'subfields/' : ''}contributors?${params}`);
 };

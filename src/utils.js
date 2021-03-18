@@ -1106,6 +1106,14 @@ export const stringifySort = sort => {
             label = 'Featured';
             break;
         }
+        case 'top': {
+            label = 'Last 30 days';
+            break;
+        }
+        case 'all': {
+            label = 'All time';
+            break;
+        }
         default: {
             label = 'Newest first';
             break;

@@ -38,7 +38,7 @@ const Papers = ({ id, boxShadow }) => {
                         <SubtitleSeparator />
                         <SubTitle className="mb-0">
                             <small className="text-muted mb-0 text-small">
-                                {totalElements === 0 && isLoading ? <Icon icon={faSpinner} spin /> : <>{`${totalElements} paper`}</>}
+                                {totalElements === 0 && isLoading ? <Icon icon={faSpinner} spin /> : <>{`${totalElements} papers`}</>}
                             </small>
                         </SubTitle>
                     </>

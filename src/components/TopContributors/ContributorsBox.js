@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import useTopContributors from 'components/TopContributors/hooks/useTopContributors';
+import useContributors from 'components/TopContributors/hooks/useContributors';
 import ContributorCard from 'components/ContributorCard/ContributorCard';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faAward } from '@fortawesome/free-solid-svg-icons';
@@ -9,7 +9,7 @@ import { SmallButton } from 'components/styled';
 import PropTypes from 'prop-types';
 
 const ContributorsBox = ({ researchFieldId }) => {
-    const { contributors, isLoading } = useTopContributors({ researchFieldId, pageSize: 4 });
+    const { contributors, isLoading } = useContributors({ researchFieldId, pageSize: 4 });
     const [openModal, setOpenModal] = useState(false);
 
     return (

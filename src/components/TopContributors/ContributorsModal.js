@@ -1,18 +1,33 @@
 import ContentLoader from 'react-content-loader';
-import useTopContributors from 'components/TopContributors/hooks/useTopContributors';
+import useContributors from 'components/TopContributors/hooks/useContributors';
 import { Modal, ModalBody, ModalHeader } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faAward } from '@fortawesome/free-solid-svg-icons';
 import ContributorCard from 'components/ContributorCard/ContributorCard';
 import PropTypes from 'prop-types';
+import ContributorsDropdownFilter from './ContributorsDropdownFilter';
 
-const ContributorsModal = ({ researchFieldId, openModal, setOpenModal }) => {
-    const { contributors, isLoading } = useTopContributors({ researchFieldId, pageSize: 30 });
+const ContributorsModal = ({ researchFieldId, openModal, setOpenModal, initialSort = 'top', initialIncludeSubFields = true }) => {
+    const { contributors, sort, includeSubFields, isLoading, setSort, setIncludeSubFields } = useContributors({
+        researchFieldId,
+        pageSize: 30,
+        initialSort,
+        initialIncludeSubFields
+    });
 
     return (
         <Modal isOpen={openModal} toggle={() => setOpenModal(v => !v)} size="lg">
             <ModalHeader toggle={() => setOpenModal(v => !v)}>
-                <Icon icon={faAward} className="text-primary" /> Top 30 Contributors
+                <Icon icon={faAward} className="text-primary" /> {sort === 'top' ? 'Top 30 ' : ''}Contributors
+                <div style={{ display: 'inline-block', marginLeft: '20px' }}>
+                    <ContributorsDropdownFilter
+                        sort={sort}
+                        isLoading={isLoading}
+                        includeSubFields={includeSubFields}
+                        setSort={setSort}
+                        setIncludeSubFields={setIncludeSubFields}
+                    />
+                </div>
             </ModalHeader>
             <ModalBody>
                 <div className="pl-3 pr-3">
@@ -21,12 +36,14 @@ const ContributorsModal = ({ researchFieldId, openModal, setOpenModal }) => {
                             return (
                                 <div className="pt-2 pb-2" key={`rp${index}`}>
                                     <div className="d-flex">
-                                        <div className="pl-4 pr-4 pt-2">{index + 1}.</div>
+                                        {sort === 'top' && <div className="pl-4 pr-4 pt-2">{index + 1}.</div>}
                                         <div>
                                             <ContributorCard
                                                 contributor={{
                                                     ...contributor.profile,
-                                                    subTitle: `${contributor.contributions} contribution${contributor.contributions > 1 ? 's' : ''}`
+                                                    subTitle: contributor.contributions
+                                                        ? `${contributor.contributions} contribution${contributor.contributions > 1 ? 's' : ''}`
+                                                        : ''
                                                 }}
                                             />
                                         </div>
@@ -35,6 +52,12 @@ const ContributorsModal = ({ researchFieldId, openModal, setOpenModal }) => {
                                 </div>
                             );
                         })}
+                    {!isLoading && contributors?.length === 0 && (
+                        <div className="mt-4 mb-4">
+                            No contributors yet.
+                            <i> be the first contributor!</i>.
+                        </div>
+                    )}
                     {isLoading && (
                         <div className="mt-4 mb-4">
                             <ContentLoader height={130} width={200} foregroundColor="#d9d9d9" backgroundColor="#ecebeb">
@@ -57,7 +80,9 @@ const ContributorsModal = ({ researchFieldId, openModal, setOpenModal }) => {
 ContributorsModal.propTypes = {
     researchFieldId: PropTypes.string.isRequired,
     openModal: PropTypes.bool.isRequired,
-    setOpenModal: PropTypes.func.isRequired
+    setOpenModal: PropTypes.func.isRequired,
+    initialSort: PropTypes.string,
+    initialIncludeSubFields: PropTypes.bool
 };
 
 export default ContributorsModal;
