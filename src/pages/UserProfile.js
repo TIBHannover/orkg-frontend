@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Container, Row } from 'reactstrap';
-import { getUserInformationById } from 'services/backend/users';
+import { getContributorInformationById } from 'services/backend/contributors';
 import Items from 'components/UserProfile/Items';
 import { getObservatoryById } from 'services/backend/observatories';
 import { getOrganization } from 'services/backend/organizations';
@@ -9,7 +9,7 @@ import ContentLoader from 'react-content-loader';
 import { useSelector } from 'react-redux';
 import Gravatar from 'react-gravatar';
 import styled from 'styled-components';
-import { CLASSES } from 'constants/graphSettings';
+import { CLASSES, MISC } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import { Link } from 'react-router-dom';
@@ -92,15 +92,15 @@ const UserProfile = props => {
         const getUserInformation = async () => {
             setNotFound(false);
             setIsLoadingUserData(true);
-            getUserInformationById(userId)
+            getContributorInformationById(userId)
                 .then(userData => {
                     if (userData.observatory_id || userData.organization_id) {
                         const promises = [];
-                        if (userData.organization_id) {
+                        if (userData.organization_id !== MISC.UNKNOWN_ID) {
                             const promise1 = getOrganization(userData.organization_id);
                             promises.push(promise1);
                         }
-                        if (userData.observatory_id) {
+                        if (userData.observatory_id !== MISC.UNKNOWN_ID) {
                             const promise2 = getObservatoryById(userData.observatory_id);
                             promises.push(promise2);
                         }
@@ -152,7 +152,7 @@ const UserProfile = props => {
                         <div className="col-2 text-center d-flex align-items-center justify-content-center">
                             <StyledGravatar
                                 className="rounded-circle"
-                                email={userData?.email ?? 'example@example.com'}
+                                md5={userData?.gravatar_id ?? 'example@example.com'}
                                 size={100}
                                 id="TooltipExample"
                             />

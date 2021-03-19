@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import ROUTES from 'constants/routes.js';
-import { getUserInformationById } from 'services/backend/users';
+import { getContributorInformationById } from 'services/backend/contributors';
 import Gravatar from 'react-gravatar';
 import Tippy from '@tippyjs/react';
 import PropTypes from 'prop-types';
@@ -42,7 +42,7 @@ const UserAvatar = ({ userId }) => {
     useEffect(() => {
         if (userId) {
             setIsLoadingContributor(true);
-            getUserInformationById(userId)
+            getContributorInformationById(userId)
                 .then(result => {
                     setContributor(result);
                     setIsLoadingContributor(false);
@@ -64,7 +64,7 @@ const UserAvatar = ({ userId }) => {
                 >
                     <Link to={reverse(ROUTES.USER_PROFILE, { userId: userId })}>
                         {!isLoadingContributor && (
-                            <StyledGravatar className="rounded-circle" email={contributor?.email ?? 'example@example.com'} size={28} />
+                            <StyledGravatar className="rounded-circle" md5={contributor?.gravatar_id ?? 'example@example.com'} size={28} />
                         )}
                         {userId && isLoadingContributor && (
                             <StyledSpinnerGravatar className="rounded-circle">
