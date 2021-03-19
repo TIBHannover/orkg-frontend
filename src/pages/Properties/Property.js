@@ -9,7 +9,9 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPen, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { EditModeHeader, Title } from 'pages/ViewPaper';
 import PropTypes from 'prop-types';
+import { PREDICATE_TYPE_ID } from 'constants/misc';
 import { useLocation } from 'react-router-dom';
+import PropertyStatements from 'components/PropertyStatements/PropertyStatements';
 
 function Property(props) {
     const location = useLocation();
@@ -17,12 +19,13 @@ function Property(props) {
     const [label, setLabel] = useState('');
     const [isLoading, setIsLoading] = useState(true);
     const [editMode, setEditMode] = useState(false);
+    const propertyId = props.match.params.id;
 
     useEffect(() => {
         const findPredicate = async () => {
             setIsLoading(true);
             try {
-                const responseJson = await getPredicate(props.match.params.id);
+                const responseJson = await getPredicate(propertyId);
                 document.title = `${responseJson.label} - Property - ORKG`;
 
                 setLabel(responseJson.label);
@@ -35,7 +38,7 @@ function Property(props) {
             }
         };
         findPredicate();
-    }, [location, props.match.params.id]);
+    }, [location, propertyId]);
 
     return (
         <>
@@ -85,17 +88,18 @@ function Property(props) {
                             <h3 className="h5">Statements</h3>
                             <div className="clearfix">
                                 <StatementBrowser
-                                    rootNodeType="predicate"
+                                    rootNodeType={PREDICATE_TYPE_ID}
                                     enableEdit={editMode}
                                     syncBackend={editMode}
                                     openExistingResourcesInDialog={false}
-                                    initialSubjectId={props.match.params.id}
+                                    initialSubjectId={propertyId}
                                     initialSubjectLabel={label}
                                     newStore={true}
                                     propertiesAsLinks={true}
                                     resourcesAsLinks={true}
                                 />
                             </div>
+                            <PropertyStatements propertyId={propertyId} />
                         </div>
                     </Container>
                 </>

@@ -25,6 +25,7 @@ export default function FeaturedComparisons() {
             id: CLASSES.FEATURED_COMPARISON,
             sortBy: 'created_at',
             desc: true,
+            returnContent: true,
             items: 10
         });
 
@@ -61,7 +62,8 @@ export default function FeaturedComparisons() {
             id: CLASSES.COMPARISON,
             sortBy: 'created_at',
             desc: true,
-            items: 8
+            items: 8,
+            returnContent: true
         });
 
         const ids = responseJson.map(comparison =>

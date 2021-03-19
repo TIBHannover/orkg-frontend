@@ -1,4 +1,4 @@
-import defaultDatatypes from 'components/ContributionTemplates/helpers/defaultDatatypes';
+import defaultDatatypes from 'components/Templates/helpers/defaultDatatypes';
 
 /**
  * Check if the input filed is Literal

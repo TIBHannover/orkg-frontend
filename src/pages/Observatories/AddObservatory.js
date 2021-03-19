@@ -1,12 +1,11 @@
 import { Component } from 'react';
 import { Container, Button, FormGroup, Input, Label } from 'reactstrap';
-import { resourcesUrl } from 'services/backend/resources';
 import { getOrganization } from 'services/backend/organizations';
 import { createObservatory } from 'services/backend/observatories';
 import NotFound from 'pages/NotFound';
 import InternalServerError from 'pages/InternalServerError';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
-import { CLASSES } from 'constants/graphSettings';
+import { ENTITIES, CLASSES } from 'constants/graphSettings';
 import { Redirect } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { reverse } from 'named-urls';
@@ -143,7 +142,7 @@ class AddObservatory extends Component {
                                     <FormGroup>
                                         <Label for="ObservatoryResearchField">Research Field</Label>
                                         <AutoComplete
-                                            requestUrl={resourcesUrl}
+                                            entityType={ENTITIES.RESOURCE}
                                             optionsClass={CLASSES.RESEARCH_FIELD}
                                             placeholder="Observatory research field"
                                             onItemSelected={async rf => {

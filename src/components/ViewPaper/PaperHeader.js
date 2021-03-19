@@ -1,23 +1,50 @@
-import { Badge, Button } from 'reactstrap';
+import { faBars, faCalendar, faCheckCircle, faPen, faTrash, faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faUser, faCalendar, faBars, faTrash, faCheckCircle } from '@fortawesome/free-solid-svg-icons';
-import { Link } from 'react-router-dom';
-import { reverse } from 'named-urls';
+import { loadPaper } from 'actions/viewPaper';
+import useDeletePapers from 'components/ViewPaper/hooks/useDeletePapers';
+import { CLASSES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import moment from 'moment';
+import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
+import { useState } from 'react';
+import { shallowEqual, useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { Badge, Button } from 'reactstrap';
 import EditPaperDialog from './EditDialog/EditPaperDialog';
-import { CLASSES } from 'constants/graphSettings';
-import { useSelector, shallowEqual } from 'react-redux';
-import useDeletePapers from 'components/ViewPaper/hooks/useDeletePapers';
+import { reverseWithSlug } from 'utils';
 
 const PaperHeader = props => {
+    const [isOpenEditModal, setIsOpenEditModal] = useState(false);
     const viewPaper = useSelector(state => state.viewPaper, shallowEqual);
     const isCurationAllowed = useSelector(state => state.auth.user?.isCurationAllowed);
     const userId = useSelector(state => state.auth.user?.id);
     const [deletePapers] = useDeletePapers({ paperIds: [viewPaper.paperResourceId], redirect: true });
+    const dispatch = useDispatch();
     const userCreatedThisPaper = viewPaper.createdBy && userId && viewPaper.createdBy === userId; // make sure a user is signed in (not null)
     const showDeleteButton = props.editMode && (isCurationAllowed || userCreatedThisPaper);
+
+    const handleUpdatePaper = data => {
+        // TODO: the viewPaper store should be refactored to directly support the updated data that is passed
+        dispatch(
+            loadPaper({
+                title: data.paper.label,
+                publicationMonth: parseInt(data.month?.label) || 0,
+                publicationMonthResourceId: data.month?.id,
+                publicationYear: parseInt(data.year?.label) || 0,
+                publicationYearResourceId: data.year?.id,
+                doi: data.doi?.label,
+                doiResourceId: data.doi?.id,
+                authors: data.authors,
+                publishedIn: data.publishedIn,
+                url: data.url?.label,
+                urlResourceId: data.url?.id,
+                researchField: data.researchField,
+                verified: data.isVerified
+            })
+        );
+        setIsOpenEditModal(false);
+    };
 
     return (
         <>
@@ -37,7 +64,9 @@ const PaperHeader = props => {
                 ''
             )}
             {viewPaper.researchField && viewPaper.researchField.id && (
-                <Link to={reverse(ROUTES.RESEARCH_FIELD, { researchFieldId: viewPaper.researchField.id })}>
+                <Link
+                    to={reverseWithSlug(ROUTES.RESEARCH_FIELD, { researchFieldId: viewPaper.researchField.id, slug: viewPaper.researchField.label })}
+                >
                     <span className="badge badge-lightblue mr-2 mb-2">
                         <Icon icon={faBars} className="text-primary" /> {viewPaper.researchField.label}
                     </span>
@@ -84,7 +113,11 @@ const PaperHeader = props => {
             </div>
             <div className="d-flex">
                 <div className="flex-grow-1">
-                    {props.editMode && <EditPaperDialog />}{' '}
+                    {props.editMode && (
+                        <Button color="darkblue" size="sm" className="mt-2" style={{ marginLeft: 'auto' }} onClick={() => setIsOpenEditModal(true)}>
+                            <Icon icon={faPen} /> Edit data
+                        </Button>
+                    )}{' '}
                     {showDeleteButton && (
                         <Button color="danger" size="sm" className="mt-2" style={{ marginLeft: 'auto' }} onClick={deletePapers}>
                             <Icon icon={faTrash} /> Delete paper
@@ -98,6 +131,40 @@ const PaperHeader = props => {
                     </div>
                 )}
             </div>
+
+            {isOpenEditModal && (
+                <EditPaperDialog
+                    paperData={{
+                        paper: {
+                            id: viewPaper.paperResourceId,
+                            label: viewPaper.title
+                        },
+                        month: {
+                            id: viewPaper.publicationMonthResourceId,
+                            label: viewPaper.publicationMonth
+                        },
+                        year: {
+                            id: viewPaper.publicationYearResourceId,
+                            label: viewPaper.publicationYear
+                        },
+                        authors: viewPaper.authors,
+                        doi: {
+                            id: viewPaper.doiResourceId,
+                            label: viewPaper.doi
+                        },
+                        publishedIn: viewPaper.publishedIn,
+                        researchField: viewPaper.researchField,
+                        url: {
+                            id: viewPaper.urlResourceId,
+                            label: viewPaper.url
+                        },
+                        isVerified: viewPaper.verified
+                    }}
+                    afterUpdate={handleUpdatePaper}
+                    isOpen={isOpenEditModal}
+                    toggle={v => setIsOpenEditModal(!v)}
+                />
+            )}
         </>
     );
 };

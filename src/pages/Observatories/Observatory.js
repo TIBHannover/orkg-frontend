@@ -24,7 +24,7 @@ import { reverse } from 'named-urls';
 import { Link } from 'react-router-dom';
 import { faPen, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { getPaperData, getComparisonData } from 'utils';
+import { getPaperData, getComparisonData, reverseWithSlug } from 'utils';
 import { find } from 'lodash';
 import capitalize from 'capitalize';
 import { connect } from 'react-redux';
@@ -237,7 +237,13 @@ class Observatory extends Component {
                             {this.state.researchField && this.state.researchField.id && (
                                 <div className="flex-grow-1 mt-2">
                                     Research field:
-                                    <Link className="ml-2" to={reverse(ROUTES.RESEARCH_FIELD, { researchFieldId: this.state.researchField.id })}>
+                                    <Link
+                                        className="ml-2"
+                                        to={reverseWithSlug(ROUTES.RESEARCH_FIELD, {
+                                            researchFieldId: this.state.researchField.id,
+                                            slug: this.state.researchField.label
+                                        })}
+                                    >
                                         {this.state.researchField && this.state.researchField.label}
                                     </Link>
                                 </div>
@@ -268,7 +274,10 @@ class Observatory extends Component {
                                                                 return (
                                                                     <li key={`rp${index}`} className="mt-2">
                                                                         <Link
-                                                                            to={reverse(ROUTES.RESEARCH_PROBLEM, { researchProblemId: problem.id })}
+                                                                            to={reverseWithSlug(ROUTES.RESEARCH_PROBLEM, {
+                                                                                researchProblemId: problem.id,
+                                                                                slug: problem.label
+                                                                            })}
                                                                         >
                                                                             {capitalize(problem.label)}
                                                                         </Link>
