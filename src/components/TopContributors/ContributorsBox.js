@@ -9,7 +9,7 @@ import { SmallButton } from 'components/styled';
 import PropTypes from 'prop-types';
 
 const ContributorsBox = ({ researchFieldId }) => {
-    const { contributors, isLoading } = useContributors({ researchFieldId, pageSize: 4 });
+    const { contributors, isLoading } = useContributors({ researchFieldId, pageSize: 5 });
     const [openModal, setOpenModal] = useState(false);
 
     return (
@@ -20,7 +20,7 @@ const ContributorsBox = ({ researchFieldId }) => {
             <div className="flex-grow-1">
                 {!isLoading && contributors && contributors.length > 0 && (
                     <div className="mt-2">
-                        {contributors.slice(0, 5).map((contributor, index) => (
+                        {contributors.slice(0, 4).map((contributor, index) => (
                             <div className="pt-1 pl-2 pr-2" key={`rp${index}`}>
                                 <ContributorCard
                                     contributor={{
@@ -28,7 +28,7 @@ const ContributorsBox = ({ researchFieldId }) => {
                                         subTitle: `${contributor.contributions} contribution${contributor.contributions > 1 ? 's' : ''}`
                                     }}
                                 />
-                                {contributors.slice(0, 5).length - 1 !== index && <hr className="mb-0 mt-1" />}
+                                {contributors.slice(0, 4).length - 1 !== index && <hr className="mb-0 mt-1" />}
                             </div>
                         ))}
                     </div>
@@ -40,7 +40,7 @@ const ContributorsBox = ({ researchFieldId }) => {
                         <i> be the first contributor!</i>.
                     </div>
                 )}
-                {!isLoading && contributors?.length > 5 && (
+                {!isLoading && contributors?.length > 4 && (
                     <div className="text-center mt-3">
                         <SmallButton onClick={() => setOpenModal(v => !v)} color="lightblue">
                             View more
