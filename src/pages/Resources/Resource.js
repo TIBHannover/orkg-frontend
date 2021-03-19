@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Container, Button, FormGroup, Label, FormText, ButtonGroup } from 'reactstrap';
-import { classesUrl, getClassById } from 'services/backend/classes';
+import { getClassById } from 'services/backend/classes';
 import { updateResourceClasses as updateResourceClassesNetwork } from 'services/backend/resources';
 import { getResource } from 'services/backend/resources';
 import { getStatementsBySubjectAndPredicate } from 'services/backend/statements';
@@ -22,7 +22,7 @@ import { resetStatementBrowser } from 'actions/statementBrowser';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPen, faTrash, faExternalLinkAlt, faTimes, faPlus } from '@fortawesome/free-solid-svg-icons';
 import Confirm from 'components/ConfirmationModal/ConfirmationModal';
-import { CLASSES, PREDICATES } from 'constants/graphSettings';
+import { CLASSES, PREDICATES, ENTITIES } from 'constants/graphSettings';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import { orderBy } from 'lodash';
@@ -30,6 +30,9 @@ import useDeleteResource from 'components/Resource/hooks/useDeleteResource';
 import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
 import { getVisualization } from 'services/similarity';
 import GDCVisualizationRenderer from 'libs/selfVisModel/RenderingComponents/GDCVisualizationRenderer';
+import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
+import { CLASS_TYPE_ID } from 'constants/misc';
+import { reverseWithSlug } from 'utils';
 
 const DEDICATED_PAGE_LINKS = {
     [CLASSES.PAPER]: {
@@ -40,7 +43,8 @@ const DEDICATED_PAGE_LINKS = {
     [CLASSES.PROBLEM]: {
         label: 'Research problem',
         route: ROUTES.RESEARCH_PROBLEM,
-        routeParams: 'researchProblemId'
+        routeParams: 'researchProblemId',
+        hasSlug: true
     },
     [CLASSES.COMPARISON]: {
         label: 'Comparison',
@@ -55,16 +59,17 @@ const DEDICATED_PAGE_LINKS = {
     [CLASSES.RESEARCH_FIELD]: {
         label: 'Research field',
         route: ROUTES.RESEARCH_FIELD,
-        routeParams: 'researchFieldId'
+        routeParams: 'researchFieldId',
+        hasSlug: true
     },
     [CLASSES.VENUE]: {
         label: 'Venue',
         route: ROUTES.VENUE_PAGE,
         routeParams: 'venueId'
     },
-    [CLASSES.CONTRIBUTION_TEMPLATE]: {
+    [CLASSES.TEMPLATE]: {
         label: 'Template',
-        route: ROUTES.CONTRIBUTION_TEMPLATE,
+        route: ROUTES.TEMPLATE,
         routeParams: 'id'
     },
     [CLASSES.CONTRIBUTION]: {
@@ -212,7 +217,10 @@ function Resource(props) {
                                     color="darkblue"
                                     size="sm"
                                     tag={Link}
-                                    to={reverse(dedicatedLink.route, { [dedicatedLink.routeParams]: props.match.params.id })}
+                                    to={reverseWithSlug(dedicatedLink.route, {
+                                        [dedicatedLink.routeParams]: props.match.params.id,
+                                        slug: dedicatedLink.hasSlug ? label : undefined
+                                    })}
                                     style={{ marginRight: 2 }}
                                 >
                                     <Icon icon={faExternalLinkAlt} className="mr-1" /> {dedicatedLink.label} view
@@ -270,8 +278,10 @@ function Resource(props) {
 
                                                 return (
                                                     <i key={index}>
-                                                        <Link to={reverse(ROUTES.CLASS, { id: classObject.id })}>{classObject.label}</Link>
-                                                        {separator}
+                                                        <DescriptionTooltip id={classObject.id} typeId={CLASS_TYPE_ID}>
+                                                            <Link to={reverse(ROUTES.CLASS, { id: classObject.id })}>{classObject.label}</Link>
+                                                            {separator}
+                                                        </DescriptionTooltip>
                                                     </i>
                                                 );
                                             })}
@@ -305,7 +315,7 @@ function Resource(props) {
                                     <FormGroup className="mb-4 mt-3">
                                         <Label for="classes-autocomplete">Classes</Label>
                                         <AutoComplete
-                                            requestUrl={classesUrl}
+                                            entityType={ENTITIES.CLASS}
                                             onChange={(selected, action) => {
                                                 // blur the field allows to focus and open the menu again
                                                 classesAutocompleteRef.current && classesAutocompleteRef.current.blur();

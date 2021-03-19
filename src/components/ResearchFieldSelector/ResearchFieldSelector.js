@@ -3,9 +3,8 @@ import { Button, Badge } from 'reactstrap';
 import { faMinusSquare, faPlusSquare, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
-import { CLASSES, MISC } from 'constants/graphSettings';
+import { CLASSES, MISC, ENTITIES } from 'constants/graphSettings';
 import { sortBy, find, set } from 'lodash';
-import { resourcesUrl } from 'services/backend/resources';
 import { getParentResearchFields, getStatementsBySubjects } from 'services/backend/statements';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
@@ -222,7 +221,7 @@ const ResearchFieldSelector = ({ selectedResearchField, researchFields, updateRe
         <>
             <div className="mb-3">
                 <Autocomplete
-                    requestUrl={resourcesUrl}
+                    entityType={ENTITIES.RESOURCE}
                     optionsClass={CLASSES.RESEARCH_FIELD}
                     placeholder="Search for fields..."
                     onItemSelected={handleFieldSelect}

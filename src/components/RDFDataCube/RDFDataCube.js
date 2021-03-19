@@ -1,67 +1,205 @@
-import { Component } from 'react';
-import { Modal, ModalHeader, ModalBody, Alert, Dropdown, DropdownItem, DropdownMenu, DropdownToggle } from 'reactstrap';
+import { useState, useEffect, useMemo, useCallback } from 'react';
+import {
+    Modal,
+    ModalHeader,
+    ModalBody,
+    Alert,
+    Table,
+    Pagination,
+    PaginationItem,
+    PaginationLink,
+    Input,
+    Dropdown,
+    DropdownItem,
+    DropdownMenu,
+    DropdownToggle,
+    InputGroupAddon,
+    InputGroup
+} from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faSpinner, faEllipsisV } from '@fortawesome/free-solid-svg-icons';
+import { faSpinner, faEllipsisV, faSortUp, faSortDown } from '@fortawesome/free-solid-svg-icons';
 import { getStatementsBySubject, getStatementsByObject } from 'services/backend/statements';
-import { getRDFDataCubeVocabularyClasses } from 'services/backend/classes';
-import ReactTable from 'react-table';
+import { getClasses } from 'services/backend/classes';
+import { useTable, usePagination, useSortBy, useFilters } from 'react-table';
 import { sortMethod } from 'utils';
 import CUBE from 'olap-cube';
-import 'react-table/react-table.css';
 import { CSVLink } from 'react-csv';
 import PropTypes from 'prop-types';
 
-class RDFDataCube extends Component {
-    constructor(props) {
-        super(props);
+// Define a default UI for filtering
+// eslint-disable-next-line react/prop-types
+const DefaultColumnFilter = ({ column: { filterValue, preFilteredRows, setFilter } }) => {
+    // eslint-disable-next-line react/prop-types
+    const count = preFilteredRows.length;
 
-        this.state = {
-            isDatacubeLoading: true,
-            isDatacubeFailedLoading: false,
-            dropdownOpen: false,
-            datacube: {},
-            resources: {},
-            dimensions: {},
-            measures: {},
-            attributes: {},
-            displayedData: []
+    return (
+        <Input
+            bsSize="sm"
+            value={filterValue || ''}
+            onChange={e => {
+                setFilter(e.target.value || undefined); // Set undefined to remove the filter entirely
+            }}
+            placeholder={`Search ${count} records...`}
+        />
+    );
+};
+
+const RDFDataCube = props => {
+    const [isDataCubeLoading, setIsDataCubeLoading] = useState(true);
+    const [isDataCubeFailedLoading, setIsDataCubeFailedLoading] = useState(false);
+    const [dropdownOpen, setDropdownOpen] = useState(false);
+    const [dataCube, setDataCube] = useState({});
+    const [resources, setResources] = useState({});
+    const [dimensions, setDimensions] = useState({});
+    const [measures, setMeasures] = useState({});
+    const [attributes, setAttributes] = useState({});
+
+    useEffect(() => {
+        loadDataCube();
+    }, []);
+
+    const data = useMemo(() => {
+        const label2Resource = resource => {
+            if ((typeof resource === 'string' || resource instanceof String) && resource in resources) {
+                return resources[resource];
+            } else if (typeof resource === 'object' && resource !== null) {
+                return resource;
+            } else {
+                return { id: resource, label: resource, rlabel: resource };
+            }
         };
-    }
+        return !isDataCubeLoading && !isDataCubeFailedLoading
+            ? dataCube.rows.map(r => {
+                  const a = Object.assign({}, ...dataCube.header.map((n, index) => ({ [n]: label2Resource(r[index]) })));
+                  return a;
+              })
+            : [];
+    }, [isDataCubeFailedLoading, isDataCubeLoading]);
 
-    componentDidMount() {
-        this.loadDataCube();
-    }
+    const columnsSortMethod = useCallback((rowA, rowB, id, desc) => {
+        return sortMethod(rowA.original[id].label, rowB.original[id].label);
+    }, []);
 
-    toggleDropdown = () => {
-        this.setState(prevState => ({
-            dropdownOpen: !prevState.dropdownOpen
-        }));
+    const columns = useMemo(() => {
+        const handleCellClick = resource => {
+            if (resource.type !== 'literal') {
+                props.handleResourceClick(resource);
+                props.toggleModal();
+            }
+        };
+
+        return !isDataCubeLoading && !isDataCubeFailedLoading
+            ? dataCube.header.map(h => {
+                  return {
+                      id: h,
+                      Header: { ...measures, ...dimensions, ...attributes }[h].label,
+                      accessor: h,
+                      sortType: columnsSortMethod,
+                      filter: 'text',
+                      Cell: props => (
+                          <span
+                              onKeyDown={e => (e.keyCode === 13 ? handleCellClick(props.value) : undefined)}
+                              role="button"
+                              tabIndex={0}
+                              onClick={() => handleCellClick(props.value)}
+                          >
+                              {props.value.label}
+                          </span>
+                      )
+                  };
+              })
+            : [];
+    }, [isDataCubeFailedLoading, isDataCubeLoading]);
+
+    const defaultColumn = useMemo(
+        () => ({
+            Filter: DefaultColumnFilter
+        }),
+        []
+    );
+
+    const filterTypes = useMemo(
+        () => ({
+            text: (rows, id, filterValue) => {
+                return rows.filter(row => {
+                    const rowValue = row.values[id].label;
+                    return rowValue !== undefined
+                        ? String(rowValue)
+                              .toLowerCase()
+                              .startsWith(String(filterValue).toLowerCase())
+                        : true;
+                });
+            }
+        }),
+        []
+    );
+    const {
+        getTableProps,
+        getTableBodyProps,
+        headerGroups,
+        prepareRow,
+        page, // Instead of using 'rows', we'll use page,
+        // which has only the rows for the active page
+        canPreviousPage,
+        canNextPage,
+        pageOptions,
+        pageCount,
+        gotoPage,
+        nextPage,
+        previousPage,
+        setPageSize,
+        rows,
+        state: { pageIndex, pageSize }
+    } = useTable(
+        {
+            columns,
+            data,
+            initialState: {
+                pageIndex: 0,
+                sortBy:
+                    dataCube?.header?.length > 0
+                        ? [
+                              {
+                                  id: dataCube.header[0],
+                                  desc: false
+                              }
+                          ]
+                        : []
+            },
+            defaultColumn,
+            filterTypes
+        },
+        useFilters,
+        useSortBy,
+        usePagination
+    );
+
+    const toggleDropdown = () => {
+        setDropdownOpen(prevState => !prevState);
     };
 
-    exportAsCsv = e => {
-        this.setState({
-            dropdownOpen: false
-        });
+    const exportAsCsv = e => {
+        setDropdownOpen(false);
     };
 
-    loadDataCube = async () => {
-        this.setState({ isDatacubeLoading: true });
+    const loadDataCube = async () => {
+        setIsDataCubeLoading(true);
         let resources = {};
-        if (this.props.resourceId) {
+        if (props.resourceId) {
             // Get all the classes
-            let classes = await getRDFDataCubeVocabularyClasses();
+            let classes = await getClasses({ q: 'qb:', returnContent: true });
             // Convert to an object { class_label: class_ID }
             classes = Object.assign({}, ...classes.map(item => ({ [item.label]: item.id })));
             // Get Data Structure Definition (DSD)
-            const dsd = await getStatementsBySubject({ id: this.props.resourceId }).then(
+            const dsd = await getStatementsBySubject({ id: props.resourceId }).then(
                 s_dataset => s_dataset.find(s => s.object.classes && s.object.classes.includes(classes['qb:DataStructureDefinition'])).object
             );
             // Get Component Specification
-            let cspecifications = await getStatementsBySubject({ id: dsd.id })
+            let cSpecifications = await getStatementsBySubject({ id: dsd.id })
                 .then(s_dataset => s_dataset.filter(s => s.object.classes && s.object.classes.includes(classes['qb:ComponentSpecification'])))
                 .then(css => css.map(cs => cs.object));
             // Fetch Statements of each component specification
-            cspecifications = cspecifications.map(cs => {
+            cSpecifications = cSpecifications.map(cs => {
                 return getStatementsBySubject({ id: cs.id }).then(css => {
                     // Get order of component specification
                     let order = css.filter(statement => statement.predicate.label === 'order');
@@ -74,7 +212,7 @@ class RDFDataCube extends Component {
                     return css;
                 });
             });
-            Promise.all(cspecifications)
+            Promise.all(cSpecifications)
                 .then(cso => cso.flat(1))
                 .then(cso => {
                     // Get Dimensions and Measures
@@ -87,10 +225,10 @@ class RDFDataCube extends Component {
                     return { sMeasures, sDimensions, sAttributes };
                 })
                 .then(({ sMeasures, sDimensions, sAttributes }) => {
-                    // Observations (fetch statements of the dataset ressource by object)
+                    // Observations (fetch statements of the dataset resource by object)
                     const allDim = Object.assign({}, sDimensions, sMeasures, sAttributes);
                     getStatementsByObject({
-                        id: this.props.resourceId,
+                        id: props.resourceId,
                         items: 9999,
                         sortBy: 'created_at',
                         desc: true
@@ -171,174 +309,183 @@ class RDFDataCube extends Component {
                                         .flat(1)
                                         .map(item => ({ [item.id]: item }))
                                 );
-                                this.setState({
-                                    measures: sMeasures,
-                                    dimensions: sDimensions,
-                                    attributes: sAttributes,
-                                    datacube: table,
-                                    resources: resources,
-                                    isDatacubeLoading: false,
-                                    isDatacubeFailedLoading: false
-                                });
+
+                                setMeasures(sMeasures);
+                                setDimensions(sDimensions);
+                                setAttributes(sAttributes);
+                                setDataCube(table);
+                                setResources(resources);
+                                setIsDataCubeLoading(false);
+                                setIsDataCubeFailedLoading(false);
                             } catch (error) {
                                 console.log(error);
-                                this.setState({ isDatacubeLoading: false, isDatacubeFailedLoading: true });
+                                setIsDataCubeLoading(false);
+                                setIsDataCubeFailedLoading(true);
                             }
                         });
                     });
                 })
                 .catch(e => {
                     console.log(e);
-                    this.setState({ isDatacubeLoading: false, isDatacubeFailedLoading: true });
+                    setIsDataCubeLoading(false);
+                    setIsDataCubeFailedLoading(true);
                 });
         }
     };
 
-    label2Resource = resource => {
-        if ((typeof resource === 'string' || resource instanceof String) && resource in this.state.resources) {
-            return this.state.resources[resource];
-        } else if (typeof resource === 'object' && resource !== null) {
-            return resource;
-        } else {
-            return { id: resource, label: resource, rlabel: resource };
-        }
-    };
-
-    handleCellClick = ressource => {
-        if (ressource.type !== 'literal') {
-            this.props.handleResourceClick(ressource);
-            this.props.toggleModal();
-        }
-    };
-
-    render() {
-        let columns = {};
-        if (!this.state.isDatacubeLoading) {
-            columns = { ...this.state.measures, ...this.state.dimensions, ...this.state.attributes };
-        }
-
-        return (
-            <Modal isOpen={this.props.show} toggle={this.props.toggleModal} size="lg" style={{ maxWidth: '90%' }}>
-                <ModalHeader toggle={this.props.toggleModal}>View dataset: {this.props.resourceLabel}</ModalHeader>
-                <ModalBody>
-                    {!this.state.isDatacubeLoading && !this.state.isDatacubeFailedLoading && (
-                        <>
-                            <ReactTable
-                                defaultPageSize={10}
-                                filterable={true}
-                                className="-striped -highlight"
-                                defaultFilterMethod={(filter, row) => {
-                                    return String(row[filter.id].label).startsWith(filter.value);
-                                }}
-                                data={this.state.datacube.rows.map(r => {
-                                    const a = Object.assign(
-                                        {},
-                                        ...this.state.datacube.header.map((n, index) => ({ [n]: this.label2Resource(r[index]) }))
-                                    );
-                                    return a;
-                                })}
-                                columns={this.state.datacube.header.map(h => {
-                                    return {
-                                        id: h,
-                                        Header: columns[h].label,
-                                        accessor: h,
-                                        sortMethod: (a, b, desc) => sortMethod(a.label, b.label),
-                                        Cell: props => (
-                                            <span
-                                                onKeyDown={e => (e.keyCode === 13 ? this.handleCellClick(props.value) : undefined)}
-                                                role="button"
-                                                tabIndex={0}
-                                                onClick={() => this.handleCellClick(props.value)}
+    return (
+        <Modal isOpen={props.show} toggle={props.toggleModal} size="lg" style={{ maxWidth: '90%' }}>
+            <ModalHeader toggle={props.toggleModal}>View dataset: {props.resourceLabel}</ModalHeader>
+            <ModalBody>
+                {!isDataCubeLoading && !isDataCubeFailedLoading && (
+                    <>
+                        {!isDataCubeLoading && !isDataCubeFailedLoading && (
+                            <>
+                                <Dropdown className="float-right mb-2" isOpen={dropdownOpen} toggle={toggleDropdown}>
+                                    <DropdownToggle color="darkblue" size="sm">
+                                        <span className="mr-2">Options</span> <Icon icon={faEllipsisV} />
+                                    </DropdownToggle>
+                                    <DropdownMenu>
+                                        <DropdownItem header>Export</DropdownItem>
+                                        {rows.length > 0 ? (
+                                            <CSVLink
+                                                headers={dataCube.header.map(h => {
+                                                    return { label: { ...measures, ...dimensions, ...attributes }[h].label, key: h + '.label' };
+                                                })}
+                                                data={rows.map(r => r.values)}
+                                                filename={props.resourceLabel + '.csv'}
+                                                className="dropdown-item"
+                                                target="_blank"
+                                                onClick={exportAsCsv}
                                             >
-                                                {props.value.label}
-                                            </span>
-                                        ), // Custom cell components!
-                                        Filter: ({ filter, onChange }) => (
-                                            <input
-                                                type="text"
-                                                style={{ width: '100%' }}
-                                                placeholder="Search..."
-                                                value={filter ? filter.value : ''}
-                                                onChange={event => onChange(event.target.value)}
-                                            />
-                                        )
-                                    };
-                                })}
-                                defaultSorted={
-                                    this.state.datacube.header.length > 0
-                                        ? [
-                                              {
-                                                  id: this.state.datacube.header[0],
-                                                  desc: false
-                                              }
-                                          ]
-                                        : []
-                                }
-                            >
-                                {(state, makeTable, instance) => {
-                                    return (
-                                        <>
-                                            <div className="clearfix">
-                                                {`Showing ${state.sortedData.length} observations ${
-                                                    state.sortedData.length !== this.state.datacube.rows.length
-                                                        ? `(filtered from ${this.state.datacube.rows.length} total observations)`
-                                                        : ''
-                                                } :`}
-                                                <Dropdown className="float-right mb-2" isOpen={this.state.dropdownOpen} toggle={this.toggleDropdown}>
-                                                    <DropdownToggle color="darkblue" size="sm">
-                                                        <span className="mr-2">Options</span> <Icon icon={faEllipsisV} />
-                                                    </DropdownToggle>
-                                                    <DropdownMenu>
-                                                        <DropdownItem header>Export</DropdownItem>
-                                                        {state.sortedData.length > 0 ? (
-                                                            <CSVLink
-                                                                headers={this.state.datacube.header.map(h => {
-                                                                    return { label: columns[h].label, key: h + '.label' };
-                                                                })}
-                                                                data={state.sortedData}
-                                                                filename={this.props.resourceLabel + '.csv'}
-                                                                className="dropdown-item"
-                                                                target="_blank"
-                                                                onClick={this.exportAsCsv}
-                                                            >
-                                                                Export as CSV
-                                                            </CSVLink>
-                                                        ) : (
-                                                            ''
-                                                        )}
-                                                    </DropdownMenu>
-                                                </Dropdown>
-                                            </div>
-                                            {makeTable()}
-                                        </>
-                                    );
-                                }}
-                            </ReactTable>
-                        </>
-                    )}
-                    {this.state.isDatacubeLoading && (
-                        <div className="text-center text-primary mt-4 mb-4">
-                            <span style={{ fontSize: 80 }}>
-                                <Icon icon={faSpinner} spin />
-                            </span>
-                            <br />
-                            <h2 className="h5">Loading dataset...</h2>
-                        </div>
-                    )}
-                    {!this.state.isDatacubeLoading && this.state.isDatacubeFailedLoading && (
-                        <div className="text-center text-primary mt-4 mb-4">
-                            <Alert color="light">Failed to load dataset, please try again later</Alert>
-                        </div>
-                    )}
-                </ModalBody>
-            </Modal>
-        );
-    }
-}
+                                                Export as CSV
+                                            </CSVLink>
+                                        ) : (
+                                            ''
+                                        )}
+                                    </DropdownMenu>
+                                </Dropdown>
+                                <Table {...getTableProps()} striped bordered>
+                                    <thead>
+                                        {headerGroups.map(headerGroup => (
+                                            <tr {...headerGroup.getHeaderGroupProps()}>
+                                                {headerGroup.headers.map(column => (
+                                                    // Add the sorting props to control sorting. For this example
+                                                    // we can add them into the header props
+                                                    <th key={column.getHeaderProps(column.getSortByToggleProps()).key}>
+                                                        <div {...column.getHeaderProps(column.getSortByToggleProps())}>
+                                                            {column.render('Header')}
+                                                            {/* Add a sort direction indicator */}
+                                                            <span>
+                                                                {column.isSorted ? (
+                                                                    column.isSortedDesc ? (
+                                                                        <Icon icon={faSortUp} className="ml-1" />
+                                                                    ) : (
+                                                                        <Icon icon={faSortDown} className="ml-1" />
+                                                                    )
+                                                                ) : (
+                                                                    ''
+                                                                )}
+                                                            </span>
+                                                        </div>
+                                                        {/* Render the columns filter UI */}
+                                                        <div>{column.canFilter ? column.render('Filter') : null}</div>
+                                                    </th>
+                                                ))}
+                                            </tr>
+                                        ))}
+                                    </thead>
+                                    <tbody {...getTableBodyProps()}>
+                                        {page.map((row, i) => {
+                                            prepareRow(row);
+                                            return (
+                                                <tr {...row.getRowProps()}>
+                                                    {row.cells.map(cell => {
+                                                        return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>;
+                                                    })}
+                                                </tr>
+                                            );
+                                        })}
+                                    </tbody>
+                                </Table>
+
+                                <Pagination aria-label="Page navigation" className="float-left">
+                                    <PaginationItem title="First page" onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
+                                        <PaginationLink first />
+                                    </PaginationItem>
+                                    <PaginationItem title="Previous page" onClick={() => previousPage()} disabled={!canPreviousPage}>
+                                        <PaginationLink previous />
+                                    </PaginationItem>
+                                    <PaginationItem active title="Current page">
+                                        <PaginationLink>
+                                            {pageIndex + 1} of {pageOptions.length}
+                                        </PaginationLink>
+                                    </PaginationItem>
+
+                                    <PaginationItem title="Next page" onClick={() => nextPage()} disabled={!canNextPage}>
+                                        <PaginationLink next />
+                                    </PaginationItem>
+                                    <PaginationItem title="Last page" onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
+                                        <PaginationLink last />
+                                    </PaginationItem>
+                                </Pagination>
+
+                                <div className=" d-flex">
+                                    <InputGroup className="col-2">
+                                        <InputGroupAddon addonType="prepend">Go to page:</InputGroupAddon>
+                                        <Input
+                                            type="number"
+                                            defaultValue={pageIndex + 1}
+                                            onChange={e => {
+                                                const page = e.target.value ? Number(e.target.value) - 1 : 0;
+                                                gotoPage(page);
+                                            }}
+                                            style={{ width: '100px' }}
+                                        />
+                                    </InputGroup>
+                                    <Input
+                                        className="d-inline-block col-1"
+                                        type="select"
+                                        name="selectMulti"
+                                        value={pageSize}
+                                        onChange={e => {
+                                            setPageSize(Number(e.target.value));
+                                        }}
+                                    >
+                                        {[10, 20, 30, 40, 50].map(pageSize => (
+                                            <option key={pageSize} value={pageSize}>
+                                                Show {pageSize}
+                                            </option>
+                                        ))}
+                                    </Input>
+                                </div>
+                            </>
+                        )}
+                    </>
+                )}
+                {isDataCubeLoading && (
+                    <div className="text-center text-primary mt-4 mb-4">
+                        <span style={{ fontSize: 80 }}>
+                            <Icon icon={faSpinner} spin />
+                        </span>
+                        <br />
+                        <h2 className="h5">Loading dataset...</h2>
+                    </div>
+                )}
+                {!isDataCubeLoading && isDataCubeFailedLoading && (
+                    <div className="text-center text-primary mt-4 mb-4">
+                        <Alert color="light">Failed to load dataset, please try again later</Alert>
+                    </div>
+                )}
+            </ModalBody>
+        </Modal>
+    );
+};
 
 RDFDataCube.propTypes = {
     resourceLabel: PropTypes.string.isRequired,
     resourceId: PropTypes.string.isRequired,
+    value: PropTypes.object,
     show: PropTypes.bool.isRequired,
     toggleModal: PropTypes.func.isRequired,
     handleResourceClick: PropTypes.func.isRequired

@@ -16,12 +16,17 @@ export const updatePredicate = (id, label) => {
     return submitPutRequest(`${predicatesUrl}${id}`, { 'Content-Type': 'application/json' }, { label: label });
 };
 
-export const getAllPredicates = ({ page = 1, items = 9999, sortBy = 'created_at', desc = true, q = null, exact = false }) => {
-    const params = queryString.stringify({ page, items, sortBy, exact, desc, ...(q ? { q } : {}) });
+export const getPredicates = ({
+    page = 0,
+    items: size = 9999,
+    sortBy = 'created_at',
+    desc = true,
+    q = null,
+    exact = false,
+    returnContent = false
+}) => {
+    const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
+    const params = queryString.stringify({ page, size, sort, exact, ...(q ? { q } : {}) });
 
-    return submitGetRequest(`${predicatesUrl}?${params}`);
-};
-
-export const getPredicatesByLabel = label => {
-    return submitGetRequest(predicatesUrl + '?q=' + encodeURIComponent(label));
+    return submitGetRequest(`${predicatesUrl}?${params}`).then(res => (returnContent ? res.content : res));
 };

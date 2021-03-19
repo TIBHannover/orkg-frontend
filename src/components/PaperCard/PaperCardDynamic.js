@@ -4,8 +4,9 @@ import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import styled from 'styled-components';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faUser, faCalendar } from '@fortawesome/free-solid-svg-icons';
+import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 import ROUTES from 'constants/routes.js';
+import Authors from './Authors';
 import PropTypes from 'prop-types';
 import { getPublicationMonth, getPublicationYear, getAuthors } from 'utils';
 import moment from 'moment';
@@ -90,11 +91,7 @@ class PaperCardDynamic extends Component {
                         <br />
                         {!this.state.isLoading && (
                             <small>
-                                {this.state.optimizedPaperObject.authorNames && this.state.optimizedPaperObject.authorNames.length > 0 && (
-                                    <>
-                                        <Icon size="sm" icon={faUser} /> {this.state.optimizedPaperObject.authorNames.map(a => a.label).join(', ')}
-                                    </>
-                                )}
+                                <Authors authors={this.state.optimizedPaperObject.authorNames} />
                                 {(this.state.optimizedPaperObject.publicationMonth || this.state.optimizedPaperObject.publicationYear) && (
                                     <Icon size="sm" icon={faCalendar} className="ml-2 mr-1" />
                                 )}

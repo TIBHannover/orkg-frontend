@@ -40,15 +40,7 @@ export default (state = initialState, action) => {
 
             return {
                 ...state,
-                title: payload.title,
-                authors: payload.authors,
-                publicationMonth: payload.publicationMonth,
-                publicationYear: payload.publicationYear,
-                doi: payload.doi,
-                entry: payload.entry,
-                showLookupTable: payload.showLookupTable,
-                publishedIn: payload.publishedIn,
-                url: payload.url
+                ...payload
             };
         }
 
@@ -89,13 +81,13 @@ export default (state = initialState, action) => {
 
         case type.CLOSE_TOUR: {
             const cookies = new Cookies();
-            if (cookies.get('taketourClosed')) {
+            if (cookies.get('takeTourClosed')) {
                 return {
                     ...state,
                     isTourOpen: false
                 };
             } else {
-                cookies.set('taketourClosed', true, { path: env('PUBLIC_URL'), maxAge: 604800 });
+                cookies.set('takeTourClosed', true, { path: env('PUBLIC_URL'), maxAge: 604800 });
                 return {
                     ...state,
                     isTourOpen: false

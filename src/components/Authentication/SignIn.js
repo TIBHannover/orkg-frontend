@@ -68,8 +68,8 @@ class SignIn extends Component {
             })
             .catch(e => {
                 let error = 'Something went wrong, please try again';
-                cookies.remove('token');
-                cookies.remove('token_expires_in');
+                cookies.remove('token', { path: env('PUBLIC_URL') });
+                cookies.remove('token_expires_in', { path: env('PUBLIC_URL') });
                 if (e.error === 'invalid_grant') {
                     error = 'Wrong email address or password';
                 } else if (e.error_description) {
