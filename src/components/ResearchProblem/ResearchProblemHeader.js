@@ -36,6 +36,8 @@ import { usePrevious } from 'react-use';
 import PropTypes from 'prop-types';
 import CheckSlug from 'components/CheckSlug/CheckSlug';
 import { reverseWithSlug } from 'utils';
+import CheckClasses from 'components/CheckClasses/CheckClasses';
+import { CLASSES } from 'constants/graphSettings';
 
 const ResearchProblemHeader = ({ id }) => {
     const [menuOpen, setMenuOpen] = useState(false);
@@ -55,6 +57,9 @@ const ResearchProblemHeader = ({ id }) => {
     return (
         <>
             {!isLoading && !isFailedLoading && <CheckSlug label={researchProblemData.label} route={ROUTES.RESEARCH_PROBLEM} />}
+            {!isLoading && !isFailedLoading && (
+                <CheckClasses classes={researchProblemData.classes} targetClass={CLASSES.PROBLEM} resourceId={researchProblemData.id} />
+            )}
             {isLoading && (
                 <>
                     <div className="mt-4 mb-4 container">

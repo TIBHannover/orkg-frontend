@@ -17,7 +17,7 @@ function useResearchProblem(initialVal = {}) {
             // Get the research problem
             getResource(rpId)
                 .then(result => {
-                    setData({ id: rpId, label: result.label, superProblems: [], subProblems: [] });
+                    setData({ ...result, superProblems: [], subProblems: [] });
                     setIsLoadingData(false);
                     setIsFailedLoadingData(false);
                     document.title = `${result.label} - ORKG`;

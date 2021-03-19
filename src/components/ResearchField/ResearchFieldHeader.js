@@ -28,7 +28,9 @@ import { reverse } from 'named-urls';
 import { usePrevious } from 'react-use';
 import PropTypes from 'prop-types';
 import CheckSlug from 'components/CheckSlug/CheckSlug';
+import CheckClasses from 'components/CheckClasses/CheckClasses';
 import { reverseWithSlug } from 'utils';
+import { CLASSES } from 'constants/graphSettings';
 
 const ResearchFieldHeader = ({ id }) => {
     const [menuOpen, setMenuOpen] = useState(false);
@@ -46,6 +48,9 @@ const ResearchFieldHeader = ({ id }) => {
     return (
         <>
             {!isLoading && !isFailedLoading && <CheckSlug label={researchFieldData.label} route={ROUTES.RESEARCH_FIELD} />}
+            {!isLoading && !isFailedLoading && (
+                <CheckClasses classes={researchFieldData.classes} targetClass={CLASSES.RESEARCH_FIELD} resourceId={researchFieldData.id} />
+            )}
             {isLoading && (
                 <>
                     <div className="mt-4 mb-4 container">
