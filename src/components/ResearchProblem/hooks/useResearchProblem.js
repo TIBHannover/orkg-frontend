@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { getStatementsBySubject, getStatementsByObjectAndPredicate, getParentResearchProblems } from 'services/backend/statements';
+import { getStatementsBySubject, getStatementsByObjectAndPredicate } from 'services/backend/statements';
 import { getResource } from 'services/backend/resources';
 import { useParams } from 'react-router-dom';
 import { filterObjectOfStatementsByPredicate } from 'utils';
@@ -10,7 +10,6 @@ function useResearchProblem(initialVal = {}) {
     const { researchProblemId } = useParams();
     const [isLoadingData, setIsLoadingData] = useState(true);
     const [isFailedLoadingData, setIsFailedLoadingData] = useState(true);
-    const [parentResearchProblems, setParentResearchProblems] = useState([]);
 
     const loadResearchProblemData = useCallback(rpId => {
         if (rpId) {
@@ -43,11 +42,6 @@ function useResearchProblem(initialVal = {}) {
             }).then(superProblems => {
                 setData(data => ({ ...data, superProblems: superProblems.map(s => s.subject) }));
             });
-
-            // Get parent research problems for the breadcrumbs
-            getParentResearchProblems(rpId).then(result => {
-                setParentResearchProblems(result.reverse());
-            });
         }
     }, []);
 
@@ -56,6 +50,6 @@ function useResearchProblem(initialVal = {}) {
             loadResearchProblemData(researchProblemId);
         }
     }, [researchProblemId, loadResearchProblemData]);
-    return [data, parentResearchProblems, isLoadingData, isFailedLoadingData, loadResearchProblemData];
+    return { researchProblemData: data, isLoading: isLoadingData, isFailedLoading: isFailedLoadingData, loadResearchProblemData };
 }
 export default useResearchProblem;

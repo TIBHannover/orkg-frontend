@@ -10,7 +10,9 @@ import {
     Card,
     CardBody,
     CardTitle,
-    Badge
+    Badge,
+    Row,
+    Col
 } from 'reactstrap';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
@@ -22,6 +24,9 @@ import Contributors from './Contributors';
 import Breadcrumbs from 'components/Breadcrumbs/Breadcrumbs';
 import useResearchProblem from 'components/ResearchProblem/hooks/useResearchProblem';
 import useResearchProblemResearchFields from 'components/ResearchProblem/hooks/useResearchProblemResearchFields';
+import AuthorsBox from 'components/TopAuthors/AuthorsBox';
+import ResearchFieldsBox from './ResearchFieldBox/ResearchFieldsBox';
+import SuperResearchProblemBox from './SuperResearchProblemBox/SuperResearchProblemBox';
 import { NavLink } from 'react-router-dom';
 import ContentLoader from 'react-content-loader';
 import ROUTES from 'constants/routes.js';
@@ -36,7 +41,7 @@ const ResearchProblemHeader = ({ id }) => {
     const [menuOpen, setMenuOpen] = useState(false);
     const [editMode, setEditMode] = useState(false);
     const [showMoreFields, setShowMoreFields] = useState(false);
-    const [researchProblemData, parentResearchProblems, isLoading, isFailedLoading, loadResearchProblemData] = useResearchProblem();
+    const { researchProblemData, isLoading, isFailedLoading, loadResearchProblemData } = useResearchProblem();
     const [researchFields, isLoadingResearchFields] = useResearchProblemResearchFields({ researchProblemId: id });
     const prevEditMode = usePrevious({ editMode });
 
@@ -186,6 +191,19 @@ const ResearchProblemHeader = ({ id }) => {
                                 <Contributors researchProblemId={id} />
                             </CardBody>
                         </Card>
+                    </Container>
+                    <Container className="p-0">
+                        <Row className="mt-3">
+                            <Col md="4" className="d-flex">
+                                <AuthorsBox researchProblemId={id} />
+                            </Col>
+                            <Col md="4" className="d-flex">
+                                <ResearchFieldsBox isLoading={isLoadingResearchFields} researchFields={researchFields} />
+                            </Col>
+                            <Col md="4" className="d-flex">
+                                <SuperResearchProblemBox isLoading={isLoadingResearchFields} superProblems={researchProblemData.superProblems} />
+                            </Col>
+                        </Row>
                     </Container>
                 </>
             )}

@@ -1,51 +1,40 @@
 import { useState } from 'react';
-import useContributors from 'components/TopContributors/hooks/useContributors';
-import ContributorCard from 'components/ContributorCard/ContributorCard';
+import useResearchProblemAuthors from './hooks/useResearchProblemAuthors';
+import AuthorCard from 'components/AuthorCard/AuthorCard';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faAward } from '@fortawesome/free-solid-svg-icons';
-import ContributorsModal from './ContributorsModal';
+import AuthorsModal from './AuthorsModal';
 import ContentLoader from 'react-content-loader';
 import { SmallButton } from 'components/styled';
 import PropTypes from 'prop-types';
 
-const ContributorsBox = ({ researchFieldId }) => {
-    const { contributors, isLoading } = useContributors({ researchFieldId, pageSize: 4 });
+const AuthorsBox = ({ researchProblemId }) => {
+    const { authors, isLoading } = useResearchProblemAuthors({ researchProblemId, pageSize: 4 });
     const [openModal, setOpenModal] = useState(false);
 
     return (
         <div className="box rounded-lg p-3 flex-grow-1 d-flex flex-column">
             <h5>
-                <Icon icon={faAward} className="text-primary" /> Top Contributors
+                <Icon icon={faAward} className="text-primary" /> Top Authors
             </h5>
             <div className="flex-grow-1">
-                {!isLoading && contributors && contributors.length > 0 && (
+                {!isLoading && authors && authors.length > 0 && (
                     <div className="mt-2">
-                        {contributors.slice(0, 5).map((contributor, index) => (
+                        {authors.slice(0, 3).map((author, index) => (
                             <div className="pt-1 pl-2 pr-2" key={`rp${index}`}>
-                                <ContributorCard
-                                    contributor={{
-                                        ...contributor.profile,
-                                        subTitle: `${contributor.contributions} contribution${contributor.contributions > 1 ? 's' : ''}`
-                                    }}
-                                />
-                                {contributors.slice(0, 5).length - 1 !== index && <hr className="mb-0 mt-1" />}
+                                <AuthorCard author={author.author} subTitle={`${author.papers} paper${author.papers > 1 ? 's' : ''}`} />
+                                {authors.slice(0, 3).length - 1 !== index && <hr className="mb-0 mt-1" />}
                             </div>
                         ))}
                     </div>
                 )}
-                {!isLoading && contributors?.length === 0 && (
-                    <div className="mt-4 mb-4">
-                        No contributors in this research field yet.
-                        <br />
-                        <i> be the first contributor!</i>.
-                    </div>
-                )}
-                {!isLoading && contributors?.length > 5 && (
+                {!isLoading && authors?.length === 0 && <div className="mt-4 mb-4">No authors in this research problem yet.</div>}
+                {!isLoading && authors?.length > 3 && (
                     <div className="text-center mt-3">
                         <SmallButton onClick={() => setOpenModal(v => !v)} color="lightblue">
                             View more
                         </SmallButton>
-                        {openModal && <ContributorsModal openModal={openModal} setOpenModal={setOpenModal} researchFieldId={researchFieldId} />}
+                        {openModal && <AuthorsModal openModal={openModal} setOpenModal={setOpenModal} researchProblemId={researchProblemId} />}
                     </div>
                 )}
                 {isLoading && (
@@ -65,8 +54,8 @@ const ContributorsBox = ({ researchFieldId }) => {
     );
 };
 
-ContributorsBox.propTypes = {
-    researchFieldId: PropTypes.string.isRequired
+AuthorsBox.propTypes = {
+    researchProblemId: PropTypes.string.isRequired
 };
 
-export default ContributorsBox;
+export default AuthorsBox;
