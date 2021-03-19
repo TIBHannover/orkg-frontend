@@ -1,9 +1,7 @@
 import { useState } from 'react';
 import { Button } from 'reactstrap';
-import Tippy from '@tippyjs/react';
 import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
 import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
-import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
 import FilterWrapper from 'components/Comparison/Filters/FilterWrapper';
 import FilterModal from 'components/Comparison/Filters/FilterModal';
 import { faFilter } from '@fortawesome/free-solid-svg-icons';
@@ -52,7 +50,7 @@ const FilterButton = styled(Button)`
     }
 `;
 
-const PropertyValue = ({ id, label, similar, filterControlData, updateRulesOfProperty }) => {
+const PropertyValue = ({ id, label, property, similar, filterControlData, updateRulesOfProperty }) => {
     const [showStatementBrowser, setShowStatementBrowser] = useState(false);
     const [showFilterDialog, setShowFilterDialog] = useState(false);
 
@@ -73,9 +71,9 @@ const PropertyValue = ({ id, label, similar, filterControlData, updateRulesOfPro
 
     return (
         <>
-            <Button onClick={handleOpenStatementBrowser} color="link" className="text-light m-0 p-0">
+            <Button onClick={handleOpenStatementBrowser} color="link" className="text-left text-light m-0 p-0">
                 <DescriptionTooltip
-                    id={id}
+                    id={property.id}
                     typeId={PREDICATE_TYPE_ID}
                     extraContent={similar && similar.length ? `This property is merged with : ${similar.join(', ')}` : ''}
                 >
@@ -108,8 +106,8 @@ const PropertyValue = ({ id, label, similar, filterControlData, updateRulesOfPro
                     show={true}
                     type={PREDICATE_TYPE_ID}
                     toggleModal={() => setShowStatementBrowser(v => !v)}
-                    id={id}
-                    label={label}
+                    id={property.id}
+                    label={property.label}
                 />
             )}
         </>
@@ -119,6 +117,7 @@ const PropertyValue = ({ id, label, similar, filterControlData, updateRulesOfPro
 PropertyValue.propTypes = {
     label: PropTypes.string.isRequired,
     id: PropTypes.string.isRequired,
+    property: PropTypes.object.isRequired,
     similar: PropTypes.array,
     filterControlData: PropTypes.array.isRequired,
     updateRulesOfProperty: PropTypes.func.isRequired

@@ -134,8 +134,8 @@ function Autocomplete(props) {
                 responseJson = await getEntities(props.entityType, {
                     page,
                     items: PAGE_SIZE,
-                    q: encodeURIComponent(value.trim()),
-                    exclude: props.excludeClasses ? encodeURIComponent(props.excludeClasses) : null,
+                    q: value.trim(),
+                    exclude: props.excludeClasses ? props.excludeClasses : null,
                     exact
                 });
             }

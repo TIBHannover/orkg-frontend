@@ -5,7 +5,7 @@ import TableHeaderColumnFirst from 'components/ContributionEditor/TableHeaderCol
 import TableHeaderRow from 'components/ContributionEditor/TableHeaderRow';
 import { PREDICATES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
-import { sortBy, uniq } from 'lodash';
+import { sortBy, uniq, without } from 'lodash';
 import queryString from 'query-string';
 import { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
@@ -19,7 +19,7 @@ const useContributionEditor = () => {
     const getContributionIds = useCallback(() => {
         const { contributions } = queryString.parse(location.search, { arrayFormat: 'comma' });
         const contributionIds = contributions && !Array.isArray(contributions) ? [contributions] : contributions;
-        return uniq(contributionIds) ?? [];
+        return without(uniq(contributionIds), undefined, null, '') ?? [];
     }, [location.search]);
 
     const handleAddContributions = ids => {

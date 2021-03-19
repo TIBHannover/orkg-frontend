@@ -10,6 +10,7 @@ import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
+import { reverseWithSlug } from 'utils';
 
 const StyledDropdownItem = styled(DropdownItem)`
     &:active,
@@ -71,7 +72,13 @@ function Breadcrumbs(props) {
                         parentResearchFields.map((field, index) => (
                             <span key={field.id}>
                                 {index !== parentResearchFields.length - 1 || !props.disableLastField ? (
-                                    <Link to={index === 0 ? reverse(ROUTES.HOME) : reverse(ROUTES.RESEARCH_FIELD, { researchFieldId: field.id })}>
+                                    <Link
+                                        to={
+                                            index === 0
+                                                ? reverse(ROUTES.HOME)
+                                                : reverseWithSlug(ROUTES.RESEARCH_FIELD, { researchFieldId: field.id, slug: field.label })
+                                        }
+                                    >
                                         {index === 0 ? <Icon className="mr-1" icon={faHome} /> : field.label}
                                     </Link>
                                 ) : (
@@ -99,7 +106,10 @@ function Breadcrumbs(props) {
                                                                 <StyledDropdownItem
                                                                     tag={NavLink}
                                                                     key={`rf-${rf.id}`}
-                                                                    to={reverse(ROUTES.RESEARCH_FIELD, { researchFieldId: rf.id })}
+                                                                    to={reverseWithSlug(ROUTES.RESEARCH_FIELD, {
+                                                                        researchFieldId: rf.id,
+                                                                        slug: rf.label
+                                                                    })}
                                                                     className="text-primary"
                                                                 >
                                                                     {rf.label}

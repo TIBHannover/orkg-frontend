@@ -24,6 +24,7 @@ export const loadContributions = contributionIds => async dispatch => {
     const papers = {};
 
     dispatch(startLoading());
+    dispatch(setHasFailed(false));
 
     const contributionsStatements = await getStatementsBySubjects({ ids: contributionIds });
 
@@ -32,6 +33,13 @@ export const loadContributions = contributionIds => async dispatch => {
         const paper = paperStatements.find(statement => statement.subject.classes.includes(CLASSES.PAPER))?.subject;
         const contribution = paperStatements.find(statement => statement.object.classes.includes(CLASSES.CONTRIBUTION))?.object;
         const { statements: contributionStatements } = contributionsStatements.find(result => result.id === contributionId) || [];
+
+        // show error if: corresponding paper not found, or provided ID is not a contribution ID
+        if (!paper?.id || !contribution?.classes.includes(CLASSES.CONTRIBUTION)) {
+            dispatch(setHasFailed(true));
+            dispatch(finishLoading());
+            return;
+        }
 
         contributions[contributionId] = { ...contribution, paperId: paper.id };
         papers[paper.id] = paper;
@@ -266,3 +274,12 @@ export const startLoading = () => ({
 export const finishLoading = () => ({
     type: type.CONTRIBUTION_EDITOR_LOADING_FINISH
 });
+
+export const setHasFailed = hasFailed => dispatch => {
+    dispatch({
+        type: type.CONTRIBUTION_EDITOR_SET_HAS_FAILED,
+        payload: {
+            hasFailed
+        }
+    });
+};

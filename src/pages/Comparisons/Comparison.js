@@ -471,6 +471,7 @@ function Comparison(props) {
                                             viewDensity={viewDensity}
                                             filterControlData={filterControlData}
                                             updateRulesOfProperty={updateRulesOfProperty}
+                                            comparisonType={comparisonType}
                                         />
                                     </div>
                                 ) : (
