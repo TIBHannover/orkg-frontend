@@ -1,12 +1,10 @@
 import { useState, useEffect, useCallback } from 'react';
 import { getStatementsByObject, getStatementsBySubject } from 'services/backend/statements';
-import { useParams } from 'react-router-dom';
 import { getPaperData } from 'utils';
 import { CLASSES } from 'constants/graphSettings';
 
-function useResearchProblemPapers() {
+function useResearchProblemPapers({ researchProblemId }) {
     const pageSize = 10;
-    const { researchProblemId } = useParams();
     const [isLoading, setIsLoading] = useState(false);
     const [hasNextPage, setHasNextPage] = useState(false);
     const [isLastPageReached, setIsLastPageReached] = useState(false);
@@ -73,11 +71,11 @@ function useResearchProblemPapers() {
         setPapers([]);
         setHasNextPage(false);
         setIsLastPageReached(false);
-        setPage(1);
+        setPage(0);
     }, [researchProblemId]);
 
     useEffect(() => {
-        loadPapers(1);
+        loadPapers(0);
     }, [loadPapers]);
 
     const handleLoadMore = () => {
