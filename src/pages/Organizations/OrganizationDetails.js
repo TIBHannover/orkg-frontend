@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Container, Row, Col, NavLink, Button, Card, CardBody } from 'reactstrap';
+import { Container, Row, Col, Button, Card, CardBody } from 'reactstrap';
 import { ButtonGroup } from 'reactstrap';
 import { getOrganization } from 'services/backend/organizations';
 import InternalServerError from 'pages/InternalServerError';
@@ -109,17 +109,17 @@ const OrganizationDetails = () => {
                             <StyledOrganizationHeader className="mb-2  py-4 px-3">
                                 <Row>
                                     <Col md={{ size: 8, order: 1 }} sm={{ size: 12, order: 2 }} xs={{ size: 12, order: 2 }}>
-                                        <NavLink className="p-0" href={url} target="_blank" rel="noopener noreferrer">
+                                        <Link className="p-0" href={url} target="_blank" rel="noopener noreferrer">
                                             <Icon size="sm" icon={faGlobe} /> website {url && <Icon size="sm" icon={faExternalLinkAlt} />}
-                                        </NavLink>
+                                        </Link>
                                     </Col>
                                     {logo && (
                                         <Col md={{ size: 4, order: 2 }} sm={{ size: 12, order: 1 }} xs={{ size: 12, order: 1 }}>
-                                            <NavLink className="p-0" href={url} target="_blank" rel="noopener noreferrer">
+                                            <Link className="p-0" href={url} target="_blank" rel="noopener noreferrer">
                                                 <div className="logoContainer">
                                                     <img className="mx-auto" src={logo} alt={`${label} logo`} />
                                                 </div>
-                                            </NavLink>
+                                            </Link>
                                         </Col>
                                     )}
                                 </Row>
