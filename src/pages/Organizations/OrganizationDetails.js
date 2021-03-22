@@ -109,9 +109,12 @@ const OrganizationDetails = () => {
                             <StyledOrganizationHeader className="mb-2  py-4 px-3">
                                 <Row>
                                     <Col md={{ size: 8, order: 1 }} sm={{ size: 12, order: 2 }} xs={{ size: 12, order: 2 }}>
-                                        <a className="p-0" href={url} target="_blank" rel="noopener noreferrer">
-                                            <Icon size="sm" icon={faGlobe} /> website {url && <Icon size="sm" icon={faExternalLinkAlt} />}
-                                        </a>
+                                        {label}
+                                        <div className="mt-2">
+                                            <a className="p-0 mt-2" href={url} target="_blank" rel="noopener noreferrer">
+                                                <Icon size="sm" icon={faGlobe} /> website {url && <Icon size="sm" icon={faExternalLinkAlt} />}
+                                            </a>
+                                        </div>
                                     </Col>
                                     {logo && (
                                         <Col md={{ size: 4, order: 2 }} sm={{ size: 12, order: 1 }} xs={{ size: 12, order: 1 }}>
