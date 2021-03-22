@@ -6,51 +6,11 @@ import useResearchProblemContributors from './hooks/useResearchProblemContributo
 import ContentLoader from 'react-content-loader';
 import ContributorsModal from './ContributorsModal';
 import ROUTES from 'constants/routes.js';
-import styled from 'styled-components';
+import { StyledGravatar, StyledDotGravatar, ContributorsAvatars } from 'components/styled';
 import Tippy from '@tippyjs/react';
 import { Link } from 'react-router-dom';
-import Gravatar from 'react-gravatar';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
-
-const StyledGravatar = styled(Gravatar)`
-    border: 2px solid ${props => props.theme.ultraLightBlueDarker};
-    cursor: pointer;
-    &:hover {
-        border: 2px solid ${props => props.theme.primary};
-    }
-`;
-
-const StyledDotGravatar = styled.div`
-    width: 48px;
-    height: 48px;
-    display: inline-block;
-    text-align: center;
-    line-height: 48px;
-    color: ${props => props.theme.darkblue};
-    border: 2px solid ${props => props.theme.ultraLightBlueDarker};
-    cursor: pointer;
-    vertical-align: sub;
-    &:hover {
-        border: 2px solid ${props => props.theme.primary};
-    }
-
-    background-color: ${props => props.theme.ultraLightBlueDarker};
-`;
-
-const ContributorsAvatars = styled.div`
-    display: inline-block;
-
-    & > div {
-        display: inline-block;
-        margin-right: 10px;
-        margin-bottom: 10px;
-    }
-
-    & > div:last-child {
-        margin-right: 0;
-    }
-`;
 
 const Contributors = ({ researchProblemId }) => {
     const { contributors, isLoading } = useResearchProblemContributors({

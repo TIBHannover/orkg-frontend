@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { Button, DropdownToggle } from 'reactstrap';
+import Gravatar from 'react-gravatar';
 
 export const SubtitleSeparator = styled.div`
     background: ${props => props.theme.darkblue};
@@ -21,5 +22,44 @@ export const SubTitle = styled.div`
 export const SmallButton = styled(Button)`
     &&& {
         padding: 0.2rem 0.75rem;
+    }
+`;
+
+export const StyledGravatar = styled(Gravatar)`
+    border: 2px solid ${props => props.theme.ultraLightBlueDarker};
+    cursor: pointer;
+    &:hover {
+        border: 2px solid ${props => props.theme.primary};
+    }
+`;
+
+export const StyledDotGravatar = styled.div`
+    width: 48px;
+    height: 48px;
+    display: inline-block;
+    text-align: center;
+    line-height: 48px;
+    color: ${props => props.theme.darkblue};
+    border: 2px solid ${props => props.theme.ultraLightBlueDarker};
+    cursor: pointer;
+    vertical-align: sub;
+    &:hover {
+        border: 2px solid ${props => props.theme.primary};
+    }
+
+    background-color: ${props => props.theme.ultraLightBlueDarker};
+`;
+
+export const ContributorsAvatars = styled.div`
+    display: inline-block;
+
+    & > div {
+        display: inline-block;
+        margin-right: 10px;
+        margin-bottom: 10px;
+    }
+
+    & > div:last-child {
+        margin-right: 0;
     }
 `;
