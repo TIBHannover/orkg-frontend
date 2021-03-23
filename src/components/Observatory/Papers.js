@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
-import { Container } from 'reactstrap';
+import { Container, ListGroup } from 'reactstrap';
 import { getStatementsBySubjects } from 'services/backend/statements';
 import { getResourcesByObservatoryId } from 'services/backend/observatories';
 import PaperCard from 'components/PaperCard/PaperCard';
+import ContentLoader from 'react-content-loader';
 import { getPaperData } from 'utils';
 import { find } from 'lodash';
 import PropTypes from 'prop-types';
@@ -43,21 +44,37 @@ const Papers = ({ observatoryId }) => {
                     <h1 className="h5 flex-shrink-0 mb-0">Papers</h1>
                 </div>
             </Container>
-            <Container className="box rounded-lg p-4 mt-4">
-                {!isLoadingPapers ? (
-                    <div className="mb-4 mt-4">
+            <Container className="p-0 box rounded">
+                {!isLoadingPapers && (
+                    <ListGroup>
                         {papersList.length > 0 ? (
-                            <div>
+                            <>
                                 {papersList.map(resource => {
                                     return <PaperCard selectable={false} paper={{ title: resource.label, ...resource }} key={`p${resource.id}`} />;
                                 })}
-                            </div>
+                            </>
                         ) : (
                             <div className="text-center mt-4 mb-4">No Papers</div>
                         )}
+                    </ListGroup>
+                )}
+                {isLoadingPapers && (
+                    <div className="text-center mt-4 mb-4 p-5 container box rounded">
+                        <div className="text-left">
+                            <ContentLoader
+                                speed={2}
+                                width={400}
+                                height={50}
+                                viewBox="0 0 400 50"
+                                style={{ width: '100% !important' }}
+                                backgroundColor="#f3f3f3"
+                                foregroundColor="#ecebeb"
+                            >
+                                <rect x="0" y="0" rx="3" ry="3" width="400" height="20" />
+                                <rect x="0" y="25" rx="3" ry="3" width="300" height="20" />
+                            </ContentLoader>
+                        </div>
                     </div>
-                ) : (
-                    <div className="mt-4">Loading papers ...</div>
                 )}
             </Container>
         </>
