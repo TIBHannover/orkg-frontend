@@ -139,7 +139,7 @@ const ResearchProblemHeader = ({ id }) => {
                             <CardBody>
                                 <CardTitle tag="h5">Description</CardTitle>
                                 {researchProblemData.description && <div className="mb-4">{researchProblemData.description}</div>}
-                                {!researchProblemData.description && <div className="mb-4">No description for this research problem yet!</div>}
+                                {!researchProblemData.description && <div className="mb-2">No description for this research problem yet!</div>}
                                 {researchProblemData.sameAs && (
                                     <ExternalDescription
                                         query={researchProblemData.sameAs ? researchProblemData.sameAs.label : researchProblemData.label}

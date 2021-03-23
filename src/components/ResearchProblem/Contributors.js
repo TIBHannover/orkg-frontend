@@ -21,7 +21,7 @@ const Contributors = ({ researchProblemId }) => {
 
     return (
         <div>
-            <div className="d-flex mb-3">
+            <div className="d-flex mb-2">
                 <CardTitle tag="h5" className="flex-grow-1">
                     Contributors
                 </CardTitle>
@@ -63,7 +63,7 @@ const Contributors = ({ researchProblemId }) => {
             {!isLoading && contributors?.length === 0 && (
                 <div className="mt-4 mb-4">
                     No contributors in this research field yet.
-                    <i> be the first contributor!</i>.
+                    <i> Be the first contributor!</i>
                 </div>
             )}
             {contributors.length > 18 && openModal && (

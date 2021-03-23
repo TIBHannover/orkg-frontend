@@ -48,24 +48,24 @@ export default function Home() {
             {selectedResearchField.id !== MISC.RESEARCH_FIELD_MAIN && <div className="h4 mt-4 mb-2 pl-3">{selectedResearchField.label}</div>}
             <Row>
                 <Col md="8">
-                    <div className="mt-3 mt-md-0" style={{ display: 'flex', flexDirection: 'column' }}>
+                    <div className="mt-3 mt-md-0 d-flex flex-column">
                         <FeaturedItemsBox researchFieldId={selectedResearchField.id} />
                     </div>
                 </Col>
                 <Col md="4">
-                    <div className="mt-3 box rounded" style={{ display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+                    <div className="mt-3 box rounded d-flex flex-column overflow-hidden">
                         <Benefits />
                     </div>
 
-                    <div className="mt-3" style={{ display: 'flex', flexDirection: 'column' }}>
+                    <div className="mt-3 d-flex flex-column">
                         <ObservatoriesBox researchFieldId={selectedResearchField.id} />
                     </div>
 
-                    <div className="mt-3" style={{ display: 'flex', flexDirection: 'column' }}>
+                    <div className="mt-3 d-flex flex-column">
                         <ContributorsBox researchFieldId={selectedResearchField.id} />
                     </div>
 
-                    <div className="mt-3" style={{ display: 'flex', flexDirection: 'column' }}>
+                    <div className="mt-3 d-flex flex-column">
                         <LastUpdatesBox researchFieldId={selectedResearchField.id} />
                     </div>
                 </Col>

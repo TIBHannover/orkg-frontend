@@ -13,10 +13,9 @@ import Breadcrumbs from 'components/Breadcrumbs/Breadcrumbs';
 import { SubTitle, SubtitleSeparator } from 'components/styled';
 import NotFound from 'pages/NotFound';
 import ROUTES from 'constants/routes';
-import { reverse } from 'named-urls';
 import { useParams, Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { faPen, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { reverseWithSlug } from 'utils';
 
@@ -123,7 +122,7 @@ const Observatory = () => {
                     <Col md="4" className="d-flex">
                         <OrganizationsBox observatoryId={id} organizationsList={organizationsList} isLoadingOrganizations={isLoadingOrganizations} />
                     </Col>
-                    <Col md="4">
+                    <Col md="4" className="d-flex">
                         <MembersBox observatoryId={id} organizationsList={organizationsList} />
                     </Col>
                 </Row>

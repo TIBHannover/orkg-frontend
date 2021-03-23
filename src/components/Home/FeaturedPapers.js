@@ -10,7 +10,6 @@ import styled from 'styled-components';
 import { MISC } from 'constants/graphSettings';
 import ContentLoader from 'react-content-loader';
 import useResearchFieldPapers from 'components/ResearchField/hooks/useResearchFieldPapers';
-import { SmallButton } from 'components/styled';
 import { stringifySort } from 'utils';
 import { reverse } from 'named-urls';
 import Tippy from '@tippyjs/react';
@@ -100,9 +99,9 @@ const FeaturedPapers = ({ researchFieldId }) => {
                         }
                     >
                         <span>
-                            <SmallButton color="lightblue" className="flex-shrink-0 pl-3 pr-3" style={{ marginLeft: 'auto' }} size="sm">
+                            <Button color="lightblue" className="flex-shrink-0 pl-3 pr-3" style={{ marginLeft: 'auto' }} size="sm">
                                 {stringifySort(sort)} <Icon icon={faChevronDown} />
-                            </SmallButton>
+                            </Button>
                         </span>
                     </Tippy>
                 )}

@@ -128,8 +128,8 @@ const ResearchFieldHeader = ({ id }) => {
                         <Card>
                             <CardBody>
                                 <CardTitle tag="h5">Description</CardTitle>
-                                {researchFieldData.description && <div className="mb-4">{researchFieldData.description}</div>}
-                                {!researchFieldData.description && <div className="mb-4">No description for this research field yet!</div>}
+                                {researchFieldData.description && <p className="m-0">{researchFieldData.description}</p>}
+                                {!researchFieldData.description && <p className="m-0">No description for this research field yet!</p>}
                                 {researchFieldData.sameAs && (
                                     <ExternalDescription
                                         query={researchFieldData.sameAs ? researchFieldData.sameAs.label : researchFieldData.label}

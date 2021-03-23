@@ -5,8 +5,8 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faAward } from '@fortawesome/free-solid-svg-icons';
 import ContributorsModal from './ContributorsModal';
 import ContentLoader from 'react-content-loader';
-import { SmallButton } from 'components/styled';
 import PropTypes from 'prop-types';
+import { Button } from 'reactstrap';
 
 const ContributorsBox = ({ researchFieldId }) => {
     const { contributors, isLoading } = useContributors({ researchFieldId, pageSize: 5 });
@@ -37,14 +37,14 @@ const ContributorsBox = ({ researchFieldId }) => {
                     <div className="mt-4 mb-4">
                         No contributors in this research field yet.
                         <br />
-                        <i> be the first contributor!</i>.
+                        <i> Be the first contributor!</i>
                     </div>
                 )}
                 {!isLoading && contributors?.length > 4 && (
                     <div className="text-center mt-3">
-                        <SmallButton onClick={() => setOpenModal(v => !v)} color="lightblue">
+                        <Button size="sm" onClick={() => setOpenModal(v => !v)} color="lightblue">
                             View more
-                        </SmallButton>
+                        </Button>
                         {openModal && <ContributorsModal openModal={openModal} setOpenModal={setOpenModal} researchFieldId={researchFieldId} />}
                     </div>
                 )}

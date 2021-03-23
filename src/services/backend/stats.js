@@ -29,7 +29,7 @@ export const getChangelogs = ({ researchFieldId = null, page = 0, items = 9999, 
 };
 
 export const getTopResearchProblems = ({ page = 0, items = 9999, sortBy = 'created_at', desc = true, subfields = true }) => {
-    const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
+    // const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
     const params = queryString.stringify({ page: page, size: items /*, sort, desc*/ });
     return submitGetRequest(`${statsUrl}top/research-problems?${params}`);
 };

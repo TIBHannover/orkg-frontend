@@ -1,5 +1,4 @@
-import { Badge } from 'reactstrap';
-import { SmallButton } from 'components/styled';
+import { Badge, Button } from 'reactstrap';
 import ROUTES from 'constants/routes.js';
 import { Link } from 'react-router-dom';
 import useResearchFieldProblems from 'components/Home/hooks/useResearchFieldProblems';
@@ -33,9 +32,9 @@ const ResearchProblemsBox = ({ id }) => {
             </div>
             {researchProblems.length > 5 && (
                 <div className="text-center">
-                    <SmallButton onClick={() => null} color="lightblue">
+                    <Button size="sm" onClick={() => null} color="lightblue">
                         View more
-                    </SmallButton>
+                    </Button>
                 </div>
             )}
         </div>

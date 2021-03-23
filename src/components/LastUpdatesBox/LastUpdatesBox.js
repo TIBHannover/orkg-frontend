@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import ContentLoader from 'react-content-loader';
 import useTopChangelog from 'components/LastUpdatesBox/hooks/useTopChangelog';
-import { SmallButton } from 'components/styled';
 import LastUpdatesModal from './LastUpdatesModal';
 import { StyledActivity } from './styled';
 import moment from 'moment';
@@ -9,6 +8,7 @@ import { Link } from 'react-router-dom';
 import { getResourceLink, getResourceTypeLabel } from 'utils';
 import { truncate } from 'lodash';
 import PropTypes from 'prop-types';
+import { Button } from 'reactstrap';
 
 const LastUpdatesBox = ({ researchFieldId }) => {
     const { activities, isLoading } = useTopChangelog({ researchFieldId, pageSize: 4 });
@@ -36,9 +36,9 @@ const LastUpdatesBox = ({ researchFieldId }) => {
 
                     {!isLoading && activities.length > 3 && (
                         <div className="text-center">
-                            <SmallButton onClick={() => setOpenModal(v => !v)} color="lightblue">
+                            <Button size="sm" onClick={() => setOpenModal(v => !v)} color="lightblue">
                                 View more
-                            </SmallButton>
+                            </Button>
                         </div>
                     )}
                     {!isLoading && activities?.length === 0 && (

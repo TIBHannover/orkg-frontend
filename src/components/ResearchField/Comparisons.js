@@ -4,7 +4,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner, faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import ComparisonCard from 'components/ComparisonCard/ComparisonCard';
 import useResearchFieldComparison from 'components/ResearchField/hooks/useResearchFieldComparison';
-import { SmallButton, SubTitle, SubtitleSeparator } from 'components/styled';
+import { SubTitle, SubtitleSeparator } from 'components/styled';
 import Tippy from '@tippyjs/react';
 import ROUTES from 'constants/routes';
 import ContentLoader from 'react-content-loader';
@@ -87,9 +87,9 @@ const Comparisons = ({ id, boxShadow }) => {
                     }
                 >
                     <span>
-                        <SmallButton className="flex-shrink-0 pl-3 pr-3" style={{ marginLeft: 'auto' }} size="sm">
+                        <Button color="darkblue" className="flex-shrink-0 pl-3 pr-3 ml-auto" size="sm">
                             {stringifySort(sort)} <Icon icon={faChevronDown} />
-                        </SmallButton>
+                        </Button>
                     </span>
                 </Tippy>
             </Container>

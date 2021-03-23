@@ -1,6 +1,5 @@
 import { useState } from 'react';
-//import { Badge } from 'reactstrap';
-import { SmallButton } from 'components/styled';
+import { Button } from 'reactstrap';
 import ROUTES from 'constants/routes.js';
 import { Link } from 'react-router-dom';
 import ContentLoader from 'react-content-loader';
@@ -53,9 +52,9 @@ const ResearchProblemsBox = ({ researchFieldId }) => {
             )}
             {totalElements > 5 && (
                 <div className="text-center mt-2">
-                    <SmallButton onClick={() => setOpenModal(v => !v)} color="lightblue">
+                    <Button size="sm" onClick={() => setOpenModal(v => !v)} color="lightblue">
                         View more
-                    </SmallButton>
+                    </Button>
                     {openModal && <ResearchProblemsModal openModal={openModal} setOpenModal={setOpenModal} researchFieldId={researchFieldId} />}
                 </div>
             )}

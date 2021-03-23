@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { Button, DropdownToggle } from 'reactstrap';
 import Gravatar from 'react-gravatar';
 
 export const SubtitleSeparator = styled.div`
@@ -17,12 +16,6 @@ export const SubTitle = styled.div`
     text-overflow: ellipsis;
     overflow: hidden;
     margin-right: 20px;
-`;
-
-export const SmallButton = styled(Button)`
-    &&& {
-        padding: 0.2rem 0.75rem;
-    }
 `;
 
 export const StyledGravatar = styled(Gravatar)`

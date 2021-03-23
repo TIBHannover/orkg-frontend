@@ -1,8 +1,7 @@
 import { useState } from 'react';
-import { DropdownMenu, DropdownItem, FormGroup, Label, Input, UncontrolledButtonDropdown, DropdownToggle } from 'reactstrap';
+import { Button, DropdownMenu, DropdownItem, FormGroup, Label, Input, UncontrolledButtonDropdown, DropdownToggle } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
-import { SmallButton } from 'components/styled';
 import Tippy from '@tippyjs/react';
 import { stringifySort } from 'utils';
 import PropTypes from 'prop-types';
@@ -71,9 +70,9 @@ const ProblemsDropdownFilter = ({ sort, isLoading, includeSubFields, setSort, se
                     }
                 >
                     <span>
-                        <SmallButton color="lightblue" className="flex-shrink-0 pl-3 pr-3" style={{ marginLeft: 'auto' }} size="sm">
+                        <Button color="lightblue" className="flex-shrink-0 pl-3 pr-3" style={{ marginLeft: 'auto' }} size="sm">
                             {stringifySort(sort)} <Icon icon={faChevronDown} />
-                        </SmallButton>
+                        </Button>
                     </span>
                 </Tippy>
             )}

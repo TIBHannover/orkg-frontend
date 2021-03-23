@@ -44,7 +44,7 @@ const ContributorsModal = ({ researchProblemId, openModal, setOpenModal }) => {
                     {!isLoading && contributors?.length === 0 && (
                         <div className="mt-4 mb-4">
                             No contributors yet.
-                            <i> be the first contributor!</i>.
+                            <i> Be the first contributor!</i>
                         </div>
                     )}
                     {isLoading && (

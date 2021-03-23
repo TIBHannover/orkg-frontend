@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Modal, ModalBody, ModalHeader } from 'reactstrap';
+import { Button, Modal, ModalBody, ModalHeader } from 'reactstrap';
 import { getUsersByObservatoryId } from 'services/backend/observatories';
 import ContributorCard from 'components/ContributorCard/ContributorCard';
-import { SmallButton } from 'components/styled';
 import PropTypes from 'prop-types';
 
 const MembersBox = ({ observatoryId, organizationsList }) => {
@@ -16,7 +15,7 @@ const MembersBox = ({ observatoryId, organizationsList }) => {
             getUsersByObservatoryId(observatoryId)
                 .then(contributors => {
                     setMembers(contributors);
-                    isLoadingMembers(false);
+                    setIsLoadingMembers(false);
                 })
                 .catch(error => {
                     setIsLoadingMembers(false);
@@ -49,9 +48,9 @@ const MembersBox = ({ observatoryId, organizationsList }) => {
                                 })}
                                 {!isLoadingMembers && members?.length > 4 && (
                                     <div className="text-center mt-3">
-                                        <SmallButton onClick={() => setOpenModal(v => !v)} color="lightblue">
+                                        <Button size="sm" onClick={() => setOpenModal(v => !v)} color="lightblue">
                                             View more
-                                        </SmallButton>
+                                        </Button>
                                         {openModal && (
                                             <Modal isOpen={openModal} toggle={() => setOpenModal(v => !v)} size="lg">
                                                 <ModalHeader toggle={() => setOpenModal(v => !v)}>Observatory members</ModalHeader>

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Button, Modal, ModalBody, ModalHeader } from 'reactstrap';
 import { getProblemsByObservatoryId } from 'services/backend/observatories';
 import AddResearchProblem from 'components/Observatory/AddResearchProblem';
@@ -10,7 +10,6 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { reverseWithSlug } from 'utils';
 import capitalize from 'capitalize';
-import { SmallButton } from 'components/styled';
 
 const ResearchProblemsBox = ({ observatoryId, organizationsList }) => {
     const user = useSelector(state => state.auth.user);
@@ -19,11 +18,7 @@ const ResearchProblemsBox = ({ observatoryId, organizationsList }) => {
     const [isLoadingProblems, setIsLoadingProblems] = useState(null);
     const [problemsList, setProblemsList] = useState([]);
 
-    useEffect(() => {
-        loadProblems();
-    }, [observatoryId]);
-
-    const loadProblems = () => {
+    const loadProblems = useCallback(() => {
         setIsLoadingProblems(true);
         getProblemsByObservatoryId(observatoryId)
             .then(problems => {
@@ -33,7 +28,11 @@ const ResearchProblemsBox = ({ observatoryId, organizationsList }) => {
             .catch(error => {
                 setIsLoadingProblems(false);
             });
-    };
+    }, [observatoryId]);
+
+    useEffect(() => {
+        loadProblems();
+    }, [observatoryId, loadProblems]);
 
     const updateObservatoryResearchProblem = () => {
         loadProblems();
@@ -73,9 +72,9 @@ const ResearchProblemsBox = ({ observatoryId, organizationsList }) => {
                     )}
                     {problemsList?.length > 5 && (
                         <div className="text-center mt-3">
-                            <SmallButton onClick={() => setOpenModal(v => !v)} color="lightblue">
+                            <Button size="sm" onClick={() => setOpenModal(v => !v)} color="lightblue">
                                 View more
-                            </SmallButton>
+                            </Button>
                             {openModal && (
                                 <Modal isOpen={openModal} toggle={() => setOpenModal(v => !v)} size="lg">
                                     <ModalHeader toggle={() => setOpenModal(v => !v)}>Research Problems</ModalHeader>

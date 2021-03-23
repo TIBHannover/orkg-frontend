@@ -77,7 +77,6 @@ const ArrowCards = styled.div`
     border-left: 15px solid transparent;
     border-right: 15px solid transparent;
     border-top: 15px solid #fff;
-    -webkit-filter: drop-shadow(1px 1px 0px rgba(0, 0, 0, 0.13));
     filter: drop-shadow(1px 1px 0px rgba(0, 0, 0, 0.13));
 `;
 
@@ -93,6 +92,12 @@ const AnimationContainer = styled(CSSTransition)`
             transform: scale(1);
         }
     }
+`;
+
+const ShowMore = styled(Card)`
+    background: ${props => props.theme.light}!important;
+    color: ${props => props.theme.bodyColor} !important;
+    text-align: center;
 `;
 
 const ResearchFieldCards = ({ selectedResearchField, handleFieldSelect, researchFields, isLoading }) => {
@@ -180,9 +185,11 @@ const ResearchFieldCards = ({ selectedResearchField, handleFieldSelect, research
                                     </AnimationContainer>
                                 ))}
                             {researchFields.length > 9 && (
-                                <Button onClick={() => setShowMoreFields(v => !v)} color="link" size="sm">
-                                    {showMoreFields ? 'Show less fields' : 'Show more fields'}
-                                </Button>
+                                <AnimationContainer classNames="fadeIn" timeout={{ enter: 500, exit: 0 }}>
+                                    <ShowMore role="button" onClick={() => setShowMoreFields(v => !v)}>
+                                        {showMoreFields ? 'Show less fields' : 'Show more fields...'}
+                                    </ShowMore>
+                                </AnimationContainer>
                             )}
                         </TransitionGroup>
                     </div>
