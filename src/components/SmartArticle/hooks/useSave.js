@@ -70,7 +70,7 @@ const useHeaderBar = () => {
             predicates: [],
             resource: {
                 name: title,
-                classes: [CLASSES.PAPER, CLASSES.SMART_ARTICLE], //TODO: paper should probably be removed?
+                classes: [CLASSES.SMART_ARTICLE],
                 values: {
                     [PREDICATES.HAS_CONTRIBUTION]: [
                         {

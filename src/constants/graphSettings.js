@@ -45,7 +45,8 @@ export const PREDICATES = {
     IS_LISTED: 'isListed',
     HAS_SECTION: 'HasSection',
     HAS_LINK: 'HasLink',
-    HAS_VISUALIZATION: 'hasVisualization'
+    HAS_VISUALIZATION: 'hasVisualization',
+    HAS_PAPER: 'HasPaper'
 };
 
 export const CLASSES = {
@@ -68,17 +69,12 @@ export const CLASSES = {
     LOCATION: 'DCLocation',
     SENTENCE: 'Sentence',
     SMART_ARTICLE: 'SmartArticle',
+    SMART_ARTICLE_PUBLISHED: 'SmartArticlePublished',
     SECTION: 'Section',
     CONTRIBUTION_SMART_ARTICLE: 'ContributionSmartArticle',
     RESOURCE_SECTION: 'ResourceSection',
     PROPERTY_SECTION: 'PropertySection',
     COMPARISON_SECTION: 'ComparisonSection',
-    /*FABIO_SCHOLARLY_WORK: 'ScholarlyWork',
-    DOCO_FRONT_MATTER: 'FrontMatter',
-    DOCO_BACK_MATTER: 'BackMatter',
-    DOCO_BODY_MATTER: 'BodyMatter',
-    DOCO_TITLE: 'Title',
-    DOCO_LIST_OF_AUTHORS: 'ListOfAuthors'*/
     VISUALIZATION: 'Visualization'
 };
 

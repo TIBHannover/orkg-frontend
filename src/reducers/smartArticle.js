@@ -6,20 +6,22 @@ const initialState = {
     authorResources: [],
     contributionId: 0,
     sections: [],
-    isLoading: false
+    isLoading: false,
+    isPublished: false
 };
 
 const smartArticle = (state = initialState, action) => {
     switch (action.type) {
         case type.ARTICLE_WRITER_LOAD: {
-            const { paper, authorResources, sections, contributionId } = action.payload;
+            const { paper, authorResources, sections, contributionId, isPublished } = action.payload;
 
             return {
                 ...state,
                 contributionId,
                 paper,
                 authorResources,
-                sections
+                sections,
+                isPublished
             };
         }
 

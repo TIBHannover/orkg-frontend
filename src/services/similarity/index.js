@@ -60,3 +60,15 @@ export const getVisualization = resourceId => {
 export const addVisualization = data => {
     return submitPostRequest(`${visualizationServiceUrl}`, { 'Content-Type': 'application/json' }, data);
 };
+
+/* same functions are above, but more general names */
+export const getResourceData = resourceId => {
+    return getVisualization(resourceId);
+};
+
+export const createResourceData = ({ resourceId, data }) => {
+    return addVisualization({
+        resourceId: resourceId,
+        jsonData: data // rename to data, it doesn't accept json...
+    });
+};

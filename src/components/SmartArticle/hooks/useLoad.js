@@ -3,7 +3,8 @@ import { CLASSES, PREDICATES } from 'constants/graphSettings';
 import { useCallback, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { getResource } from 'services/backend/resources';
-import { getStatementsBundleBySubject } from 'services/backend/statements';
+import { getStatementsBundleBySubject, getStatementsBySubjectAndPredicate } from 'services/backend/statements';
+import { getResourceData } from 'services/similarity';
 
 const useHeaderBar = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -13,16 +14,34 @@ const useHeaderBar = () => {
     const load = useCallback(
         async id => {
             setIsLoading(true);
-            const paperResource = await getResource(id).catch(e => {});
-
+            let paperResource = await getResource(id).catch(e => {});
+            let isPublished = false;
             if (!paperResource) {
                 notFound();
                 return;
             }
 
-            const { statements: paperStatements } = await getStatementsBundleBySubject({
-                id
-            });
+            console.log('paperResource', paperResource);
+
+            let paperStatements = [];
+
+            // for published articles
+            if (paperResource.classes.includes(CLASSES.SMART_ARTICLE_PUBLISHED)) {
+                const {
+                    data: { rootResource, statements }
+                } = await getResourceData(id);
+
+                paperStatements = statements;
+                id = rootResource;
+                paperResource = statements.find(statement => statement.subject.id === id).subject;
+                isPublished = true;
+            } else {
+                const { statements } = await getStatementsBundleBySubject({
+                    id
+                });
+                paperStatements = statements;
+            }
+
             const contributionResources = getObjectsByPredicateAndSubject(paperStatements, PREDICATES.HAS_CONTRIBUTION, id);
 
             if (contributionResources.length === 0) {
@@ -108,7 +127,8 @@ const useHeaderBar = () => {
                     },
                     contributionId: contributionResource.id,
                     authorResources: authorResources.reverse(),
-                    sections: sections.reverse()
+                    sections: sections.reverse(),
+                    isPublished
                 })
             );
 

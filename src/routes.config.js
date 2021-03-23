@@ -48,6 +48,7 @@ import Contribution from 'pages/Contribution';
 import CsvImport from 'pages/CsvImport';
 import SmartArticle from 'pages/SmartArticle/SmartArticle';
 import SmartArticleNew from 'pages/SmartArticle/SmartArticleNew';
+import SmartArticleView from 'pages/SmartArticle/SmartArticleView';
 import Tools from 'pages/Tools';
 import AddComparison from 'pages/AddComparison';
 import requireAuthentication from 'requireAuthentication';
@@ -311,6 +312,10 @@ const routes = [
     {
         path: ROUTES.SMART_ARTICLE,
         component: SmartArticle
+    },
+    {
+        path: ROUTES.SMART_ARTICLE_VIEW,
+        component: SmartArticleView
     },
     {
         path: ROUTES.SMART_ARTICLE_NEW,

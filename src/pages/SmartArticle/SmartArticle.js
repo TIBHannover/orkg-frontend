@@ -1,23 +1,26 @@
-import { faCheckCircle, faDownload, faEllipsisV, faPen, faSpinner, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faCheckCircle, faDownload, faEllipsisV, faHistory, faPen, faSpinner, faTimes, faUpload } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import AddSection from 'components/SmartArticle/AddSection';
 import AuthorsSection from 'components/SmartArticle/AuthorsSection';
+import HistoryModal from 'components/SmartArticle/HistoryModal';
 import useLoad from 'components/SmartArticle/hooks/useLoad';
+import PublishModal from 'components/SmartArticle/PublishModal';
 import Sections from 'components/SmartArticle/Sections';
 import Title from 'components/SmartArticle/Title';
 import ViewArticle from 'components/SmartArticle/ViewArticle';
+import ROUTES from 'constants/routes';
 import { times } from 'lodash';
+import { reverse } from 'named-urls';
 import NotFound from 'pages/NotFound';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import ContentLoader from 'react-content-loader';
 import { useSelector } from 'react-redux';
-import { Button, ButtonGroup, Container, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledButtonDropdown } from 'reactstrap';
-import { createGlobalStyle } from 'styled-components';
 import { NavLink } from 'react-router-dom';
-import ROUTES from 'constants/routes';
-import { reverse } from 'named-urls';
+import { Button, ButtonGroup, Container, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledButtonDropdown } from 'reactstrap';
+import Confirm from 'reactstrap-confirm';
+import { createGlobalStyle } from 'styled-components';
 
 const GlobalStyle = createGlobalStyle`
     // ensure printing only prints the contents and no other elements
@@ -45,12 +48,31 @@ const SmartArticle = props => {
     const { load, isLoading, isNotFound } = useLoad();
     const isLoadingInline = useSelector(state => state.smartArticle.isLoading);
     const [isEditing, setIsEditing] = useState(false);
+    const [isOpenPublishModal, setIsOpenPublishModal] = useState(false);
+    const [isOpenHistoryModal, setIsOpenHistoryModal] = useState(false);
+    const isPublished = useSelector(state => state.smartArticle.isPublished);
 
     useEffect(() => {
         document.title = 'Smart survey - ORKG';
 
         load(id);
     }, [id, load]);
+
+    const handleEdit = async () => {
+        if (isPublished) {
+            const isConfirmed = await Confirm({
+                title: 'This is a published article',
+                message: `The article you are viewing is published, which means it cannot be modified. To make changes, fetch the live article data and try this action again`,
+                cancelColor: 'light',
+                confirmText: 'Fetch live data'
+            });
+
+            if (!isConfirmed) {
+                return;
+            }
+        }
+        setIsEditing(true);
+    };
 
     if (isNotFound) {
         return <NotFound />;
@@ -61,7 +83,7 @@ const SmartArticle = props => {
             <GlobalStyle />
             <Container>
                 <div className="d-flex align-items-center">
-                    <h1 className="h4 mt-4 mb-4 flex-grow-1">Smart article writer</h1>
+                    <h1 className="h4 mt-4 mb-4 flex-grow-1">Smart article</h1>
                     <div className="flex-shrink-0 d-flex align-items-center">
                         {isEditing && (
                             <>
@@ -78,10 +100,28 @@ const SmartArticle = props => {
                         )}
                         <ButtonGroup>
                             {!isEditing && (
-                                <Button className="flex-shrink-0" color="darkblue" size="sm" style={{ marginLeft: 1 }} onClick={() => window.print()}>
-                                    <Icon icon={faDownload} />
-                                </Button>
+                                <>
+                                    <Button
+                                        className="flex-shrink-0"
+                                        color="darkblue"
+                                        size="sm"
+                                        style={{ marginLeft: 1 }}
+                                        onClick={() => window.print()}
+                                    >
+                                        <Icon icon={faDownload} />
+                                    </Button>
+                                </>
                             )}
+
+                            <Button
+                                className="flex-shrink-0"
+                                color="darkblue"
+                                size="sm"
+                                style={{ marginLeft: 1 }}
+                                onClick={() => setIsOpenHistoryModal(true)}
+                            >
+                                <Icon icon={faHistory} /> History
+                            </Button>
                             {/*isEditing && (
                                 <Button className="flex-shrink-0" color="darkblue" size="sm" style={{ marginLeft: 1 }}>
                                     <Icon icon={faCog} />
@@ -89,26 +129,31 @@ const SmartArticle = props => {
                             )*/}
 
                             {!isEditing ? (
-                                <Button
-                                    className="flex-shrink-0"
-                                    color="darkblue"
-                                    size="sm"
-                                    style={{ marginLeft: 1 }}
-                                    onClick={() => setIsEditing(true)}
-                                >
+                                <Button className="flex-shrink-0" color="darkblue" size="sm" style={{ marginLeft: 1 }} onClick={handleEdit}>
                                     <Icon icon={faPen} /> Edit
                                 </Button>
                             ) : (
-                                <Button
-                                    className="flex-shrink-0"
-                                    active
-                                    color="darkblue"
-                                    size="sm"
-                                    style={{ marginLeft: 1 }}
-                                    onClick={() => setIsEditing(false)}
-                                >
-                                    <Icon icon={faTimes} /> Stop editing
-                                </Button>
+                                <>
+                                    <Button
+                                        className="flex-shrink-0"
+                                        color="darkblue"
+                                        size="sm"
+                                        style={{ marginLeft: 1 }}
+                                        onClick={() => setIsOpenPublishModal(true)}
+                                    >
+                                        <Icon icon={faUpload} /> Publish
+                                    </Button>
+                                    <Button
+                                        className="flex-shrink-0"
+                                        active
+                                        color="darkblue"
+                                        size="sm"
+                                        style={{ marginLeft: 1 }}
+                                        onClick={() => setIsEditing(false)}
+                                    >
+                                        <Icon icon={faTimes} /> Stop editing
+                                    </Button>
+                                </>
                             )}
                             <UncontrolledButtonDropdown>
                                 <DropdownToggle size="sm" color="darkblue" className="px-3 rounded-right" style={{ marginLeft: 2 }}>
@@ -160,6 +205,8 @@ const SmartArticle = props => {
                     </div>
                 </Container>
             )}
+            {isOpenPublishModal && <PublishModal toggle={() => setIsOpenPublishModal(v => !v)} id={id} show />}
+            {isOpenHistoryModal && <HistoryModal toggle={() => setIsOpenHistoryModal(v => !v)} id={id} show />}
         </div>
     );
 };

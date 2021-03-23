@@ -8,7 +8,7 @@ import { reverse } from 'named-urls';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { Container } from 'reactstrap';
+import { Container, Alert, Button } from 'reactstrap';
 import * as Showdown from 'showdown';
 import footnotes from 'showdown-footnotes';
 import SectionComparison from './SectionComparison';
@@ -26,10 +26,20 @@ const ViewArticle = () => {
     const paper = useSelector(state => state.smartArticle.paper);
     const authors = useSelector(state => state.smartArticle.authorResources);
     const sections = useSelector(state => state.smartArticle.sections);
+    const isPublished = useSelector(state => state.smartArticle.isPublished);
 
     return (
         <Container className="print-only">
             <SectionStyled className="box rounded pr-4">
+                {!isPublished && (
+                    <Alert color="info" fade={false}>
+                        Waring: you are viewing an unpublished version of this article. The content can be changed by anyone.{' '}
+                        <Button color="link" className="p-0">
+                            View publish history
+                        </Button>
+                    </Alert>
+                )}
+
                 <h1 className="mb-2 mt-4" style={{ whiteSpace: 'pre-line' }}>
                     {paper.title}
                 </h1>
