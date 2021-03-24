@@ -7,6 +7,7 @@ import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import { MISC, CLASSES } from 'constants/graphSettings';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
 import { resourcesUrl } from 'services/backend/resources';
+import { has } from 'lodash';
 import ContentLoader from 'react-content-loader';
 import PropTypes from 'prop-types';
 import ROUTES from 'constants/routes';
@@ -104,6 +105,7 @@ const ResearchFieldCards = ({ selectedResearchField, handleFieldSelect, research
     const [stats, setStats] = useState(null);
     const rfAutocompleteRef = useRef(null);
     const [showMoreFields, setShowMoreFields] = useState(false);
+
     useEffect(() => {
         fetchResearchFieldsStats();
     }, []);
@@ -160,16 +162,20 @@ const ResearchFieldCards = ({ selectedResearchField, handleFieldSelect, research
                     <hr className="mt-1 mb-1" />
                 </>
             )}
-            {!isLoading && researchFields.length > 0 && (
+            {!isLoading && stats && researchFields.length > 0 && (
                 <div className="mt-3">
                     <div>
                         <TransitionGroup id="research-field-cards" className="mt-2 justify-content-center d-flex flex-wrap" exit={false}>
                             {researchFields.slice(0, 9).map(field => {
                                 return (
                                     <AnimationContainer key={field.id} classNames="fadeIn" timeout={{ enter: 500, exit: 0 }}>
-                                        <Card role="button" disabled={stats[field.id] === 0} onClick={() => handleFieldSelect(field)}>
+                                        <Card
+                                            role="button"
+                                            disabled={has(stats, field.id) && stats[field.id] === 0}
+                                            onClick={() => handleFieldSelect(field)}
+                                        >
                                             <CardTitle className="card-title m-0 text-center">{field.label}</CardTitle>
-                                            <PaperAmount>{stats[field.id]} papers</PaperAmount>
+                                            <PaperAmount>{has(stats, field.id) ? stats[field.id] : 0} papers</PaperAmount>
                                         </Card>
                                     </AnimationContainer>
                                 );
@@ -178,9 +184,13 @@ const ResearchFieldCards = ({ selectedResearchField, handleFieldSelect, research
                                 showMoreFields &&
                                 researchFields.slice(9).map(field => (
                                     <AnimationContainer key={field.id} classNames="fadeIn" timeout={{ enter: 500, exit: 0 }}>
-                                        <Card role="button" disabled={stats[field.id] === 0} onClick={() => handleFieldSelect(field)}>
+                                        <Card
+                                            role="button"
+                                            disabled={has(stats, field.id) && stats[field.id] === 0}
+                                            onClick={() => handleFieldSelect(field)}
+                                        >
                                             <CardTitle className="card-title m-0 text-center">{field.label}</CardTitle>
-                                            <PaperAmount>{stats[field.id]} papers</PaperAmount>
+                                            <PaperAmount>{has(stats, field.id) ? stats[field.id] : 0} papers</PaperAmount>
                                         </Card>
                                     </AnimationContainer>
                                 ))}
