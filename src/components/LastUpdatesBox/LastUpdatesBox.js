@@ -45,7 +45,7 @@ const LastUpdatesBox = ({ researchFieldId }) => {
                         <div className="mt-4 mb-4">
                             No updates in this research field yet.
                             <br />
-                            <i> be the first to start building the knowledge!</i>.
+                            <i> Be the first to start building the knowledge!</i>
                         </div>
                     )}
                     {isLoading && (
