@@ -6,12 +6,13 @@ import { CLASSES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import React from 'react';
-import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { Container, Alert, Button } from 'reactstrap';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, useParams } from 'react-router-dom';
+import { Alert, Button, Container } from 'reactstrap';
 import * as Showdown from 'showdown';
 import footnotes from 'showdown-footnotes';
 import SectionComparison from './SectionComparison';
+import { toggleHistoryModal as toggleHistoryModalAction } from 'actions/smartArticle';
 
 const converter = new Showdown.Converter({
     //tables: true,
@@ -23,20 +24,33 @@ const converter = new Showdown.Converter({
 converter.setFlavor('github');
 
 const ViewArticle = () => {
+    const { id } = useParams();
     const paper = useSelector(state => state.smartArticle.paper);
     const authors = useSelector(state => state.smartArticle.authorResources);
     const sections = useSelector(state => state.smartArticle.sections);
     const isPublished = useSelector(state => state.smartArticle.isPublished);
+    const versions = useSelector(state => state.smartArticle.versions);
+    const dispatch = useDispatch();
+    const latestVersionId = versions?.[0]?.id;
+    const newVersionAvailable = isPublished && latestVersionId !== id;
+
+    const toggleHistoryModal = () => dispatch(toggleHistoryModalAction());
 
     return (
         <Container className="print-only">
             <SectionStyled className="box rounded pr-4">
                 {!isPublished && (
                     <Alert color="info" fade={false}>
-                        Waring: you are viewing an unpublished version of this article. The content can be changed by anyone.{' '}
-                        <Button color="link" className="p-0">
+                        Warning: you are viewing an unpublished version of this article. The content can be changed by anyone.{' '}
+                        <Button color="link" className="p-0" onClick={toggleHistoryModal}>
                             View publish history
                         </Button>
+                    </Alert>
+                )}
+                {newVersionAvailable && (
+                    <Alert color="info" fade={false}>
+                        Warning: a newer version of this article is available.{' '}
+                        <Link to={reverse(ROUTES.SMART_ARTICLE, { id: latestVersionId })}>View latest version</Link>
                     </Alert>
                 )}
 

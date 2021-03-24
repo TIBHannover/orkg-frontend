@@ -1,13 +1,11 @@
-import { CLASSES, PREDICATES } from 'constants/graphSettings';
 import routes from 'constants/routes';
 import moment from 'moment';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { Alert, Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
-import { getStatementsByObjectAndPredicate, getStatementsBySubjects } from 'services/backend/statements';
+import { Alert, Modal, ModalBody, ModalHeader } from 'reactstrap';
 import styled from 'styled-components';
 
 const Activity = styled.div`
@@ -49,42 +47,13 @@ const Time = styled.div`
 
 const HistoryModal = props => {
     const { id, show, toggle } = props;
-    const paperId = useSelector(state => state.smartArticle.paper.id);
-    const [versions, setVersions] = useState([]);
-
-    useEffect(() => {
-        if (!paperId) {
-            return;
-        }
-        const getVersions = async () => {
-            const statements = await getStatementsByObjectAndPredicate({ objectId: paperId, predicateId: PREDICATES.HAS_PAPER });
-
-            // TODO: can/should we rely on the default statement ordering?
-            const ids = statements.map(version => version.subject.id);
-            const versionsStatements = await getStatementsBySubjects({ ids });
-
-            const versionsList = versionsStatements
-                .map(versionSubject => ({
-                    ...versionSubject.statements.find(
-                        statement =>
-                            statement.subject.classes.includes(CLASSES.SMART_ARTICLE_PUBLISHED) && statement.predicate.id === PREDICATES.DESCRIPTION
-                    )
-                }))
-                .map(statement => ({
-                    id: statement.subject.id,
-                    date: statement.subject.created_at,
-                    description: statement.object.label
-                }));
-            setVersions(versionsList);
-        };
-        getVersions();
-    }, [paperId]);
+    const versions = useSelector(state => state.smartArticle.versions);
 
     return (
         <Modal isOpen={show} toggle={toggle}>
             <ModalHeader toggle={toggle}>Publish history</ModalHeader>
             <ModalBody>
-                {versions.length && (
+                {versions.length > 0 && (
                     <div className="p-4">
                         {versions.map((version, i) => (
                             <Activity key={version.id} className="pl-3 pb-3">

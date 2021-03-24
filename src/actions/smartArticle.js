@@ -200,3 +200,7 @@ export const sortSections = ({ contributionId, sections }) => async dispatch => 
 
     dispatch(setIsLoading(false));
 };
+
+export const toggleHistoryModal = () => ({
+    type: type.ARTICLE_WRITER_TOGGLE_OPEN_HISTORY_MODAL
+});

@@ -1,6 +1,7 @@
 import { faCheckCircle, faDownload, faEllipsisV, faHistory, faPen, faSpinner, faTimes, faUpload } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
+import { toggleHistoryModal as toggleHistoryModalAction } from 'actions/smartArticle';
 import AddSection from 'components/SmartArticle/AddSection';
 import AuthorsSection from 'components/SmartArticle/AuthorsSection';
 import HistoryModal from 'components/SmartArticle/HistoryModal';
@@ -16,8 +17,8 @@ import NotFound from 'pages/NotFound';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import ContentLoader from 'react-content-loader';
-import { useSelector } from 'react-redux';
-import { NavLink } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { NavLink, useHistory } from 'react-router-dom';
 import { Button, ButtonGroup, Container, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledButtonDropdown } from 'reactstrap';
 import Confirm from 'reactstrap-confirm';
 import { createGlobalStyle } from 'styled-components';
@@ -49,8 +50,12 @@ const SmartArticle = props => {
     const isLoadingInline = useSelector(state => state.smartArticle.isLoading);
     const [isEditing, setIsEditing] = useState(false);
     const [isOpenPublishModal, setIsOpenPublishModal] = useState(false);
-    const [isOpenHistoryModal, setIsOpenHistoryModal] = useState(false);
+    //const [isOpenHistoryModal, setIsOpenHistoryModal] = useState(false);
     const isPublished = useSelector(state => state.smartArticle.isPublished);
+    const paper = useSelector(state => state.smartArticle.paper);
+    const isOpenHistoryModal = useSelector(state => state.smartArticle.isOpenHistoryModal);
+    const dispatch = useDispatch();
+    const history = useHistory();
 
     useEffect(() => {
         document.title = 'Smart survey - ORKG';
@@ -67,12 +72,15 @@ const SmartArticle = props => {
                 confirmText: 'Fetch live data'
             });
 
-            if (!isConfirmed) {
-                return;
+            if (isConfirmed) {
+                history.push(reverse(ROUTES.SMART_ARTICLE, { id: paper.id }));
             }
+        } else {
+            setIsEditing(true);
         }
-        setIsEditing(true);
     };
+
+    const toggleHistoryModal = () => dispatch(toggleHistoryModalAction());
 
     if (isNotFound) {
         return <NotFound />;
@@ -113,13 +121,7 @@ const SmartArticle = props => {
                                 </>
                             )}
 
-                            <Button
-                                className="flex-shrink-0"
-                                color="darkblue"
-                                size="sm"
-                                style={{ marginLeft: 1 }}
-                                onClick={() => setIsOpenHistoryModal(true)}
-                            >
+                            <Button className="flex-shrink-0" color="darkblue" size="sm" style={{ marginLeft: 1 }} onClick={toggleHistoryModal}>
                                 <Icon icon={faHistory} /> History
                             </Button>
                             {/*isEditing && (
@@ -206,7 +208,7 @@ const SmartArticle = props => {
                 </Container>
             )}
             {isOpenPublishModal && <PublishModal toggle={() => setIsOpenPublishModal(v => !v)} id={id} show />}
-            {isOpenHistoryModal && <HistoryModal toggle={() => setIsOpenHistoryModal(v => !v)} id={id} show />}
+            {isOpenHistoryModal && <HistoryModal toggle={toggleHistoryModal} id={id} show />}
         </div>
     );
 };

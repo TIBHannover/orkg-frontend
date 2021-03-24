@@ -3,7 +3,7 @@ import { CLASSES, PREDICATES } from 'constants/graphSettings';
 import { useCallback, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { getResource } from 'services/backend/resources';
-import { getStatementsBundleBySubject, getStatementsBySubjectAndPredicate } from 'services/backend/statements';
+import { getStatementsBundleBySubject, getStatementsByObjectAndPredicate, getStatementsBySubjects } from 'services/backend/statements';
 import { getResourceData } from 'services/similarity';
 
 const useHeaderBar = () => {
@@ -20,8 +20,6 @@ const useHeaderBar = () => {
                 notFound();
                 return;
             }
-
-            console.log('paperResource', paperResource);
 
             let paperStatements = [];
 
@@ -41,6 +39,9 @@ const useHeaderBar = () => {
                 });
                 paperStatements = statements;
             }
+
+            // get all published versions for this article
+            const versions = await getVersions(paperResource.id);
 
             const contributionResources = getObjectsByPredicateAndSubject(paperStatements, PREDICATES.HAS_CONTRIBUTION, id);
 
@@ -128,7 +129,8 @@ const useHeaderBar = () => {
                     contributionId: contributionResource.id,
                     authorResources: authorResources.reverse(),
                     sections: sections.reverse(),
-                    isPublished
+                    isPublished,
+                    versions
                 })
             );
 
@@ -136,6 +138,25 @@ const useHeaderBar = () => {
         },
         [dispatch]
     );
+
+    const getVersions = async paperId => {
+        const statements = await getStatementsByObjectAndPredicate({ objectId: paperId, predicateId: PREDICATES.HAS_PAPER });
+        const ids = statements.map(version => version.subject.id);
+        const versionsStatements = await getStatementsBySubjects({ ids });
+
+        return versionsStatements
+            .map(versionSubject => ({
+                ...versionSubject.statements.find(
+                    statement =>
+                        statement.subject.classes.includes(CLASSES.SMART_ARTICLE_PUBLISHED) && statement.predicate.id === PREDICATES.DESCRIPTION
+                )
+            }))
+            .map(statement => ({
+                id: statement.subject.id,
+                date: statement.subject.created_at,
+                description: statement.object.label
+            }));
+    };
 
     const notFound = () => {
         setIsNotFound(true);

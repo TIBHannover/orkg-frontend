@@ -6,14 +6,16 @@ const initialState = {
     authorResources: [],
     contributionId: 0,
     sections: [],
+    versions: [],
     isLoading: false,
-    isPublished: false
+    isPublished: false,
+    isOpenHistoryModal: false
 };
 
 const smartArticle = (state = initialState, action) => {
     switch (action.type) {
         case type.ARTICLE_WRITER_LOAD: {
-            const { paper, authorResources, sections, contributionId, isPublished } = action.payload;
+            const { paper, authorResources, sections, contributionId, isPublished, versions } = action.payload;
 
             return {
                 ...state,
@@ -21,7 +23,8 @@ const smartArticle = (state = initialState, action) => {
                 paper,
                 authorResources,
                 sections,
-                isPublished
+                isPublished,
+                versions
             };
         }
 
@@ -115,6 +118,13 @@ const smartArticle = (state = initialState, action) => {
             return {
                 ...state,
                 sections
+            };
+        }
+
+        case type.ARTICLE_WRITER_TOGGLE_OPEN_HISTORY_MODAL: {
+            return {
+                ...state,
+                isOpenHistoryModal: !state.isOpenHistoryModal
             };
         }
 
