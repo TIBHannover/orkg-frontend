@@ -43,7 +43,7 @@ const ResearchProblemHeader = ({ id }) => {
     const [menuOpen, setMenuOpen] = useState(false);
     const [editMode, setEditMode] = useState(false);
     const [showMoreFields, setShowMoreFields] = useState(false);
-    const { researchProblemData, isLoading, isFailedLoading, loadResearchProblemData } = useResearchProblem();
+    const { researchProblemData, superProblems, isLoading, isFailedLoading, loadResearchProblemData } = useResearchProblem({ id });
     const [researchFields, isLoadingResearchFields] = useResearchProblemResearchFields({ researchProblemId: id });
     const prevEditMode = usePrevious({ editMode });
 
@@ -147,17 +147,17 @@ const ResearchProblemHeader = ({ id }) => {
                                 )}
                             </CardBody>
 
-                            {researchProblemData.researchFields && researchProblemData.superProblems.length > 0 && (
+                            {researchProblemData.subProblems && researchProblemData.subProblems.length > 0 && (
                                 <>
                                     <hr className="m-0" />
                                     <CardBody>
                                         <CardTitle tag="h5">Subfields</CardTitle>
                                         <div>
-                                            {researchProblemData.superProblems.slice(0, 9).map(subfield => (
+                                            {researchProblemData.subProblems.slice(0, 9).map(subfield => (
                                                 <Link
                                                     key={`index${subfield.id}`}
-                                                    to={reverseWithSlug(ROUTES.RESEARCH_FIELD, {
-                                                        researchFieldId: subfield.id,
+                                                    to={reverseWithSlug(ROUTES.RESEARCH_PROBLEM, {
+                                                        researchProblemId: subfield.id,
                                                         slug: subfield.label
                                                     })}
                                                 >
@@ -166,13 +166,13 @@ const ResearchProblemHeader = ({ id }) => {
                                                     </Badge>
                                                 </Link>
                                             ))}
-                                            {researchProblemData.superProblems.length > 9 &&
-                                                researchProblemData.superProblems &&
-                                                researchProblemData.superProblems.slice(9).map(subfield => (
+                                            {researchProblemData.subProblems.length > 9 &&
+                                                researchProblemData.subProblems &&
+                                                researchProblemData.subProblems.slice(9).map(subfield => (
                                                     <Link
                                                         key={`index${subfield.id}`}
-                                                        to={reverseWithSlug(ROUTES.RESEARCH_FIELD, {
-                                                            researchFieldId: subfield.id,
+                                                        to={reverseWithSlug(ROUTES.RESEARCH_PROBLEM, {
+                                                            researchProblemId: subfield.id,
                                                             slug: subfield.label
                                                         })}
                                                     >
@@ -181,7 +181,7 @@ const ResearchProblemHeader = ({ id }) => {
                                                         </Badge>
                                                     </Link>
                                                 ))}
-                                            {researchProblemData.superProblems.length > 9 && (
+                                            {researchProblemData.subProblems.length > 9 && (
                                                 <Button onClick={() => setShowMoreFields(v => !v)} color="link" size="sm">
                                                     {showMoreFields ? 'Show less subfields' : 'Show more subfields'}
                                                 </Button>
@@ -206,7 +206,7 @@ const ResearchProblemHeader = ({ id }) => {
                                 <ResearchFieldsBox isLoading={isLoadingResearchFields} researchFields={researchFields} />
                             </Col>
                             <Col md="4" className="d-flex">
-                                <SuperResearchProblemBox isLoading={isLoadingResearchFields} superProblems={researchProblemData.superProblems} />
+                                <SuperResearchProblemBox isLoading={isLoadingResearchFields} superProblems={superProblems} />
                             </Col>
                         </Row>
                     </Container>
