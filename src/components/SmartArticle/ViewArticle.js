@@ -38,22 +38,21 @@ const ViewArticle = () => {
 
     return (
         <Container className="print-only">
+            {!isPublished && (
+                <Alert color="warning" fade={false} className="box">
+                    Warning: you are viewing an unpublished version of this article. The content can be changed by anyone.{' '}
+                    <Button color="link" className="p-0" onClick={toggleHistoryModal}>
+                        View publish history
+                    </Button>
+                </Alert>
+            )}
+            {newVersionAvailable && (
+                <Alert color="warning" fade={false} className="box">
+                    Warning: a newer version of this article is available.{' '}
+                    <Link to={reverse(ROUTES.SMART_ARTICLE, { id: latestVersionId })}>View latest version</Link>
+                </Alert>
+            )}
             <SectionStyled className="box rounded pr-4">
-                {!isPublished && (
-                    <Alert color="info" fade={false}>
-                        Warning: you are viewing an unpublished version of this article. The content can be changed by anyone.{' '}
-                        <Button color="link" className="p-0" onClick={toggleHistoryModal}>
-                            View publish history
-                        </Button>
-                    </Alert>
-                )}
-                {newVersionAvailable && (
-                    <Alert color="info" fade={false}>
-                        Warning: a newer version of this article is available.{' '}
-                        <Link to={reverse(ROUTES.SMART_ARTICLE, { id: latestVersionId })}>View latest version</Link>
-                    </Alert>
-                )}
-
                 <h1 className="mb-2 mt-4" style={{ whiteSpace: 'pre-line' }}>
                     {paper.title}
                 </h1>

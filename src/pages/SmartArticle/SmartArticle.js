@@ -2,6 +2,7 @@ import { faCheckCircle, faDownload, faEllipsisV, faHistory, faPen, faSpinner, fa
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import { toggleHistoryModal as toggleHistoryModalAction } from 'actions/smartArticle';
+import { SubtitleSeparator } from 'components/Comparison/styled';
 import AddSection from 'components/SmartArticle/AddSection';
 import AuthorsSection from 'components/SmartArticle/AuthorsSection';
 import HistoryModal from 'components/SmartArticle/HistoryModal';
@@ -10,8 +11,10 @@ import PublishModal from 'components/SmartArticle/PublishModal';
 import Sections from 'components/SmartArticle/Sections';
 import Title from 'components/SmartArticle/Title';
 import ViewArticle from 'components/SmartArticle/ViewArticle';
+import { SubTitle } from 'components/styled';
 import ROUTES from 'constants/routes';
 import { times } from 'lodash';
+import moment from 'moment';
 import { reverse } from 'named-urls';
 import NotFound from 'pages/NotFound';
 import PropTypes from 'prop-types';
@@ -57,6 +60,11 @@ const SmartArticle = props => {
     const dispatch = useDispatch();
     const history = useHistory();
 
+    const versions = useSelector(state => state.smartArticle.versions);
+    const version = versions.find(version => version.id === id);
+    const versionNumber = versions.length ? versions.length - versions.findIndex(version => version.id === id) : null;
+    const publicationDate = version ? moment(version.date).format('DD MMMM YYYY') : null;
+
     useEffect(() => {
         document.title = 'Smart survey - ORKG';
 
@@ -90,8 +98,20 @@ const SmartArticle = props => {
         <div>
             <GlobalStyle />
             <Container>
-                <div className="d-flex align-items-center">
-                    <h1 className="h4 mt-4 mb-4 flex-grow-1">Smart article</h1>
+                <div className="d-flex ">
+                    <div className="d-flex align-items-center flex-grow-1">
+                        <h1 className="h4 mt-4 mb-4">Smart article</h1>
+                        {publicationDate && (
+                            <>
+                                <SubtitleSeparator />
+                                <Tippy content={`Update message: "${version.description}"`}>
+                                    <SubTitle>
+                                        Published on {publicationDate} - Version {versionNumber}
+                                    </SubTitle>
+                                </Tippy>
+                            </>
+                        )}
+                    </div>
                     <div className="flex-shrink-0 d-flex align-items-center">
                         {isEditing && (
                             <>

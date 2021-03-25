@@ -1,12 +1,12 @@
 import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import React, { useState } from 'react';
-import OutsideClickHandler from 'react-outside-click-handler';
+import React, { useRef, useState } from 'react';
 import { Button, ButtonGroup } from 'reactstrap';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { createSection } from 'actions/smartArticle';
+import { useClickAway } from 'react-use';
 
 const InvisibleByDefault = styled.div`
     button {
@@ -24,7 +24,7 @@ const AddSectionStyled = styled(Button)`
     margin: 5px 0 !important;
 `;
 
-const Toolbar = styled(ButtonGroup)`
+const Toolbar = styled.div`
     position: absolute !important;
     top: -25px;
 
@@ -37,14 +37,10 @@ const AddSection = props => {
     const [isToolbarVisible, setIsToolbarVisible] = useState(false);
     const dispatch = useDispatch();
     const contributionId = useSelector(state => state.smartArticle.contributionId);
+    const refToolbar = useRef(null);
 
     const handleShowToolbar = () => {
         setIsToolbarVisible(true);
-        // show toolbar
-    };
-
-    const handleOutsideClick = () => {
-        setIsToolbarVisible(false);
     };
 
     const handleAddSection = sectionType => {
@@ -59,14 +55,18 @@ const AddSection = props => {
         );
     };
 
+    useClickAway(refToolbar, () => {
+        setIsToolbarVisible(false);
+    });
+
     return (
         <InvisibleByDefault className="d-flex align-items-center justify-content-center add position-relative">
             <AddSectionStyled color="link" className="p-0" onClick={handleShowToolbar}>
                 <Icon icon={faPlusCircle} />
             </AddSectionStyled>
             {isToolbarVisible && (
-                <OutsideClickHandler onOutsideClick={handleOutsideClick} display="contents">
-                    <Toolbar size="sm">
+                <Toolbar ref={refToolbar}>
+                    <ButtonGroup size="sm">
                         <Button color="dark" onClick={() => handleAddSection('content')}>
                             Content
                         </Button>
@@ -81,8 +81,8 @@ const AddSection = props => {
                         <Button color="dark" onClick={() => handleAddSection('property')}>
                             Property
                         </Button>
-                    </Toolbar>
-                </OutsideClickHandler>
+                    </ButtonGroup>
+                </Toolbar>
             )}
         </InvisibleByDefault>
     );

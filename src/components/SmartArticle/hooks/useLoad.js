@@ -154,7 +154,8 @@ const useHeaderBar = () => {
             .map(statement => ({
                 id: statement.subject.id,
                 date: statement.subject.created_at,
-                description: statement.object.label
+                description: statement.object.label,
+                creator: statement.object.created_by
             }));
     };
 

@@ -1,3 +1,4 @@
+import UserAvatar from 'components/UserAvatar/UserAvatar';
 import routes from 'constants/routes';
 import moment from 'moment';
 import { reverse } from 'named-urls';
@@ -32,7 +33,8 @@ const Time = styled.div`
     margin-top: -0.2rem;
     margin-bottom: 0.2rem;
     font-size: 15px;
-
+    display: flex;
+    align-items: center;
     &::before {
         width: 1rem;
         height: 1rem;
@@ -60,6 +62,9 @@ const HistoryModal = props => {
                                 <Time className={id === version.id ? 'selected' : ''}>
                                     {version.date ? moment(version.date).format('DD MMMM YYYY - H:mm') : ''}{' '}
                                     {id === version.id && <>(This version)</>}
+                                    <span className="ml-2">
+                                        <UserAvatar userId={version.creator} />
+                                    </span>
                                 </Time>
                                 <div>
                                     Version {versions.length - i}: <em>{version.description}</em> <br />
