@@ -34,6 +34,9 @@ import { NavLink } from 'react-router-dom';
 import ROUTES from 'constants/routes';
 import Papers from 'components/ResearchField/Papers';
 import Comparisons from 'components/ResearchField/Comparisons';
+import { RESOURCE_TYPE_ID } from 'constants/misc';
+import CheckSlug from 'components/CheckSlug/CheckSlug';
+import { reverseWithSlug } from 'utils';
 
 function usePrevious(value) {
     const ref = useRef();
@@ -73,6 +76,8 @@ function ResearchField(props) {
 
     return (
         <div>
+            {!isLoading && !isFailedLoading && <CheckSlug label={researchFieldData.label} route={ROUTES.RESEARCH_FIELD} />}
+
             {isLoading && (
                 <div className="text-center mt-4 mb-4">
                     <Icon icon={faSpinner} spin /> Loading
@@ -89,7 +94,7 @@ function ResearchField(props) {
                             label={researchFieldData.label}
                             enableEdit={true}
                             syncBackend={true}
-                            type="resource"
+                            type={RESOURCE_TYPE_ID}
                         />
                     )}
                     <Breadcrumbs researchFieldId={researchFieldId} disableLastField />
@@ -134,7 +139,9 @@ function ResearchField(props) {
                                         <ul className="pl-3 pt-2">
                                             {subResearchFields.slice(0, 5).map(subRF => (
                                                 <li key={`subrp${subRF.id}`}>
-                                                    <Link to={reverse(ROUTES.RESEARCH_FIELD, { researchFieldId: subRF.id })}>
+                                                    <Link
+                                                        to={reverseWithSlug(ROUTES.RESEARCH_FIELD, { researchFieldId: subRF.id, slug: subRF.label })}
+                                                    >
                                                         {subRF.label}{' '}
                                                         <small>
                                                             <Badge className="ml-1" color="info" pill>
@@ -173,7 +180,10 @@ function ResearchField(props) {
                                                             <ListGroupItem key={`subrf${subRF.id}`} className="justify-content-between">
                                                                 <Link
                                                                     onClick={() => setIsSubResearchFieldsModalOpen(false)}
-                                                                    to={reverse(ROUTES.RESEARCH_FIELD, { researchFieldId: subRF.id })}
+                                                                    to={reverseWithSlug(ROUTES.RESEARCH_FIELD, {
+                                                                        researchFieldId: subRF.id,
+                                                                        slug: subRF.label
+                                                                    })}
                                                                 >
                                                                     {subRF.label}
                                                                     <small>
@@ -206,8 +216,9 @@ function ResearchField(props) {
                                                 {researchProblems.slice(0, 5).map(researchProblem => (
                                                     <li key={`rp${researchProblem.problem.id}`}>
                                                         <Link
-                                                            to={reverse(ROUTES.RESEARCH_PROBLEM, {
-                                                                researchProblemId: researchProblem.problem.id
+                                                            to={reverseWithSlug(ROUTES.RESEARCH_PROBLEM, {
+                                                                researchProblemId: researchProblem.problem.id,
+                                                                slug: researchProblem.problem.label
                                                             })}
                                                         >
                                                             {researchProblem.problem.label}
@@ -242,8 +253,9 @@ function ResearchField(props) {
                                                         {researchProblems.map(researchProblem => (
                                                             <ListGroupItem key={`rp${researchProblem.id}`} className="justify-content-between">
                                                                 <Link
-                                                                    to={reverse(ROUTES.RESEARCH_PROBLEM, {
-                                                                        researchProblemId: researchProblem.problem.id
+                                                                    to={reverseWithSlug(ROUTES.RESEARCH_PROBLEM, {
+                                                                        researchProblemId: researchProblem.problem.id,
+                                                                        slug: researchProblem.problem.label
                                                                     })}
                                                                 >
                                                                     {researchProblem.problem.label}

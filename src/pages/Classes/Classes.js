@@ -1,119 +1,117 @@
-import { Component } from 'react';
+import { useState, useEffect } from 'react';
 import { Container, ListGroup, ListGroupItem, ButtonGroup } from 'reactstrap';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import ShortRecord from 'components/ShortRecord/ShortRecord';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faSpinner, faAngleDoubleDown, faPlus } from '@fortawesome/free-solid-svg-icons';
-import { getAllClasses } from 'services/backend/classes';
+import { faPlus, faSpinner, faAngleDoubleDown } from '@fortawesome/free-solid-svg-icons';
+import { getClasses } from 'services/backend/classes';
 import { reverse } from 'named-urls';
 import { Link } from 'react-router-dom';
 import ROUTES from 'constants/routes';
 
-export default class Classes extends Component {
-    constructor(props) {
-        super(props);
+const Classes = () => {
+    const pageSize = 25;
+    const [classes, setClasses] = useState([]);
+    const [isNextPageLoading, setIsNextPageLoading] = useState(false);
+    const [hasNextPage, setHasNextPage] = useState(false);
+    const [page, setPage] = useState(0);
+    const [isLastPageReached, setIsLastPageReached] = useState(false);
+    const [totalElements, setTotalElements] = useState(0);
 
-        this.pageSize = 25;
-
-        this.state = {
-            classes: [],
-            isNextPageLoading: false,
-            hasNextPage: false,
-            page: 1,
-            isLastPageReached: false
-        };
-    }
-
-    componentDidMount() {
+    useEffect(() => {
         document.title = 'Classes - ORKG';
+        loadMoreClasses();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
-        this.loadMoreClasses();
-    }
-
-    loadMoreClasses = () => {
-        this.setState({ isNextPageLoading: true });
-        getAllClasses({
-            page: this.state.page,
-            items: this.pageSize,
+    const loadMoreClasses = () => {
+        setIsNextPageLoading(true);
+        getClasses({
+            page: page,
+            items: pageSize,
             sortBy: 'created_at',
             desc: true
-        }).then(classes => {
-            if (classes.length > 0) {
-                this.setState({
-                    classes: [...this.state.classes, ...classes],
-                    isNextPageLoading: false,
-                    hasNextPage: classes.length < this.pageSize ? false : true,
-                    page: this.state.page + 1
-                });
-            } else {
-                this.setState({
-                    isNextPageLoading: false,
-                    hasNextPage: false,
-                    isLastPageReached: true
-                });
-            }
-        });
+        })
+            .then(result => {
+                setClasses(prevClasses => [...prevClasses, ...result.content]);
+                setIsNextPageLoading(false);
+                setHasNextPage(!result.last);
+                setIsLastPageReached(result.last);
+                setPage(prevPage => prevPage + 1);
+                setTotalElements(result.totalElements);
+            })
+            .catch(error => {
+                setIsNextPageLoading(false);
+                setHasNextPage(false);
+                setIsLastPageReached(false);
+                console.log(error);
+            });
     };
 
-    render() {
-        return (
-            <>
-                <Container className="d-flex align-items-center">
-                    <h1 className="h4 mt-4 mb-4 flex-grow-1">View all classes</h1>
-                    <ButtonGroup>
-                        <RequireAuthentication
-                            component={Link}
-                            color="darkblue"
-                            size="sm"
-                            className="btn btn-darkblue btn-sm flex-shrink-0"
-                            to={ROUTES.ADD_CLASS}
-                        >
-                            <Icon icon={faPlus} /> Create class
-                        </RequireAuthentication>
-                    </ButtonGroup>
-                </Container>
+    return (
+        <>
+            <Container className="d-flex align-items-center">
+                <div className="d-flex flex-grow-1 mt-4 mb-4">
+                    <h1 className="h4">View all classes</h1>
+                    <div className="text-muted ml-3 mt-1">
+                        {totalElements === 0 && isNextPageLoading ? <Icon icon={faSpinner} spin /> : totalElements} classes
+                    </div>
+                </div>
+                <ButtonGroup>
+                    <RequireAuthentication
+                        component={Link}
+                        color="darkblue"
+                        size="sm"
+                        className="btn btn-darkblue btn-sm flex-shrink-0"
+                        to={ROUTES.ADD_CLASS}
+                    >
+                        <Icon icon={faPlus} /> Create class
+                    </RequireAuthentication>
+                </ButtonGroup>
+            </Container>
 
-                <Container className="p-0">
-                    <ListGroup flush className="box rounded" style={{ overflow: 'hidden' }}>
-                        {this.state.classes.length > 0 && (
-                            <div>
-                                {this.state.classes.map(classItem => {
-                                    return (
-                                        <ShortRecord key={classItem.id} header={classItem.label} href={reverse(ROUTES.CLASS, { id: classItem.id })}>
-                                            {classItem.id}
-                                        </ShortRecord>
-                                    );
-                                })}
-                            </div>
-                        )}
-                        {this.state.classes.length === 0 && !this.state.isNextPageLoading && (
-                            <ListGroupItem tag="div" className="text-center">
-                                No Classes
-                            </ListGroupItem>
-                        )}
-                        {this.state.isNextPageLoading && (
-                            <ListGroupItem tag="div" className="text-center">
-                                <Icon icon={faSpinner} spin /> Loading
-                            </ListGroupItem>
-                        )}
-                        {!this.state.isNextPageLoading && this.state.hasNextPage && (
-                            <ListGroupItem
-                                style={{ cursor: 'pointer' }}
-                                className="text-center"
-                                action
-                                onClick={!this.state.isNextPageLoading ? this.loadMoreClasses : undefined}
-                            >
-                                <Icon icon={faAngleDoubleDown} /> Load more classes
-                            </ListGroupItem>
-                        )}
-                        {!this.state.hasNextPage && this.state.isLastPageReached && (
-                            <ListGroupItem tag="div" className="text-center">
-                                You have reached the last page.
-                            </ListGroupItem>
-                        )}
-                    </ListGroup>
-                </Container>
-            </>
-        );
-    }
-}
+            <Container className="p-0">
+                <ListGroup flush className="box rounded" style={{ overflow: 'hidden' }}>
+                    {classes.length > 0 && (
+                        <div>
+                            {classes.map(classItem => {
+                                return (
+                                    <ShortRecord key={classItem.id} header={classItem.label} href={reverse(ROUTES.CLASS, { id: classItem.id })}>
+                                        {classItem.id}
+                                    </ShortRecord>
+                                );
+                            })}
+                        </div>
+                    )}
+                    {totalElements === 0 && !isNextPageLoading && (
+                        <ListGroupItem tag="div" className="text-center">
+                            No Classes
+                        </ListGroupItem>
+                    )}
+                    {isNextPageLoading && (
+                        <ListGroupItem tag="div" className="text-center">
+                            <Icon icon={faSpinner} spin /> Loading
+                        </ListGroupItem>
+                    )}
+                    {!isNextPageLoading && hasNextPage && (
+                        <ListGroupItem
+                            style={{ cursor: 'pointer' }}
+                            className="text-center"
+                            action
+                            onClick={!isNextPageLoading ? loadMoreClasses : undefined}
+                        >
+                            <Icon icon={faAngleDoubleDown} /> Load more classes
+                        </ListGroupItem>
+                    )}
+                    {!hasNextPage && isLastPageReached && page > 1 && totalElements !== 0 && (
+                        <ListGroupItem tag="div" className="text-center">
+                            You have reached the last page.
+                        </ListGroupItem>
+                    )}
+                </ListGroup>
+            </Container>
+        </>
+    );
+};
+
+export default Classes;

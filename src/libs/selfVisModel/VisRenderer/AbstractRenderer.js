@@ -32,7 +32,6 @@ export default class AbstractRenderer extends Component {
 
     applySelectorMethod = () => {
         this.setState({ updateFlipFlop: !this.state.updateFlipFlop });
-        // try to read the customizationWidget;
     };
 
     setCustomizationState = state => {

@@ -51,14 +51,14 @@ const AddClass = () => {
             <Container className="box rounded pt-4 pb-4 pl-5 pr-5">
                 <div className="pl-3 pr-3 pt-2">
                     <FormGroup>
-                        <Label for="classLabel">Class name</Label>
+                        <Label for="classLabel">Class label</Label>
                         <Input
                             onChange={e => setLabel(e.target.value)}
                             type="text"
                             name="value"
                             id="classLabel"
                             disabled={isLoading}
-                            placeholder="Class name"
+                            placeholder="Class label"
                         />
                     </FormGroup>
                     <FormGroup>
