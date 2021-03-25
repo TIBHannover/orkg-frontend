@@ -3,13 +3,15 @@ import ROUTES from 'constants/routes';
 import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faGithub, faGitlab } from '@fortawesome/free-brands-svg-icons';
+import { faGithub, faGitlab, faFirefox } from '@fortawesome/free-brands-svg-icons';
 
 function addTableRow(props) {
     const url = props.benchmark_details.code_url;
-    let faIcon = faGithub;
+    let faIcon = faFirefox;
     if (url.includes('gitlab')) {
         faIcon = faGitlab;
+    } else if (url.includes('github')) {
+        faIcon = faGithub;
     }
     return (
         <tr>

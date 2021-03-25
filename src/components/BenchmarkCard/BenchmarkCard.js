@@ -30,7 +30,7 @@ const BenchmarkCardStyled = styled.div`
 
 function BenchmarkCard(props) {
     return (
-        <BenchmarkCardStyled className="col-4 mb-4">
+        <BenchmarkCardStyled className="col-3 mb-4">
             {!props.research_problem_benchmark.logo && (
                 <Card className="h-100">
                     <Link

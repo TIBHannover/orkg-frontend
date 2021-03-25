@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Container, Table, Card, CardBody } from 'reactstrap';
+import styled from 'styled-components';
 import Chart from 'react-google-charts';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
@@ -12,6 +13,23 @@ import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowser
 //import ROUTES from 'constants/routes';
 import { usePrevious } from 'react-use';
 import BenchmarkPaperRowCard from 'components/BenchmarkCard/BenchmarkPaperRowCard';
+
+export const SubtitleSeparator = styled.div`
+    background: ${props => props.theme.darkblue};
+    width: 2px;
+    height: 24px;
+    margin: 0 15px;
+    content: '';
+    display: block;
+    opacity: 0.7;
+`;
+
+export const SubTitle = styled.div`
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    margin-right: 20px;
+`;
 
 function Benchmark(props) {
     const [resourceData, isLoading, isFailedLoading, loadResourceData] = useBenchmarkDatasetResource();
@@ -64,30 +82,60 @@ function Benchmark(props) {
                         <h1 className="h4 mt-4 mb-4 flex-grow-1">Visualizations</h1>
                     </Container>
                     <Container>
-                        <Chart
-                            width={400}
-                            height={300}
-                            chartType="LineChart"
-                            loader={<div>Loading Chart</div>}
-                            data={[
-                                [{ type: 'number', label: 'x' }, { type: 'number', label: 'values' }],
-                                [1, 100],
-                                [2, 120],
-                                [3, 130],
-                                [4, 90],
-                                [5, 70],
-                                [6, 30],
-                                [7, 80],
-                                [8, 100]
-                            ]}
-                            options={{
-                                intervals: { style: 'sticks' },
-                                legend: 'none'
-                            }}
-                        />
+                        <div style={{ display: 'flex' }}>
+                            <Chart
+                                width={400}
+                                height={300}
+                                chartType="ScatterChart"
+                                loader={<div>Loading Chart</div>}
+                                data={[['Year', 'F-score'], [2017, 80], [2019, 65], [2020, 70], [2020, 85]]}
+                                options={{
+                                    hAxis: { title: 'Year', format: '####' },
+                                    vAxis: { title: 'F-score', minValue: 0 },
+                                    legend: 'none'
+                                }}
+                            />
+                            <Chart
+                                width={400}
+                                height={300}
+                                chartType="ScatterChart"
+                                loader={<div>Loading Chart</div>}
+                                data={[
+                                    ['Year', 'Accuracy'],
+                                    [2015, 43],
+                                    [2015, 20],
+                                    [2016, 55],
+                                    [2016, 57],
+                                    [2016, 60],
+                                    [2018, 64],
+                                    [2018, 65],
+                                    [2019, 68.5],
+                                    [2019, 70],
+                                    [2019, 72],
+                                    [2019, 75.4],
+                                    [2019, 78],
+                                    [2019, 69],
+                                    [2020, 70],
+                                    [2021, 90]
+                                ]}
+                                options={{
+                                    hAxis: { title: 'Year', format: '####' },
+                                    vAxis: { title: 'Accuracy', minValue: 0 },
+                                    legend: 'none'
+                                }}
+                            />
+                        </div>
                     </Container>
                     <Container>
-                        <h1 className="h4 mt-4 mb-4 flex-grow-y1">Papers</h1>
+                        <div className="d-flex flex-grow-1 mt-4 mb-4">
+                            <h1 className="h5 flex-shrink-0 mb-0">Papers</h1>
+                            <>
+                                <SubtitleSeparator />
+                                <SubTitle className="mb-0">
+                                    <small className="text-muted mb-0 text-small">Data imported from paperswithcode.com</small>
+                                </SubTitle>
+                            </>
+                        </div>
                     </Container>
                     <Container className="p-0">
                         <Card>

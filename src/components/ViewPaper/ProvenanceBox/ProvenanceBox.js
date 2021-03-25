@@ -13,6 +13,7 @@ import { isEmpty } from 'lodash';
 import PropTypes from 'prop-types';
 import { Button } from 'reactstrap';
 import { MISC } from 'constants/graphSettings';
+import PWC_LOGO from 'assets/img/poweredby/papers-with-code.png';
 
 export default function ProvenanceBox(props) {
     const [showAssignObservatory, setShowAssignObservatory] = useState(false);
@@ -22,6 +23,34 @@ export default function ProvenanceBox(props) {
 
     return (
         <div className="col-md-3">
+            <SidebarStyledBox className="box rounded-lg" style={{ minHeight: 170, backgroundColor: '#f8f9fb' }}>
+                <div>
+                    <ul className="list-group">
+                        <ProvenanceBoxTabs className="clearfix d-flex">
+                            <div
+                                background-color="#80869b"
+                                id="div1"
+                                className={`h6 col-md-6 text-center tab ${activeTab === 1 ? 'active' : ''}`}
+                                role="button"
+                                tabIndex={0}
+                            >
+                                Provenance
+                            </div>
+                        </ProvenanceBoxTabs>
+                        <StyledItemProvenanceBox>
+                            <a href="https://paperswithcode.com/" target="_blank" rel="noopener noreferrer">
+                                <img
+                                    style={{ marginTop: 8, marginBottom: 8, maxWidth: '80%', height: 'auto' }}
+                                    className="mx-auto d-block"
+                                    src={PWC_LOGO}
+                                    alt="Contribution data obtained from paperswithcode"
+                                />
+                            </a>
+                        </StyledItemProvenanceBox>
+                    </ul>
+                </div>
+            </SidebarStyledBox>
+            {/*
             {!isEmpty(props.observatoryInfo) && (
                 <SidebarStyledBox className="box rounded-lg" style={{ minHeight: 430, backgroundColor: '#f8f9fb' }}>
                     <ProvenanceBoxTabs className="clearfix d-flex">
@@ -67,11 +96,6 @@ export default function ProvenanceBox(props) {
                                                     />
                                                 </Link>
                                             )}
-                                            {/* <p> */}
-                                            {/* <Link to={reverse(ROUTES.ORGANIZATION, { id: props.observatoryInfo.organization.id })}> */}
-                                            {/* {props.observatoryInfo.organization.name} */}
-                                            {/* </Link> */}
-                                            {/* </p> */}
                                         </StyledItemProvenanceBox>
 
                                         <StyledItemProvenanceBox>
@@ -179,6 +203,7 @@ export default function ProvenanceBox(props) {
                 }
                 toggle={() => setShowAssignObservatory(v => !v)}
             />
+            */}
         </div>
     );
 }
