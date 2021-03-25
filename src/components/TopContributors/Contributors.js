@@ -74,7 +74,7 @@ const Contributors = ({ researchFieldId }) => {
             )}
             {!isLoading && contributors?.length === 0 && (
                 <div className="mt-4 mb-4">
-                    No contributors in this research field yet.
+                    {sort === 'top' ? 'No contributors in the last 30 days yet.' : 'No contributors in this research field yet.'}
                     <i> Be the first contributor!</i>
                 </div>
             )}
