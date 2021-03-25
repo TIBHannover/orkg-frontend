@@ -35,7 +35,7 @@ function useResearchFieldPapers({ researchFieldId, initialSort, initialIncludeSu
                     page: page,
                     items: pageSize,
                     sortBy: 'created_at',
-                    desc: sort === 'newest' ? true : false,
+                    desc: sort === 'newest' || sort === 'featured' ? true : false,
                     subfields: includeSubFields
                 });
             }
