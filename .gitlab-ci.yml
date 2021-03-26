@@ -24,7 +24,7 @@ jest:
             junit:
                 - junit.xml
 
-container_scanning:
+container_scanning_deprecated:
     stage: verify
     variables:
         # Change image name to match our repository naming convention
