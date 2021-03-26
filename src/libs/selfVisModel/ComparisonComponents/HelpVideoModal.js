@@ -12,7 +12,7 @@ function HelpVideoModal(props) {
                         title="How to make an ORKG comparison"
                         scrolling="no"
                         frameBorder="0"
-                        src="//av.tib.eu/player/51996"
+                        src="//av.tib.eu/player/52057"
                         allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
                         allowFullScreen={true}
                         className="embed-responsive-item"
