@@ -102,26 +102,31 @@ function AddVisualizationModal(props) {
     const prevProcessStep = usePrevious(processStep);
     const prevShowDialog = usePrevious(props.showDialog);
 
-    useEffect(() => {
-        const updateDimensions = () => {
-            // test
-            const offset = 300;
-            let width = 800;
-            // try to find the element int the dom
-            const modalBody = document.getElementById('selfVisServiceModalBody');
-            if (modalBody) {
-                width = modalBody.getBoundingClientRect().width;
-            } else {
-                // using a timeout to force an update when the modalBody is present and provides its width
-                if (callingTimeoutCount < 10) {
-                    setTimeout(setTimeout(updateDimensions, 500));
-                    setCallingTimeoutCount(callingTimeoutCount + 1);
-                }
+    const updateDimensions = () => {
+        // test
+        const offset = 300;
+        let width = 800;
+        // try to find the element int the dom
+        const modalBody = document.getElementById('selfVisServiceModalBody');
+        if (modalBody) {
+            width = modalBody.getBoundingClientRect().width;
+        } else {
+            // using a timeout to force an update when the modalBody is present and provides its width
+            if (callingTimeoutCount < 10) {
+                setTimeout(setTimeout(updateDimensions, 500));
+                setCallingTimeoutCount(callingTimeoutCount + 1);
             }
-            setWindowHeight(window.innerHeight - offset);
-            setWindowWidth(width);
-        };
+        }
+        setWindowHeight(window.innerHeight - offset);
+        setWindowWidth(width);
+    };
 
+    const hybridUpdate = () => {
+        setCallingTimeoutCount(9);
+        setTimeout(setTimeout(updateDimensions, 50));
+    };
+
+    useEffect(() => {
         window.addEventListener('resize', updateDimensions);
         updateDimensions();
 
@@ -196,6 +201,7 @@ function AddVisualizationModal(props) {
                         style={{ display: 'inline', marginLeft: '5px' }}
                         onClick={() => {
                             setShowVideoModalEmbedded(!showVideoModalEmbedded);
+                            hybridUpdate();
                         }}
                         id="helpIcon"
                     >
