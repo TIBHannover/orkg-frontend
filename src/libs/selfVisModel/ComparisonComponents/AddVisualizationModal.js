@@ -46,8 +46,6 @@ function AddVisualizationModal(props) {
     const [loadedModel, setLoadedModel] = useState(false);
     const [showPublishVisualizationDialog, setShowPublishVisualizationDialog] = useState(false);
     const [showVideoModal, setShowVideoModal] = useState(false);
-    const [showVideoModalEmbedded, setShowVideoModalEmbedded] = useState(false);
-
     const prevProcessStep = usePrevious(processStep);
     const prevShowDialog = usePrevious(props.showDialog);
 
@@ -83,7 +81,6 @@ function AddVisualizationModal(props) {
     useEffect(() => {
         if (props.showDialog) {
             if (!prevShowDialog) {
-                setShowVideoModalEmbedded(false);
                 if (props.useReconstructedData) {
                     // set the state last tab;
                     setProcessStep(2);
@@ -129,7 +126,7 @@ function AddVisualizationModal(props) {
                     onLoadModal();
                     setLoadedModel(true);
                 }}
-                style={{ maxWidth: showVideoModalEmbedded ? '65%' : '90%', marginBottom: 0, marginLeft: showVideoModalEmbedded ? '5%' : '' }}
+                style={{ maxWidth: '90%', marginBottom: 0 }}
             >
                 <ModalHeader toggle={props.toggle}>
                     Create comparison visualization
