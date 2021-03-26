@@ -50,6 +50,7 @@ const routes = {
     CSV_IMPORT: '/csv-import',
     SMART_ARTICLE: '/smart-article/:id',
     SMART_ARTICLE_NEW: '/smart-article/new',
+    SMART_ARTICLE_DIFF: '/smart-article/diff/:oldId-:newId',
     TOOLS: '/tools',
     CONTRIBUTION_EDITOR: '/contribution-editor',
     ADD_COMPARISON: '/add-comparison',

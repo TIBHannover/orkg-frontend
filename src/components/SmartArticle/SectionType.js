@@ -107,6 +107,7 @@ const SectionType = props => {
                         options={options}
                         components={{ Option }}
                         onBlur={handleBlur}
+                        classNamePrefix="react-select"
                         blurInputOnSelect
                         autoFocus
                         openMenuOnFocus

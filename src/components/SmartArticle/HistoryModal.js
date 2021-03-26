@@ -1,13 +1,32 @@
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
-import routes from 'constants/routes';
+import ROUTES from 'constants/routes';
 import moment from 'moment';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { Alert, Modal, ModalBody, ModalHeader } from 'reactstrap';
+import { Link, useHistory } from 'react-router-dom';
+import Select, { components } from 'react-select';
+import { Alert, Button, Modal, ModalBody, ModalHeader } from 'reactstrap';
 import styled from 'styled-components';
+
+const Option = ({ children, data, ...props }) => {
+    return (
+        <components.Option {...props}>
+            {children}
+            <div>
+                <small>{data.comment}</small>
+            </div>
+        </components.Option>
+    );
+};
+
+Option.propTypes = {
+    data: PropTypes.object.isRequired,
+    children: PropTypes.string.isRequired
+};
 
 const Activity = styled.div`
     border-left: 3px solid #e9ebf2;
@@ -50,32 +69,82 @@ const Time = styled.div`
 const HistoryModal = props => {
     const { id, show, toggle } = props;
     const versions = useSelector(state => state.smartArticle.versions);
+    const [selectedVersion1, setSelectedVersion1] = useState(null);
+    const [selectedVersion2, setSelectedVersion2] = useState(null);
+    const history = useHistory();
+    const options = versions.map((version, index) => ({
+        label: `Version ${versions.length - index}`,
+        value: version.id,
+        comment: version.description
+    }));
+
+    const handleCompare = () => {
+        history.push(reverse(ROUTES.SMART_ARTICLE_DIFF, { oldId: selectedVersion1.value, newId: selectedVersion2.value }));
+    };
 
     return (
         <Modal isOpen={show} toggle={toggle}>
             <ModalHeader toggle={toggle}>Publish history</ModalHeader>
             <ModalBody>
                 {versions.length > 0 && (
-                    <div className="p-4">
-                        {versions.map((version, i) => (
-                            <Activity key={version.id} className="pl-3 pb-3">
-                                <Time className={id === version.id ? 'selected' : ''}>
-                                    {version.date ? moment(version.date).format('DD MMMM YYYY - H:mm') : ''}{' '}
-                                    {id === version.id && <>(This version)</>}
-                                    <span className="ml-2">
-                                        <UserAvatar userId={version.creator} />
-                                    </span>
-                                </Time>
-                                <div>
-                                    Version {versions.length - i}: <em>{version.description}</em> <br />
-                                    {id !== version.id && (
-                                        <Link onClick={props.toggle} to={reverse(routes.SMART_ARTICLE, { id: version.id })}>
-                                            View article at this version
-                                        </Link>
-                                    )}
+                    <div>
+                        <div className="p-2">
+                            {versions.length > 1 && (
+                                <div className="mb-4">
+                                    <h2 className="h6">Compare versions</h2>
+                                    <div className="d-flex w-100">
+                                        <Select
+                                            value={selectedVersion1}
+                                            onChange={v => setSelectedVersion1(v)}
+                                            options={options}
+                                            components={{ Option }}
+                                            blurInputOnSelect
+                                            openMenuOnFocus
+                                            className="flex-grow-1 mr-1 focus-primary"
+                                            classNamePrefix="react-select"
+                                            placeholder="Select version"
+                                        />
+                                        <Select
+                                            value={selectedVersion2}
+                                            onChange={v => setSelectedVersion2(v)}
+                                            options={options}
+                                            components={{ Option }}
+                                            blurInputOnSelect
+                                            openMenuOnFocus
+                                            className="flex-grow-1 mr-1"
+                                            classNamePrefix="react-select"
+                                            placeholder="Select version"
+                                        />
+                                        <Button color="darkblue" className="px-2" onClick={handleCompare}>
+                                            <Icon icon={faSearch} />
+                                        </Button>
+                                    </div>
+                                    <hr />
                                 </div>
-                            </Activity>
-                        ))}
+                            )}
+                            <h2 className="h6 mb-0">Version history</h2>
+                        </div>
+                        <div className="p-4">
+                            {versions.map((version, i) => (
+                                <Activity key={version.id} className="pl-3 pb-3">
+                                    <Time className={id === version.id ? 'selected' : ''}>
+                                        {version.date ? moment(version.date).format('DD MMMM YYYY - H:mm') : ''}{' '}
+                                        {id === version.id && <>(This version)</>}
+                                        <span className="ml-2">
+                                            <UserAvatar userId={version.creator} />
+                                        </span>
+                                    </Time>
+                                    <div>
+                                        Version {versions.length - i}: <em>{version.description}</em> <br />
+                                        {id !== version.id && (
+                                            <Link onClick={props.toggle} to={reverse(ROUTES.SMART_ARTICLE, { id: version.id })}>
+                                                View article at this version
+                                            </Link>
+                                        )}
+                                    </div>
+                                </Activity>
+                            ))}
+                        </div>
                     </div>
                 )}
                 {versions.length === 0 && <Alert color="info">This article is not published yet</Alert>}
