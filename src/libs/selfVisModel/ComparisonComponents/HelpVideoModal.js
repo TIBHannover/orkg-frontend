@@ -1,14 +1,13 @@
 import React from 'react';
 import { Modal, ModalHeader, ModalBody } from 'reactstrap';
-
 import PropTypes from 'prop-types';
 
-function SVSVideoModal(props) {
+function HelpVideoModal(props) {
     return (
-        <Modal size="lg" isOpen={props.showDialog} toggle={props.toggle}>
-            <ModalHeader toggle={props.toggle}>Self Visualization Service Instruction Video</ModalHeader>
+        <Modal size="lg" unmountOnClose={false} isOpen={props.showDialog} toggle={props.toggle}>
+            <ModalHeader toggle={props.toggle}>Self visualization service instruction video</ModalHeader>
             <ModalBody>
-                <div className="embed-responsive embed-responsive-16by9" style={{ height: props.height }}>
+                <div className="embed-responsive embed-responsive-16by9">
                     <iframe
                         title="How to make an ORKG comparison"
                         scrolling="no"
@@ -24,11 +23,9 @@ function SVSVideoModal(props) {
     );
 }
 
-SVSVideoModal.propTypes = {
+HelpVideoModal.propTypes = {
     showDialog: PropTypes.bool.isRequired,
-    toggle: PropTypes.func.isRequired,
-    width: PropTypes.number.isRequired,
-    height: PropTypes.number.isRequired
+    toggle: PropTypes.func.isRequired
 };
 
-export default SVSVideoModal;
+export default HelpVideoModal;
