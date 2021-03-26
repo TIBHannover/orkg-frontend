@@ -5,7 +5,7 @@ import AddPaper from 'pages/AddPaper';
 import AuthorPage from 'pages/AuthorPage';
 import VenuePage from 'pages/VenuePage';
 import AddResource from 'pages/Resources/AddResource';
-import Comparison from 'pages/Comparison';
+import Comparison from 'pages/Comparisons/Comparison';
 import Home from 'pages/Home';
 import License from 'pages/License';
 import DataProtection from 'pages/DataProtection';
@@ -13,7 +13,7 @@ import TermsOfUse from 'pages/TermsOfUse';
 import Changelog from 'pages/Changelog/Changelog';
 import NotFound from 'pages/NotFound';
 import Papers from 'pages/Papers';
-import Comparisons from 'pages/Comparisons';
+import Comparisons from 'pages/Comparisons/Comparisons';
 import Visualizations from 'pages/Visualizations/Visualizations';
 import Visualization from 'pages/Visualizations/Visualization';
 import ClassDetails from 'pages/Classes/ClassDetails';
@@ -22,8 +22,8 @@ import AddClass from 'pages/Classes/AddClass';
 import Properties from 'pages/Properties/Properties';
 import AddProperty from 'pages/Properties/AddProperty';
 import PropertyDetails from 'pages/Properties/Property';
-import ContributionTemplates from 'pages/ContributionTemplates/ContributionTemplates';
-import ContributionTemplate from 'pages/ContributionTemplates/ContributionTemplate';
+import Templates from 'pages/Templates/Templates';
+import Template from 'pages/Templates/Template';
 import ROUTES from 'constants/routes';
 import RedirectShortLinks from 'pages/RedirectShortLinks';
 import ResearchField from 'pages/ResearchFields/ResearchField';
@@ -46,6 +46,7 @@ import FeaturedComparisons from 'pages/FeaturedComparisons';
 import Data from 'pages/Data';
 import Contribution from 'pages/Contribution';
 import CsvImport from 'pages/CsvImport';
+import Tools from 'pages/Tools';
 import AddComparison from 'pages/AddComparison';
 import requireAuthentication from 'requireAuthentication';
 import { reverse } from 'named-urls';
@@ -105,14 +106,14 @@ const routes = [
         component: requireAuthentication(AddClass)
     },
     {
-        path: ROUTES.CONTRIBUTION_TEMPLATES,
+        path: ROUTES.TEMPLATES,
         exact: true,
-        component: ContributionTemplates
+        component: Templates
     },
     {
-        path: ROUTES.CONTRIBUTION_TEMPLATE,
+        path: ROUTES.TEMPLATE,
         exact: true,
-        component: ContributionTemplate
+        component: Template
     },
     {
         path: ROUTES.USER_SETTINGS,
@@ -312,6 +313,10 @@ const routes = [
     {
         path: ROUTES.ADD_COMPARISON,
         component: AddComparison
+    },
+    {
+        path: ROUTES.TOOLS,
+        component: Tools
     },
     /* Don't add routes below this line */
     {

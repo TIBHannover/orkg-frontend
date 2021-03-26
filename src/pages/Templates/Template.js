@@ -15,14 +15,14 @@ import {
     DropdownMenu,
     DropdownItem
 } from 'reactstrap';
-import GeneralSettings from 'components/ContributionTemplates/Tabs/GeneralSettings/GeneralSettings';
-import TemplateEditorHeaderBar from 'components/ContributionTemplates/TemplateEditorHeaderBar';
-import ComponentsTab from 'components/ContributionTemplates/Tabs/ComponentsTab/ComponentsTab';
+import GeneralSettings from 'components/Templates/Tabs/GeneralSettings/GeneralSettings';
+import TemplateEditorHeaderBar from 'components/Templates/TemplateEditorHeaderBar';
+import ComponentsTab from 'components/Templates/Tabs/ComponentsTab/ComponentsTab';
 import Unauthorized from 'pages/Unauthorized';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
-import Format from 'components/ContributionTemplates/Tabs/Format/Format';
-import HelpModal from 'components/ContributionTemplates/HelpModal';
-import { StyledContainer } from 'components/ContributionTemplates/styled';
+import Format from 'components/Templates/Tabs/Format/Format';
+import HelpModal from 'components/Templates/HelpModal';
+import { StyledContainer } from 'components/Templates/styled';
 import { setEditMode, loadTemplate, saveTemplate, setIsLoading, doneLoading, setClass } from 'actions/addTemplate';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPen, faSpinner, faQuestionCircle, faEllipsisV, faSave } from '@fortawesome/free-solid-svg-icons';
@@ -49,7 +49,7 @@ const NavItemStyled = styled(NavItem)`
     cursor: pointer;
 `;
 
-class ContributionTemplate extends Component {
+class Template extends Component {
     constructor(props) {
         super(props);
 
@@ -74,7 +74,7 @@ class ContributionTemplate extends Component {
 
     componentDidUpdate(prevProps) {
         if (!this.props.match.params.id && this.props.templateID) {
-            this.props.history.push(reverse(ROUTES.CONTRIBUTION_TEMPLATE, { id: this.props.templateID }));
+            this.props.history.push(reverse(ROUTES.TEMPLATE, { id: this.props.templateID }));
         }
         if (this.props.match.params.id && this.props.match.params.id !== prevProps.match.params.id) {
             this.props.loadTemplate(this.props.match.params.id);
@@ -263,7 +263,7 @@ class ContributionTemplate extends Component {
     }
 }
 
-ContributionTemplate.propTypes = {
+Template.propTypes = {
     location: PropTypes.object.isRequired,
     match: PropTypes.shape({
         params: PropTypes.shape({
@@ -314,4 +314,4 @@ export default compose(
         mapDispatchToProps
     ),
     withTheme
-)(ContributionTemplate);
+)(Template);

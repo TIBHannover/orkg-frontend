@@ -37,6 +37,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import { reverse } from 'named-urls';
 import { compose } from 'redux';
+import env from '@beam-australia/react-env';
 import { toast } from 'react-toastify';
 import HomeBannerBg from 'assets/img/graph-background.svg';
 import { scrollbarWidth } from '@xobotyi/scrollbar-width';
@@ -195,8 +196,8 @@ class Header extends Component {
 
     tokenExpired = () => {
         toast.warn('User session expired, please sign in again!');
-        cookies.remove('token');
-        cookies.remove('token_expires_in');
+        cookies.remove('token', { path: env('PUBLIC_URL') });
+        cookies.remove('token_expires_in', { path: env('PUBLIC_URL') });
         this.props.resetAuth();
         this.props.openAuthDialog({ action: 'signin' });
         this.logoutTimeoutId = null;
@@ -221,8 +222,8 @@ class Header extends Component {
                     });
                 })
                 .catch(error => {
-                    cookies.remove('token');
-                    cookies.remove('token_expires_in');
+                    cookies.remove('token', { path: env('PUBLIC_URL') });
+                    cookies.remove('token_expires_in', { path: env('PUBLIC_URL') });
                     this.props.resetAuth();
                 });
         }
@@ -243,8 +244,8 @@ class Header extends Component {
     handleSignOut = () => {
         this.props.resetAuth();
         const cookies = new Cookies();
-        cookies.remove('token');
-
+        cookies.remove('token', { path: env('PUBLIC_URL') });
+        cookies.remove('token_expires_in', { path: env('PUBLIC_URL') });
         this.toggleUserTooltip();
 
         this.setState({
@@ -339,6 +340,19 @@ class Header extends Component {
                                         Tools <FontAwesomeIcon style={{ marginTop: '4px' }} icon={faChevronDown} pull="right" />
                                     </DropdownToggle>
                                     <DropdownMenu>
+                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.TOOLS}>
+                                            Tools overview
+                                        </DropdownItem>
+                                        <DropdownItem divider />
+                                        <DropdownItem header>Data entry</DropdownItem>
+                                        <DropdownItem
+                                            tag={RouterNavLink}
+                                            exact
+                                            to={ROUTES.CONTRIBUTION_EDITOR}
+                                            onClick={e => this.requireAuthentication(e, ROUTES.CONTRIBUTION_EDITOR)}
+                                        >
+                                            Contribution editor
+                                        </DropdownItem>
                                         <DropdownItem
                                             tag={RouterNavLink}
                                             exact
@@ -355,19 +369,13 @@ class Header extends Component {
                                         >
                                             Survey table import
                                         </DropdownItem>
-                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.DATA}>
-                                            Data Access
-                                        </DropdownItem>
-                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.CONTRIBUTION_TEMPLATES}>
+                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.TEMPLATES}>
                                             Templates
                                         </DropdownItem>
-                                        <DropdownItem
-                                            tag={RouterNavLink}
-                                            exact
-                                            to={ROUTES.CONTRIBUTION_EDITOR}
-                                            onClick={e => this.requireAuthentication(e, ROUTES.CONTRIBUTION_EDITOR)}
-                                        >
-                                            Contribution editor
+                                        <DropdownItem divider />
+                                        <DropdownItem header>Data export</DropdownItem>
+                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.DATA}>
+                                            Data Access
                                         </DropdownItem>
                                     </DropdownMenu>
                                 </UncontrolledButtonDropdown>

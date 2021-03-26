@@ -16,28 +16,31 @@ const ButtonsContainer = styled.div`
 const TableCellButtons = ({ onEdit, onDelete, backgroundColor, style }) => {
     return (
         <ButtonsContainer style={{ backgroundColor, ...style }} className="cell-buttons">
-            <StatementOptionButton title="Edit" icon={faPen} action={onEdit} />
+            <StatementOptionButton title={onEdit ? 'Edit' : 'This item cannot be edited'} icon={faPen} action={onEdit} isDisabled={!onEdit} />
             <StatementOptionButton
                 requireConfirmation={true}
-                title="Delete"
+                title={onDelete ? 'Delete' : 'This item cannot be deleted'}
                 confirmationMessage="Are you sure to delete?"
                 icon={faTrash}
-                action={onDelete}
                 appendTo={document.body}
+                isDisabled={!onDelete}
+                action={onDelete}
             />
         </ButtonsContainer>
     );
 };
 
 TableCellButtons.propTypes = {
-    onEdit: PropTypes.func.isRequired,
-    onDelete: PropTypes.func.isRequired,
+    onEdit: PropTypes.func,
+    onDelete: PropTypes.func,
     backgroundColor: PropTypes.string.isRequired,
     style: PropTypes.object
 };
 
 TableCellButtons.defaultProps = {
-    style: {}
+    style: {},
+    onEdit: null,
+    onDelete: null
 };
 
 export default memo(TableCellButtons);

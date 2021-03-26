@@ -41,9 +41,7 @@ function ClassDetails(props) {
                     predicateId: PREDICATES.TEMPLATE_OF_CLASS
                 })
                     .then(statements =>
-                        Promise.all(
-                            statements.filter(statement => statement.subject.classes?.includes(CLASSES.CONTRIBUTION_TEMPLATE)).map(st => st.subject)
-                        )
+                        Promise.all(statements.filter(statement => statement.subject.classes?.includes(CLASSES.TEMPLATE)).map(st => st.subject))
                     )
                     .then(templates => {
                         if (templates.length > 0) {
@@ -131,13 +129,11 @@ function ClassDetails(props) {
                                     <th scope="row">Template</th>
                                     <td>
                                         {template ? (
-                                            <Link to={reverse(ROUTES.CONTRIBUTION_TEMPLATE, { id: template.id })}>{template.label}</Link>
+                                            <Link to={reverse(ROUTES.TEMPLATE, { id: template.id })}>{template.label}</Link>
                                         ) : (
                                             <i>
                                                 Not Defined{' '}
-                                                <Link to={`${reverse(ROUTES.CONTRIBUTION_TEMPLATE)}?classID=${props.match.params.id}`}>
-                                                    Create a template
-                                                </Link>
+                                                <Link to={`${reverse(ROUTES.TEMPLATE)}?classID=${props.match.params.id}`}>Create a template</Link>
                                             </i>
                                         )}
                                     </td>

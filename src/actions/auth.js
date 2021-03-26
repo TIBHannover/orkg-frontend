@@ -1,5 +1,6 @@
 import * as type from './types';
 import { getUserInformation } from 'services/backend/users';
+import env from '@beam-australia/react-env';
 import { Cookies } from 'react-cookie';
 
 export const updateAuth = payload => dispatch => {
@@ -37,8 +38,8 @@ export function firstLoad() {
                 return Promise.resolve();
             })
             .catch(() => {
-                cookies.remove('token');
-                cookies.remove('token_expires_in');
+                cookies.remove('token', { path: env('PUBLIC_URL') });
+                cookies.remove('token_expires_in', { path: env('PUBLIC_URL') });
                 dispatch({
                     type: type.RESET_AUTH
                 });

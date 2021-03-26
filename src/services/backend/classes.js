@@ -12,16 +12,24 @@ export const createClass = (label, uri = null) => {
     return submitPostRequest(classesUrl, { 'Content-Type': 'application/json' }, { label: label, uri: uri });
 };
 
-export const getRDFDataCubeVocabularyClasses = () => {
-    return submitGetRequest(`${classesUrl}?q=qb:`);
-};
+export const getClasses = ({
+    page = 0,
+    items: size = 9999,
+    sortBy = 'created_at',
+    desc = true,
+    q = null,
+    exact = false,
+    uri = null,
+    returnContent = false
+}) => {
+    const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
+    const params = queryString.stringify(
+        { page, size, sort, exact, ...(q ? { q: q } : {}), uri },
+        {
+            skipNull: true,
+            skipEmptyString: true
+        }
+    );
 
-export const getAllClasses = ({ page = 1, items = 9999, sortBy = 'created_at', desc = true, q = null }) => {
-    const params = queryString.stringify({ page: page, items: items, sortBy: sortBy, desc: desc, ...(q ? { q: q } : {}) });
-
-    return submitGetRequest(`${classesUrl}?${params}`);
-};
-
-export const getClassOfTemplate = templateId => {
-    return submitGetRequest(`${classesUrl}?q=${templateId}&exact=true`);
+    return submitGetRequest(`${classesUrl}?${params}`).then(res => (returnContent ? res.content : res));
 };
