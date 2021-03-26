@@ -10,7 +10,8 @@ import {
     getStatementsByObject,
     getStatementsBySubject,
     getStatementsBySubjectAndPredicate,
-    deleteStatementById
+    deleteStatementById,
+    updateStatement
 } from 'services/backend/statements';
 
 export const load = payload => dispatch => {
@@ -204,3 +205,24 @@ export const sortSections = ({ contributionId, sections }) => async dispatch => 
 export const toggleHistoryModal = () => ({
     type: type.ARTICLE_WRITER_TOGGLE_OPEN_HISTORY_MODAL
 });
+
+export const setResearchField = ({ statementId, paperId, researchField }) => async dispatch => {
+    if (statementId) {
+        updateStatement(statementId, {
+            subject_id: paperId,
+            predicate_id: PREDICATES.HAS_RESEARCH_FIELD,
+            object_id: researchField.id
+        });
+    } else {
+        const statement = await createResourceStatement(paperId, PREDICATES.HAS_RESEARCH_FIELD, researchField.id);
+        statementId = statement.id;
+    }
+    researchField.statementId = statementId;
+
+    dispatch({
+        type: type.ARTICLE_WRITER_SET_RESEARCH_FIELD,
+        payload: {
+            researchField
+        }
+    });
+};

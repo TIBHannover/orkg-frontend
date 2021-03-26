@@ -7,6 +7,7 @@ const initialState = {
     contributionId: 0,
     sections: [],
     versions: [],
+    researchField: {},
     isLoading: false,
     isPublished: false,
     isOpenHistoryModal: false,
@@ -16,7 +17,7 @@ const initialState = {
 const smartArticle = (state = initialState, action) => {
     switch (action.type) {
         case type.ARTICLE_WRITER_LOAD: {
-            const { paper, authorResources, sections, contributionId, isPublished, versions, statements } = action.payload;
+            const { paper, authorResources, sections, contributionId, isPublished, versions, statements, researchField } = action.payload;
 
             return {
                 ...state,
@@ -26,7 +27,8 @@ const smartArticle = (state = initialState, action) => {
                 sections,
                 isPublished,
                 versions,
-                statements
+                statements,
+                researchField
             };
         }
 
@@ -127,6 +129,15 @@ const smartArticle = (state = initialState, action) => {
             return {
                 ...state,
                 isOpenHistoryModal: !state.isOpenHistoryModal
+            };
+        }
+
+        case type.ARTICLE_WRITER_SET_RESEARCH_FIELD: {
+            const { researchField } = action.payload;
+
+            return {
+                ...state,
+                researchField
             };
         }
 

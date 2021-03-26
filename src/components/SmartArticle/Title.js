@@ -3,6 +3,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import { updateTitle } from 'actions/smartArticle';
 import { EditableTitle, SectionStyled, SectionTypeStyled } from 'components/SmartArticle/styled';
+import ResearchField from 'components/SmartArticle/ResearchField';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Badge } from 'reactstrap';
@@ -42,13 +43,8 @@ const Title = () => {
                     placeholder="Enter a paper title..."
                 />
             </h1>
-            <Tippy content="Research field">
-                <span>
-                    <Badge color="lightblue" className="mr-2 mb-2">
-                        <Icon icon={faBars} className="text-darkblue" /> Field
-                    </Badge>
-                </span>
-            </Tippy>
+
+            <ResearchField />
         </SectionStyled>
     );
 };

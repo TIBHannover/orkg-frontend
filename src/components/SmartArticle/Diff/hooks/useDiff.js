@@ -6,6 +6,10 @@ const useDiff = () => {
         let articleText = '';
         articleText += `Title: ${article.paper.title}\n\n`;
 
+        if (article.researchField) {
+            articleText += `Research field: ${article.researchField.label}\n\n`;
+        }
+
         for (const [index, author] of article.authorResources.entries()) {
             articleText += `Author ${index + 1}: ${author.label}\n`;
         }

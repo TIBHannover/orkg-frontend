@@ -56,6 +56,20 @@ const useHeaderBar = () => {
             notFound();
             return;
         }
+
+        // get the research field
+        let researchField = null;
+        const researchFieldStatement = paperStatements.find(
+            statement => statement.subject.id === id && statement.predicate.id === PREDICATES.HAS_RESEARCH_FIELD
+        );
+        if (researchFieldStatement) {
+            researchField = {
+                id: researchFieldStatement.object.id,
+                label: researchFieldStatement.object.label,
+                statementId: researchFieldStatement.id
+            };
+        }
+
         const authorResources = getObjectsByPredicateAndSubject(paperStatements, PREDICATES.HAS_AUTHOR, id);
         const sectionResources = getObjectsByPredicateAndSubject(paperStatements, PREDICATES.HAS_SECTION, contributionResource.id);
 
@@ -128,6 +142,7 @@ const useHeaderBar = () => {
             sections: sections.reverse(),
             isPublished,
             versions,
+            researchField,
             statements: paperStatements
         };
     }, []);
