@@ -127,7 +127,8 @@ const useHeaderBar = () => {
             authorResources: authorResources.reverse(),
             sections: sections.reverse(),
             isPublished,
-            versions
+            versions,
+            statements: paperStatements
         };
     }, []);
 

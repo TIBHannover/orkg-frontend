@@ -36,13 +36,9 @@ const SmartArticleDiff = () => {
         if (!oldId || !newId) {
             return;
         }
+
         if (isOldIdHigherThanNewId({ oldId, newId })) {
             history.push(`${reverse(ROUTES.SMART_ARTICLE_DIFF, { oldId: newId, newId: oldId })}?switchedVersions=true`);
-        }
-    }, [oldId, newId, isOldIdHigherThanNewId, history]);
-
-    useEffect(() => {
-        if (!oldId || !newId) {
             return;
         }
 
@@ -64,7 +60,7 @@ const SmartArticleDiff = () => {
         };
 
         getArticles();
-    }, [oldId, newId, getArticleById, articleToPlainText]);
+    }, [oldId, newId, getArticleById, articleToPlainText, isOldIdHigherThanNewId, history]);
 
     const handleDismiss = () => {
         history.push(reverse(ROUTES.SMART_ARTICLE_DIFF, { oldId, newId }));

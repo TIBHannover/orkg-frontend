@@ -13,6 +13,7 @@ import * as Showdown from 'showdown';
 import footnotes from 'showdown-footnotes';
 import SectionComparison from './SectionComparison';
 import { toggleHistoryModal as toggleHistoryModalAction } from 'actions/smartArticle';
+import ViewArticleStatementBrowser from 'components/SmartArticle/ViewArticleStatementBrowser';
 
 const converter = new Showdown.Converter({
     //tables: true,
@@ -85,13 +86,17 @@ const ViewArticle = () => {
                                                         {section.contentLink.label}
                                                     </Link>
                                                 </div>
-                                                <StatementBrowser
-                                                    enableEdit={false}
-                                                    initialSubjectId={section.contentLink.objectId}
-                                                    initialSubjectLabel="Main"
-                                                    newStore={true}
-                                                    rootNodeType={section.type.id === CLASSES.RESOURCE_SECTION ? 'resource' : 'predicate'}
-                                                />
+                                                {!isPublished ? (
+                                                    <StatementBrowser
+                                                        enableEdit={false}
+                                                        initialSubjectId={section.contentLink.objectId}
+                                                        initialSubjectLabel="Main"
+                                                        newStore={true}
+                                                        rootNodeType={section.type.id === CLASSES.RESOURCE_SECTION ? 'resource' : 'predicate'}
+                                                    />
+                                                ) : (
+                                                    <ViewArticleStatementBrowser id={section.contentLink.objectId} />
+                                                )}
                                             </>
                                         ) : (
                                             <SectionComparison key={section.id} id={section.contentLink.objectId} />

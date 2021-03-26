@@ -2,12 +2,11 @@ import { updateSectionLink } from 'actions/smartArticle';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
 import SectionComparison from 'components/SmartArticle/SectionComparison';
 import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
-import { CLASSES } from 'constants/graphSettings';
+import { CLASSES, ENTITIES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { predicatesUrl } from 'services/backend/predicates';
-import { createResource, resourcesUrl } from 'services/backend/resources';
+import { createResource } from 'services/backend/resources';
 
 const SectionContentLink = props => {
     const dispatch = useDispatch();
@@ -57,14 +56,13 @@ const SectionContentLink = props => {
             })
         );
     };
-
-    const requestUrl = props.type === 'property' ? predicatesUrl : resourcesUrl;
+    const entityType = props.type === 'property' ? ENTITIES.PREDICATE : ENTITIES.RESOURCE;
     const hasValue = selectedResource && selectedResource?.value;
 
     return (
         <div>
             <Autocomplete
-                requestUrl={requestUrl}
+                entityType={entityType}
                 optionsClass={props.type === 'comparison' ? CLASSES.COMPARISON : undefined}
                 placeholder={`Enter a ${props.type}`}
                 onChange={handleItemSelected}

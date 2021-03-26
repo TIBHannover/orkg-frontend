@@ -9,13 +9,14 @@ const initialState = {
     versions: [],
     isLoading: false,
     isPublished: false,
-    isOpenHistoryModal: false
+    isOpenHistoryModal: false,
+    statements: []
 };
 
 const smartArticle = (state = initialState, action) => {
     switch (action.type) {
         case type.ARTICLE_WRITER_LOAD: {
-            const { paper, authorResources, sections, contributionId, isPublished, versions } = action.payload;
+            const { paper, authorResources, sections, contributionId, isPublished, versions, statements } = action.payload;
 
             return {
                 ...state,
@@ -24,7 +25,8 @@ const smartArticle = (state = initialState, action) => {
                 authorResources,
                 sections,
                 isPublished,
-                versions
+                versions,
+                statements
             };
         }
 
