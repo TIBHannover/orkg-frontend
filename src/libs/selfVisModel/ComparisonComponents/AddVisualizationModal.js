@@ -139,6 +139,7 @@ function AddVisualizationModal(props) {
     useEffect(() => {
         if (props.showDialog) {
             if (!prevShowDialog) {
+                setShowVideoModalEmbedded(false);
                 if (props.useReconstructedData) {
                     // set the state last tab;
                     setProcessStep(2);
@@ -296,7 +297,7 @@ function AddVisualizationModal(props) {
                     </div>
                 </ModalFooter>
             </Modal>
-            {showVideoModalEmbedded && (
+            {showVideoModalEmbedded && props.showDialog && (
                 <EmbeddedContainer style={{ width: '25%' }}>
                     <div className="modal-content">
                         <ModalHeader toggle={() => setShowVideoModalEmbedded(!showVideoModalEmbedded)}>
