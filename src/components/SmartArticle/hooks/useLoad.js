@@ -1,10 +1,11 @@
 import { load as loadArticle } from 'actions/smartArticle';
-import { CLASSES, PREDICATES } from 'constants/graphSettings';
+import { CLASSES, MISC, PREDICATES } from 'constants/graphSettings';
 import { useCallback, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { getResource } from 'services/backend/resources';
 import { getStatementsBundleBySubject, getStatementsByObjectAndPredicate, getStatementsBySubjects } from 'services/backend/statements';
 import { getResourceData } from 'services/similarity';
+import { uniq } from 'lodash';
 
 const useHeaderBar = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -132,6 +133,10 @@ const useHeaderBar = () => {
                 contentLink
             });
         }
+
+        // contributors
+        const contributors = getAllContributors(paperStatements);
+
         return {
             paper: {
                 id: paperResource.id,
@@ -143,9 +148,23 @@ const useHeaderBar = () => {
             isPublished,
             versions,
             researchField,
-            statements: paperStatements
+            statements: paperStatements,
+            contributors
         };
     }, []);
+
+    const getAllContributors = statements => {
+        //paperStatements
+        let contributors = [];
+
+        for (const statement of statements) {
+            contributors.push(statement.subject.created_by);
+            contributors.push(statement.object.created_by);
+        }
+        contributors = contributors.filter(contributor => contributor !== MISC.UNKNOWN_ID);
+
+        return uniq(contributors);
+    };
 
     const load = useCallback(
         async id => {

@@ -5,6 +5,7 @@ import AuthorsList from 'components/SmartArticle/AuthorsList';
 import MarkdownRenderer from 'components/SmartArticle/MarkdownRenderer';
 import { SectionStyled } from 'components/SmartArticle/styled';
 import ViewArticleStatementBrowser from 'components/SmartArticle/ViewArticleStatementBrowser';
+import Acknowledgements from 'components/SmartArticle/Acknowledgements';
 import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
 import { CLASSES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
@@ -126,6 +127,8 @@ const ViewArticle = () => {
                         );
                     }
                 })}
+                <h2 className="h4 border-bottom mt-5">Acknowledgements</h2>
+                <Acknowledgements />
             </SectionStyled>
         </Container>
     );

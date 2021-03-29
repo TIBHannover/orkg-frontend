@@ -3,6 +3,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import { toggleHistoryModal as toggleHistoryModalAction } from 'actions/smartArticle';
 import { SubtitleSeparator } from 'components/Comparison/styled';
+import AcknowledgementsSection from 'components/SmartArticle/AcknowledgementsSection';
 import AddSection from 'components/SmartArticle/AddSection';
 import AuthorsSection from 'components/SmartArticle/AuthorsSection';
 import HistoryModal from 'components/SmartArticle/HistoryModal';
@@ -199,6 +200,9 @@ const SmartArticle = props => {
                     </Container>
                     <AddSection index={0} />
                     <Sections />
+                    <Container>
+                        <AcknowledgementsSection />
+                    </Container>
                 </>
             )}
             {!isLoading && !isEditing && <ViewArticle />}
