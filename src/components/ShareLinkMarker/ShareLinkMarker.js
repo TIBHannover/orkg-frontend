@@ -7,6 +7,7 @@ import { toast } from 'react-toastify';
 import Tippy, { useSingleton } from '@tippyjs/react';
 import { getFacebookSharerLink, getTwitterSharerLink, getLinkedInSharerLink } from './helpers';
 import PropTypes from 'prop-types';
+import { Button } from 'reactstrap';
 
 export const ShareSideBox = styled.div`
     position: absolute;
@@ -54,10 +55,12 @@ const ShareLinkMarker = ({ typeOfLink, title }) => {
                         className="text-secondary p-0"
                         onCopy={() => {
                             toast.dismiss();
-                            toast.success(`Link Copied`);
+                            toast.success('Link copied');
                         }}
                     >
-                        <Icon icon={faLink} />
+                        <Button color="link">
+                            <Icon icon={faLink} />
+                        </Button>
                     </CopyToClipboard>
                 </span>
             </Tippy>
