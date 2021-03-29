@@ -34,7 +34,7 @@ const DoiItem = ({ toggleItem, isExpanded, value, onChange, onPopulateMetadata }
                 const paper = await getPaperByDOI(doi);
                 const paperStatements = await getStatementsBySubject({ id: paper.id });
                 setExistingPaper({
-                    ...getPaperData(paper.id, paper.title, paperStatements),
+                    ...getPaperData({ ...paper, label: paper.title }, paperStatements),
                     title: paper.title
                 });
             } catch (e) {

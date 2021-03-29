@@ -81,11 +81,7 @@ class VenuePage extends Component {
                     .then(papersStatements => {
                         const papers = papersStatements.map(paperStatements => {
                             const paperSubject = find(result.map(p => p.subject), { id: paperStatements.id });
-                            return getPaperData(
-                                paperStatements.id,
-                                paperSubject && paperSubject.label ? paperSubject.label : 'No Title',
-                                paperStatements.statements
-                            );
+                            return getPaperData(paperSubject, paperStatements.statements);
                         });
                         this.setState({
                             papers: [...this.state.papers, ...papers],

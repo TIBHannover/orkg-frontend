@@ -143,7 +143,7 @@ const GeneralData = () => {
             getPaperByDOI(entryParsed)
                 .then(result => {
                     getStatementsBySubject({ id: result.id }).then(paperStatements => {
-                        setExistingPaper({ ...getPaperData(result.id, result.title, paperStatements), title: result.title });
+                        setExistingPaper({ ...getPaperData(result, paperStatements), title: result.title });
                     });
                 })
                 .catch(() => {

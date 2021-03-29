@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { getStatementsBySubject, getStatementsBySubjectAndPredicate, getStatementsByObjectAndPredicate } from 'services/backend/statements';
-import { getUserInformationById } from 'services/backend/users';
+import { getContributorInformationById } from 'services/backend/contributors';
 import { getObservatoryAndOrganizationInformation } from 'services/backend/observatories';
 import { getResource } from 'services/backend/resources';
 import { getComparison } from 'services/similarity/index';
@@ -247,7 +247,7 @@ function useComparison() {
     const loadCreatedBy = created_by => {
         // Get Provenance data
         if (created_by && created_by !== MISC.UNKNOWN_ID) {
-            getUserInformationById(created_by)
+            getContributorInformationById(created_by)
                 .then(creator => {
                     setCreatedBy(creator);
                 })

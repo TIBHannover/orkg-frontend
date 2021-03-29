@@ -179,8 +179,6 @@ function Publish(props) {
                         }
                     }
                     if (subject && subject.id) {
-                        // has research field is not used because it affects the page "research field"
-                        // this should be updated when the issue !169 in back-end is resolved
                         await createResourceStatement(resourceId, PREDICATES.HAS_SUBJECT, subject.id);
                     }
                     await saveCreators(comparisonCreators, resourceId);
