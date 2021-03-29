@@ -180,6 +180,7 @@ const ComparisonTable = props => {
                                               similar={property.similar}
                                               label={property.label}
                                               id={property.id}
+                                              property={props.comparisonType === 'merge' ? property : getPropertyObjectFromData(props.data, property)}
                                           />
                                       </ItemHeaderInner>
                                   </ItemHeader>
