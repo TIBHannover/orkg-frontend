@@ -110,7 +110,7 @@ Share.propTypes = {
     contributionsList: PropTypes.array,
     setResponseHash: PropTypes.func.isRequired,
     shortLink: PropTypes.string.isRequired,
-    subject: PropTypes.string.isRequired,
+    subject: PropTypes.object,
     setShortLink: PropTypes.func.isRequired
 };
 

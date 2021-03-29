@@ -96,8 +96,7 @@ function Publish(props) {
         setReferences(props.metaData?.references && props.metaData.references.length > 0 ? props.metaData.references : ['']);
         setSubject(props.metaData && props.metaData.subject ? props.metaData.subject : undefined);
         setComparisonCreators(props.authors ? props.authors : []);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [JSON.stringify(props.metaData), props.authors]);
+    }, [props.metaData, props.authors]);
 
     // TODO: improve code by using reduce function and unify code with paper edit dialog
     const saveCreators = async (creators, resourceId) => {
@@ -273,7 +272,7 @@ function Publish(props) {
         list[index] = value;
         setReferences(list);
     };
-    console.log(subject?.label);
+
     return (
         <Modal size="lg" isOpen={props.showDialog} toggle={props.toggle}>
             <ModalHeader toggle={props.toggle}>Publish comparison</ModalHeader>
