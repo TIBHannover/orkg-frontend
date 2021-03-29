@@ -220,7 +220,15 @@ export default function AddContribution(props) {
                     {!isNextPageLoading && searchPaper && paperResult.length === 0 && (
                         <div>
                             <div className="text-center mt-4 mb-4">
-                                There are no results, please try a different search term {props.allowCreate && 'or click on "Add new paper".'}
+                                There are no results, please try a different search term{' '}
+                                {props.allowCreate && (
+                                    <>
+                                        or{' '}
+                                        <Button color="light" size="sm" onClick={() => props.onCreatePaper(searchPaper)}>
+                                            Add new paper
+                                        </Button>
+                                    </>
+                                )}
                             </div>
                         </div>
                     )}
@@ -314,7 +322,7 @@ export default function AddContribution(props) {
             <ModalFooter className="d-flex">
                 {props.allowCreate && (
                     <div className="flex-grow-1">
-                        <Button color="lightblue" onClick={props.onCreatePaper}>
+                        <Button color="lightblue" onClick={() => props.onCreatePaper(searchPaper)}>
                             Add new paper
                         </Button>
                     </div>
