@@ -17,7 +17,7 @@ export const ShareSideBox = styled.div`
     border-bottom-right-radius: 4px;
     display: flex;
     flex-direction: column;
-    box-shadow: 8px 0px 8px 0px rgba(0, 0, 0, 0.13);
+    box-shadow: 8px 0px 8px 0px rgba(0, 0, 0, 0.03);
     align-items: center;
     justify-content: center;
 `;
@@ -65,6 +65,6 @@ const ShareLinkMarker = ({ typeOfLink, title }) => {
     );
 };
 
-ShareLinkMarker.propTypes = { typeOfLink: PropTypes.string.isRequired, title: PropTypes.string.isRequired };
+ShareLinkMarker.propTypes = { typeOfLink: PropTypes.string.isRequired, title: PropTypes.string };
 
 export default ShareLinkMarker;

@@ -140,7 +140,7 @@ function Comparison(props) {
         setViewDensity(density);
     };
 
-    const containerStyle = fullWidth ? { maxWidth: 'calc(100% - 20px)' } : {};
+    const containerStyle = fullWidth ? { maxWidth: 'calc(100% - 100px)' } : {};
 
     const handleChangeType = type => {
         setUrlNeedsToUpdate(true);
