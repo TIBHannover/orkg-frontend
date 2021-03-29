@@ -349,7 +349,7 @@ class ViewPaper extends Component {
                             className={`box pt-md-4 pb-md-4 pl-md-5 pr-md-5 pt-sm-2 pb-sm-2 pl-sm-2 pr-sm-2 clearfix position-relative 
                                 ${this.state.editMode ? 'rounded-bottom' : 'rounded'}`}
                         >
-                            <ShareLinkMarker />
+                            <ShareLinkMarker typeOfLink="paper" title={this.props.viewPaper.title} />
 
                             {this.state.loading && (
                                 <ContentLoader

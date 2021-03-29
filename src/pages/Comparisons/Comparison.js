@@ -376,7 +376,7 @@ function Comparison(props) {
                 )}
             </ContainerAnimated>
             <ContainerAnimated className="box rounded pt-4 pb-4 pl-5 pr-5 clearfix position-relative" style={containerStyle}>
-                <ShareLinkMarker />
+                <ShareLinkMarker typeOfLink="comparison" title={metaData?.title} />
                 {!isLoadingMetaData && (isFailedLoadingComparisonResult || isFailedLoadingMetaData) && (
                     <div>
                         {isFailedLoadingComparisonResult && contributionsList.length < 2 ? (

@@ -2,11 +2,15 @@ import styled from 'styled-components';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faFacebook, faTwitter, faLinkedin } from '@fortawesome/free-brands-svg-icons';
 import { faLink } from '@fortawesome/free-solid-svg-icons';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { toast } from 'react-toastify';
+import Tippy, { useSingleton } from '@tippyjs/react';
+import { getFacebookSharerLink, getTwitterSharerLink, getLinkedInSharerLink } from './helpers';
 import PropTypes from 'prop-types';
 
 export const ShareSideBox = styled.div`
     position: absolute;
-    right: -40px;
+    right: -45px;
     z-index: 20;
     background-color: #fff;
     border-top-right-radius: 4px;
@@ -18,49 +22,49 @@ export const ShareSideBox = styled.div`
     justify-content: center;
 `;
 
-const ShareLinkMarker = () => {
+const ShareLinkMarker = ({ typeOfLink, title }) => {
+    const [source, target] = useSingleton();
     return (
         <ShareSideBox className="pt-2 pl-2 pr-2 pb-2">
-            <small className="text-muted">Share</small>
-            <a
-                href={`https://www.facebook.com/sharer/sharer.php?u=${window.location.protocol}//${window.location.host}${window.location.pathname}`}
-                target="_blank"
-                className="text-secondary"
-                title="Share this paper on Facebook"
-                rel="noopener noreferrer"
-            >
-                <Icon icon={faFacebook} />
-            </a>
-            <a
-                href={`https://twitter.com/share?url=${window.location.protocol}//${window.location.host}${window.location.pathname}&via=orkg_org`}
-                target="_blank"
-                className="text-secondary"
-                title="Share this paper on Twitter"
-                rel="noopener noreferrer"
-            >
-                <Icon icon={faTwitter} />
-            </a>
-            <a
-                href={`https://www.linkedin.com/sharing/share-offsite/?url=${window.location.protocol}//${window.location.host}${window.location.pathname}&via=orkg_org`}
-                target="_blank"
-                className="text-secondary"
-                title="Share this paper on Linkedin"
-                rel="noopener noreferrer"
-            >
-                <Icon icon={faLinkedin} />
-            </a>
-            <a
-                href={`${window.location.protocol}//${window.location.host}${window.location.pathname}`}
-                target="_blank"
-                className="text-secondary"
-                title="Copy to clipboard"
-                rel="noopener noreferrer"
-            >
-                <Icon icon={faLink} />
-            </a>
+            {/* This is the tippy that gets used as the singleton */}
+            <Tippy placement="left" singleton={source} delay={500} />
+            <div className="text-muted mb-1">
+                <small>Share</small>
+            </div>
+            <Tippy singleton={target} content={`Share this ${typeOfLink ? typeOfLink : 'page'} on Facebook`}>
+                <a href={getFacebookSharerLink()} target="_blank" className="text-secondary" rel="noopener noreferrer">
+                    <Icon icon={faFacebook} />
+                </a>
+            </Tippy>
+            <Tippy singleton={target} content={`Share this  ${typeOfLink ? typeOfLink : 'page'} on Twitter`}>
+                <a href={getTwitterSharerLink(title)} target="_blank" className="text-secondary" rel="noopener noreferrer">
+                    <Icon icon={faTwitter} />
+                </a>
+            </Tippy>
+            <Tippy singleton={target} content={`Share this  ${typeOfLink ? typeOfLink : 'page'} on Linkedin`}>
+                <a href={getLinkedInSharerLink()} target="_blank" className="text-secondary" rel="noopener noreferrer">
+                    <Icon icon={faLinkedin} />
+                </a>
+            </Tippy>
+            <Tippy singleton={target} content="Copy link to clipboard">
+                <span>
+                    <CopyToClipboard
+                        text={`${window.location.protocol}//${window.location.host}${window.location.pathname}`}
+                        target="_blank"
+                        className="text-secondary p-0"
+                        onCopy={() => {
+                            toast.dismiss();
+                            toast.success(`Link Copied`);
+                        }}
+                    >
+                        <Icon icon={faLink} />
+                    </CopyToClipboard>
+                </span>
+            </Tippy>
         </ShareSideBox>
     );
 };
-ShareLinkMarker.propTypes = {};
+
+ShareLinkMarker.propTypes = { typeOfLink: PropTypes.string.isRequired, title: PropTypes.string.isRequired };
 
 export default ShareLinkMarker;
