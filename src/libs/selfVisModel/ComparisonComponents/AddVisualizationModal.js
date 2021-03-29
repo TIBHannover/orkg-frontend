@@ -132,7 +132,7 @@ function AddVisualizationModal(props) {
                     Create comparison visualization
                     <Button
                         outline
-                        color="secondary"
+                        color="darkblue"
                         size="sm"
                         className="ml-3"
                         onClick={() => {
