@@ -18,7 +18,7 @@ import ExportCitation from 'components/Comparison/Export/ExportCitation';
 import ComparisonMetaData from 'components/Comparison/ComparisonMetaData';
 import Share from 'components/Comparison/Share.js';
 import ComparisonVersions from 'components/Comparison/ComparisonVersions.js';
-import Publish from 'components/Comparison/Publish.js';
+import Publish from 'components/Comparison/Publish/Publish';
 import { ContainerAnimated, ComparisonTypeButton } from 'components/Comparison/styled';
 import useComparison from 'components/Comparison/hooks/useComparison';
 import ShareLinkMarker from 'components/ShareLinkMarker/ShareLinkMarker';
@@ -537,6 +537,7 @@ function Comparison(props) {
                 setResponseHash={setResponseHash}
                 shortLink={shortLink}
                 setShortLink={setShortLink}
+                subject={!metaData?.subject && researchField ? researchField : metaData?.subject}
             />
             {(metaData?.hasPreviousVersion || (hasNextVersions && hasNextVersions.length > 0)) && (
                 <ComparisonVersions
@@ -551,7 +552,7 @@ function Comparison(props) {
                 toggle={() => setShowPublishDialog(v => !v)}
                 comparisonId={metaData?.id}
                 doi={metaData?.doi}
-                metaData={metaData}
+                metaData={!metaData?.subject && researchField ? { ...metaData, subject: researchField } : metaData}
                 publicURL={publicURL}
                 setMetaData={setMetaData}
                 contributionsList={contributionsList}

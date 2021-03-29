@@ -26,7 +26,6 @@ const ShareLinkMarker = ({ typeOfLink, title }) => {
     const [source, target] = useSingleton();
     return (
         <ShareSideBox className="pt-2 pl-2 pr-2 pb-2">
-            {/* This is the tippy that gets used as the singleton */}
             <Tippy placement="left" singleton={source} delay={500} />
             <div className="text-muted mb-1">
                 <small>Share</small>

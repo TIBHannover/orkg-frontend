@@ -24,6 +24,7 @@ import { getComparison } from 'services/similarity/index';
 import Tooltip from 'components/Utils/Tooltip';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
 import AuthorsInput from 'components/Utils/AuthorsInput';
+import ShareCreatedContent from 'components/ShareLinkMarker/ShareCreatedContent';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faOrcid } from '@fortawesome/free-brands-svg-icons';
 import { faClipboard } from '@fortawesome/free-regular-svg-icons';
@@ -32,6 +33,7 @@ import { reverse } from 'named-urls';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import { slugify } from 'utils';
 import { PREDICATES, CLASSES, ENTITIES } from 'constants/graphSettings';
 import env from '@beam-australia/react-env';
 
@@ -94,7 +96,8 @@ function Publish(props) {
         setReferences(props.metaData?.references && props.metaData.references.length > 0 ? props.metaData.references : ['']);
         setSubject(props.metaData && props.metaData.subject ? props.metaData.subject : undefined);
         setComparisonCreators(props.authors ? props.authors : []);
-    }, [props.metaData, props.authors]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [JSON.stringify(props.metaData), props.authors]);
 
     // TODO: improve code by using reduce function and unify code with paper edit dialog
     const saveCreators = async (creators, resourceId) => {
@@ -272,7 +275,7 @@ function Publish(props) {
         list[index] = value;
         setReferences(list);
     };
-
+    console.log(subject?.label);
     return (
         <Modal size="lg" isOpen={props.showDialog} toggle={props.toggle}>
             <ModalHeader toggle={props.toggle}>Publish comparison</ModalHeader>
@@ -358,6 +361,12 @@ function Publish(props) {
                             </Tooltip>
                         </div>
                     </FormGroup>
+                )}
+                {props.comparisonId && (
+                    <ShareCreatedContent
+                        typeOfLink="comparison"
+                        title={`An @orkg_org comparison on '${title}' in the area of ${subject?.label ? `%23${slugify(subject.label)}` : ''}`}
+                    />
                 )}
                 {!props.doi && (!props.comparisonId || (props.comparisonId && assignDOI)) && (
                     <>

@@ -7,6 +7,8 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faClipboard } from '@fortawesome/free-regular-svg-icons';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { createShortLink, getComparison } from 'services/similarity/index';
+import ShareCreatedContent from 'components/ShareLinkMarker/ShareCreatedContent';
+import { slugify } from 'utils';
 import { toast } from 'react-toastify';
 
 function Share(props) {
@@ -80,6 +82,13 @@ function Share(props) {
                     </InputGroupAddon>
                 </InputGroup>
 
+                {!shortLinkIsLoading && (
+                    <ShareCreatedContent
+                        typeOfLink="comparison"
+                        title={`An @orkg_org comparison in the area of ${props.subject?.label ? `%23${slugify(props.subject.label)}` : ''}`}
+                    />
+                )}
+
                 {shortLinkIsFailed && (
                     <Alert color="light" className="mb-0 mt-1">
                         Failed to create a short link, please try again later
@@ -101,6 +110,7 @@ Share.propTypes = {
     contributionsList: PropTypes.array,
     setResponseHash: PropTypes.func.isRequired,
     shortLink: PropTypes.string.isRequired,
+    subject: PropTypes.string.isRequired,
     setShortLink: PropTypes.func.isRequired
 };
 
