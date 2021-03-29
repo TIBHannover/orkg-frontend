@@ -1,13 +1,14 @@
 import ObservatoriesCarousel from 'components/ObservatoriesCarousel/ObservatoriesCarousel';
 import { Link } from 'react-router-dom';
 import ROUTES from 'constants/routes.js';
-import useObservatories from './hooks/useObservatories';
+import useResearchFieldObservatories from 'components/ResearchField/hooks/useResearchFieldObservatories';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
 import Tippy from '@tippyjs/react';
+import PropTypes from 'prop-types';
 
-export default function ObservatoriesBox() {
-    const [observatories, isLoading] = useObservatories(false);
+const ObservatoriesBox = ({ researchFieldId }) => {
+    const [observatories, isLoading] = useResearchFieldObservatories({ researchFieldId });
 
     return (
         <div className="box rounded-lg" style={{ overflow: 'hidden' }}>
@@ -31,4 +32,10 @@ export default function ObservatoriesBox() {
             <ObservatoriesCarousel observatories={observatories} isLoading={isLoading} />
         </div>
     );
-}
+};
+
+ObservatoriesBox.propTypes = {
+    researchFieldId: PropTypes.string.isRequired
+};
+
+export default ObservatoriesBox;

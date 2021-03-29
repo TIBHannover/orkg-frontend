@@ -52,7 +52,7 @@ const AddComparison = () => {
                             In case you have existing data, you can import this via the CSV import tool. This is especially helpful if you already
                             have a large file in which related work is compared.{' '}
                         </p>
-                        <Button color="primary" tag={Link} to={ROUTES.CSV_IMPORT} target="_blank">
+                        <Button color="primary" tag={Link} to={ROUTES.CSV_IMPORT}>
                             Go to CSV import tool
                         </Button>
                     </Col>
@@ -70,7 +70,7 @@ const AddComparison = () => {
                             If you don’t have existing data, go to the contribution editor to add contributions that will be used in the comparison.
                             After creating contributions, you can create a comparisons.
                         </p>
-                        <Button color="primary" tag={Link} to={ROUTES.CONTRIBUTION_EDITOR} target="_blank">
+                        <Button color="primary" tag={Link} to={ROUTES.CONTRIBUTION_EDITOR}>
                             Go to contribution editor
                         </Button>
                     </Col>

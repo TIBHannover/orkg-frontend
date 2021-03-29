@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import { Container, Alert, UncontrolledAlert } from 'reactstrap';
 import { getStatementsBySubject, createResourceStatement, deleteStatementById } from 'services/backend/statements';
-import { getUserInformationById } from 'services/backend/users';
+import { getContributorInformationById } from 'services/backend/contributors';
 import { getIsVerified } from 'services/backend/papers';
 import { getObservatoryAndOrganizationInformation } from 'services/backend/observatories';
 import { getResource, updateResource, createResource, getContributorsByResourceId } from 'services/backend/resources';
@@ -203,7 +203,7 @@ class ViewPaper extends Component {
             const observatory = getObservatoryAndOrganizationInformation(paperResource.observatory_id, paperResource.organization_id);
             const creator =
                 paperResource.created_by && paperResource.created_by !== MISC.UNKNOWN_ID
-                    ? getUserInformationById(paperResource.created_by).catch(e => {})
+                    ? getContributorInformationById(paperResource.created_by).catch(e => {})
                     : undefined;
             Promise.all([observatory, creator]).then(data => {
                 this.setState({

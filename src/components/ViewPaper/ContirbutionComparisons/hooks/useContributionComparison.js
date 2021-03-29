@@ -38,11 +38,7 @@ function useContributionComparison(contributionId) {
                                     id: resourceStatements.id
                                 }
                             );
-                            return getComparisonData(
-                                resourceStatements.id,
-                                resourceStatements && comparisonSubject.label ? comparisonSubject.label : 'No Title',
-                                resourceStatements.statements
-                            );
+                            return getComparisonData(comparisonSubject, resourceStatements.statements);
                         });
                         Promise.all(comparisonsData).then(results => {
                             setComparisons(prevResources => [...prevResources, ...results]);
