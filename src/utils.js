@@ -2,10 +2,12 @@ import capitalize from 'capitalize';
 import queryString from 'query-string';
 import { flattenDepth, uniq, isString, find, flatten, last } from 'lodash';
 import rdf from 'rdf';
-import { PREDICATES, MISC } from 'constants/graphSettings';
+import ROUTES from 'constants/routes';
+import { PREDICATES, MISC, CLASSES } from 'constants/graphSettings';
+import { reverse } from 'named-urls';
+import { PREDICATE_TYPE_ID, RESOURCE_TYPE_ID } from 'constants/misc';
 import { FILTER_TYPES } from 'constants/comparisonFilterTypes';
 import slugifyString from 'slugify';
-import { reverse } from 'named-urls';
 
 export function hashCode(s) {
     return s.split('').reduce((a, b) => {
@@ -203,7 +205,7 @@ export const getPaperData_ViewPaper = (paperResource, paperStatements) => {
  * @param {Array} paperStatements
  */
 
-export const getPaperData = (id, label, paperStatements) => {
+export const getPaperData = (resource, paperStatements) => {
     // research field
     const researchField = getResearchField(paperStatements);
     const publicationYear = getPublicationYear(paperStatements)[0]; // gets year[0] and resourceId[1]
@@ -214,8 +216,8 @@ export const getPaperData = (id, label, paperStatements) => {
     const order = getOrder(paperStatements);
 
     return {
-        id,
-        label,
+        id: resource.id,
+        label: resource.label ? resource.label : 'No Title',
         publicationYear,
         publicationMonth,
         researchField,
@@ -223,7 +225,8 @@ export const getPaperData = (id, label, paperStatements) => {
         doiResourceId,
         authorNames: authors.sort((a, b) => a.created_at.localeCompare(b.created_at)),
         contributions: contributions.sort((a, b) => a.label.localeCompare(b.label)),
-        order
+        order,
+        created_by: resource.created_by !== MISC.UNKNOWN_ID ? resource.created_by : null
     };
 };
 
@@ -233,7 +236,7 @@ export const getPaperData = (id, label, paperStatements) => {
  * @param {String } label
  * @param {Array} comparisonStatements
  */
-export const getComparisonData = (id, label, comparisonStatements) => {
+export const getComparisonData = (resource, comparisonStatements) => {
     // description
     const description = comparisonStatements.find(statement => statement.predicate.id === PREDICATES.DESCRIPTION);
 
@@ -255,9 +258,12 @@ export const getComparisonData = (id, label, comparisonStatements) => {
     // onHomePage
     const onHomePage = comparisonStatements.find(statement => statement.predicate.id === PREDICATES.ON_HOMEPAGE);
 
+    // subject
+    const subject = comparisonStatements.find(statement => statement.predicate.id === PREDICATES.HAS_SUBJECT);
+
     return {
-        id,
-        label,
+        id: resource.id,
+        label: resource.label ? resource.label : 'No Title',
         created_at: url ? url.object.created_at : '',
         nbContributions: url ? getArrayParamFromQueryString(url.object.label, 'contributions').length : 0,
         url: url ? url.object.label : '',
@@ -266,7 +272,9 @@ export const getComparisonData = (id, label, comparisonStatements) => {
         icon: icon ? icon.object.label : '',
         order: order ? order.object.label : Infinity,
         type: type ? type.object.id : '',
-        onHomePage: onHomePage ? true : false
+        onHomePage: onHomePage ? true : false,
+        researchField: subject ? subject.object : null,
+        created_by: resource.created_by !== MISC.UNKNOWN_ID ? resource.created_by : null
     };
 };
 
@@ -670,7 +678,7 @@ function getPublishedIn(paperStatements) {
     return publishedIn;
 }
 
-function getResearchField(paperStatements) {
+export function getResearchField(paperStatements) {
     let researchField = paperStatements.filter(statement => statement.predicate.id === PREDICATES.HAS_RESEARCH_FIELD);
     if (researchField.length > 0) {
         researchField = { ...researchField[0].object, statementId: researchField[0].id };
@@ -956,6 +964,162 @@ export const applyRule = ({ filterControlData, type, propertyId, value }) => {
         default:
             return [];
     }
+};
+
+/**
+ * Get resource link based on class
+ *
+ * @param {String} classId class ID
+ * @param {String} resourceId Resource ID
+ * @result {String} Link of the resource
+ */
+export const getResourceLink = (classId, resourceId) => {
+    let link = '';
+
+    switch (classId) {
+        case CLASSES.PAPER: {
+            link = reverse(ROUTES.VIEW_PAPER, { resourceId: resourceId });
+            break;
+        }
+        case CLASSES.PROBLEM: {
+            link = reverse(ROUTES.RESEARCH_PROBLEM, { researchProblemId: resourceId });
+            break;
+        }
+        case CLASSES.AUTHOR: {
+            link = reverse(ROUTES.AUTHOR_PAGE, { authorId: resourceId });
+            break;
+        }
+        case CLASSES.COMPARISON: {
+            link = reverse(ROUTES.COMPARISON, { comparisonId: resourceId });
+            break;
+        }
+        case CLASSES.VENUE: {
+            link = reverse(ROUTES.VENUE_PAGE, { venueId: resourceId });
+            break;
+        }
+        case CLASSES.TEMPLATE: {
+            link = reverse(ROUTES.TEMPLATE, { id: resourceId });
+            break;
+        }
+        case CLASSES.VISUALIZATION: {
+            link = reverse(ROUTES.VISUALIZATION, { id: resourceId });
+            break;
+        }
+        case CLASSES.CONTRIBUTION: {
+            link = reverse(ROUTES.CONTRIBUTION, { id: resourceId });
+            break;
+        }
+        case RESOURCE_TYPE_ID: {
+            link = reverse(ROUTES.RESOURCE, { id: resourceId });
+            break;
+        }
+        case PREDICATE_TYPE_ID: {
+            link = reverse(ROUTES.PROPERTY, { id: resourceId });
+            break;
+        }
+        default: {
+            link = reverse(ROUTES.RESOURCE, { id: resourceId });
+            break;
+        }
+    }
+
+    return link;
+};
+
+/**
+ * Get resource type label based on class
+ *
+ * @param {String} classId class ID
+ * @result {String} resource label
+ */
+export const getResourceTypeLabel = classId => {
+    let label = 'resource';
+
+    switch (classId) {
+        case CLASSES.PAPER: {
+            label = 'paper';
+            break;
+        }
+        case CLASSES.PROBLEM: {
+            label = 'research problem';
+            break;
+        }
+        case CLASSES.AUTHOR: {
+            label = 'author';
+            break;
+        }
+        case CLASSES.COMPARISON: {
+            label = 'comparison';
+            break;
+        }
+        case CLASSES.VENUE: {
+            label = 'venue';
+            break;
+        }
+        case CLASSES.TEMPLATE: {
+            label = 'template';
+            break;
+        }
+        case CLASSES.VISUALIZATION: {
+            label = 'visualization';
+            break;
+        }
+        case CLASSES.CONTRIBUTION: {
+            label = 'contribution';
+            break;
+        }
+        case RESOURCE_TYPE_ID: {
+            label = 'resource';
+            break;
+        }
+        case PREDICATE_TYPE_ID: {
+            label = 'predicate';
+            break;
+        }
+        default: {
+            label = 'resource';
+            break;
+        }
+    }
+
+    return label;
+};
+
+/**
+ * Stringify sort value
+ *
+ * @param {String} sort sort value
+ * @result {String} Label
+ */
+export const stringifySort = sort => {
+    let label = 'Newest first';
+    switch (sort) {
+        case 'newest': {
+            label = 'Newest first';
+            break;
+        }
+        case 'oldest': {
+            label = 'Oldest first';
+            break;
+        }
+        case 'featured': {
+            label = 'Featured';
+            break;
+        }
+        case 'top': {
+            label = 'Last 30 days';
+            break;
+        }
+        case 'all': {
+            label = 'All time';
+            break;
+        }
+        default: {
+            label = 'Newest first';
+            break;
+        }
+    }
+    return label;
 };
 
 /**

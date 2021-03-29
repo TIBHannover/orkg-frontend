@@ -1,152 +1,167 @@
-import { useState, useEffect } from 'react';
-import { ListGroup, ListGroupItem, Button, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import { useState } from 'react';
+import { FormGroup, Label, Input, ListGroup, Button, UncontrolledButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import ROUTES from 'constants/routes.js';
-import { getStatementsBySubjectAndPredicate } from 'services/backend/statements';
-import { getResourcesByClass } from 'services/backend/resources';
-import Dotdotdot from 'react-dotdotdot';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import ComparisonCard from 'components/ComparisonCard/ComparisonCard';
+import useResearchFieldComparison from 'components/ResearchField/hooks/useResearchFieldComparison';
+import ContentLoader from 'react-content-loader';
 import { reverse } from 'named-urls';
-import { getComparisonData } from 'utils';
-import { CLASSES, PREDICATES } from 'constants/graphSettings';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
+import { MISC } from 'constants/graphSettings';
+import Tippy from '@tippyjs/react';
+import { stringifySort } from 'utils';
+import styled from 'styled-components';
+import PropTypes from 'prop-types';
 
-export default function FeaturedComparisons() {
-    const [comparisons, setComparisons] = useState([]);
-    const [isLoading, setIsLoading] = useState(false);
-    const [filter, setFilter] = useState('featured');
-    const [dropdownOpen, setOpen] = useState(false);
+const ListGroupStyled = styled(ListGroup)`
+    &&& .list-group-item {
+        border-radius: 0;
+        border-right-width: 0;
+        border-left-width: 0;
+    }
+`;
 
-    const toggle = () => setOpen(!dropdownOpen);
-
-    const getFeaturedComparisons = async () => {
-        setIsLoading(true);
-        const responseJson = await getResourcesByClass({
-            id: CLASSES.FEATURED_COMPARISON,
-            sortBy: 'created_at',
-            desc: true,
-            returnContent: true,
-            items: 10
-        });
-
-        const ids = responseJson.map(comparison =>
-            getStatementsBySubjectAndPredicate({ subjectId: comparison.id, predicateId: PREDICATES.DESCRIPTION })
-        );
-
-        Promise.all(ids)
-            .then(comparisonsStatements => {
-                const comparisons = comparisonsStatements.map((comparisonStatements, index) => {
-                    const resourceSubject = responseJson[index];
-                    return getComparisonData(
-                        resourceSubject.id,
-                        comparisonStatements && resourceSubject.label ? resourceSubject.label : 'No Title',
-                        comparisonStatements
-                    );
-                });
-
-                // order featured comparison on show only that have onHomePage predicate
-                //comparisons = comparisons.filter(c => c.onHomePage).sort((c1, c2) => sortMethod(c1.order, c2.order));
-                setComparisons(comparisons);
-                setIsLoading(false);
-            })
-            .catch(() => {
-                setComparisons([]);
-                setIsLoading(false);
-            });
-    };
-
-    const getLatestComparisons = async () => {
-        setIsLoading(true);
-
-        const responseJson = await getResourcesByClass({
-            id: CLASSES.COMPARISON,
-            sortBy: 'created_at',
-            desc: true,
-            items: 8,
-            returnContent: true
-        });
-
-        const ids = responseJson.map(comparison =>
-            getStatementsBySubjectAndPredicate({ subjectId: comparison.id, predicateId: PREDICATES.DESCRIPTION })
-        );
-
-        Promise.all(ids)
-            .then(comparisonsStatements => {
-                const comparisons = comparisonsStatements.map((comparisonStatements, index) => {
-                    const resourceSubject = responseJson[index];
-                    return getComparisonData(
-                        resourceSubject.id,
-                        comparisonStatements && resourceSubject.label ? resourceSubject.label : 'No Title',
-                        comparisonStatements
-                    );
-                });
-                setComparisons(comparisons);
-                setIsLoading(false);
-            })
-            .catch(() => {
-                setComparisons([]);
-                setIsLoading(false);
-            });
-    };
-
-    useEffect(() => {
-        if (filter === 'featured') {
-            getFeaturedComparisons();
-        } else {
-            getLatestComparisons();
-        }
-    }, [filter]);
-
-    useEffect(() => {
-        getFeaturedComparisons();
-    }, []);
+const FeaturedComparisons = ({ researchFieldId }) => {
+    const { comparisons, sort, includeSubFields, isLoading, setSort, setIncludeSubFields } = useResearchFieldComparison({
+        researchFieldId: researchFieldId,
+        initialSort: 'featured',
+        initialIncludeSubFields: true,
+        pageSize: 10
+    });
+    const [tippy, setTippy] = useState({});
 
     return (
-        <div className="pl-3 pr-3 pt-2 pb-3">
-            <div className="d-flex justify-content-end mb-2">
-                <ButtonDropdown size="sm" isOpen={dropdownOpen} toggle={toggle}>
-                    <DropdownToggle caret color="lightblue">
-                        {filter === 'featured' && 'Featured'}
-                        {filter === 'latest' && 'Latest'}
-                    </DropdownToggle>
-                    <DropdownMenu right>
-                        <DropdownItem onClick={() => setFilter('featured')}>Featured</DropdownItem>
-                        <DropdownItem onClick={() => setFilter('latest')}>Latest</DropdownItem>
-                    </DropdownMenu>
-                </ButtonDropdown>
+        <div className="pt-2 pb-3">
+            <div className="mr-2 d-flex justify-content-end mb-2">
+                {researchFieldId === MISC.RESEARCH_FIELD_MAIN && (
+                    <UncontrolledButtonDropdown>
+                        <DropdownToggle caret className="pl-3 pr-3" size="sm" color="lightblue">
+                            {stringifySort(sort)}
+                        </DropdownToggle>
+                        <DropdownMenu>
+                            <DropdownItem disabled={isLoading} onClick={() => setSort('newest')}>
+                                Newest first
+                            </DropdownItem>
+                            <DropdownItem disabled={isLoading} onClick={() => setSort('oldest')}>
+                                Oldest first
+                            </DropdownItem>
+                            <DropdownItem disabled={isLoading} onClick={() => setSort('featured')}>
+                                Featured
+                            </DropdownItem>
+                        </DropdownMenu>
+                    </UncontrolledButtonDropdown>
+                )}
+                {researchFieldId !== MISC.RESEARCH_FIELD_MAIN && (
+                    <Tippy
+                        interactive={true}
+                        trigger="click"
+                        placement="bottom-end"
+                        onCreate={instance => setTippy(instance)}
+                        content={
+                            <div className="p-2">
+                                <FormGroup>
+                                    <Label for="sortPapers">Sort</Label>
+                                    <Input
+                                        value={sort}
+                                        onChange={e => {
+                                            tippy.hide();
+                                            setSort(e.target.value);
+                                        }}
+                                        bsSize="sm"
+                                        type="select"
+                                        name="sort"
+                                        id="sortPapers"
+                                        disabled={isLoading}
+                                    >
+                                        <option value="newest">Newest first</option>
+                                        <option value="oldest">Oldest first</option>
+                                    </Input>
+                                </FormGroup>
+                                {researchFieldId !== MISC.RESEARCH_FIELD_MAIN && (
+                                    <FormGroup check>
+                                        <Label check>
+                                            <Input
+                                                onChange={e => {
+                                                    tippy.hide();
+                                                    setIncludeSubFields(e.target.checked);
+                                                }}
+                                                checked={includeSubFields}
+                                                type="checkbox"
+                                                style={{ marginTop: '0.1rem' }}
+                                                disabled={isLoading}
+                                            />
+                                            Include subfields
+                                        </Label>
+                                    </FormGroup>
+                                )}
+                            </div>
+                        }
+                    >
+                        <span>
+                            <Button color="lightblue" className="flex-shrink-0 pl-3 pr-3" style={{ marginLeft: 'auto' }} size="sm">
+                                {stringifySort(sort === 'featured' ? 'newest' : sort)} <Icon icon={faChevronDown} />
+                            </Button>
+                        </span>
+                    </Tippy>
+                )}
             </div>
-            {!isLoading ? (
-                comparisons.length > 0 ? (
+            {!isLoading &&
+                (comparisons.length > 0 ? (
                     <>
-                        <ListGroup>
-                            {comparisons.map((comparison, index) => (
-                                <ListGroupItem key={index} className="p-0 m-0 mb-2" style={{ border: 0 }}>
-                                    <Link to={reverse(ROUTES.COMPARISON, { comparisonId: comparison.id })}>
-                                        {comparison.label ? comparison.label : <em>No title</em>}
-                                    </Link>
-                                    <div style={{ fontSize: '13px' }} className="text-muted">
-                                        <Dotdotdot clamp={3}>{comparison.description}</Dotdotdot>
-                                    </div>
-                                </ListGroupItem>
-                            ))}
-                        </ListGroup>
+                        <ListGroupStyled>
+                            {comparisons.map(comparison => {
+                                return comparison && <ComparisonCard comparison={comparison} key={`pc${comparison.id}`} />;
+                            })}
+                        </ListGroupStyled>
 
-                        <div className="text-center">
-                            <Link to={filter === 'featured' ? ROUTES.FEATURED_COMPARISONS : ROUTES.COMPARISONS}>
-                                <Button color="primary" className="mr-3" size="sm">
-                                    View more
-                                </Button>
-                            </Link>
+                        <div className="text-center mt-2">
+                            <Button
+                                tag={Link}
+                                to={
+                                    researchFieldId !== MISC.RESEARCH_FIELD_MAIN
+                                        ? reverse(ROUTES.RESEARCH_FIELD, { researchFieldId: researchFieldId })
+                                        : sort === 'featured'
+                                        ? ROUTES.FEATURED_COMPARISONS
+                                        : ROUTES.COMPARISONS
+                                }
+                                color="primary"
+                                size="sm"
+                                className="flex-shrink-0 mr-2"
+                            >
+                                View more
+                            </Button>
                         </div>
                     </>
                 ) : (
-                    <div className="text-center">{filter === 'featured' ? 'No featured comparison found' : 'No published comparison found'}</div>
-                )
-            ) : (
-                <div className="text-center">
-                    <Icon icon={faSpinner} spin /> Loading
+                    <div className="text-center">
+                        {sort === 'featured' && researchFieldId === MISC.RESEARCH_FIELD_MAI
+                            ? 'No featured comparison found'
+                            : 'There are no published comparison for this research field, yet.'}
+                    </div>
+                ))}
+            {isLoading && (
+                <div className="p-3 text-left">
+                    <ContentLoader
+                        speed={2}
+                        width={400}
+                        height={50}
+                        viewBox="0 0 400 50"
+                        style={{ width: '100% !important' }}
+                        backgroundColor="#f3f3f3"
+                        foregroundColor="#ecebeb"
+                    >
+                        <rect x="0" y="0" rx="3" ry="3" width="400" height="20" />
+                        <rect x="0" y="25" rx="3" ry="3" width="300" height="20" />
+                    </ContentLoader>
                 </div>
             )}
         </div>
     );
-}
+};
+
+FeaturedComparisons.propTypes = {
+    researchFieldId: PropTypes.string.isRequired
+};
+
+export default FeaturedComparisons;

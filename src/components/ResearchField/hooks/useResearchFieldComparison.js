@@ -1,55 +1,64 @@
-import { CLASSES, PREDICATES } from 'constants/graphSettings';
+import { CLASSES } from 'constants/graphSettings';
 import { find } from 'lodash';
 import { useCallback, useEffect, useState } from 'react';
-import { getStatementsByObjectAndPredicate, getStatementsBySubjects } from 'services/backend/statements';
+import { getComparisonsByResearchFieldId } from 'services/backend/researchFields';
+import { getResourcesByClass } from 'services/backend/resources';
+import { getStatementsBySubjects } from 'services/backend/statements';
+import { MISC } from 'constants/graphSettings';
 import { getComparisonData } from 'utils';
 
-function useResearchFieldComparison({ researchFieldId }) {
-    const pageSize = 10;
+function useResearchFieldComparison({ researchFieldId, initialSort, initialIncludeSubFields, pageSize = 10 }) {
     const [isLoading, setIsLoading] = useState(false);
     const [hasNextPage, setHasNextPage] = useState(false);
     const [isLastPageReached, setIsLastPageReached] = useState(false);
     const [page, setPage] = useState(0);
     const [comparisons, setComparisons] = useState([]);
+    const [sort, setSort] = useState(initialSort);
+    const [totalElements, setTotalElements] = useState(0);
+    const [includeSubFields, setIncludeSubFields] = useState(initialIncludeSubFields);
 
-    const loadComparisons = useCallback(
+    const loadData = useCallback(
         page => {
             setIsLoading(true);
+            // Comparisons
+            let papersService;
+            if (researchFieldId === MISC.RESEARCH_FIELD_MAIN) {
+                papersService = getResourcesByClass({
+                    id: sort === 'newest' || sort === 'featured' ? CLASSES.FEATURED_COMPARISON : CLASSES.COMPARISON,
+                    sortBy: 'created_at',
+                    desc: true,
+                    items: pageSize
+                });
+            } else {
+                papersService = getComparisonsByResearchFieldId({
+                    id: researchFieldId,
+                    page: page,
+                    items: pageSize,
+                    sortBy: 'created_at',
+                    desc: sort === 'newest' || sort === 'featured' ? true : false,
+                    subfields: includeSubFields
+                });
+            }
 
-            // Get the statements that contains the research field as an object
-            getStatementsByObjectAndPredicate({
-                objectId: researchFieldId,
-                predicateId: PREDICATES.HAS_SUBJECT,
-                page: page,
-                items: pageSize,
-                sortBy: 'created_at',
-                desc: true
-            }).then(result => {
-                // Comparisons
-                if (result.length > 0) {
-                    // const parentResearchField = result.find(statement => statement.predicate.id === PREDICATES.HAS_SUB_RESEARCH_FIELD);
-                    // Fetch the data of each paper
+            papersService
+                .then(result => {
+                    // Fetch the data of each comparison
                     getStatementsBySubjects({
-                        ids: result
-                            .filter(paper => paper.subject.classes.includes(CLASSES.COMPARISON))
-                            .filter(statement => statement.predicate.id === PREDICATES.HAS_SUBJECT)
-                            .map(p => p.subject.id)
+                        ids: result.content.map(p => p.id)
                     })
                         .then(comparisonsStatements => {
-                            const comparisons = comparisonsStatements.map(comparisonStatements => {
-                                const resourceSubject = find(result.map(p => p.subject), { id: comparisonStatements.id });
-                                return getComparisonData(
-                                    comparisonStatements.id,
-                                    comparisonStatements && resourceSubject.label ? resourceSubject.label : 'No Title',
-                                    comparisonStatements.statements
-                                );
+                            const papers = comparisonsStatements.map(comparisonStatements => {
+                                const resourceSubject = find(result.content, {
+                                    id: comparisonStatements.id
+                                });
+                                return getComparisonData(resourceSubject, comparisonStatements.statements);
                             });
 
-                            setComparisons(prevResources => [...prevResources, ...comparisons]);
+                            setComparisons(prevResources => [...prevResources, ...papers]);
                             setIsLoading(false);
-                            // use result instead of results because filtering by contribution class might reduce the number of items
-                            setHasNextPage(comparisons.length < pageSize || comparisons.length === 0 ? false : true);
-                            setIsLastPageReached(false);
+                            setHasNextPage(!result.last);
+                            setIsLastPageReached(result.last);
+                            setTotalElements(result.totalElements);
                             setPage(page + 1);
                         })
                         .catch(error => {
@@ -59,14 +68,16 @@ function useResearchFieldComparison({ researchFieldId }) {
 
                             console.log(error);
                         });
-                } else {
+                })
+                .catch(error => {
                     setIsLoading(false);
                     setHasNextPage(false);
                     setIsLastPageReached(page > 1 ? true : false);
-                }
-            });
+
+                    console.log(error);
+                });
         },
-        [researchFieldId]
+        [includeSubFields, researchFieldId, sort, pageSize]
     );
 
     // reset resources when the researchFieldId has changed
@@ -74,19 +85,39 @@ function useResearchFieldComparison({ researchFieldId }) {
         setComparisons([]);
         setHasNextPage(false);
         setIsLastPageReached(false);
-        setPage(1);
-    }, [researchFieldId]);
+        setPage(0);
+        setTotalElements(0);
+        /* 
+        TODO: Remove the featured sort with it's not the main research field
+        if (researchFieldId !== MISC.RESEARCH_FIELD_MAIN && sort === 'featured') {
+            // Because filtering featured comparison based on research field is not supported
+            setSort('newest');
+        }
+        */
+    }, [researchFieldId, sort, includeSubFields]);
 
     useEffect(() => {
-        loadComparisons(1);
-    }, [loadComparisons]);
+        loadData(0);
+    }, [loadData]);
 
     const handleLoadMore = () => {
         if (!isLoading) {
-            loadComparisons(page);
+            loadData(page);
         }
     };
 
-    return [comparisons, isLoading, hasNextPage, isLastPageReached, handleLoadMore];
+    return {
+        comparisons,
+        isLoading,
+        hasNextPage,
+        isLastPageReached,
+        sort,
+        includeSubFields,
+        totalElements,
+        page,
+        handleLoadMore,
+        setIncludeSubFields,
+        setSort
+    };
 }
 export default useResearchFieldComparison;

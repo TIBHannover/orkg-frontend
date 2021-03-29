@@ -1,17 +1,55 @@
 import { useState, useEffect } from 'react';
-import { Container, Row, Col } from 'reactstrap';
-import PropTypes from 'prop-types';
-import { getUserInformationById } from 'services/backend/users';
+import { Container, Row } from 'reactstrap';
+import { getContributorInformationById } from 'services/backend/contributors';
 import Items from 'components/UserProfile/Items';
+import { getObservatoryById } from 'services/backend/observatories';
+import { getOrganization } from 'services/backend/organizations';
 import NotFound from 'pages/NotFound';
+import ContentLoader from 'react-content-loader';
 import { useSelector } from 'react-redux';
-import { CLASSES } from 'constants/graphSettings';
+import Gravatar from 'react-gravatar';
+import styled from 'styled-components';
+import { CLASSES, MISC } from 'constants/graphSettings';
+import ROUTES from 'constants/routes';
+import { reverse } from 'named-urls';
+import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
-/*
 const StyledGravatar = styled(Gravatar)`
     border: 3px solid ${props => props.theme.avatarBorderColor};
 `;
 
+const StyledOrganizationCard = styled.div`
+    border: 0;
+    text-align: center;
+    .logoContainer {
+        position: relative;
+        display: block;
+
+        &::before {
+            // for aspect ratio
+            content: '';
+            display: block;
+            padding-bottom: 100px;
+        }
+        img {
+            position: absolute;
+            max-width: 100%;
+            max-height: 100px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        &:active,
+        &:focus {
+            outline: 0;
+            border: none;
+            -moz-outline-style: none;
+        }
+    }
+`;
+
+/*
 const StyledActivity = styled.div`
     border-left: 3px solid #e9ebf2;
     color: ${props => props.theme.bodyColor};
@@ -41,9 +79,11 @@ const StyledActivity = styled.div`
     }
 `;
 */
-
 const UserProfile = props => {
-    const [displayName, setDisplayName] = useState('');
+    const [userData, setUserData] = useState('');
+    const [observatoryData, setObservatoryData] = useState(null);
+    const [organizationData, setOrganizationData] = useState(null);
+    const [isLoadingUserData, setIsLoadingUserData] = useState(false);
     const [notFound, setNotFound] = useState(false);
     const userId = props.match.params.userId;
     const currentUserId = useSelector(state => state.auth.user?.id);
@@ -51,15 +91,50 @@ const UserProfile = props => {
     useEffect(() => {
         const getUserInformation = async () => {
             setNotFound(false);
+            setIsLoadingUserData(true);
+            getContributorInformationById(userId)
+                .then(userData => {
+                    if (userData.observatory_id || userData.organization_id) {
+                        const promises = [];
+                        if (userData.organization_id !== MISC.UNKNOWN_ID) {
+                            const promise1 = getOrganization(userData.organization_id);
+                            promises.push(promise1);
+                        }
+                        if (userData.observatory_id !== MISC.UNKNOWN_ID) {
+                            const promise2 = getObservatoryById(userData.observatory_id);
+                            promises.push(promise2);
+                        }
 
-            try {
-                const userData = await getUserInformationById(userId);
-                const { display_name: displayName } = userData;
-
-                setDisplayName(displayName);
-            } catch (e) {
-                setNotFound(true);
-            }
+                        Promise.all(promises)
+                            .then(obsOrgData => {
+                                console.log(obsOrgData);
+                                if (userData.organization_id) {
+                                    setOrganizationData(obsOrgData[0]);
+                                }
+                                if (userData.observatory_id) {
+                                    setObservatoryData(obsOrgData[1]);
+                                }
+                                setUserData(userData);
+                                setIsLoadingUserData(false);
+                            })
+                            .catch(e => {
+                                if (userData.organization_id) {
+                                    setOrganizationData(null);
+                                }
+                                if (userData.observatory_id) {
+                                    setObservatoryData(null);
+                                }
+                                setUserData(userData);
+                                setIsLoadingUserData(false);
+                            });
+                    } else {
+                        setUserData(userData);
+                        setIsLoadingUserData(false);
+                    }
+                })
+                .catch(e => {
+                    setNotFound(true);
+                });
         };
 
         getUserInformation();
@@ -71,42 +146,75 @@ const UserProfile = props => {
 
     return (
         <>
-            <Container className="p-0">
-                <h1 className="h4 mt-4 mb-4">Contributions by {displayName}</h1>
+            <Container>
+                {!isLoadingUserData && (
+                    <Row>
+                        <div className="col-2 text-center d-flex align-items-center justify-content-center">
+                            <StyledGravatar
+                                className="rounded-circle"
+                                md5={userData?.gravatar_id ?? 'example@example.com'}
+                                size={100}
+                                id="TooltipExample"
+                            />
+                        </div>
+                        <div className="col-10 box rounded p-4">
+                            <div className="row">
+                                <div className="col-8 d-flex" style={{ flexDirection: 'column' }}>
+                                    <h2 className="h3 flex-grow-1">{userData.display_name}</h2>
+                                    {observatoryData && (
+                                        <div className="mt-3 align-items-end">
+                                            <b className="d-block">Member of the observatory</b>
+                                            <Link to={reverse(ROUTES.OBSERVATORY, { id: observatoryData?.id })} className="text-center">
+                                                {observatoryData?.name}
+                                            </Link>
+                                        </div>
+                                    )}
+                                </div>
+                                <div className="col-4">
+                                    {organizationData && (
+                                        <StyledOrganizationCard>
+                                            <Link className="logoContainer" to={reverse(ROUTES.ORGANIZATION, { id: organizationData.id })}>
+                                                <img className="mx-auto p-2" src={organizationData.logo} alt={`${organizationData.name} logo`} />
+                                            </Link>
+                                            <Link to={reverse(ROUTES.ORGANIZATION, { id: organizationData.id })}>{organizationData?.name}</Link>
+                                        </StyledOrganizationCard>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    </Row>
+                )}
+                {isLoadingUserData && (
+                    <div className="mt-4 ml-3">
+                        <ContentLoader
+                            speed={2}
+                            width={500}
+                            height={100}
+                            viewBox="0 0 500 100"
+                            style={{ width: '100% !important' }}
+                            backgroundColor="#f3f3f3"
+                            foregroundColor="#ecebeb"
+                        >
+                            <rect x="160" y="8" rx="3" ry="3" width="400" height="20" />
+                            <rect x="160" y="50" rx="3" ry="3" width="300" height="20" />
+                            <circle cx="50" cy="50" r="50" />
+                        </ContentLoader>
+                    </div>
+                )}
             </Container>
-            {/*<Container className="box pt-4 pb-3 pl-5 pr-5">
-                <Row>
-                    <div className="col-1 text-center">
-                        <StyledGravatar className="rounded-circle" email="example@example.com" size={76} id="TooltipExample" />{' '}
-                        TODO: Replace with hash from email (should be returned by the backend) 
-                    </div>
-                    <div className="col-11 pl-4">
-                        <h2 className="h5">{this.state.displayName}</h2>
-                        TODO: support more information for users, like organization and short bio
-                        <p>
-                        <b className={'d-block'}>Organization</b>
-                        L3S Research Center
-                    </p>
 
-                    <p>
-                        <b className={'d-block'}>Bio </b>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna
-                        aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                    </p>
-                    </div>
-                </Row>
-            </Container>*/}
-            <Container className="box rounded mt-4 pt-4 pb-3 pl-5 pr-5">
-                <Row>
-                    <Col md={6} sm={12} style={{ display: 'flex', flexDirection: 'column' }}>
-                        <h5 className="mb-4">Added papers</h5>
-                        <Items filterLabel="papers" filterClass={CLASSES.PAPER} userId={userId} showDelete={userId === currentUserId} />
-                    </Col>
-                    <Col md={6} sm={12} style={{ display: 'flex', flexDirection: 'column' }}>
-                        <h5 className="mb-4">Published comparisons</h5>
-                        <Items filterLabel="comparisons" filterClass={CLASSES.COMPARISON} userId={userId} />
-                    </Col>
-                </Row>
+            <Container className="d-flex align-items-center mt-4 mb-4">
+                <h1 className="h4 flex-grow-1">Published comparisons</h1>
+            </Container>
+            <Container className="p-0">
+                <Items filterLabel="comparisons" filterClass={CLASSES.COMPARISON} userId={userId} />
+            </Container>
+
+            <Container className="d-flex align-items-center mt-4 mb-4">
+                <h1 className="h4 flex-grow-1">Added papers</h1>
+            </Container>
+            <Container className="p-0">
+                <Items filterLabel="papers" filterClass={CLASSES.PAPER} userId={userId} showDelete={userId === currentUserId} />
             </Container>
             {/*
             TODO: support for activity feed

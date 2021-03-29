@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Container, Card, CardFooter } from 'reactstrap';
+import { Button, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Container, Card, CardFooter } from 'reactstrap';
 import { getParentResearchFields, getStatementsBySubjectAndPredicate } from 'services/backend/statements';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faAngleDoubleRight, faAngleDoubleDown, faSpinner, faHome } from '@fortawesome/free-solid-svg-icons';
@@ -60,30 +60,62 @@ function Breadcrumbs(props) {
         }
     };
 
+    const renderLink = (field, children, index) => {
+        if (props.onFieldClick) {
+            return (
+                <Button className="p-0" color="link" onClick={() => props.onFieldClick(field)}>
+                    {children}
+                </Button>
+            );
+        } else {
+            return (
+                <Link
+                    to={index === 0 ? reverse(ROUTES.HOME) : reverseWithSlug(ROUTES.RESEARCH_FIELD, { researchFieldId: field.id, slug: field.label })}
+                >
+                    {children}
+                </Link>
+            );
+        }
+    };
+
+    const renderDropdownItem = (field, children) => {
+        if (props.onFieldClick) {
+            return (
+                <StyledDropdownItem key={`rf-${field.id}`} className="text-primary" onClick={() => props.onFieldClick(field)}>
+                    {children}
+                </StyledDropdownItem>
+            );
+        } else {
+            return (
+                <StyledDropdownItem
+                    tag={NavLink}
+                    key={`rf-${field.id}`}
+                    to={reverseWithSlug(ROUTES.RESEARCH_FIELD, { researchFieldId: field.id, slug: field.label })}
+                    className="text-primary"
+                >
+                    {children}
+                </StyledDropdownItem>
+            );
+        }
+    };
+
     if (!props.researchFieldId) {
         return null;
     }
     return (
         <Container className="p-0">
             <Card className="border-0">
-                <CardFooter className="rounded border-top-0" style={{ fontSize: '95%', backgroundColor: '#dcdee6' }}>
+                <CardFooter
+                    className={`rounded border-top-0 ${props.backgroundWhite ? 'p-0' : ''}`}
+                    style={{ fontSize: '95%', backgroundColor: props.backgroundWhite ? '#fff' : '#dcdee6' }}
+                >
                     {props.researchFieldId &&
                         !isLoading &&
                         parentResearchFields.map((field, index) => (
                             <span key={field.id}>
-                                {index !== parentResearchFields.length - 1 || !props.disableLastField ? (
-                                    <Link
-                                        to={
-                                            index === 0
-                                                ? reverse(ROUTES.HOME)
-                                                : reverseWithSlug(ROUTES.RESEARCH_FIELD, { researchFieldId: field.id, slug: field.label })
-                                        }
-                                    >
-                                        {index === 0 ? <Icon className="mr-1" icon={faHome} /> : field.label}
-                                    </Link>
-                                ) : (
-                                    field.label
-                                )}
+                                {index !== parentResearchFields.length - 1 || !props.disableLastField
+                                    ? renderLink(field, index === 0 ? <Icon className="mr-1" icon={faHome} /> : field.label, index)
+                                    : field.label}
                                 {index !== parentResearchFields.length - 1 && (
                                     <Dropdown tag="span" isOpen={isOpen[index]} toggle={() => handleClickArrow(index)}>
                                         <DropdownToggle
@@ -103,17 +135,7 @@ function Breadcrumbs(props) {
                                                         siblings[index].length &&
                                                         siblings[index].map(rf =>
                                                             rf.id !== parentResearchFields[index + 1].id ? (
-                                                                <StyledDropdownItem
-                                                                    tag={NavLink}
-                                                                    key={`rf-${rf.id}`}
-                                                                    to={reverseWithSlug(ROUTES.RESEARCH_FIELD, {
-                                                                        researchFieldId: rf.id,
-                                                                        slug: rf.label
-                                                                    })}
-                                                                    className="text-primary"
-                                                                >
-                                                                    {rf.label}
-                                                                </StyledDropdownItem>
+                                                                renderDropdownItem(rf, rf.label)
                                                             ) : (
                                                                 <DropdownItem key={`rf-${rf.id}`}>{rf.label}</DropdownItem>
                                                             )
@@ -133,9 +155,8 @@ function Breadcrumbs(props) {
                             width="100%"
                             viewBox="0 0 100 2"
                             style={{ width: '100% !important' }}
-                            speed={2}
-                            backgroundColor="#dcdee6"
-                            foregroundColor="#cdced6"
+                            backgroundColor={props.backgroundWhite ? '#f3f3f3' : '#dcdee6'}
+                            foregroundColor={props.backgroundWhite ? '#ecebeb' : '#cdced6'}
                         >
                             <rect x="0" y="0" rx="0" ry="0" width="100" height="50" />
                         </ContentLoader>
@@ -148,11 +169,14 @@ function Breadcrumbs(props) {
 
 Breadcrumbs.propTypes = {
     researchFieldId: PropTypes.string,
-    disableLastField: PropTypes.bool
+    disableLastField: PropTypes.bool,
+    onFieldClick: PropTypes.func,
+    backgroundWhite: PropTypes.bool
 };
 
 Breadcrumbs.defaultProps = {
-    disableLastField: false
+    disableLastField: false,
+    backgroundWhite: false
 };
 
 export default Breadcrumbs;
