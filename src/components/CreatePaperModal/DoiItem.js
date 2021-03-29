@@ -4,19 +4,20 @@ import Cite from 'citation-js';
 import ExistingDoiModal from 'components/AddPaper/GeneralData/ExistingDoiModal';
 import ListItem from 'components/ViewPaper/EditDialog/ListItem';
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { Button, Input, InputGroup, InputGroupAddon } from 'reactstrap';
 import { getPaperByDOI } from 'services/backend/misc';
 import { getStatementsBySubject } from 'services/backend/statements';
 import { getPaperData, parseCiteResult } from 'utils';
 
-const DoiItem = ({ toggleItem, isExpanded, value, onChange, onPopulateMetadata }) => {
+const DoiItem = ({ toggleItem, isExpanded, value, onChange, onPopulateMetadata, lookupOnMount }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [existingPaper, setExistingPaper] = useState(null);
     const [isValid, setIsValid] = useState(null);
+    const [shouldPerformLookup, setShouldPerformLookup] = useState(lookupOnMount);
 
-    const handleLookup = async () => {
+    const handleLookup = useCallback(async () => {
         if (!value) {
             toast.error('Please enter the DOI to perform a lookup');
             setIsValid(false);
@@ -75,7 +76,14 @@ const DoiItem = ({ toggleItem, isExpanded, value, onChange, onPopulateMetadata }
             });
 
         setIsLoading(false);
-    };
+    }, [onPopulateMetadata, value]);
+
+    useEffect(() => {
+        if (shouldPerformLookup) {
+            handleLookup();
+            setShouldPerformLookup(false);
+        }
+    }, [handleLookup, shouldPerformLookup]);
 
     return (
         <ListItem toggleItem={toggleItem} label="Paper DOI or BibTeX" open={isExpanded} value={value}>
@@ -98,7 +106,12 @@ DoiItem.propTypes = {
     toggleItem: PropTypes.func.isRequired,
     onPopulateMetadata: PropTypes.func.isRequired,
     value: PropTypes.string.isRequired,
-    onChange: PropTypes.func.isRequired
+    onChange: PropTypes.func.isRequired,
+    lookupOnMount: PropTypes.bool
+};
+
+DoiItem.defaultProps = {
+    lookupOnMount: false
 };
 
 export default DoiItem;
