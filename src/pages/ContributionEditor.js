@@ -92,7 +92,7 @@ const ContributionEditor = () => {
                         style={{ marginRight: 2 }}
                         disabled={contributionAmount < 2}
                     >
-                        Make comparison
+                        View comparison
                     </Button>
 
                     <Button color="darkblue" size="sm" onClick={() => setIsOpenAddContribution(true)}>
