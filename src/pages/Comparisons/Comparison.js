@@ -21,6 +21,7 @@ import ComparisonVersions from 'components/Comparison/ComparisonVersions.js';
 import Publish from 'components/Comparison/Publish.js';
 import { ContainerAnimated, ComparisonTypeButton } from 'components/Comparison/styled';
 import useComparison from 'components/Comparison/hooks/useComparison';
+import ShareLinkMarker from 'components/ShareLinkMarker/ShareLinkMarker';
 import { getResource } from 'services/backend/resources';
 import ROUTES from 'constants/routes.js';
 import { useHistory, Link } from 'react-router-dom';
@@ -374,7 +375,8 @@ function Comparison(props) {
                     </div>
                 )}
             </ContainerAnimated>
-            <ContainerAnimated className="box rounded pt-4 pb-4 pl-5 pr-5 clearfix" style={containerStyle}>
+            <ContainerAnimated className="box rounded pt-4 pb-4 pl-5 pr-5 clearfix position-relative" style={containerStyle}>
+                <ShareLinkMarker />
                 {!isLoadingMetaData && (isFailedLoadingComparisonResult || isFailedLoadingMetaData) && (
                     <div>
                         {isFailedLoadingComparisonResult && contributionsList.length < 2 ? (
