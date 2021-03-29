@@ -182,6 +182,16 @@ body {
     border-right-color: $primary;
 }
 
+.tippy-box[data-theme~='addNew'] .tippy-content {
+    background-color: #fff;
+    padding: 0;
+    border: 1px solid $primary;
+    border-radius: 4px;
+}
+.tippy-box[data-theme~='addNew'] .tippy-tooltip[data-state='visible'] {
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.125);
+}
+
 // Datepicker
 .react-datepicker__close-icon::after {
     background-color: $darkblue !important;
