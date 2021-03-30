@@ -1,5 +1,6 @@
 import { Component } from 'react';
-import { Container, Button, FormGroup, Input, Label } from 'reactstrap';
+import { Container, Button, FormGroup, Input, Label, InputGroup, InputGroupAddon } from 'reactstrap';
+import { resourcesUrl } from 'services/backend/resources';
 import { getOrganization } from 'services/backend/organizations';
 import { createObservatory } from 'services/backend/observatories';
 import NotFound from 'pages/NotFound';
@@ -15,6 +16,12 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { openAuthDialog } from 'actions/auth';
 import { connect } from 'react-redux';
+import slugify from 'slugify';
+import Tooltip from 'components/Utils/Tooltip';
+
+const publicObservatoryRoute = `${window.location.protocol}//${window.location.host}${window.location.pathname
+    .replace(reverse(ROUTES.ADD_OBSERVATORY), reverse(ROUTES.OBSERVATORY, { id: ' ' }))
+    .replace(/\/$/, '')}`;
 
 class AddObservatory extends Component {
     constructor(props) {
@@ -24,10 +31,10 @@ class AddObservatory extends Component {
             redirect: false,
             value: '',
             description: '',
-            observatoryId: '',
+            display_id: '',
             researchField: '',
             organizationName: '',
-            url: '',
+            permalink: '',
             isLoadingOrganization: true,
             errorLoadingOrganization: null
         };
@@ -75,16 +82,15 @@ class AddObservatory extends Component {
 
     handleChange = event => {
         this.setState({ [event.target.name]: event.target.value.trim() });
-        const slugify = require('slugify');
         if (event.target.name === 'value') {
             this.setState({
-                url: slugify(event.target.value.trim(), { replacement: '-', remove: /[*+~%<>/;.(){}?,'"!:@#_^|]/g, lower: true })
+                permalink: slugify(event.target.value.trim(), { replacement: '-', remove: /[*+~%\<>/;.(){}?,'"!:@#_^|]/g, lower: false })
             });
         }
     };
 
-    navigateToObservatory = observatoryId => {
-        this.setState({ editorState: 'edit', observatoryId: observatoryId }, () => {
+    navigateToObservatory = display_id => {
+        this.setState({ editorState: 'edit', display_id: display_id }, () => {
             this.setState({ redirect: true });
         });
     };
@@ -95,10 +101,10 @@ class AddObservatory extends Component {
             this.setState({
                 redirect: false,
                 value: '',
-                observatoryId: ''
+                display_id: ''
             });
 
-            return <Redirect to={reverse(ROUTES.OBSERVATORY, { id: this.state.observatoryId })} />;
+            return <Redirect to={reverse(ROUTES.OBSERVATORY, { id: this.state.display_id })} />;
         }
 
         return (
@@ -128,17 +134,26 @@ class AddObservatory extends Component {
                                         />
                                     </FormGroup>
                                     <FormGroup>
-                                        <Label for="ObservatoryURL">Observatory URL</Label>
-                                        <Input
-                                            onChange={this.handleChange}
-                                            type="text"
-                                            name="url"
-                                            id="ObservatoryURL"
-                                            disabled={loading}
-                                            placeholder="Observatory URL"
-                                            value={this.state.url}
-                                        />
+                                        <div>
+                                            <Label for="observatoryPermalink">
+                                                Permalink
+                                                <Tooltip message="Permalink field allows to identify the observatory page on ORKG in an easy-to-read form. Only dashes ( - ) and lower case letters are allowed" />
+                                            </Label>
+                                            <InputGroup>
+                                                <InputGroupAddon addonType="prepend">{publicObservatoryRoute}</InputGroupAddon>
+                                                <Input
+                                                    onChange={this.handleChange}
+                                                    type="text"
+                                                    name="permalink"
+                                                    id="ObservatoryURL"
+                                                    disabled={loading}
+                                                    placeholder="name"
+                                                    value={this.state.permalink}
+                                                />
+                                            </InputGroup>
+                                        </div>
                                     </FormGroup>
+
                                     <FormGroup>
                                         <Label for="ObservatoryResearchField">Research Field</Label>
                                         <AutoComplete
