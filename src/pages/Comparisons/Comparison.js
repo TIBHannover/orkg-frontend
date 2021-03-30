@@ -192,7 +192,7 @@ function Comparison(props) {
 
     return (
         <div>
-            <Breadcrumbs researchFieldId={researchField ? researchField.id : null} />
+            <Breadcrumbs researchFieldId={metaData?.subject ? metaData?.subject.id : researchField ? researchField.id : null} />
             <ContainerAnimated className="d-flex align-items-center">
                 <h1 className="h4 mt-4 mb-4 flex-grow-1">
                     Contribution comparison{' '}
