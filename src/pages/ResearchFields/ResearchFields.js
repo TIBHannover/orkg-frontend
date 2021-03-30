@@ -91,7 +91,7 @@ const ResearchFields = () => {
                                             </Button>
                                         )}
                                     </div>
-                                    <Papers researchFieldId={selectedResearchField} />
+                                    <Papers id={selectedResearchField} boxShadow={false} />
                                 </>
                             )}
                         </Col>
