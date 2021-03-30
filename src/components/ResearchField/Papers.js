@@ -12,7 +12,7 @@ import { stringifySort } from 'utils';
 import Tippy from '@tippyjs/react';
 import PropTypes from 'prop-types';
 
-const Papers = ({ id, boxShadow }) => {
+const Papers = ({ id, boxShadow, showBreadcrumbs }) => {
     const {
         papers,
         sort,
@@ -105,6 +105,7 @@ const Papers = ({ id, boxShadow }) => {
                                             title: paper.label,
                                             ...paper
                                         }}
+                                        showBreadcrumbs={showBreadcrumbs}
                                         key={`pc${paper.id}`}
                                     />
                                 )
@@ -171,11 +172,13 @@ const Papers = ({ id, boxShadow }) => {
 
 Papers.propTypes = {
     id: PropTypes.string.isRequired,
-    boxShadow: PropTypes.bool
+    boxShadow: PropTypes.bool,
+    showBreadcrumbs: PropTypes.bool
 };
 
 Papers.defaultProps = {
-    boxShadow: false
+    boxShadow: false,
+    showBreadcrumbs: true
 };
 
 export default Papers;
