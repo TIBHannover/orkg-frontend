@@ -12,6 +12,21 @@ import AddPaperWizard from 'assets/img/tools/add-paper-wizard.png';
 import ContributionEditor from 'assets/img/tools/contribution-editor.png';
 import styled from 'styled-components';
 
+const TippyStyle = styled.div`
+    .tippy-box[data-theme~='addNew'] {
+        background: #fff !important;
+    }
+    .tippy-box[data-theme~='addNew'] .tippy-content {
+        background-color: #fff !important;
+        padding: 0 !important;
+        border: 1px solid #d9d9d9 !important;
+        border-radius: 4px !important;
+    }
+    .tippy-box[data-theme~='addNew'] {
+        box-shadow: 0 0 8px rgba(0, 0, 0, 0.125) !important;
+    }
+`;
+
 const ToolContainer = styled(Link)`
     display: block;
     text-align: center;
@@ -30,7 +45,7 @@ const ToolContainer = styled(Link)`
     }
 
     &:hover {
-        background-color: ${props => props.theme.ultraLightBlueDarker};
+        background-color: ${props => props.theme.ultraLightBlue};
         color: inherit;
         text-decoration: none;
     }
@@ -68,7 +83,7 @@ const AddNew = ({ isHomePageStyle }) => {
     };
 
     return (
-        <>
+        <TippyStyle>
             <Tippy
                 interactive={true}
                 animateFill={true}
@@ -83,7 +98,7 @@ const AddNew = ({ isHomePageStyle }) => {
                 offset={[0, 0]}
                 content={
                     <div>
-                        <ToolContainer onClick={handleClickMenuItem} component={ToolContainer} to={ROUTES.ADD_COMPARISON} className="d-flex p-2">
+                        <ToolContainer onClick={handleClickMenuItem} to={ROUTES.ADD_COMPARISON} className="d-flex p-2">
                             <ImgContainer>
                                 <img src={ContributionEditor} width="90%" alt="Contribution editor preview" />
                             </ImgContainer>
@@ -119,7 +134,7 @@ const AddNew = ({ isHomePageStyle }) => {
                     </Button>
                 </div>
             </Tippy>
-        </>
+        </TippyStyle>
     );
 };
 
