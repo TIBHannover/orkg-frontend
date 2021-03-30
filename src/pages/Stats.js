@@ -82,6 +82,7 @@ class Stats extends Component {
                 <Container className="box rounded pt-4 pb-4 pl-5 pr-5">
                     <Row>
                         <InlineStatsBox number={this.state.stats.resources} label="Resources" isLoading={this.state.isLoading} />
+                        <InlineStatsBox number={this.state.stats.predicates} label="Properties" isLoading={this.state.isLoading} />
                         <InlineStatsBox number={this.state.stats.statements} label="Statements" isLoading={this.state.isLoading} />
                         <InlineStatsBox number={this.state.stats.literals} label="Literals" isLoading={this.state.isLoading} />
                         <InlineStatsBox number={this.state.stats.classes} label="Classes" hideBorder isLoading={this.state.isLoading} />

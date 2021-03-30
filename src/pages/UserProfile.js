@@ -107,7 +107,6 @@ const UserProfile = props => {
 
                         Promise.all(promises)
                             .then(obsOrgData => {
-                                console.log(obsOrgData);
                                 if (userData.organization_id) {
                                     setOrganizationData(obsOrgData[0]);
                                 }

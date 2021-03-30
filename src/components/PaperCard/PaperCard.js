@@ -74,7 +74,7 @@ const PaperCard = props => {
                 </div>
                 <div className="col-3 text-right d-flex align-items-end" style={{ flexDirection: 'column' }}>
                     <div style={{ flex: 1 }}>
-                        <RelativeBreadcrumbs researchField={props.paper.researchField} />
+                        {props.showBreadcrumbs && <RelativeBreadcrumbs researchField={props.paper.researchField} />}
 
                         {props.contribution && (
                             <div className="options mr-2">
@@ -113,12 +113,14 @@ PaperCard.propTypes = {
     }),
     selectable: PropTypes.bool,
     selected: PropTypes.bool,
+    showBreadcrumbs: PropTypes.bool.isRequired,
     onSelect: PropTypes.func
 };
 
 PaperCard.defaultProps = {
     selectable: false,
     selected: false,
+    showBreadcrumbs: true,
     onChange: () => {}
 };
 

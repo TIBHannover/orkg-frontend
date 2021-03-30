@@ -12,7 +12,7 @@ import { stringifySort } from 'utils';
 import Tippy from '@tippyjs/react';
 import PropTypes from 'prop-types';
 
-const Papers = ({ id, boxShadow }) => {
+const Papers = ({ id, boxShadow, showBreadcrumbs }) => {
     const {
         papers,
         sort,
@@ -105,6 +105,7 @@ const Papers = ({ id, boxShadow }) => {
                                             title: paper.label,
                                             ...paper
                                         }}
+                                        showBreadcrumbs={showBreadcrumbs}
                                         key={`pc${paper.id}`}
                                     />
                                 )
@@ -140,7 +141,7 @@ const Papers = ({ id, boxShadow }) => {
                     </div>
                 )}
                 {isLoading && (
-                    <div className={`text-center mt-4 mb-4 ${page === 0 ? 'p-5 container box rounded' : ''}`}>
+                    <div className={`text-center mt-4 mb-4 ${page === 0 ? 'p-5 container rounded' : ''} ${boxShadow ? 'box' : ''}`}>
                         {page !== 0 && (
                             <>
                                 <Icon icon={faSpinner} spin /> Loading
@@ -171,11 +172,13 @@ const Papers = ({ id, boxShadow }) => {
 
 Papers.propTypes = {
     id: PropTypes.string.isRequired,
-    boxShadow: PropTypes.bool
+    boxShadow: PropTypes.bool,
+    showBreadcrumbs: PropTypes.bool
 };
 
 Papers.defaultProps = {
-    boxShadow: false
+    boxShadow: false,
+    showBreadcrumbs: true
 };
 
 export default Papers;
