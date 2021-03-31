@@ -35,7 +35,7 @@ const StyledSpinnerGravatar = styled.div`
     background-color: ${props => props.theme.ultraLightBlueDarker};
 `;
 
-const UserAvatar = ({ userId }) => {
+const UserAvatar = ({ userId, size }) => {
     const [contributor, setContributor] = useState(null);
     const [isLoadingContributor, setIsLoadingContributor] = useState(false);
 
@@ -64,7 +64,7 @@ const UserAvatar = ({ userId }) => {
                 >
                     <Link to={reverse(ROUTES.USER_PROFILE, { userId: userId })}>
                         {!isLoadingContributor && (
-                            <StyledGravatar className="rounded-circle" md5={contributor?.gravatar_id ?? 'example@example.com'} size={28} />
+                            <StyledGravatar className="rounded-circle" md5={contributor?.gravatar_id ?? 'example@example.com'} size={size} />
                         )}
                         {userId && isLoadingContributor && (
                             <StyledSpinnerGravatar className="rounded-circle">
@@ -79,7 +79,12 @@ const UserAvatar = ({ userId }) => {
 };
 
 UserAvatar.propTypes = {
-    userId: PropTypes.string
+    userId: PropTypes.string,
+    size: PropTypes.string
+};
+
+UserAvatar.defaultProps = {
+    size: 28
 };
 
 export default UserAvatar;

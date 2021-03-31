@@ -148,12 +148,6 @@ const SmartArticle = props => {
                             <Button className="flex-shrink-0" color="darkblue" size="sm" style={{ marginLeft: 1 }} onClick={toggleHistoryModal}>
                                 <Icon icon={faHistory} /> History
                             </Button>
-                            {/*isEditing && (
-                                <Button className="flex-shrink-0" color="darkblue" size="sm" style={{ marginLeft: 1 }}>
-                                    <Icon icon={faCog} />
-                                </Button>
-                            )*/}
-
                             {!isEditing ? (
                                 <Button className="flex-shrink-0" color="darkblue" size="sm" style={{ marginLeft: 1 }} onClick={handleEdit}>
                                     <Icon icon={faPen} /> Edit

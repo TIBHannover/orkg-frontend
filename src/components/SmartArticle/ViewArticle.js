@@ -1,11 +1,12 @@
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import Tippy from '@tippyjs/react';
 import { toggleHistoryModal as toggleHistoryModalAction } from 'actions/smartArticle';
+import Acknowledgements from 'components/SmartArticle/Acknowledgements';
 import AuthorsList from 'components/SmartArticle/AuthorsList';
 import MarkdownRenderer from 'components/SmartArticle/MarkdownRenderer';
 import { SectionStyled } from 'components/SmartArticle/styled';
 import ViewArticleStatementBrowser from 'components/SmartArticle/ViewArticleStatementBrowser';
-import Acknowledgements from 'components/SmartArticle/Acknowledgements';
 import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
 import { CLASSES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
@@ -17,7 +18,6 @@ import { Alert, Badge, Button, Container } from 'reactstrap';
 import * as Showdown from 'showdown';
 import footnotes from 'showdown-footnotes';
 import SectionComparison from './SectionComparison';
-import Breadcrumbs from 'components/Breadcrumbs/Breadcrumbs';
 
 const converter = new Showdown.Converter({
     //tables: true,
@@ -129,7 +129,11 @@ const ViewArticle = () => {
                             );
                         }
                     })}
-                    <h2 className="h4 border-bottom mt-5">Acknowledgements</h2>
+                    <h2 className="h4 border-bottom mt-5">
+                        <Tippy content="Acknowledgements are automatically generated based on ORKG users that contributed to resources used in this article">
+                            <span>Acknowledgements</span>
+                        </Tippy>
+                    </h2>
                     <Acknowledgements />
                 </SectionStyled>
             </Container>
