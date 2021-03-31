@@ -141,6 +141,9 @@ class ComparisonCard extends Component {
                                 <small className="text-muted">{truncate(this.props.comparison.description, { length: 150 })}</small>
                             </div>
                         )}
+                        <div className="d-block d-md-none mt-1">
+                            <RelativeBreadcrumbs researchField={this.props.comparison.researchField} />
+                        </div>
                     </Col>
 
                     <div className="col-md-3 text-right d-flex align-items-end" style={{ flexDirection: 'column' }}>

@@ -70,6 +70,11 @@ const PaperCard = props => {
                                 : ''}{' '}
                             {props.paper.publicationYear}
                         </small>
+                        {props.showBreadcrumbs && (
+                            <div className="d-block d-md-none mt-1">
+                                <RelativeBreadcrumbs researchField={props.paper.researchField} />
+                            </div>
+                        )}
                     </div>
                 </div>
                 <div className="col-md-3 text-right d-flex align-items-end" style={{ flexDirection: 'column' }}>
