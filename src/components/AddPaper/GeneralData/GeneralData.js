@@ -105,6 +105,7 @@ const GeneralData = () => {
         return () => {
             clearAllBodyScrollLocks();
         };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     //TODO this logic should be placed inside an action creator
