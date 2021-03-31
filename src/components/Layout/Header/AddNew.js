@@ -127,7 +127,7 @@ const AddNew = ({ isHomePageStyle }) => {
                     </div>
                 }
             >
-                <div className="btn">
+                <div className="mr-3 mb-2 mb-md-0">
                     <Button color={!isHomePageStyle ? 'primary' : 'light'}>
                         <FontAwesomeIcon className="mr-1" icon={faPlus} />
                         Add new

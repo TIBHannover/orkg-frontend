@@ -143,9 +143,11 @@ class ComparisonCard extends Component {
                         )}
                     </Col>
 
-                    <div className="col-3 text-right d-flex align-items-end" style={{ flexDirection: 'column' }}>
+                    <div className="col-md-3 text-right d-flex align-items-end" style={{ flexDirection: 'column' }}>
                         <div style={{ flex: 1 }}>
-                            <RelativeBreadcrumbs researchField={this.props.comparison.researchField} />
+                            <div className="d-none d-md-block">
+                                <RelativeBreadcrumbs researchField={this.props.comparison.researchField} />
+                            </div>
                             <div style={{ marginTop: '8px' }}>
                                 {!this.state.openBox &&
                                     this.state.relatedFigures.slice(0, 2).map(url => (

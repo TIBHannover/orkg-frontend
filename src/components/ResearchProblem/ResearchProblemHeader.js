@@ -199,13 +199,13 @@ const ResearchProblemHeader = ({ id }) => {
                     </Container>
                     <Container className="p-0">
                         <Row className="mt-3">
-                            <Col md="4" className="d-flex">
+                            <Col md="4" className="d-flex ">
                                 <AuthorsBox researchProblemId={id} />
                             </Col>
-                            <Col md="4" className="d-flex">
+                            <Col md="4" className="d-flex mt-3 mt-md-0">
                                 <ResearchFieldsBox isLoading={isLoadingResearchFields} researchFields={researchFields} />
                             </Col>
-                            <Col md="4" className="d-flex">
+                            <Col md="4" className="d-flex mt-3 mt-md-0">
                                 <SuperResearchProblemBox isLoading={isLoadingResearchFields} superProblems={superProblems} />
                             </Col>
                         </Row>

@@ -271,7 +271,14 @@ class Header extends Component {
 
         return (
             <StyledTopBar className={this.state.isHomePageStyle ? 'home-page' : ''}>
-                <Navbar className={this.state.isHomePageStyle ? 'home-page' : ''} expand="md" fixed="top" id="main-navbar">
+                <Navbar
+                    light={!this.state.isHomePageStyle}
+                    dark={this.state.isHomePageStyle}
+                    className={this.state.isHomePageStyle ? 'home-page' : ''}
+                    expand="md"
+                    fixed="top"
+                    id="main-navbar"
+                >
                     <GlobalStyle scrollbarWidth={scrollbarWidth(true)} cookieInfoDismissed={cookieInfoDismissed} />
 
                     <div
