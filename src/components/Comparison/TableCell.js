@@ -69,9 +69,10 @@ class TableCell extends Component {
                     <ItemInner cellPadding={cellPadding}>
                         {this.props.data &&
                             this.props.data.length > 0 &&
-                            this.props.data.map((date, index) =>
-                                Object.keys(date).length > 0 ? (
-                                    date.type === 'resource' ? (
+                            this.props.data.map(
+                                (date, index) =>
+                                    Object.keys(date).length > 0 &&
+                                    (date.type === 'resource' ? (
                                         <span key={`value-${date.resourceId}`}>
                                             {index > 0 && <ItemInnerSeparator />}
                                             <Tippy content={`Path of this value : ${date.pathLabels?.slice(1).join(' / ')}`} arrow={true}>
@@ -100,12 +101,7 @@ class TableCell extends Component {
                                                 </span>
                                             </Tippy>
                                         </span>
-                                    )
-                                ) : (
-                                    <span className="font-italic" key={`value-${index}`}>
-                                        Empty
-                                    </span>
-                                )
+                                    ))
                             )}
                     </ItemInner>
                 </Item>

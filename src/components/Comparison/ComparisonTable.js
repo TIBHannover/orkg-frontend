@@ -11,6 +11,7 @@ import { ReactTableWrapper, Contribution, Delete, ItemHeader, ItemHeaderInner, P
 import TableCell from './TableCell';
 import { useTable, useFlexLayout } from 'react-table';
 import { useSticky } from 'react-table-sticky';
+import { getPropertyObjectFromData } from 'utils';
 import PropTypes from 'prop-types';
 
 const compareProps = (prevProps, nextProps) => {
@@ -91,6 +92,7 @@ const ComparisonTable = props => {
                                     similar={info.value.similar}
                                     label={info.value.label}
                                     id={info.value.id}
+                                    property={props.comparisonType === 'merge' ? info.value : getPropertyObjectFromData(props.data, info.value)}
                                 />
                             </PropertiesInner>
                         </Properties>
@@ -181,6 +183,7 @@ const ComparisonTable = props => {
                                               similar={property.similar}
                                               label={property.label}
                                               id={property.id}
+                                              property={props.comparisonType === 'merge' ? property : getPropertyObjectFromData(props.data, property)}
                                           />
                                       </ItemHeaderInner>
                                   </ItemHeader>
@@ -195,7 +198,7 @@ const ComparisonTable = props => {
         ];
         // TODO: remove disable lint rule: useCallback for removeContribution and add used dependencies
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [props.transpose, props.properties, props.contributions, props.filterControlData]);
+    }, [props.transpose, props.properties, props.contributions, props.filterControlData, props.viewDensity]);
 
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable(
         {
@@ -263,6 +266,7 @@ ComparisonTable.propTypes = {
     properties: PropTypes.array.isRequired,
     removeContribution: PropTypes.func.isRequired,
     transpose: PropTypes.bool.isRequired,
+    comparisonType: PropTypes.string.isRequired,
     viewDensity: PropTypes.oneOf(['spacious', 'normal', 'compact']),
     scrollContainerBody: PropTypes.object.isRequired,
     filterControlData: PropTypes.array.isRequired,

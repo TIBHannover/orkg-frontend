@@ -81,8 +81,8 @@ class SignUp extends Component {
                             this.setState({ loading: false, errors: null });
                         })
                         .catch(e => {
-                            cookies.remove('token');
-                            cookies.remove('token_expires_in');
+                            cookies.remove('token', { path: env('PUBLIC_URL') });
+                            cookies.remove('token_expires_in', { path: env('PUBLIC_URL') });
                             this.setState({ loading: false, errors: { message: 'Something went wrong, please try again' } });
                         });
                 })

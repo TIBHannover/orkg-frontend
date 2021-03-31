@@ -21,6 +21,7 @@ const ContributionEditor = () => {
     const [isOpenCreateContribution, setIsOpenCreateContribution] = useState(false);
     const [isOpenCreatePaper, setIsOpenCreatePaper] = useState(false);
     const [createContributionPaperId, setCreateContributionPaperId] = useState(null);
+    const [initialValueCreatePaper, setInitialValueCreatePaper] = useState(null);
     const { getContributionIds, handleAddContributions } = useContributionEditor();
     const contributions = useSelector(state => state.contributionEditor.contributions);
     const isLoading = useSelector(state => state.contributionEditor.isLoading);
@@ -56,9 +57,10 @@ const ContributionEditor = () => {
         setIsOpenCreateContribution(true);
     };
 
-    const handleOpenCreatePaperModal = () => {
+    const handleOpenCreatePaperModal = initialValue => {
         setIsOpenAddContribution(false);
         setIsOpenCreatePaper(true);
+        setInitialValueCreatePaper(initialValue);
     };
 
     const handleCreateContribution = id => {
@@ -72,6 +74,7 @@ const ContributionEditor = () => {
     };
 
     const contributionAmount = contributionIds.length;
+    const containerStyle = contributionAmount > 3 ? { maxWidth: 'calc(100% - 20px)' } : undefined;
 
     // if is loading and there are no contributions in the store, it means it is loading for the first time
     const isLoadingInit = Object.keys(contributions).length === 0 && isLoading;
@@ -91,7 +94,7 @@ const ContributionEditor = () => {
                         style={{ marginRight: 2 }}
                         disabled={contributionAmount < 2}
                     >
-                        Make comparison
+                        View comparison
                     </Button>
 
                     <Button color="darkblue" size="sm" onClick={() => setIsOpenAddContribution(true)}>
@@ -99,7 +102,7 @@ const ContributionEditor = () => {
                     </Button>
                 </ButtonGroup>
             </Container>
-            <Container className="box rounded p-4">
+            <Container className="box rounded p-4" style={containerStyle}>
                 {!hasFailed && contributionAmount === 0 && (
                     <Alert color="info">
                         Start adding contributions by clicking the button <em>Add contribution</em> on the right
@@ -140,7 +143,14 @@ const ContributionEditor = () => {
                 />
             )}
 
-            {isOpenCreatePaper && <CreatePaperModal isOpen onCreatePaper={handleCreatePaper} toggle={() => setIsOpenCreatePaper(v => !v)} />}
+            {isOpenCreatePaper && (
+                <CreatePaperModal
+                    isOpen
+                    onCreatePaper={handleCreatePaper}
+                    toggle={() => setIsOpenCreatePaper(v => !v)}
+                    initialValue={initialValueCreatePaper}
+                />
+            )}
         </>
     );
 };

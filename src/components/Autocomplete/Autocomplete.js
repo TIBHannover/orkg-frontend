@@ -134,8 +134,8 @@ function Autocomplete(props) {
                 responseJson = await getEntities(props.entityType, {
                     page,
                     items: PAGE_SIZE,
-                    q: encodeURIComponent(value.trim()),
-                    exclude: props.excludeClasses ? encodeURIComponent(props.excludeClasses) : null,
+                    q: value.trim(),
+                    exclude: props.excludeClasses ? props.excludeClasses : null,
                     exact
                 });
             }
@@ -701,6 +701,7 @@ function Autocomplete(props) {
                     onBlur={props.onBlur}
                     onKeyDown={props.onKeyDown}
                     selectRef={props.innerRef}
+                    createOptionPosition="first"
                     menuPortalTarget={props.menuPortalTarget}
                     components={{
                         Option: Option,

@@ -16,6 +16,7 @@ import ResearchProblemInput from 'components/AddPaper/Contributions/ResearchProb
 import ContributionItemList from 'components/AddPaper/Contributions/ContributionItemList';
 import ContributionComparisons from 'components/ViewPaper/ContirbutionComparisons/ContributionComparisons';
 import ProvenanceBox from 'components/ViewPaper/ProvenanceBox/ProvenanceBox';
+import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import { connect } from 'react-redux';
 import { reverse } from 'named-urls';
 import { toast } from 'react-toastify';
@@ -29,6 +30,7 @@ import SuggestedTemplates from 'components/StatementBrowser/SuggestedTemplates/S
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { PREDICATES, CLASSES } from 'constants/graphSettings';
 import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
+import { reverseWithSlug } from 'utils';
 
 const Title = styled.div`
     font-size: 18px;
@@ -276,7 +278,12 @@ class Contributions extends Component {
                                                         this.props.researchProblems.length > 0 &&
                                                         this.props.researchProblems.map((problem, index) => (
                                                             <span key={index}>
-                                                                <Link to={reverse(ROUTES.RESEARCH_PROBLEM, { researchProblemId: problem.id })}>
+                                                                <Link
+                                                                    to={reverseWithSlug(ROUTES.RESEARCH_PROBLEM, {
+                                                                        researchProblemId: problem.id,
+                                                                        slug: problem.label
+                                                                    })}
+                                                                >
                                                                     <ResearchProblemButton className="btn btn-link p-0 border-0 align-baseline">
                                                                         <DescriptionTooltip id={problem.id} typeId={CLASSES.PROBLEM}>
                                                                             {problem.label}
@@ -289,14 +296,15 @@ class Contributions extends Component {
                                                     {this.props.researchProblems && this.props.researchProblems.length === 0 && (
                                                         <i>
                                                             No research problems added yet. Please contribute by{' '}
-                                                            <Button
-                                                                color="link"
-                                                                style={{ verticalAlign: 'initial', fontStyle: 'italic' }}
+                                                            <RequireAuthentication
+                                                                component={Button}
                                                                 className="m-0 p-0"
+                                                                style={{ verticalAlign: 'initial', fontStyle: 'italic' }}
+                                                                color="link"
                                                                 onClick={() => this.props.toggleEditMode()}
                                                             >
                                                                 editing
-                                                            </Button>{' '}
+                                                            </RequireAuthentication>{' '}
                                                             the paper.
                                                         </i>
                                                     )}

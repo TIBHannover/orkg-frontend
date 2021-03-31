@@ -34,17 +34,13 @@ const Comparisons = () => {
             items: pageSize,
             sortBy: 'created_at',
             desc: true
-        }).then(result => {
-            if (result.content.length > 0) {
+        })
+            .then(result => {
                 // Fetch the data of each paper
                 getStatementsBySubjects({ ids: result.content.map(p => p.id) })
                     .then(comparisonsStatements => {
                         const comparisonsData = comparisonsStatements.map(comparisonStatements => {
-                            return getComparisonData(
-                                comparisonStatements.id,
-                                find(result.content, { id: comparisonStatements.id }).label,
-                                comparisonStatements.statements
-                            );
+                            return getComparisonData(find(result.content, { id: comparisonStatements.id }), comparisonStatements.statements);
                         });
                         setComparisons(prevComparisons => [...prevComparisons, ...comparisonsData]);
                         setIsNextPageLoading(false);
@@ -59,13 +55,13 @@ const Comparisons = () => {
                         setIsNextPageLoading(false);
                         console.log(error);
                     });
-            } else {
+            })
+            .catch(error => {
                 setIsLastPageReached(true);
                 setHasNextPage(false);
                 setIsNextPageLoading(false);
-                setTotalElements(0);
-            }
-        });
+                console.log(error);
+            });
     };
 
     return (
@@ -74,7 +70,7 @@ const Comparisons = () => {
                 <div className="d-flex flex-grow-1 mt-4 mb-4">
                     <h1 className="h4">View all published comparisons</h1>
                     <div className="text-muted ml-3 mt-1">
-                        {totalElements === 0 && isNextPageLoading ? <Icon icon={faSpinner} spin /> : totalElements} comparison
+                        {totalElements === 0 && isNextPageLoading ? <Icon icon={faSpinner} spin /> : totalElements} comparisons
                     </div>
                 </div>
                 <ButtonGroup>
@@ -91,7 +87,7 @@ const Comparisons = () => {
                             })}
                         </div>
                     )}
-                    {comparisons.length === 0 && !isNextPageLoading && <div className="text-center mt-4 mb-4">No published comparison</div>}
+                    {totalElements === 0 && !isNextPageLoading && <div className="text-center mt-4 mb-4">No published comparison</div>}
                     {isNextPageLoading && (
                         <div className="text-center mt-4 mb-4">
                             <Icon icon={faSpinner} spin /> Loading
@@ -109,7 +105,9 @@ const Comparisons = () => {
                             Load more comparisons
                         </div>
                     )}
-                    {!hasNextPage && isLastPageReached && <div className="text-center mt-3">You have reached the last page.</div>}
+                    {!hasNextPage && isLastPageReached && page > 1 && totalElements !== 0 && (
+                        <div className="text-center mt-3">You have reached the last page.</div>
+                    )}
                 </ListGroup>
             </Container>
         </>

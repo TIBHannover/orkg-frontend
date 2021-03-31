@@ -12,6 +12,7 @@ import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Badge, Button } from 'reactstrap';
 import EditPaperDialog from './EditDialog/EditPaperDialog';
+import { reverseWithSlug } from 'utils';
 
 const PaperHeader = props => {
     const [isOpenEditModal, setIsOpenEditModal] = useState(false);
@@ -63,7 +64,9 @@ const PaperHeader = props => {
                 ''
             )}
             {viewPaper.researchField && viewPaper.researchField.id && (
-                <Link to={reverse(ROUTES.RESEARCH_FIELD, { researchFieldId: viewPaper.researchField.id })}>
+                <Link
+                    to={reverseWithSlug(ROUTES.RESEARCH_FIELD, { researchFieldId: viewPaper.researchField.id, slug: viewPaper.researchField.label })}
+                >
                     <span className="badge badge-lightblue mr-2 mb-2">
                         <Icon icon={faBars} className="text-primary" /> {viewPaper.researchField.label}
                     </span>

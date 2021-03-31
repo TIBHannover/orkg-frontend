@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { getStatementsBySubject, getStatementsBySubjectAndPredicate, getStatementsByObjectAndPredicate } from 'services/backend/statements';
-import { getUserInformationById } from 'services/backend/users';
+import { getContributorInformationById } from 'services/backend/contributors';
 import { getObservatoryAndOrganizationInformation } from 'services/backend/observatories';
 import { getResource } from 'services/backend/resources';
 import { getComparison } from 'services/similarity/index';
@@ -149,6 +149,8 @@ function useComparison({ id }) {
                         const resources = filterObjectOfStatementsByPredicate(statements, PREDICATES.RELATED_RESOURCES, false);
                         const figures = filterObjectOfStatementsByPredicate(statements, PREDICATES.RELATED_FIGURE, false);
                         const visualizations = filterObjectOfStatementsByPredicate(statements, PREDICATES.HAS_VISUALIZATION, false);
+                        const subject = filterObjectOfStatementsByPredicate(statements, PREDICATES.HAS_SUBJECT, true);
+
                         // Load authors
                         let creators = filterObjectOfStatementsByPredicate(statements, PREDICATES.HAS_AUTHOR, false);
                         if (creators) {
@@ -167,8 +169,10 @@ function useComparison({ id }) {
                             hasPreviousVersion: hasPreviousVersion,
                             resources: resources ? resources : [],
                             figures: figures ? figures : [],
-                            visualizations: visualizations ? visualizations : []
+                            visualizations: visualizations ? visualizations : [],
+                            subject: subject
                         });
+
                         // TODO: replace this with ordered feature
                         // Load comparison config
                         const url = filterObjectOfStatementsByPredicate(statements, PREDICATES.URL, true);
@@ -248,7 +252,7 @@ function useComparison({ id }) {
     const loadCreatedBy = created_by => {
         // Get Provenance data
         if (created_by && created_by !== MISC.UNKNOWN_ID) {
-            getUserInformationById(created_by)
+            getContributorInformationById(created_by)
                 .then(creator => {
                     setCreatedBy(creator);
                 })
@@ -416,7 +420,7 @@ function useComparison({ id }) {
                     subjectId: comparisonData.contributions[0].paperId,
                     predicateId: PREDICATES.HAS_RESEARCH_FIELD
                 }).then(s => {
-                    if (s.length) {
+                    if (s.length && !metaData?.subject) {
                         setResearchField(s[0].object);
                     }
                     return Promise.resolve(comparisonData);

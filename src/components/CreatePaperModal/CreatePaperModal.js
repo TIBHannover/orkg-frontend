@@ -1,11 +1,12 @@
 import DoiItem from 'components/CreatePaperModal/DoiItem';
 import useCreatePaper from 'components/CreatePaperModal/hooks/useCreatePaper';
 import EditItem from 'components/ViewPaper/EditDialog/EditItem';
+import REGEX from 'constants/regex';
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Button, ListGroup, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 
-const CreatePaperModal = ({ isOpen, toggle, onCreatePaper }) => {
+const CreatePaperModal = ({ isOpen, toggle, onCreatePaper, initialValue }) => {
     const { isLoading, createPaper } = useCreatePaper();
     const [openItem, setOpenItem] = useState('doi');
     const [title, setTitle] = useState('');
@@ -16,6 +17,22 @@ const CreatePaperModal = ({ isOpen, toggle, onCreatePaper }) => {
     const [publishedIn, setPublishedIn] = useState('');
     const [researchField, setResearchField] = useState(null);
     const [url, setUrl] = useState('');
+    const [lookupOnMount, setLookupOnMount] = useState(false);
+
+    useEffect(() => {
+        if (!initialValue) {
+            return;
+        }
+
+        const doi = initialValue.startsWith('http') ? initialValue.substring(initialValue.indexOf('10.')) : initialValue;
+        if (REGEX.DOI.test(doi)) {
+            setDoi(doi);
+            setLookupOnMount(true);
+        } else {
+            setTitle(initialValue);
+            setOpenItem('title');
+        }
+    }, [initialValue]);
 
     const handleCreate = async () => {
         const contributionId = await createPaper({
@@ -80,14 +97,17 @@ const CreatePaperModal = ({ isOpen, toggle, onCreatePaper }) => {
         }
     };
 
-    const handlePopulateMetadata = paper => {
-        setTitle(paper.title || title);
-        setAuthors(paper.authors || authors);
-        setMonth(paper.month || month);
-        setYear(paper.year || year);
-        setDoi(paper.doi || doi);
-        setPublishedIn(paper.publishedIn || publishedIn);
-    };
+    const handlePopulateMetadata = useCallback(
+        paper => {
+            setTitle(paper.title || title);
+            setAuthors(paper.authors || authors);
+            setMonth(paper.month || month);
+            setYear(paper.year || year);
+            setDoi(paper.doi || doi);
+            setPublishedIn(paper.publishedIn || publishedIn);
+        },
+        [authors, doi, month, publishedIn, title, year]
+    );
 
     const toggleItem = item => setOpenItem(openItem !== item ? item : null);
 
@@ -102,6 +122,7 @@ const CreatePaperModal = ({ isOpen, toggle, onCreatePaper }) => {
                         onPopulateMetadata={handlePopulateMetadata}
                         value={doi}
                         onChange={value => setDoi(value)}
+                        lookupOnMount={lookupOnMount}
                     />
                     {Object.entries(FIELDS).map(([itemName, item], index) => (
                         <EditItem
@@ -129,7 +150,12 @@ const CreatePaperModal = ({ isOpen, toggle, onCreatePaper }) => {
 CreatePaperModal.propTypes = {
     isOpen: PropTypes.bool.isRequired,
     toggle: PropTypes.func.isRequired,
-    onCreatePaper: PropTypes.func.isRequired
+    onCreatePaper: PropTypes.func.isRequired,
+    initialValue: PropTypes.string
+};
+
+CreatePaperModal.defaultProps = {
+    initialValue: ''
 };
 
 export default CreatePaperModal;

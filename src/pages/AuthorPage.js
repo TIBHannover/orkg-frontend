@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import { Container, Row, Col, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import { Container, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Button, ListGroup } from 'reactstrap';
 import { getStatementsByObject, getStatementsBySubject, getStatementsBySubjects } from 'services/backend/statements';
 import PaperCard from 'components/PaperCard/PaperCard';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -11,22 +11,14 @@ import { find } from 'lodash';
 import PropTypes from 'prop-types';
 import { PREDICATES } from 'constants/graphSettings';
 import { NavLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import ContentLoader from 'react-content-loader';
 import ROUTES from 'constants/routes.js';
 import { reverse } from 'named-urls';
 
 const AuthorMetaInfo = styled.div`
     .key {
         font-weight: bolder;
-    }
-    .value {
-        margin-bottom: 10px;
-    }
-`;
-
-const AuthorIdentifier = styled.div`
-    .key {
-        font-weight: bolder;
-        margin-bottom: 4px;
     }
     .value {
         margin-bottom: 10px;
@@ -105,11 +97,7 @@ class AuthorPage extends Component {
                                 /**  returns an empty resource for a paper >> handle in renderer **/
                                 return undefined;
                             } else {
-                                return getPaperData(
-                                    paperStatements.id,
-                                    paperSubject && paperSubject.label ? paperSubject.label : 'No Title',
-                                    paperStatements.statements
-                                );
+                                return getPaperData(paperSubject, paperStatements.statements);
                             }
                         });
 
@@ -172,92 +160,105 @@ class AuthorPage extends Component {
                             </ButtonDropdown>
                         </Container>
                         <Container className="p-0">
-                            <Row>
-                                <Col className="col-4">
-                                    <div className="box rounded p-4 mb-3">
-                                        <AuthorMetaInfo>
-                                            <div className="key">Full name</div>
-                                            <div className="value">{this.state.author.label}</div>
-                                        </AuthorMetaInfo>
-                                        {/*
-                                        <AuthorMetaInfo>
-                                            <div className={'key'}>Date of birth</div>
-                                            <div className={'value'}>Date</div>
-                                        </AuthorMetaInfo>
-                                        <AuthorMetaInfo>
-                                            <div className={'key'}>Place of birth</div>
-                                            <div className={'value'}>Country</div>
-                                        </AuthorMetaInfo>
-                                        <AuthorMetaInfo>
-                                            <div className={'key'}>Occupation</div>
-                                            <div className={'value'}>Lab</div>
-                                        </AuthorMetaInfo>
-                                        */}
-                                    </div>
-
-                                    {this.state.orcid && (
-                                        <div className="box rounded p-4">
-                                            <h5>Identifiers</h5>
-                                            <AuthorIdentifier>
-                                                <div className="key">
-                                                    ORCID <Icon color="#A6CE39" icon={faOrcid} />
-                                                </div>
-                                                <div className="value">
-                                                    <a href={`https://orcid.org/${this.state.orcid}`} target="_blank" rel="noopener noreferrer">
-                                                        {this.state.orcid} <Icon icon={faExternalLinkAlt} />
-                                                    </a>
-                                                </div>
-                                            </AuthorIdentifier>
-                                            {/*
-                                            <AuthorIdentifier>
-                                                <div className={'key'}>Scopus Author ID</div>
-                                                <div className={'value'}>Scopus link</div>
-                                            </AuthorIdentifier>
-                                            <AuthorIdentifier>
-                                                <div className={'key'}>Google Scholar author ID</div>
-                                                <div className={'value'}>Google Scholar link</div>
-                                            </AuthorIdentifier>
-                                            */}
+                            <div className="box rounded p-4 mb-3">
+                                <AuthorMetaInfo>
+                                    <div className="key">Full name</div>
+                                    <div className="value">{this.state.author.label}</div>
+                                </AuthorMetaInfo>
+                                {this.state.orcid && (
+                                    <AuthorMetaInfo>
+                                        <div className="key">
+                                            ORCID <Icon color="#A6CE39" icon={faOrcid} />
+                                        </div>
+                                        <div className="value">
+                                            <a href={`https://orcid.org/${this.state.orcid}`} target="_blank" rel="noopener noreferrer">
+                                                {this.state.orcid} <Icon icon={faExternalLinkAlt} />
+                                            </a>
+                                        </div>
+                                    </AuthorMetaInfo>
+                                )}
+                            </div>
+                        </Container>
+                        <Container className="d-flex align-items-center mt-4 mb-4">
+                            <div className="d-flex flex-grow-1">
+                                <h1 className="h5 flex-shrink-0 mb-0">Papers</h1>
+                            </div>
+                        </Container>
+                        <Container className="p-0">
+                            {this.state.papers.length > 0 && (
+                                <ListGroup>
+                                    {this.state.papers.map(paper => {
+                                        return (
+                                            paper && (
+                                                <PaperCard
+                                                    paper={{
+                                                        id: paper.id,
+                                                        title: paper.label,
+                                                        ...paper
+                                                    }}
+                                                    key={`pc${paper.id}`}
+                                                />
+                                            )
+                                        );
+                                    })}
+                                    {!this.state.isNextPageLoading && this.state.hasNextPage && (
+                                        <div
+                                            style={{ cursor: 'pointer' }}
+                                            className="list-group-item list-group-item-action text-center"
+                                            onClick={!this.state.isNextPageLoading ? this.loadMorePapers : undefined}
+                                            onKeyDown={e =>
+                                                e.keyCode === 13 ? (!this.state.isNextPageLoading ? this.loadMorePapers : undefined) : undefined
+                                            }
+                                            role="button"
+                                            tabIndex={0}
+                                        >
+                                            Load more papers
                                         </div>
                                     )}
-                                </Col>
-
-                                <Col className="col-8">
-                                    <div className="box rounded p-4">
-                                        <h5>Papers</h5>
-
-                                        {this.state.papers.length > 0 && (
-                                            <div>
-                                                {this.state.papers
-                                                    .filter(p => p !== undefined)
-                                                    .map(resource => {
-                                                        return <PaperCard paper={{ title: resource.label, ...resource }} key={`pc${resource.id}`} />;
-                                                    })}
-                                            </div>
-                                        )}
-                                        {/*Add loading indicator*/}
-                                        {this.state.isNextPageLoading && (
-                                            <div className="text-center mt-4 mb-4">
-                                                <Icon icon={faSpinner} spin /> Loading
-                                            </div>
-                                        )}
-                                        {!this.state.isNextPageLoading && this.state.hasNextPage && (
-                                            <div
-                                                style={{ cursor: 'pointer' }}
-                                                className="list-group-item list-group-item-action text-center mt-2"
-                                                onClick={!this.state.isNextPageLoading ? this.loadMorePapers : undefined}
-                                                onKeyDown={e =>
-                                                    e.keyCode === 13 ? (!this.state.isNextPageLoading ? this.loadMorePapers : undefined) : undefined
-                                                }
-                                                role="button"
-                                                tabIndex={0}
-                                            >
-                                                View more papers
-                                            </div>
-                                        )}
+                                    {!this.state.hasNextPage && this.state.isLastPageReached && this.state.page !== 1 && (
+                                        <div className="text-center mt-3">You have reached the last page.</div>
+                                    )}
+                                </ListGroup>
+                            )}
+                            {this.state.papers.length === 0 && !this.state.isNextPageLoading && (
+                                <div>
+                                    <div className="p-5 text-center mt-4 mb-4">
+                                        There are no papers for this research field, yet.
+                                        <br />
+                                        <br />
+                                        <Link to={ROUTES.ADD_PAPER.GENERAL_DATA}>
+                                            <Button size="sm" color="primary " className="mr-3">
+                                                Add paper
+                                            </Button>
+                                        </Link>
                                     </div>
-                                </Col>
-                            </Row>
+                                </div>
+                            )}
+                            {this.state.isNextPageLoading && (
+                                <div className={`text-center mt-4 mb-4 ${this.state.page === 0 ? 'p-5 container box rounded' : ''}`}>
+                                    {this.state.page !== 0 && (
+                                        <>
+                                            <Icon icon={faSpinner} spin /> Loading
+                                        </>
+                                    )}
+                                    {this.state.page === 0 && (
+                                        <div className="text-left">
+                                            <ContentLoader
+                                                speed={2}
+                                                width={400}
+                                                height={50}
+                                                viewBox="0 0 400 50"
+                                                style={{ width: '100% !important' }}
+                                                backgroundColor="#f3f3f3"
+                                                foregroundColor="#ecebeb"
+                                            >
+                                                <rect x="0" y="0" rx="3" ry="3" width="400" height="20" />
+                                                <rect x="0" y="25" rx="3" ry="3" width="300" height="20" />
+                                            </ContentLoader>
+                                        </div>
+                                    )}
+                                </div>
+                            )}
                         </Container>
                     </div>
                 )}

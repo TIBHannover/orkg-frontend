@@ -103,6 +103,7 @@
         "sbd": "^1.0.18",
         "showdown": "^1.9.1",
         "showdown-footnotes": "^2.1.2",
+        "slugify": "^1.4.7",
         "source-map-explorer": "^2.5.2",
         "stopwords-en": "^0.3.0",
         "strict-mode": "^1.1.4",
