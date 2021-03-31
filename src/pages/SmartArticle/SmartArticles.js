@@ -9,7 +9,6 @@ import ROUTES from 'constants/routes';
 import { groupBy } from 'lodash';
 import { reverse } from 'named-urls';
 import { Link } from 'react-router-dom';
-import { Button } from 'reactstrap';
 import { getResourcesByClass } from 'services/backend/resources';
 import { getStatementsBySubjects } from 'services/backend/statements';
 

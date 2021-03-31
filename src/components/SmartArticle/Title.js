@@ -1,12 +1,9 @@
-import { faBars } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import { updateTitle } from 'actions/smartArticle';
-import { EditableTitle, SectionStyled, SectionTypeStyled } from 'components/SmartArticle/styled';
 import ResearchField from 'components/SmartArticle/ResearchField';
+import { EditableTitle, SectionStyled, SectionTypeStyled } from 'components/SmartArticle/styled';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Badge } from 'reactstrap';
 
 const Title = () => {
     const { id, title: titleStore } = useSelector(state => state.smartArticle.paper);
