@@ -52,6 +52,7 @@ export const getSimilarContribution = id => {
     return submitGetRequest(`${similarityUrl}${encodeURIComponent(id)}/`);
 };
 
+/* TODO: rename this in similarity service */
 export const getVisualization = resourceId => {
     return submitGetRequest(`${visualizationServiceUrl}?resourceId=${encodeURI(resourceId)}`, {
         'Content-Type': 'application/json'
@@ -61,7 +62,6 @@ export const addVisualization = data => {
     return submitPostRequest(`${visualizationServiceUrl}`, { 'Content-Type': 'application/json' }, data);
 };
 
-/* same functions are above, but more general names */
 export const getResourceData = resourceId => {
     return getVisualization(resourceId);
 };
@@ -69,6 +69,6 @@ export const getResourceData = resourceId => {
 export const createResourceData = ({ resourceId, data }) => {
     return addVisualization({
         resourceId: resourceId,
-        jsonData: data // rename to data, it doesn't accept json...
+        jsonData: data
     });
 };
