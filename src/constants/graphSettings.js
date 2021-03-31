@@ -42,7 +42,6 @@ export const PREDICATES = {
     HAS_PROPERTY: 'hasProperty',
     HAS_PREVIOUS_VERSION: 'hasPreviousVersion',
     HAS_SUBJECT: 'hasSubject',
-    IS_LISTED: 'isListed',
     HAS_SECTION: 'HasSection',
     HAS_LINK: 'HasLink',
     HAS_VISUALIZATION: 'hasVisualization',
