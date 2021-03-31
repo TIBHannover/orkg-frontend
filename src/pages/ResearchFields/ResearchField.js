@@ -27,7 +27,7 @@ const ResearchField = () => {
                     <Col md="4" className="d-flex mt-3 mt-md-0">
                         <LastUpdatesBox researchFieldId={researchFieldId} />
                     </Col>
-                    <Col md="4" className="d-flex mt-3 mt-md-0">
+                    <Col md="4" className="mt-3 mt-md-0">
                         <div className="box rounded-lg flex-grow-1" style={{ overflow: 'hidden' }}>
                             <h5 className="pr-3 pl-3 pt-3 pb-2 m-0">Observatories</h5>
                             <hr className="mb-3 mt-0" />
