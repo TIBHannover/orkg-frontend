@@ -121,7 +121,7 @@ export const createSection = ({ contributionId, afterIndex, sectionType }) => as
         await createLiteralStatement(sectionResource.id, PREDICATES.HAS_CONTENT, markdownLiteral.id);
         sectionResourceId = sectionResource.id;
         markdownLiteralId = markdownLiteral.id;
-    } else if (sectionType === 'resource' || sectionType === 'property' || sectionType === 'comparison') {
+    } else if (sectionType === 'resource' || sectionType === 'property' || sectionType === 'comparison' || sectionType === 'visualization') {
         // link section
         if (sectionType === 'resource') {
             typeId = CLASSES.RESOURCE_SECTION;
@@ -129,6 +129,8 @@ export const createSection = ({ contributionId, afterIndex, sectionType }) => as
             typeId = CLASSES.PROPERTY_SECTION;
         } else if (sectionType === 'comparison') {
             typeId = CLASSES.COMPARISON_SECTION;
+        } else if (sectionType === 'visualization') {
+            typeId = CLASSES.VISUALIZATION_SECTION;
         }
 
         const sectionResource = await createResource('', [typeId]);

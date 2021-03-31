@@ -10,7 +10,7 @@ const Acknowledgements = () => {
             {contributors &&
                 contributors.map(contributor => (
                     <div className="mr-1" key={contributor}>
-                        <UserAvatar userId={contributor} size="40" />
+                        <UserAvatar userId={contributor} size={40} />
                     </div>
                 ))}
         </div>

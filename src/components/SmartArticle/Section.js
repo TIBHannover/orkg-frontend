@@ -54,9 +54,11 @@ const Section = props => {
         sectionType = 'property';
     } else if (type.id === CLASSES.COMPARISON_SECTION) {
         sectionType = 'comparison';
+    } else if (type.id === CLASSES.VISUALIZATION_SECTION) {
+        sectionType = 'visualization';
     }
 
-    const isContentLinkSection = sectionType === 'resource' || sectionType === 'property' || sectionType === 'comparison';
+    const isContentLinkSection = ['resource', 'property', 'comparison', 'visualization'].includes(sectionType);
 
     return (
         <>

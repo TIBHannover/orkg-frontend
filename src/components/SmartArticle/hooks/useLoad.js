@@ -102,7 +102,7 @@ const useHeaderBar = () => {
             let markdown = null;
             let contentLink = null;
 
-            if (type === CLASSES.RESOURCE_SECTION || type === CLASSES.PROPERTY_SECTION || type === CLASSES.COMPARISON_SECTION) {
+            if ([CLASSES.RESOURCE_SECTION, CLASSES.PROPERTY_SECTION, CLASSES.COMPARISON_SECTION, CLASSES.VISUALIZATION_SECTION].includes(type)) {
                 const linkStatement = section.statements.find(statement => statement.predicate.id === PREDICATES.HAS_LINK);
                 const link = linkStatement?.object;
 

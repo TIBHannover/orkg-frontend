@@ -52,6 +52,10 @@ const SectionType = props => {
                 {
                     label: 'Comparison',
                     value: CLASSES.COMPARISON_SECTION
+                },
+                {
+                    label: 'Visualization',
+                    value: CLASSES.VISUALIZATION_SECTION
                 }
             ];
             const _options = sortBy([...ontologyClasses, ...additionalClasses], 'label');

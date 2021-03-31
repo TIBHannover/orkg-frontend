@@ -75,6 +75,7 @@ export const CLASSES = {
     RESOURCE_SECTION: 'ResourceSection',
     PROPERTY_SECTION: 'PropertySection',
     COMPARISON_SECTION: 'ComparisonSection',
+    VISUALIZATION_SECTION: 'VisualizationSection',
     VISUALIZATION: 'Visualization'
 };
 

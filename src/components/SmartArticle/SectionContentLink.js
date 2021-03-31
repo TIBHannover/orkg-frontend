@@ -1,6 +1,7 @@
 import { updateSectionLink } from 'actions/smartArticle';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
 import SectionComparison from 'components/SmartArticle/SectionComparison';
+import SectionVisualization from 'components/SmartArticle/SectionVisualization';
 import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
 import { CLASSES, ENTITIES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
@@ -58,19 +59,27 @@ const SectionContentLink = props => {
     };
     const entityType = props.type === 'property' ? ENTITIES.PREDICATE : ENTITIES.RESOURCE;
     const hasValue = selectedResource && selectedResource?.value;
+    let optionsClass = undefined;
+
+    if (props.type === 'comparison') {
+        optionsClass = CLASSES.COMPARISON;
+    } else if (props.type === 'visualization') {
+        optionsClass = CLASSES.VISUALIZATION;
+    }
 
     return (
         <div>
             <Autocomplete
                 entityType={entityType}
-                optionsClass={props.type === 'comparison' ? CLASSES.COMPARISON : undefined}
-                placeholder={`Enter a ${props.type}`}
+                optionsClass={optionsClass}
+                placeholder={`Select a ${props.type}`}
                 onChange={handleItemSelected}
                 value={selectedResource}
                 openMenuOnFocus={false}
                 allowCreate={props.type === 'resource'} // only allow create for resources
                 autoFocus={false}
                 cssClasses="mb-2"
+                classNamePrefix="react-select"
             />
             {(props.type === 'resource' || props.type === 'property') && hasValue && (
                 <StatementBrowser
@@ -85,6 +94,7 @@ const SectionContentLink = props => {
                 />
             )}
             {props.type === 'comparison' && hasValue && <SectionComparison id={selectedResource.value} />}
+            {props.type === 'visualization' && hasValue && <SectionVisualization id={selectedResource.value} />}
         </div>
     );
 };

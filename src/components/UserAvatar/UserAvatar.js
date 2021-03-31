@@ -80,7 +80,7 @@ const UserAvatar = ({ userId, size }) => {
 
 UserAvatar.propTypes = {
     userId: PropTypes.string,
-    size: PropTypes.string
+    size: PropTypes.number
 };
 
 UserAvatar.defaultProps = {

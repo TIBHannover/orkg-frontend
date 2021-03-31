@@ -9,19 +9,18 @@ import AddSection from 'components/SmartArticle/AddSection';
 import AuthorsSection from 'components/SmartArticle/AuthorsSection';
 import HistoryModal from 'components/SmartArticle/HistoryModal';
 import useLoad from 'components/SmartArticle/hooks/useLoad';
+import LoadingArticle from 'components/SmartArticle/LoadingArticle';
 import PublishModal from 'components/SmartArticle/PublishModal';
 import Sections from 'components/SmartArticle/Sections';
 import Title from 'components/SmartArticle/Title';
 import ViewArticle from 'components/SmartArticle/ViewArticle';
 import { SubTitle } from 'components/styled';
 import ROUTES from 'constants/routes';
-import { times } from 'lodash';
 import moment from 'moment';
 import { reverse } from 'named-urls';
 import NotFound from 'pages/NotFound';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
-import ContentLoader from 'react-content-loader';
 import { useDispatch, useSelector } from 'react-redux';
 import { NavLink, useHistory } from 'react-router-dom';
 import { Button, ButtonGroup, Container, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledButtonDropdown } from 'reactstrap';
@@ -55,14 +54,12 @@ const SmartArticle = props => {
     const isLoadingInline = useSelector(state => state.smartArticle.isLoading);
     const [isEditing, setIsEditing] = useState(false);
     const [isOpenPublishModal, setIsOpenPublishModal] = useState(false);
-    //const [isOpenHistoryModal, setIsOpenHistoryModal] = useState(false);
     const isPublished = useSelector(state => state.smartArticle.isPublished);
     const paper = useSelector(state => state.smartArticle.paper);
     const isOpenHistoryModal = useSelector(state => state.smartArticle.isOpenHistoryModal);
     const researchField = useSelector(state => state.smartArticle.researchField);
     const dispatch = useDispatch();
     const history = useHistory();
-
     const versions = useSelector(state => state.smartArticle.versions);
     const version = versions.find(version => version.id === id);
     const versionNumber = versions.length ? versions.length - versions.findIndex(version => version.id === id) : null;
@@ -203,31 +200,8 @@ const SmartArticle = props => {
                 </>
             )}
             {!isLoading && !isEditing && <ViewArticle />}
-            {isLoading && (
-                <Container className="p-0">
-                    <div className="box rounded p-5">
-                        <ContentLoader height="500" width="100%" speed={2} foregroundColor="#f3f3f3" backgroundColor="#ccc" viewBox="0 0 100 50">
-                            {/* title */}
-                            <rect x="0" y="0" rx="0" ry="0" width="100" height="5" />
-                            {/* authors */}
-                            <rect x="0" y="6" rx="0" ry="0" width="15" height="3" />
-                            <rect x="16" y="6" rx="0" ry="0" width="15" height="3" />
-                            <rect x="32" y="6" rx="0" ry="0" width="15" height="3" />
-                            <rect x="32" y="6" rx="0" ry="0" width="15" height="3" />
-                            {/* 2 sections */}
-                            {times(2, i => (
-                                <React.Fragment key={i}>
-                                    <rect x="0" y={13 + i * 17} rx="0" ry="0" width="100" height="4" />
-                                    <rect x="0" y={18 + i * 17} rx="0" ry="0" width="30" height="1" />
-                                    <rect x="0" y={20 + i * 17} rx="0" ry="0" width="45" height="1" />
-                                    <rect x="0" y={22 + i * 17} rx="0" ry="0" width="35" height="1" />
-                                    <rect x="0" y={24 + i * 17} rx="0" ry="0" width="45" height="1" />
-                                </React.Fragment>
-                            ))}
-                        </ContentLoader>
-                    </div>
-                </Container>
-            )}
+            {isLoading && <LoadingArticle />}
+
             {isOpenPublishModal && <PublishModal toggle={() => setIsOpenPublishModal(v => !v)} id={id} show />}
             {isOpenHistoryModal && <HistoryModal toggle={toggleHistoryModal} id={id} show />}
         </div>

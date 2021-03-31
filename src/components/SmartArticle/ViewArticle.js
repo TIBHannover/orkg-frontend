@@ -5,6 +5,7 @@ import { toggleHistoryModal as toggleHistoryModalAction } from 'actions/smartArt
 import Acknowledgements from 'components/SmartArticle/Acknowledgements';
 import AuthorsList from 'components/SmartArticle/AuthorsList';
 import MarkdownRenderer from 'components/SmartArticle/MarkdownRenderer';
+import SectionVisualization from 'components/SmartArticle/SectionVisualization';
 import { SectionStyled } from 'components/SmartArticle/styled';
 import ViewArticleStatementBrowser from 'components/SmartArticle/ViewArticleStatementBrowser';
 import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
@@ -75,16 +76,16 @@ const ViewArticle = () => {
                     </div>
                     {sections.map(section => {
                         if (
-                            section.type.id === CLASSES.RESOURCE_SECTION ||
-                            section.type.id === CLASSES.PROPERTY_SECTION ||
-                            section.type.id === CLASSES.COMPARISON_SECTION
+                            [CLASSES.RESOURCE_SECTION, CLASSES.PROPERTY_SECTION, CLASSES.COMPARISON_SECTION, CLASSES.VISUALIZATION_SECTION].includes(
+                                section.type.id
+                            )
                         ) {
                             return (
                                 <React.Fragment key={section.id}>
                                     <h2 className="h4 border-bottom mt-5">{section.title.label}</h2>
                                     {section?.contentLink?.objectId && (
                                         <>
-                                            {section.type.id !== CLASSES.COMPARISON_SECTION ? (
+                                            {section.type.id !== CLASSES.COMPARISON_SECTION && section.type.id !== CLASSES.VISUALIZATION_SECTION && (
                                                 <>
                                                     <div className="mt-3 mb-2">
                                                         <Link
@@ -111,8 +112,12 @@ const ViewArticle = () => {
                                                         <ViewArticleStatementBrowser id={section.contentLink.objectId} />
                                                     )}
                                                 </>
-                                            ) : (
+                                            )}
+                                            {section.type.id === CLASSES.COMPARISON_SECTION && (
                                                 <SectionComparison key={section.id} id={section.contentLink.objectId} />
+                                            )}
+                                            {section.type.id === CLASSES.VISUALIZATION_SECTION && (
+                                                <SectionVisualization key={section.id} id={section.contentLink.objectId} />
                                             )}
                                         </>
                                     )}
