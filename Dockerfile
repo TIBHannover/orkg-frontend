@@ -10,7 +10,7 @@ ENV NODE_OPTIONS --max-old-space-size=8192
 COPY package.json package-lock.json ./
 
 # NOTE: opencollective is not required but leads to warnings if missing
-RUN npm install react-scripts@4.0.2 opencollective -g
+RUN npm install react-scripts@4.0.3 opencollective -g
 
 # install the dependencies
 # replace npm ci beceause of npm v7   
