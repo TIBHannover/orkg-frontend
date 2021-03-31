@@ -126,20 +126,26 @@ const ResearchFieldHeader = ({ id }) => {
                     </Container>
                     <Container className="p-0">
                         <Card>
-                            <CardBody>
-                                <CardTitle tag="h5">Description</CardTitle>
-                                {researchFieldData.description && <p className="m-0">{researchFieldData.description}</p>}
-                                {!researchFieldData.description && <p className="m-0">No description for this research field yet!</p>}
-                                {researchFieldData.sameAs && (
-                                    <ExternalDescription
-                                        query={researchFieldData.sameAs ? researchFieldData.sameAs.label : researchFieldData.label}
-                                    />
-                                )}
-                            </CardBody>
-
+                            {(researchFieldData.description || researchFieldData.sameAs) && (
+                                <>
+                                    <CardBody>
+                                        {researchFieldData.description && (
+                                            <>
+                                                <CardTitle tag="h5">Description</CardTitle>
+                                                {researchFieldData.description && <p className="m-0">{researchFieldData.description}</p>}
+                                            </>
+                                        )}
+                                        {researchFieldData.sameAs && (
+                                            <ExternalDescription
+                                                query={researchFieldData.sameAs ? researchFieldData.sameAs.label : researchFieldData.label}
+                                            />
+                                        )}
+                                    </CardBody>
+                                    <hr className="m-0" />
+                                </>
+                            )}
                             {subResearchFields && subResearchFields.length > 0 && (
                                 <>
-                                    <hr className="m-0" />
                                     <CardBody>
                                         <CardTitle tag="h5">Subfields</CardTitle>
                                         <div>
@@ -178,10 +184,10 @@ const ResearchFieldHeader = ({ id }) => {
                                             )}
                                         </div>
                                     </CardBody>
+                                    <hr className="m-0" />
                                 </>
                             )}
 
-                            <hr className="m-0" />
                             <CardBody>
                                 <Contributors researchFieldId={id} />
                             </CardBody>
