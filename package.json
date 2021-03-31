@@ -34,7 +34,7 @@
         "lodash": "^4.17.21",
         "make-latex": "^0.1.0",
         "markdown-into-html": "^1.0.3",
-        "marked": "^1.2.7",
+        "marked": "^2.0.1",
         "moment": "^2.29.1",
         "named-urls": "^2.0.0",
         "node-html-parser": "^2.0.2",
