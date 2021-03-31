@@ -17,6 +17,7 @@ import { Alert, Badge, Button, Container } from 'reactstrap';
 import * as Showdown from 'showdown';
 import footnotes from 'showdown-footnotes';
 import SectionComparison from './SectionComparison';
+import Breadcrumbs from 'components/Breadcrumbs/Breadcrumbs';
 
 const converter = new Showdown.Converter({
     //tables: true,
@@ -42,95 +43,97 @@ const ViewArticle = () => {
     const toggleHistoryModal = () => dispatch(toggleHistoryModalAction());
 
     return (
-        <Container className="print-only">
-            {!isPublished && (
-                <Alert color="warning" fade={false} className="box">
-                    Warning: you are viewing an unpublished version of this article. The content can be changed by anyone.{' '}
-                    <Button color="link" className="p-0" onClick={toggleHistoryModal}>
-                        View publish history
-                    </Button>
-                </Alert>
-            )}
-            {newVersionAvailable && (
-                <Alert color="warning" fade={false} className="box">
-                    Warning: a newer version of this article is available.{' '}
-                    <Link to={reverse(ROUTES.SMART_ARTICLE, { id: latestVersionId })}>View latest version</Link>
-                </Alert>
-            )}
-            <SectionStyled className="box rounded pr-4">
-                <h1 className="mb-2 mt-4" style={{ whiteSpace: 'pre-line' }}>
-                    {paper.title}
-                </h1>
-                <div className="my-3">
-                    {researchField && (
-                        <Link to={reverse(ROUTES.RESEARCH_FIELD, { researchFieldId: researchField.id })} target="_blank">
-                            <Badge color="lightblue" className="mr-2 mb-2">
-                                <Icon icon={faBars} className="text-primary" /> {researchField.label}
-                            </Badge>
-                        </Link>
-                    )}
-                    <AuthorsList authors={authors} />{' '}
-                </div>
-                {sections.map(section => {
-                    if (
-                        section.type.id === CLASSES.RESOURCE_SECTION ||
-                        section.type.id === CLASSES.PROPERTY_SECTION ||
-                        section.type.id === CLASSES.COMPARISON_SECTION
-                    ) {
-                        return (
-                            <React.Fragment key={section.id}>
-                                <h2 className="h4 border-bottom mt-5">{section.title.label}</h2>
-                                {section?.contentLink?.objectId && (
-                                    <>
-                                        {section.type.id !== CLASSES.COMPARISON_SECTION ? (
-                                            <>
-                                                <div className="mt-3 mb-2">
-                                                    <Link
-                                                        to={reverse(
-                                                            section.type.id === CLASSES.RESOURCE_SECTION ? ROUTES.RESOURCE : ROUTES.PREDICATE,
-                                                            {
-                                                                id: section.contentLink.objectId
-                                                            }
-                                                        )}
-                                                        target="_blank"
-                                                    >
-                                                        {section.contentLink.label}
-                                                    </Link>
-                                                </div>
-                                                {!isPublished ? (
-                                                    <StatementBrowser
-                                                        enableEdit={false}
-                                                        initialSubjectId={section.contentLink.objectId}
-                                                        initialSubjectLabel="Main"
-                                                        newStore={true}
-                                                        rootNodeType={section.type.id === CLASSES.RESOURCE_SECTION ? 'resource' : 'predicate'}
-                                                    />
-                                                ) : (
-                                                    <ViewArticleStatementBrowser id={section.contentLink.objectId} />
-                                                )}
-                                            </>
-                                        ) : (
-                                            <SectionComparison key={section.id} id={section.contentLink.objectId} />
-                                        )}
-                                    </>
-                                )}
-                            </React.Fragment>
-                        );
-                    } else {
-                        return (
-                            <React.Fragment key={section.id}>
-                                <h2 className="h4 border-bottom mt-4" style={{ whiteSpace: 'pre-line' }}>
-                                    {section.title.label}
-                                </h2>
-                                <MarkdownRenderer text={section.markdown.label} />
-                            </React.Fragment>
-                        );
-                    }
-                })}
-                <h2 className="h4 border-bottom mt-5">Acknowledgements</h2>
-                <Acknowledgements />
-            </SectionStyled>
-        </Container>
+        <>
+            <Container className="print-only p-0">
+                {!isPublished && (
+                    <Alert color="warning" fade={false} className="box">
+                        Warning: you are viewing an unpublished version of this article. The content can be changed by anyone.{' '}
+                        <Button color="link" className="p-0" onClick={toggleHistoryModal}>
+                            View publish history
+                        </Button>
+                    </Alert>
+                )}
+                {newVersionAvailable && (
+                    <Alert color="warning" fade={false} className="box">
+                        Warning: a newer version of this article is available.{' '}
+                        <Link to={reverse(ROUTES.SMART_ARTICLE, { id: latestVersionId })}>View latest version</Link>
+                    </Alert>
+                )}
+                <SectionStyled className="box rounded pr-4">
+                    <h1 className="mb-2 mt-4" style={{ whiteSpace: 'pre-line' }}>
+                        {paper.title}
+                    </h1>
+                    <div className="my-3">
+                        {researchField && (
+                            <Link to={reverse(ROUTES.RESEARCH_FIELD, { researchFieldId: researchField.id })} target="_blank">
+                                <Badge color="lightblue" className="mr-2 mb-2">
+                                    <Icon icon={faBars} className="text-primary" /> {researchField.label}
+                                </Badge>
+                            </Link>
+                        )}
+                        <AuthorsList authors={authors} />{' '}
+                    </div>
+                    {sections.map(section => {
+                        if (
+                            section.type.id === CLASSES.RESOURCE_SECTION ||
+                            section.type.id === CLASSES.PROPERTY_SECTION ||
+                            section.type.id === CLASSES.COMPARISON_SECTION
+                        ) {
+                            return (
+                                <React.Fragment key={section.id}>
+                                    <h2 className="h4 border-bottom mt-5">{section.title.label}</h2>
+                                    {section?.contentLink?.objectId && (
+                                        <>
+                                            {section.type.id !== CLASSES.COMPARISON_SECTION ? (
+                                                <>
+                                                    <div className="mt-3 mb-2">
+                                                        <Link
+                                                            to={reverse(
+                                                                section.type.id === CLASSES.RESOURCE_SECTION ? ROUTES.RESOURCE : ROUTES.PREDICATE,
+                                                                {
+                                                                    id: section.contentLink.objectId
+                                                                }
+                                                            )}
+                                                            target="_blank"
+                                                        >
+                                                            {section.contentLink.label}
+                                                        </Link>
+                                                    </div>
+                                                    {!isPublished ? (
+                                                        <StatementBrowser
+                                                            enableEdit={false}
+                                                            initialSubjectId={section.contentLink.objectId}
+                                                            initialSubjectLabel="Main"
+                                                            newStore={true}
+                                                            rootNodeType={section.type.id === CLASSES.RESOURCE_SECTION ? 'resource' : 'predicate'}
+                                                        />
+                                                    ) : (
+                                                        <ViewArticleStatementBrowser id={section.contentLink.objectId} />
+                                                    )}
+                                                </>
+                                            ) : (
+                                                <SectionComparison key={section.id} id={section.contentLink.objectId} />
+                                            )}
+                                        </>
+                                    )}
+                                </React.Fragment>
+                            );
+                        } else {
+                            return (
+                                <React.Fragment key={section.id}>
+                                    <h2 className="h4 border-bottom mt-4" style={{ whiteSpace: 'pre-line' }}>
+                                        {section.title.label}
+                                    </h2>
+                                    <MarkdownRenderer text={section.markdown.label} />
+                                </React.Fragment>
+                            );
+                        }
+                    })}
+                    <h2 className="h4 border-bottom mt-5">Acknowledgements</h2>
+                    <Acknowledgements />
+                </SectionStyled>
+            </Container>
+        </>
     );
 };
 

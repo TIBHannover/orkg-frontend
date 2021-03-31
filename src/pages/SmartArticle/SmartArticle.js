@@ -2,6 +2,7 @@ import { faCheckCircle, faDownload, faEllipsisV, faHistory, faPen, faSpinner, fa
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import { toggleHistoryModal as toggleHistoryModalAction } from 'actions/smartArticle';
+import Breadcrumbs from 'components/Breadcrumbs/Breadcrumbs';
 import { SubtitleSeparator } from 'components/Comparison/styled';
 import AcknowledgementsSection from 'components/SmartArticle/AcknowledgementsSection';
 import AddSection from 'components/SmartArticle/AddSection';
@@ -58,6 +59,7 @@ const SmartArticle = props => {
     const isPublished = useSelector(state => state.smartArticle.isPublished);
     const paper = useSelector(state => state.smartArticle.paper);
     const isOpenHistoryModal = useSelector(state => state.smartArticle.isOpenHistoryModal);
+    const researchField = useSelector(state => state.smartArticle.researchField);
     const dispatch = useDispatch();
     const history = useHistory();
 
@@ -97,6 +99,7 @@ const SmartArticle = props => {
 
     return (
         <div>
+            {researchField && <Breadcrumbs researchFieldId={researchField.id} />}
             <GlobalStyle />
             <Container>
                 <div className="d-flex ">
@@ -207,7 +210,7 @@ const SmartArticle = props => {
             )}
             {!isLoading && !isEditing && <ViewArticle />}
             {isLoading && (
-                <Container>
+                <Container className="p-0">
                     <div className="box rounded p-5">
                         <ContentLoader height="500" width="100%" speed={2} foregroundColor="#f3f3f3" backgroundColor="#ccc" viewBox="0 0 100 50">
                             {/* title */}

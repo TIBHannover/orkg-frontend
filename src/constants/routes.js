@@ -49,6 +49,7 @@ const routes = {
     PDF_ANNOTATION: '/pdf-annotation',
     CSV_IMPORT: '/csv-import',
     SMART_ARTICLE: '/smart-article/:id',
+    SMART_ARTICLES: '/smart-articles',
     SMART_ARTICLE_NEW: '/smart-article/new',
     SMART_ARTICLE_DIFF: '/smart-article/diff/:oldId-:newId',
     TOOLS: '/tools',

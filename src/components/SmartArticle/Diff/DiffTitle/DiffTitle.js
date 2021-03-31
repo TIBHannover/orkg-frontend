@@ -20,14 +20,16 @@ const DiffTitle = ({ id, versions }) => {
 
     return (
         <div className="d-flex justify-content-between align-items-center">
-            <Tippy content={`Update message: ${version.description}`}>
-                <span className="d-flex align-items-center">
-                    Version {versionNumber} - {publicationDate}
-                    <span className="ml-2">
-                        <UserAvatar userId={version.creator} />
+            <span className="d-flex align-items-center">
+                <Tippy content={`Update message: ${version.description}`}>
+                    <span>
+                        Version {versionNumber} - {publicationDate}
                     </span>
+                </Tippy>
+                <span className="ml-2">
+                    <UserAvatar userId={version.creator} />
                 </span>
-            </Tippy>{' '}
+            </span>{' '}
             <Button color="light" size="sm" tag={Link} to={reverse(ROUTES.SMART_ARTICLE, { id })}>
                 View article
             </Button>
