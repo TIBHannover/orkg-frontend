@@ -3,6 +3,8 @@ import FeaturedComparisons from './FeaturedComparisons';
 import FeaturedPapers from './FeaturedPapers';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import styled from 'styled-components';
+import Tippy from '@tippyjs/react';
+import PropTypes from 'prop-types';
 
 const AnimationContainer = styled(CSSTransition)`
     &.fadeIn-enter {
@@ -36,27 +38,28 @@ const FeaturedTabs = styled.div`
 
 const SidebarStyledBox = styled.div`
     flex-grow: 1;
-    overflow: hidden;
     @media (max-width: 768px) {
         margin-top: 20px;
     }
 `;
 
-export default function FeaturedItemsBox() {
+const FeaturedItemsBox = ({ researchFieldId }) => {
     const [activeTab, setActiveState] = useState(2);
 
     return (
         <SidebarStyledBox className="box rounded-lg mt-3">
             <FeaturedTabs className="clearfix d-flex">
-                <div
-                    role="button"
-                    tabIndex="0"
-                    onKeyDown={e => e.keyCode === 13 && setActiveState(2)}
-                    className={`h6 col-md-6 text-center tab ${activeTab === 2 ? 'active' : ''}`}
-                    onClick={() => setActiveState(2)}
-                >
-                    Comparisons
-                </div>
+                <Tippy content="Comparisons in ORKG provide an overview of state-of-the-art literature for a particular topic.">
+                    <div
+                        role="button"
+                        tabIndex="0"
+                        onKeyDown={e => e.keyCode === 13 && setActiveState(2)}
+                        className={`h6 col-md-6 text-center tab ${activeTab === 2 ? 'active' : ''}`}
+                        onClick={() => setActiveState(2)}
+                    >
+                        Comparisons
+                    </div>
+                </Tippy>
                 <div
                     role="button"
                     tabIndex="0"
@@ -70,14 +73,20 @@ export default function FeaturedItemsBox() {
             <TransitionGroup exit={false}>
                 {activeTab === 1 ? (
                     <AnimationContainer key={1} classNames="fadeIn" timeout={{ enter: 700, exit: 0 }}>
-                        <FeaturedPapers />
+                        <FeaturedPapers researchFieldId={researchFieldId} />
                     </AnimationContainer>
                 ) : (
                     <AnimationContainer key={2} classNames="fadeIn" timeout={{ enter: 700, exit: 0 }}>
-                        <FeaturedComparisons />
+                        <FeaturedComparisons researchFieldId={researchFieldId} />
                     </AnimationContainer>
                 )}
             </TransitionGroup>
         </SidebarStyledBox>
     );
-}
+};
+
+FeaturedItemsBox.propTypes = {
+    researchFieldId: PropTypes.string.isRequired
+};
+
+export default FeaturedItemsBox;

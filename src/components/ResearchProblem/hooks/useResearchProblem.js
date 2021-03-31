@@ -1,16 +1,14 @@
 import { useState, useEffect, useCallback } from 'react';
-import { getStatementsBySubject, getStatementsByObjectAndPredicate, getParentResearchProblems } from 'services/backend/statements';
+import { getStatementsBySubject, getStatementsByObjectAndPredicate } from 'services/backend/statements';
 import { getResource } from 'services/backend/resources';
-import { useParams } from 'react-router-dom';
 import { filterObjectOfStatementsByPredicate } from 'utils';
 import { PREDICATES } from 'constants/graphSettings';
 
-function useResearchProblem(initialVal = {}) {
-    const [data, setData] = useState({ initialVal });
-    const { researchProblemId } = useParams();
+function useResearchProblem({ id }) {
+    const [data, setData] = useState({});
+    const [superProblems, setSuperProblems] = useState([]);
     const [isLoadingData, setIsLoadingData] = useState(true);
     const [isFailedLoadingData, setIsFailedLoadingData] = useState(true);
-    const [parentResearchProblems, setParentResearchProblems] = useState([]);
 
     const loadResearchProblemData = useCallback(rpId => {
         if (rpId) {
@@ -18,7 +16,7 @@ function useResearchProblem(initialVal = {}) {
             // Get the research problem
             getResource(rpId)
                 .then(result => {
-                    setData({ id: rpId, label: result.label, superProblems: [], subProblems: [] });
+                    setData({ ...result, superProblems: [], subProblems: [] });
                     setIsLoadingData(false);
                     setIsFailedLoadingData(false);
                     document.title = `${result.label} - ORKG`;
@@ -33,7 +31,7 @@ function useResearchProblem(initialVal = {}) {
                 const description = filterObjectOfStatementsByPredicate(statements, PREDICATES.DESCRIPTION, true);
                 const sameAs = filterObjectOfStatementsByPredicate(statements, PREDICATES.SAME_AS, true);
                 const subProblems = filterObjectOfStatementsByPredicate(statements, PREDICATES.SUB_PROBLEM, false);
-                setData(data => ({ ...data, description: description?.label, sameAs: sameAs, subProblems: subProblems ?? [] }));
+                setData(prevData => ({ ...prevData, description: description?.label, sameAs: sameAs, subProblems: subProblems ?? [] }));
             });
 
             // Get super research problems
@@ -41,21 +39,16 @@ function useResearchProblem(initialVal = {}) {
                 objectId: rpId,
                 predicateId: PREDICATES.SUB_PROBLEM
             }).then(superProblems => {
-                setData(data => ({ ...data, superProblems: superProblems.map(s => s.subject) }));
-            });
-
-            // Get parent research problems for the breadcrumbs
-            getParentResearchProblems(rpId).then(result => {
-                setParentResearchProblems(result.reverse());
+                setSuperProblems(superProblems.map(s => s.subject));
             });
         }
     }, []);
 
     useEffect(() => {
-        if (researchProblemId !== undefined) {
-            loadResearchProblemData(researchProblemId);
+        if (id !== undefined) {
+            loadResearchProblemData(id);
         }
-    }, [researchProblemId, loadResearchProblemData]);
-    return [data, parentResearchProblems, isLoadingData, isFailedLoadingData, loadResearchProblemData];
+    }, [id, loadResearchProblemData]);
+    return { researchProblemData: data, superProblems, isLoading: isLoadingData, isFailedLoading: isFailedLoadingData, loadResearchProblemData };
 }
 export default useResearchProblem;

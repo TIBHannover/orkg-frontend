@@ -20,7 +20,7 @@ function useResearchField(initialVal = {}) {
             // Get the research field
             getResource(rfId)
                 .then(result => {
-                    setData({ id: rfId, label: result.label });
+                    setData({ ...result });
                     setIsLoadingData(false);
                     setIsFailedLoadingData(false);
                     document.title = `${result.label} - ORKG`;

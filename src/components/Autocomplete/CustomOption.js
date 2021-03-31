@@ -85,10 +85,13 @@ export default function CustomOption(props) {
                                             ))}
                                         {props.data.statements &&
                                             props.data.statements
-                                                .filter(statement => statement.predicate.id === PREDICATES.URL)
+                                                .filter(
+                                                    statement =>
+                                                        statement.predicate.id === PREDICATES.URL || statement.predicate.id === PREDICATES.SAME_AS
+                                                )
                                                 .map((statement, index) => (
                                                     <div key={`s${index}`}>
-                                                        <b>URL : </b>{' '}
+                                                        <b>{statement.predicate?.label ?? 'URL'} : </b>{' '}
                                                         <a target="_blank" rel="noopener noreferrer" href={statement.value.label}>
                                                             {statement.value.label}
                                                         </a>

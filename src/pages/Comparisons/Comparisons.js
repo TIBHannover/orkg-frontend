@@ -40,11 +40,7 @@ const Comparisons = () => {
                 getStatementsBySubjects({ ids: result.content.map(p => p.id) })
                     .then(comparisonsStatements => {
                         const comparisonsData = comparisonsStatements.map(comparisonStatements => {
-                            return getComparisonData(
-                                comparisonStatements.id,
-                                find(result.content, { id: comparisonStatements.id }).label,
-                                comparisonStatements.statements
-                            );
+                            return getComparisonData(find(result.content, { id: comparisonStatements.id }), comparisonStatements.statements);
                         });
                         setComparisons(prevComparisons => [...prevComparisons, ...comparisonsData]);
                         setIsNextPageLoading(false);

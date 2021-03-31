@@ -11,7 +11,7 @@ import { CLASSES, PREDICATES } from 'constants/graphSettings';
 import HeaderSearchButton from 'components/HeaderSearchButton/HeaderSearchButton';
 
 const Visualizations = () => {
-    const pageSize = 1;
+    const pageSize = 10;
     const [visualizations, setVisualizations] = useState([]);
     const [isNextPageLoading, setIsNextPageLoading] = useState(false);
     const [hasNextPage, setHasNextPage] = useState(false);

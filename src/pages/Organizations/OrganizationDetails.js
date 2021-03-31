@@ -1,19 +1,20 @@
-import { Component } from 'react';
-import { Container, Row, Col, NavLink, Button, Card, CardTitle } from 'reactstrap';
-import { getUsersByOrganizationId, getAllObservatoriesByOrganizationId, getOrganization } from 'services/backend/organizations';
+import { useState, useEffect } from 'react';
+import { Container, Row, Col, Button, Card, CardBody } from 'reactstrap';
+import { ButtonGroup } from 'reactstrap';
+import { getOrganization } from 'services/backend/organizations';
 import InternalServerError from 'pages/InternalServerError';
-import ContributorCard from 'components/ContributorCard/ContributorCard';
+import Members from 'components/Organization/Members';
+import Observatories from 'components/Organization/Observatories';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
-import { Link } from 'react-router-dom';
+import { faExternalLinkAlt, faGlobe } from '@fortawesome/free-solid-svg-icons';
+import { useParams, Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import NotFound from 'pages/NotFound';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import Dotdotdot from 'react-dotdotdot';
 import ROUTES from 'constants/routes';
-import { faPen } from '@fortawesome/free-solid-svg-icons';
+import { faPen, faPlus } from '@fortawesome/free-solid-svg-icons';
 import EditOrganization from 'components/Organization/EditOrganization';
+import { SubTitle, SubtitleSeparator } from 'components/styled';
 import { reverse } from 'named-urls';
 
 const StyledOrganizationHeader = styled.div`
@@ -43,258 +44,109 @@ const StyledOrganizationHeader = styled.div`
     }
 `;
 
-class OrganizationDetails extends Component {
-    constructor(props) {
-        super(props);
+const OrganizationDetails = () => {
+    const [error, setError] = useState(null);
+    const [label, setLabel] = useState(null);
+    const [url, setURL] = useState(null);
+    const [isLoading, setIsLoading] = useState(null);
+    const [logo, setLogo] = useState(null);
+    const [createdBy, setCreatedBy] = useState(null);
+    const [showEditDialog, setShowEditDialog] = useState(null);
+    const { id } = useParams();
+    const user = useSelector(state => state.auth.user);
 
-        this.state = {
-            error: null,
-            label: '',
-            url: '',
-            isLoading: false,
-            isLoadingObservatories: false,
-            logo: '',
-            contributors: [],
-            observatories: [],
-            isLoadingContributors: false,
-            createdBy: '',
-            showEditDialog: false
+    useEffect(() => {
+        const findOrg = () => {
+            setIsLoading(true);
+            getOrganization(id)
+                .then(responseJson => {
+                    document.title = `${responseJson.name} - Organization - ORKG`;
+                    setLabel(responseJson.name);
+                    setURL(responseJson.homepage);
+                    setLogo(responseJson.logo);
+                    setIsLoading(false);
+                    setCreatedBy(responseJson.created_by);
+                })
+                .catch(error => {
+                    setIsLoading(false);
+                    setError(error);
+                });
         };
-    }
+        findOrg();
+    }, [id]);
 
-    componentDidMount() {
-        this.findOrg();
-        this.loadObservatories();
-        this.loadContributors();
-    }
-
-    componentDidUpdate = prevProps => {
-        if (this.props.match.params.id !== prevProps.match.params.id) {
-            this.findOrg();
-            this.loadObservatories();
-            this.loadContributors();
-        }
+    const updateOrganizationMetadata = (label, url, logo) => {
+        setLabel(label);
+        setURL(url);
+        setLogo(logo);
     };
 
-    findOrg = () => {
-        this.setState({ isLoading: true });
-        getOrganization(this.props.match.params.id)
-            .then(responseJson => {
-                document.title = `${responseJson.name} - Organization - ORKG`;
-                this.setState({
-                    label: responseJson.name,
-                    url: responseJson.homepage,
-                    logo: responseJson.logo,
-                    isLoading: false,
-                    createdBy: responseJson.created_by
-                });
-            })
-            .catch(error => {
-                this.setState({ error: error, isLoading: false });
-            });
-    };
-
-    loadContributors = () => {
-        this.setState({ isLoadingContributors: true });
-        getUsersByOrganizationId(this.props.match.params.id)
-            .then(contributors => {
-                this.setState({
-                    contributors: contributors,
-                    isLoadingContributors: false
-                });
-            })
-            .catch(error => {
-                this.setState({ error: error, isLoadingContributors: false });
-            });
-    };
-
-    loadObservatories = () => {
-        this.setState({ isLoadingObservatories: true });
-        getAllObservatoriesByOrganizationId(this.props.match.params.id)
-            .then(observatories => {
-                if (observatories.length > 0) {
-                    this.setState({
-                        observatories: observatories,
-                        isLoadingObservatories: false
-                    });
-                } else {
-                    this.setState({
-                        isLoadingObservatories: false
-                    });
-                }
-            })
-            .catch(error => {
-                this.setState({
-                    isLoadingObservatories: false
-                });
-            });
-    };
-
-    updateOrganizationMetadata = (label, url, logo) => {
-        this.setState({ label: label, url: url, logo: logo });
-    };
-
-    toggle = type => {
-        this.setState(prevState => ({
-            [type]: !prevState[type]
-        }));
-    };
-
-    render() {
-        return (
-            <>
-                {this.state.isLoading && <Container className="box rounded pt-4 pb-4 pl-5 pr-5 mt-5 clearfix">Loading ...</Container>}
-                {!this.state.isLoading && this.state.error && <>{this.state.error.statusCode === 404 ? <NotFound /> : <InternalServerError />}</>}
-                {!this.state.isLoading && !this.state.error && this.state.label && (
-                    <>
-                        <Container className="d-flex align-items-center">
-                            <h3 className="h4 my-4 flex-grow-1">Organization</h3>
-                        </Container>
-                        <Container className="box rounded clearfix py-4 px-5">
-                            <StyledOrganizationHeader className="mb-2">
+    return (
+        <>
+            {isLoading && <Container className="box rounded pt-4 pb-4 pl-5 pr-5 mt-5 clearfix">Loading ...</Container>}
+            {!isLoading && error && <>{error.statusCode === 404 ? <NotFound /> : <InternalServerError />}</>}
+            {!isLoading && !error && label && (
+                <>
+                    <Container className="d-flex align-items-center mt-4 mb-4">
+                        <h1 className="h5 flex-shrink-0 mb-0">Organization</h1>
+                        <>
+                            <SubtitleSeparator />
+                            <SubTitle className="h5 mb-0"> {label}</SubTitle>
+                        </>
+                        {!!user && (user.id === createdBy || user.isCurationAllowed) && (
+                            <ButtonGroup className="flex-shrink-0" style={{ marginLeft: 'auto' }}>
+                                <Button size="sm" color="darkblue" tag={Link} to={reverse(ROUTES.ADD_OBSERVATORY, { id: id })}>
+                                    <Icon icon={faPlus} /> Create new observatory
+                                </Button>
+                                <Button color="darkblue" size="sm" onClick={() => setShowEditDialog(v => !v)}>
+                                    <Icon icon={faPen} /> Edit
+                                </Button>
+                            </ButtonGroup>
+                        )}
+                    </Container>
+                    <Container className="p-0">
+                        <Card>
+                            <StyledOrganizationHeader className="mb-2  py-4 px-3">
                                 <Row>
                                     <Col md={{ size: 8, order: 1 }} sm={{ size: 12, order: 2 }} xs={{ size: 12, order: 2 }}>
-                                        <NavLink className="p-0" href={this.state.url} target="_blank" rel="noopener noreferrer">
-                                            <h4>
-                                                {this.state.label} {this.state.url && <Icon size="sm" icon={faExternalLinkAlt} />}
-                                            </h4>
-                                        </NavLink>
-                                        {!!this.props.user && (this.props.user.id === this.state.createdBy || this.props.user.isCurationAllowed) && (
-                                            <div>
-                                                <Button
-                                                    outline
-                                                    size="sm"
-                                                    color="primary"
-                                                    className="mt-4"
-                                                    tag={Link}
-                                                    to={reverse(ROUTES.ADD_OBSERVATORY, { id: this.props.match.params.id })}
-                                                >
-                                                    Create new observatory
-                                                </Button>
-
-                                                <Button
-                                                    color="darkblue"
-                                                    size="sm"
-                                                    className="mt-4 ml-4"
-                                                    onClick={() => this.toggle('showEditDialog')}
-                                                >
-                                                    <Icon icon={faPen} /> Edit
-                                                </Button>
-                                            </div>
-                                        )}
+                                        {label}
+                                        <div className="mt-2">
+                                            <a className="p-0 mt-2" href={url} target="_blank" rel="noopener noreferrer">
+                                                <Icon size="sm" icon={faGlobe} /> website {url && <Icon size="sm" icon={faExternalLinkAlt} />}
+                                            </a>
+                                        </div>
                                     </Col>
-                                    {this.state.logo && (
+                                    {logo && (
                                         <Col md={{ size: 4, order: 2 }} sm={{ size: 12, order: 1 }} xs={{ size: 12, order: 1 }}>
-                                            <NavLink className="p-0" href={this.state.url} target="_blank" rel="noopener noreferrer">
+                                            <a className="p-0" href={url} target="_blank" rel="noopener noreferrer">
                                                 <div className="logoContainer">
-                                                    <img className="mx-auto" src={this.state.logo} alt={`${this.state.label} logo`} />
+                                                    <img className="mx-auto" src={logo} alt={`${label} logo`} />
                                                 </div>
-                                            </NavLink>
+                                            </a>
                                         </Col>
                                     )}
                                 </Row>
                             </StyledOrganizationHeader>
-                        </Container>
-                        <Container>
-                            <Row className="mt-4">
-                                <Col md={6} sm={12} style={{ minHeight: '500px' }} className="d-flex px-0 pr-4">
-                                    <div className="p-4 box rounded-lg flex-grow-1">
-                                        <h2 className="h5">Observatories</h2>
-                                        {!this.state.isLoadingObservatories ? (
-                                            <div className="mb-4 mt-4">
-                                                {this.state.observatories.length > 0 ? (
-                                                    <div>
-                                                        {this.state.observatories.map((observatory, index) => {
-                                                            return (
-                                                                <Card body key={`c${index}`} className="mt-1 border-0 p-0">
-                                                                    <CardTitle>
-                                                                        <Link to={reverse(ROUTES.OBSERVATORY, { id: observatory.id })}>
-                                                                            {observatory.name}
-                                                                        </Link>
-                                                                    </CardTitle>
-                                                                    <Dotdotdot clamp={3}>
-                                                                        <small className="text-muted">{observatory.description}</small>
-                                                                    </Dotdotdot>
-                                                                    <hr style={{ width: '90%', margin: '10px auto' }} />
-                                                                </Card>
-                                                            );
-                                                        })}
-                                                    </div>
-                                                ) : (
-                                                    <div className="mt-4">
-                                                        <h5>No Observatories</h5>
-                                                    </div>
-                                                )}
-                                            </div>
-                                        ) : (
-                                            <div className="mt-4">
-                                                <h5>Loading observatories ...</h5>
-                                            </div>
-                                        )}
-                                    </div>
-                                </Col>
-                                <Col md={6} sm={12} className="d-flex px-0">
-                                    <div className="box rounded-lg p-4 flex-grow-1">
-                                        <h2 className="h5">Contributors</h2>
-                                        {!this.state.isLoadingContributors ? (
-                                            <div className="mb-4 mt-4">
-                                                {this.state.contributors.length > 0 ? (
-                                                    <div>
-                                                        {this.state.contributors.map((user, index) => {
-                                                            return (
-                                                                <div>
-                                                                    <ContributorCard contributor={user} />
-
-                                                                    <hr style={{ width: '90%', margin: '10px auto' }} />
-                                                                </div>
-                                                            );
-                                                        })}
-                                                    </div>
-                                                ) : (
-                                                    <div className="mt-4">
-                                                        <h5>No Contributors</h5>
-                                                    </div>
-                                                )}
-                                            </div>
-                                        ) : (
-                                            <div className="mt-4">
-                                                <h5>Loading Contributors ...</h5>
-                                            </div>
-                                        )}
-                                    </div>
-                                </Col>
-                            </Row>
-                        </Container>
-                    </>
-                )}
-                <EditOrganization
-                    showDialog={this.state.showEditDialog}
-                    toggle={() => this.toggle('showEditDialog')}
-                    label={this.state.label}
-                    id={this.props.match.params.id}
-                    url={this.state.url}
-                    previewSrc={this.state.logo}
-                    updateOrganizationMetadata={this.updateOrganizationMetadata}
-                />
-            </>
-        );
-    }
-}
-
-OrganizationDetails.propTypes = {
-    match: PropTypes.shape({
-        params: PropTypes.shape({
-            id: PropTypes.string.isRequired
-        }).isRequired
-    }).isRequired,
-    user: PropTypes.oneOfType([PropTypes.object, PropTypes.number])
+                            <hr className="m-0" />
+                            <CardBody>
+                                <Members organizationsId={id} />
+                            </CardBody>
+                        </Card>
+                    </Container>
+                    <Observatories organizationsId={id} />
+                </>
+            )}
+            <EditOrganization
+                showDialog={showEditDialog}
+                toggle={() => setShowEditDialog(v => !v)}
+                label={label}
+                id={id}
+                url={url}
+                previewSrc={logo}
+                updateOrganizationMetadata={updateOrganizationMetadata}
+            />
+        </>
+    );
 };
 
-const mapStateToProps = state => ({
-    user: state.auth.user
-});
-
-export default connect(
-    mapStateToProps,
-    null
-)(OrganizationDetails);
+export default OrganizationDetails;

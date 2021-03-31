@@ -701,6 +701,7 @@ function Autocomplete(props) {
                     onBlur={props.onBlur}
                     onKeyDown={props.onKeyDown}
                     selectRef={props.innerRef}
+                    createOptionPosition="first"
                     menuPortalTarget={props.menuPortalTarget}
                     components={{
                         Option: Option,
