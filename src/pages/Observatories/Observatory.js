@@ -88,15 +88,15 @@ const Observatory = () => {
                             </ButtonGroup>
                         )}
                     </Container>
-                    <Container className="p-0">
-                        <Card>
-                            <CardBody>
-                                <CardTitle tag="h5">Description</CardTitle>
-                                {description && <div className="mb-4">{description}</div>}
-                                {!description && <div className="mb-4">No description for this observatory yet!</div>}
-                            </CardBody>
-                        </Card>
-                    </Container>
+                    {description && (
+                        <Container className="p-0">
+                            <Card>
+                                <CardBody>
+                                    <div className="mb-4">{description}</div>
+                                </CardBody>
+                            </Card>
+                        </Container>
+                    )}
                 </>
             )}
 
