@@ -3,7 +3,7 @@ import { Row, Col } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import styled from 'styled-components';
-import ROUTES from '../../constants/routes.js';
+import ROUTES from 'constants/routes.js';
 import PropTypes from 'prop-types';
 
 const TemplateCardStyled = styled.div`
