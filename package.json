@@ -50,7 +50,7 @@
         "react-app-polyfill": "^2.0.0",
         "react-bootstrap-table-next": "^4.0.3",
         "react-bootstrap-table2-editor": "^1.4.0",
-        "react-content-loader": "^5.1.4",
+        "react-content-loader": "^6.0.2",
         "react-cookie": "^4.0.3",
         "react-copy-to-clipboard": "^5.0.3",
         "react-csv": "^2.0.3",
