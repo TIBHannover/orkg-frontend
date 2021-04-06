@@ -47,7 +47,7 @@ const SmartArticleNew = () => {
                         To make sure you work is not removed permanently by someone else, <strong>publish the article regularly</strong>{' '}
                     </li>
                     <li>
-                        Everything you write is write is <strong>immediately visible for everyone</strong>{' '}
+                        Everything you write is <strong>immediately visible for everyone</strong>{' '}
                     </li>
                 </ul>
                 <hr className="mt-5 mb-4" />
