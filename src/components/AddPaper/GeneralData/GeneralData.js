@@ -23,7 +23,7 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { range } from 'utils';
 import Tooltip from 'components/Utils/Tooltip';
 import AuthorsInput from 'components/Utils/AuthorsInput';
-import Joi from '@hapi/joi';
+import Joi from 'joi';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateGeneralData, nextStep, openTour, closeTour } from 'actions/addPaper';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
