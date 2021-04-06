@@ -78,7 +78,7 @@ const TableCellValue = ({ value, index, setDisableCreate, propertyId }) => {
                 <ValuePlugins type={value._class} options={{ inModal: true }}>
                     {value._class === 'resource' && <TableCellValueResource value={value} />}
                     {value._class === 'literal' && (
-                        <div role="button" tabIndex="0" onDoubleClick={handleStartEdit}>
+                        <div role="textbox" tabIndex="0" onDoubleClick={handleStartEdit}>
                             {value.label}
                         </div>
                     )}
