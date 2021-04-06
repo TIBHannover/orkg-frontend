@@ -18,6 +18,7 @@ import { openAuthDialog } from 'actions/auth';
 import { connect } from 'react-redux';
 import slugify from 'slugify';
 import Tooltip from 'components/Utils/Tooltip';
+import REGEX from 'constants/regex';
 
 const publicObservatoryRoute = `${window.location.protocol}//${window.location.host}${window.location.pathname
     .replace(reverse(ROUTES.ADD_OBSERVATORY), reverse(ROUTES.OBSERVATORY, { id: ' ' }))
@@ -29,7 +30,7 @@ class AddObservatory extends Component {
 
         this.state = {
             redirect: false,
-            value: '',
+            name: '',
             description: '',
             display_id: '',
             researchField: '',
@@ -59,32 +60,47 @@ class AddObservatory extends Component {
 
     createNewObservatory = async () => {
         this.setState({ editorState: 'loading' });
-        const value = this.state.value;
-        const description = this.state.description;
-        const researchField = this.state.researchField.id;
-        const uriName = this.state.url;
-        const regex = /^[a-z0-9-]+$/;
+        const { name, description, researchField, permalink } = this.state;
 
-        if (value && value.length !== 0 && description && description.length !== 0 && researchField && uriName.length !== 0 && regex.test(uriName)) {
-            try {
-                const observatory = await createObservatory(value, this.props.match.params.id, description, researchField, uriName);
-                this.navigateToObservatory(observatory.display_id);
-            } catch (error) {
-                this.setState({ editorState: 'edit' });
-                console.error(error);
-                toast.error(`Error creating observatory ${error.message}`);
-            }
-        } else {
-            toast.error(`Please enter an observatory name, description, research field and valid URL`);
+        if (!name && name.length === 0) {
+            toast.error(`Please enter an observatory name`);
             this.setState({ editorState: 'edit' });
+            return;
+        }
+
+        if (!new RegExp(REGEX.PERMALINK).test(permalink)) {
+            toast.error(`Only dashes (-), numbers, and letters are allowed in the permalink field`);
+            this.setState({ editorState: 'edit' });
+            return;
+        }
+
+        if (!description && description.length === 0) {
+            toast.error(`Please enter an observatory description`);
+            this.setState({ editorState: 'edit' });
+            return;
+        }
+
+        if (!researchField && researchField.length === 0) {
+            toast.error(`Please enter an observatory research field`);
+            this.setState({ editorState: 'edit' });
+            return;
+        }
+
+        try {
+            const observatory = await createObservatory(name, this.props.match.params.id, description, researchField, permalink);
+            this.navigateToObservatory(observatory.display_id);
+        } catch (error) {
+            this.setState({ editorState: 'edit' });
+            console.error(error);
+            toast.error(`Error creating an observatory ${error.message}`);
         }
     };
 
     handleChange = event => {
-        this.setState({ [event.target.name]: event.target.value.trim() });
-        if (event.target.name === 'value') {
+        this.setState({ [event.target.name]: event.target.name.trim() });
+        if (event.target.name === 'name') {
             this.setState({
-                permalink: slugify(event.target.value.trim(), { replacement: '-', remove: /[*+~%\<>/;.(){}?,'"!:@#_^|]/g, lower: false })
+                permalink: slugify(event.target.name.trim(), { replacement: '-', remove: /[*+~%\<>/;.(){}?,'"!:@#_^|]/g, lower: false })
             });
         }
     };
@@ -100,8 +116,11 @@ class AddObservatory extends Component {
         if (this.state.redirect) {
             this.setState({
                 redirect: false,
-                value: '',
-                display_id: ''
+                name: '',
+                display_id: '',
+                description: '',
+                researchField: '',
+                permalink: ''
             });
 
             return <Redirect to={reverse(ROUTES.OBSERVATORY, { id: this.state.display_id })} />;
@@ -120,15 +139,15 @@ class AddObservatory extends Component {
                         </Container>
 
                         <Container className="box rounded pt-4 pb-4 pl-5 pr-5">
-                            {this.props.user ? (
+                            {this.props.user && this.props.user.isCurationAllowed && (
                                 <div className="pl-3 pr-3 pt-2">
                                     <FormGroup>
-                                        <Label for="ObservatoryLabel">Observatory name</Label>
+                                        <Label for="ObservatoryName">Name</Label>
                                         <Input
                                             onChange={this.handleChange}
                                             type="text"
-                                            name="value"
-                                            id="ObservatoryLabel"
+                                            name="name"
+                                            id="ObservatoryName"
                                             disabled={loading}
                                             placeholder="Observatory name"
                                         />
@@ -191,7 +210,8 @@ class AddObservatory extends Component {
                                         {!loading ? 'Create Observatory' : <span>Loading</span>}
                                     </Button>
                                 </div>
-                            ) : (
+                            )}
+                            {(!!!this.props.user || !this.props.user.isCurationAllowed) && (
                                 <>
                                     <Button
                                         color="link"
