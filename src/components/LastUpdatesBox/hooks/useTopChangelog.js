@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
 import { getChangelogs } from 'services/backend/stats';
+import { MISC } from 'constants/graphSettings';
 
-function useTopChangelog({ researchFieldId, pageSize = 30, sortBy = 'id', desc = true }) {
+function useTopChangelog({ researchFieldId, pageSize = 30, sortBy = 'created_at', desc = true }) {
     const [isLoading, setIsLoading] = useState(false);
     const [hasNextPage, setHasNextPage] = useState(false);
     const [isLastPageReached, setIsLastPageReached] = useState(false);
@@ -13,7 +14,7 @@ function useTopChangelog({ researchFieldId, pageSize = 30, sortBy = 'id', desc =
         page => {
             setIsLoading(true);
             getChangelogs({
-                researchFieldId: researchFieldId,
+                researchFieldId: researchFieldId === MISC.RESEARCH_FIELD_MAIN ? null : researchFieldId,
                 page: page,
                 items: pageSize,
                 sortBy,
