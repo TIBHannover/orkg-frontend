@@ -77,7 +77,11 @@ const TableCellValue = ({ value, index, setDisableCreate, propertyId }) => {
             <Value className="position-relative">
                 <ValuePlugins type={value._class} options={{ inModal: true }}>
                     {value._class === 'resource' && <TableCellValueResource value={value} />}
-                    {value._class === 'literal' && <div onDoubleClick={handleStartEdit}>{value.label}</div>}
+                    {value._class === 'literal' && (
+                        <div role="button" tabIndex="0" onDoubleClick={handleStartEdit}>
+                            {value.label}
+                        </div>
+                    )}
                 </ValuePlugins>
                 <TableCellButtons onEdit={handleStartEdit} onDelete={handleDelete} backgroundColor="rgba(240, 242, 247, 0.8)" />
             </Value>
