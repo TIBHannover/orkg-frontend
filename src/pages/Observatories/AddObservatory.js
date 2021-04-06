@@ -1,6 +1,5 @@
 import { Component } from 'react';
 import { Container, Button, FormGroup, Input, Label, InputGroup, InputGroupAddon } from 'reactstrap';
-import { resourcesUrl } from 'services/backend/resources';
 import { getOrganization } from 'services/backend/organizations';
 import { createObservatory } from 'services/backend/observatories';
 import NotFound from 'pages/NotFound';
@@ -20,10 +19,6 @@ import slugify from 'slugify';
 import Tooltip from 'components/Utils/Tooltip';
 import REGEX from 'constants/regex';
 
-const publicObservatoryRoute = `${window.location.protocol}//${window.location.host}${window.location.pathname
-    .replace(reverse(ROUTES.ADD_OBSERVATORY), reverse(ROUTES.OBSERVATORY, { id: ' ' }))
-    .replace(/\/$/, '')}`;
-
 class AddObservatory extends Component {
     constructor(props) {
         super(props);
@@ -36,6 +31,9 @@ class AddObservatory extends Component {
             researchField: '',
             organizationName: '',
             permalink: '',
+            publicObservatoryRoute: `${window.location.protocol}//${window.location.host}${window.location.pathname
+                .replace(reverse(ROUTES.ADD_OBSERVATORY, { id: this.props.match.params.id }), reverse(ROUTES.OBSERVATORY, { id: ' ' }))
+                .replace(/\/$/, '')}`,
             isLoadingOrganization: true,
             errorLoadingOrganization: null
         };
@@ -61,6 +59,7 @@ class AddObservatory extends Component {
     createNewObservatory = async () => {
         this.setState({ editorState: 'loading' });
         const { name, description, researchField, permalink } = this.state;
+        console.log(researchField);
 
         if (!name && name.length === 0) {
             toast.error(`Please enter an observatory name`);
@@ -69,7 +68,7 @@ class AddObservatory extends Component {
         }
 
         if (!new RegExp(REGEX.PERMALINK).test(permalink)) {
-            toast.error(`Only dashes (-), numbers, and letters are allowed in the permalink field`);
+            toast.error(`Only underscores ( _ ), numbers, and letters are allowed in the permalink field`);
             this.setState({ editorState: 'edit' });
             return;
         }
@@ -87,7 +86,7 @@ class AddObservatory extends Component {
         }
 
         try {
-            const observatory = await createObservatory(name, this.props.match.params.id, description, researchField, permalink);
+            const observatory = await createObservatory(name, this.props.match.params.id, description, researchField.id, permalink);
             this.navigateToObservatory(observatory.display_id);
         } catch (error) {
             this.setState({ editorState: 'edit' });
@@ -97,10 +96,10 @@ class AddObservatory extends Component {
     };
 
     handleChange = event => {
-        this.setState({ [event.target.name]: event.target.name.trim() });
+        this.setState({ [event.target.name]: event.target.value.trim() });
         if (event.target.name === 'name') {
             this.setState({
-                permalink: slugify(event.target.name.trim(), { replacement: '-', remove: /[*+~%\<>/;.(){}?,'"!:@#_^|]/g, lower: false })
+                permalink: slugify(event.target.value.trim(), { replacement: '_', remove: /[*+~%\<>/;.(){}?,'"!:@#-^|]/g, lower: false })
             });
         }
     };
@@ -159,12 +158,12 @@ class AddObservatory extends Component {
                                                 <Tooltip message="Permalink field allows to identify the observatory page on ORKG in an easy-to-read form. Only dashes ( - ) and lower case letters are allowed" />
                                             </Label>
                                             <InputGroup>
-                                                <InputGroupAddon addonType="prepend">{publicObservatoryRoute}</InputGroupAddon>
+                                                <InputGroupAddon addonType="prepend">{this.state.publicObservatoryRoute}</InputGroupAddon>
                                                 <Input
                                                     onChange={this.handleChange}
                                                     type="text"
                                                     name="permalink"
-                                                    id="ObservatoryURL"
+                                                    id="observatoryPermalink"
                                                     disabled={loading}
                                                     placeholder="name"
                                                     value={this.state.permalink}
