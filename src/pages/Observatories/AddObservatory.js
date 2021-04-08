@@ -59,7 +59,6 @@ class AddObservatory extends Component {
     createNewObservatory = async () => {
         this.setState({ editorState: 'loading' });
         const { name, description, researchField, permalink } = this.state;
-        console.log(researchField);
 
         if (!name && name.length === 0) {
             toast.error(`Please enter an observatory name`);
@@ -96,10 +95,10 @@ class AddObservatory extends Component {
     };
 
     handleChange = event => {
-        this.setState({ [event.target.name]: event.target.value.trim() });
+        this.setState({ [event.target.name]: event.target.value });
         if (event.target.name === 'name') {
             this.setState({
-                permalink: slugify(event.target.value.trim(), { replacement: '_', remove: /[*+~%\<>/;.(){}?,'"!:@#-^|]/g, lower: false })
+                permalink: slugify(event.target.value.trim(), { replacement: '_', remove: /[*+~%\\<>/;.(){}?,'"!:@#-^|]/g, lower: false })
             });
         }
     };
