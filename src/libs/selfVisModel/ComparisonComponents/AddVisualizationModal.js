@@ -21,7 +21,7 @@ const TabButtons = styled(Row)`
 const TabButton = styled.div`
     cursor: pointer;
     padding: 4px 20px;
-    background-color: ${props => (props.active ? props.theme.primary : props.theme.themeColors.lightblue)};
+    background-color: ${props => (props.active ? props.theme.primary : props.theme.light)};
     border: ${props => (props.active ? 'none' : '1px solid ' + props.theme.lightDarker)};
     border-bottom: 0;
     color: ${props => (props.active ? '#ffffff' : '')};

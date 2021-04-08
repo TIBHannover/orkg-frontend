@@ -151,7 +151,7 @@ const ResearchFieldHeader = ({ id }) => {
                                                         slug: subfield.label
                                                     })}
                                                 >
-                                                    <Badge color="lightblue" className="mr-2 mb-2">
+                                                    <Badge color="light" className="mr-2 mb-2">
                                                         {subfield.label}
                                                     </Badge>
                                                 </Link>
@@ -166,7 +166,7 @@ const ResearchFieldHeader = ({ id }) => {
                                                             slug: subfield.label
                                                         })}
                                                     >
-                                                        <Badge color="lightblue" className="mr-2 mb-2">
+                                                        <Badge color="light" className="mr-2 mb-2">
                                                             {subfield.label}
                                                         </Badge>
                                                     </Link>

@@ -23,7 +23,7 @@ const AppliedRule = props => {
     const { propertyName, type, value, removeRule } = data;
 
     return (
-        <Badge color="lightblue" className="mr-2 mt-2 text-left" style={{ whiteSpace: 'normal' }}>
+        <Badge color="light" className="mr-2 mt-2 text-left" style={{ whiteSpace: 'normal' }}>
             <span className="font-weight-bolder">{propertyName}</span>&nbsp;
             <span className="font-italic">{stringifyType(type)}</span>
             &nbsp;

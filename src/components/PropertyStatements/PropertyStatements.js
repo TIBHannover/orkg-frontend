@@ -58,7 +58,7 @@ const PropertyStatements = ({ propertyId }) => {
                                 {!isLoading && hasNextPage && (
                                     <tr className="text-center">
                                         <td colspan="3">
-                                            <Button color="lightblue" size="sm" onClick={!isLoading ? handleLoadMore : undefined}>
+                                            <Button color="light" size="sm" onClick={!isLoading ? handleLoadMore : undefined}>
                                                 Load more statements
                                             </Button>
                                         </td>

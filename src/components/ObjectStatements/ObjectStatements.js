@@ -98,7 +98,7 @@ const ObjectStatements = props => {
                                 {!isLoading && hasNextPage && (
                                     <tr className="text-center">
                                         <td colspan="3">
-                                            <Button color="lightblue" size="sm" onClick={handleLoadMore}>
+                                            <Button color="light" size="sm" onClick={handleLoadMore}>
                                                 Load more statements
                                             </Button>
                                         </td>

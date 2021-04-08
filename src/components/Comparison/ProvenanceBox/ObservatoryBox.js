@@ -6,7 +6,7 @@ import styled from 'styled-components';
 
 const ObservatoryBoxStyled = styled.div`
     float: right;
-    border: 2px solid ${props => props.theme.themeColors.lightblue};
+    border: 2px solid ${props => props.theme.light};
     border-radius: 5px;
     display: flex;
     padding: 5px 20px;

@@ -201,7 +201,7 @@ export const ItemHeaderInner = styled.div`
         color: #fff !important;
     }
     &.contribution-editor {
-        background: ${props => props.theme.themeColors.lightblue};
+        background: ${props => props.theme.light};
     }
 `;
 
@@ -232,7 +232,7 @@ export const Delete = styled.button`
         background: #fff;
     }
     &.contribution-editor {
-        color: ${props => props.theme.themeColors.lightblue};
+        color: ${props => props.theme.light};
         right: -5px;
         background: ${props => props.theme.secondary};
         &:hover {

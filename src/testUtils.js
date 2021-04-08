@@ -21,7 +21,7 @@ export const theme = {
     borderWidth: '1px',
     borderRadius: '6px',
     themeColors: {
-        lightblue: 'rgb(233, 235, 242)',
+        light: 'rgb(233, 235, 242)',
         secondary: 'rgb(128, 134, 155)',
         secondaryDarker: 'rgb(80, 85, 101)',
         primaryDarker: 'rgb(198, 29, 29)'

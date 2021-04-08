@@ -36,7 +36,7 @@ const FeaturedComparisons = ({ researchFieldId }) => {
             <div className="mr-2 d-flex justify-content-end mb-2">
                 {researchFieldId === MISC.RESEARCH_FIELD_MAIN && (
                     <UncontrolledButtonDropdown>
-                        <DropdownToggle caret className="pl-3 pr-3" size="sm" color="lightblue">
+                        <DropdownToggle caret className="pl-3 pr-3" size="sm" color="light">
                             {stringifySort(sort)}
                         </DropdownToggle>
                         <DropdownMenu>
@@ -99,7 +99,7 @@ const FeaturedComparisons = ({ researchFieldId }) => {
                         }
                     >
                         <span>
-                            <Button color="lightblue" className="flex-shrink-0 pl-3 pr-3" style={{ marginLeft: 'auto' }} size="sm">
+                            <Button color="light" className="flex-shrink-0 pl-3 pr-3" style={{ marginLeft: 'auto' }} size="sm">
                                 {stringifySort(sort === 'featured' ? 'newest' : sort)} <Icon icon={faChevronDown} />
                             </Button>
                         </span>

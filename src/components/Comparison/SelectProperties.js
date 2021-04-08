@@ -42,7 +42,7 @@ function SelectProperties(props) {
                 checked={property.active}
             />
             <Tooltip message="Amount of contributions" hideDefaultIcon>
-                <Badge color="lightblue">{property.contributionAmount}</Badge>
+                <Badge color="light">{property.contributionAmount}</Badge>
             </Tooltip>
         </ListGroupItemStyled>
     ));
