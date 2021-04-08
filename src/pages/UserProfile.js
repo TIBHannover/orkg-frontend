@@ -148,7 +148,7 @@ const UserProfile = props => {
             <Container>
                 {!isLoadingUserData && (
                     <Row>
-                        <div className="col-2 text-center d-flex align-items-center justify-content-center">
+                        <div className="col-md-2 text-center d-flex align-items-center justify-content-center mb-3 mb-md-0">
                             <StyledGravatar
                                 className="rounded-circle"
                                 md5={userData?.gravatar_id ?? 'example@example.com'}
@@ -156,9 +156,9 @@ const UserProfile = props => {
                                 id="TooltipExample"
                             />
                         </div>
-                        <div className="col-10 box rounded p-4">
+                        <div className="col-md-10 box rounded p-4">
                             <div className="row">
-                                <div className="col-8 d-flex" style={{ flexDirection: 'column' }}>
+                                <div className="col-md-8 d-flex" style={{ flexDirection: 'column' }}>
                                     <h2 className="h3 flex-grow-1">{userData.display_name}</h2>
                                     {observatoryData && (
                                         <div className="mt-3 align-items-end">
@@ -169,7 +169,7 @@ const UserProfile = props => {
                                         </div>
                                     )}
                                 </div>
-                                <div className="col-4">
+                                <div className="col-md-4 mt-4 mt-md-0">
                                     {organizationData && (
                                         <StyledOrganizationCard>
                                             <Link className="logoContainer" to={reverse(ROUTES.ORGANIZATION, { id: organizationData.id })}>

@@ -119,10 +119,10 @@ const ResearchFieldCards = ({ selectedResearchField, handleFieldSelect, research
     return (
         <>
             <div className="row" style={{ position: 'relative' }}>
-                <h1 className="col-8 h5 flex-shrink-0 mb-0">
+                <h1 className="col-md-8 h5 flex-shrink-0 mb-0">
                     <Icon icon={faStream} className="text-primary" /> Browse by research field
                 </h1>
-                <div className="col-4 flex-end d-flex">
+                <div className="col-md-4 mt-2 mt-md-0 flex-end d-flex">
                     {selectedResearchField.id !== MISC.RESEARCH_FIELD_MAIN && (
                         <Button
                             tag={Link}
