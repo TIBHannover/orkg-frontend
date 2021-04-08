@@ -3,12 +3,10 @@ import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 import { ListGroup, ListGroupItem, Button } from 'reactstrap';
 import ContentLoader from 'react-content-loader';
 import { Link, withRouter } from 'react-router-dom';
-import ROUTES from 'constants/routes';
-import { PREDICATE_TYPE_ID, RESOURCE_TYPE_ID } from 'constants/misc';
 import { CLASSES } from 'constants/graphSettings';
-import { reverse } from 'named-urls';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
+import { getResourceLink } from 'utils';
 import moment from 'moment';
 
 const StyledLoadMoreButton = styled.div`
@@ -40,55 +38,6 @@ const StyledListGroupItem = styled(ListGroupItem)`
 `;
 
 const Results = props => {
-    const getResourceLink = (filterClass, resourceId) => {
-        let link = '';
-
-        switch (filterClass) {
-            case CLASSES.PAPER: {
-                link = reverse(ROUTES.VIEW_PAPER, { resourceId: resourceId });
-                break;
-            }
-            case CLASSES.PROBLEM: {
-                link = reverse(ROUTES.RESEARCH_PROBLEM, { researchProblemId: resourceId });
-                break;
-            }
-            case CLASSES.AUTHOR: {
-                link = reverse(ROUTES.AUTHOR_PAGE, { authorId: resourceId });
-                break;
-            }
-            case CLASSES.COMPARISON: {
-                link = reverse(ROUTES.COMPARISON, { comparisonId: resourceId });
-                break;
-            }
-            case CLASSES.VENUE: {
-                link = reverse(ROUTES.VENUE_PAGE, { venueId: resourceId });
-                break;
-            }
-            case CLASSES.TEMPLATE: {
-                link = reverse(ROUTES.TEMPLATE, { id: resourceId });
-                break;
-            }
-            case CLASSES.VISUALIZATION: {
-                link = reverse(ROUTES.VISUALIZATION, { id: resourceId });
-                break;
-            }
-            case RESOURCE_TYPE_ID: {
-                link = reverse(ROUTES.RESOURCE, { id: resourceId });
-                break;
-            }
-            case PREDICATE_TYPE_ID: {
-                link = reverse(ROUTES.PROPERTY, { id: resourceId });
-                break;
-            }
-            default: {
-                link = reverse(ROUTES.RESOURCE, { id: resourceId });
-                break;
-            }
-        }
-
-        return link;
-    };
-
     return (
         <div>
             {props.loading && (

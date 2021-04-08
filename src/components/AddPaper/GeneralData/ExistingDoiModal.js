@@ -8,7 +8,7 @@ const ExistingDoiModal = props => {
     const toggle = () => setShow(!show);
 
     return (
-        <Modal isOpen={show} toggle={toggle}>
+        <Modal size="lg" isOpen={show} toggle={toggle}>
             <ModalHeader toggle={toggle}>Warning: DOI already in ORKG</ModalHeader>
             <ModalBody>
                 <Alert color="info">

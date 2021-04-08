@@ -24,6 +24,7 @@ import { getComparison } from 'services/similarity/index';
 import Tooltip from 'components/Utils/Tooltip';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
 import AuthorsInput from 'components/Utils/AuthorsInput';
+import ShareCreatedContent from 'components/ShareLinkMarker/ShareCreatedContent';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faOrcid } from '@fortawesome/free-brands-svg-icons';
 import { faClipboard } from '@fortawesome/free-regular-svg-icons';
@@ -32,6 +33,7 @@ import { reverse } from 'named-urls';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import { slugify } from 'utils';
 import { PREDICATES, CLASSES, ENTITIES } from 'constants/graphSettings';
 import env from '@beam-australia/react-env';
 
@@ -176,8 +178,6 @@ function Publish(props) {
                         }
                     }
                     if (subject && subject.id) {
-                        // has research field is not used because it affects the page "research field"
-                        // this should be updated when the issue !169 in back-end is resolved
                         await createResourceStatement(resourceId, PREDICATES.HAS_SUBJECT, subject.id);
                     }
                     await saveCreators(comparisonCreators, resourceId);
@@ -358,6 +358,12 @@ function Publish(props) {
                             </Tooltip>
                         </div>
                     </FormGroup>
+                )}
+                {props.comparisonId && (
+                    <ShareCreatedContent
+                        typeOfLink="comparison"
+                        title={`An @orkg_org comparison on '${title}' in the area of ${subject?.label ? `%23${slugify(subject.label)}` : ''}`}
+                    />
                 )}
                 {!props.doi && (!props.comparisonId || (props.comparisonId && assignDOI)) && (
                     <>

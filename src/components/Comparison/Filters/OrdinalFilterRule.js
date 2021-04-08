@@ -1,4 +1,4 @@
-import Joi from '@hapi/joi';
+import Joi from 'joi';
 import FilterModalFooter from 'components/Comparison/Filters/FilterModalFooter';
 import { FILTER_TYPES } from 'constants/comparisonFilterTypes';
 import PropTypes from 'prop-types';

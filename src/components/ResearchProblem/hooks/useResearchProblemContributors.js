@@ -1,10 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { getContributorsByResearchProblemId } from 'services/backend/problems';
-import { useParams } from 'react-router-dom';
 
-function useResearchProblemContributors() {
-    const pageSize = 25;
-    const { researchProblemId } = useParams();
+function useResearchProblemContributors({ researchProblemId, pageSize = 30 }) {
     const [isLoading, setIsLoading] = useState(false);
     const [hasNextPage, setHasNextPage] = useState(false);
     const [isLastPageReached, setIsLastPageReached] = useState(false);
@@ -29,11 +26,11 @@ function useResearchProblemContributors() {
                 } else {
                     setIsLoading(false);
                     setHasNextPage(false);
-                    setIsLastPageReached(page > 1 ? true : false);
+                    setIsLastPageReached(page > 0 ? true : false);
                 }
             });
         },
-        [researchProblemId]
+        [researchProblemId, pageSize]
     );
 
     // reset resources when the researchProblemId has changed
@@ -41,11 +38,11 @@ function useResearchProblemContributors() {
         setContributors([]);
         setHasNextPage(false);
         setIsLastPageReached(false);
-        setPage(1);
+        setPage(0);
     }, [researchProblemId]);
 
     useEffect(() => {
-        loadContributors(1);
+        loadContributors(0);
     }, [loadContributors]);
 
     const handleLoadMore = () => {
@@ -54,6 +51,6 @@ function useResearchProblemContributors() {
         }
     };
 
-    return [contributors, isLoading, hasNextPage, isLastPageReached, page, handleLoadMore];
+    return { contributors, isLoading, hasNextPage, isLastPageReached, page, handleLoadMore };
 }
 export default useResearchProblemContributors;

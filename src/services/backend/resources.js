@@ -1,5 +1,5 @@
 import { submitPostRequest, submitPutRequest, submitGetRequest, submitDeleteRequest } from 'network';
-import { getUserInformationById } from 'services/backend/users';
+import { getContributorInformationById } from 'services/backend/contributors';
 import { classesUrl } from 'services/backend/classes';
 import { MISC } from 'constants/graphSettings';
 import queryString from 'query-string';
@@ -39,15 +39,21 @@ export const getResources = ({
     returnContent = false
 }) => {
     const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
-    const params = queryString.stringify({
-        page,
-        size,
-        sort,
-        desc,
-        exact,
-        ...(q ? { q } : {}),
-        ...(exclude ? { exclude } : {})
-    });
+    const params = queryString.stringify(
+        {
+            page,
+            size,
+            sort,
+            desc,
+            exact,
+            ...(q ? { q } : {}),
+            ...(exclude ? { exclude } : {})
+        },
+        {
+            skipNull: true,
+            skipEmptyString: true
+        }
+    );
 
     return submitGetRequest(`${resourcesUrl}?${params}`).then(res => (returnContent ? res.content : res));
 };
@@ -58,7 +64,7 @@ export const getContributorsByResourceId = id => {
             if (contributor.createdBy === MISC.UNKNOWN_ID) {
                 return { ...contributor, created_by: { id: MISC.UNKNOWN_ID, display_name: 'Unknown' } };
             } else {
-                return getUserInformationById(contributor.createdBy)
+                return getContributorInformationById(contributor.createdBy)
                     .then(user => ({ ...contributor, created_by: user }))
                     .catch(() => ({ ...contributor, created_by: { id: MISC.UNKNOWN_ID, display_name: 'Unknown' } }));
             }

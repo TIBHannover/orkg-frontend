@@ -62,7 +62,7 @@ const ResearchFields = () => {
             <Container className="p-0">
                 <div className="box rounded-lg p-4">
                     <Row>
-                        <Col className="mr-2 pr-4 border-right">
+                        <Col md="5" className="border-right">
                             <ResearchFieldSelector
                                 selectedResearchField={selectedResearchField}
                                 researchFields={researchFields}
@@ -71,7 +71,7 @@ const ResearchFields = () => {
                             />
                         </Col>
 
-                        <Col>
+                        <Col md="7">
                             {selectedResearchField && (
                                 <>
                                     <div className="d-flex justify-content-between align-items-start mb-3">
@@ -91,7 +91,7 @@ const ResearchFields = () => {
                                             </Button>
                                         )}
                                     </div>
-                                    <Papers researchFieldId={selectedResearchField} />
+                                    <Papers id={selectedResearchField} boxShadow={false} showBreadcrumbs={false} />
                                 </>
                             )}
                         </Col>

@@ -15,12 +15,12 @@ import {
     Badge
 } from 'reactstrap';
 import { Link, NavLink as RouterNavLink, withRouter } from 'react-router-dom';
-import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import Jumbotron from 'components/Home/Jumbotron';
+import AddNew from './AddNew';
 import { ReactComponent as Logo } from 'assets/img/logo.svg';
 import { ReactComponent as LogoWhite } from 'assets/img/logo_white.svg';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronDown, faPlus, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faChevronDown, faUser } from '@fortawesome/free-solid-svg-icons';
 import ROUTES from 'constants/routes.js';
 import { Cookies } from 'react-cookie';
 import Gravatar from 'react-gravatar';
@@ -271,7 +271,14 @@ class Header extends Component {
 
         return (
             <StyledTopBar className={this.state.isHomePageStyle ? 'home-page' : ''}>
-                <Navbar className={this.state.isHomePageStyle ? 'home-page' : ''} expand="md" fixed="top" id="main-navbar">
+                <Navbar
+                    light={!this.state.isHomePageStyle}
+                    dark={this.state.isHomePageStyle}
+                    className={this.state.isHomePageStyle ? 'home-page' : ''}
+                    expand="md"
+                    fixed="top"
+                    id="main-navbar"
+                >
                     <GlobalStyle scrollbarWidth={scrollbarWidth(true)} cookieInfoDismissed={cookieInfoDismissed} />
 
                     <div
@@ -415,30 +422,7 @@ class Header extends Component {
 
                             <SearchForm placeholder="Search..." />
 
-                            <UncontrolledButtonDropdown className="mr-3 flex-shrink-0">
-                                <RequireAuthentication
-                                    component={Button}
-                                    color={!this.state.isHomePageStyle ? 'primary' : 'light'}
-                                    className="pl-4 pr-4"
-                                    tag={Link}
-                                    to={ROUTES.ADD_PAPER.GENERAL_DATA}
-                                >
-                                    <FontAwesomeIcon className="mr-1" icon={faPlus} />
-                                    Add paper
-                                </RequireAuthentication>
-
-                                <DropdownToggle
-                                    split
-                                    color={!this.state.isHomePageStyle ? 'primary' : 'light'}
-                                    className="px-2"
-                                    style={{ marginLeft: 1 }}
-                                />
-                                <DropdownMenu right>
-                                    <DropdownItem tag={RouterNavLink} exact to={ROUTES.ADD_COMPARISON}>
-                                        Add comparison
-                                    </DropdownItem>
-                                </DropdownMenu>
-                            </UncontrolledButtonDropdown>
+                            <AddNew isHomePageStyle={this.state.isHomePageStyle} />
 
                             {!!this.props.user && (
                                 <div>
