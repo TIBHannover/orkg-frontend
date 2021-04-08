@@ -14,10 +14,6 @@ import slugify from 'slugify';
 import ROUTES from 'constants/routes';
 import Tooltip from 'components/Utils/Tooltip';
 
-const publicOrganizationRoute = `${window.location.protocol}//${window.location.host}${window.location.pathname
-    .replace(reverse(ROUTES.ADD_ORGANIZATION), reverse(ROUTES.ORGANIZATION, { id: ' ' }))
-    .replace(/\/$/, '')}`;
-
 class AddOrganization extends Component {
     constructor(props) {
         super(props);
@@ -31,6 +27,9 @@ class AddOrganization extends Component {
             logo: '',
             editorState: 'edit'
         };
+        this.publicOrganizationRoute = `${window.location.protocol}//${window.location.host}${window.location.pathname
+            .replace(reverse(ROUTES.ADD_ORGANIZATION), reverse(ROUTES.ORGANIZATION, { id: ' ' }))
+            .replace(/\/$/, '')}`;
     }
 
     componentDidMount() {
@@ -46,7 +45,7 @@ class AddOrganization extends Component {
             this.setState({ editorState: 'edit' });
             return;
         }
-        if (!new RegExp(REGEX.OBSERVATORY_ORGANIZATION_PERMALINK).test(permalink)) {
+        if (!new RegExp(REGEX.PERMALINK).test(permalink)) {
             toast.error(`Only dashes (-), numbers, and letters are allowed in the permalink field`);
             this.setState({ editorState: 'edit' });
             return;
@@ -64,8 +63,7 @@ class AddOrganization extends Component {
 
         try {
             const responseJson = await createOrganization(name, logo[0], this.props.user.id, website, permalink);
-            const organizationId = responseJson.display_id;
-            this.navigateToOrganization(organizationId);
+            this.navigateToOrganization(responseJson.display_id);
         } catch (error) {
             this.setState({ editorState: 'edit' });
             console.error(error);
@@ -74,10 +72,10 @@ class AddOrganization extends Component {
     };
 
     handleChange = event => {
-        this.setState({ [event.target.name]: event.target.value.trim() });
+        this.setState({ [event.target.name]: event.target.value });
         if (event.target.name === 'name') {
             this.setState({
-                permalink: slugify(event.target.value.trim(), { replacement: '-', remove: /[*+~%\<>/;.(){}?,'"!:@#_^|]/g, lower: false })
+                permalink: slugify(event.target.value.trim(), { replacement: '_', remove: /[*+~%\\<>/;.(){}?,'"!:@#_^|]/g, lower: false })
             });
         }
     };
@@ -145,7 +143,7 @@ class AddOrganization extends Component {
                                         <Tooltip message="Permalink field allows to identify the organization page on ORKG in an easy-to-read form. Only dashes ( - ) and lower case letters are allowed" />
                                     </Label>
                                     <InputGroup>
-                                        <InputGroupAddon addonType="prepend">{publicOrganizationRoute}</InputGroupAddon>
+                                        <InputGroupAddon addonType="prepend">{this.publicOrganizationRoute}</InputGroupAddon>
                                         <Input
                                             onChange={this.handleChange}
                                             type="text"
