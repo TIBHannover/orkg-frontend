@@ -15,11 +15,17 @@ function PaperMenuBar(props) {
         <>
             <ButtonGroup className="flex-shrink-0">
                 {props.paperLink && (
-                    <a href={props.paperLink} className="btn btn-darkblue flex-shrink-0 btn-sm" target="_blank" rel="noopener noreferrer">
+                    <a href={props.paperLink} className="btn btn-secondary flex-shrink-0 btn-sm" target="_blank" rel="noopener noreferrer">
                         <Icon icon={faFile} style={{ margin: '2px 4px 0 0' }} /> View paper
                     </a>
                 )}
-                <Button className="flex-shrink-0" color="darkblue" size="sm" style={{ marginLeft: 1 }} onClick={() => props.toggle('showGraphModal')}>
+                <Button
+                    className="flex-shrink-0"
+                    color="secondary"
+                    size="sm"
+                    style={{ marginLeft: 1 }}
+                    onClick={() => props.toggle('showGraphModal')}
+                >
                     <Icon icon={faProjectDiagram} style={{ margin: '2px 4px 0 0' }} /> Graph view
                 </Button>
 
@@ -28,7 +34,7 @@ function PaperMenuBar(props) {
                         component={Button}
                         className="flex-shrink-0"
                         style={{ marginLeft: 1 }}
-                        color="darkblue"
+                        color="secondary"
                         size="sm"
                         onClick={() => props.toggle('editMode')}
                     >
@@ -46,7 +52,7 @@ function PaperMenuBar(props) {
                     </Button>
                 )}
                 <ButtonDropdown isOpen={menuOpen} toggle={() => setMenuOpen(v => !v)} nav inNavbar>
-                    <DropdownToggle size="sm" color="darkblue" className="px-3 rounded-right" style={{ marginLeft: 2 }}>
+                    <DropdownToggle size="sm" color="secondary" className="px-3 rounded-right" style={{ marginLeft: 2 }}>
                         <Icon icon={faEllipsisV} />
                     </DropdownToggle>
                     <DropdownMenu right>

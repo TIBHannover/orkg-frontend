@@ -15,7 +15,7 @@ const TableContainerStyled = styled.div`
     background: ${props => props.theme.ultraLightBlue};
     font-size: 90%;
     max-height: 500px;
-    border: 2px solid ${props => props.theme.darkblue};
+    border: 2px solid ${props => props.theme.secondary};
     border-radius: ${props => props.theme.borderRadius};
 `;
 
@@ -67,7 +67,7 @@ const CsvImport = () => {
                         className="p-0"
                         onClick={() => setIsHelpModalOpen(true)}
                     >
-                        <Icon icon={faQuestionCircle} className="text-darkblue" />
+                        <Icon icon={faQuestionCircle} className="text-secondary" />
                     </Button>
                 </span>
             </Tippy>

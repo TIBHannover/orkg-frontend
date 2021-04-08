@@ -54,7 +54,7 @@ function ComparisonMetaData(props) {
                                         </NavLink>
                                     ) : (
                                         <Badge color="lightblue" className="mr-2 mb-2" key={index}>
-                                            <Icon icon={faUser} className="text-darkblue" /> {author.label}
+                                            <Icon icon={faUser} className="text-secondary" /> {author.label}
                                         </Badge>
                                     )
                                 )}

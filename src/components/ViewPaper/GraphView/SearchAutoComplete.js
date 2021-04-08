@@ -424,7 +424,7 @@ class SearchAutoComplete extends Component {
                     onKeyDown={this.handleKeyDown}
                 />
                 <Dropdown
-                    color="darkblue"
+                    color="secondary"
                     size="sm"
                     style={{ marginLeft: '-40px', flexGrow: '1', display: 'flex', height: 'min-content', paddingTop: '5px' }}
                     isOpen={this.state.dropdownMenuOpen}

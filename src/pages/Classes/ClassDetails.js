@@ -85,14 +85,14 @@ function ClassDetails(props) {
                                         <RequireAuthentication
                                             component={Link}
                                             to={`${ROUTES.ADD_RESOURCE}?classes=${props.match.params.id}`}
-                                            className="float-right btn btn-darkblue flex-shrink-0 btn-sm"
+                                            className="float-right btn btn-secondary flex-shrink-0 btn-sm"
                                         >
                                             <Icon icon={faPlus} /> Add resource
                                         </RequireAuthentication>
                                         <RequireAuthentication
                                             component={Button}
                                             size="sm"
-                                            color="darkblue"
+                                            color="secondary"
                                             onClick={() => setModalImportIsOpen(true)}
                                         >
                                             <Icon icon={faFileCsv} /> Import Instances
@@ -148,7 +148,7 @@ function ClassDetails(props) {
                                 <RequireAuthentication
                                     component={Button}
                                     className="flex-shrink-0"
-                                    color="darkblue"
+                                    color="secondary"
                                     size="sm"
                                     onClick={() => setEditMode(v => !v)}
                                 >

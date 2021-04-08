@@ -35,8 +35,8 @@ export const StyledStatementItem = styled(ListGroupItem)`
     }
 
     &.statementActive {
-        background-color: ${props => props.theme.darkblue} !important;
-        border-color: ${props => props.theme.darkblue} !important;
+        background-color: ${props => props.theme.secondary} !important;
+        border-color: ${props => props.theme.secondary} !important;
         color: #fff;
 
         & .deletePredicate {
@@ -87,8 +87,8 @@ export const StyledButton = styled(Button)`
     background: ${props => props.theme.ultraLightBlueDarker} !important;
     &:hover {
         color: #fff !important;
-        background-color: ${props => props.theme.darkblue} !important;
-        border-color: ${props => props.theme.darkblue} !important;
+        background-color: ${props => props.theme.secondary} !important;
+        border-color: ${props => props.theme.secondary} !important;
     }
 `;
 
@@ -104,8 +104,8 @@ export const StyledDropdownToggle = styled(DropdownToggle).withConfig({
     border-color: #ced4da !important;
     &:hover {
         color: #fff !important;
-        background-color: ${props => props.theme.darkblue} !important;
-        border-color: ${props => props.theme.darkblue} !important;
+        background-color: ${props => props.theme.secondary} !important;
+        border-color: ${props => props.theme.secondary} !important;
     }
 `;
 
@@ -183,7 +183,7 @@ export const AddPropertyContentStyle = styled.span`
     border-radius: 4px;
     max-width: 33.33%;
     font-size: 0.875rem;
-    color: ${props => props.theme.darkblue};
+    color: ${props => props.theme.secondary};
     transition: 0.3s max-width;
     cursor: pointer;
 
@@ -211,7 +211,7 @@ export const AddPropertyContentStyle = styled.span`
             padding: 0;
             border: 0 !important;
             .icon {
-                color: ${props => props.theme.darkblue};
+                color: ${props => props.theme.secondary};
             }
         }
     }
@@ -326,8 +326,8 @@ export const ValuesStyle = styled.div`
 
 export const TemplateHeaderStyle = styled.div`
     cursor: default;
-    background-color: ${props => props.theme.darkblue};
-    border-color: ${props => props.theme.darkblue};
+    background-color: ${props => props.theme.secondary};
+    border-color: ${props => props.theme.secondary};
     border-top-left-radius: 6px;
     border-top-right-radius: 6px;
     color: #fff;
@@ -373,7 +373,7 @@ export const TemplateHeaderStyle = styled.div`
         opacity: 0.9;
         .span {
             background-color: ${props => props.theme.buttonDark};
-            color: ${props => props.theme.darkblue};
+            color: ${props => props.theme.secondary};
         }
     }
 `;

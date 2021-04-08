@@ -27,7 +27,7 @@ export default function AddPropertyTemplate(props) {
                     >
                         <Button
                             //className={this.props.inTemplate ? 'p-0' : ''}
-                            color={props.inTemplate ? 'light' : 'darkblue'}
+                            color={props.inTemplate ? 'light' : 'secondary'}
                             disabled={props.isDisabled}
                             onClick={() => (!props.inTemplate ? props.handleShowAddProperty() : undefined)}
                             style={props.inTemplate && props.isDisabled ? { opacity: '1', color: '#21252975' } : undefined}

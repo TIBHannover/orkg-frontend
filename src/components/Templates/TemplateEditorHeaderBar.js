@@ -49,7 +49,7 @@ function TemplateEditorHeaderBar(props) {
                                 className="float-left"
                                 disabled={props.isSaving}
                                 style={{ marginLeft: 1 }}
-                                color="darkblue"
+                                color="secondary"
                                 onClick={() => props.saveTemplate(props.template)}
                             >
                                 {props.isSaving && <Icon icon={faSpinner} spin />}
@@ -58,7 +58,7 @@ function TemplateEditorHeaderBar(props) {
                             </Button>
                         </ButtonGroup>
                     ) : (
-                        <Button className="float-right" color="darkblue" size="sm" onClick={() => props.setEditMode(true)}>
+                        <Button className="float-right" color="secondary" size="sm" onClick={() => props.setEditMode(true)}>
                             <Icon icon={faPen} /> Edit
                         </Button>
                     )}

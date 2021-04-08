@@ -63,7 +63,7 @@ class RelatedResources extends Component {
                                         {resource.description && <CardText>{resource.description}</CardText>}
                                         {isLink ? (
                                             <a href={resource.url} target="_blank" rel="noopener noreferrer">
-                                                <Button size="sm" color="darkblue">
+                                                <Button size="sm" color="secondary">
                                                     Visit resource
                                                 </Button>
                                             </a>

@@ -67,7 +67,7 @@ const ObjectStatements = props => {
 
     return (
         <div>
-            <Button color="darkblue" size="sm" className="mt-5" onClick={() => setShowObjectStatements(!showObjectStatements)}>
+            <Button color="secondary" size="sm" className="mt-5" onClick={() => setShowObjectStatements(!showObjectStatements)}>
                 {!showObjectStatements ? 'Show' : 'Hide'} object statements
             </Button>
 

@@ -24,7 +24,7 @@ const StyledSpinnerGravatar = styled.div`
     display: inline-block;
     text-align: center;
     line-height: 28px;
-    color: ${props => props.theme.darkblue};
+    color: ${props => props.theme.secondary};
     border: 2px solid ${props => props.theme.ultraLightBlueDarker};
     cursor: pointer;
     vertical-align: sub;

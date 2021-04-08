@@ -148,7 +148,7 @@ export default function Benefits() {
                 <div className="flex-shrink-0">
                     {!!!user && (
                         <Button
-                            color="darkblue"
+                            color="secondary"
                             size="sm"
                             onClick={() => {
                                 dispatch(openAuthDialog({ action: 'signup' }));

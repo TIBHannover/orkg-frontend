@@ -32,7 +32,7 @@ export const PropertyCell = styled.div`
     text-overflow: ellipsis;
     display: ruby;
     color: white;
-    background: ${props => props.theme.darkblue};
+    background: ${props => props.theme.secondary};
     border-top-left-radius: 0;
     border-top-right-radius: 0;
     width: 150px;
@@ -47,7 +47,7 @@ export const PropertyCellEditor = styled(TableCell)`
     text-overflow: ellipsis;
     display: ruby;
     color: white;
-    background: ${props => props.theme.darkblue};
+    background: ${props => props.theme.secondary};
     width: 150px;
     min-width: 150px;
     padding: 0 2px;

@@ -161,8 +161,8 @@ export const StyledStatementItem = styled(ListGroupItem)`
     }
 
     &.statementActive {
-        background-color: ${props => props.theme.darkblue} !important;
-        border-color: ${props => props.theme.darkblue} !important;
+        background-color: ${props => props.theme.secondary} !important;
+        border-color: ${props => props.theme.secondary} !important;
         color: #fff;
 
         & .deletePredicate {

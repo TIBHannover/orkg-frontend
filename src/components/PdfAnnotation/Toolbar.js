@@ -11,7 +11,7 @@ import Tippy from '@tippyjs/react';
 import HelpModal from 'components/PdfAnnotation/HelpModal';
 
 const ToolbarStyled = styled.div`
-    background: ${props => props.theme.darkblue};
+    background: ${props => props.theme.secondary};
     position: fixed;
     width: 100%;
     top: 72px;

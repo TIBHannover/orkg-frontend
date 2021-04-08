@@ -164,9 +164,9 @@ const Templates = () => {
                 </div>
                 <RequireAuthentication
                     component={Link}
-                    color="darkblue"
+                    color="secondary"
                     size="sm"
-                    className="btn btn-darkblue btn-sm flex-shrink-0"
+                    className="btn btn-secondary btn-sm flex-shrink-0"
                     to={reverse(ROUTES.TEMPLATE)}
                 >
                     <Icon icon={faPlus} /> Create template

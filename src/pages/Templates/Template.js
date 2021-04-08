@@ -131,14 +131,14 @@ class Template extends Component {
                                     className="p-0"
                                     onClick={() => this.toggle('helpModalOpen')}
                                 >
-                                    <Icon icon={faQuestionCircle} className="text-darkblue" />
+                                    <Icon icon={faQuestionCircle} className="text-secondary" />
                                 </Button>
                             </span>
                         </Tippy>
                     </div>
                     <ButtonGroup className="flex-shrink-0">
                         {!this.props.editMode && !this.props.isSaving ? (
-                            <RequireAuthentication component={Button} color="darkblue" size="sm" onClick={() => this.props.setEditMode(true)}>
+                            <RequireAuthentication component={Button} color="secondary" size="sm" onClick={() => this.props.setEditMode(true)}>
                                 <Icon icon={faPen} /> Edit
                             </RequireAuthentication>
                         ) : (
@@ -166,7 +166,7 @@ class Template extends Component {
                                 nav
                                 inNavbar
                             >
-                                <DropdownToggle size="sm" color="darkblue" className="px-3 rounded-right" style={{ marginLeft: 2 }}>
+                                <DropdownToggle size="sm" color="secondary" className="px-3 rounded-right" style={{ marginLeft: 2 }}>
                                     <Icon icon={faEllipsisV} />
                                 </DropdownToggle>
                                 <DropdownMenu right>

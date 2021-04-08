@@ -82,7 +82,7 @@ const Observatory = () => {
                         </>
                         {!!user && user.isCurationAllowed && (
                             <ButtonGroup className="flex-shrink-0" style={{ marginLeft: 'auto' }}>
-                                <Button color="darkblue" size="sm" onClick={() => setShowEditDialog(v => !v)}>
+                                <Button color="secondary" size="sm" onClick={() => setShowEditDialog(v => !v)}>
                                     <Icon icon={faPen} /> Edit
                                 </Button>
                             </ButtonGroup>

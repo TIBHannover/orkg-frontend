@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { Container, Button } from 'reactstrap';
 
 export const SubtitleSeparator = styled.div`
-    background: ${props => props.theme.darkblue};
+    background: ${props => props.theme.secondary};
     width: 2px;
     height: 30px;
     margin: 0 15px;
@@ -40,7 +40,7 @@ export const ComparisonTypeButton = styled(Button)`
 export const ScrollButton = styled(Button)`
     &&& {
         border-radius: 30px;
-        color: ${props => props.theme.darkblue};
+        color: ${props => props.theme.secondary};
         width: 30px;
         height: 30px;
         cursor: pointer;
@@ -209,7 +209,7 @@ export const Contribution = styled.div`
     color: #ffa5a5;
     font-size: 85%;
     &.contribution-editor {
-        color: ${props => props.theme.themeColors.darkblue};
+        color: ${props => props.theme.secondary};
     }
 `;
 
@@ -234,7 +234,7 @@ export const Delete = styled.button`
     &.contribution-editor {
         color: ${props => props.theme.themeColors.lightblue};
         right: -5px;
-        background: ${props => props.theme.themeColors.darkblue};
+        background: ${props => props.theme.secondary};
         &:hover {
             background: ${props => props.theme.secondaryDarker};
         }

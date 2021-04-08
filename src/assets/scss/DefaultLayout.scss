@@ -15,7 +15,7 @@ body {
     border: 0;
 
     .nav-link {
-        color: $darkblue;
+        color: $secondary;
 
         &:hover {
             color: $primary;
@@ -56,7 +56,7 @@ body {
             }
         }
         .search-box .search-icon {
-            color: $darkblue;
+            color: $secondary;
         }
     }
 }
@@ -184,5 +184,5 @@ body {
 
 // Datepicker
 .react-datepicker__close-icon::after {
-    background-color: $darkblue !important;
+    background-color: $secondary !important;
 }

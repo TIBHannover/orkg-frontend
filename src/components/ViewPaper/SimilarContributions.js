@@ -19,7 +19,7 @@ const Card = styled(Link)`
     margin: 0 0;
     flex: 1;
     border-radius: 11px;
-    background: ${props => props.theme.darkblue};
+    background: ${props => props.theme.secondary};
     cursor: pointer;
     font-size: 95%;
     padding: 10px 5px;

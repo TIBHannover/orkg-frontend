@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import Gravatar from 'react-gravatar';
 
 export const SubtitleSeparator = styled.div`
-    background: ${props => props.theme.darkblue};
+    background: ${props => props.theme.secondary};
     width: 2px;
     height: 24px;
     margin: 0 15px;
@@ -32,7 +32,7 @@ export const StyledDotGravatar = styled.div`
     display: inline-block;
     text-align: center;
     line-height: 48px;
-    color: ${props => props.theme.darkblue};
+    color: ${props => props.theme.secondary};
     border: 2px solid ${props => props.theme.ultraLightBlueDarker};
     cursor: pointer;
     vertical-align: sub;

@@ -7,7 +7,7 @@ import styled from 'styled-components';
 
 const DeleteButton = styled(Button)`
     &&& {
-        color: ${props => props.theme.darkblue};
+        color: ${props => props.theme.secondary};
         padding: 0;
         line-height: 1;
         border: 0;

@@ -49,7 +49,7 @@ const CarouselIndicatorsStyled = styled(CarouselIndicators)`
 `;
 
 const StyledGravatar = styled(Gravatar)`
-    border: 2px solid ${props => props.theme.darkblue};
+    border: 2px solid ${props => props.theme.secondary};
     cursor: pointer;
     &:hover {
         border: 2px solid ${props => props.theme.primaryColor};

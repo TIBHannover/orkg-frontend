@@ -52,7 +52,7 @@ function Property(props) {
                             <RequireAuthentication
                                 component={Button}
                                 className="float-right flex-shrink-0"
-                                color="darkblue"
+                                color="secondary"
                                 size="sm"
                                 onClick={() => setEditMode(v => !v)}
                             >

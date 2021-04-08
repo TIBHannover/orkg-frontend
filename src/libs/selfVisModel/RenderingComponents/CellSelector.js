@@ -50,7 +50,7 @@ const CellSelector = props => {
                                     <Button
                                         className="p-0 m-0"
                                         size="sm"
-                                        color="darkblue"
+                                        color="secondary"
                                         style={{
                                             borderBottomLeftRadius: '0',
                                             borderBottomRightRadius: '0'

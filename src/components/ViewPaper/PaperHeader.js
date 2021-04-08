@@ -81,7 +81,7 @@ const PaperHeader = props => {
                     </Link>
                 ) : (
                     <Badge color="lightblue" className="mr-2 mb-2" key={index}>
-                        <Icon icon={faUser} className="text-darkblue" /> {author.label}
+                        <Icon icon={faUser} className="text-secondary" /> {author.label}
                     </Badge>
                 )
             )}
@@ -114,7 +114,7 @@ const PaperHeader = props => {
             <div className="d-flex">
                 <div className="flex-grow-1">
                     {props.editMode && (
-                        <Button color="darkblue" size="sm" className="mt-2" style={{ marginLeft: 'auto' }} onClick={() => setIsOpenEditModal(true)}>
+                        <Button color="secondary" size="sm" className="mt-2" style={{ marginLeft: 'auto' }} onClick={() => setIsOpenEditModal(true)}>
                             <Icon icon={faPen} /> Edit data
                         </Button>
                     )}{' '}

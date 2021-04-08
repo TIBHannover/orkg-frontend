@@ -24,7 +24,7 @@ const PropertyStatements = ({ propertyId }) => {
 
     return (
         <div>
-            <Button color="darkblue" size="sm" className="mt-5" onClick={() => setShowPropertyStatements(!showPropertyStatements)}>
+            <Button color="secondary" size="sm" className="mt-5" onClick={() => setShowPropertyStatements(!showPropertyStatements)}>
                 {!showPropertyStatements ? 'Show' : 'Hide'} property usage
             </Button>
 

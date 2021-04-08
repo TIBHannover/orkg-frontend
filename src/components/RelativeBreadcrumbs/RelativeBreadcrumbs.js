@@ -29,7 +29,7 @@ const BreadcrumbStyled = styled.ul`
             }
         }
         & > a {
-            color: ${props => props.theme.darkblue};
+            color: ${props => props.theme.secondary};
             display: block;
             background: ${props => props.theme.ultraLightBlueDarker};
             text-decoration: none;

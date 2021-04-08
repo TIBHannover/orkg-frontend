@@ -24,7 +24,7 @@ const FieldItem = styled(Button)`
         transition: none;
 
         &.active {
-            background: ${props => props.theme.darkblue};
+            background: ${props => props.theme.secondary};
             color: #fff;
         }
     }
@@ -48,7 +48,7 @@ const IndicatorContainer = styled.div`
 
 const CollapseButton = styled(Button)`
     && {
-        color: ${props => props.theme.darkblue};
+        color: ${props => props.theme.secondary};
     }
 `;
 
@@ -180,7 +180,7 @@ const ResearchFieldSelector = ({ selectedResearchField, researchFields, updateRe
                         <div className="flex-grow-1">
                             <IndicatorContainer onClick={e => handleFieldClick(e, field.id, false)}>
                                 {field.hasChildren && (
-                                    <Icon icon={icon} spin={isLoading} className={selectedResearchField !== field.id ? 'text-darkblue' : ''} />
+                                    <Icon icon={icon} spin={isLoading} className={selectedResearchField !== field.id ? 'text-secondary' : ''} />
                                 )}
                             </IndicatorContainer>
                             {find(parents, p => p.id === field.id) ? <b>{field.label}</b> : field.label}

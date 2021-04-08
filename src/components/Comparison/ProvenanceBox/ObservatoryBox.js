@@ -20,7 +20,7 @@ const ObservatoryBoxStyled = styled.div`
     transition: background-color 0.2s;
 
     &:hover {
-        border: 2px solid ${props => props.theme.darkblue};
+        border: 2px solid ${props => props.theme.secondary};
     }
 `;
 
