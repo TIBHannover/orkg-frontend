@@ -1,4 +1,4 @@
-import Joi from '@hapi/joi';
+import Joi from 'joi';
 import REGEX from 'constants/regex';
 import moment from 'moment';
 

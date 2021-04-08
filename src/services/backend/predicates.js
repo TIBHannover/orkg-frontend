@@ -26,7 +26,13 @@ export const getPredicates = ({
     returnContent = false
 }) => {
     const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
-    const params = queryString.stringify({ page, size, sort, exact, ...(q ? { q } : {}) });
+    const params = queryString.stringify(
+        { page, size, sort, exact, ...(q ? { q } : {}) },
+        {
+            skipNull: true,
+            skipEmptyString: true
+        }
+    );
 
     return submitGetRequest(`${predicatesUrl}?${params}`).then(res => (returnContent ? res.content : res));
 };

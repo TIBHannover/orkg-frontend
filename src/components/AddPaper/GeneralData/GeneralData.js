@@ -23,7 +23,7 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { range } from 'utils';
 import Tooltip from 'components/Utils/Tooltip';
 import AuthorsInput from 'components/Utils/AuthorsInput';
-import Joi from '@hapi/joi';
+import Joi from 'joi';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateGeneralData, nextStep, openTour, closeTour } from 'actions/addPaper';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
@@ -97,18 +97,19 @@ const GeneralData = () => {
 
     useEffect(() => {
         const entryParam = queryString.parse(location.search).entry;
-        if (entryParam && !entry) {
+        if (entryParam) {
             dispatch(updateGeneralData({ entry: entryParam }));
-            handleLookupClick();
+            handleLookupClick(entryParam);
         }
 
         return () => {
             clearAllBodyScrollLocks();
         };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     //TODO this logic should be placed inside an action creator
-    const handleLookupClick = async () => {
+    const handleLookupClick = async lookDoi => {
         if (isTourOpen) {
             requestCloseTour();
         }
@@ -122,7 +123,7 @@ const GeneralData = () => {
                 'string.empty': `Please enter the DOI, Bibtex or select 'Manually' to enter the paper details yourself`
             })
             .label('Paper DOI or BibTeX')
-            .validate(entry);
+            .validate(lookDoi);
         if (error) {
             setValidation(error.message);
             return;
@@ -132,10 +133,10 @@ const GeneralData = () => {
         setValidation(null);
 
         let entryParsed;
-        if (entry.startsWith('http')) {
-            entryParsed = entry.trim().substring(entry.trim().indexOf('10.'));
+        if (lookDoi.startsWith('http')) {
+            entryParsed = lookDoi.trim().substring(lookDoi.trim().indexOf('10.'));
         } else {
-            entryParsed = entry.trim();
+            entryParsed = lookDoi.trim();
         }
 
         // If the entry is a DOI check if it exists in the database
@@ -356,7 +357,7 @@ const GeneralData = () => {
                                             onChange={handleInputChange}
                                             invalid={!!validation}
                                             onKeyPress={target => {
-                                                target.charCode === 13 && handleLookupClick();
+                                                target.charCode === 13 && handleLookupClick(entry);
                                             }}
                                         />
                                         <FormFeedback className="order-1">{validation}</FormFeedback>
@@ -367,7 +368,7 @@ const GeneralData = () => {
                                                 color="primary"
                                                 innerRef={refLookup}
                                                 style={{ minWidth: 130 }}
-                                                onClick={handleLookupClick}
+                                                onClick={() => handleLookupClick(entry)}
                                                 disabled={isFetching}
                                                 data-test="lookupDoi"
                                             >

@@ -7,7 +7,7 @@ Detailed user documentation can be found in the Wiki at: https://gitlab.com/TIBH
 
 ### Prerequisites
 
-In order to run the frontend, ensure that Node.js is installed (version >= 10). Check whether you have the right version installed using your command prompt or terminal, run: `node --version`. For more information about installing or upgrading Node.js, see: https://nodejs.org/en/download/.
+In order to run the frontend, ensure that Node.js is installed (version >= 12). Check whether you have the right version installed using your command prompt or terminal, run: `node --version`. For more information about installing or upgrading Node.js, see: https://nodejs.org/en/download/.
 
 ### Installation
 
