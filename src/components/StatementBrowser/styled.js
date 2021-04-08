@@ -6,7 +6,7 @@ export const StyledStatementItem = styled(ListGroupItem)`
     padding: 0.5rem 0.75rem !important;
     cursor: default;
     background-color: ${props => props.theme.ultraLightBlue} !important;
-    border-color: ${props => props.theme.ultraLightBlueDarker} !important;
+    border-color: ${props => props.theme.lightDarker} !important;
     overflow-wrap: break-word;
     word-break: break-all;
     flex: 1;
@@ -84,7 +84,7 @@ export const StyledDropdownItem = styled(DropdownItem)`
 export const StyledButton = styled(Button)`
     border-color: #ced4da !important;
     color: ${props => props.theme.buttonDark} !important;
-    background: ${props => props.theme.ultraLightBlueDarker} !important;
+    background: ${props => props.theme.lightDarker} !important;
     &:hover {
         color: #fff !important;
         background-color: ${props => props.theme.secondary} !important;
@@ -99,7 +99,7 @@ export const StyledDropdownToggle = styled(DropdownToggle).withConfig({
     border-bottom-left-radius: ${props => (props.disableBorderRadiusLeft ? '0' : '4px !important')};
     border-top-right-radius: ${props => (props.disableBorderRadiusRight ? '0' : '4px !important')};
     border-bottom-right-radius: ${props => (props.disableBorderRadiusRight ? '0' : '4px !important')};
-    background: ${props => props.theme.ultraLightBlueDarker} !important;
+    background: ${props => props.theme.lightDarker} !important;
     color: ${props => props.theme.buttonDark} !important;
     border-color: #ced4da !important;
     &:hover {
@@ -363,13 +363,13 @@ export const TemplateHeaderStyle = styled.div`
 
         &:focus {
             outline: 0;
-            border: 1px dashed ${props => props.theme.ultraLightBlueDarker};
+            border: 1px dashed ${props => props.theme.lightDarker};
             box-shadow: none;
         }
     }
     & .type {
         font-size: 0.9rem;
-        color: ${props => props.theme.ultraLightBlueDarker};
+        color: ${props => props.theme.lightDarker};
         opacity: 0.9;
         .span {
             background-color: ${props => props.theme.buttonDark};

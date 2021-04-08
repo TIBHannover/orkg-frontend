@@ -11,7 +11,7 @@ import Tippy from '@tippyjs/react';
 import PropTypes from 'prop-types';
 
 const StyledGravatar = styled(Gravatar)`
-    border: 2px solid ${props => props.theme.ultraLightBlueDarker};
+    border: 2px solid ${props => props.theme.lightDarker};
     cursor: pointer;
     &:hover {
         border: 2px solid ${props => props.theme.primary};
@@ -25,14 +25,14 @@ const StyledSpinnerGravatar = styled.div`
     text-align: center;
     line-height: 28px;
     color: ${props => props.theme.secondary};
-    border: 2px solid ${props => props.theme.ultraLightBlueDarker};
+    border: 2px solid ${props => props.theme.lightDarker};
     cursor: pointer;
     vertical-align: sub;
     &:hover {
         border: 2px solid ${props => props.theme.primary};
     }
 
-    background-color: ${props => props.theme.ultraLightBlueDarker};
+    background-color: ${props => props.theme.lightDarker};
 `;
 
 const UserAvatar = ({ userId }) => {

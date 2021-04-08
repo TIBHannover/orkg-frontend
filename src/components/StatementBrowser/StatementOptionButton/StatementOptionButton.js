@@ -10,7 +10,7 @@ export const OptionButton = styled(Button)`
     margin: 0 2px !important;
     display: inline-block !important;
     border-radius: 100% !important;
-    background-color: ${props => props.theme.ultraLightBlueDarker}!important;
+    background-color: ${props => props.theme.lightDarker}!important;
     color: ${props => props.theme.buttonDark}!important;
 
     & .icon-wrapper {

@@ -34,7 +34,7 @@ const StyledResearchFieldItem = styled(NavLink)`
     transition: 0.3s background;
     border-top-left-radius: ${props => props.theme.borderRadius};
     border-bottom-left-radius: ${props => props.theme.borderRadius};
-    border: 1px solid ${props => props.theme.ultraLightBlueDarker};
+    border: 1px solid ${props => props.theme.lightDarker};
     background-color: ${props => props.theme.ultraLightBlue};
     color: inherit;
 

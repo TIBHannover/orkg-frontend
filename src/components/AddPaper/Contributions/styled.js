@@ -5,7 +5,7 @@ import { Button, ListGroupItem } from 'reactstrap';
 export const StyledHorizontalContribution = styled.div`
     border-radius: ${props => props.theme.borderRadius};
     border-width: ${props => props.theme.borderWidth};
-    border-color: ${props => props.theme.ultraLightBlueDarker};
+    border-color: ${props => props.theme.lightDarker};
     border-style: solid;
     border-top-left-radius: 0;
     padding: 25px 30px;
@@ -35,7 +35,7 @@ export const StyledHorizontalContributionsList = styled.ul`
         margin-right: 2px;
 
         .contribution-item {
-            border: 1px solid ${props => props.theme.ultraLightBlueDarker};
+            border: 1px solid ${props => props.theme.lightDarker};
             border-bottom: 0;
             background-color: ${props => props.theme.ultraLightBlue};
             position: relative;
@@ -69,7 +69,7 @@ export const StyledHorizontalContributionsList = styled.ul`
 export const AddContribution = styled(Button)`
     &&& {
         padding: 0;
-        border: 1px solid ${props => props.theme.ultraLightBlueDarker};
+        border: 1px solid ${props => props.theme.lightDarker};
         background-color: ${props => props.theme.ultraLightBlue};
         border-radius: 60px;
         margin: 0 5px;
@@ -132,7 +132,7 @@ export const StyledStatementItem = styled(ListGroupItem)`
     padding: 0.5rem 0.75rem !important;
     cursor: default;
     background-color: ${props => props.theme.ultraLightBlue} !important;
-    border-color: ${props => props.theme.ultraLightBlueDarker} !important;
+    border-color: ${props => props.theme.lightDarker} !important;
     overflow-wrap: break-word;
     word-break: break-all;
     flex: 1;

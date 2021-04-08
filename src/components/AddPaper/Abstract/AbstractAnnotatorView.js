@@ -121,7 +121,7 @@ class AbstractAnnotatorView extends Component {
                                                 width: '100%',
                                                 background: getTrackBackground({
                                                     values: this.props.certaintyThreshold,
-                                                    colors: [this.props.theme.orkgPrimaryColor, this.props.theme.ultraLightBlueDarker],
+                                                    colors: [this.props.theme.orkgPrimaryColor, this.props.theme.lightDarker],
                                                     min: 0,
                                                     max: 1
                                                 })

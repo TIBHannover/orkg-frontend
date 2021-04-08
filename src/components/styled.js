@@ -19,7 +19,7 @@ export const SubTitle = styled.div`
 `;
 
 export const StyledGravatar = styled(Gravatar)`
-    border: 2px solid ${props => props.theme.ultraLightBlueDarker};
+    border: 2px solid ${props => props.theme.lightDarker};
     cursor: pointer;
     &:hover {
         border: 2px solid ${props => props.theme.primary};
@@ -33,14 +33,14 @@ export const StyledDotGravatar = styled.div`
     text-align: center;
     line-height: 48px;
     color: ${props => props.theme.secondary};
-    border: 2px solid ${props => props.theme.ultraLightBlueDarker};
+    border: 2px solid ${props => props.theme.lightDarker};
     cursor: pointer;
     vertical-align: sub;
     &:hover {
         border: 2px solid ${props => props.theme.primary};
     }
 
-    background-color: ${props => props.theme.ultraLightBlueDarker};
+    background-color: ${props => props.theme.lightDarker};
 `;
 
 export const ContributorsAvatars = styled.div`

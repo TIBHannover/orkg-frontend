@@ -16,7 +16,7 @@ import classNames from 'classnames';
 const FilterButton = styled(Button)`
     &&& {
         padding: 0 5px;
-        color: ${props => props.theme.ultraLightBlueDarker};
+        color: ${props => props.theme.lightDarker};
         &:hover,
         &.active {
             color: ${props => props.theme.secondaryDarker};

@@ -222,6 +222,6 @@ const SideBar = styled.div`
     min-width: 320px;
     overflow: auto;
     background-color: ${props => props.theme.ultraLightBlue} !important;
-    border: 1px solid ${props => props.theme.ultraLightBlueDarker} !important;
+    border: 1px solid ${props => props.theme.lightDarker} !important;
     border-radius: ${props => props.theme.borderRadius};
 `;

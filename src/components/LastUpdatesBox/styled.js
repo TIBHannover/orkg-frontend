@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export const StyledActivity = styled.div`
-    border-left: 3px solid ${props => props.theme.ultraLightBlueDarker};
+    border-left: 3px solid ${props => props.theme.lightDarker};
     color: ${props => props.theme.bodyColor};
     position: relative;
     font-size: 15px;
@@ -18,7 +18,7 @@ export const StyledActivity = styled.div`
         margin-right: 0.5rem;
         border-radius: 14px;
         content: '';
-        background-color: ${props => props.theme.ultraLightBlueDarker};
+        background-color: ${props => props.theme.lightDarker};
         display: inline-block;
         position: absolute;
         margin-top: 3px;
