@@ -11,7 +11,7 @@ export const OptionButton = styled(Button)`
     display: inline-block !important;
     border-radius: 100% !important;
     background-color: ${props => props.theme.lightDarker}!important;
-    color: ${props => props.theme.buttonDark}!important;
+    color: ${props => props.theme.dark}!important;
 
     & .icon-wrapper {
         display: flex !important;

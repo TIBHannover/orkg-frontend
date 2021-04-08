@@ -47,8 +47,8 @@ export const theme = {
     badgePaddingY: '0.3rem',
     badgePaddingX: '0.8rem',
     listGroupBorderColor: 'rgba(0, 0, 0, 0.125)',
-    buttonDark: 'rgb(91, 97, 118)',
-    avatarBorderColor: 'rgb(103, 109, 129)'
+    dark: 'rgb(91, 97, 118)',
+    dark: 'rgb(103, 109, 129)'
 };
 
 // wrap the components with the required providers

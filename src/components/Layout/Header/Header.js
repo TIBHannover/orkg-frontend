@@ -80,7 +80,7 @@ const StyledLink = styled(Link)`
 `;
 
 const StyledGravatar = styled(Gravatar)`
-    border: 3px solid ${props => props.theme.avatarBorderColor};
+    border: 3px solid ${props => props.theme.dark};
     cursor: pointer;
 `;
 
@@ -112,7 +112,7 @@ const StyledAuthTooltip = styled(Tooltip)`
 
         .btn {
             border-color: ${props => props.theme.secondary};
-            background-color: ${props => props.theme.buttonDark};
+            background-color: ${props => props.theme.dark};
 
             &:hover {
                 background-color: ${props => props.theme.secondaryDarker};

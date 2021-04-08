@@ -83,7 +83,7 @@ export const StyledDropdownItem = styled(DropdownItem)`
 /* Template Wizard */
 export const StyledButton = styled(Button)`
     border-color: #ced4da !important;
-    color: ${props => props.theme.buttonDark} !important;
+    color: ${props => props.theme.dark} !important;
     background: ${props => props.theme.lightDarker} !important;
     &:hover {
         color: #fff !important;
@@ -100,7 +100,7 @@ export const StyledDropdownToggle = styled(DropdownToggle).withConfig({
     border-top-right-radius: ${props => (props.disableBorderRadiusRight ? '0' : '4px !important')};
     border-bottom-right-radius: ${props => (props.disableBorderRadiusRight ? '0' : '4px !important')};
     background: ${props => props.theme.lightDarker} !important;
-    color: ${props => props.theme.buttonDark} !important;
+    color: ${props => props.theme.dark} !important;
     border-color: #ced4da !important;
     &:hover {
         color: #fff !important;
@@ -304,14 +304,14 @@ export const PropertyStyle = styled.div`
         visibility: visible;
         opacity: 1;
         span {
-            color: ${props => props.theme.buttonDark};
+            color: ${props => props.theme.dark};
         }
     }
     &:focus-within .propertyOption {
         visibility: visible;
         opacity: 1;
         span {
-            color: ${props => props.theme.buttonDark};
+            color: ${props => props.theme.dark};
         }
     }
 `;
@@ -372,7 +372,7 @@ export const TemplateHeaderStyle = styled.div`
         color: ${props => props.theme.lightDarker};
         opacity: 0.9;
         .span {
-            background-color: ${props => props.theme.buttonDark};
+            background-color: ${props => props.theme.dark};
             color: ${props => props.theme.secondary};
         }
     }
