@@ -115,7 +115,7 @@ const StyledAuthTooltip = styled(Tooltip)`
             background-color: ${props => props.theme.buttonDark};
 
             &:hover {
-                background-color: ${props => props.theme.darkblueDarker};
+                background-color: ${props => props.theme.secondaryDarker};
             }
         }
     }

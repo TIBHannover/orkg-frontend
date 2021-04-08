@@ -145,7 +145,7 @@ class Template extends Component {
                             <Button
                                 disabled={this.props.isSaving}
                                 style={{ marginLeft: 1 }}
-                                color="darkblueDarker"
+                                color="secondary-darker"
                                 size="sm"
                                 onClick={() => this.props.saveTemplate(this.props.template)}
                             >

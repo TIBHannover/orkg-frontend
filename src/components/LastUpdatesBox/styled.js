@@ -6,7 +6,7 @@ export const StyledActivity = styled.div`
     position: relative;
     font-size: 15px;
     .time {
-        color: ${props => props.theme.darkblueDarker};
+        color: ${props => props.theme.secondaryDarker};
         margin-top: -0.2rem;
         margin-bottom: 0.2rem;
         font-size: 16px;

@@ -238,7 +238,7 @@ function Resource(props) {
                                         <Icon icon={faPen} /> Edit
                                     </RequireAuthentication>
                                 ) : (
-                                    <Button className="flex-shrink-0" color="darkblueDarker" size="sm" onClick={() => setEditMode(v => !v)}>
+                                    <Button className="flex-shrink-0" color="secondary-darker" size="sm" onClick={() => setEditMode(v => !v)}>
                                         <Icon icon={faTimes} /> Stop editing
                                     </Button>
                                 )

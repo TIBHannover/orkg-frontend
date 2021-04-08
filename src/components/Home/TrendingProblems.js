@@ -28,7 +28,7 @@ const List = styled.div`
         font-size: 145%;
         min-height: 40px;
         a {
-            color: ${props => props.theme.darkblueDarker}!important;
+            color: ${props => props.theme.secondaryDarker}!important;
         }
     }
     .item-1,

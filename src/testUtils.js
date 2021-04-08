@@ -12,7 +12,7 @@ export const theme = {
     orkgBorderWidth: '1px',
     primary: 'rgb(232, 97, 97)',
     darkblue: 'rgb(128, 134, 155)',
-    darkblueDarker: 'rgb(80, 85, 101)',
+    secondaryDarker: 'rgb(80, 85, 101)',
     light: 'rgb(233, 236, 239)',
     ultraLightBlue: 'rgb(248, 249, 251)',
     ultraLightBlueDarker: 'rgb(219, 221, 229)',
@@ -23,7 +23,7 @@ export const theme = {
     themeColors: {
         lightblue: 'rgb(233, 235, 242)',
         darkblue: 'rgb(128, 134, 155)',
-        darkblueDarker: 'rgb(80, 85, 101)',
+        secondaryDarker: 'rgb(80, 85, 101)',
         primaryDarker: 'rgb(198, 29, 29)'
     },
     formFeedbackFontSize: '90%',

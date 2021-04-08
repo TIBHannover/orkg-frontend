@@ -236,7 +236,7 @@ export const Delete = styled.button`
         right: -5px;
         background: ${props => props.theme.themeColors.darkblue};
         &:hover {
-            background: ${props => props.theme.themeColors.darkblueDarker};
+            background: ${props => props.theme.secondaryDarker};
         }
     }
 `;

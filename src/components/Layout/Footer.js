@@ -19,21 +19,21 @@ const FooterWrapper = styled.div`
 `;
 
 const FooterCol = styled(Col)`
-    color: ${props => props.theme.darkblueDarker};
+    color: ${props => props.theme.secondaryDarker};
     margin: 10px 0;
     font-size: 0.95rem;
 
     h5 {
         font-weight: 500;
         text-transform: uppercase;
-        color: ${props => props.theme.darkblueDarker};
+        color: ${props => props.theme.secondaryDarker};
         font-size: 1.1rem;
     }
     .description {
         font-size: 0.85rem;
     }
     a {
-        color: ${props => props.theme.darkblueDarker};
+        color: ${props => props.theme.secondaryDarker};
     }
 `;
 

@@ -38,7 +38,7 @@ function PaperMenuBar(props) {
                     <Button
                         className="flex-shrink-0"
                         style={{ marginLeft: 1 }}
-                        color="darkblueDarker"
+                        color="secondary-darker"
                         size="sm"
                         onClick={() => props.toggle('editMode')}
                     >

@@ -18,7 +18,7 @@ const PaperHeaderBarContainer = styled.div`
     border-bottom: 1px #d1d3d9 solid;
     box-shadow: 0 2px 8px -2px rgba(0, 0, 0, 0.13);
     & .title {
-        color: ${props => props.theme.darkblueDarker};
+        color: ${props => props.theme.secondaryDarker};
     }
 `;
 
