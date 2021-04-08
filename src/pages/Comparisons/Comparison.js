@@ -18,9 +18,10 @@ import ExportCitation from 'components/Comparison/Export/ExportCitation';
 import ComparisonMetaData from 'components/Comparison/ComparisonMetaData';
 import Share from 'components/Comparison/Share.js';
 import ComparisonVersions from 'components/Comparison/ComparisonVersions.js';
-import Publish from 'components/Comparison/Publish.js';
+import Publish from 'components/Comparison/Publish/Publish';
 import { ContainerAnimated, ComparisonTypeButton } from 'components/Comparison/styled';
 import useComparison from 'components/Comparison/hooks/useComparison';
+import ShareLinkMarker from 'components/ShareLinkMarker/ShareLinkMarker';
 import { getResource } from 'services/backend/resources';
 import ROUTES from 'constants/routes.js';
 import { useHistory, Link } from 'react-router-dom';
@@ -139,7 +140,7 @@ function Comparison(props) {
         setViewDensity(density);
     };
 
-    const containerStyle = fullWidth ? { maxWidth: 'calc(100% - 20px)' } : {};
+    const containerStyle = fullWidth ? { maxWidth: 'calc(100% - 100px)' } : {};
 
     const handleChangeType = type => {
         setUrlNeedsToUpdate(true);
@@ -191,7 +192,7 @@ function Comparison(props) {
 
     return (
         <div>
-            <Breadcrumbs researchFieldId={researchField ? researchField.id : null} />
+            <Breadcrumbs researchFieldId={metaData?.subject ? metaData?.subject.id : researchField ? researchField.id : null} />
             <ContainerAnimated className="d-flex align-items-center">
                 <h1 className="h4 mt-4 mb-4 flex-grow-1">
                     Contribution comparison{' '}
@@ -374,7 +375,8 @@ function Comparison(props) {
                     </div>
                 )}
             </ContainerAnimated>
-            <ContainerAnimated className="box rounded pt-4 pb-4 pl-5 pr-5 clearfix" style={containerStyle}>
+            <ContainerAnimated className="box rounded pt-4 pb-4 pl-5 pr-5 clearfix position-relative" style={containerStyle}>
+                <ShareLinkMarker typeOfLink="comparison" title={metaData?.title} />
                 {!isLoadingMetaData && (isFailedLoadingComparisonResult || isFailedLoadingMetaData) && (
                     <div>
                         {isFailedLoadingComparisonResult && contributionsList.length < 2 ? (
@@ -535,6 +537,7 @@ function Comparison(props) {
                 setResponseHash={setResponseHash}
                 shortLink={shortLink}
                 setShortLink={setShortLink}
+                subject={!metaData?.subject && researchField ? researchField : metaData?.subject}
             />
             {(metaData?.hasPreviousVersion || (hasNextVersions && hasNextVersions.length > 0)) && (
                 <ComparisonVersions
@@ -549,7 +552,7 @@ function Comparison(props) {
                 toggle={() => setShowPublishDialog(v => !v)}
                 comparisonId={metaData?.id}
                 doi={metaData?.doi}
-                metaData={metaData}
+                metaData={!metaData?.subject && researchField ? { ...metaData, subject: researchField } : metaData}
                 publicURL={publicURL}
                 setMetaData={setMetaData}
                 contributionsList={contributionsList}

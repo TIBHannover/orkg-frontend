@@ -31,7 +31,7 @@ export default async function getGeonames(value, options) {
         // load statements
         if (docs[i] && docs[i].attributes) {
             itemData['statements'].push({
-                predicate: { id: PREDICATES.URL, label: 'URL' },
+                predicate: { id: PREDICATES.SAME_AS, label: 'same as' },
                 value: { type: 'literal', label: docs[i].attributes.getNamedItem('rdf:about').nodeValue, id: null }
             });
         }

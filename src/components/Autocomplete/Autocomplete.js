@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useMemo } from 'react';
 import { InputGroup, InputGroupAddon, Button } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faClipboard, faLink, faAtom } from '@fortawesome/free-solid-svg-icons';
@@ -8,7 +8,7 @@ import { getEntity, getEntities } from 'services/backend/misc';
 import { createClass, getClasses } from 'services/backend/classes';
 import { getResourcesByClass } from 'services/backend/resources';
 import { olsBaseUrl, selectTerms, getAllOntologies, getOntologyTerms, getTermMatchingAcrossOntologies } from 'services/ols/index';
-import { AsyncPaginateBase } from 'react-select-async-paginate';
+import { AsyncPaginate, withAsyncPaginate } from 'react-select-async-paginate';
 import Creatable from 'react-select/creatable';
 import PropTypes from 'prop-types';
 import { truncate } from 'lodash';
@@ -635,7 +635,7 @@ function Autocomplete(props) {
     };
 
     // Creatable with adding new options : https://codesandbox.io/s/6pznz
-    const Select = props.allowCreate && !props.ols ? Creatable : undefined;
+    const Select = useMemo(() => (props.allowCreate && !props.ols ? withAsyncPaginate(Creatable) : AsyncPaginate), [props.allowCreate, props.ols]);
 
     return (
         <ConditionalWrapper
@@ -673,8 +673,7 @@ function Autocomplete(props) {
                 showDialog={ontologySelectorIsOpen}
             />
             <StyledAutoCompleteInputFormControl className={`form-control ${props.cssClasses ? props.cssClasses : 'default'} border-0`}>
-                <AsyncPaginateBase
-                    SelectComponent={Select}
+                <Select
                     key={JSON.stringify(selectedOntologies.map(o => o.id))}
                     value={props.value}
                     loadOptions={loadOptions}
@@ -701,6 +700,7 @@ function Autocomplete(props) {
                     onBlur={props.onBlur}
                     onKeyDown={props.onKeyDown}
                     selectRef={props.innerRef}
+                    createOptionPosition="first"
                     menuPortalTarget={props.menuPortalTarget}
                     components={{
                         Option: Option,

@@ -1,72 +1,73 @@
 import { useRef } from 'react';
 import { FormGroup, Label, FormText, Input } from 'reactstrap';
-import { connect } from 'react-redux';
-import { setLabel, setPredicate, setClass, setResearchFields, setResearchProblems, setIsStrictTemplate } from 'actions/addTemplate';
+import { setLabel, setPredicate, setClass, setResearchFields, setResearchProblems } from 'actions/addTemplate';
 import { createPredicate } from 'services/backend/predicates';
 import ConfirmClass from 'components/ConfirmationModal/ConfirmationModal';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes.js';
-import PropTypes from 'prop-types';
 import { CLASSES, ENTITIES } from 'constants/graphSettings';
+import { useSelector, useDispatch } from 'react-redux';
 import useConfirmPropertyModal from 'components/StatementBrowser/AddProperty/hooks/useConfirmPropertyModal';
 
-function GeneralSettings(props) {
+const GeneralSettings = () => {
     const inputRef = useRef(null);
     const classAutocompleteRef = useRef(null);
     const predicateAutocompleteRef = useRef(null);
     const { confirmProperty } = useConfirmPropertyModal();
+    const dispatch = useDispatch();
+    const { templateID, label, predicate, class: clasS, editMode, researchProblems, researchFields } = useSelector(state => state.addTemplate);
 
     const handleChangeLabel = event => {
-        props.setLabel(event.target.value);
+        dispatch(setLabel(event.target.value));
     };
 
     const handlePropertySelect = async (selected, { action }) => {
         if (action === 'select-option') {
-            props.setPredicate(selected);
+            dispatch(setPredicate(selected));
         } else if (action === 'create-option') {
             const confirmedProperty = await confirmProperty();
             if (confirmedProperty) {
                 const newPredicate = await createPredicate(selected.label);
                 selected.id = newPredicate.id;
-                props.setPredicate(selected);
+                dispatch(setPredicate(selected));
             }
             // blur the field allows to focus and open the menu again
             predicateAutocompleteRef.current && predicateAutocompleteRef.current.blur();
         } else if (action === 'clear') {
-            props.setPredicate(null);
+            dispatch(setPredicate(null));
         }
     };
 
     const handleClassSelect = async (selected, { action }) => {
         if (action === 'select-option') {
-            props.setClass(selected);
+            dispatch(setClass(selected));
         } else if (action === 'create-option') {
             const newClass = await ConfirmClass({
                 label: selected.label
             });
             if (newClass) {
                 selected.id = newClass.id;
-                props.setClass(selected);
+                dispatch(setClass(selected));
             }
             // blur the field allows to focus and open the menu again
             classAutocompleteRef.current && classAutocompleteRef.current.blur();
         } else if (action === 'clear') {
-            props.setClass(null);
+            dispatch(setClass(null));
         }
     };
 
     const handleResearchFieldSelect = selected => {
-        props.setResearchFields(!selected ? [] : selected);
+        dispatch(setResearchFields(!selected ? [] : selected));
     };
 
     const handleResearchProblemSelect = selected => {
-        props.setResearchProblems(!selected ? [] : selected);
+        dispatch(setResearchProblems(!selected ? [] : selected));
     };
 
     /*
     const handleSwitchIsDescription = event => {
-        props.setIsClassDescription(event.target.checked);
+        dispatch(setIsClassDescription(event.target.checked));
     };
     */
 
@@ -74,28 +75,28 @@ function GeneralSettings(props) {
         <div className="p-4">
             <FormGroup className="mb-4">
                 <Label>Name of template</Label>
-                <Input innerRef={inputRef} value={props.label} onChange={handleChangeLabel} disabled={!props.editMode} />
+                <Input innerRef={inputRef} value={label} onChange={handleChangeLabel} disabled={!editMode} />
             </FormGroup>
 
             <FormGroup className="mb-4">
                 <Label>Target class</Label>
                 <AutoComplete
                     entityType={ENTITIES.CLASS}
-                    placeholder={props.editMode ? 'Select or type to enter a class' : 'No Classes'}
+                    placeholder={editMode ? 'Select or type to enter a class' : 'No Classes'}
                     onChange={handleClassSelect}
-                    value={props.class}
+                    value={clasS}
                     autoLoadOption={true}
                     openMenuOnFocus={true}
                     allowCreate={true}
-                    isDisabled={!props.editMode || (Boolean(props.templateID) && Boolean(props.class))}
+                    isDisabled={!editMode || (Boolean(templateID) && Boolean(clasS))}
                     copyValueButton={true}
                     isClearable
                     innerRef={classAutocompleteRef}
                     autoFocus={false}
-                    linkButton={props.class && props.class.id ? reverse(ROUTES.CLASS, { id: props.class.id }) : ''}
+                    linkButton={clasS && clasS.id ? reverse(ROUTES.CLASS, { id: clasS.id }) : ''}
                     linkButtonTippy="Go to class page"
                 />
-                {props.editMode && <FormText>Specify the class of this template. If not specified, a class is generated automatically.</FormText>}
+                {editMode && <FormText>Specify the class of this template. If not specified, a class is generated automatically.</FormText>}
             </FormGroup>
             <>
                 <fieldset className="scheduler-border">
@@ -110,18 +111,18 @@ function GeneralSettings(props) {
                         <Label>Property</Label>
                         <AutoComplete
                             entityType={ENTITIES.PREDICATE}
-                            placeholder={props.editMode ? 'Select or type to enter a property' : 'No Property'}
+                            placeholder={editMode ? 'Select or type to enter a property' : 'No Property'}
                             onChange={handlePropertySelect}
-                            value={props.predicate}
+                            value={predicate}
                             autoLoadOption={true}
                             openMenuOnFocus={true}
                             allowCreate={true}
-                            isDisabled={!props.editMode}
+                            isDisabled={!editMode}
                             autoFocus={false}
                             isClearable
                             innerRef={predicateAutocompleteRef}
                         />
-                        {props.editMode && (
+                        {editMode && (
                             <FormText>
                                 Specify the property of this template. This property is used to link the contribution to the template instance.
                             </FormText>
@@ -132,83 +133,41 @@ function GeneralSettings(props) {
                         <AutoComplete
                             entityType={ENTITIES.RESOURCE}
                             optionsClass={CLASSES.RESEARCH_FIELD}
-                            placeholder={props.editMode ? 'Select or type to enter a research field' : 'No research fields'}
+                            placeholder={editMode ? 'Select or type to enter a research field' : 'No research fields'}
                             onChange={handleResearchFieldSelect}
-                            value={props.researchFields}
+                            value={researchFields}
                             autoLoadOption={true}
                             openMenuOnFocus={true}
                             autoFocus={false}
                             allowCreate={false}
-                            isDisabled={!props.editMode}
+                            isDisabled={!editMode}
                             isClearable
                             isMulti
                         />
-                        {props.editMode && <FormText>Specify the research fields that uses this template.</FormText>}
+                        {editMode && <FormText>Specify the research fields that uses this template.</FormText>}
                     </FormGroup>
                     <FormGroup className="mb-4">
                         <Label>Research problems</Label>
                         <AutoComplete
                             entityType={ENTITIES.RESOURCE}
                             optionsClass={CLASSES.PROBLEM}
-                            placeholder={props.editMode ? 'Select or type to enter a research problem' : 'No research problem'}
+                            placeholder={editMode ? 'Select or type to enter a research problem' : 'No research problem'}
                             onChange={handleResearchProblemSelect}
-                            value={props.researchProblems}
+                            value={researchProblems}
                             autoLoadOption={true}
                             openMenuOnFocus={true}
                             autoFocus={false}
                             allowCreate={false}
-                            isDisabled={!props.editMode}
+                            isDisabled={!editMode}
                             isClearable
                             isMulti
                         />
-                        {props.editMode && <FormText>Specify the research problems that uses this template.</FormText>}
+                        {editMode && <FormText>Specify the research problems that uses this template.</FormText>}
                     </FormGroup>
                 </fieldset>
             </>
         </div>
     );
-}
-
-GeneralSettings.propTypes = {
-    templateID: PropTypes.string.isRequired,
-    label: PropTypes.string.isRequired,
-    setLabel: PropTypes.func.isRequired,
-    editMode: PropTypes.bool.isRequired,
-    predicate: PropTypes.object,
-    setPredicate: PropTypes.func.isRequired,
-    class: PropTypes.object,
-    setClass: PropTypes.func.isRequired,
-    researchProblems: PropTypes.array,
-    setResearchProblems: PropTypes.func.isRequired,
-    researchFields: PropTypes.array,
-    isStrictTemplate: PropTypes.bool.isRequired,
-    setResearchFields: PropTypes.func.isRequired,
-    setIsStrictTemplate: PropTypes.func.isRequired
 };
 
-const mapStateToProps = state => {
-    return {
-        templateID: state.addTemplate.templateID,
-        label: state.addTemplate.label,
-        predicate: state.addTemplate.predicate,
-        class: state.addTemplate.class,
-        editMode: state.addTemplate.editMode,
-        researchProblems: state.addTemplate.researchProblems,
-        researchFields: state.addTemplate.researchFields,
-        isStrictTemplate: state.addTemplate.isStrict
-    };
-};
-
-const mapDispatchToProps = dispatch => ({
-    setLabel: data => dispatch(setLabel(data)),
-    setPredicate: data => dispatch(setPredicate(data)),
-    setClass: data => dispatch(setClass(data)),
-    setResearchProblems: data => dispatch(setResearchProblems(data)),
-    setResearchFields: data => dispatch(setResearchFields(data)),
-    setIsStrictTemplate: data => dispatch(setIsStrictTemplate(data))
-});
-
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(GeneralSettings);
+export default GeneralSettings;

@@ -21,6 +21,7 @@ const ContributionEditor = () => {
     const [isOpenCreateContribution, setIsOpenCreateContribution] = useState(false);
     const [isOpenCreatePaper, setIsOpenCreatePaper] = useState(false);
     const [createContributionPaperId, setCreateContributionPaperId] = useState(null);
+    const [initialValueCreatePaper, setInitialValueCreatePaper] = useState(null);
     const { getContributionIds, handleAddContributions } = useContributionEditor();
     const contributions = useSelector(state => state.contributionEditor.contributions);
     const isLoading = useSelector(state => state.contributionEditor.isLoading);
@@ -56,9 +57,10 @@ const ContributionEditor = () => {
         setIsOpenCreateContribution(true);
     };
 
-    const handleOpenCreatePaperModal = () => {
+    const handleOpenCreatePaperModal = initialValue => {
         setIsOpenAddContribution(false);
         setIsOpenCreatePaper(true);
+        setInitialValueCreatePaper(initialValue);
     };
 
     const handleCreateContribution = id => {
@@ -92,7 +94,7 @@ const ContributionEditor = () => {
                         style={{ marginRight: 2 }}
                         disabled={contributionAmount < 2}
                     >
-                        Make comparison
+                        View comparison
                     </Button>
 
                     <Button color="darkblue" size="sm" onClick={() => setIsOpenAddContribution(true)}>
@@ -141,7 +143,14 @@ const ContributionEditor = () => {
                 />
             )}
 
-            {isOpenCreatePaper && <CreatePaperModal isOpen onCreatePaper={handleCreatePaper} toggle={() => setIsOpenCreatePaper(v => !v)} />}
+            {isOpenCreatePaper && (
+                <CreatePaperModal
+                    isOpen
+                    onCreatePaper={handleCreatePaper}
+                    toggle={() => setIsOpenCreatePaper(v => !v)}
+                    initialValue={initialValueCreatePaper}
+                />
+            )}
         </>
     );
 };

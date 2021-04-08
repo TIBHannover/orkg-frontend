@@ -1,11 +1,10 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Modal, ModalHeader, ModalBody, ModalFooter, Button, FormGroup, Input, Label, ListGroup, ListGroupItem, InputGroup } from 'reactstrap';
+import { Modal, ModalHeader, ModalBody, ModalFooter, Button, FormGroup, Input, Label, ListGroup, ListGroupItem, InputGroup, Alert } from 'reactstrap';
 import { getStatementsBySubjectAndPredicate } from 'services/backend/statements';
 import { getResourcesByClass } from 'services/backend/resources';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faExternalLinkAlt, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import ContentLoader from 'react-content-loader';
-import Tooltip from 'components/Utils/Tooltip';
 import { getPaperByDOI } from 'services/backend/misc';
 import REGEX from 'constants/regex';
 import { toast } from 'react-toastify';
@@ -65,10 +64,11 @@ export default function AddContribution(props) {
             return;
         }
         setIsNextPageLoading(true);
+        const doi = searchQuery.startsWith('http') ? searchQuery.substring(searchQuery.indexOf('10.')) : searchQuery;
 
         // The entry is a DOI, check if it exists in the database
-        if (searchQuery.trim().match(new RegExp(REGEX.DOI))) {
-            getPaperByDOI(searchQuery.trim())
+        if (doi.trim().match(new RegExp(REGEX.DOI))) {
+            getPaperByDOI(doi.trim())
                 .then(result =>
                     getStatementsBySubjectAndPredicate({
                         subjectId: result.id,
@@ -188,9 +188,7 @@ export default function AddContribution(props) {
             <ModalHeader toggle={props.toggle}>Add contribution</ModalHeader>
             <ModalBody>
                 <FormGroup>
-                    <Label for="title">
-                        <Tooltip message="Enter the title of the paper or DOI">Paper title or DOI</Tooltip>
-                    </Label>
+                    <Label for="title">Paper title or DOI</Label>
                     <InputGroup>
                         <Input
                             value={searchPaper}
@@ -222,20 +220,29 @@ export default function AddContribution(props) {
                     {!isNextPageLoading && searchPaper && paperResult.length === 0 && (
                         <div>
                             <div className="text-center mt-4 mb-4">
-                                There are no results, please try a different search term {props.allowCreate && 'or click on "Add new paper".'}
+                                There are no results, please try a different search term{' '}
+                                {props.allowCreate && (
+                                    <>
+                                        or{' '}
+                                        <Button color="light" size="sm" onClick={() => props.onCreatePaper(searchPaper)}>
+                                            Add new paper
+                                        </Button>
+                                    </>
+                                )}
                             </div>
                         </div>
                     )}
                     {paperResult.length > 0 && (
                         <>
-                            <p>
-                                Select from the following list the contributions that you want to add.
+                            <Alert color="info">
+                                Select the contributions you want to add{' '}
                                 {props.allowCreate && (
                                     <>
-                                        or you click on <Icon icon={faPlusCircle} /> if you want to create a new contribution for an existing paper
+                                        or you click on <Icon icon={faPlusCircle} className="text-primary" /> if you want to create a new contribution
+                                        for an existing paper
                                     </>
                                 )}
-                            </p>
+                            </Alert>
                             <ListGroup>
                                 {paperResult.map((paper, index) => {
                                     return (
@@ -315,7 +322,7 @@ export default function AddContribution(props) {
             <ModalFooter className="d-flex">
                 {props.allowCreate && (
                     <div className="flex-grow-1">
-                        <Button color="lightblue" onClick={props.onCreatePaper}>
+                        <Button color="lightblue" onClick={() => props.onCreatePaper(searchPaper)}>
                             Add new paper
                         </Button>
                     </div>

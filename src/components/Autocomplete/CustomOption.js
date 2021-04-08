@@ -56,13 +56,17 @@ export default function CustomOption(props) {
                     {props.children}
                     {truncatedDescription && (
                         <div>
-                            <small className="text-muted">{truncatedDescription}</small>
+                            <small className={!propsWithoutInnerProps.isFocused && !propsWithoutInnerProps.isSelected ? 'text-muted' : undefined}>
+                                {truncatedDescription}
+                            </small>
                         </div>
                     )}
                     {truncatedURI && (
                         <div>
                             <i>
-                                <small className="text-muted">{truncatedURI}</small>
+                                <small className={!propsWithoutInnerProps.isFocused && !propsWithoutInnerProps.isSelected ? 'text-muted' : undefined}>
+                                    {truncatedURI}
+                                </small>
                             </i>
                         </div>
                     )}
@@ -85,10 +89,13 @@ export default function CustomOption(props) {
                                             ))}
                                         {props.data.statements &&
                                             props.data.statements
-                                                .filter(statement => statement.predicate.id === PREDICATES.URL)
+                                                .filter(
+                                                    statement =>
+                                                        statement.predicate.id === PREDICATES.URL || statement.predicate.id === PREDICATES.SAME_AS
+                                                )
                                                 .map((statement, index) => (
                                                     <div key={`s${index}`}>
-                                                        <b>URL : </b>{' '}
+                                                        <b>{statement.predicate?.label ?? 'URL'} : </b>{' '}
                                                         <a target="_blank" rel="noopener noreferrer" href={statement.value.label}>
                                                             {statement.value.label}
                                                         </a>

@@ -8,7 +8,7 @@ echo "Serializing environment"
 
 react-env --dest /usr/share/nginx/html/
 
-cat /usr/share/nginx/html/env.js
+cat /usr/share/nginx/html/__ENV.js
 
 exec "$@"
 
