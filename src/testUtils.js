@@ -14,7 +14,7 @@ export const theme = {
     secondary: 'rgb(128, 134, 155)',
     secondaryDarker: 'rgb(80, 85, 101)',
     light: 'rgb(233, 236, 239)',
-    ultraLightBlue: 'rgb(248, 249, 251)',
+    lightLighter: 'rgb(248, 249, 251)',
     lightDarker: 'rgb(219, 221, 229)',
     bodyBg: 'rgb(233, 235, 242)',
     bodyColor: 'rgb(79, 79, 79)',

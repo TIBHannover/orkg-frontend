@@ -44,7 +44,7 @@ const CarouselIndicatorsStyled = styled(CarouselIndicators)`
         margin: 0;
     }
 
-    background: ${props => props.theme.ultraLightBlue};
+    background: ${props => props.theme.lightLighter};
 `;
 
 const ITEMS = [

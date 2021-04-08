@@ -5,7 +5,7 @@ import { ListGroupItem, DropdownItem, Button, DropdownToggle } from 'reactstrap'
 export const StyledStatementItem = styled(ListGroupItem)`
     padding: 0.5rem 0.75rem !important;
     cursor: default;
-    background-color: ${props => props.theme.ultraLightBlue} !important;
+    background-color: ${props => props.theme.lightLighter} !important;
     border-color: ${props => props.theme.lightDarker} !important;
     overflow-wrap: break-word;
     word-break: break-all;
@@ -228,7 +228,7 @@ export const AddPropertyFormStyle = styled.div`
     }
 
     .input-group-prepend {
-        background-color: ${props => props.theme.ultraLightBlue};
+        background-color: ${props => props.theme.lightLighter};
         cursor: default;
         display: flex;
         border: 1px solid rgba(0, 0, 0, 0.125);
@@ -263,7 +263,7 @@ export const StatementsGroupStyle = styled(ListGroupItem)`
 `;
 
 export const PropertyStyle = styled.div`
-    background-color: ${props => props.theme.ultraLightBlue};
+    background-color: ${props => props.theme.lightLighter};
     overflow-wrap: break-word;
     border-radius: 3px 0 0 3px;
 

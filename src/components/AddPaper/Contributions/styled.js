@@ -37,7 +37,7 @@ export const StyledHorizontalContributionsList = styled.ul`
         .contribution-item {
             border: 1px solid ${props => props.theme.lightDarker};
             border-bottom: 0;
-            background-color: ${props => props.theme.ultraLightBlue};
+            background-color: ${props => props.theme.lightLighter};
             position: relative;
             box-sizing: border-box;
             padding: 7px 15px 7px 15px;
@@ -70,7 +70,7 @@ export const AddContribution = styled(Button)`
     &&& {
         padding: 0;
         border: 1px solid ${props => props.theme.lightDarker};
-        background-color: ${props => props.theme.ultraLightBlue};
+        background-color: ${props => props.theme.lightLighter};
         border-radius: 60px;
         margin: 0 5px;
         cursor: pointer;
@@ -131,7 +131,7 @@ export const StyledResearchFieldBrowser = styled.div`
 export const StyledStatementItem = styled(ListGroupItem)`
     padding: 0.5rem 0.75rem !important;
     cursor: default;
-    background-color: ${props => props.theme.ultraLightBlue} !important;
+    background-color: ${props => props.theme.lightLighter} !important;
     border-color: ${props => props.theme.lightDarker} !important;
     overflow-wrap: break-word;
     word-break: break-all;

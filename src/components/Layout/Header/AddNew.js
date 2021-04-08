@@ -45,7 +45,7 @@ const ToolContainer = styled(Link)`
     }
 
     &:hover {
-        background-color: ${props => props.theme.ultraLightBlue};
+        background-color: ${props => props.theme.lightLighter};
         color: inherit;
         text-decoration: none;
     }
