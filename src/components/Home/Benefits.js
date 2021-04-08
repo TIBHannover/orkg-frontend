@@ -18,7 +18,7 @@ const CarouselContainer = styled.div`
         width: 10px !important;
         height: 10px !important;
         border-radius: 100% !important;
-        background-color: ${props => props.theme.orkgPrimaryColor} !important;
+        background-color: ${props => props.theme.primary} !important;
     }
 `;
 

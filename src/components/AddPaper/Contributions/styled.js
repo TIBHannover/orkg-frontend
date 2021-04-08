@@ -54,8 +54,8 @@ export const StyledHorizontalContributionsList = styled.ul`
                 text-decoration: none;
             }
             &.active-contribution {
-                background: ${props => props.theme.orkgPrimaryColor};
-                border: 1px solid ${props => props.theme.orkgPrimaryColor};
+                background: ${props => props.theme.primary};
+                border: 1px solid ${props => props.theme.primary};
                 color: #fff;
                 cursor: initial !important;
             }
@@ -86,8 +86,8 @@ export const AddContribution = styled(Button)`
         }
 
         &:hover {
-            background-color: ${props => props.theme.orkgPrimaryColor};
-            border: 1px solid ${props => props.theme.orkgPrimaryColor};
+            background-color: ${props => props.theme.primary};
+            border: 1px solid ${props => props.theme.primary};
             color: #fff;
         }
     }
@@ -144,7 +144,7 @@ export const StyledStatementItem = styled(ListGroupItem)`
     & > .statementItemIcon {
         font-size: 18px;
         margin-top: 3px;
-        color: ${props => props.theme.orkgPrimaryColor};
+        color: ${props => props.theme.primary};
 
         &.open {
             color: #fff;

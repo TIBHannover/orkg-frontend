@@ -18,7 +18,7 @@ const TabPaneStyled = styled(TabPane)`
 
 export const StyledResearchFieldWrapper = styled.div`
     border-radius: ${props => props.theme.borderRadius};
-    border: ${props => props.theme.borderWidth} solid ${props => props.theme.orkgPrimaryColor};
+    border: ${props => props.theme.borderWidth} solid ${props => props.theme.primary};
     padding: 15px 30px;
 `;
 
@@ -45,10 +45,10 @@ const StyledResearchFieldItem = styled(NavLink)`
     }
 
     &.active {
-        background: ${props => props.theme.orkgPrimaryColor};
+        background: ${props => props.theme.primary};
         color: #fff;
         cursor: initial !important;
-        border-color: ${props => props.theme.orkgPrimaryColor};
+        border-color: ${props => props.theme.primary};
     }
 `;
 

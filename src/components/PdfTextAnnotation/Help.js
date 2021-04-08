@@ -19,7 +19,7 @@ const Help = props => {
         props.setIsOpen(false);
     };
 
-    const tourStyle = { borderTop: `4px solid ${themeContext.orkgPrimaryColor}` };
+    const tourStyle = { borderTop: `4px solid ${themeContext.primary}` };
 
     const tourSteps = [
         {
@@ -115,7 +115,7 @@ const Help = props => {
                 onAfterOpen={disableBody}
                 onBeforeClose={enableBody}
                 showNumber={false}
-                accentColor={themeContext.orkgPrimaryColor}
+                accentColor={themeContext.primary}
                 rounded={10}
                 onRequestClose={handleCloseTour}
                 isOpen={props.isOpen}

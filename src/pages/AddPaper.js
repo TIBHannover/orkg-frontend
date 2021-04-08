@@ -51,7 +51,7 @@ const HelpIcon = styled(Icon)`
     height: 48px;
     width: 48px !important;
     z-index: 9999;
-    background-color: ${props => props.theme.orkgPrimaryColor};
+    background-color: ${props => props.theme.primary};
     display: inline-flex;
     -webkit-justify-content: center;
     justify-content: center;

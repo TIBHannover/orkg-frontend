@@ -24,7 +24,7 @@ export const StyledActivity = styled.div`
         margin-top: 3px;
     }
     a {
-        color: ${props => props.theme.ORKGPrimaryColor};
+        color: ${props => props.theme.primary};
     }
 
     &:last-child {

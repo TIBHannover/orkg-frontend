@@ -15,7 +15,7 @@ import { ActionButton } from 'components/AddPaper/Contributions/styled';
 
 export const StyledInput = styled(Input)`
     background: #fff;
-    color: ${props => props.theme.orkgPrimaryColor};
+    color: ${props => props.theme.primary};
     outline: 0;
     border: dotted 2px ${props => props.theme.listGroupBorderColor};
     border-radius: 0;
@@ -25,7 +25,7 @@ export const StyledInput = styled(Input)`
 
     &:focus {
         background: #fff;
-        color: ${props => props.theme.orkgPrimaryColor};
+        color: ${props => props.theme.primary};
         outline: 0;
         border: dotted 2px ${props => props.theme.listGroupBorderColor};
         padding: 0 4px;

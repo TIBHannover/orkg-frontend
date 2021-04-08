@@ -8,7 +8,7 @@ import { ThemeProvider } from 'styled-components';
 // https://github.com/adamgruber/sass-extract-js/issues/12
 export const theme = {
     orkgBorderRadius: '6px',
-    orkgPrimaryColor: 'rgb(232, 97, 97)',
+    primary: 'rgb(232, 97, 97)',
     orkgBorderWidth: '1px',
     primary: 'rgb(232, 97, 97)',
     secondary: 'rgb(128, 134, 155)',

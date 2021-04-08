@@ -34,7 +34,7 @@ export const StyledStatementItem = styled(ListGroupItem)`
     & > .statementItemIcon {
         font-size: 18px;
         margin-top: 3px;
-        color: ${props => props.theme.orkgPrimaryColor};
+        color: ${props => props.theme.primary};
 
         &.open {
             color: #fff;
