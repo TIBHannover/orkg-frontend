@@ -40,7 +40,7 @@ class AddOrganization extends Component {
         this.setState({ editorState: 'loading' });
         const { name, logo, website, permalink } = this.state;
 
-        if (!name && name.length === 0) {
+        if (!name || name.length === 0) {
             toast.error(`Please enter an organization name`);
             this.setState({ editorState: 'edit' });
             return;
@@ -50,7 +50,7 @@ class AddOrganization extends Component {
             this.setState({ editorState: 'edit' });
             return;
         }
-        if (!website && !new RegExp(REGEX.URL).test(website)) {
+        if (!new RegExp(REGEX.URL).test(website)) {
             toast.error(`Please enter a valid website URL`);
             this.setState({ editorState: 'edit' });
             return;
