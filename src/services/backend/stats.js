@@ -28,7 +28,7 @@ export const getTopContributors = ({ researchFieldId = null, page = 0, items = 9
     return submitGetRequest(`${statsUrl}${researchFieldId ? `research-field/${researchFieldId}/` : ''}top/contributors?${params}`);
 };
 
-export const getChangelogs = ({ researchFieldId = null, page = 0, items = 9999, sortBy = 'id', desc = true }) => {
+export const getChangelogs = ({ researchFieldId = null, page = 0, items = 9999, sortBy = 'createdAt', desc = true }) => {
     const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
     const params = queryString.stringify(
         { page: page, size: items, sort },
