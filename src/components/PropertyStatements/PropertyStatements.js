@@ -24,7 +24,7 @@ const PropertyStatements = ({ propertyId }) => {
 
     return (
         <div>
-            <Button color="darkblue" size="sm" className="mt-5" onClick={() => setShowPropertyStatements(!showPropertyStatements)}>
+            <Button color="secondary" size="sm" className="mt-5" onClick={() => setShowPropertyStatements(!showPropertyStatements)}>
                 {!showPropertyStatements ? 'Show' : 'Hide'} property usage
             </Button>
 
@@ -58,7 +58,7 @@ const PropertyStatements = ({ propertyId }) => {
                                 {!isLoading && hasNextPage && (
                                     <tr className="text-center">
                                         <td colspan="3">
-                                            <Button color="lightblue" size="sm" onClick={!isLoading ? handleLoadMore : undefined}>
+                                            <Button color="light" size="sm" onClick={!isLoading ? handleLoadMore : undefined}>
                                                 Load more statements
                                             </Button>
                                         </td>

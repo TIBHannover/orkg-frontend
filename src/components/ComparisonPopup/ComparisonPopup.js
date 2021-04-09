@@ -93,7 +93,7 @@ class ComparisonPopup extends Component {
                     <Container>
                         {!this.state.showComparisonBox ? (
                             <ComparisonBoxButton color="primary" className="ml-auto" onClick={this.toggleComparisonBox}>
-                                <Badge color="primaryDarker" className="pl-2 pr-2">
+                                <Badge color="primary-darker" className="pl-2 pr-2">
                                     {contributionAmount}
                                 </Badge>{' '}
                                 Compare contributions <Icon icon={faChevronUp} />
@@ -101,7 +101,7 @@ class ComparisonPopup extends Component {
                         ) : (
                             <ComparisonBox className="ml-auto">
                                 <Header onClick={this.toggleComparisonBox}>
-                                    <Badge color="primaryDarker" className="pl-2 pr-2 mr-1">
+                                    <Badge color="primary-darker" className="pl-2 pr-2 mr-1">
                                         {contributionAmount}
                                     </Badge>{' '}
                                     Compare contributions
@@ -146,7 +146,7 @@ class ComparisonPopup extends Component {
                                 </List>
                                 <div className="w-100 text-center">
                                     <Link to={comparisonUrl}>
-                                        <StartComparison color="primaryDarker" className="mb-2">
+                                        <StartComparison color="primary-darker" className="mb-2">
                                             Start comparison
                                         </StartComparison>
                                     </Link>

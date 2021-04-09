@@ -456,6 +456,7 @@ function useComparison() {
                 setIsLoadingComparisonResult(false);
                 setIsFailedLoadingComparisonResult(true);
             });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [comparisonType, contributionsList, extendAndSortProperties, responseHash]);
 
     /**

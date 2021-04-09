@@ -199,7 +199,7 @@ function Comparison(props) {
                     {!isFailedLoadingMetaData && contributionsList.length > 1 && (
                         <Tippy content="The amount of compared contributions">
                             <span>
-                                <Badge color="darkblue" pill style={{ fontSize: '65%' }}>
+                                <Badge color="secondary" pill style={{ fontSize: '65%' }}>
                                     {contributionsList.length}
                                 </Badge>
                             </span>
@@ -211,7 +211,7 @@ function Comparison(props) {
                     <div style={{ marginLeft: 'auto' }} className="flex-shrink-0 mt-4">
                         <ButtonGroup className="float-right mb-4 ml-1">
                             <Dropdown group isOpen={dropdownDensityOpen} toggle={() => setDropdownDensityOpen(v => !v)} style={{ marginRight: 3 }}>
-                                <DropdownToggle color="darkblue" size="sm">
+                                <DropdownToggle color="secondary" size="sm">
                                     <Icon icon={faWindowMaximize} className="mr-1" /> View
                                 </DropdownToggle>
                                 <DropdownMenu>
@@ -234,7 +234,7 @@ function Comparison(props) {
                             </Dropdown>
                             {!!metaData.id ? (
                                 <Button
-                                    color="darkblue"
+                                    color="secondary"
                                     size="sm"
                                     onClick={() => {
                                         setUseReconstructedData(false);
@@ -249,13 +249,13 @@ function Comparison(props) {
                                     hideOnClick={false}
                                     content="Cannot use self-visualization-service for unpublished comparison. You must publish the comparison first to use this functionality."
                                 >
-                                    <span style={{ marginRight: 3 }} className="btn btn-darkblue btn-sm disabled">
+                                    <span style={{ marginRight: 3 }} className="btn btn-secondary btn-sm disabled">
                                         <Icon icon={faChartBar} className="mr-1" /> Visualize
                                     </span>
                                 </Tippy>
                             )}
                             <Dropdown group isOpen={dropdownOpen} toggle={() => setDropdownOpen(v => !v)}>
-                                <DropdownToggle color="darkblue" size="sm" className="rounded-right">
+                                <DropdownToggle color="secondary" size="sm" className="rounded-right">
                                     <span className="mr-2">More</span> <Icon icon={faEllipsisV} />
                                 </DropdownToggle>
                                 <DropdownMenu right>

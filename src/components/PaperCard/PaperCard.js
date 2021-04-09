@@ -70,11 +70,20 @@ const PaperCard = props => {
                                 : ''}{' '}
                             {props.paper.publicationYear}
                         </small>
+                        {props.showBreadcrumbs && (
+                            <div className="d-block d-md-none mt-1">
+                                <RelativeBreadcrumbs researchField={props.paper.researchField} />
+                            </div>
+                        )}
                     </div>
                 </div>
-                <div className="col-3 text-right d-flex align-items-end" style={{ flexDirection: 'column' }}>
+                <div className="col-md-3 text-right d-flex align-items-end" style={{ flexDirection: 'column' }}>
                     <div style={{ flex: 1 }}>
-                        {props.showBreadcrumbs && <RelativeBreadcrumbs researchField={props.paper.researchField} />}
+                        {props.showBreadcrumbs && (
+                            <div className="d-none d-md-block">
+                                <RelativeBreadcrumbs researchField={props.paper.researchField} />
+                            </div>
+                        )}
 
                         {props.contribution && (
                             <div className="options mr-2">

@@ -80,7 +80,7 @@ const StyledLink = styled(Link)`
 `;
 
 const StyledGravatar = styled(Gravatar)`
-    border: 3px solid ${props => props.theme.avatarBorderColor};
+    border: 3px solid ${props => props.theme.dark};
     cursor: pointer;
 `;
 
@@ -106,22 +106,22 @@ const StyledAuthTooltip = styled(Tooltip)`
     }
     & .tooltip-inner {
         font-size: 16px;
-        background-color: ${props => props.theme.darkblue};
+        background-color: ${props => props.theme.secondary};
         max-width: 410px;
         box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.13);
 
         .btn {
-            border-color: ${props => props.theme.darkblue};
-            background-color: ${props => props.theme.buttonDark};
+            border-color: ${props => props.theme.secondary};
+            background-color: ${props => props.theme.dark};
 
             &:hover {
-                background-color: ${props => props.theme.darkblueDarker};
+                background-color: ${props => props.theme.secondaryDarker};
             }
         }
     }
 
     & .arrow:before {
-        border-bottom-color: ${props => props.theme.darkblue} !important;
+        border-bottom-color: ${props => props.theme.secondary} !important;
     }
 `;
 
@@ -271,7 +271,14 @@ class Header extends Component {
 
         return (
             <StyledTopBar className={this.state.isHomePageStyle ? 'home-page' : ''}>
-                <Navbar className={this.state.isHomePageStyle ? 'home-page' : ''} expand="md" fixed="top" id="main-navbar">
+                <Navbar
+                    light={!this.state.isHomePageStyle}
+                    dark={this.state.isHomePageStyle}
+                    className={this.state.isHomePageStyle ? 'home-page' : ''}
+                    expand="md"
+                    fixed="top"
+                    id="main-navbar"
+                >
                     <GlobalStyle scrollbarWidth={scrollbarWidth(true)} cookieInfoDismissed={cookieInfoDismissed} />
 
                     <div
@@ -471,7 +478,7 @@ class Header extends Component {
 
                             {!this.props.user && (
                                 <Button
-                                    color={!this.state.isHomePageStyle ? 'secondary' : 'darkblue'}
+                                    color="secondary"
                                     className="pl-4 pr-4 flex-shrink-0 sign-in"
                                     outline
                                     onClick={() => this.props.openAuthDialog({ action: 'signin' })}

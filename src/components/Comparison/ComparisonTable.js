@@ -56,6 +56,7 @@ const ComparisonTable = props => {
                       };
                   }))
         ];
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.transpose, props.properties, props.contributions]);
 
     const defaultColumn = useMemo(
@@ -193,6 +194,7 @@ const ComparisonTable = props => {
                           };
                       }))
         ];
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.transpose, props.properties, props.contributions, props.viewDensity]);
 
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable(
@@ -232,7 +234,7 @@ const ComparisonTable = props => {
                 </ScrollSyncPane>
                 <ScrollSyncPane group="one">
                     <div ref={props.scrollContainerBody} style={{ overflow: 'auto' }}>
-                        <div {...getTableBodyProps()} className="comparisonBody" style={{ width: '100%' }}>
+                        <div {...getTableBodyProps()} className="comparisonBody" style={{ ...getTableProps().style }}>
                             {rows.map((row, i) => {
                                 prepareRow(row);
                                 return (

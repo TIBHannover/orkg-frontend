@@ -25,7 +25,7 @@ const PreviewContainer = styled.div`
     height: 100px;
     display: flex;
     align-items: center;
-    border: 1px ${props => props.theme.darkblue} solid;
+    border: 1px ${props => props.theme.secondary} solid;
     border-radius: 5px;
     overflow: hidden;
     transition: box-shadow 0.5s;

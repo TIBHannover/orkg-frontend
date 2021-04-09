@@ -56,7 +56,7 @@ class EditableHeader extends Component {
                                     <small>No label</small>
                                 </i>
                             )}
-                            <Button className="float-right" size="sm" color="darkblue" onClick={this.handleEditClick}>
+                            <Button className="float-right" size="sm" color="secondary" onClick={this.handleEditClick}>
                                 <Icon icon={faPen} /> Edit
                             </Button>
                         </h3>

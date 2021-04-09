@@ -28,7 +28,7 @@ const List = styled.div`
         font-size: 145%;
         min-height: 40px;
         a {
-            color: ${props => props.theme.darkblueDarker}!important;
+            color: ${props => props.theme.secondaryDarker}!important;
         }
     }
     .item-1,
@@ -37,7 +37,7 @@ const List = styled.div`
         min-height: 40px;
 
         a {
-            color: ${props => props.theme.darkblue}!important;
+            color: ${props => props.theme.secondary}!important;
         }
     }
     .item-3,
@@ -46,7 +46,7 @@ const List = styled.div`
         min-height: 30px;
 
         a {
-            color: ${props => props.theme.darkblue}!important;
+            color: ${props => props.theme.secondary}!important;
             opacity: 0.8;
         }
     }

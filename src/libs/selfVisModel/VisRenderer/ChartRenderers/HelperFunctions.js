@@ -125,7 +125,7 @@ const createIntervalDropDownSelectors = (ref, id, interval_id, possibleValueCand
                 });
             }}
         >
-            <TippyDropdownToggle caret color="darkblue" className="text-truncate mw-100">
+            <TippyDropdownToggle caret color="secondary" className="text-truncate mw-100">
                 <Tippy
                     content={ref.state.yAxisInterValSelectors[id][interval_id].label}
                     placement="right"
@@ -252,7 +252,7 @@ export const createValueSelectors = ref => {
                                 });
                             }}
                         >
-                            <TippyDropdownToggle caret color="darkblue" className="text-truncate mw-100 ">
+                            <TippyDropdownToggle caret color="secondary" className="text-truncate mw-100 ">
                                 <Tippy
                                     content={ref.state.yAxisSelector[id] ? ref.state.yAxisSelector[id] : possibleValueCandidates[0].label}
                                     placement="right"
@@ -430,7 +430,7 @@ export const createLabelSelectors = ref => {
                     });
                 }}
             >
-                <TippyDropdownToggle caret color="darkblue" className="text-truncate mw-100">
+                <TippyDropdownToggle caret color="secondary" className="text-truncate mw-100">
                     <Tippy
                         content={ref.state.xAxisSelector ? ref.state.xAxisSelector : possibleLabelCandidates[0].label}
                         placement="right"

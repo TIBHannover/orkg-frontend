@@ -107,7 +107,7 @@ const EditItem = props => {
                     inputValue={inputValue}
                 />
                 <InputGroupAddon addonType="append">
-                    <Button color="darkblue" onClick={() => setIsOpenResearchFieldModal(true)}>
+                    <Button color="secondary" onClick={() => setIsOpenResearchFieldModal(true)}>
                         Choose
                     </Button>
                 </InputGroupAddon>

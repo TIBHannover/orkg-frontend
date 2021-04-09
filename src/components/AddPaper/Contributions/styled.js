@@ -5,7 +5,7 @@ import { Button, ListGroupItem } from 'reactstrap';
 export const StyledHorizontalContribution = styled.div`
     border-radius: ${props => props.theme.borderRadius};
     border-width: ${props => props.theme.borderWidth};
-    border-color: ${props => props.theme.ultraLightBlueDarker};
+    border-color: ${props => props.theme.lightDarker};
     border-style: solid;
     border-top-left-radius: 0;
     padding: 25px 30px;
@@ -35,9 +35,9 @@ export const StyledHorizontalContributionsList = styled.ul`
         margin-right: 2px;
 
         .contribution-item {
-            border: 1px solid ${props => props.theme.ultraLightBlueDarker};
+            border: 1px solid ${props => props.theme.lightDarker};
             border-bottom: 0;
-            background-color: ${props => props.theme.ultraLightBlue};
+            background-color: ${props => props.theme.lightLighter};
             position: relative;
             box-sizing: border-box;
             padding: 7px 15px 7px 15px;
@@ -54,8 +54,8 @@ export const StyledHorizontalContributionsList = styled.ul`
                 text-decoration: none;
             }
             &.active-contribution {
-                background: ${props => props.theme.orkgPrimaryColor};
-                border: 1px solid ${props => props.theme.orkgPrimaryColor};
+                background: ${props => props.theme.primary};
+                border: 1px solid ${props => props.theme.primary};
                 color: #fff;
                 cursor: initial !important;
             }
@@ -69,8 +69,8 @@ export const StyledHorizontalContributionsList = styled.ul`
 export const AddContribution = styled(Button)`
     &&& {
         padding: 0;
-        border: 1px solid ${props => props.theme.ultraLightBlueDarker};
-        background-color: ${props => props.theme.ultraLightBlue};
+        border: 1px solid ${props => props.theme.lightDarker};
+        background-color: ${props => props.theme.lightLighter};
         border-radius: 60px;
         margin: 0 5px;
         cursor: pointer;
@@ -86,8 +86,8 @@ export const AddContribution = styled(Button)`
         }
 
         &:hover {
-            background-color: ${props => props.theme.orkgPrimaryColor};
-            border: 1px solid ${props => props.theme.orkgPrimaryColor};
+            background-color: ${props => props.theme.primary};
+            border: 1px solid ${props => props.theme.primary};
             color: #fff;
         }
     }
@@ -131,8 +131,8 @@ export const StyledResearchFieldBrowser = styled.div`
 export const StyledStatementItem = styled(ListGroupItem)`
     padding: 0.5rem 0.75rem !important;
     cursor: default;
-    background-color: ${props => props.theme.ultraLightBlue} !important;
-    border-color: ${props => props.theme.ultraLightBlueDarker} !important;
+    background-color: ${props => props.theme.lightLighter} !important;
+    border-color: ${props => props.theme.lightDarker} !important;
     overflow-wrap: break-word;
     word-break: break-all;
     flex: 1;
@@ -144,7 +144,7 @@ export const StyledStatementItem = styled(ListGroupItem)`
     & > .statementItemIcon {
         font-size: 18px;
         margin-top: 3px;
-        color: ${props => props.theme.orkgPrimaryColor};
+        color: ${props => props.theme.primary};
 
         &.open {
             color: #fff;
@@ -161,8 +161,8 @@ export const StyledStatementItem = styled(ListGroupItem)`
     }
 
     &.statementActive {
-        background-color: ${props => props.theme.darkblue} !important;
-        border-color: ${props => props.theme.darkblue} !important;
+        background-color: ${props => props.theme.secondary} !important;
+        border-color: ${props => props.theme.secondary} !important;
         color: #fff;
 
         & .deletePredicate {

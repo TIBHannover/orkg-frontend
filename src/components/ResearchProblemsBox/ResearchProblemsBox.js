@@ -52,7 +52,7 @@ const ResearchProblemsBox = ({ researchFieldId }) => {
             )}
             {totalElements > 5 && (
                 <div className="text-center mt-2">
-                    <Button size="sm" onClick={() => setOpenModal(v => !v)} color="lightblue">
+                    <Button size="sm" onClick={() => setOpenModal(v => !v)} color="light">
                         View more
                     </Button>
                     {openModal && <ResearchProblemsModal openModal={openModal} setOpenModal={setOpenModal} researchFieldId={researchFieldId} />}

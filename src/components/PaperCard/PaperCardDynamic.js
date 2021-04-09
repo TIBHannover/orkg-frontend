@@ -70,17 +70,23 @@ const PaperCardDynamic = props => {
                     </Link>
                     <br />
                     {!isLoading && (
-                        <small>
-                            <Authors authors={optimizedPaperObject.authorNames} />
-                            {(optimizedPaperObject.publicationMonth || optimizedPaperObject.publicationYear) && (
-                                <Icon size="sm" icon={faCalendar} className="ml-2 mr-1" />
-                            )}
-                            {optimizedPaperObject.publicationMonth && optimizedPaperObject.publicationMonth > 0
-                                ? moment(optimizedPaperObject.publicationMonth, 'M').format('MMMM')
-                                : ''}{' '}
-                            {optimizedPaperObject.publicationYear}
-                        </small>
+                        <>
+                            <small>
+                                <Authors authors={optimizedPaperObject.authorNames} />
+                                {(optimizedPaperObject.publicationMonth || optimizedPaperObject.publicationYear) && (
+                                    <Icon size="sm" icon={faCalendar} className="ml-2 mr-1" />
+                                )}
+                                {optimizedPaperObject.publicationMonth && optimizedPaperObject.publicationMonth > 0
+                                    ? moment(optimizedPaperObject.publicationMonth, 'M').format('MMMM')
+                                    : ''}{' '}
+                                {optimizedPaperObject.publicationYear}
+                            </small>
+                            <div className="d-block d-md-none">
+                                <RelativeBreadcrumbs researchField={optimizedPaperObject.researchField} />
+                            </div>
+                        </>
                     )}
+
                     {/*Show Loading Dynamic data indicator if we are loading */}
                     {isLoading && (
                         <div style={{ display: 'ruby' }}>
@@ -103,7 +109,7 @@ const PaperCardDynamic = props => {
                 </div>
                 {!isLoading && (
                     <div className="col-3 text-right d-flex align-items-end" style={{ flexDirection: 'column' }}>
-                        <div style={{ flex: 1 }}>
+                        <div style={{ flex: 1 }} className="d-none d-md-block">
                             <RelativeBreadcrumbs researchField={optimizedPaperObject.researchField} />
                         </div>
                         <UserAvatar userId={props.paper?.created_by} />

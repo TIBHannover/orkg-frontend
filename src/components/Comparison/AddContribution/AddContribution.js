@@ -322,7 +322,7 @@ export default function AddContribution(props) {
             <ModalFooter className="d-flex">
                 {props.allowCreate && (
                     <div className="flex-grow-1">
-                        <Button color="lightblue" onClick={() => props.onCreatePaper(searchPaper)}>
+                        <Button color="light" onClick={() => props.onCreatePaper(searchPaper)}>
                             Add new paper
                         </Button>
                     </div>

@@ -19,7 +19,7 @@ const Card = styled(Link)`
     margin: 0 0;
     flex: 1;
     border-radius: 11px;
-    background: ${props => props.theme.darkblue};
+    background: ${props => props.theme.secondary};
     cursor: pointer;
     font-size: 95%;
     padding: 10px 5px;
@@ -46,7 +46,7 @@ const Card = styled(Link)`
     }
 
     & .simContributionLabel {
-        color: ${props => props.theme.darkblueDarker};
+        color: ${props => props.theme.secondaryDarker};
         font-size: 84%;
     }
 `;
@@ -58,7 +58,7 @@ const Similarity = styled.span`
     display: block;
     float: left;
     text-align: center;
-    color: ${props => props.theme.darkblueDarker};
+    color: ${props => props.theme.secondaryDarker};
     font-weight: 700;
 
     margin-right: 10px;

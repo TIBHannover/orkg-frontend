@@ -67,7 +67,7 @@ const ObjectStatements = props => {
 
     return (
         <div>
-            <Button color="darkblue" size="sm" className="mt-5" onClick={() => setShowObjectStatements(!showObjectStatements)}>
+            <Button color="secondary" size="sm" className="mt-5" onClick={() => setShowObjectStatements(!showObjectStatements)}>
                 {!showObjectStatements ? 'Show' : 'Hide'} object statements
             </Button>
 
@@ -98,7 +98,7 @@ const ObjectStatements = props => {
                                 {!isLoading && hasNextPage && (
                                     <tr className="text-center">
                                         <td colspan="3">
-                                            <Button color="lightblue" size="sm" onClick={handleLoadMore}>
+                                            <Button color="light" size="sm" onClick={handleLoadMore}>
                                                 Load more statements
                                             </Button>
                                         </td>

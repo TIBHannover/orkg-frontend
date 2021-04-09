@@ -63,7 +63,7 @@ class FeaturedComparisonsItem extends Component {
                                 <Col sm="9">
                                     <ComparisonTitle tag="h5">{this.props.title}</ComparisonTitle>
                                     <ComparisonText>{this.props.description}</ComparisonText>
-                                    <Badge color="lightblue">{contributionsLength} contributions</Badge>
+                                    <Badge color="light">{contributionsLength} contributions</Badge>
                                 </Col>
                             </Row>
                         </ComparisonBody>

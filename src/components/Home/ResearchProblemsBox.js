@@ -32,7 +32,7 @@ const ResearchProblemsBox = ({ id }) => {
             </div>
             {researchProblems.length > 5 && (
                 <div className="text-center">
-                    <Button size="sm" onClick={() => null} color="lightblue">
+                    <Button size="sm" onClick={() => null} color="light">
                         View more
                     </Button>
                 </div>
