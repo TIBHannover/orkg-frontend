@@ -58,6 +58,10 @@ body {
         .search-box .search-icon {
             color: $secondary;
         }
+
+        @media (max-width: 768px) {
+            background: #5f6474;
+        }
     }
 }
 
