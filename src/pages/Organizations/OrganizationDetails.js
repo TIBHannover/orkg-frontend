@@ -97,7 +97,7 @@ const OrganizationDetails = () => {
                         </>
                         {!!user && (user.id === createdBy || user.isCurationAllowed) && (
                             <ButtonGroup className="flex-shrink-0" style={{ marginLeft: 'auto' }}>
-                                <Button size="sm" color="darkblue" tag={Link} to={reverse(ROUTES.ADD_OBSERVATORY, { id: id })}>
+                                <Button size="sm" color="darkblue" tag={Link} to={reverse(ROUTES.ADD_OBSERVATORY, { id: organizationId })}>
                                     <Icon icon={faPlus} /> Create new observatory
                                 </Button>
                                 <Button color="darkblue" size="sm" onClick={() => setShowEditDialog(v => !v)}>

@@ -134,7 +134,7 @@ class AddObservatory extends Component {
                 {!this.state.isLoadingOrganization && !this.state.errorLoadingOrganization && (
                     <>
                         <Container className="d-flex align-items-center">
-                            <h3 className="h4 my-4 flex-grow-1">Create an Observatory in {this.state.organizationName}</h3>
+                            <h3 className="h4 my-4 flex-grow-1">Create an observatory in {this.state.organizationName}</h3>
                         </Container>
 
                         <Container className="box rounded pt-4 pb-4 pl-5 pr-5">
