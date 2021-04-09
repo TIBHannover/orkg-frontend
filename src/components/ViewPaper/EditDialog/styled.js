@@ -21,8 +21,8 @@ export const StyledListGroupOpen = styled(Collapse)`
 export const StyledStatementItem = styled(ListGroupItem)`
     padding: 0.5rem 0.75rem !important;
     cursor: default;
-    background-color: ${props => props.theme.ultraLightBlue} !important;
-    border-color: ${props => props.theme.ultraLightBlueDarker} !important;
+    background-color: ${props => props.theme.lightLighter} !important;
+    border-color: ${props => props.theme.lightDarker} !important;
     overflow-wrap: break-word;
     word-break: break-all;
     flex: 1;
@@ -34,7 +34,7 @@ export const StyledStatementItem = styled(ListGroupItem)`
     & > .statementItemIcon {
         font-size: 18px;
         margin-top: 3px;
-        color: ${props => props.theme.orkgPrimaryColor};
+        color: ${props => props.theme.primary};
 
         &.open {
             color: #fff;
@@ -51,8 +51,8 @@ export const StyledStatementItem = styled(ListGroupItem)`
     }
 
     &.statementActive {
-        background-color: ${props => props.theme.darkblue} !important;
-        border-color: ${props => props.theme.darkblue} !important;
+        background-color: ${props => props.theme.secondary} !important;
+        border-color: ${props => props.theme.secondary} !important;
         color: #fff;
 
         & .deletePredicate {

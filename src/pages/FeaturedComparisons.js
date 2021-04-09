@@ -126,7 +126,7 @@ const FeaturedComparisons = () => {
             <Container className="p-0 d-flex align-items-center">
                 <h1 className="h4 mt-4 mb-4 flex-grow-1">Featured paper comparisons</h1>
                 <ButtonGroup className="flex-shrink-0">
-                    <Link to={ROUTES.COMPARISONS} className="btn btn-darkblue flex-shrink-0 btn-sm">
+                    <Link to={ROUTES.COMPARISONS} className="btn btn-secondary flex-shrink-0 btn-sm">
                         View all comparisons
                     </Link>
                 </ButtonGroup>

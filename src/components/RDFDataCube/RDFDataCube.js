@@ -345,7 +345,7 @@ const RDFDataCube = props => {
                         {!isDataCubeLoading && !isDataCubeFailedLoading && (
                             <>
                                 <Dropdown className="float-right mb-2" isOpen={dropdownOpen} toggle={toggleDropdown}>
-                                    <DropdownToggle color="darkblue" size="sm">
+                                    <DropdownToggle color="secondary" size="sm">
                                         <span className="mr-2">Options</span> <Icon icon={faEllipsisV} />
                                     </DropdownToggle>
                                     <DropdownMenu>

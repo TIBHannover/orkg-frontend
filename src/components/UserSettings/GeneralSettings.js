@@ -12,7 +12,7 @@ import Gravatar from 'react-gravatar';
 import styled from 'styled-components';
 
 const StyledGravatar = styled(Gravatar)`
-    border: 3px solid ${props => props.theme.avatarBorderColor};
+    border: 3px solid ${props => props.theme.dark};
 `;
 
 class GeneralSettings extends Component {

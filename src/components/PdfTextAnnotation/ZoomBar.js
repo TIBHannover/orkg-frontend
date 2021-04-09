@@ -26,10 +26,10 @@ const ZoomBar = () => {
     return (
         <Container>
             <ButtonGroup className="rounded-pill">
-                <Button color="darkblue" onClick={handleZoomIn} size="lg">
+                <Button color="secondary" onClick={handleZoomIn} size="lg">
                     <Icon icon={faSearchPlus} />
                 </Button>
-                <Button color="darkblue" onClick={handleZoomOut} size="lg">
+                <Button color="secondary" onClick={handleZoomOut} size="lg">
                     <Icon icon={faSearchMinus} />
                 </Button>
             </ButtonGroup>

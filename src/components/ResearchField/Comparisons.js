@@ -87,7 +87,7 @@ const Comparisons = ({ id, boxShadow }) => {
                     }
                 >
                     <span>
-                        <Button color="darkblue" className="flex-shrink-0 pl-3 pr-3 ml-auto" size="sm">
+                        <Button color="secondary" className="flex-shrink-0 pl-3 pr-3 ml-auto" size="sm">
                             {stringifySort(sort)} <Icon icon={faChevronDown} />
                         </Button>
                     </span>

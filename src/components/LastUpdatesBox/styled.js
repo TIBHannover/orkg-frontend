@@ -1,12 +1,12 @@
 import styled from 'styled-components';
 
 export const StyledActivity = styled.div`
-    border-left: 3px solid ${props => props.theme.ultraLightBlueDarker};
+    border-left: 3px solid ${props => props.theme.lightDarker};
     color: ${props => props.theme.bodyColor};
     position: relative;
     font-size: 15px;
     .time {
-        color: ${props => props.theme.darkblueDarker};
+        color: ${props => props.theme.secondaryDarker};
         margin-top: -0.2rem;
         margin-bottom: 0.2rem;
         font-size: 16px;
@@ -18,13 +18,13 @@ export const StyledActivity = styled.div`
         margin-right: 0.5rem;
         border-radius: 14px;
         content: '';
-        background-color: ${props => props.theme.ultraLightBlueDarker};
+        background-color: ${props => props.theme.lightDarker};
         display: inline-block;
         position: absolute;
         margin-top: 3px;
     }
     a {
-        color: ${props => props.theme.ORKGPrimaryColor};
+        color: ${props => props.theme.primary};
     }
 
     &:last-child {

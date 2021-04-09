@@ -80,7 +80,7 @@ const ClassInstances = props => {
 
     return (
         <div>
-            <Button color="darkblue" size="sm" className="mt-5" onClick={() => setShowClassInstances(!showClassInstances)}>
+            <Button color="secondary" size="sm" className="mt-5" onClick={() => setShowClassInstances(!showClassInstances)}>
                 {!showClassInstances ? 'Show' : 'Hide'} class instances
             </Button>
 

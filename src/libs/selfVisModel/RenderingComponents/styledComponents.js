@@ -32,7 +32,7 @@ export const PropertyCell = styled.div`
     text-overflow: ellipsis;
     display: ruby;
     color: white;
-    background: ${props => props.theme.darkblue};
+    background: ${props => props.theme.secondary};
     border-top-left-radius: 0;
     border-top-right-radius: 0;
     width: 150px;
@@ -47,7 +47,7 @@ export const PropertyCellEditor = styled(TableCell)`
     text-overflow: ellipsis;
     display: ruby;
     color: white;
-    background: ${props => props.theme.darkblue};
+    background: ${props => props.theme.secondary};
     width: 150px;
     min-width: 150px;
     padding: 0 2px;
@@ -125,7 +125,7 @@ export const MetaMapperSelectorSimple = styled.div`
 
 export const PropertyCellInput = styled(Input)`
     background: #fff;
-    color: ${props => props.theme.orkgPrimaryColor};
+    color: ${props => props.theme.primary};
     outline: 0;
     border: dotted 2px ${props => props.theme.listGroupBorderColor};
     border-radius: 0;
@@ -137,7 +137,7 @@ export const PropertyCellInput = styled(Input)`
 
     &:focus {
         background: #fff;
-        color: ${props => props.theme.orkgPrimaryColor};
+        color: ${props => props.theme.primary};
         outline: 0;
         border: dotted 2px ${props => props.theme.listGroupBorderColor};
         padding: 0 4px;

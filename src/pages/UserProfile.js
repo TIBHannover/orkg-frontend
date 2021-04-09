@@ -16,7 +16,7 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 const StyledGravatar = styled(Gravatar)`
-    border: 3px solid ${props => props.theme.avatarBorderColor};
+    border: 3px solid ${props => props.theme.dark};
 `;
 
 const StyledOrganizationCard = styled.div`
@@ -70,7 +70,7 @@ const StyledActivity = styled.div`
         display: inline-block;
     }
     a {
-        color: ${props => props.theme.ORKGPrimaryColor};
+        color: ${props => props.theme.primary};
     }
 
     &:last-child {
