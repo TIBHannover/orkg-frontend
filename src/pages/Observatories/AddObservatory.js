@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import { Container, Button, FormGroup, Input, Label } from 'reactstrap';
+import { Container, Button, FormGroup, Input, Label, InputGroup, InputGroupAddon } from 'reactstrap';
 import { getOrganization } from 'services/backend/organizations';
 import { createObservatory } from 'services/backend/observatories';
 import NotFound from 'pages/NotFound';
@@ -15,6 +15,9 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { openAuthDialog } from 'actions/auth';
 import { connect } from 'react-redux';
+import slugify from 'slugify';
+import Tooltip from 'components/Utils/Tooltip';
+import REGEX from 'constants/regex';
 
 class AddObservatory extends Component {
     constructor(props) {
@@ -22,11 +25,15 @@ class AddObservatory extends Component {
 
         this.state = {
             redirect: false,
-            value: '',
+            name: '',
             description: '',
-            observatoryId: '',
+            display_id: '',
             researchField: '',
             organizationName: '',
+            permalink: '',
+            publicObservatoryRoute: `${window.location.protocol}//${window.location.host}${window.location.pathname
+                .replace(reverse(ROUTES.ADD_OBSERVATORY, { id: this.props.match.params.id }), reverse(ROUTES.OBSERVATORY, { id: ' ' }))
+                .replace(/\/$/, '')}`,
             isLoadingOrganization: true,
             errorLoadingOrganization: null,
             organizationId: ''
@@ -52,31 +59,53 @@ class AddObservatory extends Component {
 
     createNewObservatory = async () => {
         this.setState({ editorState: 'loading' });
-        const value = this.state.value;
-        const description = this.state.description;
-        const researchField = this.state.researchField.id;
+        const { name, description, researchField, permalink } = this.state;
 
-        if (value && value.length !== 0 && description && description.length !== 0 && researchField) {
-            try {
-                const observatory = await createObservatory(value, this.state.organizationId, description, researchField);
-                this.navigateToObservatory(observatory.id);
-            } catch (error) {
-                this.setState({ editorState: 'edit' });
-                console.error(error);
-                toast.error(`Error creating observatory ${error.message}`);
-            }
-        } else {
-            toast.error(`Please enter an observatory name, description and research field`);
+        if (!name && name.length === 0) {
+            toast.error(`Please enter an observatory name`);
             this.setState({ editorState: 'edit' });
+            return;
+        }
+
+        if (!new RegExp(REGEX.PERMALINK).test(permalink)) {
+            toast.error(`Only underscores ( _ ), numbers, and letters are allowed in the permalink field`);
+            this.setState({ editorState: 'edit' });
+            return;
+        }
+
+        if (!description && description.length === 0) {
+            toast.error(`Please enter an observatory description`);
+            this.setState({ editorState: 'edit' });
+            return;
+        }
+
+        if (!researchField && researchField.length === 0) {
+            toast.error(`Please enter an observatory research field`);
+            this.setState({ editorState: 'edit' });
+            return;
+        }
+
+        try {
+            const observatory = await createObservatory(name, this.props.match.params.id, description, researchField.id, permalink);
+            this.navigateToObservatory(observatory.display_id);
+        } catch (error) {
+            this.setState({ editorState: 'edit' });
+            console.error(error);
+            toast.error(`Error creating an observatory ${error.message}`);
         }
     };
 
     handleChange = event => {
-        this.setState({ [event.target.name]: event.target.value.trim() });
+        this.setState({ [event.target.name]: event.target.value });
+        if (event.target.name === 'name') {
+            this.setState({
+                permalink: slugify(event.target.value.trim(), { replacement: '_', remove: /[*+~%\\<>/;.(){}?,'"!:@#-^|]/g, lower: false })
+            });
+        }
     };
 
-    navigateToObservatory = observatoryId => {
-        this.setState({ editorState: 'edit', observatoryId: observatoryId }, () => {
+    navigateToObservatory = display_id => {
+        this.setState({ editorState: 'edit', display_id: display_id }, () => {
             this.setState({ redirect: true });
         });
     };
@@ -86,11 +115,14 @@ class AddObservatory extends Component {
         if (this.state.redirect) {
             this.setState({
                 redirect: false,
-                value: '',
-                observatoryId: ''
+                name: '',
+                display_id: '',
+                description: '',
+                researchField: '',
+                permalink: ''
             });
 
-            return <Redirect to={reverse(ROUTES.OBSERVATORY, { id: this.state.observatoryId })} />;
+            return <Redirect to={reverse(ROUTES.OBSERVATORY, { id: this.state.display_id })} />;
         }
 
         return (
@@ -106,19 +138,40 @@ class AddObservatory extends Component {
                         </Container>
 
                         <Container className="box rounded pt-4 pb-4 pl-5 pr-5">
-                            {this.props.user ? (
+                            {this.props.user && this.props.user.isCurationAllowed && (
                                 <div className="pl-3 pr-3 pt-2">
                                     <FormGroup>
-                                        <Label for="ObservatoryLabel">Observatory name</Label>
+                                        <Label for="ObservatoryName">Name</Label>
                                         <Input
                                             onChange={this.handleChange}
                                             type="text"
-                                            name="value"
-                                            id="ObservatoryLabel"
+                                            name="name"
+                                            id="ObservatoryName"
                                             disabled={loading}
                                             placeholder="Observatory name"
                                         />
                                     </FormGroup>
+                                    <FormGroup>
+                                        <div>
+                                            <Label for="observatoryPermalink">
+                                                Permalink
+                                                <Tooltip message="Permalink field allows to identify the observatory page on ORKG in an easy-to-read form. Only dashes ( - ) and lower case letters are allowed" />
+                                            </Label>
+                                            <InputGroup>
+                                                <InputGroupAddon addonType="prepend">{this.state.publicObservatoryRoute}</InputGroupAddon>
+                                                <Input
+                                                    onChange={this.handleChange}
+                                                    type="text"
+                                                    name="permalink"
+                                                    id="observatoryPermalink"
+                                                    disabled={loading}
+                                                    placeholder="name"
+                                                    value={this.state.permalink}
+                                                />
+                                            </InputGroup>
+                                        </div>
+                                    </FormGroup>
+
                                     <FormGroup>
                                         <Label for="ObservatoryResearchField">Research Field</Label>
                                         <AutoComplete
@@ -156,7 +209,8 @@ class AddObservatory extends Component {
                                         {!loading ? 'Create Observatory' : <span>Loading</span>}
                                     </Button>
                                 </div>
-                            ) : (
+                            )}
+                            {(!!!this.props.user || !this.props.user.isCurationAllowed) && (
                                 <>
                                     <Button
                                         color="link"

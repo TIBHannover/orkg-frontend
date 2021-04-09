@@ -12,11 +12,11 @@ class EditObservatory extends Component {
         super(props);
         this.resourceInputRef = createRef();
         this.state = {
-            label: '',
-            description: '',
+            label: this.props.label,
+            description: this.props.description,
             isLoadingName: false,
             isLoadingDescription: false,
-            researchField: null,
+            researchField: this.props.researchField,
             isLoadingResearchField: false
         };
     }
