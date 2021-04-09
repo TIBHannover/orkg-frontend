@@ -16,7 +16,7 @@ export const getComparisonsCountByObservatoryId = id => {
     return submitGetRequest(`${statsUrl}${encodeURIComponent(id)}/observatoryComparisonsCount`);
 };
 
-export const getTopContributors = ({ researchFieldId = null, page = 0, items = 9999, sortBy = 'created_at', desc = true }) => {
+export const getTopContributors = ({ researchFieldId = null, page = 0, items = 9999, sortBy = 'contributions', desc = true }) => {
     const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
     const params = queryString.stringify(
         { page: page, size: items, sort },
