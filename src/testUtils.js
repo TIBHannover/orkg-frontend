@@ -7,24 +7,21 @@ import { ThemeProvider } from 'styled-components';
 
 // https://github.com/adamgruber/sass-extract-js/issues/12
 export const theme = {
-    orkgBorderRadius: '6px',
     primary: 'rgb(232, 97, 97)',
-    orkgBorderWidth: '1px',
-    primary: 'rgb(232, 97, 97)',
+    primaryDarker: 'rgb(198, 29, 29)',
     secondary: 'rgb(128, 134, 155)',
     secondaryDarker: 'rgb(80, 85, 101)',
-    light: 'rgb(233, 236, 239)',
+    light: 'rgb(233, 235, 242)',
     lightLighter: 'rgb(248, 249, 251)',
     lightDarker: 'rgb(219, 221, 229)',
+    dark: 'rgb(91, 97, 118)',
     bodyBg: 'rgb(233, 235, 242)',
     bodyColor: 'rgb(79, 79, 79)',
     borderWidth: '1px',
     borderRadius: '6px',
     themeColors: {
-        light: 'rgb(233, 235, 242)',
-        secondary: 'rgb(128, 134, 155)',
-        secondaryDarker: 'rgb(80, 85, 101)',
-        primaryDarker: 'rgb(198, 29, 29)'
+        primaryDarker: 'rgb(198, 29, 29)',
+        secondaryDarker: 'rgb(80, 85, 101)'
     },
     formFeedbackFontSize: '90%',
     inputBorderRadius: '6px',
@@ -46,9 +43,7 @@ export const theme = {
     badgeFontWeight: 500,
     badgePaddingY: '0.3rem',
     badgePaddingX: '0.8rem',
-    listGroupBorderColor: 'rgba(0, 0, 0, 0.125)',
-    dark: 'rgb(91, 97, 118)',
-    dark: 'rgb(103, 109, 129)'
+    listGroupBorderColor: 'rgba(0, 0, 0, 0.125)'
 };
 
 // wrap the components with the required providers
