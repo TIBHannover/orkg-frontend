@@ -3,11 +3,17 @@ import { Button, Modal, ModalBody, ModalHeader } from 'reactstrap';
 import { getUsersByObservatoryId } from 'services/backend/observatories';
 import ContributorCard from 'components/ContributorCard/ContributorCard';
 import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import AddMember from 'components/Observatory/AddMember';
 
 const MembersBox = ({ observatoryId, organizationsList }) => {
+    const user = useSelector(state => state.auth.user);
     const [members, setMembers] = useState([]);
     const [isLoadingMembers, setIsLoadingMembers] = useState(null);
     const [openModal, setOpenModal] = useState(false);
+    const [showAddMemberDialog, setShowAddMemberDialog] = useState(null);
 
     useEffect(() => {
         const loadMembers = () => {
@@ -26,8 +32,13 @@ const MembersBox = ({ observatoryId, organizationsList }) => {
     }, [observatoryId]);
 
     return (
-        <div className="box rounded-lg p-4 flex-grow-1 d-flex flex-column">
+        <div className="box rounded-lg p-4 flex-grow-1">
             <h5>Members</h5>
+            {!!user && user.isCurationAllowed && (
+                <Button outline size="sm" style={{ float: 'right', marginTop: '-33px' }} onClick={() => setShowAddMemberDialog(v => !v)}>
+                    <Icon icon={faPlus} /> Add
+                </Button>
+            )}
             <div className="flex-grow-1">
                 {!isLoadingMembers ? (
                     <div className="mt-3">
@@ -86,6 +97,13 @@ const MembersBox = ({ observatoryId, organizationsList }) => {
                 ) : (
                     <div className="text-center mt-4 mb-4">Loading members ...</div>
                 )}
+
+                <AddMember
+                    showDialog={showAddMemberDialog}
+                    toggle={() => setShowAddMemberDialog(v => !v)}
+                    id={observatoryId}
+                    organizationId={organizationsList.length > 0 ? organizationsList[0]['id'] : ''}
+                />
             </div>
         </div>
     );
