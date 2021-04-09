@@ -64,10 +64,12 @@ export const getObservatoryAndOrganizationInformation = (observatoryId, organiza
                     return {
                         id: observatoryId,
                         name: obsResponse.name,
+                        display_id: obsResponse.display_id,
                         organization: {
                             id: organizationId,
                             name: orgResponse.name,
-                            logo: orgResponse.logo
+                            logo: orgResponse.logo,
+                            display_id: orgResponse.display_id
                         }
                     };
                 })

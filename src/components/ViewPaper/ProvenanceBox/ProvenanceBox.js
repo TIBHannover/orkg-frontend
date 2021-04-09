@@ -58,7 +58,7 @@ export default function ProvenanceBox(props) {
                                             <b style={{ textTransform: 'uppercase' }}>{props.observatoryInfo.name}</b>
                                             <br />
                                             {props.observatoryInfo.organization && props.observatoryInfo.organization.id && (
-                                                <Link to={reverse(ROUTES.ORGANIZATION, { id: props.observatoryInfo.organization.id })}>
+                                                <Link to={reverse(ROUTES.ORGANIZATION, { id: props.observatoryInfo.organization.display_id })}>
                                                     <img
                                                         style={{ marginTop: 8, marginBottom: 8, maxWidth: '80%', height: 'auto' }}
                                                         className="mx-auto d-block"
