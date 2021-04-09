@@ -554,7 +554,7 @@ export const similarPropertiesByLabel = (propertyLabel, propertyData) => {
 
 /**
  * Compare input value to select options
- * Builtins https://github.com/JedWatson/react-select/blob/d2a820efc70835adf864169eebc76947783a15e2/packages/react-select/src/Creatable.js
+ * Built-ins https://github.com/JedWatson/react-select/blob/d2a820efc70835adf864169eebc76947783a15e2/packages/react-select/src/Creatable.js
  * @param {String} inputValue candidate label
  * @param {Object} option option
  */
