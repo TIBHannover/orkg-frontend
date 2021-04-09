@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # From: https://github.com/andrewmclagan/react-env/blob/master/packages/nginx/entrypoint.sh
 
