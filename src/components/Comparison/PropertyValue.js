@@ -16,10 +16,10 @@ import classNames from 'classnames';
 const FilterButton = styled(Button)`
     &&& {
         padding: 0 5px;
-        color: ${props => props.theme.ultraLightBlueDarker};
+        color: ${props => props.theme.lightDarker};
         &:hover,
         &.active {
-            color: ${props => props.theme.darkblueDarker};
+            color: ${props => props.theme.secondaryDarker};
         }
 
         & .cross {
@@ -39,7 +39,7 @@ const FilterButton = styled(Button)`
             content: ' ';
             height: 12px;
             width: 2px;
-            background-color: ${props => props.theme.darkblueDarker};
+            background-color: ${props => props.theme.secondaryDarker};
         }
         & .cross:before {
             transform: rotate(45deg);

@@ -116,14 +116,14 @@ const ResearchProblemHeader = ({ id }) => {
                             <RequireAuthentication
                                 component={Button}
                                 size="sm"
-                                color="darkblue"
+                                color="secondary"
                                 className="float-right"
                                 onClick={() => setEditMode(v => !v)}
                             >
                                 <Icon icon={faPen} /> Edit
                             </RequireAuthentication>
                             <ButtonDropdown isOpen={menuOpen} toggle={() => setMenuOpen(v => !v)} nav inNavbar>
-                                <DropdownToggle size="sm" color="darkblue" className="px-3 rounded-right" style={{ marginLeft: 2 }}>
+                                <DropdownToggle size="sm" color="secondary" className="px-3 rounded-right" style={{ marginLeft: 2 }}>
                                     <Icon icon={faEllipsisV} />
                                 </DropdownToggle>
                                 <DropdownMenu right>
@@ -161,7 +161,7 @@ const ResearchProblemHeader = ({ id }) => {
                                                         slug: subfield.label
                                                     })}
                                                 >
-                                                    <Badge color="lightblue" className="mr-2 mb-2">
+                                                    <Badge color="light" className="mr-2 mb-2">
                                                         {subfield.label}
                                                     </Badge>
                                                 </Link>
@@ -176,7 +176,7 @@ const ResearchProblemHeader = ({ id }) => {
                                                             slug: subfield.label
                                                         })}
                                                     >
-                                                        <Badge color="lightblue" className="mr-2 mb-2">
+                                                        <Badge color="light" className="mr-2 mb-2">
                                                             {subfield.label}
                                                         </Badge>
                                                     </Link>

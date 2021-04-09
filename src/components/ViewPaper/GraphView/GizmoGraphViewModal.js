@@ -488,7 +488,7 @@ class GraphView extends Component {
                             )}
                             <div style={{ flexDirection: 'row', display: 'flex', flexGrow: '1' }}>
                                 <Button
-                                    color="darkblue"
+                                    color="secondary"
                                     size="sm"
                                     //    className='mb-4 mt-4'
                                     style={{ margin: '0 10px', flexGrow: '1', display: 'flex', alignSelf: 'center', width: '155px' }}
@@ -507,7 +507,7 @@ class GraphView extends Component {
                                     )}
                                 </Button>
                                 <Button
-                                    color="darkblue"
+                                    color="secondary"
                                     size="sm"
                                     //    className='mb-4 mt-4'
                                     style={{ margin: '0 10px', flexGrow: '1', display: 'flex', alignSelf: 'center', width: '130px' }}
@@ -516,7 +516,7 @@ class GraphView extends Component {
                                     <Icon icon={faHome} className="mr-1 align-self-center" /> Center graph
                                 </Button>
                                 <Dropdown
-                                    color="darkblue"
+                                    color="secondary"
                                     size="sm"
                                     //    className='mb-4 mt-4'
                                     style={{ marginLeft: '10px', flexGrow: '1', display: 'flex', height: 'min-content', paddingTop: '5px' }}
@@ -525,7 +525,7 @@ class GraphView extends Component {
                                         this.setState({ layoutSelectionOpen: !this.state.layoutSelectionOpen });
                                     }}
                                 >
-                                    <DropdownToggle caret color="darkblue">
+                                    <DropdownToggle caret color="secondary">
                                         Layout:
                                         <Icon
                                             icon={this.state.layout === 'force' ? faProjectDiagram : faSitemap}

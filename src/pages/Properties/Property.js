@@ -52,14 +52,14 @@ function Property(props) {
                             <RequireAuthentication
                                 component={Button}
                                 className="float-right flex-shrink-0"
-                                color="darkblue"
+                                color="secondary"
                                 size="sm"
                                 onClick={() => setEditMode(v => !v)}
                             >
                                 <Icon icon={faPen} /> Edit
                             </RequireAuthentication>
                         ) : (
-                            <Button className="float-right flex-shrink-0" color="darkblueDarker" size="sm" onClick={() => setEditMode(v => !v)}>
+                            <Button className="float-right flex-shrink-0" color="secondary-darker" size="sm" onClick={() => setEditMode(v => !v)}>
                                 <Icon icon={faTimes} /> Stop editing
                             </Button>
                         )}

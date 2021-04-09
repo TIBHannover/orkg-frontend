@@ -558,7 +558,7 @@ const GeneralData = () => {
                         }
                     ]}
                     showNumber={false}
-                    accentColor={theme.orkgPrimaryColor}
+                    accentColor={theme.primary}
                     rounded={10}
                     onRequestClose={requestCloseTour}
                     isOpen={isTourOpen}
@@ -579,7 +579,7 @@ const GeneralData = () => {
                         }
                     ]}
                     showNumber={false}
-                    accentColor={theme.orkgPrimaryColor}
+                    accentColor={theme.primary}
                     rounded={10}
                     onRequestClose={() => {
                         setShowHelpButton(false);

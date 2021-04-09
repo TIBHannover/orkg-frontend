@@ -89,7 +89,7 @@ const ContributionEditor = () => {
                     <Button
                         tag={Link}
                         to={`${reverse(routes.COMPARISON)}?contributions=${contributionIds.join(',')}`}
-                        color="darkblue"
+                        color="secondary"
                         size="sm"
                         style={{ marginRight: 2 }}
                         disabled={contributionAmount < 2}
@@ -97,7 +97,7 @@ const ContributionEditor = () => {
                         View comparison
                     </Button>
 
-                    <Button color="darkblue" size="sm" onClick={() => setIsOpenAddContribution(true)}>
+                    <Button color="secondary" size="sm" onClick={() => setIsOpenAddContribution(true)}>
                         <Icon icon={faPlusCircle} /> Add contribution
                     </Button>
                 </ButtonGroup>

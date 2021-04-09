@@ -11,7 +11,7 @@ import Tippy from '@tippyjs/react';
 import HelpModal from 'components/PdfAnnotation/HelpModal';
 
 const ToolbarStyled = styled.div`
-    background: ${props => props.theme.darkblue};
+    background: ${props => props.theme.secondary};
     position: fixed;
     width: 100%;
     top: 72px;
@@ -65,13 +65,13 @@ const Toolbar = props => {
                 </span>
             </Tippy>
             {/*
-            <Button color="darkblueDarker" size="sm">
+            <Button color="secondary-darker" size="sm">
                 <Icon icon={faICursor} className="mr-2" />
                 Text select
             </Button>
             <Button
                 active={this.props.selectedTool === 'tableSelect'}
-                color="darkblueDarker"
+                color="secondary-darker"
                 size="sm"
                 className="ml-2"
                 onClick={() => this.selectTool('tableSelect')}
@@ -83,7 +83,7 @@ const Toolbar = props => {
             <div className="ml-auto">
                 <ButtonGroup className="mr-2">
                     <Button
-                        color="darkblueDarker"
+                        color="secondary-darker"
                         disabled={!pdf}
                         size="sm"
                         style={{ marginRight: 2 }}
@@ -92,7 +92,7 @@ const Toolbar = props => {
                         <Icon icon={faSearchMinus} />
                     </Button>
                     <Button
-                        color="darkblueDarker"
+                        color="secondary-darker"
                         disabled={!pdf}
                         size="sm"
                         style={{ marginRight: 2 }}
@@ -100,12 +100,12 @@ const Toolbar = props => {
                     >
                         <Icon icon={faSearchPlus} />
                     </Button>
-                    <Button color="darkblueDarker" disabled={!pdf} size="sm" onClick={() => props.changeZoom()}>
+                    <Button color="secondary-darker" disabled={!pdf} size="sm" onClick={() => props.changeZoom()}>
                         <Icon icon={faExpandArrowsAlt} />
                     </Button>
                 </ButtonGroup>
                 {pdf && (
-                    <Button className="mr-2" color="darkblueDarker" disabled={!pdf} size="sm" onClick={discardPdfFile}>
+                    <Button className="mr-2" color="secondary-darker" disabled={!pdf} size="sm" onClick={discardPdfFile}>
                         <Icon icon={faTimesCircle} className="mr-1" /> Discard PDF
                     </Button>
                 )}

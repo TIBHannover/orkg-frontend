@@ -57,7 +57,7 @@ export default class DropDownMapperSelector extends Component {
 
         return (
             <ButtonDropdown
-                color="darkblue"
+                color="secondary"
                 size="sm"
                 className="pl-0 m-0 flex-grow-1"
                 isOpen={this.state.isOpen}
@@ -67,7 +67,7 @@ export default class DropDownMapperSelector extends Component {
                     });
                 }}
             >
-                <StyledDropdownToggle caret color="darkblue" className="pl-1" style={{ borderBottomRightRadius: '0', borderBottomLeftRadius: '0' }}>
+                <StyledDropdownToggle caret color="secondary" className="pl-1" style={{ borderBottomRightRadius: '0', borderBottomLeftRadius: '0' }}>
                     {this.state.selectedMapper}
                 </StyledDropdownToggle>
                 <DropdownMenu>{items}</DropdownMenu>

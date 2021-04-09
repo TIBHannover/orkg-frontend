@@ -21,7 +21,7 @@ function ComparisonMetaData(props) {
                     )}
                     <div>
                         {props.metaData.createdAt ? (
-                            <span className="badge badge-lightblue mr-2">
+                            <span className="badge badge-light mr-2">
                                 <Icon icon={faCalendar} className="text-primary" />{' '}
                                 {props.metaData.createdAt ? moment(props.metaData.createdAt).format('MMMM') : ''}{' '}
                                 {props.metaData.createdAt ? moment(props.metaData.createdAt).format('YYYY') : ''}
@@ -35,7 +35,7 @@ function ComparisonMetaData(props) {
                                 {props.authors.map((author, index) =>
                                     author.id && author.id !== '' && author.orcid && author.orcid !== '' ? (
                                         <Link className="p-0" to={reverse(ROUTES.AUTHOR_PAGE, { authorId: author.id })} key={index}>
-                                            <Badge color="lightblue" className="mr-2 mb-2">
+                                            <Badge color="light" className="mr-2 mb-2">
                                                 <Icon icon={faUser} className="text-primary" /> {author.label}
                                             </Badge>
                                         </Link>
@@ -48,13 +48,13 @@ function ComparisonMetaData(props) {
                                             rel="noopener noreferrer"
                                             key={index}
                                         >
-                                            <Badge color="lightblue" className="mr-2 mb-2">
+                                            <Badge color="light" className="mr-2 mb-2">
                                                 <Icon icon={faUser} className="text-primary" /> {author.label}
                                             </Badge>
                                         </NavLink>
                                     ) : (
-                                        <Badge color="lightblue" className="mr-2 mb-2" key={index}>
-                                            <Icon icon={faUser} className="text-darkblue" /> {author.label}
+                                        <Badge color="light" className="mr-2 mb-2" key={index}>
+                                            <Icon icon={faUser} className="text-secondary" /> {author.label}
                                         </Badge>
                                     )
                                 )}

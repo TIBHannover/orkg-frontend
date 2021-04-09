@@ -69,16 +69,16 @@ const ExtractionModal = props => {
                                 <>
                                     <TableEditor setRef={editorRef} id={props.id} />
                                     <div className="mt-3">
-                                        <Button size="sm" color="darkblue" onClick={toggleExtractReferencesModal}>
+                                        <Button size="sm" color="secondary" onClick={toggleExtractReferencesModal}>
                                             Extract references
                                         </Button>{' '}
-                                        <Button size="sm" color="darkblue" onClick={handleCsvDownload}>
+                                        <Button size="sm" color="secondary" onClick={handleCsvDownload}>
                                             Download CSV
                                         </Button>{' '}
-                                        <Button size="sm" color="darkblue" onClick={transposeTable}>
+                                        <Button size="sm" color="secondary" onClick={transposeTable}>
                                             Transpose
                                         </Button>{' '}
-                                        <Button size="sm" color="darkblue" onClick={removeEmptyRows}>
+                                        <Button size="sm" color="secondary" onClick={removeEmptyRows}>
                                             Remove empty rows
                                         </Button>
                                     </div>

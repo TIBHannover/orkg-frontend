@@ -40,7 +40,7 @@ export const Title = styled.div`
     flex-grow: 1;
     & span {
         font-size: small;
-        color: ${props => props.theme.ultraLightBlueDarker};
+        color: ${props => props.theme.lightDarker};
     }
 `;
 

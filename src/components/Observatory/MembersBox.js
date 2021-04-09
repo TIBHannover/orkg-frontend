@@ -48,7 +48,7 @@ const MembersBox = ({ observatoryId, organizationsList }) => {
                                 })}
                                 {!isLoadingMembers && members?.length > 4 && (
                                     <div className="text-center mt-3">
-                                        <Button size="sm" onClick={() => setOpenModal(v => !v)} color="lightblue">
+                                        <Button size="sm" onClick={() => setOpenModal(v => !v)} color="light">
                                             View more
                                         </Button>
                                         {openModal && (

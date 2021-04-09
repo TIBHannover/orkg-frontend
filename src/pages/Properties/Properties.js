@@ -60,7 +60,7 @@ const Properties = () => {
                     </div>
                 </div>
                 <ButtonGroup>
-                    <RequireAuthentication component={Link} color="darkblue" size="sm" className="btn btn-darkblue btn-sm" to={ROUTES.ADD_PROPERTY}>
+                    <RequireAuthentication component={Link} color="secondary" size="sm" className="btn btn-secondary btn-sm" to={ROUTES.ADD_PROPERTY}>
                         <Icon icon={faPlus} /> Create property
                     </RequireAuthentication>
                     <HeaderSearchButton placeholder="Search properties..." type={PREDICATE_TYPE_ID} />

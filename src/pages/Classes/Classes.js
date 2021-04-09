@@ -60,9 +60,9 @@ const Classes = () => {
                 <ButtonGroup>
                     <RequireAuthentication
                         component={Link}
-                        color="darkblue"
+                        color="secondary"
                         size="sm"
-                        className="btn btn-darkblue btn-sm flex-shrink-0"
+                        className="btn btn-secondary btn-sm flex-shrink-0"
                         to={ROUTES.ADD_CLASS}
                     >
                         <Icon icon={faPlus} /> Create class

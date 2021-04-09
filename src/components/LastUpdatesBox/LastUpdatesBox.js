@@ -36,7 +36,7 @@ const LastUpdatesBox = ({ researchFieldId }) => {
 
                     {!isLoading && activities.length > 3 && (
                         <div className="text-center">
-                            <Button size="sm" onClick={() => setOpenModal(v => !v)} color="lightblue">
+                            <Button size="sm" onClick={() => setOpenModal(v => !v)} color="light">
                                 View more
                             </Button>
                         </div>
