@@ -7,7 +7,7 @@ function FilterModalFooter({ handleApply, handleCancel, handleReset }) {
     return (
         <ModalFooter className="d-flex justify-content-between">
             <Button className="mx-1" color="light" onClick={handleReset}>
-                <Icon icon={faRedoAlt} className="text-darkblue" /> Reset
+                <Icon icon={faRedoAlt} className="text-secondary" /> Reset
             </Button>
             <div>
                 <Button className="mx-1" color="light" onClick={handleCancel}>

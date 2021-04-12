@@ -113,7 +113,7 @@ const SingleVisualizationComponent = props => {
                             <b>Meta Information:</b> <br />
                             <div className="mb-2">
                                 <i>Created on: </i>
-                                <span className="badge badge-lightblue mr-2">
+                                <span className="badge badge-light mr-2">
                                     <Icon icon={faCalendar} className="text-primary" />{' '}
                                     {props.input.created_at ? moment(props.input.created_at).format('dddd, MMMM Do YYYY') : ''}
                                 </span>
@@ -129,14 +129,14 @@ const SingleVisualizationComponent = props => {
                                                     to={reverse(ROUTES.AUTHOR_PAGE, { authorId: author.id })}
                                                     key={`author${author.id}`}
                                                 >
-                                                    <Badge color="lightblue">
+                                                    <Badge color="light">
                                                         <Icon icon={faUser} className="text-primary" /> {author.label}
                                                     </Badge>
                                                 </Link>
                                             );
                                         } else {
                                             return (
-                                                <Badge key={`author${author.id}`} color="lightblue" className="mr-2 mb-2">
+                                                <Badge key={`author${author.id}`} color="light" className="mr-2 mb-2">
                                                     <Icon icon={faUser} /> {author.label}
                                                 </Badge>
                                             );

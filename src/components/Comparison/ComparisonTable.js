@@ -237,7 +237,7 @@ const ComparisonTable = props => {
                 </ScrollSyncPane>
                 <ScrollSyncPane group="one">
                     <div ref={props.scrollContainerBody} style={{ overflow: 'auto' }}>
-                        <div {...getTableBodyProps()} className="comparisonBody" style={{ width: '100%' }}>
+                        <div {...getTableBodyProps()} className="comparisonBody" style={{ ...getTableProps().style }}>
                             {rows.map((row, i) => {
                                 prepareRow(row);
                                 return (

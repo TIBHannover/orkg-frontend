@@ -52,7 +52,7 @@ export default class VisualizationSelector extends Component {
 
         return (
             <Dropdown
-                color="darkblue"
+                color="secondary"
                 size="sm"
                 isOpen={this.state.visSelectionOpen}
                 className="mt-1"
@@ -62,7 +62,7 @@ export default class VisualizationSelector extends Component {
                     });
                 }}
             >
-                <DropdownToggle caret color="darkblue">
+                <DropdownToggle caret color="secondary">
                     {this.state.visualizationMethod}
                 </DropdownToggle>
                 <DropdownMenu>{items}</DropdownMenu>

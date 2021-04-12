@@ -67,7 +67,7 @@ const TableSelect = props => {
                             const { region } = tableRegions[key];
                             return (
                                 <SelectHelper style={{ top: region.y, left: region.x, width: region.w, height: region.h }} key={key}>
-                                    <RemoveTableButton color="darkblueDarker" size="sm" className="p-0" onMouseDown={e => deleteRegion(e, key)}>
+                                    <RemoveTableButton color="secondary-darker" size="sm" className="p-0" onMouseDown={e => deleteRegion(e, key)}>
                                         <Icon icon={faTimes} />
                                     </RemoveTableButton>
                                     <Button

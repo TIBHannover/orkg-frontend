@@ -17,7 +17,7 @@ const Contributors = ({ researchFieldId }) => {
     const { contributors, sort, includeSubFields, isLoading, setSort, setIncludeSubFields } = useContributors({
         researchFieldId,
         pageSize: 19,
-        initialSort: 'top',
+        initialSort: 'all',
         includeSubFields: true
     });
     const [openModal, setOpenModal] = useState(false);

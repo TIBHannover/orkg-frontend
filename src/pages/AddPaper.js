@@ -51,7 +51,7 @@ const HelpIcon = styled(Icon)`
     height: 48px;
     width: 48px !important;
     z-index: 9999;
-    background-color: ${props => props.theme.orkgPrimaryColor};
+    background-color: ${props => props.theme.primary};
     display: inline-flex;
     -webkit-justify-content: center;
     justify-content: center;
@@ -82,7 +82,7 @@ const AnimationContainer = styled(CSSTransition)`
 `;
 
 const SubtitleSeparator = styled.div`
-    background: ${props => props.theme.darkblue};
+    background: ${props => props.theme.secondary};
     width: 2px;
     height: 30px;
     margin: 0 15px;
@@ -206,7 +206,7 @@ class AddPaper extends Component {
                     )}
 
                     {/*<Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggleDropdown} className="mb-4 mt-4 float-right" style={{ marginLeft: 'auto' }}>
-                        <DropdownToggle color="darkblue" size="sm">
+                        <DropdownToggle color="secondary" size="sm">
                             <Icon icon={faBars} className="mr-2" /> Options
                         </DropdownToggle>
                         <DropdownMenu>
@@ -215,7 +215,7 @@ class AddPaper extends Component {
                     </Dropdown>*/}
 
                     <Button
-                        color="darkblue"
+                        color="secondary"
                         size="sm"
                         className="flex-shrink-0"
                         style={{ marginLeft: 'auto' }}

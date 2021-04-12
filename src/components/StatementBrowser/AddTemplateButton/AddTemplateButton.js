@@ -22,7 +22,7 @@ const IconWrapper = styled.span`
     display: flex;
     align-items: center;
     justify-content: center;
-    color: ${props => props.theme.darkblue};
+    color: ${props => props.theme.secondary};
     padding-left: 3px;
 `;
 

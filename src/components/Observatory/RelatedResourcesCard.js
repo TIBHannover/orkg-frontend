@@ -102,12 +102,12 @@ class RelatedResourcesCard extends Component {
                         requestToChangeActive={this.onChange}
                         rightChevron={
                             <Button color="link" className="p-0">
-                                <Icon icon={faArrowCircleRight} className="text-darkblue h3 m-0" />
+                                <Icon icon={faArrowCircleRight} className="text-secondary h3 m-0" />
                             </Button>
                         }
                         leftChevron={
                             <Button color="link" className="p-0">
-                                <Icon icon={faArrowCircleLeft} className="text-darkblue h3 m-0" />
+                                <Icon icon={faArrowCircleLeft} className="text-secondary h3 m-0" />
                             </Button>
                         }
                         chevronWidth={CHEVRON_WIDTH}

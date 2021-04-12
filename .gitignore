@@ -16,3 +16,4 @@ build/
 .idea/
 
 public/env.js
+public/__ENV.js

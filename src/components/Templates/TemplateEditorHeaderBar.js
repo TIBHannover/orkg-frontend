@@ -18,7 +18,7 @@ const PaperHeaderBarContainer = styled.div`
     border-bottom: 1px #d1d3d9 solid;
     box-shadow: 0 2px 8px -2px rgba(0, 0, 0, 0.13);
     & .title {
-        color: ${props => props.theme.darkblueDarker};
+        color: ${props => props.theme.secondaryDarker};
     }
 `;
 
@@ -49,7 +49,7 @@ function TemplateEditorHeaderBar(props) {
                                 className="float-left"
                                 disabled={props.isSaving}
                                 style={{ marginLeft: 1 }}
-                                color="darkblue"
+                                color="secondary"
                                 onClick={() => props.saveTemplate(props.template)}
                             >
                                 {props.isSaving && <Icon icon={faSpinner} spin />}
@@ -58,7 +58,7 @@ function TemplateEditorHeaderBar(props) {
                             </Button>
                         </ButtonGroup>
                     ) : (
-                        <Button className="float-right" color="darkblue" size="sm" onClick={() => props.setEditMode(true)}>
+                        <Button className="float-right" color="secondary" size="sm" onClick={() => props.setEditMode(true)}>
                             <Icon icon={faPen} /> Edit
                         </Button>
                     )}

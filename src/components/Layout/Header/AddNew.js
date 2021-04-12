@@ -32,7 +32,7 @@ const ToolContainer = styled(Link)`
     text-align: center;
     color: inherit;
     border-radius: 0;
-    border-bottom: 2px solid ${props => props.theme.ultraLightBlueDarker};
+    border-bottom: 2px solid ${props => props.theme.lightDarker};
     position: relative;
     &:last-of-type {
         border-bottom: 0;
@@ -45,7 +45,7 @@ const ToolContainer = styled(Link)`
     }
 
     &:hover {
-        background-color: ${props => props.theme.ultraLightBlue};
+        background-color: ${props => props.theme.lightLighter};
         color: inherit;
         text-decoration: none;
     }
@@ -127,7 +127,7 @@ const AddNew = ({ isHomePageStyle }) => {
                     </div>
                 }
             >
-                <div className="btn">
+                <div className="mr-3 mb-2 mb-md-0">
                     <Button color={!isHomePageStyle ? 'primary' : 'light'}>
                         <FontAwesomeIcon className="mr-1" icon={faPlus} />
                         Add new

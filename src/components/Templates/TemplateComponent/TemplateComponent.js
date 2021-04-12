@@ -49,7 +49,8 @@ function TemplateComponent(props) {
         }
     });
     const [{ isDragging }, drag, preview] = useDrag({
-        item: { type: ItemTypes.TEMPLATE_COMPONENT, index: props.id },
+        type: ItemTypes.TEMPLATE_COMPONENT,
+        item: { index: props.id },
         collect: monitor => ({
             isDragging: monitor.isDragging()
         }),
