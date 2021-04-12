@@ -77,6 +77,7 @@ export const getObservatoryAndOrganizationInformation = (observatoryId, organiza
                     return {
                         id: observatoryId,
                         name: obsResponse.name,
+                        display_id: obsResponse.display_id,
                         organization: null
                     };
                 });
@@ -84,6 +85,7 @@ export const getObservatoryAndOrganizationInformation = (observatoryId, organiza
             return {
                 id: observatoryId,
                 name: obsResponse.name,
+                display_id: obsResponse.display_id,
                 organization: null
             };
         }
