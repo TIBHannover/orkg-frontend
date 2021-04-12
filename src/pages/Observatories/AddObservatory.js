@@ -155,7 +155,7 @@ class AddObservatory extends Component {
                                         <div>
                                             <Label for="observatoryPermalink">
                                                 Permalink
-                                                <Tooltip message="Permalink field allows to identify the observatory page on ORKG in an easy-to-read form. Only dashes ( - ) and lower case letters are allowed" />
+                                                <Tooltip message="Permalink field allows to identify the observatory page on ORKG in an easy-to-read form. Only underscores ( _ ), numbers, and letters are allowed." />
                                             </Label>
                                             <InputGroup>
                                                 <InputGroupAddon addonType="prepend">{this.state.publicObservatoryRoute}</InputGroupAddon>

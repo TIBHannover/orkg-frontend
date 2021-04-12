@@ -46,7 +46,7 @@ class AddOrganization extends Component {
             return;
         }
         if (!new RegExp(REGEX.PERMALINK).test(permalink)) {
-            toast.error(`Only dashes (-), numbers, and letters are allowed in the permalink field`);
+            toast.error(`Only underscores ( _ ), numbers, and letters are allowed in the permalink field`);
             this.setState({ editorState: 'edit' });
             return;
         }
@@ -140,7 +140,7 @@ class AddOrganization extends Component {
                                 <div>
                                     <Label for="organizationPermalink">
                                         Permalink
-                                        <Tooltip message="Permalink field allows to identify the organization page on ORKG in an easy-to-read form. Only dashes ( - ) and lower case letters are allowed" />
+                                        <Tooltip message="Permalink field allows to identify the organization page on ORKG in an easy-to-read form. Only underscores ( _ ), numbers, and letters are allowed." />
                                     </Label>
                                     <InputGroup>
                                         <InputGroupAddon addonType="prepend">{this.publicOrganizationRoute}</InputGroupAddon>
