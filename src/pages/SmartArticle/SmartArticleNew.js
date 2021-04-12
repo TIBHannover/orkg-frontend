@@ -54,7 +54,7 @@ const SmartArticleNew = () => {
                 <FormGroup>
                     <Tippy content="Choose the title of your article. You can always update this title later">
                         <span>
-                            <Label for="articleTitle">Title</Label> <Icon icon={faQuestionCircle} className="text-darkblue" />
+                            <Label for="articleTitle">Title</Label> <Icon icon={faQuestionCircle} className="text-secondary" />
                         </span>
                     </Tippy>
 

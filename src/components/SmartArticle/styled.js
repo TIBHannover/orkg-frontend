@@ -24,7 +24,7 @@ export const MoveHandle = styled.div`
     top: 0;
     z-index: 0;
     &.hover {
-        background: ${props => props.theme.darkblue};
+        background: ${props => props.theme.secondary};
         color: #fff;
     }
 `;
@@ -53,7 +53,7 @@ export const SectionTypeStyled = styled.button`
     position: absolute;
     right: -6px;
     top: -6px;
-    color: ${props => props.theme.darkblue};
+    color: ${props => props.theme.secondary};
     text-transform: uppercase;
     font-weight: bold;
     font-size: 90%;

@@ -67,7 +67,7 @@ const ViewArticle = () => {
                     <div className="my-3">
                         {researchField && (
                             <Link to={reverse(ROUTES.RESEARCH_FIELD, { researchFieldId: researchField.id })} target="_blank">
-                                <Badge color="lightblue" className="mr-2 mb-2">
+                                <Badge color="light" className="mr-2 mb-2">
                                     <Icon icon={faBars} className="text-primary" /> {researchField.label}
                                 </Badge>
                             </Link>

@@ -121,7 +121,7 @@ const SmartArticle = props => {
                                 ) : (
                                     <Tippy content="All changes are saved">
                                         <span className="mr-2">
-                                            <Icon icon={faCheckCircle} className="text-darkblue" style={{ fontSize: '125%' }} />
+                                            <Icon icon={faCheckCircle} className="text-secondary" style={{ fontSize: '125%' }} />
                                         </span>
                                     </Tippy>
                                 )}
@@ -132,7 +132,7 @@ const SmartArticle = props => {
                                 <>
                                     <Button
                                         className="flex-shrink-0"
-                                        color="darkblue"
+                                        color="secondary"
                                         size="sm"
                                         style={{ marginLeft: 1 }}
                                         onClick={() => window.print()}
@@ -142,18 +142,18 @@ const SmartArticle = props => {
                                 </>
                             )}
 
-                            <Button className="flex-shrink-0" color="darkblue" size="sm" style={{ marginLeft: 1 }} onClick={toggleHistoryModal}>
+                            <Button className="flex-shrink-0" color="secondary" size="sm" style={{ marginLeft: 1 }} onClick={toggleHistoryModal}>
                                 <Icon icon={faHistory} /> History
                             </Button>
                             {!isEditing ? (
-                                <Button className="flex-shrink-0" color="darkblue" size="sm" style={{ marginLeft: 1 }} onClick={handleEdit}>
+                                <Button className="flex-shrink-0" color="secondary" size="sm" style={{ marginLeft: 1 }} onClick={handleEdit}>
                                     <Icon icon={faPen} /> Edit
                                 </Button>
                             ) : (
                                 <>
                                     <Button
                                         className="flex-shrink-0"
-                                        color="darkblue"
+                                        color="secondary"
                                         size="sm"
                                         style={{ marginLeft: 1 }}
                                         onClick={() => setIsOpenPublishModal(true)}
@@ -163,7 +163,7 @@ const SmartArticle = props => {
                                     <Button
                                         className="flex-shrink-0"
                                         active
-                                        color="darkblue"
+                                        color="secondary"
                                         size="sm"
                                         style={{ marginLeft: 1 }}
                                         onClick={() => setIsEditing(false)}
@@ -173,7 +173,7 @@ const SmartArticle = props => {
                                 </>
                             )}
                             <UncontrolledButtonDropdown>
-                                <DropdownToggle size="sm" color="darkblue" className="px-3 rounded-right" style={{ marginLeft: 2 }}>
+                                <DropdownToggle size="sm" color="secondary" className="px-3 rounded-right" style={{ marginLeft: 2 }}>
                                     <Icon icon={faEllipsisV} />
                                 </DropdownToggle>
                                 <DropdownMenu right>

@@ -19,7 +19,7 @@ const InvisibleByDefault = styled.div`
 `;
 
 const AddSectionStyled = styled(Button)`
-    color: ${props => props.theme.darkblue}!important;
+    color: ${props => props.theme.secondary}!important;
     font-size: 140% !important;
     margin: 5px 0 !important;
 `;

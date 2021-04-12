@@ -58,7 +58,7 @@ const SmartArticles = () => {
     };
 
     const buttons = (
-        <RequireAuthentication component={Link} color="darkblue" size="sm" className="btn btn-darkblue btn-sm" to={ROUTES.SMART_ARTICLE_NEW}>
+        <RequireAuthentication component={Link} color="secondary" size="sm" className="btn btn-secondary btn-sm" to={ROUTES.SMART_ARTICLE_NEW}>
             <Icon icon={faPlus} /> Create article
         </RequireAuthentication>
     );

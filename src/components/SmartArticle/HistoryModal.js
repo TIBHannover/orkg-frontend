@@ -33,7 +33,7 @@ const Activity = styled.div`
     color: ${props => props.theme.bodyColor};
 
     a {
-        color: ${props => props.theme.ORKGPrimaryColor};
+        color: ${props => props.theme.primary};
     }
 
     &:last-child {
@@ -115,7 +115,7 @@ const HistoryModal = props => {
                                             classNamePrefix="react-select"
                                             placeholder="Select version"
                                         />
-                                        <Button color="darkblue" className="px-2" onClick={handleCompare}>
+                                        <Button color="secondary" className="px-2" onClick={handleCompare}>
                                             <Icon icon={faSearch} />
                                         </Button>
                                     </div>

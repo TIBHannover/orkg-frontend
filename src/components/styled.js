@@ -16,7 +16,7 @@ export const SubTitle = styled.div`
     text-overflow: ellipsis;
     overflow: hidden;
     margin-right: 20px;
-    color: ${props => props.theme.darkblue};
+    color: ${props => props.theme.secondary};
 `;
 
 export const StyledGravatar = styled(Gravatar)`

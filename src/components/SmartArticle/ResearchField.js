@@ -27,8 +27,8 @@ const ResearchField = () => {
         <div>
             <Tippy content="Research field">
                 <span>
-                    <Button size="sm" color="lightblue" className="mr-2 mb-2" onClick={() => setIsOpenResearchFieldModal(true)}>
-                        <Icon icon={faBars} className="text-darkblue" /> {researchField?.label ?? 'Research field'}
+                    <Button size="sm" color="light" className="mr-2 mb-2" onClick={() => setIsOpenResearchFieldModal(true)}>
+                        <Icon icon={faBars} className="text-secondary" /> {researchField?.label ?? 'Research field'}
                     </Button>
                 </span>
             </Tippy>

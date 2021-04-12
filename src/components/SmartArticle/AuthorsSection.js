@@ -20,7 +20,7 @@ const AuthorsSection = () => {
                 </Tippy>
             </SectionTypeStyled>
             <AuthorsList authors={authorResources} />
-            <Button size="sm" color="darkblue" className="ml-2" onClick={() => setShowModal(true)}>
+            <Button size="sm" color="secondary" className="ml-2" onClick={() => setShowModal(true)}>
                 <Icon icon={faPen} /> Edit
             </Button>
 
