@@ -181,6 +181,10 @@ const useHeaderBar = () => {
     const getVersions = async paperId => {
         const statements = await getStatementsByObjectAndPredicate({ objectId: paperId, predicateId: PREDICATES.HAS_PAPER });
         const ids = statements.map(version => version.subject.id);
+
+        if (ids.length === 0) {
+            return [];
+        }
         const versionsStatements = await getStatementsBySubjects({ ids });
 
         return versionsStatements
