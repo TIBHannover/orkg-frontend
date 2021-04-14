@@ -6,8 +6,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { usePrevious } from 'react-use';
 import { ButtonGroup, Container, ListGroup } from 'reactstrap';
 
-const ListPage = ({ label, resourceClass, renderListItem, buttons, fetchItems }) => {
-    const pageSize = 25;
+const ListPage = ({ label, resourceClass, renderListItem, buttons, fetchItems, pageSize = 25 }) => {
     const [results, setResults] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [hasNextPage, setHasNextPage] = useState(false);
@@ -39,7 +38,7 @@ const ListPage = ({ label, resourceClass, renderListItem, buttons, fetchItems })
             console.log(e);
             errorOccurred();
         }
-    }, [fetchItems, page, prevPage, resourceClass]);
+    }, [fetchItems, page, prevPage, resourceClass, pageSize]);
 
     useEffect(() => {
         loadMore();
@@ -106,7 +105,9 @@ const ListPage = ({ label, resourceClass, renderListItem, buttons, fetchItems })
                             Load more
                         </div>
                     )}
-                    {!hasNextPage && isLastPageReached && <div className="text-center my-3">You have reached the last page</div>}
+                    {!hasNextPage && isLastPageReached && totalElements !== 0 && (
+                        <div className="text-center my-3">You have reached the last page</div>
+                    )}
                 </ListGroup>
             </Container>
         </>
@@ -118,6 +119,7 @@ ListPage.propTypes = {
     resourceClass: PropTypes.string.isRequired,
     renderListItem: PropTypes.func.isRequired,
     fetchItems: PropTypes.func.isRequired,
+    pageSize: PropTypes.number,
     buttons: PropTypes.node
 };
 
