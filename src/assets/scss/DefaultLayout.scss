@@ -1,4 +1,7 @@
-@import '../../assets/scss/ThemeVariables.scss';
+@import 'assets/scss/ThemeVariables.scss';
+@import '~bootstrap/scss/functions';
+@import '~bootstrap/scss/variables';
+@import '~bootstrap/scss/mixins';
 
 body {
     color: #646464;
@@ -59,7 +62,7 @@ body {
             color: $secondary;
         }
 
-        @media (max-width: 768px) {
+        @include media-breakpoint-down(md) {
             background: #5f6474;
         }
     }
