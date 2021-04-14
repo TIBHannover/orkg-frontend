@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Col, Row, Container, Button, ButtonGroup, Card, CardBody, CardTitle } from 'reactstrap';
+import { Col, Row, Container, Button, ButtonGroup, Card, CardBody } from 'reactstrap';
 import { getOrganization } from 'services/backend/organizations';
 import { getObservatoryById } from 'services/backend/observatories';
 import InternalServerError from 'pages/InternalServerError';
@@ -12,12 +12,10 @@ import MembersBox from 'components/Observatory/MembersBox';
 import Breadcrumbs from 'components/Breadcrumbs/Breadcrumbs';
 import { SubTitle, SubtitleSeparator } from 'components/styled';
 import NotFound from 'pages/NotFound';
-import ROUTES from 'constants/routes';
-import { useParams, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { reverseWithSlug } from 'utils';
 
 const Observatory = () => {
     const [error, setError] = useState(null);
