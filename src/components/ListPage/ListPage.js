@@ -7,7 +7,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { usePrevious } from 'react-use';
 import { ButtonGroup, Container, ListGroup } from 'reactstrap';
 
-const ListPage = ({ label, resourceClass, renderListItem, buttons, fetchItems, boxShadow, pageSize = 25 }) => {
+const ListPage = ({ label, resourceClass, renderListItem, buttons, fetchItems, boxShadow, pageSize = 2 }) => {
     const [results, setResults] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [hasNextPage, setHasNextPage] = useState(false);
@@ -101,9 +101,7 @@ const ListPage = ({ label, resourceClass, renderListItem, buttons, fetchItems, b
                                 Load more
                             </div>
                         )}
-                        {!hasNextPage && isLastPageReached && totalElements !== 0 && (
-                            <div className="text-center my-3">You have reached the last page</div>
-                        )}
+                        {!hasNextPage && isLastPageReached && page !== 0 && <div className="text-center my-3">You have reached the last page</div>}
                     </ListGroup>
                 )}
                 {results.length === 0 && !isLoading && (
