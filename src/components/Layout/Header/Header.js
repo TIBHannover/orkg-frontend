@@ -283,7 +283,7 @@ class Header extends Component {
 
                     <div
                         style={{ display: 'flex', width: '100%', transition: 'width 1s ease-in-out' }}
-                        className={!this.state.isHomePageStyle ? 'p-0 container' : ''}
+                        className={!this.state.isHomePageStyle ? 'p-0 container' : 'container-sm'}
                     >
                         <StyledLink to={ROUTES.HOME} className="mr-4 p-0">
                             {!this.state.isHomePageStyle && <Logo />}
