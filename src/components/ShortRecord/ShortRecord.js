@@ -37,7 +37,7 @@ class ShortRecord extends Component {
 
 ShortRecord.propTypes = {
     href: PropTypes.string.isRequired,
-    children: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
+    children: PropTypes.oneOfType([PropTypes.string, PropTypes.array, PropTypes.node]),
     header: PropTypes.string.isRequired
 };
 

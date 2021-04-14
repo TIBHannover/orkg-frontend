@@ -15,16 +15,19 @@ import { getStatementsBySubjects } from 'services/backend/statements';
 const SmartArticles = () => {
     const renderListItem = versions => (
         <ShortRecord key={versions[0]?.id} header={versions[0]?.label} href={reverse(ROUTES.SMART_ARTICLE, { id: versions[0]?.id })}>
-            All versions:{' '}
-            {versions.length > 1 &&
-                versions.map((version, index) => (
-                    <span key={version.id}>
-                        <Tippy content={version.label}>
-                            <Link to={reverse(ROUTES.SMART_ARTICLE, { id: version.id })}>Version {versions.length - index}</Link>
-                        </Tippy>{' '}
-                        {index < versions.length - 1 && ' • '}
-                    </span>
-                ))}
+            {versions.length > 1 && (
+                <>
+                    All versions:{' '}
+                    {versions.map((version, index) => (
+                        <span key={version.id}>
+                            <Tippy content={version.label}>
+                                <Link to={reverse(ROUTES.SMART_ARTICLE, { id: version.id })}>Version {versions.length - index}</Link>
+                            </Tippy>{' '}
+                            {index < versions.length - 1 && ' • '}
+                        </span>
+                    ))}
+                </>
+            )}
         </ShortRecord>
     );
 

@@ -89,6 +89,21 @@ const ListPage = ({ label, resourceClass, renderListItem, buttons, fetchItems, b
                 {results.length > 0 && (
                     <ListGroup flush className="box rounded" style={{ overflow: 'hidden' }}>
                         {results.map(renderListItem)}
+                        {!isLoading && hasNextPage && (
+                            <div
+                                style={{ cursor: 'pointer' }}
+                                className="list-group-item list-group-item-action text-center mt-2"
+                                onClick={loadNextPage}
+                                onKeyDown={e => (e.key === 'Enter' ? loadNextPage : undefined)}
+                                role="button"
+                                tabIndex={0}
+                            >
+                                Load more
+                            </div>
+                        )}
+                        {!hasNextPage && isLastPageReached && totalElements !== 0 && (
+                            <div className="text-center my-3">You have reached the last page</div>
+                        )}
                     </ListGroup>
                 )}
                 {results.length === 0 && !isLoading && (
@@ -96,19 +111,6 @@ const ListPage = ({ label, resourceClass, renderListItem, buttons, fetchItems, b
                         <div className="p-5 text-center">No {label} found</div>
                     </div>
                 )}
-                {!isLoading && hasNextPage && (
-                    <div
-                        style={{ cursor: 'pointer' }}
-                        className="list-group-item list-group-item-action text-center mt-2"
-                        onClick={loadNextPage}
-                        onKeyDown={e => (e.key === 'Enter' ? loadNextPage : undefined)}
-                        role="button"
-                        tabIndex={0}
-                    >
-                        Load more
-                    </div>
-                )}
-                {!hasNextPage && isLastPageReached && totalElements !== 0 && <div className="text-center my-3">You have reached the last page</div>}
 
                 {isLoading && (
                     <div className={`text-center ${page === 0 ? 'p-5 container rounded' : ''} ${boxShadow ? 'box' : ''}`}>
