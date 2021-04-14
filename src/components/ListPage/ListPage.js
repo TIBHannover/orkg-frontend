@@ -1,12 +1,13 @@
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import HeaderSearchButton from 'components/HeaderSearchButton/HeaderSearchButton';
+import ContentLoader from 'react-content-loader';
 import PropTypes from 'prop-types';
 import { useCallback, useEffect, useState } from 'react';
 import { usePrevious } from 'react-use';
 import { ButtonGroup, Container, ListGroup } from 'reactstrap';
 
-const ListPage = ({ label, resourceClass, renderListItem, buttons, fetchItems, pageSize = 25 }) => {
+const ListPage = ({ label, resourceClass, renderListItem, buttons, fetchItems, boxShadow, pageSize = 25 }) => {
     const [results, setResults] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [hasNextPage, setHasNextPage] = useState(false);
@@ -85,30 +86,55 @@ const ListPage = ({ label, resourceClass, renderListItem, buttons, fetchItems, p
             </Container>
 
             <Container className="p-0">
-                <ListGroup flush className="box rounded" style={{ overflow: 'hidden' }}>
-                    {results.length > 0 && <>{results.map(renderListItem)}</>}
-                    {results.length === 0 && !isLoading && <div className="text-center mt-4 mb-4">No {label} found</div>}
-                    {isLoading && (
-                        <div className="text-center mt-4 mb-4">
-                            <Icon icon={faSpinner} spin /> Loading
-                        </div>
-                    )}
-                    {!isLoading && hasNextPage && (
-                        <div
-                            style={{ cursor: 'pointer' }}
-                            className="list-group-item list-group-item-action text-center mt-2"
-                            onClick={loadNextPage}
-                            onKeyDown={e => (e.key === 'Enter' ? loadNextPage : undefined)}
-                            role="button"
-                            tabIndex={0}
-                        >
-                            Load more
-                        </div>
-                    )}
-                    {!hasNextPage && isLastPageReached && totalElements !== 0 && (
-                        <div className="text-center my-3">You have reached the last page</div>
-                    )}
-                </ListGroup>
+                {results.length > 0 && (
+                    <ListGroup flush className="box rounded" style={{ overflow: 'hidden' }}>
+                        {results.map(renderListItem)}
+                    </ListGroup>
+                )}
+                {results.length === 0 && !isLoading && (
+                    <div className={`container ${boxShadow ? 'box rounded' : ''}`}>
+                        <div className="p-5 text-center">No {label} found</div>
+                    </div>
+                )}
+                {!isLoading && hasNextPage && (
+                    <div
+                        style={{ cursor: 'pointer' }}
+                        className="list-group-item list-group-item-action text-center mt-2"
+                        onClick={loadNextPage}
+                        onKeyDown={e => (e.key === 'Enter' ? loadNextPage : undefined)}
+                        role="button"
+                        tabIndex={0}
+                    >
+                        Load more
+                    </div>
+                )}
+                {!hasNextPage && isLastPageReached && totalElements !== 0 && <div className="text-center my-3">You have reached the last page</div>}
+
+                {isLoading && (
+                    <div className={`text-center ${page === 0 ? 'p-5 container rounded' : ''} ${boxShadow ? 'box' : ''}`}>
+                        {page !== 0 && (
+                            <>
+                                <Icon icon={faSpinner} spin /> Loading
+                            </>
+                        )}
+                        {page === 0 && (
+                            <div className="text-left">
+                                <ContentLoader
+                                    speed={2}
+                                    width={400}
+                                    height={50}
+                                    viewBox="0 0 400 50"
+                                    style={{ width: '100% !important' }}
+                                    backgroundColor="#f3f3f3"
+                                    foregroundColor="#ecebeb"
+                                >
+                                    <rect x="0" y="0" rx="3" ry="3" width="400" height="20" />
+                                    <rect x="0" y="25" rx="3" ry="3" width="300" height="20" />
+                                </ContentLoader>
+                            </div>
+                        )}
+                    </div>
+                )}
             </Container>
         </>
     );
@@ -120,10 +146,12 @@ ListPage.propTypes = {
     renderListItem: PropTypes.func.isRequired,
     fetchItems: PropTypes.func.isRequired,
     pageSize: PropTypes.number,
+    boxShadow: PropTypes.bool,
     buttons: PropTypes.node
 };
 
 ListPage.defaultProps = {
+    boxShadow: true,
     buttons: null
 };
 
