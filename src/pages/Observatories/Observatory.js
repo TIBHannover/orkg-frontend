@@ -72,7 +72,7 @@ const Observatory = () => {
             {!isLoading && error && <>{error.statusCode === 404 ? <NotFound /> : <InternalServerError />}</>}
             {!isLoading && !error && label && (
                 <>
-                    <Breadcrumbs researchFieldId={researchField?.id} disableLastField />
+                    <Breadcrumbs researchFieldId={researchField?.id} />
 
                     <Container className="d-flex align-items-center mt-4 mb-4">
                         <h1 className="h5 flex-shrink-0 mb-0">Observatory</h1>
@@ -88,29 +88,15 @@ const Observatory = () => {
                             </ButtonGroup>
                         )}
                     </Container>
-                    <Container className="p-0">
-                        <Card>
-                            <CardBody>
-                                <CardTitle tag="h5">Description</CardTitle>
-                                {description && <div className="mb-4">{description}</div>}
-                                {!description && <div className="mb-4">No description for this observatory yet!</div>}
-                                {researchField && researchField.id && (
-                                    <div className="flex-grow-1 mt-2">
-                                        Research field:
-                                        <Link
-                                            className="ml-2"
-                                            to={reverseWithSlug(ROUTES.RESEARCH_FIELD, {
-                                                researchFieldId: researchField.id,
-                                                slug: researchField.label
-                                            })}
-                                        >
-                                            {researchField && researchField.label}
-                                        </Link>
-                                    </div>
-                                )}
-                            </CardBody>
-                        </Card>
-                    </Container>
+                    {description && (
+                        <Container className="p-0">
+                            <Card>
+                                <CardBody>
+                                    <div className="mb-4">{description}</div>
+                                </CardBody>
+                            </Card>
+                        </Container>
+                    )}
                 </>
             )}
 
