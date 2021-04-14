@@ -55,7 +55,13 @@ export default function ProvenanceBox(props) {
                                 <div>
                                     <ul className="list-group">
                                         <StyledItemProvenanceBox>
-                                            <b style={{ textTransform: 'uppercase' }}>{props.observatoryInfo.name}</b>
+                                            <b style={{ textTransform: 'uppercase' }}>
+                                                {props.observatoryInfo.id && (
+                                                    <Link to={reverse(ROUTES.OBSERVATORY, { id: props.observatoryInfo.display_id })}>
+                                                        {props.observatoryInfo.name}
+                                                    </Link>
+                                                )}
+                                            </b>
                                             <br />
                                             {props.observatoryInfo.organization && props.observatoryInfo.organization.id && (
                                                 <Link to={reverse(ROUTES.ORGANIZATION, { id: props.observatoryInfo.organization.display_id })}>
