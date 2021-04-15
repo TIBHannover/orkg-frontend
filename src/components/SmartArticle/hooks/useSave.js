@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { createObject } from 'services/backend/misc';
 import { CLASSES, PREDICATES } from 'constants/graphSettings';
 
-const useHeaderBar = () => {
+const useSave = () => {
     const [isLoading, setIsLoading] = useState(false);
 
     const create = async title => {
@@ -34,4 +34,4 @@ const useHeaderBar = () => {
     return { create, isLoading };
 };
 
-export default useHeaderBar;
+export default useSave;
