@@ -36,7 +36,7 @@ export default function CurationCall() {
                     gain visibility and reputation in your research field.
                 </p>
 
-                <h3>What is the Open Research Knowledge Graph?</h3>
+                <h3 className="mt-4 mb-3">What is the Open Research Knowledge Graph? </h3>
                 <p>
                     Scholarly contents are mainly communicated through publications, in the form of unstructured texts. Considering the continuously
                     increasing numbers of publications being issued each year, researchers are finding it increasingly difficult to follow the
@@ -50,7 +50,7 @@ export default function CurationCall() {
                     ).
                 </p>
 
-                <h3>Requirements and Duties</h3>
+                <h3 className="mt-4 mb-3">Requirements and Duties</h3>
                 <ul>
                     <li>
                         You have an academic qualification in a concrete field of science, documented by a master degree and experience in publishing
@@ -79,7 +79,7 @@ export default function CurationCall() {
                     </li>
                 </ul>
 
-                <h3>Benefits</h3>
+                <h3 className="mt-4 mb-3">Benefits</h3>
                 <ul>
                     <li>
                         You contribute to one of the biggest challenges in research―better organizing the contents of scholarly publications, and you
@@ -101,7 +101,7 @@ export default function CurationCall() {
                     </li>
                 </ul>
 
-                <h3>Application process and deadlines</h3>
+                <h3 className="mt-4 mb-3">Application process and deadlines</h3>
                 <p>To apply for the grant, you have to complete and submit this application form. </p>
                 <p>
                     <strong>Application deadline:</strong> 31st of May 2021
@@ -111,7 +111,7 @@ export default function CurationCall() {
                     <strong>Beginning of curation project:</strong> 1st of July 2021
                 </p>
 
-                <h3>How to apply</h3>
+                <h3 className="mt-4 mb-3">How to apply</h3>
                 <p>
                     Please complete the{' '}
                     <a
@@ -125,7 +125,7 @@ export default function CurationCall() {
                     <a href="mailto:lars.vogt@tib.eu">lars.vogt@tib.eu</a>.
                 </p>
 
-                <h3>ORKG how-to videos</h3>
+                <h3 className="mt-4 mb-3">ORKG how-to videos</h3>
                 <Row className="my-3">
                     <Col>
                         <div class="embed-responsive embed-responsive-16by9">
