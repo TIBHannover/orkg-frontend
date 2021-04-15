@@ -23,6 +23,15 @@ const SBEditorHelpModal = props => {
                     </li>
                     <li>
                         <a
+                            href="https://gitlab.com/TIBHannover/orkg/orkg-frontend/-/wikis/How-to-embed-a-video"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            How to embed a video?
+                        </a>
+                    </li>
+                    <li>
+                        <a
                             href="https://gitlab.com/TIBHannover/orkg/orkg-frontend/-/wikis/How-to-retrieve-the-abstract-from-DBpedia,-Wikipedia-or-WikiData"
                             target="_blank"
                             rel="noopener noreferrer"
