@@ -19,7 +19,7 @@ import ROUTES from 'constants/routes';
 import moment from 'moment';
 import { reverse } from 'named-urls';
 import NotFound from 'pages/NotFound';
-import PropTypes from 'prop-types';
+import { useParams } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { NavLink, useHistory } from 'react-router-dom';
@@ -48,8 +48,8 @@ const GlobalStyle = createGlobalStyle`
     }
 `;
 
-const SmartArticle = props => {
-    const id = props.match.params.id || null;
+const SmartArticle = () => {
+    const { id } = useParams();
     const { load, isLoading, isNotFound } = useLoad();
     const isLoadingInline = useSelector(state => state.smartArticle.isLoading);
     const [isEditing, setIsEditing] = useState(false);
@@ -206,14 +206,6 @@ const SmartArticle = props => {
             {isOpenHistoryModal && <HistoryModal toggle={toggleHistoryModal} id={id} show />}
         </div>
     );
-};
-
-SmartArticle.propTypes = {
-    match: PropTypes.shape({
-        params: PropTypes.shape({
-            id: PropTypes.string.isRequired
-        }).isRequired
-    }).isRequired
 };
 
 export default SmartArticle;
