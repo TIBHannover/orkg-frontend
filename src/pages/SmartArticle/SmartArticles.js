@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
@@ -13,6 +14,10 @@ import { getResourcesByClass } from 'services/backend/resources';
 import { getStatementsBySubjects } from 'services/backend/statements';
 
 const SmartArticles = () => {
+    useEffect(() => {
+        document.title = 'Smart Articles - ORKG';
+    });
+
     const renderListItem = versions => (
         <ShortRecord key={versions[0]?.id} header={versions[0]?.label} href={reverse(ROUTES.SMART_ARTICLE, { id: versions[0]?.id })}>
             {versions.length > 1 && (

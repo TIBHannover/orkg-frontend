@@ -7,7 +7,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { usePrevious } from 'react-use';
 import { ButtonGroup, Container, ListGroup } from 'reactstrap';
 
-const ListPage = ({ label, resourceClass, renderListItem, buttons, fetchItems, boxShadow, pageSize = 2 }) => {
+const ListPage = ({ label, resourceClass, renderListItem, buttons, fetchItems, boxShadow, pageSize = 25 }) => {
     const [results, setResults] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [hasNextPage, setHasNextPage] = useState(false);
