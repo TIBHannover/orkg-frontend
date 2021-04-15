@@ -15,7 +15,7 @@ import { getStatementsBySubjects } from 'services/backend/statements';
 
 const SmartArticles = () => {
     useEffect(() => {
-        document.title = 'Smart Articles - ORKG';
+        document.title = 'Smart articles - ORKG';
     });
 
     const renderListItem = versions => (

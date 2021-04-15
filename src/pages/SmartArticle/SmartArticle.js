@@ -66,7 +66,7 @@ const SmartArticle = props => {
     const publicationDate = version ? moment(version.date).format('DD MMMM YYYY') : null;
 
     useEffect(() => {
-        document.title = 'Smart survey - ORKG';
+        document.title = 'Smart article - ORKG';
 
         load(id);
     }, [id, load]);
