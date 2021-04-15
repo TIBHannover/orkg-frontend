@@ -46,8 +46,7 @@ const SmartArticleDiff = () => {
             setIsLoading(true);
             const oldArticle = await getArticleById(oldId);
             const newArticle = await getArticleById(newId);
-
-            if (!oldArticle || !newArticle) {
+            if (!oldArticle || !newArticle || oldArticle.paper?.id !== newArticle.paper?.id) {
                 setHasFailed(true);
                 return;
             }
