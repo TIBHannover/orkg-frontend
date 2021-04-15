@@ -128,7 +128,7 @@ export default function CurationCall() {
                 <h3 className="mt-4 mb-3">ORKG how-to videos</h3>
                 <Row className="my-3">
                     <Col>
-                        <div class="embed-responsive embed-responsive-16by9">
+                        <div className="embed-responsive embed-responsive-16by9">
                             <iframe
                                 title="How to make an ORKG comparison"
                                 scrolling="no"
@@ -141,7 +141,7 @@ export default function CurationCall() {
                         </div>
                     </Col>
                     <Col>
-                        <div class="embed-responsive embed-responsive-16by9">
+                        <div className="embed-responsive embed-responsive-16by9">
                             <iframe
                                 title="Video explaining how to make a comparison visualization"
                                 scrolling="no"
