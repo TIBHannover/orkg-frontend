@@ -15,7 +15,7 @@ import routes from 'constants/routes';
 const PublishModal = ({ id, show, toggle }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [updateMessage, setUpdateMessage] = useState('');
-    const [publishedSurveyId, setPublishedSurveyId] = useState(null);
+    const [publishedId, setPublishedId] = useState(null);
 
     const handlePublish = async () => {
         setIsLoading(true);
@@ -35,7 +35,7 @@ const PublishModal = ({ id, show, toggle }) => {
                 data: { rootResource: id, statements }
             });
             toast.success('Article published successfully');
-            setPublishedSurveyId(versionResource.id);
+            setPublishedId(versionResource.id);
             setIsLoading(false);
         } catch (e) {
             toast.success('An error occurred when publishing the article');
@@ -47,7 +47,7 @@ const PublishModal = ({ id, show, toggle }) => {
         <Modal isOpen={show} toggle={toggle}>
             <ModalHeader toggle={toggle}>Publish article</ModalHeader>
             <ModalBody>
-                {!publishedSurveyId ? (
+                {!publishedId ? (
                     <FormGroup>
                         <Label for="update-message">Update message</Label>
                         <Input
@@ -59,10 +59,10 @@ const PublishModal = ({ id, show, toggle }) => {
                         />
                     </FormGroup>
                 ) : (
-                    <a href={reverse(routes.SMART_ARTICLE, { id: publishedSurveyId })}>View the published survey</a>
+                    <a href={reverse(routes.SMART_ARTICLE, { id: publishedId })}>View the published article</a>
                 )}
             </ModalBody>
-            {!publishedSurveyId && (
+            {!publishedId && (
                 <ModalFooter>
                     <Button disabled={isLoading} color="primary" onClick={handlePublish}>
                         {!isLoading ? 'Publish' : <Icon icon={faSpinner} spin />}
