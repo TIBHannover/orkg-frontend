@@ -7,7 +7,7 @@ import { getStatementsBundleBySubject, getStatementsByObjectAndPredicate, getSta
 import { getResourceData } from 'services/similarity';
 import { uniq } from 'lodash';
 
-const useHeaderBar = () => {
+const useLoad = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [isNotFound, setIsNotFound] = useState(false);
     const dispatch = useDispatch();
@@ -224,4 +224,4 @@ const useHeaderBar = () => {
     return { load, isLoading, isNotFound, getArticleById };
 };
 
-export default useHeaderBar;
+export default useLoad;
