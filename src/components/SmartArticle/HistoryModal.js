@@ -115,7 +115,12 @@ const HistoryModal = props => {
                                             classNamePrefix="react-select"
                                             placeholder="Select version"
                                         />
-                                        <Button color="secondary" className="px-2" onClick={handleCompare}>
+                                        <Button
+                                            disabled={!selectedVersion2 || !selectedVersion1}
+                                            color="secondary"
+                                            className="px-2"
+                                            onClick={handleCompare}
+                                        >
                                             <Icon icon={faSearch} />
                                         </Button>
                                     </div>

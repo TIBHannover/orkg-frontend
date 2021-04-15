@@ -121,7 +121,11 @@ const SmartArticle = () => {
                                 ) : (
                                     <Tippy content="All changes are saved">
                                         <span className="mr-2">
-                                            <Icon icon={faCheckCircle} className="text-secondary" style={{ fontSize: '125%' }} />
+                                            <Icon
+                                                icon={faCheckCircle}
+                                                className="text-secondary"
+                                                style={{ fontSize: '125%', verticalAlign: 'middle' }}
+                                            />
                                         </span>
                                     </Tippy>
                                 )}
