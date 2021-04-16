@@ -1,11 +1,10 @@
 import { useEffect } from 'react';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import ListPage from 'components/ListPage/ListPage';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import ShortRecord from 'components/ShortRecord/ShortRecord';
-import UserUnpublishedArticles from 'components/SmartArticle/UserUnpublishedArticles';
 import { CLASSES, PREDICATES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import { useSelector } from 'react-redux';
@@ -70,14 +69,26 @@ const SmartArticles = () => {
     };
 
     const buttons = (
-        <RequireAuthentication component={Link} color="secondary" size="sm" className="btn btn-secondary btn-sm" to={ROUTES.SMART_ARTICLE_NEW}>
-            <Icon icon={faPlus} /> Create article
-        </RequireAuthentication>
+        <>
+            <RequireAuthentication component={Link} color="secondary" size="sm" className="btn btn-secondary btn-sm" to={ROUTES.SMART_ARTICLE_NEW}>
+                <Icon icon={faPlus} /> Create article
+            </RequireAuthentication>
+            {!!user && (
+                <RequireAuthentication
+                    component={Link}
+                    color="secondary"
+                    size="sm"
+                    className="btn btn-secondary btn-sm"
+                    to={ROUTES.USER_UNPUBLISHED_ARTICLES}
+                >
+                    <Icon icon={faEyeSlash} /> My unpublished articles
+                </RequireAuthentication>
+            )}
+        </>
     );
 
     return (
         <>
-            {!!user && <UserUnpublishedArticles userId={user.id} />}
             <ListPage
                 label="smart articles"
                 resourceClass={CLASSES.SMART_ARTICLE_PUBLISHED}

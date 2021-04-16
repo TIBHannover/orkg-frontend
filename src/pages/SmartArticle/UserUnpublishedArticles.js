@@ -1,10 +1,11 @@
+import { useEffect } from 'react';
 import { faPlus, faCalendar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import ListPage from 'components/ListPage/ListPage';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import ShortRecord from 'components/ShortRecord/ShortRecord';
 import { CLASSES, PREDICATES } from 'constants/graphSettings';
-import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import { Link } from 'react-router-dom';
@@ -12,7 +13,13 @@ import moment from 'moment';
 import { getResourcesByClass } from 'services/backend/resources';
 import { getStatementsByObjectAndPredicate } from 'services/backend/statements';
 
-const UserUnpublishedArticles = ({ userId }) => {
+const UserUnpublishedArticles = () => {
+    const user = useSelector(state => state.auth.user);
+
+    useEffect(() => {
+        document.title = 'My unpublished articles - ORKG';
+    });
+
     const renderListItem = article => (
         <ShortRecord key={article.id} header={article.label} href={reverse(ROUTES.SMART_ARTICLE, { id: article.id })}>
             <div className="time">
@@ -27,7 +34,7 @@ const UserUnpublishedArticles = ({ userId }) => {
             page,
             items: pageSize,
             sortBy: 'created_at',
-            creator: userId,
+            creator: user.id,
             desc: true
         });
 
@@ -68,7 +75,7 @@ const UserUnpublishedArticles = ({ userId }) => {
     return (
         <>
             <ListPage
-                label="unpublished smart articles"
+                label="unpublished articles"
                 resourceClass={CLASSES.SMART_ARTICLE}
                 renderListItem={renderListItem}
                 fetchItems={fetchItems}
@@ -78,10 +85,6 @@ const UserUnpublishedArticles = ({ userId }) => {
             />
         </>
     );
-};
-
-UserUnpublishedArticles.propTypes = {
-    userId: PropTypes.string.isRequired
 };
 
 export default UserUnpublishedArticles;

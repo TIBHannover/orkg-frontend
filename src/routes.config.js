@@ -48,6 +48,7 @@ import Contribution from 'pages/Contribution';
 import CsvImport from 'pages/CsvImport';
 import SmartArticle from 'pages/SmartArticle/SmartArticle';
 import SmartArticles from 'pages/SmartArticle/SmartArticles';
+import UserUnpublishedArticles from 'pages/SmartArticle/UserUnpublishedArticles';
 import SmartArticleNew from 'pages/SmartArticle/SmartArticleNew';
 import SmartArticleDiff from 'pages/SmartArticle/SmartArticleDiff';
 import Tools from 'pages/Tools';
@@ -325,6 +326,10 @@ const routes = [
     {
         path: ROUTES.SMART_ARTICLES,
         component: SmartArticles
+    },
+    {
+        path: ROUTES.USER_UNPUBLISHED_ARTICLES,
+        component: requireAuthentication(UserUnpublishedArticles)
     },
     {
         path: ROUTES.CONTRIBUTION_EDITOR,
