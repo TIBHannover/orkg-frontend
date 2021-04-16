@@ -87,6 +87,7 @@ const ComparisonTable = props => {
                         <Properties className="columnProperty">
                             <PropertiesInner className="d-flex flex-row align-items-start justify-content-between" cellPadding={cellPadding}>
                                 <PropertyValue
+                                    embeddedMode={props.embeddedMode}
                                     filterControlData={props.filterControlData}
                                     updateRulesOfProperty={props.updateRulesOfProperty}
                                     similar={info.value.similar}
@@ -113,7 +114,7 @@ const ComparisonTable = props => {
                                 </Contribution>
                             </PropertiesInner>
 
-                            {props.contributions.filter(contribution => contribution.active).length > 2 && (
+                            {!props.embeddedMode && props.contributions.filter(contribution => contribution.active).length > 2 && (
                                 <Delete onClick={() => props.removeContribution(info.value.id)}>
                                     <Icon icon={faTimes} />
                                 </Delete>
@@ -147,7 +148,7 @@ const ComparisonTable = props => {
                                                   </Contribution>
                                               </ItemHeaderInner>
 
-                                              {props.contributions.filter(contribution => contribution.active).length > 2 && (
+                                              {!props.embeddedMode && props.contributions.filter(contribution => contribution.active).length > 2 && (
                                                   <Delete onClick={() => props.removeContribution(contribution.id)}>
                                                       <Icon icon={faTimes} />
                                                   </Delete>
@@ -178,6 +179,7 @@ const ComparisonTable = props => {
                                           transpose={props.transpose}
                                       >
                                           <PropertyValue
+                                              embeddedMode={props.embeddedMode}
                                               filterControlData={props.filterControlData}
                                               updateRulesOfProperty={props.updateRulesOfProperty}
                                               similar={property.similar}
@@ -270,7 +272,12 @@ ComparisonTable.propTypes = {
     viewDensity: PropTypes.oneOf(['spacious', 'normal', 'compact']),
     scrollContainerBody: PropTypes.object.isRequired,
     filterControlData: PropTypes.array.isRequired,
-    updateRulesOfProperty: PropTypes.func.isRequired
+    updateRulesOfProperty: PropTypes.func.isRequired,
+    embeddedMode: PropTypes.bool.isRequired
+};
+
+ComparisonTable.defaultProps = {
+    embeddedMode: false
 };
 
 export default memo(ComparisonTable, compareProps);

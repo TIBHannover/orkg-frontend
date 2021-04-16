@@ -19,6 +19,7 @@ const SectionComparison = ({ id }) => {
                     viewDensity="compact"
                     filterControlData={filterControlData}
                     updateRulesOfProperty={updateRulesOfProperty}
+                    embeddedMode={true}
                 />
             )}
             {id && isLoadingComparisonResult && <ComparisonLoadingComponent />}
