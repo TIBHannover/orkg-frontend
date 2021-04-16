@@ -5,8 +5,10 @@ import Tippy from '@tippyjs/react';
 import ListPage from 'components/ListPage/ListPage';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import ShortRecord from 'components/ShortRecord/ShortRecord';
+import UserUnpublishedArticles from 'components/SmartArticle/UserUnpublishedArticles';
 import { CLASSES, PREDICATES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
+import { useSelector } from 'react-redux';
 import { groupBy } from 'lodash';
 import { reverse } from 'named-urls';
 import { Link } from 'react-router-dom';
@@ -14,6 +16,8 @@ import { getResourcesByClass } from 'services/backend/resources';
 import { getStatementsBySubjects } from 'services/backend/statements';
 
 const SmartArticles = () => {
+    const user = useSelector(state => state.auth.user);
+
     useEffect(() => {
         document.title = 'Smart articles - ORKG';
     });
@@ -72,13 +76,16 @@ const SmartArticles = () => {
     );
 
     return (
-        <ListPage
-            label="smart articles"
-            resourceClass={CLASSES.SMART_ARTICLE_PUBLISHED}
-            renderListItem={renderListItem}
-            fetchItems={fetchItems}
-            buttons={buttons}
-        />
+        <>
+            {!!user && <UserUnpublishedArticles userId={user.id} />}
+            <ListPage
+                label="smart articles"
+                resourceClass={CLASSES.SMART_ARTICLE_PUBLISHED}
+                renderListItem={renderListItem}
+                fetchItems={fetchItems}
+                buttons={buttons}
+            />
+        </>
     );
 };
 
