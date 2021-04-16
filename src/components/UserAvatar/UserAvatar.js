@@ -37,7 +37,7 @@ const StyledSpinnerGravatar = styled.div`
 
 const UserAvatar = ({ userId, size }) => {
     const [contributor, setContributor] = useState(null);
-    const [isLoadingContributor, setIsLoadingContributor] = useState(false);
+    const [isLoadingContributor, setIsLoadingContributor] = useState(true);
 
     useEffect(() => {
         if (userId) {
