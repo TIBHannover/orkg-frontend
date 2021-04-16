@@ -45,7 +45,7 @@ export default function Contribution(props) {
     } else if (!isSmartArticle && paperId) {
         return <Redirect to={reverse(ROUTES.VIEW_PAPER, { resourceId: paperId, contributionId })} />;
     } else if (paperId) {
-        return <Redirect to={reverse(ROUTES.SMART_ARTICLE, { id: paperId, contributionId })} />;
+        return <Redirect to={reverse(ROUTES.SMART_ARTICLE, { id: paperId })} />;
     } else {
         return <Container className="box rounded pt-4 pb-4 pl-5 pr-5 mt-5 clearfix">Loading ...</Container>;
     }
