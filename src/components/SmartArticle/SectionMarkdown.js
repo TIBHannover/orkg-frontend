@@ -82,7 +82,7 @@ const SectionMarkdown = props => {
             {!editMode && (
                 <Tippy hideOnClick={false} content="Double click to edit">
                     {markdownValue ? (
-                        <div onDoubleClick={() => setEditMode(true)}>
+                        <div role="button" tabIndex="0" onDoubleClick={() => setEditMode(true)}>
                             <MarkdownRenderer text={markdownValue} />
                         </div>
                     ) : (
