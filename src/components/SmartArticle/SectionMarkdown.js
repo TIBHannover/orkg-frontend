@@ -95,37 +95,60 @@ const SectionMarkdown = props => {
                 <>
                     <Toolbar>
                         <ButtonGroup className="mr-1" size="sm">
-                            <Button color="dark" onMouseDown={e => wrapText(e, '**', '**')}>
-                                <Icon icon={faBold} />
-                            </Button>
-                            <Button color="dark" onMouseDown={e => wrapText(e, '*', '*')}>
-                                <Icon icon={faItalic} />
-                            </Button>
-                            <Button color="dark" onMouseDown={e => wrapText(e, '__', '__')}>
-                                <Icon icon={faUnderline} />
-                            </Button>
+                            <Tippy content="Add bold text">
+                                <div role="button" tabIndex="0" className="btn btn-dark" onMouseDown={e => wrapText(e, '**', '**')}>
+                                    <Icon icon={faBold} />
+                                </div>
+                            </Tippy>
+                            <Tippy content="Add italic text">
+                                <div role="button" tabIndex="0" className="btn btn-dark" onMouseDown={e => wrapText(e, '*', '*')}>
+                                    <Icon icon={faItalic} />
+                                </div>
+                            </Tippy>
+                            <Tippy content="Add underlined text">
+                                <div role="button" tabIndex="0" className="btn btn-dark" onMouseDown={e => wrapText(e, '__', '__')}>
+                                    <Icon icon={faUnderline} />
+                                </div>
+                            </Tippy>
                         </ButtonGroup>
                         <ButtonGroup className="mr-1" size="sm">
-                            <Button color="dark" onMouseDown={e => wrapText(e, '* ')}>
-                                <Icon icon={faList} />
-                            </Button>
-                            <Button color="dark" onMouseDown={e => wrapText(e, '1. ')}>
-                                <Icon icon={faListOl} />
-                            </Button>
+                            <Tippy content="Add a bullet list">
+                                <div role="button" tabIndex="0" className="btn btn-dark" onMouseDown={e => wrapText(e, '* ')}>
+                                    <Icon icon={faList} />
+                                </div>
+                            </Tippy>
+                            <Tippy content="Add a numbered list">
+                                <div role="button" tabIndex="0" className="btn btn-dark" onMouseDown={e => wrapText(e, '1. ')}>
+                                    <Icon icon={faListOl} />
+                                </div>
+                            </Tippy>
                         </ButtonGroup>
                         <ButtonGroup size="sm">
-                            <Button color="dark" onMouseDown={e => wrapText(e, '[', '](url)')}>
-                                <Icon icon={faLink} />
-                            </Button>
-                            <Button color="dark" onMouseDown={e => wrapText(e, '![', '](https://example.com/img.png)')}>
-                                <Icon icon={faImage} />
-                            </Button>
-                            <Button color="dark" onMouseDown={e => wrapText(e, '> ')}>
-                                <Icon icon={faQuoteLeft} />
-                            </Button>
-                            <Button color="dark" onMouseDown={e => wrapText(e, '`', '`')}>
-                                <Icon icon={faCode} />
-                            </Button>
+                            <Tippy content="Add a link">
+                                <div role="button" tabIndex="0" className="btn btn-dark" onMouseDown={e => wrapText(e, '[', '](url)')}>
+                                    <Icon icon={faLink} />
+                                </div>
+                            </Tippy>
+                            <Tippy content="Add an image">
+                                <div
+                                    role="button"
+                                    tabIndex="0"
+                                    className="btn btn-dark"
+                                    onMouseDown={e => wrapText(e, '![', '](https://example.com/img.png)')}
+                                >
+                                    <Icon icon={faImage} />
+                                </div>
+                            </Tippy>
+                            <Tippy content="Add a quote">
+                                <div role="button" tabIndex="0" className="btn btn-dark" onMouseDown={e => wrapText(e, '> ')}>
+                                    <Icon icon={faQuoteLeft} />
+                                </div>
+                            </Tippy>
+                            <Tippy content="Add a code">
+                                <div role="button" tabIndex="0" className="btn btn-dark" onMouseDown={e => wrapText(e, '`', '`')}>
+                                    <Icon icon={faCode} />
+                                </div>
+                            </Tippy>
                         </ButtonGroup>
                     </Toolbar>
                     <Textarea
