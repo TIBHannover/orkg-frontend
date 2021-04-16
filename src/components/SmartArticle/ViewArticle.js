@@ -16,18 +16,7 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
 import { Alert, Badge, Button, Container } from 'reactstrap';
-import * as Showdown from 'showdown';
-import footnotes from 'showdown-footnotes';
 import SectionComparison from './SectionComparison';
-
-const converter = new Showdown.Converter({
-    //tables: true,
-    //simplifiedAutoLink: true,
-    //strikethrough: true,
-    //tasklists: true,
-    extensions: [footnotes]
-});
-converter.setFlavor('github');
 
 const ViewArticle = () => {
     const { id } = useParams();

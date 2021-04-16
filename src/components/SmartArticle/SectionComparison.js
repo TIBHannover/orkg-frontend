@@ -5,7 +5,9 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 const SectionComparison = ({ id }) => {
-    const { contributions, properties, data, isLoadingComparisonResult, filterControlData, updateRulesOfProperty } = useComparison({ id });
+    const { contributions, properties, data, isLoadingComparisonResult, filterControlData, updateRulesOfProperty, comparisonType } = useComparison({
+        id
+    });
 
     return (
         <>
@@ -17,6 +19,7 @@ const SectionComparison = ({ id }) => {
                     removeContribution={() => {}}
                     transpose={false}
                     viewDensity="compact"
+                    comparisonType={comparisonType}
                     filterControlData={filterControlData}
                     updateRulesOfProperty={updateRulesOfProperty}
                     embeddedMode={true}

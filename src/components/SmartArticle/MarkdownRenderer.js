@@ -5,6 +5,7 @@ import * as Showdown from 'showdown';
 import footnotes from 'showdown-footnotes';
 
 const converter = new Showdown.Converter({
+    openLinksInNewWindow: true,
     extensions: [footnotes]
 });
 converter.setFlavor('github');
@@ -14,8 +15,9 @@ converter.setFlavor('github');
  * Markdown renderer, takes care of sanitation to prevent XSS injections
  * and configures the markdown to HTML parser
  */
+/* TODO: secure ADD_ATTR */
 const MarkdownRenderer = ({ text }) => {
-    return <p dangerouslySetInnerHTML={{ __html: sanitize(converter.makeHtml(text)) }} />;
+    return <p dangerouslySetInnerHTML={{ __html: sanitize(converter.makeHtml(text), { ADD_ATTR: ['target'] }) }} />;
 };
 
 MarkdownRenderer.propTypes = {
