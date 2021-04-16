@@ -15,6 +15,7 @@ export default function Contribution(props) {
     const contributionId = props.match.params.id;
     const [error, setError] = useState(false);
     const [paperId, setPaperId] = useState(null);
+    const [isSmartArticle, setIsSmartArticle] = useState(false);
 
     useEffect(() => {
         getStatementsByObjectAndPredicate({ objectId: contributionId, predicateId: PREDICATES.HAS_CONTRIBUTION }).then(statements => {
@@ -24,7 +25,12 @@ export default function Contribution(props) {
                 return;
             }
 
-            const paperStatement = statements.find(_statement => _statement.subject.classes.includes(CLASSES.PAPER));
+            const paperStatement = statements.find(
+                _statement => _statement.subject.classes.includes(CLASSES.PAPER) || _statement.subject.classes.includes(CLASSES.SMART_ARTICLE)
+            );
+
+            setIsSmartArticle(!!statements.find(_statement => _statement.subject.classes.includes(CLASSES.SMART_ARTICLE)));
+
             if (!paperStatement) {
                 setError(true);
                 return;
@@ -36,8 +42,10 @@ export default function Contribution(props) {
 
     if (error) {
         return <NotFound />;
-    } else if (paperId) {
+    } else if (!isSmartArticle && paperId) {
         return <Redirect to={reverse(ROUTES.VIEW_PAPER, { resourceId: paperId, contributionId })} />;
+    } else if (paperId) {
+        return <Redirect to={reverse(ROUTES.SMART_ARTICLE, { id: paperId, contributionId })} />;
     } else {
         return <Container className="box rounded pt-4 pb-4 pl-5 pr-5 mt-5 clearfix">Loading ...</Container>;
     }
