@@ -24,10 +24,15 @@ const useLoad = () => {
 
         // for published articles
         if (paperResource.classes.includes(CLASSES.SMART_ARTICLE_PUBLISHED)) {
+            const resourceData = await getResourceData(id).catch(e => {});
+            if (!resourceData) {
+                console.log('no resource data found');
+                notFound();
+                return;
+            }
             const {
                 data: { rootResource, statements }
-            } = await getResourceData(id);
-
+            } = resourceData;
             paperStatements = statements;
             id = rootResource;
             paperResource = statements.find(statement => statement.subject.id === id).subject;
@@ -170,9 +175,9 @@ const useLoad = () => {
         async id => {
             setIsLoading(true);
             const article = await getArticleById(id);
-
-            dispatch(loadArticle(article));
-
+            if (article) {
+                dispatch(loadArticle(article));
+            }
             setIsLoading(false);
         },
         [dispatch, getArticleById]
