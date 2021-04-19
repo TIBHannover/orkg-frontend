@@ -50,6 +50,22 @@ export default function CurationCall() {
                     ).
                 </p>
 
+                <Row className="my-3">
+                    <Col md={6} className="mx-auto">
+                        <div className="embed-responsive embed-responsive-16by9">
+                            <iframe
+                                title="Overview on the Open Research Knowledge Graph"
+                                scrolling="no"
+                                frameBorder="0"
+                                src="//av.tib.eu/player/52261"
+                                allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                                allowFullScreen={true}
+                                className="embed-responsive-item"
+                            />
+                        </div>
+                    </Col>
+                </Row>
+
                 <h3 className="mt-4 mb-3">Requirements and Duties</h3>
                 <ul>
                     <li>
@@ -127,7 +143,7 @@ export default function CurationCall() {
 
                 <h3 className="mt-4 mb-3">ORKG how-to videos</h3>
                 <Row className="my-3">
-                    <Col>
+                    <Col md={6}>
                         <div className="embed-responsive embed-responsive-16by9">
                             <iframe
                                 title="How to make an ORKG comparison"
@@ -140,7 +156,7 @@ export default function CurationCall() {
                             />
                         </div>
                     </Col>
-                    <Col>
+                    <Col md={6} className="mt-3 mt-md-0">
                         <div className="embed-responsive embed-responsive-16by9">
                             <iframe
                                 title="Video explaining how to make a comparison visualization"
