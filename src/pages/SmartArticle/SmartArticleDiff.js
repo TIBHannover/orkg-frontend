@@ -72,7 +72,7 @@ const SmartArticleDiff = () => {
         <>
             <Container>
                 <div className="d-flex align-items-center">
-                    <h1 className="h4 mt-4 mb-4 flex-grow-1">Compare smart article versions</h1>
+                    <h1 className="h4 mt-4 mb-4 flex-grow-1">Compare smart review versions</h1>
                     <div style={{ marginLeft: 'auto' }} className="flex-shrink-0 mt-4">
                         <ButtonGroup className="float-right mb-4 ml-1">
                             <Button size="sm" color="secondary" onClick={() => setFullWidth(v => !v)}>

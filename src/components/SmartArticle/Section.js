@@ -61,7 +61,7 @@ const Section = props => {
     const isContentLinkSection = ['resource', 'property', 'comparison', 'visualization'].includes(sectionType);
 
     return (
-        <>
+        <section>
             <SectionStyled className="box rounded" onMouseEnter={() => setIsHovering(true)} onMouseLeave={() => setIsHovering(false)}>
                 <DeleteButton className={isHovering ? 'hover' : ''} color="primary" onClick={handleDelete}>
                     <Icon icon={faTimes} />
@@ -84,7 +84,7 @@ const Section = props => {
                 {!isContentLinkSection && markdown && <SectionMarkdown markdown={markdown} />}
             </SectionStyled>
             <AddSection index={props.atIndex} />
-        </>
+        </section>
     );
 };
 

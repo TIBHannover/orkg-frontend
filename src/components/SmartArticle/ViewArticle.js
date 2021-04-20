@@ -49,87 +49,103 @@ const ViewArticle = () => {
                         <Link to={reverse(ROUTES.SMART_ARTICLE, { id: latestVersionId })}>View latest version</Link>
                     </Alert>
                 )}
-                <SectionStyled className="box rounded pr-4">
-                    <h1 className="mb-2 mt-4" style={{ whiteSpace: 'pre-line' }}>
-                        {paper.title}
-                    </h1>
-                    <div className="my-3">
-                        {researchField && (
-                            <Link to={reverse(ROUTES.RESEARCH_FIELD, { researchFieldId: researchField.id })} target="_blank">
-                                <Badge color="light" className="mr-2 mb-2">
-                                    <Icon icon={faBars} className="text-primary" /> {researchField.label}
-                                </Badge>
-                            </Link>
-                        )}
-                        <AuthorsList authors={authors} />{' '}
-                    </div>
-                    {sections.map(section => {
-                        if (
-                            [CLASSES.RESOURCE_SECTION, CLASSES.PROPERTY_SECTION, CLASSES.COMPARISON_SECTION, CLASSES.VISUALIZATION_SECTION].includes(
-                                section.type.id
-                            )
-                        ) {
-                            return (
-                                <React.Fragment key={section.id}>
-                                    <h2 className="h4 border-bottom mt-5">{section.title.label}</h2>
-                                    {section?.contentLink?.objectId && (
-                                        <>
-                                            {section.type.id !== CLASSES.COMPARISON_SECTION && section.type.id !== CLASSES.VISUALIZATION_SECTION && (
+                <main>
+                    <article>
+                        <SectionStyled className="box rounded pr-4">
+                            <header>
+                                <h1 className="mb-2 mt-4" style={{ whiteSpace: 'pre-line' }}>
+                                    {paper.title}
+                                </h1>
+                                <div className="my-3">
+                                    {researchField && (
+                                        <Link to={reverse(ROUTES.RESEARCH_FIELD, { researchFieldId: researchField.id })} target="_blank">
+                                            <Badge color="light" className="mr-2 mb-2">
+                                                <Icon icon={faBars} className="text-primary" /> {researchField.label}
+                                            </Badge>
+                                        </Link>
+                                    )}
+                                    <AuthorsList authors={authors} />{' '}
+                                </div>
+                            </header>
+                            {sections.map(section => {
+                                if (
+                                    [
+                                        CLASSES.RESOURCE_SECTION,
+                                        CLASSES.PROPERTY_SECTION,
+                                        CLASSES.COMPARISON_SECTION,
+                                        CLASSES.VISUALIZATION_SECTION
+                                    ].includes(section.type.id)
+                                ) {
+                                    return (
+                                        <section key={section.id}>
+                                            <h2 className="h4 border-bottom mt-5">{section.title.label}</h2>
+                                            {section?.contentLink?.objectId && (
                                                 <>
-                                                    <div className="mt-3 mb-2">
-                                                        <Link
-                                                            to={reverse(
-                                                                section.type.id === CLASSES.RESOURCE_SECTION ? ROUTES.RESOURCE : ROUTES.PREDICATE,
-                                                                {
-                                                                    id: section.contentLink.objectId
-                                                                }
-                                                            )}
-                                                            target="_blank"
-                                                        >
-                                                            {section.contentLink.label}
-                                                        </Link>
-                                                    </div>
-                                                    {!isPublished ? (
-                                                        <StatementBrowser
-                                                            enableEdit={false}
-                                                            initialSubjectId={section.contentLink.objectId}
-                                                            initialSubjectLabel="Main"
-                                                            newStore={true}
-                                                            rootNodeType={section.type.id === CLASSES.RESOURCE_SECTION ? 'resource' : 'predicate'}
-                                                        />
-                                                    ) : (
-                                                        <ViewArticleStatementBrowser id={section.contentLink.objectId} />
+                                                    {section.type.id !== CLASSES.COMPARISON_SECTION &&
+                                                        section.type.id !== CLASSES.VISUALIZATION_SECTION && (
+                                                            <>
+                                                                <div className="mt-3 mb-2">
+                                                                    <Link
+                                                                        to={reverse(
+                                                                            section.type.id === CLASSES.RESOURCE_SECTION
+                                                                                ? ROUTES.RESOURCE
+                                                                                : ROUTES.PREDICATE,
+                                                                            {
+                                                                                id: section.contentLink.objectId
+                                                                            }
+                                                                        )}
+                                                                        target="_blank"
+                                                                    >
+                                                                        {section.contentLink.label}
+                                                                    </Link>
+                                                                </div>
+                                                                {!isPublished ? (
+                                                                    <StatementBrowser
+                                                                        enableEdit={false}
+                                                                        initialSubjectId={section.contentLink.objectId}
+                                                                        initialSubjectLabel="Main"
+                                                                        newStore={true}
+                                                                        rootNodeType={
+                                                                            section.type.id === CLASSES.RESOURCE_SECTION ? 'resource' : 'predicate'
+                                                                        }
+                                                                    />
+                                                                ) : (
+                                                                    <ViewArticleStatementBrowser id={section.contentLink.objectId} />
+                                                                )}
+                                                            </>
+                                                        )}
+                                                    {section.type.id === CLASSES.COMPARISON_SECTION && (
+                                                        <SectionComparison key={section.id} id={section.contentLink.objectId} />
+                                                    )}
+                                                    {section.type.id === CLASSES.VISUALIZATION_SECTION && (
+                                                        <SectionVisualization key={section.id} id={section.contentLink.objectId} />
                                                     )}
                                                 </>
                                             )}
-                                            {section.type.id === CLASSES.COMPARISON_SECTION && (
-                                                <SectionComparison key={section.id} id={section.contentLink.objectId} />
-                                            )}
-                                            {section.type.id === CLASSES.VISUALIZATION_SECTION && (
-                                                <SectionVisualization key={section.id} id={section.contentLink.objectId} />
-                                            )}
-                                        </>
-                                    )}
-                                </React.Fragment>
-                            );
-                        } else {
-                            return (
-                                <React.Fragment key={section.id}>
-                                    <h2 className="h4 border-bottom mt-4" style={{ whiteSpace: 'pre-line' }}>
-                                        {section.title.label}
-                                    </h2>
-                                    <MarkdownRenderer text={section.markdown.label} />
-                                </React.Fragment>
-                            );
-                        }
-                    })}
-                    <h2 className="h4 border-bottom mt-5">
-                        <Tippy content="Acknowledgements are automatically generated based on ORKG users that contributed to resources used in this article">
-                            <span>Acknowledgements</span>
-                        </Tippy>
-                    </h2>
-                    <Acknowledgements />
-                </SectionStyled>
+                                        </section>
+                                    );
+                                } else {
+                                    return (
+                                        <section key={section.id}>
+                                            <h2 className="h4 border-bottom mt-4" style={{ whiteSpace: 'pre-line' }}>
+                                                {section.title.label}
+                                            </h2>
+                                            <MarkdownRenderer text={section.markdown.label} />
+                                        </section>
+                                    );
+                                }
+                            })}
+                            <section>
+                                <h2 className="h4 border-bottom mt-5">
+                                    <Tippy content="Acknowledgements are automatically generated based on ORKG users that contributed to resources used in this article">
+                                        <span>Acknowledgements</span>
+                                    </Tippy>
+                                </h2>
+                                <Acknowledgements />
+                            </section>
+                        </SectionStyled>
+                    </article>
+                </main>
             </Container>
         </>
     );

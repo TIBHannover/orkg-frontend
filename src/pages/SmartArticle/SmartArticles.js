@@ -18,7 +18,7 @@ const SmartArticles = () => {
     const user = useSelector(state => state.auth.user);
 
     useEffect(() => {
-        document.title = 'Smart articles - ORKG';
+        document.title = 'Smart reviews - ORKG';
     });
 
     const renderListItem = versions => (
@@ -80,6 +80,7 @@ const SmartArticles = () => {
                     size="sm"
                     className="btn btn-secondary btn-sm"
                     to={ROUTES.USER_UNPUBLISHED_ARTICLES}
+                    style={{ marginLeft: 1 }}
                 >
                     <Icon icon={faEyeSlash} /> My unpublished articles
                 </RequireAuthentication>
@@ -90,7 +91,7 @@ const SmartArticles = () => {
     return (
         <>
             <ListPage
-                label="smart articles"
+                label="smart reviews"
                 resourceClass={CLASSES.SMART_ARTICLE_PUBLISHED}
                 renderListItem={renderListItem}
                 fetchItems={fetchItems}

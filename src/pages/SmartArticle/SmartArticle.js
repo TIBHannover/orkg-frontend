@@ -66,7 +66,7 @@ const SmartArticle = () => {
     const publicationDate = version ? moment(version.date).format('DD MMMM YYYY') : null;
 
     useEffect(() => {
-        document.title = 'Smart article - ORKG';
+        document.title = 'Smart review - ORKG';
 
         load(id);
     }, [id, load]);
@@ -101,13 +101,13 @@ const SmartArticle = () => {
             <Container>
                 <div className="d-flex ">
                     <div className="d-flex align-items-center flex-grow-1">
-                        <h1 className="h4 mt-4 mb-4">Smart article</h1>
+                        <h1 className="h4 mt-4 mb-4">Smart review</h1>
                         {publicationDate && (
                             <>
                                 <SubtitleSeparator />
                                 <Tippy content={`Update message: "${version.description}"`}>
                                     <SubTitle>
-                                        Published on {publicationDate} - Version {versionNumber}
+                                        Published on <time dateTime={version?.date}>{publicationDate}</time> - Version {versionNumber}
                                     </SubTitle>
                                 </Tippy>
                             </>
@@ -191,17 +191,19 @@ const SmartArticle = () => {
                 </div>
             </Container>
             {!isLoading && isEditing && (
-                <>
-                    <Container>
-                        <Title />
-                        <AuthorsSection />
-                    </Container>
+                <main>
+                    <header>
+                        <Container>
+                            <Title />
+                            <AuthorsSection />
+                        </Container>
+                    </header>
                     <AddSection index={0} />
                     <Sections />
                     <Container>
                         <AcknowledgementsSection />
                     </Container>
-                </>
+                </main>
             )}
             {!isLoading && !isEditing && <ViewArticle />}
             {isLoading && <LoadingArticle />}
