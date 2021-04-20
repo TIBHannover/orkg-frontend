@@ -43,19 +43,23 @@ const SectionType = props => {
                 },
                 {
                     label: 'Resource',
-                    value: CLASSES.RESOURCE_SECTION
+                    value: CLASSES.RESOURCE_SECTION,
+                    disabled: true
                 },
                 {
                     label: 'Property',
-                    value: CLASSES.PROPERTY_SECTION
+                    value: CLASSES.PROPERTY_SECTION,
+                    disabled: true
                 },
                 {
                     label: 'Comparison',
-                    value: CLASSES.COMPARISON_SECTION
+                    value: CLASSES.COMPARISON_SECTION,
+                    disabled: true
                 },
                 {
                     label: 'Visualization',
-                    value: CLASSES.VISUALIZATION_SECTION
+                    value: CLASSES.VISUALIZATION_SECTION,
+                    disabled: true
                 }
             ];
             const _options = sortBy([...ontologyClasses, ...additionalClasses], 'label');
@@ -111,6 +115,7 @@ const SectionType = props => {
                         options={options}
                         components={{ Option }}
                         onBlur={handleBlur}
+                        isOptionDisabled={option => option.disabled}
                         classNamePrefix="react-select"
                         blurInputOnSelect
                         autoFocus
