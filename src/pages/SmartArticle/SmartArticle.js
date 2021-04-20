@@ -98,8 +98,11 @@ const SmartArticle = () => {
         <div>
             {researchField && <Breadcrumbs researchFieldId={researchField.id} />}
             <GlobalStyle />
-            <Container>
-                <div className="d-flex ">
+            <Container
+                prefix="doco: http://purl.org/spar/doco/ fabio: http://purl.org/spar/fabio/ deo: http://purl.org/spar/deo/ c4o: http://purl.org/spar/c4o foaf: http://xmlns.com/foaf/0.1/"
+                typeof="fabio:ScholarlyWork"
+            >
+                <div className="d-flex">
                     <div className="d-flex align-items-center flex-grow-1">
                         <h1 className="h4 mt-4 mb-4">Smart review</h1>
                         {publicationDate && (

@@ -53,7 +53,7 @@ const ViewArticle = () => {
                     <article>
                         <SectionStyled className="box rounded pr-4">
                             <header>
-                                <h1 className="mb-2 mt-4" style={{ whiteSpace: 'pre-line' }}>
+                                <h1 className="mb-2 mt-4" style={{ whiteSpace: 'pre-line' }} typeof="doco:Title" property="c4o:hasContent">
                                     {paper.title}
                                 </h1>
                                 <div className="my-3">
@@ -77,8 +77,10 @@ const ViewArticle = () => {
                                     ].includes(section.type.id)
                                 ) {
                                     return (
-                                        <section key={section.id}>
-                                            <h2 className="h4 border-bottom mt-5">{section.title.label}</h2>
+                                        <section key={section.id} typeof="doco:Section">
+                                            <h2 className="h4 border-bottom mt-5" typeof="doco:SectionTitle" property="c4o:hasContent">
+                                                {section.title.label}
+                                            </h2>
                                             {section?.contentLink?.objectId && (
                                                 <>
                                                     {section.type.id !== CLASSES.COMPARISON_SECTION &&
@@ -126,8 +128,13 @@ const ViewArticle = () => {
                                     );
                                 } else {
                                     return (
-                                        <section key={section.id}>
-                                            <h2 className="h4 border-bottom mt-4" style={{ whiteSpace: 'pre-line' }}>
+                                        <section key={section.id} typeof={`doco:Section deo:${section?.type?.id}`} property="c4o:hasContent">
+                                            <h2
+                                                className="h4 border-bottom mt-4"
+                                                style={{ whiteSpace: 'pre-line' }}
+                                                typeof="doco:SectionTitle"
+                                                property="c4o:hasContent"
+                                            >
                                                 {section.title.label}
                                             </h2>
                                             <MarkdownRenderer text={section.markdown.label} />
@@ -135,8 +142,8 @@ const ViewArticle = () => {
                                     );
                                 }
                             })}
-                            <section>
-                                <h2 className="h4 border-bottom mt-5">
+                            <section typeof="doco:Section deo:Acknowledgements">
+                                <h2 className="h4 border-bottom mt-5" typeof="doco:SectionTitle" property="c4o:hasContent">
                                     <Tippy content="Acknowledgements are automatically generated based on ORKG users that contributed to resources used in this article">
                                         <span>Acknowledgements</span>
                                     </Tippy>
