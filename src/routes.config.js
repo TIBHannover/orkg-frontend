@@ -52,6 +52,12 @@ import requireAuthentication from 'requireAuthentication';
 import { reverse } from 'named-urls';
 import ContributionEditor from 'pages/ContributionEditor';
 import CurationCall from 'pages/CurationCall';
+import Page from 'pages/Page';
+import About from 'pages/About';
+import HelpCenter from 'pages/HelpCenter/HelpCenter';
+import HelpCenterCategory from 'pages/HelpCenter/HelpCenterCategory';
+import HelpCenterArticle from 'pages/HelpCenter/HelpCenterArticle';
+import HelpCenterSearch from 'pages/HelpCenter/HelpCenterSearch';
 
 // use lazy loading of pages that contain large dependencies
 // run "npm run analyze" to ensure the listed dependencies are not loaded elsewhere and thus end up in the bundle
@@ -322,6 +328,30 @@ const routes = [
     {
         path: ROUTES.CURATION_CALL,
         component: CurationCall
+    },
+    {
+        path: ROUTES.PAGE,
+        component: Page
+    },
+    {
+        path: ROUTES.ABOUT,
+        component: About
+    },
+    {
+        path: ROUTES.HELP_CENTER_CATEGORY,
+        component: HelpCenterCategory
+    },
+    {
+        path: ROUTES.HELP_CENTER_ARTICLE,
+        component: HelpCenterArticle
+    },
+    {
+        path: ROUTES.HELP_CENTER_SEARCH,
+        component: HelpCenterSearch
+    },
+    {
+        path: ROUTES.HELP_CENTER,
+        component: HelpCenter
     },
     /* Don't add routes below this line */
     {

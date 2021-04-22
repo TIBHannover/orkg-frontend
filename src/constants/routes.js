@@ -55,6 +55,12 @@ const routes = {
     PREDICATE: '/predicate/:id',
     TPDL: '/tpdl',
     EXPORT_DATA: '/export-data',
-    CURATION_CALL: '/open-call-curation-grant'
+    CURATION_CALL: '/open-call-curation-grant',
+    PAGE: '/page/:id-:slug',
+    ABOUT: '/about/:id-:slug',
+    HELP_CENTER: '/help-center',
+    HELP_CENTER_CATEGORY: '/help-center/category/:id',
+    HELP_CENTER_ARTICLE: '/help-center/:categoryId/:id-:slug',
+    HELP_CENTER_SEARCH: '/help-center/search/:searchQuery'
 };
 export default routes;
