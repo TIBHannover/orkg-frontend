@@ -17,6 +17,13 @@ const Page = () => {
         loadPage({ id: params.id });
     }, [params, loadPage]);
 
+    useEffect(() => {
+        if (!params?.uid) {
+            return;
+        }
+        loadPage({ uid: params.uid });
+    }, [params, loadPage]);
+
     if (isNotFound) {
         return <NotFound />;
     }

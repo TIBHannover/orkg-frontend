@@ -9,6 +9,7 @@ import queryString from 'query-string';
 export const url = env('CMS_URL');
 
 export const getPage = id => submitGetRequest(`${url}pages/${id}`);
+export const getPageByUid = uid => submitGetRequest(`${url}pages?uid=${uid}`).then(pages => pages[0]);
 
 export const getPages = ({ category = null, sort = null, where = '' }) => {
     const params = queryString.stringify(

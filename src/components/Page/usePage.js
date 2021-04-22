@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { getPage } from 'services/cms';
+import { getPage, getPageByUid } from 'services/cms';
 import * as Showdown from 'showdown';
 import styled from 'styled-components';
 
@@ -32,10 +32,17 @@ const usePage = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [isNotFound, setIsNotFound] = useState(false);
 
-    const loadPage = useCallback(async ({ id, categoryTitle = undefined, categoryId = undefined }) => {
+    const loadPage = useCallback(async ({ id = null, uid = null, categoryTitle = undefined, categoryId = undefined }) => {
         setIsLoading(true);
         try {
-            const _page = await getPage(id);
+            let _page = {};
+
+            if (id) {
+                _page = await getPage(id);
+            } else if (uid) {
+                _page = await getPageByUid(uid);
+            }
+
             setPage({
                 ..._page,
                 content: <Article dangerouslySetInnerHTML={{ __html: converter.makeHtml(_page.content) }} />
