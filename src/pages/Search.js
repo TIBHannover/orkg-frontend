@@ -74,8 +74,8 @@ class Search extends Component {
                 id: CLASSES.VISUALIZATION
             },
             {
-                label: 'Smart review',
-                labelPlural: 'Smart reviews',
+                label: 'SmartReview',
+                labelPlural: 'SmartReviews',
                 id: CLASSES.SMART_ARTICLE_PUBLISHED
             }
         ];

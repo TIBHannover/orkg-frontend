@@ -75,7 +75,7 @@ const UserUnpublishedArticles = () => {
     return (
         <>
             <ListPage
-                label="unpublished articles"
+                label="unpublished SmartReviews"
                 resourceClass={CLASSES.SMART_ARTICLE}
                 renderListItem={renderListItem}
                 fetchItems={fetchItems}

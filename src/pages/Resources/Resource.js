@@ -78,12 +78,12 @@ const DEDICATED_PAGE_LINKS = {
         routeParams: 'id'
     },
     [CLASSES.SMART_ARTICLE]: {
-        label: 'Smart review',
+        label: 'SmartReview',
         route: ROUTES.SMART_ARTICLE,
         routeParams: 'id'
     },
     [CLASSES.SMART_ARTICLE_PUBLISHED]: {
-        label: 'Smart review',
+        label: 'SmartReview',
         route: ROUTES.SMART_ARTICLE,
         routeParams: 'id'
     }

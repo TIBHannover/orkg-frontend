@@ -18,7 +18,7 @@ const SmartArticles = () => {
     const user = useSelector(state => state.auth.user);
 
     useEffect(() => {
-        document.title = 'Smart reviews - ORKG';
+        document.title = 'SmartReviews - ORKG';
     });
 
     const renderListItem = versions => (
@@ -91,7 +91,7 @@ const SmartArticles = () => {
     return (
         <>
             <ListPage
-                label="smart reviews"
+                label="SmartReviews"
                 resourceClass={CLASSES.SMART_ARTICLE_PUBLISHED}
                 renderListItem={renderListItem}
                 fetchItems={fetchItems}

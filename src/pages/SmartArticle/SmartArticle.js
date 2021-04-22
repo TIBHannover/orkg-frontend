@@ -66,7 +66,7 @@ const SmartArticle = () => {
     const publicationDate = version ? moment(version.date).format('DD MMMM YYYY') : null;
 
     useEffect(() => {
-        document.title = 'Smart review - ORKG';
+        document.title = 'SmartReview - ORKG';
 
         load(id);
     }, [id, load]);
@@ -104,7 +104,7 @@ const SmartArticle = () => {
             >
                 <div className="d-flex">
                     <div className="d-flex align-items-center flex-grow-1">
-                        <h1 className="h4 mt-4 mb-4">Smart review</h1>
+                        <h1 className="h4 mt-4 mb-4">SmartReview</h1>
                         {publicationDate && (
                             <>
                                 <SubtitleSeparator />
