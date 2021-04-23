@@ -239,7 +239,7 @@ class AuthorsInput extends Component {
     editAuthor = key => {
         this.setState({
             editIndex: key,
-            authorInput: this.props.value[key].orcid ? this.props.value[key].orcid : this.props.value[key],
+            authorInput: { ...this.props.value[key], label: this.props.value[key].orcid ? this.props.value[key].orcid : this.props.value[key].label },
             editMode: true
         });
         this.toggle('showAuthorForm');
