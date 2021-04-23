@@ -28,7 +28,7 @@ const SmartReviews = () => {
                     All versions:{' '}
                     {versions.map((version, index) => (
                         <span key={version.id}>
-                            <Tippy content={version.label}>
+                            <Tippy content={version.description}>
                                 <Link to={reverse(ROUTES.SMART_REVIEW, { id: version.id })}>Version {versions.length - index}</Link>
                             </Tippy>{' '}
                             {index < versions.length - 1 && ' • '}
@@ -54,6 +54,7 @@ const SmartReviews = () => {
             items = await getStatementsBySubjects({ ids: resources.map(item => item.id) }).then(statements =>
                 statements.map(statementsForSubject => ({
                     ...resources.find(resource => resource.id === statementsForSubject.id),
+                    description: statementsForSubject.statements.find(statement => statement.predicate.id === PREDICATES.DESCRIPTION)?.object?.label,
                     paperId: statementsForSubject.statements.find(statement => statement.predicate.id === PREDICATES.HAS_PAPER)?.object?.id
                 }))
             );
