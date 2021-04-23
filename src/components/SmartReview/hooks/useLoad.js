@@ -1,4 +1,4 @@
-import { load as loadArticle } from 'actions/smartArticle';
+import { load as loadArticle } from 'actions/smartReview';
 import { CLASSES, MISC, PREDICATES } from 'constants/graphSettings';
 import { useCallback, useState } from 'react';
 import { useDispatch } from 'react-redux';
@@ -23,7 +23,7 @@ const useLoad = () => {
         let paperStatements = [];
 
         // for published articles
-        if (paperResource.classes.includes(CLASSES.SMART_ARTICLE_PUBLISHED)) {
+        if (paperResource.classes.includes(CLASSES.SMART_REVIEW_PUBLISHED)) {
             const resourceData = await getResourceData(id).catch(e => {});
             if (!resourceData) {
                 console.log('no resource data found');
@@ -55,10 +55,10 @@ const useLoad = () => {
             return;
         }
 
-        const contributionResource = contributionResources.find(statement => statement.classes.includes(CLASSES.CONTRIBUTION_SMART_ARTICLE));
+        const contributionResource = contributionResources.find(statement => statement.classes.includes(CLASSES.CONTRIBUTION_SMART_REVIEW));
 
         if (!contributionResource) {
-            console.log('no contribution with class "CONTRIBUTION_SMART_ARTICLE" found');
+            console.log('no contribution with class "CONTRIBUTION_SMART_REVIEW" found');
             notFound();
             return;
         }
@@ -196,7 +196,7 @@ const useLoad = () => {
             .map(versionSubject => ({
                 ...versionSubject.statements.find(
                     statement =>
-                        statement.subject.classes.includes(CLASSES.SMART_ARTICLE_PUBLISHED) && statement.predicate.id === PREDICATES.DESCRIPTION
+                        statement.subject.classes.includes(CLASSES.SMART_REVIEW_PUBLISHED) && statement.predicate.id === PREDICATES.DESCRIPTION
                 )
             }))
             .map(statement => ({

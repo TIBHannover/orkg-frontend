@@ -1,5 +1,5 @@
-import { moveSection } from 'actions/smartArticle';
-import Section from 'components/SmartArticle/Section';
+import { moveSection } from 'actions/smartReview';
+import Section from 'components/SmartReview/Section';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { SortableContainer } from 'react-sortable-hoc';
@@ -21,8 +21,8 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 const Sections = () => {
-    const sections = useSelector(state => state.smartArticle.sections);
-    const contributionId = useSelector(state => state.smartArticle.contributionId);
+    const sections = useSelector(state => state.smartReview.sections);
+    const contributionId = useSelector(state => state.smartReview.contributionId);
     const [isSorting, setIsSorting] = useState(false);
     const dispatch = useDispatch();
 

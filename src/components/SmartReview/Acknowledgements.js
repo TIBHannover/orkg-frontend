@@ -3,7 +3,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 
 const Acknowledgements = () => {
-    const contributors = useSelector(state => state.smartArticle.contributors);
+    const contributors = useSelector(state => state.smartReview.contributors);
 
     return (
         <div className="d-flex mb-4">

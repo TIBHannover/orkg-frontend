@@ -1,6 +1,6 @@
 import Tippy from '@tippyjs/react';
-import Acknowledgements from 'components/SmartArticle/Acknowledgements';
-import { SectionStyled, SectionTypeStyled } from 'components/SmartArticle/styled';
+import Acknowledgements from 'components/SmartReview/Acknowledgements';
+import { SectionStyled, SectionTypeStyled } from 'components/SmartReview/styled';
 import React from 'react';
 
 const AcknowledgementsSection = () => {

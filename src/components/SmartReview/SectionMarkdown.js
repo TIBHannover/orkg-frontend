@@ -1,9 +1,9 @@
 import { faBold, faCode, faImage, faItalic, faLink, faList, faListOl, faQuoteLeft, faUnderline } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
-import { updateSectionMarkdown } from 'actions/smartArticle';
-import MarkdownRenderer from 'components/SmartArticle/MarkdownRenderer';
-import { MarkdownPlaceholder } from 'components/SmartArticle/styled';
+import { updateSectionMarkdown } from 'actions/smartReview';
+import MarkdownRenderer from 'components/SmartReview/MarkdownRenderer';
+import { MarkdownPlaceholder } from 'components/SmartReview/styled';
 import PropTypes from 'prop-types';
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';

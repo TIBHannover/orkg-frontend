@@ -21,7 +21,7 @@ const UserUnpublishedArticles = () => {
     });
 
     const renderListItem = article => (
-        <ShortRecord key={article.id} header={article.label} href={reverse(ROUTES.SMART_ARTICLE, { id: article.id })}>
+        <ShortRecord key={article.id} header={article.label} href={reverse(ROUTES.SMART_REVIEW, { id: article.id })}>
             <div className="time">
                 <Icon size="sm" icon={faCalendar} className="mr-1" /> {article.created_at ? moment(article.created_at).format('DD MMMM YYYY') : ''}
             </div>
@@ -51,10 +51,11 @@ const UserUnpublishedArticles = () => {
                     })
                 )
                 .then(unpublishedItems => {
+                    const items = unpublishedItems.filter(v => v);
                     return {
-                        items: unpublishedItems.filter(v => v),
+                        items: items,
                         last,
-                        totalElements
+                        totalElements: items.length
                     };
                 });
         } else {
@@ -67,7 +68,7 @@ const UserUnpublishedArticles = () => {
     };
 
     const buttons = (
-        <RequireAuthentication component={Link} color="secondary" size="sm" className="btn btn-secondary btn-sm" to={ROUTES.SMART_ARTICLE_NEW}>
+        <RequireAuthentication component={Link} color="secondary" size="sm" className="btn btn-secondary btn-sm" to={ROUTES.SMART_REVIEW_NEW}>
             <Icon icon={faPlus} /> Create article
         </RequireAuthentication>
     );
@@ -76,7 +77,7 @@ const UserUnpublishedArticles = () => {
         <>
             <ListPage
                 label="unpublished SmartReviews"
-                resourceClass={CLASSES.SMART_ARTICLE}
+                resourceClass={CLASSES.SMART_REVIEW}
                 renderListItem={renderListItem}
                 fetchItems={fetchItems}
                 buttons={buttons}

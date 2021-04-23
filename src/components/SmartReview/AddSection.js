@@ -5,7 +5,7 @@ import { Button, ButtonGroup } from 'reactstrap';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
-import { createSection } from 'actions/smartArticle';
+import { createSection } from 'actions/smartReview';
 import { useClickAway } from 'react-use';
 
 const InvisibleByDefault = styled.div`
@@ -36,7 +36,7 @@ const Toolbar = styled.div`
 const AddSection = props => {
     const [isToolbarVisible, setIsToolbarVisible] = useState(false);
     const dispatch = useDispatch();
-    const contributionId = useSelector(state => state.smartArticle.contributionId);
+    const contributionId = useSelector(state => state.smartReview.contributionId);
     const refToolbar = useRef(null);
 
     const handleShowToolbar = () => {

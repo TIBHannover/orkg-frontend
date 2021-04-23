@@ -68,7 +68,7 @@ const Time = styled.div`
 
 const HistoryModal = props => {
     const { id, show, toggle } = props;
-    const versions = useSelector(state => state.smartArticle.versions);
+    const versions = useSelector(state => state.smartReview.versions);
     const [selectedVersion1, setSelectedVersion1] = useState(null);
     const [selectedVersion2, setSelectedVersion2] = useState(null);
     const history = useHistory();
@@ -79,7 +79,7 @@ const HistoryModal = props => {
     }));
 
     const handleCompare = () => {
-        history.push(reverse(ROUTES.SMART_ARTICLE_DIFF, { oldId: selectedVersion1.value, newId: selectedVersion2.value }));
+        history.push(reverse(ROUTES.SMART_REVIEW_DIFF, { oldId: selectedVersion1.value, newId: selectedVersion2.value }));
     };
 
     return (
@@ -142,7 +142,7 @@ const HistoryModal = props => {
                                     <div>
                                         Version {versions.length - i}: <em>{version.description}</em> <br />
                                         {id !== version.id && (
-                                            <Link onClick={props.toggle} to={reverse(ROUTES.SMART_ARTICLE, { id: version.id })}>
+                                            <Link onClick={props.toggle} to={reverse(ROUTES.SMART_REVIEW, { id: version.id })}>
                                                 View article at this version
                                             </Link>
                                         )}

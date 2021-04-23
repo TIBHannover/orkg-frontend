@@ -12,12 +12,12 @@ const useSave = () => {
             predicates: [],
             resource: {
                 name: title,
-                classes: [CLASSES.SMART_ARTICLE],
+                classes: [CLASSES.SMART_REVIEW],
                 values: {
                     [PREDICATES.HAS_CONTRIBUTION]: [
                         {
                             label: 'Contribution',
-                            classes: [CLASSES.CONTRIBUTION, CLASSES.CONTRIBUTION_SMART_ARTICLE],
+                            classes: [CLASSES.CONTRIBUTION, CLASSES.CONTRIBUTION_SMART_REVIEW],
                             values: {}
                         }
                     ]

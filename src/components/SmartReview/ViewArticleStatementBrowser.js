@@ -14,7 +14,7 @@ import { ListGroup } from 'reactstrap';
  */
 const ViewArticleStatementBrowser = ({ id }) => {
     const [properties, setProperties] = useState([]);
-    const statements = useSelector(state => state.smartArticle.statements);
+    const statements = useSelector(state => state.smartReview.statements);
 
     useEffect(() => {
         const statementsForSubject = statements.filter(statement => statement.subject.id === id);

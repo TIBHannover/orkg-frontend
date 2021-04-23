@@ -8,7 +8,7 @@ import viewPaper from 'reducers/viewPaper';
 import pdfAnnotation from 'reducers/pdfAnnotation';
 import addTemplate from 'reducers/addTemplate';
 import contributionEditor from 'reducers/contributionEditor';
-import smartArticle from './smartArticle';
+import smartReview from './smartReview';
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default history =>
@@ -21,6 +21,6 @@ export default history =>
         auth,
         addTemplate,
         pdfTextAnnotation,
-        smartArticle,
+        smartReview,
         contributionEditor
     });

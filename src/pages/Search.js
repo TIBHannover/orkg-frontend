@@ -76,7 +76,7 @@ class Search extends Component {
             {
                 label: 'SmartReview',
                 labelPlural: 'SmartReviews',
-                id: CLASSES.SMART_ARTICLE_PUBLISHED
+                id: CLASSES.SMART_REVIEW_PUBLISHED
             }
         ];
 

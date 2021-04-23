@@ -151,7 +151,7 @@ export const createSection = ({ contributionId, afterIndex, sectionType }) => as
     dispatch(
         sortSections({
             contributionId,
-            sections: getState().smartArticle.sections
+            sections: getState().smartReview.sections
         })
     );
     dispatch(setIsLoading(false));

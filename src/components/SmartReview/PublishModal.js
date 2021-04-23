@@ -25,7 +25,7 @@ const PublishModal = ({ id, show, toggle }) => {
                 id
             });
             const paperTitle = statements.find(statement => statement.subject.id === id).subject.label;
-            const versionResource = await createResource(paperTitle, [CLASSES.SMART_ARTICLE_PUBLISHED]);
+            const versionResource = await createResource(paperTitle, [CLASSES.SMART_REVIEW_PUBLISHED]);
             const updateMessageLiteral = await createLiteral(updateMessage);
             await createLiteralStatement(versionResource.id, PREDICATES.DESCRIPTION, updateMessageLiteral.id);
             await createResourceStatement(versionResource.id, PREDICATES.HAS_PAPER, id);
@@ -59,7 +59,7 @@ const PublishModal = ({ id, show, toggle }) => {
                         />
                     </FormGroup>
                 ) : (
-                    <a href={reverse(routes.SMART_ARTICLE, { id: publishedId })}>View the published article</a>
+                    <a href={reverse(routes.SMART_REVIEW, { id: publishedId })}>View the published article</a>
                 )}
             </ModalBody>
             {!publishedId && (

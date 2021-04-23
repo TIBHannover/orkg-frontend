@@ -1,9 +1,9 @@
 import { faArrowsAltH } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { ContainerAnimated } from 'components/Comparison/styled';
-import DiffTitle from 'components/SmartArticle/Diff/DiffTitle/DiffTitle';
-import useDiff from 'components/SmartArticle/Diff/hooks/useDiff';
-import useLoad from 'components/SmartArticle/hooks/useLoad';
+import DiffTitle from 'components/SmartReview/Diff/DiffTitle/DiffTitle';
+import useDiff from 'components/SmartReview/Diff/hooks/useDiff';
+import useLoad from 'components/SmartReview/hooks/useLoad';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import React, { useEffect, useState } from 'react';
@@ -14,7 +14,7 @@ import { useLocation } from 'react-use';
 import { Alert, Button, ButtonGroup, Container } from 'reactstrap';
 import queryString from 'query-string';
 
-const SmartArticleDiff = () => {
+const SmartReviewDiff = () => {
     const { oldId, newId } = useParams();
     const { getArticleById } = useLoad();
     const [oldArticleText, setOldArticleText] = useState('');
@@ -38,7 +38,7 @@ const SmartArticleDiff = () => {
         }
 
         if (isOldIdHigherThanNewId({ oldId, newId })) {
-            history.push(`${reverse(ROUTES.SMART_ARTICLE_DIFF, { oldId: newId, newId: oldId })}?switchedVersions=true`);
+            history.push(`${reverse(ROUTES.SMART_REVIEW_DIFF, { oldId: newId, newId: oldId })}?switchedVersions=true`);
             return;
         }
 
@@ -62,7 +62,7 @@ const SmartArticleDiff = () => {
     }, [oldId, newId, getArticleById, articleToPlainText, isOldIdHigherThanNewId, history]);
 
     const handleDismiss = () => {
-        history.push(reverse(ROUTES.SMART_ARTICLE_DIFF, { oldId, newId }));
+        history.push(reverse(ROUTES.SMART_REVIEW_DIFF, { oldId, newId }));
     };
 
     const containerStyle = fullWidth ? { maxWidth: 'calc(100% - 20px)' } : {};
@@ -120,4 +120,4 @@ const SmartArticleDiff = () => {
     );
 };
 
-export default SmartArticleDiff;
+export default SmartReviewDiff;

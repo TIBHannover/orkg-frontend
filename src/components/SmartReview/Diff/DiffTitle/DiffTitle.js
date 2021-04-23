@@ -30,7 +30,7 @@ const DiffTitle = ({ id, versions }) => {
                     <UserAvatar userId={version.creator} />
                 </span>
             </span>{' '}
-            <Button color="light" size="sm" tag={Link} to={reverse(ROUTES.SMART_ARTICLE, { id })}>
+            <Button color="light" size="sm" tag={Link} to={reverse(ROUTES.SMART_REVIEW, { id })}>
                 View article
             </Button>
         </div>

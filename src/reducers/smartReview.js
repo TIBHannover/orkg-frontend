@@ -14,7 +14,7 @@ const initialState = {
     statements: []
 };
 
-const smartArticle = (state = initialState, action) => {
+const smartReview = (state = initialState, action) => {
     switch (action.type) {
         case type.ARTICLE_WRITER_LOAD: {
             const {
@@ -164,4 +164,4 @@ const smartArticle = (state = initialState, action) => {
     }
 };
 
-export default smartArticle;
+export default smartReview;

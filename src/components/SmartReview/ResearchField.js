@@ -1,15 +1,15 @@
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
-import { setResearchField } from 'actions/smartArticle';
+import { setResearchField } from 'actions/smartReview';
 import ResearchFieldSelectorModal from 'components/ResearchFieldSelector/ResearchFieldSelectorModal';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button } from 'reactstrap';
 
 const ResearchField = () => {
-    const researchField = useSelector(state => state.smartArticle.researchField);
-    const paper = useSelector(state => state.smartArticle.paper);
+    const researchField = useSelector(state => state.smartReview.researchField);
+    const paper = useSelector(state => state.smartReview.paper);
     const dispatch = useDispatch();
     const [isOpenResearchFieldModal, setIsOpenResearchFieldModal] = useState(false);
 

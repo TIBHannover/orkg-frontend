@@ -1,7 +1,7 @@
-import { updateSectionLink } from 'actions/smartArticle';
+import { updateSectionLink } from 'actions/smartReview';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
-import SectionComparison from 'components/SmartArticle/SectionComparison';
-import SectionVisualization from 'components/SmartArticle/SectionVisualization';
+import SectionComparison from 'components/SmartReview/SectionComparison';
+import SectionVisualization from 'components/SmartReview/SectionVisualization';
 import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
 import { CLASSES, ENTITIES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';

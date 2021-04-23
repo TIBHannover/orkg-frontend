@@ -14,7 +14,7 @@ import { Link } from 'react-router-dom';
 import { getResourcesByClass } from 'services/backend/resources';
 import { getStatementsBySubjects } from 'services/backend/statements';
 
-const SmartArticles = () => {
+const SmartReviews = () => {
     const user = useSelector(state => state.auth.user);
 
     useEffect(() => {
@@ -22,14 +22,14 @@ const SmartArticles = () => {
     });
 
     const renderListItem = versions => (
-        <ShortRecord key={versions[0]?.id} header={versions[0]?.label} href={reverse(ROUTES.SMART_ARTICLE, { id: versions[0]?.id })}>
+        <ShortRecord key={versions[0]?.id} header={versions[0]?.label} href={reverse(ROUTES.SMART_REVIEW, { id: versions[0]?.id })}>
             {versions.length > 1 && (
                 <>
                     All versions:{' '}
                     {versions.map((version, index) => (
                         <span key={version.id}>
                             <Tippy content={version.label}>
-                                <Link to={reverse(ROUTES.SMART_ARTICLE, { id: version.id })}>Version {versions.length - index}</Link>
+                                <Link to={reverse(ROUTES.SMART_REVIEW, { id: version.id })}>Version {versions.length - index}</Link>
                             </Tippy>{' '}
                             {index < versions.length - 1 && ' • '}
                         </span>
@@ -70,7 +70,7 @@ const SmartArticles = () => {
 
     const buttons = (
         <>
-            <RequireAuthentication component={Link} color="secondary" size="sm" className="btn btn-secondary btn-sm" to={ROUTES.SMART_ARTICLE_NEW}>
+            <RequireAuthentication component={Link} color="secondary" size="sm" className="btn btn-secondary btn-sm" to={ROUTES.SMART_REVIEW_NEW}>
                 <Icon icon={faPlus} /> Create article
             </RequireAuthentication>
             {!!user && (
@@ -79,7 +79,7 @@ const SmartArticles = () => {
                     color="secondary"
                     size="sm"
                     className="btn btn-secondary btn-sm"
-                    to={ROUTES.USER_UNPUBLISHED_ARTICLES}
+                    to={ROUTES.USER_UNPUBLISHED_REVIEWS}
                     style={{ marginLeft: 1 }}
                 >
                     <Icon icon={faEyeSlash} /> My unpublished articles
@@ -92,7 +92,7 @@ const SmartArticles = () => {
         <>
             <ListPage
                 label="SmartReviews"
-                resourceClass={CLASSES.SMART_ARTICLE_PUBLISHED}
+                resourceClass={CLASSES.SMART_REVIEW_PUBLISHED}
                 renderListItem={renderListItem}
                 fetchItems={fetchItems}
                 buttons={buttons}
@@ -101,4 +101,4 @@ const SmartArticles = () => {
     );
 };
 
-export default SmartArticles;
+export default SmartReviews;

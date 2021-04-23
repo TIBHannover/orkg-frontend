@@ -1,7 +1,7 @@
 import { faQuestionCircle, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
-import useSave from 'components/SmartArticle/hooks/useSave';
+import useSave from 'components/SmartReview/hooks/useSave';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import React, { useEffect, useState } from 'react';
@@ -9,7 +9,7 @@ import { useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { Button, Container, FormGroup, Input, Label } from 'reactstrap';
 
-const SmartArticleNew = () => {
+const SmartReviewNew = () => {
     const [title, setTitle] = useState('');
     const { create, isLoading } = useSave();
     const history = useHistory();
@@ -24,7 +24,7 @@ const SmartArticleNew = () => {
             return;
         }
         const id = await create(title);
-        history.push(reverse(ROUTES.SMART_ARTICLE, { id }));
+        history.push(reverse(ROUTES.SMART_REVIEW, { id }));
     };
 
     return (
@@ -76,4 +76,4 @@ const SmartArticleNew = () => {
     );
 };
 
-export default SmartArticleNew;
+export default SmartReviewNew;

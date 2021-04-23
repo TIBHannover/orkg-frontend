@@ -1,4 +1,4 @@
-import { updateAuthors } from 'actions/smartArticle';
+import { updateAuthors } from 'actions/smartReview';
 import AuthorsInput from 'components/Utils/AuthorsInput';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
@@ -9,8 +9,8 @@ import { saveAuthors } from 'utils';
 const AuthorsModal = props => {
     const { show, toggle } = props;
     const [authors, setAuthors] = useState([]);
-    const authorResources = useSelector(state => state.smartArticle.authorResources);
-    const paper = useSelector(state => state.smartArticle.paper);
+    const authorResources = useSelector(state => state.smartReview.authorResources);
+    const paper = useSelector(state => state.smartReview.paper);
     const dispatch = useDispatch();
 
     useEffect(() => {

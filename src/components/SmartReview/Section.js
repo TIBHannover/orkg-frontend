@@ -1,11 +1,11 @@
 import { faBars, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { deleteSection, updateSectionTitle } from 'actions/smartArticle';
-import AddSection from 'components/SmartArticle/AddSection';
-import SectionContentLink from 'components/SmartArticle/SectionContentLink';
-import SectionMarkdown from 'components/SmartArticle/SectionMarkdown';
-import SectionType from 'components/SmartArticle/SectionType';
-import { DeleteButton, MoveHandle, SectionStyled, EditableTitle } from 'components/SmartArticle/styled';
+import { deleteSection, updateSectionTitle } from 'actions/smartReview';
+import AddSection from 'components/SmartReview/AddSection';
+import SectionContentLink from 'components/SmartReview/SectionContentLink';
+import SectionMarkdown from 'components/SmartReview/SectionMarkdown';
+import SectionType from 'components/SmartReview/SectionType';
+import { DeleteButton, MoveHandle, SectionStyled, EditableTitle } from 'components/SmartReview/styled';
 import { CLASSES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';

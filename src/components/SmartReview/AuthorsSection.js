@@ -1,15 +1,15 @@
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
-import AuthorsList from 'components/SmartArticle/AuthorsList';
-import AuthorsModal from 'components/SmartArticle/AuthorsModal';
-import { SectionStyled, SectionTypeStyled } from 'components/SmartArticle/styled';
+import AuthorsList from 'components/SmartReview/AuthorsList';
+import AuthorsModal from 'components/SmartReview/AuthorsModal';
+import { SectionStyled, SectionTypeStyled } from 'components/SmartReview/styled';
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Button } from 'reactstrap';
 
 const AuthorsSection = () => {
-    const authorResources = useSelector(state => state.smartArticle.authorResources);
+    const authorResources = useSelector(state => state.smartReview.authorResources);
     const [showModal, setShowModal] = useState(false);
 
     return (

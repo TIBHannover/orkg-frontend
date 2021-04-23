@@ -1,13 +1,13 @@
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
-import { toggleHistoryModal as toggleHistoryModalAction } from 'actions/smartArticle';
-import Acknowledgements from 'components/SmartArticle/Acknowledgements';
-import AuthorsList from 'components/SmartArticle/AuthorsList';
-import MarkdownRenderer from 'components/SmartArticle/MarkdownRenderer';
-import SectionVisualization from 'components/SmartArticle/SectionVisualization';
-import { SectionStyled } from 'components/SmartArticle/styled';
-import ViewArticleStatementBrowser from 'components/SmartArticle/ViewArticleStatementBrowser';
+import { toggleHistoryModal as toggleHistoryModalAction } from 'actions/smartReview';
+import Acknowledgements from 'components/SmartReview/Acknowledgements';
+import AuthorsList from 'components/SmartReview/AuthorsList';
+import MarkdownRenderer from 'components/SmartReview/MarkdownRenderer';
+import SectionVisualization from 'components/SmartReview/SectionVisualization';
+import { SectionStyled } from 'components/SmartReview/styled';
+import ViewArticleStatementBrowser from 'components/SmartReview/ViewArticleStatementBrowser';
 import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
 import { CLASSES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
@@ -20,12 +20,12 @@ import SectionComparison from './SectionComparison';
 
 const ViewArticle = () => {
     const { id } = useParams();
-    const paper = useSelector(state => state.smartArticle.paper);
-    const authors = useSelector(state => state.smartArticle.authorResources);
-    const sections = useSelector(state => state.smartArticle.sections);
-    const isPublished = useSelector(state => state.smartArticle.isPublished);
-    const versions = useSelector(state => state.smartArticle.versions);
-    const researchField = useSelector(state => state.smartArticle.researchField);
+    const paper = useSelector(state => state.smartReview.paper);
+    const authors = useSelector(state => state.smartReview.authorResources);
+    const sections = useSelector(state => state.smartReview.sections);
+    const isPublished = useSelector(state => state.smartReview.isPublished);
+    const versions = useSelector(state => state.smartReview.versions);
+    const researchField = useSelector(state => state.smartReview.researchField);
     const dispatch = useDispatch();
     const latestVersionId = versions?.[0]?.id;
     const newVersionAvailable = isPublished && latestVersionId !== id;
@@ -46,7 +46,7 @@ const ViewArticle = () => {
                 {newVersionAvailable && (
                     <Alert color="warning" fade={false} className="box">
                         Warning: a newer version of this article is available.{' '}
-                        <Link to={reverse(ROUTES.SMART_ARTICLE, { id: latestVersionId })}>View latest version</Link>
+                        <Link to={reverse(ROUTES.SMART_REVIEW, { id: latestVersionId })}>View latest version</Link>
                     </Alert>
                 )}
                 <main>

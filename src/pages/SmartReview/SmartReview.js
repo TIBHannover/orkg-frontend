@@ -1,19 +1,19 @@
 import { faCheckCircle, faDownload, faEllipsisV, faHistory, faPen, faSpinner, faTimes, faUpload } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
-import { toggleHistoryModal as toggleHistoryModalAction } from 'actions/smartArticle';
+import { toggleHistoryModal as toggleHistoryModalAction } from 'actions/smartReview';
 import Breadcrumbs from 'components/Breadcrumbs/Breadcrumbs';
 import { SubtitleSeparator } from 'components/Comparison/styled';
-import AcknowledgementsSection from 'components/SmartArticle/AcknowledgementsSection';
-import AddSection from 'components/SmartArticle/AddSection';
-import AuthorsSection from 'components/SmartArticle/AuthorsSection';
-import HistoryModal from 'components/SmartArticle/HistoryModal';
-import useLoad from 'components/SmartArticle/hooks/useLoad';
-import LoadingArticle from 'components/SmartArticle/LoadingArticle';
-import PublishModal from 'components/SmartArticle/PublishModal';
-import Sections from 'components/SmartArticle/Sections';
-import Title from 'components/SmartArticle/Title';
-import ViewArticle from 'components/SmartArticle/ViewArticle';
+import AcknowledgementsSection from 'components/SmartReview/AcknowledgementsSection';
+import AddSection from 'components/SmartReview/AddSection';
+import AuthorsSection from 'components/SmartReview/AuthorsSection';
+import HistoryModal from 'components/SmartReview/HistoryModal';
+import useLoad from 'components/SmartReview/hooks/useLoad';
+import LoadingArticle from 'components/SmartReview/LoadingArticle';
+import PublishModal from 'components/SmartReview/PublishModal';
+import Sections from 'components/SmartReview/Sections';
+import Title from 'components/SmartReview/Title';
+import ViewArticle from 'components/SmartReview/ViewArticle';
 import { SubTitle } from 'components/styled';
 import ROUTES from 'constants/routes';
 import moment from 'moment';
@@ -48,19 +48,19 @@ const GlobalStyle = createGlobalStyle`
     }
 `;
 
-const SmartArticle = () => {
+const SmartReview = () => {
     const { id } = useParams();
     const { load, isLoading, isNotFound } = useLoad();
-    const isLoadingInline = useSelector(state => state.smartArticle.isLoading);
+    const isLoadingInline = useSelector(state => state.smartReview.isLoading);
     const [isEditing, setIsEditing] = useState(false);
     const [isOpenPublishModal, setIsOpenPublishModal] = useState(false);
-    const isPublished = useSelector(state => state.smartArticle.isPublished);
-    const paper = useSelector(state => state.smartArticle.paper);
-    const isOpenHistoryModal = useSelector(state => state.smartArticle.isOpenHistoryModal);
-    const researchField = useSelector(state => state.smartArticle.researchField);
+    const isPublished = useSelector(state => state.smartReview.isPublished);
+    const paper = useSelector(state => state.smartReview.paper);
+    const isOpenHistoryModal = useSelector(state => state.smartReview.isOpenHistoryModal);
+    const researchField = useSelector(state => state.smartReview.researchField);
     const dispatch = useDispatch();
     const history = useHistory();
-    const versions = useSelector(state => state.smartArticle.versions);
+    const versions = useSelector(state => state.smartReview.versions);
     const version = versions.find(version => version.id === id);
     const versionNumber = versions.length ? versions.length - versions.findIndex(version => version.id === id) : null;
     const publicationDate = version ? moment(version.date).format('DD MMMM YYYY') : null;
@@ -81,7 +81,7 @@ const SmartArticle = () => {
             });
 
             if (isConfirmed) {
-                history.push(reverse(ROUTES.SMART_ARTICLE, { id: paper.id }));
+                history.push(reverse(ROUTES.SMART_REVIEW, { id: paper.id }));
             }
         } else {
             setIsEditing(true);
@@ -217,4 +217,4 @@ const SmartArticle = () => {
     );
 };
 
-export default SmartArticle;
+export default SmartReview;

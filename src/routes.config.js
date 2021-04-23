@@ -46,11 +46,11 @@ import FeaturedComparisons from 'pages/FeaturedComparisons';
 import Data from 'pages/Data';
 import Contribution from 'pages/Contribution';
 import CsvImport from 'pages/CsvImport';
-import SmartArticle from 'pages/SmartArticle/SmartArticle';
-import SmartArticles from 'pages/SmartArticle/SmartArticles';
-import UserUnpublishedArticles from 'pages/SmartArticle/UserUnpublishedArticles';
-import SmartArticleNew from 'pages/SmartArticle/SmartArticleNew';
-import SmartArticleDiff from 'pages/SmartArticle/SmartArticleDiff';
+import SmartReview from 'pages/SmartReview/SmartReview';
+import SmartReviews from 'pages/SmartReview/SmartReviews';
+import UserUnpublishedArticles from 'pages/SmartReview/UserUnpublishedArticles';
+import SmartReviewNew from 'pages/SmartReview/SmartReviewNew';
+import SmartReviewDiff from 'pages/SmartReview/SmartReviewDiff';
 import Tools from 'pages/Tools';
 import AddComparison from 'pages/AddComparison';
 import requireAuthentication from 'requireAuthentication';
@@ -313,23 +313,23 @@ const routes = [
         component: requireAuthentication(CsvImport)
     },
     {
-        path: ROUTES.SMART_ARTICLE_NEW,
-        component: requireAuthentication(SmartArticleNew)
+        path: ROUTES.SMART_REVIEW_NEW,
+        component: requireAuthentication(SmartReviewNew)
     },
     {
-        path: ROUTES.SMART_ARTICLE_DIFF,
-        component: SmartArticleDiff
+        path: ROUTES.SMART_REVIEW_DIFF,
+        component: SmartReviewDiff
     },
     {
-        path: ROUTES.SMART_ARTICLE,
-        component: SmartArticle
+        path: ROUTES.SMART_REVIEW,
+        component: SmartReview
     },
     {
-        path: ROUTES.SMART_ARTICLES,
-        component: SmartArticles
+        path: ROUTES.SMART_REVIEWS,
+        component: SmartReviews
     },
     {
-        path: ROUTES.USER_UNPUBLISHED_ARTICLES,
+        path: ROUTES.USER_UNPUBLISHED_REVIEWS,
         component: requireAuthentication(UserUnpublishedArticles)
     },
     {
