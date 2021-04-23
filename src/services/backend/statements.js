@@ -243,7 +243,7 @@ export const getTemplateById = templateId => {
                                       id: value.object.id,
                                       label: value.object.label
                                   }
-                                : {},
+                                : null,
                             minOccurs: minOccurs ? minOccurs.object.label : 0,
                             maxOccurs: maxOccurs ? maxOccurs.object.label : null,
                             order: order ? order.object.label : null,

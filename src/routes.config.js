@@ -56,6 +56,7 @@ import AddComparison from 'pages/AddComparison';
 import requireAuthentication from 'requireAuthentication';
 import { reverse } from 'named-urls';
 import ContributionEditor from 'pages/ContributionEditor';
+import CurationCall from 'pages/CurationCall';
 
 // use lazy loading of pages that contain large dependencies
 // run "npm run analyze" to ensure the listed dependencies are not loaded elsewhere and thus end up in the bundle
@@ -342,6 +343,10 @@ const routes = [
     {
         path: ROUTES.TOOLS,
         component: Tools
+    },
+    {
+        path: ROUTES.CURATION_CALL,
+        component: CurationCall
     },
     /* Don't add routes below this line */
     {

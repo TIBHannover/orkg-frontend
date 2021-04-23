@@ -5,6 +5,22 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [V0.35](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.34...V0.35) - 2021-04-21
+
+### Changes
+
+- page: Add video to curation grant call [`#557`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/557)
+
+---
+## [V0.34](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.33...V0.34) - 2021-04-16
+
+### Changes
+
+- help: Add a link to how to embed a video wiki page [`#555`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/555)
+- feat: add page Curation Grant [`#556`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/556)
+- fix: force LF line endings for Windows users [`#552`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/552)
+
+---
 ## [V0.33](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.32...V0.33) - 2021-04-14
 
 ### Changes

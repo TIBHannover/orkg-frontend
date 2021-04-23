@@ -40,7 +40,6 @@ const routes = {
     DATA_PROTECTION: '/data-protection',
     TERMS_OF_USE: '/terms-of-use',
     SEARCH: '/search/:searchTerm?',
-    TPDL: '/tpdl', // legacy
     STATS: '/stats',
     DATA: '/data',
     CHANGELOG: '/changelog',
@@ -59,6 +58,8 @@ const routes = {
     /* Legacy routes */
     PREDICATES: '/predicates',
     PREDICATE: '/predicate/:id',
-    EXPORT_DATA: '/export-data'
+    TPDL: '/tpdl',
+    EXPORT_DATA: '/export-data',
+    CURATION_CALL: '/open-call-curation-grant'
 };
 export default routes;
