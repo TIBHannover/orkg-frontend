@@ -72,6 +72,11 @@ class Search extends Component {
                 label: 'Visualization',
                 labelPlural: 'Visualizations',
                 id: CLASSES.VISUALIZATION
+            },
+            {
+                label: 'SmartReview',
+                labelPlural: 'SmartReviews',
+                id: CLASSES.SMART_REVIEW_PUBLISHED
             }
         ];
 

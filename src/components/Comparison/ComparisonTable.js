@@ -56,8 +56,7 @@ const ComparisonTable = props => {
                       };
                   }))
         ];
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [props.transpose, props.properties, props.contributions]);
+    }, [props.transpose, props.properties, props.contributions, props.data]);
 
     const defaultColumn = useMemo(
         () => ({
@@ -69,6 +68,9 @@ const ComparisonTable = props => {
     );
 
     const columns = useMemo(() => {
+        if (props.filterControlData.length === 0) {
+            return [];
+        }
         return [
             {
                 Header: (
@@ -85,6 +87,7 @@ const ComparisonTable = props => {
                         <Properties className="columnProperty">
                             <PropertiesInner className="d-flex flex-row align-items-start justify-content-between" cellPadding={cellPadding}>
                                 <PropertyValue
+                                    embeddedMode={props.embeddedMode}
                                     filterControlData={props.filterControlData}
                                     updateRulesOfProperty={props.updateRulesOfProperty}
                                     similar={info.value.similar}
@@ -111,7 +114,7 @@ const ComparisonTable = props => {
                                 </Contribution>
                             </PropertiesInner>
 
-                            {props.contributions.filter(contribution => contribution.active).length > 2 && (
+                            {!props.embeddedMode && props.contributions.filter(contribution => contribution.active).length > 2 && (
                                 <Delete onClick={() => props.removeContribution(info.value.id)}>
                                     <Icon icon={faTimes} />
                                 </Delete>
@@ -145,7 +148,7 @@ const ComparisonTable = props => {
                                                   </Contribution>
                                               </ItemHeaderInner>
 
-                                              {props.contributions.filter(contribution => contribution.active).length > 2 && (
+                                              {!props.embeddedMode && props.contributions.filter(contribution => contribution.active).length > 2 && (
                                                   <Delete onClick={() => props.removeContribution(contribution.id)}>
                                                       <Icon icon={faTimes} />
                                                   </Delete>
@@ -176,6 +179,7 @@ const ComparisonTable = props => {
                                           transpose={props.transpose}
                                       >
                                           <PropertyValue
+                                              embeddedMode={props.embeddedMode}
                                               filterControlData={props.filterControlData}
                                               updateRulesOfProperty={props.updateRulesOfProperty}
                                               similar={property.similar}
@@ -194,8 +198,9 @@ const ComparisonTable = props => {
                           };
                       }))
         ];
+        // TODO: remove disable lint rule: useCallback for removeContribution and add used dependencies
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [props.transpose, props.properties, props.contributions, props.viewDensity]);
+    }, [props.transpose, props.properties, props.contributions, props.filterControlData, props.viewDensity]);
 
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable(
         {
@@ -267,7 +272,12 @@ ComparisonTable.propTypes = {
     viewDensity: PropTypes.oneOf(['spacious', 'normal', 'compact']),
     scrollContainerBody: PropTypes.object.isRequired,
     filterControlData: PropTypes.array.isRequired,
-    updateRulesOfProperty: PropTypes.func.isRequired
+    updateRulesOfProperty: PropTypes.func.isRequired,
+    embeddedMode: PropTypes.bool.isRequired
+};
+
+ComparisonTable.defaultProps = {
+    embeddedMode: false
 };
 
 export default memo(ComparisonTable, compareProps);

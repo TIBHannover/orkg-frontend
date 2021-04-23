@@ -98,7 +98,7 @@ const TableCellValueCreate = ({ isVisible, contributionId, propertyId, isEmptyCe
                             <Autocomplete
                                 optionsClass={propertyId === PREDICATES.HAS_RESEARCH_PROBLEM ? CLASSES.PROBLEM : undefined}
                                 entityType={ENTITIES.RESOURCE}
-                                excludeClasses={`${CLASSES.CONTRIBUTION},${CLASSES.PROBLEM},${CLASSES.CONTRIBUTION_TEMPLATE}`}
+                                excludeClasses={`${CLASSES.CONTRIBUTION},${CLASSES.PROBLEM},${CLASSES.TEMPLATE}`}
                                 placeholder={propertyId === PREDICATES.HAS_RESEARCH_PROBLEM ? 'Enter a research problem' : 'Enter a resource'}
                                 onChange={handleChangeAutocomplete}
                                 menuPortalTarget={document.body}

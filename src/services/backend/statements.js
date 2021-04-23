@@ -89,8 +89,9 @@ export const getStatementsBySubject = ({ id, page = 0, items: size = 9999, sortB
     return submitGetRequest(`${statementsUrl}subject/${encodeURIComponent(id)}/?${params}`).then(res => res.content);
 };
 
-export const getStatementsBundleBySubject = ({ id }) => {
-    return submitGetRequest(`${statementsUrl}${encodeURIComponent(id)}/bundle`);
+export const getStatementsBundleBySubject = ({ id, maxLevel = 10 }) => {
+    const params = queryString.stringify({ maxLevel });
+    return submitGetRequest(`${statementsUrl}${encodeURIComponent(id)}/bundle/?${params}`);
 };
 
 export const getStatementsBySubjects = ({ ids, page = 0, items: size = 9999, sortBy = 'created_at', desc = true }) => {

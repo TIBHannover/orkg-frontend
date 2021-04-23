@@ -46,6 +46,11 @@ import FeaturedComparisons from 'pages/FeaturedComparisons';
 import Data from 'pages/Data';
 import Contribution from 'pages/Contribution';
 import CsvImport from 'pages/CsvImport';
+import SmartReview from 'pages/SmartReview/SmartReview';
+import SmartReviews from 'pages/SmartReview/SmartReviews';
+import UserUnpublishedArticles from 'pages/SmartReview/UserUnpublishedArticles';
+import SmartReviewNew from 'pages/SmartReview/SmartReviewNew';
+import SmartReviewDiff from 'pages/SmartReview/SmartReviewDiff';
 import Tools from 'pages/Tools';
 import AddComparison from 'pages/AddComparison';
 import requireAuthentication from 'requireAuthentication';
@@ -306,6 +311,26 @@ const routes = [
     {
         path: ROUTES.CSV_IMPORT,
         component: requireAuthentication(CsvImport)
+    },
+    {
+        path: ROUTES.SMART_REVIEW_NEW,
+        component: requireAuthentication(SmartReviewNew)
+    },
+    {
+        path: ROUTES.SMART_REVIEW_DIFF,
+        component: SmartReviewDiff
+    },
+    {
+        path: ROUTES.SMART_REVIEW,
+        component: SmartReview
+    },
+    {
+        path: ROUTES.SMART_REVIEWS,
+        component: SmartReviews
+    },
+    {
+        path: ROUTES.USER_UNPUBLISHED_REVIEWS,
+        component: requireAuthentication(UserUnpublishedArticles)
     },
     {
         path: ROUTES.CONTRIBUTION_EDITOR,

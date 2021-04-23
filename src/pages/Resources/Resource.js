@@ -76,6 +76,16 @@ const DEDICATED_PAGE_LINKS = {
         label: 'Contribution',
         route: ROUTES.CONTRIBUTION,
         routeParams: 'id'
+    },
+    [CLASSES.SMART_REVIEW]: {
+        label: 'SmartReview',
+        route: ROUTES.SMART_REVIEW,
+        routeParams: 'id'
+    },
+    [CLASSES.SMART_REVIEW_PUBLISHED]: {
+        label: 'SmartReview',
+        route: ROUTES.SMART_REVIEW,
+        routeParams: 'id'
     }
 };
 function Resource(props) {
