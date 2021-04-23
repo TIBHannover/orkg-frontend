@@ -658,7 +658,6 @@ export function fillResourceWithTemplate({ templateID, selectedResource, syncBac
                         const statements = { properties: [], values: [] };
 
                         for (const component of template.components) {
-                            console.log(component.value);
                             statements['properties'].push({
                                 existingPredicateId: component.property.id,
                                 label: component.property.label,
