@@ -70,6 +70,9 @@ const SectionContentLink = props => {
     return (
         <div>
             <Autocomplete
+                excludeClasses={
+                    props.type === 'resource' ? `${CLASSES.PAPER},${CLASSES.CONTRIBUTION},${CLASSES.TEMPLATE},${CLASSES.RESEARCH_FIELD}` : undefined
+                }
                 entityType={entityType}
                 optionsClass={optionsClass}
                 placeholder={`Select a ${props.type}`}
