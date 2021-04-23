@@ -182,7 +182,7 @@ export const getPaperData_ViewPaper = (paperResource, paperStatements) => {
     return {
         title: paperResource.label,
         paperResourceId: paperResource.id,
-        contributions: contributions.reverse(), // statements are ordered desc, so first contribution is last => thus reverse
+        contributions: contributions.sort((a, b) => a.label.localeCompare(b.label)), // sort contributions ascending, so contribution 1, is actually the first one
         authors: authors.reverse(), // statements are ordered desc, so first author is last => thus reverse
         publicationMonth: parseInt(publicationMonth),
         publicationMonthResourceId,
@@ -224,7 +224,7 @@ export const getPaperData = (resource, paperStatements) => {
         doi,
         doiResourceId,
         authorNames: authors.sort((a, b) => a.created_at.localeCompare(b.created_at)),
-        contributions: contributions.sort((a, b) => a.created_at.localeCompare(b.created_at)),
+        contributions: contributions.sort((a, b) => a.label.localeCompare(b.label)), // sort contributions ascending, so contribution 1, is actually the first one
         order,
         created_by: resource.created_by !== MISC.UNKNOWN_ID ? resource.created_by : null
     };
