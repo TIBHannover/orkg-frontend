@@ -4,35 +4,23 @@
 
 import env from '@beam-australia/react-env';
 import { submitGetRequest } from 'network';
-import queryString from 'query-string';
 
 export const url = env('CMS_URL');
 
-export const getPage = id => submitGetRequest(`${url}pages/${id}`);
-export const getPageByUid = uid => submitGetRequest(`${url}pages?uid=${uid}`).then(pages => pages[0]);
-
-export const getPages = ({ category = null, sort = null, where = '' }) => {
-    const params = queryString.stringify(
-        { category, _sort: sort },
-        {
-            skipNull: true,
-            skipEmptyString: true
-        }
-    );
-
-    return submitGetRequest(`${url}pages?${params}${where}`);
-};
-
-export const getCategories = ({ isHelpCategory = false, sort = null }) => {
-    const params = queryString.stringify(
-        { is_help_category: isHelpCategory, _sort: sort },
-        {
-            skipNull: true,
-            skipEmptyString: true
-        }
-    );
-
-    return submitGetRequest(`${url}categories?${params}`);
-};
-
 export const getCategory = id => submitGetRequest(`${url}categories/${id}`);
+
+export const getPage = id => submitGetRequest(`${url}pages/${id}`);
+
+export const getPageByUrl = _url => submitGetRequest(`${url}pages?url=${_url}`).then(pages => pages[0] ?? null);
+
+export const getAboutPage = id => submitGetRequest(`${url}about-pages/${id}`);
+
+export const getAboutPages = () => submitGetRequest(`${url}about-pages?_sort=order`);
+
+export const getHelpArticle = id => submitGetRequest(`${url}help-articles/${id}`);
+
+export const getHelpArticles = ({ where = '' }) => submitGetRequest(`${url}help-articles?${where}`);
+
+export const getHelpCategories = () => submitGetRequest(`${url}help-categories?_sort=order`);
+
+export const getHelpCategory = id => submitGetRequest(`${url}help-categories/${id}`);

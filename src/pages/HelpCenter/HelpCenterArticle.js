@@ -1,11 +1,13 @@
+import CheckSlug from 'components/CheckSlug/CheckSlug';
 import usePage from 'components/Page/usePage';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import NotFound from 'pages/NotFound';
 import { useEffect } from 'react';
-import { Redirect, useParams } from 'react-router';
+import { useParams } from 'react-router';
 import { Link } from 'react-router-dom';
 import { Breadcrumb, BreadcrumbItem, Container } from 'reactstrap';
+import { getHelpArticle } from 'services/cms';
 
 const HelpCenterArticle = () => {
     const { loadPage, page, isLoading, isNotFound } = usePage();
@@ -15,19 +17,18 @@ const HelpCenterArticle = () => {
         if (!params?.id) {
             return;
         }
-        loadPage({ id: params.id, categoryId: parseInt(params.categoryId) });
+        const pagePromise = getHelpArticle(params.id);
+        loadPage({ pagePromise });
     }, [params, loadPage]);
 
     if (isNotFound) {
         return <NotFound />;
     }
 
-    if (page && page.slug !== params.slug && page.id === parseInt(params.id)) {
-        return <Redirect to={{ pathname: reverse(ROUTES.HELP_CENTER_ARTICLE, { ...params, slug: page.slug }), state: { status: 301 } }} />;
-    }
-    console.log('page?.content', page?.content);
     return (
         <div>
+            {!isLoading && params?.id && page?.title && <CheckSlug label={page.title} route={ROUTES.HELP_CENTER_ARTICLE} />}
+
             <Container>
                 <h1 className="h4 mt-4 mb-4">Help center</h1>
             </Container>
@@ -44,13 +45,13 @@ const HelpCenterArticle = () => {
                             <BreadcrumbItem>
                                 <Link
                                     to={reverse(ROUTES.HELP_CENTER_CATEGORY, {
-                                        id: page.category.id
+                                        id: page.help_category.id
                                     })}
                                 >
-                                    {page.category.title}
+                                    {page.help_category.title}
                                 </Link>
                             </BreadcrumbItem>
-                            <BreadcrumbItem active>Data</BreadcrumbItem>
+                            <BreadcrumbItem active>{page.title}</BreadcrumbItem>
                         </Breadcrumb>
                         <h1 className="h3 my-4">{page.title}</h1>
                         {page?.content}

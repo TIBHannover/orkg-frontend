@@ -1,11 +1,11 @@
 import HelpCenterSearchInput from 'components/HelpCenterSearchInput/HelpCenterSearchInput';
 import ROUTES from 'constants/routes';
-import { reverse } from 'named-urls';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import { Link } from 'react-router-dom';
 import { Breadcrumb, BreadcrumbItem, Container } from 'reactstrap';
-import { getPages } from 'services/cms';
+import { getHelpArticles } from 'services/cms';
+import { reverseWithSlug } from 'utils';
 
 const HelpCenterSearch = () => {
     const [articles, setArticles] = useState([]);
@@ -17,13 +17,21 @@ const HelpCenterSearch = () => {
             try {
                 setIsLoading(true);
                 const words = params.searchQuery.split(' ');
-                const _articles = await getPages({
-                    category: params.id,
+                let whereCount = 0;
+                const _articles = await getHelpArticles({
                     // can be made more readable by using an object and converting it with 'qs' package to a string
-                    where: `_where[category.is_help_category]=true&_where[_or][0][title_contains]=${words}&_where[_or][1][content_contains]=${words}`
+                    where: words
+                        .map(word => {
+                            const where = `_where[_or][${whereCount}][title_contains]=${word}&_where[_or][${whereCount +
+                                1}][content_contains]=${word}`;
+                            whereCount = whereCount + 2;
+                            return where;
+                        })
+                        .join('&')
                 });
                 setArticles(_articles);
             } catch (e) {
+                console.log(e);
             } finally {
                 setIsLoading(false);
             }
@@ -55,10 +63,9 @@ const HelpCenterSearch = () => {
                         {articles.map(article => (
                             <li key={article.id}>
                                 <Link
-                                    to={reverse(ROUTES.HELP_CENTER_ARTICLE, {
+                                    to={reverseWithSlug(ROUTES.HELP_CENTER_ARTICLE, {
                                         id: article.id,
-                                        slug: article.slug,
-                                        categoryId: article?.category?.id
+                                        slug: article.title
                                     })}
                                 >
                                     {article.title}

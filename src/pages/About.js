@@ -1,39 +1,47 @@
+import CheckSlug from 'components/CheckSlug/CheckSlug';
 import usePage from 'components/Page/usePage';
 import ROUTES from 'constants/routes';
-import { reverse } from 'named-urls';
 import NotFound from 'pages/NotFound';
 import { useEffect, useState } from 'react';
-import { Redirect, useParams } from 'react-router';
+import { useParams } from 'react-router';
 import { Link } from 'react-router-dom';
 import { Container, Nav, Navbar, NavItem } from 'reactstrap';
-import { getPages } from 'services/cms';
+import { getAboutPage, getAboutPages } from 'services/cms';
+import { reverseWithSlug } from 'utils';
 
 const About = () => {
     const [isLoadingMenu, setIsLoadingMenu] = useState(false);
     const [menuItems, setMenuItems] = useState([]);
     const { loadPage, page, isLoading, isNotFound } = usePage();
     const params = useParams();
+    const id = params.id ? parseInt(params.id) : null;
 
+    // load page content
     useEffect(() => {
-        if (!params?.id) {
+        let aboutPageId = id;
+        // if not page ID is specified, load the first page from the menu
+        if (!id && menuItems.length > 0) {
+            aboutPageId = menuItems[0].id;
+        }
+        if (!aboutPageId || aboutPageId === page?.id) {
             return;
         }
-        loadPage({ id: params.id, categoryTitle: 'about' });
-    }, [params, loadPage]);
+        const pagePromise = getAboutPage(aboutPageId);
+        loadPage({ pagePromise });
+    }, [params, loadPage, menuItems, id, page]);
 
+    // load menu items
     useEffect(() => {
         // if the menu is loaded already, don't load it
-        if (!page || menuItems.length > 0) {
+        if (menuItems.length > 0) {
             return;
         }
 
         const getMenu = async () => {
-            if (page.category?.id === 1) {
-                setIsLoadingMenu(true);
-                const _pages = await getPages({ category: 1, sort: 'order' });
-                setMenuItems(_pages);
-                setIsLoadingMenu(false);
-            }
+            setIsLoadingMenu(true);
+            const _pages = await getAboutPages();
+            setMenuItems(_pages);
+            setIsLoadingMenu(false);
         };
 
         getMenu();
@@ -43,12 +51,10 @@ const About = () => {
         return <NotFound />;
     }
 
-    if (page && page.slug !== params.slug && page.id === parseInt(params.id)) {
-        return <Redirect to={{ pathname: reverse(ROUTES.ABOUT, { ...params, slug: page.slug }), state: { status: 301 } }} />;
-    }
-
     return (
         <div>
+            {!isLoading && params?.id && page?.title && <CheckSlug label={page.title} route={ROUTES.ABOUT} />}
+
             <Container>
                 <h1 className="h4 mt-4 mb-4">About ORKG</h1>
             </Container>
@@ -59,8 +65,8 @@ const About = () => {
                         <Navbar color="white" expand="md" className="mb-3 p-0">
                             <Nav>
                                 {menuItems.map(item => (
-                                    <NavItem key={item.id} className={item.id === parseInt(params.id) ? 'rounded bg-light' : ''}>
-                                        <Link className="nav-link" to={reverse(ROUTES.ABOUT, { id: item.id, slug: item.slug })}>
+                                    <NavItem key={item.id} className={item.id === page?.id ? 'rounded bg-light' : ''}>
+                                        <Link className="nav-link" to={reverseWithSlug(ROUTES.ABOUT, { id: item.id, slug: item.title })}>
                                             {item.title}
                                         </Link>
                                     </NavItem>

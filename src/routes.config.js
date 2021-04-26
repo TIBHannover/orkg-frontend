@@ -334,10 +334,6 @@ const routes = [
         component: Page
     },
     {
-        path: ROUTES.PAGE_UID,
-        component: Page
-    },
-    {
         path: ROUTES.ABOUT,
         component: About
     },

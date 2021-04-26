@@ -1,5 +1,4 @@
 import { useCallback, useState } from 'react';
-import { getPage, getPageByUid } from 'services/cms';
 import * as Showdown from 'showdown';
 import styled from 'styled-components';
 
@@ -32,24 +31,15 @@ const usePage = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [isNotFound, setIsNotFound] = useState(false);
 
-    const loadPage = useCallback(async ({ id = null, uid = null, categoryTitle = undefined, categoryId = undefined }) => {
+    const loadPage = useCallback(async ({ pagePromise }) => {
         setIsLoading(true);
         try {
-            let _page = {};
-
-            if (id) {
-                _page = await getPage(id);
-            } else if (uid) {
-                _page = await getPageByUid(uid);
-            }
+            const _page = await pagePromise;
 
             setPage({
                 ..._page,
                 content: <Article dangerouslySetInnerHTML={{ __html: converter.makeHtml(_page.content) }} />
             });
-            if (_page.category?.title !== categoryTitle && _page.category?.id !== categoryId) {
-                throw new Error('Page category does not match selected category');
-            }
         } catch (e) {
             console.log(e);
             setIsNotFound(true);

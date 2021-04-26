@@ -1,27 +1,20 @@
 import HelpCenterSearchInput from 'components/HelpCenterSearchInput/HelpCenterSearchInput';
 import ROUTES from 'constants/routes';
-import { groupBy } from 'lodash';
 import { reverse } from 'named-urls';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Col, Container, Row } from 'reactstrap';
-import { getCategories, getPages } from 'services/cms';
+import { getHelpCategories } from 'services/cms';
+import { reverseWithSlug } from 'utils';
 
 const HelpCenter = () => {
     const [categories, setCategories] = useState([]);
-    const [articles, setArticles] = useState([]);
     const [isLoading, setIsLoading] = useState([]);
 
     useEffect(() => {
         const fetchCategories = async () => {
             setIsLoading(true);
-            const _categories = await getCategories({ isHelpCategory: true, sort: 'order' });
-            const categoryIds = _categories.map(category => category.id);
-            let _articles = await getPages({ category: categoryIds });
-            _articles = groupBy(_articles, 'category.id');
-
-            setCategories(_categories);
-            setArticles(_articles);
+            setCategories(await getHelpCategories());
             setIsLoading(false);
         };
 
@@ -51,14 +44,13 @@ const HelpCenter = () => {
                                 </Link>
                             </h3>
                             <ul className="pl-3 mb-0">
-                                {articles[category.id] &&
-                                    articles[category.id].map(article => (
+                                {category.help_articles &&
+                                    category.help_articles.slice(0, 5).map(article => (
                                         <li key={article.id}>
                                             <Link
-                                                to={reverse(ROUTES.HELP_CENTER_ARTICLE, {
+                                                to={reverseWithSlug(ROUTES.HELP_CENTER_ARTICLE, {
                                                     id: article.id,
-                                                    slug: article.slug,
-                                                    categoryId: article.category.id
+                                                    slug: article.title
                                                 })}
                                             >
                                                 {article.title}
@@ -73,7 +65,7 @@ const HelpCenter = () => {
                                     })}
                                     className="text-muted"
                                 >
-                                    View all articles
+                                    View all {category.help_articles.length} articles
                                 </Link>
                             </div>
                         </Col>
