@@ -33,6 +33,8 @@ const usePage = () => {
 
     const loadPage = useCallback(async ({ pagePromise }) => {
         setIsLoading(true);
+        setIsNotFound(false);
+
         try {
             const _page = await pagePromise;
 

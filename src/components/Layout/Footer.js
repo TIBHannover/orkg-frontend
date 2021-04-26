@@ -1,5 +1,6 @@
 import { Container, Row, Col, Badge } from 'reactstrap';
 import ROUTES from 'constants/routes';
+import ROUTES_CMS from 'constants/routesCms';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faTwitter } from '@fortawesome/free-brands-svg-icons';
@@ -11,6 +12,7 @@ import INFAI_LOGO from 'assets/img/poweredby/infAI.png';
 import EU_LOGO from 'assets/img/poweredby/co-funded-h2020-horiz_en.png';
 import EOSC_LOGO from 'assets/img/poweredby/EOSC.png';
 import styled from 'styled-components';
+import { reverse } from 'named-urls';
 
 const FooterWrapper = styled.div`
     background: #e0e2ea;
@@ -71,25 +73,24 @@ const Footer = () => (
                         <hr className="mr-5" />
                         <ul className="p-0" style={{ listStyle: 'none' }}>
                             <li>
-                                <a href="https://projects.tib.eu/orkg/" target="_blank" rel="noopener noreferrer">
-                                    About us
-                                </a>
+                                <Link to={reverse(ROUTES.ABOUT, {})}>About us</Link>
                             </li>
                             <li>
+                                <Link to={ROUTES.HELP_CENTER}>Help center</Link>
+                            </li>
+                            {/*<li>
                                 <a href="https://projects.tib.eu/orkg/get-involved/" target="_blank" rel="noopener noreferrer">
                                     Get involved
                                 </a>
+                            </li>*/}
+                            <li>
+                                <Link to={reverse(ROUTES.PAGE, { url: ROUTES_CMS.DATA_PROTECTION })}>Data protection</Link>
                             </li>
                             <li>
-                                <Link to={ROUTES.DATA_PROTECTION}>Data protection</Link>
+                                <Link to={reverse(ROUTES.PAGE, { url: ROUTES_CMS.TERMS_OF_USE })}>Terms of use</Link>
                             </li>
                             <li>
-                                <Link to={ROUTES.TERMS_OF_USE}>Terms of use</Link>
-                            </li>
-                            <li>
-                                <a href="https://projects.tib.eu/orkg/imprint/" target="_blank" rel="noopener noreferrer">
-                                    Imprint
-                                </a>
+                                <Link to={reverse(ROUTES.PAGE, { url: ROUTES_CMS.IMPRINT })}>Imprint</Link>
                             </li>
                         </ul>
                     </FooterCol>
@@ -98,11 +99,6 @@ const Footer = () => (
                         <hr className="mr-5" />
                         <ul className="p-0" style={{ listStyle: 'none' }}>
                             <li>
-                                <a href="https://gitlab.com/TIBHannover/orkg/orkg-frontend/-/wikis/home" target="_blank" rel="noopener noreferrer">
-                                    Documentation
-                                </a>
-                            </li>
-                            <li>
                                 <Link to={ROUTES.DATA}>Data Access</Link>
                             </li>
                             <li>
@@ -110,11 +106,11 @@ const Footer = () => (
                             </li>
                             <li>
                                 <a href="https://gitlab.com/TIBHannover/orkg/orkg-frontend/" target="_blank" rel="noopener noreferrer">
-                                    Gitlab
+                                    GitLab
                                 </a>
                             </li>
                             <li>
-                                <Link to={ROUTES.LICENSE}>License</Link>
+                                <Link to={reverse(ROUTES.PAGE, { url: ROUTES_CMS.LICENSE })}>License</Link>
                             </li>
                         </ul>
                     </FooterCol>
@@ -129,9 +125,7 @@ const Footer = () => (
                                 </TwitterLink>
                             </li>
                             <li>
-                                <a href="https://projects.tib.eu/orkg/contact/" target="_blank" rel="noopener noreferrer">
-                                    Contact us
-                                </a>
+                                <Link to={reverse(ROUTES.PAGE, { url: ROUTES_CMS.CONTACT })}>Contact us</Link>
                             </li>
                             <li>
                                 <a href="https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues" target="_blank" rel="noopener noreferrer">
