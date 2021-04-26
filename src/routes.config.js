@@ -7,9 +7,6 @@ import VenuePage from 'pages/VenuePage';
 import AddResource from 'pages/Resources/AddResource';
 import Comparison from 'pages/Comparisons/Comparison';
 import Home from 'pages/Home';
-import License from 'pages/License';
-import DataProtection from 'pages/DataProtection';
-import TermsOfUse from 'pages/TermsOfUse';
 import Changelog from 'pages/Changelog/Changelog';
 import NotFound from 'pages/NotFound';
 import Papers from 'pages/Papers';
@@ -229,18 +226,6 @@ const routes = [
     {
         path: ROUTES.AUTHOR_PAGE,
         component: AuthorPage
-    },
-    {
-        path: ROUTES.LICENSE,
-        component: License
-    },
-    {
-        path: ROUTES.DATA_PROTECTION,
-        component: DataProtection
-    },
-    {
-        path: ROUTES.TERMS_OF_USE,
-        component: TermsOfUse
     },
     {
         path: ROUTES.CHANGELOG,
