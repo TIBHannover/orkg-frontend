@@ -12,6 +12,8 @@ import { MISC } from 'constants/graphSettings';
 import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
 import ROUTES from 'constants/routes';
+import { reverse } from 'named-urls';
+import ROUTES_CMS from 'constants/routesCms';
 
 export default function Home() {
     const location = useLocation();
@@ -37,7 +39,7 @@ export default function Home() {
         <Container style={{ marginTop: -70 }}>
             <Alert color="info" className="box mt-2">
                 The ORKG <strong>Curation Grant Competition</strong> has launched. Apply until 31st of May 2021.{' '}
-                <Link to={ROUTES.CURATION_CALL}>Find out more</Link>
+                <Link to={reverse(ROUTES.PAGE, { url: ROUTES_CMS.CURATION_CALL })}>Find out more</Link>
             </Alert>
 
             <Row>

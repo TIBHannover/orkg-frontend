@@ -52,7 +52,6 @@ const routes = {
     PREDICATE: '/predicate/:id',
     TPDL: '/tpdl',
     EXPORT_DATA: '/export-data',
-    CURATION_CALL: '/open-call-curation-grant',
     PAGE: '/page/:url',
     ABOUT: '/about/:id?/:slug?',
     HELP_CENTER: '/help-center',

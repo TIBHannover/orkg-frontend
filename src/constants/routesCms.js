@@ -8,7 +8,8 @@ const routes = {
     DATA_PROTECTION: 'data-protection',
     IMPRINT: 'imprint',
     LICENSE: 'license',
-    CONTACT: 'contact'
+    CONTACT: 'contact',
+    CURATION_CALL: 'open-call-curation-grant'
 };
 
 export default routes;

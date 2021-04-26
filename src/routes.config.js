@@ -48,13 +48,13 @@ import AddComparison from 'pages/AddComparison';
 import requireAuthentication from 'requireAuthentication';
 import { reverse } from 'named-urls';
 import ContributionEditor from 'pages/ContributionEditor';
-import CurationCall from 'pages/CurationCall';
 import Page from 'pages/Page';
 import About from 'pages/About';
 import HelpCenter from 'pages/HelpCenter/HelpCenter';
 import HelpCenterCategory from 'pages/HelpCenter/HelpCenterCategory';
 import HelpCenterArticle from 'pages/HelpCenter/HelpCenterArticle';
 import HelpCenterSearch from 'pages/HelpCenter/HelpCenterSearch';
+import ROUTES_CMS from 'constants/routesCms';
 
 // use lazy loading of pages that contain large dependencies
 // run "npm run analyze" to ensure the listed dependencies are not loaded elsewhere and thus end up in the bundle
@@ -311,10 +311,6 @@ const routes = [
         component: Tools
     },
     {
-        path: ROUTES.CURATION_CALL,
-        component: CurationCall
-    },
-    {
         path: ROUTES.PAGE,
         component: Page
     },
@@ -333,6 +329,11 @@ const routes = [
     {
         path: ROUTES.HELP_CENTER_SEARCH,
         component: HelpCenterSearch
+    },
+    // redirect legacy route
+    {
+        path: '/open-call-curation-grant',
+        component: () => <Redirect to={{ pathname: reverse(ROUTES.PAGE, { url: ROUTES_CMS.CURATION_CALL }), state: { status: 301 } }} />
     },
     {
         path: ROUTES.HELP_CENTER,
