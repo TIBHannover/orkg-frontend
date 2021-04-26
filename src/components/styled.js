@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import Gravatar from 'react-gravatar';
 
 export const SubtitleSeparator = styled.div`
-    background: ${props => props.theme.darkblue};
+    background: ${props => props.theme.secondary};
     width: 2px;
     height: 24px;
     margin: 0 15px;
@@ -16,10 +16,11 @@ export const SubTitle = styled.div`
     text-overflow: ellipsis;
     overflow: hidden;
     margin-right: 20px;
+    color: ${props => props.theme.secondary};
 `;
 
 export const StyledGravatar = styled(Gravatar)`
-    border: 2px solid ${props => props.theme.ultraLightBlueDarker};
+    border: 2px solid ${props => props.theme.lightDarker};
     cursor: pointer;
     &:hover {
         border: 2px solid ${props => props.theme.primary};
@@ -32,15 +33,15 @@ export const StyledDotGravatar = styled.div`
     display: inline-block;
     text-align: center;
     line-height: 48px;
-    color: ${props => props.theme.darkblue};
-    border: 2px solid ${props => props.theme.ultraLightBlueDarker};
+    color: ${props => props.theme.secondary};
+    border: 2px solid ${props => props.theme.lightDarker};
     cursor: pointer;
     vertical-align: sub;
     &:hover {
         border: 2px solid ${props => props.theme.primary};
     }
 
-    background-color: ${props => props.theme.ultraLightBlueDarker};
+    background-color: ${props => props.theme.lightDarker};
 `;
 
 export const ContributorsAvatars = styled.div`

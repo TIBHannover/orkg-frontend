@@ -56,6 +56,7 @@ const RDFDataCube = props => {
 
     useEffect(() => {
         loadDataCube();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const data = useMemo(() => {
@@ -74,6 +75,7 @@ const RDFDataCube = props => {
                   return a;
               })
             : [];
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isDataCubeFailedLoading, isDataCubeLoading]);
 
     const columnsSortMethod = useCallback((rowA, rowB, id, desc) => {
@@ -109,6 +111,7 @@ const RDFDataCube = props => {
                   };
               })
             : [];
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isDataCubeFailedLoading, isDataCubeLoading]);
 
     const defaultColumn = useMemo(
@@ -342,7 +345,7 @@ const RDFDataCube = props => {
                         {!isDataCubeLoading && !isDataCubeFailedLoading && (
                             <>
                                 <Dropdown className="float-right mb-2" isOpen={dropdownOpen} toggle={toggleDropdown}>
-                                    <DropdownToggle color="darkblue" size="sm">
+                                    <DropdownToggle color="secondary" size="sm">
                                         <span className="mr-2">Options</span> <Icon icon={faEllipsisV} />
                                     </DropdownToggle>
                                     <DropdownMenu>

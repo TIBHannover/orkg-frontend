@@ -23,7 +23,7 @@ const FeaturedTabs = styled.div`
         padding: 15px;
         color: #bebbac;
         cursor: pointer;
-        border-bottom: 2px solid ${props => props.theme.ultraLightBlueDarker};
+        border-bottom: 2px solid ${props => props.theme.lightDarker};
         -webkit-transition: border 500ms ease-out;
         -moz-transition: border 500ms ease-out;
         -o-transition: border 500ms ease-out;

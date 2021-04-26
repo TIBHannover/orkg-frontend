@@ -39,15 +39,21 @@ export const getResources = ({
     returnContent = false
 }) => {
     const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
-    const params = queryString.stringify({
-        page,
-        size,
-        sort,
-        desc,
-        exact,
-        ...(q ? { q } : {}),
-        ...(exclude ? { exclude } : {})
-    });
+    const params = queryString.stringify(
+        {
+            page,
+            size,
+            sort,
+            desc,
+            exact,
+            ...(q ? { q } : {}),
+            ...(exclude ? { exclude } : {})
+        },
+        {
+            skipNull: true,
+            skipEmptyString: true
+        }
+    );
 
     return submitGetRequest(`${resourcesUrl}?${params}`).then(res => (returnContent ? res.content : res));
 };

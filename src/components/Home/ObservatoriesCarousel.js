@@ -19,7 +19,7 @@ const CarouselContainer = styled.div`
         width: 10px !important;
         height: 10px !important;
         border-radius: 100% !important;
-        background-color: ${props => props.theme.orkgPrimaryColor} !important;
+        background-color: ${props => props.theme.primary} !important;
     }
 `;
 
@@ -45,11 +45,11 @@ const CarouselIndicatorsStyled = styled(CarouselIndicators)`
         margin: 0;
     }
 
-    background: ${props => props.theme.ultraLightBlue};
+    background: ${props => props.theme.lightLighter};
 `;
 
 const StyledGravatar = styled(Gravatar)`
-    border: 2px solid ${props => props.theme.darkblue};
+    border: 2px solid ${props => props.theme.secondary};
     cursor: pointer;
     &:hover {
         border: 2px solid ${props => props.theme.primaryColor};
@@ -58,7 +58,7 @@ const StyledGravatar = styled(Gravatar)`
 
 const CardFooterStyled = styled(CardFooter)`
     && {
-        background: ${props => props.theme.ultraLightBlue};
+        background: ${props => props.theme.lightLighter};
     }
 `;
 

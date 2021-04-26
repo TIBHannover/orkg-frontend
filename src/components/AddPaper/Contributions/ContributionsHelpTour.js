@@ -136,7 +136,7 @@ class ContributionsHelpTour extends Component {
                             : [])
                     ]}
                     showNumber={false}
-                    accentColor={this.props.theme.orkgPrimaryColor}
+                    accentColor={this.props.theme.primary}
                     rounded={10}
                     onRequestClose={this.requestCloseTour}
                     isOpen={this.props.isTourOpen}

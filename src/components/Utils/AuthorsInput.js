@@ -25,7 +25,7 @@ const AddAuthor = styled(Button)`
     margin: 0 0 2px 0;
     &:hover {
         background-color: #e9ecef;
-        color: ${props => props.theme.darkblueDarker};
+        color: ${props => props.theme.secondaryDarker};
     }
 `;
 
@@ -239,7 +239,7 @@ class AuthorsInput extends Component {
     editAuthor = key => {
         this.setState({
             editIndex: key,
-            authorInput: this.props.value[key].orcid ? this.props.value[key].orcid : this.props.value[key],
+            authorInput: { ...this.props.value[key], label: this.props.value[key].orcid ? this.props.value[key].orcid : this.props.value[key].label },
             editMode: true
         });
         this.toggle('showAuthorForm');

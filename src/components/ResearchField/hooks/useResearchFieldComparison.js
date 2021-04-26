@@ -24,9 +24,9 @@ function useResearchFieldComparison({ researchFieldId, initialSort, initialInclu
             let papersService;
             if (researchFieldId === MISC.RESEARCH_FIELD_MAIN) {
                 papersService = getResourcesByClass({
-                    id: sort === 'newest' || sort === 'featured' ? CLASSES.FEATURED_COMPARISON : CLASSES.COMPARISON,
+                    id: sort === 'featured' ? CLASSES.FEATURED_COMPARISON : CLASSES.COMPARISON,
                     sortBy: 'created_at',
-                    desc: true,
+                    desc: sort === 'newest' || sort === 'featured' ? true : false,
                     items: pageSize
                 });
             } else {

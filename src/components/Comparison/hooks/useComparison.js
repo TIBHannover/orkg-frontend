@@ -25,10 +25,11 @@ import queryString from 'query-string';
 import { usePrevious } from 'react-use';
 import Confirm from 'reactstrap-confirm';
 
-function useComparison() {
+function useComparison({ id }) {
     const location = useLocation();
     const history = useHistory();
-    const { comparisonId } = useParams();
+    const params = useParams();
+    const comparisonId = id || params.comparisonId;
 
     /**
      * @typedef {Object} MetaData
@@ -456,6 +457,7 @@ function useComparison() {
                 setIsLoadingComparisonResult(false);
                 setIsFailedLoadingComparisonResult(true);
             });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [comparisonType, contributionsList, extendAndSortProperties, responseHash]);
 
     /**
@@ -737,7 +739,6 @@ function useComparison() {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isLoadingComparisonResult]);
-
     return {
         metaData,
         contributions,

@@ -44,7 +44,7 @@ const TableHeaderColumn = ({ contribution, paper }) => {
             <ItemHeaderInner className="position-relative contribution-editor">
                 <Tippy content="Edit paper's metadata">
                     <span>
-                        <Button color="link" className="text-darkblueDarker p-0 text-left" onClick={handleEditPaper}>
+                        <Button color="link" className="text-secondary-darker p-0 text-left" onClick={handleEditPaper}>
                             {paper.label || <em>No title</em>}
                         </Button>
                     </span>

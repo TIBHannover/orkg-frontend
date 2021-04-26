@@ -103,67 +103,69 @@ function Breadcrumbs(props) {
         return null;
     }
     return (
-        <Container className="p-0">
-            <Card className="border-0">
-                <CardFooter
-                    className={`rounded border-top-0 ${props.backgroundWhite ? 'p-0' : ''}`}
-                    style={{ fontSize: '95%', backgroundColor: props.backgroundWhite ? '#fff' : '#dcdee6' }}
-                >
-                    {props.researchFieldId &&
-                        !isLoading &&
-                        parentResearchFields.map((field, index) => (
-                            <span key={field.id}>
-                                {index !== parentResearchFields.length - 1 || !props.disableLastField
-                                    ? renderLink(field, index === 0 ? <Icon className="mr-1" icon={faHome} /> : field.label, index)
-                                    : field.label}
-                                {index !== parentResearchFields.length - 1 && (
-                                    <Dropdown tag="span" isOpen={isOpen[index]} toggle={() => handleClickArrow(index)}>
-                                        <DropdownToggle
-                                            style={{ cursor: 'pointer', width: '15px', display: 'inline-block' }}
-                                            tag="span"
-                                            className="flex-1 ml-2 mr-2"
-                                        >
-                                            <Icon
-                                                className={isOpen[index] ? 'mr-1' : ''}
-                                                icon={isOpen[index] ? faAngleDoubleDown : faAngleDoubleRight}
-                                            />
-                                        </DropdownToggle>
-                                        <DropdownMenu>
-                                            {!isLoadingSiblings[index] ? (
-                                                <>
-                                                    {siblings[index] &&
-                                                        siblings[index].length &&
-                                                        siblings[index].map(rf =>
-                                                            rf.id !== parentResearchFields[index + 1].id ? (
-                                                                renderDropdownItem(rf, rf.label)
-                                                            ) : (
-                                                                <DropdownItem key={`rf-${rf.id}`}>{rf.label}</DropdownItem>
-                                                            )
-                                                        )}
-                                                </>
-                                            ) : (
-                                                <Icon className="ml-3" icon={faSpinner} spin />
-                                            )}
-                                        </DropdownMenu>
-                                    </Dropdown>
-                                )}
-                            </span>
-                        ))}
-                    {isLoading && (
-                        <ContentLoader
-                            height="100%"
-                            width="100%"
-                            viewBox="0 0 100 2"
-                            style={{ width: '100% !important' }}
-                            backgroundColor={props.backgroundWhite ? '#f3f3f3' : '#dcdee6'}
-                            foregroundColor={props.backgroundWhite ? '#ecebeb' : '#cdced6'}
-                        >
-                            <rect x="0" y="0" rx="0" ry="0" width="100" height="50" />
-                        </ContentLoader>
-                    )}
-                </CardFooter>
-            </Card>
-        </Container>
+        <nav>
+            <Container className="p-0">
+                <Card className="border-0">
+                    <CardFooter
+                        className={`rounded border-top-0 ${props.backgroundWhite ? 'p-0' : ''}`}
+                        style={{ fontSize: '95%', backgroundColor: props.backgroundWhite ? '#fff' : '#dcdee6' }}
+                    >
+                        {props.researchFieldId &&
+                            !isLoading &&
+                            parentResearchFields.map((field, index) => (
+                                <span key={field.id}>
+                                    {index !== parentResearchFields.length - 1 || !props.disableLastField
+                                        ? renderLink(field, index === 0 ? <Icon className="mr-1" icon={faHome} /> : field.label, index)
+                                        : field.label}
+                                    {index !== parentResearchFields.length - 1 && (
+                                        <Dropdown tag="span" isOpen={isOpen[index]} toggle={() => handleClickArrow(index)}>
+                                            <DropdownToggle
+                                                style={{ cursor: 'pointer', width: '15px', display: 'inline-block' }}
+                                                tag="span"
+                                                className="flex-1 ml-2 mr-2"
+                                            >
+                                                <Icon
+                                                    className={isOpen[index] ? 'mr-1' : ''}
+                                                    icon={isOpen[index] ? faAngleDoubleDown : faAngleDoubleRight}
+                                                />
+                                            </DropdownToggle>
+                                            <DropdownMenu>
+                                                {!isLoadingSiblings[index] ? (
+                                                    <>
+                                                        {siblings[index] &&
+                                                            siblings[index].length &&
+                                                            siblings[index].map(rf =>
+                                                                rf.id !== parentResearchFields[index + 1].id ? (
+                                                                    renderDropdownItem(rf, rf.label)
+                                                                ) : (
+                                                                    <DropdownItem key={`rf-${rf.id}`}>{rf.label}</DropdownItem>
+                                                                )
+                                                            )}
+                                                    </>
+                                                ) : (
+                                                    <Icon className="ml-3" icon={faSpinner} spin />
+                                                )}
+                                            </DropdownMenu>
+                                        </Dropdown>
+                                    )}
+                                </span>
+                            ))}
+                        {isLoading && (
+                            <ContentLoader
+                                height="100%"
+                                width="100%"
+                                viewBox="0 0 100 2"
+                                style={{ width: '100% !important' }}
+                                backgroundColor={props.backgroundWhite ? '#f3f3f3' : '#dcdee6'}
+                                foregroundColor={props.backgroundWhite ? '#ecebeb' : '#cdced6'}
+                            >
+                                <rect x="0" y="0" rx="0" ry="0" width="100" height="50" />
+                            </ContentLoader>
+                        )}
+                    </CardFooter>
+                </Card>
+            </Container>
+        </nav>
     );
 }
 

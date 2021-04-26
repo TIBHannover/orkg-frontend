@@ -19,7 +19,7 @@ export const StyledSettingsMenu = styled.div`
 
         &.active,
         &:hover {
-            background: ${props => props.theme.orkgPrimaryColor};
+            background: ${props => props.theme.primary};
             color: #fff;
         }
         &.active a {

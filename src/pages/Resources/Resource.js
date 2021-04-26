@@ -76,6 +76,16 @@ const DEDICATED_PAGE_LINKS = {
         label: 'Contribution',
         route: ROUTES.CONTRIBUTION,
         routeParams: 'id'
+    },
+    [CLASSES.SMART_REVIEW]: {
+        label: 'SmartReview',
+        route: ROUTES.SMART_REVIEW,
+        routeParams: 'id'
+    },
+    [CLASSES.SMART_REVIEW_PUBLISHED]: {
+        label: 'SmartReview',
+        route: ROUTES.SMART_REVIEW,
+        routeParams: 'id'
     }
 };
 function Resource(props) {
@@ -205,7 +215,7 @@ function Resource(props) {
                             <RequireAuthentication
                                 size="sm"
                                 component={Button}
-                                color="darkblue"
+                                color="secondary"
                                 style={{ marginRight: 2 }}
                                 tag={Link}
                                 to={ROUTES.ADD_RESOURCE}
@@ -214,7 +224,7 @@ function Resource(props) {
                             </RequireAuthentication>
                             {dedicatedLink && (
                                 <Button
-                                    color="darkblue"
+                                    color="secondary"
                                     size="sm"
                                     tag={Link}
                                     to={reverseWithSlug(dedicatedLink.route, {
@@ -231,20 +241,20 @@ function Resource(props) {
                                     <RequireAuthentication
                                         component={Button}
                                         className="float-right"
-                                        color="darkblue"
+                                        color="secondary"
                                         size="sm"
                                         onClick={() => setEditMode(v => !v)}
                                     >
                                         <Icon icon={faPen} /> Edit
                                     </RequireAuthentication>
                                 ) : (
-                                    <Button className="flex-shrink-0" color="darkblueDarker" size="sm" onClick={() => setEditMode(v => !v)}>
+                                    <Button className="flex-shrink-0" color="secondary-darker" size="sm" onClick={() => setEditMode(v => !v)}>
                                         <Icon icon={faTimes} /> Stop editing
                                     </Button>
                                 )
                             ) : (
                                 <Tippy hideOnClick={false} content="This resource can not be edited because it has a published DOI.">
-                                    <span className="btn btn-darkblue btn-sm disabled">
+                                    <span className="btn btn-secondary btn-sm disabled">
                                         <Icon icon={faPen} /> <span>Edit</span>
                                     </span>
                                 </Tippy>

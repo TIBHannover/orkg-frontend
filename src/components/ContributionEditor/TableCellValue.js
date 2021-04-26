@@ -77,7 +77,11 @@ const TableCellValue = ({ value, index, setDisableCreate, propertyId }) => {
             <Value className="position-relative">
                 <ValuePlugins type={value._class} options={{ inModal: true }}>
                     {value._class === 'resource' && <TableCellValueResource value={value} />}
-                    {value._class === 'literal' && <div onDoubleClick={handleStartEdit}>{value.label}</div>}
+                    {value._class === 'literal' && (
+                        <div role="textbox" tabIndex="0" onDoubleClick={handleStartEdit}>
+                            {value.label}
+                        </div>
+                    )}
                 </ValuePlugins>
                 <TableCellButtons onEdit={handleStartEdit} onDelete={handleDelete} backgroundColor="rgba(240, 242, 247, 0.8)" />
             </Value>
@@ -88,7 +92,7 @@ const TableCellValue = ({ value, index, setDisableCreate, propertyId }) => {
                 <Autocomplete
                     optionsClass={propertyId === PREDICATES.HAS_RESEARCH_PROBLEM ? CLASSES.PROBLEM : undefined}
                     entityType={ENTITIES.RESOURCE}
-                    excludeClasses={`${CLASSES.CONTRIBUTION},${CLASSES.PROBLEM},${CLASSES.CONTRIBUTION_TEMPLATE}`}
+                    excludeClasses={`${CLASSES.CONTRIBUTION},${CLASSES.PROBLEM},${CLASSES.TEMPLATE}`}
                     menuPortalTarget={document.body} // use a portal to ensure the menu isn't blocked by other elements
                     placeholder={propertyId === PREDICATES.HAS_RESEARCH_PROBLEM ? 'Enter a research problem' : 'Enter a resource'}
                     onChange={handleChangeAutocomplete}

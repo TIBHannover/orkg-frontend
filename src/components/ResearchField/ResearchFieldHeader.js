@@ -106,14 +106,14 @@ const ResearchFieldHeader = ({ id }) => {
                             <RequireAuthentication
                                 component={Button}
                                 size="sm"
-                                color="darkblue"
+                                color="secondary"
                                 className="float-right"
                                 onClick={() => setEditMode(v => !v)}
                             >
                                 <Icon icon={faPen} /> Edit
                             </RequireAuthentication>
                             <ButtonDropdown isOpen={menuOpen} toggle={() => setMenuOpen(v => !v)} nav inNavbar>
-                                <DropdownToggle size="sm" color="darkblue" className="px-3 rounded-right" style={{ marginLeft: 2 }}>
+                                <DropdownToggle size="sm" color="secondary" className="px-3 rounded-right" style={{ marginLeft: 2 }}>
                                     <Icon icon={faEllipsisV} />
                                 </DropdownToggle>
                                 <DropdownMenu right>
@@ -126,20 +126,26 @@ const ResearchFieldHeader = ({ id }) => {
                     </Container>
                     <Container className="p-0">
                         <Card>
-                            <CardBody>
-                                <CardTitle tag="h5">Description</CardTitle>
-                                {researchFieldData.description && <p className="m-0">{researchFieldData.description}</p>}
-                                {!researchFieldData.description && <p className="m-0">No description for this research field yet!</p>}
-                                {researchFieldData.sameAs && (
-                                    <ExternalDescription
-                                        query={researchFieldData.sameAs ? researchFieldData.sameAs.label : researchFieldData.label}
-                                    />
-                                )}
-                            </CardBody>
-
+                            {(researchFieldData.description || researchFieldData.sameAs) && (
+                                <>
+                                    <CardBody>
+                                        {researchFieldData.description && (
+                                            <>
+                                                <CardTitle tag="h5">Description</CardTitle>
+                                                {researchFieldData.description && <p className="m-0">{researchFieldData.description}</p>}
+                                            </>
+                                        )}
+                                        {researchFieldData.sameAs && (
+                                            <ExternalDescription
+                                                query={researchFieldData.sameAs ? researchFieldData.sameAs.label : researchFieldData.label}
+                                            />
+                                        )}
+                                    </CardBody>
+                                    <hr className="m-0" />
+                                </>
+                            )}
                             {subResearchFields && subResearchFields.length > 0 && (
                                 <>
-                                    <hr className="m-0" />
                                     <CardBody>
                                         <CardTitle tag="h5">Subfields</CardTitle>
                                         <div>
@@ -151,7 +157,7 @@ const ResearchFieldHeader = ({ id }) => {
                                                         slug: subfield.label
                                                     })}
                                                 >
-                                                    <Badge color="lightblue" className="mr-2 mb-2">
+                                                    <Badge color="light" className="mr-2 mb-2">
                                                         {subfield.label}
                                                     </Badge>
                                                 </Link>
@@ -166,7 +172,7 @@ const ResearchFieldHeader = ({ id }) => {
                                                             slug: subfield.label
                                                         })}
                                                     >
-                                                        <Badge color="lightblue" className="mr-2 mb-2">
+                                                        <Badge color="light" className="mr-2 mb-2">
                                                             {subfield.label}
                                                         </Badge>
                                                     </Link>
@@ -178,10 +184,10 @@ const ResearchFieldHeader = ({ id }) => {
                                             )}
                                         </div>
                                     </CardBody>
+                                    <hr className="m-0" />
                                 </>
                             )}
 
-                            <hr className="m-0" />
                             <CardBody>
                                 <Contributors researchFieldId={id} />
                             </CardBody>

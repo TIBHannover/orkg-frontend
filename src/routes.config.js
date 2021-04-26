@@ -46,6 +46,11 @@ import FeaturedComparisons from 'pages/FeaturedComparisons';
 import Data from 'pages/Data';
 import Contribution from 'pages/Contribution';
 import CsvImport from 'pages/CsvImport';
+import SmartReview from 'pages/SmartReview/SmartReview';
+import SmartReviews from 'pages/SmartReview/SmartReviews';
+import UserUnpublishedArticles from 'pages/SmartReview/UserUnpublishedArticles';
+import SmartReviewNew from 'pages/SmartReview/SmartReviewNew';
+import SmartReviewDiff from 'pages/SmartReview/SmartReviewDiff';
 import Tools from 'pages/Tools';
 import AddComparison from 'pages/AddComparison';
 import requireAuthentication from 'requireAuthentication';
@@ -53,6 +58,7 @@ import Benchmarks from 'pages/Benchmarks/Benchmarks';
 import Benchmark from 'pages/Benchmark/Benchmark';
 import { reverse } from 'named-urls';
 import ContributionEditor from 'pages/ContributionEditor';
+import CurationCall from 'pages/CurationCall';
 
 // use lazy loading of pages that contain large dependencies
 // run "npm run analyze" to ensure the listed dependencies are not loaded elsewhere and thus end up in the bundle
@@ -318,6 +324,26 @@ const routes = [
         component: Benchmark
     },
     {
+        path: ROUTES.SMART_REVIEW_NEW,
+        component: requireAuthentication(SmartReviewNew)
+    },
+    {
+        path: ROUTES.SMART_REVIEW_DIFF,
+        component: SmartReviewDiff
+    },
+    {
+        path: ROUTES.SMART_REVIEW,
+        component: SmartReview
+    },
+    {
+        path: ROUTES.SMART_REVIEWS,
+        component: SmartReviews
+    },
+    {
+        path: ROUTES.USER_UNPUBLISHED_REVIEWS,
+        component: requireAuthentication(UserUnpublishedArticles)
+    },
+    {
         path: ROUTES.CONTRIBUTION_EDITOR,
         component: requireAuthentication(ContributionEditor)
     },
@@ -328,6 +354,10 @@ const routes = [
     {
         path: ROUTES.TOOLS,
         component: Tools
+    },
+    {
+        path: ROUTES.CURATION_CALL,
+        component: CurationCall
     },
     /* Don't add routes below this line */
     {

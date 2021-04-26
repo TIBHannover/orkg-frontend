@@ -49,11 +49,11 @@ const PaperList = props => {
         <>
             <div className="w-100 text-right">
                 {showContributions.length === 0 ? (
-                    <Button size="sm" color="darkblue" className="mb-2" onClick={handleExpandAll}>
+                    <Button size="sm" color="secondary" className="mb-2" onClick={handleExpandAll}>
                         <Icon icon={faArrowsAltV} /> Expand all data
                     </Button>
                 ) : (
-                    <Button size="sm" color="darkblue" className="mb-2" onClick={handleCollapseAll}>
+                    <Button size="sm" color="secondary" className="mb-2" onClick={handleCollapseAll}>
                         <Icon icon={faArrowsAltV} /> Collapse all data
                     </Button>
                 )}

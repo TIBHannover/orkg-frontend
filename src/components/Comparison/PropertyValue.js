@@ -16,10 +16,10 @@ import classNames from 'classnames';
 const FilterButton = styled(Button)`
     &&& {
         padding: 0 5px;
-        color: ${props => props.theme.ultraLightBlueDarker};
+        color: ${props => props.theme.lightDarker};
         &:hover,
         &.active {
-            color: ${props => props.theme.darkblueDarker};
+            color: ${props => props.theme.secondaryDarker};
         }
 
         & .cross {
@@ -39,7 +39,7 @@ const FilterButton = styled(Button)`
             content: ' ';
             height: 12px;
             width: 2px;
-            background-color: ${props => props.theme.darkblueDarker};
+            background-color: ${props => props.theme.secondaryDarker};
         }
         & .cross:before {
             transform: rotate(45deg);
@@ -50,7 +50,7 @@ const FilterButton = styled(Button)`
     }
 `;
 
-const PropertyValue = ({ id, label, property, similar, filterControlData, updateRulesOfProperty }) => {
+const PropertyValue = ({ id, label, property, similar, filterControlData, updateRulesOfProperty, embeddedMode }) => {
     const [showStatementBrowser, setShowStatementBrowser] = useState(false);
     const [showFilterDialog, setShowFilterDialog] = useState(false);
 
@@ -81,25 +81,33 @@ const PropertyValue = ({ id, label, property, similar, filterControlData, update
                     {similar && similar.length > 0 && '*'}
                 </DescriptionTooltip>
             </Button>
+            {!embeddedMode && (
+                <>
+                    <FilterWrapper
+                        data={{
+                            rules: getRuleByProperty(filterControlData, id),
+                            disabled: getValuesNr() <= 1 && getRuleByProperty(filterControlData, id).length === 0
+                        }}
+                    >
+                        <FilterButton
+                            color="link"
+                            disabled={getValuesNr() <= 1}
+                            onClick={() => setShowFilterDialog(v => !v)}
+                            className={filterButtonClasses}
+                        >
+                            <Icon size="xs" icon={faFilter} />
+                            {getValuesNr() <= 1 && <div className="cross" />}
+                        </FilterButton>
+                    </FilterWrapper>
 
-            <FilterWrapper
-                data={{
-                    rules: getRuleByProperty(filterControlData, id),
-                    disabled: getValuesNr() <= 1 && getRuleByProperty(filterControlData, id).length === 0
-                }}
-            >
-                <FilterButton color="link" disabled={getValuesNr() <= 1} onClick={() => setShowFilterDialog(v => !v)} className={filterButtonClasses}>
-                    <Icon size="xs" icon={faFilter} />
-                    {getValuesNr() <= 1 && <div className="cross" />}
-                </FilterButton>
-            </FilterWrapper>
-
-            <FilterModal
-                data={getDataByProperty(filterControlData, id)}
-                updateRulesOfProperty={updateRulesFactory}
-                showFilterDialog={showFilterDialog}
-                toggleFilterDialog={() => setShowFilterDialog(v => !v)}
-            />
+                    <FilterModal
+                        data={getDataByProperty(filterControlData, id)}
+                        updateRulesOfProperty={updateRulesFactory}
+                        showFilterDialog={showFilterDialog}
+                        toggleFilterDialog={() => setShowFilterDialog(v => !v)}
+                    />
+                </>
+            )}
 
             {showStatementBrowser && (
                 <StatementBrowserDialog
@@ -120,12 +128,14 @@ PropertyValue.propTypes = {
     property: PropTypes.object.isRequired,
     similar: PropTypes.array,
     filterControlData: PropTypes.array.isRequired,
-    updateRulesOfProperty: PropTypes.func.isRequired
+    updateRulesOfProperty: PropTypes.func.isRequired,
+    embeddedMode: PropTypes.bool.isRequired
 };
 
 PropertyValue.defaultProps = {
     label: PropTypes.string.isRequired,
-    similar: PropTypes.array
+    similar: PropTypes.array,
+    embeddedMode: false
 };
 
 export default PropertyValue;

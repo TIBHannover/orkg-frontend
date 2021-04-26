@@ -85,7 +85,7 @@ const TableCellValueCreate = ({ isVisible, contributionId, propertyId, isEmptyCe
     return (
         <>
             {!isCreating && isVisible && (
-                <div className={isEmptyCell ? 'h-100' : ''} onDoubleClick={() => setIsCreating(true)}>
+                <div className={isEmptyCell ? 'h-100' : ''} role="button" tabIndex="0" onDoubleClick={() => setIsCreating(true)}>
                     <CreateButtonContainer className="create-button">
                         <StatementOptionButton title="Add value" icon={faPlus} action={() => setIsCreating(true)} />
                     </CreateButtonContainer>
@@ -98,7 +98,7 @@ const TableCellValueCreate = ({ isVisible, contributionId, propertyId, isEmptyCe
                             <Autocomplete
                                 optionsClass={propertyId === PREDICATES.HAS_RESEARCH_PROBLEM ? CLASSES.PROBLEM : undefined}
                                 entityType={ENTITIES.RESOURCE}
-                                excludeClasses={`${CLASSES.CONTRIBUTION},${CLASSES.PROBLEM},${CLASSES.CONTRIBUTION_TEMPLATE}`}
+                                excludeClasses={`${CLASSES.CONTRIBUTION},${CLASSES.PROBLEM},${CLASSES.TEMPLATE}`}
                                 placeholder={propertyId === PREDICATES.HAS_RESEARCH_PROBLEM ? 'Enter a research problem' : 'Enter a resource'}
                                 onChange={handleChangeAutocomplete}
                                 menuPortalTarget={document.body}

@@ -108,7 +108,7 @@ export default function StatementItemTemplate(props) {
                                 return (
                                     <ValueItem
                                         value={value}
-                                        key={index}
+                                        key={valueId}
                                         id={valueId}
                                         enableEdit={props.enableEdit}
                                         syncBackend={props.syncBackend}

@@ -49,7 +49,7 @@ const ResearchFields = () => {
                 <h1 className="h4 mt-4 mb-4 flex-grow-1">Research fields taxonomy</h1>
 
                 <ButtonDropdown isOpen={menuOpen} toggle={() => setMenuOpen(v => !v)} nav inNavbar>
-                    <DropdownToggle size="sm" color="darkblue" className="px-3 rounded-right" style={{ marginLeft: 2 }}>
+                    <DropdownToggle size="sm" color="secondary" className="px-3 rounded-right" style={{ marginLeft: 2 }}>
                         <Icon icon={faEllipsisV} />
                     </DropdownToggle>
                     <DropdownMenu right>

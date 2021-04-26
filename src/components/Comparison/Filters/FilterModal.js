@@ -2,7 +2,7 @@ import { Modal, ModalHeader } from 'reactstrap';
 import PropTypes from 'prop-types';
 import CategoricalFilterRule from './CategoricalFilterRule.js';
 import OrdinalFilterRule from './OrdinalFilterRule.js';
-import Joi from '@hapi/joi';
+import Joi from 'joi';
 import TextFilterRule from './TextFilterRule.js';
 
 function FilterModal(props) {

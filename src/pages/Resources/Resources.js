@@ -62,9 +62,9 @@ const Resources = () => {
                 <ButtonGroup>
                     <RequireAuthentication
                         component={Link}
-                        color="darkblue"
+                        color="secondary"
                         size="sm"
-                        className="btn btn-darkblue btn-sm flex-shrink-0"
+                        className="btn btn-secondary btn-sm flex-shrink-0"
                         to={ROUTES.ADD_RESOURCE}
                     >
                         <Icon icon={faPlus} /> Create resource

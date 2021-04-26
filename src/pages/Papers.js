@@ -108,7 +108,7 @@ const Papers = () => {
                 <ButtonGroup>
                     {!!user && user.isCurationAllowed && (
                         <ButtonDropdown size="sm" isOpen={dropdownOpen} toggle={toggle}>
-                            <DropdownToggle caret color="darkblue">
+                            <DropdownToggle caret color="secondary">
                                 {verified === true && 'Verified'}
                                 {verified === false && 'Unverified'}
                                 {verified === null && 'All'}

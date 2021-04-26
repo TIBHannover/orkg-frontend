@@ -18,7 +18,7 @@ const CarouselContainer = styled.div`
         width: 10px !important;
         height: 10px !important;
         border-radius: 100% !important;
-        background-color: ${props => props.theme.orkgPrimaryColor} !important;
+        background-color: ${props => props.theme.primary} !important;
     }
 `;
 
@@ -44,7 +44,7 @@ const CarouselIndicatorsStyled = styled(CarouselIndicators)`
         margin: 0;
     }
 
-    background: ${props => props.theme.ultraLightBlue};
+    background: ${props => props.theme.lightLighter};
 `;
 
 const ITEMS = [
@@ -148,7 +148,7 @@ export default function Benefits() {
                 <div className="flex-shrink-0">
                     {!!!user && (
                         <Button
-                            color="darkblue"
+                            color="secondary"
                             size="sm"
                             onClick={() => {
                                 dispatch(openAuthDialog({ action: 'signup' }));

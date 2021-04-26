@@ -11,7 +11,7 @@ import Tippy from '@tippyjs/react';
 import PropTypes from 'prop-types';
 
 const StyledGravatar = styled(Gravatar)`
-    border: 2px solid ${props => props.theme.ultraLightBlueDarker};
+    border: 2px solid ${props => props.theme.lightDarker};
     cursor: pointer;
     &:hover {
         border: 2px solid ${props => props.theme.primary};
@@ -24,20 +24,20 @@ const StyledSpinnerGravatar = styled.div`
     display: inline-block;
     text-align: center;
     line-height: 28px;
-    color: ${props => props.theme.darkblue};
-    border: 2px solid ${props => props.theme.ultraLightBlueDarker};
+    color: ${props => props.theme.secondary};
+    border: 2px solid ${props => props.theme.lightDarker};
     cursor: pointer;
     vertical-align: sub;
     &:hover {
         border: 2px solid ${props => props.theme.primary};
     }
 
-    background-color: ${props => props.theme.ultraLightBlueDarker};
+    background-color: ${props => props.theme.lightDarker};
 `;
 
-const UserAvatar = ({ userId }) => {
+const UserAvatar = ({ userId, size }) => {
     const [contributor, setContributor] = useState(null);
-    const [isLoadingContributor, setIsLoadingContributor] = useState(false);
+    const [isLoadingContributor, setIsLoadingContributor] = useState(true);
 
     useEffect(() => {
         if (userId) {
@@ -64,7 +64,7 @@ const UserAvatar = ({ userId }) => {
                 >
                     <Link to={reverse(ROUTES.USER_PROFILE, { userId: userId })}>
                         {!isLoadingContributor && (
-                            <StyledGravatar className="rounded-circle" md5={contributor?.gravatar_id ?? 'example@example.com'} size={28} />
+                            <StyledGravatar className="rounded-circle" md5={contributor?.gravatar_id ?? 'example@example.com'} size={size} />
                         )}
                         {userId && isLoadingContributor && (
                             <StyledSpinnerGravatar className="rounded-circle">
@@ -79,7 +79,12 @@ const UserAvatar = ({ userId }) => {
 };
 
 UserAvatar.propTypes = {
-    userId: PropTypes.string
+    userId: PropTypes.string,
+    size: PropTypes.number
+};
+
+UserAvatar.defaultProps = {
+    size: 28
 };
 
 export default UserAvatar;

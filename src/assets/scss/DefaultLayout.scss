@@ -1,4 +1,7 @@
-@import '../../assets/scss/ThemeVariables.scss';
+@import 'assets/scss/ThemeVariables.scss';
+@import '~bootstrap/scss/functions';
+@import '~bootstrap/scss/variables';
+@import '~bootstrap/scss/mixins';
 
 body {
     color: #646464;
@@ -15,7 +18,7 @@ body {
     border: 0;
 
     .nav-link {
-        color: $darkblue;
+        color: $secondary;
 
         &:hover {
             color: $primary;
@@ -56,7 +59,11 @@ body {
             }
         }
         .search-box .search-icon {
-            color: $darkblue;
+            color: $secondary;
+        }
+
+        @include media-breakpoint-down(md) {
+            background: #5f6474;
         }
     }
 }
@@ -160,6 +167,16 @@ body {
     background: #fff;
 }
 
+// MISC: in case custom buttons/controls are used, this class can be applied to support
+// the default focus indicator behavior. Colors are copied from Bootstrap (based on the primary color)
+.focus-primary {
+    &:focus {
+        box-shadow: 0 0 0 0.2rem rgba(232, 97, 97, 0.25);
+    }
+    outline: 0 !important;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
 // Tippy
 .tippy-box[data-theme~='visualizationPreview'] {
     background-color: #fff;
@@ -184,5 +201,28 @@ body {
 
 // Datepicker
 .react-datepicker__close-icon::after {
-    background-color: $darkblue !important;
+    background-color: $secondary !important;
+}
+
+// react-select
+// can be activated in react select by using "classNamePrefix="react-select""
+.react-select__control {
+    cursor: pointer !important;
+}
+.react-select__control--is-focused {
+    border-color: rgba(232, 97, 97, 0.25) !important;
+    box-shadow: 0 0 0 0.2rem rgba(232, 97, 97, 0.25) !important;
+    outline: 0 !important;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out !important;
+}
+.react-select__option--is-selected {
+    background-color: $primary !important;
+}
+.react-select__option {
+    cursor: pointer !important;
+}
+.react-select__option--is-focused,
+.react-select__option:active {
+    background: #fde8e8 !important;
+    color: inherit !important;
 }

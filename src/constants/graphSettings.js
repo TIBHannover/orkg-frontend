@@ -42,13 +42,16 @@ export const PREDICATES = {
     HAS_PROPERTY: 'hasProperty',
     HAS_PREVIOUS_VERSION: 'hasPreviousVersion',
     HAS_SUBJECT: 'hasSubject',
-    HAS_VISUALIZATION: 'hasVisualization',
     HAS_BENCHMARK: 'hasBenchmark',
     HAS_MODEL: 'hasModel',
     HAS_DATASET: 'hasDataset',
     HAS_EVALUATION: 'HasEvaluation',
     HAS_METRIC: 'HAS_METRIC',
-    HAS_VALUE: 'HAS_VALUE'
+    HAS_VALUE: 'HAS_VALUE',
+    HAS_SECTION: 'HasSection',
+    HAS_LINK: 'HasLink',
+    HAS_VISUALIZATION: 'hasVisualization',
+    HAS_PAPER: 'HasPaper'
 };
 
 export const CLASSES = {
@@ -70,12 +73,20 @@ export const CLASSES = {
     QB_DATASET_CLASS: 'QBDataset',
     LOCATION: 'DCLocation',
     SENTENCE: 'Sentence',
-    VISUALIZATION: 'Visualization',
     BENCHMARK: 'Benchmark',
     MODEL: 'Model',
     DATASET: 'Dataset',
     EVALUATION: 'Evaluation',
-    METRIC: 'Metric'
+    METRIC: 'Metric',
+    SMART_REVIEW: 'SmartReview',
+    SMART_REVIEW_PUBLISHED: 'SmartReviewPublished',
+    SECTION: 'Section',
+    CONTRIBUTION_SMART_REVIEW: 'ContributionSmartReview',
+    RESOURCE_SECTION: 'ResourceSection',
+    PROPERTY_SECTION: 'PropertySection',
+    COMPARISON_SECTION: 'ComparisonSection',
+    VISUALIZATION_SECTION: 'VisualizationSection',
+    VISUALIZATION: 'Visualization'
 };
 
 export const MISC = {

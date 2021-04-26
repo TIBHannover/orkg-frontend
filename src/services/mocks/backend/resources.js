@@ -8,7 +8,7 @@ const resources = [
             ctx.json({
                 content: [
                     {
-                        id: `R${faker.random.number()}`,
+                        id: `R${faker.datatype.number()}`,
                         label: 'resource label 1',
                         created_at: '2020-06-22T10:38:53.178764Z',
                         classes: [],
@@ -20,7 +20,7 @@ const resources = [
                         organization_id: '00000000-0000-0000-0000-000000000000'
                     },
                     {
-                        id: `R${faker.random.number()}`,
+                        id: `R${faker.datatype.number()}`,
                         label: 'resource label 1',
                         created_at: '2020-06-25T11:29:07.197842Z',
                         classes: [],
@@ -83,7 +83,7 @@ const resources = [
 
         return res(
             ctx.json({
-                id: `R${faker.random.number()}`,
+                id: `R${faker.datatype.number()}`,
                 label: label,
                 created_at: '2020-06-22T10:38:53.178764Z',
                 classes: [],

@@ -9,7 +9,7 @@ export const AddPropertyWrapper = styled(ListGroupItem)`
     border-bottom-right-radius: 4px !important;
     & .propertyHolder {
         height: 20px;
-        background-color: ${props => props.theme.ultraLightBlue};
+        background-color: ${props => props.theme.lightLighter};
     }
 `;
 
