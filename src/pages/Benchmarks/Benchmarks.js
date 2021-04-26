@@ -5,8 +5,6 @@ import useBenchmarks from 'components/Benchmarks/hooks/useBenchmarks';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { Col, Row, FormGroup, Label, Form, Input, Container } from 'reactstrap';
 import styled from 'styled-components';
-import { withRouter } from 'react-router-dom';
-import PropTypes from 'prop-types';
 
 export const StyledResearchFieldWrapper = styled.div`
     border-radius: ${props => props.theme.borderRadius};
@@ -27,7 +25,7 @@ const SubTitle = styled.div`
     margin-right: 20px;
 `;
 
-function Benchmarks(props) {
+function Benchmarks() {
     const [filterLabel, setFilterLabel] = React.useState('');
     const handleLabelFilter = e => {
         setFilterLabel(e.target.value);
@@ -70,9 +68,6 @@ function Benchmarks(props) {
                         </Col>
                     </Row>
                 </Form>
-                {/*<hr className="mt-3" />*/}
-                {/*<SharePaper title={this.props.viewPaper.title} />*/}
-
                 <Row noGutters={true}>
                     <Col md={12} sm={12} className="d-flex">
                         <StyledResearchFieldWrapper className="row flex-grow-1 justify-content-center">
@@ -101,8 +96,4 @@ function Benchmarks(props) {
     );
 }
 
-Benchmarks.propTypes = {
-    location: PropTypes.object.isRequired
-};
-
-export default withRouter(Benchmarks);
+export default Benchmarks;

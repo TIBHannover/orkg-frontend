@@ -55,7 +55,7 @@ import Tools from 'pages/Tools';
 import AddComparison from 'pages/AddComparison';
 import requireAuthentication from 'requireAuthentication';
 import Benchmarks from 'pages/Benchmarks/Benchmarks';
-import Benchmark from 'pages/Benchmark/Benchmark';
+import Benchmark from 'pages/Benchmarks/Benchmark';
 import { reverse } from 'named-urls';
 import ContributionEditor from 'pages/ContributionEditor';
 import CurationCall from 'pages/CurationCall';
