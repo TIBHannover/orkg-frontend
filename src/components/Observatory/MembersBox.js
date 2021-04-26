@@ -13,7 +13,7 @@ const MembersBox = ({ observatoryId, organizationsList }) => {
     const [members, setMembers] = useState([]);
     const [isLoadingMembers, setIsLoadingMembers] = useState(null);
     const [openModal, setOpenModal] = useState(false);
-    const [showAddMemberDialog, setShowAddMemberDialog] = useState(null);
+    const [showAddMemberDialog, setShowAddMemberDialog] = useState(false);
 
     useEffect(() => {
         const loadMembers = () => {
@@ -30,6 +30,10 @@ const MembersBox = ({ observatoryId, organizationsList }) => {
 
         loadMembers();
     }, [observatoryId]);
+
+    const updateObservatoryMembers = members => {
+        setMembers(members);
+    };
 
     return (
         <div className="box rounded-lg p-4 flex-grow-1">
@@ -103,6 +107,8 @@ const MembersBox = ({ observatoryId, organizationsList }) => {
                     toggle={() => setShowAddMemberDialog(v => !v)}
                     id={observatoryId}
                     organizationId={organizationsList.length > 0 ? organizationsList[0]['id'] : ''}
+                    members={members}
+                    updateObservatoryMembers={updateObservatoryMembers}
                 />
             </div>
         </div>
