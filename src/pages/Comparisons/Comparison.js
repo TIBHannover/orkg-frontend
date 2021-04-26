@@ -258,7 +258,7 @@ function Comparison(props) {
                                 <DropdownToggle color="secondary" size="sm" className="rounded-right">
                                     <span className="mr-2">More</span> <Icon icon={faEllipsisV} />
                                 </DropdownToggle>
-                                <DropdownMenu right>
+                                <DropdownMenu right style={{ zIndex: '1031' }}>
                                     <DropdownItem header>Customize</DropdownItem>
                                     <DropdownItem onClick={() => setShowAddContribution(v => !v)}>Add contribution</DropdownItem>
                                     <DropdownItem onClick={() => setShowPropertiesDialog(v => !v)}>Select properties</DropdownItem>
