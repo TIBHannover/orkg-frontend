@@ -17,7 +17,7 @@ const CodeURLsTooltip = ({ urls }) => {
     if (urls?.length === 1) {
         return (
             <a href={urls[0] ?? '-'} rel="noreferrer" target="_blank">
-                <Icon icon={getCodeIconByURL(urls[0])} className="icon ml-2 mr-2" />
+                <Icon icon={getCodeIconByURL(urls[0])} color="primary" className="icon ml-2 mr-2" />
             </a>
         );
     }
@@ -25,9 +25,9 @@ const CodeURLsTooltip = ({ urls }) => {
         <Tippy
             interactive={true}
             content={
-                <ul className={{ listStyle: 'none' }}>
-                    {urls.map(url => (
-                        <li>
+                <ul className="p-2" style={{ listStyle: 'none' }}>
+                    {urls.map((url, index) => (
+                        <li key={index}>
                             <a href={url ?? '-'} rel="noreferrer" target="_blank" className="text-white">
                                 <Icon icon={getCodeIconByURL(url)} className="icon ml-2 mr-2" /> {url}
                             </a>
@@ -37,7 +37,7 @@ const CodeURLsTooltip = ({ urls }) => {
             }
         >
             <span>
-                <Icon icon={faGithub} className="icon ml-2 mr-2" />
+                <Icon icon={faGithub} color="#e86161" className="icon ml-2 mr-2" />
             </span>
         </Tippy>
     );

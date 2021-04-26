@@ -1,19 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
-import {
-    Container,
-    Table,
-    Card,
-    CardBody,
-    Button,
-    ButtonGroup,
-    ButtonDropdown,
-    DropdownToggle,
-    DropdownMenu,
-    DropdownItem,
-    CardTitle
-} from 'reactstrap';
+import { Container, Table, Card, CardBody, Button, ButtonGroup, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import ROUTES from 'constants/routes';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import { UncontrolledButtonDropdown } from 'reactstrap';
 import Chart from 'react-google-charts';
@@ -37,7 +25,7 @@ function Benchmark() {
     const [editMode, setEditMode] = useState(false);
     const prevEditMode = usePrevious({ editMode });
     const { resourceId } = useParams();
-
+    const history = useHistory();
     const {
         isLoading: isLoadingPapers,
         isFailedLoading: isFailedLoadingPapers,
@@ -48,8 +36,6 @@ function Benchmark() {
     } = useBenchmarkDatasetPapers({
         datasetId: resourceId
     });
-
-    const [tippy, setTippy] = useState({});
 
     useEffect(() => {
         if (!editMode && prevEditMode && prevEditMode.editMode !== editMode) {
@@ -98,7 +84,6 @@ function Benchmark() {
         benchmarkDatasetPapers
     ]);
 
-    // Use the state and functions returned from useTable to build your UI
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable(
         {
             columns,
@@ -210,16 +195,39 @@ function Benchmark() {
                                     chartType="ScatterChart"
                                     loader={<div>Loading Chart</div>}
                                     data={[
-                                        ['Year', selectedMetric],
+                                        ['Year', selectedMetric, { type: 'string', role: 'tooltip', p: { html: true } }],
                                         ...(benchmarkDatasetPapers[selectedMetric]
-                                            ? benchmarkDatasetPapers[selectedMetric].map(c => [parseInt(c.paper_year), c.score])
+                                            ? benchmarkDatasetPapers[selectedMetric].map(c => [
+                                                  parseInt(c.paper_year),
+                                                  c.score,
+                                                  `<b>Paper</b>: ${c.paper_title}<br /> <b>Model</b>: ${c.model_name}<br /> <b>Score</b>: ${c.score}`
+                                              ])
                                             : [])
                                     ]}
                                     options={{
                                         hAxis: { title: 'Year', format: '####' },
                                         vAxis: { title: selectedMetric },
-                                        legend: 'none'
+                                        legend: 'none',
+                                        tooltip: { isHtml: true }
                                     }}
+                                    chartEvents={[
+                                        {
+                                            eventName: 'select',
+                                            callback: ({ chartWrapper }) => {
+                                                const chart = chartWrapper.getChart();
+                                                const selection = chart.getSelection();
+                                                if (selection.length === 1) {
+                                                    const [selectedItem] = selection;
+                                                    const { row } = selectedItem;
+                                                    history.push(
+                                                        reverse(ROUTES.VIEW_PAPER, {
+                                                            resourceId: benchmarkDatasetPapers[selectedMetric][row].paper_id
+                                                        })
+                                                    );
+                                                }
+                                            }
+                                        }
+                                    ]}
                                 />
                             </CardBody>
                         </Card>
