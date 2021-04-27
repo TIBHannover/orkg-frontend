@@ -5,6 +5,8 @@ import { StyledActivity } from './styled';
 import moment from 'moment';
 import { Link } from 'react-router-dom';
 import { getResourceLink, getResourceTypeLabel } from 'utils';
+import { reverse } from 'named-urls';
+import ROUTES from 'constants/routes';
 import { truncate } from 'lodash';
 import PropTypes from 'prop-types';
 
@@ -23,7 +25,16 @@ const LastUpdatesBox = ({ researchFieldId, openModal, setOpenModal }) => {
                                 <StyledActivity key={`sss${activity.id}`} className="pl-3 pb-3">
                                     <div className="time">{moment(activity.created_at).fromNow()}</div>
                                     <div className="action">
-                                        {activity.profile?.id ? activity.profile.display_name : <i>Anonymous user</i>} added
+                                        {activity.profile?.id ? (
+                                            <>
+                                                <Link to={reverse(ROUTES.USER_PROFILE, { userId: activity.profile.id })}>
+                                                    {activity.profile.display_name}
+                                                </Link>
+                                            </>
+                                        ) : (
+                                            <i>Anonymous user</i>
+                                        )}{' '}
+                                        added
                                         {` a ${getResourceTypeLabel(activity.classes?.length > 0 ? activity.classes[0] : '')} `}
                                         <Link to={getResourceLink(activity.classes?.length > 0 ? activity.classes[0] : '', activity.id)}>
                                             {' '}
