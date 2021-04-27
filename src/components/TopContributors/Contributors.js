@@ -49,9 +49,9 @@ const Contributors = ({ researchFieldId }) => {
                                     <>
                                         {contributor.profile.display_name}
                                         <br />
-                                        {contributor.contributions !== null && (
+                                        {contributor?.counts && contributor.counts.total !== null && (
                                             <i>
-                                                {contributor.contributions} contribution{contributor.contributions > 1 ? 's' : ''}
+                                                {contributor.counts.total} contribution{contributor.counts.total > 1 ? 's' : ''}
                                             </i>
                                         )}
                                     </>

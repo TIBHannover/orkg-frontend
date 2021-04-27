@@ -16,22 +16,56 @@ export const getComparisonsCountByObservatoryId = id => {
     return submitGetRequest(`${statsUrl}${encodeURIComponent(id)}/observatoryComparisonsCount`);
 };
 
-export const getTopContributors = ({ researchFieldId = null, page = 0, items = 9999, sortBy = 'contributions', desc = true }) => {
-    const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
-    const params = queryString.stringify(
-        { page: page, size: items, sort },
-        {
-            skipNull: true,
-            skipEmptyString: true
-        }
-    );
-    return submitGetRequest(`${statsUrl}${researchFieldId ? `research-field/${researchFieldId}/` : ''}top/contributors?${params}`);
+/* 
+    for api/stats/top/contributors
+    we need to provide sort=contributions,desc to get sorted by contributions 
+    sort=contributions,desc 
+    By default it is not sorted
+*/
+export const getTopContributors = ({ researchFieldId = null, days = 30, page = 0, items = 9999, sortBy = 'contributions', desc = true }) => {
+    if (researchFieldId) {
+        const params = queryString.stringify(
+            { days },
+            {
+                skipNull: true,
+                skipEmptyString: true
+            }
+        );
+        return submitGetRequest(`${statsUrl}research-field/${researchFieldId}/top/contributors?${params}`).then(result => {
+            result = {
+                content: result,
+                last: true,
+                totalElements: result.length
+            };
+            return result;
+        });
+    } else {
+        const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
+        const params = queryString.stringify(
+            { page: page, size: items, sort },
+            {
+                skipNull: true,
+                skipEmptyString: true
+            }
+        );
+        return submitGetRequest(`${statsUrl}top/contributors?${params}`).then(result => {
+            return {
+                ...result,
+                content: result.content.map(c => {
+                    return {
+                        profile: c.profile,
+                        counts: { total: c.contributions }
+                    };
+                })
+            };
+        });
+    }
 };
 
 export const getChangelogs = ({ researchFieldId = null, page = 0, items = 9999, sortBy = 'createdAt', desc = true }) => {
-    const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
+    //const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
     const params = queryString.stringify(
-        { page: page, size: items, sort },
+        { page: page, size: items /*, sort */ },
         {
             skipNull: true,
             skipEmptyString: true
