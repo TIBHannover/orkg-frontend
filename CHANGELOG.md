@@ -5,6 +5,51 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [V0.36](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.35...V0.36) - 2021-04-26
+
+### Changes
+
+- fix: contributions order and rediction after delete [`#560`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/560)
+- style: increase z-index of the comparison menu [`#562`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/562)
+- style: alignment of checkboxes in 'select properties' modal [`#563`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/563)
+- feat: smart survey article writer [`#477`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/477)
+- fix: use value id instead of index as a key in StatementItemTemplate [`#558`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/558)
+- fix: Add properties if there is no template predicate [`#559`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/559)
+- fix: Edit author in AuthorsInput [`#561`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/561)
+
+---
+## [V0.35](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.34...V0.35) - 2021-04-21
+
+### Changes
+
+- page: Add video to curation grant call [`#557`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/557)
+
+---
+## [V0.34](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.33...V0.34) - 2021-04-16
+
+### Changes
+
+- help: Add a link to how to embed a video wiki page [`#555`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/555)
+- feat: add page Curation Grant [`#556`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/556)
+- fix: force LF line endings for Windows users [`#552`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/552)
+
+---
+## [V0.33](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.32...V0.33) - 2021-04-14
+
+### Changes
+
+- fix: List comparisons for a contribution [`#554`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/554)
+- fix: Mobile menu breaks on homepage [`#553`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/553)
+- ui: Observatory page improvements [`#545`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/545)
+- refactor: update theme variables [`#551`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/551)
+- update dependencies [`#547`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/547)
+- enhancement: improve mobile support is some views [`#543`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/543)
+- ui: Show all time contributors by default [`#544`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/544)
+- data: Add API to Data Access Page [`#546`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/546)
+- fix: Sorting comparisons on the home page [`#548`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/548)
+- geonames: use the property "same as" instead of "url" for the linking [`#541`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/541)
+
+---
 ## [V0.32](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.31...V0.32) - 2021-03-30
 
 ### Changes

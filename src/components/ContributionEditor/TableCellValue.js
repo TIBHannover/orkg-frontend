@@ -92,7 +92,7 @@ const TableCellValue = ({ value, index, setDisableCreate, propertyId }) => {
                 <Autocomplete
                     optionsClass={propertyId === PREDICATES.HAS_RESEARCH_PROBLEM ? CLASSES.PROBLEM : undefined}
                     entityType={ENTITIES.RESOURCE}
-                    excludeClasses={`${CLASSES.CONTRIBUTION},${CLASSES.PROBLEM},${CLASSES.CONTRIBUTION_TEMPLATE}`}
+                    excludeClasses={`${CLASSES.CONTRIBUTION},${CLASSES.PROBLEM},${CLASSES.TEMPLATE}`}
                     menuPortalTarget={document.body} // use a portal to ensure the menu isn't blocked by other elements
                     placeholder={propertyId === PREDICATES.HAS_RESEARCH_PROBLEM ? 'Enter a research problem' : 'Enter a resource'}
                     onChange={handleChangeAutocomplete}

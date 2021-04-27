@@ -26,6 +26,8 @@ import PaperMenuBar from 'components/ViewPaper/PaperHeaderBar/PaperMenuBar';
 import styled from 'styled-components';
 import { getPaperData_ViewPaper } from 'utils';
 import { PREDICATES, CLASSES, MISC } from 'constants/graphSettings';
+import { reverse } from 'named-urls';
+import ROUTES from 'constants/routes.js';
 
 export const EditModeHeader = styled(Container)`
     background-color: #80869b !important;
@@ -179,6 +181,9 @@ class ViewPaper extends Component {
                     this.setState({
                         contributions: newContributions
                     });
+                    this.props.history.push(
+                        reverse(ROUTES.VIEW_PAPER, { resourceId: this.props.viewPaper.paperResourceId, contributionId: newContributions[0].id })
+                    );
                 }
             );
             await deleteStatementById(statementId);
@@ -438,7 +443,8 @@ ViewPaper.propTypes = {
     viewPaper: PropTypes.object.isRequired,
     loadPaper: PropTypes.func.isRequired,
     setPaperAuthors: PropTypes.func.isRequired,
-    user: PropTypes.oneOfType([PropTypes.object, PropTypes.number])
+    user: PropTypes.oneOfType([PropTypes.object, PropTypes.number]),
+    history: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({

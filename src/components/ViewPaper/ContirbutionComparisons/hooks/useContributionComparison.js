@@ -64,11 +64,11 @@ function useContributionComparison(contributionId) {
         setComparisons([]);
         setHasNextPage(false);
         setIsLastPageReached(false);
-        setPage(1);
+        setPage(0);
     }, [contributionId]);
 
     useEffect(() => {
-        loadComparisons(1);
+        loadComparisons(0);
     }, [loadComparisons]);
 
     const handleLoadMore = () => {

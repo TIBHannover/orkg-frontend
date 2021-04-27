@@ -1,12 +1,20 @@
 import capitalize from 'capitalize';
-import queryString from 'query-string';
-import { flattenDepth, uniq, isString, find, flatten, last } from 'lodash';
-import rdf from 'rdf';
-import ROUTES from 'constants/routes';
-import { PREDICATES, MISC, CLASSES } from 'constants/graphSettings';
-import { reverse } from 'named-urls';
-import { PREDICATE_TYPE_ID, RESOURCE_TYPE_ID } from 'constants/misc';
 import { FILTER_TYPES } from 'constants/comparisonFilterTypes';
+import { CLASSES, MISC, PREDICATES } from 'constants/graphSettings';
+import { PREDICATE_TYPE_ID, RESOURCE_TYPE_ID } from 'constants/misc';
+import ROUTES from 'constants/routes';
+import { find, flatten, flattenDepth, isEqual, isString, last, uniq } from 'lodash';
+import { reverse } from 'named-urls';
+import queryString from 'query-string';
+import rdf from 'rdf';
+import { createLiteral as createLiteralApi } from 'services/backend/literals';
+import { createResource } from 'services/backend/resources';
+import {
+    createLiteralStatement,
+    createResourceStatement,
+    deleteStatementsByIds,
+    getStatementsByPredicateAndLiteral
+} from 'services/backend/statements';
 import slugifyString from 'slugify';
 
 export function hashCode(s) {
@@ -224,7 +232,7 @@ export const getPaperData = (resource, paperStatements) => {
         doi,
         doiResourceId,
         authorNames: authors.sort((a, b) => a.created_at.localeCompare(b.created_at)),
-        contributions: contributions.sort((a, b) => a.label.localeCompare(b.label)),
+        contributions: contributions.sort((a, b) => a.label.localeCompare(b.label)), // sort contributions ascending, so contribution 1, is actually the first one
         order,
         created_by: resource.created_by !== MISC.UNKNOWN_ID ? resource.created_by : null
     };
@@ -807,6 +815,75 @@ export function truncStringPortion(str, firstCharCount = str.length, endCharCoun
     }
 }
 
+// TODO: refactor the authors dialog and create a hook to put this function
+export async function saveAuthors({ prevAuthors, newAuthors, paperId }) {
+    if (isEqual(prevAuthors, newAuthors)) {
+        return null;
+    }
+
+    const statementsIds = [];
+    // remove all authors statement from reducer
+    for (const author of prevAuthors) {
+        statementsIds.push(author.statementId);
+    }
+    deleteStatementsByIds(statementsIds);
+
+    // Add all authors from the state
+    const authors = newAuthors;
+    for (const [i, author] of newAuthors.entries()) {
+        // create the author
+        if (author.orcid) {
+            // Create author with ORCID
+            // check if there's an author resource
+            const responseJson = await getStatementsByPredicateAndLiteral({
+                predicateId: PREDICATES.HAS_ORCID,
+                literal: author.orcid,
+                subjectClass: CLASSES.AUTHOR,
+                items: 1
+            });
+            if (responseJson.length > 0) {
+                // Author resource exists
+                const authorResource = responseJson[0];
+                const authorStatement = await createResourceStatement(paperId, PREDICATES.HAS_AUTHOR, authorResource.subject.id);
+                authors[i].statementId = authorStatement.id;
+                authors[i].id = authorResource.subject.id;
+                authors[i].class = authorResource.subject._class;
+                authors[i].classes = authorResource.subject.classes;
+            } else {
+                // Author resource doesn't exist
+                // Create resource author
+                const authorResource = await createResource(author.label, [CLASSES.AUTHOR]);
+                const createLiteral = await createLiteralApi(author.orcid);
+                await createLiteralStatement(authorResource.id, PREDICATES.HAS_ORCID, createLiteral.id);
+                const authorStatement = await createResourceStatement(paperId, PREDICATES.HAS_AUTHOR, authorResource.id);
+                authors[i].statementId = authorStatement.id;
+                authors[i].id = authorResource.id;
+                authors[i].class = authorResource._class;
+                authors[i].classes = authorResource.classes;
+            }
+        } else {
+            // Author resource exists
+            if (author.label !== author.id) {
+                const authorStatement = await createResourceStatement(paperId, PREDICATES.HAS_AUTHOR, author.id);
+                authors[i].statementId = authorStatement.id;
+                authors[i].id = author.id;
+                authors[i].class = author._class;
+                authors[i].classes = author.classes;
+            } else {
+                // Author resource doesn't exist
+                const newLiteral = await createLiteralApi(author.label);
+                // Create literal of author
+                const authorStatement = await createLiteralStatement(paperId, PREDICATES.HAS_AUTHOR, newLiteral.id);
+                authors[i].statementId = authorStatement.id;
+                authors[i].id = newLiteral.id;
+                authors[i].class = authorStatement.object._class;
+                authors[i].classes = authorStatement.object.classes;
+            }
+        }
+    }
+
+    return authors;
+}
 /**
  * Stringify filter type of comparison
  *
