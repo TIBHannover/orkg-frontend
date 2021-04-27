@@ -32,7 +32,9 @@ function Benchmark() {
         benchmarkDatasetPapers,
         metrics,
         selectedMetric,
-        setSelectedMetric
+        selectedMetricVisualization,
+        setSelectedMetric,
+        setSelectedMetricVisualization
     } = useBenchmarkDatasetPapers({
         datasetId: resourceId
     });
@@ -73,7 +75,9 @@ function Benchmark() {
             {
                 Header: 'Code',
                 accessor: 'code_urls',
-                Cell: cell => <CodeURLsTooltip urls={cell.row.original.code_urls} />
+                Cell: cell => (
+                    <CodeURLsTooltip id={cell.row.original.paper_id} title={cell.row.original.paper_title} urls={cell.row.original.code_urls} />
+                )
             }
         ],
         []
@@ -87,7 +91,15 @@ function Benchmark() {
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable(
         {
             columns,
-            data
+            data,
+            initialState: {
+                sortBy: [
+                    {
+                        id: 'score',
+                        desc: true
+                    }
+                ]
+            }
         },
         useSortBy
     );
@@ -183,8 +195,22 @@ function Benchmark() {
             )}
             {!isLoadingPapers && !isFailedLoadingPapers && (
                 <div>
-                    <Container>
-                        <h3 className="h5 flex-shrink-0 mt-4 mb-4">Visualizations</h3>
+                    <Container className="d-flex align-items-center mt-4 mb-4">
+                        <div className="d-flex flex-grow-1">
+                            <h1 className="h5 flex-shrink-0 mb-0">Visualizations</h1>
+                        </div>
+                        <UncontrolledButtonDropdown className="flex-shrink-0 ml-auto">
+                            <DropdownToggle caret size="sm" color="secondary">
+                                Metric: {selectedMetricVisualization}
+                            </DropdownToggle>
+                            <DropdownMenu>
+                                {metrics.map(m => (
+                                    <DropdownItem disabled={isLoading} onClick={() => setSelectedMetricVisualization(m)}>
+                                        {m}
+                                    </DropdownItem>
+                                ))}
+                            </DropdownMenu>
+                        </UncontrolledButtonDropdown>
                     </Container>
                     <Container className="p-0">
                         <Card>
@@ -195,9 +221,9 @@ function Benchmark() {
                                     chartType="ScatterChart"
                                     loader={<div>Loading Chart</div>}
                                     data={[
-                                        ['Year', selectedMetric, { type: 'string', role: 'tooltip', p: { html: true } }],
-                                        ...(benchmarkDatasetPapers[selectedMetric]
-                                            ? benchmarkDatasetPapers[selectedMetric].map(c => [
+                                        ['Year', selectedMetricVisualization, { type: 'string', role: 'tooltip', p: { html: true } }],
+                                        ...(benchmarkDatasetPapers[selectedMetricVisualization]
+                                            ? benchmarkDatasetPapers[selectedMetricVisualization].map(c => [
                                                   parseInt(c.paper_year),
                                                   c.score,
                                                   `<b>Paper</b>: ${c.paper_title}<br /> <b>Model</b>: ${c.model_name}<br /> <b>Score</b>: ${c.score}`
@@ -206,7 +232,7 @@ function Benchmark() {
                                     ]}
                                     options={{
                                         hAxis: { title: 'Year', format: '####' },
-                                        vAxis: { title: selectedMetric },
+                                        vAxis: { title: selectedMetricVisualization },
                                         legend: 'none',
                                         tooltip: { isHtml: true }
                                     }}
@@ -221,7 +247,7 @@ function Benchmark() {
                                                     const { row } = selectedItem;
                                                     history.push(
                                                         reverse(ROUTES.VIEW_PAPER, {
-                                                            resourceId: benchmarkDatasetPapers[selectedMetric][row].paper_id
+                                                            resourceId: benchmarkDatasetPapers[selectedMetricVisualization][row].paper_id
                                                         })
                                                     );
                                                 }
@@ -263,20 +289,20 @@ function Benchmark() {
                                         <tr {...headerGroup.getHeaderGroupProps()}>
                                             {headerGroup.headers.map(column => (
                                                 <th key={column.getHeaderProps(column.getSortByToggleProps()).key}>
-                                                    <div {...column.getHeaderProps(column.getSortByToggleProps())}>
+                                                    <div className="d-flex" {...column.getHeaderProps(column.getSortByToggleProps())}>
                                                         {column.render('Header')}
                                                         {/* Add a sort direction indicator */}
-                                                        <span>
+                                                        <div className="ml-1">
                                                             {column.isSorted ? (
                                                                 column.isSortedDesc ? (
                                                                     <Icon icon={faSortUp} className="ml-1" />
                                                                 ) : (
-                                                                    <Icon icon={faSortDown} className="ml-1" />
+                                                                    <Icon icon={faSortDown} />
                                                                 )
                                                             ) : (
-                                                                <div className="ml-1" style={{ width: '30px' }} />
+                                                                ''
                                                             )}
-                                                        </span>
+                                                        </div>
                                                     </div>
                                                 </th>
                                             ))}
