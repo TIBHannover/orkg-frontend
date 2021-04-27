@@ -67,6 +67,11 @@ export default function ProvenanceBox(props) {
                                                     />
                                                 </Link>
                                             )}
+                                            <p>
+                                                <Link to={reverse(ROUTES.ORGANIZATION, { id: props.observatoryInfo.organization.id })}>
+                                                    {props.observatoryInfo.organization.name}
+                                                </Link>
+                                            </p>
                                         </StyledItemProvenanceBox>
 
                                         <StyledItemProvenanceBox>
