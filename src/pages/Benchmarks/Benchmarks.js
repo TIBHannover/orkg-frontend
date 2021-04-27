@@ -1,5 +1,5 @@
 import React from 'react';
-import { faSpinner, faAngleDoubleDown } from '@fortawesome/free-solid-svg-icons';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import BenchmarkCard from 'components/BenchmarkCard/BenchmarkCard';
 import useBenchmarks from 'components/Benchmarks/hooks/useBenchmarks';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -31,7 +31,7 @@ function Benchmarks() {
         setFilterLabel(e.target.value);
     };
 
-    const { benchmarks, isLoadingBenchmarks, hasNextPage, isLastPageReached, loadMoreBenchmarks } = useBenchmarks();
+    const { benchmarks, isLoadingBenchmarks, hasNextPage, isLastPageReached } = useBenchmarks();
 
     return (
         <>
