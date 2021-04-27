@@ -207,61 +207,6 @@ export const getPaperData_ViewPaper = (paperResource, paperStatements) => {
 };
 
 /**
- * @param {*} contributionStatement
- * @param {*} contributionStatements
- */
-export const getBenchmarkData = (contributionStatement, contributionStatements) => {
-    //const modelName = getModelName(contributionStatement);
-    // change the variables ... basically we want datasetName - (metricName, score) and there can be several such
-    const benchmarkArray = getEvaluation(contributionStatements);
-    //return modelName, benchmarkArray;
-    return benchmarkArray;
-};
-
-/**
- * Move later to the bottom
- * @param {*} paperStatement
- */
-//eslint-disable-next-line
-function getModelName(contributionStatement) {
-    let model = contributionStatement.filter(statement => statement.predicate.id === PREDICATES.HAS_MODEL);
-    //let modelId = 0;
-    if (model.length > 0) {
-        //modelId = model[0].object.id;
-        model = model[0].object.label;
-    } else {
-        model = '';
-    }
-
-    return model;
-}
-
-function getEvaluation(contributionStatements) {
-    const benchmarkStatements = contributionStatements.filter(statement => statement.predicate.id === PREDICATES.HAS_BENCHMARK);
-    const benchmarkArray = [];
-
-    if (benchmarkStatements.length > 0) {
-        for (const benchmarkStatement of benchmarkStatements) {
-            const datasetName = benchmarkStatement.find(statement => statement.predicate.id === PREDICATES.HAS_DATASET);
-
-            const evaluationStatements = benchmarkStatement.filter(statement => statement.predicate.id === PREDICATES.HAS_EVALUATION);
-            const evaluationArray = [];
-            if (evaluationStatements.length > 0) {
-                for (const evaluationStatement of evaluationStatements) {
-                    const metricName = evaluationStatement.filter(statement => statement.predicate.id === PREDICATES.HAS_METRIC);
-                    const score = evaluationStatement.filter(statement => statement.predicate.id === PREDICATES.HAS_VALUE);
-                    //the score statement has a literal object
-                    evaluationArray.push({ ...metricName.object.label, score });
-                }
-            }
-            benchmarkArray.push({ ...datasetName, evaluationArray });
-        }
-    }
-
-    return benchmarkArray;
-}
-
-/**
  * Parse paper statements and return a a paper object
  * @param {String} id
  * @param {String} label
