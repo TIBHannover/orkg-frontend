@@ -1,11 +1,10 @@
 //Adapted from https://github.com/rakumairu/simple-react-carousel/blob/part-3/src/components/Carousel/Carousel.js
 import { useEffect, useState } from 'react';
-import { Carousel, CarouselItem, Button, CarouselIndicators, Card, CardBody, CardFooter, CardTitle, CardSubtitle } from 'reactstrap';
+import { Card, CardBody } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import ROUTES from 'constants/routes';
 import styled from 'styled-components';
 import { reverse } from 'named-urls';
-import ContentLoader from 'react-content-loader';
 import PropTypes from 'prop-types';
 import './benchmarkscarousel.css';
 
@@ -103,15 +102,15 @@ function BenchmarksCarousel(props) {
                                     >
                                         <CardBody>
                                             <div>
-                                                <div className="benchmarkName">{research_problem_benchmark.name}</div>
+                                                <div className="benchmarkName">{research_problem_benchmark.label}</div>
 
                                                 <div className="benchmarkStats text-muted">
                                                     {/*Models: <b>{props.research_problem_benchmark.total_models}</b> <br />
                                                     Papers: <b>{props.research_problem_benchmark.total_papers}</b> <br />
                                                     Code: <b>{props.research_problem_benchmark.total_codes}</b> */}
-                                                    Models: <b>{research_problem_benchmark.numModels}</b> <br />
-                                                    Papers: <b>{research_problem_benchmark.numPapers}</b> <br />
-                                                    Code: <b>{research_problem_benchmark.numCode}</b>
+                                                    Models: <b>{research_problem_benchmark.total_models}</b> <br />
+                                                    Papers: <b>{research_problem_benchmark.total_papers}</b> <br />
+                                                    Code: <b>{research_problem_benchmark.total_codes}</b>
                                                 </div>
                                             </div>
                                         </CardBody>

@@ -6,7 +6,7 @@ import Papers from 'components/ResearchProblem/Papers';
 import ResearchProblemHeader from 'components/ResearchProblem/ResearchProblemHeader';
 function ResearchProblem(props) {
     const { researchProblemId } = props.match.params;
-    const [researchProblemBenchmarksData, isLoadingData] = useResearchProblemBenchmarks();
+    const { researchProblemBenchmarksData } = useResearchProblemBenchmarks({ researchProblemId });
     return (
         <div>
             <ResearchProblemHeader id={researchProblemId} />
@@ -16,25 +16,6 @@ function ResearchProblem(props) {
             <Container>
                 <BenchmarksCarousel research_problem_benchmarks={researchProblemBenchmarksData} show={6} />
             </Container>
-            {/*
-                    <Container>
-                        <Row>
-                            {researchProblemBenchmarksData.length > 0 &&
-                                researchProblemBenchmarksData.map(researchProblemBenchmarksData => {
-                                    return (
-                                        researchProblemBenchmarksData && (
-                                            //old section card which causes extra research problems to spill into the next line                         
-                                            <BenchmarkSectionCard
-                                                //this researchProblemBenchmarksData.id is actually the research problem id of the page
-                                                key={`pc${researchProblemId}`}
-                                                research_problem_benchmark={researchProblemBenchmarksData}
-                                            />
-                                        )
-                                    );
-                                })}
-                        </Row>
-                    </Container>
-                    */}
             <Papers id={researchProblemId} boxShadow />
         </div>
     );

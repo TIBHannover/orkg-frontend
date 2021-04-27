@@ -31,7 +31,7 @@ function Benchmarks() {
         setFilterLabel(e.target.value);
     };
 
-    const [benchmarks, isLoadingBenchmarks, hasNextPage, isLastPageReached, loadMoreBenchmarks] = useBenchmarks();
+    const { benchmarks, isLoadingBenchmarks, hasNextPage, isLastPageReached, loadMoreBenchmarks } = useBenchmarks();
 
     return (
         <>
@@ -43,7 +43,7 @@ function Benchmarks() {
                     <i>Benchmarks</i> organize the state-of-the-art empirical research within research fields and are powered in part by automated
                     information extraction within a human-in-the-loop curation model.{' '}
                 </p>
-                <p>
+                <div>
                     Further information about benchmarks can be also found in the{' '}
                     <a href="https://gitlab.com/TIBHannover/orkg/orkg-frontend/-/wikis/Benchmarks" target="_blank" rel="noopener noreferrer">
                         ORKG wiki
@@ -57,7 +57,7 @@ function Benchmarks() {
                             </a>
                         </small>
                     </SubTitle>
-                </p>
+                </div>
                 <Form className="mb-3">
                     <Row form>
                         <Col md={6}>
@@ -71,11 +71,10 @@ function Benchmarks() {
                 <Row noGutters={true}>
                     <Col md={12} sm={12} className="d-flex">
                         <StyledResearchFieldWrapper className="row flex-grow-1 justify-content-center">
-                            {benchmarks.map(benchmark => {
-                                return (
-                                    <BenchmarkCard key={`${benchmark.research_field.label}-${benchmark.id}`} research_problem_benchmark={benchmark} />
-                                );
-                            })}
+                            {benchmarks?.length > 0 &&
+                                benchmarks.map(benchmark => {
+                                    return <BenchmarkCard key={`${benchmark.id}`} benchmark={benchmark} />;
+                                })}
                         </StyledResearchFieldWrapper>
                     </Col>
                 </Row>
@@ -85,11 +84,7 @@ function Benchmarks() {
                         <Icon icon={faSpinner} spin /> Loading
                     </div>
                 )}
-                {!isLoadingBenchmarks && hasNextPage && !isLastPageReached && (
-                    <div style={{ cursor: 'pointer' }} className="text-center" action onClick={!isLoadingBenchmarks ? loadMoreBenchmarks : undefined}>
-                        <Icon icon={faAngleDoubleDown} /> Load more benchmarks
-                    </div>
-                )}
+
                 {!hasNextPage && isLastPageReached && <div className="text-center mt-4 mb-4">You have reached the last page.</div>}
             </Container>
         </>

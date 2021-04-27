@@ -31,37 +31,27 @@ const BenchmarkCardStyled = styled.div`
 function BenchmarkCard(props) {
     return (
         <BenchmarkCardStyled className="col-3 mb-4">
-            {!props.research_problem_benchmark.logo && (
-                <Card className="h-100">
-                    <Link
-                        //to={reverse(ROUTES.RESEARCH_PROBLEM, { researchProblemId: props.research_problem_benchmark[research_problem].id })}
-                        to={reverse(ROUTES.RESEARCH_PROBLEM, { researchProblemId: props.research_problem_benchmark.id })}
-                        style={{ textDecoration: 'none' }}
-                    >
-                        <CardBody>
-                            <div className="mt-2">
-                                {/* <div className="researchProblemName">{props.research_problem_benchmark[research_problem].label}</div> */}
-                                <div className="researchProblemName">{props.research_problem_benchmark.name}</div>
+            <Card className="h-100">
+                <Link to={reverse(ROUTES.RESEARCH_PROBLEM, { researchProblemId: props.benchmark.id })} style={{ textDecoration: 'none' }}>
+                    <CardBody>
+                        <div className="mt-2">
+                            <div className="researchProblemName">{props.benchmark.label}</div>
 
-                                <div className="researchProblemStats text-muted">
-                                    {/*Papers: <b>{props.research_problem_benchmark.total_papers}</b> <br />
-                                    Datasets: <b>{props.research_problem_benchmark.total_datasets}</b> <br />
-                                    Code: <b>{props.research_problem_benchmark.total_codes}</b>*/}
-                                    Papers: <b>{props.research_problem_benchmark.numPapers}</b> <br />
-                                    Datasets: <b>{props.research_problem_benchmark.numDatasets}</b> <br />
-                                    Code: <b>{props.research_problem_benchmark.numCode}</b>
-                                </div>
+                            <div className="researchProblemStats text-muted">
+                                Papers: <b>{props?.benchmark.numPapers}</b> <br />
+                                Datasets: <b>{props?.benchmark.numDatasets}</b> <br />
+                                Code: <b>{props?.benchmark.numCode}</b>
                             </div>
-                        </CardBody>
-                    </Link>
-                </Card>
-            )}
+                        </div>
+                    </CardBody>
+                </Link>
+            </Card>
         </BenchmarkCardStyled>
     );
 }
 
 BenchmarkCard.propTypes = {
-    research_problem_benchmark: PropTypes.object.isRequired
+    benchmark: PropTypes.object.isRequired
 };
 
 export default BenchmarkCard;

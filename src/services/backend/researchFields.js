@@ -15,14 +15,6 @@ export const getResearchProblemsByResearchFieldIdCountingPapers = ({ id, page = 
     return submitGetRequest(`${fieldsUrl}${encodeURIComponent(id)}/problems?${params}`);
 };
 
-//the following service was discussed in the following issue
-//https://gitlab.com/TIBHannover/orkg/orkg-backend/-/issues/263
-
-//# Obtain the list of research fields with benchmarks:
-//$ curl --silent http://localhost:8080/api/research-fields/benchmarks | jq .
-
-export const getResearchFieldsWithBenchmarks = submitGetRequest(`${fieldsUrl}/benchmarks$`);
-
 export const getComparisonsByResearchFieldId = ({ id, page = 0, items = 9999, sortBy = 'created_at', desc = true, subfields = true }) => {
     const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
     const params = queryString.stringify(

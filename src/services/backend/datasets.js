@@ -14,3 +14,10 @@ export const datasetsUrl = `${url}datasets/`;
 export const getDatasetBenchmarksByDatasetId = resourceId => {
     return submitGetRequest(`${datasetsUrl}${encodeURIComponent(resourceId)}/summary`);
 };
+
+/**
+ * Get the datasets for a research problem: (a.k.a. Benchmark Summary)
+ * */
+export const getDatasetsBenchmarksByResearchProblemId = resourceId => {
+    return submitGetRequest(`${datasetsUrl}research-problem/${encodeURIComponent(resourceId)}`);
+};
