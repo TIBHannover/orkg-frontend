@@ -71,8 +71,10 @@ export default function SignUp() {
                     setIsLoading(false);
                     if (password !== matchingPassword) {
                         setErrors({ message: 'Your password and confirmation password do not match.' });
-                    } else {
+                    } else if (e.message === '') {
                         setErrors({ message: 'Something went wrong, please try again' });
+                    } else {
+                        setErrors(e);
                     }
                 });
         } else {
