@@ -6,7 +6,7 @@ import { registerWithEmailAndPassword, signInWithEmailAndPassword, getUserInform
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { useDispatch } from 'react-redux';
-import { get_error_message } from 'utils';
+import { get_error_message, checkCookie } from 'utils';
 import ROUTES from 'constants/routes';
 import { Cookies } from 'react-cookie';
 import env from '@beam-australia/react-env';
@@ -60,11 +60,15 @@ export default function SignUp() {
                             setErrors(null);
                         })
                         .catch(e => {
-                            cookies.remove('token', { path: env('PUBLIC_URL') });
-                            cookies.remove('token_expires_in', { path: env('PUBLIC_URL') });
-                            setIsLoading(false);
-
-                            setErrors({ message: 'Something went wrong, please try again' });
+                            if (checkCookie()) {
+                                cookies.remove('token', { path: env('PUBLIC_URL') });
+                                cookies.remove('token_expires_in', { path: env('PUBLIC_URL') });
+                                setIsLoading(false);
+                                setErrors({ message: 'Something went wrong, please try again' });
+                            } else {
+                                setIsLoading(false);
+                                setErrors({ message: 'Cookies must be enabled to sign in' });
+                            }
                         });
                 })
                 .catch(e => {
