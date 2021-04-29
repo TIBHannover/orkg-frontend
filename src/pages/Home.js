@@ -39,7 +39,12 @@ export default function Home() {
                 The ORKG <strong>Curation Grant Competition</strong> has launched. Apply until 31st of May 2021.{' '}
                 <Link to={ROUTES.CURATION_CALL}>Find out more</Link>
             </Alert>
-
+            {Date.now() < new Date('may 13, 2021 00:00:00') && (
+                <Alert color="info" className="box mt-2">
+                    <strong>Webinar:</strong> Open Research Knowledge Graph - 11th May 2021, 14:00 - 15:00 (CEST).{' '}
+                    <Link to={ROUTES.WEBINAR_MAY_11}>More information</Link>
+                </Alert>
+            )}
             <Row>
                 <Col md="12">
                     <div className="box rounded-lg p-3">
