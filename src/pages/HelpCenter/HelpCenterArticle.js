@@ -1,4 +1,5 @@
 import CheckSlug from 'components/CheckSlug/CheckSlug';
+import PageContentLoader from 'components/Page/PageContentLoader';
 import usePage from 'components/Page/usePage';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
@@ -34,7 +35,7 @@ const HelpCenterArticle = () => {
             </Container>
 
             <Container className="box rounded pt-4 pb-4 pl-5 pr-5">
-                {isLoading && 'Loading...'}
+                {isLoading && <PageContentLoader />}
 
                 {!isLoading && page && (
                     <>

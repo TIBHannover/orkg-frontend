@@ -1,4 +1,5 @@
 import CheckSlug from 'components/CheckSlug/CheckSlug';
+import PageContentLoader from 'components/Page/PageContentLoader';
 import usePage from 'components/Page/usePage';
 import ROUTES from 'constants/routes';
 import NotFound from 'pages/NotFound';
@@ -77,7 +78,7 @@ const About = () => {
                     </>
                 )}
 
-                {isLoading && 'Loading...'}
+                {isLoading && <PageContentLoader />}
 
                 {!isLoading && page?.content}
             </Container>

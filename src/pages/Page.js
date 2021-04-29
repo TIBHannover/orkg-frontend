@@ -1,3 +1,4 @@
+import PageContentLoader from 'components/Page/PageContentLoader';
 import usePage from 'components/Page/usePage';
 import NotFound from 'pages/NotFound';
 import { useEffect } from 'react';
@@ -28,7 +29,7 @@ const Page = () => {
             </Container>
 
             <Container className="box rounded pt-4 pb-4 pl-5 pr-5">
-                {isLoading && 'Loading...'}
+                {isLoading && <PageContentLoader />}
 
                 {!isLoading && page?.content}
             </Container>
