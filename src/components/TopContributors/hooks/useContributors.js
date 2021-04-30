@@ -43,7 +43,7 @@ function useContributors({ researchFieldId, pageSize = 30, initialSort = 'top', 
 
             contributorsCall
                 .then(result => {
-                    setContributors(prevResources => orderBy([...prevResources, ...result.content], ['contributions'], ['desc']));
+                    setContributors(prevResources => orderBy([...prevResources, ...(result.content || [])], ['contributions'], ['desc']));
                     setIsLoading(false);
                     setHasNextPage(!result.last);
                     setIsLastPageReached(result.last);

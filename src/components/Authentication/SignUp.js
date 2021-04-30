@@ -1,13 +1,12 @@
-import { Component } from 'react';
+import { useState } from 'react';
 import { Button, Form, FormGroup, Input, Label, Alert, FormFeedback, CustomInput } from 'reactstrap';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import { toggleAuthDialog, updateAuth } from 'actions/auth';
 import { Link } from 'react-router-dom';
 import { registerWithEmailAndPassword, signInWithEmailAndPassword, getUserInformation } from 'services/backend/users';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { get_error_message } from 'utils';
+import { useDispatch } from 'react-redux';
+import { get_error_message, checkCookie } from 'utils';
 import ROUTES from 'constants/routes';
 import { Cookies } from 'react-cookie';
 import env from '@beam-australia/react-env';
@@ -15,47 +14,24 @@ import InfoSheet from 'assets/pdf/infosheet-data-protection.pdf';
 
 const cookies = new Cookies();
 
-class SignUp extends Component {
-    constructor(props) {
-        super(props);
+export default function SignUp() {
+    const dispatch = useDispatch();
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [matchingPassword, setMatchingPassword] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+    const [errors, setErrors] = useState(null);
+    const [termsConditionIsChecked, setTermsConditionIsChecked] = useState(false);
+    const [dataProtectionIsChecked, setDataProtectionIsChecked] = useState(false);
 
-        this.state = {
-            name: '',
-            email: '',
-            password: '',
-            matching_password: '',
-            loading: false,
-            errors: null,
-            termsConditionIsChecked: false,
-            dataProtectionIsChecked: false
-        };
-    }
-
-    handleInputChange = e => {
-        this.setState({
-            [e.target.name]: e.target.value
-        });
-    };
-
-    handleCheckBoxChange = e => {
-        this.setState({
-            [e.target.id]: e.target.checked
-        });
-    };
-
-    signUp = async e => {
+    const signUp = async e => {
         e.preventDefault();
-        const { email, password, matching_password, name, termsConditionIsChecked, dataProtectionIsChecked } = this.state;
-
-        this.setState({
-            loading: true,
-            errors: null
-        });
-
+        setIsLoading(true);
         let userToken;
         let token_expires_in;
         if (termsConditionIsChecked && dataProtectionIsChecked) {
-            registerWithEmailAndPassword(email, password, matching_password, name)
+            registerWithEmailAndPassword(email, password, matchingPassword, name)
                 .then(() => {
                     signInWithEmailAndPassword(email, password)
                         .then(token => {
@@ -67,171 +43,162 @@ class SignUp extends Component {
                             //window.location.reload();
                         })
                         .then(userData => {
-                            this.props.updateAuth({
-                                user: {
-                                    displayName: userData.display_name,
-                                    id: userData.id,
-                                    token: userToken,
-                                    email: userData.email,
-                                    tokenExpire: token_expires_in,
-                                    isCurationAllowed: userData.is_curation_allowed
-                                }
-                            });
-                            this.props.toggleAuthDialog();
-                            this.setState({ loading: false, errors: null });
+                            dispatch(
+                                updateAuth({
+                                    user: {
+                                        displayName: userData.display_name,
+                                        id: userData.id,
+                                        token: userToken,
+                                        email: userData.email,
+                                        tokenExpire: token_expires_in,
+                                        isCurationAllowed: userData.is_curation_allowed
+                                    }
+                                })
+                            );
+                            dispatch(toggleAuthDialog());
+                            setIsLoading(false);
+                            setErrors(null);
                         })
                         .catch(e => {
-                            cookies.remove('token', { path: env('PUBLIC_URL') });
-                            cookies.remove('token_expires_in', { path: env('PUBLIC_URL') });
-                            this.setState({ loading: false, errors: { message: 'Something went wrong, please try again' } });
+                            if (checkCookie()) {
+                                cookies.remove('token', { path: env('PUBLIC_URL') });
+                                cookies.remove('token_expires_in', { path: env('PUBLIC_URL') });
+                                setIsLoading(false);
+                                setErrors({ message: 'Something went wrong, please try again' });
+                            } else {
+                                setIsLoading(false);
+                                setErrors({ message: 'Cookies must be enabled to sign in' });
+                            }
                         });
                 })
                 .catch(e => {
-                    this.setState({
-                        loading: false,
-                        errors: e
-                    });
+                    setIsLoading(false);
+                    if (password !== matchingPassword) {
+                        setErrors({ message: 'Your password and confirmation password do not match.' });
+                    } else if (e.message === '') {
+                        setErrors({ message: 'Something went wrong, please try again' });
+                    } else {
+                        setErrors(e);
+                    }
                 });
         } else {
-            this.setState({ loading: false, errors: { message: 'The Special Conditions and the data processing by TIB have to be accepted.' } });
+            setIsLoading(false);
+            setErrors({ message: 'The Special Conditions and the data processing by TIB have to be accepted.' });
         }
     };
 
-    render() {
-        return (
-            <>
-                <Form className="pl-3 pr-3 pt-2" onSubmit={this.signUp}>
-                    {Boolean(get_error_message(this.state.errors)) && <Alert color="danger">{get_error_message(this.state.errors)}</Alert>}
-                    <FormGroup>
-                        <Label for="name">Display name</Label>
-                        <Input
-                            onChange={this.handleInputChange}
-                            value={this.state.name}
-                            type="text"
-                            name="name"
-                            id="name"
-                            placeholder="Name"
-                            invalid={Boolean(get_error_message(this.state.errors, 'display_name'))}
-                        />
-                        {Boolean(get_error_message(this.state.errors, 'display_name')) && (
-                            <FormFeedback>{get_error_message(this.state.errors, 'display_name')}</FormFeedback>
-                        )}
-                    </FormGroup>
-                    <FormGroup>
-                        <Label for="Email">Email address</Label>
-                        <Input
-                            onChange={this.handleInputChange}
-                            value={this.state.email}
-                            type="text"
-                            name="email"
-                            id="Email"
-                            placeholder="Email address"
-                            invalid={Boolean(get_error_message(this.state.errors, 'email'))}
-                        />
-                        {Boolean(get_error_message(this.state.errors, 'email')) && (
-                            <FormFeedback>{get_error_message(this.state.errors, 'email')}</FormFeedback>
-                        )}
-                    </FormGroup>
-                    <FormGroup>
-                        <Label for="Password">Password</Label>
-                        <Input
-                            onChange={this.handleInputChange}
-                            value={this.state.password}
-                            type="password"
-                            name="password"
-                            id="Password"
-                            placeholder="Password"
-                            invalid={Boolean(get_error_message(this.state.errors, 'password'))}
-                        />
-                        {Boolean(get_error_message(this.state.errors, 'password')) && (
-                            <FormFeedback>{get_error_message(this.state.errors, 'password')}</FormFeedback>
-                        )}
-                    </FormGroup>
-                    <FormGroup>
-                        <Label for="matching_password">Confirm Password</Label>
-                        <Input
-                            onChange={this.handleInputChange}
-                            value={this.state.matching_password}
-                            type="password"
-                            name="matching_password"
-                            id="matching_password"
-                            placeholder="Confirm password"
-                            invalid={Boolean(get_error_message(this.state.errors, 'matching_password'))}
-                        />
-                        {Boolean(get_error_message(this.state.errors, 'matching_password')) && (
-                            <FormFeedback>{get_error_message(this.state.errors, 'matching_password')}</FormFeedback>
-                        )}
-                    </FormGroup>
-                    <FormGroup className="mb-0" style={{ fontSize: '90%' }}>
-                        <CustomInput
-                            type="checkbox"
-                            id="termsConditionIsChecked"
-                            onChange={this.handleCheckBoxChange}
-                            checked={this.state.termsConditionIsChecked}
-                            label={
-                                <>
-                                    I accept the{' '}
-                                    <Link to={ROUTES.TERMS_OF_USE} target="_blank">
-                                        Special Conditions ORKG
-                                    </Link>
-                                </>
-                            }
-                        />
-                    </FormGroup>
-                    <FormGroup style={{ fontSize: '90%' }}>
-                        <CustomInput
-                            type="checkbox"
-                            id="dataProtectionIsChecked"
-                            onChange={this.handleCheckBoxChange}
-                            checked={this.state.dataProtectionIsChecked}
-                            label={
-                                <>
-                                    I agree to the processing of my personal data provided here by Technische Informationsbibliothek (TIB). In
-                                    accordance with the{' '}
-                                    <Link to={ROUTES.DATA_PROTECTION} target="_blank">
-                                        data protection declaration
-                                    </Link>{' '}
-                                    as well as the{' '}
-                                    <a href={InfoSheet} target="_blank" rel="noopener noreferrer">
-                                        info sheet data protection
-                                    </a>
-                                    , the data is processed exclusively by TIB in order to provide services of our platform.
-                                </>
-                            }
-                        />
-                    </FormGroup>
-                    <Button
-                        type="submit"
-                        color="primary"
-                        className="mt-4 mb-2"
-                        block
-                        disabled={this.state.loading || !this.state.dataProtectionIsChecked || !this.state.termsConditionIsChecked}
-                    >
-                        {!this.state.loading ? (
-                            'Sign up'
-                        ) : (
-                            <span>
-                                <Icon icon={faSpinner} spin /> Loading
-                            </span>
-                        )}
-                    </Button>
-                </Form>
-            </>
-        );
-    }
+    return (
+        <>
+            <Form className="pl-3 pr-3 pt-2" onSubmit={signUp}>
+                {Boolean(get_error_message(errors)) && <Alert color="danger">{get_error_message(errors)}</Alert>}
+                <FormGroup>
+                    <Label for="name">Display name</Label>
+                    <Input
+                        onChange={e => setName(e.target.value)}
+                        value={name}
+                        type="text"
+                        name="name"
+                        id="name"
+                        placeholder="Name"
+                        invalid={Boolean(get_error_message(errors, 'display_name'))}
+                    />
+                    {Boolean(get_error_message(errors, 'display_name')) && <FormFeedback>{get_error_message(errors, 'display_name')}</FormFeedback>}
+                </FormGroup>
+                <FormGroup>
+                    <Label for="Email">Email address</Label>
+                    <Input
+                        onChange={e => setEmail(e.target.value)}
+                        value={email}
+                        type="text"
+                        name="email"
+                        id="Email"
+                        placeholder="Email address"
+                        invalid={Boolean(get_error_message(errors, 'email'))}
+                    />
+                    {Boolean(get_error_message(errors, 'email')) && <FormFeedback>{get_error_message(errors, 'email')}</FormFeedback>}
+                </FormGroup>
+                <FormGroup>
+                    <Label for="Password">Password</Label>
+                    <Input
+                        onChange={e => setPassword(e.target.value)}
+                        value={password}
+                        type="password"
+                        name="password"
+                        id="Password"
+                        placeholder="Password"
+                        invalid={Boolean(get_error_message(errors, 'password'))}
+                    />
+                    {Boolean(get_error_message(errors, 'password')) && <FormFeedback>{get_error_message(errors, 'password')}</FormFeedback>}
+                </FormGroup>
+                <FormGroup>
+                    <Label for="matching_password">Confirm Password</Label>
+                    <Input
+                        onChange={e => setMatchingPassword(e.target.value)}
+                        value={matchingPassword}
+                        type="password"
+                        name="matching_password"
+                        id="matching_password"
+                        placeholder="Confirm password"
+                        invalid={Boolean(get_error_message(errors, 'matching_password'))}
+                    />
+                    {Boolean(get_error_message(errors, 'matching_password')) && (
+                        <FormFeedback>{get_error_message(errors, 'matching_password')}</FormFeedback>
+                    )}
+                </FormGroup>
+                <FormGroup className="mb-0" style={{ fontSize: '90%' }}>
+                    <CustomInput
+                        type="checkbox"
+                        id="termsConditionIsChecked"
+                        onChange={e => setTermsConditionIsChecked(e.target.checked)}
+                        checked={termsConditionIsChecked}
+                        label={
+                            <>
+                                I accept the{' '}
+                                <Link to={ROUTES.TERMS_OF_USE} target="_blank">
+                                    Special Conditions ORKG
+                                </Link>
+                            </>
+                        }
+                    />
+                </FormGroup>
+                <FormGroup style={{ fontSize: '90%' }}>
+                    <CustomInput
+                        type="checkbox"
+                        id="dataProtectionIsChecked"
+                        onChange={e => setDataProtectionIsChecked(e.target.checked)}
+                        checked={dataProtectionIsChecked}
+                        label={
+                            <>
+                                I agree to the processing of my personal data provided here by Technische Informationsbibliothek (TIB). In accordance
+                                with the{' '}
+                                <Link to={ROUTES.DATA_PROTECTION} target="_blank">
+                                    data protection declaration
+                                </Link>{' '}
+                                as well as the{' '}
+                                <a href={InfoSheet} target="_blank" rel="noopener noreferrer">
+                                    info sheet data protection
+                                </a>
+                                , the data is processed exclusively by TIB in order to provide services of our platform.
+                            </>
+                        }
+                    />
+                </FormGroup>
+                <Button
+                    type="submit"
+                    color="primary"
+                    className="mt-4 mb-2"
+                    block
+                    disabled={isLoading || !dataProtectionIsChecked || !termsConditionIsChecked}
+                >
+                    {!isLoading ? (
+                        'Sign up'
+                    ) : (
+                        <span>
+                            <Icon icon={faSpinner} spin /> Loading
+                        </span>
+                    )}
+                </Button>
+            </Form>
+        </>
+    );
 }
-
-SignUp.propTypes = {
-    updateAuth: PropTypes.func.isRequired,
-    toggleAuthDialog: PropTypes.func.isRequired
-};
-
-const mapDispatchToProps = dispatch => ({
-    updateAuth: data => dispatch(updateAuth(data)),
-    toggleAuthDialog: () => dispatch(toggleAuthDialog())
-});
-
-export default connect(
-    null,
-    mapDispatchToProps
-)(SignUp);
