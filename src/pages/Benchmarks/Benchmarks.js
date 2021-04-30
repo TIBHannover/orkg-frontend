@@ -1,11 +1,13 @@
 import { useState } from 'react';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import ContentLoader from 'react-content-loader';
+import { faSearch, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import BenchmarkCard from 'components/BenchmarkCard/BenchmarkCard';
 import useBenchmarks from 'components/Benchmarks/hooks/useBenchmarks';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import PWC_LOGO from 'assets/img/poweredby/papers-with-code.png';
 import { Row, Container } from 'reactstrap';
 import styled from 'styled-components';
+import { SearchStyled, InputStyled, SearchButtonStyled } from 'components/styled';
 
 const ObservatoryBoxStyled = styled.div`
     float: right;
@@ -23,17 +25,26 @@ const ObservatoryBoxStyled = styled.div`
 `;
 
 function Benchmarks() {
-    const [filterLabel, setFilterLabel] = useState('');
-    const handleLabelFilter = e => {
-        setFilterLabel(e.target.value);
-    };
-
     const { benchmarks, isLoadingBenchmarks } = useBenchmarks();
+    const [filter, setFilter] = useState('');
 
     return (
         <>
-            <Container>
-                <h1 className="h4 mt-4 mb-4">View all benchmarks</h1>
+            <Container className="d-flex align-items-center">
+                <div className="d-flex flex-grow-1 mt-4 mb-4">
+                    <h1 className="h4">View all benchmarks</h1>
+                    <div className="text-muted ml-3 mt-1">
+                        {benchmarks.length === 0 && isLoadingBenchmarks ? <Icon icon={faSpinner} spin /> : benchmarks.length} benchmarks{' '}
+                        {!!filter && `(${benchmarks.filter(b => b.label.toLowerCase().includes(filter.toLowerCase())).length} filtered)`}
+                    </div>
+                </div>
+
+                <SearchStyled className="btn btn-secondary btn-sm active">
+                    <InputStyled type="text" placeholder="Search benchmarks..." value={filter} onChange={e => setFilter(e.target.value)} />
+                    <SearchButtonStyled size="sm" className="px-3" color="link">
+                        <Icon icon={faSearch} />
+                    </SearchButtonStyled>
+                </SearchStyled>
             </Container>
             <Container className="box rounded p-4 clearfix">
                 <div>
@@ -54,18 +65,39 @@ function Benchmarks() {
                         ORKG wiki
                     </a>
                 </div>
-
+                <hr />
                 <Row className="mt-3 flex-grow-1 justify-content-center">
                     {benchmarks?.length > 0 &&
-                        benchmarks.map(benchmark => {
-                            return <BenchmarkCard key={`${benchmark.id}`} benchmark={benchmark} />;
-                        })}
+                        benchmarks
+                            .filter(b => b.label.toLowerCase().includes(filter.toLowerCase()) || filter === '')
+                            .map(benchmark => {
+                                return <BenchmarkCard key={`${benchmark.id}`} benchmark={benchmark} />;
+                            })}
                 </Row>
 
                 {benchmarks.length === 0 && !isLoadingBenchmarks && <div className="text-center mt-4 mb-4">No benchmarks yet!</div>}
+                {benchmarks.length !== 0 &&
+                    benchmarks.filter(b => b.label.toLowerCase().includes(filter.toLowerCase())).length === 0 &&
+                    !isLoadingBenchmarks && <div className="text-center mt-4 mb-4">Sorry, no benchmarks found - try a different search..!</div>}
                 {isLoadingBenchmarks && (
                     <div className="text-center mt-4 mb-4">
-                        <Icon icon={faSpinner} spin /> Loading
+                        <div className="mt-3">
+                            <div>
+                                <ContentLoader
+                                    height="10%"
+                                    width="100%"
+                                    viewBox="0 0 100 10"
+                                    style={{ width: '100% !important' }}
+                                    backgroundColor="#f3f3f3"
+                                    foregroundColor="#ecebeb"
+                                >
+                                    <rect x="2" y="0" rx="2" ry="2" width="20" height="10" />
+                                    <rect x="27" y="0" rx="2" ry="2" width="20" height="10" />
+                                    <rect x="52" y="0" rx="2" ry="2" width="20" height="10" />
+                                    <rect x="77" y="0" rx="2" ry="2" width="20" height="10" />
+                                </ContentLoader>
+                            </div>
+                        </div>
                     </div>
                 )}
             </Container>
