@@ -25,6 +25,8 @@ import queryString from 'query-string';
 import { usePrevious } from 'react-use';
 import Confirm from 'reactstrap-confirm';
 
+const DEFAULT_COMPARISON_METHOD = 'path';
+
 function useComparison({ id }) {
     const location = useLocation();
     const history = useHistory();
@@ -85,7 +87,7 @@ function useComparison({ id }) {
 
     // comparison config
     const [transpose, setTranspose] = useState(false);
-    const [comparisonType, setComparisonType] = useState('merge');
+    const [comparisonType, setComparisonType] = useState(DEFAULT_COMPARISON_METHOD);
     const [responseHash, setResponseHash] = useState(null);
     const [contributionsList, setContributionsList] = useState([]);
     const [predicatesList, setPredicatesList] = useState([]);
@@ -178,7 +180,9 @@ function useComparison({ id }) {
                         const url = filterObjectOfStatementsByPredicate(statements, PREDICATES.URL, true);
                         if (url) {
                             setResponseHash(getParamFromQueryString(url?.label.substring(url?.label.indexOf('?')), 'response_hash'));
-                            setComparisonType(getParamFromQueryString(url?.label.substring(url?.label.indexOf('?')), 'type') ?? 'merge');
+                            setComparisonType(
+                                getParamFromQueryString(url?.label.substring(url?.label.indexOf('?')), 'type') ?? DEFAULT_COMPARISON_METHOD
+                            );
                             setTranspose(getParamFromQueryString(url?.label.substring(url?.label.indexOf('?')), 'transpose', true));
                             setPredicatesList(getArrayParamFromQueryString(url?.label.substring(url?.label.indexOf('?')), 'properties'));
                             setContributionsList(getArrayParamFromQueryString(url?.label.substring(url?.label.indexOf('?')), 'contributions'));
@@ -681,7 +685,7 @@ function useComparison({ id }) {
             // Update browser title
             document.title = 'Comparison - ORKG';
             setResponseHash(getParamFromQueryString(location.search, 'response_hash'));
-            setComparisonType(getParamFromQueryString(location.search, 'type') ?? 'merge');
+            setComparisonType(getParamFromQueryString(location.search, 'type') ?? DEFAULT_COMPARISON_METHOD);
             setTranspose(getParamFromQueryString(location.search, 'transpose', true));
             setContributionsList(getArrayParamFromQueryString(location.search, 'contributions'));
             setPredicatesList(getArrayParamFromQueryString(location.search, 'properties'));
