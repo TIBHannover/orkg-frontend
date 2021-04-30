@@ -5,6 +5,15 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [V0.37](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.36...V0.37) - 2021-04-30
+
+### Changes
+
+- feat: add webinar page [`#566`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/566)
+- fix: Creating account with non-matching passwords doesn't display error [`#565`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/565)
+- fix: temporary fix of top contributors [`#567`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/567)
+
+---
 ## [V0.36](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.35...V0.36) - 2021-04-26
 
 ### Changes
