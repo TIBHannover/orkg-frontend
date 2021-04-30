@@ -16,19 +16,23 @@ function useResearchProblemContributors({ researchProblemId, pageSize = 30 }) {
                 id: researchProblemId,
                 page: page,
                 items: pageSize
-            }).then(result => {
-                if (result.length > 0) {
-                    setContributors(prevResources => [...prevResources, ...result]);
-                    setIsLoading(false);
-                    setHasNextPage(result.length < pageSize || result.length === 0 ? false : true);
-                    setIsLastPageReached(false);
-                    setPage(page + 1);
-                } else {
-                    setIsLoading(false);
-                    setHasNextPage(false);
-                    setIsLastPageReached(page > 0 ? true : false);
-                }
-            });
+            })
+                .then(result => {
+                    if (result.length > 0) {
+                        setContributors(prevResources => [...prevResources, ...result]);
+                        setIsLoading(false);
+                        setHasNextPage(result.length < pageSize || result.length === 0 ? false : true);
+                        setIsLastPageReached(false);
+                        setPage(page + 1);
+                    } else {
+                        setIsLoading(false);
+                        setHasNextPage(false);
+                        setIsLastPageReached(page > 0 ? true : false);
+                    }
+                })
+                .catch(() => {
+                    setContributors([]);
+                });
         },
         [researchProblemId, pageSize]
     );

@@ -31,6 +31,7 @@ function useResearchProblemAuthors({ researchProblemId, pageSize = 25 }) {
                     }
                 })
                 .catch(() => {
+                    setAuthors([]);
                     setIsLoading(false);
                 });
         },

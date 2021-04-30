@@ -13,8 +13,8 @@ function ResearchProblem(props) {
             <Container>
                 <h1 className="h4 mt-4 mb-4 flex-grow-1">Benchmarks</h1>
             </Container>
-            <Container>
-                <BenchmarksCarousel research_problem_benchmarks={researchProblemBenchmarksData} show={6} />
+            <Container className="p-0">
+                <BenchmarksCarousel research_problem_benchmarks={researchProblemBenchmarksData} />
             </Container>
             <Papers id={researchProblemId} boxShadow />
         </div>
