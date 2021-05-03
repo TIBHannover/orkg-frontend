@@ -59,6 +59,7 @@ import Benchmark from 'pages/Benchmarks/Benchmark';
 import { reverse } from 'named-urls';
 import ContributionEditor from 'pages/ContributionEditor';
 import CurationCall from 'pages/CurationCall';
+import WebinarMay11 from 'pages/WebinarMay11';
 
 // use lazy loading of pages that contain large dependencies
 // run "npm run analyze" to ensure the listed dependencies are not loaded elsewhere and thus end up in the bundle
@@ -358,6 +359,10 @@ const routes = [
     {
         path: ROUTES.CURATION_CALL,
         component: CurationCall
+    },
+    {
+        path: ROUTES.WEBINAR_MAY_11,
+        component: WebinarMay11
     },
     /* Don't add routes below this line */
     {

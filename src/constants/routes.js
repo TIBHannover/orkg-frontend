@@ -62,6 +62,7 @@ const routes = {
     PREDICATE: '/predicate/:id',
     TPDL: '/tpdl',
     EXPORT_DATA: '/export-data',
-    CURATION_CALL: '/open-call-curation-grant'
+    CURATION_CALL: '/open-call-curation-grant',
+    WEBINAR_MAY_11: '/webinar-may-11'
 };
 export default routes;

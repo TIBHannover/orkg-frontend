@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 import { Button } from 'reactstrap';
 
 const ContributorsBox = ({ researchFieldId }) => {
-    const { contributors, isLoading } = useContributors({ researchFieldId, pageSize: 5 });
+    const { contributors, isLoading } = useContributors({ researchFieldId, pageSize: 30 });
     const [openModal, setOpenModal] = useState(false);
 
     return (

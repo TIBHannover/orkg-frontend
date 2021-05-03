@@ -15,7 +15,11 @@ import {
     deleteStatementsByIds,
     getStatementsByPredicateAndLiteral
 } from 'services/backend/statements';
+import { Cookies } from 'react-cookie';
+import env from '@beam-australia/react-env';
 import slugifyString from 'slugify';
+
+const cookies = new Cookies();
 
 export function hashCode(s) {
     return s.split('').reduce((a, b) => {
@@ -232,7 +236,7 @@ export const getPaperData = (resource, paperStatements) => {
         doi,
         doiResourceId,
         authorNames: authors.sort((a, b) => a.created_at.localeCompare(b.created_at)),
-        contributions: contributions.sort((a, b) => a.label.localeCompare(b.label)),
+        contributions: contributions.sort((a, b) => a.label.localeCompare(b.label)), // sort contributions ascending, so contribution 1, is actually the first one
         order,
         created_by: resource.created_by !== MISC.UNKNOWN_ID ? resource.created_by : null
     };
@@ -1229,4 +1233,14 @@ export const getPropertyObjectFromData = (data, value) => {
     return notEmptyCell && notEmptyCell.path?.length && notEmptyCell.pathLabels?.length
         ? { id: last(notEmptyCell.path), label: last(notEmptyCell.pathLabels) }
         : value;
+};
+
+/**
+ * check if Cookies is enabled
+ * @return {Boolean}
+ */
+export const checkCookie = () => {
+    cookies.set('testcookie', 1, { path: env('PUBLIC_URL'), maxAge: 5 });
+    const cookieEnabled = cookies.get('testcookie') ? cookies.get('testcookie') : null;
+    return cookieEnabled ? true : false;
 };
