@@ -53,9 +53,7 @@ export const StyledSlider = styled(Slider)`
         top: 0;
         left: 0;
 
-        display: block;
-        margin-left: auto;
-        margin-right: auto;
+        display: flex;
     }
     & .slick-track:before,
     & .slick-track:after {
@@ -71,11 +69,14 @@ export const StyledSlider = styled(Slider)`
     }
 
     & .slick-slide {
-        display: none;
+        display: flex;
         float: left;
+        flex: 1;
 
-        height: 100%;
-        min-height: 1px;
+        > div {
+            display: flex;
+            flex: 1;
+        }
     }
     [dir='rtl'] .slick-slide {
         float: right;
@@ -90,7 +91,7 @@ export const StyledSlider = styled(Slider)`
         pointer-events: none;
     }
     &.slick-initialized .slick-slide {
-        display: block;
+        display: flex;
     }
     & .slick-loading .slick-slide {
         visibility: hidden;
@@ -145,6 +146,7 @@ export const StyledSlider = styled(Slider)`
     & .slick-prev.slick-disabled,
     & .slick-next.slick-disabled {
         color: ${props => props.theme.lightLighter};
+        cursor: default;
     }
     & .slick-prev:hover:before,
     & .slick-prev:focus:before,

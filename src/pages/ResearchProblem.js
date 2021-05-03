@@ -1,21 +1,15 @@
-import { Container } from 'reactstrap';
-import useResearchProblemBenchmarks from 'components/ResearchProblem/hooks/useResearchProblemBenchmarks';
-import BenchmarksCarousel from 'components/BenchmarksCarousel/BenchmarksCarousel';
 import PropTypes from 'prop-types';
 import Papers from 'components/ResearchProblem/Papers';
+import Benchmarks from 'components/ResearchProblem/Benchmarks/Benchmarks';
 import ResearchProblemHeader from 'components/ResearchProblem/ResearchProblemHeader';
 function ResearchProblem(props) {
     const { researchProblemId } = props.match.params;
-    const { researchProblemBenchmarksData: benchmarks } = useResearchProblemBenchmarks({ researchProblemId });
+
     return (
         <div>
             <ResearchProblemHeader id={researchProblemId} />
-            <Container>
-                <h1 className="h4 mt-4 mb-4 flex-grow-1">Benchmarks</h1>
-            </Container>
-            <Container className="p-0">
-                <BenchmarksCarousel benchmarks={benchmarks} />
-            </Container>
+            <Benchmarks id={researchProblemId} />
+
             <Papers id={researchProblemId} boxShadow />
         </div>
     );
