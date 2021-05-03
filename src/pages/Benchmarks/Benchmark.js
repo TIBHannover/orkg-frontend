@@ -3,6 +3,7 @@ import { Container, Table, Card, CardBody, Button, ButtonGroup, ButtonDropdown, 
 import ROUTES from 'constants/routes';
 import { Link, useHistory } from 'react-router-dom';
 import { reverse } from 'named-urls';
+import moment from 'moment';
 import { UncontrolledButtonDropdown } from 'reactstrap';
 import Chart from 'react-google-charts';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -204,8 +205,8 @@ function Benchmark() {
                                 Metric: {selectedMetricVisualization}
                             </DropdownToggle>
                             <DropdownMenu>
-                                {metrics.map(m => (
-                                    <DropdownItem disabled={isLoading} onClick={() => setSelectedMetricVisualization(m)}>
+                                {metrics.map((m, index) => (
+                                    <DropdownItem key={index} disabled={isLoading} onClick={() => setSelectedMetricVisualization(m)}>
                                         {m}
                                     </DropdownItem>
                                 ))}
@@ -224,14 +225,14 @@ function Benchmark() {
                                         ['Year', selectedMetricVisualization, { type: 'string', role: 'tooltip', p: { html: true } }],
                                         ...(benchmarkDatasetPapers[selectedMetricVisualization]
                                             ? benchmarkDatasetPapers[selectedMetricVisualization].map(c => [
-                                                  parseInt(c.paper_year),
+                                                  moment(`${c.paper_year}-${c.paper_month ? c.paper_month : '01'}`, 'YYYY-MM').toDate(),
                                                   c.score,
                                                   `<b>Paper</b>: ${c.paper_title}<br /> <b>Model</b>: ${c.model_name}<br /> <b>Score</b>: ${c.score}`
                                               ])
                                             : [])
                                     ]}
                                     options={{
-                                        hAxis: { title: 'Year', format: '####' },
+                                        hAxis: { title: 'Year', format: 'MMM yyyy' },
                                         vAxis: { title: selectedMetricVisualization },
                                         legend: 'none',
                                         tooltip: { isHtml: true }
@@ -273,8 +274,8 @@ function Benchmark() {
                                 Metric: {selectedMetric}
                             </DropdownToggle>
                             <DropdownMenu>
-                                {metrics.map(m => (
-                                    <DropdownItem disabled={isLoading} onClick={() => setSelectedMetric(m)}>
+                                {metrics.map((m, index) => (
+                                    <DropdownItem key={index} disabled={isLoading} onClick={() => setSelectedMetric(m)}>
                                         {m}
                                     </DropdownItem>
                                 ))}
