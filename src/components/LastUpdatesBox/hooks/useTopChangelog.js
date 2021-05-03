@@ -18,7 +18,7 @@ function useTopChangelog({ researchFieldId, pageSize = 30, sortBy = 'createdAt',
                 researchFieldId: researchFieldId === MISC.RESEARCH_FIELD_MAIN ? null : researchFieldId,
                 page: page,
                 items: pageSize,
-                sortBy,
+                sortBy: researchFieldId === MISC.RESEARCH_FIELD_MAIN ? null : sortBy,
                 desc
             })
                 .then(result => {
