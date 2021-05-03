@@ -6,7 +6,7 @@ import Papers from 'components/ResearchProblem/Papers';
 import ResearchProblemHeader from 'components/ResearchProblem/ResearchProblemHeader';
 function ResearchProblem(props) {
     const { researchProblemId } = props.match.params;
-    const { researchProblemBenchmarksData } = useResearchProblemBenchmarks({ researchProblemId });
+    const { researchProblemBenchmarksData: benchmarks } = useResearchProblemBenchmarks({ researchProblemId });
     return (
         <div>
             <ResearchProblemHeader id={researchProblemId} />
@@ -14,7 +14,7 @@ function ResearchProblem(props) {
                 <h1 className="h4 mt-4 mb-4 flex-grow-1">Benchmarks</h1>
             </Container>
             <Container className="p-0">
-                <BenchmarksCarousel research_problem_benchmarks={researchProblemBenchmarksData} />
+                <BenchmarksCarousel benchmarks={benchmarks} />
             </Container>
             <Papers id={researchProblemId} boxShadow />
         </div>

@@ -132,18 +132,19 @@ export const StyledSlider = styled(Slider)`
 
         cursor: pointer;
 
-        color: transparent;
-        border: none;
-        outline: none;
-        background: transparent;
+        color: ${props => props.theme.secondary};
     }
     & .slick-prev:hover,
     & .slick-prev:focus,
     & .slick-next:hover,
     & .slick-next:focus {
-        color: transparent;
+        color: ${props => props.theme.primary};
         outline: none;
         background: transparent;
+    }
+    & .slick-prev.slick-disabled,
+    & .slick-next.slick-disabled {
+        color: ${props => props.theme.lightLighter};
     }
     & .slick-prev:hover:before,
     & .slick-prev:focus:before,
