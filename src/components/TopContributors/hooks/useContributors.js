@@ -32,12 +32,6 @@ function useContributors({ researchFieldId, pageSize = 30, initialSort = 'top', 
                     page: page,
                     items: pageSize,
                     subfields: includeSubFields
-                }).then(result => {
-                    result.content = result.content.map(c => ({
-                        profile: c,
-                        contributions: null
-                    }));
-                    return result;
                 });
             }
 
