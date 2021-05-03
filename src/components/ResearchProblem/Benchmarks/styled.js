@@ -109,9 +109,6 @@ export const StyledSlider = styled(Slider)`
     /* slick-theme.css */
 
     /* Slider */
-    & .slick-loading .slick-list {
-        background: #fff url('./ajax-loader.gif') center center no-repeat;
-    }
 
     /* Arrows */
     & .slick-prev,
