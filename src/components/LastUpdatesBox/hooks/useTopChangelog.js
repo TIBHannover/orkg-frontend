@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { getChangelogs } from 'services/backend/stats';
+import { orderBy } from 'lodash';
 import { MISC } from 'constants/graphSettings';
 
 function useTopChangelog({ researchFieldId, pageSize = 30, sortBy = 'createdAt', desc = true }) {
@@ -21,7 +22,7 @@ function useTopChangelog({ researchFieldId, pageSize = 30, sortBy = 'createdAt',
                 desc
             })
                 .then(result => {
-                    setActivities(prevResources => [...prevResources, ...result.content]);
+                    setActivities(prevResources => orderBy([...prevResources, ...(result.content || [])], ['created_at'], ['desc']));
                     setIsLoading(false);
                     setHasNextPage(!result.last);
                     setIsLastPageReached(result.last);
