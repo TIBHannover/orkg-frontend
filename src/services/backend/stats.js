@@ -63,9 +63,9 @@ export const getTopContributors = ({ researchFieldId = null, days = 30, page = 0
 };
 
 export const getChangelogs = ({ researchFieldId = null, page = 0, items = 9999, sortBy = 'createdAt', desc = true }) => {
-    //const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
+    const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
     const params = queryString.stringify(
-        { page: page, size: items /*, sort */ },
+        { page: page, size: items, sort },
         {
             skipNull: true,
             skipEmptyString: true
