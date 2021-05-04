@@ -37,8 +37,6 @@ export default function WebinarMay11() {
                     </a>
                 </p>
                 <p>
-                    <strong>Or join by meeting number</strong>
-                    <br />
                     Meeting number: 137 009 4886
                     <br />
                     Password: 9J728JcaC6i
