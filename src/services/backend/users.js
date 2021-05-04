@@ -94,13 +94,11 @@ export const registerWithEmailAndPassword = (email, password, matching_password,
     return submitPostRequest(`${url}auth/register`, headers, data, true, false);
 };
 
-export const updateUserObservatory = (contributors, observatory_id, organization_id) => {
+export const updateUserObservatory = contributors => {
     const headers = { 'Content-Type': 'application/json' };
 
     const data = {
-        users_id: contributors,
-        observatory_id: observatory_id,
-        organization_id: organization_id
+        users_id: contributors
     };
     return submitPutRequest(`${userUrl}observatory`, headers, data);
 };
