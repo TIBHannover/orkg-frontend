@@ -224,11 +224,16 @@ function Benchmark() {
                                     data={[
                                         ['Year', selectedMetricVisualization, { type: 'string', role: 'tooltip', p: { html: true } }],
                                         ...(benchmarkDatasetPapers[selectedMetricVisualization]
-                                            ? benchmarkDatasetPapers[selectedMetricVisualization].map(c => [
-                                                  moment(`${c.paper_year}-${c.paper_month ? c.paper_month : '01'}`, 'YYYY-MM').toDate(),
-                                                  c.score,
-                                                  `<b>Paper</b>: ${c.paper_title}<br /> <b>Model</b>: ${c.model_name}<br /> <b>Score</b>: ${c.score}`
-                                              ])
+                                            ? benchmarkDatasetPapers[selectedMetricVisualization].map(c => {
+                                                  const publishedOn = moment(`${c.paper_year}-${c.paper_month ? c.paper_month : '01'}`, 'YYYY-MM');
+                                                  return [
+                                                      publishedOn.toDate(),
+                                                      c.score,
+                                                      `<b>Paper</b>: ${c.paper_title}<br /> <b>Model</b>: ${c.model_name}<br /> <b>Score</b>: ${
+                                                          c.score
+                                                      }<br /> <b>Published on</b>: ${publishedOn.format('MM-YYYY')}`
+                                                  ];
+                                              })
                                             : [])
                                     ]}
                                     options={{
