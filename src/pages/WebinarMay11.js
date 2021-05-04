@@ -29,15 +29,17 @@ export default function WebinarMay11() {
                     to the main ideas and goals, we show how to use the interface to enter your data.{' '}
                 </p>
                 <p>
-                    To register, please fill out the{' '}
-                    <a
-                        href="https://docs.google.com/forms/d/e/1FAIpQLSdFzLCkranE2X4r6MpVJSNyfoIlfzRHWIoy6l4TBlclDgB5rw/viewform"
-                        target="_blank"
-                        rel="noreferrer"
-                    >
-                        registration form
+                    <strong>Join from meeting link</strong>
+                    <br />
+                    You can join the webinar from the meeting link: <br />
+                    <a href="https://tib-eu.webex.com/tib-eu-en/j.php?MTID=mccdeb0f1dcedef694953c018367f4ea0" target="_blank" rel="noreferrer">
+                        https://tib-eu.webex.com/tib-eu-en/j.php?MTID=mccdeb0f1dcedef694953c018367f4ea0
                     </a>
-                    .
+                </p>
+                <p>
+                    Meeting number: 137 009 4886
+                    <br />
+                    Password: 9J728JcaC6i
                 </p>
                 <h2 className="mt-5">Agenda</h2>
                 <table className="table">
