@@ -40,7 +40,7 @@ const MembersBox = ({ observatoryId, organizationsList }) => {
             <h5>Members</h5>
             {!!user && user.isCurationAllowed && (
                 <Button outline size="sm" style={{ float: 'right', marginTop: '-33px' }} onClick={() => setShowAddMemberDialog(v => !v)}>
-                    <Icon icon={faPlus} /> Add
+                    <Icon icon={faPlus} /> Edit
                 </Button>
             )}
             <div className="flex-grow-1">
