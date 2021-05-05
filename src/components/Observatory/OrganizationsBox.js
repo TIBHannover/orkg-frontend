@@ -2,16 +2,39 @@ import PropTypes from 'prop-types';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import { Link } from 'react-router-dom';
+import AddOrganization from 'components/Observatory/AddOrganization';
+import { useSelector } from 'react-redux';
+import { useState, useEffect } from 'react';
+import { Button } from 'reactstrap';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 
-const OrganizationsBox = ({ isLoadingOrganizations, organizationsList }) => {
+const OrganizationsBox = ({ isLoadingOrganizations, organizationsList, observatoryId }) => {
+    const user = useSelector(state => state.auth.user);
+    const [showAddOrganizationDialog, setShowAddOrganizationDialog] = useState(false);
+    const [organizations, setOrganizations] = useState([]);
+
+    useEffect(() => {
+        setOrganizations(organizationsList);
+    }, [organizationsList]);
+
+    const updateObservatoryOrganizations = organizations => {
+        setOrganizations(organizations);
+    };
+
     return (
         <div className="box rounded-lg p-4 flex-grow-1">
             <h5>Organizations</h5>
+            {!!user && user.isCurationAllowed && (
+                <Button outline size="sm" style={{ float: 'right', marginTop: '-33px' }} onClick={() => setShowAddOrganizationDialog(v => !v)}>
+                    <Icon icon={faPlus} /> Edit
+                </Button>
+            )}
             {!isLoadingOrganizations ? (
                 <div className="mb-4 mt-4">
-                    {organizationsList.length > 0 ? (
+                    {organizations.length > 0 ? (
                         <div>
-                            {organizationsList.map((organization, index) => {
+                            {organizations.map((organization, index) => {
                                 if (organization.logo) {
                                     return (
                                         <div
@@ -57,13 +80,21 @@ const OrganizationsBox = ({ isLoadingOrganizations, organizationsList }) => {
             ) : (
                 <div className="text-center mt-4 mb-4">Loading organizations ...</div>
             )}
+            <AddOrganization
+                showDialog={showAddOrganizationDialog}
+                toggle={() => setShowAddOrganizationDialog(v => !v)}
+                id={observatoryId}
+                organizations={organizations}
+                updateObservatoryOrganizations={updateObservatoryOrganizations}
+            />
         </div>
     );
 };
 
 OrganizationsBox.propTypes = {
     organizationsList: PropTypes.array.isRequired,
-    isLoadingOrganizations: PropTypes.bool.isRequired
+    isLoadingOrganizations: PropTypes.bool.isRequired,
+    observatoryId: PropTypes.string.isRequired
 };
 
 export default OrganizationsBox;
