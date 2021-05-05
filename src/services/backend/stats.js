@@ -16,16 +16,21 @@ export const getComparisonsCountByObservatoryId = id => {
     return submitGetRequest(`${statsUrl}${encodeURIComponent(id)}/observatoryComparisonsCount`);
 };
 
-/* 
-    for api/stats/top/contributors
-    we need to provide sort=contributions,desc to get sorted by contributions 
-    sort=contributions,desc 
-    By default it is not sorted
-*/
-export const getTopContributors = ({ researchFieldId = null, days = 30, page = 0, items = 9999, sortBy = 'contributions', desc = true }) => {
+/**
+ * Get top contributors
+ * @param {String} researchFieldId Research field id
+ * @param {Number} days Number of last days (by default it counts all time, from 2010-01-01)
+ * @param {Number} page Page number (it only works when the research field is not specified)
+ * @param {Number} items Number of items per page
+ * @param {String} sortBy Sort field
+ * @param {Boolean} desc  ascending order and descending order.
+ * @return {Object} List of contributors
+ */
+export const getTopContributors = ({ researchFieldId = null, days = null, page = 0, size = 9999, sortBy = 'contributions', desc = true }) => {
+    const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
     if (researchFieldId) {
         const params = queryString.stringify(
-            { days },
+            { days, sort },
             {
                 skipNull: true,
                 skipEmptyString: true
@@ -40,9 +45,8 @@ export const getTopContributors = ({ researchFieldId = null, days = 30, page = 0
             return result;
         });
     } else {
-        const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
         const params = queryString.stringify(
-            { page: page, size: items, sort },
+            { page, size, sort, days },
             {
                 skipNull: true,
                 skipEmptyString: true
