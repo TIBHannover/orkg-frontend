@@ -2,24 +2,10 @@ import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import { getContributors } from 'services/backend/contributors';
-import { useSelector } from 'react-redux';
 import { useState, useEffect } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
 import { updateUserObservatory } from 'services/backend/users';
-import styled from 'styled-components';
 import Select from 'react-select';
 import { MISC } from 'constants/graphSettings';
-
-export const StyledAutoCompleteInputFormControl = styled.div`
-    padding-top: 0 !important;
-    padding-bottom: 0 !important;
-    &.default {
-        height: auto !important;
-        min-height: calc(1.8125rem + 4px);
-    }
-    cursor: text;
-    padding: 0 !important;
-`;
 
 function AddMember(props) {
     const [contributors, setContributors] = useState([]);
