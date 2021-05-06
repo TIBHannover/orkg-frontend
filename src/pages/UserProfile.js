@@ -147,8 +147,6 @@ const UserProfile = props => {
         return <NotFound />;
     }
 
-    console.log(organizationData);
-
     return (
         <>
             <Container>
@@ -176,7 +174,7 @@ const UserProfile = props => {
                                     )}
                                 </div>
                                 <div className="col-md-4 mt-4 mt-md-0">
-                                    {!!organizationData && (
+                                    {organizationData && (
                                         <StyledOrganizationCard>
                                             <Link className="logoContainer" to={reverse(ROUTES.ORGANIZATION, { id: organizationData.id })}>
                                                 <img className="mx-auto p-2" src={organizationData.logo} alt={`${organizationData.name} logo`} />
