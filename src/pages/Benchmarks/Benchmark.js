@@ -240,7 +240,11 @@ function Benchmark() {
                                         hAxis: { title: 'Year', format: 'MMM yyyy' },
                                         vAxis: { title: selectedMetricVisualization },
                                         legend: 'none',
-                                        tooltip: { isHtml: true }
+                                        tooltip: { isHtml: true },
+                                        pointSize: 7,
+                                        trendlines: {
+                                            0: { tooltip: false, type: 'polynomial', degree: 3, visibleInLegend: false }
+                                        }
                                     }}
                                     chartEvents={[
                                         {

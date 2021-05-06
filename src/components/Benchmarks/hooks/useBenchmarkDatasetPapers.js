@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { getDatasetBenchmarksByDatasetId } from 'services/backend/datasets';
-import { groupBy } from 'lodash';
+import { groupBy, sortBy } from 'lodash';
 
 // Loading summary for a dataset
 function useBenchmarkDatasetPapers({ datasetId }) {
@@ -17,10 +17,11 @@ function useBenchmarkDatasetPapers({ datasetId }) {
         return getDatasetBenchmarksByDatasetId(datasetId)
             .then(result => {
                 // TODO: this trim needs to be done on the data itself
-                const trimResult = result.map(s => {
+                let trimResult = result.map(s => {
                     s.metric = s.metric.trim();
                     return s;
                 });
+                trimResult = sortBy(trimResult, ['paper_year', 'paper_month']);
                 setBenchmarkDatasetPapers(groupBy(trimResult, 'metric'));
                 setMetrics(Object.keys(groupBy(trimResult, 'metric')));
                 setSelectedMetric(Object.keys(groupBy(trimResult, 'metric'))[0]);
