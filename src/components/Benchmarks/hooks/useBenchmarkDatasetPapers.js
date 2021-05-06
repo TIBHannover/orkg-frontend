@@ -16,10 +16,15 @@ function useBenchmarkDatasetPapers({ datasetId }) {
         setIsFailedLoading(false);
         return getDatasetBenchmarksByDatasetId(datasetId)
             .then(result => {
-                setBenchmarkDatasetPapers(groupBy(result, 'metric'));
-                setMetrics(Object.keys(groupBy(result, 'metric')));
-                setSelectedMetric(Object.keys(groupBy(result, 'metric'))[0]);
-                setSelectedMetricVisualization(Object.keys(groupBy(result, 'metric'))[0]);
+                // TODO: this trim needs to be done on the data itself
+                const trimResult = result.map(s => {
+                    s.metric = s.metric.trim();
+                    return s;
+                });
+                setBenchmarkDatasetPapers(groupBy(trimResult, 'metric'));
+                setMetrics(Object.keys(groupBy(trimResult, 'metric')));
+                setSelectedMetric(Object.keys(groupBy(trimResult, 'metric'))[0]);
+                setSelectedMetricVisualization(Object.keys(groupBy(trimResult, 'metric'))[0]);
                 setIsLoading(false);
                 setIsFailedLoading(false);
             })
