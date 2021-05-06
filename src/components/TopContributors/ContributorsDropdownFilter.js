@@ -11,7 +11,7 @@ const ContributorsDropdownFilter = ({ sort, isLoading, includeSubFields, setSort
     const [tippy, setTippy] = useState({});
     return (
         <>
-            {(sort === 'top' || researchFieldId === MISC.RESEARCH_FIELD_MAIN) && (
+            {researchFieldId === MISC.RESEARCH_FIELD_MAIN && (
                 <UncontrolledButtonDropdown>
                     <DropdownToggle caret className="pl-3 pr-3" size="sm" color="light">
                         {stringifySort(sort)}
@@ -26,7 +26,7 @@ const ContributorsDropdownFilter = ({ sort, isLoading, includeSubFields, setSort
                     </DropdownMenu>
                 </UncontrolledButtonDropdown>
             )}
-            {sort !== 'top' && researchFieldId !== MISC.RESEARCH_FIELD_MAIN && (
+            {researchFieldId !== MISC.RESEARCH_FIELD_MAIN && (
                 <Tippy
                     interactive={true}
                     trigger="click"

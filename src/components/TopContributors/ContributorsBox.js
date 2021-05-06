@@ -25,7 +25,7 @@ const ContributorsBox = ({ researchFieldId }) => {
                                 <ContributorCard
                                     contributor={{
                                         ...contributor.profile,
-                                        counts: contributor.counts
+                                        subTitle: `${contributor.counts.total} contribution${contributor.counts.total > 1 ? 's' : ''}`
                                     }}
                                 />
                                 {contributors.slice(0, 4).length - 1 !== index && <hr className="mb-0 mt-1" />}
