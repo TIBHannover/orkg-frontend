@@ -12,6 +12,7 @@ import ShareLinkMarker from 'components/ShareLinkMarker/ShareLinkMarker';
 import VisibilitySensor from 'react-visibility-sensor';
 import { useSelector } from 'react-redux';
 import queryString from 'query-string';
+import env from '@beam-australia/react-env';
 import PaperHeaderBar from 'components/ViewPaper/PaperHeaderBar/PaperHeaderBar';
 import PaperMenuBar from 'components/ViewPaper/PaperHeaderBar/PaperMenuBar';
 import styled from 'styled-components';
@@ -78,7 +79,14 @@ const ViewPaper = () => {
             {!isLoadingFailed && (
                 <>
                     {showHeaderBar && (
-                        <PaperHeaderBar paperLink={paperLink} editMode={editMode} toggle={toggle} id={resourceId} paperTitle={viewPaper.title} />
+                        <PaperHeaderBar
+                            disableEdit={env('PWC_USER_ID') === viewPaper.createdBy}
+                            paperLink={paperLink}
+                            editMode={editMode}
+                            toggle={toggle}
+                            id={resourceId}
+                            paperTitle={viewPaper.title}
+                        />
                     )}
 
                     <Breadcrumbs researchFieldId={viewPaper.researchField.id} />
@@ -86,7 +94,13 @@ const ViewPaper = () => {
                     <VisibilitySensor onChange={handleShowHeaderBar}>
                         <Container className="d-flex align-items-center">
                             <h1 className="h4 mt-4 mb-4 flex-grow-1">View paper</h1>
-                            <PaperMenuBar editMode={editMode} paperLink={paperLink} toggle={toggle} id={resourceId} />
+                            <PaperMenuBar
+                                disableEdit={env('PWC_USER_ID') === viewPaper.createdBy}
+                                editMode={editMode}
+                                paperLink={paperLink}
+                                toggle={toggle}
+                                id={resourceId}
+                            />
                         </Container>
                     </VisibilitySensor>
 

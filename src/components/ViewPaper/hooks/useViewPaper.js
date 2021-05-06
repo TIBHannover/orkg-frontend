@@ -157,12 +157,16 @@ const useViewPaper = ({ paperId, contributionId }) => {
                     ? getContributorInformationById(paperResource.created_by).catch(e => {})
                     : undefined;
             Promise.all([observatory, creator]).then(data => {
-                setObservatoryInfo({
-                    ...data[0],
-                    created_at: paperResource.created_at,
-                    created_by: data[1] !== undefined ? data[1] : null,
-                    extraction_method: paperResource.extraction_method
-                });
+                if (observatory) {
+                    setObservatoryInfo({
+                        ...data[0],
+                        created_at: paperResource.created_at,
+                        created_by: data[1] !== undefined ? data[1] : null,
+                        extraction_method: paperResource.extraction_method
+                    });
+                } else {
+                    setObservatoryInfo({});
+                }
             });
 
             getContributorsByResourceId(resourceId).then(contributors =>

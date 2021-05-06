@@ -14,7 +14,7 @@ import ContentLoader from 'react-content-loader';
 import { SubTitle, SubtitleSeparator } from 'components/styled';
 import useBenchmarkDatasetResource from 'components/Benchmarks/hooks/useBenchmarkDatasetResource';
 import useBenchmarkDatasetPapers from 'components/Benchmarks/hooks/useBenchmarkDatasetPapers';
-import CodeURLsTooltip from 'components/BenchmarkCard/CodeURLsTooltip';
+import CodeURLsTooltip from 'components/Benchmarks/BenchmarkCard/CodeURLsTooltip';
 import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
 import { useParams } from 'react-router-dom';
 import { usePrevious } from 'react-use';
