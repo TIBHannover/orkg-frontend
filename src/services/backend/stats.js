@@ -20,13 +20,22 @@ export const getComparisonsCountByObservatoryId = id => {
  * Get top contributors
  * @param {String} researchFieldId Research field id
  * @param {Number} days Number of last days (by default it counts all time, from 2010-01-01)
- * @param {Number} page Page number (it only works when the research field is not specified)
+ * @param {Number} page Page number (Doesn't not work!)
  * @param {Number} items Number of items per page
  * @param {String} sortBy Sort field
  * @param {Boolean} desc  ascending order and descending order.
+ * @param {Boolean} subfields whether include the subfields or not
  * @return {Object} List of contributors
  */
-export const getTopContributors = ({ researchFieldId = null, days = null, page = 0, size = 9999, sortBy = 'contributions', desc = true }) => {
+export const getTopContributors = ({
+    researchFieldId = null,
+    days = null,
+    page = 0,
+    size = 9999,
+    sortBy = 'contributions',
+    desc = true,
+    subfields = true
+}) => {
     const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
     if (researchFieldId) {
         const params = queryString.stringify(
@@ -36,14 +45,16 @@ export const getTopContributors = ({ researchFieldId = null, days = null, page =
                 skipEmptyString: true
             }
         );
-        return submitGetRequest(`${statsUrl}research-field/${researchFieldId}/top/contributors?${params}`).then(result => {
-            result = {
-                content: result,
-                last: true,
-                totalElements: result.length
-            };
-            return result;
-        });
+        return submitGetRequest(`${statsUrl}research-field/${researchFieldId}/${subfields ? 'subfields/' : ''}top/contributors?${params}`).then(
+            result => {
+                result = {
+                    content: result,
+                    last: true,
+                    totalElements: result.length
+                };
+                return result;
+            }
+        );
     } else {
         const params = queryString.stringify(
             { page, size, sort, days },

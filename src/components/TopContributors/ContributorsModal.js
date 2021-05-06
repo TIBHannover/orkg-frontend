@@ -18,7 +18,7 @@ const ContributorsModal = ({ researchFieldId, openModal, setOpenModal, initialSo
     return (
         <Modal isOpen={openModal} toggle={() => setOpenModal(v => !v)} size="lg">
             <ModalHeader toggle={() => setOpenModal(v => !v)}>
-                <Icon icon={faAward} className="text-primary" /> Top 50 Contributors
+                <Icon icon={faAward} className="text-primary" /> Top Contributors
                 <div style={{ display: 'inline-block', marginLeft: '20px' }}>
                     <ContributorsDropdownFilter
                         sort={sort}
@@ -37,14 +37,12 @@ const ContributorsModal = ({ researchFieldId, openModal, setOpenModal, initialSo
                             return (
                                 <div className="pt-2 pb-2" key={`rp${index}`}>
                                     <div className="d-flex">
-                                        <div className="pl-4 pr-4 pt-2">{index + 1}.</div>
+                                        <div className="pl-4 pr-4 pt-2 align-self-center">{index + 1}.</div>
                                         <div>
                                             <ContributorCard
                                                 contributor={{
                                                     ...contributor.profile,
-                                                    subTitle: contributor?.counts?.total
-                                                        ? `${contributor.counts.total} contribution${contributor.counts.total > 1 ? 's' : ''}`
-                                                        : ''
+                                                    counts: contributor?.counts
                                                 }}
                                             />
                                         </div>

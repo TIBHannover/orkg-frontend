@@ -86,7 +86,7 @@ ContributorsDropdownFilter.propTypes = {
     isLoading: PropTypes.bool.isRequired,
     includeSubFields: PropTypes.bool.isRequired,
     setSort: PropTypes.func.isRequired,
-    researchFieldId: PropTypes.string.isRequired,
+    researchFieldId: PropTypes.string,
     setIncludeSubFields: PropTypes.func.isRequired
 };
 
