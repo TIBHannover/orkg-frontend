@@ -1,9 +1,9 @@
 import { Card, CardBody } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import ROUTES from 'constants/routes';
-import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import { reverseWithSlug } from 'utils';
 
 const BenchmarkCardStyled = styled.div`
     cursor: initial;
@@ -32,7 +32,10 @@ function BenchmarkCard(props) {
     return (
         <BenchmarkCardStyled className="col-3 mb-4">
             <Card className="h-100">
-                <Link to={reverse(ROUTES.RESEARCH_PROBLEM, { researchProblemId: props.benchmark.id })} style={{ textDecoration: 'none' }}>
+                <Link
+                    to={reverseWithSlug(ROUTES.RESEARCH_PROBLEM, { researchProblemId: props.benchmark.id, slug: props.benchmark.label })}
+                    style={{ textDecoration: 'none' }}
+                >
                     <CardBody>
                         <div className="mt-2">
                             <div className="researchProblemName">{props.benchmark.label}</div>
