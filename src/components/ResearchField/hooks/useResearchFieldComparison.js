@@ -24,7 +24,7 @@ function useResearchFieldComparison({ researchFieldId, initialSort, initialInclu
             let papersService;
             if (researchFieldId === MISC.RESEARCH_FIELD_MAIN) {
                 papersService = getResourcesByClass({
-                    id: sort === 'featured' ? CLASSES.FEATURED_COMPARISON : CLASSES.COMPARISON,
+                    id: sort === 'featured' ? CLASSES.FEATURED_COMPARISON_HOME_PAGE : CLASSES.COMPARISON,
                     sortBy: 'created_at',
                     desc: sort === 'newest' || sort === 'featured' ? true : false,
                     items: pageSize
