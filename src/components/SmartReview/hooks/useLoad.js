@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux';
 import { getResource } from 'services/backend/resources';
 import { getStatementsBundleBySubject, getStatementsByObjectAndPredicate, getStatementsBySubjects } from 'services/backend/statements';
 import { getResourceData } from 'services/similarity';
-import { uniq } from 'lodash';
+import { countBy, orderBy } from 'lodash';
 
 const useLoad = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -159,16 +159,20 @@ const useLoad = () => {
     }, []);
 
     const getAllContributors = statements => {
-        //paperStatements
-        let contributors = [];
-
-        for (const statement of statements) {
-            contributors.push(statement.subject.created_by);
-            contributors.push(statement.object.created_by);
+        if (statements.length === 0) {
+            return [];
         }
-        contributors = contributors.filter(contributor => contributor !== MISC.UNKNOWN_ID);
+        const contributors = statements
+            .flatMap(statement => [statement.subject.created_by, statement.object.created_by, statement.created_by])
+            .filter(contributor => contributor !== MISC.UNKNOWN_ID);
 
-        return uniq(contributors);
+        const statementAmountPerContributor = countBy(contributors);
+        const contributorsWithPercentage = Object.keys(statementAmountPerContributor).map(contributorId => ({
+            id: contributorId,
+            percentage: Math.round((statementAmountPerContributor[contributorId] / contributors.length) * 100)
+        }));
+
+        return orderBy(contributorsWithPercentage, 'percentage', 'desc');
     };
 
     const load = useCallback(
