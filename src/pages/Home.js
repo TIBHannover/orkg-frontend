@@ -42,10 +42,9 @@ export default function Home() {
                     <Link to={ROUTES.CURATION_CALL}>Find out more</Link>
                 </Alert>
             )}
-            {moment() < moment('2021-05-13T00:00:00') && (
+            {moment() < moment('2021-06-13T00:00:00') && (
                 <Alert color="info" className="box mt-2">
-                    <strong>Webinar:</strong> Open Research Knowledge Graph - 11th May 2021, 14:00 - 15:00 (CEST).{' '}
-                    <Link to={ROUTES.WEBINAR_MAY_11}>More information</Link>
+                    <strong>Webinar:</strong> Open Research Knowledge Graph. <Link to={ROUTES.WEBINAR_MAY_11}>Watch the recording</Link>
                 </Alert>
             )}
             <Row>

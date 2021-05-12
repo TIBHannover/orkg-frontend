@@ -12,7 +12,22 @@ export default function WebinarMay11() {
             </Container>
             <Container className="box rounded pt-4 pb-4 pl-5 pr-5">
                 <h2>Webinar: Open Research Knowledge Graph</h2>
-                <strong>Online 11th May 2021, 14:00 - 15:00 (CEST)</strong>
+
+                <div className="d-flex align-items-center flex-column my-3">
+                    <div className="embed-responsive embed-responsive-16by9" style={{ maxWidth: 750 }}>
+                        <iframe
+                            width="750"
+                            height="315"
+                            src="https://www.youtube.com/embed/8rqkQe_2lUE"
+                            title="YouTube video player"
+                            frameborder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            className="embed-responsive-item"
+                            allowFullScreen
+                        />
+                    </div>
+                    <strong>Online 11th May 2021, 14:00 - 15:00 (CEST)</strong>
+                </div>
                 <p className="mt-4">
                     Scholarly work is mainly communicated through publications, in the form of unstructured texts. Considering the continuously
                     increasing number of publications, researchers are finding it increasingly difficult to stay current with the literature that is
@@ -27,19 +42,6 @@ export default function WebinarMay11() {
                 <p>
                     In this Webinar, we introduce the Open Research Knowledge Graph and explain how you can add content. Besides a brief introduction
                     to the main ideas and goals, we show how to use the interface to enter your data.{' '}
-                </p>
-                <p>
-                    <strong>Join from meeting link</strong>
-                    <br />
-                    You can join the webinar from the meeting link: <br />
-                    <a href="https://tib-eu.webex.com/tib-eu-en/j.php?MTID=mccdeb0f1dcedef694953c018367f4ea0" target="_blank" rel="noreferrer">
-                        https://tib-eu.webex.com/tib-eu-en/j.php?MTID=mccdeb0f1dcedef694953c018367f4ea0
-                    </a>
-                </p>
-                <p>
-                    Meeting number: 137 009 4886
-                    <br />
-                    Password: 9J728JcaC6i
                 </p>
                 <h2 className="mt-5">Agenda</h2>
                 <table className="table">
