@@ -11,6 +11,7 @@ import { createResourceData } from 'services/similarity';
 import { toast } from 'react-toastify';
 import { reverse } from 'named-urls';
 import routes from 'constants/routes';
+import { Link } from 'react-router-dom';
 
 const PublishModal = ({ id, show, toggle }) => {
     const [isLoading, setIsLoading] = useState(false);
@@ -59,7 +60,9 @@ const PublishModal = ({ id, show, toggle }) => {
                         />
                     </FormGroup>
                 ) : (
-                    <a href={reverse(routes.SMART_REVIEW, { id: publishedId })}>View the published article</a>
+                    <Link to={reverse(routes.SMART_REVIEW, { id: publishedId })} onClick={toggle}>
+                        View the published article
+                    </Link>
                 )}
             </ModalBody>
             {!publishedId && (

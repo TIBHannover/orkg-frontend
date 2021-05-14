@@ -1,7 +1,7 @@
 import { faCheckCircle, faDownload, faEllipsisV, faHistory, faPen, faSpinner, faTimes, faUpload } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
-import { toggleHistoryModal as toggleHistoryModalAction } from 'actions/smartReview';
+import { toggleHistoryModal as toggleHistoryModalAction, setIsEditing } from 'actions/smartReview';
 import Breadcrumbs from 'components/Breadcrumbs/Breadcrumbs';
 import { SubtitleSeparator } from 'components/Comparison/styled';
 import AcknowledgementsSection from 'components/SmartReview/AcknowledgementsSection';
@@ -52,7 +52,7 @@ const SmartReview = () => {
     const { id } = useParams();
     const { load, isLoading, isNotFound } = useLoad();
     const isLoadingInline = useSelector(state => state.smartReview.isLoading);
-    const [isEditing, setIsEditing] = useState(false);
+    const isEditing = useSelector(state => state.smartReview.isEditing);
     const [isOpenPublishModal, setIsOpenPublishModal] = useState(false);
     const isPublished = useSelector(state => state.smartReview.isPublished);
     const paper = useSelector(state => state.smartReview.paper);
@@ -84,7 +84,7 @@ const SmartReview = () => {
                 history.push(reverse(ROUTES.SMART_REVIEW, { id: paper.id }));
             }
         } else {
-            setIsEditing(true);
+            dispatch(setIsEditing(true));
         }
     };
 
@@ -173,7 +173,7 @@ const SmartReview = () => {
                                         color="secondary"
                                         size="sm"
                                         style={{ marginLeft: 1 }}
-                                        onClick={() => setIsEditing(false)}
+                                        onClick={() => dispatch(setIsEditing(false))}
                                     >
                                         <Icon icon={faTimes} /> Stop editing
                                     </Button>
