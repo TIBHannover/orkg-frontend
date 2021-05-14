@@ -226,7 +226,7 @@ const useLoad = () => {
         return statements.filter(statement => statement.object.id === objectId);
     };
 
-    return { load, isLoading, isNotFound, getArticleById };
+    return { load, isLoading, isNotFound, getArticleById, getVersions };
 };
 
 export default useLoad;

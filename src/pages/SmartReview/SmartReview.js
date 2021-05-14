@@ -50,7 +50,7 @@ const GlobalStyle = createGlobalStyle`
 
 const SmartReview = () => {
     const { id } = useParams();
-    const { load, isLoading, isNotFound } = useLoad();
+    const { load, isLoading, isNotFound, getVersions } = useLoad();
     const isLoadingInline = useSelector(state => state.smartReview.isLoading);
     const isEditing = useSelector(state => state.smartReview.isEditing);
     const [isOpenPublishModal, setIsOpenPublishModal] = useState(false);
@@ -211,7 +211,9 @@ const SmartReview = () => {
             {!isLoading && !isEditing && <ViewArticle />}
             {isLoading && <LoadingArticle />}
 
-            {isOpenPublishModal && <PublishModal toggle={() => setIsOpenPublishModal(v => !v)} id={id} show />}
+            {isOpenPublishModal && (
+                <PublishModal toggle={() => setIsOpenPublishModal(v => !v)} id={id} getVersions={getVersions} paperId={paper.id} show />
+            )}
             {isOpenHistoryModal && <HistoryModal toggle={toggleHistoryModal} id={id} show />}
         </div>
     );

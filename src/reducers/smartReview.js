@@ -162,6 +162,15 @@ const smartReview = (state = initialState, action) => {
             };
         }
 
+        case type.ARTICLE_WRITER_SET_VERSIONS: {
+            const { versions } = action.payload;
+
+            return {
+                ...state,
+                versions
+            };
+        }
+
         case '@@router/LOCATION_CHANGE': {
             return {
                 ...initialState
