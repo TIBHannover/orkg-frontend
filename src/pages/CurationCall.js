@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Alert, Col, Container, Row } from 'reactstrap';
 import ROUTES from 'constants/routes';
-import moment from 'moment';
 
 export default function CurationCall() {
     document.title = 'ORKG Curation Grant Competition - Open Research Knowledge Graph';
