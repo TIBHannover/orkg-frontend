@@ -7,7 +7,7 @@ import ContributorCard from 'components/ContributorCard/ContributorCard';
 import PropTypes from 'prop-types';
 
 const ContributorsModal = ({ researchProblemId, openModal, setOpenModal }) => {
-    const { contributors, isLoading } = useResearchProblemContributors({
+    const { contributors, isLoading, isLoadingFailed } = useResearchProblemContributors({
         researchProblemId,
         pageSize: 19
     });
@@ -41,12 +41,13 @@ const ContributorsModal = ({ researchProblemId, openModal, setOpenModal }) => {
                                 </div>
                             );
                         })}
-                    {!isLoading && contributors?.length === 0 && (
+                    {!isLoading && !isLoadingFailed && contributors?.length === 0 && (
                         <div className="mt-4 mb-4">
                             No contributors yet.
                             <i> Be the first contributor!</i>
                         </div>
                     )}
+                    {!isLoading && isLoadingFailed && <div className="mt-4 mb-4 text-danger">Something went wrong while loading contributors.</div>}
                     {isLoading && (
                         <div className="mt-4 mb-4">
                             <ContentLoader height={130} width={200} foregroundColor="#d9d9d9" backgroundColor="#ecebeb">
