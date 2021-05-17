@@ -33,17 +33,20 @@ function BenchmarkCard(props) {
         <BenchmarkCardStyled className="col-3 mb-4">
             <Card className="h-100">
                 <Link
-                    to={reverseWithSlug(ROUTES.RESEARCH_PROBLEM, { researchProblemId: props.benchmark.id, slug: props.benchmark.label })}
+                    to={reverseWithSlug(ROUTES.RESEARCH_PROBLEM, {
+                        researchProblemId: props.benchmark.research_problem.id,
+                        slug: props.benchmark.research_problem.label
+                    })}
                     style={{ textDecoration: 'none' }}
                 >
                     <CardBody>
                         <div className="mt-2">
-                            <div className="researchProblemName">{props.benchmark.label}</div>
+                            <div className="researchProblemName">{props.benchmark.research_problem.label}</div>
 
                             <div className="researchProblemStats text-muted">
-                                Papers: <b>{props?.benchmark.numPapers}</b> <br />
-                                Datasets: <b>{props?.benchmark.numDatasets}</b> <br />
-                                Code: <b>{props?.benchmark.numCode}</b>
+                                Papers: <b>{props?.benchmark.total_papers}</b> <br />
+                                Datasets: <b>{props?.benchmark.total_datasets}</b> <br />
+                                Code: <b>{props?.benchmark.total_codes}</b>
                             </div>
                         </div>
                     </CardBody>

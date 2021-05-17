@@ -229,9 +229,10 @@ function Benchmark() {
                                                   return [
                                                       publishedOn.toDate(),
                                                       c.score,
-                                                      `<b>Paper</b>: ${c.paper_title}<br /> <b>Model</b>: ${c.model_name}<br /> <b>Score</b>: ${
-                                                          c.score
-                                                      }<br /> <b>Published on</b>: ${publishedOn.format('MM-YYYY')}`
+                                                      `<b>Paper</b>: ${c.paper_title}<br /> <b>Model</b>: ${c.model_name ??
+                                                          '-'}<br /> <b>Score</b>: ${c.score}<br /> <b>Published on</b>: ${publishedOn.format(
+                                                          'MM-YYYY'
+                                                      )}`
                                                   ];
                                               })
                                             : [])
@@ -243,7 +244,7 @@ function Benchmark() {
                                         tooltip: { isHtml: true },
                                         pointSize: 7,
                                         trendlines: {
-                                            0: { tooltip: false, type: 'polynomial', degree: 3, visibleInLegend: false }
+                                            0: { tooltip: false, type: 'polynomial', degree: 2, visibleInLegend: false }
                                         }
                                     }}
                                     chartEvents={[

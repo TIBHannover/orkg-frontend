@@ -19,7 +19,8 @@ function Benchmarks() {
                     <h1 className="h4">View all benchmarks</h1>
                     <div className="text-muted ml-3 mt-1">
                         {benchmarks.length === 0 && isLoadingBenchmarks ? <Icon icon={faSpinner} spin /> : benchmarks.length} benchmarks{' '}
-                        {!!filter && `(${benchmarks.filter(b => b.label.toLowerCase().includes(filter.toLowerCase())).length} filtered)`}
+                        {!!filter &&
+                            `(${benchmarks.filter(b => b.research_problem.label.toLowerCase().includes(filter.toLowerCase())).length} filtered)`}
                     </div>
                 </div>
 
@@ -50,15 +51,15 @@ function Benchmarks() {
                 <Row className="mt-3 flex-grow-1 justify-content-center">
                     {benchmarks?.length > 0 &&
                         benchmarks
-                            .filter(b => b.label.toLowerCase().includes(filter.toLowerCase()) || filter === '')
+                            .filter(b => b.research_problem.label.toLowerCase().includes(filter.toLowerCase()) || filter === '')
                             .map(benchmark => {
-                                return <BenchmarkCard key={`${benchmark.id}`} benchmark={benchmark} />;
+                                return <BenchmarkCard key={`${benchmark.research_problem.id}`} benchmark={benchmark} />;
                             })}
                 </Row>
 
                 {benchmarks.length === 0 && !isLoadingBenchmarks && <div className="text-center mt-4 mb-4">No benchmarks yet!</div>}
                 {benchmarks.length !== 0 &&
-                    benchmarks.filter(b => b.label.toLowerCase().includes(filter.toLowerCase())).length === 0 &&
+                    benchmarks.filter(b => b.research_problem.label.toLowerCase().includes(filter.toLowerCase())).length === 0 &&
                     !isLoadingBenchmarks && <div className="text-center mt-4 mb-4">Sorry, no benchmarks found - try a different search..!</div>}
                 {isLoadingBenchmarks && (
                     <div className="text-center mt-4 mb-4">
