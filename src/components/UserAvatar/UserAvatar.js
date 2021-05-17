@@ -35,7 +35,7 @@ const StyledSpinnerGravatar = styled.div`
     background-color: ${props => props.theme.lightDarker};
 `;
 
-const UserAvatar = ({ userId, size }) => {
+const UserAvatar = ({ userId, size, appendToTooltip }) => {
     const [contributor, setContributor] = useState(null);
     const [isLoadingContributor, setIsLoadingContributor] = useState(true);
 
@@ -59,7 +59,7 @@ const UserAvatar = ({ userId, size }) => {
                 <Tippy
                     offset={[0, 10]}
                     placement="bottom"
-                    content={contributor?.display_name}
+                    content={`${contributor?.display_name}${appendToTooltip}`}
                     disabled={!userId || !contributor || isLoadingContributor}
                 >
                     <Link to={reverse(ROUTES.USER_PROFILE, { userId: userId })}>
@@ -80,11 +80,13 @@ const UserAvatar = ({ userId, size }) => {
 
 UserAvatar.propTypes = {
     userId: PropTypes.string,
-    size: PropTypes.number
+    size: PropTypes.number,
+    appendToTooltip: PropTypes.string
 };
 
 UserAvatar.defaultProps = {
-    size: 28
+    size: 28,
+    appendToTooltip: ''
 };
 
 export default UserAvatar;
