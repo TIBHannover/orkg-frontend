@@ -563,6 +563,7 @@ function Comparison(props) {
                 setAuthors={setAuthors}
                 loadCreatedBy={loadCreatedBy}
                 loadProvenanceInfos={loadProvenanceInfos}
+                data={data}
             />
 
             <AddContribution onAddContributions={addContributions} showDialog={showAddContribution} toggle={() => setShowAddContribution(v => !v)} />

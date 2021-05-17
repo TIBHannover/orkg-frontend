@@ -588,7 +588,7 @@ function useComparison({ id }) {
         const params = queryString.stringify(
             {
                 contributions: contributionsList.join(','),
-                properties: predicatesList.join(','),
+                properties: predicatesList.map(predicate => encodeURIComponent(predicate)).join(','),
                 type: comparisonType,
                 transpose: transpose
             },
