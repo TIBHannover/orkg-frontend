@@ -17,12 +17,12 @@ const PWCProvenanceBoxStyled = styled.div`
 export default function PWCProvenanceBox() {
     return (
         <div>
-            <PWCProvenanceBoxStyled>
-                <small>Data originally imported from</small>
-                <a href="https://paperswithcode.com/" target="_blank" rel="noopener noreferrer" className="text-center">
+            <a href="https://paperswithcode.com/" target="_blank" rel="noopener noreferrer" className="text-center">
+                <PWCProvenanceBoxStyled>
+                    <small>Data originally imported from</small>
                     <img className="p-2" src={PWC_LOGO} alt="papers with code logo" style={{ maxWidth: 200, maxHeight: 60 }} />
-                </a>
-            </PWCProvenanceBoxStyled>
+                </PWCProvenanceBoxStyled>
+            </a>
         </div>
     );
 }

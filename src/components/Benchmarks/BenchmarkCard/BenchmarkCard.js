@@ -31,14 +31,14 @@ const BenchmarkCardStyled = styled.div`
 function BenchmarkCard(props) {
     return (
         <BenchmarkCardStyled className="col-3 mb-4">
-            <Card className="h-100">
-                <Link
-                    to={reverseWithSlug(ROUTES.RESEARCH_PROBLEM, {
-                        researchProblemId: props.benchmark.research_problem.id,
-                        slug: props.benchmark.research_problem.label
-                    })}
-                    style={{ textDecoration: 'none' }}
-                >
+            <Link
+                to={reverseWithSlug(ROUTES.RESEARCH_PROBLEM, {
+                    researchProblemId: props.benchmark.research_problem.id,
+                    slug: props.benchmark.research_problem.label
+                })}
+                style={{ textDecoration: 'none' }}
+            >
+                <Card className="h-100">
                     <CardBody>
                         <div className="mt-2">
                             <div className="researchProblemName">{props.benchmark.research_problem.label}</div>
@@ -50,8 +50,8 @@ function BenchmarkCard(props) {
                             </div>
                         </div>
                     </CardBody>
-                </Link>
-            </Card>
+                </Card>
+            </Link>
         </BenchmarkCardStyled>
     );
 }
