@@ -138,7 +138,7 @@ function Resource(props) {
                                 getStatementsBySubjectAndPredicate({ subjectId: props.match.params.id, predicateId: PREDICATES.HAS_DOI }).then(st => {
                                     if (st.length > 0) {
                                         setIsLoading(false);
-                                        setCanEdit(false);
+                                        setCanEdit(isCurationAllowed);
                                     } else {
                                         setIsLoading(false);
                                         setCanEdit(true);
@@ -158,7 +158,7 @@ function Resource(props) {
                 });
         };
         findResource();
-    }, [location, props.match.params.id, resourceId]);
+    }, [location, props.match.params.id, resourceId, isCurationAllowed]);
 
     useEffect(() => {
         setCanBeDeleted((values.allIds.length === 0 || properties.allIds.length === 0) && !hasObjectStatement);
