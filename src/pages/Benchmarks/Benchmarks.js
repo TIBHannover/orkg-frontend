@@ -16,7 +16,7 @@ function Benchmarks() {
         <>
             <Container className="d-flex align-items-center">
                 <div className="d-flex flex-grow-1 mt-4 mb-4">
-                    <h1 className="h4">View all benchmarks</h1>
+                    <h1 className="h4 m-0">View all benchmarks</h1>
                     <div className="text-muted ml-3 mt-1">
                         {benchmarks.length === 0 && isLoadingBenchmarks ? <Icon icon={faSpinner} spin /> : benchmarks.length} benchmarks{' '}
                         {!!filter &&
@@ -60,7 +60,7 @@ function Benchmarks() {
                 {benchmarks.length === 0 && !isLoadingBenchmarks && <div className="text-center mt-4 mb-4">No benchmarks yet!</div>}
                 {benchmarks.length !== 0 &&
                     benchmarks.filter(b => b.research_problem.label.toLowerCase().includes(filter.toLowerCase())).length === 0 &&
-                    !isLoadingBenchmarks && <div className="text-center mt-4 mb-4">Sorry, no benchmarks found - try a different search..!</div>}
+                    !isLoadingBenchmarks && <div className="text-center mt-4 mb-4">Sorry, no benchmarks found - try a different search query</div>}
                 {isLoadingBenchmarks && (
                     <div className="text-center mt-4 mb-4">
                         <div className="mt-3">
