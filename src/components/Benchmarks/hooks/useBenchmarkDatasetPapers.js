@@ -9,11 +9,11 @@ function useBenchmarkDatasetPapers({ datasetId }) {
     const [selectedMetric, setSelectedMetric] = useState(null);
     const [selectedMetricVisualization, setSelectedMetricVisualization] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
-    const [isFailedLoading, setIsFailedLoading] = useState(false);
+    const [isFailedLoadingPapers, setIsFailedLoadingPapers] = useState(false);
 
     const loadBenchmarkDatasetPapers = useCallback(() => {
         setIsLoading(true);
-        setIsFailedLoading(false);
+        setIsFailedLoadingPapers(false);
         return getDatasetBenchmarksByDatasetId(datasetId)
             .then(result => {
                 // TODO: this trim needs to be done on the data itself
@@ -27,13 +27,13 @@ function useBenchmarkDatasetPapers({ datasetId }) {
                 setSelectedMetric(Object.keys(groupBy(trimResult, 'metric'))[0]);
                 setSelectedMetricVisualization(Object.keys(groupBy(trimResult, 'metric'))[0]);
                 setIsLoading(false);
-                setIsFailedLoading(false);
+                setIsFailedLoadingPapers(false);
             })
             .catch(() => {
                 setMetrics([]);
                 setBenchmarkDatasetPapers({});
                 setIsLoading(false);
-                setIsFailedLoading(true);
+                setIsFailedLoadingPapers(true);
             });
     }, [datasetId]);
 
@@ -49,7 +49,7 @@ function useBenchmarkDatasetPapers({ datasetId }) {
         selectedMetric,
         selectedMetricVisualization,
         isLoading,
-        isFailedLoading,
+        isFailedLoadingPapers,
         setSelectedMetric,
         setSelectedMetricVisualization
     };

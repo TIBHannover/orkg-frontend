@@ -29,7 +29,7 @@ function Benchmark() {
     const history = useHistory();
     const {
         isLoading: isLoadingPapers,
-        isFailedLoading: isFailedLoadingPapers,
+        isFailedLoadingPapers,
         benchmarkDatasetPapers,
         metrics,
         selectedMetric,
@@ -336,6 +336,13 @@ function Benchmark() {
                         </Card>
                     </Container>
                 </div>
+            )}
+            {!isLoadingPapers && isFailedLoadingPapers && (
+                <Container className="p-0 mt-3">
+                    <Card>
+                        <div className="text-center mt-4 mb-4">Failed loading benchmark papers.</div>
+                    </Card>
+                </Container>
             )}
         </div>
     );
