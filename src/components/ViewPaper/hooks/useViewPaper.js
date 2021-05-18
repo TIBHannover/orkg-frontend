@@ -76,8 +76,8 @@ const useViewPaper = ({ paperId, contributionId }) => {
 
                 processObservatoryInformation(paperResource, paperId);
 
-                Promise.all([getStatementsBySubject({ id: paperId }), getIsVerified(paperId).catch(() => false)])
-                    .then(([paperStatements, verified]) => {
+                Promise.all([getStatementsBySubject({ id: paperId }), getIsVerified(paperId).catch(() => false)]).then(
+                    ([paperStatements, verified]) => {
                         const paperData = getPaperData_ViewPaper(paperResource, paperStatements);
                         // Set document title
                         document.title = `${paperResource.label} - ORKG`;
@@ -86,46 +86,14 @@ const useViewPaper = ({ paperId, contributionId }) => {
                         setContributions(paperData.contributions);
                         loadAuthorsORCID(paperData.authors);
                         return paperData.contributions;
-                    })
-                    .then(contrib => {
-                        try {
-                            // apply selected contribution
-                            if (
-                                contributionId &&
-                                !contrib.some(el => {
-                                    return el.id === contributionId;
-                                })
-                            ) {
-                                throw new Error('Contribution not found');
-                            }
-                            if (contrib && contrib[0]) {
-                                setSelectedContribution(
-                                    contributionId &&
-                                        contrib.some(el => {
-                                            return el.id === contributionId;
-                                        })
-                                        ? contributionId
-                                        : contrib[0].id
-                                );
-                            }
-                        } catch (error) {
-                            console.log(error);
-                            if (error.message === 'No Contribution found') {
-                                setLoadingContributionFailed(true);
-                                setIsLoading(false);
-                                setIsLoadingFailed(false);
-                            } else {
-                                setIsLoading(false);
-                                setIsLoadingFailed(true);
-                            }
-                        }
-                    });
+                    }
+                );
             })
             .catch(error => {
                 setIsLoading(false);
                 setIsLoadingFailed(true);
             });
-    }, [contributionId, dispatch, loadAuthorsORCID, paperId]);
+    }, [dispatch, loadAuthorsORCID, paperId]);
 
     useEffect(() => {
         loadPaperData();
@@ -133,14 +101,33 @@ const useViewPaper = ({ paperId, contributionId }) => {
 
     useEffect(() => {
         if (contributions?.length && selectedContribution !== contributionId) {
-            const selected =
-                contributionId &&
-                contributions.some(el => {
-                    return el.id === contributionId;
-                })
-                    ? contributionId
-                    : contributions[0].id;
-            setSelectedContribution(selected);
+            try {
+                // apply selected contribution
+                if (
+                    contributionId &&
+                    !contributions.some(el => {
+                        return el.id === contributionId;
+                    })
+                ) {
+                    throw new Error('Contribution not found');
+                }
+                const selected =
+                    contributionId &&
+                    contributions.some(el => {
+                        return el.id === contributionId;
+                    })
+                        ? contributionId
+                        : contributions[0].id;
+                setSelectedContribution(selected);
+            } catch (error) {
+                console.log(error);
+                if (error.message === 'Contribution not found') {
+                    setLoadingContributionFailed(true);
+                } else {
+                    setIsLoading(false);
+                    setIsLoadingFailed(true);
+                }
+            }
         }
     }, [contributionId, contributions, selectedContribution]);
 
