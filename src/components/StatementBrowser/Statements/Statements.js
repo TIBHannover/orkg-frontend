@@ -9,6 +9,7 @@ import SBEditorHelpModal from 'components/StatementBrowser/SBEditorHelpModal/SBE
 import NoData from 'components/StatementBrowser/NoData/NoData';
 import { StyledLevelBox, StyledStatementItem } from 'components/StatementBrowser/styled';
 import { RESOURCE_TYPE_ID } from 'constants/misc';
+import { isArray } from 'lodash';
 import { useCookies } from 'react-cookie';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
@@ -87,7 +88,7 @@ const Statements = props => {
         let propertyIds = [];
         let shared = 1;
         if (resource && selectedResource) {
-            propertyIds = resource ? resource.propertyIds : [];
+            propertyIds = resource && isArray(resource.propertyIds) ? resource.propertyIds : [];
             shared = resource ? resource.shared : 0;
         }
 
