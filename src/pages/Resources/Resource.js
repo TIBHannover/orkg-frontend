@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { Container, Button, FormGroup, Label, FormText, ButtonGroup } from 'reactstrap';
+import { Container, Button, FormGroup, Label, FormText, ButtonGroup, Alert } from 'reactstrap';
 import { getClassById } from 'services/backend/classes';
 import { updateResourceClasses as updateResourceClassesNetwork } from 'services/backend/resources';
 import { getResource } from 'services/backend/resources';
@@ -104,6 +104,7 @@ function Resource(props) {
     const isCurationAllowed = useSelector(state => state.auth.user?.isCurationAllowed);
     const showDeleteButton = editMode && isCurationAllowed;
     const [hasObjectStatement, setHasObjectStatement] = useState(false);
+    const [hasDOI, setHasDOI] = useState(false);
     const { deleteResource } = useDeleteResource({ resourceId, redirect: true });
     const [canEdit, setCanEdit] = useState(false);
     const classesAutocompleteRef = useRef(null);
@@ -138,6 +139,7 @@ function Resource(props) {
                                 getStatementsBySubjectAndPredicate({ subjectId: props.match.params.id, predicateId: PREDICATES.HAS_DOI }).then(st => {
                                     if (st.length > 0) {
                                         setIsLoading(false);
+                                        setHasDOI(true);
                                         setCanEdit(isCurationAllowed);
                                     } else {
                                         setIsLoading(false);
@@ -261,7 +263,11 @@ function Resource(props) {
                             )}
                         </ButtonGroup>
                     </Container>
-
+                    {editMode && hasDOI && (
+                        <Alert className="container" color="danger">
+                            This resource should not be edited because it has a published DOI, please make sure that you know what are you doing!
+                        </Alert>
+                    )}
                     {editMode && canEdit && (
                         <EditModeHeader className="box rounded-top">
                             <Title>
