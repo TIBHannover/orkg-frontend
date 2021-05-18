@@ -1,4 +1,6 @@
-import { Col, Container, Row } from 'reactstrap';
+import { Link } from 'react-router-dom';
+import { Alert, Col, Container, Row } from 'reactstrap';
+import ROUTES from 'constants/routes';
 
 export default function CurationCall() {
     document.title = 'ORKG Curation Grant Competition - Open Research Knowledge Graph';
@@ -9,6 +11,10 @@ export default function CurationCall() {
                 <h1 className="h4 mt-4 mb-4">ORKG Curation Grant Competition</h1>
             </Container>
             <Container className="box rounded pt-4 pb-4 pl-5 pr-5">
+                <Alert color="info" className="mt-2">
+                    <strong>Webinar:</strong> Open Research Knowledge Graph. <Link to={ROUTES.WEBINAR_MAY_11}>Watch the recording</Link>
+                </Alert>
+
                 <h2>Open Call for Proposals launched</h2>
                 <p>
                     The{' '}
@@ -118,6 +124,11 @@ export default function CurationCall() {
                 </ul>
 
                 <h3 className="mt-4 mb-3">Application process and deadlines</h3>
+                <p>
+                    The Open Research Knowledge Graph webinar provides an introduction to the ORKG.{' '}
+                    <Link to={ROUTES.WEBINAR_MAY_11}>Watch the recording</Link>.
+                </p>
+
                 <p>To apply for the grant, you have to complete and submit this application form. </p>
                 <p>
                     <strong>Application deadline:</strong> 31st of May 2021
