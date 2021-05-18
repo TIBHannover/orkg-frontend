@@ -95,6 +95,7 @@ function Comparison(props) {
 
     const [fullWidth, setFullWidth] = useState(cookies.useFullWidthForComparisonTable === 'true' ? cookies.useFullWidthForComparisonTable : false);
     const [hideScrollHint, setHideScrollHint] = useState(cookies.seenShiftMouseWheelScroll ? cookies.seenShiftMouseWheelScroll : false);
+    const [hideMethodHint, setHideMethodHint] = useState(cookies.seenComparisonMethod ? cookies.seenComparisonMethod : false);
 
     const [viewDensity, setViewDensity] = useState(cookies.viewDensityComparisonTable ? cookies.viewDensityComparisonTable : 'spacious');
     const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -126,6 +127,11 @@ function Comparison(props) {
         // dismiss function for the alert thingy!;
         setCookie('seenShiftMouseWheelScroll', true, { path: env('PUBLIC_URL'), maxAge: 315360000 }); // << TEN YEARS
         setHideScrollHint(true);
+    };
+
+    const onDismissComparisonMethod = () => {
+        setCookie('seenComparisonMethod', true, { path: env('PUBLIC_URL'), maxAge: 315360000 }); // << TEN YEARS
+        setHideMethodHint(true);
     };
 
     const handleFullWidth = () => {
@@ -434,6 +440,12 @@ function Comparison(props) {
                                         <i>Mouse Wheel</i>
                                     </b>{' '}
                                     for horizontal scrolling in the table.
+                                </Alert>
+                            )}
+                            {!isLoadingComparisonResult && comparisonType === 'path' && (
+                                <Alert className="mt-3" color="info" isOpen={!hideMethodHint} toggle={onDismissComparisonMethod}>
+                                    This table is a result of applying the comparison method <b>Exact match</b>, you can try a different method by
+                                    clicking <i>"More --&gt; Comparison method"</i> in the above menu !
                                 </Alert>
                             )}
                             {areAllRulesEmpty(filterControlData) && (
