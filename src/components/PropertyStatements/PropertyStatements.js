@@ -4,8 +4,7 @@ import usePropertyStatements from './hooks/usePropertyStatements';
 import { Button, Table, Collapse } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { reverse } from 'named-urls';
-import ROUTES from 'constants/routes.js';
+import { getResourceLinkByEntityType } from 'utils';
 import { Link } from 'react-router-dom';
 
 const PropertyStatements = ({ propertyId }) => {
@@ -47,17 +46,29 @@ const PropertyStatements = ({ propertyId }) => {
                                 {statements.map(statement => (
                                     <tr key={statement.id}>
                                         <td>
-                                            <Link to={reverse(ROUTES.RESOURCE, { id: statement.subject.id })}>{statement.subject.label}</Link>
+                                            {getResourceLinkByEntityType(statement.subject._class, statement.subject.id) ? (
+                                                <Link to={getResourceLinkByEntityType(statement.subject._class, statement.subject.id)}>
+                                                    {statement.subject.label}
+                                                </Link>
+                                            ) : (
+                                                statement.subject.label
+                                            )}
                                         </td>
                                         <td>{statement.predicate.label}</td>
                                         <td>
-                                            <Link to={reverse(ROUTES.RESOURCE, { id: statement.object.id })}>{statement.object.label}</Link>
+                                            {getResourceLinkByEntityType(statement.object._class, statement.object.id) ? (
+                                                <Link to={getResourceLinkByEntityType(statement.object._class, statement.object.id)}>
+                                                    {statement.object.label}
+                                                </Link>
+                                            ) : (
+                                                statement.object.label
+                                            )}
                                         </td>
                                     </tr>
                                 ))}
                                 {!isLoading && hasNextPage && (
                                     <tr className="text-center">
-                                        <td colspan="3">
+                                        <td colSpan="3">
                                             <Button color="light" size="sm" onClick={!isLoading ? handleLoadMore : undefined}>
                                                 Load more statements
                                             </Button>

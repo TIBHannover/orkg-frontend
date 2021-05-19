@@ -1,6 +1,6 @@
 import capitalize from 'capitalize';
 import { FILTER_TYPES } from 'constants/comparisonFilterTypes';
-import { CLASSES, MISC, PREDICATES } from 'constants/graphSettings';
+import { CLASSES, MISC, PREDICATES, ENTITIES } from 'constants/graphSettings';
 import { PREDICATE_TYPE_ID, RESOURCE_TYPE_ID } from 'constants/misc';
 import ROUTES from 'constants/routes';
 import { find, flatten, flattenDepth, isEqual, isString, last, uniq } from 'lodash';
@@ -1115,6 +1115,37 @@ export const getResourceLink = (classId, resourceId) => {
         }
     }
 
+    return link;
+};
+
+/**
+ * Get resource link based on entity type
+ *
+ * @param {String} _class Entity type
+ * @param {String} resourceId Resource ID
+ * @result {String} Link of the resource
+ */
+export const getResourceLinkByEntityType = (_class, resourceId) => {
+    let link = '';
+
+    switch (_class) {
+        case ENTITIES.RESOURCE: {
+            link = reverse(ROUTES.RESOURCE, { id: resourceId });
+            break;
+        }
+        case ENTITIES.CLASS: {
+            link = reverse(ROUTES.CLASS, { id: resourceId });
+            break;
+        }
+        case ENTITIES.PREDICATE: {
+            link = reverse(ROUTES.PROPERTY, { id: resourceId });
+            break;
+        }
+        default: {
+            link = '';
+            break;
+        }
+    }
     return link;
 };
 

@@ -85,8 +85,10 @@ export const MISC = {
     UNKNOWN_ID: '00000000-0000-0000-0000-000000000000'
 };
 
+/* entities usually are returned by the backend (in _class) to specify the type of node  */
 export const ENTITIES = {
     CLASS: 'class',
     PREDICATE: 'predicate',
-    RESOURCE: 'resource'
+    RESOURCE: 'resource',
+    LITERAL: 'literal'
 };
