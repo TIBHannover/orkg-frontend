@@ -28,6 +28,21 @@ export const setIsLoading = isLoading => dispatch => {
     });
 };
 
+export const setIsEditing = isEditing => dispatch => {
+    dispatch({
+        type: type.ARTICLE_WRITER_SET_IS_EDITING,
+        isEditing
+    });
+};
+export const setVersions = versions => dispatch => {
+    dispatch({
+        type: type.ARTICLE_WRITER_SET_VERSIONS,
+        payload: {
+            versions
+        }
+    });
+};
+
 export const updateTitle = ({ id, title }) => async dispatch => {
     // on purpose don't have a blocking update there (so don't wait with dispatching the change before updating resource)
     dispatch({

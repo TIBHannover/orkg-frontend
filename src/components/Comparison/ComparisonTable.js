@@ -1,4 +1,5 @@
 import { memo, useRef, useMemo } from 'react';
+import { Alert } from 'reactstrap';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import PropertyValue from 'components/Comparison/PropertyValue';
@@ -258,6 +259,11 @@ const ComparisonTable = props => {
                     </div>
                 </ScrollSyncPane>
             </div>
+            {rows.length === 0 && (
+                <Alert className="mt-3" color="info">
+                    This contributions have no data to compare on!
+                </Alert>
+            )}
         </ReactTableWrapper>
     );
 };

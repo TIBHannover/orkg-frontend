@@ -273,11 +273,19 @@ export const getComparisonData = (resource, comparisonStatements) => {
     // subject
     const subject = comparisonStatements.find(statement => statement.predicate.id === PREDICATES.HAS_SUBJECT);
 
+    let contributionAmount = 0;
+    // try/catch to handle exceptions when a URL is malformed
+    try {
+        contributionAmount = url ? getArrayParamFromQueryString(url.object.label, 'contributions').length : 0;
+    } catch (e) {
+        console.log(e);
+    }
+
     return {
         id: resource.id,
         label: resource.label ? resource.label : 'No Title',
         created_at: url ? url.object.created_at : '',
-        nbContributions: url ? getArrayParamFromQueryString(url.object.label, 'contributions').length : 0,
+        nbContributions: contributionAmount,
         url: url ? url.object.label : '',
         reference: reference ? reference.object.label : '',
         description: description ? description.object.label : '',

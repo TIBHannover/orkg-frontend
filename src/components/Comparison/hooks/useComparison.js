@@ -18,12 +18,14 @@ import {
 import { useParams, useLocation, useHistory } from 'react-router-dom';
 import { PREDICATES, CLASSES, MISC } from 'constants/graphSettings';
 import { reverse } from 'named-urls';
-import { flattenDepth, flatten, groupBy, intersection, findIndex, cloneDeep, isEmpty } from 'lodash';
+import { flattenDepth, flatten, groupBy, intersection, findIndex, cloneDeep, isEmpty, uniq, without } from 'lodash';
 import arrayMove from 'array-move';
 import ROUTES from 'constants/routes.js';
 import queryString from 'query-string';
 import { usePrevious } from 'react-use';
 import Confirm from 'reactstrap-confirm';
+
+const DEFAULT_COMPARISON_METHOD = 'path';
 
 function useComparison({ id }) {
     const location = useLocation();
@@ -85,7 +87,7 @@ function useComparison({ id }) {
 
     // comparison config
     const [transpose, setTranspose] = useState(false);
-    const [comparisonType, setComparisonType] = useState('merge');
+    const [comparisonType, setComparisonType] = useState(DEFAULT_COMPARISON_METHOD);
     const [responseHash, setResponseHash] = useState(null);
     const [contributionsList, setContributionsList] = useState([]);
     const [predicatesList, setPredicatesList] = useState([]);
@@ -198,22 +200,38 @@ function useComparison({ id }) {
                         const url = filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.URL, true);
                         if (url) {
                             setResponseHash(getParamFromQueryString(url?.label.substring(url?.label.indexOf('?')), 'response_hash'));
-                            setComparisonType(getParamFromQueryString(url?.label.substring(url?.label.indexOf('?')), 'type') ?? 'merge');
+                            setComparisonType(
+                                getParamFromQueryString(url?.label.substring(url?.label.indexOf('?')), 'type') ?? DEFAULT_COMPARISON_METHOD
+                            );
                             setTranspose(getParamFromQueryString(url?.label.substring(url?.label.indexOf('?')), 'transpose', true));
                             setPredicatesList(getArrayParamFromQueryString(url?.label.substring(url?.label.indexOf('?')), 'properties'));
-                            setContributionsList(getArrayParamFromQueryString(url?.label.substring(url?.label.indexOf('?')), 'contributions'));
+                            const contributionsIDs =
+                                without(
+                                    uniq(getArrayParamFromQueryString(url?.label.substring(url?.label.indexOf('?')), 'contributions')),
+                                    undefined,
+                                    null,
+                                    ''
+                                ) ?? [];
+                            setContributionsList(contributionsIDs);
                         } else {
                             setPredicatesList(
                                 filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.HAS_PROPERTY, false)?.map(p => p.id)
                             );
-                            setContributionsList(
-                                filterObjectOfStatementsByPredicateAndClass(
-                                    statements,
-                                    PREDICATES.COMPARE_CONTRIBUTION,
-                                    false,
-                                    CLASSES.CONTRIBUTION
-                                )?.map(c => c.id) ?? []
-                            );
+                            const contributionsIDs =
+                                without(
+                                    uniq(
+                                        filterObjectOfStatementsByPredicateAndClass(
+                                            statements,
+                                            PREDICATES.COMPARE_CONTRIBUTION,
+                                            false,
+                                            CLASSES.CONTRIBUTION
+                                        )?.map(c => c.id) ?? []
+                                    ),
+                                    undefined,
+                                    null,
+                                    ''
+                                ) ?? [];
+                            setContributionsList(contributionsIDs);
                         }
                         if (
                             !filterObjectOfStatementsByPredicateAndClass(
@@ -577,7 +595,8 @@ function useComparison({ id }) {
     const addContributions = newContributionIds => {
         setUrlNeedsToUpdate(true);
         setResponseHash(null);
-        setContributionsList(contributionsList.concat(newContributionIds));
+        const contributionsIDs = without(uniq(contributionsList.concat(newContributionIds)), undefined, null, '') ?? [];
+        setContributionsList(contributionsIDs);
     };
 
     /**
@@ -622,7 +641,7 @@ function useComparison({ id }) {
         const params = queryString.stringify(
             {
                 contributions: contributionsList.join(','),
-                properties: predicatesList.join(','),
+                properties: predicatesList.map(predicate => encodeURIComponent(predicate)).join(','),
                 type: comparisonType,
                 transpose: transpose
             },
@@ -715,9 +734,10 @@ function useComparison({ id }) {
             // Update browser title
             document.title = 'Comparison - ORKG';
             setResponseHash(getParamFromQueryString(location.search, 'response_hash'));
-            setComparisonType(getParamFromQueryString(location.search, 'type') ?? 'merge');
+            setComparisonType(getParamFromQueryString(location.search, 'type') ?? DEFAULT_COMPARISON_METHOD);
             setTranspose(getParamFromQueryString(location.search, 'transpose', true));
-            setContributionsList(getArrayParamFromQueryString(location.search, 'contributions'));
+            const contributionsIDs = without(uniq(getArrayParamFromQueryString(location.search, 'contributions')), undefined, null, '') ?? [];
+            setContributionsList(contributionsIDs);
             setPredicatesList(getArrayParamFromQueryString(location.search, 'properties'));
         }
         updateComparisonPublicURL();
