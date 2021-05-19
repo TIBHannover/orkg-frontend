@@ -5,6 +5,22 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [V0.38](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.37.3...V0.38) - 2021-05-19
+
+### Changes
+
+- fix: Error on PropertySuggestions component [`#585`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/585)
+- fix: loading comparison components [`#576`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/576)
+- fix: loading observatory and organization in user profile [`#575`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/575)
+- fix: load more button in add contribution modal and prevent comparing the same contribution [`#577`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/577)
+- feat(Resources): allow curators to edit published comparison [`#584`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/584)
+- feat(Comparisons): change default comparison method to 'path' [`#568`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/568)
+- fix(Comparisons): encode predicates when URL is generated [`#578`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/578)
+- feat(FeaturedComparison): make featured comparison for home page only [`#579`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/579)
+- SmartReview: fix link after publishing, fix Markdown syntax, fix history after publishing [`#582`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/582)
+- feat: sort contributors and show contribution percentage in tooltip [`#580`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/580)
+
+---
 ## [V0.37.3](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.37.2...V0.37.3) - 2021-05-12
 
 ### Changes
