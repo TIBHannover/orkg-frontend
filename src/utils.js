@@ -470,11 +470,14 @@ export const generateRdfDataVocabularyFile = (data, contributions, properties, m
  * @param {String} predicateID Predicate ID
  * @param {Boolean} isUnique if this predicate is unique and has one value
  */
-export const filterObjectOfStatementsByPredicate = (statementsArray, predicateID, isUnique = true) => {
+export const filterObjectOfStatementsByPredicateAndClass = (statementsArray, predicateID, isUnique = true, classID = null) => {
     if (!statementsArray) {
         return null;
     }
-    const result = statementsArray.filter(statement => statement.predicate.id === predicateID);
+    let result = statementsArray.filter(statement => statement.predicate.id === predicateID);
+    if (classID) {
+        result = statementsArray.filter(statement => statement.object.classes && statement.object.classes.includes(classID));
+    }
     if (result.length > 0 && isUnique) {
         return result[0].object;
     } else if (result.length > 0 && !isUnique) {

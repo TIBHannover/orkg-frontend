@@ -1,8 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import { getStatementsBySubject, getStatementsByObjectAndPredicate } from 'services/backend/statements';
 import { getResource } from 'services/backend/resources';
-import { filterObjectOfStatementsByPredicate } from 'utils';
-import { PREDICATES } from 'constants/graphSettings';
+import { filterObjectOfStatementsByPredicateAndClass } from 'utils';
+import { CLASSES, PREDICATES } from 'constants/graphSettings';
 
 function useResearchProblem({ id }) {
     const [data, setData] = useState({});
@@ -28,9 +28,9 @@ function useResearchProblem({ id }) {
 
             // Get description, same as and sub-problems of the research problem
             getStatementsBySubject({ id: rpId }).then(statements => {
-                const description = filterObjectOfStatementsByPredicate(statements, PREDICATES.DESCRIPTION, true);
-                const sameAs = filterObjectOfStatementsByPredicate(statements, PREDICATES.SAME_AS, true);
-                const subProblems = filterObjectOfStatementsByPredicate(statements, PREDICATES.SUB_PROBLEM, false);
+                const description = filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.DESCRIPTION, true);
+                const sameAs = filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.SAME_AS, true);
+                const subProblems = filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.SUB_PROBLEM, false, CLASSES.PROBLEM);
                 setData(prevData => ({ ...prevData, description: description?.label, sameAs: sameAs, subProblems: subProblems ?? [] }));
             });
 
