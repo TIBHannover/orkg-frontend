@@ -18,7 +18,7 @@ import {
 import { useParams, useLocation, useHistory } from 'react-router-dom';
 import { PREDICATES, CLASSES, MISC } from 'constants/graphSettings';
 import { reverse } from 'named-urls';
-import { flattenDepth, flatten, groupBy, intersection, findIndex, cloneDeep, isEmpty } from 'lodash';
+import { flattenDepth, flatten, groupBy, intersection, findIndex, cloneDeep, isEmpty, uniq, without } from 'lodash';
 import arrayMove from 'array-move';
 import ROUTES from 'constants/routes.js';
 import queryString from 'query-string';
@@ -185,12 +185,26 @@ function useComparison({ id }) {
                             );
                             setTranspose(getParamFromQueryString(url?.label.substring(url?.label.indexOf('?')), 'transpose', true));
                             setPredicatesList(getArrayParamFromQueryString(url?.label.substring(url?.label.indexOf('?')), 'properties'));
-                            setContributionsList(getArrayParamFromQueryString(url?.label.substring(url?.label.indexOf('?')), 'contributions'));
+                            const contributionsIDs =
+                                without(
+                                    uniq(getArrayParamFromQueryString(url?.label.substring(url?.label.indexOf('?')), 'contributions')),
+                                    undefined,
+                                    null,
+                                    ''
+                                ) ?? [];
+                            setContributionsList(contributionsIDs);
                         } else {
                             setPredicatesList(filterObjectOfStatementsByPredicate(statements, PREDICATES.HAS_PROPERTY, false)?.map(p => p.id));
-                            setContributionsList(
-                                filterObjectOfStatementsByPredicate(statements, PREDICATES.COMPARE_CONTRIBUTION, false)?.map(c => c.id) ?? []
-                            );
+                            const contributionsIDs =
+                                without(
+                                    uniq(
+                                        filterObjectOfStatementsByPredicate(statements, PREDICATES.COMPARE_CONTRIBUTION, false)?.map(c => c.id) ?? []
+                                    ),
+                                    undefined,
+                                    null,
+                                    ''
+                                ) ?? [];
+                            setContributionsList(contributionsIDs);
                         }
                         if (!filterObjectOfStatementsByPredicate(statements, PREDICATES.COMPARE_CONTRIBUTION, false)?.map(c => c.id)) {
                             setIsLoadingComparisonResult(false);
@@ -547,7 +561,8 @@ function useComparison({ id }) {
     const addContributions = newContributionIds => {
         setUrlNeedsToUpdate(true);
         setResponseHash(null);
-        setContributionsList(contributionsList.concat(newContributionIds));
+        const contributionsIDs = without(uniq(contributionsList.concat(newContributionIds)), undefined, null, '') ?? [];
+        setContributionsList(contributionsIDs);
     };
 
     /**
@@ -687,7 +702,8 @@ function useComparison({ id }) {
             setResponseHash(getParamFromQueryString(location.search, 'response_hash'));
             setComparisonType(getParamFromQueryString(location.search, 'type') ?? DEFAULT_COMPARISON_METHOD);
             setTranspose(getParamFromQueryString(location.search, 'transpose', true));
-            setContributionsList(getArrayParamFromQueryString(location.search, 'contributions'));
+            const contributionsIDs = without(uniq(getArrayParamFromQueryString(location.search, 'contributions')), undefined, null, '') ?? [];
+            setContributionsList(contributionsIDs);
             setPredicatesList(getArrayParamFromQueryString(location.search, 'properties'));
         }
         updateComparisonPublicURL();
