@@ -255,8 +255,10 @@ export const getComparisonData = (resource, comparisonStatements) => {
     // reference
     const reference = comparisonStatements.find(statement => statement.predicate.id === PREDICATES.REFERENCE);
 
-    // url
-    const url = comparisonStatements.find(statement => statement.predicate.id === PREDICATES.URL);
+    // contributions
+    const contributions = comparisonStatements
+        .filter(statement => statement.predicate.id === PREDICATES.COMPARE_CONTRIBUTION)
+        .map(statement => statement.object);
 
     // icon
     const icon = comparisonStatements.find(statement => statement.predicate.id === PREDICATES.ICON);
@@ -276,7 +278,7 @@ export const getComparisonData = (resource, comparisonStatements) => {
     let contributionAmount = 0;
     // try/catch to handle exceptions when a URL is malformed
     try {
-        contributionAmount = url ? getArrayParamFromQueryString(url.object.label, 'contributions').length : 0;
+        contributionAmount = contributions ? contributions.length : 0;
     } catch (e) {
         console.log(e);
     }
@@ -284,9 +286,9 @@ export const getComparisonData = (resource, comparisonStatements) => {
     return {
         id: resource.id,
         label: resource.label ? resource.label : 'No Title',
-        created_at: url ? url.object.created_at : '',
+        created_at: description ? description.object.created_at : '',
         nbContributions: contributionAmount,
-        url: url ? url.object.label : '',
+        contributions: contributions ? contributions : [],
         reference: reference ? reference.object.label : '',
         description: description ? description.object.label : '',
         icon: icon ? icon.object.label : '',

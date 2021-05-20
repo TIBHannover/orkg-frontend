@@ -213,7 +213,7 @@ ComparisonCard.propTypes = {
         label: PropTypes.string,
         description: PropTypes.string,
         nbContributions: PropTypes.number,
-        url: PropTypes.string,
+        contributions: PropTypes.array,
         reference: PropTypes.string,
         created_at: PropTypes.string,
         resources: PropTypes.array,

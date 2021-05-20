@@ -20,7 +20,7 @@ import { createLiteralStatement, createResourceStatement, getStatementsByPredica
 import { generateDOIForComparison, createObject } from 'services/backend/misc';
 import { createLiteral } from 'services/backend/literals';
 import { createResource } from 'services/backend/resources';
-import { getComparison } from 'services/similarity/index';
+import { getComparison, createResourceData } from 'services/similarity/index';
 import Tooltip from 'components/Utils/Tooltip';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
 import AuthorsInput from 'components/Utils/AuthorsInput';
@@ -194,11 +194,6 @@ function Publish(props) {
                                             }
                                         ]
                                     }),
-                                [PREDICATES.URL]: [
-                                    {
-                                        text: `${props.comparisonURLConfig}&response_hash=${comparison.response_hash}`
-                                    }
-                                ],
                                 [PREDICATES.COMPARE_CONTRIBUTION]: props.contributionsList.map(contributionID => ({
                                     '@id': contributionID
                                 })),
@@ -219,6 +214,10 @@ function Publish(props) {
                     };
                     const createdComparison = await createObject(comparison_obj);
                     await saveCreators(comparisonCreators, createdComparison.id);
+                    await createResourceData({
+                        resourceId: createdComparison.id,
+                        data: { url: `${props.comparisonURLConfig}&response_hash=${comparison.response_hash}` }
+                    });
                     toast.success('Comparison saved successfully');
                     // Assign a DOI
                     if (assignDOI) {
