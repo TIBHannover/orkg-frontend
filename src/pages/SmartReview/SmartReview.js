@@ -1,4 +1,14 @@
-import { faCheckCircle, faDownload, faEllipsisV, faHistory, faPen, faSpinner, faTimes, faUpload } from '@fortawesome/free-solid-svg-icons';
+import {
+    faCheckCircle,
+    faDownload,
+    faEllipsisV,
+    faHistory,
+    faPen,
+    faQuoteRight,
+    faSpinner,
+    faTimes,
+    faUpload
+} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import { toggleHistoryModal as toggleHistoryModalAction, setIsEditing } from 'actions/smartReview';
@@ -26,6 +36,9 @@ import { NavLink, useHistory } from 'react-router-dom';
 import { Button, ButtonGroup, Container, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledButtonDropdown } from 'reactstrap';
 import Confirm from 'reactstrap-confirm';
 import { createGlobalStyle } from 'styled-components';
+import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
+import ReferencesModal from 'components/SmartReview/References/ReferencesModal';
+import ReferencesSection from 'components/SmartReview/References/ReferencesSection';
 
 const GlobalStyle = createGlobalStyle`
     // ensure printing only prints the contents and no other elements
@@ -54,6 +67,7 @@ const SmartReview = () => {
     const isLoadingInline = useSelector(state => state.smartReview.isLoading);
     const isEditing = useSelector(state => state.smartReview.isEditing);
     const [isOpenPublishModal, setIsOpenPublishModal] = useState(false);
+    const [isOpenReferencesModal, setIsOpenReferencesModal] = useState(false);
     const isPublished = useSelector(state => state.smartReview.isPublished);
     const paper = useSelector(state => state.smartReview.paper);
     const isOpenHistoryModal = useSelector(state => state.smartReview.isOpenHistoryModal);
@@ -149,15 +163,40 @@ const SmartReview = () => {
                                 </>
                             )}
 
-                            <Button className="flex-shrink-0" color="secondary" size="sm" style={{ marginLeft: 1 }} onClick={toggleHistoryModal}>
-                                <Icon icon={faHistory} /> History
-                            </Button>
                             {!isEditing ? (
-                                <Button className="flex-shrink-0" color="secondary" size="sm" style={{ marginLeft: 1 }} onClick={handleEdit}>
-                                    <Icon icon={faPen} /> Edit
-                                </Button>
+                                <>
+                                    <Button
+                                        className="flex-shrink-0"
+                                        color="secondary"
+                                        size="sm"
+                                        style={{ marginLeft: 1 }}
+                                        onClick={toggleHistoryModal}
+                                    >
+                                        <Icon icon={faHistory} /> History
+                                    </Button>
+
+                                    <RequireAuthentication
+                                        component={Button}
+                                        className="flex-shrink-0"
+                                        color="secondary"
+                                        size="sm"
+                                        style={{ marginLeft: 1 }}
+                                        onClick={handleEdit}
+                                    >
+                                        <Icon icon={faPen} /> Edit
+                                    </RequireAuthentication>
+                                </>
                             ) : (
                                 <>
+                                    <Button
+                                        className="flex-shrink-0"
+                                        color="secondary"
+                                        size="sm"
+                                        style={{ marginLeft: 1 }}
+                                        onClick={() => setIsOpenReferencesModal(true)}
+                                    >
+                                        <Icon icon={faQuoteRight} /> References
+                                    </Button>
                                     <Button
                                         className="flex-shrink-0"
                                         color="secondary"
@@ -206,6 +245,9 @@ const SmartReview = () => {
                     <Container>
                         <AcknowledgementsSection />
                     </Container>
+                    <Container>
+                        <ReferencesSection />
+                    </Container>
                 </main>
             )}
             {!isLoading && !isEditing && <ViewArticle />}
@@ -215,6 +257,7 @@ const SmartReview = () => {
                 <PublishModal toggle={() => setIsOpenPublishModal(v => !v)} id={id} getVersions={getVersions} paperId={paper.id} show />
             )}
             {isOpenHistoryModal && <HistoryModal toggle={toggleHistoryModal} id={id} show />}
+            {isOpenReferencesModal && <ReferencesModal toggle={() => setIsOpenReferencesModal(v => !v)} id={id} show />}
         </div>
     );
 };

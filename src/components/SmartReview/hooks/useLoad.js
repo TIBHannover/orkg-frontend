@@ -6,6 +6,7 @@ import { getResource } from 'services/backend/resources';
 import { getStatementsBundleBySubject, getStatementsByObjectAndPredicate, getStatementsBySubjects } from 'services/backend/statements';
 import { getResourceData } from 'services/similarity';
 import { countBy, orderBy } from 'lodash';
+import Cite from 'citation-js';
 
 const useLoad = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -141,6 +142,7 @@ const useLoad = () => {
 
         // contributors
         const contributors = getAllContributors(paperStatements);
+        const references = await getReferences(paperStatements, contributionResource.id);
 
         return {
             paper: {
@@ -154,9 +156,23 @@ const useLoad = () => {
             versions,
             researchField,
             statements: paperStatements,
-            contributors
+            contributors,
+            references
         };
     }, []);
+
+    const getReferences = async (statements, contributionId) => {
+        const referenceStatements = statements.filter(
+            statement => statement.subject.id === contributionId && statement.predicate.id === PREDICATES.HAS_REFERENCE
+        );
+        const parseReferences = referenceStatements.map(reference => Cite.async(reference.object.label));
+
+        return (await Promise.all(parseReferences)).map((parsedReference, index) => ({
+            parsedReference: parsedReference.data[0],
+            literal: referenceStatements[index].object,
+            statementId: referenceStatements[index].id
+        }));
+    };
 
     const getAllContributors = statements => {
         if (statements.length === 0) {

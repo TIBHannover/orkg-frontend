@@ -12,6 +12,8 @@ const initialState = {
     isEditing: false,
     isPublished: false,
     isOpenHistoryModal: false,
+    references: [],
+    usedReferencesPerSection: {},
     statements: []
 };
 
@@ -27,7 +29,8 @@ const smartReview = (state = initialState, action) => {
                 versions,
                 statements,
                 researchField,
-                contributors
+                contributors,
+                references
             } = action.payload;
 
             return {
@@ -40,7 +43,8 @@ const smartReview = (state = initialState, action) => {
                 versions,
                 statements,
                 researchField,
-                contributors
+                contributors,
+                references
             };
         }
 
@@ -168,6 +172,46 @@ const smartReview = (state = initialState, action) => {
             return {
                 ...state,
                 versions
+            };
+        }
+
+        case type.ARTICLE_WRITER_REFERENCE_ADD: {
+            const { reference } = action.payload;
+            return {
+                ...state,
+                references: [...state.references, reference]
+            };
+        }
+
+        case type.ARTICLE_WRITER_REFERENCE_REMOVE: {
+            const { statementId } = action.payload;
+            return {
+                ...state,
+                references: state.references.filter(reference => reference.statementId !== statementId)
+            };
+        }
+
+        case type.ARTICLE_WRITER_REFERENCE_UPDATE: {
+            const { literalId, bibtex, parsedReference } = action.payload;
+            return {
+                ...state,
+                references: state.references.map(reference =>
+                    reference.literal.id === literalId
+                        ? { ...reference, literal: { ...reference.literal, label: bibtex }, parsedReference }
+                        : reference
+                )
+            };
+        }
+
+        case type.ARTICLE_WRITER_SET_USED_REFERENCES: {
+            const { references, sectionId } = action.payload;
+
+            return {
+                ...state,
+                usedReferences: {
+                    ...state.usedReferences,
+                    [sectionId]: references
+                }
             };
         }
 

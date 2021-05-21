@@ -45,7 +45,8 @@ export const PREDICATES = {
     HAS_SECTION: 'HasSection',
     HAS_LINK: 'HasLink',
     HAS_VISUALIZATION: 'hasVisualization',
-    HAS_PAPER: 'HasPaper'
+    HAS_PAPER: 'HasPaper',
+    HAS_REFERENCE: 'HasReference'
 };
 
 export const CLASSES = {

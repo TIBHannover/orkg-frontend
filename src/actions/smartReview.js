@@ -243,3 +243,58 @@ export const setResearchField = ({ statementId, paperId, researchField }) => asy
         }
     });
 };
+
+export const createReference = ({ contributionId, bibtex, parsedReference }) => async dispatch => {
+    try {
+        const literal = await createLiteral(bibtex);
+        const { id: statementId } = await createLiteralStatement(contributionId, PREDICATES.HAS_REFERENCE, literal.id);
+
+        dispatch({
+            type: type.ARTICLE_WRITER_REFERENCE_ADD,
+            payload: {
+                reference: {
+                    literal,
+                    parsedReference,
+                    statementId
+                }
+            }
+        });
+    } catch (e) {
+        console.log(e);
+    }
+};
+
+export const deleteReference = statementId => async dispatch => {
+    try {
+        await deleteStatementById(statementId);
+
+        dispatch({
+            type: type.ARTICLE_WRITER_REFERENCE_REMOVE,
+            payload: {
+                statementId
+            }
+        });
+    } catch (e) {
+        console.log(e);
+    }
+};
+
+export const updateReference = ({ literalId, bibtex, parsedReference }) => async dispatch => {
+    try {
+        await updateLiteral(literalId, bibtex);
+
+        dispatch({
+            type: type.ARTICLE_WRITER_REFERENCE_UPDATE,
+            payload: { literalId, bibtex, parsedReference }
+        });
+    } catch (e) {
+        console.log(e);
+    }
+};
+
+export const setUsedReferences = ({ sectionId, references }) => async dispatch => {
+    dispatch({
+        type: type.ARTICLE_WRITER_SET_USED_REFERENCES,
+        payload: { sectionId, references }
+    });
+};
