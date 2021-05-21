@@ -7,7 +7,6 @@ import { reverse } from 'named-urls';
 import ROUTES from '../../constants/routes.js';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import queryString from 'query-string';
 
 const Comparison = styled(Card)`
     border-width: 1px !important; //TODO: remove once style of 1px border is applied globally
