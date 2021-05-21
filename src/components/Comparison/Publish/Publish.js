@@ -32,6 +32,7 @@ import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { reverse } from 'named-urls';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { Link } from 'react-router-dom';
+import { getPropertyObjectFromData } from 'utils';
 import styled from 'styled-components';
 import { slugify } from 'utils';
 import { PREDICATES, CLASSES, ENTITIES } from 'constants/graphSettings';
@@ -187,7 +188,8 @@ function Publish(props) {
                         createResourceStatement(resourceId, PREDICATES.COMPARE_CONTRIBUTION, contirbutionID);
                     });
                     props.predicatesList.forEach(predicateID => {
-                        createResourceStatement(resourceId, PREDICATES.HAS_PROPERTY, predicateID);
+                        const property = props.comparisonType === 'merge' ? predicateID : getPropertyObjectFromData(props.data, { id: predicateID });
+                        createResourceStatement(resourceId, PREDICATES.HAS_PROPERTY, property.id);
                     });
                     if (props.metaData.hasPreviousVersion) {
                         createResourceStatement(resourceId, PREDICATES.HAS_PREVIOUS_VERSION, props.metaData.hasPreviousVersion.id);
@@ -557,7 +559,8 @@ Publish.propTypes = {
     comparisonURLConfig: PropTypes.string.isRequired,
     setAuthors: PropTypes.func.isRequired,
     loadCreatedBy: PropTypes.func.isRequired,
-    loadProvenanceInfos: PropTypes.func.isRequired
+    loadProvenanceInfos: PropTypes.func.isRequired,
+    data: PropTypes.object.isRequired
 };
 
 export default Publish;

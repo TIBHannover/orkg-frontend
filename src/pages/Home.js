@@ -10,6 +10,7 @@ import ContributorsBox from 'components/TopContributors/ContributorsBox';
 import useResearchFieldSelector from 'components/Home/hooks/useResearchFieldSelector';
 import { MISC } from 'constants/graphSettings';
 import { toast } from 'react-toastify';
+import moment from 'moment';
 import { Link } from 'react-router-dom';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
@@ -42,6 +43,11 @@ export default function Home() {
                 <Link to={reverse(ROUTES.PAGE, { url: ROUTES_CMS.CURATION_CALL })}>Find out more</Link>
             </Alert>
 
+            {moment() < moment('2021-06-13T00:00:00') && (
+                <Alert color="info" className="box mt-2">
+                    <strong>Webinar:</strong> Open Research Knowledge Graph. <Link to={ROUTES.WEBINAR_MAY_11}>Watch the recording</Link>
+                </Alert>
+            )}
             <Row>
                 <Col md="12">
                     <div className="box rounded-lg p-3">

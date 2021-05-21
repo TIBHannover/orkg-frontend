@@ -15,13 +15,6 @@ export const getResearchProblemsByResearchFieldIdCountingPapers = ({ id, page = 
     return submitGetRequest(`${fieldsUrl}${encodeURIComponent(id)}/problems?${params}`);
 };
 
-/*
-http://www.localhost:8080/api/research-fields/{id}/subfields/problems
-http://www.localhost:8080/api/research-fields/{id}/subfields/contributors
-http://www.localhost:8080/api/research-fields/{id}/subfields/comparisons
-http://www.localhost:8080/api/research-fields/{id}/subfields/papers
-*/
-
 export const getComparisonsByResearchFieldId = ({ id, page = 0, items = 9999, sortBy = 'created_at', desc = true, subfields = true }) => {
     const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
     const params = queryString.stringify(
@@ -66,5 +59,13 @@ export const getContributorsByResearchFieldId = ({ id, page = 0, items = 9999, s
             skipEmptyString: true
         }
     );
-    return submitGetRequest(`${fieldsUrl}${encodeURIComponent(id)}/${subfields ? 'subfields/' : ''}contributors?${params}`);
+    return submitGetRequest(`${fieldsUrl}${encodeURIComponent(id)}/${subfields ? 'subfields/' : ''}contributors?${params}`).then(result => {
+        return {
+            ...result,
+            content: result.content.map(c => ({
+                profile: c,
+                counts: { total: null }
+            }))
+        };
+    });
 };

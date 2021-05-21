@@ -7,7 +7,7 @@ import { getComparison } from 'services/similarity/index';
 import {
     extendPropertyIds,
     similarPropertiesByLabel,
-    filterObjectOfStatementsByPredicate,
+    filterObjectOfStatementsByPredicateAndClass,
     filterSubjectOfStatementsByPredicate,
     getArrayParamFromQueryString,
     getParamFromQueryString,
@@ -18,17 +18,20 @@ import {
 import { useParams, useLocation, useHistory } from 'react-router-dom';
 import { PREDICATES, CLASSES, MISC } from 'constants/graphSettings';
 import { reverse } from 'named-urls';
-import { flattenDepth, flatten, groupBy, intersection, findIndex, cloneDeep, isEmpty } from 'lodash';
+import { flattenDepth, flatten, groupBy, intersection, findIndex, cloneDeep, isEmpty, uniq, without } from 'lodash';
 import arrayMove from 'array-move';
 import ROUTES from 'constants/routes.js';
 import queryString from 'query-string';
 import { usePrevious } from 'react-use';
 import Confirm from 'reactstrap-confirm';
 
-function useComparison() {
+const DEFAULT_COMPARISON_METHOD = 'path';
+
+function useComparison({ id }) {
     const location = useLocation();
     const history = useHistory();
-    const { comparisonId } = useParams();
+    const params = useParams();
+    const comparisonId = id || params.comparisonId;
 
     /**
      * @typedef {Object} MetaData
@@ -84,7 +87,7 @@ function useComparison() {
 
     // comparison config
     const [transpose, setTranspose] = useState(false);
-    const [comparisonType, setComparisonType] = useState('merge');
+    const [comparisonType, setComparisonType] = useState(DEFAULT_COMPARISON_METHOD);
     const [responseHash, setResponseHash] = useState(null);
     const [contributionsList, setContributionsList] = useState([]);
     const [predicatesList, setPredicatesList] = useState([]);
@@ -115,7 +118,12 @@ function useComparison() {
 
     const loadVisualizations = comparisonID => {
         getStatementsBySubjectAndPredicate({ subjectId: comparisonID, predicateId: PREDICATES.HAS_VISUALIZATION }).then(statements => {
-            const visualizations = filterObjectOfStatementsByPredicate(statements, PREDICATES.HAS_VISUALIZATION, false);
+            const visualizations = filterObjectOfStatementsByPredicateAndClass(
+                statements,
+                PREDICATES.HAS_VISUALIZATION,
+                false,
+                CLASSES.VISUALIZATION
+            );
             setMetaData({ ...metaData, visualizations: visualizations });
         });
     };
@@ -141,17 +149,32 @@ function useComparison() {
                 .then(comparisonResource => {
                     // Get meta data and config of a comparison
                     getStatementsBySubject({ id: cId }).then(statements => {
-                        const description = filterObjectOfStatementsByPredicate(statements, PREDICATES.DESCRIPTION, true);
-                        const doi = filterObjectOfStatementsByPredicate(statements, PREDICATES.HAS_DOI, true);
-                        const references = filterObjectOfStatementsByPredicate(statements, PREDICATES.REFERENCE, false);
-                        const hasPreviousVersion = filterObjectOfStatementsByPredicate(statements, PREDICATES.HAS_PREVIOUS_VERSION, true);
-                        const resources = filterObjectOfStatementsByPredicate(statements, PREDICATES.RELATED_RESOURCES, false);
-                        const figures = filterObjectOfStatementsByPredicate(statements, PREDICATES.RELATED_FIGURE, false);
-                        const visualizations = filterObjectOfStatementsByPredicate(statements, PREDICATES.HAS_VISUALIZATION, false);
-                        const subject = filterObjectOfStatementsByPredicate(statements, PREDICATES.HAS_SUBJECT, true);
+                        const description = filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.DESCRIPTION, true);
+                        const doi = filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.HAS_DOI, true);
+                        const references = filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.REFERENCE, false);
+                        const hasPreviousVersion = filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.HAS_PREVIOUS_VERSION, true);
+                        const resources = filterObjectOfStatementsByPredicateAndClass(
+                            statements,
+                            PREDICATES.RELATED_RESOURCES,
+                            false,
+                            CLASSES.RELATED_RESOURCES
+                        );
+                        const figures = filterObjectOfStatementsByPredicateAndClass(
+                            statements,
+                            PREDICATES.RELATED_FIGURE,
+                            false,
+                            CLASSES.RELATED_FIGURE
+                        );
+                        const visualizations = filterObjectOfStatementsByPredicateAndClass(
+                            statements,
+                            PREDICATES.HAS_VISUALIZATION,
+                            false,
+                            CLASSES.VISUALIZATION
+                        );
+                        const subject = filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.HAS_SUBJECT, true);
 
                         // Load authors
-                        let creators = filterObjectOfStatementsByPredicate(statements, PREDICATES.HAS_AUTHOR, false);
+                        let creators = filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.HAS_AUTHOR, false);
                         if (creators) {
                             creators = creators.reverse(); // statements are ordered desc, so first author is last => thus reverse
                             loadAuthorsORCID(creators);
@@ -174,20 +197,50 @@ function useComparison() {
 
                         // TODO: replace this with ordered feature
                         // Load comparison config
-                        const url = filterObjectOfStatementsByPredicate(statements, PREDICATES.URL, true);
+                        const url = filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.URL, true);
                         if (url) {
                             setResponseHash(getParamFromQueryString(url?.label.substring(url?.label.indexOf('?')), 'response_hash'));
-                            setComparisonType(getParamFromQueryString(url?.label.substring(url?.label.indexOf('?')), 'type') ?? 'merge');
+                            setComparisonType(
+                                getParamFromQueryString(url?.label.substring(url?.label.indexOf('?')), 'type') ?? DEFAULT_COMPARISON_METHOD
+                            );
                             setTranspose(getParamFromQueryString(url?.label.substring(url?.label.indexOf('?')), 'transpose', true));
                             setPredicatesList(getArrayParamFromQueryString(url?.label.substring(url?.label.indexOf('?')), 'properties'));
-                            setContributionsList(getArrayParamFromQueryString(url?.label.substring(url?.label.indexOf('?')), 'contributions'));
+                            const contributionsIDs =
+                                without(
+                                    uniq(getArrayParamFromQueryString(url?.label.substring(url?.label.indexOf('?')), 'contributions')),
+                                    undefined,
+                                    null,
+                                    ''
+                                ) ?? [];
+                            setContributionsList(contributionsIDs);
                         } else {
-                            setPredicatesList(filterObjectOfStatementsByPredicate(statements, PREDICATES.HAS_PROPERTY, false)?.map(p => p.id));
-                            setContributionsList(
-                                filterObjectOfStatementsByPredicate(statements, PREDICATES.COMPARE_CONTRIBUTION, false)?.map(c => c.id) ?? []
+                            setPredicatesList(
+                                filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.HAS_PROPERTY, false)?.map(p => p.id)
                             );
+                            const contributionsIDs =
+                                without(
+                                    uniq(
+                                        filterObjectOfStatementsByPredicateAndClass(
+                                            statements,
+                                            PREDICATES.COMPARE_CONTRIBUTION,
+                                            false,
+                                            CLASSES.CONTRIBUTION
+                                        )?.map(c => c.id) ?? []
+                                    ),
+                                    undefined,
+                                    null,
+                                    ''
+                                ) ?? [];
+                            setContributionsList(contributionsIDs);
                         }
-                        if (!filterObjectOfStatementsByPredicate(statements, PREDICATES.COMPARE_CONTRIBUTION, false)?.map(c => c.id)) {
+                        if (
+                            !filterObjectOfStatementsByPredicateAndClass(
+                                statements,
+                                PREDICATES.COMPARE_CONTRIBUTION,
+                                false,
+                                CLASSES.CONTRIBUTION
+                            )?.map(c => c.id)
+                        ) {
                             setIsLoadingComparisonResult(false);
                         }
                         setIsLoadingMetaData(false);
@@ -542,7 +595,8 @@ function useComparison() {
     const addContributions = newContributionIds => {
         setUrlNeedsToUpdate(true);
         setResponseHash(null);
-        setContributionsList(contributionsList.concat(newContributionIds));
+        const contributionsIDs = without(uniq(contributionsList.concat(newContributionIds)), undefined, null, '') ?? [];
+        setContributionsList(contributionsIDs);
     };
 
     /**
@@ -587,7 +641,7 @@ function useComparison() {
         const params = queryString.stringify(
             {
                 contributions: contributionsList.join(','),
-                properties: predicatesList.join(','),
+                properties: predicatesList.map(predicate => encodeURIComponent(predicate)).join(','),
                 type: comparisonType,
                 transpose: transpose
             },
@@ -680,9 +734,10 @@ function useComparison() {
             // Update browser title
             document.title = 'Comparison - ORKG';
             setResponseHash(getParamFromQueryString(location.search, 'response_hash'));
-            setComparisonType(getParamFromQueryString(location.search, 'type') ?? 'merge');
+            setComparisonType(getParamFromQueryString(location.search, 'type') ?? DEFAULT_COMPARISON_METHOD);
             setTranspose(getParamFromQueryString(location.search, 'transpose', true));
-            setContributionsList(getArrayParamFromQueryString(location.search, 'contributions'));
+            const contributionsIDs = without(uniq(getArrayParamFromQueryString(location.search, 'contributions')), undefined, null, '') ?? [];
+            setContributionsList(contributionsIDs);
             setPredicatesList(getArrayParamFromQueryString(location.search, 'properties'));
         }
         updateComparisonPublicURL();
@@ -738,7 +793,6 @@ function useComparison() {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isLoadingComparisonResult]);
-
     return {
         metaData,
         contributions,

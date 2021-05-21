@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { getTopContributors } from 'services/backend/stats';
+import { orderBy } from 'lodash';
 import { getContributorsByResearchFieldId } from 'services/backend/researchFields';
 import { MISC } from 'constants/graphSettings';
 
@@ -31,18 +32,12 @@ function useContributors({ researchFieldId, pageSize = 30, initialSort = 'top', 
                     page: page,
                     items: pageSize,
                     subfields: includeSubFields
-                }).then(result => {
-                    result.content = result.content.map(c => ({
-                        profile: c,
-                        contributions: null
-                    }));
-                    return result;
                 });
             }
 
             contributorsCall
                 .then(result => {
-                    setContributors(prevResources => [...prevResources, ...result.content]);
+                    setContributors(prevResources => orderBy([...prevResources, ...(result.content || [])], ['contributions'], ['desc']));
                     setIsLoading(false);
                     setHasNextPage(!result.last);
                     setIsLastPageReached(result.last);

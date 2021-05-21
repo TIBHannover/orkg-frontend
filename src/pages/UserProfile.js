@@ -99,10 +99,14 @@ const UserProfile = props => {
                         if (userData.organization_id !== MISC.UNKNOWN_ID) {
                             const promise1 = getOrganization(userData.organization_id);
                             promises.push(promise1);
+                        } else {
+                            promises.push(Promise.resolve());
                         }
                         if (userData.observatory_id !== MISC.UNKNOWN_ID) {
                             const promise2 = getObservatoryById(userData.observatory_id);
                             promises.push(promise2);
+                        } else {
+                            promises.push(Promise.resolve());
                         }
 
                         Promise.all(promises)

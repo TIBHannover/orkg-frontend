@@ -647,12 +647,16 @@ export function fillResourceWithTemplate({ templateID, selectedResource, syncBac
         return dispatch(fetchTemplateIfNeeded(templateID)).then(async templateDate => {
             const template = templateDate;
             // Check if it's a template
-            if (template && template.predicate) {
+            if (template) {
                 // TODO : handle the case where the template isFetching
-                if (template.predicate.id === PREDICATES.HAS_CONTRIBUTION) {
+                if (
+                    (!template.predicate && template.components && template.components.length > 0) ||
+                    template?.predicate.id === PREDICATES.HAS_CONTRIBUTION
+                ) {
                     // Add properties
                     if (template.components && template.components.length > 0) {
                         const statements = { properties: [], values: [] };
+
                         for (const component of template.components) {
                             statements['properties'].push({
                                 existingPredicateId: component.property.id,
@@ -665,7 +669,7 @@ export function fillResourceWithTemplate({ templateID, selectedResource, syncBac
                         }
                         dispatch(prefillStatements({ statements, resourceId: selectedResource, syncBackend: syncBackend }));
                     }
-                } else {
+                } else if (template.predicate) {
                     // Add template to the statement browser
                     const statements = { properties: [], values: [] };
                     const pID = guid();

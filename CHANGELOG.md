@@ -5,6 +5,81 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [V0.38.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.38...V0.38.1) - 2021-05-20
+
+### Changes
+
+- fix: Error when components of a templates don't have a range [`#588`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/588)
+
+---
+## [V0.38](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.37.3...V0.38) - 2021-05-19
+
+### Changes
+
+- fix: Error on PropertySuggestions component [`#585`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/585)
+- fix: loading comparison components [`#576`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/576)
+- fix: loading observatory and organization in user profile [`#575`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/575)
+- fix: load more button in add contribution modal and prevent comparing the same contribution [`#577`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/577)
+- feat(Resources): allow curators to edit published comparison [`#584`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/584)
+- feat(Comparisons): change default comparison method to 'path' [`#568`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/568)
+- fix(Comparisons): encode predicates when URL is generated [`#578`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/578)
+- feat(FeaturedComparison): make featured comparison for home page only [`#579`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/579)
+- SmartReview: fix link after publishing, fix Markdown syntax, fix history after publishing [`#582`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/582)
+- feat: sort contributors and show contribution percentage in tooltip [`#580`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/580)
+
+---
+## [V0.37.3](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.37.2...V0.37.3) - 2021-05-12
+
+### Changes
+
+- Add webinar recording [`#581`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/581)
+- fix(RelativeBreadcrumbs): fix alignment of list items [`#571`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/571)
+
+---
+## [V0.37.2](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.37.1...V0.37.2) - 2021-05-04
+
+### Changes
+
+- Resolve "Update webinar page" [`#572`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/572)
+- fix: Sort top contributors and top changes [`#542`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/542)
+
+---
+## [V0.37.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.37...V0.37.1) - 2021-05-03
+
+### Changes
+
+- Update curation call page [`#570`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/570)
+
+---
+## [V0.37](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.36...V0.37) - 2021-04-30
+
+### Changes
+
+- feat: add webinar page [`#566`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/566)
+- fix: Creating account with non-matching passwords doesn't display error [`#565`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/565)
+- fix: temporary fix of top contributors [`#567`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/567)
+
+---
+## [V0.36](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.35...V0.36) - 2021-04-26
+
+### Changes
+
+- fix: contributions order and rediction after delete [`#560`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/560)
+- style: increase z-index of the comparison menu [`#562`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/562)
+- style: alignment of checkboxes in 'select properties' modal [`#563`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/563)
+- feat: smart survey article writer [`#477`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/477)
+- fix: use value id instead of index as a key in StatementItemTemplate [`#558`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/558)
+- fix: Add properties if there is no template predicate [`#559`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/559)
+- fix: Edit author in AuthorsInput [`#561`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/561)
+
+---
+## [V0.35](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.34...V0.35) - 2021-04-21
+
+### Changes
+
+- page: Add video to curation grant call [`#557`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/557)
+
+---
 ## [V0.34](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.33...V0.34) - 2021-04-16
 
 ### Changes

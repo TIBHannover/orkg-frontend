@@ -1,13 +1,25 @@
 import capitalize from 'capitalize';
-import queryString from 'query-string';
-import { flattenDepth, uniq, isString, find, flatten, last } from 'lodash';
-import rdf from 'rdf';
-import ROUTES from 'constants/routes';
-import { PREDICATES, MISC, CLASSES } from 'constants/graphSettings';
-import { reverse } from 'named-urls';
-import { PREDICATE_TYPE_ID, RESOURCE_TYPE_ID } from 'constants/misc';
 import { FILTER_TYPES } from 'constants/comparisonFilterTypes';
+import { CLASSES, MISC, PREDICATES } from 'constants/graphSettings';
+import { PREDICATE_TYPE_ID, RESOURCE_TYPE_ID } from 'constants/misc';
+import ROUTES from 'constants/routes';
+import { find, flatten, flattenDepth, isEqual, isString, last, uniq } from 'lodash';
+import { reverse } from 'named-urls';
+import queryString from 'query-string';
+import rdf from 'rdf';
+import { createLiteral as createLiteralApi } from 'services/backend/literals';
+import { createResource } from 'services/backend/resources';
+import {
+    createLiteralStatement,
+    createResourceStatement,
+    deleteStatementsByIds,
+    getStatementsByPredicateAndLiteral
+} from 'services/backend/statements';
+import { Cookies } from 'react-cookie';
+import env from '@beam-australia/react-env';
 import slugifyString from 'slugify';
+
+const cookies = new Cookies();
 
 export function hashCode(s) {
     return s.split('').reduce((a, b) => {
@@ -224,7 +236,7 @@ export const getPaperData = (resource, paperStatements) => {
         doi,
         doiResourceId,
         authorNames: authors.sort((a, b) => a.created_at.localeCompare(b.created_at)),
-        contributions: contributions.sort((a, b) => a.label.localeCompare(b.label)),
+        contributions: contributions.sort((a, b) => a.label.localeCompare(b.label)), // sort contributions ascending, so contribution 1, is actually the first one
         order,
         created_by: resource.created_by !== MISC.UNKNOWN_ID ? resource.created_by : null
     };
@@ -261,11 +273,19 @@ export const getComparisonData = (resource, comparisonStatements) => {
     // subject
     const subject = comparisonStatements.find(statement => statement.predicate.id === PREDICATES.HAS_SUBJECT);
 
+    let contributionAmount = 0;
+    // try/catch to handle exceptions when a URL is malformed
+    try {
+        contributionAmount = url ? getArrayParamFromQueryString(url.object.label, 'contributions').length : 0;
+    } catch (e) {
+        console.log(e);
+    }
+
     return {
         id: resource.id,
         label: resource.label ? resource.label : 'No Title',
         created_at: url ? url.object.created_at : '',
-        nbContributions: url ? getArrayParamFromQueryString(url.object.label, 'contributions').length : 0,
+        nbContributions: contributionAmount,
         url: url ? url.object.label : '',
         reference: reference ? reference.object.label : '',
         description: description ? description.object.label : '',
@@ -450,11 +470,14 @@ export const generateRdfDataVocabularyFile = (data, contributions, properties, m
  * @param {String} predicateID Predicate ID
  * @param {Boolean} isUnique if this predicate is unique and has one value
  */
-export const filterObjectOfStatementsByPredicate = (statementsArray, predicateID, isUnique = true) => {
+export const filterObjectOfStatementsByPredicateAndClass = (statementsArray, predicateID, isUnique = true, classID = null) => {
     if (!statementsArray) {
         return null;
     }
-    const result = statementsArray.filter(statement => statement.predicate.id === predicateID);
+    let result = statementsArray.filter(statement => statement.predicate.id === predicateID);
+    if (classID) {
+        result = statementsArray.filter(statement => statement.object.classes && statement.object.classes.includes(classID));
+    }
     if (result.length > 0 && isUnique) {
         return result[0].object;
     } else if (result.length > 0 && !isUnique) {
@@ -807,6 +830,75 @@ export function truncStringPortion(str, firstCharCount = str.length, endCharCoun
     }
 }
 
+// TODO: refactor the authors dialog and create a hook to put this function
+export async function saveAuthors({ prevAuthors, newAuthors, paperId }) {
+    if (isEqual(prevAuthors, newAuthors)) {
+        return null;
+    }
+
+    const statementsIds = [];
+    // remove all authors statement from reducer
+    for (const author of prevAuthors) {
+        statementsIds.push(author.statementId);
+    }
+    deleteStatementsByIds(statementsIds);
+
+    // Add all authors from the state
+    const authors = newAuthors;
+    for (const [i, author] of newAuthors.entries()) {
+        // create the author
+        if (author.orcid) {
+            // Create author with ORCID
+            // check if there's an author resource
+            const responseJson = await getStatementsByPredicateAndLiteral({
+                predicateId: PREDICATES.HAS_ORCID,
+                literal: author.orcid,
+                subjectClass: CLASSES.AUTHOR,
+                items: 1
+            });
+            if (responseJson.length > 0) {
+                // Author resource exists
+                const authorResource = responseJson[0];
+                const authorStatement = await createResourceStatement(paperId, PREDICATES.HAS_AUTHOR, authorResource.subject.id);
+                authors[i].statementId = authorStatement.id;
+                authors[i].id = authorResource.subject.id;
+                authors[i].class = authorResource.subject._class;
+                authors[i].classes = authorResource.subject.classes;
+            } else {
+                // Author resource doesn't exist
+                // Create resource author
+                const authorResource = await createResource(author.label, [CLASSES.AUTHOR]);
+                const createLiteral = await createLiteralApi(author.orcid);
+                await createLiteralStatement(authorResource.id, PREDICATES.HAS_ORCID, createLiteral.id);
+                const authorStatement = await createResourceStatement(paperId, PREDICATES.HAS_AUTHOR, authorResource.id);
+                authors[i].statementId = authorStatement.id;
+                authors[i].id = authorResource.id;
+                authors[i].class = authorResource._class;
+                authors[i].classes = authorResource.classes;
+            }
+        } else {
+            // Author resource exists
+            if (author.label !== author.id) {
+                const authorStatement = await createResourceStatement(paperId, PREDICATES.HAS_AUTHOR, author.id);
+                authors[i].statementId = authorStatement.id;
+                authors[i].id = author.id;
+                authors[i].class = author._class;
+                authors[i].classes = author.classes;
+            } else {
+                // Author resource doesn't exist
+                const newLiteral = await createLiteralApi(author.label);
+                // Create literal of author
+                const authorStatement = await createLiteralStatement(paperId, PREDICATES.HAS_AUTHOR, newLiteral.id);
+                authors[i].statementId = authorStatement.id;
+                authors[i].id = newLiteral.id;
+                authors[i].class = authorStatement.object._class;
+                authors[i].classes = authorStatement.object.classes;
+            }
+        }
+    }
+
+    return authors;
+}
 /**
  * Stringify filter type of comparison
  *
@@ -1152,4 +1244,14 @@ export const getPropertyObjectFromData = (data, value) => {
     return notEmptyCell && notEmptyCell.path?.length && notEmptyCell.pathLabels?.length
         ? { id: last(notEmptyCell.path), label: last(notEmptyCell.pathLabels) }
         : value;
+};
+
+/**
+ * check if Cookies is enabled
+ * @return {Boolean}
+ */
+export const checkCookie = () => {
+    cookies.set('testcookie', 1, { path: env('PUBLIC_URL'), maxAge: 5 });
+    const cookieEnabled = cookies.get('testcookie') ? cookies.get('testcookie') : null;
+    return cookieEnabled ? true : false;
 };

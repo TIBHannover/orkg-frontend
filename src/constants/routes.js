@@ -36,14 +36,19 @@ const routes = {
     RESEARCH_FIELDS: '/fields',
     VENUE_PAGE: '/venue/:venueId',
     AUTHOR_PAGE: '/author/:authorId',
+    SEARCH: '/search/:searchTerm?',
+    STATS: '/stats',
     DATA: '/data',
     CHANGELOG: '/changelog',
-    STATS: '/stats',
-    SEARCH: '/search/:searchTerm?',
     FEATURED_COMPARISONS: '/featured-comparisons',
     PDF_TEXT_ANNOTATION: '/pdf-text-annotation',
     PDF_ANNOTATION: '/pdf-annotation',
     CSV_IMPORT: '/csv-import',
+    SMART_REVIEW: '/smart-review/:id',
+    SMART_REVIEWS: '/smart-reviews',
+    USER_UNPUBLISHED_REVIEWS: '/user-unpublished-reviews',
+    SMART_REVIEW_NEW: '/smart-review/new',
+    SMART_REVIEW_DIFF: '/smart-review/diff/:oldId-:newId',
     TOOLS: '/tools',
     CONTRIBUTION_EDITOR: '/contribution-editor',
     ADD_COMPARISON: '/add-comparison',
@@ -57,6 +62,8 @@ const routes = {
     HELP_CENTER: '/help-center',
     HELP_CENTER_CATEGORY: '/help-center/category/:id',
     HELP_CENTER_ARTICLE: '/help-center/article/:id/:slug',
-    HELP_CENTER_SEARCH: '/help-center/search/:searchQuery'
+    HELP_CENTER_SEARCH: '/help-center/search/:searchQuery',
+    CURATION_CALL: '/open-call-curation-grant',
+    WEBINAR_MAY_11: '/webinar-may-11'
 };
 export default routes;
