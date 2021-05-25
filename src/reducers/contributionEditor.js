@@ -1,6 +1,7 @@
 import * as type from 'actions/types';
 import { omit } from 'lodash';
 import dotProp from 'dot-prop-immutable';
+import { guid } from 'utils';
 
 const initialState = {
     contributions: {},
@@ -77,6 +78,7 @@ export default function reducer(state = initialState, action) {
 
         case type.CONTRIBUTION_EDITOR_PROPERTY_CREATE: {
             const { property } = action.payload;
+            property.staticRowId = guid();
             return dotProp.merge({ ...state }, `properties.${property.id}`, property);
         }
 
@@ -104,7 +106,7 @@ export default function reducer(state = initialState, action) {
 
         case type.CONTRIBUTION_EDITOR_PROPERTY_UPDATE: {
             const { id, newProperty, statementIds } = action.payload;
-
+            newProperty.staticRowId = state.properties[id].staticRowId;
             let newState = dotProp.delete({ ...state }, `properties.${id}`);
             newState = dotProp.merge(newState, `properties.${newProperty.id}`, newProperty);
 

@@ -6,7 +6,7 @@ import { ItemInnerSeparator } from 'components/Comparison/TableCell';
 import ValuePlugins from 'components/ValuePlugins/ValuePlugins';
 import { CLASSES, PREDICATES, ENTITIES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
-import { memo, useState } from 'react';
+import { forwardRef, memo, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Input } from 'reactstrap';
 import styled from 'styled-components';
@@ -17,7 +17,7 @@ const Value = styled.div`
     }
 `;
 
-const TableCellValue = ({ value, index, setDisableCreate, propertyId }) => {
+const TableCellValue = forwardRef(({ value, index, setDisableCreate, propertyId }, ref) => {
     const [isEditing, setIsEditing] = useState(false);
     const [inputValue, setInputValue] = useState(value.label);
     const dispatch = useDispatch();
@@ -71,54 +71,58 @@ const TableCellValue = ({ value, index, setDisableCreate, propertyId }) => {
         }
     };
 
-    return !isEditing ? (
-        <>
-            {index > 0 && <ItemInnerSeparator className="my-0" />}
-            <Value className="position-relative">
-                <ValuePlugins type={value._class} options={{ inModal: true }}>
-                    {value._class === 'resource' && <TableCellValueResource value={value} />}
-                    {value._class === 'literal' && (
-                        <div role="textbox" tabIndex="0" onDoubleClick={handleStartEdit}>
-                            {value.label}
-                        </div>
+    return (
+        <div ref={ref}>
+            {!isEditing ? (
+                <>
+                    {index > 0 && <ItemInnerSeparator className="my-0" />}
+                    <Value className="position-relative">
+                        <ValuePlugins type={value._class} options={{ inModal: true }}>
+                            {value._class === 'resource' && <TableCellValueResource value={value} />}
+                            {value._class === 'literal' && (
+                                <div role="textbox" tabIndex="0" onDoubleClick={handleStartEdit}>
+                                    {value.label}
+                                </div>
+                            )}
+                        </ValuePlugins>
+                        <TableCellButtons onEdit={handleStartEdit} onDelete={handleDelete} backgroundColor="rgba(240, 242, 247, 0.8)" />
+                    </Value>
+                </>
+            ) : (
+                <div>
+                    {value._class === 'resource' && (
+                        <Autocomplete
+                            optionsClass={propertyId === PREDICATES.HAS_RESEARCH_PROBLEM ? CLASSES.PROBLEM : undefined}
+                            entityType={ENTITIES.RESOURCE}
+                            excludeClasses={`${CLASSES.CONTRIBUTION},${CLASSES.PROBLEM},${CLASSES.TEMPLATE}`}
+                            menuPortalTarget={document.body} // use a portal to ensure the menu isn't blocked by other elements
+                            placeholder={propertyId === PREDICATES.HAS_RESEARCH_PROBLEM ? 'Enter a research problem' : 'Enter a resource'}
+                            onChange={handleChangeAutocomplete}
+                            onInput={(e, value) => setInputValue(e ? e.target.value : value)}
+                            value={inputValue}
+                            onBlur={handleStopEdit}
+                            openMenuOnFocus={true}
+                            cssClasses="form-control-sm"
+                            allowCreate
+                        />
                     )}
-                </ValuePlugins>
-                <TableCellButtons onEdit={handleStartEdit} onDelete={handleDelete} backgroundColor="rgba(240, 242, 247, 0.8)" />
-            </Value>
-        </>
-    ) : (
-        <div>
-            {value._class === 'resource' && (
-                <Autocomplete
-                    optionsClass={propertyId === PREDICATES.HAS_RESEARCH_PROBLEM ? CLASSES.PROBLEM : undefined}
-                    entityType={ENTITIES.RESOURCE}
-                    excludeClasses={`${CLASSES.CONTRIBUTION},${CLASSES.PROBLEM},${CLASSES.TEMPLATE}`}
-                    menuPortalTarget={document.body} // use a portal to ensure the menu isn't blocked by other elements
-                    placeholder={propertyId === PREDICATES.HAS_RESEARCH_PROBLEM ? 'Enter a research problem' : 'Enter a resource'}
-                    onChange={handleChangeAutocomplete}
-                    onInput={(e, value) => setInputValue(e ? e.target.value : value)}
-                    value={inputValue}
-                    onBlur={handleStopEdit}
-                    openMenuOnFocus={true}
-                    cssClasses="form-control-sm"
-                    allowCreate
-                />
-            )}
-            {value._class === 'literal' && (
-                <Input
-                    type="text"
-                    bsSize="sm"
-                    value={inputValue}
-                    autoFocus
-                    onChange={e => setInputValue(e.target.value)}
-                    onBlur={handleUpdate}
-                    onKeyPress={handleKeyPress}
-                    placeholder="Enter a literal"
-                />
+                    {value._class === 'literal' && (
+                        <Input
+                            type="text"
+                            bsSize="sm"
+                            value={inputValue}
+                            autoFocus
+                            onChange={e => setInputValue(e.target.value)}
+                            onBlur={handleUpdate}
+                            onKeyPress={handleKeyPress}
+                            placeholder="Enter a literal"
+                        />
+                    )}
+                </div>
             )}
         </div>
     );
-};
+});
 
 TableCellValue.propTypes = {
     value: PropTypes.object.isRequired,
