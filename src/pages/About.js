@@ -6,12 +6,13 @@ import NotFound from 'pages/NotFound';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import { Link } from 'react-router-dom';
-import { Container, Nav, Navbar, NavItem } from 'reactstrap';
+import { Container, Nav, Navbar, NavItem, Alert } from 'reactstrap';
 import { getAboutPage, getAboutPages } from 'services/cms';
 import { reverseWithSlug } from 'utils';
 
 const About = () => {
     const [isLoadingMenu, setIsLoadingMenu] = useState(false);
+    const [isFailedLoadingMenu, setIsFailedLoadingMenu] = useState(false);
     const [menuItems, setMenuItems] = useState([]);
     const { loadPage, page, isLoading, isNotFound } = usePage();
     const params = useParams();
@@ -40,13 +41,19 @@ const About = () => {
 
         const getMenu = async () => {
             setIsLoadingMenu(true);
-            const _pages = await getAboutPages();
-            setMenuItems(_pages);
-            setIsLoadingMenu(false);
+            try {
+                const _pages = await getAboutPages();
+                setMenuItems(_pages);
+            } catch (e) {
+                console.log(e);
+                setIsFailedLoadingMenu(true);
+            } finally {
+                setIsLoadingMenu(false);
+            }
         };
 
         getMenu();
-    }, [page, menuItems]);
+    }, [menuItems.length]);
 
     if (isNotFound) {
         return <NotFound />;
@@ -77,6 +84,8 @@ const About = () => {
                         <hr />
                     </>
                 )}
+
+                {!isLoadingMenu && isFailedLoadingMenu && <Alert color="danger">Failed loading menu</Alert>}
 
                 {isLoading && <PageContentLoader />}
 
