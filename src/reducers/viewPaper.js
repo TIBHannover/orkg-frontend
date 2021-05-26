@@ -10,7 +10,7 @@ const initialState = {
         allIds: []
     },
     paperResource: {
-        id: 0,
+        id: '',
         label: '',
         created_at: null,
         classes: [],
@@ -59,6 +59,15 @@ export default (state = initialState, action) => {
             const { payload } = action;
 
             return dotProp.set(state, 'authors', payload.authors);
+        }
+
+        case type.SET_PAPER_OBSERVATORY: {
+            const { payload } = action;
+            let newState = dotProp.set(state, 'paperResource.observatory_id', payload.observatory_id);
+            newState = dotProp.set(newState, 'paperResource.organization_id', payload.organization_id);
+            return {
+                ...newState
+            };
         }
 
         case type.UPDATE_RESEARCH_PROBLEMS: {

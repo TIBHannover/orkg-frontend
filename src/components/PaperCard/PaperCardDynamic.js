@@ -62,7 +62,7 @@ const PaperCardDynamic = props => {
         return {
             publicationYear,
             publicationMonth,
-            authorNames: authors.sort((a, b) => a.created_at.localeCompare(b.created_at)),
+            authorNames: authors ? authors.sort((a, b) => a.created_at.localeCompare(b.created_at)) : [],
             researchField
         };
     };

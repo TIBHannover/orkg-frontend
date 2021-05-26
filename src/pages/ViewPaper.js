@@ -60,9 +60,6 @@ const ViewPaper = () => {
         setEditMode,
         handleCreateContribution,
         toggleDeleteContribution,
-        observatoryInfo,
-        contributors,
-        getObservatoryInfo,
         setShowGraphModal,
         showGraphModal
     } = useViewPaper({
@@ -89,7 +86,7 @@ const ViewPaper = () => {
                         />
                     )}
 
-                    <Breadcrumbs researchFieldId={viewPaper.researchField.id} />
+                    <Breadcrumbs researchFieldId={viewPaper.researchField ? viewPaper.researchField.id : null} />
 
                     <VisibilitySensor onChange={handleShowHeaderBar}>
                         <Container className="d-flex align-items-center">
@@ -162,9 +159,6 @@ const ViewPaper = () => {
                                     handleChangeContributionLabel={handleChangeContributionLabel}
                                     handleCreateContribution={handleCreateContribution}
                                     toggleDeleteContribution={toggleDeleteContribution}
-                                    observatoryInfo={observatoryInfo}
-                                    contributors={contributors}
-                                    changeObservatory={getObservatoryInfo}
                                 />
 
                                 <ComparisonPopup />

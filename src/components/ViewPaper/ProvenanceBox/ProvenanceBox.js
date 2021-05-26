@@ -1,23 +1,74 @@
-import { useState } from 'react';
-import { StyledItemProvenanceBox, AnimationContainer, StyledActivity, ProvenanceBoxTabs, ErrorMessage, SidebarStyledBox } from './styled';
-import ObservatoryModal from 'components/ObservatoryModal/ObservatoryModal';
+import { useState, useEffect } from 'react';
+import { AnimationContainer, ProvenanceBoxTabs, ErrorMessage, SidebarStyledBox } from './styled';
 import { TransitionGroup } from 'react-transition-group';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faPen } from '@fortawesome/free-solid-svg-icons';
-import moment from 'moment';
-import { Link } from 'react-router-dom';
+import { getContributorInformationById } from 'services/backend/contributors';
+import { getObservatoryById } from 'services/backend/observatories';
+import { getContributorsByResourceId } from 'services/backend/resources';
+import { getOrganization } from 'services/backend/organizations';
 import { useSelector } from 'react-redux';
-import { reverse } from 'named-urls';
-import ROUTES from 'constants/routes.js';
-import { isEmpty } from 'lodash';
-import PropTypes from 'prop-types';
-import { Button } from 'reactstrap';
 import { MISC } from 'constants/graphSettings';
+import Provenance from './Provenance';
+import Timeline from './Timeline';
 
-export default function ProvenanceBox(props) {
-    const [showAssignObservatory, setShowAssignObservatory] = useState(false);
-    const user = useSelector(state => state.auth.user);
-    const createdBy = useSelector(state => state.viewPaper.createdBy);
+const ProvenanceBox = () => {
+    const paperResource = useSelector(state => state.viewPaper.paperResource);
+    const [isLoadingProvenance, setIsLoadingProvenance] = useState(true);
+    const [isLoadingContributors, setIsLoadingContributors] = useState(true);
+    const [observatoryInfo, setObservatoryInfo] = useState(null);
+    const [organizationInfo, setOrganizationInfo] = useState(null);
+    const [createdBy, setCreatedBy] = useState(null);
+    const [contributors, setContributors] = useState([]);
+
+    useEffect(() => {
+        const loadContributors = () => {
+            setIsLoadingContributors(true);
+            getContributorsByResourceId(paperResource.id)
+                .then(contributors => {
+                    setContributors(contributors);
+                    setIsLoadingContributors(false);
+                })
+                .catch(error => {
+                    setIsLoadingContributors(false);
+                });
+        };
+        const loadProvenance = () => {
+            setIsLoadingProvenance(true);
+            const observatoryCall =
+                paperResource.observatory_id !== MISC.UNKNOWN_ID
+                    ? getObservatoryById(paperResource.observatory_id).catch(e => null)
+                    : Promise.resolve(null);
+
+            const organizationCall =
+                paperResource.organization_id !== MISC.UNKNOWN_ID
+                    ? getOrganization(paperResource.organization_id).catch(e => null)
+                    : Promise.resolve(null);
+
+            Promise.all([observatoryCall, organizationCall])
+                .then(([observatory, organization]) => {
+                    setObservatoryInfo(observatory);
+                    setOrganizationInfo(organization);
+                    setIsLoadingProvenance(false);
+                })
+                .catch(() => setIsLoadingProvenance(false));
+        };
+
+        const loadCreator = () => {
+            if (paperResource.created_by && paperResource.created_by !== MISC.UNKNOWN_ID) {
+                getContributorInformationById(paperResource.created_by)
+                    .then(creator => {
+                        setCreatedBy(creator);
+                    })
+                    .catch(e => setCreatedBy(null));
+            } else {
+                setCreatedBy(null);
+            }
+        };
+
+        loadContributors();
+        loadProvenance();
+        loadCreator();
+    }, [paperResource.created_by, paperResource.id, paperResource.observatory_id, paperResource.organization_id]);
+
     const [activeTab, setActiveTab] = useState(1);
 
     return (
@@ -45,169 +96,38 @@ export default function ProvenanceBox(props) {
                         Timeline
                     </div>
                 </ProvenanceBoxTabs>
-                {props.observatoryInfo.extraction_method === 'AUTOMATIC' && (
+                {paperResource.extraction_method === 'AUTOMATIC' && (
                     <ErrorMessage className="alert-server">The data has been partially imported automatically.</ErrorMessage>
                 )}
                 <TransitionGroup exit={false}>
                     {activeTab === 1 ? (
                         <AnimationContainer key={1} classNames="fadeIn" timeout={{ enter: 700, exit: 0 }}>
-                            <div>
-                                <ul className="list-group pt-2">
-                                    {!isEmpty(props.observatoryInfo.id) && (
-                                        <StyledItemProvenanceBox>
-                                            <b style={{ textTransform: 'uppercase' }}>
-                                                {props.observatoryInfo.id && (
-                                                    <Link
-                                                        to={reverse(ROUTES.OBSERVATORY, {
-                                                            id: props.observatoryInfo.id
-                                                        })}
-                                                    >
-                                                        {props.observatoryInfo.name}
-                                                    </Link>
-                                                )}
-                                            </b>
-                                            <br />
-                                            {props.observatoryInfo.organization && props.observatoryInfo.organization.id && (
-                                                <Link
-                                                    to={reverse(ROUTES.ORGANIZATION, {
-                                                        id: props.observatoryInfo.organization.id
-                                                    })}
-                                                >
-                                                    <img
-                                                        style={{
-                                                            marginTop: 8,
-                                                            marginBottom: 8,
-                                                            maxWidth: '80%',
-                                                            height: 'auto'
-                                                        }}
-                                                        className="mx-auto d-block"
-                                                        src={props.observatoryInfo.organization.logo}
-                                                        alt=""
-                                                    />
-                                                </Link>
-                                            )}
-                                        </StyledItemProvenanceBox>
-                                    )}
-
-                                    <StyledItemProvenanceBox>
-                                        <b>Added on</b>
-                                        <br />
-                                        {moment(props.observatoryInfo.created_at).format('DD MMM YYYY')}
-                                    </StyledItemProvenanceBox>
-                                    {props.observatoryInfo.created_by && props.observatoryInfo.created_by.id && (
-                                        <StyledItemProvenanceBox>
-                                            <b>Added by</b>
-                                            <br />
-                                            <Link
-                                                to={reverse(ROUTES.USER_PROFILE, {
-                                                    userId: props.observatoryInfo.created_by.id
-                                                })}
-                                            >
-                                                {props.observatoryInfo.created_by.display_name}
-                                            </Link>
-                                        </StyledItemProvenanceBox>
-                                    )}
-                                    <StyledItemProvenanceBox>
-                                        <b>Contributors</b>
-                                        {props.contributors &&
-                                            props.contributors.map((contributor, index) => (
-                                                <div key={`cntbrs-${contributor.id}${index}`}>
-                                                    {contributor.created_by.display_name !== 'Unknown' && (
-                                                        <span>
-                                                            <Link
-                                                                to={reverse(ROUTES.USER_PROFILE, {
-                                                                    userId: contributor.created_by.id
-                                                                })}
-                                                            >
-                                                                {contributor.created_by.display_name}
-                                                            </Link>
-                                                        </span>
-                                                    )}
-                                                </div>
-                                            ))}
-                                    </StyledItemProvenanceBox>
-                                </ul>
-                                {!!user && user.isCurationAllowed && (
-                                    <Button size="sm" className="float-right" onClick={() => setShowAssignObservatory(true)} color="link">
-                                        <Icon icon={faPen} /> {!isEmpty(props.observatoryInfo) ? `Edit` : `Assign to observatory`}
-                                    </Button>
-                                )}
-                            </div>
+                            <Provenance
+                                observatoryInfo={observatoryInfo}
+                                organizationInfo={organizationInfo}
+                                paperResource={paperResource}
+                                contributors={contributors}
+                                createdBy={createdBy}
+                                isLoadingProvenance={isLoadingProvenance}
+                                isLoadingContributors={isLoadingContributors}
+                            />
                         </AnimationContainer>
                     ) : (
                         <AnimationContainer key={2} classNames="fadeIn" timeout={{ enter: 700, exit: 0 }}>
-                            <div>
-                                <div className="pt-3 pb-3 pl-3 pr-3">
-                                    {props.contributors &&
-                                        props.contributors.map(contributor => {
-                                            return (
-                                                <StyledActivity key={`prov-${contributor.id}`} className="pl-3 pb-3">
-                                                    <div className="time">{moment(contributor.createdAt).format('DD MMM YYYY')}</div>
-                                                    <div>
-                                                        {props.observatoryInfo?.created_by &&
-                                                            props.observatoryInfo?.created_by !== null &&
-                                                            contributor?.created_by.display_name ===
-                                                                props.observatoryInfo?.created_by.display_name && (
-                                                                <>
-                                                                    Added by{' '}
-                                                                    <Link
-                                                                        to={reverse(ROUTES.USER_PROFILE, {
-                                                                            userId: contributor.created_by.id
-                                                                        })}
-                                                                    >
-                                                                        <b>{contributor.created_by.display_name}</b>
-                                                                    </Link>
-                                                                </>
-                                                            )}
-
-                                                        {props.observatoryInfo?.created_by &&
-                                                            props.observatoryInfo?.created_by !== null &&
-                                                            contributor?.created_by &&
-                                                            contributor?.created_by.display_name !==
-                                                                props.observatoryInfo?.created_by.display_name && (
-                                                                <>
-                                                                    Updated by{' '}
-                                                                    {contributor.created_by.id !== MISC.UNKNOWN_ID ? (
-                                                                        <Link
-                                                                            to={reverse(ROUTES.USER_PROFILE, {
-                                                                                userId: contributor.created_by.id
-                                                                            })}
-                                                                        >
-                                                                            <b>{contributor.created_by.display_name}</b>
-                                                                        </Link>
-                                                                    ) : (
-                                                                        <b>{contributor.created_by.display_name}</b>
-                                                                    )}
-                                                                </>
-                                                            )}
-                                                    </div>
-                                                </StyledActivity>
-                                            );
-                                        })}
-                                </div>
-                            </div>
+                            <Timeline
+                                observatoryInfo={observatoryInfo}
+                                organizationInfo={organizationInfo}
+                                paperResource={paperResource}
+                                contributors={contributors}
+                                createdBy={createdBy}
+                                isLoadingContributors={isLoadingContributors}
+                            />
                         </AnimationContainer>
                     )}
                 </TransitionGroup>
             </SidebarStyledBox>
-
-            <ObservatoryModal
-                callBack={props.changeObservatory}
-                showDialog={showAssignObservatory}
-                resourceId={props.resourceId}
-                observatory={!isEmpty(props.observatoryInfo?.id) ? props.observatoryInfo : null}
-                organization={
-                    !isEmpty(props.observatoryInfo?.id) && !isEmpty(props.observatoryInfo.organization) ? props.observatoryInfo.organization : null
-                }
-                toggle={() => setShowAssignObservatory(v => !v)}
-            />
         </div>
     );
-}
-
-ProvenanceBox.propTypes = {
-    contributors: PropTypes.array,
-    observatoryInfo: PropTypes.object,
-    changeObservatory: PropTypes.func,
-    resourceId: PropTypes.string.isRequired
 };
+
+export default ProvenanceBox;

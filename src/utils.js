@@ -182,7 +182,7 @@ export const getPaperData_ViewPaper = (paperResource, paperStatements) => {
 
     return {
         paperResource: paperResource,
-        authors: authors.reverse(), // statements are ordered desc, so first author is last => thus reverse
+        authors: authors ? authors.reverse() : [], // statements are ordered desc, so first author is last => thus reverse
         contributions: contributions.sort((a, b) => a.label.localeCompare(b.label)), // sort contributions ascending, so contribution 1, is actually the first one
         publicationMonth: filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_PUBLICATION_MONTH, true),
         publicationYear: filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_PUBLICATION_YEAR, true),
