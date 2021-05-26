@@ -136,7 +136,7 @@ const useViewPaper = ({ paperId, contributionId }) => {
     };
 
     const processProvenanceInformation = (paperResource, resourceId) => {
-        const observatory = getObservatoryAndOrganizationInformation(paperResource.observatory_id, paperResource.organization_id);
+        const observatory = getObservatoryAndOrganizationInformation(paperResource.observatory_id, paperResource.organization_id).catch(e => {});
         const creator =
             paperResource.created_by && paperResource.created_by !== MISC.UNKNOWN_ID
                 ? getContributorInformationById(paperResource.created_by).catch(e => {})
