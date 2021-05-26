@@ -202,8 +202,8 @@ export const getPaperData_ViewPaper = (paperResource, paperStatements) => {
 
 export const getPaperData = (resource, paperStatements) => {
     let doi = filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_DOI, true);
-    if (doi.includes('10.') && !doi.startsWith('10.')) {
-        doi = doi.substring(doi.indexOf('10.'));
+    if (doi && doi.label.includes('10.') && !doi.label.startsWith('10.')) {
+        doi = { ...doi, label: doi.label.substring(doi.label.indexOf('10.')) };
     }
     const researchField = filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_RESEARCH_FIELD, true, CLASSES.RESEARCH_FIELD);
     const publicationYear = filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_PUBLICATION_YEAR, true);
