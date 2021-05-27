@@ -12,7 +12,7 @@ const Timeline = ({ contributors, paperResource, isLoadingContributors }) => {
             <div className="pt-3 pb-3 pl-3 pr-3">
                 {!isLoadingContributors &&
                     contributors?.length > 0 &&
-                    contributors.reverse().map((contributor, index) => {
+                    contributors.map((contributor, index) => {
                         return (
                             <StyledActivity key={`prov-${index}`} className="pl-3 pb-3">
                                 <div className="time">{moment(contributor.createdAt).format('DD MMM YYYY')}</div>

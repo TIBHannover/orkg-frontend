@@ -24,7 +24,7 @@ const ProvenanceBox = () => {
             setIsLoadingContributors(true);
             getContributorsByResourceId(paperResource.id)
                 .then(contributors => {
-                    setContributors(contributors);
+                    setContributors(contributors ? contributors.reverse() : []);
                     setIsLoadingContributors(false);
                 })
                 .catch(error => {

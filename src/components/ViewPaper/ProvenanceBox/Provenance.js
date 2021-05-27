@@ -118,9 +118,11 @@ const Provenance = ({ observatoryInfo, organizationInfo, paperResource, contribu
                 </StyledItemProvenanceBox>
             </ul>
             {!!user && user.isCurationAllowed && (
-                <Button size="sm" className="float-right" onClick={() => setShowAssignObservatory(true)} color="link">
-                    <Icon icon={faPen} /> {observatoryInfo ? `Edit` : `Assign to observatory`}
-                </Button>
+                <div className="text-center">
+                    <Button size="sm" className="mt-2 mb-2" onClick={() => setShowAssignObservatory(true)}>
+                        <Icon icon={faPen} /> {observatoryInfo ? `Edit` : `Assign to observatory`}
+                    </Button>
+                </div>
             )}
             <ObservatoryModal
                 callBack={(observatory_id, organization_id) => {
