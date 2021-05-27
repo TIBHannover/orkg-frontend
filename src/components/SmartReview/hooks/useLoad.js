@@ -165,10 +165,10 @@ const useLoad = () => {
         const referenceStatements = statements.filter(
             statement => statement.subject.id === contributionId && statement.predicate.id === PREDICATES.HAS_REFERENCE
         );
-        const parseReferences = referenceStatements.map(reference => Cite.async(reference.object.label));
+        const parseReferences = referenceStatements.map(reference => Cite.async(reference.object.label).catch(e => console.log(e)));
 
         return (await Promise.all(parseReferences)).map((parsedReference, index) => ({
-            parsedReference: parsedReference.data[0],
+            parsedReference: parsedReference?.data?.[0] ?? {},
             literal: referenceStatements[index].object,
             statementId: referenceStatements[index].id
         }));

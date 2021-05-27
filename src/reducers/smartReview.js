@@ -13,7 +13,7 @@ const initialState = {
     isPublished: false,
     isOpenHistoryModal: false,
     references: [],
-    usedReferencesPerSection: {},
+    usedReferences: {},
     statements: []
 };
 

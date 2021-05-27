@@ -1,40 +1,50 @@
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import Cite from 'citation-js';
+import { Alert } from 'reactstrap';
 
 const ListReferences = () => {
     const usedReferences = useSelector(state => state.smartReview.usedReferences);
-    const [referencesSorted, setReferencesSorted] = useState([]);
+    const [bibliography, setBibliography] = useState(null);
+    const [error, setError] = useState(false);
 
     useEffect(() => {
-        let references = {};
+        const parseBibtex = async () => {
+            const bibtex = Object.values(usedReferences)
+                .map(section => Object.values(section).length > 0 && Object.values(section).map(reference => reference?.literal?.label))
+                .join('');
 
-        usedReferences &&
-            Object.keys(usedReferences).map(sectionId => {
-                references = { ...references, ...usedReferences[sectionId] };
-                return null;
-            });
+            if (!bibtex) {
+                return;
+            }
 
-        references = Object.keys(references).map(key => references[key]);
+            try {
+                // by passing the full bibtex to citation-js, we get sorting and formatting of references for free
+                const parsedCitation = await Cite.async(bibtex);
+                const _bibliography = parsedCitation.format('bibliography', {
+                    format: 'html',
+                    template: 'apa',
+                    lang: 'en-US',
+                    prepend: () => '<li>',
+                    append: () => '</li>'
+                });
 
-        setReferencesSorted(
-            references.sort((a, b) => a?.parsedReference?.author?.[0]?.family.localeCompare(b?.parsedReference?.author?.[0]?.family))
-        );
+                setBibliography(_bibliography);
+            } catch (e) {
+                console.log(e);
+                setError(true);
+            }
+        };
+        parseBibtex();
     }, [usedReferences]);
 
     return (
         <>
-            <ul>
-                {referencesSorted.map(reference => (
-                    <li key={reference.statementId}>
-                        {reference?.parsedReference?.author.map(author => (
-                            <span key={author.family + author.given}>
-                                {author.family}, {author.given?.charAt(0)}.,
-                            </span>
-                        ))}{' '}
-                        ({reference?.parsedReference?.issued?.['date-parts'][0]}) {reference?.parsedReference?.title}
-                    </li>
-                ))}
-            </ul>
+            {!error ? (
+                <ul dangerouslySetInnerHTML={{ __html: bibliography }} style={{ fontSize: '90%' }} className="pl-3" />
+            ) : (
+                <Alert color="danger">BibTeX parsing error, please check the BibTeX entries</Alert>
+            )}
         </>
     );
 };

@@ -31,7 +31,6 @@ const ReferencesModal = ({ show, toggle }) => {
         } else {
             updateReference({ bibtex, literalId });
         }
-        setIsOpenReferenceModal(false);
     };
 
     const updateReference = async ({ bibtex, literalId }) => {
@@ -79,6 +78,8 @@ const ReferencesModal = ({ show, toggle }) => {
                 toast.warning('BibTeX contains multiple citations, only the first citation is added');
             }
 
+            setIsOpenReferenceModal(false);
+
             return parsedReference;
         } catch (e) {
             console.log(e);
@@ -114,14 +115,15 @@ const ReferencesModal = ({ show, toggle }) => {
             <ModalHeader toggle={toggle}>Manage references</ModalHeader>
             <ModalBody>
                 <Alert color="info">
-                    Use references with content sections using the command <em>[@citationKey]</em>
+                    Use references within content sections using the command <em>[@citationKey]</em>, or use a DOI as citation key (for example,{' '}
+                    <em>[@10.1145/3360901.3364435]</em>)
                 </Alert>
 
                 <ListGroup>
                     {referencesSorted.map(reference => {
                         return (
                             <ListGroupItem key={reference.literal.id} action className="d-flex align-items-start pr-2">
-                                <div>
+                                <div className="flex-grow-1">
                                     <Badge color="light">@{reference.parsedReference['citation-label']}</Badge>{' '}
                                     {reference.parsedReference.author?.[0]?.family} {reference.parsedReference.author?.length > 1 && 'et al.'}{' '}
                                     <em>{reference.parsedReference.title}</em>
