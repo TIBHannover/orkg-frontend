@@ -68,7 +68,7 @@ const PaperCard = props => {
                             {props.paper.publicationMonth && props.paper.publicationMonth.label > 0
                                 ? moment(props.paper.publicationMonth.label, 'M').format('MMMM')
                                 : ''}{' '}
-                            {props.paper.publicationYear?.label && props.paper.publicationYear.label}
+                            {props.paper.publicationYear?.label ?? null}
                         </small>
                         {props.showBreadcrumbs && (
                             <div className="d-block d-md-none mt-1">
