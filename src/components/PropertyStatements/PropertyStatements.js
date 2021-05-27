@@ -4,7 +4,7 @@ import usePropertyStatements from './hooks/usePropertyStatements';
 import { Button, Table, Collapse } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { getResourceLinkByEntityType } from 'utils';
+import { getLinkByEntityType } from 'utils';
 import { Link } from 'react-router-dom';
 
 const PropertyStatements = ({ propertyId }) => {
@@ -46,8 +46,8 @@ const PropertyStatements = ({ propertyId }) => {
                                 {statements.map(statement => (
                                     <tr key={statement.id}>
                                         <td>
-                                            {getResourceLinkByEntityType(statement.subject._class, statement.subject.id) ? (
-                                                <Link to={getResourceLinkByEntityType(statement.subject._class, statement.subject.id)}>
+                                            {getLinkByEntityType(statement.subject._class, statement.subject.id) ? (
+                                                <Link to={getLinkByEntityType(statement.subject._class, statement.subject.id)}>
                                                     {statement.subject.label}
                                                 </Link>
                                             ) : (
@@ -56,8 +56,8 @@ const PropertyStatements = ({ propertyId }) => {
                                         </td>
                                         <td>{statement.predicate.label}</td>
                                         <td>
-                                            {getResourceLinkByEntityType(statement.object._class, statement.object.id) ? (
-                                                <Link to={getResourceLinkByEntityType(statement.object._class, statement.object.id)}>
+                                            {getLinkByEntityType(statement.object._class, statement.object.id) ? (
+                                                <Link to={getLinkByEntityType(statement.object._class, statement.object.id)}>
                                                     {statement.object.label}
                                                 </Link>
                                             ) : (

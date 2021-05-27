@@ -1122,31 +1122,16 @@ export const getResourceLink = (classId, resourceId) => {
  * Get resource link based on entity type
  *
  * @param {String} _class Entity type
- * @param {String} resourceId Resource ID
+ * @param {String} id ID
  * @result {String} Link of the resource
  */
-export const getResourceLinkByEntityType = (_class, resourceId) => {
-    let link = '';
-
-    switch (_class) {
-        case ENTITIES.RESOURCE: {
-            link = reverse(ROUTES.RESOURCE, { id: resourceId });
-            break;
-        }
-        case ENTITIES.CLASS: {
-            link = reverse(ROUTES.CLASS, { id: resourceId });
-            break;
-        }
-        case ENTITIES.PREDICATE: {
-            link = reverse(ROUTES.PROPERTY, { id: resourceId });
-            break;
-        }
-        default: {
-            link = '';
-            break;
-        }
-    }
-    return link;
+export const getLinkByEntityType = (_class, id) => {
+    const links = {
+        [ENTITIES.RESOURCE]: ROUTES.RESOURCE,
+        [ENTITIES.CLASS]: ROUTES.CLASS,
+        [ENTITIES.PREDICATE]: ROUTES.PROPERTY
+    };
+    return links[_class] ? reverse(links[_class], { id }) : '';
 };
 
 /**

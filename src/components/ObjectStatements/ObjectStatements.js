@@ -5,7 +5,7 @@ import { Button, Table, Collapse } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { reverse } from 'named-urls';
-import { getResourceLinkByEntityType } from 'utils';
+import { getLinkByEntityType } from 'utils';
 import ROUTES from 'constants/routes.js';
 import { Link } from 'react-router-dom';
 
@@ -88,9 +88,9 @@ const ObjectStatements = props => {
                                 {statements.map(statement => (
                                     <tr key={statement.id}>
                                         <td>
-                                            {getResourceLinkByEntityType(statement.subject._class, statement.subject.id) ? (
-                                                <Link to={getResourceLinkByEntityType(statement.subject._class, statement.subject.id)}>
-                                                    {statement.subject.label}
+                                            {getLinkByEntityType(statement.subject._class, statement.subject.id) ? (
+                                                <Link to={getLinkByEntityType(statement.subject._class, statement.subject.id)}>
+                                                    {statement.subject.label}123123
                                                 </Link>
                                             ) : (
                                                 statement.subject.label
