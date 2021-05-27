@@ -41,7 +41,7 @@ const Items = props => {
             id: props.filterClass,
             page: page,
             items: pageSize,
-            sortBy: 'id',
+            sortBy: 'created_at',
             desc: true,
             creator: props.userId,
             returnContent: true
