@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux';
 import { getResource } from 'services/backend/resources';
 import { getStatementsBundleBySubject, getStatementsByObjectAndPredicate, getStatementsBySubjects } from 'services/backend/statements';
 import { getResourceData } from 'services/similarity';
-import { countBy, orderBy } from 'lodash';
+import { countBy, orderBy, sortBy } from 'lodash';
 
 const useLoad = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -106,6 +106,7 @@ const useLoad = () => {
             const type = section.classes.length > 1 ? section.classes.find(_class => _class !== CLASSES.SECTION) : section.classes[0];
             let markdown = null;
             let contentLink = null;
+            let dataTable = null;
 
             if ([CLASSES.RESOURCE_SECTION, CLASSES.PROPERTY_SECTION, CLASSES.COMPARISON_SECTION, CLASSES.VISUALIZATION_SECTION].includes(type)) {
                 const linkStatement = section.statements.find(statement => statement.predicate.id === PREDICATES.HAS_LINK);
@@ -115,6 +116,29 @@ const useLoad = () => {
                     id: section?.id,
                     objectId: link?.id,
                     label: link?.label
+                };
+            } else if (type === CLASSES.DATA_TABLE_SECTION) {
+                // sortBy probably not needed once https://gitlab.com/TIBHannover/orkg/orkg-backend/-/merge_requests/199/diffs is merged
+                const properties =
+                    sortBy(section.statements.filter(statement => statement.predicate.id === PREDICATES.SHOW_PROPERTY), 'id').map(
+                        statement => statement.object
+                    ) ?? [];
+
+                const entities =
+                    sortBy(section.statements.filter(statement => statement.predicate.id === PREDICATES.HAS_ENTITY), 'id').map(
+                        statement => statement.object
+                    ) ?? [];
+
+                const entityStatements = entities.flatMap(entity => {
+                    const _entityStatements = paperStatements.filter(
+                        statement => statement.subject.id === entity.id // && properties.includes(statement.predicate.id)
+                    );
+                    return { ...entity, statements: _entityStatements };
+                });
+
+                dataTable = {
+                    properties,
+                    entities: entityStatements
                 };
             } else {
                 const contentStatement = section.statements.find(statement => statement.predicate.id === PREDICATES.HAS_CONTENT);
@@ -135,7 +159,8 @@ const useLoad = () => {
                     id: type
                 },
                 markdown,
-                contentLink
+                contentLink,
+                dataTable
             });
         }
 

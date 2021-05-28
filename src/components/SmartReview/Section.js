@@ -3,6 +3,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { deleteSection, updateSectionTitle } from 'actions/smartReview';
 import AddSection from 'components/SmartReview/AddSection';
 import SectionContentLink from 'components/SmartReview/SectionContentLink';
+import SectionDataTable from 'components/SmartReview/DataTable/SectionDataTable';
 import SectionMarkdown from 'components/SmartReview/SectionMarkdown';
 import SectionType from 'components/SmartReview/SectionType';
 import { DeleteButton, MoveHandle, SectionStyled, EditableTitle } from 'components/SmartReview/styled';
@@ -56,9 +57,12 @@ const Section = props => {
         sectionType = 'comparison';
     } else if (type.id === CLASSES.VISUALIZATION_SECTION) {
         sectionType = 'visualization';
+    } else if (type.id === CLASSES.DATA_TABLE_SECTION) {
+        sectionType = 'data-table';
     }
 
     const isContentLinkSection = ['resource', 'property', 'comparison', 'visualization'].includes(sectionType);
+    const isDataTableSection = sectionType === 'data-table';
 
     return (
         <section>
@@ -67,7 +71,7 @@ const Section = props => {
                     <Icon icon={faTimes} />
                 </DeleteButton>
                 <SortableHandle />
-                <SectionType type={type.id} sectionId={sectionId} isDisabled={isContentLinkSection} />
+                <SectionType type={type.id} sectionId={sectionId} isDisabled={isContentLinkSection || isDataTableSection} />
                 <h2 className="h4 border-bottom pb-1 mb-3" placeholder="trd">
                     <EditableTitle
                         value={title}
@@ -81,7 +85,9 @@ const Section = props => {
 
                 {isContentLinkSection && <SectionContentLink section={props.section} type={sectionType} />}
 
-                {!isContentLinkSection && markdown && <SectionMarkdown markdown={markdown} />}
+                {isDataTableSection && <SectionDataTable section={props.section} type={sectionType} isEditable />}
+
+                {!isContentLinkSection && !isDataTableSection && markdown && <SectionMarkdown markdown={markdown} />}
             </SectionStyled>
             <AddSection index={props.atIndex} />
         </section>

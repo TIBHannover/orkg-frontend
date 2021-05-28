@@ -7,6 +7,7 @@ const initialState = {
     contributionId: 0,
     sections: [],
     versions: [],
+    comparisons: {},
     researchField: {},
     isLoading: false,
     isEditing: false,
@@ -115,7 +116,11 @@ const smartReview = (state = initialState, action) => {
                                   id: markdownId,
                                   label: ''
                               }
-                            : undefined
+                            : undefined,
+                        dataTable: {
+                            entities: [],
+                            properties: []
+                        }
                     },
                     ...state.sections.slice(afterIndex)
                 ]
@@ -169,6 +174,39 @@ const smartReview = (state = initialState, action) => {
                 ...state,
                 versions
             };
+        }
+
+        case type.ARTICLE_WRITER_SET_COMPARISON_DATA: {
+            const { id, data } = action.payload;
+
+            return dotProp.set(state, `comparisons.${id}`, data);
+        }
+
+        case type.ARTICLE_WRITER_UPDATE_DATA_TABLE: {
+            const { sectionId, dataTable } = action.payload;
+            const index = state.sections.findIndex(section => section.id === sectionId);
+            return dotProp.set(state, `sections.${index}.dataTable`, {
+                ...state.sections[index].dataTable,
+                ...dataTable
+            });
+        }
+
+        case type.ARTICLE_WRITER_SET_DATA_TABLE_STATEMENTS: {
+            const { id, sectionId, statements } = action.payload;
+            const sectionIndex = state.sections.findIndex(section => section.id === sectionId);
+            if (sectionIndex === -1) {
+                return state;
+            }
+            const dataTableIndex = state.sections[sectionIndex]?.dataTable?.entities?.findIndex(entity => entity.id === id);
+
+            if (dataTableIndex === -1) {
+                return state;
+            }
+
+            return dotProp.set(state, `sections.${sectionIndex}.dataTable.entities.${dataTableIndex}`, {
+                ...state.sections[sectionIndex].dataTable.entities[dataTableIndex],
+                statements
+            });
         }
 
         case '@@router/LOCATION_CHANGE': {

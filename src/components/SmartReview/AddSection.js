@@ -82,6 +82,9 @@ const AddSection = props => {
                         <Button color="dark" onClick={() => handleAddSection('property')}>
                             Property
                         </Button>
+                        <Button color="dark" onClick={() => handleAddSection('data-table')}>
+                            Data table
+                        </Button>
                     </ButtonGroup>
                 </Toolbar>
             )}

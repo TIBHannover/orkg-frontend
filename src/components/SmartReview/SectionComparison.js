@@ -2,12 +2,28 @@ import ComparisonLoadingComponent from 'components/Comparison/ComparisonLoadingC
 import Comparison from 'components/Comparison/Comparison';
 import useComparison from 'components/Comparison/hooks/useComparison';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { setComparisonData } from 'actions/smartReview';
 
 const SectionComparison = ({ id }) => {
-    const { contributions, properties, data, isLoadingComparisonResult, filterControlData, updateRulesOfProperty, comparisonType } = useComparison({
+    const comparisonData = useComparison({
         id
     });
+    const { contributions, properties, data, isLoadingComparisonResult, filterControlData, updateRulesOfProperty, comparisonType } = comparisonData;
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        if (Object.keys(comparisonData.data).length === 0) {
+            return;
+        }
+        dispatch(
+            setComparisonData({
+                id,
+                data: comparisonData
+            })
+        );
+    }, [comparisonData, dispatch, id]);
 
     return (
         <>
