@@ -54,7 +54,7 @@ const UserAvatar = ({ userId, size, appendToTooltip }) => {
     }, [userId]);
 
     return (
-        <div>
+        <>
             {userId && (
                 <Tippy
                     offset={[0, 10]}
@@ -74,7 +74,7 @@ const UserAvatar = ({ userId, size, appendToTooltip }) => {
                     </Link>
                 </Tippy>
             )}
-        </div>
+        </>
     );
 };
 
