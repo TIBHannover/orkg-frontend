@@ -33,7 +33,7 @@ const ObservatoryModal = props => {
                 id: props.resourceId
             }).then(l => {
                 toast.success(`Observatory added to paper successfully`);
-                props.callBack();
+                props.callBack && props.callBack(observatory.id, organization.id);
                 props.toggle();
             });
         } else {
@@ -69,7 +69,7 @@ ObservatoryModal.propTypes = {
     resourceId: PropTypes.string.isRequired,
     observatory: PropTypes.object,
     organization: PropTypes.object,
-    callBack: PropTypes.func.isRequired
+    callBack: PropTypes.func
 };
 
 export default ObservatoryModal;
