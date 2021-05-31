@@ -18,7 +18,7 @@ export const PREDICATES = {
     ON_HOMEPAGE: 'onHomepage',
     SAME_AS: 'SAME_AS',
     SUB_PROBLEM: 'subProblem',
-    RELATED_RESOURCES: 'RelatedResource',
+    RELATED_RESOURCE: 'RelatedResource',
     RELATED_FIGURE: 'RelatedFigure',
     IMAGE: 'Image',
     TEMPLATE_OF_RESEARCH_FIELD: 'TemplateOfResearchField',
@@ -76,7 +76,9 @@ export const CLASSES = {
     PROPERTY_SECTION: 'PropertySection',
     COMPARISON_SECTION: 'ComparisonSection',
     VISUALIZATION_SECTION: 'VisualizationSection',
-    VISUALIZATION: 'Visualization'
+    VISUALIZATION: 'Visualization',
+    COMPARISON_RELATED_RESOURCE: 'ComparisonRelatedResource',
+    COMPARISON_RELATED_FIGURE: 'ComparisonRelatedFigure'
 };
 
 export const MISC = {

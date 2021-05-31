@@ -17,7 +17,8 @@ import RelatedFigures from 'components/Comparison/RelatedResources/RelatedFigure
 import ExportCitation from 'components/Comparison/Export/ExportCitation';
 import ComparisonMetaData from 'components/Comparison/ComparisonMetaData';
 import Share from 'components/Comparison/Share.js';
-import ComparisonVersions from 'components/Comparison/ComparisonVersions.js';
+import HistoryModal from 'components/Comparison/HistoryModal/HistoryModal';
+import NewerVersionWarning from 'components/Comparison/HistoryModal/NewerVersionWarning';
 import Publish from 'components/Comparison/Publish/Publish';
 import { ContainerAnimated, ComparisonTypeButton } from 'components/Comparison/styled';
 import useComparison from 'components/Comparison/hooks/useComparison';
@@ -50,7 +51,6 @@ function Comparison(props) {
         data,
         filterControlData,
         matrixData,
-        authors,
         errors,
         transpose,
         comparisonType,
@@ -81,7 +81,6 @@ function Comparison(props) {
         setResponseHash,
         setUrlNeedsToUpdate,
         setShortLink,
-        setAuthors,
         loadCreatedBy,
         loadProvenanceInfos,
         loadVisualizations,
@@ -375,6 +374,8 @@ function Comparison(props) {
                     </div>
                 )}
             </ContainerAnimated>
+            {!!metaData.id && hasNextVersions?.length > 0 && <NewerVersionWarning comparisonId={metaData?.id} nextVersions={hasNextVersions} />}
+
             <ContainerAnimated className="box rounded pt-4 pb-4 pl-5 pr-5 clearfix position-relative" style={containerStyle}>
                 <ShareLinkMarker typeOfLink="comparison" title={metaData?.title} />
                 {!isLoadingMetaData && (isFailedLoadingComparisonResult || isFailedLoadingMetaData) && (
@@ -415,7 +416,7 @@ function Comparison(props) {
                             <div className="flex-grow-1">
                                 <h2 className="h4 mb-4 mt-4">{metaData.title ? metaData.title : 'Compare'}</h2>
 
-                                {!isFailedLoadingMetaData && <ComparisonMetaData authors={authors} metaData={metaData} />}
+                                {!isFailedLoadingMetaData && <ComparisonMetaData metaData={metaData} />}
                             </div>
 
                             {metaData.id && provenance && <ObservatoryBox provenance={provenance} />}
@@ -453,7 +454,7 @@ function Comparison(props) {
                                             contributions,
                                             properties,
                                             data,
-                                            authors, // do we need this? maybe to add a new author who creates the comparison
+                                            authors: metaData.authors, // do we need this? maybe to add a new author who creates the comparison
                                             contributionsList,
                                             predicatesList
                                         }) && (
@@ -539,13 +540,8 @@ function Comparison(props) {
                 setShortLink={setShortLink}
                 subject={!metaData?.subject && researchField ? researchField : metaData?.subject}
             />
-            {(metaData?.hasPreviousVersion || (hasNextVersions && hasNextVersions.length > 0)) && (
-                <ComparisonVersions
-                    showDialog={showComparisonVersions}
-                    toggle={() => setShowComparisonVersions(v => !v)}
-                    metaData={metaData}
-                    hasNextVersions={hasNextVersions}
-                />
+            {(metaData?.hasPreviousVersion || (hasNextVersions && hasNextVersions.length > 0)) && showComparisonVersions && (
+                <HistoryModal comparisonId={metaData?.id} toggle={() => setShowComparisonVersions(v => !v)} showDialog={showComparisonVersions} />
             )}
             <Publish
                 showDialog={showPublishDialog}
@@ -559,8 +555,7 @@ function Comparison(props) {
                 predicatesList={predicatesList}
                 comparisonType={comparisonType}
                 comparisonURLConfig={comparisonURLConfig}
-                authors={authors}
-                setAuthors={setAuthors}
+                authors={metaData?.authors}
                 loadCreatedBy={loadCreatedBy}
                 loadProvenanceInfos={loadProvenanceInfos}
                 data={data}
@@ -603,7 +598,7 @@ function Comparison(props) {
                     contributions,
                     properties,
                     data,
-                    authors, // do we need this? maybe to add a new author who creates the comparison
+                    authors: metaData.authors, // do we need this? maybe to add a new author who creates the comparison
                     contributionsList,
                     predicatesList
                 }}

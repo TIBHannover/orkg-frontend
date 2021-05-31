@@ -9,6 +9,7 @@ import { getContributorInformationById } from 'services/backend/contributors';
 import Gravatar from 'react-gravatar';
 import Tippy from '@tippyjs/react';
 import PropTypes from 'prop-types';
+import { MISC } from 'constants/graphSettings';
 
 const StyledGravatar = styled(Gravatar)`
     border: 2px solid ${props => props.theme.lightDarker};
@@ -55,7 +56,7 @@ const UserAvatar = ({ userId, size, appendToTooltip }) => {
 
     return (
         <>
-            {userId && (
+            {userId && userId !== MISC.UNKNOWN_ID && (
                 <Tippy
                     offset={[0, 10]}
                     placement="bottom"

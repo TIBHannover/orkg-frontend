@@ -5,7 +5,8 @@ import { getComparisonsByResearchFieldId } from 'services/backend/researchFields
 import { getResourcesByClass } from 'services/backend/resources';
 import { getStatementsBySubjects } from 'services/backend/statements';
 import { MISC } from 'constants/graphSettings';
-import { getComparisonData } from 'utils';
+import { getComparisonData, groupVersionsOfComparisons } from 'utils';
+import { flatten } from 'lodash';
 
 function useResearchFieldComparison({ researchFieldId, initialSort, initialIncludeSubFields, pageSize = 10 }) {
     const [isLoading, setIsLoading] = useState(false);
@@ -54,7 +55,8 @@ function useResearchFieldComparison({ researchFieldId, initialSort, initialInclu
                                 return getComparisonData(resourceSubject, comparisonStatements.statements);
                             });
 
-                            setComparisons(prevResources => [...prevResources, ...papers]);
+                            setComparisons(prevResources => groupVersionsOfComparisons([...flatten(prevResources.map(c => c.versions)), ...papers]));
+
                             setIsLoading(false);
                             setHasNextPage(!result.last);
                             setIsLastPageReached(result.last);

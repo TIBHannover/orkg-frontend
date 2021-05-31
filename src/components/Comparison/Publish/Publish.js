@@ -213,9 +213,9 @@ function Publish(props) {
                         resources: [],
                         figures: [],
                         hasPreviousVersion: props.metaData.hasPreviousVersion,
-                        hasNextVersion: null
+                        hasNextVersion: null,
+                        authors: comparisonCreators
                     }));
-                    props.setAuthors(comparisonCreators);
                     props.loadCreatedBy(titleResponse.created_by);
                     props.loadProvenanceInfos(titleResponse.observatory_id, titleResponse.organization_id);
                 } else {
@@ -557,7 +557,6 @@ Publish.propTypes = {
     predicatesList: PropTypes.array.isRequired,
     comparisonType: PropTypes.string,
     comparisonURLConfig: PropTypes.string.isRequired,
-    setAuthors: PropTypes.func.isRequired,
     loadCreatedBy: PropTypes.func.isRequired,
     loadProvenanceInfos: PropTypes.func.isRequired,
     data: PropTypes.object.isRequired

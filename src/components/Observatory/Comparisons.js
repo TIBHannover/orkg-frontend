@@ -7,8 +7,6 @@ import RelatedResourcesCard from 'components/Observatory/RelatedResourcesCard';
 import ContentLoader from 'react-content-loader';
 import { getComparisonData } from 'utils';
 import { find } from 'lodash';
-import { filterObjectOfStatementsByPredicateAndClass } from 'utils';
-import { CLASSES, PREDICATES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
 
 const Comparisons = ({ observatoryId }) => {
@@ -26,23 +24,7 @@ const Comparisons = ({ observatoryId }) => {
                     }).then(resourcesStatements => {
                         const comparisonsData = resourcesStatements.map(resourceStatements => {
                             const comparisonSubject = find(comparisons, { id: resourceStatements.id });
-                            const resources = filterObjectOfStatementsByPredicateAndClass(
-                                resourceStatements.statements,
-                                PREDICATES.RELATED_RESOURCES,
-                                false,
-                                CLASSES.RELATED_RESOURCES
-                            );
-                            const figures = filterObjectOfStatementsByPredicateAndClass(
-                                resourceStatements.statements,
-                                PREDICATES.RELATED_FIGURE,
-                                false,
-                                CLASSES.RELATED_FIGURE
-                            );
-
                             const data = getComparisonData(comparisonSubject, resourceStatements.statements);
-
-                            data.resources = resources;
-                            data.figures = figures;
                             return data;
                         });
                         setComparisonsList(comparisonsData);
