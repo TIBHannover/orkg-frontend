@@ -2,7 +2,7 @@ import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import DataTableEntity from 'components/SmartReview/DataTable/DataTableEntity';
 import SelectEntitiesModal from 'components/SmartReview/DataTable/SelectEntitiesModal';
-import { orderBy } from 'lodash';
+import { capitalize, orderBy } from 'lodash';
 import PropTypes from 'prop-types';
 import React, { useMemo, useState } from 'react';
 import { Button, Table } from 'reactstrap';
@@ -84,7 +84,7 @@ const SectionDataTable = ({ section, isEditable = false }) => {
                             (entityStatements[index - 1] && entityStatement.subject?.label !== entityStatements[index - 1].subject?.label) ? (
                                 <DataTableEntity
                                     id={entityStatement.subject?.id}
-                                    label={entityStatement.subject?.label}
+                                    label={capitalize(entityStatement.subject?.label)}
                                     type={entityStatement.subject?._class === 'resource' ? 'resource' : 'property'}
                                     isEditable={isEditable}
                                     sectionId={section.id}
@@ -93,7 +93,13 @@ const SectionDataTable = ({ section, isEditable = false }) => {
                                 ''
                             )}
                         </td>
-                        <td>{entityStatement.predicate?.label ?? <em className="text-muted">No data</em>}</td>
+                        <td>
+                            {entityStatement.predicate?.label ? (
+                                capitalize(entityStatement.predicate?.label)
+                            ) : (
+                                <em className="text-muted">No data</em>
+                            )}
+                        </td>
                         <td>
                             {entityStatement.object?._class === 'resource' ? (
                                 <DataTableEntity
