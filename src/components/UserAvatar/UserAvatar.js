@@ -36,7 +36,7 @@ const StyledSpinnerGravatar = styled.div`
     background-color: ${props => props.theme.lightDarker};
 `;
 
-const UserAvatar = ({ userId, size, appendToTooltip }) => {
+const UserAvatar = ({ userId, size, appendToTooltip, showDisplayName }) => {
     const [contributor, setContributor] = useState(null);
     const [isLoadingContributor, setIsLoadingContributor] = useState(true);
 
@@ -61,18 +61,23 @@ const UserAvatar = ({ userId, size, appendToTooltip }) => {
                     offset={[0, 10]}
                     placement="bottom"
                     content={`${contributor?.display_name}${appendToTooltip}`}
-                    disabled={!userId || !contributor || isLoadingContributor}
+                    disabled={showDisplayName || !userId || !contributor || isLoadingContributor}
                 >
-                    <Link to={reverse(ROUTES.USER_PROFILE, { userId: userId })}>
-                        {!isLoadingContributor && (
-                            <StyledGravatar className="rounded-circle" md5={contributor?.gravatar_id ?? 'example@example.com'} size={size} />
+                    <span>
+                        <Link to={reverse(ROUTES.USER_PROFILE, { userId: userId })}>
+                            {!isLoadingContributor && (
+                                <StyledGravatar className="rounded-circle" md5={contributor?.gravatar_id ?? 'example@example.com'} size={size} />
+                            )}
+                            {userId && isLoadingContributor && (
+                                <StyledSpinnerGravatar className="rounded-circle">
+                                    <Icon icon={faSpinner} spin />
+                                </StyledSpinnerGravatar>
+                            )}
+                        </Link>
+                        {showDisplayName && !isLoadingContributor && (
+                            <Link to={reverse(ROUTES.USER_PROFILE, { userId: userId })}>{!isLoadingContributor && contributor.display_name}</Link>
                         )}
-                        {userId && isLoadingContributor && (
-                            <StyledSpinnerGravatar className="rounded-circle">
-                                <Icon icon={faSpinner} spin />
-                            </StyledSpinnerGravatar>
-                        )}
-                    </Link>
+                    </span>
                 </Tippy>
             )}
         </>
@@ -82,12 +87,14 @@ const UserAvatar = ({ userId, size, appendToTooltip }) => {
 UserAvatar.propTypes = {
     userId: PropTypes.string,
     size: PropTypes.number,
-    appendToTooltip: PropTypes.string
+    appendToTooltip: PropTypes.string,
+    showDisplayName: PropTypes.bool
 };
 
 UserAvatar.defaultProps = {
     size: 28,
-    appendToTooltip: ''
+    appendToTooltip: '',
+    showDisplayName: false
 };
 
 export default UserAvatar;

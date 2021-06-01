@@ -33,7 +33,7 @@ function ComparisonMetaData(props) {
                         {props.metaData.authors && props.metaData.authors.length > 0 && (
                             <>
                                 {props.metaData.authors.map((author, index) =>
-                                    author.classes.includes(CLASSES.AUTHOR) ? (
+                                    author?.classes?.includes(CLASSES.AUTHOR) ? (
                                         <Link className="p-0" to={reverse(ROUTES.AUTHOR_PAGE, { authorId: author.id })} key={index}>
                                             <Badge color="light" className="mr-2 mb-2">
                                                 <Icon icon={faUser} className="text-primary" /> {author.label}

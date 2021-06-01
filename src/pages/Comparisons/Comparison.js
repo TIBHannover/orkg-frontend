@@ -374,7 +374,7 @@ function Comparison(props) {
                     </div>
                 )}
             </ContainerAnimated>
-            {!!metaData.id && hasNextVersions?.length > 0 && <NewerVersionWarning comparisonId={metaData?.id} nextVersions={hasNextVersions} />}
+            {!!metaData.id && hasNextVersions?.length > 0 && <NewerVersionWarning comparisonId={metaData?.id} />}
 
             <ContainerAnimated className="box rounded pt-4 pb-4 pl-5 pr-5 clearfix position-relative" style={containerStyle}>
                 <ShareLinkMarker typeOfLink="comparison" title={metaData?.title} />
@@ -540,7 +540,11 @@ function Comparison(props) {
                 subject={!metaData?.subject && researchField ? researchField : metaData?.subject}
             />
             {(metaData?.hasPreviousVersion || (hasNextVersions && hasNextVersions.length > 0)) && showComparisonVersions && (
-                <HistoryModal comparisonId={metaData?.id} toggle={() => setShowComparisonVersions(v => !v)} showDialog={showComparisonVersions} />
+                <HistoryModal
+                    comparisonId={metaData?.id || metaData?.hasPreviousVersion.id}
+                    toggle={() => setShowComparisonVersions(v => !v)}
+                    showDialog={showComparisonVersions}
+                />
             )}
             <Publish
                 showDialog={showPublishDialog}
@@ -558,6 +562,7 @@ function Comparison(props) {
                 loadCreatedBy={loadCreatedBy}
                 loadProvenanceInfos={loadProvenanceInfos}
                 data={data}
+                nextVersions={hasNextVersions}
             />
 
             <AddContribution onAddContributions={addContributions} showDialog={showAddContribution} toggle={() => setShowAddContribution(v => !v)} />
