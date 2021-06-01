@@ -619,6 +619,7 @@ export const groupVersionsOfComparisons = (comparisons, sortFunc = (a, b) => new
     let result = list_to_tree(uniqBy(sortBy(comparisons, 'hasPreviousVersion'), 'id'));
     // 3- We flat the versions  inside the roots
     for (let i = 0; i < result.length; i += 1) {
+        // Always the new version if the main resource
         const arrayVersions = [...convertTreeToFlat(result[i]), result[i]].sort(sortFunc);
         result[i] = { ...arrayVersions[0], versions: arrayVersions };
     }

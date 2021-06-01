@@ -55,9 +55,14 @@ function useResearchFieldComparison({ researchFieldId, initialSort, initialInclu
                                 return getComparisonData(resourceSubject, comparisonStatements.statements);
                             });
 
-                            setComparisons(prevResources =>
-                                groupVersionsOfComparisons([...flatten([...prevResources.map(c => c.versions), ...prevResources]), ...papers])
-                            );
+                            setComparisons(prevResources => {
+                                const sortFunc =
+                                    sort === 'newest' || sort === 'featured' ? undefined : (a, b) => new Date(a.created_at) - new Date(b.created_at);
+                                return groupVersionsOfComparisons(
+                                    [...flatten([...prevResources.map(c => c.versions), ...prevResources]), ...papers],
+                                    sortFunc
+                                );
+                            });
 
                             setIsLoading(false);
                             setHasNextPage(!result.last);
