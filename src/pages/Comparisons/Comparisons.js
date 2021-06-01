@@ -44,7 +44,7 @@ const Comparisons = () => {
                         });
 
                         setComparisons(prevResources =>
-                            groupVersionsOfComparisons([...flatten(prevResources.map(c => c.versions)), ...comparisonsData])
+                            groupVersionsOfComparisons([...flatten([...prevResources.map(c => c.versions), ...prevResources]), ...comparisonsData])
                         );
 
                         setIsNextPageLoading(false);

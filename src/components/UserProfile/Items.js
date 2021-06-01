@@ -68,7 +68,9 @@ const Items = props => {
                         return null;
                     });
                     if (props.filterClass === CLASSES.COMPARISON) {
-                        setResources(prevResources => groupVersionsOfComparisons([...flatten(prevResources.map(c => c.versions)), ...new_resources]));
+                        setResources(prevResources =>
+                            groupVersionsOfComparisons([...flatten([...prevResources.map(c => c.versions), ...prevResources]), ...new_resources])
+                        );
                     } else {
                         setResources(prevResources => [...prevResources, ...new_resources]);
                     }

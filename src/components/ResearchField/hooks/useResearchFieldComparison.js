@@ -55,7 +55,9 @@ function useResearchFieldComparison({ researchFieldId, initialSort, initialInclu
                                 return getComparisonData(resourceSubject, comparisonStatements.statements);
                             });
 
-                            setComparisons(prevResources => groupVersionsOfComparisons([...flatten(prevResources.map(c => c.versions)), ...papers]));
+                            setComparisons(prevResources =>
+                                groupVersionsOfComparisons([...flatten([...prevResources.map(c => c.versions), ...prevResources]), ...papers])
+                            );
 
                             setIsLoading(false);
                             setHasNextPage(!result.last);

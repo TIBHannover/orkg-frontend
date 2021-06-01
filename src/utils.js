@@ -3,7 +3,7 @@ import { FILTER_TYPES } from 'constants/comparisonFilterTypes';
 import { CLASSES, MISC, PREDICATES, ENTITIES } from 'constants/graphSettings';
 import { PREDICATE_TYPE_ID, RESOURCE_TYPE_ID } from 'constants/misc';
 import ROUTES from 'constants/routes';
-import { find, flatten, flattenDepth, isEqual, isString, last, uniq, sortBy } from 'lodash';
+import { find, flatten, flattenDepth, isEqual, isString, last, uniq, sortBy, uniqBy } from 'lodash';
 import { reverse } from 'named-urls';
 import queryString from 'query-string';
 import rdf from 'rdf';
@@ -614,9 +614,9 @@ function convertTreeToFlat(treeStructure) {
  * @param {Function} sortFunc Sort function
  */
 export const groupVersionsOfComparisons = (comparisons, sortFunc = (a, b) => new Date(b.created_at) - new Date(a.created_at)) => {
-    // 1- Comparison resource with `previous version`
+    // 1- Remove duplicated and keep the ones with hasPreviousVersion
     // 2- Make a tree of versions
-    let result = list_to_tree(comparisons);
+    let result = list_to_tree(uniqBy(sortBy(comparisons, 'hasPreviousVersion'), 'id'));
     // 3- We flat the versions  inside the roots
     for (let i = 0; i < result.length; i += 1) {
         const arrayVersions = [...convertTreeToFlat(result[i]), result[i]].sort(sortFunc);
