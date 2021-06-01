@@ -182,7 +182,7 @@ export const getPaperData_ViewPaper = (paperResource, paperStatements) => {
 
     return {
         paperResource: paperResource,
-        authors: authors ? authors.reverse() : [], // statements are ordered desc, so first author is last => thus reverse
+        authors: authors ? authors.sort((a, b) => a.s_created_at.localeCompare(b.s_created_at)) : [], // statements are ordered desc, so first author is last => thus reverse
         contributions: contributions.sort((a, b) => a.label.localeCompare(b.label)), // sort contributions ascending, so contribution 1, is actually the first one
         publicationMonth: filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_PUBLICATION_MONTH, true),
         publicationYear: filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_PUBLICATION_YEAR, true),
@@ -219,7 +219,7 @@ export const getPaperData = (resource, paperStatements) => {
         publicationMonth,
         researchField,
         doi,
-        authorNames: authors ? authors.sort((a, b) => a.created_at.localeCompare(b.created_at)) : [],
+        authors: authors ? authors.sort((a, b) => a.s_created_at.localeCompare(b.s_created_at)) : [],
         contributions: contributions ? contributions.sort((a, b) => a.label.localeCompare(b.label)) : [], // sort contributions ascending, so contribution 1, is actually the first one
         order,
         created_by: resource.created_by !== MISC.UNKNOWN_ID ? resource.created_by : null
@@ -314,7 +314,7 @@ export const getVisualizationData = (id, label, visualizationStatements) => {
         label,
         created_at: description ? description.object.created_at : '',
         description: description ? description.object.label : '',
-        authorNames: authors.sort((a, b) => a.created_at.localeCompare(b.created_at))
+        authors: authors ? authors.sort((a, b) => a.s_created_at.localeCompare(b.s_created_at)) : []
     };
 };
 

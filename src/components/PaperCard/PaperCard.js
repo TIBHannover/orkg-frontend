@@ -61,7 +61,7 @@ const PaperCard = props => {
                         )}
                         <br />
                         <small>
-                            <Authors authors={props.paper.authorNames} />
+                            <Authors authors={props.paper.authors} />
                             {(props.paper.publicationMonth || props.paper.publicationYear) && (
                                 <Icon size="sm" icon={faCalendar} className="ml-2 mr-1" />
                             )}
@@ -107,7 +107,7 @@ PaperCard.propTypes = {
     paper: PropTypes.shape({
         id: PropTypes.string.isRequired,
         title: PropTypes.string,
-        authorNames: PropTypes.array,
+        authors: PropTypes.array,
         publicationMonth: PropTypes.object,
         publicationYear: PropTypes.object,
         researchField: PropTypes.shape({
