@@ -272,6 +272,7 @@ export const getComparisonData = (resource, comparisonStatements) => {
         CLASSES.VISUALIZATION
     );
     const authors = filterObjectOfStatementsByPredicateAndClass(comparisonStatements, PREDICATES.HAS_AUTHOR, false);
+    const properties = filterObjectOfStatementsByPredicateAndClass(comparisonStatements, PREDICATES.HAS_PROPERTY, false);
 
     // url
     const url = filterObjectOfStatementsByPredicateAndClass(comparisonStatements, PREDICATES.URL, true);
@@ -293,7 +294,8 @@ export const getComparisonData = (resource, comparisonStatements) => {
         hasPreviousVersion,
         visualizations,
         figures,
-        resources
+        resources,
+        properties
     };
 };
 
