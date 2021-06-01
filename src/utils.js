@@ -274,7 +274,7 @@ export const getComparisonData = (resource, comparisonStatements) => {
     return {
         ...resource,
         label: resource.label ? resource.label : 'No Title',
-        authors: authors ? authors.sort((a, b) => a.created_at.localeCompare(b.created_at)) : [],
+        authors: authors ? authors.sort((a, b) => a.s_created_at.localeCompare(b.s_created_at)) : [], // sort authors by their statement creation time (s_created_at)
         contributions: contributions,
         reference: references,
         doi: doi ? doi.label : '',
@@ -458,7 +458,7 @@ export const generateRdfDataVocabularyFile = (data, contributions, properties, m
 };
 
 /**
- * Filter a list of statements by predicate id and return the object
+ * Filter a list of statements by predicate id and return the object (including the statement id and created_at)
  *
  * @param {Array} statementsArray Array of statements
  * @param {String} predicateID Predicate ID
@@ -473,16 +473,16 @@ export const filterObjectOfStatementsByPredicateAndClass = (statementsArray, pre
         result = statementsArray.filter(statement => statement.object.classes && statement.object.classes.includes(classID));
     }
     if (result.length > 0 && isUnique) {
-        return { ...result[0].object, statementId: result[0].id };
+        return { ...result[0].object, statementId: result[0].id, s_created_at: result[0].created_at };
     } else if (result.length > 0 && !isUnique) {
-        return result.map(s => ({ ...s.object, statementId: s.id }));
+        return result.map(s => ({ ...s.object, statementId: s.id, s_created_at: s.created_at }));
     } else {
         return isUnique ? null : [];
     }
 };
 
 /**
- * Filter a list of statements by predicate id and return the subject
+ * Filter a list of statements by predicate id and return the subject (including the statement id and created_at)
  *
  * @param {Array} statementsArray Array of statements
  * @param {String} predicateID Predicate ID
@@ -497,9 +497,9 @@ export const filterSubjectOfStatementsByPredicateAndClass = (statementsArray, pr
         result = statementsArray.filter(statement => statement.subject.classes && statement.subject.classes.includes(classID));
     }
     if (result.length > 0 && isUnique) {
-        return { ...result[0].subject, statementId: result[0].id };
+        return { ...result[0].subject, statementId: result[0].id, s_created_at: result[0].created_at };
     } else if (result.length > 0 && !isUnique) {
-        return result.map(s => ({ ...s.subject, statementId: s.id }));
+        return result.map(s => ({ ...s.subject, statementId: s.id, s_created_at: s.created_at }));
     } else {
         return isUnique ? null : [];
     }

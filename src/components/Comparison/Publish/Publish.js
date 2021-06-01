@@ -34,7 +34,9 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { Link } from 'react-router-dom';
 import { getPropertyObjectFromData } from 'utils';
 import styled from 'styled-components';
+import UserAvatar from 'components/UserAvatar/UserAvatar';
 import { slugify } from 'utils';
+import moment from 'moment';
 import { PREDICATES, CLASSES, ENTITIES } from 'constants/graphSettings';
 import env from '@beam-australia/react-env';
 
@@ -293,6 +295,17 @@ function Publish(props) {
                         <>This comparison is already published, you can find the persistent link and the DOI below.</>
                     )}
                 </Alert>
+                {!props.comparisonId && props.metaData.hasPreviousVersion && (
+                    <Alert color="info">
+                        You are publishing a new version of a published comparison. The comparison you are about to publish will be marked as a new
+                        version of the{' '}
+                        <Link target="_blank" to={reverse(ROUTES.COMPARISON, { comparisonId: props.metaData.hasPreviousVersion.id })}>
+                            original comparison{' '}
+                        </Link>
+                        {' created by '}
+                        <UserAvatar userId={props.metaData.hasPreviousVersion.created_by} />.
+                    </Alert>
+                )}
                 {props.comparisonId && (
                     <FormGroup>
                         <Label for="comparison_link">Comparison link</Label>
@@ -504,19 +517,6 @@ function Publish(props) {
                                 </div>
                             </FormGroup>
                         )}
-                        {!props.comparisonId && props.metaData.hasPreviousVersion && (
-                            <FormGroup>
-                                <div>
-                                    <hr />
-                                    <>
-                                        This comparison will be marked as new version of the comparison{' '}
-                                        <Link target="_blank" to={reverse(ROUTES.COMPARISON, { comparisonId: props.metaData.hasPreviousVersion.id })}>
-                                            {props.metaData.hasPreviousVersion.id}
-                                        </Link>
-                                    </>
-                                </div>
-                            </FormGroup>
-                        )}
                     </>
                 )}
 
@@ -549,7 +549,7 @@ Publish.propTypes = {
     toggle: PropTypes.func.isRequired,
     comparisonId: PropTypes.string,
     doi: PropTypes.string,
-    authors: PropTypes.array.isRequired,
+    authors: PropTypes.array,
     setMetaData: PropTypes.func.isRequired,
     publicURL: PropTypes.string.isRequired,
     metaData: PropTypes.object.isRequired,

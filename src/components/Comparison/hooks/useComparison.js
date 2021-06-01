@@ -707,7 +707,7 @@ function useComparison({ id }) {
                 setMetaData({
                     ...metaData,
                     doi: '',
-                    hasPreviousVersion: { id: metaData.id, created_at: metaData.createdAt, createdBy: metaData.createdBy },
+                    hasPreviousVersion: { id: metaData.id, created_at: metaData.createdAt, created_by: metaData.created_by },
                     id: null,
                     visualizations: []
                 });
