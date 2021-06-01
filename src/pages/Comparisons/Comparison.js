@@ -454,7 +454,6 @@ function Comparison(props) {
                                             contributions,
                                             properties,
                                             data,
-                                            authors: metaData.authors, // do we need this? maybe to add a new author who creates the comparison
                                             contributionsList,
                                             predicatesList
                                         }) && (
@@ -598,7 +597,6 @@ function Comparison(props) {
                     contributions,
                     properties,
                     data,
-                    authors: metaData.authors, // do we need this? maybe to add a new author who creates the comparison
                     contributionsList,
                     predicatesList
                 }}

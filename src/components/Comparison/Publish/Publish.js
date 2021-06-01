@@ -36,7 +36,6 @@ import { getPropertyObjectFromData } from 'utils';
 import styled from 'styled-components';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
 import { slugify } from 'utils';
-import moment from 'moment';
 import { PREDICATES, CLASSES, ENTITIES } from 'constants/graphSettings';
 import env from '@beam-australia/react-env';
 
