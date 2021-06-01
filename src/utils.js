@@ -3,7 +3,7 @@ import { FILTER_TYPES } from 'constants/comparisonFilterTypes';
 import { CLASSES, MISC, PREDICATES, ENTITIES } from 'constants/graphSettings';
 import { PREDICATE_TYPE_ID, RESOURCE_TYPE_ID } from 'constants/misc';
 import ROUTES from 'constants/routes';
-import { find, flatten, flattenDepth, isEqual, isString, last, uniq } from 'lodash';
+import { find, flatten, flattenDepth, isEqual, isString, last, uniq, sortBy } from 'lodash';
 import { reverse } from 'named-urls';
 import queryString from 'query-string';
 import rdf from 'rdf';
@@ -234,7 +234,12 @@ export const getPaperData = (resource, paperStatements) => {
  */
 export const getComparisonData = (resource, comparisonStatements) => {
     const description = filterObjectOfStatementsByPredicateAndClass(comparisonStatements, PREDICATES.DESCRIPTION, true);
-    const contributions = filterObjectOfStatementsByPredicateAndClass(comparisonStatements, PREDICATES.DESCRIPTION, false, CLASSES.CONTRIBUTION);
+    const contributions = filterObjectOfStatementsByPredicateAndClass(
+        comparisonStatements,
+        PREDICATES.COMPARE_CONTRIBUTION,
+        false,
+        CLASSES.CONTRIBUTION
+    );
     const references = filterObjectOfStatementsByPredicateAndClass(comparisonStatements, PREDICATES.REFERENCE, false);
     const doi = filterObjectOfStatementsByPredicateAndClass(comparisonStatements, PREDICATES.HAS_DOI, true);
     const hasPreviousVersion = filterObjectOfStatementsByPredicateAndClass(
@@ -577,6 +582,7 @@ export function list_to_tree(list) {
     let node;
     const roots = [];
     let i;
+    list = sortBy(list, 'hasPreviousVersion');
     for (i = 0; i < list.length; i += 1) {
         map[list[i].id] = i; // initialize the map
         const v = list[i].hasPreviousVersion;

@@ -5,7 +5,7 @@ import { getComparisonsByObservatoryId } from 'services/backend/observatories';
 import ComparisonCard from 'components/ComparisonCard/ComparisonCard';
 import RelatedResourcesCard from 'components/Observatory/RelatedResourcesCard';
 import ContentLoader from 'react-content-loader';
-import { getComparisonData } from 'utils';
+import { getComparisonData, groupVersionsOfComparisons } from 'utils';
 import { find } from 'lodash';
 import PropTypes from 'prop-types';
 
@@ -27,7 +27,7 @@ const Comparisons = ({ observatoryId }) => {
                             const data = getComparisonData(comparisonSubject, resourceStatements.statements);
                             return data;
                         });
-                        setComparisonsList(comparisonsData);
+                        setComparisonsList(groupVersionsOfComparisons(comparisonsData));
                         setIsLoadingComparisons(false);
                     });
                 })
@@ -70,7 +70,7 @@ const Comparisons = ({ observatoryId }) => {
                         {comparisonsList.length > 0 ? (
                             <>
                                 {comparisonsList.map(comparison => {
-                                    return <ComparisonCard comparison={{ ...comparison }} key={`pc${comparison.id}`} loadResources={true} />;
+                                    return <ComparisonCard comparison={comparison} key={`pc${comparison.id}`} />;
                                 })}
                             </>
                         ) : (
