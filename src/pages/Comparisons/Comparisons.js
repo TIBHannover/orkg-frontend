@@ -4,14 +4,14 @@ import { getResourcesByClass } from 'services/backend/resources';
 import { Container, ButtonGroup, ListGroup } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { getComparisonData } from 'utils';
-import { find } from 'lodash';
+import { getComparisonData, groupVersionsOfComparisons } from 'utils';
+import { find, flatten } from 'lodash';
 import ComparisonCard from 'components/ComparisonCard/ComparisonCard';
 import { CLASSES } from 'constants/graphSettings';
 import HeaderSearchButton from 'components/HeaderSearchButton/HeaderSearchButton';
 
 const Comparisons = () => {
-    const pageSize = 25;
+    const pageSize = 15;
     const [comparisons, setComparisons] = useState([]);
     const [isNextPageLoading, setIsNextPageLoading] = useState(false);
     const [hasNextPage, setHasNextPage] = useState(false);
@@ -42,7 +42,11 @@ const Comparisons = () => {
                         const comparisonsData = comparisonsStatements.map(comparisonStatements => {
                             return getComparisonData(find(result.content, { id: comparisonStatements.id }), comparisonStatements.statements);
                         });
-                        setComparisons(prevComparisons => [...prevComparisons, ...comparisonsData]);
+
+                        setComparisons(prevResources =>
+                            groupVersionsOfComparisons([...flatten(prevResources.map(c => c.versions)), ...comparisonsData])
+                        );
+
                         setIsNextPageLoading(false);
                         setHasNextPage(!result.last);
                         setPage(prevPage => prevPage + 1);
