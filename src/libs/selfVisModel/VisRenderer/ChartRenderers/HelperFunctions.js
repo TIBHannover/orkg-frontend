@@ -38,12 +38,22 @@ export const isMounted = ref => {
 
 const removeSelector = (id, ref) => {
     const ySelectors = ref.state.yAxisSelector;
+    const ySelectorsIndex = ref.state.yAxisIndexInModel;
     const yAxisIntervals = ref.state.yAxisInterValSelectors;
     if (yAxisIntervals[id]) {
         yAxisIntervals[id] = [];
     }
+    if (ySelectorsIndex[id]) {
+        ySelectorsIndex[id] = undefined;
+    }
     ySelectors.splice(id, 1);
-    ref.setState({ ySelectors: ySelectors, yAxisSelectorCount: ref.state.yAxisSelectorCount - 1, yAxisIntervals: yAxisIntervals });
+    ySelectorsIndex.splice(id, 1);
+    ref.setState({
+        ySelectors: ySelectors,
+        yAxisSelectorCount: ref.state.yAxisSelectorCount - 1,
+        yAxisIntervals: yAxisIntervals,
+        yAxisIndexInModel: ySelectorsIndex
+    });
 };
 
 export const getSelectorsState = ref => {
@@ -52,7 +62,9 @@ export const getSelectorsState = ref => {
         yAxis: ref.state.yAxisSelector,
         yAxisIntervals: ref.state.yAxisInterValSelectors,
         xAxisLabel: ref.state.xAxisLabel,
-        yAxisLabel: ref.state.yAxisLabel
+        yAxisLabel: ref.state.yAxisLabel,
+        xAxisIndexInModel: ref.state.xAxisIndexInModel,
+        yAxisIndexInModel: ref.state.yAxisIndexInModel
     };
 };
 
@@ -185,17 +197,23 @@ export const createValueSelectors = ref => {
         }
         const itemsArray = [];
         for (let i = 0; i < ref.state.yAxisSelectorCount; i++) {
+            ref.YAxisModelIndices = [];
+            const possibleIndicies = [];
             const items = possibleValueCandidates.map((item, id) => {
+                // use the ids for the ySelectors;
+                possibleIndicies.push(item.positionPropertyAnchor);
                 return (
                     <DropdownItem
-                        key={'XSelectionDropdownItemIndexKey_' + id}
+                        key={'XSelectionDropdownItemIndexKey_' + id + '_' + item.positionPropertyAnchor}
                         onClick={() => {
                             const yAxisSelector = ref.state.yAxisSelector;
+                            const yAxisIndexInModel = ref.state.yAxisIndexInModel;
                             yAxisSelector[i] = item.label;
+                            yAxisIndexInModel[i] = item.positionPropertyAnchor;
                             if (i !== 0) {
-                                ref.setState({ yAxisSelector: yAxisSelector });
+                                ref.setState({ yAxisSelector: yAxisSelector, yAxisIndexInModel: yAxisIndexInModel });
                             } else {
-                                ref.setState({ yAxisSelector: yAxisSelector, yAxisLabel: item.label });
+                                ref.setState({ yAxisSelector: yAxisSelector, yAxisLabel: item.label, yAxisIndexInModel: yAxisIndexInModel });
                             }
                         }}
                     >
@@ -221,10 +239,12 @@ export const createValueSelectors = ref => {
         // initialize yAxisSelectors;
         if (ref.state.yAxisSelector.length === 0) {
             const possibleSelectors = [];
+            const possibleIndexSelector = [];
             for (let i = 0; i < ref.state.yAxisSelectorCount; i++) {
                 possibleSelectors.push(possibleValueCandidates[0].label);
+                possibleIndexSelector.push(possibleValueCandidates[0].positionPropertyAnchor);
             }
-            ref.cachedYAxisSelector = { yAxisSelector: possibleSelectors };
+            ref.cachedYAxisSelector = { yAxisSelector: possibleSelectors, yAxisIndex: possibleIndexSelector };
         }
 
         return itemsArray.map((selector, id) => {
@@ -395,7 +415,7 @@ export const createLabelSelectors = ref => {
                 <DropdownItem
                     key={'XSelectionDropdownItemIndexKey_' + id}
                     onClick={() => {
-                        ref.setState({ xAxisSelector: item.label, xAxisLabel: item.label });
+                        ref.setState({ xAxisSelector: item.label, xAxisLabel: item.label, xAxisIndexInModel: item.positionPropertyAnchor });
                     }}
                 >
                     <Tippy content={item.label} placement="right" disabled={item.label.length < 30}>

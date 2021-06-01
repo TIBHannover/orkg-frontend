@@ -1,7 +1,7 @@
 import MachineReadableRepresentation from './MachineReadableRepresentation';
 import DataForChart from './VisRenderer/googleDataWrapper';
 import { validateCellMapping } from './ValidateCellMapping';
-
+import { clone } from 'lodash';
 export default class SelfVisDataMode {
     static instance;
     constructor() {
@@ -14,7 +14,85 @@ export default class SelfVisDataMode {
         this.requiresParing = false;
         this._googleChartsData = undefined;
         this.__customizationStateObject = undefined;
+
+        // introducing share state object
+        this.__sharedStateObject = {
+            renderingMethod: 'Table',
+            selectedColumns: [],
+            customizer: {
+                errorDataNotSupported: false,
+                errorMessage: undefined,
+                errorValue: -1,
+                xAxisLabel: undefined,
+                yAxisLabel: undefined,
+                xAxisSelector: undefined,
+                yAxisSelector: undefined,
+                xAxisSelectorOpen: false,
+                yAxisSelectorOpen: [],
+                yAxisInterValSelectors: {},
+                yAxisSelectorCount: 1
+            }
+        };
     }
+
+    /** Customization State Logic**/
+    applySelectionToCustomizationState = (propertyAnchor, value) => {
+        if (value === true) {
+            // find based on index
+            const res = this.__sharedStateObject.selectedColumns.find(item => item.positionPropertyAnchor === propertyAnchor.positionPropertyAnchor);
+            if (!res) {
+                this.__sharedStateObject.selectedColumns.push(propertyAnchor);
+            }
+        } // else it is already there -- which should never be the case
+
+        if (value === false) {
+            // remove it from the array;
+            const res = this.__sharedStateObject.selectedColumns.find(item => item.positionPropertyAnchor === propertyAnchor.positionPropertyAnchor);
+            const indexInArray = this.__sharedStateObject.selectedColumns.indexOf(res);
+            if (indexInArray !== -1) {
+                this.__sharedStateObject.selectedColumns.splice(indexInArray, 1);
+            }
+        }
+    };
+    resetSharedCustomizerObject = () => {
+        this.__sharedStateObject.customizer = {
+            errorDataNotSupported: false,
+            errorMessage: undefined,
+            errorValue: -1,
+            xAxisLabel: undefined,
+            yAxisLabel: undefined,
+            xAxisSelector: undefined,
+            yAxisSelector: undefined,
+            xAxisSelectorOpen: false,
+            yAxisSelectorOpen: [],
+            yAxisInterValSelectors: {},
+            yAxisSelectorCount: 1
+        };
+    };
+
+    getSharedCustomizerObject = () => {
+        return this.__sharedStateObject.customizer;
+    };
+
+    resetSharedCustomizationState = () => {
+        this.__sharedStateObject = {
+            renderingMethod: 'Table',
+            selectedColumns: [],
+            customizer: {
+                errorDataNotSupported: false,
+                errorMessage: undefined,
+                errorValue: -1,
+                xAxisSelector: undefined,
+                xAxisLabel: undefined,
+                yAxisLabel: undefined,
+                yAxisSelector: undefined,
+                xAxisSelectorOpen: false,
+                yAxisSelectorOpen: [],
+                yAxisInterValSelectors: {},
+                yAxisSelectorCount: 1
+            }
+        };
+    };
 
     /** exposed functions ----------------------------------------------------------------------**/
     /** ----------------------------------------------------------------------------------------**/
@@ -28,12 +106,14 @@ export default class SelfVisDataMode {
     /** CURRENTLY HACKISH **/
     setRenderingMethod = method => {
         this._renderingMethod = method;
+        this.__sharedStateObject.renderingMethod = method;
     };
     getRenderingMethod = () => {
         return this._renderingMethod;
     };
     setRenderingEngine = engine => {
         this._renderingEngine = engine;
+        this.__sharedStateObject.renderingEngine = engine;
     };
 
     setGCData = data => {
@@ -41,10 +121,10 @@ export default class SelfVisDataMode {
     };
 
     saveCustomizationState = state => {
-        this.__customizationStateObject = state;
+        this.__customizationStateObject = { ...state };
     };
     loadCustomizationState = () => {
-        return this.__customizationStateObject;
+        return { ...this.__customizationStateObject };
     };
 
     getGoogleChartsData = () => {
@@ -90,7 +170,7 @@ export default class SelfVisDataMode {
         });
 
         // reconstruct the contribution anchors;
-        const selectedContribAnchors = this.mrrModel.contributionAnchors.filter(item => item.isSelectedRow() === true);
+        const selectedContribAnchors = this.mrrModel.contributionAnchors;
         selectedContribAnchors.forEach(anchor => {
             // extract some information to be able to reconstruct it later;
             if (anchor.label !== anchor.originalLabel) {
@@ -107,22 +187,24 @@ export default class SelfVisDataMode {
         });
 
         // reconstruct the cell Values;
-        const selectedCells = this.mrrModel.dataItems.filter(item => item.itemIsSelectedForUse === true);
+        const selectedCells = this.mrrModel.dataItems;
         selectedCells.forEach(cell => {
             // extract some information to be able to reconstruct it later;
-
-            if (cell.label !== cell.originalLabel) {
-                reconstructionModel.dataCells.push({
-                    label: cell.label,
-                    originalLabel: cell.originalLabel,
-                    positionContribAnchor: cell.positionContribAnchor,
-                    positionPropertyAnchor: cell.positionPropertyAnchor
-                });
-            } else {
-                reconstructionModel.dataCells.push({
-                    positionContribAnchor: cell.positionContribAnchor,
-                    positionPropertyAnchor: cell.positionPropertyAnchor
-                });
+            const colPos = cell.positionPropertyAnchor;
+            if (this.mrrModel.propertyAnchors[colPos].isSelectedColumnForUse) {
+                if (cell.label !== cell.originalLabel) {
+                    reconstructionModel.dataCells.push({
+                        label: cell.label,
+                        originalLabel: cell.originalLabel,
+                        positionContribAnchor: cell.positionContribAnchor,
+                        positionPropertyAnchor: cell.positionPropertyAnchor
+                    });
+                } else {
+                    reconstructionModel.dataCells.push({
+                        positionContribAnchor: cell.positionContribAnchor,
+                        positionPropertyAnchor: cell.positionPropertyAnchor
+                    });
+                }
             }
         });
 
@@ -162,7 +244,7 @@ export default class SelfVisDataMode {
                 const position = anchor.positionContribAnchor;
                 if (this.mrrModel.contributionAnchors[position]) {
                     // set this to be selected in the model;
-                    this.mrrModel.contributionAnchors[position].isSelectedRowForUse = false;
+                    // this.mrrModel.contributionAnchors[position].isSelectedRowForUse = false;
                     this.mrrModel.contributionAnchors[position].label = anchor.originalLabel;
                 }
             });
@@ -188,26 +270,18 @@ export default class SelfVisDataMode {
             });
 
             this.setRenderingMethod('Table'); // << Default rendering Method
-
-            // rest the customizationState
-            this.saveCustomizationState({
-                errorDataNotSupported: false,
-                errorMessage: undefined,
-                xAxisSelector: undefined,
-                xAxisLabel: undefined,
-                yAxisLabel: undefined,
-                xAxisSelectorOpen: false,
-                yAxisSelector: [],
-                yAxisInterValSelectors: {},
-                yAxisSelectorOpen: [],
-                yAxisSelectorCount: 1
-            });
+            console.log('FORECED RESET OF CUSTOMIZATION STATE');
+            this.resetSharedCustomizationState();
             this.createGDCDataModel();
         }
     };
 
     applyReconstructionModel = model => {
-        const data = model.data;
+        console.log('Applying reconstruction model! ');
+        const data = clone(model.data);
+        console.log(data);
+        console.log(data.reconstructionData.customizationState);
+        console.log('^^^^^^^^^^^^^^');
 
         if (!this.mrrModel) {
             console.log('Model Failed!');
@@ -227,9 +301,7 @@ export default class SelfVisDataMode {
         reconstructionObject.contributionAnchors.forEach(anchor => {
             const position = anchor.positionContribAnchor;
             if (this.mrrModel.contributionAnchors[position]) {
-                // set this to be selected in the model;
                 this.mrrModel.contributionAnchors[position].isSelectedRowForUse = true;
-                // always reset the label to original
                 this.mrrModel.contributionAnchors[position].label = this.mrrModel.contributionAnchors[position].originalLabel;
                 // overwrite a label
                 if (anchor.label) {
@@ -252,6 +324,7 @@ export default class SelfVisDataMode {
                 if (anchor.label) {
                     this.mrrModel.propertyAnchors[position].label = anchor.label;
                 }
+                this.__sharedStateObject.selectedColumns.push(this.mrrModel.propertyAnchors[position]);
             }
         });
 
@@ -260,35 +333,173 @@ export default class SelfVisDataMode {
             const rowIndex = cell.positionContribAnchor;
             const colIndex = cell.positionPropertyAnchor;
             const item = this.modelAccess.getItem(rowIndex, colIndex);
-            item.setItemSelected(true);
-            item.setLabel(item.originalLabel);
-            if (cell.label) {
-                item.setLabel(cell.label);
+            if (item) {
+                item.setLabel(item.originalLabel);
+                if (cell.label) {
+                    item.setLabel(cell.label);
+                }
+                item.cellValueIsValid = true;
             }
-            item.cellValueIsValid = true;
         });
         this.createGDCDataModel();
 
         if (data.visMethod === 'Table') {
             return this._googleChartsData.useAllColumns();
         }
-        // this now neeeds to apply some selectors
-        this.saveCustomizationState(reconstructionObject.customizationState);
-        const stateForGDC = {
-            xAxis: reconstructionObject.customizationState.xAxisSelector,
-            yAxis: reconstructionObject.customizationState.yAxisSelector,
-            yAxisIntervals: reconstructionObject.customizationState.yAxisInterValSelectors,
-            xAxisLabel: reconstructionObject.customizationState.xAxisLabel,
-            yAxisLabel: reconstructionObject.customizationState.yAxisLabel
-        };
+        // // this now neeeds to apply some selectors
+        // this.saveCustomizationState({ ...reconstructionObject.customizationState });
+        // const stateForGDC = {
+        //     xAxis: reconstructionObject.customizationState.xAxisSelector,
+        //     yAxis: reconstructionObject.customizationState.yAxisSelector,
+        //     yAxisIntervals: reconstructionObject.customizationState.yAxisInterValSelectors,
+        //     xAxisLabel: reconstructionObject.customizationState.xAxisLabel,
+        //     yAxisLabel: reconstructionObject.customizationState.yAxisLabel
+        // };
 
-        const resultingData = this._googleChartsData.createDataFromSelectors(stateForGDC);
+        // we need to synchronize the shared object with reconstruction model
+        this.synchronizeSharedCustomizationStateObject(reconstructionObject.customizationState);
+
+        const resultingData = this._googleChartsData.createDataFromSharedCustomizer(this.__sharedStateObject.customizer);
         return resultingData;
+    };
+
+    synchronizeSharedCustomizationStateObject = reconstruct => {
+        console.log('Syncronizing >>>', reconstruct);
+        console.log('++++++++++++++++++++++++++++++++');
+        console.log('current', this.__sharedStateObject);
+
+        const customizer = this.__sharedStateObject.customizer;
+
+        // axis selector;
+        // we have a label for the Axis;
+        const xAxisGuess = this.requestAnXIndex(reconstruct.xAxisSelector);
+        console.log(xAxisGuess);
+        if (xAxisGuess.error === undefined) {
+            customizer.xAxisSelector = this.mrrModel.propertyAnchors[xAxisGuess.index];
+        } else {
+            customizer.xAxisSelector = { label: 'Contribution' }; // assume default values
+        }
+        customizer.xAxisLabel = reconstruct.xAxisLabel;
+        customizer.yAxisLabel = reconstruct.yAxisLabel;
+
+        // adjust yAxis selecotrs;
+        console.log('yAxisSelectors', reconstruct.yAxisSelector);
+
+        const yAxisSelectors = [];
+        reconstruct.yAxisSelector.forEach(item => {
+            // item is a string
+            const yAxisGuess = this.requestAnXIndex(item);
+            yAxisSelectors.push(this.mrrModel.propertyAnchors[yAxisGuess.index]);
+        });
+        console.log(yAxisSelectors);
+        customizer.yAxisSelector = yAxisSelectors;
+
+        this.__sharedStateObject.customizer = customizer;
+        console.log('FINAL', this.__sharedStateObject.customizer);
     };
 
     /** HACKISH ENDS**/
 
+    requestAnXIndex = label => {
+        console.log('>>> Want label to map ', label);
+        const guess = this.mrrModel.propertyAnchors.find(element => element.label === label);
+        console.log('GUESS', guess);
+        if (guess) {
+            return { index: guess.positionPropertyAnchor, label: guess.label };
+        }
+        return { error: 'NotFound' };
+    };
+
     // getter functions for various models: TODO
+    getModelState = () => {
+        console.log('---------- Wants to reconstruct an customization State');
+
+        if (this.__customizationStateObject) {
+            console.log(this.__customizationStateObject);
+            const tempState = { ...this.__customizationStateObject };
+
+            let needUpdate = false;
+            // go through the xAxis Selector
+            const currAxis = tempState.xAxis;
+            const xIndex = tempState.xAxisIndexInModel;
+            const yIndex = tempState.yAxisIndexInModel;
+            const selectorsAxis = tempState.yAxisSelector;
+            const selectorsIntervals = tempState.yAxisIntervals;
+
+            if (xIndex) {
+                if (currAxis !== this.mrrModel.propertyAnchors[xIndex].label) {
+                    tempState.xAxis = this.mrrModel.propertyAnchors[xIndex].label;
+                    tempState.xAxisLabel = this.mrrModel.propertyAnchors[xIndex].label;
+                    tempState.xAxisSelector = this.mrrModel.propertyAnchors[xIndex].label;
+                    needUpdate = true;
+                }
+            }
+
+            console.log('Do this for yAxis for now');
+            // do this for the yAxisSelectors
+            if (yIndex) {
+                console.log('Execute', selectorsAxis);
+                selectorsAxis.forEach((item, index) => {
+                    console.log(item, index);
+                    const inModelIndex = yIndex[index];
+                    if (inModelIndex) {
+                        console.log('Assuming this index', inModelIndex);
+
+                        if (item !== this.mrrModel.propertyAnchors[inModelIndex].label) {
+                            console.log('Item: ', item, 'vs', this.mrrModel.propertyAnchors[inModelIndex].label);
+                            tempState.yAxisSelector[index] = this.mrrModel.propertyAnchors[inModelIndex].label;
+                            if (index === 0) {
+                                tempState.yAxisLabel = this.mrrModel.propertyAnchors[inModelIndex].label;
+                            }
+                            needUpdate = true;
+                        }
+                    } else {
+                        // try to resolve it
+                        console.log('Guessing Idex this index');
+                        const guess = this.mrrModel.propertyAnchors.find(element => element.label === item);
+
+                        if (guess) {
+                            const inModelIndex = guess.positionPropertyAnchor;
+                            console.log('       Found a guessthis index:', inModelIndex);
+                            tempState.yAxisIndexInModel[index] = inModelIndex;
+                            needUpdate = true;
+                        } else {
+                            const newGuess = this.mrrModel.propertyAnchors.find(element => element.originalLabel === item);
+                            if (newGuess) {
+                                const inModelIndex = newGuess.positionPropertyAnchor;
+                                console.log('       Found a guessthis index:', inModelIndex);
+                                tempState.yAxisIndexInModel[index] = inModelIndex;
+                                if (item !== this.mrrModel.propertyAnchors[inModelIndex].label) {
+                                    console.log('Item: ', item, 'vs', this.mrrModel.propertyAnchors[inModelIndex].label);
+                                    tempState.yAxisSelector[index] = this.mrrModel.propertyAnchors[inModelIndex].label;
+                                    tempState.yAxisLabel = this.mrrModel.propertyAnchors[inModelIndex].label;
+                                }
+                                needUpdate = true;
+                            }
+                        }
+                    }
+                });
+            } else {
+                // we never saw an y index >> means this could be an old model that we want to use
+                console.log('Adjusting Model for Selectors', selectorsAxis);
+                tempState.yAxisIndexInModel = [];
+                selectorsAxis.forEach((item, index) => {
+                    const guess = this.mrrModel.propertyAnchors.find(element => element.label === item);
+                    if (guess) {
+                        const inModelIndex = guess.positionPropertyAnchor;
+                        console.log('       Found a guessthis index:', inModelIndex);
+                        tempState.yAxisIndexInModel[index] = inModelIndex;
+                        needUpdate = true;
+                    }
+                });
+            }
+
+            if (needUpdate) {
+                return tempState;
+            }
+        }
+        return undefined;
+    };
 
     createGDCDataModel = () => {
         // filter the propertyAnchors by selectionFlag;
@@ -296,7 +507,8 @@ export default class SelfVisDataMode {
             item => item.isSelectedColumnForUse === true && item.propertyMapperType !== 'Select Mapper'
         );
         // now figure out how many rows we do have;
-        const filteredContribs = this.mrrModel.contributionAnchors.filter(item => item.isSelectedRowForUse === true);
+        // const filteredContribs = this.mrrModel.contributionAnchors.filter(item => item.isSelectedRowForUse === true);
+        const filteredContribs = this.mrrModel.contributionAnchors;
 
         const gdc = new DataForChart();
         gdc.addColumn('string', 'Contribution');
@@ -358,20 +570,43 @@ export default class SelfVisDataMode {
     // Force Cell Validation
     forceCellValidation = () => {
         // get selected cells;
-        const selectedCells = this.mrrModel.dataItems.filter(item => item.itemIsSelectedForUse);
-        selectedCells.forEach(cell => {
-            const pos = cell.positionPropertyAnchor;
-            const mapper = this.mrrModel.propertyAnchors[pos].getPropertyMapperType();
-            if (mapper) {
-                // call the validator for this cell value;
-                const { error } = validateCellMapping(mapper, cell.label);
-                if (error) {
-                    cell.cellValueIsValid = false;
-                } else {
-                    cell.cellValueIsValid = true;
+
+        // perform validation on selected columns;
+        const selectedCols = this.mrrModel.propertyAnchors.filter(item => item.isSelectedColumnForUse);
+        console.log(selectedCols);
+        selectedCols.forEach(col => {
+            // get data item from matrix;
+            const colIndex = col.positionPropertyAnchor;
+            const colCells = this.modelAccess.getCol(colIndex);
+            console.log(colCells);
+            colCells.forEach(cell => {
+                const mapper = this.mrrModel.propertyAnchors[colIndex].getPropertyMapperType();
+                if (mapper) {
+                    // call the validator for this cell value;
+                    const { error } = validateCellMapping(mapper, cell.label);
+                    if (error) {
+                        cell.cellValueIsValid = false;
+                    } else {
+                        cell.cellValueIsValid = true;
+                    }
                 }
-            }
+            });
         });
+        // *** OLD ***
+        // const selectedCells = this.mrrModel.dataItems.filter(item => item.itemIsSelectedForUse);
+        // selectedCells.forEach(cell => {
+        //     const pos = cell.positionPropertyAnchor;
+        //     const mapper = this.mrrModel.propertyAnchors[pos].getPropertyMapperType();
+        //     if (mapper) {
+        //         // call the validator for this cell value;
+        //         const { error } = validateCellMapping(mapper, cell.label);
+        //         if (error) {
+        //             cell.cellValueIsValid = false;
+        //         } else {
+        //             cell.cellValueIsValid = true;
+        //         }
+        //     }
+        // });
     };
 
     /** GROUPED FUNCTIONS : handling input model and parse it **/
@@ -408,5 +643,41 @@ export default class SelfVisDataMode {
         parser.execute();
         this.mrrModel = parser.getResult();
         this.modelAccess = parser;
+    };
+
+    debug = () => {
+        console.log(this.__sharedStateObject);
+        console.log('+++++++++++++++++++++++++++++++++++++');
+
+        // // show selected columns;
+        // const filteredProperties = this.mrrModel.propertyAnchors.filter(
+        //     item => item.isSelectedColumnForUse === true && item.propertyMapperType !== 'Select Mapper'
+        // );
+        // // now figure out how many rows we do have;
+        // const filteredContribs = this.mrrModel.contributionAnchors;
+        //
+        // console.log('--------------');
+        // console.log('Properties:', filteredProperties);
+        // filteredProperties.forEach(item => {
+        //     console.log({ name: item.label, pos: item.positionPropertyAnchor });
+        // });
+        // console.log('Contribution:', filteredContribs);
+        // filteredContribs.forEach(item => {
+        //     console.log({ name: item.label, pos: item.positionContribAnchor });
+        // });
+        // console.log('-----------------');
+        //
+        // const reconstructionData = this.getReconstructionModel();
+        // console.log(reconstructionData);
+        //
+        // if (reconstructionData) {
+        //     reconstructionData.contributionAnchors.forEach(item => {
+        //         console.log({ name: item.label, pos: item.positionContribAnchor });
+        //     });
+        //     reconstructionData.propertyAnchors.forEach(item => {
+        //         console.log({ name: item.label, pos: item.positionPropertyAnchor });
+        //     });
+        //     console.log(reconstructionData.customizationState);
+        // }
     };
 }

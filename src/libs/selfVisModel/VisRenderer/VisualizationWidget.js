@@ -23,7 +23,9 @@ export default class VisualizationWidget extends Component {
     }
 
     componentDidMount() {
-        new SelfVisDataModel().createGDCDataModel(); // gets the singleton ptr and creates the gdc model
+        const model = new SelfVisDataModel();
+        model.createGDCDataModel(); // gets the singleton ptr and creates the gdc model
+
         window.addEventListener('resize', this.updateDimensions);
         this.updateDimensions();
     }
@@ -49,6 +51,11 @@ export default class VisualizationWidget extends Component {
     customizerPropagateUpdates = state => {
         if (this.refAbstractRenderer.current) {
             this.refAbstractRenderer.current.setCustomizationState(state);
+        }
+    };
+    createChartVisualization = () => {
+        if (this.refAbstractRenderer.current) {
+            this.refAbstractRenderer.current.createChartVisualization();
         }
     };
 
@@ -120,6 +127,7 @@ export default class VisualizationWidget extends Component {
                                             <AbstractCustomizationWidget
                                                 ref={this.refAbstractCustomizationWidget}
                                                 propagateUpdates={this.customizerPropagateUpdates}
+                                                createChartVisualization={this.createChartVisualization}
                                             />
                                         </div>
                                     </div>

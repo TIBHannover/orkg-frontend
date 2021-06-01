@@ -3,6 +3,7 @@ import Cell from './Cell';
 export default class MachineReadableRepresentation {
     constructor(inputData) {
         this.inputDataAsJsonObject = inputData;
+        console.log('>>> THIS IS INPUT DATA ', inputData);
         this.mrrModel = {};
     }
 

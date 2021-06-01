@@ -1,7 +1,14 @@
 import React, { Component } from 'react';
 import { Alert, Button } from 'reactstrap';
 import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
-import { createValueSelectors, createLabelSelectors, isMounted, getSelectorsState, createLabelEditor, createValueEditor } from './HelperFunctions';
+import {
+    createValueSelectors,
+    createLabelSelectors,
+    createLabelEditor,
+    addYAxisSelector,
+    createValueEditor,
+    initializeFromCustomizer
+} from './HelperFunctionsRefactored';
 import PropTypes from 'prop-types';
 
 class CustomizationColumnChart extends Component {
@@ -18,8 +25,6 @@ class CustomizationColumnChart extends Component {
         };
 
         this.yAxisSelectorMaxCount = -1;
-        this.cachedXAxisSelector = undefined;
-        this.cachedYAxisSelector = undefined;
     }
 
     state = {
@@ -35,36 +40,12 @@ class CustomizationColumnChart extends Component {
     };
 
     componentDidMount() {
-        isMounted(this);
+        initializeFromCustomizer(this);
     }
 
     componentDidUpdate = () => {
-        if (this.props.propagateUpdates) {
-            this.props.propagateUpdates(getSelectorsState(this));
-
-            const customizationState = {
-                ...this.state,
-                errorDataNotSupported: false,
-                errorMessage: undefined,
-                errorValue: -1
-            };
-            if (customizationState.xAxisLabel === undefined) {
-                if (this.state.cachedXAxisSelector) {
-                    customizationState.xAxisLabel = this.state.cachedXAxisSelector.xAxisSelector ? this.state.cachedXAxisSelector.xAxisSelector : '';
-                } else {
-                    customizationState.xAxisLabel = customizationState.xAxisSelector;
-                }
-            }
-            if (customizationState.yAxisLabel === undefined) {
-                if (this.state.cachedYAxisSelector) {
-                    customizationState.yAxisLabel = this.state.cachedXAxisSelector.yAxisSelector
-                        ? this.state.cachedXAxisSelector.xAxisSelector[0]
-                        : '';
-                } else {
-                    customizationState.yAxisLabel = customizationState.yAxisSelector[0];
-                }
-            }
-            this.selfVisModel.saveCustomizationState(customizationState);
+        if (this.state.isInitialized) {
+            this.props.createChartVisualization();
         }
     };
 
@@ -91,6 +72,11 @@ class CustomizationColumnChart extends Component {
     setErrorCode = val => {
         this.setState({ errorDataNotSupported: true, errorValue: val });
     };
+
+    addYAxisSelector = () => {
+        addYAxisSelector(this);
+    };
+
     render() {
         // mappings;
         return (
@@ -110,7 +96,7 @@ class CustomizationColumnChart extends Component {
                         color="primary"
                         size="sm"
                         onClick={() => {
-                            this.setState({ yAxisSelectorCount: this.state.yAxisSelectorCount + 1 });
+                            this.addYAxisSelector();
                         }}
                     >
                         Add Y-axis value
@@ -123,6 +109,8 @@ class CustomizationColumnChart extends Component {
 }
 CustomizationColumnChart.propTypes = {
     propagateUpdates: PropTypes.func,
+    createChartVisualization: PropTypes.func,
+
     restoreCustomizationState: PropTypes.bool
 };
 export default CustomizationColumnChart;
