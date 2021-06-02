@@ -118,7 +118,11 @@ const ViewArticle = () => {
                                                             </>
                                                         )}
                                                     {section.type.id === CLASSES.COMPARISON_SECTION && (
-                                                        <SectionComparison key={section.id} id={section.contentLink.objectId} />
+                                                        <SectionComparison
+                                                            key={section.id}
+                                                            id={section.contentLink.objectId}
+                                                            sectionId={section.id}
+                                                        />
                                                     )}
                                                     {section.type.id === CLASSES.VISUALIZATION_SECTION && (
                                                         <SectionVisualization key={section.id} id={section.contentLink.objectId} />

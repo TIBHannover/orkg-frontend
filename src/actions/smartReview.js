@@ -190,6 +190,7 @@ export const deleteSection = id => async dispatch => {
     //await deleteResource(id);
 
     dispatch(setIsLoading(false));
+    dispatch(setUsedReferences({ sectionId: id, references: {} }));
 };
 
 export const moveSection = ({ contributionId, sections, oldIndex, newIndex }) => async dispatch => {
@@ -208,7 +209,7 @@ export const sortSections = ({ contributionId, sections }) => async dispatch => 
         }
     });
 
-    const sectionSubjectStatement = await getStatementsBySubject({ id: contributionId });
+    const sectionSubjectStatement = await getStatementsBySubjectAndPredicate({ subjectId: contributionId, predicateId: PREDICATES.HAS_SECTION });
     const sectionSubjectStatementIds = sectionSubjectStatement.map(stmt => stmt.id);
     await deleteStatementsByIds(sectionSubjectStatementIds);
 

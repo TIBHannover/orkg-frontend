@@ -12,10 +12,20 @@ const ListReferences = () => {
     useEffect(() => {
         const parseBibtex = async () => {
             const bibtex = Object.values(usedReferences)
-                .map(section => (Object.values(section).length > 0 ? Object.values(section).map(reference => reference?.literal?.label) : []))
+                .map(section =>
+                    Object.values(section).length > 0
+                        ? Object.values(section)
+                              .filter(reference => reference)
+                              .map(reference => reference?.literal?.label)
+                        : []
+                )
                 .join('');
 
             if (!bibtex) {
+                // remove existing references
+                if (bibliography) {
+                    setBibliography(null);
+                }
                 return;
             }
 
@@ -37,7 +47,7 @@ const ListReferences = () => {
             }
         };
         parseBibtex();
-    }, [usedReferences]);
+    }, [bibliography, usedReferences]);
 
     return (
         <>
