@@ -187,7 +187,6 @@ function AddVisualizationModal(props) {
                         color="primary"
                         className="mr-2"
                         onClick={() => {
-                            console.log('want to debug current model');
                             const mmr = new SelfVisDataModel(); // this is a singleton
                             mmr.debug();
                         }}

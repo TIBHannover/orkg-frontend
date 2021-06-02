@@ -298,8 +298,8 @@ export const getVisualizationData = (id, label, visualizationStatements) => {
         id,
         label,
         created_at: description ? description.object.created_at : '',
-        description: description ? description.object.label : '',
-        authorNames: authors.sort((a, b) => a.created_at.localeCompare(b.created_at))
+        description: description ? description.object.label : ''
+        // authorNames: authors.sort((a, b) => a.created_at.localeCompare(b.created_at))
     };
 };
 

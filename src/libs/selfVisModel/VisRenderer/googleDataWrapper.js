@@ -16,15 +16,7 @@ export default class DataForChart {
     };
 
     createDataFromSharedCustomizer = customizer => {
-        console.log('given', customizer);
         if (customizer.errorDataNotSupported || !customizer.xAxisSelector || !customizer.yAxisSelector || customizer.yAxisSelector.length === 0) {
-            console.log('A', customizer.errorDataNotSupported);
-            console.log('B', customizer.xAxisSelector);
-            console.log('C', customizer.yAxisSelector);
-            if (customizer.yAxisSelector) {
-                console.log('D', customizer.yAxisSelector.length);
-            }
-
             return {
                 cols: [],
                 rows: []

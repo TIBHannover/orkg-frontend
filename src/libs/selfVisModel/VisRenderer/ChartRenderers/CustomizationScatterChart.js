@@ -72,6 +72,10 @@ class CustomizationScatterChart extends Component {
         this.setState({ errorDataNotSupported: true, errorValue: val });
     };
 
+    addYAxisSelector = () => {
+        addYAxisSelector(this);
+    };
+
     render() {
         // mappings;
         return (

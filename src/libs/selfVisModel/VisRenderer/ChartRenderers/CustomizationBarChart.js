@@ -71,6 +71,11 @@ class CustomizationBarChart extends Component {
     setErrorCode = val => {
         this.setState({ errorDataNotSupported: true, errorValue: val });
     };
+
+    addYAxisSelector = () => {
+        addYAxisSelector(this);
+    };
+
     render() {
         // mappings;
         return (

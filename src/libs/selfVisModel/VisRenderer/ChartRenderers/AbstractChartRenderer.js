@@ -19,14 +19,9 @@ class AbstractChartRenderer extends Component {
     };
 
     createRenderingData = () => {
-        // console.log('>>>> THIS SHALL BE CALLED CREATE RENDERING DATA FUNCTION');
         const sharedCustomizationState = this.selfVisModel.__sharedStateObject;
         const customizer = sharedCustomizationState.customizer;
-        // console.log('Shared state:', sharedCustomizationState);
         const gdc = this.selfVisModel._googleChartsData;
-        // ensure that is is correct every time;
-        // console.log(gdc);
-
         if (gdc && this.props.visualizationMethod === 'Table') {
             return gdc.useAllColumns();
         } else {

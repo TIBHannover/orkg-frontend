@@ -213,7 +213,6 @@ export default class SelfVisDataMode {
         }
 
         const sharedCustomizer = { ...this.__sharedStateObject.customizer };
-        console.log('this is the state we want to create');
 
         const customizationState = {
             errorValue: -1,
@@ -231,28 +230,25 @@ export default class SelfVisDataMode {
 
         customizationState.xAxisLabel = sharedCustomizer.xAxisLabel;
         customizationState.yAxisLabel = sharedCustomizer.yAxisLabel;
-        customizationState.xAxisSelector = sharedCustomizer.xAxisSelector.label;
 
-        sharedCustomizer.yAxisSelector.forEach((yAxis, id) => {
-            console.log(yAxis);
-            // add ti ySelector
-            customizationState.yAxisSelector[id] = yAxis.axis.label;
-            customizationState.yAxisSelectorOpen[id] = false;
+        if (sharedCustomizer.xAxisSelector && sharedCustomizer.xAxisSelector.label) {
+            customizationState.xAxisSelector = sharedCustomizer.xAxisSelector.label;
 
-            if (yAxis.intervals && yAxis.intervals.length > 0) {
-                // get the intervals;
-                customizationState.yAxisInterValSelectors[id] = [];
-                customizationState.yAxisIntervals[id] = [];
-                yAxis.intervals.forEach(interval => {
-                    console.log(interval);
-                    customizationState.yAxisInterValSelectors[id].push({ isOpen: false, label: interval.item.label });
-                    customizationState.yAxisIntervals[id].push({ isOpen: false, label: interval.item.label });
-                });
-            }
-        });
+            sharedCustomizer.yAxisSelector.forEach((yAxis, id) => {
+                customizationState.yAxisSelector[id] = yAxis.axis.label;
+                customizationState.yAxisSelectorOpen[id] = false;
 
-        console.log(customizationState);
-        console.log('++++++++++++++++++++++++');
+                if (yAxis.intervals && yAxis.intervals.length > 0) {
+                    // get the intervals;
+                    customizationState.yAxisInterValSelectors[id] = [];
+                    customizationState.yAxisIntervals[id] = [];
+                    yAxis.intervals.forEach(interval => {
+                        customizationState.yAxisInterValSelectors[id].push({ isOpen: false, label: interval.item.label });
+                        customizationState.yAxisIntervals[id].push({ isOpen: false, label: interval.item.label });
+                    });
+                }
+            });
+        }
         reconstructionModel.customizationState = customizationState;
         return reconstructionModel;
     };
@@ -295,18 +291,13 @@ export default class SelfVisDataMode {
             });
 
             this.setRenderingMethod('Table'); // << Default rendering Method
-            console.log('FORECED RESET OF CUSTOMIZATION STATE');
             this.resetSharedCustomizationState();
             this.createGDCDataModel();
         }
     };
 
     applyReconstructionModel = model => {
-        console.log('Applying reconstruction model! ');
         const data = clone(model.data);
-        console.log(data);
-        console.log(data.reconstructionData.customizationState);
-        console.log('^^^^^^^^^^^^^^');
 
         if (!this.mrrModel) {
             console.log('Model Failed!');
@@ -389,16 +380,11 @@ export default class SelfVisDataMode {
     };
 
     synchronizeSharedCustomizationStateObject = reconstruct => {
-        console.log('Syncronizing >>>', reconstruct);
-        console.log('++++++++++++++++++++++++++++++++');
-        console.log('current', this.__sharedStateObject);
-
         const customizer = this.__sharedStateObject.customizer;
 
         // axis selector;
         // we have a label for the Axis;
         const xAxisGuess = this.requestAnIndex(reconstruct.xAxisSelector);
-        console.log(xAxisGuess);
         if (xAxisGuess.error === undefined) {
             customizer.xAxisSelector = this.mrrModel.propertyAnchors[xAxisGuess.index];
         } else {
@@ -407,9 +393,7 @@ export default class SelfVisDataMode {
         customizer.xAxisLabel = reconstruct.xAxisLabel;
         customizer.yAxisLabel = reconstruct.yAxisLabel;
 
-        // adjust yAxis selecotrs;
-        console.log('yAxisSelectors', reconstruct.yAxisSelector);
-
+        // adjust yAxis selectors;
         const yAxisSelectors = [];
         reconstruct.yAxisSelector.forEach(item => {
             // item is a string
@@ -436,15 +420,13 @@ export default class SelfVisDataMode {
         }
 
         this.__sharedStateObject.customizer = customizer;
-        console.log('FINAL', this.__sharedStateObject.customizer);
     };
 
     /** HACKISH ENDS**/
 
     requestAnIndex = label => {
-        console.log('>>> Want label to map ', label);
         const guess = this.mrrModel.propertyAnchors.find(element => element.label === label);
-        console.log('GUESS', guess);
+
         if (guess) {
             return { index: guess.positionPropertyAnchor, label: guess.label };
         }
@@ -453,10 +435,9 @@ export default class SelfVisDataMode {
 
     // getter functions for various models: TODO
     getModelState = () => {
-        console.log('---------- Wants to reconstruct an customization State');
+        // DEPRECATED
 
         if (this.__customizationStateObject) {
-            console.log(this.__customizationStateObject);
             const tempState = { ...this.__customizationStateObject };
 
             let needUpdate = false;
@@ -476,18 +457,12 @@ export default class SelfVisDataMode {
                 }
             }
 
-            console.log('Do this for yAxis for now');
             // do this for the yAxisSelectors
             if (yIndex) {
-                console.log('Execute', selectorsAxis);
                 selectorsAxis.forEach((item, index) => {
-                    console.log(item, index);
                     const inModelIndex = yIndex[index];
                     if (inModelIndex) {
-                        console.log('Assuming this index', inModelIndex);
-
                         if (item !== this.mrrModel.propertyAnchors[inModelIndex].label) {
-                            console.log('Item: ', item, 'vs', this.mrrModel.propertyAnchors[inModelIndex].label);
                             tempState.yAxisSelector[index] = this.mrrModel.propertyAnchors[inModelIndex].label;
                             if (index === 0) {
                                 tempState.yAxisLabel = this.mrrModel.propertyAnchors[inModelIndex].label;
@@ -496,22 +471,17 @@ export default class SelfVisDataMode {
                         }
                     } else {
                         // try to resolve it
-                        console.log('Guessing Idex this index');
                         const guess = this.mrrModel.propertyAnchors.find(element => element.label === item);
-
                         if (guess) {
                             const inModelIndex = guess.positionPropertyAnchor;
-                            console.log('       Found a guessthis index:', inModelIndex);
                             tempState.yAxisIndexInModel[index] = inModelIndex;
                             needUpdate = true;
                         } else {
                             const newGuess = this.mrrModel.propertyAnchors.find(element => element.originalLabel === item);
                             if (newGuess) {
                                 const inModelIndex = newGuess.positionPropertyAnchor;
-                                console.log('       Found a guessthis index:', inModelIndex);
                                 tempState.yAxisIndexInModel[index] = inModelIndex;
                                 if (item !== this.mrrModel.propertyAnchors[inModelIndex].label) {
-                                    console.log('Item: ', item, 'vs', this.mrrModel.propertyAnchors[inModelIndex].label);
                                     tempState.yAxisSelector[index] = this.mrrModel.propertyAnchors[inModelIndex].label;
                                     tempState.yAxisLabel = this.mrrModel.propertyAnchors[inModelIndex].label;
                                 }
@@ -522,13 +492,11 @@ export default class SelfVisDataMode {
                 });
             } else {
                 // we never saw an y index >> means this could be an old model that we want to use
-                console.log('Adjusting Model for Selectors', selectorsAxis);
                 tempState.yAxisIndexInModel = [];
                 selectorsAxis.forEach((item, index) => {
                     const guess = this.mrrModel.propertyAnchors.find(element => element.label === item);
                     if (guess) {
                         const inModelIndex = guess.positionPropertyAnchor;
-                        console.log('       Found a guessthis index:', inModelIndex);
                         tempState.yAxisIndexInModel[index] = inModelIndex;
                         needUpdate = true;
                     }
@@ -614,12 +582,12 @@ export default class SelfVisDataMode {
 
         // perform validation on selected columns;
         const selectedCols = this.mrrModel.propertyAnchors.filter(item => item.isSelectedColumnForUse);
-        console.log(selectedCols);
+
         selectedCols.forEach(col => {
             // get data item from matrix;
             const colIndex = col.positionPropertyAnchor;
             const colCells = this.modelAccess.getCol(colIndex);
-            console.log(colCells);
+
             colCells.forEach(cell => {
                 const mapper = this.mrrModel.propertyAnchors[colIndex].getPropertyMapperType();
                 if (mapper) {
@@ -633,21 +601,6 @@ export default class SelfVisDataMode {
                 }
             });
         });
-        // *** OLD ***
-        // const selectedCells = this.mrrModel.dataItems.filter(item => item.itemIsSelectedForUse);
-        // selectedCells.forEach(cell => {
-        //     const pos = cell.positionPropertyAnchor;
-        //     const mapper = this.mrrModel.propertyAnchors[pos].getPropertyMapperType();
-        //     if (mapper) {
-        //         // call the validator for this cell value;
-        //         const { error } = validateCellMapping(mapper, cell.label);
-        //         if (error) {
-        //             cell.cellValueIsValid = false;
-        //         } else {
-        //             cell.cellValueIsValid = true;
-        //         }
-        //     }
-        // });
     };
 
     /** GROUPED FUNCTIONS : handling input model and parse it **/
@@ -688,37 +641,7 @@ export default class SelfVisDataMode {
 
     debug = () => {
         console.log(this.__sharedStateObject);
-        console.log('+++++++++++++++++++++++++++++++++++++');
-
-        // // show selected columns;
-        // const filteredProperties = this.mrrModel.propertyAnchors.filter(
-        //     item => item.isSelectedColumnForUse === true && item.propertyMapperType !== 'Select Mapper'
-        // );
-        // // now figure out how many rows we do have;
-        // const filteredContribs = this.mrrModel.contributionAnchors;
-        //
-        // console.log('--------------');
-        // console.log('Properties:', filteredProperties);
-        // filteredProperties.forEach(item => {
-        //     console.log({ name: item.label, pos: item.positionPropertyAnchor });
-        // });
-        // console.log('Contribution:', filteredContribs);
-        // filteredContribs.forEach(item => {
-        //     console.log({ name: item.label, pos: item.positionContribAnchor });
-        // });
-        // console.log('-----------------');
-        //
         const reconstructionData = this.getReconstructionModel();
         console.log(reconstructionData);
-
-        if (reconstructionData) {
-            reconstructionData.contributionAnchors.forEach(item => {
-                console.log({ name: item.label, pos: item.positionContribAnchor });
-            });
-            reconstructionData.propertyAnchors.forEach(item => {
-                console.log({ name: item.label, pos: item.positionPropertyAnchor });
-            });
-            console.log(reconstructionData.customizationState);
-        }
     };
 }
