@@ -27,7 +27,7 @@ const MarkdownRenderer = ({ text, id }) => {
     const contributionId = useSelector(state => state.smartReview.contributionId);
     const references = useSelector(state => state.smartReview.references);
     const [fetchedDois, setFetchedDois] = useState([]);
-    const referenceRegex = useMemo(() => /\[\@(.*?)\]/gi, []);
+    const referenceRegex = useMemo(() => /\[@(.*?)\]/gi, []);
     const dispatch = useDispatch();
 
     const inlineReferences = {

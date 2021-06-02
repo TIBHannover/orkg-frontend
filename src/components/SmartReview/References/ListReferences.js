@@ -5,13 +5,14 @@ import { Alert } from 'reactstrap';
 
 const ListReferences = () => {
     const usedReferences = useSelector(state => state.smartReview.usedReferences);
+    const isEditing = useSelector(state => state.smartReview.isEditing);
     const [bibliography, setBibliography] = useState(null);
     const [error, setError] = useState(false);
 
     useEffect(() => {
         const parseBibtex = async () => {
             const bibtex = Object.values(usedReferences)
-                .map(section => Object.values(section).length > 0 && Object.values(section).map(reference => reference?.literal?.label))
+                .map(section => (Object.values(section).length > 0 ? Object.values(section).map(reference => reference?.literal?.label) : []))
                 .join('');
 
             if (!bibtex) {
@@ -40,11 +41,8 @@ const ListReferences = () => {
 
     return (
         <>
-            {!error ? (
-                <ul dangerouslySetInnerHTML={{ __html: bibliography }} style={{ fontSize: '90%' }} className="pl-3" />
-            ) : (
-                <Alert color="danger">BibTeX parsing error, please check the BibTeX entries</Alert>
-            )}
+            {!error && <ul dangerouslySetInnerHTML={{ __html: bibliography }} style={{ fontSize: '90%' }} className="pl-3" />}
+            {error && isEditing && <Alert color="danger">BibTeX parsing error, please check the BibTeX entries</Alert>}
         </>
     );
 };
