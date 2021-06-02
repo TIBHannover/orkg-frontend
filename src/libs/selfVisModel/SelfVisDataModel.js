@@ -147,7 +147,7 @@ export default class SelfVisDataMode {
         // the reconstruction model fetches the set flags and labels ;
         // get propertyAnchors;
         const reconstructionModel = {};
-        const selectedPropertyAnchors = this.mrrModel.propertyAnchors.filter(item => item.isSelectedColumn() === true);
+        const selectedPropertyAnchors = this.__sharedStateObject.selectedColumns;
 
         reconstructionModel.propertyAnchors = [];
         reconstructionModel.contributionAnchors = [];
@@ -212,22 +212,47 @@ export default class SelfVisDataMode {
             return undefined; // << this is an error there is no data in the model
         }
 
-        const customizationState = { ...this.loadCustomizationState() };
-        // HACKIS: TODO: read only required options;
-        delete customizationState.errorDataNotSupported;
-        delete customizationState.errorMessage;
-        customizationState.xAxisSelectorOpen = false; // overwrites it for the reconstruction
-        if (customizationState.yAxisSelectorOpen) {
-            for (let i = 0; i < customizationState.yAxisSelectorOpen.length; i++) {
-                customizationState.yAxisSelectorOpen[i] = false;
-            }
-        }
-        for (const name in customizationState.yAxisInterValSelectors) {
-            if (customizationState.yAxisInterValSelectors.hasOwnProperty(name)) {
-                customizationState.yAxisInterValSelectors[name].isOpen = false;
-            }
-        }
+        const sharedCustomizer = { ...this.__sharedStateObject.customizer };
+        console.log('this is the state we want to create');
 
+        const customizationState = {
+            errorValue: -1,
+            xAxisLabel: 0,
+            xAxisSelectorOpen: false,
+            xAxisSelector: 0,
+            yAxisLabel: 0,
+            yAxisInterValSelectors: {},
+            yAxisIntervals: {},
+            yAxisSelectorOpen: [],
+            yAxisSelector: []
+        };
+
+        // reconstruct values one by one
+
+        customizationState.xAxisLabel = sharedCustomizer.xAxisLabel;
+        customizationState.yAxisLabel = sharedCustomizer.yAxisLabel;
+        customizationState.xAxisSelector = sharedCustomizer.xAxisSelector.label;
+
+        sharedCustomizer.yAxisSelector.forEach((yAxis, id) => {
+            console.log(yAxis);
+            // add ti ySelector
+            customizationState.yAxisSelector[id] = yAxis.axis.label;
+            customizationState.yAxisSelectorOpen[id] = false;
+
+            if (yAxis.intervals && yAxis.intervals.length > 0) {
+                // get the intervals;
+                customizationState.yAxisInterValSelectors[id] = [];
+                customizationState.yAxisIntervals[id] = [];
+                yAxis.intervals.forEach(interval => {
+                    console.log(interval);
+                    customizationState.yAxisInterValSelectors[id].push({ isOpen: false, label: interval.item.label });
+                    customizationState.yAxisIntervals[id].push({ isOpen: false, label: interval.item.label });
+                });
+            }
+        });
+
+        console.log(customizationState);
+        console.log('++++++++++++++++++++++++');
         reconstructionModel.customizationState = customizationState;
         return reconstructionModel;
     };
@@ -389,26 +414,26 @@ export default class SelfVisDataMode {
         reconstruct.yAxisSelector.forEach(item => {
             // item is a string
             const yAxisGuess = this.requestAnIndex(item);
-            yAxisSelectors.push(this.mrrModel.propertyAnchors[yAxisGuess.index]);
+            yAxisSelectors.push({ axis: this.mrrModel.propertyAnchors[yAxisGuess.index] });
         });
         customizer.yAxisSelector = yAxisSelectors;
 
         // reconstruct intervals
         // customizer.yAxisInterValSelectors = {};
-        // for (const intervalAxisID in reconstruct.yAxisIntervals) {
-        //     if (reconstruct.yAxisIntervals.hasOwnProperty(intervalAxisID)) {
-        //         const selectedIntervals = reconstruct.yAxisIntervals[intervalAxisID];
-        //         //createSelector for that
-        //         const yAxisIntervalGuesses = [];
-        //         selectedIntervals.forEach(item => {
-        //             const yAxisGuess = this.requestAnIndex(item.label);
-        //             if (yAxisGuess.index) {
-        //                 yAxisIntervalGuesses.push({ isOpen: false, item: this.mrrModel.propertyAnchors[yAxisGuess.index] });
-        //             }
-        //         });
-        //         customizer.yAxisInterValSelectors[intervalAxisID] = yAxisIntervalGuesses;
-        //     }
-        // }
+        for (const intervalAxisID in reconstruct.yAxisIntervals) {
+            if (reconstruct.yAxisIntervals.hasOwnProperty(intervalAxisID)) {
+                const selectedIntervals = reconstruct.yAxisIntervals[intervalAxisID];
+                //createSelector for that
+                const yAxisIntervalGuesses = [];
+                selectedIntervals.forEach(item => {
+                    const yAxisGuess = this.requestAnIndex(item.label);
+                    if (yAxisGuess.index) {
+                        yAxisIntervalGuesses.push({ isOpen: false, item: this.mrrModel.propertyAnchors[yAxisGuess.index] });
+                    }
+                });
+                customizer.yAxisSelector[intervalAxisID].intervals = yAxisIntervalGuesses;
+            }
+        }
 
         this.__sharedStateObject.customizer = customizer;
         console.log('FINAL', this.__sharedStateObject.customizer);
@@ -683,17 +708,17 @@ export default class SelfVisDataMode {
         // });
         // console.log('-----------------');
         //
-        // const reconstructionData = this.getReconstructionModel();
-        // console.log(reconstructionData);
-        //
-        // if (reconstructionData) {
-        //     reconstructionData.contributionAnchors.forEach(item => {
-        //         console.log({ name: item.label, pos: item.positionContribAnchor });
-        //     });
-        //     reconstructionData.propertyAnchors.forEach(item => {
-        //         console.log({ name: item.label, pos: item.positionPropertyAnchor });
-        //     });
-        //     console.log(reconstructionData.customizationState);
-        // }
+        const reconstructionData = this.getReconstructionModel();
+        console.log(reconstructionData);
+
+        if (reconstructionData) {
+            reconstructionData.contributionAnchors.forEach(item => {
+                console.log({ name: item.label, pos: item.positionContribAnchor });
+            });
+            reconstructionData.propertyAnchors.forEach(item => {
+                console.log({ name: item.label, pos: item.positionPropertyAnchor });
+            });
+            console.log(reconstructionData.customizationState);
+        }
     };
 }
