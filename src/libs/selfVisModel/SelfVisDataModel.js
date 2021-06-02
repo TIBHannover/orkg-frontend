@@ -372,7 +372,7 @@ export default class SelfVisDataMode {
 
         // axis selector;
         // we have a label for the Axis;
-        const xAxisGuess = this.requestAnXIndex(reconstruct.xAxisSelector);
+        const xAxisGuess = this.requestAnIndex(reconstruct.xAxisSelector);
         console.log(xAxisGuess);
         if (xAxisGuess.error === undefined) {
             customizer.xAxisSelector = this.mrrModel.propertyAnchors[xAxisGuess.index];
@@ -388,11 +388,27 @@ export default class SelfVisDataMode {
         const yAxisSelectors = [];
         reconstruct.yAxisSelector.forEach(item => {
             // item is a string
-            const yAxisGuess = this.requestAnXIndex(item);
+            const yAxisGuess = this.requestAnIndex(item);
             yAxisSelectors.push(this.mrrModel.propertyAnchors[yAxisGuess.index]);
         });
-        console.log(yAxisSelectors);
         customizer.yAxisSelector = yAxisSelectors;
+
+        // reconstruct intervals
+        customizer.yAxisInterValSelectors = {};
+        for (const intervalAxisID in reconstruct.yAxisIntervals) {
+            if (reconstruct.yAxisIntervals.hasOwnProperty(intervalAxisID)) {
+                const selectedIntervals = reconstruct.yAxisIntervals[intervalAxisID];
+                //createSelector for that
+                const yAxisIntervalGuesses = [];
+                selectedIntervals.forEach(item => {
+                    const yAxisGuess = this.requestAnIndex(item.label);
+                    if (yAxisGuess.index) {
+                        yAxisIntervalGuesses.push({ isOpen: false, item: this.mrrModel.propertyAnchors[yAxisGuess.index] });
+                    }
+                });
+                customizer.yAxisInterValSelectors[intervalAxisID] = yAxisIntervalGuesses;
+            }
+        }
 
         this.__sharedStateObject.customizer = customizer;
         console.log('FINAL', this.__sharedStateObject.customizer);
@@ -400,7 +416,7 @@ export default class SelfVisDataMode {
 
     /** HACKISH ENDS**/
 
-    requestAnXIndex = label => {
+    requestAnIndex = label => {
         console.log('>>> Want label to map ', label);
         const guess = this.mrrModel.propertyAnchors.find(element => element.label === label);
         console.log('GUESS', guess);
