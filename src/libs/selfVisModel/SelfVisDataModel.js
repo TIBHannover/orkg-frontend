@@ -394,21 +394,21 @@ export default class SelfVisDataMode {
         customizer.yAxisSelector = yAxisSelectors;
 
         // reconstruct intervals
-        customizer.yAxisInterValSelectors = {};
-        for (const intervalAxisID in reconstruct.yAxisIntervals) {
-            if (reconstruct.yAxisIntervals.hasOwnProperty(intervalAxisID)) {
-                const selectedIntervals = reconstruct.yAxisIntervals[intervalAxisID];
-                //createSelector for that
-                const yAxisIntervalGuesses = [];
-                selectedIntervals.forEach(item => {
-                    const yAxisGuess = this.requestAnIndex(item.label);
-                    if (yAxisGuess.index) {
-                        yAxisIntervalGuesses.push({ isOpen: false, item: this.mrrModel.propertyAnchors[yAxisGuess.index] });
-                    }
-                });
-                customizer.yAxisInterValSelectors[intervalAxisID] = yAxisIntervalGuesses;
-            }
-        }
+        // customizer.yAxisInterValSelectors = {};
+        // for (const intervalAxisID in reconstruct.yAxisIntervals) {
+        //     if (reconstruct.yAxisIntervals.hasOwnProperty(intervalAxisID)) {
+        //         const selectedIntervals = reconstruct.yAxisIntervals[intervalAxisID];
+        //         //createSelector for that
+        //         const yAxisIntervalGuesses = [];
+        //         selectedIntervals.forEach(item => {
+        //             const yAxisGuess = this.requestAnIndex(item.label);
+        //             if (yAxisGuess.index) {
+        //                 yAxisIntervalGuesses.push({ isOpen: false, item: this.mrrModel.propertyAnchors[yAxisGuess.index] });
+        //             }
+        //         });
+        //         customizer.yAxisInterValSelectors[intervalAxisID] = yAxisIntervalGuesses;
+        //     }
+        // }
 
         this.__sharedStateObject.customizer = customizer;
         console.log('FINAL', this.__sharedStateObject.customizer);

@@ -53,19 +53,18 @@ export default class DataForChart {
             xSelectorIndex = 0;
         }
 
-        customizer.yAxisSelector.forEach((yax, yaxID) => {
+        customizer.yAxisSelector.forEach(yax => {
             // find yAx in headerMap;
-            if (headerMap[yax.label]) {
-                newHeaders.push(oldHeaders[headerMap[yax.label]]);
-                ySelectorIndices.push(headerMap[yax.label]);
+            if (headerMap[yax.axis.label]) {
+                newHeaders.push(oldHeaders[headerMap[yax.axis.label]]);
+                ySelectorIndices.push(headerMap[yax.axis.label]);
 
-                if (customizer.yAxisInterValSelectors && customizer.yAxisInterValSelectors[yaxID]) {
-                    const intervals = customizer.yAxisInterValSelectors[yaxID];
-                    intervals.forEach((int, i) => {
-                        const i_label = int.item.label;
-                        // if we have such an interval label
+                if (yax.intervals && yax.intervals.length > 0) {
+                    yax.intervals.forEach((interval, id) => {
+                        //get label
+                        const i_label = interval.item.label;
                         if (headerMap[i_label] !== undefined) {
-                            newHeaders.push({ id: 'i' + i, type: 'number', role: 'interval' });
+                            newHeaders.push({ id: 'i' + id, type: 'number', role: 'interval' });
                             ySelectorIndices.push(headerMap[i_label]);
                         }
                     });

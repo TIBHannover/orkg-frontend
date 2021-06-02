@@ -25,8 +25,10 @@ export const addYAxisSelector = ref => {
     const currentCustomState = ref.selfVisModel.__sharedStateObject.customizer;
     const selectedCols = ref.selfVisModel.__sharedStateObject.selectedColumns;
     const Y_possibleValueCandidates = selectedCols.filter(item => item.propertyMapperType === 'Number');
-
-    const newItem = Y_possibleValueCandidates[0];
+    const Y_possibleAxisSelectors = Y_possibleValueCandidates.map(item => {
+        return { axis: item };
+    });
+    const newItem = Y_possibleAxisSelectors[0];
     currentCustomState.yAxisSelector.push(newItem);
     // TODO some validation here;
     ref.setState({
@@ -87,45 +89,35 @@ export const initializeFromCustomizer = ref => {
         if (currentCustomState.yAxisSelector.length === 0) {
             // set it to be an array and push first item into it;
             currentCustomState.yAxisSelector = [];
-            currentCustomState.yAxisSelector.push(Y_possibleValueCandidates[0]);
+            currentCustomState.yAxisSelector.push({ axis: Y_possibleValueCandidates[0] });
             currentCustomState.yAxisLabel = Y_possibleValueCandidates[0].label;
         } else {
             //check if axis still exist and is of type mapper number
             //this has to iterate over all yAxisSelectors, since it is an array;
 
             const validatedSelectors = [];
-            currentCustomState.yAxisSelector.forEach(selector => {
+            currentCustomState.yAxisSelector.forEach((selector, index) => {
                 // validate
-                const selectorId = selector.positionPropertyAnchor;
+                const selectorId = selector.axis.positionPropertyAnchor;
                 const res = selectedCols.find(item => item.positionPropertyAnchor === selectorId);
                 console.log('res', res);
                 if (res) {
                     // is it a number?
                     if (res.propertyMapperType === 'Number') {
-                        validatedSelectors.push(res);
+                        validatedSelectors.push(selector);
                     }
                 } else {
-                    // TODO: we need to remove that thing
-                    //and also check if it exists in intervals and remove it there
+                    console.log('Some error oO ');
                 }
             });
             console.log('validatedSelectors', validatedSelectors);
-            currentCustomState.yAxisSelector = validatedSelectors;
-        }
-    }
-
-    /** Y-AXIS INTERVALS **/
-    if (currentCustomState.yAxisInterValSelectors) {
-        for (const id in currentCustomState.yAxisInterValSelectors) {
-            if (currentCustomState.yAxisInterValSelectors.hasOwnProperty(id)) {
-                const intervalArray = currentCustomState.yAxisInterValSelectors[id];
-                const validIntervalArray = [];
-                intervalArray.forEach(item => {
-                    if (item.item.propertyMapperType === 'Number') {
-                        validIntervalArray.push(item);
-                    }
-                });
-                currentCustomState.yAxisInterValSelectors[id] = validIntervalArray;
+            if (validatedSelectors.length > 0) {
+                currentCustomState.yAxisSelector = validatedSelectors;
+            } else {
+                // try the candidate
+                currentCustomState.yAxisSelector = [];
+                currentCustomState.yAxisSelector.push({ axis: Y_possibleValueCandidates[0] });
+                currentCustomState.yAxisLabel = Y_possibleValueCandidates[0].label;
             }
         }
     }
@@ -141,7 +133,6 @@ export const initializeFromCustomizer = ref => {
         yAxisSelector: currentCustomState.yAxisSelector,
         yAxisLabel: currentCustomState.yAxisLabel,
         yAxisSelectorCount: currentCustomState.yAxisSelector.length,
-        yAxisInterValSelectors: currentCustomState.yAxisInterValSelectors,
         isInitialized: true
     });
 };
@@ -222,6 +213,7 @@ export const createLabelSelectors = ref => {
     }
 };
 
+/** VALUE AXIS SELECTOR **/
 export const createValueSelectors = ref => {
     const currentCustomState = ref.selfVisModel.__sharedStateObject.customizer;
     const selectedCols = ref.selfVisModel.__sharedStateObject.selectedColumns;
@@ -237,12 +229,19 @@ export const createValueSelectors = ref => {
             ref.setErrorCode(1);
         } else {
             ref.yAxisSelectorMaxCount = possibleValueCandidates.length;
+            const possibleAxisCandidates = possibleValueCandidates.map(item => {
+                return { axis: item };
+            });
             const itemsArray = [];
+            console.log('CREATING Y AXIS SELECTORS -------------------------');
+            console.log(possibleAxisCandidates);
+
             for (let i = 0; i < ref.state.yAxisSelectorCount; i++) {
-                const items = possibleValueCandidates.map((item, id) => {
+                const items = possibleAxisCandidates.map((item, id) => {
+                    console.log(item);
                     return (
                         <DropdownItem
-                            key={'YSelectionDropdownItemIndexKey_' + id + '_' + item.positionPropertyAnchor}
+                            key={'YSelectionDropdownItemIndexKey_' + id + '_' + item.axis.positionPropertyAnchor}
                             onClick={() => {
                                 const yAxisSelector = ref.state.yAxisSelector;
                                 yAxisSelector[i] = item;
@@ -250,12 +249,12 @@ export const createValueSelectors = ref => {
                                 if (i !== 0) {
                                     ref.setState({ yAxisSelector: yAxisSelector });
                                 } else {
-                                    currentCustomState.yAxisLabel = item.label;
-                                    ref.setState({ yAxisSelector: yAxisSelector, yAxisLabel: item.label });
+                                    currentCustomState.yAxisLabel = item.axis.label;
+                                    ref.setState({ yAxisSelector: yAxisSelector, yAxisLabel: item.axis.label });
                                 }
                             }}
                         >
-                            <Tippy content={item.label} placement="right" disabled={item.label.length < 30}>
+                            <Tippy content={item.axis.label} placement="right" disabled={item.axis.label.length < 30}>
                                 <span
                                     className="d-inline-block"
                                     style={{
@@ -266,7 +265,7 @@ export const createValueSelectors = ref => {
                                         textOverflow: 'ellipsis'
                                     }}
                                 >
-                                    {item.label}
+                                    {item.axis.label}
                                 </span>
                             </Tippy>
                         </DropdownItem>
@@ -301,9 +300,9 @@ export const createValueSelectors = ref => {
                             >
                                 <TippyDropdownToggle caret color="secondary" className="text-truncate mw-100 ">
                                     <Tippy
-                                        content={ref.state.yAxisSelector[id].label}
+                                        content={ref.state.yAxisSelector[id].axis.label}
                                         placement="right"
-                                        disabled={ref.state.yAxisSelector[id].label < 30}
+                                        disabled={ref.state.yAxisSelector[id].axis.label < 30}
                                     >
                                         <span
                                             className="d-inline-block"
@@ -315,16 +314,16 @@ export const createValueSelectors = ref => {
                                                 textOverflow: 'ellipsis'
                                             }}
                                         >
-                                            {ref.state.yAxisSelector[id].label}
+                                            {ref.state.yAxisSelector[id].axis.label}
                                         </span>
                                     </Tippy>
                                 </TippyDropdownToggle>
                                 <DropdownMenu>{itemsArray[id]}</DropdownMenu>
                             </Dropdown>
                             {possibleValueCandidates.length > 1 &&
-                                (!ref.state.yAxisInterValSelectors[id] ||
-                                    (ref.state.yAxisInterValSelectors[id] &&
-                                        ref.state.yAxisInterValSelectors[id].length < possibleValueCandidates.length)) && (
+                                (!ref.state.yAxisSelector[id].intervals ||
+                                    (ref.state.yAxisSelector[id].intervals &&
+                                        ref.state.yAxisSelector[id].intervals.length < possibleValueCandidates.length)) && (
                                     <Tippy content="Add interval">
                                         <span>
                                             <Button
@@ -342,7 +341,7 @@ export const createValueSelectors = ref => {
                                     </Tippy>
                                 )}
                         </div>
-                        <div className="mt-2">{createIntervalSelectors(ref, id, possibleValueCandidates)}</div>
+                        <div className="mt-2">{createIntervalSelectors(ref, id, possibleAxisCandidates)}</div>
                         <hr />
                     </div>
                 );
@@ -353,39 +352,36 @@ export const createValueSelectors = ref => {
 
 const removeSelector = (id, ref) => {
     const ySelectors = ref.state.yAxisSelector;
-    const yAxisIntervals = ref.state.yAxisInterValSelectors;
-    if (yAxisIntervals[id]) {
-        // clear the interval for this axis
-        yAxisIntervals[id] = [];
-    }
     ySelectors.splice(id, 1);
 
     const currentCustomState = ref.selfVisModel.__sharedStateObject.customizer;
-    currentCustomState.yAxisInterValSelectors = yAxisIntervals;
     currentCustomState.yAxisSelector = ySelectors;
 
     ref.setState({
         ySelectors: ySelectors,
-        yAxisSelectorCount: ref.state.yAxisSelectorCount - 1,
-        yAxisIntervals: yAxisIntervals
+        yAxisSelectorCount: ref.state.yAxisSelectorCount - 1
     });
 };
 
 const addYAxisInterval = (ref, id) => {
-    const yAxisIntervals = ref.state.yAxisInterValSelectors;
-    if (!yAxisIntervals[id]) {
+    // get the yAxis
+    const currentYAxisSelector = ref.state.yAxisSelector;
+    const yAxisObj = currentYAxisSelector[id];
+
+    if (!yAxisObj.intervals) {
         // we have now an array of intervals
-        yAxisIntervals[id] = [];
+        yAxisObj.intervals = [];
     }
 
-    yAxisIntervals[id].push({ isOpen: false, item: { label: 'Select interval' } });
+    yAxisObj.intervals.push({ isOpen: false, item: { label: 'Select interval' } });
+
     const currentCustomState = ref.selfVisModel.__sharedStateObject.customizer;
-    currentCustomState.yAxisInterValSelectors = yAxisIntervals;
-    ref.setState({ yAxisIntervals: yAxisIntervals });
+    currentCustomState.yAxisSelector = currentYAxisSelector;
+    ref.setState({ yAxisSelector: currentYAxisSelector });
 };
 
 const createIntervalSelectors = (ref, id, possibleValueCandidates) => {
-    const yAxisIntervals = ref.state.yAxisInterValSelectors[id];
+    const yAxisIntervals = ref.state.yAxisSelector[id].intervals;
     console.log('>> HAVING INTERVAL SELECTORS: ', yAxisIntervals);
     if (yAxisIntervals && yAxisIntervals.length > 0) {
         return yAxisIntervals.map((interval, interval_id) => {
@@ -408,18 +404,20 @@ const createIntervalSelectors = (ref, id, possibleValueCandidates) => {
 };
 
 const removeInterval = (id, intervalId, ref) => {
-    const yAxisIntervals = ref.state.yAxisInterValSelectors;
-    const subInterval = yAxisIntervals[id];
-    subInterval.splice(intervalId, 1);
-    yAxisIntervals[id] = subInterval;
-    const currentCustomState = ref.selfVisModel.__sharedStateObject.customizer;
-    currentCustomState.yAxisInterValSelectors = yAxisIntervals;
-    ref.setState({ yAxisInterValSelectors: yAxisIntervals });
+    const yAxisIntervals = ref.state.yAxisSelector[id].intervals;
+    if (yAxisIntervals && yAxisIntervals.length > 0) {
+        const subInterval = ref.state.yAxisSelector[id].intervals;
+        subInterval.splice(intervalId, 1);
+        ref.state.yAxisSelector[id].intervals = subInterval;
+        const currentCustomState = ref.selfVisModel.__sharedStateObject.customizer;
+        currentCustomState.yAxisInterValSelectors = yAxisIntervals;
+        ref.setState({ yAxisSelector: ref.state.yAxisSelector });
+    }
 };
 
 const createIntervalDropDownSelectors = (ref, id, interval_id, possibleValueCandidates) => {
     const extended = [...possibleValueCandidates];
-    extended.unshift({ label: 'Select interval' });
+    extended.unshift({ axis: { label: 'Select interval' } });
     console.log('INTERVAL SELECTORS', extended);
     const itemsArray = extended.map((pvc, pvc_id) => {
         return (
@@ -427,14 +425,17 @@ const createIntervalDropDownSelectors = (ref, id, interval_id, possibleValueCand
                 className="text-truncate mw-100"
                 key={'N_XSelectionDropdownItemIndexKey_' + id + '_' + interval_id + '_' + pvc_id}
                 onClick={() => {
-                    const intervalSelectors = ref.state.yAxisInterValSelectors;
-                    intervalSelectors[id][interval_id].item = pvc;
-                    ref.setState({ yAxisInterValSelectors: intervalSelectors });
+                    const intervalSelectors = ref.state.yAxisSelector[id].intervals;
+                    intervalSelectors[interval_id].item = pvc.axis;
+                    console.log(intervalSelectors);
+                    console.log(intervalSelectors[id]);
+                    console.log('-------------------');
+                    ref.setState({ yAxisSelector: ref.state.yAxisSelector });
                 }}
             >
                 {/*qnd text length handler */}
 
-                <Tippy content={pvc.label} placement="right" disabled={pvc.label.length < 30}>
+                <Tippy content={pvc.axis.label} placement="right" disabled={pvc.axis.label.length < 30}>
                     <span
                         className="d-inline-block"
                         style={{
@@ -445,33 +446,34 @@ const createIntervalDropDownSelectors = (ref, id, interval_id, possibleValueCand
                             textOverflow: 'ellipsis'
                         }}
                     >
-                        {pvc.label}
+                        {pvc.axis.label}
                     </span>
                 </Tippy>
             </DropdownItem>
         );
     });
 
-    const isItemOpen = ref.state.yAxisInterValSelectors[id][interval_id].isOpen;
+    const isItemOpen = ref.state.yAxisSelector[id].intervals[interval_id].isOpen;
+    console.log('???????');
+    console.log(ref.state.yAxisSelector[id].intervals[interval_id]);
     return (
         <Dropdown
             size="sm"
             className="mt-1"
             isOpen={isItemOpen}
             toggle={() => {
-                const yAxisSelectorOpen = ref.state.yAxisInterValSelectors;
-
-                yAxisSelectorOpen[id][interval_id].isOpen = !yAxisSelectorOpen[id][interval_id].isOpen;
+                const yAxisSelectors = ref.state.yAxisSelector;
+                yAxisSelectors[id].intervals[interval_id].isOpen = !yAxisSelectors[id].intervals[interval_id].isOpen;
                 ref.setState({
-                    yAxisInterValSelectors: yAxisSelectorOpen
+                    yAxisSelector: yAxisSelectors
                 });
             }}
         >
             <TippyDropdownToggle caret color="secondary" className="text-truncate mw-100">
                 <Tippy
-                    content={ref.state.yAxisInterValSelectors[id][interval_id].item.label}
+                    content={ref.state.yAxisSelector[id].intervals[interval_id].item.label}
                     placement="right"
-                    disabled={ref.state.yAxisInterValSelectors[id][interval_id].item.label.length < 30}
+                    disabled={ref.state.yAxisSelector[id].intervals[interval_id].item.label.length < 30}
                 >
                     <span
                         className="d-inline-block"
@@ -483,7 +485,7 @@ const createIntervalDropDownSelectors = (ref, id, interval_id, possibleValueCand
                             textOverflow: 'ellipsis'
                         }}
                     >
-                        {ref.state.yAxisInterValSelectors[id][interval_id].item.label}
+                        {ref.state.yAxisSelector[id].intervals[interval_id].item.label}
                     </span>
                 </Tippy>
             </TippyDropdownToggle>
