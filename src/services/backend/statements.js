@@ -313,6 +313,9 @@ export const getParentResearchFields = (researchFieldId, parents = []) => {
         }).then(parentResearchField => {
             if (parentResearchField && parentResearchField[0]) {
                 parents.push(parentResearchField[0].object);
+                if (parents.find(p => p.id === parentResearchField[0].subject.id)) {
+                    return Promise.resolve(parents);
+                }
                 return getParentResearchFields(parentResearchField[0].subject.id, parents);
             } else {
                 return Promise.resolve(parents);
