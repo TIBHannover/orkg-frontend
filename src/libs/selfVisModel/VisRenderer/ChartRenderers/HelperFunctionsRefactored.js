@@ -39,7 +39,6 @@ export const addYAxisSelector = ref => {
 
 /** INITIALIZER **/
 export const initializeFromCustomizer = ref => {
-    console.log('INITIALIZING FROM CUSTOMIZER');
     const currentCustomState = ref.selfVisModel.__sharedStateObject.customizer;
     const selectedCols = ref.selfVisModel.__sharedStateObject.selectedColumns;
 
@@ -85,7 +84,6 @@ export const initializeFromCustomizer = ref => {
         if (!currentCustomState.yAxisSelector) {
             currentCustomState.yAxisSelector = [];
         }
-        console.log('INITIALIZING Y-AXIS', currentCustomState.yAxisSelector);
         if (currentCustomState.yAxisSelector.length === 0) {
             // set it to be an array and push first item into it;
             currentCustomState.yAxisSelector = [];
@@ -100,17 +98,14 @@ export const initializeFromCustomizer = ref => {
                 // validate
                 const selectorId = selector.axis.positionPropertyAnchor;
                 const res = selectedCols.find(item => item.positionPropertyAnchor === selectorId);
-                console.log('res', res);
                 if (res) {
                     // is it a number?
                     if (res.propertyMapperType === 'Number') {
                         validatedSelectors.push(selector);
                     }
-                } else {
-                    console.log('Some error oO ');
-                }
+                } // else there is some error
             });
-            console.log('validatedSelectors', validatedSelectors);
+
             if (validatedSelectors.length > 0) {
                 currentCustomState.yAxisSelector = validatedSelectors;
             } else {
@@ -123,8 +118,6 @@ export const initializeFromCustomizer = ref => {
     }
 
     currentCustomState.isInitialized = true;
-    console.log(currentCustomState);
-
     // apply!
     ref.setState({
         xAxisSelector: currentCustomState.xAxisSelector,
@@ -233,12 +226,8 @@ export const createValueSelectors = ref => {
                 return { axis: item };
             });
             const itemsArray = [];
-            console.log('CREATING Y AXIS SELECTORS -------------------------');
-            console.log(possibleAxisCandidates);
-
             for (let i = 0; i < ref.state.yAxisSelectorCount; i++) {
                 const items = possibleAxisCandidates.map((item, id) => {
-                    console.log(item);
                     return (
                         <DropdownItem
                             key={'YSelectionDropdownItemIndexKey_' + id + '_' + item.axis.positionPropertyAnchor}
@@ -382,7 +371,6 @@ const addYAxisInterval = (ref, id) => {
 
 const createIntervalSelectors = (ref, id, possibleValueCandidates) => {
     const yAxisIntervals = ref.state.yAxisSelector[id].intervals;
-    console.log('>> HAVING INTERVAL SELECTORS: ', yAxisIntervals);
     if (yAxisIntervals && yAxisIntervals.length > 0) {
         return yAxisIntervals.map((interval, interval_id) => {
             return (
@@ -418,7 +406,6 @@ const removeInterval = (id, intervalId, ref) => {
 const createIntervalDropDownSelectors = (ref, id, interval_id, possibleValueCandidates) => {
     const extended = [...possibleValueCandidates];
     extended.unshift({ axis: { label: 'Select interval' } });
-    console.log('INTERVAL SELECTORS', extended);
     const itemsArray = extended.map((pvc, pvc_id) => {
         return (
             <DropdownItem
@@ -427,9 +414,6 @@ const createIntervalDropDownSelectors = (ref, id, interval_id, possibleValueCand
                 onClick={() => {
                     const intervalSelectors = ref.state.yAxisSelector[id].intervals;
                     intervalSelectors[interval_id].item = pvc.axis;
-                    console.log(intervalSelectors);
-                    console.log(intervalSelectors[id]);
-                    console.log('-------------------');
                     ref.setState({ yAxisSelector: ref.state.yAxisSelector });
                 }}
             >
@@ -454,8 +438,6 @@ const createIntervalDropDownSelectors = (ref, id, interval_id, possibleValueCand
     });
 
     const isItemOpen = ref.state.yAxisSelector[id].intervals[interval_id].isOpen;
-    console.log('???????');
-    console.log(ref.state.yAxisSelector[id].intervals[interval_id]);
     return (
         <Dropdown
             size="sm"

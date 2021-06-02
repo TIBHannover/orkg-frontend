@@ -128,18 +128,13 @@ export default class SelfVisDataMode {
     };
 
     getGoogleChartsData = () => {
+        if (!this._googleChartsData) {
+            return {}; // empty object
+        }
         if (this._renderingMethod === 'Table') {
             return this._googleChartsData.useAllColumns();
         } else {
-            const customizationState = { ...this.loadCustomizationState() };
-            const stateForGDC = {
-                xAxis: customizationState.xAxisSelector,
-                xAxisLabel: customizationState.xAxisLabel,
-                yAxisLabel: customizationState.yAxisLabel,
-                yAxis: customizationState.yAxisSelector,
-                yAxisIntervals: customizationState.yAxisInterValSelectors
-            };
-            return this._googleChartsData.createDataFromSelectors(stateForGDC);
+            return this._googleChartsData.createDataFromSharedCustomizer(this.__sharedStateObject.customizer);
         }
     };
 
@@ -212,44 +207,51 @@ export default class SelfVisDataMode {
             return undefined; // << this is an error there is no data in the model
         }
 
-        const sharedCustomizer = { ...this.__sharedStateObject.customizer };
+        if (this.__sharedStateObject.renderingMethod !== 'Table') {
+            const sharedCustomizer = { ...this.__sharedStateObject.customizer };
 
-        const customizationState = {
-            errorValue: -1,
-            xAxisLabel: 0,
-            xAxisSelectorOpen: false,
-            xAxisSelector: 0,
-            yAxisLabel: 0,
-            yAxisInterValSelectors: {},
-            yAxisIntervals: {},
-            yAxisSelectorOpen: [],
-            yAxisSelector: []
-        };
+            const customizationState = {
+                errorValue: -1,
+                xAxisLabel: 0,
+                xAxisSelectorOpen: false,
+                xAxisSelector: 0,
+                yAxisLabel: 0,
+                yAxisInterValSelectors: {},
+                yAxisIntervals: {},
+                yAxisSelectorOpen: [],
+                yAxisSelector: []
+            };
 
-        // reconstruct values one by one
+            // reconstruct values one by one
 
-        customizationState.xAxisLabel = sharedCustomizer.xAxisLabel;
-        customizationState.yAxisLabel = sharedCustomizer.yAxisLabel;
+            customizationState.xAxisLabel = sharedCustomizer.xAxisLabel;
+            customizationState.yAxisLabel = sharedCustomizer.yAxisLabel;
 
-        if (sharedCustomizer.xAxisSelector && sharedCustomizer.xAxisSelector.label) {
-            customizationState.xAxisSelector = sharedCustomizer.xAxisSelector.label;
+            if (sharedCustomizer.xAxisSelector && sharedCustomizer.xAxisSelector.label) {
+                customizationState.xAxisSelector = sharedCustomizer.xAxisSelector.label;
 
-            sharedCustomizer.yAxisSelector.forEach((yAxis, id) => {
-                customizationState.yAxisSelector[id] = yAxis.axis.label;
-                customizationState.yAxisSelectorOpen[id] = false;
+                sharedCustomizer.yAxisSelector.forEach((yAxis, id) => {
+                    customizationState.yAxisSelector[id] = yAxis.axis.label;
+                    customizationState.yAxisSelectorOpen[id] = false;
 
-                if (yAxis.intervals && yAxis.intervals.length > 0) {
-                    // get the intervals;
-                    customizationState.yAxisInterValSelectors[id] = [];
-                    customizationState.yAxisIntervals[id] = [];
-                    yAxis.intervals.forEach(interval => {
-                        customizationState.yAxisInterValSelectors[id].push({ isOpen: false, label: interval.item.label });
-                        customizationState.yAxisIntervals[id].push({ isOpen: false, label: interval.item.label });
-                    });
-                }
-            });
+                    if (yAxis.intervals && yAxis.intervals.length > 0) {
+                        // get the intervals;
+                        customizationState.yAxisInterValSelectors[id] = [];
+                        customizationState.yAxisIntervals[id] = [];
+                        yAxis.intervals.forEach(interval => {
+                            customizationState.yAxisInterValSelectors[id].push({
+                                isOpen: false,
+                                label: interval.item.label
+                            });
+                            customizationState.yAxisIntervals[id].push({ isOpen: false, label: interval.item.label });
+                        });
+                    }
+                });
+            }
+            reconstructionModel.customizationState = customizationState;
+        } else {
+            reconstructionModel.customizationState = {}; // add empty customization state obj
         }
-        reconstructionModel.customizationState = customizationState;
         return reconstructionModel;
     };
 
@@ -362,21 +364,11 @@ export default class SelfVisDataMode {
         if (data.visMethod === 'Table') {
             return this._googleChartsData.useAllColumns();
         }
-        // // this now neeeds to apply some selectors
-        // this.saveCustomizationState({ ...reconstructionObject.customizationState });
-        // const stateForGDC = {
-        //     xAxis: reconstructionObject.customizationState.xAxisSelector,
-        //     yAxis: reconstructionObject.customizationState.yAxisSelector,
-        //     yAxisIntervals: reconstructionObject.customizationState.yAxisInterValSelectors,
-        //     xAxisLabel: reconstructionObject.customizationState.xAxisLabel,
-        //     yAxisLabel: reconstructionObject.customizationState.yAxisLabel
-        // };
 
         // we need to synchronize the shared object with reconstruction model
         this.synchronizeSharedCustomizationStateObject(reconstructionObject.customizationState);
 
-        const resultingData = this._googleChartsData.createDataFromSharedCustomizer(this.__sharedStateObject.customizer);
-        return resultingData;
+        return this._googleChartsData.createDataFromSharedCustomizer(this.__sharedStateObject.customizer);
     };
 
     synchronizeSharedCustomizationStateObject = reconstruct => {
@@ -431,83 +423,6 @@ export default class SelfVisDataMode {
             return { index: guess.positionPropertyAnchor, label: guess.label };
         }
         return { error: 'NotFound' };
-    };
-
-    // getter functions for various models: TODO
-    getModelState = () => {
-        // DEPRECATED
-
-        if (this.__customizationStateObject) {
-            const tempState = { ...this.__customizationStateObject };
-
-            let needUpdate = false;
-            // go through the xAxis Selector
-            const currAxis = tempState.xAxis;
-            const xIndex = tempState.xAxisIndexInModel;
-            const yIndex = tempState.yAxisIndexInModel;
-            const selectorsAxis = tempState.yAxisSelector;
-            const selectorsIntervals = tempState.yAxisIntervals;
-
-            if (xIndex) {
-                if (currAxis !== this.mrrModel.propertyAnchors[xIndex].label) {
-                    tempState.xAxis = this.mrrModel.propertyAnchors[xIndex].label;
-                    tempState.xAxisLabel = this.mrrModel.propertyAnchors[xIndex].label;
-                    tempState.xAxisSelector = this.mrrModel.propertyAnchors[xIndex].label;
-                    needUpdate = true;
-                }
-            }
-
-            // do this for the yAxisSelectors
-            if (yIndex) {
-                selectorsAxis.forEach((item, index) => {
-                    const inModelIndex = yIndex[index];
-                    if (inModelIndex) {
-                        if (item !== this.mrrModel.propertyAnchors[inModelIndex].label) {
-                            tempState.yAxisSelector[index] = this.mrrModel.propertyAnchors[inModelIndex].label;
-                            if (index === 0) {
-                                tempState.yAxisLabel = this.mrrModel.propertyAnchors[inModelIndex].label;
-                            }
-                            needUpdate = true;
-                        }
-                    } else {
-                        // try to resolve it
-                        const guess = this.mrrModel.propertyAnchors.find(element => element.label === item);
-                        if (guess) {
-                            const inModelIndex = guess.positionPropertyAnchor;
-                            tempState.yAxisIndexInModel[index] = inModelIndex;
-                            needUpdate = true;
-                        } else {
-                            const newGuess = this.mrrModel.propertyAnchors.find(element => element.originalLabel === item);
-                            if (newGuess) {
-                                const inModelIndex = newGuess.positionPropertyAnchor;
-                                tempState.yAxisIndexInModel[index] = inModelIndex;
-                                if (item !== this.mrrModel.propertyAnchors[inModelIndex].label) {
-                                    tempState.yAxisSelector[index] = this.mrrModel.propertyAnchors[inModelIndex].label;
-                                    tempState.yAxisLabel = this.mrrModel.propertyAnchors[inModelIndex].label;
-                                }
-                                needUpdate = true;
-                            }
-                        }
-                    }
-                });
-            } else {
-                // we never saw an y index >> means this could be an old model that we want to use
-                tempState.yAxisIndexInModel = [];
-                selectorsAxis.forEach((item, index) => {
-                    const guess = this.mrrModel.propertyAnchors.find(element => element.label === item);
-                    if (guess) {
-                        const inModelIndex = guess.positionPropertyAnchor;
-                        tempState.yAxisIndexInModel[index] = inModelIndex;
-                        needUpdate = true;
-                    }
-                });
-            }
-
-            if (needUpdate) {
-                return tempState;
-            }
-        }
-        return undefined;
     };
 
     createGDCDataModel = () => {
@@ -643,5 +558,6 @@ export default class SelfVisDataMode {
         console.log(this.__sharedStateObject);
         const reconstructionData = this.getReconstructionModel();
         console.log(reconstructionData);
+        console.log(this.getGoogleChartsData());
     };
 }
