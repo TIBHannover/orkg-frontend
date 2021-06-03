@@ -146,6 +146,9 @@ function Resource(props) {
                                         setCanEdit(true);
                                     }
                                 });
+                            } else if (responseJson.classes.includes(CLASSES.RESEARCH_FIELD)) {
+                                setIsLoading(false);
+                                setCanEdit(isCurationAllowed);
                             } else {
                                 setIsLoading(false);
                                 setCanEdit(true);
@@ -179,10 +182,13 @@ function Resource(props) {
                 return null;
             }
         }
-        const newClasses = !selected ? [] : selected;
+        let newClasses = !selected ? [] : selected;
         // Reset the statement browser and rely on React attribute 'key' to reinitialize the statement browser
         // (When a key changes, React will create a new component instance rather than update the current one)
         props.resetStatementBrowser();
+        if (!isCurationAllowed) {
+            newClasses = newClasses.filter(c => c.id !== CLASSES.RESEARCH_FIELD); // only admins can add research field resources
+        }
         setClasses(newClasses);
         await updateResourceClassesNetwork(resourceId, newClasses.map(c => c.id));
         toast.success('Resource classes updated successfully');
@@ -255,7 +261,20 @@ function Resource(props) {
                                     </Button>
                                 )
                             ) : (
-                                <Tippy hideOnClick={false} content="This resource can not be edited because it has a published DOI.">
+                                <Tippy
+                                    hideOnClick={false}
+                                    interactive={classes.find(c => c.id === CLASSES.RESEARCH_FIELD) ? true : false}
+                                    content={
+                                        classes.find(c => c.id === CLASSES.RESEARCH_FIELD) ? (
+                                            <>
+                                                This resource can not be edited. Please contact us if you have any suggestions to change the research
+                                                fields taxonomy.
+                                            </>
+                                        ) : (
+                                            'This resource can not be edited because it has a published DOI.'
+                                        )
+                                    }
+                                >
                                     <span className="btn btn-secondary btn-sm disabled">
                                         <Icon icon={faPen} /> <span>Edit</span>
                                     </span>
