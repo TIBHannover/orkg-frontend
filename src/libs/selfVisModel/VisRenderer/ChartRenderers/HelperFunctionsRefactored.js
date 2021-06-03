@@ -233,7 +233,7 @@ export const createValueSelectors = ref => {
                             key={'YSelectionDropdownItemIndexKey_' + id + '_' + item.axis.positionPropertyAnchor}
                             onClick={() => {
                                 const yAxisSelector = ref.state.yAxisSelector;
-                                yAxisSelector[i] = item;
+                                yAxisSelector[i].axis = item.axis;
 
                                 if (i !== 0) {
                                     ref.setState({ yAxisSelector: yAxisSelector });
