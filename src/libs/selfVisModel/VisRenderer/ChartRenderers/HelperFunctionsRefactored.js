@@ -101,6 +101,27 @@ export const initializeFromCustomizer = ref => {
                 if (res) {
                     // is it a number?
                     if (res.propertyMapperType === 'Number') {
+                        // adjust selector based on tests
+                        //1] check in selected columns
+                        //2] check if mapper is a also a number
+
+                        if (selector.intervals && selector.intervals.length > 0) {
+                            const validIntervals = [];
+                            selector.intervals.forEach(interval => {
+                                // 1] check if item is in selected cols;
+                                const exists = selectedCols.find(
+                                    selectedCol => selectedCol.positionPropertyAnchor === interval.item.positionPropertyAnchor
+                                );
+                                if (exists) {
+                                    // 2] check if it has mapper of type number
+                                    if (exists.propertyMapperType === 'Number') {
+                                        validIntervals.push(interval);
+                                    }
+                                }
+                            });
+                            selector.intervals = validIntervals;
+                        }
+
                         validatedSelectors.push(selector);
                     }
                 } // else there is some error
