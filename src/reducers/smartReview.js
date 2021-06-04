@@ -1,5 +1,7 @@
 import * as type from 'actions/types';
+import { match } from 'path-to-regexp';
 import dotProp from 'dot-prop-immutable';
+import ROUTES from 'constants/routes';
 
 const initialState = {
     paper: {},
@@ -216,6 +218,12 @@ const smartReview = (state = initialState, action) => {
         }
 
         case '@@router/LOCATION_CHANGE': {
+            const matchSmartReview = match(ROUTES.SMART_REVIEW);
+            const parsed_payload = matchSmartReview(action.payload.location.pathname);
+            if (parsed_payload && parsed_payload.params?.id === state.paper.id) {
+                // when it's the same review  (just the hash changed) do not init
+                return state;
+            }
             return {
                 ...initialState
             };
