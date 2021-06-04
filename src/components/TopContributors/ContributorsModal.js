@@ -41,8 +41,8 @@ const ContributorsModal = ({ researchFieldId, openModal, setOpenModal, initialSo
                                             <ContributorCard
                                                 contributor={{
                                                     ...contributor.profile,
-                                                    subTitle: contributor.contributions
-                                                        ? `${contributor.contributions} contribution${contributor.contributions > 1 ? 's' : ''}`
+                                                    subTitle: contributor?.counts?.total
+                                                        ? `${contributor.counts.total} contribution${contributor.counts.total > 1 ? 's' : ''}`
                                                         : ''
                                                 }}
                                             />

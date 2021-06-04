@@ -1,9 +1,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { getStatementsBySubject, createResourceStatement, deleteStatementById } from 'services/backend/statements';
-import { getContributorInformationById } from 'services/backend/contributors';
 import { getIsVerified } from 'services/backend/papers';
-import { getObservatoryAndOrganizationInformation } from 'services/backend/observatories';
-import { getResource, updateResource, createResource, getContributorsByResourceId } from 'services/backend/resources';
+import { getResource, updateResource, createResource } from 'services/backend/resources';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { resetStatementBrowser, updateContributionLabel } from 'actions/statementBrowser';
@@ -11,7 +9,7 @@ import { loadPaper, setPaperAuthors } from 'actions/viewPaper';
 import { toast } from 'react-toastify';
 import Confirm from 'reactstrap-confirm';
 import { getPaperData_ViewPaper } from 'utils';
-import { PREDICATES, CLASSES, MISC } from 'constants/graphSettings';
+import { PREDICATES, CLASSES } from 'constants/graphSettings';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes.js';
 
@@ -23,8 +21,6 @@ const useViewPaper = ({ paperId, contributionId }) => {
     const [selectedContribution, setSelectedContribution] = useState('');
     const [showGraphModal, setShowGraphModal] = useState(false);
     const [editMode, setEditMode] = useState(false);
-    const [observatoryInfo, setObservatoryInfo] = useState({});
-    const [contributors, setContributors] = useState([]);
     const [showHeaderBar, setShowHeaderBar] = useState(false);
     const dispatch = useDispatch();
     const history = useHistory();
@@ -73,8 +69,6 @@ const useViewPaper = ({ paperId, contributionId }) => {
                     setIsLoadingFailed(true);
                     return;
                 }
-
-                processObservatoryInformation(paperResource, paperId);
 
                 Promise.all([getStatementsBySubject({ id: paperId }), getIsVerified(paperId).catch(() => false)]).then(
                     ([paperStatements, verified]) => {
@@ -135,39 +129,6 @@ const useViewPaper = ({ paperId, contributionId }) => {
         setShowHeaderBar(!isVisible);
     };
 
-    /** PROCESSING HELPER :  Helper functions to increase code readability**/
-    const processObservatoryInformation = (paperResource, resourceId) => {
-        if (paperResource.observatory_id && paperResource.observatory_id !== MISC.UNKNOWN_ID) {
-            const observatory = getObservatoryAndOrganizationInformation(paperResource.observatory_id, paperResource.organization_id);
-            const creator =
-                paperResource.created_by && paperResource.created_by !== MISC.UNKNOWN_ID
-                    ? getContributorInformationById(paperResource.created_by).catch(e => {})
-                    : undefined;
-            Promise.all([observatory, creator]).then(data => {
-                if (observatory) {
-                    setObservatoryInfo({
-                        ...data[0],
-                        created_at: paperResource.created_at,
-                        created_by: data[1] !== undefined ? data[1] : null,
-                        extraction_method: paperResource.extraction_method
-                    });
-                } else {
-                    setObservatoryInfo({});
-                }
-            });
-
-            getContributorsByResourceId(resourceId).then(contributors =>
-                Promise.all(contributors).then(data => {
-                    setContributors(data);
-                })
-            );
-        } else {
-            // Initialize the state in case the user switch to another paper that is not linked with observatory
-            setObservatoryInfo({});
-            setContributors([]);
-        }
-    };
-
     // @param sync : to update the contribution label on the backend.
     const handleChangeContributionLabel = async (contributionId, label) => {
         //find the index of contribution
@@ -205,21 +166,16 @@ const useViewPaper = ({ paperId, contributionId }) => {
                 return contribution.id !== contributionId;
             });
             //setSelectedContribution(newContributions[0].id);
-            history.push(reverse(ROUTES.VIEW_PAPER, { resourceId: paperId, contributionId: newContributions[0].id }));
+            history.push(
+                reverse(ROUTES.VIEW_PAPER, {
+                    resourceId: paperId,
+                    contributionId: newContributions[0].id
+                })
+            );
             setContributions(newContributions);
             await deleteStatementById(statementId);
             toast.success('Contribution deleted successfully');
         }
-    };
-
-    const getObservatoryInfo = () => {
-        getResource(paperId)
-            .then(paperResource => {
-                processObservatoryInformation(paperResource, paperId);
-            })
-            .catch(error => {
-                setIsLoading(false);
-            });
     };
 
     const toggle = type => {
@@ -250,9 +206,6 @@ const useViewPaper = ({ paperId, contributionId }) => {
         setEditMode,
         handleCreateContribution,
         toggleDeleteContribution,
-        observatoryInfo,
-        contributors,
-        getObservatoryInfo,
         setShowGraphModal,
         showGraphModal
     };

@@ -12,7 +12,22 @@ export default function WebinarMay11() {
             </Container>
             <Container className="box rounded pt-4 pb-4 pl-5 pr-5">
                 <h2>Webinar: Open Research Knowledge Graph</h2>
-                <strong>Online 11th May 2021, 14:00 - 15:00 (CEST)</strong>
+
+                <div className="d-flex align-items-center flex-column my-3">
+                    <div className="embed-responsive embed-responsive-16by9" style={{ maxWidth: 750 }}>
+                        <iframe
+                            width="750"
+                            height="315"
+                            src="https://www.youtube.com/embed/8rqkQe_2lUE"
+                            title="YouTube video player"
+                            frameborder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            className="embed-responsive-item"
+                            allowFullScreen
+                        />
+                    </div>
+                    <strong>Online 11th May 2021, 14:00 - 15:00 (CEST)</strong>
+                </div>
                 <p className="mt-4">
                     Scholarly work is mainly communicated through publications, in the form of unstructured texts. Considering the continuously
                     increasing number of publications, researchers are finding it increasingly difficult to stay current with the literature that is
@@ -27,17 +42,6 @@ export default function WebinarMay11() {
                 <p>
                     In this Webinar, we introduce the Open Research Knowledge Graph and explain how you can add content. Besides a brief introduction
                     to the main ideas and goals, we show how to use the interface to enter your data.{' '}
-                </p>
-                <p>
-                    To register, please fill out the{' '}
-                    <a
-                        href="https://docs.google.com/forms/d/e/1FAIpQLSdFzLCkranE2X4r6MpVJSNyfoIlfzRHWIoy6l4TBlclDgB5rw/viewform"
-                        target="_blank"
-                        rel="noreferrer"
-                    >
-                        registration form
-                    </a>
-                    .
                 </p>
                 <h2 className="mt-5">Agenda</h2>
                 <table className="table">

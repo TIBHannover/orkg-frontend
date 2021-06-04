@@ -86,7 +86,7 @@ const FeaturedComparisons = () => {
         const comparisons = responseJson.map(comparison => {
             let description = '';
             let icon = '';
-            let url = '';
+            let contributions = [];
             let type = '';
 
             for (const comparisonStatement of comparisonStatements) {
@@ -99,8 +99,10 @@ const FeaturedComparisons = () => {
                     const iconStatement = comparisonStatement.statements.filter(statement => statement.predicate.id === PREDICATES.ICON);
                     icon = iconStatement.length ? iconStatement[0].object.label : '';
 
-                    const urlStatement = comparisonStatement.statements.filter(statement => statement.predicate.id === PREDICATES.URL);
-                    url = urlStatement.length ? urlStatement[0].object.label : '';
+                    // contributions
+                    contributions = comparisonStatement.statements
+                        .filter(statement => statement.predicate.id === PREDICATES.COMPARE_CONTRIBUTION)
+                        .map(statement => statement.object);
 
                     const typeStatement = comparisonStatement.statements.filter(statement => statement.predicate.id === PREDICATES.TYPE);
                     type = typeStatement.length ? typeStatement[0].object.id : '';
@@ -111,7 +113,7 @@ const FeaturedComparisons = () => {
                 label: comparison.label,
                 id: comparison.id,
                 description,
-                url,
+                contributions,
                 icon,
                 type
             };
@@ -163,7 +165,7 @@ const FeaturedComparisons = () => {
                                                 description={comparison.description}
                                                 icon={comparison.icon}
                                                 id={comparison.id}
-                                                link={comparison.url}
+                                                contributions={comparison.contributions}
                                             />
                                         ))}
                                 </Row>

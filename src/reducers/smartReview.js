@@ -9,6 +9,7 @@ const initialState = {
     versions: [],
     researchField: {},
     isLoading: false,
+    isEditing: false,
     isPublished: false,
     isOpenHistoryModal: false,
     statements: []
@@ -49,6 +50,15 @@ const smartReview = (state = initialState, action) => {
             return {
                 ...state,
                 isLoading
+            };
+        }
+
+        case type.ARTICLE_WRITER_SET_IS_EDITING: {
+            const { isEditing } = action;
+
+            return {
+                ...state,
+                isEditing
             };
         }
 
@@ -149,6 +159,15 @@ const smartReview = (state = initialState, action) => {
             return {
                 ...state,
                 researchField
+            };
+        }
+
+        case type.ARTICLE_WRITER_SET_VERSIONS: {
+            const { versions } = action.payload;
+
+            return {
+                ...state,
+                versions
             };
         }
 

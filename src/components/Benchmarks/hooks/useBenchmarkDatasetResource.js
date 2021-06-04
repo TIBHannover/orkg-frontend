@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { getStatementsBySubject } from 'services/backend/statements';
 import { getResource } from 'services/backend/resources';
 import { useParams } from 'react-router-dom';
-import { filterObjectOfStatementsByPredicate } from 'utils';
+import { filterObjectOfStatementsByPredicateAndClass } from 'utils';
 import { PREDICATES } from 'constants/graphSettings';
 
 function useBenchmarkDatasetResource(initialVal = {}) {
@@ -30,7 +30,7 @@ function useBenchmarkDatasetResource(initialVal = {}) {
             // Get description, same as of the dataset resource
             //we need to make a check if it has a description perhaps
             getStatementsBySubject({ id: rpId }).then(statements => {
-                const description = filterObjectOfStatementsByPredicate(statements, PREDICATES.DESCRIPTION, true);
+                const description = filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.DESCRIPTION, true);
                 //const sameAs = filterObjectOfStatementsByPredicate(statements, PREDICATES.SAME_AS, true);
                 setData(data => ({ ...data, description: description?.label }));
             });

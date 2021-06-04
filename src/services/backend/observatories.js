@@ -58,37 +58,33 @@ export const createObservatory = (observatoryName, organizationId, description, 
 };
 
 export const getObservatoryAndOrganizationInformation = (observatoryId, organizationId) => {
-    return getObservatoryById(observatoryId)
-        .then(obsResponse => {
-            if (organizationId !== MISC.UNKNOWN_ID) {
-                return getOrganization(organizationId)
-                    .then(orgResponse => {
-                        return {
-                            id: observatoryId,
-                            name: obsResponse.name,
-                            organization: {
-                                id: organizationId,
-                                name: orgResponse.name,
-                                logo: orgResponse.logo
-                            }
-                        };
-                    })
-                    .catch(() => {
-                        return {
-                            id: observatoryId,
-                            name: obsResponse.name,
-                            organization: null
-                        };
-                    });
-            } else {
-                return {
-                    id: observatoryId,
-                    name: obsResponse.name,
-                    organization: null
-                };
-            }
-        })
-        .catch(() => {
-            return null;
-        });
+    return getObservatoryById(observatoryId).then(obsResponse => {
+        if (organizationId !== MISC.UNKNOWN_ID) {
+            return getOrganization(organizationId)
+                .then(orgResponse => {
+                    return {
+                        id: observatoryId,
+                        name: obsResponse.name,
+                        organization: {
+                            id: organizationId,
+                            name: orgResponse.name,
+                            logo: orgResponse.logo
+                        }
+                    };
+                })
+                .catch(() => {
+                    return {
+                        id: observatoryId,
+                        name: obsResponse.name,
+                        organization: null
+                    };
+                });
+        } else {
+            return {
+                id: observatoryId,
+                name: obsResponse.name,
+                organization: null
+            };
+        }
+    });
 };

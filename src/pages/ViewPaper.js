@@ -40,9 +40,9 @@ const ViewPaper = () => {
     const viewPaper = useSelector(state => state.viewPaper);
     const paperLink = useSelector(state =>
         state.viewPaper.url
-            ? state.viewPaper.url
-            : state.viewPaper.doi && state.viewPaper.doi.startsWith('10.')
-            ? 'https://doi.org/' + state.viewPaper.doi
+            ? state.viewPaper.url.label
+            : state.viewPaper.doi && state.viewPaper.doi.label.startsWith('10.')
+            ? 'https://doi.org/' + state.viewPaper.doi.label
             : ''
     );
 
@@ -60,9 +60,6 @@ const ViewPaper = () => {
         setEditMode,
         handleCreateContribution,
         toggleDeleteContribution,
-        observatoryInfo,
-        contributors,
-        getObservatoryInfo,
         setShowGraphModal,
         showGraphModal
     } = useViewPaper({
@@ -80,22 +77,22 @@ const ViewPaper = () => {
                 <>
                     {showHeaderBar && (
                         <PaperHeaderBar
-                            disableEdit={env('PWC_USER_ID') === viewPaper.createdBy}
+                            disableEdit={env('PWC_USER_ID') === viewPaper.paperResource.created_by}
                             paperLink={paperLink}
                             editMode={editMode}
                             toggle={toggle}
                             id={resourceId}
-                            paperTitle={viewPaper.title}
+                            paperTitle={viewPaper.paperResource.label}
                         />
                     )}
 
-                    <Breadcrumbs researchFieldId={viewPaper.researchField.id} />
+                    <Breadcrumbs researchFieldId={viewPaper.researchField ? viewPaper.researchField.id : null} />
 
                     <VisibilitySensor onChange={handleShowHeaderBar}>
                         <Container className="d-flex align-items-center">
                             <h1 className="h4 mt-4 mb-4 flex-grow-1">View paper</h1>
                             <PaperMenuBar
-                                disableEdit={env('PWC_USER_ID') === viewPaper.createdBy}
+                                disableEdit={env('PWC_USER_ID') === viewPaper.paperResource.created_by}
                                 editMode={editMode}
                                 paperLink={paperLink}
                                 toggle={toggle}
@@ -115,7 +112,7 @@ const ViewPaper = () => {
                         className={`box pt-md-4 pb-md-4 pl-md-5 pr-md-5 pt-sm-2 pb-sm-2 pl-sm-2 pr-sm-2 clearfix position-relative 
                                 ${editMode ? 'rounded-bottom' : 'rounded'}`}
                     >
-                        <ShareLinkMarker typeOfLink="paper" title={viewPaper.title} />
+                        <ShareLinkMarker typeOfLink="paper" title={viewPaper.paperResource.label} />
 
                         {isLoading && (
                             <ContentLoader
@@ -156,15 +153,12 @@ const ViewPaper = () => {
                                     selectedContribution={selectedContribution}
                                     contributions={contributions}
                                     paperId={resourceId}
-                                    paperTitle={viewPaper.title}
+                                    paperTitle={viewPaper.paperResource.label}
                                     enableEdit={editMode}
                                     toggleEditMode={() => setEditMode(v => !v)}
                                     handleChangeContributionLabel={handleChangeContributionLabel}
                                     handleCreateContribution={handleCreateContribution}
                                     toggleDeleteContribution={toggleDeleteContribution}
-                                    observatoryInfo={observatoryInfo}
-                                    contributors={contributors}
-                                    changeObservatory={getObservatoryInfo}
                                 />
 
                                 <ComparisonPopup />

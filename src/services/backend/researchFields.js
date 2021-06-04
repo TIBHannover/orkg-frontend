@@ -59,5 +59,13 @@ export const getContributorsByResearchFieldId = ({ id, page = 0, items = 9999, s
             skipEmptyString: true
         }
     );
-    return submitGetRequest(`${fieldsUrl}${encodeURIComponent(id)}/${subfields ? 'subfields/' : ''}contributors?${params}`);
+    return submitGetRequest(`${fieldsUrl}${encodeURIComponent(id)}/${subfields ? 'subfields/' : ''}contributors?${params}`).then(result => {
+        return {
+            ...result,
+            content: result.content.map(c => ({
+                profile: c,
+                counts: { total: null }
+            }))
+        };
+    });
 };
