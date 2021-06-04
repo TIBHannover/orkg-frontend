@@ -3,7 +3,7 @@ import { getStatementsBySubject, getStatementsBySubjectAndPredicate, getStatemen
 import { getContributorInformationById } from 'services/backend/contributors';
 import { getObservatoryAndOrganizationInformation } from 'services/backend/observatories';
 import { getResource } from 'services/backend/resources';
-import { getComparison } from 'services/similarity/index';
+import { getComparison, getResourceData } from 'services/similarity/index';
 import {
     extendPropertyIds,
     similarPropertiesByLabel,
@@ -125,18 +125,18 @@ function useComparison({ id }) {
     const loadComparisonMetaData = useCallback(cId => {
         if (cId) {
             setIsLoadingMetaData(true);
-            // Get the comparison resource
-            getResource(cId)
-                .then(comparisonResource => {
+            // Get the comparison resource and comparison config
+            Promise.all([getResource(cId), getResourceData(cId)])
+                .then(([comparisonResource, configurationData]) => {
                     // Make sure that this resource is a comparison
                     if (!comparisonResource.classes.includes(CLASSES.COMPARISON)) {
                         throw new Error(`The requested resource is not of class "${CLASSES.COMPARISON}".`);
                     }
                     // Update browser title
                     document.title = `${comparisonResource.label} - Comparison - ORKG`;
-                    return comparisonResource;
+                    return [comparisonResource, configurationData];
                 })
-                .then(comparisonResource => {
+                .then(([comparisonResource, configurationData]) => {
                     // Get meta data and config of a comparison
                     getStatementsBySubject({ id: cId }).then(statements => {
                         const comparisonObject = getComparisonData(comparisonResource, statements);
@@ -147,23 +147,15 @@ function useComparison({ id }) {
                             createdBy: comparisonObject.created_by
                         });
 
-                        // TODO: replace this with ordered feature
-                        // Load comparison config
-                        const url = filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.URL, true);
+                        const url = configurationData.data.url;
                         if (url) {
-                            setResponseHash(getParamFromQueryString(url?.label.substring(url?.label.indexOf('?')), 'response_hash'));
-                            setComparisonType(
-                                getParamFromQueryString(url?.label.substring(url?.label.indexOf('?')), 'type') ?? DEFAULT_COMPARISON_METHOD
-                            );
-                            setTranspose(getParamFromQueryString(url?.label.substring(url?.label.indexOf('?')), 'transpose', true));
-                            setPredicatesList(getArrayParamFromQueryString(url?.label.substring(url?.label.indexOf('?')), 'properties'));
+                            setResponseHash(getParamFromQueryString(url.substring(url.indexOf('?')), 'response_hash'));
+                            setComparisonType(getParamFromQueryString(url.substring(url.indexOf('?')), 'type') ?? DEFAULT_COMPARISON_METHOD);
+                            setTranspose(getParamFromQueryString(url.substring(url.indexOf('?')), 'transpose', true));
+                            setPredicatesList(getArrayParamFromQueryString(url.substring(url.indexOf('?')), 'properties'));
                             const contributionsIDs =
-                                without(
-                                    uniq(getArrayParamFromQueryString(url?.label.substring(url?.label.indexOf('?')), 'contributions')),
-                                    undefined,
-                                    null,
-                                    ''
-                                ) ?? [];
+                                without(uniq(getArrayParamFromQueryString(url.substring(url.indexOf('?')), 'contributions')), undefined, null, '') ??
+                                [];
                             setContributionsList(contributionsIDs);
                         } else {
                             setPredicatesList(

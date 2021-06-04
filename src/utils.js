@@ -274,9 +274,6 @@ export const getComparisonData = (resource, comparisonStatements) => {
     const authors = filterObjectOfStatementsByPredicateAndClass(comparisonStatements, PREDICATES.HAS_AUTHOR, false);
     const properties = filterObjectOfStatementsByPredicateAndClass(comparisonStatements, PREDICATES.HAS_PROPERTY, false);
 
-    // url
-    const url = filterObjectOfStatementsByPredicateAndClass(comparisonStatements, PREDICATES.URL, true);
-
     return {
         ...resource,
         label: resource.label ? resource.label : 'No Title',
@@ -288,7 +285,6 @@ export const getComparisonData = (resource, comparisonStatements) => {
         icon: icon ? icon.label : '',
         order: order ? order.label : Infinity,
         type: type ? type.id : '',
-        url: url ? url.label : '',
         onHomePage: onHomePage ? true : false,
         researchField: subject,
         hasPreviousVersion,
