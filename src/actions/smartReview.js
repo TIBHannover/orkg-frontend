@@ -245,7 +245,7 @@ export const setResearchField = ({ statementId, paperId, researchField }) => asy
     });
 };
 
-export const createReference = ({ contributionId, bibtex, parsedReference }) => async dispatch => {
+export const createReference = ({ contributionId, bibtex, parsedReference }) => dispatch => {
     return createLiteral(bibtex)
         .then(async literal => {
             const { id: statementId } = await createLiteralStatement(contributionId, PREDICATES.HAS_REFERENCE, literal.id);
@@ -267,19 +267,21 @@ export const createReference = ({ contributionId, bibtex, parsedReference }) => 
         });
 };
 
-export const deleteReference = statementId => async dispatch => {
-    try {
-        await deleteStatementById(statementId);
-
-        dispatch({
-            type: type.ARTICLE_WRITER_REFERENCE_REMOVE,
-            payload: {
-                statementId
-            }
+export const deleteReference = statementId => dispatch => {
+    return deleteStatementById(statementId)
+        .then(() => {
+            dispatch({
+                type: type.ARTICLE_WRITER_REFERENCE_REMOVE,
+                payload: {
+                    statementId
+                }
+            });
+            return Promise.resolve();
+        })
+        .catch(e => {
+            console.log(e);
+            return Promise.resolve();
         });
-    } catch (e) {
-        console.log(e);
-    }
 };
 
 export const updateReference = ({ literalId, bibtex, parsedReference }) => dispatch => {

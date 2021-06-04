@@ -1,4 +1,4 @@
-import { faPen, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faPen, faTimes, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { createReference as createReferenceAction, deleteReference, updateReference as updateReferenceAction } from 'actions/smartReview';
 import Cite from 'citation-js';
@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 import React, { useEffect, useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
+import { uniq } from 'lodash';
 import { Alert, Badge, Button, ListGroup, ListGroupItem, Modal, ModalBody, ModalHeader } from 'reactstrap';
 import Confirm from 'reactstrap-confirm';
 
@@ -17,6 +18,7 @@ const ReferencesModal = ({ show, toggle }) => {
     const references = useSelector(state => state.smartReview.references);
     const contributionId = useSelector(state => state.smartReview.contributionId);
     const [isParsingBibtex, setIsParsingBibtex] = useState(false);
+    const [isDeletingIDs, setIsDeletingIDs] = useState([]);
 
     useEffect(() => {
         setReferencesSorted(
@@ -122,7 +124,10 @@ const ReferencesModal = ({ show, toggle }) => {
         });
 
         if (isConfirmed) {
-            dispatch(deleteReference(statementId));
+            setIsDeletingIDs(prevIDs => uniq([...prevIDs, statementId]));
+            return dispatch(deleteReference(statementId)).then(() => {
+                setIsDeletingIDs(prevIDs => prevIDs.filter(id => id !== statementId));
+            });
         }
     };
 
@@ -160,11 +165,12 @@ const ReferencesModal = ({ show, toggle }) => {
                                     </Button>
                                     <Button
                                         color="link"
+                                        disabled={isDeletingIDs?.includes(reference.statementId)}
                                         className="px-1 py-0 text-danger"
                                         style={{ fontSize: '120%' }}
                                         onClick={() => handleDelete(reference.statementId)}
                                     >
-                                        <Icon icon={faTimes} />
+                                        {isDeletingIDs?.includes(reference.statementId) ? <Icon icon={faSpinner} spin /> : <Icon icon={faTimes} />}
                                     </Button>
                                 </div>
                             </ListGroupItem>
@@ -175,7 +181,7 @@ const ReferencesModal = ({ show, toggle }) => {
                 <Button size="sm" disabled={isParsingBibtex} onClick={handleAdd} className="mt-4">
                     {isParsingBibtex ? (
                         <>
-                            <span className="fa fa-spinner fa-spin" /> Parsing BibTeX
+                            <Icon icon={faSpinner} spin /> Parsing BibTeX
                         </>
                     ) : (
                         'Add BibTeX'
