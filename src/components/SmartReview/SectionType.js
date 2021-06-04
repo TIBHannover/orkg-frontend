@@ -62,8 +62,8 @@ const SectionType = props => {
                     disabled: true
                 },
                 {
-                    label: 'Data table',
-                    value: CLASSES.DATA_TABLE_SECTION,
+                    label: 'Ontology',
+                    value: CLASSES.ONTOLOGY_SECTION,
                     disabled: true
                 }
             ];

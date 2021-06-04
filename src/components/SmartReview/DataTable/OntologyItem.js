@@ -5,7 +5,7 @@ import { memo, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Button } from 'reactstrap';
 
-const DataTableEntity = ({ id, label, type, isEditable, sectionId }) => {
+const OntologyItem = ({ id, label, type, isEditable, sectionId }) => {
     const [isModelOpen, setIsModalOpen] = useState(false);
     const dispatch = useDispatch();
 
@@ -32,7 +32,7 @@ const DataTableEntity = ({ id, label, type, isEditable, sectionId }) => {
     );
 };
 
-DataTableEntity.propTypes = {
+OntologyItem.propTypes = {
     id: PropTypes.string.isRequired,
     label: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired,
@@ -40,4 +40,4 @@ DataTableEntity.propTypes = {
     isEditable: PropTypes.bool.isRequired
 };
 
-export default memo(DataTableEntity);
+export default memo(OntologyItem);

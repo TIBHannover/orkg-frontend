@@ -141,7 +141,7 @@ export const createSection = ({ contributionId, afterIndex, sectionType }) => as
         sectionType === 'property' ||
         sectionType === 'comparison' ||
         sectionType === 'visualization' ||
-        sectionType === 'data-table'
+        sectionType === 'ontology'
     ) {
         // link section
         if (sectionType === 'resource') {
@@ -152,8 +152,8 @@ export const createSection = ({ contributionId, afterIndex, sectionType }) => as
             typeId = CLASSES.COMPARISON_SECTION;
         } else if (sectionType === 'visualization') {
             typeId = CLASSES.VISUALIZATION_SECTION;
-        } else if (sectionType === 'data-table') {
-            typeId = CLASSES.DATA_TABLE_SECTION;
+        } else if (sectionType === 'ontology') {
+            typeId = CLASSES.ONTOLOGY_SECTION;
         }
 
         const sectionResource = await createResource('', [typeId]);

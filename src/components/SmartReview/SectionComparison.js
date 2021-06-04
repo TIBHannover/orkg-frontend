@@ -1,10 +1,10 @@
-import ComparisonLoadingComponent from 'components/Comparison/ComparisonLoadingComponent';
+import { setComparisonData } from 'actions/smartReview';
 import Comparison from 'components/Comparison/Comparison';
+import ComparisonLoadingComponent from 'components/Comparison/ComparisonLoadingComponent';
 import useComparison from 'components/Comparison/hooks/useComparison';
 import PropTypes from 'prop-types';
 import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { setComparisonData } from 'actions/smartReview';
 
 const SectionComparison = ({ id }) => {
     const comparisonData = useComparison({
