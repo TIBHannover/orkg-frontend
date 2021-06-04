@@ -22,6 +22,7 @@ const useLoad = () => {
         }
 
         let paperStatements = [];
+        let paramId = null;
 
         // for published articles
         if (paperResource.classes.includes(CLASSES.SMART_REVIEW_PUBLISHED)) {
@@ -35,6 +36,7 @@ const useLoad = () => {
                 data: { rootResource, statements }
             } = resourceData;
             paperStatements = statements;
+            paramId = id;
             id = rootResource;
             paperResource = statements.find(statement => statement.subject.id === id).subject;
             isPublished = true;
@@ -145,6 +147,7 @@ const useLoad = () => {
         const references = await getReferences(paperStatements, contributionResource.id);
 
         return {
+            articleId: paramId,
             paper: {
                 id: paperResource.id,
                 title: paperResource.label

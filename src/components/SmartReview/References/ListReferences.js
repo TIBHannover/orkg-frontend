@@ -5,6 +5,7 @@ import Cite from 'citation-js';
 import { useLocation } from 'react-router';
 import styled from 'styled-components';
 import { Alert } from 'reactstrap';
+import { usePrevious } from 'react-use';
 
 const ListReferencesStyled = styled.ul`
     & li.blink-figure {
@@ -29,7 +30,24 @@ const ListReferences = () => {
     const isEditing = useSelector(state => state.smartReview.isEditing);
     const [bibliography, setBibliography] = useState(null);
     const location = useLocation();
+    const prevHash = usePrevious(location.hash);
     const [error, setError] = useState(false);
+
+    useEffect(() => {
+        const scrollToQuote = () => {
+            const hash = location.hash;
+            const id = isString(hash) ? hash.replace('#', '') : null;
+            if (id && document.getElementById(id)) {
+                window.scrollTo({
+                    behavior: 'smooth',
+                    top: document.getElementById(id).offsetTop - 90
+                });
+            }
+        };
+        if (prevHash !== location.hash) {
+            scrollToQuote();
+        }
+    }, [location.hash, prevHash]);
 
     useEffect(() => {
         const parseBibtex = async () => {
@@ -69,18 +87,6 @@ const ListReferences = () => {
             }
         };
         parseBibtex();
-
-        // Scroll to reference
-        setTimeout(() => {
-            const hash = location.hash;
-            const id = isString(hash) ? hash.replace('#', '') : null;
-            if (id && document.getElementById(id)) {
-                window.scrollTo({
-                    behavior: 'smooth',
-                    top: document.getElementById(id).offsetTop - 90
-                });
-            }
-        }, 500);
     }, [bibliography, location.hash, usedReferences]);
 
     return (
