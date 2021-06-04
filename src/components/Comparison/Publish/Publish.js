@@ -306,7 +306,7 @@ function Publish(props) {
             <ModalHeader toggle={props.toggle}>Publish comparison</ModalHeader>
             <ModalBody>
                 {!props.comparisonId && props.metaData.hasPreviousVersion && props.nextVersions?.length > 0 && (
-                    <NewerVersionWarning comparisonId={props.metaData.hasPreviousVersion.id} showViewHistory={false} />
+                    <NewerVersionWarning versions={props.nextVersions} comparisonId={props.metaData.hasPreviousVersion.id} showViewHistory={false} />
                 )}
                 <Alert color="info">
                     {!props.comparisonId && (

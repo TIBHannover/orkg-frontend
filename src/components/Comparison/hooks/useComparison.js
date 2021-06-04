@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { getStatementsBySubject, getStatementsBySubjectAndPredicate, getStatementsByObjectAndPredicate } from 'services/backend/statements';
+import { getStatementsBySubject, getStatementsBySubjectAndPredicate } from 'services/backend/statements';
 import { getContributorInformationById } from 'services/backend/contributors';
 import { getObservatoryAndOrganizationInformation } from 'services/backend/observatories';
 import { getResource } from 'services/backend/resources';
@@ -8,7 +8,6 @@ import {
     extendPropertyIds,
     similarPropertiesByLabel,
     filterObjectOfStatementsByPredicateAndClass,
-    filterSubjectOfStatementsByPredicateAndClass,
     getArrayParamFromQueryString,
     getParamFromQueryString,
     get_error_message,
@@ -62,7 +61,6 @@ function useComparison({ id }) {
     const [errors, setErrors] = useState([]);
     const [matrixData, setMatrixData] = useState([]);
 
-    const [hasNextVersions, setHasNextVersions] = useState([]);
     const [createdBy, setCreatedBy] = useState(null);
     const [provenance, setProvenance] = useState(null);
 
@@ -189,17 +187,6 @@ function useComparison({ id }) {
                         }
                         setIsLoadingMetaData(false);
                         setIsFailedLoadingMetaData(false);
-                    });
-
-                    // Get the next versions
-                    getStatementsByObjectAndPredicate({ objectId: cId, predicateId: PREDICATES.HAS_PREVIOUS_VERSION }).then(statements => {
-                        const hasNextVersion = filterSubjectOfStatementsByPredicateAndClass(
-                            statements,
-                            PREDICATES.HAS_PREVIOUS_VERSION,
-                            false,
-                            CLASSES.COMPARISON
-                        );
-                        setHasNextVersions(hasNextVersion);
                     });
 
                     // Get Provenance data
@@ -740,7 +727,6 @@ function useComparison({ id }) {
         isFailedLoadingMetaData,
         isLoadingComparisonResult,
         isFailedLoadingComparisonResult,
-        hasNextVersions,
         createdBy,
         provenance,
         researchField,

@@ -52,10 +52,14 @@ export const getComparisonVersionsById = comparisonId => {
             ]).then(v => uniqBy(flatten(v), 'id'));
         });
     };
-    const currentNode = getResource(comparisonId);
-    const restOfNodes = getVersions(comparisonId, []);
+    if (comparisonId) {
+        const currentNode = getResource(comparisonId);
+        const restOfNodes = getVersions(comparisonId, []);
 
-    return Promise.all([currentNode, restOfNodes]).then(c => {
-        return uniqBy(flatten(c), 'id').sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-    });
+        return Promise.all([currentNode, restOfNodes]).then(c => {
+            return uniqBy(flatten(c), 'id').sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+        });
+    } else {
+        return Promise.resolve([]);
+    }
 };

@@ -7,7 +7,7 @@ import ROUTES from 'constants/routes.js';
 import { Link, useHistory } from 'react-router-dom';
 import moment from 'moment';
 import styled from 'styled-components';
-import React, { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Select, { components } from 'react-select';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
 import useComparisonVersions from 'components/Comparison/hooks/useComparisonVersions';
@@ -67,7 +67,7 @@ Option.propTypes = {
 };
 
 function HistoryModal(props) {
-    const { versions, isLoading } = useComparisonVersions({ comparisonId: props.comparisonId });
+    const { versions, isLoading, loadVersions } = useComparisonVersions({ comparisonId: props.comparisonId });
     const [selectedVersion1, setSelectedVersion1] = useState(null);
     const [selectedVersion2, setSelectedVersion2] = useState(null);
     const history = useHistory();
@@ -76,6 +76,11 @@ function HistoryModal(props) {
         value: version.id,
         created_at: version.created_at
     }));
+
+    useEffect(() => {
+        loadVersions(props.comparisonId);
+    }, [loadVersions, props.comparisonId]);
+
     const handleCompare = () => {
         history.push(reverse(ROUTES.COMPARISON_DIFF, { oldId: selectedVersion1.value, newId: selectedVersion2.value }));
     };
