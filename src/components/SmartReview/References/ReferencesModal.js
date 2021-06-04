@@ -4,7 +4,7 @@ import { createReference as createReferenceAction, deleteReference, updateRefere
 import Cite from 'citation-js';
 import ReferenceModal from 'components/SmartReview/References/ReferenceModal';
 import PropTypes from 'prop-types';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { Alert, Badge, Button, ListGroup, ListGroupItem, Modal, ModalBody, ModalHeader } from 'reactstrap';
@@ -12,81 +12,107 @@ import Confirm from 'reactstrap-confirm';
 
 const ReferencesModal = ({ show, toggle }) => {
     const [isOpenReferenceModal, setIsOpenReferenceModal] = useState(false);
-    const [editReference, setEditReference] = useState(false);
+    const [editReference, setEditReference] = useState(null);
     const [referencesSorted, setReferencesSorted] = useState([]);
     const references = useSelector(state => state.smartReview.references);
     const contributionId = useSelector(state => state.smartReview.contributionId);
+    const [isParsingBibtex, setIsParsingBibtex] = useState(false);
 
     useEffect(() => {
         setReferencesSorted(
-            references.sort((a, b) => a?.parsedReference?.author?.[0]?.family.localeCompare(b?.parsedReference?.author?.[0]?.family))
+            references.sort((a, b) => a?.parsedReference?.author?.[0]?.family?.localeCompare(b?.parsedReference?.author?.[0]?.family))
         );
     }, [references]);
 
     const dispatch = useDispatch();
 
-    const handleSaveReference = ({ bibtex, literalId }) => {
-        if (!literalId) {
-            createReference(bibtex);
-        } else {
-            updateReference({ bibtex, literalId });
-        }
-    };
+    const parseBibtex = useCallback(
+        ({ bibtex, checkForDuplicate }) => {
+            return Cite.async(bibtex)
+                .then(parsedReference => {
+                    const hasMultipleCitations = parsedReference.data.length > 1;
+                    parsedReference = parsedReference.data[0];
 
-    const updateReference = async ({ bibtex, literalId }) => {
-        const parsedReference = await parseBibtex({ bibtex, checkForDuplicate: false });
-        if (parsedReference) {
-            dispatch(
-                updateReferenceAction({
-                    bibtex,
-                    literalId,
-                    parsedReference
+                    if (checkForDuplicate) {
+                        const isKeyExisting = references.filter(reference => reference.parsedReference.id === parsedReference.id).length;
+                        if (isKeyExisting) {
+                            throw new Error('Duplicate citation key');
+                        }
+                    }
+                    if (hasMultipleCitations) {
+                        toast.warning('BibTeX contains multiple citations, only the first citation is added');
+                    }
+
+                    setIsOpenReferenceModal(false);
+                    return parsedReference;
                 })
-            );
-        }
-    };
+                .catch(e => {
+                    console.log(e);
+                    toast.error(e.name === 'Error' ? e.message : 'An error occurred while parsing the BibTeX');
+                    return null;
+                });
+        },
+        [references]
+    );
 
-    const createReference = async bibtex => {
-        const parsedReference = await parseBibtex({ bibtex, checkForDuplicate: true });
+    const updateReference = useCallback(
+        ({ bibtex, literalId }) => {
+            setIsParsingBibtex(true);
+            console.log('updateReference');
+            parseBibtex({ bibtex, checkForDuplicate: false })
+                .then(parsedReference => {
+                    if (parsedReference) {
+                        return dispatch(
+                            updateReferenceAction({
+                                bibtex,
+                                literalId,
+                                parsedReference
+                            })
+                        ).then(() => setIsParsingBibtex(false));
+                    }
+                })
+                .catch(() => {
+                    setIsParsingBibtex(false);
+                });
+        },
+        [dispatch, parseBibtex]
+    );
 
-        if (!parsedReference) {
-            return;
-        }
+    const createReference = useCallback(
+        bibtex => {
+            setIsParsingBibtex(true);
+            console.log('createReference');
+            parseBibtex({ bibtex, checkForDuplicate: true })
+                .then(parsedReference => {
+                    if (!parsedReference) {
+                        setIsParsingBibtex(false);
+                        return;
+                    }
+                    return dispatch(
+                        createReferenceAction({
+                            contributionId,
+                            bibtex,
+                            parsedReference
+                        })
+                    ).then(() => setIsParsingBibtex(false));
+                })
+                .catch(() => {
+                    setIsParsingBibtex(false);
+                });
+        },
+        [contributionId, dispatch, parseBibtex]
+    );
 
-        dispatch(
-            createReferenceAction({
-                contributionId,
-                bibtex,
-                parsedReference
-            })
-        );
-    };
-
-    const parseBibtex = async ({ bibtex, checkForDuplicate }) => {
-        try {
-            let parsedReference = await Cite.async(bibtex);
-            const hasMultipleCitations = parsedReference.data.length > 1;
-            parsedReference = parsedReference.data[0];
-
-            if (checkForDuplicate) {
-                const isKeyExisting = references.filter(reference => reference.parsedReference.id === parsedReference.id).length;
-                if (isKeyExisting) {
-                    throw new Error('Duplicate citation key');
-                }
+    const handleSaveReference = useCallback(
+        ({ bibtex, literalId }) => {
+            if (!literalId) {
+                createReference(bibtex);
+            } else {
+                updateReference({ bibtex, literalId });
             }
-            if (hasMultipleCitations) {
-                toast.warning('BibTeX contains multiple citations, only the first citation is added');
-            }
-
-            setIsOpenReferenceModal(false);
-
-            return parsedReference;
-        } catch (e) {
-            console.log(e);
-            toast.error(e.name === 'Error' ? e.message : 'An error occurred while parsing the BibTeX');
-        }
-        return null;
-    };
+        },
+        [createReference, updateReference]
+    );
 
     const handleDelete = async statementId => {
         const isConfirmed = await Confirm({
@@ -146,8 +172,14 @@ const ReferencesModal = ({ show, toggle }) => {
                     })}
                     {referencesSorted.length === 0 && <div className="text-center mt-3">No references added yet</div>}
                 </ListGroup>
-                <Button size="sm" onClick={handleAdd} className="mt-4">
-                    Add BibTeX
+                <Button size="sm" disabled={isParsingBibtex} onClick={handleAdd} className="mt-4">
+                    {isParsingBibtex ? (
+                        <>
+                            <span className="fa fa-spinner fa-spin" /> Parsing BibTeX
+                        </>
+                    ) : (
+                        'Add BibTeX'
+                    )}
                 </Button>
             </ModalBody>
 

@@ -246,23 +246,25 @@ export const setResearchField = ({ statementId, paperId, researchField }) => asy
 };
 
 export const createReference = ({ contributionId, bibtex, parsedReference }) => async dispatch => {
-    try {
-        const literal = await createLiteral(bibtex);
-        const { id: statementId } = await createLiteralStatement(contributionId, PREDICATES.HAS_REFERENCE, literal.id);
-
-        dispatch({
-            type: type.ARTICLE_WRITER_REFERENCE_ADD,
-            payload: {
-                reference: {
-                    literal,
-                    parsedReference,
-                    statementId
+    return createLiteral(bibtex)
+        .then(async literal => {
+            const { id: statementId } = await createLiteralStatement(contributionId, PREDICATES.HAS_REFERENCE, literal.id);
+            dispatch({
+                type: type.ARTICLE_WRITER_REFERENCE_ADD,
+                payload: {
+                    reference: {
+                        literal,
+                        parsedReference,
+                        statementId
+                    }
                 }
-            }
+            });
+            return Promise.resolve();
+        })
+        .catch(e => {
+            console.log(e);
+            return Promise.resolve();
         });
-    } catch (e) {
-        console.log(e);
-    }
 };
 
 export const deleteReference = statementId => async dispatch => {
@@ -280,17 +282,19 @@ export const deleteReference = statementId => async dispatch => {
     }
 };
 
-export const updateReference = ({ literalId, bibtex, parsedReference }) => async dispatch => {
-    try {
-        await updateLiteral(literalId, bibtex);
-
-        dispatch({
-            type: type.ARTICLE_WRITER_REFERENCE_UPDATE,
-            payload: { literalId, bibtex, parsedReference }
+export const updateReference = ({ literalId, bibtex, parsedReference }) => dispatch => {
+    return updateLiteral(literalId, bibtex)
+        .then(literal => {
+            dispatch({
+                type: type.ARTICLE_WRITER_REFERENCE_UPDATE,
+                payload: { literalId, bibtex, parsedReference }
+            });
+            return Promise.resolve();
+        })
+        .catch(e => {
+            console.log(e);
+            return Promise.resolve();
         });
-    } catch (e) {
-        console.log(e);
-    }
 };
 
 export const setUsedReferences = ({ sectionId, references }) => async dispatch => {
