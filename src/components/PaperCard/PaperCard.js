@@ -65,10 +65,10 @@ const PaperCard = props => {
                             {(props.paper.publicationMonth || props.paper.publicationYear) && (
                                 <Icon size="sm" icon={faCalendar} className="ml-2 mr-1" />
                             )}
-                            {props.paper.publicationMonth && props.paper.publicationMonth > 0
-                                ? moment(props.paper.publicationMonth, 'M').format('MMMM')
+                            {props.paper.publicationMonth && props.paper.publicationMonth.label > 0
+                                ? moment(props.paper.publicationMonth.label, 'M').format('MMMM')
                                 : ''}{' '}
-                            {props.paper.publicationYear}
+                            {props.paper.publicationYear?.label ?? null}
                         </small>
                         {props.showBreadcrumbs && (
                             <div className="d-block d-md-none mt-1">
@@ -108,8 +108,8 @@ PaperCard.propTypes = {
         id: PropTypes.string.isRequired,
         title: PropTypes.string,
         authorNames: PropTypes.array,
-        publicationMonth: PropTypes.any,
-        publicationYear: PropTypes.string,
+        publicationMonth: PropTypes.object,
+        publicationYear: PropTypes.object,
         researchField: PropTypes.shape({
             id: PropTypes.string.isRequired,
             label: PropTypes.string

@@ -2,12 +2,29 @@ import ComparisonLoadingComponent from 'components/Comparison/ComparisonLoadingC
 import Comparison from 'components/Comparison/Comparison';
 import useComparison from 'components/Comparison/hooks/useComparison';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { setUsedReferences } from 'actions/smartReview';
+import { isEqual } from 'lodash';
 
-const SectionComparison = ({ id }) => {
+const SectionComparison = ({ id, sectionId }) => {
+    const references = useSelector(state => state.smartReview.references);
+    const usedReferences = useSelector(state => state.smartReview.usedReferences);
+    const dispatch = useDispatch();
     const { contributions, properties, data, isLoadingComparisonResult, filterControlData, updateRulesOfProperty, comparisonType } = useComparison({
         id
     });
+
+    useEffect(() => {
+        const paperIds = contributions.map(contribution => contribution.paperId);
+        if (paperIds.length === 0) {
+            return;
+        }
+        const _usedReferences = paperIds.map(paperId => references.find(reference => reference?.parsedReference?.id === paperId));
+        if (!isEqual(_usedReferences, usedReferences[sectionId])) {
+            dispatch(setUsedReferences({ references: _usedReferences, sectionId }));
+        }
+    }, [contributions, dispatch, references, sectionId, usedReferences]);
 
     return (
         <>
@@ -31,7 +48,8 @@ const SectionComparison = ({ id }) => {
 };
 
 SectionComparison.propTypes = {
-    id: PropTypes.string.isRequired
+    id: PropTypes.string.isRequired,
+    sectionId: PropTypes.string.isRequired
 };
 
 export default SectionComparison;

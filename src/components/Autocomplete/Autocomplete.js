@@ -619,6 +619,7 @@ function Autocomplete(props) {
         input: provided => ({
             ...provided, // custom style to fix when the input field doesn't get the full width
             display: 'flex',
+            visibility: 'visible',
             flex: '1',
             '& > div': {
                 flex: '1',

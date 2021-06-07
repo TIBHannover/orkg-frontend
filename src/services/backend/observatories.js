@@ -1,4 +1,5 @@
 import { url } from 'constants/misc';
+import { MISC } from 'constants/graphSettings';
 import { submitGetRequest, submitPostRequest, submitPutRequest } from 'network';
 import { getOrganization } from 'services/backend/organizations';
 
@@ -58,7 +59,7 @@ export const createObservatory = (observatoryName, organizationId, description, 
 
 export const getObservatoryAndOrganizationInformation = (observatoryId, organizationId) => {
     return getObservatoryById(observatoryId).then(obsResponse => {
-        if (organizationId !== '00000000-0000-0000-0000-000000000000') {
+        if (organizationId !== MISC.UNKNOWN_ID) {
             return getOrganization(organizationId)
                 .then(orgResponse => {
                     return {
