@@ -45,7 +45,10 @@ export const PREDICATES = {
     HAS_SECTION: 'HasSection',
     HAS_LINK: 'HasLink',
     HAS_VISUALIZATION: 'hasVisualization',
-    HAS_PAPER: 'HasPaper'
+    HAS_PAPER: 'HasPaper',
+    SHOW_PROPERTY: 'ShowProperty',
+    HAS_ENTITY: 'HasEntity',
+    HAS_REFERENCE: 'HasReference'
 };
 
 export const CLASSES = {
@@ -78,7 +81,8 @@ export const CLASSES = {
     VISUALIZATION_SECTION: 'VisualizationSection',
     VISUALIZATION: 'Visualization',
     COMPARISON_RELATED_RESOURCE: 'ComparisonRelatedResource',
-    COMPARISON_RELATED_FIGURE: 'ComparisonRelatedFigure'
+    COMPARISON_RELATED_FIGURE: 'ComparisonRelatedFigure',
+    ONTOLOGY_SECTION: 'OntologySection'
 };
 
 export const MISC = {

@@ -27,8 +27,10 @@ const Sections = () => {
     const dispatch = useDispatch();
 
     const handleSortEnd = ({ oldIndex, newIndex }) => {
-        dispatch(moveSection({ contributionId, sections, oldIndex, newIndex }));
         setIsSorting(false);
+        if (oldIndex !== newIndex) {
+            dispatch(moveSection({ contributionId, sections, oldIndex, newIndex }));
+        }
     };
 
     // disable pointer events for all elements while sorting (prevents trigger hover in the sections)

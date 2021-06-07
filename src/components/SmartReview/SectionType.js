@@ -60,6 +60,11 @@ const SectionType = props => {
                     label: 'Visualization',
                     value: CLASSES.VISUALIZATION_SECTION,
                     disabled: true
+                },
+                {
+                    label: 'Ontology',
+                    value: CLASSES.ONTOLOGY_SECTION,
+                    disabled: true
                 }
             ];
             const _options = sortBy([...ontologyClasses, ...additionalClasses], 'label');

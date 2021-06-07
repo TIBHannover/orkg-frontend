@@ -83,7 +83,7 @@ const SectionMarkdown = props => {
                 <Tippy hideOnClick={false} content="Double click to edit">
                     {markdownValue ? (
                         <div role="button" tabIndex="0" onDoubleClick={() => setEditMode(true)}>
-                            <MarkdownRenderer text={markdownValue} />
+                            <MarkdownRenderer text={markdownValue} id={markdown.id} />
                         </div>
                     ) : (
                         <MarkdownPlaceholder onDoubleClick={() => setEditMode(true)}>Double click to edit this text</MarkdownPlaceholder>
@@ -139,8 +139,8 @@ const SectionMarkdown = props => {
                                     <Icon icon={faImage} />
                                 </div>
                             </Tippy>
-                            <Tippy content="Add a quote">
-                                <div role="button" tabIndex="0" className="btn btn-dark" onMouseDown={e => wrapText(e, '> ')}>
+                            <Tippy content="Add a citation">
+                                <div role="button" tabIndex="0" className="btn btn-dark" onMouseDown={e => wrapText(e, '[@', ']')}>
                                     <Icon icon={faQuoteLeft} />
                                 </div>
                             </Tippy>

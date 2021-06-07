@@ -5,7 +5,8 @@ import { useDispatch } from 'react-redux';
 import { getResource } from 'services/backend/resources';
 import { getStatementsBundleBySubject, getStatementsByObjectAndPredicate, getStatementsBySubjects } from 'services/backend/statements';
 import { getResourceData } from 'services/similarity';
-import { countBy, orderBy } from 'lodash';
+import { countBy, orderBy, sortBy } from 'lodash';
+import Cite from 'citation-js';
 
 const useLoad = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -21,6 +22,7 @@ const useLoad = () => {
         }
 
         let paperStatements = [];
+        const paramId = id;
 
         // for published articles
         if (paperResource.classes.includes(CLASSES.SMART_REVIEW_PUBLISHED)) {
@@ -106,6 +108,7 @@ const useLoad = () => {
             const type = section.classes.length > 1 ? section.classes.find(_class => _class !== CLASSES.SECTION) : section.classes[0];
             let markdown = null;
             let contentLink = null;
+            let dataTable = null;
 
             if ([CLASSES.RESOURCE_SECTION, CLASSES.PROPERTY_SECTION, CLASSES.COMPARISON_SECTION, CLASSES.VISUALIZATION_SECTION].includes(type)) {
                 const linkStatement = section.statements.find(statement => statement.predicate.id === PREDICATES.HAS_LINK);
@@ -115,6 +118,27 @@ const useLoad = () => {
                     id: section?.id,
                     objectId: link?.id,
                     label: link?.label
+                };
+            } else if (type === CLASSES.ONTOLOGY_SECTION) {
+                // sortBy probably not needed once https://gitlab.com/TIBHannover/orkg/orkg-backend/-/merge_requests/199/diffs is merged
+                const properties =
+                    sortBy(section.statements.filter(statement => statement.predicate.id === PREDICATES.SHOW_PROPERTY), 'id').map(
+                        statement => statement.object
+                    ) ?? [];
+
+                const entities =
+                    sortBy(section.statements.filter(statement => statement.predicate.id === PREDICATES.HAS_ENTITY), 'id').map(
+                        statement => statement.object
+                    ) ?? [];
+
+                const entityStatements = entities.flatMap(entity => ({
+                    ...entity,
+                    statements: paperStatements.filter(statement => statement.subject.id === entity.id)
+                }));
+
+                dataTable = {
+                    properties,
+                    entities: entityStatements
                 };
             } else {
                 const contentStatement = section.statements.find(statement => statement.predicate.id === PREDICATES.HAS_CONTENT);
@@ -135,14 +159,17 @@ const useLoad = () => {
                     id: type
                 },
                 markdown,
-                contentLink
+                contentLink,
+                dataTable
             });
         }
 
         // contributors
         const contributors = getAllContributors(paperStatements);
+        const references = await getReferences(paperStatements, contributionResource.id);
 
         return {
+            articleId: paramId,
             paper: {
                 id: paperResource.id,
                 title: paperResource.label
@@ -154,9 +181,23 @@ const useLoad = () => {
             versions,
             researchField,
             statements: paperStatements,
-            contributors
+            contributors,
+            references
         };
     }, []);
+
+    const getReferences = async (statements, contributionId) => {
+        const referenceStatements = statements.filter(
+            statement => statement.subject.id === contributionId && statement.predicate.id === PREDICATES.HAS_REFERENCE
+        );
+        const parseReferences = referenceStatements.map(reference => Cite.async(reference.object.label).catch(e => console.log(e)));
+
+        return (await Promise.all(parseReferences)).map((parsedReference, index) => ({
+            parsedReference: parsedReference?.data?.[0] ?? {},
+            literal: referenceStatements[index].object,
+            statementId: referenceStatements[index].id
+        }));
+    };
 
     const getAllContributors = statements => {
         if (statements.length === 0) {
