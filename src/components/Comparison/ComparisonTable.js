@@ -40,7 +40,7 @@ const ComparisonTable = props => {
                           return {
                               property: property,
                               values: props.contributions.map((contribution, index2) => {
-                                  const data = props.data[property.id][index2];
+                                  const data = props.data[property.id] ? props.data[property.id][index2] : null;
                                   return data;
                               })
                           };
@@ -51,7 +51,7 @@ const ComparisonTable = props => {
                           values: props.properties
                               .filter(property => property.active)
                               .map((property, index2) => {
-                                  const data = props.data[property.id][index];
+                                  const data = props.data[property.id] ? props.data[property.id][index] : null;
                                   return data;
                               })
                       };
