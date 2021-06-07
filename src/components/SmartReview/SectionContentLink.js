@@ -1,16 +1,22 @@
-import { updateSectionLink } from 'actions/smartReview';
+import { createReference, updateSectionLink } from 'actions/smartReview';
+import Cite from 'citation-js';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
 import SectionComparison from 'components/SmartReview/SectionComparison';
 import SectionVisualization from 'components/SmartReview/SectionVisualization';
 import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
-import { CLASSES, ENTITIES } from 'constants/graphSettings';
+import { CLASSES, ENTITIES, PREDICATES } from 'constants/graphSettings';
+import { groupBy } from 'lodash';
+import uniq from 'lodash.uniq';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { createResource } from 'services/backend/resources';
+import { getStatementsByObjectAndPredicate, getStatementsBySubjectAndPredicate, getStatementsBySubjects } from 'services/backend/statements';
 
 const SectionContentLink = props => {
     const dispatch = useDispatch();
+    const references = useSelector(state => state.smartReview.references);
+    const contributionId = useSelector(state => state.smartReview.contributionId);
 
     const [selectedResource, setSelectedResource] = useState(null);
 
@@ -56,7 +62,52 @@ const SectionContentLink = props => {
                 label
             })
         );
+
+        if (props.type === 'comparison') {
+            // paper metadata is needed to add it automatically to the reference list
+            getPaperMetadataFromComparison(id);
+        }
     };
+
+    // it requires quite a lot of requests to get the metadata of the papers used in a comparison
+    const getPaperMetadataFromComparison = async comparisonId => {
+        const contributionStatements = await getStatementsBySubjectAndPredicate({
+            subjectId: comparisonId,
+            predicateId: PREDICATES.COMPARE_CONTRIBUTION
+        });
+        const contributionIds = contributionStatements.map(statement => statement.object.id);
+        const paperStatementsPromises = contributionIds.map(contributionId =>
+            getStatementsByObjectAndPredicate({ predicateId: PREDICATES.HAS_CONTRIBUTION, objectId: contributionId })
+        );
+        const paperStatements = (await Promise.all(paperStatementsPromises)).flatMap(statement => statement);
+        const paperIds = uniq(paperStatements.map(statement => statement.subject.id));
+        const statementsByPaper = groupBy((await getStatementsBySubjects({ ids: paperIds })).flatMap(({ statements }) => statements), 'subject.id');
+
+        for (const statements of Object.values(statementsByPaper)) {
+            const paper = statements[0]?.subject;
+            if (paper) {
+                const bibJson = {
+                    title: paper.label,
+                    author: statements
+                        .filter(statement => statement.predicate.id === PREDICATES.HAS_AUTHOR)
+                        .map(statement => ({ name: statement.object.label })),
+                    year: statements?.find(statement => statement.predicate.id === PREDICATES.HAS_PUBLICATION_YEAR)?.object?.label
+                };
+
+                const parsedReference = await Cite.async(bibJson);
+                const parsedReferenceData = parsedReference?.data?.[0];
+                const bibtex = parsedReference.format('bibtex').replace(parsedReference.format('label')[parsedReferenceData.id], paper.id); // use the paper ID as key, so we can identify it to add in the _usedReferences later
+                parsedReferenceData['citation-label'] = paper.id; // set citation-label, later used to get the citation key
+                parsedReferenceData.id = paper.id; // set citation-label, later used to get the citation key
+                const isExistingReference = references.find(reference => reference?.parsedReference?.id === paper.id);
+
+                if (!isExistingReference) {
+                    dispatch(createReference({ contributionId, bibtex, parsedReference: parsedReferenceData }));
+                }
+            }
+        }
+    };
+
     const entityType = props.type === 'property' ? ENTITIES.PREDICATE : ENTITIES.RESOURCE;
     const hasValue = selectedResource && selectedResource?.value;
     let optionsClass = undefined;
@@ -96,7 +147,7 @@ const SectionContentLink = props => {
                     rootNodeType={props.type === 'resource' ? 'resource' : 'predicate'}
                 />
             )}
-            {props.type === 'comparison' && hasValue && <SectionComparison id={selectedResource.value} />}
+            {props.type === 'comparison' && hasValue && <SectionComparison id={selectedResource.value} sectionId={props.section.id} />}
             {props.type === 'visualization' && hasValue && <SectionVisualization id={selectedResource.value} />}
         </div>
     );
