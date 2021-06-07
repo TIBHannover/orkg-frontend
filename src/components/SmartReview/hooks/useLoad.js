@@ -22,7 +22,7 @@ const useLoad = () => {
         }
 
         let paperStatements = [];
-        let paramId = null;
+        const paramId = id;
 
         // for published articles
         if (paperResource.classes.includes(CLASSES.SMART_REVIEW_PUBLISHED)) {
@@ -36,7 +36,6 @@ const useLoad = () => {
                 data: { rootResource, statements }
             } = resourceData;
             paperStatements = statements;
-            paramId = id;
             id = rootResource;
             paperResource = statements.find(statement => statement.subject.id === id).subject;
             isPublished = true;
