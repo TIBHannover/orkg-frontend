@@ -17,10 +17,10 @@ import { toast } from 'react-toastify';
 import ROUTES from 'constants/routes.js';
 import PropTypes from 'prop-types';
 import { createLiteralStatement, createResourceStatement, getStatementsByPredicateAndLiteral } from 'services/backend/statements';
-import { generateDOIForComparison } from 'services/backend/misc';
+import { generateDOIForComparison, createObject } from 'services/backend/misc';
 import { createLiteral } from 'services/backend/literals';
 import { createResource } from 'services/backend/resources';
-import { getComparison } from 'services/similarity/index';
+import { getComparison, createResourceData } from 'services/similarity/index';
 import Tooltip from 'components/Utils/Tooltip';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
 import AuthorsInput from 'components/Utils/AuthorsInput';
@@ -166,58 +166,82 @@ function Publish(props) {
                         type: props.comparisonType,
                         save_response: true
                     });
-                    const titleResponse = await createResource(title, [CLASSES.COMPARISON]);
-                    const resourceId = titleResponse.id;
-                    const descriptionResponse = await createLiteral(description);
-                    await createLiteralStatement(resourceId, PREDICATES.DESCRIPTION, descriptionResponse.id);
-                    if (references && references.length > 0) {
-                        for (const reference of references) {
-                            if (reference && reference.trim() !== '') {
-                                const referenceResponse = await createLiteral(reference);
-                                await createLiteralStatement(resourceId, PREDICATES.REFERENCE, referenceResponse.id);
+
+                    const comparison_obj = {
+                        predicates: [],
+                        resource: {
+                            name: title,
+                            classes: [CLASSES.COMPARISON],
+                            values: {
+                                [PREDICATES.DESCRIPTION]: [
+                                    {
+                                        text: description
+                                    }
+                                ],
+                                ...(references &&
+                                    references.length > 0 && {
+                                        [PREDICATES.REFERENCE]: references
+                                            .filter(reference => reference && reference.trim() !== '')
+                                            .map(reference => ({
+                                                text: reference
+                                            }))
+                                    }),
+                                ...(subject &&
+                                    subject.id && {
+                                        [PREDICATES.HAS_SUBJECT]: [
+                                            {
+                                                id: subject.id
+                                            }
+                                        ]
+                                    }),
+                                [PREDICATES.COMPARE_CONTRIBUTION]: props.contributionsList.map(contributionID => ({
+                                    id: contributionID
+                                })),
+                                [PREDICATES.HAS_PROPERTY]: props.predicatesList.map(predicateID => {
+                                    const property =
+                                        props.comparisonType === 'merge' ? predicateID : getPropertyObjectFromData(props.data, { id: predicateID });
+                                    return { id: property.id };
+                                }),
+                                ...(props.metaData.hasPreviousVersion && {
+                                    [PREDICATES.HAS_PREVIOUS_VERSION]: [
+                                        {
+                                            id: props.metaData.hasPreviousVersion.id
+                                        }
+                                    ]
+                                })
                             }
                         }
-                    }
-                    if (subject && subject.id) {
-                        await createResourceStatement(resourceId, PREDICATES.HAS_SUBJECT, subject.id);
-                    }
-                    await saveCreators(comparisonCreators, resourceId);
-                    const urlResponse = await createLiteral(`${props.comparisonURLConfig}&response_hash=${comparison.response_hash}`);
-                    await createLiteralStatement(resourceId, PREDICATES.URL, urlResponse.id);
-                    props.contributionsList.forEach(contirbutionID => {
-                        createResourceStatement(resourceId, PREDICATES.COMPARE_CONTRIBUTION, contirbutionID);
+                    };
+                    const createdComparison = await createObject(comparison_obj);
+                    await saveCreators(comparisonCreators, createdComparison.id);
+                    await createResourceData({
+                        resourceId: createdComparison.id,
+                        data: { url: `${props.comparisonURLConfig}&response_hash=${comparison.response_hash}` }
                     });
-                    props.predicatesList.forEach(predicateID => {
-                        const property = props.comparisonType === 'merge' ? predicateID : getPropertyObjectFromData(props.data, { id: predicateID });
-                        createResourceStatement(resourceId, PREDICATES.HAS_PROPERTY, property.id);
-                    });
-                    if (props.metaData.hasPreviousVersion) {
-                        createResourceStatement(resourceId, PREDICATES.HAS_PREVIOUS_VERSION, props.metaData.hasPreviousVersion.id);
-                    }
                     toast.success('Comparison saved successfully');
                     // Assign a DOI
                     if (assignDOI) {
-                        publishDOI(resourceId);
+                        publishDOI(createdComparison.id);
                     }
                     setIsLoading(false);
                     props.setMetaData(prevMetaData => ({
                         ...prevMetaData,
-                        id: resourceId,
+                        id: createdComparison.id,
                         title,
                         description,
                         references: references.filter(Boolean), // Remove empty strings from array
                         subject,
                         comparisonCreators,
-                        createdAt: titleResponse.created_at,
-                        createdBy: titleResponse.created_by,
+                        createdAt: createdComparison.created_at,
+                        createdBy: createdComparison.created_by,
                         resources: [],
                         figures: [],
                         hasPreviousVersion: props.metaData.hasPreviousVersion,
                         hasNextVersion: null
                     }));
                     props.setAuthors(comparisonCreators);
-                    props.loadCreatedBy(titleResponse.created_by);
-                    props.loadProvenanceInfos(titleResponse.observatory_id, titleResponse.organization_id);
+                    props.loadCreatedBy(createdComparison.created_by);
+                    props.loadProvenanceInfos(createdComparison.observatory_id, createdComparison.organization_id);
                 } else {
                     throw Error('Please enter a title and a description');
                 }

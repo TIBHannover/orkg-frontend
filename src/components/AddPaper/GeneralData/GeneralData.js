@@ -436,7 +436,7 @@ const GeneralData = () => {
                 )}
                 {dataEntry !== 'doi' && (
                     <Container key={2} classNames="fadeIn" timeout={{ enter: 500, exit: 0 }}>
-                        <Form className="mt-4" onSubmit={submitHandler}>
+                        <Form className="mt-4" onSubmit={submitHandler} id="manuelInputGroup">
                             <FormGroup>
                                 <Label for="paperTitle">
                                     <Tooltip message="The main title of the paper">Paper title</Tooltip>
@@ -547,15 +547,29 @@ const GeneralData = () => {
                                       'Start by entering the DOI or the BibTeX of the paper you want to add. Then, click on "Lookup" to fetch paper meta-data automatically.',
                                   style: { borderTop: '4px solid #E86161' },
                                   action: node => (node ? node.focus() : null)
+                              },
+                              {
+                                  selector: '#entryOptions',
+                                  content:
+                                      'In case you don\'t have the DOI, you can enter the general paper data manually. Do this by pressing the "Manually" button on the right.',
+                                  style: { borderTop: '4px solid #E86161' }
                               }
                           ]
-                        : []),
-                    {
-                        selector: '#entryOptions',
-                        content:
-                            'In case you don\'t have the DOI, you can enter the general paper data manually. Do this by pressing the "Manually" button on the right.',
-                        style: { borderTop: '4px solid #E86161' }
-                    }
+                        : [
+                              {
+                                  selector: '#entryOptions',
+                                  content:
+                                      'In case you have the DOI, you can enter the doi to fetch paper meta-data automatically. Do this by pressing the "By DOI" button on the left.',
+                                  style: { borderTop: '4px solid #E86161' },
+                                  action: node => (node ? node.focus() : null)
+                              },
+                              {
+                                  selector: '#manuelInputGroup',
+                                  content: 'You can enter the general paper data manually using this form.',
+                                  style: { borderTop: '4px solid #E86161' },
+                                  action: node => (node ? node.focus() : null)
+                              }
+                          ])
                 ]}
                 showNumber={false}
                 accentColor={theme.primary}

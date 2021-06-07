@@ -198,6 +198,7 @@ export const deleteSection = id => async dispatch => {
     //await deleteResource(id);
 
     dispatch(setIsLoading(false));
+    dispatch(setUsedReferences({ sectionId: id, references: {} }));
 };
 
 export const moveSection = ({ contributionId, sections, oldIndex, newIndex }) => async dispatch => {
@@ -216,7 +217,7 @@ export const sortSections = ({ contributionId, sections }) => async dispatch => 
         }
     });
 
-    const sectionSubjectStatement = await getStatementsBySubject({ id: contributionId });
+    const sectionSubjectStatement = await getStatementsBySubjectAndPredicate({ subjectId: contributionId, predicateId: PREDICATES.HAS_SECTION });
     const sectionSubjectStatementIds = sectionSubjectStatement.map(stmt => stmt.id);
     await deleteStatementsByIds(sectionSubjectStatementIds);
 
@@ -312,5 +313,66 @@ export const reloadDataTableStatements = ({ id, sectionId }) => async dispatch =
             sectionId,
             statements
         }
+    });
+};
+
+export const createReference = ({ contributionId, bibtex, parsedReference }) => dispatch => {
+    return createLiteral(bibtex)
+        .then(async literal => {
+            const { id: statementId } = await createLiteralStatement(contributionId, PREDICATES.HAS_REFERENCE, literal.id);
+            dispatch({
+                type: type.ARTICLE_WRITER_REFERENCE_ADD,
+                payload: {
+                    reference: {
+                        literal,
+                        parsedReference,
+                        statementId
+                    }
+                }
+            });
+            return Promise.resolve();
+        })
+        .catch(e => {
+            console.log(e);
+            return Promise.resolve();
+        });
+};
+
+export const deleteReference = statementId => dispatch => {
+    return deleteStatementById(statementId)
+        .then(() => {
+            dispatch({
+                type: type.ARTICLE_WRITER_REFERENCE_REMOVE,
+                payload: {
+                    statementId
+                }
+            });
+            return Promise.resolve();
+        })
+        .catch(e => {
+            console.log(e);
+            return Promise.resolve();
+        });
+};
+
+export const updateReference = ({ literalId, bibtex, parsedReference }) => dispatch => {
+    return updateLiteral(literalId, bibtex)
+        .then(literal => {
+            dispatch({
+                type: type.ARTICLE_WRITER_REFERENCE_UPDATE,
+                payload: { literalId, bibtex, parsedReference }
+            });
+            return Promise.resolve();
+        })
+        .catch(e => {
+            console.log(e);
+            return Promise.resolve();
+        });
+};
+
+export const setUsedReferences = ({ sectionId, references }) => async dispatch => {
+    dispatch({
+        type: type.ARTICLE_WRITER_SET_USED_REFERENCES,
+        payload: { sectionId, references }
     });
 };

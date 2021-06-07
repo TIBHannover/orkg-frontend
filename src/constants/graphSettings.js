@@ -47,7 +47,8 @@ export const PREDICATES = {
     HAS_VISUALIZATION: 'hasVisualization',
     HAS_PAPER: 'HasPaper',
     SHOW_PROPERTY: 'ShowProperty',
-    HAS_ENTITY: 'HasEntity'
+    HAS_ENTITY: 'HasEntity',
+    HAS_REFERENCE: 'HasReference'
 };
 
 export const CLASSES = {

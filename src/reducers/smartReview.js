@@ -1,7 +1,10 @@
 import * as type from 'actions/types';
+import { match } from 'path-to-regexp';
 import dotProp from 'dot-prop-immutable';
+import ROUTES from 'constants/routes';
 
 const initialState = {
+    articleId: null,
     paper: {},
     authorResources: [],
     contributionId: 0,
@@ -13,6 +16,8 @@ const initialState = {
     isEditing: false,
     isPublished: false,
     isOpenHistoryModal: false,
+    references: [],
+    usedReferences: {},
     statements: []
 };
 
@@ -20,6 +25,7 @@ const smartReview = (state = initialState, action) => {
     switch (action.type) {
         case type.ARTICLE_WRITER_LOAD: {
             const {
+                articleId,
                 paper,
                 authorResources,
                 sections,
@@ -28,11 +34,13 @@ const smartReview = (state = initialState, action) => {
                 versions,
                 statements,
                 researchField,
-                contributors
+                contributors,
+                references
             } = action.payload;
 
             return {
                 ...state,
+                articleId,
                 contributionId,
                 paper,
                 authorResources,
@@ -41,7 +49,8 @@ const smartReview = (state = initialState, action) => {
                 versions,
                 statements,
                 researchField,
-                contributors
+                contributors,
+                references
             };
         }
 
@@ -209,7 +218,53 @@ const smartReview = (state = initialState, action) => {
             });
         }
 
+        case type.ARTICLE_WRITER_REFERENCE_ADD: {
+            const { reference } = action.payload;
+            return {
+                ...state,
+                references: [...state.references, reference]
+            };
+        }
+
+        case type.ARTICLE_WRITER_REFERENCE_REMOVE: {
+            const { statementId } = action.payload;
+            return {
+                ...state,
+                references: state.references.filter(reference => reference.statementId !== statementId)
+            };
+        }
+
+        case type.ARTICLE_WRITER_REFERENCE_UPDATE: {
+            const { literalId, bibtex, parsedReference } = action.payload;
+            return {
+                ...state,
+                references: state.references.map(reference =>
+                    reference.literal.id === literalId
+                        ? { ...reference, literal: { ...reference.literal, label: bibtex }, parsedReference }
+                        : reference
+                )
+            };
+        }
+
+        case type.ARTICLE_WRITER_SET_USED_REFERENCES: {
+            const { references, sectionId } = action.payload;
+
+            return {
+                ...state,
+                usedReferences: {
+                    ...state.usedReferences,
+                    [sectionId]: references
+                }
+            };
+        }
+
         case '@@router/LOCATION_CHANGE': {
+            const matchSmartReview = match(ROUTES.SMART_REVIEW);
+            const parsed_payload = matchSmartReview(action.payload.location.pathname);
+            if (parsed_payload && parsed_payload.params?.id === state.articleId) {
+                // when it's the same review  (just the hash changed) do not init
+                return state;
+            }
             return {
                 ...initialState
             };

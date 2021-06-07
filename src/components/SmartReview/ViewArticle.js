@@ -6,6 +6,7 @@ import Acknowledgements from 'components/SmartReview/Acknowledgements';
 import AuthorsList from 'components/SmartReview/AuthorsList';
 import MarkdownRenderer from 'components/SmartReview/MarkdownRenderer';
 import SectionDataTable from 'components/SmartReview/DataTable/SectionOntology';
+import ListReferences from 'components/SmartReview/References/ListReferences';
 import SectionVisualization from 'components/SmartReview/SectionVisualization';
 import { SectionStyled } from 'components/SmartReview/styled';
 import ViewArticleStatementBrowser from 'components/SmartReview/ViewArticleStatementBrowser';
@@ -120,7 +121,11 @@ const ViewArticle = () => {
                                                             </>
                                                         )}
                                                     {section.type.id === CLASSES.COMPARISON_SECTION && (
-                                                        <SectionComparison key={section.id} id={section.contentLink.objectId} />
+                                                        <SectionComparison
+                                                            key={section.id}
+                                                            id={section.contentLink.objectId}
+                                                            sectionId={section.id}
+                                                        />
                                                     )}
                                                     {section.type.id === CLASSES.VISUALIZATION_SECTION && (
                                                         <SectionVisualization key={section.id} id={section.contentLink.objectId} />
@@ -140,7 +145,7 @@ const ViewArticle = () => {
                                             >
                                                 {section.title.label}
                                             </h2>
-                                            <MarkdownRenderer text={section.markdown.label} />
+                                            <MarkdownRenderer text={section.markdown.label} id={section.markdown.id} />
                                         </section>
                                     );
                                 }
@@ -152,6 +157,13 @@ const ViewArticle = () => {
                                     </Tippy>
                                 </h2>
                                 <Acknowledgements />
+                            </section>
+
+                            <section typeof="doco:Section deo:Reference">
+                                <h2 className="h4 border-bottom mt-4" typeof="doco:SectionTitle" property="c4o:hasContent">
+                                    References
+                                </h2>
+                                <ListReferences />
                             </section>
                         </SectionStyled>
                     </article>

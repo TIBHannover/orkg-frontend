@@ -59,8 +59,8 @@ function useStatementItem(props) {
                 const predicate = property;
                 const existingPredicateId = predicate ? predicate.existingPredicateId : false;
                 if (existingPredicateId) {
-                    const values = predicate.valueIds;
-                    for (const value of values) {
+                    const oldValues = predicate.valueIds;
+                    for (const value of oldValues) {
                         await updateStatement(values.byId[value].statementId, { predicate_id: newProperty.id });
                     }
                     dispatch(changeProperty({ propertyId: props.id, newProperty: newProperty }));
@@ -71,7 +71,7 @@ function useStatementItem(props) {
             }
             dispatch(doneSavingProperty({ id: props.id }));
         },
-        [dispatch, property, props.id, props.syncBackend]
+        [dispatch, property, props.id, props.syncBackend, values.byId]
     );
 
     const handleChange = useCallback(
