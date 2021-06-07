@@ -1,5 +1,6 @@
-import ComparisonLoadingComponent from 'components/Comparison/ComparisonLoadingComponent';
+import { setComparisonData } from 'actions/smartReview';
 import Comparison from 'components/Comparison/Comparison';
+import ComparisonLoadingComponent from 'components/Comparison/ComparisonLoadingComponent';
 import useComparison from 'components/Comparison/hooks/useComparison';
 import PropTypes from 'prop-types';
 import React, { useEffect } from 'react';
@@ -11,9 +12,22 @@ const SectionComparison = ({ id, sectionId }) => {
     const references = useSelector(state => state.smartReview.references);
     const usedReferences = useSelector(state => state.smartReview.usedReferences);
     const dispatch = useDispatch();
-    const { contributions, properties, data, isLoadingComparisonResult, filterControlData, updateRulesOfProperty, comparisonType } = useComparison({
+    const comparisonData = useComparison({
         id
     });
+    const { contributions, properties, data, isLoadingComparisonResult, filterControlData, updateRulesOfProperty, comparisonType } = comparisonData;
+
+    useEffect(() => {
+        if (Object.keys(comparisonData.data).length === 0) {
+            return;
+        }
+        dispatch(
+            setComparisonData({
+                id,
+                data: comparisonData
+            })
+        );
+    }, [comparisonData, dispatch, id]);
 
     useEffect(() => {
         const paperIds = contributions.map(contribution => contribution.paperId);

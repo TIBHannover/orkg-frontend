@@ -5,6 +5,7 @@ import { toggleHistoryModal as toggleHistoryModalAction } from 'actions/smartRev
 import Acknowledgements from 'components/SmartReview/Acknowledgements';
 import AuthorsList from 'components/SmartReview/AuthorsList';
 import MarkdownRenderer from 'components/SmartReview/MarkdownRenderer';
+import SectionDataTable from 'components/SmartReview/DataTable/SectionOntology';
 import ListReferences from 'components/SmartReview/References/ListReferences';
 import SectionVisualization from 'components/SmartReview/SectionVisualization';
 import { SectionStyled } from 'components/SmartReview/styled';
@@ -52,7 +53,7 @@ const ViewArticle = () => {
                 )}
                 <main>
                     <article>
-                        <SectionStyled className="box rounded pr-4">
+                        <SectionStyled className="box rounded">
                             <header>
                                 <h1 className="mb-2 mt-4" style={{ whiteSpace: 'pre-line' }} typeof="doco:Title" property="c4o:hasContent">
                                     {paper.title}
@@ -74,7 +75,8 @@ const ViewArticle = () => {
                                         CLASSES.RESOURCE_SECTION,
                                         CLASSES.PROPERTY_SECTION,
                                         CLASSES.COMPARISON_SECTION,
-                                        CLASSES.VISUALIZATION_SECTION
+                                        CLASSES.VISUALIZATION_SECTION,
+                                        CLASSES.ONTOLOGY_SECTION
                                     ].includes(section.type.id)
                                 ) {
                                     return (
@@ -82,6 +84,7 @@ const ViewArticle = () => {
                                             <h2 className="h4 border-bottom mt-5" typeof="doco:SectionTitle" property="c4o:hasContent">
                                                 {section.title.label}
                                             </h2>
+                                            {section.type.id === CLASSES.ONTOLOGY_SECTION && <SectionDataTable key={section.id} section={section} />}
                                             {section?.contentLink?.objectId && (
                                                 <>
                                                     {section.type.id !== CLASSES.COMPARISON_SECTION &&

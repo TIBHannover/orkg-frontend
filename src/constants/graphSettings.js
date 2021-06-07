@@ -46,6 +46,8 @@ export const PREDICATES = {
     HAS_LINK: 'HasLink',
     HAS_VISUALIZATION: 'hasVisualization',
     HAS_PAPER: 'HasPaper',
+    SHOW_PROPERTY: 'ShowProperty',
+    HAS_ENTITY: 'HasEntity',
     HAS_REFERENCE: 'HasReference'
 };
 
@@ -77,6 +79,7 @@ export const CLASSES = {
     PROPERTY_SECTION: 'PropertySection',
     COMPARISON_SECTION: 'ComparisonSection',
     VISUALIZATION_SECTION: 'VisualizationSection',
+    ONTOLOGY_SECTION: 'OntologySection',
     VISUALIZATION: 'Visualization'
 };
 

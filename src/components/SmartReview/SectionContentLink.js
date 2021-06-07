@@ -1,4 +1,4 @@
-import { createReference, updateSectionLink } from 'actions/smartReview';
+import { createReference, createSection, updateSectionLink } from 'actions/smartReview';
 import Cite from 'citation-js';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
 import SectionComparison from 'components/SmartReview/SectionComparison';
@@ -10,11 +10,14 @@ import uniq from 'lodash.uniq';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
+import { Alert, Button } from 'reactstrap';
 import { createResource } from 'services/backend/resources';
 import { getStatementsByObjectAndPredicate, getStatementsBySubjectAndPredicate, getStatementsBySubjects } from 'services/backend/statements';
 
 const SectionContentLink = props => {
     const dispatch = useDispatch();
+    const [shouldShowOntologyAlert, setShouldShowOntologyAlert] = useState(false);
     const references = useSelector(state => state.smartReview.references);
     const contributionId = useSelector(state => state.smartReview.contributionId);
 
@@ -54,7 +57,7 @@ const SectionContentLink = props => {
 
         setSelectedResource({ value: id, label });
         setStatementBrowserKey(current => ++current);
-
+        setShouldShowOntologyAlert(true);
         dispatch(
             updateSectionLink({
                 id: props.section.id,
@@ -108,6 +111,20 @@ const SectionContentLink = props => {
         }
     };
 
+    const handleAddOntologySection = () => {
+        setShouldShowOntologyAlert(false);
+        dispatch(
+            createSection({
+                afterIndex: props.index,
+                contributionId,
+                sectionType: 'ontology'
+            })
+        );
+        toast.success('Ontology section has been added successfully below the comparison');
+        // TODO: somehow populate the just added section with properties from the comparison...
+        // due to the data flow structure, this is not so straightforward
+    };
+
     const entityType = props.type === 'property' ? ENTITIES.PREDICATE : ENTITIES.RESOURCE;
     const hasValue = selectedResource && selectedResource?.value;
     let optionsClass = undefined;
@@ -147,7 +164,17 @@ const SectionContentLink = props => {
                     rootNodeType={props.type === 'resource' ? 'resource' : 'predicate'}
                 />
             )}
-            {props.type === 'comparison' && hasValue && <SectionComparison id={selectedResource.value} sectionId={props.section.id} />}
+            {props.type === 'comparison' && hasValue && (
+                <>
+                    <Alert color="info" className="my-3" isOpen={shouldShowOntologyAlert} toggle={() => setShouldShowOntologyAlert(false)}>
+                        Do you want to add an ontology section for this comparison?{' '}
+                        <Button color="link" className="p-0" onClick={handleAddOntologySection}>
+                            Add section
+                        </Button>
+                    </Alert>
+                    <SectionComparison id={selectedResource.value} sectionId={props.section.id} />
+                </>
+            )}
             {props.type === 'visualization' && hasValue && <SectionVisualization id={selectedResource.value} />}
         </div>
     );
@@ -155,7 +182,8 @@ const SectionContentLink = props => {
 
 SectionContentLink.propTypes = {
     section: PropTypes.object.isRequired,
-    type: PropTypes.string.isRequired
+    type: PropTypes.string.isRequired,
+    index: PropTypes.number.isRequired
 };
 
 export default SectionContentLink;

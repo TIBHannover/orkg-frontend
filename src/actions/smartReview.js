@@ -136,7 +136,13 @@ export const createSection = ({ contributionId, afterIndex, sectionType }) => as
         await createLiteralStatement(sectionResource.id, PREDICATES.HAS_CONTENT, markdownLiteral.id);
         sectionResourceId = sectionResource.id;
         markdownLiteralId = markdownLiteral.id;
-    } else if (sectionType === 'resource' || sectionType === 'property' || sectionType === 'comparison' || sectionType === 'visualization') {
+    } else if (
+        sectionType === 'resource' ||
+        sectionType === 'property' ||
+        sectionType === 'comparison' ||
+        sectionType === 'visualization' ||
+        sectionType === 'ontology'
+    ) {
         // link section
         if (sectionType === 'resource') {
             typeId = CLASSES.RESOURCE_SECTION;
@@ -146,6 +152,8 @@ export const createSection = ({ contributionId, afterIndex, sectionType }) => as
             typeId = CLASSES.COMPARISON_SECTION;
         } else if (sectionType === 'visualization') {
             typeId = CLASSES.VISUALIZATION_SECTION;
+        } else if (sectionType === 'ontology') {
+            typeId = CLASSES.ONTOLOGY_SECTION;
         }
 
         const sectionResource = await createResource('', [typeId]);
@@ -241,6 +249,69 @@ export const setResearchField = ({ statementId, paperId, researchField }) => asy
         type: type.ARTICLE_WRITER_SET_RESEARCH_FIELD,
         payload: {
             researchField
+        }
+    });
+};
+
+export const setComparisonData = ({ id, data }) => ({
+    type: type.ARTICLE_WRITER_SET_COMPARISON_DATA,
+    payload: {
+        id,
+        data
+    }
+});
+
+export const saveEntities = ({ sectionId, entities }) => async dispatch => {
+    // delete existing statements
+    const entityStatements = await getStatementsBySubject({ id: sectionId });
+    const entityStatementIds = entityStatements.filter(statement => statement.predicate.id === PREDICATES.HAS_ENTITY).map(statement => statement.id);
+    await deleteStatementsByIds(entityStatementIds);
+
+    // create new statements, import to use await to ensure statements are created in the correct order
+    entities.map(async entity => await createResourceStatement(sectionId, PREDICATES.HAS_ENTITY, entity.id));
+
+    dispatch({
+        type: type.ARTICLE_WRITER_UPDATE_DATA_TABLE,
+        payload: {
+            sectionId,
+            dataTable: {
+                entities
+            }
+        }
+    });
+};
+
+export const saveShowProperties = ({ sectionId, properties }) => async dispatch => {
+    // delete existing statements
+    const propertyStatements = await getStatementsBySubject({ id: sectionId });
+    const propertyStatementIds = propertyStatements
+        .filter(statement => statement.predicate.id === PREDICATES.SHOW_PROPERTY)
+        .map(statement => statement.id);
+    await deleteStatementsByIds(propertyStatementIds);
+
+    // create new statements
+    properties.map(async property => await createResourceStatement(sectionId, PREDICATES.SHOW_PROPERTY, property.id));
+
+    dispatch({
+        type: type.ARTICLE_WRITER_UPDATE_DATA_TABLE,
+        payload: {
+            sectionId,
+            dataTable: {
+                properties
+            }
+        }
+    });
+};
+
+export const reloadDataTableStatements = ({ id, sectionId }) => async dispatch => {
+    const statements = await getStatementsBySubject({ id });
+
+    dispatch({
+        type: type.ARTICLE_WRITER_SET_DATA_TABLE_STATEMENTS,
+        payload: {
+            id,
+            sectionId,
+            statements
         }
     });
 };
