@@ -117,7 +117,7 @@ const useLoad = () => {
                     objectId: link?.id,
                     label: link?.label
                 };
-            } else if (type === CLASSES.DATA_TABLE_SECTION) {
+            } else if (type === CLASSES.ONTOLOGY_SECTION) {
                 // sortBy probably not needed once https://gitlab.com/TIBHannover/orkg/orkg-backend/-/merge_requests/199/diffs is merged
                 const properties =
                     sortBy(section.statements.filter(statement => statement.predicate.id === PREDICATES.SHOW_PROPERTY), 'id').map(
@@ -129,12 +129,10 @@ const useLoad = () => {
                         statement => statement.object
                     ) ?? [];
 
-                const entityStatements = entities.flatMap(entity => {
-                    const _entityStatements = paperStatements.filter(
-                        statement => statement.subject.id === entity.id // && properties.includes(statement.predicate.id)
-                    );
-                    return { ...entity, statements: _entityStatements };
-                });
+                const entityStatements = entities.flatMap(entity => ({
+                    ...entity,
+                    statements: paperStatements.filter(statement => statement.subject.id === entity.id)
+                }));
 
                 dataTable = {
                     properties,

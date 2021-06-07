@@ -1,13 +1,13 @@
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import DataTableEntity from 'components/SmartReview/DataTable/DataTableEntity';
+import OntologyItem from 'components/SmartReview/DataTable/OntologyItem';
 import SelectEntitiesModal from 'components/SmartReview/DataTable/SelectEntitiesModal';
 import { capitalize, orderBy } from 'lodash';
 import PropTypes from 'prop-types';
 import React, { useMemo, useState } from 'react';
 import { Button, Table } from 'reactstrap';
 
-const SectionDataTable = ({ section, isEditable = false }) => {
+const SectionOntology = ({ section, isEditable = false }) => {
     const [isOpenEntityModal, setIsOpenEntityModal] = useState(false);
     const [editType, setEditType] = useState();
     const entityStatements = useMemo(() => {
@@ -82,7 +82,7 @@ const SectionDataTable = ({ section, isEditable = false }) => {
                         <td>
                             {!entityStatements[index - 1] ||
                             (entityStatements[index - 1] && entityStatement.subject?.label !== entityStatements[index - 1].subject?.label) ? (
-                                <DataTableEntity
+                                <OntologyItem
                                     id={entityStatement.subject?.id}
                                     label={capitalize(entityStatement.subject?.label)}
                                     type={entityStatement.subject?._class === 'resource' ? 'resource' : 'property'}
@@ -104,7 +104,7 @@ const SectionDataTable = ({ section, isEditable = false }) => {
                         </td>
                         <td>
                             {entityStatement.object?._class === 'resource' ? (
-                                <DataTableEntity
+                                <OntologyItem
                                     id={entityStatement.object?.id}
                                     label={entityStatement.object?.label}
                                     isEditable={
@@ -119,15 +119,22 @@ const SectionDataTable = ({ section, isEditable = false }) => {
                         </td>
                     </tr>
                 ))}
+                {entityStatements.length === 0 && (
+                    <tr>
+                        <td colSpan="3" className="text-center text-muted font-italic">
+                            No entities added
+                        </td>
+                    </tr>
+                )}
             </tbody>
             {isOpenEntityModal && <SelectEntitiesModal type={editType} toggle={() => setIsOpenEntityModal(v => !v)} section={section} />}
         </Table>
     );
 };
 
-SectionDataTable.propTypes = {
+SectionOntology.propTypes = {
     section: PropTypes.object.isRequired,
     isEditable: PropTypes.bool
 };
 
-export default SectionDataTable;
+export default SectionOntology;

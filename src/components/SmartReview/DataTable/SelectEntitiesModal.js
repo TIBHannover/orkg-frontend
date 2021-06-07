@@ -1,6 +1,5 @@
-import { faMinusCircle, faPlusCircle, faQuestionCircle, faSort } from '@fortawesome/free-solid-svg-icons';
+import { faMinusCircle, faPlusCircle, faSort } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import Tippy from '@tippyjs/react';
 import { saveEntities, saveShowProperties } from 'actions/smartReview';
 import arrayMove from 'array-move';
 import capitalize from 'capitalize';
@@ -34,6 +33,7 @@ const SelectEntitiesModal = ({ toggle, section, type }) => {
     const comparisons = useSelector(state => state.smartReview.comparisons);
     const [selectedEntities, setSelectedEntities] = useState([]);
     const [suggestionEntities, setSuggestionEntities] = useState([]);
+    const [suggestionProperties, setSuggestionProperties] = useState([]);
     const [addEntityType, setAddEntityType] = useState(null);
 
     const dispatch = useDispatch();
@@ -41,25 +41,33 @@ const SelectEntitiesModal = ({ toggle, section, type }) => {
     useEffect(() => {
         const populateLists = async () => {
             if (type === 'entities') {
-                // get all the properties used in the comparison (not the most elegant code)
+                // get all the properties used in the comparison (not the most elegant code..)
                 setSuggestionEntities(
-                    uniqBy(
-                        flattenDeep(
-                            Object.values(comparisons).map(comparison =>
-                                Object.keys(comparison.data).map(propertyLabel =>
-                                    comparison.data[propertyLabel].map(row =>
-                                        row.map(value => ({ label: propertyLabel, id: value.path[value.path.length - 1], type: 'property' }))
+                    Object.values(comparisons).map(comparison => ({
+                        title: comparison.metaData?.title ?? 'Nameless comparison',
+                        properties: uniqBy(
+                            flattenDeep(
+                                Object.keys(comparison.data)
+                                    .filter(property => comparison.properties.find(({ id }) => property === id).active)
+                                    .map(property =>
+                                        comparison.data[property].map(row =>
+                                            row
+                                                .map(value => ({ label: property, id: value.path?.[value.path?.length - 1], type: 'property' }))
+                                                .filter(_property => _property.id)
+                                        )
                                     )
-                                )
-                            )
-                        ),
-                        'id'
-                    )
+                            ),
+                            'id'
+                        )
+                    }))
                 );
+
                 setSelectedEntities(section.dataTable.entities);
+                setSuggestionProperties([]);
             } else if (type === 'properties') {
-                setSuggestionEntities([await getPredicate(PREDICATES.DESCRIPTION), await getPredicate(PREDICATES.SAME_AS)]);
+                setSuggestionEntities([]);
                 setSelectedEntities(section.dataTable.properties);
+                setSuggestionProperties([await getPredicate(PREDICATES.DESCRIPTION), await getPredicate(PREDICATES.SAME_AS)]);
             }
         };
         populateLists();
@@ -86,11 +94,11 @@ const SelectEntitiesModal = ({ toggle, section, type }) => {
     const SortableList = SortableContainer(({ items }) => {
         return (
             <ListGroup>
-                <ListGroupItemStyled className="font-weight-bold pl-2 py-2">Selected entities</ListGroupItemStyled>
+                <ListGroupItemStyled className="font-weight-bold pl-2 py-2 bg-light">Selected {type}</ListGroupItemStyled>
                 {items.map((value, index) => (
                     <SortableItem key={`item-${index}`} index={index} value={value} />
                 ))}
-                <ListGroupItemStyled className="py-2">
+                <ListGroupItemStyled className="py-2 d-flex justify-content-end">
                     {addEntityType ? (
                         <Autocomplete
                             entityType={addEntityType}
@@ -156,25 +164,45 @@ const SelectEntitiesModal = ({ toggle, section, type }) => {
             <ModalHeader toggle={toggle}>Select {type}</ModalHeader>
             <ModalBody>
                 <SortableList items={selectedEntities} onSortEnd={handleSort} lockAxis="y" helperClass="sortableHelper" useDragHandle />
-                <ListGroup className="mt-3">
-                    <ListGroupItemStyled className="font-weight-bold pl-2 py-2">
-                        <Tippy content="Suggestions based on comparisons used in this article">
-                            <span>
-                                Suggestions <Icon icon={faQuestionCircle} />
-                            </span>
-                        </Tippy>
-                    </ListGroupItemStyled>
-                    {suggestionEntities
-                        .filter(entity => selectedEntities.filter(item => item.id === entity.id).length === 0)
-                        .map(suggestion => (
-                            <ListGroupItem key={suggestion.id} className="py-2">
-                                <Button color="link" className="p-0 mr-2" onClick={() => handleSelectEntity({ id: suggestion.id })}>
-                                    <Icon icon={faPlusCircle} />
-                                </Button>
-                                {capitalize(suggestion.label)}
-                            </ListGroupItem>
-                        ))}
-                </ListGroup>
+                <h2 className="h5 mt-3">Suggestions</h2>
+
+                {suggestionEntities.map((comparison, index) => {
+                    const properties =
+                        comparison?.properties?.filter(entity => selectedEntities.filter(item => item.id === entity.id).length === 0) ?? [];
+                    return (
+                        <ListGroup className="mt-3" key={index}>
+                            <ListGroupItemStyled className="bg-light pl-2 py-2">
+                                <span className="font-weight-bold mr-2">Comparison</span> {comparison.title}
+                            </ListGroupItemStyled>
+                            {properties.map(suggestion => (
+                                <ListGroupItem key={suggestion.id} className="py-2">
+                                    <Button color="link" className="p-0 mr-2" onClick={() => handleSelectEntity({ id: suggestion.id })}>
+                                        <Icon icon={faPlusCircle} />
+                                    </Button>
+                                    {capitalize(suggestion.label)}
+                                </ListGroupItem>
+                            ))}
+                            {properties.length === 0 && (
+                                <ListGroupItem className="py-2 text-muted text-center">No suggestions available</ListGroupItem>
+                            )}
+                        </ListGroup>
+                    );
+                })}
+
+                {suggestionProperties.length > 0 && (
+                    <ListGroup className="mt-3">
+                        {suggestionProperties
+                            .filter(property => selectedEntities.filter(item => item.id === property.id).length === 0)
+                            .map(suggestion => (
+                                <ListGroupItem key={suggestion.id} className="py-2">
+                                    <Button color="link" className="p-0 mr-2" onClick={() => handleSelectEntity({ id: suggestion.id })}>
+                                        <Icon icon={faPlusCircle} />
+                                    </Button>
+                                    {capitalize(suggestion.label)}
+                                </ListGroupItem>
+                            ))}
+                    </ListGroup>
+                )}
             </ModalBody>
             <ModalFooter>
                 <Button color="primary" onClick={handleSave}>

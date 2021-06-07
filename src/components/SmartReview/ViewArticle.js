@@ -5,7 +5,7 @@ import { toggleHistoryModal as toggleHistoryModalAction } from 'actions/smartRev
 import Acknowledgements from 'components/SmartReview/Acknowledgements';
 import AuthorsList from 'components/SmartReview/AuthorsList';
 import MarkdownRenderer from 'components/SmartReview/MarkdownRenderer';
-import SectionDataTable from 'components/SmartReview/DataTable/SectionDataTable';
+import SectionDataTable from 'components/SmartReview/DataTable/SectionOntology';
 import SectionVisualization from 'components/SmartReview/SectionVisualization';
 import { SectionStyled } from 'components/SmartReview/styled';
 import ViewArticleStatementBrowser from 'components/SmartReview/ViewArticleStatementBrowser';
@@ -75,7 +75,7 @@ const ViewArticle = () => {
                                         CLASSES.PROPERTY_SECTION,
                                         CLASSES.COMPARISON_SECTION,
                                         CLASSES.VISUALIZATION_SECTION,
-                                        CLASSES.DATA_TABLE_SECTION
+                                        CLASSES.ONTOLOGY_SECTION
                                     ].includes(section.type.id)
                                 ) {
                                     return (
@@ -83,9 +83,7 @@ const ViewArticle = () => {
                                             <h2 className="h4 border-bottom mt-5" typeof="doco:SectionTitle" property="c4o:hasContent">
                                                 {section.title.label}
                                             </h2>
-                                            {section.type.id === CLASSES.DATA_TABLE_SECTION && (
-                                                <SectionDataTable key={section.id} section={section} />
-                                            )}
+                                            {section.type.id === CLASSES.ONTOLOGY_SECTION && <SectionDataTable key={section.id} section={section} />}
                                             {section?.contentLink?.objectId && (
                                                 <>
                                                     {section.type.id !== CLASSES.COMPARISON_SECTION &&

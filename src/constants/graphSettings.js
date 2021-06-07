@@ -78,7 +78,7 @@ export const CLASSES = {
     PROPERTY_SECTION: 'PropertySection',
     COMPARISON_SECTION: 'ComparisonSection',
     VISUALIZATION_SECTION: 'VisualizationSection',
-    DATA_TABLE_SECTION: 'DataTableSection',
+    ONTOLOGY_SECTION: 'OntologySection',
     VISUALIZATION: 'Visualization'
 };
 
