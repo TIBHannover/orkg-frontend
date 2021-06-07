@@ -86,7 +86,9 @@ const SectionDataTable = ({ section, isEditable = false }) => {
                                     id={entityStatement.subject?.id}
                                     label={capitalize(entityStatement.subject?.label)}
                                     type={entityStatement.subject?._class === 'resource' ? 'resource' : 'property'}
-                                    isEditable={isEditable}
+                                    isEditable={
+                                        entityStatement.object?._class === 'resource' && entityStatement.subject?.shared > 1 ? false : isEditable
+                                    }
                                     sectionId={section.id}
                                 />
                             ) : (
@@ -105,7 +107,9 @@ const SectionDataTable = ({ section, isEditable = false }) => {
                                 <DataTableEntity
                                     id={entityStatement.object?.id}
                                     label={entityStatement.object?.label}
-                                    isEditable={isEditable}
+                                    isEditable={
+                                        entityStatement.object?._class === 'resource' && entityStatement.subject?.shared > 1 ? false : isEditable
+                                    }
                                     type="resource"
                                     sectionId={section.id}
                                 />
