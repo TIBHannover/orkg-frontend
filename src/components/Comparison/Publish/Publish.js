@@ -161,12 +161,18 @@ function Publish(props) {
         try {
             if (!props.comparisonId) {
                 if (title && title.trim() !== '' && description && description.trim() !== '') {
-                    const comparison = await getComparison({
-                        contributionIds: props.contributionsList,
-                        type: props.comparisonType,
-                        save_response: true
-                    });
+                    let response_hash;
 
+                    if (!props.responseHash) {
+                        const comparison = await getComparison({
+                            contributionIds: props.contributionsList,
+                            type: props.comparisonType,
+                            save_response: true
+                        });
+                        response_hash = comparison.response_hash;
+                    } else {
+                        response_hash = props.responseHash;
+                    }
                     const comparison_obj = {
                         predicates: [],
                         resource: {
@@ -190,22 +196,22 @@ function Publish(props) {
                                     subject.id && {
                                         [PREDICATES.HAS_SUBJECT]: [
                                             {
-                                                id: subject.id
+                                                '@id': subject.id
                                             }
                                         ]
                                     }),
                                 [PREDICATES.COMPARE_CONTRIBUTION]: props.contributionsList.map(contributionID => ({
-                                    id: contributionID
+                                    '@id': contributionID
                                 })),
                                 [PREDICATES.HAS_PROPERTY]: props.predicatesList.map(predicateID => {
                                     const property =
                                         props.comparisonType === 'merge' ? predicateID : getPropertyObjectFromData(props.data, { id: predicateID });
-                                    return { id: property.id };
+                                    return { '@id': property.id };
                                 }),
                                 ...(props.metaData.hasPreviousVersion && {
                                     [PREDICATES.HAS_PREVIOUS_VERSION]: [
                                         {
-                                            id: props.metaData.hasPreviousVersion.id
+                                            '@id': props.metaData.hasPreviousVersion.id
                                         }
                                     ]
                                 })
@@ -216,7 +222,7 @@ function Publish(props) {
                     await saveCreators(comparisonCreators, createdComparison.id);
                     await createResourceData({
                         resourceId: createdComparison.id,
-                        data: { url: `${props.comparisonURLConfig}&response_hash=${comparison.response_hash}` }
+                        data: { url: `${props.comparisonURLConfig}&response_hash=${response_hash}` }
                     });
                     toast.success('Comparison saved successfully');
                     // Assign a DOI
@@ -580,6 +586,7 @@ Publish.propTypes = {
     contributionsList: PropTypes.array.isRequired,
     predicatesList: PropTypes.array.isRequired,
     comparisonType: PropTypes.string,
+    responseHash: PropTypes.string,
     comparisonURLConfig: PropTypes.string.isRequired,
     setAuthors: PropTypes.func.isRequired,
     loadCreatedBy: PropTypes.func.isRequired,
