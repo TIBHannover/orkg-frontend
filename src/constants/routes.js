@@ -27,6 +27,7 @@ const routes = {
     CONTRIBUTION: '/contribution/:id',
     COMPARISON_SHORTLINK: '/c/:shortCode',
     COMPARISON: '/comparison/:comparisonId?',
+    COMPARISON_DIFF: '/comparison/diff/:oldId-:newId',
     PAPERS: '/papers',
     COMPARISONS: '/comparisons',
     VISUALIZATIONS: '/visualizations',

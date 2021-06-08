@@ -25,17 +25,20 @@ import Tooltip from 'components/Utils/Tooltip';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
 import AuthorsInput from 'components/Utils/AuthorsInput';
 import ShareCreatedContent from 'components/ShareLinkMarker/ShareCreatedContent';
+import NewerVersionWarning from 'components/Comparison/HistoryModal/NewerVersionWarning';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faOrcid } from '@fortawesome/free-brands-svg-icons';
 import { faClipboard } from '@fortawesome/free-regular-svg-icons';
 import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { reverse } from 'named-urls';
+import { useHistory } from 'react-router-dom';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { Link } from 'react-router-dom';
 import { getPropertyObjectFromData } from 'utils';
 import styled from 'styled-components';
+import UserAvatar from 'components/UserAvatar/UserAvatar';
 import { slugify } from 'utils';
-import { PREDICATES, CLASSES, ENTITIES } from 'constants/graphSettings';
+import { PREDICATES, CLASSES, ENTITIES, MISC } from 'constants/graphSettings';
 import env from '@beam-australia/react-env';
 
 const StyledCustomInput = styled(CustomInput)`
@@ -76,7 +79,7 @@ const AuthorTag = styled.div`
 
 function Publish(props) {
     const [isLoading, setIsLoading] = useState(false);
-
+    const history = useHistory();
     const [assignDOI, setAssignDOI] = useState(false);
     const [title, setTitle] = useState(props.metaData && props.metaData.title ? props.metaData.title : '');
     const [description, setDescription] = useState(props.metaData && props.metaData.description ? props.metaData.description : '');
@@ -230,24 +233,7 @@ function Publish(props) {
                         publishDOI(createdComparison.id);
                     }
                     setIsLoading(false);
-                    props.setMetaData(prevMetaData => ({
-                        ...prevMetaData,
-                        id: createdComparison.id,
-                        title,
-                        description,
-                        references: references.filter(Boolean), // Remove empty strings from array
-                        subject,
-                        comparisonCreators,
-                        createdAt: createdComparison.created_at,
-                        createdBy: createdComparison.created_by,
-                        resources: [],
-                        figures: [],
-                        hasPreviousVersion: props.metaData.hasPreviousVersion,
-                        hasNextVersion: null
-                    }));
-                    props.setAuthors(comparisonCreators);
-                    props.loadCreatedBy(createdComparison.created_by);
-                    props.loadProvenanceInfos(createdComparison.observatory_id, createdComparison.organization_id);
+                    history.push(reverse(ROUTES.COMPARISON, { comparisonId: createdComparison.id }));
                 } else {
                     throw Error('Please enter a title and a description');
                 }
@@ -309,6 +295,9 @@ function Publish(props) {
         <Modal size="lg" isOpen={props.showDialog} toggle={props.toggle}>
             <ModalHeader toggle={props.toggle}>Publish comparison</ModalHeader>
             <ModalBody>
+                {!props.comparisonId && props.metaData.hasPreviousVersion && props.nextVersions?.length > 0 && (
+                    <NewerVersionWarning versions={props.nextVersions} comparisonId={props.metaData.hasPreviousVersion.id} showViewHistory={false} />
+                )}
                 <Alert color="info">
                     {!props.comparisonId && (
                         <>
@@ -323,6 +312,22 @@ function Publish(props) {
                         <>This comparison is already published, you can find the persistent link and the DOI below.</>
                     )}
                 </Alert>
+                {!props.comparisonId && props.metaData.hasPreviousVersion && (
+                    <Alert color="info">
+                        You are publishing a new version of a published comparison. The comparison you are about to publish will be marked as a new
+                        version of the{' '}
+                        <Link target="_blank" to={reverse(ROUTES.COMPARISON, { comparisonId: props.metaData.hasPreviousVersion.id })}>
+                            original comparison{' '}
+                        </Link>
+                        {props.metaData.hasPreviousVersion.created_by !== MISC.UNKNOWN_ID && (
+                            <>
+                                {' created by '}
+                                <UserAvatar showDisplayName={true} userId={props.metaData.hasPreviousVersion.created_by} />
+                            </>
+                        )}
+                        .
+                    </Alert>
+                )}
                 {props.comparisonId && (
                     <FormGroup>
                         <Label for="comparison_link">Comparison link</Label>
@@ -534,19 +539,6 @@ function Publish(props) {
                                 </div>
                             </FormGroup>
                         )}
-                        {!props.comparisonId && props.metaData.hasPreviousVersion && (
-                            <FormGroup>
-                                <div>
-                                    <hr />
-                                    <>
-                                        This comparison will be marked as new version of the comparison{' '}
-                                        <Link target="_blank" to={reverse(ROUTES.COMPARISON, { comparisonId: props.metaData.hasPreviousVersion.id })}>
-                                            {props.metaData.hasPreviousVersion.id}
-                                        </Link>
-                                    </>
-                                </div>
-                            </FormGroup>
-                        )}
                     </>
                 )}
 
@@ -579,7 +571,7 @@ Publish.propTypes = {
     toggle: PropTypes.func.isRequired,
     comparisonId: PropTypes.string,
     doi: PropTypes.string,
-    authors: PropTypes.array.isRequired,
+    authors: PropTypes.array,
     setMetaData: PropTypes.func.isRequired,
     publicURL: PropTypes.string.isRequired,
     metaData: PropTypes.object.isRequired,
@@ -588,10 +580,10 @@ Publish.propTypes = {
     comparisonType: PropTypes.string,
     responseHash: PropTypes.string,
     comparisonURLConfig: PropTypes.string.isRequired,
-    setAuthors: PropTypes.func.isRequired,
     loadCreatedBy: PropTypes.func.isRequired,
     loadProvenanceInfos: PropTypes.func.isRequired,
-    data: PropTypes.object.isRequired
+    data: PropTypes.object.isRequired,
+    nextVersions: PropTypes.array.isRequired
 };
 
 export default Publish;
