@@ -104,3 +104,11 @@ export const getResourcesByClass = async ({
     );
     return resources;
 };
+
+export const markAsFeatured = id => {
+    return submitPutRequest(`${resourcesUrl}${id}/metadata/featured`, { 'Content-Type': 'application/json' });
+};
+
+export const removeFeaturedFlag = id => {
+    return submitDeleteRequest(`${resourcesUrl}${id}/metadata/featured`, { 'Content-Type': 'application/json' });
+};

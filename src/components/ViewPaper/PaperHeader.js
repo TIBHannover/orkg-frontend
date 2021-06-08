@@ -2,6 +2,7 @@ import { faBars, faCalendar, faCheckCircle, faPen, faTrash, faUser } from '@fort
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { loadPaper } from 'actions/viewPaper';
 import useDeletePapers from 'components/ViewPaper/hooks/useDeletePapers';
+import FeaturedMark from 'components/FeaturedMark/FeaturedMark';
 import { CLASSES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import moment from 'moment';
@@ -44,8 +45,9 @@ const PaperHeader = props => {
 
     return (
         <>
-            <div className="d-flex align-items-start">
-                <h2 className="h4 mt-4 mb-3 flex-grow-1">{viewPaper.paperResource.label ? viewPaper.paperResource.label : <em>No title</em>}</h2>
+            <div className="d-flex align-items-start mt-4 mb-3 ">
+                <h2 className="h4 flex-grow-1">{viewPaper.paperResource.label ? viewPaper.paperResource.label : <em>No title</em>}</h2>
+                <FeaturedMark size="lg" resourceId={viewPaper.paperResource.id} />
             </div>
 
             <div className="clearfix" />
