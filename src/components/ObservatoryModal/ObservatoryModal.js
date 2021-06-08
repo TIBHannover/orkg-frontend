@@ -4,6 +4,7 @@ import AutoCompleteObservatory from 'components/AutocompleteObservatory/Autocomp
 import { addResourceToObservatory } from 'services/backend/resources';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
+import { MISC } from 'constants/graphSettings';
 
 const ObservatoryModal = props => {
     const [observatory, setObservatory] = useState(props.observatory);
@@ -26,19 +27,15 @@ const ObservatoryModal = props => {
     };
 
     const handleSubmit = async () => {
-        if (observatory && observatory.id && organization && organization.id) {
-            await addResourceToObservatory({
-                observatory_id: observatory.id,
-                organization_id: organization.id,
-                id: props.resourceId
-            }).then(l => {
-                toast.success(`Observatory added to paper successfully`);
-                props.callBack && props.callBack(observatory.id, organization.id);
-                props.toggle();
-            });
-        } else {
-            toast.error(`Please select an observatory`);
-        }
+        await addResourceToObservatory({
+            observatory_id: observatory?.id ?? MISC.UNKNOWN_ID,
+            organization_id: organization?.id ?? MISC.UNKNOWN_ID,
+            id: props.resourceId
+        }).then(() => {
+            toast.success(`Observatory added to paper successfully`);
+            props.callBack && props.callBack(observatory?.id ?? MISC.UNKNOWN_ID, organization?.id ?? MISC.UNKNOWN_ID);
+            props.toggle();
+        });
     };
 
     return (
