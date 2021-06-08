@@ -161,12 +161,18 @@ function Publish(props) {
         try {
             if (!props.comparisonId) {
                 if (title && title.trim() !== '' && description && description.trim() !== '') {
-                    const comparison = await getComparison({
-                        contributionIds: props.contributionsList,
-                        type: props.comparisonType,
-                        save_response: true
-                    });
+                    let response_hash;
 
+                    if (!props.responseHash) {
+                        const comparison = await getComparison({
+                            contributionIds: props.contributionsList,
+                            type: props.comparisonType,
+                            save_response: true
+                        });
+                        response_hash = comparison.response_hash;
+                    } else {
+                        response_hash = props.responseHash;
+                    }
                     const comparison_obj = {
                         predicates: [],
                         resource: {
@@ -216,7 +222,7 @@ function Publish(props) {
                     await saveCreators(comparisonCreators, createdComparison.id);
                     await createResourceData({
                         resourceId: createdComparison.id,
-                        data: { url: `${props.comparisonURLConfig}&response_hash=${comparison.response_hash}` }
+                        data: { url: `${props.comparisonURLConfig}&response_hash=${response_hash}` }
                     });
                     toast.success('Comparison saved successfully');
                     // Assign a DOI
@@ -580,6 +586,7 @@ Publish.propTypes = {
     contributionsList: PropTypes.array.isRequired,
     predicatesList: PropTypes.array.isRequired,
     comparisonType: PropTypes.string,
+    responseHash: PropTypes.string,
     comparisonURLConfig: PropTypes.string.isRequired,
     setAuthors: PropTypes.func.isRequired,
     loadCreatedBy: PropTypes.func.isRequired,
