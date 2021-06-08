@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { getStatementsBySubject, getStatementsBySubjectAndPredicate, getStatementsByObjectAndPredicate } from 'services/backend/statements';
+import { getStatementsBySubject, getStatementsBySubjectAndPredicate } from 'services/backend/statements';
 import { getContributorInformationById } from 'services/backend/contributors';
 import { getObservatoryAndOrganizationInformation } from 'services/backend/observatories';
 import { getResource } from 'services/backend/resources';
@@ -8,17 +8,17 @@ import {
     extendPropertyIds,
     similarPropertiesByLabel,
     filterObjectOfStatementsByPredicateAndClass,
-    filterSubjectOfStatementsByPredicate,
     getArrayParamFromQueryString,
     getParamFromQueryString,
     get_error_message,
     applyRule,
-    getRuleByProperty
+    getRuleByProperty,
+    getComparisonData
 } from 'utils';
 import { useParams, useLocation, useHistory } from 'react-router-dom';
 import { PREDICATES, CLASSES, MISC } from 'constants/graphSettings';
 import { reverse } from 'named-urls';
-import { flattenDepth, flatten, groupBy, intersection, findIndex, cloneDeep, isEmpty, uniq, without } from 'lodash';
+import { flatten, groupBy, intersection, findIndex, cloneDeep, isEmpty, uniq, without } from 'lodash';
 import arrayMove from 'array-move';
 import ROUTES from 'constants/routes.js';
 import queryString from 'query-string';
@@ -44,6 +44,7 @@ function useComparison({ id }) {
      * @property {Array[Object]} resources Comparison related resources
      * @property {Array[Object]} figures Comparison related figures
      * @property {Array[Object]} visualizations Comparison visualizations
+     * @property {Array[Object]} authors Comparison authors
      */
     /**
      * @typedef {Function} MetaDataSetter Set Metadata
@@ -53,26 +54,13 @@ function useComparison({ id }) {
      */
     const [metaData, setMetaData] = useState({});
     const [properties, setProperties] = useState([]);
-    /**
-     * @typedef {Object} Author
-     * @property {String} id Author ID
-     * @property {String} label Author name
-     * @property {String} orcid Author ORCID
-     */
-    /**
-     * @typedef {Function} AuthorSetter Set Authors
-     */
-    /**
-     * @type {[[Author], AuthorSetter]} Loading
-     */
-    const [authors, setAuthors] = useState([]);
+
     const [contributions, setContributions] = useState([]);
     const [data, setData] = useState({});
     const [filterControlData, setFilterControlData] = useState([]);
     const [errors, setErrors] = useState([]);
     const [matrixData, setMatrixData] = useState([]);
 
-    const [hasNextVersions, setHasNextVersions] = useState([]);
     const [createdBy, setCreatedBy] = useState(null);
     const [provenance, setProvenance] = useState(null);
 
@@ -149,50 +137,12 @@ function useComparison({ id }) {
                 .then(([comparisonResource, configurationData]) => {
                     // Get meta data and config of a comparison
                     getStatementsBySubject({ id: cId }).then(statements => {
-                        const description = filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.DESCRIPTION, true);
-                        const doi = filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.HAS_DOI, true);
-                        const references = filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.REFERENCE, false);
-                        const hasPreviousVersion = filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.HAS_PREVIOUS_VERSION, true);
-                        const resources = filterObjectOfStatementsByPredicateAndClass(
-                            statements,
-                            PREDICATES.RELATED_RESOURCES,
-                            false,
-                            CLASSES.RELATED_RESOURCES
-                        );
-                        const figures = filterObjectOfStatementsByPredicateAndClass(
-                            statements,
-                            PREDICATES.RELATED_FIGURE,
-                            false,
-                            CLASSES.RELATED_FIGURE
-                        );
-                        const visualizations = filterObjectOfStatementsByPredicateAndClass(
-                            statements,
-                            PREDICATES.HAS_VISUALIZATION,
-                            false,
-                            CLASSES.VISUALIZATION
-                        );
-                        const subject = filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.HAS_SUBJECT, true);
-
-                        // Load authors
-                        let creators = filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.HAS_AUTHOR, false);
-                        if (creators) {
-                            creators = creators.reverse(); // statements are ordered desc, so first author is last => thus reverse
-                            loadAuthorsORCID(creators);
-                        }
-
+                        const comparisonObject = getComparisonData(comparisonResource, statements);
                         setMetaData({
-                            id: cId,
-                            title: comparisonResource.label,
-                            createdAt: comparisonResource.created_at ?? '',
-                            createdBy: comparisonResource.created_by ?? '',
-                            description: description?.label,
-                            doi: doi?.label,
-                            references: references ? references.map(r => r.label) : [],
-                            hasPreviousVersion: hasPreviousVersion,
-                            resources: resources ? resources : [],
-                            figures: figures ? figures : [],
-                            visualizations: visualizations ? visualizations : [],
-                            subject: subject
+                            ...comparisonObject,
+                            title: comparisonObject.label,
+                            createdAt: comparisonObject.created_at,
+                            createdBy: comparisonObject.created_by
                         });
 
                         const url = configurationData.data.url;
@@ -239,12 +189,6 @@ function useComparison({ id }) {
                         setIsFailedLoadingMetaData(false);
                     });
 
-                    // Get the next versions
-                    getStatementsByObjectAndPredicate({ objectId: cId, predicateId: PREDICATES.HAS_PREVIOUS_VERSION }).then(statements => {
-                        const hasNextVersion = filterSubjectOfStatementsByPredicate(statements, PREDICATES.HAS_PREVIOUS_VERSION, false);
-                        setHasNextVersions(hasNextVersion);
-                    });
-
                     // Get Provenance data
                     loadCreatedBy(comparisonResource.created_by);
                     loadProvenanceInfos(comparisonResource.observatory_id, comparisonResource.organization_id);
@@ -265,28 +209,6 @@ function useComparison({ id }) {
             setIsFailedLoadingMetaData(true);
         }
     }, []);
-
-    /**
-     * Loading comparison Authors ORCIDs
-     * Set the authors of the comparison
-     * @param {Array[Object]} creators Creators
-     */
-    const loadAuthorsORCID = async creators => {
-        return Promise.all(
-            creators.map(author => getStatementsBySubjectAndPredicate({ subjectId: author.id, predicateId: PREDICATES.HAS_ORCID }))
-        ).then(authorsORCID => {
-            const authorsArray = [];
-            for (const author of creators) {
-                const orcid = flattenDepth(authorsORCID, 2).find(a => a !== undefined && a.subject.id === author.id);
-                if (orcid) {
-                    authorsArray.push({ orcid: orcid.object.label, label: author.label, id: author.id });
-                } else {
-                    authorsArray.push({ orcid: '', label: author.label, id: author.id });
-                }
-            }
-            setAuthors(authorsArray);
-        });
-    };
 
     /**
      * Load creator user
@@ -766,7 +688,7 @@ function useComparison({ id }) {
                 setMetaData({
                     ...metaData,
                     doi: '',
-                    hasPreviousVersion: { id: metaData.id, created_at: metaData.createdAt, createdBy: metaData.createdBy },
+                    hasPreviousVersion: { id: metaData.id, created_at: metaData.createdAt, created_by: metaData.created_by },
                     id: null,
                     visualizations: []
                 });
@@ -794,7 +716,6 @@ function useComparison({ id }) {
         data,
         filterControlData,
         matrixData,
-        authors,
         errors,
         transpose,
         comparisonType,
@@ -808,7 +729,6 @@ function useComparison({ id }) {
         isFailedLoadingMetaData,
         isLoadingComparisonResult,
         isFailedLoadingComparisonResult,
-        hasNextVersions,
         createdBy,
         provenance,
         researchField,
@@ -826,7 +746,6 @@ function useComparison({ id }) {
         setResponseHash,
         setUrlNeedsToUpdate,
         setShortLink,
-        setAuthors,
         loadCreatedBy,
         loadProvenanceInfos,
         loadVisualizations,

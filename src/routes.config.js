@@ -6,6 +6,7 @@ import AuthorPage from 'pages/AuthorPage';
 import VenuePage from 'pages/VenuePage';
 import AddResource from 'pages/Resources/AddResource';
 import Comparison from 'pages/Comparisons/Comparison';
+import ComparisonDiff from 'pages/Comparisons/ComparisonDiff';
 import Home from 'pages/Home';
 import License from 'pages/License';
 import DataProtection from 'pages/DataProtection';
@@ -144,6 +145,10 @@ const routes = [
         component: ViewPaper
     },
     {
+        path: ROUTES.COMPARISON_DIFF,
+        component: ComparisonDiff
+    },
+    {
         path: ROUTES.COMPARISON_SHORTLINK,
         exact: true,
         component: RedirectShortLinks
@@ -201,6 +206,7 @@ const routes = [
         exact: true,
         component: Comparisons
     },
+
     {
         path: ROUTES.VISUALIZATIONS,
         exact: true,

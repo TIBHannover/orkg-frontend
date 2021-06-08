@@ -79,7 +79,7 @@ const Results = props => {
                                                 <small>
                                                     <i className="text-muted">
                                                         <Icon size="sm" icon={faCalendar} className="mr-1" />{' '}
-                                                        {moment(item.created_at).format('DD MMMM YYYY')}
+                                                        {moment(item.created_at).format('DD MMMM YYYY - H:mm')}
                                                     </i>
                                                 </small>
                                             </div>

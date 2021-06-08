@@ -71,7 +71,6 @@ const useListPage = ({ label, resourceClass, renderListItem }) => {
                             comparisonStatements.statements
                         );
                     });
-                    console.log('comparisonsData', comparisonsData);
                     addResults({
                         results: comparisonsData,
                         last: result.last,
