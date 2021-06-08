@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faCalendar, faFile, faChartBar, faPaperclip } from '@fortawesome/free-solid-svg-icons';
 import ROUTES from 'constants/routes.js';
+import FeaturedMark from 'components/FeaturedMark/FeaturedMark';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import Versions from './Versions';
@@ -27,6 +28,9 @@ const ComparisonCard = props => {
                     <Link to={reverse(ROUTES.COMPARISON, { comparisonId: props.comparison.id })}>
                         {props.comparison.label ? props.comparison.label : <em>No title</em>}
                     </Link>
+                    <div className="d-inline-block ml-1">
+                        <FeaturedMark size="sm" resourceId={props.comparison.id} />
+                    </div>
                     <br />
                     {props.comparison.created_at && (
                         <div>

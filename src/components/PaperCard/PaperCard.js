@@ -8,6 +8,7 @@ import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 import ROUTES from 'constants/routes.js';
 import AddToComparison from 'components/ViewPaper/AddToComparison';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
+import FeaturedMark from 'components/FeaturedMark/FeaturedMark';
 import RelativeBreadcrumbs from 'components/RelativeBreadcrumbs/RelativeBreadcrumbs';
 import Authors from './Authors';
 import PropTypes from 'prop-types';
@@ -59,6 +60,9 @@ const PaperCard = props => {
                                 {props.paper.title ? props.paper.title : <em>No title</em>}
                             </Link>
                         )}
+                        <div className="d-inline-block ml-1">
+                            <FeaturedMark size="sm" resourceId={props.paper.id} />
+                        </div>
                         <br />
                         <small>
                             <Authors authors={props.paper.authors} />

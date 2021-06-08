@@ -46,8 +46,10 @@ const PaperHeader = props => {
     return (
         <>
             <div className="d-flex align-items-start mt-4 mb-3 ">
-                <h2 className="h4 flex-grow-1">{viewPaper.paperResource.label ? viewPaper.paperResource.label : <em>No title</em>}</h2>
-                <FeaturedMark size="lg" resourceId={viewPaper.paperResource.id} />
+                <h2 className="h4 flex-grow-1">
+                    {viewPaper.paperResource.label ? viewPaper.paperResource.label : <em>No title</em>}{' '}
+                    <FeaturedMark size="md" resourceId={viewPaper.paperResource.id} />
+                </h2>
             </div>
 
             <div className="clearfix" />

@@ -9,6 +9,7 @@ import RelativeBreadcrumbs from 'components/RelativeBreadcrumbs/RelativeBreadcru
 import UserAvatar from 'components/UserAvatar/UserAvatar';
 import Authors from './Authors';
 import PropTypes from 'prop-types';
+import FeaturedMark from 'components/FeaturedMark/FeaturedMark';
 import { CLASSES, PREDICATES } from 'constants/graphSettings';
 import { filterObjectOfStatementsByPredicateAndClass } from 'utils';
 import moment from 'moment';
@@ -74,6 +75,9 @@ const PaperCardDynamic = props => {
                     <Link to={reverse(ROUTES.VIEW_PAPER, { resourceId: props.paper.id })}>
                         {props.paper.title ? props.paper.title : <em>No title</em>}
                     </Link>
+                    <div className="d-inline-block ml-1">
+                        <FeaturedMark size="sm" resourceId={props.paper.id} />
+                    </div>
                     <br />
                     {!isLoading && (
                         <>
