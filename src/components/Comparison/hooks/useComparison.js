@@ -606,7 +606,7 @@ function useComparison({ id }) {
     };
 
     const handleEditContributions = async () => {
-        if (metaData?.id) {
+        if (metaData?.id || responseHash) {
             const isConfirmed = await Confirm({
                 title: 'This is a published comparison',
                 message: `The comparison you are viewing is published, which means it cannot be modified. To make changes, fetch the live comparison data and try this action again`,
@@ -647,7 +647,9 @@ function useComparison({ id }) {
         } else {
             // Update browser title
             document.title = 'Comparison - ORKG';
-            setResponseHash(getParamFromQueryString(location.search, 'response_hash'));
+            setResponseHash(
+                metaData?.hasPreviousVersion?.id && responseHash ? responseHash : getParamFromQueryString(location.search, 'response_hash')
+            );
             setComparisonType(getParamFromQueryString(location.search, 'type') ?? DEFAULT_COMPARISON_METHOD);
             setTranspose(getParamFromQueryString(location.search, 'transpose', true));
             const contributionsIDs = without(uniq(getArrayParamFromQueryString(location.search, 'contributions')), undefined, null, '') ?? [];

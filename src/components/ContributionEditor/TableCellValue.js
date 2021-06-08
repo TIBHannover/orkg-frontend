@@ -1,14 +1,14 @@
 import { deleteStatement, updateLiteral, updateResource } from 'actions/contributionEditor';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
+import { ItemInnerSeparator } from 'components/Comparison/TableCell';
 import TableCellButtons from 'components/ContributionEditor/TableCellButtons';
 import TableCellValueResource from 'components/ContributionEditor/TableCellValueResource';
-import { ItemInnerSeparator } from 'components/Comparison/TableCell';
 import ValuePlugins from 'components/ValuePlugins/ValuePlugins';
-import { CLASSES, PREDICATES, ENTITIES } from 'constants/graphSettings';
+import { CLASSES, ENTITIES, PREDICATES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
 import { memo, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { Input } from 'reactstrap';
+import Textarea from 'react-textarea-autosize';
 import styled from 'styled-components';
 
 const Value = styled.div`
@@ -105,15 +105,15 @@ const TableCellValue = ({ value, index, setDisableCreate, propertyId }) => {
                 />
             )}
             {value._class === 'literal' && (
-                <Input
-                    type="text"
-                    bsSize="sm"
+                <Textarea
                     value={inputValue}
                     autoFocus
                     onChange={e => setInputValue(e.target.value)}
                     onBlur={handleUpdate}
                     onKeyPress={handleKeyPress}
                     placeholder="Enter a literal"
+                    className="form-control text-center"
+                    style={{ margin: '-7px 0' }}
                 />
             )}
         </div>

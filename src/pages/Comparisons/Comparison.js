@@ -568,6 +568,7 @@ function Comparison(props) {
                 contributionsList={contributionsList}
                 predicatesList={predicatesList}
                 comparisonType={comparisonType}
+                responseHash={responseHash ?? ''}
                 comparisonURLConfig={comparisonURLConfig}
                 authors={metaData?.authors}
                 loadCreatedBy={loadCreatedBy}
