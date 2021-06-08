@@ -58,7 +58,7 @@ const ComparisonDiff = () => {
     }, [oldId, newId, comparisonToPlainText, isOldIdHigherThanNewId, history]);
 
     const handleDismiss = () => {
-        history.push(reverse(ROUTES.SMART_REVIEW_DIFF, { oldId, newId }));
+        history.push(reverse(ROUTES.COMPARISON_DIFF, { oldId, newId }));
     };
 
     const containerStyle = fullWidth ? { maxWidth: 'calc(100% - 20px)' } : {};
@@ -68,13 +68,13 @@ const ComparisonDiff = () => {
         <>
             <Container>
                 <div className="d-flex align-items-center">
-                    <h1 className="h4 mt-4 mb-4 flex-grow-1">Compare comparison versions</h1>
+                    <h1 className="h4 mt-4 mb-4 flex-grow-1">Compare versions</h1>
                     <div style={{ marginLeft: 'auto' }} className="flex-shrink-0 mt-4">
                         <ButtonGroup className="float-right mb-4 ml-1">
                             <Button size="sm" color="secondary" onClick={() => setIsOpenHistoryModal(true)}>
                                 <Icon icon={faHistory} className="mr-1" /> View history
                             </Button>
-                            <Button size="sm" color="secondary" onClick={() => setFullWidth(v => !v)}>
+                            <Button size="sm" color="secondary" onClick={() => setFullWidth(v => !v)} style={{ marginLeft: 1 }}>
                                 <Icon icon={faArrowsAltH} className="mr-1" /> Full width
                             </Button>
                         </ButtonGroup>
