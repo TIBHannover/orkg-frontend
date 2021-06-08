@@ -190,22 +190,22 @@ function Publish(props) {
                                     subject.id && {
                                         [PREDICATES.HAS_SUBJECT]: [
                                             {
-                                                id: subject.id
+                                                '@id': subject.id
                                             }
                                         ]
                                     }),
                                 [PREDICATES.COMPARE_CONTRIBUTION]: props.contributionsList.map(contributionID => ({
-                                    id: contributionID
+                                    '@id': contributionID
                                 })),
                                 [PREDICATES.HAS_PROPERTY]: props.predicatesList.map(predicateID => {
                                     const property =
                                         props.comparisonType === 'merge' ? predicateID : getPropertyObjectFromData(props.data, { id: predicateID });
-                                    return { id: property.id };
+                                    return { '@id': property.id };
                                 }),
                                 ...(props.metaData.hasPreviousVersion && {
                                     [PREDICATES.HAS_PREVIOUS_VERSION]: [
                                         {
-                                            id: props.metaData.hasPreviousVersion.id
+                                            '@id': props.metaData.hasPreviousVersion.id
                                         }
                                     ]
                                 })
