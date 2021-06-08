@@ -45,12 +45,16 @@ class TableCell extends Component {
     }
 
     openStatementBrowser = (id, label, type = null) => {
-        this.setState({
-            modal: true,
-            dialogResourceId: id,
-            dialogResourceLabel: label,
-            dialogResourceType: type ? type : RESOURCE_TYPE_ID
-        });
+        this.setState(
+            {
+                dialogResourceId: id,
+                dialogResourceLabel: label,
+                dialogResourceType: type ? type : RESOURCE_TYPE_ID
+            },
+            () => {
+                this.setState({ modal: true });
+            }
+        );
     };
 
     toggle = type => {
@@ -63,27 +67,24 @@ class TableCell extends Component {
         return (
             <div className="fullPath">
                 Path of this value :{' '}
-                {data.pathLabels?.map((path, index) => (
-                    <span key={index}>
-                        <span
-                            className="btn-link"
-                            onClick={() =>
-                                this.openStatementBrowser(data.path[index + 1], path, index % 2 === 0 ? PREDICATE_TYPE_ID : RESOURCE_TYPE_ID)
-                            }
-                            style={{ cursor: 'pointer' }}
-                            onKeyDown={e =>
-                                e.keyCode === 13
-                                    ? this.openStatementBrowser(data.path[index + 1], path, index % 2 === 0 ? PREDICATE_TYPE_ID : RESOURCE_TYPE_ID)
-                                    : undefined
-                            }
-                            role="button"
-                            tabIndex={0}
-                        >
-                            {path}
+                {data.pathLabels?.map((path, index) => {
+                    const resourceType = index % 2 === 0 ? RESOURCE_TYPE_ID : PREDICATE_TYPE_ID;
+                    return (
+                        <span key={index}>
+                            <span
+                                className="btn-link"
+                                onClick={() => this.openStatementBrowser(data.path[index], path, resourceType)}
+                                style={{ cursor: 'pointer' }}
+                                onKeyDown={e => (e.keyCode === 13 ? this.openStatementBrowser(data.path[index], path, resourceType) : undefined)}
+                                role="button"
+                                tabIndex={0}
+                            >
+                                {path}
+                            </span>
+                            {index !== data.pathLabels?.length - 1 && ' / '}
                         </span>
-                        {index !== data.pathLabels?.length - 1 && ' / '}
-                    </span>
-                ))}
+                    );
+                })}
             </div>
         );
     };
@@ -100,8 +101,8 @@ class TableCell extends Component {
                     <ItemInner cellPadding={cellPadding}>
                         {this.props.data &&
                             this.props.data.length > 0 &&
-                            this.props.data.map(
-                                (date, index) =>
+                            this.props.data.map((date, index) => {
+                                return (
                                     Object.keys(date).length > 0 &&
                                     (date.type === 'resource' ? (
                                         <span key={`value-${date.resourceId}`}>
@@ -143,7 +144,8 @@ class TableCell extends Component {
                                             </Tippy>
                                         </span>
                                     ))
-                            )}
+                                );
+                            })}
                     </ItemInner>
                 </Item>
 
