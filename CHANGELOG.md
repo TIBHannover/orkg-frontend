@@ -5,6 +5,13 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [V0.39.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.39...V0.39.1) - 2021-06-08
+
+### Changes
+
+- fix(Comparison): Publishing a comparison with a old response [`#605`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/605)
+
+---
 ## [V0.39](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.38.1...V0.39) - 2021-06-07
 
 ### Changes
