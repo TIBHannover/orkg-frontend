@@ -195,8 +195,7 @@ export const getPaperData_ViewPaper = (paperResource, paperStatements) => {
 
 /**
  * Parse paper statements and return a a paper object
- * @param {String} id
- * @param {String} label
+ * @param {Object} resource Paper resource
  * @param {Array} paperStatements
  */
 
@@ -227,9 +226,26 @@ export const getPaperData = (resource, paperStatements) => {
 };
 
 /**
+ * Parse smart review statements and return a a smart review object
+ * @param {Object} resource Smart Review resource
+ * @param {Array} statements Smart Review Statements
+ */
+export const getSmartReviewData = (resource, statements) => {
+    const description = filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.DESCRIPTION, true);
+    const paperId = filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.HAS_PAPER, true)?.id;
+
+    return {
+        ...resource,
+        id: resource.id,
+        label: resource.label ? resource.label : 'No Title',
+        description: description?.label ?? '',
+        paperId
+    };
+};
+
+/**
  * Parse comparison statements and return a comparison object
- * @param {String} id
- * @param {String } label
+ * @param {Object} resource Comparison resource
  * @param {Array} comparisonStatements
  */
 export const getComparisonData = (resource, comparisonStatements) => {
