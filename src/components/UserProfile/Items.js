@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import PaperCard from 'components/PaperCard/PaperCard';
 import ComparisonCard from 'components/ComparisonCard/ComparisonCard';
 import { getStatementsBySubjects } from 'services/backend/statements';
-import { getPaperData, getComparisonData } from 'utils';
-import { find } from 'lodash';
+import { getPaperData, getComparisonData, groupVersionsOfComparisons } from 'utils';
+import { find, flatten } from 'lodash';
 import { Button, ListGroup } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
@@ -13,7 +13,7 @@ import useDeletePapers from 'components/ViewPaper/hooks/useDeletePapers';
 import { CLASSES } from 'constants/graphSettings';
 
 const Items = props => {
-    const pageSize = 5;
+    const pageSize = props.filterClass === CLASSES.COMPARISON ? 10 : 5;
     const [isLoading, setIsLoading] = useState(false);
     const [hasNextPage, setHasNextPage] = useState(false);
     const [page, setPage] = useState(0);
@@ -41,7 +41,7 @@ const Items = props => {
             id: props.filterClass,
             page: page,
             items: pageSize,
-            sortBy: 'id',
+            sortBy: 'created_at',
             desc: true,
             creator: props.userId,
             returnContent: true
@@ -57,7 +57,7 @@ const Items = props => {
                 ids: result.map(p => p.id)
             })
                 .then(resourcesStatements => {
-                    const resources = resourcesStatements.map(resourceStatements => {
+                    const new_resources = resourcesStatements.map(resourceStatements => {
                         const resourceSubject = find(result, { id: resourceStatements.id });
                         if (props.filterClass === CLASSES.PAPER) {
                             return getPaperData(resourceSubject, resourceStatements.statements);
@@ -67,7 +67,14 @@ const Items = props => {
                         }
                         return null;
                     });
-                    setResources(prevResources => [...prevResources, ...resources]);
+                    if (props.filterClass === CLASSES.COMPARISON) {
+                        setResources(prevResources =>
+                            groupVersionsOfComparisons([...flatten([...prevResources.map(c => c.versions), ...prevResources]), ...new_resources])
+                        );
+                    } else {
+                        setResources(prevResources => [...prevResources, ...new_resources]);
+                    }
+
                     setIsLoading(false);
                     setHasNextPage(resources.length < pageSize || resources.length === 0 ? false : true);
                 })
@@ -78,7 +85,8 @@ const Items = props => {
                     console.log(error);
                 });
         });
-    }, [page, props.filterClass, props.userId]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [page, pageSize, props.filterClass, props.userId]);
 
     useEffect(() => {
         if (loadingDeletePapers) {

@@ -25,7 +25,8 @@ const GDCVisualizationRenderer = props => {
                 // height={this.state.windowHeight + 'px'}
                 options={{
                     showRowNumber: true,
-                    width: '100%',
+                    enableInteractivity: !!!props.disableInteractivity,
+                    width: props.width ?? '100%',
                     ...(props.height ? { height: props.height } : {})
                 }}
             />
@@ -35,7 +36,9 @@ const GDCVisualizationRenderer = props => {
 
 GDCVisualizationRenderer.propTypes = {
     model: PropTypes.any,
-    height: PropTypes.string
+    height: PropTypes.string,
+    width: PropTypes.string,
+    disableInteractivity: PropTypes.bool
 };
 
 export default GDCVisualizationRenderer;

@@ -62,7 +62,7 @@ const PaperCardDynamic = props => {
         return {
             publicationYear,
             publicationMonth,
-            authorNames: authors ? authors.sort((a, b) => a.created_at.localeCompare(b.created_at)) : [],
+            authors: authors ? authors.sort((a, b) => a.created_at.localeCompare(b.created_at)) : [],
             researchField
         };
     };
@@ -78,7 +78,7 @@ const PaperCardDynamic = props => {
                     {!isLoading && (
                         <>
                             <small>
-                                <Authors authors={optimizedPaperObject.authorNames} />
+                                <Authors authors={optimizedPaperObject.authors} />
                                 {(optimizedPaperObject.publicationMonth || optimizedPaperObject.publicationYear) && (
                                     <Icon size="sm" icon={faCalendar} className="ml-2 mr-1" />
                                 )}
@@ -130,7 +130,7 @@ PaperCardDynamic.propTypes = {
     paper: PropTypes.shape({
         id: PropTypes.string.isRequired,
         title: PropTypes.string,
-        authorNames: PropTypes.array,
+        authors: PropTypes.array,
         publicationMonth: PropTypes.string,
         publicationYear: PropTypes.string,
         paperData: PropTypes.object,

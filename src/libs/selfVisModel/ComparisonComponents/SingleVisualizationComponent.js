@@ -118,10 +118,10 @@ const SingleVisualizationComponent = props => {
                                     {props.input.created_at ? moment(props.input.created_at).format('dddd, MMMM Do YYYY') : ''}
                                 </span>
                             </div>
-                            {props.input.authorNames && props.input.authorNames.length > 0 && (
+                            {props.input.authors && props.input.authors.length > 0 && (
                                 <div className="mb-2">
                                     <i>Created by: </i>
-                                    {props.input.authorNames.map(author => {
+                                    {props.input.authors.map(author => {
                                         if (author && author.class === RESOURCE_TYPE_ID) {
                                             return (
                                                 <Link

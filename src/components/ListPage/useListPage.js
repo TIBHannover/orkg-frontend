@@ -6,7 +6,6 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { getComparisonData } from 'utils';
 import { find } from 'lodash';
-import ComparisonCard from 'components/ComparisonCard/ComparisonCard';
 import { CLASSES } from 'constants/graphSettings';
 import HeaderSearchButton from 'components/HeaderSearchButton/HeaderSearchButton';
 
@@ -72,7 +71,6 @@ const useListPage = ({ label, resourceClass, renderListItem }) => {
                             comparisonStatements.statements
                         );
                     });
-                    console.log('comparisonsData', comparisonsData);
                     addResults({
                         results: comparisonsData,
                         last: result.last,
