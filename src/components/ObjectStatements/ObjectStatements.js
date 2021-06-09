@@ -90,7 +90,7 @@ const ObjectStatements = props => {
                                         <td>
                                             {getLinkByEntityType(statement.subject._class, statement.subject.id) ? (
                                                 <Link to={getLinkByEntityType(statement.subject._class, statement.subject.id)}>
-                                                    {statement.subject.label}123123
+                                                    {statement.subject.label}
                                                 </Link>
                                             ) : (
                                                 statement.subject.label
