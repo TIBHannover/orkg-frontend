@@ -189,9 +189,12 @@ const Items = props => {
 
             {selectedItems.length > 0 && (
                 <>
-                    <Button size="sm" color="secondary" className="mt-2 mr-2" onClick={comparePapers}>
-                        Compare selected papers {props.filterLabel} ({selectedItems.length})
-                    </Button>
+                    {props.filterClass === CLASSES.PAPER && (
+                        <Button size="sm" color="secondary" className="mt-2 mr-2" onClick={comparePapers}>
+                            Compare selected {props.filterLabel} ({selectedItems.length})
+                        </Button>
+                    )}
+
                     <Button size="sm" color="danger" className="mt-2" onClick={deletePapers}>
                         Delete selected {props.filterLabel} ({selectedItems.length})
                     </Button>
