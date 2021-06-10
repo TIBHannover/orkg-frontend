@@ -15,7 +15,7 @@ const ExistingDoiModal = props => {
                     The DOI <i>`{props.existingPaper.doi}`</i> is already linked in ORKG. Please view the paper and contribute to improve the content.
                     In case you want you can continue to create a new paper for this DOI.
                 </Alert>
-                <strong>Existing paper:</strong> <PaperCard paper={props.existingPaper} />
+                <strong>Existing paper:</strong> <PaperCard paper={props.existingPaper} showAddToComparison={false} />
             </ModalBody>
             <ModalFooter>
                 <Button color="primary" onClick={toggle}>
