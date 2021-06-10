@@ -151,7 +151,6 @@ const Items = props => {
                                 <PaperCard
                                     selectable={props.showDelete}
                                     selected={selected}
-                                    showAddToComparison={false}
                                     onSelect={() => handleSelect(paperId)}
                                     paper={{ title: resource.label, ...resource }}
                                     key={`pc${resource.id}`}
