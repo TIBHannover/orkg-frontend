@@ -7,7 +7,6 @@ function useBenchmarkDatasetPapers({ datasetId }) {
     const [benchmarkDatasetPapers, setBenchmarkDatasetPapers] = useState({});
     const [metrics, setMetrics] = useState([]);
     const [selectedMetric, setSelectedMetric] = useState(null);
-    const [selectedMetricVisualization, setSelectedMetricVisualization] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [isFailedLoadingPapers, setIsFailedLoadingPapers] = useState(false);
 
@@ -25,7 +24,6 @@ function useBenchmarkDatasetPapers({ datasetId }) {
                 setBenchmarkDatasetPapers(groupBy(trimResult, 'metric'));
                 setMetrics(Object.keys(groupBy(trimResult, 'metric')));
                 setSelectedMetric(Object.keys(groupBy(trimResult, 'metric'))[0]);
-                setSelectedMetricVisualization(Object.keys(groupBy(trimResult, 'metric'))[0]);
                 setIsLoading(false);
                 setIsFailedLoadingPapers(false);
             })
@@ -47,11 +45,9 @@ function useBenchmarkDatasetPapers({ datasetId }) {
         benchmarkDatasetPapers,
         metrics,
         selectedMetric,
-        selectedMetricVisualization,
         isLoading,
         isFailedLoadingPapers,
-        setSelectedMetric,
-        setSelectedMetricVisualization
+        setSelectedMetric
     };
 }
 

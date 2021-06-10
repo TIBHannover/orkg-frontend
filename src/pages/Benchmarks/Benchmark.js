@@ -33,9 +33,7 @@ function Benchmark() {
         benchmarkDatasetPapers,
         metrics,
         selectedMetric,
-        selectedMetricVisualization,
-        setSelectedMetric,
-        setSelectedMetricVisualization
+        setSelectedMetric
     } = useBenchmarkDatasetPapers({
         datasetId: resourceId
     });
@@ -198,15 +196,15 @@ function Benchmark() {
                 <div>
                     <Container className="d-flex align-items-center mt-4 mb-4">
                         <div className="d-flex flex-grow-1">
-                            <h1 className="h5 flex-shrink-0 mb-0">Visualizations</h1>
+                            <h1 className="h5 flex-shrink-0 mb-0">Performance trend</h1>
                         </div>
                         <UncontrolledButtonDropdown className="flex-shrink-0 ml-auto">
                             <DropdownToggle caret size="sm" color="secondary">
-                                Metric: {selectedMetricVisualization}
+                                Metric: {selectedMetric}
                             </DropdownToggle>
                             <DropdownMenu>
                                 {metrics.map((m, index) => (
-                                    <DropdownItem key={index} disabled={isLoading} onClick={() => setSelectedMetricVisualization(m)}>
+                                    <DropdownItem key={index} disabled={isLoading} onClick={() => setSelectedMetric(m)}>
                                         {m}
                                     </DropdownItem>
                                 ))}
@@ -222,9 +220,9 @@ function Benchmark() {
                                     chartType="ScatterChart"
                                     loader={<div>Loading Chart</div>}
                                     data={[
-                                        ['Year', selectedMetricVisualization, { type: 'string', role: 'tooltip', p: { html: true } }],
-                                        ...(benchmarkDatasetPapers[selectedMetricVisualization]
-                                            ? benchmarkDatasetPapers[selectedMetricVisualization]
+                                        ['Year', selectedMetric, { type: 'string', role: 'tooltip', p: { html: true } }],
+                                        ...(benchmarkDatasetPapers[selectedMetric]
+                                            ? benchmarkDatasetPapers[selectedMetric]
                                                   .map(c => {
                                                       const publishedOn = moment(
                                                           `${c.paper_year}-${c.paper_month ? c.paper_month : '01'}`,
@@ -250,7 +248,7 @@ function Benchmark() {
                                     ]}
                                     options={{
                                         hAxis: { title: 'Year', format: 'MMM yyyy' },
-                                        vAxis: { title: selectedMetricVisualization },
+                                        vAxis: { title: selectedMetric },
                                         legend: 'none',
                                         tooltip: { isHtml: true },
                                         pointSize: 7,
@@ -269,7 +267,7 @@ function Benchmark() {
                                                     const { row } = selectedItem;
                                                     history.push(
                                                         reverse(ROUTES.VIEW_PAPER, {
-                                                            resourceId: benchmarkDatasetPapers[selectedMetricVisualization][row].paper_id
+                                                            resourceId: benchmarkDatasetPapers[selectedMetric][row].paper_id
                                                         })
                                                     );
                                                 }
@@ -290,18 +288,6 @@ function Benchmark() {
                                 </SubTitle>
                             </>
                         </div>
-                        <UncontrolledButtonDropdown className="flex-shrink-0 ml-auto">
-                            <DropdownToggle caret size="sm" color="secondary">
-                                Metric: {selectedMetric}
-                            </DropdownToggle>
-                            <DropdownMenu>
-                                {metrics.map((m, index) => (
-                                    <DropdownItem key={index} disabled={isLoading} onClick={() => setSelectedMetric(m)}>
-                                        {m}
-                                    </DropdownItem>
-                                ))}
-                            </DropdownMenu>
-                        </UncontrolledButtonDropdown>
                     </Container>
                     <Container className="p-0">
                         <Card>
