@@ -428,7 +428,7 @@ function Comparison(props) {
                             <div className="flex-grow-1">
                                 <h2 className="h4 mb-4 mt-4">
                                     {metaData.title ? metaData.title : 'Compare'}{' '}
-                                    {!!metaData?.id && <FeaturedMark size="md" resourceId={metaData?.id} />}
+                                    {metaData.id && <FeaturedMark size="1x" resourceId={metaData?.id} featured={metaData?.featured} />}
                                 </h2>
 
                                 {!isFailedLoadingMetaData && <ComparisonMetaData metaData={metaData} />}

@@ -76,7 +76,7 @@ const PaperCardDynamic = props => {
                         {props.paper.title ? props.paper.title : <em>No title</em>}
                     </Link>
                     <div className="d-inline-block ml-1">
-                        <FeaturedMark size="sm" resourceId={props.paper.id} />
+                        <FeaturedMark size="sm" resourceId={props.paper.id} featured={props.paper.featured} />
                     </div>
                     <br />
                     {!isLoading && (
@@ -142,7 +142,8 @@ PaperCardDynamic.propTypes = {
             id: PropTypes.string.isRequired,
             label: PropTypes.string
         }),
-        created_by: PropTypes.string
+        created_by: PropTypes.string,
+        featured: PropTypes.bool
     }).isRequired
 };
 

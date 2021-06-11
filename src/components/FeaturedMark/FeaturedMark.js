@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
 import { faStar as faEmptyStar } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -25,6 +25,11 @@ const FeaturedMark = ({ resourceId, featured, size }) => {
             removeFeaturedFlag(resourceId).catch(e => console.log(e));
         }
     };
+
+    useEffect(() => {
+        setIsFeatured(featured);
+    }, [featured]);
+
     if (!isCurationAllowed && !isFeatured) {
         return null;
     }
@@ -52,13 +57,13 @@ const FeaturedMark = ({ resourceId, featured, size }) => {
 
 FeaturedMark.propTypes = {
     resourceId: PropTypes.string.isRequired,
-    featured: PropTypes.bool.isRequired,
+    featured: PropTypes.bool,
     size: PropTypes.string.isRequired
 };
 
 FeaturedMark.defaultProps = {
     featured: false,
-    size: 'md'
+    size: '1x'
 };
 
 export default FeaturedMark;

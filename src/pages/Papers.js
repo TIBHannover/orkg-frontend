@@ -130,7 +130,13 @@ const Papers = () => {
                             const paperCardData = statements.find(({ id }) => id === paper.id);
                             return (
                                 <PaperCardDynamic
-                                    paper={{ title: paper.label, id: paper.id, paperData: paperCardData, created_by: paper.created_by }}
+                                    paper={{
+                                        title: paper.label,
+                                        id: paper.id,
+                                        paperData: paperCardData,
+                                        created_by: paper.created_by,
+                                        featured: paper.featured
+                                    }}
                                     key={`pc${paper.id}`}
                                 />
                             );

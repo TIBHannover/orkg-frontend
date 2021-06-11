@@ -29,7 +29,7 @@ const ComparisonCard = props => {
                         {props.comparison.label ? props.comparison.label : <em>No title</em>}
                     </Link>
                     <div className="d-inline-block ml-1">
-                        <FeaturedMark size="sm" resourceId={props.comparison.id} />
+                        <FeaturedMark size="sm" resourceId={props.comparison.id} featured={props.comparison?.featured} />
                     </div>
                     <br />
                     {props.comparison.created_at && (
@@ -91,7 +91,8 @@ ComparisonCard.propTypes = {
         }),
         created_by: PropTypes.string,
         versions: PropTypes.array,
-        visualizations: PropTypes.array
+        visualizations: PropTypes.array,
+        featured: PropTypes.bool
     }).isRequired,
     rounded: PropTypes.string,
     showHistory: PropTypes.bool

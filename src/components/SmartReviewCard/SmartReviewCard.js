@@ -24,7 +24,7 @@ const SmartReviewCard = ({ versions }) => {
                 <Col md={9}>
                     <Link to={reverse(ROUTES.SMART_REVIEW, { id: versions[0]?.id })}>{versions[0]?.label}</Link>
                     <div className="d-inline-block ml-1">
-                        <FeaturedMark size="sm" resourceId={versions[0]?.id} />
+                        <FeaturedMark size="sm" resourceId={versions[0]?.id} featured={versions[0]?.featured} />
                     </div>
                     <br />
                     {versions[0].created_at && (

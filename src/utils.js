@@ -212,6 +212,7 @@ export const getPaperData = (resource, paperStatements) => {
     const order = getOrder(paperStatements);
 
     return {
+        ...resource,
         id: resource.id,
         label: resource.label ? resource.label : 'No Title',
         publicationYear,

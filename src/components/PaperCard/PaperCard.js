@@ -61,7 +61,7 @@ const PaperCard = props => {
                             </Link>
                         )}
                         <div className="d-inline-block ml-1">
-                            <FeaturedMark size="sm" resourceId={props.paper.id} />
+                            <FeaturedMark size="sm" resourceId={props.paper.id} featured={props.paper.featured} />
                         </div>
                         <br />
                         <small>
@@ -118,7 +118,8 @@ PaperCard.propTypes = {
             id: PropTypes.string.isRequired,
             label: PropTypes.string
         }),
-        created_by: PropTypes.string
+        created_by: PropTypes.string,
+        featured: PropTypes.bool
     }).isRequired,
     contribution: PropTypes.shape({
         id: PropTypes.string.isRequired,
