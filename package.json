@@ -29,6 +29,7 @@
         "fast-text-encoding": "^1.0.2",
         "greeting-time": "^1.0.0",
         "handsontable": "^8.3.2",
+        "he": "^1.2.0",
         "immutability-helper": "^3.0.2",
         "joi": "^17.4.0",
         "jspdf": "^2.3.1",

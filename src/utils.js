@@ -4,6 +4,7 @@ import { CLASSES, MISC, PREDICATES, ENTITIES } from 'constants/graphSettings';
 import { PREDICATE_TYPE_ID, RESOURCE_TYPE_ID } from 'constants/misc';
 import ROUTES from 'constants/routes';
 import { find, flatten, flattenDepth, isEqual, isString, last, uniq, sortBy, uniqBy } from 'lodash';
+import { unescape } from 'he';
 import { reverse } from 'named-urls';
 import queryString from 'query-string';
 import rdf from 'rdf';
@@ -655,7 +656,7 @@ export const parseCiteResult = paper => {
         paperTitle = title;
         if (subtitle && subtitle.length > 0) {
             // include the subtitle
-            paperTitle = `${paperTitle}: ${subtitle[0]}`;
+            paperTitle = unescape(`${paperTitle}: ${subtitle[0]}`);
         }
         if (author) {
             paperAuthors = author.map(author => {
@@ -664,7 +665,7 @@ export const parseCiteResult = paper => {
                     fullname = author.literal ? author.literal : '';
                 }
                 return {
-                    label: fullname,
+                    label: unescape(fullname),
                     id: fullname,
                     orcid: author.ORCID ? author.ORCID : ''
                 };
@@ -680,7 +681,7 @@ export const parseCiteResult = paper => {
         }
         doi = DOI ? DOI : '';
         if (containerTitle && isString(containerTitle)) {
-            publishedIn = containerTitle;
+            publishedIn = unescape(containerTitle);
         }
     } catch (e) {
         console.log('Error setting paper data: ', e);
