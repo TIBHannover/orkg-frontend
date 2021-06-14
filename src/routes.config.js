@@ -37,7 +37,6 @@ import OrganizationDetails from 'pages/Organizations/OrganizationDetails';
 import AddOrganization from 'pages/Organizations/AddOrganization';
 import AddObservatory from 'pages/Observatories/AddObservatory';
 import Observatory from 'pages/Observatories/Observatory';
-import OrganizationObservatories from 'pages/Observatories/OrganizationObservatories';
 import SearchResults from 'pages/Search';
 import ViewPaper from 'pages/ViewPaper';
 import Stats from 'pages/Stats';
@@ -284,11 +283,6 @@ const routes = [
         path: ROUTES.OBSERVATORY,
         exact: true,
         component: Observatory
-    },
-    {
-        path: ROUTES.ORGANIZATION_OBSERVATORIES,
-        exact: true,
-        component: OrganizationObservatories
     },
     {
         path: ROUTES.PDF_TEXT_ANNOTATION,
