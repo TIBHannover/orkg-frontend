@@ -27,6 +27,7 @@ import useResearchProblemResearchFields from 'components/ResearchProblem/hooks/u
 import AuthorsBox from 'components/TopAuthors/AuthorsBox';
 import ResearchFieldsBox from './ResearchFieldBox/ResearchFieldsBox';
 import SuperResearchProblemBox from './SuperResearchProblemBox/SuperResearchProblemBox';
+import FeaturedMark from 'components/FeaturedMark/FeaturedMark';
 import { NavLink } from 'react-router-dom';
 import ContentLoader from 'react-content-loader';
 import ROUTES from 'constants/routes.js';
@@ -100,7 +101,10 @@ const ResearchProblemHeader = ({ id }) => {
                         <h1 className="h5 flex-shrink-0 mb-0">Research problem</h1>
                         <>
                             <SubtitleSeparator />
-                            <SubTitle className="h5 mb-0"> {researchProblemData.label}</SubTitle>
+                            <SubTitle className="h5 mb-0">
+                                {' '}
+                                {researchProblemData.label} <FeaturedMark size="sm" resourceId={id} featured={researchProblemData?.featured} />
+                            </SubTitle>
                         </>
                         {editMode && (
                             <StatementBrowserDialog

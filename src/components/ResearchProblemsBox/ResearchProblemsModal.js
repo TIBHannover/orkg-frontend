@@ -22,7 +22,7 @@ const ResearchProblemsModal = ({ researchFieldId, openModal, setOpenModal }) => 
     } = useResearchFieldProblems({
         researchFieldId,
         pageSize: 10,
-        initialSort: 'newest',
+        initialSort: 'combined',
         initialIncludeSubFields: true
     });
 

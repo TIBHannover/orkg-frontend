@@ -8,6 +8,7 @@ import ROUTES from 'constants/routes';
 import { Link } from 'react-router-dom';
 import ContentLoader from 'react-content-loader';
 import { SubTitle, SubtitleSeparator } from 'components/styled';
+import { useSelector } from 'react-redux';
 import { stringifySort } from 'utils';
 import Tippy from '@tippyjs/react';
 import PropTypes from 'prop-types';
@@ -25,8 +26,9 @@ const Papers = ({ id, boxShadow, showBreadcrumbs }) => {
         handleLoadMore,
         setSort,
         setIncludeSubFields
-    } = useResearchFieldPapers({ researchFieldId: id, initialSort: 'newest', initialIncludeSubFields: true });
+    } = useResearchFieldPapers({ researchFieldId: id, initialSort: 'combined', initialIncludeSubFields: true });
     const [tippy, setTippy] = useState({});
+    const isCurationAllowed = useSelector(state => state.auth.user?.isCurationAllowed);
 
     return (
         <>
@@ -64,8 +66,10 @@ const Papers = ({ id, boxShadow, showBreadcrumbs }) => {
                                     id="sortPapers"
                                     disabled={isLoading}
                                 >
-                                    <option value="newest">Newest first</option>
-                                    <option value="oldest">Oldest first</option>
+                                    <option value="combined">Top recent</option>
+                                    <option value="newest">Recently added</option>
+                                    <option value="featured">Featured</option>
+                                    {isCurationAllowed && <option value="unlisted">Unlisted</option>}
                                 </Input>
                             </FormGroup>
                             <FormGroup check>
@@ -129,7 +133,8 @@ const Papers = ({ id, boxShadow, showBreadcrumbs }) => {
                 {papers.length === 0 && !isLoading && (
                     <div className={boxShadow ? 'container box rounded' : ''}>
                         <div className="p-5 text-center mt-4 mb-4">
-                            There are no papers for this research field, yet.
+                            There are no {sort === 'featured' ? 'featured' : sort === 'unlisted' ? 'unlisted' : ''} papers for this research field,
+                            yet.
                             <br />
                             <br />
                             <Link to={ROUTES.ADD_PAPER.GENERAL_DATA}>
@@ -141,7 +146,7 @@ const Papers = ({ id, boxShadow, showBreadcrumbs }) => {
                     </div>
                 )}
                 {isLoading && (
-                    <div className={`text-center mt-4 mb-4 ${page === 0 ? 'p-5 container rounded' : ''} ${boxShadow ? 'box' : ''}`}>
+                    <div className={`text-center mt-4 mb-4 ${page === 0 ? 'p-5 container rounded' : ''} ${boxShadow && page === 0 ? 'box' : ''}`}>
                         {page !== 0 && (
                             <>
                                 <Icon icon={faSpinner} spin /> Loading

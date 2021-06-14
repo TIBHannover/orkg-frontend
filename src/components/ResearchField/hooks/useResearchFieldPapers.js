@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { getStatementsBySubjects } from 'services/backend/statements';
 import { getPapersByResearchFieldId } from 'services/backend/researchFields';
 import { getResourcesByClass } from 'services/backend/resources';
-import { getPaperData } from 'utils';
+import { getPaperData, mergeAlternate } from 'utils';
 import { MISC } from 'constants/graphSettings';
 import { CLASSES } from 'constants/graphSettings';
 
@@ -18,26 +18,61 @@ function useResearchFieldPapers({ researchFieldId, initialSort, initialIncludeSu
     const [includeSubFields, setIncludeSubFields] = useState(initialIncludeSubFields);
 
     const loadData = useCallback(
-        page => {
+        (page, total) => {
             setIsLoading(true);
+            let featured = sort === 'featured' ? true : null;
+            featured = sort === 'unlisted' ? false : featured;
             // Papers
             let papersService;
-            if (researchFieldId === MISC.RESEARCH_FIELD_MAIN) {
-                papersService = getResourcesByClass({
-                    id: sort === 'featured' ? CLASSES.FEATURED_PAPER : CLASSES.PAPER,
-                    sortBy: 'created_at',
-                    desc: sort === 'newest' || sort === 'featured' ? true : false,
-                    items: pageSize
-                });
-            } else {
-                papersService = getPapersByResearchFieldId({
+            if (sort === 'combined') {
+                // in case of combined sort we list 50% featured and 50% newest items (new not featured)
+                const newPapersService = getPapersByResearchFieldId({
                     id: researchFieldId,
                     page: page,
-                    items: pageSize,
+                    items: Math.round(pageSize / 2),
                     sortBy: 'created_at',
-                    desc: sort === 'newest' || sort === 'featured' ? true : false,
-                    subfields: includeSubFields
+                    desc: true,
+                    subfields: includeSubFields,
+                    featured: false
                 });
+                const featuredPapersService = getPapersByResearchFieldId({
+                    id: researchFieldId,
+                    page: page,
+                    items: Math.round(pageSize / 2),
+                    sortBy: 'created_at',
+                    desc: true,
+                    subfields: includeSubFields,
+                    featured: true
+                });
+                papersService = Promise.all([newPapersService, featuredPapersService]).then(([newPapers, featuredPapers]) => {
+                    // merge two arrays and alternate values
+                    const combinedPapers = mergeAlternate(newPapers.content, featuredPapers.content);
+                    return {
+                        content: combinedPapers,
+                        totalElements: page === 0 ? newPapers.totalElements + featuredPapers.totalElements : total,
+                        last: newPapers.last && featuredPapers.last
+                    };
+                });
+            } else {
+                if (researchFieldId === MISC.RESEARCH_FIELD_MAIN) {
+                    papersService = getResourcesByClass({
+                        id: sort === 'featured' ? CLASSES.FEATURED_PAPER : CLASSES.PAPER,
+                        sortBy: 'created_at',
+                        desc: true,
+                        items: pageSize,
+                        featured: featured
+                    });
+                } else {
+                    papersService = getPapersByResearchFieldId({
+                        id: researchFieldId,
+                        page: page,
+                        items: pageSize,
+                        sortBy: 'created_at',
+                        desc: true,
+                        subfields: includeSubFields,
+                        featured: featured
+                    });
+                }
             }
 
             papersService
@@ -77,7 +112,7 @@ function useResearchFieldPapers({ researchFieldId, initialSort, initialIncludeSu
                     console.log(error);
                 });
         },
-        [includeSubFields, researchFieldId, sort, pageSize]
+        [sort, researchFieldId, pageSize, includeSubFields]
     );
 
     // reset resources when the researchFieldId has changed
@@ -102,7 +137,7 @@ function useResearchFieldPapers({ researchFieldId, initialSort, initialIncludeSu
 
     const handleLoadMore = () => {
         if (!isLoading) {
-            loadData(page);
+            loadData(page, totalElements);
         }
     };
 

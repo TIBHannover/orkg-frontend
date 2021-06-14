@@ -7,6 +7,7 @@ import useResearchFieldComparison from 'components/ResearchField/hooks/useResear
 import { SubTitle, SubtitleSeparator } from 'components/styled';
 import Tippy from '@tippyjs/react';
 import ROUTES from 'constants/routes';
+import { useSelector } from 'react-redux';
 import ContentLoader from 'react-content-loader';
 import { stringifySort } from 'utils';
 import { Link } from 'react-router-dom';
@@ -25,8 +26,9 @@ const Comparisons = ({ id, boxShadow }) => {
         handleLoadMore,
         setSort,
         setIncludeSubFields
-    } = useResearchFieldComparison({ researchFieldId: id, initialSort: 'newest', initialIncludeSubFields: true });
+    } = useResearchFieldComparison({ researchFieldId: id, initialSort: 'combined', initialIncludeSubFields: true });
     const [tippy, setTippy] = useState({});
+    const isCurationAllowed = useSelector(state => state.auth.user?.isCurationAllowed);
 
     return (
         <>
@@ -64,8 +66,10 @@ const Comparisons = ({ id, boxShadow }) => {
                                     id="sortComparisons"
                                     disabled={isLoading}
                                 >
-                                    <option value="newest">Newest first</option>
-                                    <option value="oldest">Oldest first</option>
+                                    <option value="combined">Top recent</option>
+                                    <option value="newest">Recently added</option>
+                                    <option value="featured">Featured</option>
+                                    {isCurationAllowed && <option value="unlisted">Unlisted</option>}
                                 </Input>
                             </FormGroup>
                             <FormGroup check>
@@ -117,7 +121,8 @@ const Comparisons = ({ id, boxShadow }) => {
                 {comparisons.length === 0 && !isLoading && (
                     <div className={boxShadow ? 'container box rounded' : ''}>
                         <div className="p-5 text-center mt-4 mb-4">
-                            There are no comparisons for this research field, yet.
+                            There are no {sort === 'featured' ? 'featured' : sort === 'unlisted' ? 'unlisted' : ''} comparisons for this research
+                            field, yet.
                             <br />
                             <br />
                             <Link to={ROUTES.ADD_COMPARISON}>

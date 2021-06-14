@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import { mergeAlternate } from 'utils';
 import { getResearchProblemsByResearchFieldId } from 'services/backend/researchFields';
 
 function useResearchFieldProblems({ researchFieldId, initialSort, initialIncludeSubFields, pageSize = 10 }) {
@@ -12,17 +13,53 @@ function useResearchFieldProblems({ researchFieldId, initialSort, initialInclude
     const [includeSubFields, setIncludeSubFields] = useState(initialIncludeSubFields);
 
     const loadData = useCallback(
-        page => {
+        (page, total) => {
             setIsLoading(true);
-            // Get the problems of research field
-            getResearchProblemsByResearchFieldId({
-                id: researchFieldId,
-                page: page,
-                items: pageSize,
-                sortBy: 'created_at',
-                desc: sort === 'newest' ? true : false,
-                subfields: includeSubFields
-            })
+            let featured = sort === 'featured' ? true : null;
+            featured = sort === 'unlisted' ? false : featured;
+            // problems
+            let problemsService;
+
+            if (sort === 'combined') {
+                // in case of combined sort we list 50% featured and 50% newest items (new not featured)
+                const newService = getResearchProblemsByResearchFieldId({
+                    id: researchFieldId,
+                    page: page,
+                    items: Math.round(pageSize / 2),
+                    sortBy: 'created_at',
+                    desc: true,
+                    subfields: includeSubFields,
+                    featured: false
+                });
+                const featuredService = getResearchProblemsByResearchFieldId({
+                    id: researchFieldId,
+                    page: page,
+                    items: Math.round(pageSize / 2),
+                    sortBy: 'created_at',
+                    desc: true,
+                    subfields: includeSubFields,
+                    featured: true
+                });
+                problemsService = Promise.all([newService, featuredService]).then(([newC, featuredC]) => {
+                    const combinedC = mergeAlternate(newC.content, featuredC.content);
+                    return {
+                        content: combinedC,
+                        totalElements: page === 0 ? newC.totalElements + featuredC.totalElements : total,
+                        last: newC.last && featuredC.last
+                    };
+                });
+            } else {
+                problemsService = getResearchProblemsByResearchFieldId({
+                    id: researchFieldId,
+                    page: page,
+                    items: pageSize,
+                    sortBy: 'created_at',
+                    desc: true,
+                    subfields: includeSubFields,
+                    featured: featured
+                });
+            }
+            problemsService
                 .then(result => {
                     setProblems(prevResources => [...prevResources, ...result.content]);
                     setIsLoading(false);
@@ -56,7 +93,7 @@ function useResearchFieldProblems({ researchFieldId, initialSort, initialInclude
 
     const handleLoadMore = () => {
         if (!isLoading) {
-            loadData(page);
+            loadData(page, totalElements);
         }
     };
 

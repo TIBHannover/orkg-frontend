@@ -31,6 +31,7 @@ import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
 import { getVisualization } from 'services/similarity';
 import GDCVisualizationRenderer from 'libs/selfVisModel/RenderingComponents/GDCVisualizationRenderer';
 import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
+import FeaturedMark from 'components/FeaturedMark/FeaturedMark';
 import { CLASS_TYPE_ID } from 'constants/misc';
 import { reverseWithSlug } from 'utils';
 
@@ -93,6 +94,7 @@ function Resource(props) {
     const location = useLocation();
     const [error, setError] = useState(null);
     const [label, setLabel] = useState('');
+    const [featured, setFeatured] = useState(false);
     const [classes, setClasses] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [editMode, setEditMode] = useState(false);
@@ -120,6 +122,7 @@ function Resource(props) {
                         .then(classes => {
                             classes = orderBy(classes, [classLabel => classLabel.label.toLowerCase()], ['asc']);
                             setLabel(responseJson.label);
+                            setFeatured(responseJson.featured);
                             setClasses(classes);
                         })
                         .then(() => {
@@ -284,7 +287,8 @@ function Resource(props) {
                                             <i>
                                                 <small>No label</small>
                                             </i>
-                                        )}
+                                        )}{' '}
+                                        <FeaturedMark size="sm" resourceId={props.match.params.id} featured={featured} />
                                     </h3>
                                     {classes.length > 0 && (
                                         <span style={{ fontSize: '90%' }}>

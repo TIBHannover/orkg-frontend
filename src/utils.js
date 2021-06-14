@@ -657,6 +657,21 @@ export const compareOption = (inputValue = '', option) => {
     return optionValue === candidate || optionLabel === candidate || optionURI === candidate;
 };
 
+/**
+ * Merge two arrays with alternating values
+ * @param {Array} array1 Array 2
+ * @param {Array} array2 Array 2
+ */
+export const mergeAlternate = (array1, array2) => {
+    const result = [];
+    const l = Math.min(array1.length, array2.length);
+    for (let i = 0; i < l; i++) {
+        result.push(array1[i], array2[i]);
+    }
+    result.push(...array1.slice(l), ...array2.slice(l));
+    return result;
+};
+
 // TODO: could be part of a 'parseDoi' hook when the add paper wizard is refactored to support hooks
 export const parseCiteResult = paper => {
     let paperTitle = '',
@@ -1157,34 +1172,16 @@ export const getResourceTypeLabel = classId => {
  * @result {String} Label
  */
 export const stringifySort = sort => {
-    let label = 'Newest first';
-    switch (sort) {
-        case 'newest': {
-            label = 'Newest first';
-            break;
-        }
-        case 'oldest': {
-            label = 'Oldest first';
-            break;
-        }
-        case 'featured': {
-            label = 'Featured';
-            break;
-        }
-        case 'top': {
-            label = 'Last 30 days';
-            break;
-        }
-        case 'all': {
-            label = 'All time';
-            break;
-        }
-        default: {
-            label = 'Newest first';
-            break;
-        }
-    }
-    return label;
+    const stringsSortMapping = {
+        newest: 'Recently added',
+        oldest: 'Oldest first',
+        featured: 'Featured',
+        combined: 'Top recent',
+        unlisted: 'Unlisted',
+        top: 'Last 30 days',
+        all: 'All time'
+    };
+    return stringsSortMapping[sort] ?? stringsSortMapping['newest'];
 };
 
 /**

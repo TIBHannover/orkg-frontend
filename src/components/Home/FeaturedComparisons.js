@@ -25,7 +25,7 @@ const ListGroupStyled = styled(ListGroup)`
 const FeaturedComparisons = ({ researchFieldId }) => {
     const { comparisons, sort, includeSubFields, isLoading, setSort, setIncludeSubFields } = useResearchFieldComparison({
         researchFieldId: researchFieldId,
-        initialSort: 'featured',
+        initialSort: 'combined',
         initialIncludeSubFields: true,
         pageSize: 10
     });
@@ -40,11 +40,11 @@ const FeaturedComparisons = ({ researchFieldId }) => {
                             {stringifySort(sort)}
                         </DropdownToggle>
                         <DropdownMenu>
-                            <DropdownItem disabled={isLoading} onClick={() => setSort('newest')}>
-                                Newest first
+                            <DropdownItem disabled={isLoading} onClick={() => setSort('combined')}>
+                                Top recent
                             </DropdownItem>
-                            <DropdownItem disabled={isLoading} onClick={() => setSort('oldest')}>
-                                Oldest first
+                            <DropdownItem disabled={isLoading} onClick={() => setSort('newest')}>
+                                Recently added
                             </DropdownItem>
                             <DropdownItem disabled={isLoading} onClick={() => setSort('featured')}>
                                 Featured
@@ -74,8 +74,9 @@ const FeaturedComparisons = ({ researchFieldId }) => {
                                         id="sortPapers"
                                         disabled={isLoading}
                                     >
-                                        <option value="newest">Newest first</option>
-                                        <option value="oldest">Oldest first</option>
+                                        <option value="combined">Top recent</option>
+                                        <option value="newest">Recently added</option>
+                                        <option value="featured">Featured</option>
                                     </Input>
                                 </FormGroup>
                                 {researchFieldId !== MISC.RESEARCH_FIELD_MAIN && (

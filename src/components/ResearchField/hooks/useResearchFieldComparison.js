@@ -5,7 +5,7 @@ import { getComparisonsByResearchFieldId } from 'services/backend/researchFields
 import { getResourcesByClass } from 'services/backend/resources';
 import { getStatementsBySubjects } from 'services/backend/statements';
 import { MISC } from 'constants/graphSettings';
-import { getComparisonData, groupVersionsOfComparisons } from 'utils';
+import { getComparisonData, groupVersionsOfComparisons, mergeAlternate } from 'utils';
 import { flatten } from 'lodash';
 
 function useResearchFieldComparison({ researchFieldId, initialSort, initialIncludeSubFields, pageSize = 10 }) {
@@ -19,29 +19,65 @@ function useResearchFieldComparison({ researchFieldId, initialSort, initialInclu
     const [includeSubFields, setIncludeSubFields] = useState(initialIncludeSubFields);
 
     const loadData = useCallback(
-        page => {
+        (page, total) => {
             setIsLoading(true);
+            let featured = sort === 'featured' ? true : null;
+            featured = sort === 'unlisted' ? false : featured;
             // Comparisons
-            let papersService;
-            if (researchFieldId === MISC.RESEARCH_FIELD_MAIN) {
-                papersService = getResourcesByClass({
-                    id: sort === 'featured' ? CLASSES.FEATURED_COMPARISON_HOME_PAGE : CLASSES.COMPARISON,
-                    sortBy: 'created_at',
-                    desc: sort === 'newest' || sort === 'featured' ? true : false,
-                    items: pageSize
-                });
-            } else {
-                papersService = getComparisonsByResearchFieldId({
+            let comparisonsService;
+            if (sort === 'combined') {
+                // in case of combined sort we list 50% featured and 50% newest items (new not featured)
+                const newComparisonsService = getComparisonsByResearchFieldId({
                     id: researchFieldId,
                     page: page,
-                    items: pageSize,
+                    items: Math.round(pageSize / 2),
                     sortBy: 'created_at',
-                    desc: sort === 'newest' || sort === 'featured' ? true : false,
-                    subfields: includeSubFields
+                    desc: true,
+                    subfields: includeSubFields,
+                    featured: false
                 });
+                const featuredComparisonsService = getComparisonsByResearchFieldId({
+                    id: researchFieldId,
+                    page: page,
+                    items: Math.round(pageSize / 2),
+                    sortBy: 'created_at',
+                    desc: true,
+                    subfields: includeSubFields,
+                    featured: true
+                });
+                comparisonsService = Promise.all([newComparisonsService, featuredComparisonsService]).then(
+                    ([newComparisons, featuredComparisons]) => {
+                        const combinedComparisons = mergeAlternate(newComparisons.content, featuredComparisons.content);
+                        return {
+                            content: combinedComparisons,
+                            totalElements: page === 0 ? newComparisons.totalElements + featuredComparisons.totalElements : total,
+                            last: newComparisons.last && featuredComparisons.last
+                        };
+                    }
+                );
+            } else {
+                if (researchFieldId === MISC.RESEARCH_FIELD_MAIN) {
+                    comparisonsService = getResourcesByClass({
+                        id: sort === 'featured' ? CLASSES.FEATURED_COMPARISON_HOME_PAGE : CLASSES.COMPARISON,
+                        sortBy: 'created_at',
+                        desc: true,
+                        items: pageSize,
+                        featured: featured
+                    });
+                } else {
+                    comparisonsService = getComparisonsByResearchFieldId({
+                        id: researchFieldId,
+                        page: page,
+                        items: pageSize,
+                        sortBy: 'created_at',
+                        desc: true,
+                        subfields: includeSubFields,
+                        featured: featured
+                    });
+                }
             }
 
-            papersService
+            comparisonsService
                 .then(result => {
                     // Fetch the data of each comparison
                     getStatementsBySubjects({
@@ -56,12 +92,11 @@ function useResearchFieldComparison({ researchFieldId, initialSort, initialInclu
                             });
 
                             setComparisons(prevResources => {
-                                const sortFunc =
-                                    sort === 'newest' || sort === 'featured' ? undefined : (a, b) => new Date(a.created_at) - new Date(b.created_at);
-                                return groupVersionsOfComparisons(
-                                    [...flatten([...prevResources.map(c => c.versions), ...prevResources]), ...papers],
-                                    sortFunc
-                                );
+                                const newItems = groupVersionsOfComparisons([
+                                    ...flatten([...prevResources.map(c => c.versions), ...prevResources]),
+                                    ...papers
+                                ]);
+                                return flatten([...prevResources, newItems.filter(t => !prevResources.map(p => p.id).includes(t.id))]);
                             });
 
                             setIsLoading(false);
@@ -111,7 +146,7 @@ function useResearchFieldComparison({ researchFieldId, initialSort, initialInclu
 
     const handleLoadMore = () => {
         if (!isLoading) {
-            loadData(page);
+            loadData(page, totalElements);
         }
     };
 

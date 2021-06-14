@@ -2,7 +2,6 @@ import ObservatoriesCarousel from 'components/ObservatoriesCarousel/Observatorie
 import { Link } from 'react-router-dom';
 import ROUTES from 'constants/routes.js';
 import useResearchFieldObservatories from 'components/ResearchField/hooks/useResearchFieldObservatories';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import PropTypes from 'prop-types';
 

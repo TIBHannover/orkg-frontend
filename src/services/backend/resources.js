@@ -88,11 +88,12 @@ export const getResourcesByClass = async ({
     creator = null,
     exact = false,
     verified = null,
-    returnContent = false
+    returnContent = false,
+    featured = null
 }) => {
     const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
     const params = queryString.stringify(
-        { page, size, sort, desc, creator, exact, ...(q ? { q } : {}), verified },
+        { page, size, sort, desc, creator, exact, ...(q ? { q } : {}), verified, featured },
         {
             skipNull: true,
             skipEmptyString: true
