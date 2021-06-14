@@ -101,7 +101,7 @@ const FeaturedComparisons = ({ researchFieldId }) => {
                     >
                         <span>
                             <Button color="light" className="flex-shrink-0 pl-3 pr-3" style={{ marginLeft: 'auto' }} size="sm">
-                                {stringifySort(sort === 'featured' ? 'newest' : sort)} <Icon icon={faChevronDown} />
+                                {stringifySort(sort)} <Icon icon={faChevronDown} />
                             </Button>
                         </span>
                     </Tippy>
