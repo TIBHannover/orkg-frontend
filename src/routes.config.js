@@ -55,6 +55,8 @@ import SmartReviewDiff from 'pages/SmartReview/SmartReviewDiff';
 import Tools from 'pages/Tools';
 import AddComparison from 'pages/AddComparison';
 import requireAuthentication from 'requireAuthentication';
+import Benchmarks from 'pages/Benchmarks/Benchmarks';
+import Benchmark from 'pages/Benchmarks/Benchmark';
 import { reverse } from 'named-urls';
 import ContributionEditor from 'pages/ContributionEditor';
 import CurationCall from 'pages/CurationCall';
@@ -318,6 +320,15 @@ const routes = [
     {
         path: ROUTES.CSV_IMPORT,
         component: requireAuthentication(CsvImport)
+    },
+    {
+        path: ROUTES.BENCHMARKS,
+        exact: true,
+        component: Benchmarks
+    },
+    {
+        path: ROUTES.BENCHMARK,
+        component: Benchmark
     },
     {
         path: ROUTES.SMART_REVIEW_NEW,
