@@ -142,8 +142,8 @@ export const StyledSlider = styled(Slider)`
     }
     & .slick-prev.slick-disabled,
     & .slick-next.slick-disabled {
-        color: ${props => props.theme.lightLighter};
-        cursor: default;
+        opacity: 0.3;
+        pointer-events: none;
     }
     & .slick-prev:hover:before,
     & .slick-prev:focus:before,
