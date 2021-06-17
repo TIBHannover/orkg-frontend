@@ -25,7 +25,7 @@ const ListGroupStyled = styled(ListGroup)`
 const FeaturedPapers = ({ researchFieldId }) => {
     const { papers, sort, includeSubFields, isLoading, setSort, setIncludeSubFields } = useResearchFieldPapers({
         researchFieldId: researchFieldId,
-        initialSort: 'combined',
+        initialSort: 'featured',
         initialIncludeSubFields: true,
         pageSize: 10
     });

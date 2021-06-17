@@ -25,7 +25,7 @@ const ListGroupStyled = styled(ListGroup)`
 const FeaturedComparisons = ({ researchFieldId }) => {
     const { comparisons, sort, includeSubFields, isLoading, setSort, setIncludeSubFields } = useResearchFieldComparison({
         researchFieldId: researchFieldId,
-        initialSort: 'combined',
+        initialSort: 'featured',
         initialIncludeSubFields: true,
         pageSize: 10
     });
