@@ -1,13 +1,44 @@
-import ComparisonLoadingComponent from 'components/Comparison/ComparisonLoadingComponent';
+import { setComparisonData } from 'actions/smartReview';
 import Comparison from 'components/Comparison/Comparison';
+import ComparisonLoadingComponent from 'components/Comparison/ComparisonLoadingComponent';
 import useComparison from 'components/Comparison/hooks/useComparison';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { setUsedReferences } from 'actions/smartReview';
+import { isEqual } from 'lodash';
 
-const SectionComparison = ({ id }) => {
-    const { contributions, properties, data, isLoadingComparisonResult, filterControlData, updateRulesOfProperty, comparisonType } = useComparison({
+const SectionComparison = ({ id, sectionId }) => {
+    const references = useSelector(state => state.smartReview.references);
+    const usedReferences = useSelector(state => state.smartReview.usedReferences);
+    const dispatch = useDispatch();
+    const comparisonData = useComparison({
         id
     });
+    const { contributions, properties, data, isLoadingComparisonResult, filterControlData, updateRulesOfProperty, comparisonType } = comparisonData;
+
+    useEffect(() => {
+        if (Object.keys(comparisonData.data).length === 0) {
+            return;
+        }
+        dispatch(
+            setComparisonData({
+                id,
+                data: comparisonData
+            })
+        );
+    }, [comparisonData, dispatch, id]);
+
+    useEffect(() => {
+        const paperIds = contributions.map(contribution => contribution.paperId);
+        if (paperIds.length === 0) {
+            return;
+        }
+        const _usedReferences = paperIds.map(paperId => references.find(reference => reference?.parsedReference?.id === paperId));
+        if (!isEqual(_usedReferences, usedReferences[sectionId])) {
+            dispatch(setUsedReferences({ references: _usedReferences, sectionId }));
+        }
+    }, [contributions, dispatch, references, sectionId, usedReferences]);
 
     return (
         <>
@@ -31,7 +62,8 @@ const SectionComparison = ({ id }) => {
 };
 
 SectionComparison.propTypes = {
-    id: PropTypes.string.isRequired
+    id: PropTypes.string.isRequired,
+    sectionId: PropTypes.string.isRequired
 };
 
 export default SectionComparison;

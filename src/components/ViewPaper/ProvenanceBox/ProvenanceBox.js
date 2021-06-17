@@ -9,6 +9,8 @@ import { useSelector } from 'react-redux';
 import { MISC } from 'constants/graphSettings';
 import Provenance from './Provenance';
 import Timeline from './Timeline';
+import env from '@beam-australia/react-env';
+import PWCProvenanceBox from 'components/Benchmarks/PWCProvenanceBox/PWCProvenanceBox';
 
 const ProvenanceBox = () => {
     const paperResource = useSelector(state => state.viewPaper.paperResource);
@@ -70,6 +72,10 @@ const ProvenanceBox = () => {
     }, [paperResource.created_by, paperResource.id, paperResource.observatory_id, paperResource.organization_id]);
 
     const [activeTab, setActiveTab] = useState(1);
+
+    if (env('PWC_USER_ID') === createdBy) {
+        return <PWCProvenanceBox />;
+    }
 
     return (
         <div className="col-md-3">

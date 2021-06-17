@@ -3,7 +3,7 @@ import { FILTER_TYPES } from 'constants/comparisonFilterTypes';
 import { CLASSES, MISC, PREDICATES, ENTITIES } from 'constants/graphSettings';
 import { PREDICATE_TYPE_ID, RESOURCE_TYPE_ID } from 'constants/misc';
 import ROUTES from 'constants/routes';
-import { find, flatten, flattenDepth, isEqual, isString, last, uniq } from 'lodash';
+import { find, flatten, flattenDepth, isEqual, isString, last, uniq, sortBy, uniqBy } from 'lodash';
 import { reverse } from 'named-urls';
 import queryString from 'query-string';
 import rdf from 'rdf';
@@ -182,7 +182,7 @@ export const getPaperData_ViewPaper = (paperResource, paperStatements) => {
 
     return {
         paperResource: paperResource,
-        authors: authors ? authors.reverse() : [], // statements are ordered desc, so first author is last => thus reverse
+        authors: authors ? authors.sort((a, b) => a.s_created_at.localeCompare(b.s_created_at)) : [], // statements are ordered desc, so first author is last => thus reverse
         contributions: contributions.sort((a, b) => a.label.localeCompare(b.label)), // sort contributions ascending, so contribution 1, is actually the first one
         publicationMonth: filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_PUBLICATION_MONTH, true),
         publicationYear: filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_PUBLICATION_YEAR, true),
@@ -219,7 +219,7 @@ export const getPaperData = (resource, paperStatements) => {
         publicationMonth,
         researchField,
         doi,
-        authorNames: authors ? authors.sort((a, b) => a.created_at.localeCompare(b.created_at)) : [],
+        authors: authors ? authors.sort((a, b) => a.s_created_at.localeCompare(b.s_created_at)) : [],
         contributions: contributions ? contributions.sort((a, b) => a.label.localeCompare(b.label)) : [], // sort contributions ascending, so contribution 1, is actually the first one
         order,
         created_by: resource.created_by !== MISC.UNKNOWN_ID ? resource.created_by : null
@@ -233,54 +233,65 @@ export const getPaperData = (resource, paperStatements) => {
  * @param {Array} comparisonStatements
  */
 export const getComparisonData = (resource, comparisonStatements) => {
-    // description
-    const description = comparisonStatements.find(statement => statement.predicate.id === PREDICATES.DESCRIPTION);
-
-    // reference
-    const reference = comparisonStatements.find(statement => statement.predicate.id === PREDICATES.REFERENCE);
-
-    // contributions
-    const contributions = comparisonStatements
-        .filter(statement => statement.predicate.id === PREDICATES.COMPARE_CONTRIBUTION)
-        .map(statement => statement.object);
-
-    // icon
-    const icon = comparisonStatements.find(statement => statement.predicate.id === PREDICATES.ICON);
-
-    // type
-    const type = comparisonStatements.find(statement => statement.predicate.id === PREDICATES.TYPE);
-
-    // order
-    const order = comparisonStatements.find(statement => statement.predicate.id === PREDICATES.ORDER);
-
-    // onHomePage
-    const onHomePage = comparisonStatements.find(statement => statement.predicate.id === PREDICATES.ON_HOMEPAGE);
-
-    // subject
-    const subject = comparisonStatements.find(statement => statement.predicate.id === PREDICATES.HAS_SUBJECT);
-
-    let contributionAmount = 0;
-    // try/catch to handle exceptions when a URL is malformed
-    try {
-        contributionAmount = contributions ? contributions.length : 0;
-    } catch (e) {
-        console.log(e);
-    }
+    const description = filterObjectOfStatementsByPredicateAndClass(comparisonStatements, PREDICATES.DESCRIPTION, true);
+    const contributions = filterObjectOfStatementsByPredicateAndClass(
+        comparisonStatements,
+        PREDICATES.COMPARE_CONTRIBUTION,
+        false,
+        CLASSES.CONTRIBUTION
+    );
+    const references = filterObjectOfStatementsByPredicateAndClass(comparisonStatements, PREDICATES.REFERENCE, false);
+    const doi = filterObjectOfStatementsByPredicateAndClass(comparisonStatements, PREDICATES.HAS_DOI, true);
+    const hasPreviousVersion = filterObjectOfStatementsByPredicateAndClass(
+        comparisonStatements,
+        PREDICATES.HAS_PREVIOUS_VERSION,
+        true,
+        CLASSES.COMPARISON
+    );
+    const icon = filterObjectOfStatementsByPredicateAndClass(comparisonStatements, PREDICATES.ICON, true);
+    const type = filterObjectOfStatementsByPredicateAndClass(comparisonStatements, PREDICATES.TYPE, true);
+    const order = filterObjectOfStatementsByPredicateAndClass(comparisonStatements, PREDICATES.ORDER, true);
+    const onHomePage = filterObjectOfStatementsByPredicateAndClass(comparisonStatements, PREDICATES.ON_HOMEPAGE, true);
+    const subject = filterObjectOfStatementsByPredicateAndClass(comparisonStatements, PREDICATES.HAS_SUBJECT, true, CLASSES.RESEARCH_FIELD);
+    const resources = filterObjectOfStatementsByPredicateAndClass(
+        comparisonStatements,
+        PREDICATES.RELATED_RESOURCE,
+        false,
+        CLASSES.COMPARISON_RELATED_RESOURCE
+    );
+    const figures = filterObjectOfStatementsByPredicateAndClass(
+        comparisonStatements,
+        PREDICATES.RELATED_FIGURE,
+        false,
+        CLASSES.COMPARISON_RELATED_FIGURE
+    );
+    const visualizations = filterObjectOfStatementsByPredicateAndClass(
+        comparisonStatements,
+        PREDICATES.HAS_VISUALIZATION,
+        false,
+        CLASSES.VISUALIZATION
+    );
+    const authors = filterObjectOfStatementsByPredicateAndClass(comparisonStatements, PREDICATES.HAS_AUTHOR, false);
+    const properties = filterObjectOfStatementsByPredicateAndClass(comparisonStatements, PREDICATES.HAS_PROPERTY, false);
 
     return {
-        id: resource.id,
+        ...resource,
         label: resource.label ? resource.label : 'No Title',
-        created_at: description ? description.object.created_at : '',
-        nbContributions: contributionAmount,
-        contributions: contributions ? contributions : [],
-        reference: reference ? reference.object.label : '',
-        description: description ? description.object.label : '',
-        icon: icon ? icon.object.label : '',
-        order: order ? order.object.label : Infinity,
-        type: type ? type.object.id : '',
+        authors: authors ? authors.sort((a, b) => a.s_created_at.localeCompare(b.s_created_at)) : [], // sort authors by their statement creation time (s_created_at)
+        contributions: contributions,
+        reference: references,
+        doi: doi ? doi.label : '',
+        description: description ? description.label : '',
+        icon: icon ? icon.label : '',
+        order: order ? order.label : Infinity,
+        type: type ? type.id : '',
         onHomePage: onHomePage ? true : false,
-        researchField: subject ? subject.object : null,
-        created_by: resource.created_by !== MISC.UNKNOWN_ID ? resource.created_by : null
+        researchField: subject,
+        hasPreviousVersion,
+        visualizations,
+        figures,
+        resources,
+        properties
     };
 };
 
@@ -300,8 +311,8 @@ export const getVisualizationData = (id, label, visualizationStatements) => {
         id,
         label,
         created_at: description ? description.object.created_at : '',
-        description: description ? description.object.label : ''
-        // authorNames: authors.sort((a, b) => a.created_at.localeCompare(b.created_at))
+        description: description ? description.object.label : '',
+        authors: authors ? authors.sort((a, b) => a.s_created_at.localeCompare(b.s_created_at)) : []
     };
 };
 
@@ -450,7 +461,7 @@ export const generateRdfDataVocabularyFile = (data, contributions, properties, m
 };
 
 /**
- * Filter a list of statements by predicate id and return the object
+ * Filter a list of statements by predicate id and return the object (including the statement id and created_at)
  *
  * @param {Array} statementsArray Array of statements
  * @param {String} predicateID Predicate ID
@@ -458,39 +469,42 @@ export const generateRdfDataVocabularyFile = (data, contributions, properties, m
  */
 export const filterObjectOfStatementsByPredicateAndClass = (statementsArray, predicateID, isUnique = true, classID = null) => {
     if (!statementsArray) {
-        return null;
+        return isUnique ? null : [];
     }
     let result = statementsArray.filter(statement => statement.predicate.id === predicateID);
     if (classID) {
         result = statementsArray.filter(statement => statement.object.classes && statement.object.classes.includes(classID));
     }
     if (result.length > 0 && isUnique) {
-        return { ...result[0].object, statementId: result.id };
+        return { ...result[0].object, statementId: result[0].id, s_created_at: result[0].created_at };
     } else if (result.length > 0 && !isUnique) {
-        return result.map(s => ({ ...s.object, statementId: s.id }));
+        return result.map(s => ({ ...s.object, statementId: s.id, s_created_at: s.created_at }));
     } else {
-        return null;
+        return isUnique ? null : [];
     }
 };
 
 /**
- * Filter a list of statements by predicate id and return the subject
+ * Filter a list of statements by predicate id and return the subject (including the statement id and created_at)
  *
  * @param {Array} statementsArray Array of statements
  * @param {String} predicateID Predicate ID
  * @param {Boolean} isUnique if this predicate is unique and has one value
  */
-export const filterSubjectOfStatementsByPredicate = (statementsArray, predicateID, isUnique = true) => {
+export const filterSubjectOfStatementsByPredicateAndClass = (statementsArray, predicateID, isUnique = true, classID = null) => {
     if (!statementsArray) {
-        return null;
+        return isUnique ? null : [];
     }
-    const result = statementsArray.filter(statement => statement.predicate.id === predicateID);
+    let result = statementsArray.filter(statement => statement.predicate.id === predicateID);
+    if (classID) {
+        result = statementsArray.filter(statement => statement.subject.classes && statement.subject.classes.includes(classID));
+    }
     if (result.length > 0 && isUnique) {
-        return result[0].subject;
+        return { ...result[0].subject, statementId: result[0].id, s_created_at: result[0].created_at };
     } else if (result.length > 0 && !isUnique) {
-        return result.map(s => s.subject);
+        return result.map(s => ({ ...s.subject, statementId: s.id, s_created_at: s.created_at }));
     } else {
-        return null;
+        return isUnique ? null : [];
     }
 };
 
@@ -559,6 +573,57 @@ export const similarPropertiesByLabel = (propertyLabel, propertyData) => {
         }
     });
     return uniq(result);
+};
+
+export function list_to_tree(list) {
+    const map = {};
+    let node;
+    const roots = [];
+    let i;
+    list = sortBy(list, 'hasPreviousVersion');
+    for (i = 0; i < list.length; i += 1) {
+        map[list[i].id] = i; // initialize the map
+        const v = list[i].hasPreviousVersion;
+        list[i].versions = v && !list.find(c => c.id === v.id) ? [list[i].hasPreviousVersion] : []; // initialize the versions
+    }
+    for (i = 0; i < list.length; i += 1) {
+        node = list[i];
+        // Check that map[node.hasPreviousVersion.id] exists : The parent could be not part of the list (not fetched yet!)
+        if (node.hasPreviousVersion && node.hasPreviousVersion.id !== null && map[node.hasPreviousVersion.id]) {
+            list[map[node.hasPreviousVersion.id]].versions.push(node);
+        } else {
+            roots.push(node);
+        }
+    }
+    return roots;
+}
+
+function convertTreeToFlat(treeStructure) {
+    const flatten = (children, extractChildren) =>
+        Array.prototype.concat.apply(children, children.map(x => flatten(extractChildren(x) || [], extractChildren)));
+    const extractChildren = x => x.versions ?? [];
+    const flat = flatten(extractChildren(treeStructure), extractChildren);
+    return flat;
+}
+
+/**
+ * Group comparisons versions
+ * @param {Array} comparisons comparison data objects
+ * @param {Function} sortFunc Sort function
+ */
+export const groupVersionsOfComparisons = (comparisons, sortFunc = (a, b) => new Date(b.created_at) - new Date(a.created_at)) => {
+    // 1- Remove duplicated and keep the ones with hasPreviousVersion
+    // 2- Make a tree of versions
+    let result = list_to_tree(uniqBy(sortBy(comparisons, 'hasPreviousVersion'), 'id'));
+    // 3- We flat the versions  inside the roots
+    for (let i = 0; i < result.length; i += 1) {
+        // Always the new version if the main resource
+        const arrayVersions = [...convertTreeToFlat(result[i]), result[i]].sort(sortFunc);
+        result[i] = { ...arrayVersions[0], versions: arrayVersions };
+    }
+    // 4- We sort the roots
+    result = result.sort(sortFunc);
+    return result;
 };
 
 /**

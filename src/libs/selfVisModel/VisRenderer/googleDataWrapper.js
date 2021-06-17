@@ -136,9 +136,11 @@ export default class DataForChart {
         const newRows = [];
 
         // fetch the data from the table itself;
-        this.rowls.forEach(row => {
+        this.rowls?.forEach(row => {
             const newR = [];
-            newR.push(row.c[xSelectorIndex].v);
+            if (xSelectorIndex && row?.c[xSelectorIndex]?.v) {
+                newR.push(row.c[xSelectorIndex].v);
+            }
             for (let i = 0; i < ySelectorIndices.length; i++) {
                 newR.push(row.c[ySelectorIndices[i]].v);
             }

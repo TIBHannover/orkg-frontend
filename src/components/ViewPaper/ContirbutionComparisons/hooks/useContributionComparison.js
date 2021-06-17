@@ -1,8 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import { getStatementsBySubjects, getStatementsByObjectAndPredicate } from 'services/backend/statements';
 import { CLASSES, PREDICATES } from 'constants/graphSettings';
-import { getComparisonData } from 'utils';
-import { find } from 'lodash';
+import { getComparisonData, groupVersionsOfComparisons } from 'utils';
+import { find, flatten } from 'lodash';
 
 function useContributionComparison(contributionId) {
     const pageSize = 3;
@@ -41,7 +41,9 @@ function useContributionComparison(contributionId) {
                             return getComparisonData(comparisonSubject, resourceStatements.statements);
                         });
                         Promise.all(comparisonsData).then(results => {
-                            setComparisons(prevResources => [...prevResources, ...results]);
+                            setComparisons(prevResources =>
+                                groupVersionsOfComparisons([...flatten([...prevResources.map(c => c.versions), ...prevResources]), ...results])
+                            );
                             setIsLoading(false);
                             // use result instead of results because filtering by contribution class might reduce the number of items
                             setHasNextPage(result.length < pageSize || result.length === 0 ? false : true);
