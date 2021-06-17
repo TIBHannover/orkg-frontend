@@ -98,7 +98,7 @@ const ResearchProblemHeader = ({ id }) => {
             {!isLoading && !isFailedLoading && (
                 <>
                     <Container className="d-flex align-items-center mt-4 mb-4">
-                        <h1 className="h5 flex-shrink-0 mb-0">Research problem</h1>
+                        <h1 className="h4 flex-shrink-0 mb-0">Research problem</h1>
                         <>
                             <SubtitleSeparator />
                             <SubTitle className="h5 mb-0">

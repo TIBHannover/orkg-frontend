@@ -1,5 +1,5 @@
-import { url } from 'constants/misc';
 import { MISC } from 'constants/graphSettings';
+import { url } from 'constants/misc';
 import { submitGetRequest, submitPostRequest, submitPutRequest } from 'network';
 import { getOrganization } from 'services/backend/organizations';
 
