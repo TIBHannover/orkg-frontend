@@ -8,7 +8,8 @@ import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 import ROUTES from 'constants/routes.js';
 import AddToComparison from 'components/ViewPaper/AddToComparison';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
-import FeaturedMark from 'components/FeaturedMark/FeaturedMark';
+import MarkFeatured from 'components/MarkFeatured/MarkFeatured';
+import MarkUnlisted from 'components/MarkUnlisted/MarkUnlisted';
 import RelativeBreadcrumbs from 'components/RelativeBreadcrumbs/RelativeBreadcrumbs';
 import Authors from './Authors';
 import PropTypes from 'prop-types';
@@ -61,7 +62,10 @@ const PaperCard = props => {
                             </Link>
                         )}
                         <div className="d-inline-block ml-1">
-                            <FeaturedMark size="sm" resourceId={props.paper.id} featured={props.paper.featured} />
+                            <MarkFeatured size="sm" resourceId={props.paper.id} featured={props.paper.featured} />
+                        </div>
+                        <div className="d-inline-block ml-1">
+                            <MarkUnlisted size="sm" resourceId={props.paper.id} unlisted={props.paper?.unlisted} />
                         </div>
                         <br />
                         <small>
@@ -119,7 +123,8 @@ PaperCard.propTypes = {
             label: PropTypes.string
         }),
         created_by: PropTypes.string,
-        featured: PropTypes.bool
+        featured: PropTypes.bool,
+        unlisted: PropTypes.bool
     }).isRequired,
     contribution: PropTypes.shape({
         id: PropTypes.string.isRequired,

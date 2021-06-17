@@ -32,7 +32,8 @@ import env from '@beam-australia/react-env';
 import { getVisualization } from 'services/similarity';
 import GDCVisualizationRenderer from 'libs/selfVisModel/RenderingComponents/GDCVisualizationRenderer';
 import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
-import FeaturedMark from 'components/FeaturedMark/FeaturedMark';
+import MarkFeatured from 'components/MarkFeatured/MarkFeatured';
+import MarkUnlisted from 'components/MarkUnlisted/MarkUnlisted';
 import { CLASS_TYPE_ID } from 'constants/misc';
 import { reverseWithSlug } from 'utils';
 
@@ -96,6 +97,7 @@ function Resource(props) {
     const [error, setError] = useState(null);
     const [label, setLabel] = useState('');
     const [featured, setFeatured] = useState(false);
+    const [unlisted, setUnlisted] = useState(false);
     const [classes, setClasses] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [editMode, setEditMode] = useState(false);
@@ -126,6 +128,7 @@ function Resource(props) {
                             classes = orderBy(classes, [classLabel => classLabel.label.toLowerCase()], ['asc']);
                             setLabel(responseJson.label);
                             setFeatured(responseJson.featured);
+                            setUnlisted(responseJson.unlisted);
                             setClasses(classes);
                         })
                         .then(() => {
@@ -306,7 +309,10 @@ function Resource(props) {
                                                 <small>No label</small>
                                             </i>
                                         )}{' '}
-                                        <FeaturedMark size="sm" resourceId={props.match.params.id} featured={featured} />
+                                        <MarkFeatured size="xs" resourceId={props.match.params.id} featured={featured} />
+                                        <div className="d-inline-block ml-1">
+                                            <MarkUnlisted size="xs" resourceId={props.match.params.id} unlisted={unlisted} />
+                                        </div>
                                     </h3>
                                     {classes.length > 0 && (
                                         <span style={{ fontSize: '90%' }}>

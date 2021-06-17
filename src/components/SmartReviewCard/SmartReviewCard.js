@@ -5,7 +5,8 @@ import styled from 'styled-components';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 import ROUTES from 'constants/routes.js';
-import FeaturedMark from 'components/FeaturedMark/FeaturedMark';
+import MarkFeatured from 'components/MarkFeatured/MarkFeatured';
+import MarkUnlisted from 'components/MarkUnlisted/MarkUnlisted';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import Tippy from '@tippyjs/react';
@@ -24,7 +25,10 @@ const SmartReviewCard = ({ versions }) => {
                 <Col md={9}>
                     <Link to={reverse(ROUTES.SMART_REVIEW, { id: versions[0]?.id })}>{versions[0]?.label}</Link>
                     <div className="d-inline-block ml-1">
-                        <FeaturedMark size="sm" resourceId={versions[0]?.id} featured={versions[0]?.featured} />
+                        <MarkFeatured size="sm" resourceId={versions[0]?.id} featured={versions[0]?.featured} />
+                    </div>
+                    <div className="d-inline-block ml-1">
+                        <MarkUnlisted size="sm" resourceId={versions[0]?.id} featured={versions[0]?.unlisted} />
                     </div>
                     <br />
                     {versions[0].created_at && (

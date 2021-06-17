@@ -5,7 +5,8 @@ import styled from 'styled-components';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faCalendar, faFile, faChartBar, faPaperclip } from '@fortawesome/free-solid-svg-icons';
 import ROUTES from 'constants/routes.js';
-import FeaturedMark from 'components/FeaturedMark/FeaturedMark';
+import MarkFeatured from 'components/MarkFeatured/MarkFeatured';
+import MarkUnlisted from 'components/MarkUnlisted/MarkUnlisted';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import Versions from './Versions';
@@ -29,7 +30,10 @@ const ComparisonCard = props => {
                         {props.comparison.label ? props.comparison.label : <em>No title</em>}
                     </Link>
                     <div className="d-inline-block ml-1">
-                        <FeaturedMark size="sm" resourceId={props.comparison.id} featured={props.comparison?.featured} />
+                        <MarkFeatured size="sm" resourceId={props.comparison.id} featured={props.comparison?.featured} />
+                    </div>
+                    <div className="d-inline-block ml-1">
+                        <MarkUnlisted size="sm" resourceId={props.comparison.id} unlisted={props.comparison?.unlisted} />
                     </div>
                     <br />
                     {props.comparison.created_at && (
@@ -92,7 +96,8 @@ ComparisonCard.propTypes = {
         created_by: PropTypes.string,
         versions: PropTypes.array,
         visualizations: PropTypes.array,
-        featured: PropTypes.bool
+        featured: PropTypes.bool,
+        unlisted: PropTypes.bool
     }).isRequired,
     rounded: PropTypes.string,
     showHistory: PropTypes.bool

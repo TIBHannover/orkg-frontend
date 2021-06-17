@@ -27,7 +27,8 @@ import useResearchProblemResearchFields from 'components/ResearchProblem/hooks/u
 import AuthorsBox from 'components/TopAuthors/AuthorsBox';
 import ResearchFieldsBox from './ResearchFieldBox/ResearchFieldsBox';
 import SuperResearchProblemBox from './SuperResearchProblemBox/SuperResearchProblemBox';
-import FeaturedMark from 'components/FeaturedMark/FeaturedMark';
+import FeaturedMark from 'components/MarkFeatured/MarkFeatured';
+import MarkUnlisted from 'components/MarkUnlisted/MarkUnlisted';
 import { NavLink } from 'react-router-dom';
 import ContentLoader from 'react-content-loader';
 import ROUTES from 'constants/routes.js';
@@ -103,7 +104,10 @@ const ResearchProblemHeader = ({ id }) => {
                             <SubtitleSeparator />
                             <SubTitle className="h5 mb-0">
                                 {' '}
-                                {researchProblemData.label} <FeaturedMark size="sm" resourceId={id} featured={researchProblemData?.featured} />
+                                {researchProblemData.label} <FeaturedMark size="xs" resourceId={id} featured={researchProblemData?.featured} />{' '}
+                                <div className="d-inline-block ml-1">
+                                    <MarkUnlisted size="xs" resourceId={id} unlisted={researchProblemData?.unlisted} />
+                                </div>
                             </SubTitle>
                         </>
                         {editMode && (

@@ -9,7 +9,8 @@ import RelativeBreadcrumbs from 'components/RelativeBreadcrumbs/RelativeBreadcru
 import UserAvatar from 'components/UserAvatar/UserAvatar';
 import Authors from './Authors';
 import PropTypes from 'prop-types';
-import FeaturedMark from 'components/FeaturedMark/FeaturedMark';
+import MarkFeatured from 'components/MarkFeatured/MarkFeatured';
+import MarkUnlisted from 'components/MarkUnlisted/MarkUnlisted';
 import { CLASSES, PREDICATES } from 'constants/graphSettings';
 import { filterObjectOfStatementsByPredicateAndClass } from 'utils';
 import moment from 'moment';
@@ -76,7 +77,10 @@ const PaperCardDynamic = props => {
                         {props.paper.title ? props.paper.title : <em>No title</em>}
                     </Link>
                     <div className="d-inline-block ml-1">
-                        <FeaturedMark size="sm" resourceId={props.paper.id} featured={props.paper.featured} />
+                        <MarkFeatured size="sm" resourceId={props.paper.id} featured={props.paper.featured} />
+                    </div>
+                    <div className="d-inline-block ml-1">
+                        <MarkUnlisted size="sm" resourceId={props.paper.id} unlisted={props.paper.unlisted} />
                     </div>
                     <br />
                     {!isLoading && (
@@ -143,7 +147,8 @@ PaperCardDynamic.propTypes = {
             label: PropTypes.string
         }),
         created_by: PropTypes.string,
-        featured: PropTypes.bool
+        featured: PropTypes.bool,
+        unlisted: PropTypes.bool
     }).isRequired
 };
 

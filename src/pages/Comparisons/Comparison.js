@@ -16,7 +16,8 @@ import RelatedResources from 'components/Comparison/RelatedResources/RelatedReso
 import RelatedFigures from 'components/Comparison/RelatedResources/RelatedFigures';
 import ExportCitation from 'components/Comparison/Export/ExportCitation';
 import ComparisonMetaData from 'components/Comparison/ComparisonMetaData';
-import FeaturedMark from 'components/FeaturedMark/FeaturedMark';
+import MarkFeatured from 'components/MarkFeatured/MarkFeatured';
+import MarkUnlisted from 'components/MarkUnlisted/MarkUnlisted';
 import Share from 'components/Comparison/Share.js';
 import HistoryModal from 'components/Comparison/HistoryModal/HistoryModal';
 import useComparisonVersions from 'components/Comparison/hooks/useComparisonVersions';
@@ -428,7 +429,14 @@ function Comparison(props) {
                             <div className="flex-grow-1">
                                 <h2 className="h4 mb-4 mt-4">
                                     {metaData.title ? metaData.title : 'Compare'}{' '}
-                                    {metaData.id && <FeaturedMark size="1x" resourceId={metaData?.id} featured={metaData?.featured} />}
+                                    {metaData.id && (
+                                        <>
+                                            <MarkFeatured size="xs" resourceId={metaData?.id} featured={metaData?.featured} />
+                                            <div className="d-inline-block ml-1">
+                                                <MarkUnlisted size="xs" resourceId={metaData?.id} unlisted={metaData?.unlisted} />
+                                            </div>
+                                        </>
+                                    )}
                                 </h2>
 
                                 {!isFailedLoadingMetaData && <ComparisonMetaData metaData={metaData} />}

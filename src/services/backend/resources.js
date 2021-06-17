@@ -113,3 +113,11 @@ export const markAsFeatured = id => {
 export const removeFeaturedFlag = id => {
     return submitDeleteRequest(`${resourcesUrl}${id}/metadata/featured`, { 'Content-Type': 'application/json' });
 };
+
+export const markAsUnlisted = id => {
+    return submitPutRequest(`${resourcesUrl}${id}/metadata/unlisted`, { 'Content-Type': 'application/json' });
+};
+
+export const removeUnlistedFlag = id => {
+    return submitDeleteRequest(`${resourcesUrl}${id}/metadata/unlisted`, { 'Content-Type': 'application/json' });
+};
