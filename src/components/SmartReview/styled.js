@@ -10,6 +10,20 @@ export const EditableTitle = styled(Textarea)`
     resize: none;
 `;
 
+export const MoveButton = styled.div`
+    position: absolute;
+    left: 0;
+    width: 25px;
+    top: 25px;
+    display: none;
+    &.hover {
+        display: block;
+    }
+    &.down {
+        top: calc(100% - 30px);
+    }
+`;
+
 export const MoveHandle = styled.div`
     width: 25px;
     height: 100%;

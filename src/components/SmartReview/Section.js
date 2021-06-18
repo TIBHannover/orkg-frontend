@@ -1,4 +1,4 @@
-import { faBars, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faArrowDown, faArrowUp, faBars, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { deleteSection, updateSectionTitle } from 'actions/smartReview';
 import AddSection from 'components/SmartReview/AddSection';
@@ -6,13 +6,15 @@ import SectionContentLink from 'components/SmartReview/SectionContentLink';
 import SectionOntology from 'components/SmartReview/DataTable/SectionOntology';
 import SectionMarkdown from 'components/SmartReview/SectionMarkdown';
 import SectionType from 'components/SmartReview/SectionType';
-import { DeleteButton, MoveHandle, SectionStyled, EditableTitle } from 'components/SmartReview/styled';
+import { DeleteButton, MoveHandle, MoveButton, SectionStyled, EditableTitle } from 'components/SmartReview/styled';
 import { CLASSES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { SortableElement, sortableHandle } from 'react-sortable-hoc';
 import Confirm from 'reactstrap-confirm';
+import Tippy from '@tippyjs/react';
+import { Button } from 'reactstrap';
 
 const Section = props => {
     const [isHovering, setIsHovering] = useState(false);
@@ -71,6 +73,32 @@ const Section = props => {
                     <Icon icon={faTimes} />
                 </DeleteButton>
                 <SortableHandle />
+                <MoveButton className={isHovering ? 'hover up' : 'up'}>
+                    <Tippy content="Move up">
+                        <span>
+                            <Button
+                                className="p-0 w-100"
+                                color="secondary"
+                                onClick={() => props.handleManualSort({ id: sectionId, direction: 'up' })}
+                            >
+                                <Icon icon={faArrowUp} />
+                            </Button>
+                        </span>
+                    </Tippy>
+                </MoveButton>
+                <MoveButton className={isHovering ? 'hover down' : 'down'}>
+                    <Tippy content="Move down">
+                        <span>
+                            <Button
+                                className="p-0 w-100"
+                                color="secondary"
+                                onClick={() => props.handleManualSort({ id: sectionId, direction: 'down' })}
+                            >
+                                <Icon icon={faArrowDown} />
+                            </Button>
+                        </span>
+                    </Tippy>
+                </MoveButton>
                 <SectionType type={type.id} sectionId={sectionId} isDisabled={isContentLinkSection || isOntologySection} />
                 <h2 id={`section-${sectionId}`} className="h4 border-bottom pb-1 mb-3" placeholder="trd">
                     <EditableTitle
@@ -96,7 +124,8 @@ const Section = props => {
 
 Section.propTypes = {
     section: PropTypes.object.isRequired,
-    atIndex: PropTypes.number.isRequired
+    atIndex: PropTypes.number.isRequired,
+    handleManualSort: PropTypes.func.isRequired
 };
 
 export default SortableElement(Section);

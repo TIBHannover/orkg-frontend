@@ -7,11 +7,11 @@ import { SortableContainer } from 'react-sortable-hoc';
 import { Container } from 'reactstrap';
 import { createGlobalStyle } from 'styled-components';
 
-const SortableList = SortableContainer(({ items }) => (
+const SortableList = SortableContainer(({ items, handleManualSort }) => (
     <Container style={{ position: 'relative' }}>
         <Outline editMode />
         {items.map((section, index) => (
-            <Section key={section.title.id} index={index} section={section} atIndex={index + 1} />
+            <Section key={section.title.id} index={index} section={section} atIndex={index + 1} handleManualSort={handleManualSort} />
         ))}
     </Container>
 ));
@@ -35,6 +35,12 @@ const Sections = () => {
         }
     };
 
+    const handleManualSort = ({ id, direction }) => {
+        const oldIndex = sections.findIndex(section => section.id === id);
+        const newIndex = direction === 'up' ? oldIndex - 1 : oldIndex + 1;
+        dispatch(moveSection({ contributionId, sections, oldIndex, newIndex }));
+    };
+
     // disable pointer events for all elements while sorting (prevents trigger hover in the sections)
     return (
         <div style={{ pointerEvents: isSorting ? 'none' : 'all' }}>
@@ -48,6 +54,7 @@ const Sections = () => {
                 useDragHandle
                 helperClass="is-dragging"
                 useWindowAsScrollContainer
+                handleManualSort={handleManualSort}
             />
         </div>
     );
