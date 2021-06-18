@@ -2,6 +2,7 @@ import MachineReadableRepresentation from './MachineReadableRepresentation';
 import DataForChart from './VisRenderer/googleDataWrapper';
 import { validateCellMapping } from './ValidateCellMapping';
 import { clone } from 'lodash';
+
 export default class SelfVisDataMode {
     static instance;
     constructor() {

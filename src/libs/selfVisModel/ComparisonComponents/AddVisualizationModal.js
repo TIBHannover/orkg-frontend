@@ -181,8 +181,7 @@ function AddVisualizationModal(props) {
                     />
                 </ModalBody>
                 <ModalFooter className="p-2">
-                    {/*Added hint to select at least one mapper at the top*/}
-
+                    {/*
                     <Button
                         color="primary"
                         className="mr-2"
@@ -193,6 +192,7 @@ function AddVisualizationModal(props) {
                     >
                         Debug
                     </Button>
+                    */}
 
                     {processStep === 1 && (
                         <div style={{ position: 'absolute', left: 0 }}>Please select at least one mapper at the top of a column.</div>
