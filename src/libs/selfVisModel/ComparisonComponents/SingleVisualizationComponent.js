@@ -57,8 +57,6 @@ const SingleVisualizationComponent = props => {
 
     const visMethod = props.input.reconstructionModel.data.visMethod;
     const customizationState = props.input.reconstructionModel.data.reconstructionData.customizationState;
-    // console.log(customizationState);
-    // console.log('customization State: ', customizationState.xAxisLabel, customizationState.yAxisLabel);
     useEffect(() => {
         // we need to check if the data input for this component has changed iff then apply reconstructionModel)
         const renderingData = selfVisModel.applyReconstructionModel(props.input.reconstructionModel);

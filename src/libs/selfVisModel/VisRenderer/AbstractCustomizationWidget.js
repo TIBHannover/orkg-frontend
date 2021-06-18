@@ -34,6 +34,7 @@ export default class AbstractCustomizationWidget extends Component {
                 return (
                     <CustomizationColumnChart
                         propagateUpdates={this.props.propagateUpdates}
+                        createChartVisualization={this.props.createChartVisualization}
                         restoreCustomizationState={keepCustomizationWidgetWhenChanged}
                     />
                 );
@@ -42,6 +43,7 @@ export default class AbstractCustomizationWidget extends Component {
                 return (
                     <CustomizationBarChart
                         propagateUpdates={this.props.propagateUpdates}
+                        createChartVisualization={this.props.createChartVisualization}
                         restoreCustomizationState={keepCustomizationWidgetWhenChanged}
                     />
                 );
@@ -50,6 +52,7 @@ export default class AbstractCustomizationWidget extends Component {
                 return (
                     <CustomizationScatterChart
                         propagateUpdates={this.props.propagateUpdates}
+                        createChartVisualization={this.props.createChartVisualization}
                         restoreCustomizationState={keepCustomizationWidgetWhenChanged}
                     />
                 );
@@ -58,6 +61,7 @@ export default class AbstractCustomizationWidget extends Component {
                 return (
                     <CustomizationLineChart
                         propagateUpdates={this.props.propagateUpdates}
+                        createChartVisualization={this.props.createChartVisualization}
                         restoreCustomizationState={keepCustomizationWidgetWhenChanged}
                     />
                 );
@@ -78,5 +82,6 @@ export default class AbstractCustomizationWidget extends Component {
 }
 
 AbstractCustomizationWidget.propTypes = {
-    propagateUpdates: PropTypes.func.isRequired
+    propagateUpdates: PropTypes.func.isRequired,
+    createChartVisualization: PropTypes.func.isRequired
 };

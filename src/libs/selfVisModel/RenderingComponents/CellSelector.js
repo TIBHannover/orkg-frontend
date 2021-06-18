@@ -137,13 +137,15 @@ const CellSelector = props => {
     **/
 
     const setFullColumnSelection = (columnId, value) => {
-        const colItems = selfVisModel.modelAccess.getCol(columnId);
         selfVisModel.mrrModel.propertyAnchors[columnId].setSelectedColumn(value);
+        selfVisModel.applySelectionToCustomizationState(selfVisModel.mrrModel.propertyAnchors[columnId], value);
+        // const colItems = selfVisModel.modelAccess.getCol(columnId);
 
-        for (let i = 0; i < selfVisModel.mrrModel.contributionAnchors.length; i++) {
-            selfVisModel.mrrModel.contributionAnchors[i].setSelectedRow(true);
-            colItems[i].setItemSelected(value);
-        }
+        // this is currently not needed
+        // for (let i = 0; i < selfVisModel.mrrModel.contributionAnchors.length; i++) {
+        //     selfVisModel.mrrModel.contributionAnchors[i].setSelectedRow(true);
+        //     colItems[i].setItemSelected(value);
+        // }
     };
 
     return (
