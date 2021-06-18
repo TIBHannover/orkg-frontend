@@ -8,7 +8,7 @@ import {
     addYAxisSelector,
     createValueEditor,
     initializeFromCustomizer
-} from './HelperFunctionsRefactored';
+} from './HelperFunctions';
 import PropTypes from 'prop-types';
 
 class CustomizationColumnChart extends Component {
