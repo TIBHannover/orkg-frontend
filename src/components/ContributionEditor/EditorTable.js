@@ -65,7 +65,7 @@ const EditorTable = ({ scrollContainerBody }) => {
                                     <div
                                         {...row.getRowProps()}
                                         key={row.values.property.staticRowId}
-                                        className="tr"
+                                        className="tr d-flex"
                                         style={{ zIndex: 100 - row.index }}
                                     >
                                         {row.cells.map(cell => (
