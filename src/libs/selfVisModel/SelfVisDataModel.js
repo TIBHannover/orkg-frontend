@@ -179,12 +179,15 @@ export default class SelfVisDataMode {
             this.mrrModel.dataItems.forEach(cell => {
                 const rowIndex = cell.positionContribAnchor;
                 const colIndex = cell.positionPropertyAnchor;
+
                 const item = this.modelAccess.getItem(rowIndex, colIndex);
-                item.setItemSelected(false);
-                if (cell.label) {
-                    item.setLabel(cell.originalLabel);
+                if (item) {
+                    item.setItemSelected(false);
+                    if (cell.label) {
+                        item.setLabel(cell.originalLabel);
+                    }
+                    item.cellValueIsValid = false;
                 }
-                item.cellValueIsValid = false;
             });
 
             this.setRenderingMethod('Table'); // << Default rendering Method
@@ -260,12 +263,14 @@ export default class SelfVisDataMode {
             const rowIndex = cell.positionContribAnchor;
             const colIndex = cell.positionPropertyAnchor;
             const item = this.modelAccess.getItem(rowIndex, colIndex);
-            item.setItemSelected(true);
-            item.setLabel(item.originalLabel);
-            if (cell.label) {
-                item.setLabel(cell.label);
+            if (item) {
+                item.setItemSelected(true);
+                item.setLabel(item.originalLabel);
+                if (cell.label) {
+                    item.setLabel(cell.label);
+                }
+                item.cellValueIsValid = true;
             }
-            item.cellValueIsValid = true;
         });
         this.createGDCDataModel();
 

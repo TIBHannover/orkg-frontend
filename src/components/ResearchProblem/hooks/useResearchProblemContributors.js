@@ -3,6 +3,7 @@ import { getContributorsByResearchProblemId } from 'services/backend/problems';
 
 function useResearchProblemContributors({ researchProblemId, pageSize = 30 }) {
     const [isLoading, setIsLoading] = useState(false);
+    const [isLoadingFailed, setIsLoadingFailed] = useState(false);
     const [hasNextPage, setHasNextPage] = useState(false);
     const [isLastPageReached, setIsLastPageReached] = useState(false);
     const [page, setPage] = useState(0);
@@ -16,19 +17,29 @@ function useResearchProblemContributors({ researchProblemId, pageSize = 30 }) {
                 id: researchProblemId,
                 page: page,
                 items: pageSize
-            }).then(result => {
-                if (result.length > 0) {
-                    setContributors(prevResources => [...prevResources, ...result]);
-                    setIsLoading(false);
-                    setHasNextPage(result.length < pageSize || result.length === 0 ? false : true);
-                    setIsLastPageReached(false);
-                    setPage(page + 1);
-                } else {
+            })
+                .then(result => {
+                    if (result.length > 0) {
+                        setContributors(prevResources => [...prevResources, ...result]);
+                        setIsLoading(false);
+                        setHasNextPage(result.length < pageSize || result.length === 0 ? false : true);
+                        setIsLastPageReached(false);
+                        setPage(page + 1);
+                        setIsLoadingFailed(false);
+                    } else {
+                        setIsLoading(false);
+                        setHasNextPage(false);
+                        setIsLastPageReached(page > 0 ? true : false);
+                        setIsLoadingFailed(false);
+                    }
+                })
+                .catch(e => {
+                    setContributors([]);
                     setIsLoading(false);
                     setHasNextPage(false);
-                    setIsLastPageReached(page > 0 ? true : false);
-                }
-            });
+                    setIsLastPageReached(true);
+                    setIsLoadingFailed(true);
+                });
         },
         [researchProblemId, pageSize]
     );
@@ -51,6 +62,6 @@ function useResearchProblemContributors({ researchProblemId, pageSize = 30 }) {
         }
     };
 
-    return { contributors, isLoading, hasNextPage, isLastPageReached, page, handleLoadMore };
+    return { contributors, isLoading, isLoadingFailed, hasNextPage, isLastPageReached, page, handleLoadMore };
 }
 export default useResearchProblemContributors;

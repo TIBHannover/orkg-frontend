@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import StatementBrowserDialog from '../StatementBrowser/StatementBrowserDialog';
 import ValuePlugins from '../ValuePlugins/ValuePlugins';
+import { PREDICATE_TYPE_ID, RESOURCE_TYPE_ID } from 'constants/misc';
 import Tippy from '@tippyjs/react';
 
 export const Item = styled.div`
@@ -39,16 +40,22 @@ class TableCell extends Component {
         this.state = {
             modal: false,
             dialogResourceId: null,
-            dialogResourceLabel: null
+            dialogResourceLabel: null,
+            dialogResourceType: RESOURCE_TYPE_ID
         };
     }
 
-    openStatementBrowser = (id, label) => {
-        this.setState({
-            modal: true,
-            dialogResourceId: id,
-            dialogResourceLabel: label
-        });
+    openStatementBrowser = (id, label, type = null) => {
+        this.setState(
+            {
+                dialogResourceId: id,
+                dialogResourceLabel: label,
+                dialogResourceType: type ? type : RESOURCE_TYPE_ID
+            },
+            () => {
+                this.setState({ modal: true });
+            }
+        );
     };
 
     toggle = type => {
@@ -57,6 +64,31 @@ class TableCell extends Component {
         }));
     };
 
+    PathTooltipContent = data => {
+        return (
+            <div className="fullPath">
+                Path of this value :{' '}
+                {data.pathLabels?.map((path, index) => {
+                    const resourceType = index % 2 === 0 ? RESOURCE_TYPE_ID : PREDICATE_TYPE_ID;
+                    return (
+                        <span key={index}>
+                            <span
+                                className="btn-link"
+                                onClick={() => this.openStatementBrowser(data.path[index], path, resourceType)}
+                                style={{ cursor: 'pointer' }}
+                                onKeyDown={e => (e.keyCode === 13 ? this.openStatementBrowser(data.path[index], path, resourceType) : undefined)}
+                                role="button"
+                                tabIndex={0}
+                            >
+                                {path}
+                            </span>
+                            {index !== data.pathLabels?.length - 1 && ' / '}
+                        </span>
+                    );
+                })}
+            </div>
+        );
+    };
     render() {
         let cellPadding = 10;
         if (this.props.viewDensity === 'normal') {
@@ -70,13 +102,18 @@ class TableCell extends Component {
                     <ItemInner cellPadding={cellPadding}>
                         {this.props.data &&
                             this.props.data.length > 0 &&
-                            this.props.data.map(
-                                (date, index) =>
+                            this.props.data.map((date, index) => {
+                                return (
                                     Object.keys(date).length > 0 &&
                                     (date.type === 'resource' ? (
                                         <span key={`value-${date.resourceId}`}>
                                             {index > 0 && <ItemInnerSeparator />}
-                                            <Tippy content={`Path of this value : ${date.pathLabels?.slice(1).join(' / ')}`} arrow={true}>
+                                            <Tippy
+                                                content={this.PathTooltipContent(date)}
+                                                arrow={true}
+                                                disabled={date.pathLabels?.length <= 1}
+                                                interactive={true}
+                                            >
                                                 <div
                                                     className="btn-link"
                                                     onClick={() => this.openStatementBrowser(date.resourceId, date.label)}
@@ -94,7 +131,12 @@ class TableCell extends Component {
                                     ) : (
                                         <span key={`value-${date.label}`}>
                                             {index > 0 && <ItemInnerSeparator />}
-                                            <Tippy content={`Path of this value : ${date.pathLabels?.slice(1).join(' / ')}`} arrow={true}>
+                                            <Tippy
+                                                content={this.PathTooltipContent(date)}
+                                                arrow={true}
+                                                disabled={date.pathLabels?.length <= 1}
+                                                interactive={true}
+                                            >
                                                 <span>
                                                     <ValuePlugins type="literal" options={{ inModal: true }}>
                                                         {date.label}
@@ -103,7 +145,8 @@ class TableCell extends Component {
                                             </Tippy>
                                         </span>
                                     ))
-                            )}
+                                );
+                            })}
                     </ItemInner>
                 </Item>
 
@@ -113,6 +156,7 @@ class TableCell extends Component {
                         toggleModal={() => this.toggle('modal')}
                         id={this.state.dialogResourceId}
                         label={this.state.dialogResourceLabel}
+                        type={this.state.dialogResourceType}
                     />
                 )}
             </>
