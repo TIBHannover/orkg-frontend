@@ -1,4 +1,5 @@
 import { moveSection } from 'actions/smartReview';
+import Outline from 'components/SmartReview/Outline';
 import Section from 'components/SmartReview/Section';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -7,7 +8,8 @@ import { Container } from 'reactstrap';
 import { createGlobalStyle } from 'styled-components';
 
 const SortableList = SortableContainer(({ items }) => (
-    <Container>
+    <Container style={{ position: 'relative' }}>
+        <Outline editMode />
         {items.map((section, index) => (
             <Section key={section.title.id} index={index} section={section} atIndex={index + 1} />
         ))}
@@ -45,6 +47,7 @@ const Sections = () => {
                 lockAxis="y"
                 useDragHandle
                 helperClass="is-dragging"
+                useWindowAsScrollContainer
             />
         </div>
     );

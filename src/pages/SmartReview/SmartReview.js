@@ -39,6 +39,8 @@ import { createGlobalStyle } from 'styled-components';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import ReferencesModal from 'components/SmartReview/References/ReferencesModal';
 import ReferencesSection from 'components/SmartReview/References/ReferencesSection';
+import ShouldPublishModal from 'components/SmartReview/ShouldPublishModal';
+import { usePrevious } from 'react-use';
 
 const GlobalStyle = createGlobalStyle`
     // ensure printing only prints the contents and no other elements
@@ -62,28 +64,35 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 const SmartReview = () => {
-    const { id } = useParams();
-    const { load, isLoading, isNotFound, getVersions } = useLoad();
+    const [isOpenPublishModal, setIsOpenPublishModal] = useState(false);
+    const [isOpenShouldPublishModal, setIsOpenShouldPublishModal] = useState(false);
+    const [isOpenReferencesModal, setIsOpenReferencesModal] = useState(false);
     const isLoadingInline = useSelector(state => state.smartReview.isLoading);
     const isEditing = useSelector(state => state.smartReview.isEditing);
-    const [isOpenPublishModal, setIsOpenPublishModal] = useState(false);
-    const [isOpenReferencesModal, setIsOpenReferencesModal] = useState(false);
     const isPublished = useSelector(state => state.smartReview.isPublished);
     const paper = useSelector(state => state.smartReview.paper);
     const isOpenHistoryModal = useSelector(state => state.smartReview.isOpenHistoryModal);
     const researchField = useSelector(state => state.smartReview.researchField);
+    const versions = useSelector(state => state.smartReview.versions);
+    const prevIsEditing = usePrevious(isEditing);
     const dispatch = useDispatch();
     const history = useHistory();
-    const versions = useSelector(state => state.smartReview.versions);
+    const { load, isLoading, isNotFound, getVersions } = useLoad();
+    const { id } = useParams();
     const version = versions.find(version => version.id === id);
     const versionNumber = versions.length ? versions.length - versions.findIndex(version => version.id === id) : null;
     const publicationDate = version ? moment(version.date).format('DD MMMM YYYY') : null;
 
     useEffect(() => {
         document.title = 'SmartReview - ORKG';
-
         load(id);
     }, [id, load]);
+
+    useEffect(() => {
+        if (prevIsEditing && !isEditing) {
+            setIsOpenShouldPublishModal(true);
+        }
+    }, [isEditing, prevIsEditing]);
 
     const handleEdit = async () => {
         if (isPublished) {
@@ -258,6 +267,9 @@ const SmartReview = () => {
             )}
             {isOpenHistoryModal && <HistoryModal toggle={toggleHistoryModal} id={id} show />}
             {isOpenReferencesModal && <ReferencesModal toggle={() => setIsOpenReferencesModal(v => !v)} id={id} show />}
+            {isOpenShouldPublishModal && (
+                <ShouldPublishModal toggle={() => setIsOpenShouldPublishModal(v => !v)} show openPublishModal={() => setIsOpenPublishModal(true)} />
+            )}
         </div>
     );
 };

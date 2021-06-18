@@ -72,7 +72,7 @@ const Section = props => {
                 </DeleteButton>
                 <SortableHandle />
                 <SectionType type={type.id} sectionId={sectionId} isDisabled={isContentLinkSection || isOntologySection} />
-                <h2 className="h4 border-bottom pb-1 mb-3" placeholder="trd">
+                <h2 id={`section-${sectionId}`} className="h4 border-bottom pb-1 mb-3" placeholder="trd">
                     <EditableTitle
                         value={title}
                         className="focus-primary"
