@@ -52,7 +52,11 @@ const SelectEntitiesModal = ({ toggle, section, type }) => {
                                     .map(property =>
                                         comparison.data[property].map(row =>
                                             row
-                                                .map(value => ({ label: property, id: value.path?.[value.path?.length - 1], type: 'property' }))
+                                                .map(value => ({
+                                                    label: value.pathLabels?.[value.pathLabels?.length - 1],
+                                                    id: value.path?.[value.path?.length - 1],
+                                                    type: 'property'
+                                                }))
                                                 .filter(_property => _property.id)
                                         )
                                     )
