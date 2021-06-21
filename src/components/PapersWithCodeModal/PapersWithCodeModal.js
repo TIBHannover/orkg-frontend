@@ -20,8 +20,8 @@ const PapersWithCodeModal = ({ isOpen, toggle, label }) => {
                 </a>{' '}
                 website to suggest changes.
             </ModalBody>
-            <ModalFooter className="d-flex">
-                <Button onClick={toggle} color="primary" className="float-right">
+            <ModalFooter className="d-flex justify-content-center">
+                <Button onClick={toggle} color="primary">
                     Close
                 </Button>
             </ModalFooter>
