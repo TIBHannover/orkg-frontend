@@ -65,8 +65,8 @@ const useViewPaper = ({ paperId, contributionId }) => {
         getResource(paperId)
             .then(paperResource => {
                 if (!paperResource.classes.includes(CLASSES.PAPER)) {
-                    setIsLoading(false);
                     setIsLoadingFailed(true);
+                    setIsLoading(false);
                     return;
                 }
 
@@ -84,8 +84,8 @@ const useViewPaper = ({ paperId, contributionId }) => {
                 );
             })
             .catch(error => {
-                setIsLoading(false);
                 setIsLoadingFailed(true);
+                setIsLoading(false);
             });
     }, [dispatch, loadAuthorsORCID, paperId]);
 
@@ -118,8 +118,8 @@ const useViewPaper = ({ paperId, contributionId }) => {
                 if (error.message === 'Contribution not found') {
                     setLoadingContributionFailed(true);
                 } else {
-                    setIsLoading(false);
                     setIsLoadingFailed(true);
+                    setIsLoading(false);
                 }
             }
         }
