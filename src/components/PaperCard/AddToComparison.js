@@ -36,6 +36,9 @@ const AddToComparison = ({ contributionId, paper }) => {
     const dispatch = useDispatch();
     const comparison = useSelector(state => state.viewPaper.comparison);
     const isSelected = useSelector(state => {
+        if (!contributionId && paper.contributions.length === 0) {
+            return false;
+        }
         if (!contributionId && paper.contributions?.length > 1) {
             return paper.contributions.every(c => comparison.allIds?.includes(c.id))
                 ? true
@@ -81,6 +84,11 @@ const AddToComparison = ({ contributionId, paper }) => {
                 });
         }
     };
+
+    if (!contributionId && paper.contributions.length === 0) {
+        return null;
+    }
+
     return (
         <Tippy
             theme={!contributionId && paper.contributions?.length > 1 ? 'visualizationPreview' : undefined}
