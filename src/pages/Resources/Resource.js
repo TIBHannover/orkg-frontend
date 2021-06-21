@@ -34,6 +34,7 @@ import GDCVisualizationRenderer from 'libs/selfVisModel/RenderingComponents/GDCV
 import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
 import { CLASS_TYPE_ID } from 'constants/misc';
 import { reverseWithSlug } from 'utils';
+import PapersWithCodeModal from 'components/PapersWithCodeModal/PapersWithCodeModal';
 
 const DEDICATED_PAGE_LINKS = {
     [CLASSES.PAPER]: {
@@ -110,6 +111,7 @@ function Resource(props) {
     const [canEdit, setCanEdit] = useState(false);
     const [createdBy, setCreatedBy] = useState(null);
     const classesAutocompleteRef = useRef(null);
+    const [isOpenPWCModal, setIsOpenPWCModal] = useState(false);
 
     useEffect(() => {
         const findResource = async () => {
@@ -158,11 +160,7 @@ function Resource(props) {
                                 setCanEdit(isCurationAllowed);
                             } else {
                                 setIsLoading(false);
-                                if (env('PWC_USER_ID') === responseJson.created_by) {
-                                    setCanEdit(false);
-                                } else {
-                                    setCanEdit(true);
-                                }
+                                setCanEdit(true);
                             }
                         });
                 })
@@ -262,7 +260,7 @@ function Resource(props) {
                                         className="float-right"
                                         color="secondary"
                                         size="sm"
-                                        onClick={() => setEditMode(v => !v)}
+                                        onClick={() => (env('PWC_USER_ID') === createdBy ? setIsOpenPWCModal(true) : setEditMode(v => !v))}
                                     >
                                         <Icon icon={faPen} /> Edit
                                     </RequireAuthentication>
@@ -415,6 +413,7 @@ function Resource(props) {
                     </Container>
                 </>
             )}
+            <PapersWithCodeModal isOpen={isOpenPWCModal} toggle={() => setIsOpenPWCModal(v => !v)} />
         </>
     );
 }

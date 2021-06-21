@@ -97,6 +97,7 @@ const ViewPaper = () => {
                                 paperLink={paperLink}
                                 toggle={toggle}
                                 id={resourceId}
+                                label={viewPaper.paperResource?.label}
                             />
                         </Container>
                     </VisibilitySensor>
