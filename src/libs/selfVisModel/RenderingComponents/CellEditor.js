@@ -21,8 +21,9 @@ const CellEditor = props => {
     const createTable = () => {
         const filteredProperties = selfVisModel.mrrModel.propertyAnchors.filter(item => item.isSelectedColumnForUse === true);
         const renderingDimX = filteredProperties.length + 1;
-        const filteredContribs = selfVisModel.mrrModel.contributionAnchors.filter(item => item.isSelectedRowForUse === true);
-        const renderingDimY = filteredContribs.length + 1;
+        // we use the whole column for now;
+        const filteredContribs = selfVisModel.mrrModel.contributionAnchors;
+        const renderingDimY = filteredContribs.length + 1; // using the whole column
 
         const itemsToRender = [];
         for (let i = -1; i < renderingDimY; i++) {
@@ -38,7 +39,11 @@ const CellEditor = props => {
                         const propertyItem = filteredProperties[j - 1];
                         rowArray.push(
                             <CellVE key={keyVal} type="metaNodeSelectorSimple" data={null} tippyTarget={target} tippySource={source}>
-                                <DropDownMapperSelector key={keyVal + 'dropdown'} data={propertyItem} callBack={validationCallback} />
+                                <DropDownMapperSelector
+                                    key={keyVal + 'dropdown' + propertyItem.positionPropertyAnchor}
+                                    data={propertyItem}
+                                    callBack={validationCallback}
+                                />
                             </CellVE>
                         );
                     }
@@ -67,7 +72,7 @@ const CellEditor = props => {
                     const colIndex = propertyItem.positionPropertyAnchor;
                     rowArray.push(
                         <CellVE
-                            key={keyVal}
+                            key={keyVal + '_' + rowIndex + '_' + colIndex}
                             type="value"
                             data={selfVisModel.modelAccess.getItem(rowIndex, colIndex)}
                             tippyTarget={target}

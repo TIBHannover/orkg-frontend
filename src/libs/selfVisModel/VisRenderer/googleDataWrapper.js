@@ -15,6 +15,75 @@ export default class DataForChart {
         };
     };
 
+    createDataFromSharedCustomizer = customizer => {
+        if (customizer.errorDataNotSupported || !customizer.xAxisSelector || !customizer.yAxisSelector || customizer.yAxisSelector.length === 0) {
+            return {
+                cols: [],
+                rows: []
+            };
+        }
+
+        // adjust for selected headers;
+        const oldHeaders = this.header;
+
+        // create headers;
+        let xSelectorIndex;
+        const ySelectorIndices = [];
+        const newHeaders = [];
+
+        const headerMap = {};
+        oldHeaders.forEach((oh, index) => {
+            headerMap[oh.label] = index;
+        });
+        if (headerMap[customizer.xAxisSelector.label] !== undefined) {
+            newHeaders.push(oldHeaders[headerMap[customizer.xAxisSelector.label]]);
+            xSelectorIndex = headerMap[customizer.xAxisSelector.label];
+        }
+
+        // try to find it in the current state
+        if (xSelectorIndex === undefined) {
+            xSelectorIndex = 0;
+        }
+
+        customizer.yAxisSelector.forEach(yax => {
+            // find yAx in headerMap;
+            if (headerMap[yax.axis.label]) {
+                newHeaders.push(oldHeaders[headerMap[yax.axis.label]]);
+                ySelectorIndices.push(headerMap[yax.axis.label]);
+
+                if (yax.intervals && yax.intervals.length > 0) {
+                    yax.intervals.forEach((interval, id) => {
+                        //get label
+                        const i_label = interval.item.label;
+                        if (headerMap[i_label] !== undefined) {
+                            newHeaders.push({ id: 'i' + id, type: 'number', role: 'interval' });
+                            ySelectorIndices.push(headerMap[i_label]);
+                        }
+                    });
+                }
+            }
+        });
+
+        const newRows = [];
+
+        // fetch the data from the table itself;
+        this.rowls.forEach(row => {
+            const newR = [];
+            newR.push(row.c[xSelectorIndex].v);
+            for (let i = 0; i < ySelectorIndices.length; i++) {
+                newR.push(row.c[ySelectorIndices[i]].v);
+            }
+
+            // remainingData is not used for now;
+            this.addRow2(newRows, ...newR);
+        });
+
+        return {
+            cols: newHeaders,
+            rows: newRows
+        };
+    };
+
     createDataFromSelectors = state => {
         if (state.xAxis === undefined || state.yAxis.length === 0) {
             return {
@@ -23,6 +92,7 @@ export default class DataForChart {
             };
         }
         const oldHeaders = this.header;
+
         // create headers;
         let xSelectorIndex;
         const ySelectorIndices = [];
@@ -36,6 +106,11 @@ export default class DataForChart {
         if (headerMap[state.xAxis] !== undefined) {
             newHeaders.push(oldHeaders[headerMap[state.xAxis]]);
             xSelectorIndex = headerMap[state.xAxis];
+        }
+
+        // try to find it in the current state
+        if (xSelectorIndex === undefined) {
+            xSelectorIndex = 0;
         }
 
         state.yAxis.forEach((yax, yaxID) => {

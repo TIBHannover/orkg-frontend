@@ -11,6 +11,7 @@ export const Item = styled.div`
     padding: 0 10px !important;
     margin: 0;
     height: 100%;
+    background: #fff;
 `;
 
 export const ItemInner = styled.div`

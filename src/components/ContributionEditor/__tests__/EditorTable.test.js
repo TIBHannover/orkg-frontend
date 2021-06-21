@@ -4,6 +4,8 @@ import { fireEvent, render, screen, waitFor, within } from 'testUtils';
 import EditTable from '../EditorTable';
 import { contribution, contributionLiteralOnly } from '../__mocks__/ComparisonData';
 
+jest.mock('react-flip-move', () => ({ children }) => children);
+
 // mock the ResizeObserver
 class ResizeObserver {
     observe() {}
@@ -90,7 +92,7 @@ describe('resources', () => {
         // wait until loaded
         await waitFor(() => screen.getByRole('button', { name: PREDICATES.HAS_RESEARCH_PROBLEM }), { timeout: 2000 });
 
-        const cell = screen.getByRole('cell', { name: /test resource 2/i, hidden: true });
+        const cell = screen.getByRole('cell', { name: 'test resource 2', hidden: true });
 
         fireEvent.click(within(cell).getByRole('button', { name: /edit/i, hidden: true }));
         const input = within(cell).getByRole('textbox', /enter a resource/i);

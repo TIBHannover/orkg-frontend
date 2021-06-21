@@ -28,6 +28,7 @@ import PropTypes from 'prop-types';
 import { orderBy } from 'lodash';
 import useDeleteResource from 'components/Resource/hooks/useDeleteResource';
 import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
+import env from '@beam-australia/react-env';
 import { getVisualization } from 'services/similarity';
 import GDCVisualizationRenderer from 'libs/selfVisModel/RenderingComponents/GDCVisualizationRenderer';
 import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
@@ -107,6 +108,7 @@ function Resource(props) {
     const [hasDOI, setHasDOI] = useState(false);
     const { deleteResource } = useDeleteResource({ resourceId, redirect: true });
     const [canEdit, setCanEdit] = useState(false);
+    const [createdBy, setCreatedBy] = useState(null);
     const classesAutocompleteRef = useRef(null);
 
     useEffect(() => {
@@ -115,6 +117,7 @@ function Resource(props) {
             getResource(resourceId)
                 .then(responseJson => {
                     document.title = `${responseJson.label} - Resource - ORKG`;
+                    setCreatedBy(responseJson.created_by);
                     const classesCalls = responseJson.classes.map(classResource => getClassById(classResource));
                     Promise.all(classesCalls)
                         .then(classes => {
@@ -143,7 +146,11 @@ function Resource(props) {
                                         setCanEdit(isCurationAllowed);
                                     } else {
                                         setIsLoading(false);
-                                        setCanEdit(true);
+                                        if (env('PWC_USER_ID') === responseJson.created_by) {
+                                            setCanEdit(false);
+                                        } else {
+                                            setCanEdit(true);
+                                        }
                                     }
                                 });
                             } else if (responseJson.classes.includes(CLASSES.RESEARCH_FIELD)) {
@@ -151,7 +158,11 @@ function Resource(props) {
                                 setCanEdit(isCurationAllowed);
                             } else {
                                 setIsLoading(false);
-                                setCanEdit(true);
+                                if (env('PWC_USER_ID') === responseJson.created_by) {
+                                    setCanEdit(false);
+                                } else {
+                                    setCanEdit(true);
+                                }
                             }
                         });
                 })
@@ -265,7 +276,9 @@ function Resource(props) {
                                     hideOnClick={false}
                                     interactive={classes.find(c => c.id === CLASSES.RESEARCH_FIELD) ? true : false}
                                     content={
-                                        classes.find(c => c.id === CLASSES.RESEARCH_FIELD) ? (
+                                        env('PWC_USER_ID') === createdBy ? (
+                                            'This resource cannot be edited because it is from an external source. Our provenance feature is in active development.'
+                                        ) : classes.find(c => c.id === CLASSES.RESEARCH_FIELD) ? (
                                             <>
                                                 This resource can not be edited. Please contact us if you have any suggestions to change the research
                                                 fields taxonomy.

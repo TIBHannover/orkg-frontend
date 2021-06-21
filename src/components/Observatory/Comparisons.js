@@ -46,19 +46,21 @@ const Comparisons = ({ observatoryId }) => {
                     <h1 className="h5 flex-shrink-0 mb-0">Figures</h1>
                 </div>
             </Container>
-            <Container className="box rounded-lg p-4 mt-4">
-                {!isLoadingComparisons ? (
-                    <div className="mb-4 mt-4">
-                        {comparisonsList.length > 0 ? (
-                            <RelatedResourcesCard figureStatements={comparisonsList} />
-                        ) : (
+            {!isLoadingComparisons ? (
+                <div className="mb-4 mt-4">
+                    {comparisonsList.length > 0 ? (
+                        <RelatedResourcesCard figureStatements={comparisonsList} />
+                    ) : (
+                        <Container className="box rounded-lg p-4 mt-4">
                             <div className="text-center mt-4 mb-4">No Figures</div>
-                        )}
-                    </div>
-                ) : (
+                        </Container>
+                    )}
+                </div>
+            ) : (
+                <Container className="box rounded-lg p-4 mt-4">
                     <div className="text-center mt-4 mb-4">Loading figures ...</div>
-                )}
-            </Container>
+                </Container>
+            )}
             <Container className="d-flex align-items-center mt-4 mb-4">
                 <div className="d-flex flex-grow-1">
                     <h1 className="h5 flex-shrink-0 mb-0">Comparisons</h1>
