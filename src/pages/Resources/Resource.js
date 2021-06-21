@@ -278,8 +278,15 @@ function Resource(props) {
                                             'This resource cannot be edited because it is from an external source. Our provenance feature is in active development.'
                                         ) : classes.find(c => c.id === CLASSES.RESEARCH_FIELD) ? (
                                             <>
-                                                This resource can not be edited. Please contact us if you have any suggestions to change the research
-                                                fields taxonomy.
+                                                This resource can not be edited. Please visit the{' '}
+                                                <a
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    href="https://gitlab.com/TIBHannover/orkg/orkg-frontend/-/wikis/ORKG-Research-fields-taxonomy"
+                                                >
+                                                    Wiki page
+                                                </a>{' '}
+                                                if you have any suggestions to improve the research fields taxonomy.
                                             </>
                                         ) : (
                                             'This resource can not be edited because it has a published DOI.'
