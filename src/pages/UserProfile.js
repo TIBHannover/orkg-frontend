@@ -153,12 +153,7 @@ const UserProfile = props => {
                 {!isLoadingUserData && (
                     <Row>
                         <div className="col-md-2 text-center d-flex align-items-center justify-content-center mb-3 mb-md-0">
-                            <StyledGravatar
-                                className="rounded-circle"
-                                md5={userData?.gravatar_id ?? 'example@example.com'}
-                                size={100}
-                                id="TooltipExample"
-                            />
+                            <StyledGravatar className="rounded-circle" md5={userData?.gravatar_id ?? 'example@example.com'} size={100} />
                         </div>
                         <div className="col-md-10 box rounded p-4">
                             <div className="row">
