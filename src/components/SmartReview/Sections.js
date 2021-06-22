@@ -38,6 +38,9 @@ const Sections = () => {
     const handleManualSort = ({ id, direction }) => {
         const oldIndex = sections.findIndex(section => section.id === id);
         const newIndex = direction === 'up' ? oldIndex - 1 : oldIndex + 1;
+        if (newIndex < 0) {
+            return;
+        }
         dispatch(moveSection({ contributionId, sections, oldIndex, newIndex }));
     };
 
