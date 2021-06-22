@@ -279,11 +279,11 @@ function Benchmark() {
                                     options={{
                                         hAxis: { title: 'Year', format: 'MMM yyyy', ticks: getTicksAxisH(dataChart) },
                                         vAxis: { title: selectedMetric },
-                                        legend: 'none',
+                                        legend: true,
                                         tooltip: { isHtml: true },
                                         pointSize: 7,
                                         trendlines: {
-                                            0: { tooltip: false, type: 'polynomial', degree: 2, visibleInLegend: false }
+                                            0: { labelInLegend: 'Linear trendline', tooltip: false, type: 'linear', visibleInLegend: true }
                                         }
                                     }}
                                     chartEvents={[
