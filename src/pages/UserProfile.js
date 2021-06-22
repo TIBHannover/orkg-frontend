@@ -10,6 +10,7 @@ import { useSelector } from 'react-redux';
 import Gravatar from 'react-gravatar';
 import styled from 'styled-components';
 import { CLASSES, MISC } from 'constants/graphSettings';
+import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import { Link } from 'react-router-dom';
@@ -214,6 +215,7 @@ const UserProfile = props => {
             <Container className="p-0">
                 <Items filterLabel="papers" filterClass={CLASSES.PAPER} userId={userId} showDelete={userId === currentUserId} />
             </Container>
+            <ComparisonPopup />
             {/*
             TODO: support for activity feed
             <Container className="box mt-4 pt-4 pb-3 pl-5 pr-5">

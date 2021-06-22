@@ -117,6 +117,7 @@ const FeaturedPapers = ({ researchFieldId }) => {
                                             ...paper,
                                             title: paper.label
                                         }}
+                                        showAddToComparison={false}
                                         key={`pc${paper.id}`}
                                     />
                                 );

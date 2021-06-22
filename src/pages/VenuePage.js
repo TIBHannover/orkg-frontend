@@ -7,6 +7,7 @@ import ROUTES from 'constants/routes.js';
 import PaperCard from 'components/PaperCard/PaperCard';
 import { getPaperData } from 'utils';
 import { find } from 'lodash';
+import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner, faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
@@ -202,6 +203,7 @@ class VenuePage extends Component {
                                 <div className="text-center mt-3">You have reached the last page.</div>
                             )}
                         </Container>
+                        <ComparisonPopup />
                     </div>
                 )}
             </>
