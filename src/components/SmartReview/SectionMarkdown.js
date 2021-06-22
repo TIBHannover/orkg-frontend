@@ -157,6 +157,7 @@ const SectionMarkdown = props => {
                         onBlur={handleBlurMarkdown}
                         className="form-control"
                         ref={markdownEditorRef}
+                        maxLength="3900"
                     />
                 </>
             )}
