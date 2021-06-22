@@ -13,6 +13,7 @@ const initialState = {
     comparisons: {},
     researchField: {},
     isLoading: false,
+    isLoadingSortSection: false,
     isEditing: false,
     isPublished: false,
     isOpenHistoryModal: false,
@@ -255,6 +256,15 @@ const smartReview = (state = initialState, action) => {
                     ...state.usedReferences,
                     [sectionId]: references
                 }
+            };
+        }
+
+        case type.ARTICLE_WRITER_SET_IS_LOADING_SORT: {
+            const { isLoading } = action.payload;
+
+            return {
+                ...state,
+                isLoadingSortSection: isLoading
             };
         }
 
