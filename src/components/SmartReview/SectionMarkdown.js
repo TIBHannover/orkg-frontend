@@ -9,6 +9,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import Textarea from 'react-textarea-autosize';
 import { ButtonGroup } from 'reactstrap';
+import { toast } from 'react-toastify';
 import styled from 'styled-components';
 
 const Toolbar = styled.div`
@@ -153,7 +154,12 @@ const SectionMarkdown = props => {
                     </Toolbar>
                     <Textarea
                         value={markdownValue}
-                        onChange={e => setMarkdownValue(e.target.value)}
+                        onChange={e => {
+                            setMarkdownValue(e.target.value);
+                            if (e.target.value.length > 3899) {
+                                toast.warning('The content section text should not exceed 3900 characters.');
+                            }
+                        }}
                         onBlur={handleBlurMarkdown}
                         className="form-control"
                         ref={markdownEditorRef}
