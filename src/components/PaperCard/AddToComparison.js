@@ -1,18 +1,11 @@
-import { useState, useContext } from 'react';
-import { faCheckSquare, faMinusSquare } from '@fortawesome/free-solid-svg-icons';
-import { faSquare } from '@fortawesome/free-regular-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { useRef, useEffect } from 'react';
 import Tippy from '@tippyjs/react';
-import { ThemeContext } from 'styled-components';
-import styled from 'styled-components';
+import { CustomInput } from 'reactstrap';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
 import Select, { components } from 'react-select';
 import { useSelector, useDispatch } from 'react-redux';
 import { addToComparison, removeFromComparison } from 'actions/viewPaper';
-
-const StyledIcon = styled(Icon)`
-    cursor: pointer;
-`;
 
 const Option = ({ children, data, ...props }) => {
     return (
@@ -25,15 +18,20 @@ const Option = ({ children, data, ...props }) => {
     );
 };
 
+const CustomInputStyled = styled(CustomInput)`
+    &.custom-control {
+        z-index: 0;
+    }
+`;
+
 Option.propTypes = {
     data: PropTypes.object.isRequired,
     children: PropTypes.string.isRequired
 };
 
 const AddToComparison = ({ contributionId, paper }) => {
-    const [over, setOver] = useState(false);
-    const themeContext = useContext(ThemeContext);
     const dispatch = useDispatch();
+    const inputCheckboxRef = useRef();
     const comparison = useSelector(state => state.viewPaper.comparison);
     const isSelected = useSelector(state => {
         if (!contributionId && paper.contributions.length === 0) {
@@ -85,6 +83,14 @@ const AddToComparison = ({ contributionId, paper }) => {
         }
     };
 
+    useEffect(() => {
+        if (inputCheckboxRef.current && isSelected === 'half') {
+            inputCheckboxRef.current.indeterminate = true;
+        } else if (inputCheckboxRef.current) {
+            inputCheckboxRef.current.indeterminate = false;
+        }
+    }, [isSelected]);
+
     if (!contributionId && paper.contributions.length === 0) {
         return null;
     }
@@ -129,27 +135,17 @@ const AddToComparison = ({ contributionId, paper }) => {
                 )
             }
         >
-            <span
-                role="checkbox"
-                tabIndex="0"
-                aria-checked={isSelected}
-                onClick={() =>
-                    !contributionId && paper.contributions?.length > 1
-                        ? toggleAllCompare()
-                        : toggleCompare(contributionId || paper.contributions?.[0].id)
-                }
-                onKeyDown={() =>
-                    !contributionId && paper.contributions?.length > 1
-                        ? toggleAllCompare()
-                        : toggleCompare(contributionId || paper.contributions?.[0].id)
-                }
-            >
-                <StyledIcon
-                    onMouseOver={() => setOver(true)}
-                    onMouseLeave={() => setOver(false)}
-                    size="sm"
-                    icon={isSelected || over ? (isSelected === 'half' ? faMinusSquare : faCheckSquare) : faSquare}
-                    color={isSelected || over ? themeContext.primary : themeContext.secondary}
+            <span>
+                <CustomInputStyled
+                    onChange={() =>
+                        !contributionId && paper.contributions?.length > 1
+                            ? toggleAllCompare()
+                            : toggleCompare(contributionId || paper.contributions?.[0].id)
+                    }
+                    checked={!!isSelected}
+                    type="checkbox"
+                    innerRef={inputCheckboxRef}
+                    id={`add2CPid${paper.id}cid${contributionId ?? ''}`}
                 />
             </span>
         </Tippy>
