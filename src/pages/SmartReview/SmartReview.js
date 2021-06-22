@@ -41,6 +41,7 @@ import ReferencesModal from 'components/SmartReview/References/ReferencesModal';
 import ReferencesSection from 'components/SmartReview/References/ReferencesSection';
 import ShouldPublishModal from 'components/SmartReview/ShouldPublishModal';
 import { usePrevious } from 'react-use';
+import LoadingOverlay from 'components/SmartReview/LoadingOverlay';
 
 const GlobalStyle = createGlobalStyle`
     // ensure printing only prints the contents and no other elements
@@ -241,6 +242,8 @@ const SmartReview = () => {
                     </div>
                 </div>
             </Container>
+            <LoadingOverlay />
+
             {!isLoading && isEditing && (
                 <main>
                     <header>

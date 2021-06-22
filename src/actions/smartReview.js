@@ -121,6 +121,7 @@ export const updateAuthors = authorResources => async dispatch => {
 
 export const createSection = ({ contributionId, afterIndex, sectionType }) => async (dispatch, getState) => {
     dispatch(setIsLoading(true));
+    dispatch(setIsLoadingSort(true));
 
     let typeId = '';
     let sectionResourceId = null;
@@ -207,8 +208,18 @@ export const moveSection = ({ contributionId, sections, oldIndex, newIndex }) =>
     dispatch(sortSections({ contributionId, sections: sectionsNewOrder }));
 };
 
+export const setIsLoadingSort = isLoading => dispatch => {
+    dispatch({
+        type: type.ARTICLE_WRITER_SET_IS_LOADING_SORT,
+        payload: {
+            isLoading
+        }
+    });
+};
+
 export const sortSections = ({ contributionId, sections }) => async dispatch => {
     dispatch(setIsLoading(true));
+    dispatch(setIsLoadingSort(true));
 
     dispatch({
         type: type.ARTICLE_WRITER_SORT_SECTIONS,
@@ -226,6 +237,7 @@ export const sortSections = ({ contributionId, sections }) => async dispatch => 
     }
 
     dispatch(setIsLoading(false));
+    dispatch(setIsLoadingSort(false));
 };
 
 export const toggleHistoryModal = () => ({
