@@ -37,7 +37,7 @@ const List = styled.ul`
 
 const SubList = styled.ul`
     list-style: none;
-    padding-left: 50px;
+    padding-left: 20px;
 `;
 
 const IndicatorContainer = styled.div`

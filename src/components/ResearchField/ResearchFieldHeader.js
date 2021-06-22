@@ -22,6 +22,7 @@ import ExternalDescription from 'components/ResearchProblem/ExternalDescription'
 import Contributors from 'components/TopContributors/Contributors';
 import { NavLink } from 'react-router-dom';
 import ContentLoader from 'react-content-loader';
+import { useSelector } from 'react-redux';
 import ROUTES from 'constants/routes.js';
 import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
@@ -35,6 +36,7 @@ import { CLASSES } from 'constants/graphSettings';
 const ResearchFieldHeader = ({ id }) => {
     const [menuOpen, setMenuOpen] = useState(false);
     const [editMode, setEditMode] = useState(false);
+    const isCurationAllowed = useSelector(state => state.auth.user?.isCurationAllowed);
     const [showMoreFields, setShowMoreFields] = useState(false);
     const [researchFieldData, subResearchFields, isLoading, isFailedLoading, loadResearchFieldData] = useResearchField();
     const prevEditMode = usePrevious({ editMode });
@@ -103,15 +105,17 @@ const ResearchFieldHeader = ({ id }) => {
                             />
                         )}
                         <ButtonGroup className="flex-shrink-0" style={{ marginLeft: 'auto' }}>
-                            <RequireAuthentication
-                                component={Button}
-                                size="sm"
-                                color="secondary"
-                                className="float-right"
-                                onClick={() => setEditMode(v => !v)}
-                            >
-                                <Icon icon={faPen} /> Edit
-                            </RequireAuthentication>
+                            {isCurationAllowed && (
+                                <RequireAuthentication
+                                    component={Button}
+                                    size="sm"
+                                    color="secondary"
+                                    className="float-right"
+                                    onClick={() => setEditMode(v => !v)}
+                                >
+                                    <Icon icon={faPen} /> Edit
+                                </RequireAuthentication>
+                            )}
                             <ButtonDropdown isOpen={menuOpen} toggle={() => setMenuOpen(v => !v)} nav inNavbar>
                                 <DropdownToggle size="sm" color="secondary" className="px-3 rounded-right" style={{ marginLeft: 2 }}>
                                     <Icon icon={faEllipsisV} />

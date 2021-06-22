@@ -52,6 +52,7 @@ export const PREDICATES = {
     HAS_LINK: 'HasLink',
     HAS_VISUALIZATION: 'hasVisualization',
     HAS_PAPER: 'HasPaper',
+    HAS_SYNONYM: 'hasSynonym',
     SHOW_PROPERTY: 'ShowProperty',
     HAS_ENTITY: 'HasEntity',
     HAS_REFERENCE: 'HasReference'

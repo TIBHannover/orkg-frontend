@@ -34,6 +34,7 @@ import GDCVisualizationRenderer from 'libs/selfVisModel/RenderingComponents/GDCV
 import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
 import { CLASS_TYPE_ID } from 'constants/misc';
 import { reverseWithSlug } from 'utils';
+import PapersWithCodeModal from 'components/PapersWithCodeModal/PapersWithCodeModal';
 
 const DEDICATED_PAGE_LINKS = {
     [CLASSES.PAPER]: {
@@ -110,6 +111,7 @@ function Resource(props) {
     const [canEdit, setCanEdit] = useState(false);
     const [createdBy, setCreatedBy] = useState(null);
     const classesAutocompleteRef = useRef(null);
+    const [isOpenPWCModal, setIsOpenPWCModal] = useState(false);
 
     useEffect(() => {
         const findResource = async () => {
@@ -153,13 +155,12 @@ function Resource(props) {
                                         }
                                     }
                                 });
+                            } else if (responseJson.classes.includes(CLASSES.RESEARCH_FIELD)) {
+                                setIsLoading(false);
+                                setCanEdit(isCurationAllowed);
                             } else {
                                 setIsLoading(false);
-                                if (env('PWC_USER_ID') === responseJson.created_by) {
-                                    setCanEdit(false);
-                                } else {
-                                    setCanEdit(true);
-                                }
+                                setCanEdit(true);
                             }
                         });
                 })
@@ -190,10 +191,13 @@ function Resource(props) {
                 return null;
             }
         }
-        const newClasses = !selected ? [] : selected;
+        let newClasses = !selected ? [] : selected;
         // Reset the statement browser and rely on React attribute 'key' to reinitialize the statement browser
         // (When a key changes, React will create a new component instance rather than update the current one)
         props.resetStatementBrowser();
+        if (!isCurationAllowed) {
+            newClasses = newClasses.filter(c => c.id !== CLASSES.RESEARCH_FIELD); // only admins can add research field resources
+        }
         setClasses(newClasses);
         await updateResourceClassesNetwork(resourceId, newClasses.map(c => c.id));
         toast.success('Resource classes updated successfully');
@@ -256,7 +260,7 @@ function Resource(props) {
                                         className="float-right"
                                         color="secondary"
                                         size="sm"
-                                        onClick={() => setEditMode(v => !v)}
+                                        onClick={() => (env('PWC_USER_ID') === createdBy ? setIsOpenPWCModal(true) : setEditMode(v => !v))}
                                     >
                                         <Icon icon={faPen} /> Edit
                                     </RequireAuthentication>
@@ -268,10 +272,25 @@ function Resource(props) {
                             ) : (
                                 <Tippy
                                     hideOnClick={false}
+                                    interactive={classes.find(c => c.id === CLASSES.RESEARCH_FIELD) ? true : false}
                                     content={
-                                        env('PWC_USER_ID') === createdBy
-                                            ? 'This resource cannot be edited because it is from an external source. Our provenance feature is in active development.'
-                                            : 'This resource can not be edited because it has a published DOI.'
+                                        env('PWC_USER_ID') === createdBy ? (
+                                            'This resource cannot be edited because it is from an external source. Our provenance feature is in active development.'
+                                        ) : classes.find(c => c.id === CLASSES.RESEARCH_FIELD) ? (
+                                            <>
+                                                This resource can not be edited. Please visit the{' '}
+                                                <a
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    href="https://gitlab.com/TIBHannover/orkg/orkg-frontend/-/wikis/ORKG-Research-fields-taxonomy"
+                                                >
+                                                    Wiki page
+                                                </a>{' '}
+                                                if you have any suggestions to improve the research fields taxonomy.
+                                            </>
+                                        ) : (
+                                            'This resource can not be edited because it has a published DOI.'
+                                        )
                                     }
                                 >
                                     <span className="btn btn-secondary btn-sm disabled">
@@ -401,6 +420,7 @@ function Resource(props) {
                     </Container>
                 </>
             )}
+            <PapersWithCodeModal isOpen={isOpenPWCModal} toggle={() => setIsOpenPWCModal(v => !v)} />
         </>
     );
 }
