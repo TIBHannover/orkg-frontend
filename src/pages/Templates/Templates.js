@@ -46,7 +46,7 @@ const Templates = () => {
             items: pageSize,
             sortBy: 'created_at',
             desc: true,
-            returnContent: true
+            returnContent: false
         }).then(statements => {
             // Filter statement with subjects of type Template
             return {
