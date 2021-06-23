@@ -99,8 +99,11 @@ const SectionContentLink = props => {
 
                 const parsedReference = await Cite.async(bibJson);
                 const parsedReferenceData = parsedReference?.data?.[0];
-                const bibtex = parsedReference.format('bibtex').replace(parsedReference.format('label')[parsedReferenceData.id], paper.id); // use the paper ID as key, so we can identify it to add in the _usedReferences later
-                parsedReferenceData['citation-label'] = paper.id; // set citation-label, later used to get the citation key
+                if (!parsedReferenceData) {
+                    continue;
+                }
+                parsedReferenceData['citation-label'] = paper.id;
+                const bibtex = parsedReference.format('bibtex'); // use the paper ID as key, so we can identify it to add in the _usedReferences later
                 parsedReferenceData.id = paper.id; // set citation-label, later used to get the citation key
                 const isExistingReference = references.find(reference => reference?.parsedReference?.id === paper.id);
 
