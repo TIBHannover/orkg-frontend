@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { faBold, faCode, faImage, faItalic, faLink, faList, faListOl, faQuoteLeft, faUnderline } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
@@ -5,12 +6,14 @@ import { updateSectionMarkdown } from 'actions/smartReview';
 import MarkdownRenderer from 'components/SmartReview/MarkdownRenderer';
 import { MarkdownPlaceholder } from 'components/SmartReview/styled';
 import PropTypes from 'prop-types';
-import React, { useEffect, useRef, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import Textarea from 'react-textarea-autosize';
 import { ButtonGroup } from 'reactstrap';
 import { toast } from 'react-toastify';
 import styled from 'styled-components';
+import ReactTextareaAutocomplete from '@webscopeio/react-textarea-autocomplete';
+import '@webscopeio/react-textarea-autocomplete/style.css';
 
 const Toolbar = styled.div`
     position: sticky;
@@ -19,13 +22,32 @@ const Toolbar = styled.div`
     margin-top: -40px;
 `;
 
+const MarkdownSection = styled.div`
+    .rta__list {
+        border-radius: 6px;
+        overflow: hidden;
+        font-size: 90%;
+    }
+    .rta__entity--selected {
+        background: ${props => props.theme.primary};
+    }
+`;
+
+const Item = ({ entity: { name } }) => (
+    <div role="button" onMouseDown={e => e.preventDefault()}>
+        {name}
+    </div>
+);
+const Loading = () => <div>Loading</div>;
+
 const SectionMarkdown = props => {
     const [markdownValue, setMarkdownValue] = useState('');
     const [editMode, setEditMode] = useState(false);
+    const [markdownEditorRef, setMarkdownEditorRef] = useState(null);
     const [selectionRange, setSelectionRange] = useState(null);
     const { markdown } = props;
     const dispatch = useDispatch();
-    const markdownEditorRef = useRef(null);
+    const references = useSelector(state => state.smartReview.references);
 
     // initial data loading
     useEffect(() => {
@@ -37,24 +59,26 @@ const SectionMarkdown = props => {
 
     // set focus to editor when starting edit mode
     useEffect(() => {
-        if (editMode) {
-            markdownEditorRef.current.focus();
+        if (editMode && markdownEditorRef) {
+            markdownEditorRef.focus();
         }
-    }, [editMode]);
+    }, [editMode, markdownEditorRef]);
 
     // select text in textarea when a markdown command is executed
     useEffect(() => {
         if (!selectionRange) {
             return;
         }
-        const textArea = markdownEditorRef.current;
         const { start, end, length } = selectionRange;
-        textArea.focus();
-        textArea.setSelectionRange(start + length, end + length);
+        markdownEditorRef.focus();
+        markdownEditorRef.setSelectionRange(start + length, end + length);
         setSelectionRange(null);
-    }, [selectionRange]);
+    }, [markdownEditorRef, selectionRange]);
 
-    const handleBlurMarkdown = () => {
+    const handleBlurMarkdown = e => {
+        if (e.target.className.includes('list-item')) {
+            return;
+        }
         setEditMode(false);
 
         dispatch(
@@ -67,13 +91,16 @@ const SectionMarkdown = props => {
 
     const wrapText = (e, openTag, closeTag = '') => {
         e.preventDefault(); // prevent blur on the textarea
-        const textArea = markdownEditorRef.current;
-        const len = textArea.value.length;
-        const start = textArea.selectionStart;
-        const end = textArea.selectionEnd;
-        const selectedText = textArea.value.substring(start, end);
+
+        if (!markdownEditorRef) {
+            return;
+        }
+        const len = markdownEditorRef.value.length;
+        const start = markdownEditorRef.selectionStart;
+        const end = markdownEditorRef.selectionEnd;
+        const selectedText = markdownEditorRef.value.substring(start, end);
         const replacement = openTag + selectedText + closeTag;
-        const value = textArea.value.substring(0, start) + replacement + textArea.value.substring(end, len);
+        const value = markdownEditorRef.value.substring(0, start) + replacement + markdownEditorRef.value.substring(end, len);
         setMarkdownValue(value);
         setSelectionRange({ start, end, length: openTag.length });
     };
@@ -93,7 +120,7 @@ const SectionMarkdown = props => {
             )}
 
             {editMode && (
-                <>
+                <MarkdownSection>
                     <Toolbar>
                         <ButtonGroup className="mr-1" size="sm">
                             <Tippy content="Add bold text">
@@ -152,20 +179,36 @@ const SectionMarkdown = props => {
                             </Tippy>
                         </ButtonGroup>
                     </Toolbar>
-                    <Textarea
+                    <ReactTextareaAutocomplete
                         value={markdownValue}
+                        textAreaComponent={Textarea}
+                        className="form-control"
+                        loadingComponent={Loading}
+                        innerRef={ref => {
+                            setMarkdownEditorRef(ref);
+                        }}
+                        dropdownStyle={{ zIndex: 100 }}
+                        minChar={1}
+                        trigger={{
+                            '[': {
+                                dataProvider: token =>
+                                    references
+                                        .filter(reference => reference.parsedReference.id.startsWith(token.substring(1)))
+                                        .map(reference => ({ name: reference.parsedReference.id, char: reference.parsedReference.id })),
+                                component: Item,
+                                output: item => `[@${item.char}]`
+                            }
+                        }}
                         onChange={e => {
                             setMarkdownValue(e.target.value);
                             if (e.target.value.length > 3899) {
-                                toast.warning('The content section text should not exceed 3900 characters.');
+                                toast.warning('The section text cannot exceed 3900 characters');
                             }
                         }}
                         onBlur={handleBlurMarkdown}
-                        className="form-control"
-                        ref={markdownEditorRef}
                         maxLength="3900"
                     />
-                </>
+                </MarkdownSection>
             )}
         </>
     );

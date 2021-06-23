@@ -13,6 +13,7 @@
         "@handsontable/react": "^5.0.0",
         "@tippyjs/react": "^4.2.5",
         "@trainiac/html2canvas": "^1.0.0",
+        "@webscopeio/react-textarea-autocomplete": "^4.7.3",
         "@xobotyi/scrollbar-width": "^1.9.5",
         "array-move": "^3.0.1",
         "auto-changelog": "^2.2.1",
