@@ -297,6 +297,75 @@ export const getComparisonData = (resource, comparisonStatements) => {
 };
 
 /**
+ * Parse template component statements and return a component object
+ * @param {Object} component
+ * @param {Array} componentStatements
+ */
+export const getTemplateComponentData = (component, componentStatements) => {
+    const property = filterObjectOfStatementsByPredicateAndClass(
+        componentStatements,
+        PREDICATES.TEMPLATE_COMPONENT_PROPERTY,
+        true,
+        null,
+        component.id
+    );
+    const value = filterObjectOfStatementsByPredicateAndClass(componentStatements, PREDICATES.TEMPLATE_COMPONENT_VALUE, true, null, component.id);
+
+    const validationRules = filterObjectOfStatementsByPredicateAndClass(
+        componentStatements,
+        PREDICATES.TEMPLATE_COMPONENT_VALIDATION_RULE,
+        false,
+        null,
+        component.id
+    );
+
+    const minOccurs = filterObjectOfStatementsByPredicateAndClass(
+        componentStatements,
+        PREDICATES.TEMPLATE_COMPONENT_OCCURRENCE_MIN,
+        true,
+        null,
+        component.id
+    );
+
+    const maxOccurs = filterObjectOfStatementsByPredicateAndClass(
+        componentStatements,
+        PREDICATES.TEMPLATE_COMPONENT_OCCURRENCE_MAX,
+        true,
+        null,
+        component.id
+    );
+
+    const order = filterObjectOfStatementsByPredicateAndClass(componentStatements, PREDICATES.TEMPLATE_COMPONENT_ORDER, true, null, component.id);
+
+    return {
+        id: component.id,
+        property: property
+            ? {
+                  id: property.id,
+                  label: property.label
+              }
+            : {},
+        value: value
+            ? {
+                  id: value.id,
+                  label: value.label
+              }
+            : null,
+        minOccurs: minOccurs ? minOccurs.label : 0,
+        maxOccurs: maxOccurs ? maxOccurs.label : null,
+        order: order ? order.label : null,
+        validationRules:
+            validationRules && Object.keys(validationRules).length > 0
+                ? validationRules.reduce((obj, item) => {
+                      const rule = item.label.split(/#(.+)/)[0];
+                      const value = item.label.split(/#(.+)/)[1];
+                      return Object.assign(obj, { [rule]: value });
+                  }, {})
+                : {}
+    };
+};
+
+/**
  * Parse visualization statements and return a visualization object
  * @param {String} id
  * @param {String } label
@@ -466,13 +535,17 @@ export const generateRdfDataVocabularyFile = (data, contributions, properties, m
  *
  * @param {Array} statementsArray Array of statements
  * @param {String} predicateID Predicate ID
+ * @param {String} classID Class ID
+ * @param {String} subjectID Subject ID
  * @param {Boolean} isUnique if this predicate is unique and has one value
  */
-export const filterObjectOfStatementsByPredicateAndClass = (statementsArray, predicateID, isUnique = true, classID = null) => {
+export const filterObjectOfStatementsByPredicateAndClass = (statementsArray, predicateID, isUnique = true, classID = null, subjectID = null) => {
     if (!statementsArray) {
         return isUnique ? null : [];
     }
-    let result = statementsArray.filter(statement => statement.predicate.id === predicateID);
+    let result = statementsArray.filter(
+        statement => statement.predicate.id === predicateID && (statement.subject.id === subjectID || subjectID === null)
+    );
     if (classID) {
         result = statementsArray.filter(statement => statement.object.classes && statement.object.classes.includes(classID));
     }
@@ -1211,4 +1284,8 @@ export const checkCookie = () => {
     cookies.set('testcookie', 1, { path: env('PUBLIC_URL'), maxAge: 5 });
     const cookieEnabled = cookies.get('testcookie') ? cookies.get('testcookie') : null;
     return cookieEnabled ? true : false;
+};
+
+export const getStatementsBySubjectId = (statements, subjectId) => {
+    return statements.filter(statement => statement.subject.id === subjectId);
 };
