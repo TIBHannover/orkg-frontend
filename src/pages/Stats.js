@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Container, Row } from 'reactstrap';
 import { CLASSES } from 'constants/graphSettings';
-import { faBars, faFile, faTag, faChartBar, faCubes } from '@fortawesome/free-solid-svg-icons';
+import { faBars, faFile, faTag, faChartBar, faCubes, faUsers } from '@fortawesome/free-solid-svg-icons';
 import ColoredStatsBox from 'components/Stats/ColoredStatsBox';
 import InlineStatsBox from 'components/Stats/InlineStatsBox';
-import { getResourcesByClass } from 'services/backend/resources';
 import { toast } from 'react-toastify';
 import { getStats } from 'services/backend/stats';
 
@@ -15,40 +14,10 @@ const Stats = () => {
     useEffect(() => {
         document.title = 'Stats - ORKG';
         setIsLoading(true);
-
-        const calls = [
-            getStats(),
-            getResourcesByClass({
-                id: CLASSES.COMPARISON,
-                page: 0,
-                items: 1
-            }),
-            getResourcesByClass({
-                id: CLASSES.VISUALIZATION,
-                page: 0,
-                items: 1
-            }),
-            getResourcesByClass({
-                id: CLASSES.TEMPLATE,
-                page: 0,
-                items: 1
-            }),
-            getResourcesByClass({
-                id: CLASSES.SMART_REVIEW_PUBLISHED,
-                page: 0,
-                items: 1
-            })
-        ];
-        Promise.all(calls)
-            .then(([stats, comparisons, visualizations, templates, smartReviews]) => {
+        getStats([CLASSES.BENCHMARK])
+            .then(stats => {
                 setIsLoading(false);
-                setStats({
-                    ...stats,
-                    comparisons: comparisons.totalElements,
-                    visualizations: visualizations.totalElements,
-                    templates: templates.totalElements,
-                    smartReviews: smartReviews.totalElements
-                });
+                setStats(stats);
             })
             .catch(e => {
                 setIsLoading(false);
@@ -105,10 +74,37 @@ const Stats = () => {
                         isLoading={isLoading}
                     />
                     <ColoredStatsBox number={stats.templates} label="Templates" icon={faBars} color="black" className="mr-3" isLoading={isLoading} />
-                    <ColoredStatsBox number={stats.smartReviews} label="SmartReviews" icon={faBars} color="orange" isLoading={isLoading} />
+                    <ColoredStatsBox number={stats.smart_reviews} label="SmartReviews" icon={faBars} color="orange" isLoading={isLoading} />
                 </Row>
             </Container>
-
+            <Container className="mt-2">
+                <Row>
+                    <ColoredStatsBox number={stats.users} label="Users" icon={faUsers} color="green" className="mr-3" isLoading={isLoading} />
+                    <ColoredStatsBox
+                        number={stats.organizations}
+                        label="Organizations"
+                        icon={faBars}
+                        color="gray"
+                        className="mr-3"
+                        isLoading={isLoading}
+                    />
+                    <ColoredStatsBox
+                        number={stats.observatories}
+                        label="Observatories"
+                        icon={faBars}
+                        color="black"
+                        className="mr-3"
+                        isLoading={isLoading}
+                    />
+                    <ColoredStatsBox
+                        number={stats.extras?.[CLASSES.BENCHMARK]}
+                        label="Benchmarks"
+                        icon={faBars}
+                        color="orange"
+                        isLoading={isLoading}
+                    />
+                </Row>
+            </Container>
             <Container>
                 <h1 className="h4 mt-4 mb-4">Technical values</h1>
             </Container>
