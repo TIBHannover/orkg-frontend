@@ -20,6 +20,38 @@ import { useParams } from 'react-router-dom';
 import { usePrevious } from 'react-use';
 import { useTable, useSortBy } from 'react-table';
 
+function getTicksAxisH(data) {
+    const dateRange = data.slice(1).map(function(value, index) {
+        return value[0];
+    });
+    const maxDate = new Date(Math.max.apply(null, dateRange));
+    const minDate = new Date(Math.min.apply(null, dateRange));
+    const ticksAxisH = [];
+    let year = -1;
+    for (
+        let i = moment(minDate.getTime())
+            .subtract(1, 'M')
+            .valueOf();
+        i <=
+        moment(maxDate.getTime())
+            .add(1, 'M')
+            .valueOf();
+        i = moment(i)
+            .add(1, 'M')
+            .valueOf()
+    ) {
+        const tick = new Date(i);
+        if (year !== moment(tick).format('MMM yyyy')) {
+            ticksAxisH.push({
+                v: tick,
+                f: moment(tick).format('MMM yyyy')
+            });
+            year = moment(tick).format('MMM yyyy');
+        }
+    }
+    return ticksAxisH;
+}
+
 function Benchmark() {
     const [resourceData, isLoading, isFailedLoading, loadResourceData] = useBenchmarkDatasetResource();
     const [menuOpen, setMenuOpen] = useState(false);
@@ -102,6 +134,30 @@ function Benchmark() {
         },
         useSortBy
     );
+
+    const dataChart = [
+        ['Year', selectedMetric, { type: 'string', role: 'tooltip', p: { html: true } }],
+        ...(benchmarkDatasetPapers[selectedMetric]
+            ? benchmarkDatasetPapers[selectedMetric]
+                  .map(c => {
+                      const publishedOn = moment(`${c.paper_year}-${c.paper_month ? c.paper_month : '01'}`, 'YYYY-MM');
+                      try {
+                          return parseFloat(c.score)
+                              ? [
+                                    publishedOn.toDate(),
+                                    parseFloat(c.score),
+                                    `<b>Paper</b>: ${c.paper_title}<br /> <b>Model</b>: ${c.model_name ?? '-'}<br /> <b>Score</b>: ${
+                                        c.score
+                                    }<br /> <b>Published on</b>: ${publishedOn.format('MM-YYYY')}`
+                                ]
+                              : null;
+                      } catch (error) {
+                          return null;
+                      }
+                  })
+                  .filter(v => v)
+            : [])
+    ];
 
     return (
         <div>
@@ -219,41 +275,15 @@ function Benchmark() {
                                     height={300}
                                     chartType="ScatterChart"
                                     loader={<div>Loading Chart</div>}
-                                    data={[
-                                        ['Year', selectedMetric, { type: 'string', role: 'tooltip', p: { html: true } }],
-                                        ...(benchmarkDatasetPapers[selectedMetric]
-                                            ? benchmarkDatasetPapers[selectedMetric]
-                                                  .map(c => {
-                                                      const publishedOn = moment(
-                                                          `${c.paper_year}-${c.paper_month ? c.paper_month : '01'}`,
-                                                          'YYYY-MM'
-                                                      );
-                                                      try {
-                                                          return parseFloat(c.score)
-                                                              ? [
-                                                                    publishedOn.toDate(),
-                                                                    parseFloat(c.score),
-                                                                    `<b>Paper</b>: ${c.paper_title}<br /> <b>Model</b>: ${c.model_name ??
-                                                                        '-'}<br /> <b>Score</b>: ${
-                                                                        c.score
-                                                                    }<br /> <b>Published on</b>: ${publishedOn.format('MM-YYYY')}`
-                                                                ]
-                                                              : null;
-                                                      } catch (error) {
-                                                          return null;
-                                                      }
-                                                  })
-                                                  .filter(v => v)
-                                            : [])
-                                    ]}
+                                    data={dataChart}
                                     options={{
-                                        hAxis: { title: 'Year', format: 'MMM yyyy' },
+                                        hAxis: { title: 'Year', format: 'MMM yyyy', ticks: getTicksAxisH(dataChart) },
                                         vAxis: { title: selectedMetric },
-                                        legend: 'none',
+                                        legend: true,
                                         tooltip: { isHtml: true },
                                         pointSize: 7,
                                         trendlines: {
-                                            0: { tooltip: false, type: 'polynomial', degree: 2, visibleInLegend: false }
+                                            0: { labelInLegend: 'Linear trendline', tooltip: false, type: 'linear', visibleInLegend: true }
                                         }
                                     }}
                                     chartEvents={[
