@@ -15,7 +15,7 @@ import { saveFullPaper } from 'services/backend/papers';
 import { createLiteral } from 'services/backend/literals';
 import { createPredicate } from 'services/backend/predicates';
 import { toast } from 'react-toastify';
-import { PREDICATES, MISC } from 'constants/graphSettings';
+import { PREDICATES, ENTITIES } from 'constants/graphSettings';
 
 export const updateGeneralData = data => dispatch => {
     dispatch({
@@ -230,12 +230,12 @@ export const prefillStatements = ({ statements, resourceId, syncBackend = false 
                 newStatement = await createResourceStatement(resourceId, predicate.existingPredicateId, value.existingResourceId);
             } else {
                 // The value doesn't exist in the database
-                switch (value.type) {
-                    case 'object':
+                switch (value._class) {
+                    case ENTITIES.RESOURCE:
                         newObject = await createResourceApi(value.label, value.classes ? value.classes : []);
                         newStatement = await createResourceStatement(resourceId, predicate.existingPredicateId, newObject.id);
                         break;
-                    case 'property':
+                    case ENTITIES.PREDICATE:
                         newObject = await createPredicate(value.label);
                         newStatement = await createResourceStatement(resourceId, predicate.existingPredicateId, newObject.id);
                         break;
@@ -249,13 +249,10 @@ export const prefillStatements = ({ statements, resourceId, syncBackend = false 
         dispatch(
             createValue({
                 valueId: value.valueId ? value.valueId : valueId,
-                label: value.label,
-                type: value.type ? value.type : 'object',
-                ...(value.type === 'literal' && { datatype: value.datatype ?? MISC.DEFAULT_LITERAL_DATATYPE }),
+                ...value,
                 propertyId: value.propertyId,
                 existingResourceId: syncBackend && newObject ? newObject.id : value.existingResourceId ? value.existingResourceId : null,
                 isExistingValue: syncBackend ? true : value.isExistingValue ? value.isExistingValue : false,
-                classes: value.classes ? value.classes : [],
                 statementId: newStatement ? newStatement.id : null
             })
         );
@@ -349,7 +346,7 @@ export const getResourceObject = (data, resourceId, newProperties) => {
                     ? property.existingPredicateId
                     : newProperties.find(p => p[property.label])[property.label]]: property.valueIds.map(valueId => {
                     const value = data.values.byId[valueId];
-                    if (value.type === 'literal' && !value.isExistingValue) {
+                    if (value._class === 'literal' && !value.isExistingValue) {
                         return {
                             text: value.label,
                             datatype: value.datatype

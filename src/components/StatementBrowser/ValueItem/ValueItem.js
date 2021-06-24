@@ -19,7 +19,7 @@ import { guid } from 'utils';
 import ValueItemTemplate from './ValueItemTemplate';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
-import { PREDICATES } from 'constants/graphSettings';
+import { ENTITIES, PREDICATES } from 'constants/graphSettings';
 
 export default function ValueItem(props) {
     const dispatch = useDispatch();
@@ -46,7 +46,7 @@ export default function ValueItem(props) {
             if (props.syncBackend) {
                 dispatch(isSavingValue({ id: props.id })); // To show the saving message instead of the value label
                 if (props.value.resourceId) {
-                    if (props.value.type === 'literal') {
+                    if (props.value._class === ENTITIES.LITERAL) {
                         await updateLiteral(props.value.resourceId, draftLabel);
                         toast.success('Literal label updated successfully');
                     } else {
@@ -71,7 +71,14 @@ export default function ValueItem(props) {
                     newResource = await createResourceAPICall(selectedOption.label);
                     newResource['isExistingValue'] = true;
                 } else {
-                    newResource = { id: guid(), isExistingValue: false, label: selectedOption.label, type: 'object', classes: [], shared: 1 };
+                    newResource = {
+                        id: guid(),
+                        isExistingValue: false,
+                        label: selectedOption.label,
+                        _class: ENTITIES.RESOURCE,
+                        classes: [],
+                        shared: 1
+                    };
                 }
                 await changeValueInStatementBrowser(newResource);
             }
@@ -201,12 +208,12 @@ export default function ValueItem(props) {
     let handleOnClick = null;
 
     if (
-        (props.value.type === 'object' || props.value.type === 'template') &&
+        props.value._class === ENTITIES.RESOURCE &&
         (existingResourceId || props.contextStyle !== 'StatementBrowser') &&
         openExistingResourcesInDialog
     ) {
         handleOnClick = handleExistingResourceClick;
-    } else if (props.value.type === 'object' || props.value.type === 'template') {
+    } else if (props.value._class === ENTITIES.RESOURCE) {
         handleOnClick = handleResourceClick;
     }
 

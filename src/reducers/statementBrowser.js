@@ -1,6 +1,6 @@
 import * as type from '../actions/types';
 import dotProp from 'dot-prop-immutable';
-import { MISC } from 'constants/graphSettings';
+import { ENTITIES, MISC } from 'constants/graphSettings';
 import { match } from 'path-to-regexp';
 import ROUTES from 'constants/routes';
 
@@ -124,7 +124,7 @@ export default (state = initialState, action) => {
                 newState = dotProp.set(newState, 'properties.byId', ids => ({
                     ...ids,
                     [payload.propertyId]: {
-                        label: payload.label ? payload.label : '',
+                        ...payload,
                         existingPredicateId: payload.existingPredicateId ? payload.existingPredicateId : null,
                         valueIds: [],
                         isExistingProperty: payload.isExistingProperty ? payload.isExistingProperty : false,
@@ -213,14 +213,11 @@ export default (state = initialState, action) => {
                 newState = dotProp.set(newState, 'values.byId', ids => ({
                     ...ids,
                     [payload.valueId]: {
-                        type: payload.type,
-                        classes: payload.classes ? payload.classes : [],
-                        label: payload.label ? payload.label : '',
+                        ...payload,
                         resourceId: payload.resourceId ? payload.resourceId : null,
                         isExistingValue: payload.isExistingValue ? payload.isExistingValue : false,
                         existingStatement: payload.existingStatement ? payload.existingStatement : false,
                         statementId: payload.statementId,
-                        ...(payload.type === 'literal' && { datatype: payload.datatype ?? MISC.DEFAULT_LITERAL_DATATYPE }),
                         isEditing: false,
                         isSaving: false,
                         shared: payload.shared ? payload.shared : 1
@@ -233,18 +230,15 @@ export default (state = initialState, action) => {
                 // add a new resource when a object value is created
 
                 //only create a new object when the id doesn't exist yet (for sharing changes on existing resources)
-                if ((payload.type === 'object' || payload.type === 'template') && !state.resources.byId[payload.resourceId]) {
+                if (payload.__class !== ENTITIES.LITERAL && !state.resources.byId[payload.resourceId]) {
                     newState = dotProp.set(newState, 'resources.allIds', ids => [...ids, payload.resourceId]);
 
                     newState = dotProp.set(newState, 'resources.byId', ids => ({
                         ...ids,
                         [payload.resourceId]: {
                             existingResourceId: payload.existingResourceId && payload.isExistingValue ? payload.existingResourceId : null,
-                            id: payload.resourceId,
-                            label: payload.label,
-                            shared: payload.shared ? payload.shared : 1,
-                            propertyIds: [],
-                            classes: payload.classes ? payload.classes : []
+                            ...payload,
+                            propertyIds: []
                         }
                     }));
                 }

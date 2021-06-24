@@ -26,6 +26,7 @@ import PropTypes from 'prop-types';
 import { compose } from 'redux';
 import { guid } from 'utils';
 import toArray from 'lodash/toArray';
+import { ENTITIES } from 'constants/graphSettings';
 
 const AnimationContainer = styled(CSSTransition)`
     &.fadeIn-enter {
@@ -265,7 +266,7 @@ class Abstract extends Component {
                     }
                     statements['values'].push({
                         label: range.text,
-                        type: 'object',
+                        _class: ENTITIES.RESOURCE,
                         propertyId: propertyId
                     });
                 }

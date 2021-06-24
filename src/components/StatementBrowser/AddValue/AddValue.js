@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { guid } from 'utils';
 import { isLiteral, getValueClass } from './helpers/utils';
 import PropTypes from 'prop-types';
-import { MISC } from 'constants/graphSettings';
+import { ENTITIES, MISC } from 'constants/graphSettings';
 
 const AddValue = props => {
     const dispatch = useDispatch();
@@ -91,7 +91,7 @@ const AddValue = props => {
                 dispatch(
                     createValue({
                         label: value,
-                        type: valueType,
+                        _class: valueType,
                         propertyId: props.propertyId ? props.propertyId : selectedProperty,
                         existingResourceId: newObject.id,
                         isExistingValue: true,
@@ -113,7 +113,7 @@ const AddValue = props => {
                 dispatch(
                     createValue({
                         label: value,
-                        type: valueType,
+                        _class: valueType,
                         propertyId: props.propertyId ? props.propertyId : selectedProperty,
                         classes: classes,
                         existingResourceId: id,
@@ -138,7 +138,7 @@ const AddValue = props => {
                 dispatch(
                     createValue({
                         label: value,
-                        type: valueType,
+                        _class: valueType,
                         propertyId: props.propertyId ? props.propertyId : selectedProperty,
                         classes: classes,
                         existingResourceId: id,
@@ -157,7 +157,7 @@ const AddValue = props => {
         const existingResourceId = guid();
         if (props.syncBackend) {
             switch (valueType) {
-                case 'object':
+                case ENTITIES.RESOURCE:
                     newObject = await createResource(inputValue, valueClass ? [valueClass.id] : []);
                     newStatement = await createResourceStatement(selectedResource, predicate.existingPredicateId, newObject.id);
                     break;
@@ -171,15 +171,11 @@ const AddValue = props => {
             }
             dispatch(
                 createValue({
-                    label: inputValue,
-                    type: valueType,
-                    ...(valueType === 'literal' && { datatype: datatype }),
+                    ...newObject,
                     propertyId: props.propertyId ? props.propertyId : selectedProperty,
                     existingResourceId: newObject.id,
                     isExistingValue: true,
-                    statementId: newStatement.id,
-                    shared: newObject.shared,
-                    classes: valueClass ? [valueClass.id] : []
+                    statementId: newStatement.id
                 })
             );
         } else {
@@ -187,8 +183,8 @@ const AddValue = props => {
                 createValue({
                     valueId,
                     label: inputValue,
-                    type: valueType,
-                    ...(valueType === 'literal' && { datatype: datatype }),
+                    _class: valueType,
+                    ...(valueType === ENTITIES.LITERAL && { datatype: datatype }),
                     propertyId: props.propertyId ? props.propertyId : selectedProperty,
                     existingResourceId,
                     isExistingValue: false,

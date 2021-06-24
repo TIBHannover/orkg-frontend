@@ -18,7 +18,7 @@ import { reverse } from 'named-urls';
 import { Link } from 'react-router-dom';
 import ROUTES from 'constants/routes.js';
 import { useDispatch, useSelector } from 'react-redux';
-import { CLASSES } from 'constants/graphSettings';
+import { CLASSES, ENTITIES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
 
 export default function ValueItemTemplate(props) {
@@ -35,9 +35,10 @@ export default function ValueItemTemplate(props) {
     const { hasLabelFormat, labelFormat } = useSelector(state => {
         // get all template ids
         let templateIds = [];
-        for (const c of props.value.classes) {
-            if (state.statementBrowser.classes[c]) {
-                templateIds = templateIds.concat(state.statementBrowser.classes[c].templateIds);
+        const filter_classes = props.value?.classes?.filter(c => c) ?? [];
+        for (const c of filter_classes) {
+            if (state.statementBrowser?.classes?.[c]) {
+                templateIds = templateIds.concat(state.statementBrowser?.classes[c]?.templateIds);
             }
         }
         templateIds = uniq(templateIds);
@@ -125,7 +126,8 @@ export default function ValueItemTemplate(props) {
             if (!hasLabelFormat) {
                 return props.value.label;
             }
-            if (existingResourceId && !resource.isFetched && !resource.isFetching && props.value.type !== 'literal') {
+            if (existingResourceId && !resource.isFetched && !resource.isFetching && props.value?._class !== ENTITIES.LITERAL) {
+                /*
                 dispatch(
                     fetchStatementsForResource({
                         resourceId: props.value.resourceId,
@@ -134,6 +136,8 @@ export default function ValueItemTemplate(props) {
                 ).then(() => {
                     return generatedFormattedLabel(labelFormat);
                 });
+                */
+                return generatedFormattedLabel(labelFormat);
             } else {
                 return generatedFormattedLabel(labelFormat);
             }
@@ -147,9 +151,9 @@ export default function ValueItemTemplate(props) {
         <ValueItemStyle>
             {!props.value.isEditing ? (
                 <div>
-                    {props.resource && !props.resource.isFetching && props.value.type === 'object' && !resourcesAsLinks && (
+                    {props.resource && !props.resource.isFetching && props.value._class === ENTITIES.RESOURCE && !resourcesAsLinks && (
                         <Button className="p-0 text-left" color="link" onClick={props.handleOnClick} style={{ userSelect: 'text' }}>
-                            {props.showHelp && props.value.type === 'object' ? (
+                            {props.showHelp && props.value._class === ENTITIES.RESOURCE ? (
                                 <Pulse content="Click on the resource to browse it">
                                     <ValuePlugins type="resource">{getLabel() || <i>No label</i>}</ValuePlugins>
                                 </Pulse>
@@ -168,23 +172,23 @@ export default function ValueItemTemplate(props) {
                         </Button>
                     )}
 
-                    {props.resource && props.value.type === 'object' && !props.resource.isFetching && resourcesAsLinks && (
+                    {props.resource && props.value._class === ENTITIES.RESOURCE && !props.resource.isFetching && resourcesAsLinks && (
                         <Link to={reverse(ROUTES.RESOURCE, { id: props.value.resourceId })}>{props.value.label || <i>No label</i>}</Link>
                     )}
 
-                    {!props.resource && props.value.type === 'class' && resourcesAsLinks && (
+                    {!props.resource && props.value._class === ENTITIES.CLASS && resourcesAsLinks && (
                         <Link to={reverse(ROUTES.CLASS, { id: props.value.resourceId })}>{props.value.label || <i>No label</i>}</Link>
                     )}
 
-                    {!props.resource && props.value.type === 'predicate' && resourcesAsLinks && (
+                    {!props.resource && props.value._class === ENTITIES.PREDICATE && resourcesAsLinks && (
                         <Link to={reverse(ROUTES.PROPERTY, { id: props.value.resourceId })}>{props.value.label || <i>No label</i>}</Link>
                     )}
 
-                    {props.resource && props.resource.isFetching && props.value.type === 'object' && 'Loading...'}
+                    {props.resource && props.resource.isFetching && props.value._class === ENTITIES.RESOURCE && 'Loading...'}
 
-                    {props.value.type === 'literal' && (
+                    {props.value._class === ENTITIES.LITERAL && (
                         <div className="literalLabel">
-                            <ValuePlugins type="literal">{props.value.label}</ValuePlugins>
+                            <ValuePlugins type={ENTITIES.LITERAL}>{props.value.label}</ValuePlugins>
                         </div>
                     )}
 

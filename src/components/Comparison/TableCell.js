@@ -5,6 +5,7 @@ import StatementBrowserDialog from '../StatementBrowser/StatementBrowserDialog';
 import ValuePlugins from '../ValuePlugins/ValuePlugins';
 import { PREDICATE_TYPE_ID, RESOURCE_TYPE_ID } from 'constants/misc';
 import Tippy from '@tippyjs/react';
+import { ENTITIES } from 'constants/graphSettings';
 
 export const Item = styled.div`
     padding-right: 10px;
@@ -105,7 +106,7 @@ class TableCell extends Component {
                             this.props.data.map((date, index) => {
                                 return (
                                     Object.keys(date).length > 0 &&
-                                    (date.type === 'resource' ? (
+                                    (date.type === ENTITIES.RESOURCE ? (
                                         <span key={`value-${date.resourceId}`}>
                                             {index > 0 && <ItemInnerSeparator />}
                                             <Tippy

@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
-import { getStatementsBySubject, createResourceStatement, deleteStatementById } from 'services/backend/statements';
+import { createResourceStatement, deleteStatementById, getStatementsBundleBySubject } from 'services/backend/statements';
 import { getIsVerified } from 'services/backend/papers';
 import { getResource, updateResource, createResource } from 'services/backend/resources';
 import { useDispatch } from 'react-redux';
@@ -8,7 +8,7 @@ import { resetStatementBrowser, updateContributionLabel } from 'actions/statemen
 import { loadPaper, setPaperAuthors } from 'actions/viewPaper';
 import { toast } from 'react-toastify';
 import Confirm from 'reactstrap-confirm';
-import { getPaperData_ViewPaper } from 'utils';
+import { getPaperData_ViewPaper, filterObjectOfStatementsByPredicateAndClass } from 'utils';
 import { PREDICATES, CLASSES } from 'constants/graphSettings';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes.js';
@@ -25,36 +25,25 @@ const useViewPaper = ({ paperId, contributionId }) => {
     const dispatch = useDispatch();
     const history = useHistory();
 
-    const loadAuthorsORCID = useCallback(
-        paperAuthors => {
-            let authors = [];
-            if (paperAuthors.length > 0) {
-                authors = paperAuthors
-                    .filter(author => author.classes && author.classes.includes(CLASSES.AUTHOR))
-                    .map(author => {
-                        return getStatementsBySubject({ id: author.id }).then(authorStatements => {
-                            return authorStatements.find(statement => statement.predicate.id === PREDICATES.HAS_ORCID);
-                        });
-                    });
-            }
-            return Promise.all(authors).then(authorsORCID => {
-                const authorsArray = [];
-                for (const author of paperAuthors) {
-                    const orcid = authorsORCID.find(a => a.subject.id === author.id);
-                    if (orcid) {
-                        author.orcid = orcid.object.label;
-                        authorsArray.push(author);
-                    } else {
-                        author.orcid = '';
-                        authorsArray.push(author);
-                    }
+    const setAuthorsORCID = useCallback(
+        (paperStatements, pId) => {
+            const authorsArray = [];
+            const paperAuthors = filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_AUTHOR, false, null, pId);
+            for (const author of paperAuthors) {
+                const orcid = paperStatements.find(s => s.subject.id === author.id && s.predicate.id === PREDICATES.HAS_ORCID);
+                if (orcid) {
+                    author.orcid = orcid.object.label;
+                    authorsArray.push(author);
+                } else {
+                    author.orcid = '';
+                    authorsArray.push(author);
                 }
-                dispatch(
-                    setPaperAuthors({
-                        authors: authorsArray
-                    })
-                );
-            });
+            }
+            dispatch(
+                setPaperAuthors({
+                    authors: authorsArray
+                })
+            );
         },
         [dispatch]
     );
@@ -70,24 +59,26 @@ const useViewPaper = ({ paperId, contributionId }) => {
                     return;
                 }
 
-                Promise.all([getStatementsBySubject({ id: paperId }), getIsVerified(paperId).catch(() => false)]).then(
-                    ([paperStatements, verified]) => {
-                        const paperData = getPaperData_ViewPaper(paperResource, paperStatements);
-                        // Set document title
-                        document.title = `${paperResource.label} - ORKG`;
-                        dispatch(loadPaper({ ...paperData, verified: verified }));
-                        setIsLoading(false);
-                        setContributions(paperData.contributions);
-                        loadAuthorsORCID(paperData.authors);
-                        return paperData.contributions;
-                    }
-                );
+                Promise.all([
+                    getStatementsBundleBySubject({ id: paperId, maxLevel: 2, blacklist: [CLASSES.RESEARCH_FIELD] }),
+                    getIsVerified(paperId).catch(() => false)
+                ]).then(([paperStatements, verified]) => {
+                    const paperData = getPaperData_ViewPaper(paperResource, paperStatements.statements?.filter(s => s.subject.id === paperId));
+                    // Set document title
+                    document.title = `${paperResource.label} - ORKG`;
+                    dispatch(loadPaper({ ...paperData, verified: verified }));
+                    setIsLoading(false);
+                    setContributions(paperData.contributions);
+
+                    setAuthorsORCID(paperStatements.statements, paperId);
+                    return paperData.contributions;
+                });
             })
             .catch(error => {
                 setIsLoadingFailed(true);
                 setIsLoading(false);
             });
-    }, [dispatch, loadAuthorsORCID, paperId]);
+    }, [dispatch, paperId, setAuthorsORCID]);
 
     useEffect(() => {
         loadPaperData();

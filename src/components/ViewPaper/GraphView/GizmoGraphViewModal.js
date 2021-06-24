@@ -14,7 +14,7 @@ import flattenDeep from 'lodash/flattenDeep';
 // moving GraphVis here in order to maintain the layouts and status related stuff;
 import GraphVis from 'libs/gizmo/GraphVis';
 import SearchAutoComplete from './SearchAutoComplete';
-import { PREDICATES, CLASSES } from 'constants/graphSettings';
+import { PREDICATES, CLASSES, ENTITIES } from 'constants/graphSettings';
 
 class GraphView extends Component {
     constructor(props) {
@@ -369,7 +369,7 @@ class GraphView extends Component {
                         //add the node and relation
                         nodes.push({ id: id, label: value.label, title: value.label });
                         edges.push({ from: resourceId, to: id, label: property.label });
-                        if (value.type === 'object') {
+                        if (value._class === ENTITIES.RESOURCE) {
                             this.addPaperStatementsToGraph(id, nodes, edges);
                         }
                     }

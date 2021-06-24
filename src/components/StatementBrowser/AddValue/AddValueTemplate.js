@@ -26,7 +26,7 @@ export default function AddValueTemplate(props) {
     const [dialogResourceId, setDialogResourceId] = useState(null);
     const [dialogResourceLabel, setDialogResourceLabel] = useState(null);
 
-    const [valueType, setValueType] = useState(props.isLiteral ? 'literal' : 'object');
+    const [valueType, setValueType] = useState(props.isLiteral ? ENTITIES.LITERAL : ENTITIES.RESOURCE);
     const [inputValue, setInputValue] = useState('');
     const [dropdownValueTypeOpen, setDropdownValueTypeOpen] = useToggle(false);
     const [showAddValue, setShowAddValue] = useToggle(false);
@@ -131,7 +131,7 @@ export default function AddValueTemplate(props) {
     useEffect(() => {
         if (valueType === 'literal' && literalInputRef.current) {
             literalInputRef.current.focus();
-        } else if (resourceInputRef.current && (valueType === 'object' || valueType === 'property')) {
+        } else if (resourceInputRef.current && (valueType === ENTITIES.RESOURCE || valueType === 'property')) {
             resourceInputRef.current.focus();
         }
     }, [valueType]);
@@ -143,7 +143,7 @@ export default function AddValueTemplate(props) {
     }, [showAddValue]);
 
     useEffect(() => {
-        setValueType(props.isLiteral ? 'literal' : 'object');
+        setValueType(props.isLiteral ? ENTITIES.LITERAL : ENTITIES.RESOURCE);
         setUniqueLabel(props.valueClass && props.valueClass.id === CLASSES.PROBLEM ? true : false);
         if (props.valueClass && !defaultDatatypes.map(t => t.id).includes(props.valueClass.id)) {
             setTemplateIsLoading(true);
@@ -243,18 +243,18 @@ export default function AddValueTemplate(props) {
                         {!props.valueClass && (
                             <InputGroupButtonDropdown addonType="prepend" isOpen={dropdownValueTypeOpen} toggle={setDropdownValueTypeOpen}>
                                 <StyledDropdownToggle disableBorderRadiusRight={true}>
-                                    <Tippy content={valueType === 'object' ? resourceTooltip : literalTooltip}>
-                                        <small>{valueType === 'object' ? 'Resource' : 'Literal'} </small>
+                                    <Tippy content={valueType === ENTITIES.RESOURCE ? resourceTooltip : literalTooltip}>
+                                        <small>{valueType === ENTITIES.RESOURCE ? 'Resource' : 'Literal'} </small>
                                     </Tippy>
                                     <Icon size="xs" icon={faBars} />
                                 </StyledDropdownToggle>
                                 <DropdownMenu>
-                                    <StyledDropdownItem onClick={() => setValueType('object')}>
+                                    <StyledDropdownItem onClick={() => setValueType(ENTITIES.RESOURCE)}>
                                         <Tippy content={resourceTooltip}>
                                             <span>Resource</span>
                                         </Tippy>
                                     </StyledDropdownItem>
-                                    <StyledDropdownItem onClick={() => setValueType('literal')}>
+                                    <StyledDropdownItem onClick={() => setValueType(ENTITIES.LITERAL)}>
                                         <Tippy content={literalTooltip}>
                                             <span>Literal</span>
                                         </Tippy>
@@ -262,7 +262,7 @@ export default function AddValueTemplate(props) {
                                 </DropdownMenu>
                             </InputGroupButtonDropdown>
                         )}
-                        {valueType === 'object' ? (
+                        {valueType === ENTITIES.RESOURCE ? (
                             <AutoComplete
                                 entityType={ENTITIES.RESOURCE}
                                 excludeClasses={`${CLASSES.CONTRIBUTION},${CLASSES.PROBLEM},${CLASSES.TEMPLATE}`}

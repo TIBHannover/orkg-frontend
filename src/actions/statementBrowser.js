@@ -2,10 +2,10 @@ import * as type from './types.js';
 import { guid, getStatementsBySubjectId } from 'utils';
 import { prefillStatements } from './addPaper';
 import { orderBy, uniq, isEqual } from 'lodash';
-import { PREDICATES, MISC, CLASSES, ENTITIES } from 'constants/graphSettings';
+import { PREDICATES, CLASSES, ENTITIES } from 'constants/graphSettings';
 import { getEntity } from 'services/backend/misc';
 import { flatten } from 'lodash';
-import { getStatementsBySubject, getTemplateById, getTemplatesByClass, getStatementsBundleBySubject } from 'services/backend/statements';
+import { getTemplateById, getTemplatesByClass, getStatementsBundleBySubject } from 'services/backend/statements';
 import { createResource as createResourceApi } from 'services/backend/resources';
 
 export const updateSettings = data => dispatch => {
@@ -499,12 +499,12 @@ export const updateResourceClasses = data => dispatch => {
  * @param {Object} data - Value Object
  * @param {String=} data.valueId - value ID
  * @param {String=} data.existingResourceId - Existing resource ID
- * @param {String=} data.type - Type of value (object|template)
+ * @param {String=} data._class - Type of value (resource|literal|predicate)
  * @param {Array=} data.classes - Classes of value
  */
 export function createValue(data) {
     return dispatch => {
-        const resourceId = data.existingResourceId ? data.existingResourceId : data.type === 'object' || data.type === 'template' ? guid() : null;
+        const resourceId = data.existingResourceId ? data.existingResourceId : data._class === ENTITIES.RESOURCE ? guid() : null;
 
         dispatch({
             type: type.CREATE_VALUE,
@@ -689,7 +689,7 @@ export function fillResourceWithTemplate({ templateID, selectedResource, syncBac
                         valueId: vID,
                         label: template.label,
                         existingResourceId: newObject ? newObject.id : rID,
-                        type: 'object',
+                        _class: ENTITIES.RESOURCE,
                         propertyId: pID,
                         classes: template.class ? [template.class.id] : []
                     });
@@ -880,9 +880,9 @@ export function addStatements(statements, rootId, resourceId) {
                         propertyId: propertyId,
                         resourceId: resourceId,
                         existingPredicateId: firstLevelS.predicate.id,
-                        label: firstLevelS.predicate.label,
                         isExistingProperty: true,
-                        isTemplate: false
+                        isTemplate: false,
+                        ...firstLevelS.predicate
                     })
                 );
 
@@ -898,21 +898,24 @@ export function addStatements(statements, rootId, resourceId) {
                     valueId: valueId,
                     existingResourceId: firstLevelS.object.id,
                     propertyId: propertyId,
-                    label: firstLevelS.object.label,
-                    type: firstLevelS.object._class === 'resource' ? 'object' : firstLevelS.object._class, // TODO: change 'object' to 'resource' (wrong term used here, since it is always an object)
-                    classes: firstLevelS.object.classes ? firstLevelS.object.classes : [],
-                    ...(firstLevelS.object._class === 'literal' && {
-                        datatype: firstLevelS.object.datatype ?? MISC.DEFAULT_LITERAL_DATATYPE
-                    }),
                     isExistingValue: true,
                     existingStatement: true,
                     statementId: firstLevelS.id,
-                    shared: firstLevelS.object.shared
+                    ...firstLevelS.object
                 })
             ).then(() => {
-                //recursive
-                getStatementsBySubjectId(statements, firstLevelS.object.id)?.length &&
-                    dispatch(addStatements(statements, firstLevelS.object.id, firstLevelS.object.id));
+                if (getStatementsBySubjectId(statements, firstLevelS.object.id)?.length) {
+                    // recursive
+                    // Add required properties and Add statements
+                    /*
+                    return dispatch(createRequiredPropertiesInResource(firstLevelS.object.id)).then(() =>
+                        dispatch(addStatements(statements, firstLevelS.object.id, firstLevelS.object.id))
+                    );
+                    */
+                    return dispatch(addStatements(statements, firstLevelS.object.id, firstLevelS.object.id));
+                } else {
+                    return Promise.resolve();
+                }
             });
         });
     };
@@ -935,11 +938,7 @@ export const fetchStatementsForResource = data => {
     const { resourceId, existingResourceId } = data;
     isContribution = isContribution ? isContribution : false;
 
-    if (typeof depth == 'number') {
-        depth = depth - 1;
-    } else {
-        depth = 0;
-    }
+    depth = depth ?? 1;
 
     rootNodeType = rootNodeType ?? ENTITIES.RESOURCE;
 
@@ -956,16 +955,15 @@ export const fetchStatementsForResource = data => {
                     [ENTITIES.CLASS]: [CLASSES.CLASS],
                     [ENTITIES.RESOURCE]: root.classes ?? []
                 };
+                // because we have custom templates for predicates and classes
                 let allClasses = mapEntitiesClasses[rootNodeType];
                 // set the resource classes (initialize doesn't set the classes)
-                dispatch(updateResourceClasses({ resourceId, classes: root.classes ?? [] }));
+                dispatch(updateResourceClasses({ resourceId, classes: allClasses }));
                 // fetch the statements
-                getStatementsBundleBySubject({ id: existingResourceId, maxLevel: 3 }).then(response => {
+                return getStatementsBundleBySubject({ id: existingResourceId, maxLevel: 3 }).then(response => {
                     const rootStatements = response.statements;
                     // if it's a contribution add research problem to paper redux
                     isContribution && addResearchProblemsToContribution(rootStatements, existingResourceId, resourceId);
-                    // 1 - add statements
-                    dispatch(addStatements(rootStatements, existingResourceId, resourceId));
                     // 2 - collect all classes Ids
                     allClasses = uniq([
                         ...allClasses,
@@ -977,19 +975,20 @@ export const fetchStatementsForResource = data => {
                         )
                     ]);
                     // 3 - load templates
-                    const templatesLoading = allClasses && allClasses?.map(classID => dispatch(fetchTemplatesOfClassIfNeeded(classID)));
-                    Promise.all(templatesLoading).then(c => {
-                        // 4 - Finished the call
-                        dispatch({
-                            type: type.DONE_FETCHING_STATEMENTS
+                    const templatesOfClassesLoading = allClasses && allClasses?.map(classID => dispatch(fetchTemplatesOfClassIfNeeded(classID)));
+                    return Promise.all(templatesOfClassesLoading)
+                        .then(() => dispatch(createRequiredPropertiesInResource(resourceId))) // Add required properties
+                        .then(() => dispatch(addStatements(rootStatements, existingResourceId, resourceId))) // Add required statements
+                        .then(() => {
+                            dispatch({
+                                type: type.DONE_FETCHING_STATEMENTS
+                            });
+                            dispatch({
+                                type: type.SET_STATEMENT_IS_FECHTED,
+                                resourceId: resourceId,
+                                depth: depth
+                            });
                         });
-                        ///// TODO: dispatch(createRequiredPropertiesInResource(resourceId))
-                        dispatch({
-                            type: type.SET_STATEMENT_IS_FECHTED,
-                            resourceId: resourceId,
-                            depth: depth
-                        });
-                    });
                 });
             });
         } else {
