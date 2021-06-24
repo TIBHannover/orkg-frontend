@@ -1,14 +1,12 @@
 import * as type from './types.js';
-import { guid } from 'utils';
+import { guid, getStatementsBySubjectId } from 'utils';
 import { prefillStatements } from './addPaper';
 import { orderBy, uniq, isEqual } from 'lodash';
-import { PREDICATES, MISC, CLASSES } from 'constants/graphSettings';
-import { CLASS_TYPE_ID, PREDICATE_TYPE_ID, RESOURCE_TYPE_ID } from 'constants/misc';
-import { getResource } from 'services/backend/resources';
-import { getPredicate } from 'services/backend/predicates';
-import { getStatementsBySubject, getTemplateById, getTemplatesByClass } from 'services/backend/statements';
+import { PREDICATES, MISC, CLASSES, ENTITIES } from 'constants/graphSettings';
+import { getEntity } from 'services/backend/misc';
+import { flatten } from 'lodash';
+import { getStatementsBySubject, getTemplateById, getTemplatesByClass, getStatementsBundleBySubject } from 'services/backend/statements';
 import { createResource as createResourceApi } from 'services/backend/resources';
-import { getClassById } from 'services/backend/classes.js';
 
 export const updateSettings = data => dispatch => {
     dispatch({
@@ -34,10 +32,10 @@ export const initializeWithoutContribution = data => dispatch => {
     const resourceId = data.resourceId;
     const rootNodeType = data.rootNodeType;
     let classes = [];
-    if (rootNodeType === PREDICATE_TYPE_ID) {
+    if (rootNodeType === ENTITIES.PREDICATE) {
         classes = [CLASSES.PREDICATE];
     }
-    if (rootNodeType === CLASS_TYPE_ID) {
+    if (rootNodeType === ENTITIES.CLASS) {
         classes = [CLASSES.CLASS];
     }
 
@@ -835,6 +833,91 @@ function shouldFetchStatementsForResource(state, resourceId, depth) {
     }
 }
 
+export function addResearchProblemsToContribution(statements, rootId, resourceId) {
+    return dispatch => {
+        // filter out research problem to show differently
+        const researchProblems = [];
+        const resourceStatements = getStatementsBySubjectId(statements, rootId);
+        resourceStatements
+            .filter(s => s.predicate.id === PREDICATES.HAS_RESEARCH_PROBLEM)
+            .map(s => {
+                return researchProblems.push({
+                    label: s.object.label,
+                    id: s.object.id,
+                    statementId: s.id
+                });
+            });
+        dispatch({
+            type: type.SET_RESEARCH_PROBLEMS,
+            payload: {
+                researchProblems,
+                resourceId
+            }
+        });
+    };
+}
+
+export function addStatements(statements, rootId, resourceId) {
+    return dispatch => {
+        const existingProperties = [];
+        let resourceStatements = getStatementsBySubjectId(statements, rootId);
+        // Sort predicates and values by label
+        resourceStatements = orderBy(
+            resourceStatements,
+            [
+                resourceStatements => resourceStatements.predicate.label.toLowerCase(),
+                resourceStatements => resourceStatements.object.label.toLowerCase()
+            ],
+            ['asc']
+        );
+        return resourceStatements.map(firstLevelS => {
+            let propertyId = guid();
+            const valueId = guid();
+            // check whether there already exist a property for this, then combine
+            if (existingProperties.filter(e => e.existingPredicateId === firstLevelS.predicate.id).length === 0) {
+                dispatch(
+                    createProperty({
+                        propertyId: propertyId,
+                        resourceId: resourceId,
+                        existingPredicateId: firstLevelS.predicate.id,
+                        label: firstLevelS.predicate.label,
+                        isExistingProperty: true,
+                        isTemplate: false
+                    })
+                );
+
+                existingProperties.push({
+                    existingPredicateId: firstLevelS.predicate.id,
+                    propertyId
+                });
+            } else {
+                propertyId = existingProperties.filter(e => e.existingPredicateId === firstLevelS.predicate.id)[0].propertyId;
+            }
+            return dispatch(
+                createValue({
+                    valueId: valueId,
+                    existingResourceId: firstLevelS.object.id,
+                    propertyId: propertyId,
+                    label: firstLevelS.object.label,
+                    type: firstLevelS.object._class === 'resource' ? 'object' : firstLevelS.object._class, // TODO: change 'object' to 'resource' (wrong term used here, since it is always an object)
+                    classes: firstLevelS.object.classes ? firstLevelS.object.classes : [],
+                    ...(firstLevelS.object._class === 'literal' && {
+                        datatype: firstLevelS.object.datatype ?? MISC.DEFAULT_LITERAL_DATATYPE
+                    }),
+                    isExistingValue: true,
+                    existingStatement: true,
+                    statementId: firstLevelS.id,
+                    shared: firstLevelS.object.shared
+                })
+            ).then(() => {
+                //recursive
+                getStatementsBySubjectId(statements, firstLevelS.object.id)?.length &&
+                    dispatch(addStatements(statements, firstLevelS.object.id, firstLevelS.object.id));
+            });
+        });
+    };
+}
+
 // TODO: support literals (currently not working in backend)
 /**
  * Fetch statements of a resource
@@ -843,6 +926,7 @@ function shouldFetchStatementsForResource(state, resourceId, depth) {
  * @param {String} data.resourceId - Resource ID
  * @param {String} data.existingResourceId - Existing resource ID
  * @param {Boolean} data.isContribution - If the resource if a contribution
+ * @param {String} data.rootNodeType - root node type (predicate|resource|class)
  * @param {Number} data.depth - The required depth
  * @return {Promise} Promise object
  */
@@ -857,9 +941,7 @@ export const fetchStatementsForResource = data => {
         depth = 0;
     }
 
-    rootNodeType = rootNodeType ?? RESOURCE_TYPE_ID;
-
-    let resourceStatements = [];
+    rootNodeType = rootNodeType ?? ENTITIES.RESOURCE;
 
     // Get the resource classes
     return (dispatch, getState) => {
@@ -868,151 +950,47 @@ export const fetchStatementsForResource = data => {
                 type: type.IS_FETCHING_STATEMENTS,
                 resourceId: resourceId
             });
-            let subject;
-
-            switch (rootNodeType) {
-                case PREDICATE_TYPE_ID:
-                    subject = getPredicate(existingResourceId);
-                    break;
-                case RESOURCE_TYPE_ID:
-                    subject = getResource(existingResourceId);
-                    break;
-                case CLASS_TYPE_ID:
-                    subject = getClassById(existingResourceId);
-                    break;
-                default:
-                    subject = getResource(existingResourceId); // code block
-            }
-
-            return subject.then(response => {
-                let promises;
+            return getEntity(rootNodeType, existingResourceId).then(root => {
+                const mapEntitiesClasses = {
+                    [ENTITIES.PREDICATE]: [CLASSES.PREDICATE],
+                    [ENTITIES.CLASS]: [CLASSES.CLASS],
+                    [ENTITIES.RESOURCE]: root.classes ?? []
+                };
+                let allClasses = mapEntitiesClasses[rootNodeType];
+                // set the resource classes (initialize doesn't set the classes)
+                dispatch(updateResourceClasses({ resourceId, classes: root.classes ?? [] }));
                 // fetch the statements
-                const resourceStatementsPromise = getStatementsBySubject({ id: existingResourceId }).then(response => {
-                    resourceStatements = response;
-                    return Promise.resolve();
-                });
-                if (rootNodeType === PREDICATE_TYPE_ID) {
-                    // get templates of classes
-                    const predicateClass = dispatch(fetchTemplatesOfClassIfNeeded(CLASSES.PREDICATE));
-                    promises = Promise.all([predicateClass, resourceStatementsPromise]);
-                } else if (rootNodeType === CLASS_TYPE_ID) {
-                    // get templates of classes
-                    const classClass = dispatch(fetchTemplatesOfClassIfNeeded(CLASSES.CLASS));
-                    promises = Promise.all([classClass, resourceStatementsPromise]);
-                } else {
-                    let resourceClasses = response.classes ?? [];
-                    // get templates of classes
-                    if (resourceClasses && resourceClasses.length > 0) {
-                        resourceClasses = resourceClasses.map(classID => dispatch(fetchTemplatesOfClassIfNeeded(classID)));
-                    }
-                    // set the resource classes (initialize doesn't set the classes)
-                    const resourceUpdateClasses = dispatch(updateResourceClasses({ resourceId, classes: response.classes }));
-                    promises = Promise.all([resourceUpdateClasses, resourceStatementsPromise, ...resourceClasses]);
-                }
-
-                return promises
-                    .then(() => dispatch(createRequiredPropertiesInResource(resourceId)))
-                    .then(existingProperties => {
-                        // all the template of classes are loaded
-                        // add the required property first
-                        const researchProblems = [];
-
-                        // Sort predicates and values by label
-                        resourceStatements = orderBy(
-                            resourceStatements,
-                            [
-                                resourceStatements => resourceStatements.predicate.label.toLowerCase(),
-                                resourceStatements => resourceStatements.object.label.toLowerCase()
-                            ],
-                            ['asc']
-                        );
-
-                        // Finished the call
+                getStatementsBundleBySubject({ id: existingResourceId, maxLevel: 3 }).then(response => {
+                    const rootStatements = response.statements;
+                    // if it's a contribution add research problem to paper redux
+                    isContribution && addResearchProblemsToContribution(rootStatements, existingResourceId, resourceId);
+                    // 1 - add statements
+                    dispatch(addStatements(rootStatements, existingResourceId, resourceId));
+                    // 2 - collect all classes Ids
+                    allClasses = uniq([
+                        ...allClasses,
+                        ...flatten(
+                            rootStatements
+                                .map(s => s.object)
+                                .filter(o => o.classes)
+                                .map(o => o.classes)
+                        )
+                    ]);
+                    // 3 - load templates
+                    const templatesLoading = allClasses && allClasses?.map(classID => dispatch(fetchTemplatesOfClassIfNeeded(classID)));
+                    Promise.all(templatesLoading).then(c => {
+                        // 4 - Finished the call
                         dispatch({
                             type: type.DONE_FETCHING_STATEMENTS
                         });
-
-                        for (const statement of resourceStatements) {
-                            let propertyId = guid();
-                            const valueId = guid();
-                            // filter out research problem to show differently
-                            if (isContribution && statement.predicate.id === PREDICATES.HAS_RESEARCH_PROBLEM) {
-                                researchProblems.push({
-                                    label: statement.object.label,
-                                    id: statement.object.id,
-                                    statementId: statement.id
-                                });
-                            } else {
-                                // check whether there already exist a property for this, then combine
-                                if (existingProperties.filter(e => e.existingPredicateId === statement.predicate.id).length === 0) {
-                                    dispatch(
-                                        createProperty({
-                                            propertyId: propertyId,
-                                            resourceId: resourceId,
-                                            existingPredicateId: statement.predicate.id,
-                                            label: statement.predicate.label,
-                                            isExistingProperty: true,
-                                            isTemplate: false
-                                        })
-                                    );
-
-                                    existingProperties.push({
-                                        existingPredicateId: statement.predicate.id,
-                                        propertyId
-                                    });
-                                } else {
-                                    propertyId = existingProperties.filter(e => e.existingPredicateId === statement.predicate.id)[0].propertyId;
-                                }
-
-                                dispatch(
-                                    createValue({
-                                        valueId: valueId,
-                                        existingResourceId: statement.object.id,
-                                        propertyId: propertyId,
-                                        label: statement.object.label,
-                                        type: statement.object._class === 'resource' ? 'object' : statement.object._class, // TODO: change 'object' to 'resource' (wrong term used here, since it is always an object)
-                                        classes: statement.object.classes ? statement.object.classes : [],
-                                        ...(statement.object._class === 'literal' && {
-                                            datatype: statement.object.datatype ?? MISC.DEFAULT_LITERAL_DATATYPE
-                                        }),
-                                        isExistingValue: true,
-                                        existingStatement: true,
-                                        statementId: statement.id,
-                                        shared: statement.object.shared
-                                    })
-                                ).then(() => {
-                                    if (depth >= 1 && statement.object._class === 'resource') {
-                                        dispatch(
-                                            fetchStatementsForResource({
-                                                existingResourceId: statement.object.id,
-                                                resourceId: statement.object.id,
-                                                depth: depth
-                                            })
-                                        );
-                                    }
-                                });
-
-                                //Load template of objects
-                                statement.object.classes && statement.object.classes.map(classID => dispatch(fetchTemplatesOfClassIfNeeded(classID)));
-                            }
-                        }
-
-                        if (isContribution) {
-                            dispatch({
-                                type: type.SET_RESEARCH_PROBLEMS,
-                                payload: {
-                                    researchProblems,
-                                    resourceId
-                                }
-                            });
-                        }
-
+                        ///// TODO: dispatch(createRequiredPropertiesInResource(resourceId))
                         dispatch({
                             type: type.SET_STATEMENT_IS_FECHTED,
                             resourceId: resourceId,
                             depth: depth
                         });
                     });
+                });
             });
         } else {
             return Promise.resolve();
