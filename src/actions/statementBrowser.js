@@ -121,6 +121,36 @@ export function getExistingPredicatesByResource(state, resourceId) {
 }
 
 /**
+ * Get the list of property id of a resource by existing predicate id
+ *
+ * @param {Object} state - Current state of the Store
+ * @param {String} resourceId - Resource ID
+ * @param {String} existingPredicateId - existing predicate ID
+ * @return {String} - property id
+ */
+export function getPropertyIdByByResourceAndPredicateId(state, resourceId, existingPredicateId) {
+    if (!resourceId) {
+        return null;
+    }
+    const resource = state.statementBrowser.resources.byId[resourceId];
+    if (!resource) {
+        return null;
+    }
+
+    const propertyIds = resource.propertyIds ?? [];
+    let propertyId;
+    if (propertyIds?.length > 0) {
+        propertyId = propertyIds.find(propertyId => {
+            const property = state.statementBrowser.properties.byId[propertyId];
+            return property.existingPredicateId === existingPredicateId;
+        });
+        return propertyId ?? null; // return a list without null values (predicates that aren't in the database)
+    } else {
+        return null;
+    }
+}
+
+/**
  * Create required properties based on the used template
  *
  * @param {String} resourceId Resource ID
@@ -826,7 +856,8 @@ export const updateContributionLabel = data => dispatch => {
  */
 function shouldFetchStatementsForResource(state, resourceId, depth) {
     const resource = state.statementBrowser.resources.byId[resourceId];
-    if (!resource || !resource.isFetched || (resource.isFetched && resource.fetchedDepth < depth)) {
+    //if (!resource || !resource.isFetched || (resource.isFetched && resource.fetchedDepth < depth)) {
+    if (!resource || !resource.isFetched) {
         return true;
     } else {
         return false;
@@ -857,9 +888,8 @@ export function addResearchProblemsToContribution(statements, rootId, resourceId
     };
 }
 
-export function addStatements(statements, rootId, resourceId) {
-    return dispatch => {
-        const existingProperties = [];
+export function addStatements(statements, rootId, resourceId, depth) {
+    return (dispatch, getState) => {
         let resourceStatements = getStatementsBySubjectId(statements, rootId);
         // Sort predicates and values by label
         resourceStatements = orderBy(
@@ -870,54 +900,53 @@ export function addStatements(statements, rootId, resourceId) {
             ],
             ['asc']
         );
-        return resourceStatements.map(firstLevelS => {
-            let propertyId = guid();
-            const valueId = guid();
-            // check whether there already exist a property for this, then combine
-            if (existingProperties.filter(e => e.existingPredicateId === firstLevelS.predicate.id).length === 0) {
-                dispatch(
-                    createProperty({
-                        propertyId: propertyId,
-                        resourceId: resourceId,
-                        existingPredicateId: firstLevelS.predicate.id,
-                        isExistingProperty: true,
-                        isTemplate: false,
-                        ...firstLevelS.predicate
-                    })
-                );
 
-                existingProperties.push({
-                    existingPredicateId: firstLevelS.predicate.id,
-                    propertyId
-                });
-            } else {
-                propertyId = existingProperties.filter(e => e.existingPredicateId === firstLevelS.predicate.id)[0].propertyId;
-            }
-            return dispatch(
-                createValue({
-                    valueId: valueId,
-                    existingResourceId: firstLevelS.object.id,
-                    propertyId: propertyId,
-                    isExistingValue: true,
-                    existingStatement: true,
-                    statementId: firstLevelS.id,
-                    ...firstLevelS.object
-                })
-            ).then(() => {
-                if (getStatementsBySubjectId(statements, firstLevelS.object.id)?.length) {
-                    // recursive
-                    // Add required properties and Add statements
-                    /*
-                    return dispatch(createRequiredPropertiesInResource(firstLevelS.object.id)).then(() =>
-                        dispatch(addStatements(statements, firstLevelS.object.id, firstLevelS.object.id))
+        return Promise.all(
+            resourceStatements.map(firstLevelS => {
+                const valueId = guid();
+                // Get the property id if it exists
+                let propertyId = getPropertyIdByByResourceAndPredicateId(getState(), resourceId, firstLevelS.predicate.id);
+                // check whether there already exist a property for this, then combine
+                if (!propertyId) {
+                    // create the property
+                    propertyId = guid();
+                    dispatch(
+                        createProperty({
+                            propertyId: propertyId,
+                            resourceId: resourceId,
+                            existingPredicateId: firstLevelS.predicate.id,
+                            isExistingProperty: true,
+                            isTemplate: false,
+                            ...firstLevelS.predicate
+                        })
                     );
-                    */
-                    return dispatch(addStatements(statements, firstLevelS.object.id, firstLevelS.object.id));
-                } else {
-                    return Promise.resolve();
                 }
-            });
-        });
+                //add the value
+                return dispatch(
+                    createValue({
+                        valueId: valueId,
+                        existingResourceId: firstLevelS.object.id,
+                        propertyId: propertyId,
+                        isExistingValue: true,
+                        existingStatement: true,
+                        statementId: firstLevelS.id,
+                        isFetched: depth > 1 ? true : false,
+                        fetchedDepth: depth - 1,
+                        ...firstLevelS.object
+                    })
+                ).then(() => {
+                    if (getStatementsBySubjectId(statements, firstLevelS.object.id)?.length) {
+                        // recursive
+                        // Add required properties and Add statements
+                        return dispatch(createRequiredPropertiesInResource(firstLevelS.object.id)).then(() =>
+                            dispatch(addStatements(statements, firstLevelS.object.id, firstLevelS.object.id, depth - 1))
+                        );
+                    } else {
+                        return Promise.resolve();
+                    }
+                });
+            })
+        );
     };
 }
 
@@ -978,7 +1007,7 @@ export const fetchStatementsForResource = data => {
                     const templatesOfClassesLoading = allClasses && allClasses?.map(classID => dispatch(fetchTemplatesOfClassIfNeeded(classID)));
                     return Promise.all(templatesOfClassesLoading)
                         .then(() => dispatch(createRequiredPropertiesInResource(resourceId))) // Add required properties
-                        .then(() => dispatch(addStatements(rootStatements, existingResourceId, resourceId))) // Add required statements
+                        .then(() => dispatch(addStatements(rootStatements, existingResourceId, resourceId, depth))) // Add required statements
                         .then(() => {
                             dispatch({
                                 type: type.DONE_FETCHING_STATEMENTS
