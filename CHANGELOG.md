@@ -5,6 +5,33 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [V0.42.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.42...V0.42.1) - 2021-06-24
+
+### Changes
+
+- feat(SmartReview): support value plugins in ontology table [`#618`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/618)
+- ux: Add loading indicator for benchmarks and fix plotting issues [`#622`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/622)
+- fix: Broken pagination in templates page [`#623`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/623)
+- fix(SmartReview): incorrect reference key for automatically generated references [`#621`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/621)
+
+---
+## [V0.42](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.41...V0.42) - 2021-06-22
+
+### Changes
+
+- fix(SmartReview): set max length for content sections [`#619`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/619)
+- feat(Stats): add additional statistics [`#620`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/620)
+- feat(SmartReview): section outline, section move buttons, publish reminder, scrolling on move [`#616`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/616)
+- ux: Add to comparison button [`#609`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/609)
+- curation: Make only admins can edit research field resource [`#601`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/601)
+- feat(AuthorInput): decode html entities of crossref reponse [`#613`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/613)
+- chore: remove organizations/id/Observatories endpoint [`#614`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/614)
+- fix: Current user tooltip appears on the user profile [`#615`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/615)
+- ux(ContributionEditor): list animations when automatically sorted [`#591`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/591)
+- fix(SmartReview): show correct property labels in ontology entity suggestion [`#611`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/611)
+- refactor(Visualization): Store the customization state [`#599`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/599)
+
+---
 ## [V0.41](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.40.2...V0.41) - 2021-06-15
 
 ### Changes

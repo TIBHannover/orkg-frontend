@@ -52,7 +52,11 @@ const SelectEntitiesModal = ({ toggle, section, type }) => {
                                     .map(property =>
                                         comparison.data[property].map(row =>
                                             row
-                                                .map(value => ({ label: property, id: value.path?.[value.path?.length - 1], type: 'property' }))
+                                                .map(value => ({
+                                                    label: value.pathLabels?.[value.pathLabels?.length - 1],
+                                                    id: value.path?.[value.path?.length - 1],
+                                                    type: 'property'
+                                                }))
                                                 .filter(_property => _property.id)
                                         )
                                     )
@@ -148,7 +152,7 @@ const SelectEntitiesModal = ({ toggle, section, type }) => {
         toggle();
     };
 
-    const handleSelectEntity = async ({ id }) => {
+    const handleSelectEntity = async id => {
         const entity = addEntityType === ENTITIES.RESOURCE ? await getResource(id) : await getPredicate(id);
         const entityStatements = await getStatementsBySubject({ id });
         setSelectedEntities(_entities => [..._entities, { ...entity, statements: entityStatements }]);
@@ -159,6 +163,8 @@ const SelectEntitiesModal = ({ toggle, section, type }) => {
         setSelectedEntities(_entities => _entities.filter(_entity => _entity.id !== entityId));
     };
 
+    const handleAddAllEntities = entities => entities.map(entity => handleSelectEntity(entity.id));
+
     return (
         <Modal isOpen toggle={toggle}>
             <ModalHeader toggle={toggle}>Select {type}</ModalHeader>
@@ -167,24 +173,29 @@ const SelectEntitiesModal = ({ toggle, section, type }) => {
                 <h2 className="h5 mt-3">Suggestions</h2>
 
                 {suggestionEntities.map((comparison, index) => {
-                    const properties =
+                    const entities =
                         comparison?.properties?.filter(entity => selectedEntities.filter(item => item.id === entity.id).length === 0) ?? [];
                     return (
                         <ListGroup className="mt-3" key={index}>
-                            <ListGroupItemStyled className="bg-light pl-2 py-2">
-                                <span className="font-weight-bold mr-2">Comparison</span> {comparison.title}
+                            <ListGroupItemStyled className="bg-light pl-2 py-2 d-flex justify-content-between align-items-center">
+                                <div>
+                                    <span className="font-weight-bold mr-2">Comparison</span> {comparison.title}
+                                </div>
+                                {entities.length > 0 && (
+                                    <Button color="secondary" size="sm" className="flex-shrink-0" onClick={() => handleAddAllEntities(entities)}>
+                                        Add all
+                                    </Button>
+                                )}
                             </ListGroupItemStyled>
-                            {properties.map(suggestion => (
+                            {entities.map(suggestion => (
                                 <ListGroupItem key={suggestion.id} className="py-2">
-                                    <Button color="link" className="p-0 mr-2" onClick={() => handleSelectEntity({ id: suggestion.id })}>
+                                    <Button color="link" className="p-0 mr-2" onClick={() => handleSelectEntity(suggestion.id)}>
                                         <Icon icon={faPlusCircle} />
                                     </Button>
                                     {capitalize(suggestion.label)}
                                 </ListGroupItem>
                             ))}
-                            {properties.length === 0 && (
-                                <ListGroupItem className="py-2 text-muted text-center">No suggestions available</ListGroupItem>
-                            )}
+                            {entities.length === 0 && <ListGroupItem className="py-2 text-muted text-center">No suggestions available</ListGroupItem>}
                         </ListGroup>
                     );
                 })}
@@ -195,7 +206,7 @@ const SelectEntitiesModal = ({ toggle, section, type }) => {
                             .filter(property => selectedEntities.filter(item => item.id === property.id).length === 0)
                             .map(suggestion => (
                                 <ListGroupItem key={suggestion.id} className="py-2">
-                                    <Button color="link" className="p-0 mr-2" onClick={() => handleSelectEntity({ id: suggestion.id })}>
+                                    <Button color="link" className="p-0 mr-2" onClick={() => handleSelectEntity(suggestion.id)}>
                                         <Icon icon={faPlusCircle} />
                                     </Button>
                                     {capitalize(suggestion.label)}

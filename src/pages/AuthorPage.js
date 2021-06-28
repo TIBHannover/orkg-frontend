@@ -10,6 +10,7 @@ import { getPaperData } from 'utils';
 import { find } from 'lodash';
 import PropTypes from 'prop-types';
 import { PREDICATES } from 'constants/graphSettings';
+import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
 import { NavLink } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import ContentLoader from 'react-content-loader';
@@ -260,6 +261,7 @@ class AuthorPage extends Component {
                                 </div>
                             )}
                         </Container>
+                        <ComparisonPopup />
                     </div>
                 )}
             </>

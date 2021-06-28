@@ -49,6 +49,7 @@ function PaperHeaderBar(props) {
                     <PaperMenuBar
                         disableEdit={props.disableEdit}
                         id={props.id}
+                        label={props.paperTitle}
                         editMode={props.editMode}
                         paperLink={props.paperLink}
                         toggle={props.toggle}

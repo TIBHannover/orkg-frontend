@@ -6,12 +6,32 @@ import { loadComparisonFromLocalStorage, removeFromComparison } from 'actions/vi
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { Cookies } from 'react-cookie';
 import ROUTES from 'constants/routes.js';
 import Tooltip from '../Utils/Tooltip';
 import Confirm from 'reactstrap-confirm';
+import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { faFile } from '@fortawesome/free-regular-svg-icons';
 import { reverse } from 'named-urls';
+const cookies = new Cookies();
+
+const ComparisonPopupStyled = styled.div`
+    &&& {
+        bottom: ${props => (props.cookieInfoDismissed ? '0px' : '50px')};
+    }
+
+    @media (min-width: 481px) and (max-width: 1100px) {
+        &&& {
+            bottom: ${props => (props.cookieInfoDismissed ? '0px' : '70px')};
+        }
+    }
+    @media (max-width: 480px) {
+        &&& {
+            bottom: ${props => (props.cookieInfoDismissed ? '0px' : '120px')};
+        }
+    }
+`;
 
 class ComparisonPopup extends Component {
     constructor(props) {
@@ -73,6 +93,7 @@ class ComparisonPopup extends Component {
     };
 
     render() {
+        const cookieInfoDismissed = cookies.get('cookieInfoDismissed') ? cookies.get('cookieInfoDismissed') : null;
         const { allIds, byId } = this.props.comparison;
 
         if (allIds.length === 0) {
@@ -84,7 +105,8 @@ class ComparisonPopup extends Component {
         const comparisonUrl = reverse(ROUTES.COMPARISON) + '?contributions=' + ids; // with named-urls it is not possible to use wildcard URLs, so replace the asterisk
 
         return (
-            <div
+            <ComparisonPopupStyled
+                cookieInfoDismissed={cookieInfoDismissed}
                 ref={node => (this.comparisionPopup.current = node)}
                 className="fixed-bottom p-0 offset-sm-2 offset-md-8"
                 style={{ width: '340px', zIndex: '1000' }}
@@ -155,7 +177,7 @@ class ComparisonPopup extends Component {
                         )}
                     </Container>
                 </Navbar>
-            </div>
+            </ComparisonPopupStyled>
         );
     }
 }

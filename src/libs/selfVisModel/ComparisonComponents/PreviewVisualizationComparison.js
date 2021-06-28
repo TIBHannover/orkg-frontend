@@ -48,11 +48,6 @@ function PreviewVisualizationComparison(props) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.comparisonId, JSON.stringify(props.visualizations)]);
 
-    useEffect(() => {
-        fetchVisualizationData();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
     return (
         <div>
             {!isLoading && visData && visData.length > 0 && (
