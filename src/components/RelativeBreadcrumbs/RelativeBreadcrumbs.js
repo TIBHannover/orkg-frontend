@@ -22,6 +22,7 @@ const BreadcrumbStyled = styled.ul`
         white-space: nowrap;
         overflow: hidden !important;
         text-overflow: ellipsis;
+        text-align: left;
     }
 
     & > li {

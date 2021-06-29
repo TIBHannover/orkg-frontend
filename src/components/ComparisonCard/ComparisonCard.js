@@ -50,9 +50,12 @@ const ComparisonCard = props => {
                         <div className="d-inline-block d-md-none mt-1 mr-1">
                             {props.showBreadcrumbs && <RelativeBreadcrumbs researchField={props.comparison.researchField} />}
                         </div>
-
+                        {props.showBadge && (
+                            <div>
+                                <CardBadge color="primary">Comparison</CardBadge>
+                            </div>
+                        )}
                         <div>
-                            {props.showBadge && <CardBadge color="primary">Comparison</CardBadge>}
                             <small>
                                 <Icon size="sm" icon={faFile} className="mr-1" /> {props.comparison.contributions?.length} Contributions
                                 <Icon size="sm" icon={faChartBar} className="ml-2 mr-1" /> {props.comparison.visualizations?.length} Visualizations

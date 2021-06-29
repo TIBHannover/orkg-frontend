@@ -319,16 +319,12 @@ export const getComparisonData = (resource, comparisonStatements) => {
  * @param {String } label
  * @param {Array} visualizationStatements
  */
-export const getVisualizationData = (id, label, visualizationStatements) => {
-    // description
+export const getVisualizationData = (resource, visualizationStatements) => {
     const description = visualizationStatements.find(statement => statement.predicate.id === PREDICATES.DESCRIPTION);
-
     const authors = filterObjectOfStatementsByPredicateAndClass(visualizationStatements, PREDICATES.HAS_AUTHOR, false);
 
     return {
-        id,
-        label,
-        created_at: description ? description.object.created_at : '',
+        ...resource,
         description: description ? description.object.label : '',
         authors: authors ? authors.sort((a, b) => a.s_created_at.localeCompare(b.s_created_at)) : []
     };

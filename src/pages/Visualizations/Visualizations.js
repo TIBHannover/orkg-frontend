@@ -45,11 +45,7 @@ const Visualizations = () => {
                             predicateId: PREDICATES.HAS_VISUALIZATION
                         }).then(comparisonStatement => ({
                             comparisonId: comparisonStatement.length > 0 ? comparisonStatement[0].subject.id : null,
-                            ...getVisualizationData(
-                                visualizationStatements.id,
-                                find(result.content, { id: visualizationStatements.id }).label,
-                                visualizationStatements.statements
-                            )
+                            ...getVisualizationData(find(result.content, { id: visualizationStatements.id }), visualizationStatements.statements)
                         }));
                     });
                     return Promise.all(visualizationsCalls);
