@@ -22,11 +22,12 @@ export const getComparisonsByResearchFieldId = ({
     sortBy = 'created_at',
     desc = true,
     subfields = true,
-    featured = null
+    featured = null,
+    unlisted = null
 }) => {
     const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
     const params = queryString.stringify(
-        { page: page, size: items, sort, featured },
+        { page: page, size: items, sort, featured, unlisted },
         {
             skipNull: true,
             skipEmptyString: true
@@ -35,10 +36,19 @@ export const getComparisonsByResearchFieldId = ({
     return submitGetRequest(`${fieldsUrl}${encodeURIComponent(id)}/${subfields ? 'subfields/' : ''}comparisons?${params}`);
 };
 
-export const getPapersByResearchFieldId = ({ id, page = 0, items = 9999, sortBy = 'created_at', desc = true, subfields = true, featured = null }) => {
+export const getPapersByResearchFieldId = ({
+    id,
+    page = 0,
+    items = 9999,
+    sortBy = 'created_at',
+    desc = true,
+    subfields = true,
+    featured = null,
+    unlisted = null
+}) => {
     const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
     const params = queryString.stringify(
-        { page: page, size: items, sort, featured },
+        { page: page, size: items, sort, featured, unlisted },
         {
             skipNull: true,
             skipEmptyString: true
@@ -54,11 +64,12 @@ export const getResearchProblemsByResearchFieldId = ({
     sortBy = 'created_at',
     desc = true,
     subfields = true,
-    featured = null
+    featured = null,
+    unlisted = null
 }) => {
     const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
     const params = queryString.stringify(
-        { page: page, size: items, sort, featured },
+        { page: page, size: items, sort, featured, unlisted },
         {
             skipNull: true,
             skipEmptyString: true

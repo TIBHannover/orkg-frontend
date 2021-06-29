@@ -2,8 +2,9 @@ import { faBars, faCalendar, faCheckCircle, faPen, faTrash, faUser } from '@fort
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { loadPaper } from 'actions/viewPaper';
 import useDeletePapers from 'components/ViewPaper/hooks/useDeletePapers';
-import MarkFeatured from 'components/MarkFeatured/MarkFeatured';
-import MarkUnlisted from 'components/MarkUnlisted/MarkUnlisted';
+import MarkFeatured from 'components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
+import MarkUnlisted from 'components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
+import useMarkFeaturedUnlisted from 'components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
 import { CLASSES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import moment from 'moment';
@@ -25,6 +26,11 @@ const PaperHeader = props => {
     const dispatch = useDispatch();
     const userCreatedThisPaper = viewPaper.paperResource.created_by && userId && viewPaper.paperResource.created_by === userId; // make sure a user is signed in (not null)
     const showDeleteButton = props.editMode && (isCurationAllowed || userCreatedThisPaper);
+    const { isFeatured, isUnlisted, handleChangeStatus } = useMarkFeaturedUnlisted({
+        resourceId: viewPaper.paperResource.id,
+        unlisted: viewPaper.paperResource.unlisted,
+        featured: viewPaper.paperResource.featured
+    });
 
     const handleUpdatePaper = data => {
         // TODO: the viewPaper store should be refactored to directly support the updated data that is passed
@@ -49,9 +55,9 @@ const PaperHeader = props => {
             <div className="d-flex align-items-start mt-4 mb-3 ">
                 <h2 className="h4 flex-grow-1">
                     {viewPaper.paperResource.label ? viewPaper.paperResource.label : <em>No title</em>}{' '}
-                    <MarkFeatured size="xs" resourceId={viewPaper.paperResource.id} featured={viewPaper.paperResource.featured} />
+                    <MarkFeatured size="xs" featured={isFeatured} handleChangeStatus={handleChangeStatus} />
                     <div className="d-inline-block ml-1">
-                        <MarkUnlisted size="xs" resourceId={viewPaper.paperResource.id} unlisted={viewPaper.paperResource.unlisted} />
+                        <MarkUnlisted size="xs" unlisted={isUnlisted} handleChangeStatus={handleChangeStatus} />
                     </div>
                 </h2>
             </div>

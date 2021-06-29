@@ -1,8 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { faEyeSlash as faEmptyEyeSlash } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { markAsUnlisted, removeUnlistedFlag } from 'services/backend/resources';
 import { useSelector } from 'react-redux';
 import Tippy from '@tippyjs/react';
 import styled from 'styled-components';
@@ -12,33 +11,20 @@ const StyledIcon = styled(Icon)`
     cursor: pointer;
 `;
 
-const MarkUnlisted = ({ resourceId, unlisted, size }) => {
+const MarkUnlisted = ({ unlisted, size, handleChangeStatus }) => {
     const [over, setOver] = useState(false);
-    const [isUnlisted, setIsUnlisted] = useState(unlisted);
+
     const isCurationAllowed = useSelector(state => state.auth.user?.isCurationAllowed);
-
-    const handleChangeStatus = () => {
-        setIsUnlisted(v => !v);
-        if (!isUnlisted) {
-            markAsUnlisted(resourceId).catch(e => console.log(e));
-        } else {
-            removeUnlistedFlag(resourceId).catch(e => console.log(e));
-        }
-    };
-
-    useEffect(() => {
-        setIsUnlisted(unlisted);
-    }, [unlisted]);
 
     if (!isCurationAllowed) {
         return null;
     }
     return (
-        <Tippy content={isCurationAllowed ? (isUnlisted ? 'Remove unlisted badge' : 'Mark as unlisted') : 'Unlisted content'}>
+        <Tippy content={isCurationAllowed ? (unlisted ? 'Remove unlisted badge' : 'Mark as unlisted') : 'Unlisted content'}>
             <span
                 role="checkbox"
                 tabIndex="0"
-                aria-checked={isUnlisted}
+                aria-checked={unlisted}
                 onClick={isCurationAllowed ? handleChangeStatus : undefined}
                 onKeyDown={isCurationAllowed ? handleChangeStatus : undefined}
             >
@@ -46,7 +32,7 @@ const MarkUnlisted = ({ resourceId, unlisted, size }) => {
                     onMouseOver={() => setOver(true)}
                     onMouseLeave={() => setOver(false)}
                     inverse={true}
-                    icon={isUnlisted || over ? faEyeSlash : faEmptyEyeSlash}
+                    icon={unlisted || over ? faEyeSlash : faEmptyEyeSlash}
                     className="text-primary"
                     size={size}
                 />
@@ -58,7 +44,8 @@ const MarkUnlisted = ({ resourceId, unlisted, size }) => {
 MarkUnlisted.propTypes = {
     resourceId: PropTypes.string.isRequired,
     unlisted: PropTypes.bool,
-    size: PropTypes.string.isRequired
+    size: PropTypes.string.isRequired,
+    handleChangeStatus: PropTypes.func.isRequired
 };
 
 MarkUnlisted.defaultProps = {

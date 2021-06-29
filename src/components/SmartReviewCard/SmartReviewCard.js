@@ -5,8 +5,9 @@ import styled from 'styled-components';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 import ROUTES from 'constants/routes.js';
-import MarkFeatured from 'components/MarkFeatured/MarkFeatured';
-import MarkUnlisted from 'components/MarkUnlisted/MarkUnlisted';
+import MarkFeatured from 'components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
+import MarkUnlisted from 'components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
+import useMarkFeaturedUnlisted from 'components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import Tippy from '@tippyjs/react';
@@ -19,16 +20,21 @@ const ComparisonCardStyled = styled.div`
 `;
 
 const SmartReviewCard = ({ versions }) => {
+    const { isFeatured, isUnlisted, handleChangeStatus } = useMarkFeaturedUnlisted({
+        resourceId: versions[0]?.id,
+        unlisted: versions[0]?.unlisted,
+        featured: versions[0]?.featured
+    });
     return (
         <ComparisonCardStyled className="list-group-item list-group-item-action ">
             <Row>
                 <Col md={9}>
                     <Link to={reverse(ROUTES.SMART_REVIEW, { id: versions[0]?.id })}>{versions[0]?.label}</Link>
                     <div className="d-inline-block ml-1">
-                        <MarkFeatured size="sm" resourceId={versions[0]?.id} featured={versions[0]?.featured} />
+                        <MarkFeatured size="sm" featured={isFeatured} handleChangeStatus={handleChangeStatus} />
                     </div>
                     <div className="d-inline-block ml-1">
-                        <MarkUnlisted size="sm" resourceId={versions[0]?.id} featured={versions[0]?.unlisted} />
+                        <MarkUnlisted size="sm" unlisted={isUnlisted} handleChangeStatus={handleChangeStatus} />
                     </div>
                     <br />
                     {versions[0].created_at && (

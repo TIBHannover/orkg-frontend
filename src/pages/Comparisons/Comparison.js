@@ -16,8 +16,8 @@ import RelatedResources from 'components/Comparison/RelatedResources/RelatedReso
 import RelatedFigures from 'components/Comparison/RelatedResources/RelatedFigures';
 import ExportCitation from 'components/Comparison/Export/ExportCitation';
 import ComparisonMetaData from 'components/Comparison/ComparisonMetaData';
-import MarkFeatured from 'components/MarkFeatured/MarkFeatured';
-import MarkUnlisted from 'components/MarkUnlisted/MarkUnlisted';
+import MarkFeatured from 'components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
+import MarkUnlisted from 'components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
 import Share from 'components/Comparison/Share.js';
 import HistoryModal from 'components/Comparison/HistoryModal/HistoryModal';
 import useComparisonVersions from 'components/Comparison/hooks/useComparisonVersions';

@@ -32,8 +32,9 @@ import env from '@beam-australia/react-env';
 import { getVisualization } from 'services/similarity';
 import GDCVisualizationRenderer from 'libs/selfVisModel/RenderingComponents/GDCVisualizationRenderer';
 import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
-import MarkFeatured from 'components/MarkFeatured/MarkFeatured';
-import MarkUnlisted from 'components/MarkUnlisted/MarkUnlisted';
+import MarkFeatured from 'components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
+import MarkUnlisted from 'components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
+import useMarkFeaturedUnlisted from 'components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
 import { CLASS_TYPE_ID } from 'constants/misc';
 import { reverseWithSlug } from 'utils';
 import PapersWithCodeModal from 'components/PapersWithCodeModal/PapersWithCodeModal';
@@ -116,6 +117,11 @@ function Resource(props) {
     const [createdBy, setCreatedBy] = useState(null);
     const classesAutocompleteRef = useRef(null);
     const [isOpenPWCModal, setIsOpenPWCModal] = useState(false);
+    const { isFeatured, isUnlisted, handleChangeStatus } = useMarkFeaturedUnlisted({
+        resourceId: props.match.params.id,
+        unlisted: unlisted,
+        featured: featured
+    });
 
     useEffect(() => {
         const findResource = async () => {
@@ -328,9 +334,9 @@ function Resource(props) {
                                                 <small>No label</small>
                                             </i>
                                         )}{' '}
-                                        <MarkFeatured size="xs" resourceId={props.match.params.id} featured={featured} />
+                                        <MarkFeatured size="xs" featured={isFeatured} handleChangeStatus={handleChangeStatus} />
                                         <div className="d-inline-block ml-1">
-                                            <MarkUnlisted size="xs" resourceId={props.match.params.id} unlisted={unlisted} />
+                                            <MarkUnlisted size="xs" unlisted={isUnlisted} handleChangeStatus={handleChangeStatus} />
                                         </div>
                                     </h3>
                                     {classes.length > 0 && (

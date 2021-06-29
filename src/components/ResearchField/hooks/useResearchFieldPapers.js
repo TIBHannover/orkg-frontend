@@ -20,8 +20,8 @@ function useResearchFieldPapers({ researchFieldId, initialSort, initialIncludeSu
     const loadData = useCallback(
         (page, total) => {
             setIsLoading(true);
-            let featured = sort === 'featured' ? true : null;
-            featured = sort === 'unlisted' ? false : featured;
+            const featured = sort === 'featured' ? true : false;
+            const unlisted = sort === 'unlisted' ? true : false;
             // Papers
             let papersService;
             if (sort === 'combined') {
@@ -33,7 +33,8 @@ function useResearchFieldPapers({ researchFieldId, initialSort, initialIncludeSu
                     sortBy: 'created_at',
                     desc: true,
                     subfields: includeSubFields,
-                    featured: false
+                    featured: null,
+                    unlisted: false
                 });
                 const featuredPapersService = getPapersByResearchFieldId({
                     id: researchFieldId,
@@ -42,7 +43,8 @@ function useResearchFieldPapers({ researchFieldId, initialSort, initialIncludeSu
                     sortBy: 'created_at',
                     desc: true,
                     subfields: includeSubFields,
-                    featured: true
+                    featured: true,
+                    unlisted: null
                 });
                 papersService = Promise.all([newPapersService, featuredPapersService]).then(([newPapers, featuredPapers]) => {
                     // merge two arrays and alternate values
@@ -70,7 +72,8 @@ function useResearchFieldPapers({ researchFieldId, initialSort, initialIncludeSu
                         sortBy: 'created_at',
                         desc: true,
                         subfields: includeSubFields,
-                        featured: featured
+                        featured: featured,
+                        unlisted: unlisted
                     });
                 }
             }

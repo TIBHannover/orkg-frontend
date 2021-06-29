@@ -4,7 +4,8 @@ import { getStatementsBySubjects } from 'services/backend/statements';
 import { getResourcesByClass } from 'services/backend/resources';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner, faAngleDoubleDown } from '@fortawesome/free-solid-svg-icons';
-import PaperCardDynamic from 'components/PaperCard/PaperCardDynamic';
+import PaperCard from 'components/PaperCard/PaperCard';
+import { getPaperData } from 'utils';
 import { CLASSES } from 'constants/graphSettings';
 import { useSelector } from 'react-redux';
 import HeaderSearchButton from 'components/HeaderSearchButton/HeaderSearchButton';
@@ -129,13 +130,11 @@ const Papers = () => {
                         paperResources.map(paper => {
                             const paperCardData = statements.find(({ id }) => id === paper.id);
                             return (
-                                <PaperCardDynamic
+                                <PaperCard
                                     paper={{
                                         title: paper.label,
-                                        id: paper.id,
-                                        paperData: paperCardData,
-                                        created_by: paper.created_by,
-                                        featured: paper.featured
+                                        ...paper,
+                                        ...(!paperCardData ? { isLoading: true } : getPaperData(paper, paperCardData?.statements))
                                     }}
                                     key={`pc${paper.id}`}
                                 />

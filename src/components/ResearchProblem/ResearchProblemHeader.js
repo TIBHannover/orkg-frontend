@@ -27,8 +27,9 @@ import useResearchProblemResearchFields from 'components/ResearchProblem/hooks/u
 import AuthorsBox from 'components/TopAuthors/AuthorsBox';
 import ResearchFieldsBox from './ResearchFieldBox/ResearchFieldsBox';
 import SuperResearchProblemBox from './SuperResearchProblemBox/SuperResearchProblemBox';
-import FeaturedMark from 'components/MarkFeatured/MarkFeatured';
-import MarkUnlisted from 'components/MarkUnlisted/MarkUnlisted';
+import FeaturedMark from 'components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
+import MarkUnlisted from 'components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
+import useMarkFeaturedUnlisted from 'components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
 import { NavLink } from 'react-router-dom';
 import ContentLoader from 'react-content-loader';
 import ROUTES from 'constants/routes.js';
@@ -48,6 +49,11 @@ const ResearchProblemHeader = ({ id }) => {
     const { researchProblemData, superProblems, isLoading, isFailedLoading, loadResearchProblemData } = useResearchProblem({ id });
     const [researchFields, isLoadingResearchFields] = useResearchProblemResearchFields({ researchProblemId: id });
     const prevEditMode = usePrevious({ editMode });
+    const { isFeatured, isUnlisted, handleChangeStatus } = useMarkFeaturedUnlisted({
+        resourceId: id,
+        unlisted: researchProblemData?.unlisted,
+        featured: researchProblemData?.featured
+    });
 
     useEffect(() => {
         if (!editMode && prevEditMode && prevEditMode.editMode !== editMode) {
@@ -104,9 +110,9 @@ const ResearchProblemHeader = ({ id }) => {
                             <SubtitleSeparator />
                             <SubTitle className="h5 mb-0">
                                 {' '}
-                                {researchProblemData.label} <FeaturedMark size="xs" resourceId={id} featured={researchProblemData?.featured} />{' '}
+                                {researchProblemData.label} <FeaturedMark size="xs" featured={isFeatured} handleChangeStatus={handleChangeStatus} />{' '}
                                 <div className="d-inline-block ml-1">
-                                    <MarkUnlisted size="xs" resourceId={id} unlisted={researchProblemData?.unlisted} />
+                                    <MarkUnlisted size="xs" resourceId={id} unlisted={isUnlisted} handleChangeStatus={handleChangeStatus} />
                                 </div>
                             </SubTitle>
                         </>
