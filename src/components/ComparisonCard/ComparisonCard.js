@@ -1,4 +1,3 @@
-import { Row, Col } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import styled from 'styled-components';
@@ -7,8 +6,10 @@ import { faCalendar, faFile, faChartBar, faPaperclip } from '@fortawesome/free-s
 import ROUTES from 'constants/routes.js';
 import MarkFeatured from 'components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
 import MarkUnlisted from 'components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
+import useMarkFeaturedUnlisted from 'components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
 import PropTypes from 'prop-types';
 import moment from 'moment';
+import { CardBadge } from 'components/styled';
 import Versions from './Versions';
 import Thumbnail from './Thumbnail';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
@@ -22,22 +23,36 @@ const ComparisonCardStyled = styled.div`
 `;
 
 const ComparisonCard = props => {
+    const { isFeatured, isUnlisted, handleChangeStatus } = useMarkFeaturedUnlisted({
+        resourceId: props.comparison.id,
+        unlisted: props.comparison?.unlisted,
+        featured: props.comparison?.featured
+    });
     return (
-        <ComparisonCardStyled rounded={props.rounded} className="list-group-item list-group-item-action ">
-            <Row>
-                <Col md={9}>
-                    <Link to={reverse(ROUTES.COMPARISON, { comparisonId: props.comparison.id })}>
-                        {props.comparison.label ? props.comparison.label : <em>No title</em>}
-                    </Link>
-                    <div className="d-inline-block ml-1">
-                        <MarkFeatured size="sm" resourceId={props.comparison.id} featured={props.comparison?.featured} />
-                    </div>
-                    <div className="d-inline-block ml-1">
-                        <MarkUnlisted size="sm" resourceId={props.comparison.id} unlisted={props.comparison?.unlisted} />
-                    </div>
-                    <br />
-                    {props.comparison.created_at && (
+        <ComparisonCardStyled rounded={props.rounded} className="list-group-item list-group-item-action d-flex pr-3 pl-3">
+            <div className="d-flex flex-grow-1 row">
+                <div className="col-md-9 d-flex">
+                    {props.showCurationFlags && (
+                        <div className="mr-1 d-flex flex-column" style={{ width: '25px' }}>
+                            <div>
+                                <MarkFeatured size="sm" featured={isFeatured} handleChangeStatus={handleChangeStatus} />
+                            </div>
+                            <div>
+                                <MarkUnlisted size="sm" unlisted={isUnlisted} handleChangeStatus={handleChangeStatus} />
+                            </div>
+                        </div>
+                    )}
+                    <div className="d-flex flex-column">
+                        <Link to={reverse(ROUTES.COMPARISON, { comparisonId: props.comparison.id })}>
+                            {props.comparison.label ? props.comparison.label : <em>No title</em>}
+                        </Link>
+
+                        <div className="d-inline-block d-md-none mt-1 mr-1">
+                            {props.showBreadcrumbs && <RelativeBreadcrumbs researchField={props.comparison.researchField} />}
+                        </div>
+
                         <div>
+                            {props.showBadge && <CardBadge color="primary">Comparison</CardBadge>}
                             <small>
                                 <Icon size="sm" icon={faFile} className="mr-1" /> {props.comparison.contributions?.length} Contributions
                                 <Icon size="sm" icon={faChartBar} className="ml-2 mr-1" /> {props.comparison.visualizations?.length} Visualizations
@@ -47,27 +62,29 @@ const ComparisonCard = props => {
                                         {props.comparison.resources.length + props.comparison.resources.length} attachments
                                     </>
                                 )}
-                                <Icon size="sm" icon={faCalendar} className="ml-2 mr-1" /> {moment(props.comparison.created_at).format('DD-MM-YYYY')}
+                                {props.comparison.created_at && (
+                                    <>
+                                        <Icon size="sm" icon={faCalendar} className="ml-2 mr-1" />{' '}
+                                        {moment(props.comparison.created_at).format('DD-MM-YYYY')}
+                                    </>
+                                )}
                             </small>
                         </div>
-                    )}
-                    {props.comparison.description && (
-                        <div>
-                            <small className="text-muted">{truncate(props.comparison.description, { length: 200 })}</small>
-                        </div>
-                    )}
-                    <div className="d-block d-md-none mt-1">
-                        <RelativeBreadcrumbs researchField={props.comparison.researchField} />
-                    </div>
-                    {props.showHistory && props.comparison.versions && props.comparison.versions.length > 1 && (
-                        <Versions versions={props.comparison.versions} id={props.comparison.id} />
-                    )}
-                </Col>
 
-                <div className="col-md-3 text-right d-flex align-items-end flex-column">
+                        {props.comparison.description && (
+                            <div>
+                                <small className="text-muted">{truncate(props.comparison.description, { length: 200 })}</small>
+                            </div>
+                        )}
+                        {props.showHistory && props.comparison.versions && props.comparison.versions.length > 1 && (
+                            <Versions versions={props.comparison.versions} id={props.comparison.id} />
+                        )}
+                    </div>
+                </div>
+                <div className="col-md-3 d-flex align-items-end flex-column">
                     <div className="flex-grow-1 mb-1">
                         <div className="d-none d-md-flex align-items-end justify-content-end">
-                            <RelativeBreadcrumbs researchField={props.comparison.researchField} />
+                            <RelativeBreadcrumbs researchField={props.comparison.researchField} maximumLabelLength={18} />
                         </div>
                         <div className="d-none d-md-flex align-items-end justify-content-end mt-1">
                             <Thumbnail figures={props.comparison.figures} visualizations={props.comparison.visualizations} id={props.comparison.id} />
@@ -75,7 +92,7 @@ const ComparisonCard = props => {
                     </div>
                     <UserAvatar userId={props.comparison.created_by} />
                 </div>
-            </Row>
+            </div>
         </ComparisonCardStyled>
     );
 };
@@ -100,10 +117,16 @@ ComparisonCard.propTypes = {
         unlisted: PropTypes.bool
     }).isRequired,
     rounded: PropTypes.string,
-    showHistory: PropTypes.bool
+    showHistory: PropTypes.bool,
+    showBreadcrumbs: PropTypes.bool.isRequired,
+    showBadge: PropTypes.bool.isRequired,
+    showCurationFlags: PropTypes.bool.isRequired
 };
 
 ComparisonCard.defaultProps = {
-    showHistory: true
+    showHistory: true,
+    showBreadcrumbs: true,
+    showBadge: false,
+    showCurationFlags: true
 };
 export default ComparisonCard;

@@ -119,6 +119,8 @@ const FeaturedPapers = ({ researchFieldId }) => {
                                             title: paper.label
                                         }}
                                         showAddToComparison={false}
+                                        showBadge={false}
+                                        showCurationFlags={false}
                                         key={`pc${paper.id}`}
                                     />
                                 );

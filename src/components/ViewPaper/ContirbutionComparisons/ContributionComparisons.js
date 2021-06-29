@@ -60,6 +60,8 @@ function ContributionComparisons(props) {
                                         rounded={!hasNextPage ? 'false' : 'true'}
                                         comparison={{ ...comparison }}
                                         key={`pc${comparison.id}`}
+                                        showCurationFlags={false}
+                                        showBadge={false}
                                     />
                                 )
                             );

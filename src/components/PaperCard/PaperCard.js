@@ -11,35 +11,16 @@ import MarkFeatured from 'components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatu
 import MarkUnlisted from 'components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
 import useMarkFeaturedUnlisted from 'components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
 import RelativeBreadcrumbs from 'components/RelativeBreadcrumbs/RelativeBreadcrumbs';
+import { CardBadge } from 'components/styled';
 import ContentLoader from 'react-content-loader';
 import Authors from './Authors';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 
 const PaperCardStyled = styled.div`
-    & .options {
-        visibility: hidden;
-    }
-
     &.selected {
         background: ${props => props.theme.bodyBg};
     }
-
-    &:hover .options,
-    &.selected .options {
-        visibility: visible;
-    }
-`;
-
-const CardBadge = styled.div`
-    background: #fff;
-    display: inline-block;
-    color: ${props => props.theme.bodyColor};
-    padding: 1px 5px;
-    margin-right: 6px;
-    font-size: 70%;
-    border-radius: 4px;
-    border: 1px ${props => props.theme.bodyColor} solid;
 `;
 
 const PaperCard = props => {
@@ -53,13 +34,13 @@ const PaperCard = props => {
     return (
         <PaperCardStyled className={'list-group-item list-group-item-action d-flex pr-3 pl-3 ' + (props.selected ? 'selected' : '')}>
             {showActionButtons && (
-                <div className="mr-1 d-flex flex-column" style={{ width: '25px' }}>
+                <div className="d-flex flex-column" style={{ width: '25px' }}>
                     {props.selectable && (
                         <div>
                             <CustomInput type="checkbox" id={props.paper.id + 'input'} onChange={props.onSelect} checked={props.selected} />
                         </div>
                     )}
-                    {!props.selectable && props.showAddToComparison && props.paper.contributions?.length && (
+                    {!props.selectable && props.showAddToComparison && !!props.paper.contributions?.length && (
                         <div>
                             <AddToComparison paper={props.paper} contributionId={props.contribution?.id} />
                         </div>

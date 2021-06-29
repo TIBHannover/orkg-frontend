@@ -99,3 +99,14 @@ export const SearchButtonStyled = styled(Button)`
         border: 0;
     }
 `;
+
+export const CardBadge = styled.div`
+    background: #fff;
+    display: inline-block;
+    color: ${props => props.theme.bodyColor};
+    padding: 1px 5px;
+    margin-right: 6px;
+    font-size: 70%;
+    border-radius: 4px;
+    border: 1px ${props => props.theme.bodyColor} solid;
+`;
