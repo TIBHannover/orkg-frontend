@@ -3,7 +3,8 @@ import { Container, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, 
 import { getStatementsByObject, getStatementsBySubject, getStatementsBySubjects } from 'services/backend/statements';
 import PaperCard from 'components/PaperCard/PaperCard';
 import ComparisonCard from 'components/ComparisonCard/ComparisonCard';
-import VisualizationCardNew from 'components/VisualizationCard/VisualizationCard';
+import VisualizationCard from 'components/VisualizationCard/VisualizationCard';
+import SmartReviewCard from 'components/SmartReviewCard/SmartReviewCard';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faOrcid } from '@fortawesome/free-brands-svg-icons';
 import { faSpinner, faExternalLinkAlt, faEllipsisV } from '@fortawesome/free-solid-svg-icons';
@@ -85,6 +86,9 @@ const AuthorPage = () => {
                                 if (itemSubject?.classes?.includes(CLASSES.VISUALIZATION)) {
                                     return getVisualizationData(itemSubject, itemStatements.statements);
                                 }
+                                if (itemSubject?.classes?.includes(CLASSES.SMART_REVIEW)) {
+                                    return getPaperData(itemSubject, itemStatements.statements);
+                                }
                                 return undefined;
                             });
                             setPage(page + 1);
@@ -141,7 +145,7 @@ const AuthorPage = () => {
         }
         if (item?.classes?.includes(CLASSES.VISUALIZATION)) {
             return (
-                <VisualizationCardNew
+                <VisualizationCard
                     visualization={{
                         id: item.id,
                         title: item.label,
@@ -153,6 +157,9 @@ const AuthorPage = () => {
                     key={`c${item.id}`}
                 />
             );
+        }
+        if (item?.classes?.includes(CLASSES.SMART_REVIEW)) {
+            return <SmartReviewCard versions={[item]} showBadge={true} showCurationFlags={false} showAddToComparison={false} key={`c${item.id}`} />;
         }
         return null;
     };
