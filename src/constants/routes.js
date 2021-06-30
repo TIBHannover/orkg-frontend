@@ -48,7 +48,7 @@ const routes = {
     PDF_ANNOTATION: '/pdf-annotation',
     CSV_IMPORT: '/csv-import',
     BENCHMARKS: '/benchmarks',
-    BENCHMARK: '/benchmark/:resourceId',
+    BENCHMARK: '/benchmark/:datasetId/problem/:problemId',
     SMART_REVIEW: '/smart-review/:id',
     SMART_REVIEWS: '/smart-reviews',
     USER_UNPUBLISHED_REVIEWS: '/user-unpublished-reviews',

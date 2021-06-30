@@ -11,6 +11,7 @@ import { faPen, faEllipsisV, faSortUp, faSortDown } from '@fortawesome/free-soli
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import { NavLink } from 'react-router-dom';
 import ContentLoader from 'react-content-loader';
+import { reverseWithSlug } from 'utils';
 import { SubTitle, SubtitleSeparator } from 'components/styled';
 import useBenchmarkDatasetResource from 'components/Benchmarks/hooks/useBenchmarkDatasetResource';
 import useBenchmarkDatasetPapers from 'components/Benchmarks/hooks/useBenchmarkDatasetPapers';
@@ -53,11 +54,11 @@ function getTicksAxisH(data) {
 }
 
 function Benchmark() {
-    const [resourceData, isLoading, isFailedLoading, loadResourceData] = useBenchmarkDatasetResource();
+    const { datasetId, problemId } = useParams();
+    const [resourceData, problemData, isLoading, isFailedLoading, loadResourceData] = useBenchmarkDatasetResource({ datasetId, problemId });
     const [menuOpen, setMenuOpen] = useState(false);
     const [editMode, setEditMode] = useState(false);
     const prevEditMode = usePrevious({ editMode });
-    const { resourceId } = useParams();
     const history = useHistory();
     const {
         isLoading: isLoadingPapers,
@@ -67,12 +68,13 @@ function Benchmark() {
         selectedMetric,
         setSelectedMetric
     } = useBenchmarkDatasetPapers({
-        datasetId: resourceId
+        datasetId,
+        problemId
     });
 
     useEffect(() => {
         if (!editMode && prevEditMode && prevEditMode.editMode !== editMode) {
-            loadResourceData(resourceId);
+            loadResourceData(datasetId);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [editMode]);
@@ -201,13 +203,15 @@ function Benchmark() {
                         <h1 className="h5 flex-shrink-0 mb-0">Benchmark</h1>
                         <>
                             <SubtitleSeparator />
-                            <SubTitle className="h5 mb-0"> {resourceData.label}</SubTitle>
+                            <SubTitle className="h5 mb-0">
+                                {problemData.label} on {resourceData.label}
+                            </SubTitle>
                         </>
                         {editMode && (
                             <StatementBrowserDialog
                                 show={editMode}
                                 toggleModal={() => setEditMode(v => !v)}
-                                id={resourceId}
+                                id={datasetId}
                                 label={resourceData.label}
                                 enableEdit={true}
                                 syncBackend={true}
@@ -228,7 +232,7 @@ function Benchmark() {
                                     <Icon icon={faEllipsisV} />
                                 </DropdownToggle>
                                 <DropdownMenu right>
-                                    <DropdownItem tag={NavLink} exact to={reverse(ROUTES.RESOURCE, { id: resourceId })}>
+                                    <DropdownItem tag={NavLink} exact to={reverse(ROUTES.RESOURCE, { id: datasetId })}>
                                         View resource
                                     </DropdownItem>
                                 </DropdownMenu>
@@ -238,10 +242,20 @@ function Benchmark() {
                     <Container className="p-0">
                         <Card>
                             <CardBody>
-                                <>
-                                    {resourceData.description && <p className="m-0">{resourceData.description}</p>}
-                                    {!resourceData.description && <p className="m-0">{resourceData.label}</p>}
-                                </>
+                                <div>
+                                    <i>Research problem :</i>{' '}
+                                    <Link
+                                        to={reverseWithSlug(ROUTES.RESEARCH_PROBLEM, { researchProblemId: problemData.id, slug: problemData.label })}
+                                        style={{ textDecoration: 'none', flex: 1 }}
+                                    >
+                                        {problemData.label}
+                                    </Link>
+                                </div>
+                                <div>
+                                    <i>Dataset :</i> {resourceData.label}
+                                </div>
+
+                                <>{resourceData.description && <p className="m-0">{resourceData.description}</p>}</>
                                 {resourceData.url && <div className="mb-4">{resourceData.url}</div>}
                             </CardBody>
                         </Card>

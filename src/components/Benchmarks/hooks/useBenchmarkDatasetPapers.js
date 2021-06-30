@@ -3,7 +3,7 @@ import { getDatasetBenchmarksByDatasetId } from 'services/backend/datasets';
 import { groupBy, sortBy } from 'lodash';
 
 // Loading summary for a dataset
-function useBenchmarkDatasetPapers({ datasetId }) {
+function useBenchmarkDatasetPapers({ datasetId, problemId }) {
     const [benchmarkDatasetPapers, setBenchmarkDatasetPapers] = useState({});
     const [metrics, setMetrics] = useState([]);
     const [selectedMetric, setSelectedMetric] = useState(null);
@@ -13,7 +13,7 @@ function useBenchmarkDatasetPapers({ datasetId }) {
     const loadBenchmarkDatasetPapers = useCallback(() => {
         setIsLoading(true);
         setIsFailedLoadingPapers(false);
-        return getDatasetBenchmarksByDatasetId(datasetId)
+        return getDatasetBenchmarksByDatasetId(datasetId, problemId)
             .then(result => {
                 // TODO: this trim needs to be done on the data itself
                 let trimResult = result.map(s => {
@@ -33,13 +33,11 @@ function useBenchmarkDatasetPapers({ datasetId }) {
                 setIsLoading(false);
                 setIsFailedLoadingPapers(true);
             });
-    }, [datasetId]);
+    }, [datasetId, problemId]);
 
     useEffect(() => {
-        if (datasetId) {
-            loadBenchmarkDatasetPapers(datasetId);
-        }
-    }, [datasetId, loadBenchmarkDatasetPapers]);
+        loadBenchmarkDatasetPapers();
+    }, [loadBenchmarkDatasetPapers]);
 
     return {
         benchmarkDatasetPapers,
