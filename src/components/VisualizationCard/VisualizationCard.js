@@ -1,13 +1,17 @@
-import { useState, useEffect } from 'react';
-import { Row, Col } from 'reactstrap';
-import { getVisualization } from 'services/similarity';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faUser, faCalendar } from '@fortawesome/free-solid-svg-icons';
-import GDCVisualizationRenderer from 'libs/selfVisModel/RenderingComponents/GDCVisualizationRenderer';
 import ROUTES from 'constants/routes.js';
+import UserAvatar from 'components/UserAvatar/UserAvatar';
+import MarkFeatured from 'components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
+import MarkUnlisted from 'components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
+import useMarkFeaturedUnlisted from 'components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
+import useVisualizationResearchField from './hooks/useVisualizationResearchField';
+import RelativeBreadcrumbs from 'components/RelativeBreadcrumbs/RelativeBreadcrumbs';
+import { CardBadge } from 'components/styled';
 import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import styled from 'styled-components';
+import Thumbnail from './Thumbnail';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 
@@ -21,78 +25,45 @@ const VisualizationCardStyled = styled.div`
     }
 `;
 
-const PreviewContainer = styled.div`
-    height: 100px;
-    display: flex;
-    align-items: center;
-    border: 1px ${props => props.theme.secondary} solid;
-    border-radius: 5px;
-    overflow: hidden;
-    transition: box-shadow 0.5s;
-    color: ${props => props.theme.bodyColor};
-
-    &:hover {
-        border: 1px ${props => props.theme.primary} solid;
-        box-shadow: 0px 0px 5px 0 ${props => props.theme.primary};
-    }
-`;
-
 const VisualizationCard = props => {
-    const [visualizationModelForGDC, setVisualizationModelForGDC] = useState(undefined);
-    const [hasVisualizationModelForGDC, setHasVisualizationModelForGDC] = useState(false);
-    const [isVisualizationModelForGDCLoading, setIsVisualizationModelForGDCLoading] = useState(false);
+    const { isFeatured, isUnlisted, handleChangeStatus } = useMarkFeaturedUnlisted({
+        resourceId: props.visualization.id,
+        unlisted: props.visualization?.unlisted,
+        featured: props.visualization?.featured
+    });
 
-    useEffect(() => {
-        setIsVisualizationModelForGDCLoading(true);
-        getVisualization(props.visualization.id)
-            .then(model => {
-                setVisualizationModelForGDC(model);
-                setHasVisualizationModelForGDC(true);
-                setIsVisualizationModelForGDCLoading(false);
-            })
-            .catch(() => {
-                setVisualizationModelForGDC(undefined);
-                setHasVisualizationModelForGDC(false);
-                setIsVisualizationModelForGDCLoading(false);
-                // toast.error('Error loading visualization preview');
-            });
-    }, [props.visualization.id]);
+    const { researchField } = useVisualizationResearchField({
+        visualizationId: props.visualization.id
+    });
 
     return (
-        <VisualizationCardStyled className="list-group-item list-group-item-action ">
-            <Row>
-                <Col md={3}>
-                    <Link
-                        to={
-                            props.visualization.comparisonId
-                                ? reverse(ROUTES.COMPARISON, { comparisonId: props.visualization.comparisonId })
-                                : reverse(ROUTES.RESOURCE, { id: props.visualization.id })
-                        }
-                    >
-                        {hasVisualizationModelForGDC && !isVisualizationModelForGDCLoading && (
-                            <PreviewContainer>
-                                <GDCVisualizationRenderer height="100px" model={visualizationModelForGDC} />
-                            </PreviewContainer>
-                        )}
-                        {!hasVisualizationModelForGDC && !isVisualizationModelForGDCLoading && (
-                            <PreviewContainer className="text-center justify-content-center">No preview found!</PreviewContainer>
-                        )}
-                        {isVisualizationModelForGDCLoading && (
-                            <PreviewContainer className="text-center justify-content-center">Loading...</PreviewContainer>
-                        )}
-                    </Link>
-                </Col>
-                <Col md={9}>
+        <VisualizationCardStyled className={`list-group-item list-group-item-action d-flex pr-3 ${props.showCurationFlags ? ' pl-2  ' : ' pl-4  '}`}>
+            <div className="col-md-9 d-flex p-0">
+                {props.showCurationFlags && (
+                    <div className="d-flex flex-column flex-shrink-0" style={{ width: '25px' }}>
+                        <div>
+                            <MarkFeatured size="sm" featured={isFeatured} handleChangeStatus={handleChangeStatus} />
+                        </div>
+                        <div>
+                            <MarkUnlisted size="sm" unlisted={isUnlisted} handleChangeStatus={handleChangeStatus} />
+                        </div>
+                    </div>
+                )}
+                <div className="d-flex flex-column flex-grow-1">
                     <Link
                         to={
                             props.visualization.comparisonId
                                 ? reverse(ROUTES.COMPARISON, { comparisonId: props.visualization.comparisonId }) + '#Vis' + props.visualization.id
-                                : reverse(ROUTES.RESOURCE, { id: props.visualization.id })
+                                : reverse(ROUTES.VISUALIZATION, { id: props.visualization.id })
                         }
                     >
                         {props.visualization.label ? props.visualization.label : <em>No title</em>}
                     </Link>
-                    <br />
+                    {props.showBadge && (
+                        <div>
+                            <CardBadge color="primary">Visualization</CardBadge>
+                        </div>
+                    )}
                     <div>
                         <small>
                             {props.visualization.authors && props.visualization.authors.length > 0 && (
@@ -113,8 +84,21 @@ const VisualizationCard = props => {
                             <small className="text-muted">{props.visualization.description}</small>
                         </div>
                     )}
-                </Col>
-            </Row>
+                </div>
+            </div>
+            <div className="col-md-3 d-flex align-items-end flex-column p-0">
+                <div className="flex-grow-1 mb-1">
+                    <div className="d-none d-md-flex align-items-end justify-content-end">
+                        <RelativeBreadcrumbs researchField={researchField} />
+                    </div>
+                    <div className="d-none d-md-flex align-items-end justify-content-end mt-1">
+                        <Thumbnail visualization={props.visualization} />
+                    </div>
+                </div>
+                <div className="d-none d-md-flex align-items-end justify-content-end mt-1">
+                    <UserAvatar userId={props.visualization.created_by} />
+                </div>
+            </div>
         </VisualizationCardStyled>
     );
 };
@@ -126,8 +110,18 @@ VisualizationCard.propTypes = {
         label: PropTypes.string,
         authors: PropTypes.array,
         created_at: PropTypes.string,
-        description: PropTypes.string
-    }).isRequired
+        created_by: PropTypes.string,
+        description: PropTypes.string,
+        featured: PropTypes.bool,
+        unlisted: PropTypes.bool
+    }).isRequired,
+    showBadge: PropTypes.bool.isRequired,
+    showCurationFlags: PropTypes.bool.isRequired
+};
+
+VisualizationCard.defaultProps = {
+    showBadge: false,
+    showCurationFlags: true
 };
 
 export default VisualizationCard;

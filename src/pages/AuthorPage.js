@@ -3,7 +3,7 @@ import { Container, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, 
 import { getStatementsByObject, getStatementsBySubject, getStatementsBySubjects } from 'services/backend/statements';
 import PaperCard from 'components/PaperCard/PaperCard';
 import ComparisonCard from 'components/ComparisonCard/ComparisonCard';
-import VisualizationCardNew from 'components/VisualizationCard/VisualizationCardNew';
+import VisualizationCardNew from 'components/VisualizationCard/VisualizationCard';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faOrcid } from '@fortawesome/free-brands-svg-icons';
 import { faSpinner, faExternalLinkAlt, faEllipsisV } from '@fortawesome/free-solid-svg-icons';

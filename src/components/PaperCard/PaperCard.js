@@ -32,71 +32,67 @@ const PaperCard = props => {
     });
 
     return (
-        <PaperCardStyled className={'list-group-item list-group-item-action d-flex pr-3 pl-3 ' + (props.selected ? 'selected' : '')}>
-            {showActionButtons && (
-                <div className="d-flex flex-column" style={{ width: '25px' }}>
-                    {props.selectable && (
-                        <div>
-                            <CustomInput type="checkbox" id={props.paper.id + 'input'} onChange={props.onSelect} checked={props.selected} />
-                        </div>
-                    )}
-                    {!props.selectable && props.showAddToComparison && !!props.paper.contributions?.length && (
-                        <div>
-                            <AddToComparison paper={props.paper} contributionId={props.contribution?.id} />
-                        </div>
-                    )}
-                    {props.showCurationFlags && (
-                        <>
+        <PaperCardStyled
+            className={`list-group-item list-group-item-action d-flex pr-3 ${props.showCurationFlags ? ' pl-2  ' : ' pl-4  '} ${
+                props.selected ? 'selected' : ''
+            }`}
+        >
+            <div className="col-md-9 d-flex p-0">
+                {showActionButtons && (
+                    <div className="d-flex flex-column flex-shrink-0" style={{ width: '25px' }}>
+                        {props.selectable && (
                             <div>
-                                <MarkFeatured size="sm" featured={isFeatured} handleChangeStatus={handleChangeStatus} />
-                            </div>
-                            <div>
-                                <MarkUnlisted size="sm" unlisted={isUnlisted} handleChangeStatus={handleChangeStatus} />
-                            </div>
-                        </>
-                    )}
-                </div>
-            )}
-            <div className="d-flex flex-grow-1 flex-column">
-                <div className="d-flex flex-grow-1 row">
-                    <div className="d-block col-md-9">
-                        <Link to={reverse(ROUTES.VIEW_PAPER, { resourceId: props.paper.id, contributionId: props.contribution?.id ?? undefined })}>
-                            {props.paper.title ? props.paper.title : <em>No title</em>}
-                        </Link>
-                        {props.contribution && <span className="text-muted"> - {props.contribution.title}</span>}
-                        <div>
-                            {props.showBadge && <CardBadge color="primary">Paper</CardBadge>}
-                            <div className="d-inline-block d-md-none mt-1 mr-1">
-                                {props.showBreadcrumbs && <RelativeBreadcrumbs researchField={props.paper.researchField} />}
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="d-none d-md-flex col-md-3 justify-content-end">
-                        {props.showBreadcrumbs && <RelativeBreadcrumbs researchField={props.paper.researchField} />}
-                    </div>
-                </div>
-                <div className="d-flex mt-1">
-                    <div className="d-block flex-grow-1">
-                        {/*Show Loading Dynamic data indicator if we are loading */}
-                        {props.paper.isLoading && (
-                            <div>
-                                <span>Loading</span>
-                                <ContentLoader
-                                    style={{ marginTop: '-8px', width: '8% !important' }}
-                                    height={30}
-                                    width="8%"
-                                    viewBox="0 0 100 30"
-                                    speed={2}
-                                    backgroundColor="#f3f3f3"
-                                    foregroundColor="#ccc"
-                                >
-                                    <circle cx="6" cy="18" r="4" />
-                                    <circle cx="16" cy="18" r="4" />
-                                    <circle cx="26" cy="18" r="4" />
-                                </ContentLoader>
+                                <CustomInput type="checkbox" id={props.paper.id + 'input'} onChange={props.onSelect} checked={props.selected} />
                             </div>
                         )}
+                        {!props.selectable && props.showAddToComparison && !!props.paper.contributions?.length && (
+                            <div>
+                                <AddToComparison paper={props.paper} contributionId={props.contribution?.id} />
+                            </div>
+                        )}
+                        {props.showCurationFlags && (
+                            <>
+                                <div>
+                                    <MarkFeatured size="sm" featured={isFeatured} handleChangeStatus={handleChangeStatus} />
+                                </div>
+                                <div>
+                                    <MarkUnlisted size="sm" unlisted={isUnlisted} handleChangeStatus={handleChangeStatus} />
+                                </div>
+                            </>
+                        )}
+                    </div>
+                )}
+                <div className="d-flex flex-column flex-grow-1">
+                    <Link to={reverse(ROUTES.VIEW_PAPER, { resourceId: props.paper.id, contributionId: props.contribution?.id ?? undefined })}>
+                        {props.paper.title ? props.paper.title : <em>No title</em>}
+                    </Link>
+                    {props.contribution && <span className="text-muted"> - {props.contribution.title}</span>}
+                    <div>
+                        {props.showBadge && <CardBadge color="primary">Paper</CardBadge>}
+                        <div className="d-inline-block d-md-none mt-1 mr-1">
+                            {props.showBreadcrumbs && <RelativeBreadcrumbs researchField={props.paper.researchField} />}
+                        </div>
+                    </div>
+                    {/*Show Loading Dynamic data indicator if we are loading */}
+                    {props.paper.isLoading && (
+                        <div>
+                            <span>Loading</span>
+                            <ContentLoader
+                                style={{ marginTop: '-8px', width: '8% !important' }}
+                                height={30}
+                                width="8%"
+                                viewBox="0 0 100 30"
+                                speed={2}
+                                backgroundColor="#f3f3f3"
+                                foregroundColor="#ccc"
+                            >
+                                <circle cx="6" cy="18" r="4" />
+                                <circle cx="16" cy="18" r="4" />
+                                <circle cx="26" cy="18" r="4" />
+                            </ContentLoader>
+                        </div>
+                    )}
+                    <div>
                         <small>
                             <Authors authors={props.paper.authors} />
                             {(props.paper.publicationMonth || props.paper.publicationYear) && (
@@ -108,8 +104,16 @@ const PaperCard = props => {
                             {props.paper.publicationYear?.label ?? null}
                         </small>
                     </div>
-                    <UserAvatar userId={props.paper.created_by} />
                 </div>
+            </div>
+
+            <div className="col-md-3 d-flex align-items-end flex-column p-0">
+                <div className="flex-grow-1 mb-1">
+                    <div className="d-none d-md-flex align-items-end justify-content-end">
+                        <RelativeBreadcrumbs researchField={props.paper.researchField} />
+                    </div>
+                </div>
+                <UserAvatar userId={props.paper.created_by} />
             </div>
         </PaperCardStyled>
     );

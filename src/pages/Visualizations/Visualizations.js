@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react';
-import { getStatementsBySubjects, getStatementsByObjectAndPredicate } from 'services/backend/statements';
+import { getStatementsBySubjects } from 'services/backend/statements';
 import { getResourcesByClass } from 'services/backend/resources';
 import { Container, ButtonGroup, ListGroup } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { getVisualizationData } from 'utils';
 import { find } from 'lodash';
-import VisualizationCard from 'components/VisualizationCard/VisualizationCard';
-import { CLASSES, PREDICATES } from 'constants/graphSettings';
+import VisualizationCardNew from 'components/VisualizationCard/VisualizationCard';
+import { CLASSES } from 'constants/graphSettings';
 import HeaderSearchButton from 'components/HeaderSearchButton/HeaderSearchButton';
 
 const Visualizations = () => {
@@ -38,17 +38,10 @@ const Visualizations = () => {
             // Fetch the data of each visualization
             getStatementsBySubjects({ ids: result.content.map(p => p.id) })
                 .then(visualizationsStatements => {
-                    const visualizationsCalls = visualizationsStatements.map(visualizationStatements => {
+                    return visualizationsStatements.map(visualizationStatements => {
                         // Fetch the comparison id of each visualization
-                        return getStatementsByObjectAndPredicate({
-                            objectId: visualizationStatements.id,
-                            predicateId: PREDICATES.HAS_VISUALIZATION
-                        }).then(comparisonStatement => ({
-                            comparisonId: comparisonStatement.length > 0 ? comparisonStatement[0].subject.id : null,
-                            ...getVisualizationData(find(result.content, { id: visualizationStatements.id }), visualizationStatements.statements)
-                        }));
+                        return getVisualizationData(find(result.content, { id: visualizationStatements.id }), visualizationStatements.statements);
                     });
-                    return Promise.all(visualizationsCalls);
                 })
                 .then(visualizationsData => {
                     setVisualizations(prevVisualizations => [...prevVisualizations, ...visualizationsData]);
@@ -86,7 +79,7 @@ const Visualizations = () => {
                     {visualizations.length > 0 && (
                         <div>
                             {visualizations.map(visualization => {
-                                return <VisualizationCard visualization={visualization} key={`vis${visualization.id}`} />;
+                                return <VisualizationCardNew visualization={visualization} key={`vis${visualization.id}`} />;
                             })}
                         </div>
                     )}

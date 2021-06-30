@@ -29,72 +29,73 @@ const ComparisonCard = props => {
         featured: props.comparison?.featured
     });
     return (
-        <ComparisonCardStyled rounded={props.rounded} className="list-group-item list-group-item-action d-flex pr-3 pl-3">
-            <div className="d-flex flex-grow-1 row">
-                <div className="col-md-9 d-flex">
-                    {props.showCurationFlags && (
-                        <div className="mr-1 d-flex flex-column" style={{ width: '25px' }}>
-                            <div>
-                                <MarkFeatured size="sm" featured={isFeatured} handleChangeStatus={handleChangeStatus} />
-                            </div>
-                            <div>
-                                <MarkUnlisted size="sm" unlisted={isUnlisted} handleChangeStatus={handleChangeStatus} />
-                            </div>
+        <ComparisonCardStyled
+            rounded={props.rounded}
+            className={`list-group-item list-group-item-action d-flex pr-3 ${props.showCurationFlags ? ' pl-2  ' : ' pl-4  '}`}
+        >
+            <div className="col-md-9 d-flex p-0">
+                {props.showCurationFlags && (
+                    <div className="d-flex flex-column flex-shrink-0" style={{ width: '25px' }}>
+                        <div>
+                            <MarkFeatured size="sm" featured={isFeatured} handleChangeStatus={handleChangeStatus} />
+                        </div>
+                        <div>
+                            <MarkUnlisted size="sm" unlisted={isUnlisted} handleChangeStatus={handleChangeStatus} />
+                        </div>
+                    </div>
+                )}
+                <div className="d-flex flex-column">
+                    <Link to={reverse(ROUTES.COMPARISON, { comparisonId: props.comparison.id })}>
+                        {props.comparison.label ? props.comparison.label : <em>No title</em>}
+                    </Link>
+
+                    <div className="d-inline-block d-md-none mt-1 mr-1">
+                        {props.showBreadcrumbs && <RelativeBreadcrumbs researchField={props.comparison.researchField} />}
+                    </div>
+                    {props.showBadge && (
+                        <div>
+                            <CardBadge color="primary">Comparison</CardBadge>
                         </div>
                     )}
-                    <div className="d-flex flex-column">
-                        <Link to={reverse(ROUTES.COMPARISON, { comparisonId: props.comparison.id })}>
-                            {props.comparison.label ? props.comparison.label : <em>No title</em>}
-                        </Link>
+                    <div>
+                        <small>
+                            <Icon size="sm" icon={faFile} className="mr-1" /> {props.comparison.contributions?.length} Contributions
+                            <Icon size="sm" icon={faChartBar} className="ml-2 mr-1" /> {props.comparison.visualizations?.length} Visualizations
+                            {(props.comparison.resources?.length > 0 || props.comparison.figures?.length > 0) && (
+                                <>
+                                    <Icon size="sm" icon={faPaperclip} className="ml-2 mr-1" />{' '}
+                                    {props.comparison.resources.length + props.comparison.resources.length} attachments
+                                </>
+                            )}
+                            {props.comparison.created_at && (
+                                <>
+                                    <Icon size="sm" icon={faCalendar} className="ml-2 mr-1" />{' '}
+                                    {moment(props.comparison.created_at).format('DD-MM-YYYY')}
+                                </>
+                            )}
+                        </small>
+                    </div>
 
-                        <div className="d-inline-block d-md-none mt-1 mr-1">
-                            {props.showBreadcrumbs && <RelativeBreadcrumbs researchField={props.comparison.researchField} />}
-                        </div>
-                        {props.showBadge && (
-                            <div>
-                                <CardBadge color="primary">Comparison</CardBadge>
-                            </div>
-                        )}
+                    {props.comparison.description && (
                         <div>
-                            <small>
-                                <Icon size="sm" icon={faFile} className="mr-1" /> {props.comparison.contributions?.length} Contributions
-                                <Icon size="sm" icon={faChartBar} className="ml-2 mr-1" /> {props.comparison.visualizations?.length} Visualizations
-                                {(props.comparison.resources?.length > 0 || props.comparison.figures?.length > 0) && (
-                                    <>
-                                        <Icon size="sm" icon={faPaperclip} className="ml-2 mr-1" />{' '}
-                                        {props.comparison.resources.length + props.comparison.resources.length} attachments
-                                    </>
-                                )}
-                                {props.comparison.created_at && (
-                                    <>
-                                        <Icon size="sm" icon={faCalendar} className="ml-2 mr-1" />{' '}
-                                        {moment(props.comparison.created_at).format('DD-MM-YYYY')}
-                                    </>
-                                )}
-                            </small>
+                            <small className="text-muted">{truncate(props.comparison.description, { length: 200 })}</small>
                         </div>
-
-                        {props.comparison.description && (
-                            <div>
-                                <small className="text-muted">{truncate(props.comparison.description, { length: 200 })}</small>
-                            </div>
-                        )}
-                        {props.showHistory && props.comparison.versions && props.comparison.versions.length > 1 && (
-                            <Versions versions={props.comparison.versions} id={props.comparison.id} />
-                        )}
+                    )}
+                    {props.showHistory && props.comparison.versions && props.comparison.versions.length > 1 && (
+                        <Versions versions={props.comparison.versions} id={props.comparison.id} />
+                    )}
+                </div>
+            </div>
+            <div className="col-md-3 d-flex align-items-end flex-column p-0">
+                <div className="flex-grow-1 mb-1">
+                    <div className="d-none d-md-flex align-items-end justify-content-end">
+                        <RelativeBreadcrumbs researchField={props.comparison.researchField} />
+                    </div>
+                    <div className="d-none d-md-flex align-items-end justify-content-end mt-1">
+                        <Thumbnail figures={props.comparison.figures} visualizations={props.comparison.visualizations} id={props.comparison.id} />
                     </div>
                 </div>
-                <div className="col-md-3 d-flex align-items-end flex-column">
-                    <div className="flex-grow-1 mb-1">
-                        <div className="d-none d-md-flex align-items-end justify-content-end">
-                            <RelativeBreadcrumbs researchField={props.comparison.researchField} maximumLabelLength={18} />
-                        </div>
-                        <div className="d-none d-md-flex align-items-end justify-content-end mt-1">
-                            <Thumbnail figures={props.comparison.figures} visualizations={props.comparison.visualizations} id={props.comparison.id} />
-                        </div>
-                    </div>
-                    <UserAvatar userId={props.comparison.created_by} />
-                </div>
+                <UserAvatar userId={props.comparison.created_by} />
             </div>
         </ComparisonCardStyled>
     );
