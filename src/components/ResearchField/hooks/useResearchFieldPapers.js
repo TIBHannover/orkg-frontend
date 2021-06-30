@@ -23,8 +23,8 @@ function useResearchFieldPapers({ researchFieldId, initialSort, initialIncludeSu
             // Papers
             let papersService;
             if (sort === 'combined') {
-                // in case of combined sort we list 50% featured and 50% newest items (new not featured)
-                const newPapersService = getPapersByResearchFieldId({
+                // in case of combined sort we list 50% featured and 50% not featured items
+                const noFeaturedPapersService = getPapersByResearchFieldId({
                     id: researchFieldId,
                     page: page,
                     items: Math.round(pageSize / 2),
@@ -44,13 +44,13 @@ function useResearchFieldPapers({ researchFieldId, initialSort, initialIncludeSu
                     featured: true,
                     unlisted: false
                 });
-                papersService = Promise.all([newPapersService, featuredPapersService]).then(([newPapers, featuredPapers]) => {
+                papersService = Promise.all([noFeaturedPapersService, featuredPapersService]).then(([noFeaturedPapers, featuredPapers]) => {
                     // merge two arrays and alternate values
-                    const combinedPapers = mergeAlternate(newPapers.content, featuredPapers.content);
+                    const combinedPapers = mergeAlternate(noFeaturedPapers.content, featuredPapers.content);
                     return {
                         content: combinedPapers,
-                        totalElements: page === 0 ? newPapers.totalElements + featuredPapers.totalElements : total,
-                        last: newPapers.last && featuredPapers.last
+                        totalElements: page === 0 ? noFeaturedPapers.totalElements + featuredPapers.totalElements : total,
+                        last: noFeaturedPapers.last && featuredPapers.last
                     };
                 });
             } else {
@@ -60,7 +60,8 @@ function useResearchFieldPapers({ researchFieldId, initialSort, initialIncludeSu
                         sortBy: 'created_at',
                         desc: true,
                         items: pageSize,
-                        featured: sort === 'featured' ? true : null
+                        featured: sort === 'featured' ? true : null,
+                        unlisted: sort === 'unlisted' ? true : false
                     });
                 } else {
                     papersService = getPapersByResearchFieldId({

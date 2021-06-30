@@ -32,7 +32,7 @@ const FeaturedMark = ({ featured, size, handleChangeStatus }) => {
                     onMouseLeave={() => setOver(false)}
                     inverse={true}
                     icon={featured || over ? faStar : faEmptyStar}
-                    className="text-primary"
+                    className={featured || over ? 'text-primary' : 'text-secondary'}
                     size={size}
                 />
             </span>

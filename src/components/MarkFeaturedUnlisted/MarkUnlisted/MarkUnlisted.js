@@ -33,7 +33,7 @@ const MarkUnlisted = ({ unlisted, size, handleChangeStatus }) => {
                     onMouseLeave={() => setOver(false)}
                     inverse={true}
                     icon={unlisted || over ? faEyeSlash : faEmptyEyeSlash}
-                    className="text-primary"
+                    className={unlisted || over ? 'text-primary' : 'text-secondary'}
                     size={size}
                 />
             </span>

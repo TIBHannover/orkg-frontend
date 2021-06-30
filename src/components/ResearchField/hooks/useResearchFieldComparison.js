@@ -24,8 +24,8 @@ function useResearchFieldComparison({ researchFieldId, initialSort, initialInclu
             // Comparisons
             let comparisonsService;
             if (sort === 'combined') {
-                // in case of combined sort we list 50% featured and 50% newest items (new not featured)
-                const newComparisonsService = getComparisonsByResearchFieldId({
+                // in case of combined sort we list 50% featured and 50% unfeatured items
+                const noFeaturedComparisonsService = getComparisonsByResearchFieldId({
                     id: researchFieldId,
                     page: page,
                     items: Math.round(pageSize / 2),
@@ -45,13 +45,13 @@ function useResearchFieldComparison({ researchFieldId, initialSort, initialInclu
                     featured: true,
                     unlisted: false
                 });
-                comparisonsService = Promise.all([newComparisonsService, featuredComparisonsService]).then(
-                    ([newComparisons, featuredComparisons]) => {
-                        const combinedComparisons = mergeAlternate(newComparisons.content, featuredComparisons.content);
+                comparisonsService = Promise.all([noFeaturedComparisonsService, featuredComparisonsService]).then(
+                    ([noFeaturedComparisons, featuredComparisons]) => {
+                        const combinedComparisons = mergeAlternate(noFeaturedComparisons.content, featuredComparisons.content);
                         return {
                             content: combinedComparisons,
-                            totalElements: page === 0 ? newComparisons.totalElements + featuredComparisons.totalElements : total,
-                            last: newComparisons.last && featuredComparisons.last
+                            totalElements: page === 0 ? noFeaturedComparisons.totalElements + featuredComparisons.totalElements : total,
+                            last: noFeaturedComparisons.last && featuredComparisons.last
                         };
                     }
                 );
@@ -63,7 +63,7 @@ function useResearchFieldComparison({ researchFieldId, initialSort, initialInclu
                         desc: true,
                         items: pageSize,
                         featured: sort === 'featured' ? true : null,
-                        unlisted: false
+                        unlisted: sort === 'unlisted' ? true : false
                     });
                 } else {
                     comparisonsService = getComparisonsByResearchFieldId({
