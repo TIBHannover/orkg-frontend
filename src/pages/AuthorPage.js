@@ -4,7 +4,9 @@ import { getStatementsByObject, getStatementsBySubject, getStatementsBySubjects 
 import PaperCard from 'components/PaperCard/PaperCard';
 import ComparisonCard from 'components/ComparisonCard/ComparisonCard';
 import VisualizationCard from 'components/VisualizationCard/VisualizationCard';
+import { SubTitle, SubtitleSeparator } from 'components/styled';
 import SmartReviewCard from 'components/SmartReviewCard/SmartReviewCard';
+import ClassesBadgesFilter from 'components/ClassesBadgesFilter/ClassesBadgesFilter';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faOrcid } from '@fortawesome/free-brands-svg-icons';
 import { faSpinner, faExternalLinkAlt, faEllipsisV } from '@fortawesome/free-solid-svg-icons';
@@ -178,10 +180,20 @@ const AuthorPage = () => {
             )}
             {!loading && (
                 <div>
-                    <Container className="p-0 d-flex align-items-center">
-                        <h1 className="h4 mt-4 mb-4 flex-grow-1">Author: {author.label}</h1>
-
-                        <ButtonDropdown isOpen={menuOpen} toggle={() => setMenuOpen(v => !v)} nav inNavbar>
+                    <Container className="d-flex align-items-center mt-4 mb-4">
+                        <h1 className="h4 flex-shrink-0 mb-0">Author</h1>
+                        <>
+                            <SubtitleSeparator />
+                            <SubTitle className="h5 mb-0"> {author.label}</SubTitle>
+                        </>
+                        <ButtonDropdown
+                            className="flex-shrink-0"
+                            style={{ marginLeft: 'auto' }}
+                            isOpen={menuOpen}
+                            toggle={() => setMenuOpen(v => !v)}
+                            nav
+                            inNavbar
+                        >
                             <DropdownToggle size="sm" color="secondary" className="px-3 rounded-right" style={{ marginLeft: 2 }}>
                                 <Icon icon={faEllipsisV} />
                             </DropdownToggle>
@@ -214,7 +226,10 @@ const AuthorPage = () => {
                     </Container>
                     <Container className="d-flex align-items-center mt-4 mb-4">
                         <div className="d-flex flex-grow-1">
-                            <h1 className="h5 flex-shrink-0 mb-0">Works</h1>
+                            <h1 className="h5 flex-shrink-0 mb-0 mr-1">Works</h1>
+                            <div className="flex-shrink-0" style={{ marginLeft: 'auto' }}>
+                                <ClassesBadgesFilter />
+                            </div>
                         </div>
                     </Container>
                     <Container className="p-0">

@@ -110,3 +110,19 @@ export const CardBadge = styled.div`
     border-radius: 4px;
     border: 1px ${props => props.theme.bodyColor} solid;
 `;
+
+export const CardBadgeFilter = styled.div`
+    background: #fff;
+    display: inline-block;
+    border: 1px ${props => props.theme.bodyColor} solid;
+    padding: 2px 10px;
+    margin-right: 6px;
+    border-radius: 4px;
+    cursor: pointer;
+    position: relative;
+    &.active,
+    &:hover {
+        color: ${props => props.theme.primary};
+        border: 1px ${props => props.theme.primary} solid;
+    }
+`;
