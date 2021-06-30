@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Container, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Button, ListGroup } from 'reactstrap';
 import { getStatementsByObject, getStatementsBySubject, getStatementsBySubjects } from 'services/backend/statements';
 import PaperCard from 'components/PaperCard/PaperCard';
@@ -39,7 +39,7 @@ const AuthorPage = () => {
     const pageSize = 15;
     const params = useParams();
 
-    const loadAuthorData = () => {
+    const loadAuthorData = useCallback(() => {
         // Get the author data
         getStatementsBySubject({ id: params.authorId }).then(authorStatements => {
             const orcidStatement = authorStatements.find(statement => statement.predicate.id === PREDICATES.HAS_ORCID);
@@ -54,56 +54,59 @@ const AuthorPage = () => {
                 document.title = `${authorStatements[0].subject.label} - ORKG`;
             }
         });
-    };
+    }, [params.authorId]);
 
-    const loadMorePapers = () => {
-        setIsNextPageLoading(true);
-        // Get the statements that contains the author as an object
-        getStatementsByObject({
-            id: params.authorId,
-            page: page,
-            items: pageSize,
-            sortBy: 'id',
-            desc: true
-        }).then(result => {
-            // resource
-            if (result.length > 0) {
-                // Fetch the data of each paper
-                getStatementsBySubjects({
-                    ids: result.filter(statement => statement.predicate.id === PREDICATES.HAS_AUTHOR).map(p => p.subject.id)
-                })
-                    .then(statements => {
-                        const items = statements.map(itemStatements => {
-                            const itemSubject = find(result.map(p => p.subject), { id: itemStatements.id });
-                            if (itemSubject?.classes?.includes(CLASSES.PAPER)) {
-                                return getPaperData(itemSubject, itemStatements.statements);
-                            }
-                            if (itemSubject?.classes?.includes(CLASSES.COMPARISON)) {
-                                return getComparisonData(itemSubject, itemStatements.statements);
-                            }
-                            if (itemSubject?.classes?.includes(CLASSES.VISUALIZATION)) {
-                                return getVisualizationData(itemSubject, itemStatements.statements);
-                            }
-                            return undefined;
-                        });
-                        setPage(page + 1);
-                        setIsNextPageLoading(false);
-                        setResources(prevResources => [...prevResources, ...items]);
-                        setHasNextPage(resources.length < pageSize || resources.length === 0 ? false : true);
+    const loadMorePapers = useCallback(
+        page => {
+            setIsNextPageLoading(true);
+            // Get the statements that contains the author as an object
+            getStatementsByObject({
+                id: params.authorId,
+                page: page,
+                items: pageSize,
+                sortBy: 'id',
+                desc: true
+            }).then(result => {
+                // resource
+                if (result.length > 0) {
+                    // Fetch the data of each paper
+                    getStatementsBySubjects({
+                        ids: result.filter(statement => statement.predicate.id === PREDICATES.HAS_AUTHOR).map(p => p.subject.id)
                     })
-                    .catch(error => {
-                        setIsNextPageLoading(false);
-                        setHasNextPage(false);
-                        setIsLastPageReached(true);
-                        console.log(error);
-                    });
-            } else {
-                setIsNextPageLoading(false);
-                setHasNextPage(false);
-                setIsLastPageReached(true);
-            }
-        });
-    };
+                        .then(statements => {
+                            const items = statements.map(itemStatements => {
+                                const itemSubject = find(result.map(p => p.subject), { id: itemStatements.id });
+                                if (itemSubject?.classes?.includes(CLASSES.PAPER)) {
+                                    return getPaperData(itemSubject, itemStatements.statements);
+                                }
+                                if (itemSubject?.classes?.includes(CLASSES.COMPARISON)) {
+                                    return getComparisonData(itemSubject, itemStatements.statements);
+                                }
+                                if (itemSubject?.classes?.includes(CLASSES.VISUALIZATION)) {
+                                    return getVisualizationData(itemSubject, itemStatements.statements);
+                                }
+                                return undefined;
+                            });
+                            setPage(page + 1);
+                            setIsNextPageLoading(false);
+                            setResources(prevResources => [...prevResources, ...items]);
+                            setHasNextPage(false);
+                        })
+                        .catch(error => {
+                            setIsNextPageLoading(false);
+                            setHasNextPage(false);
+                            setIsLastPageReached(true);
+                            console.log(error);
+                        });
+                } else {
+                    setIsNextPageLoading(false);
+                    setHasNextPage(false);
+                    setIsLastPageReached(true);
+                }
+            });
+        },
+        [params.authorId]
+    );
 
     const renderItem = item => {
         if (item?.classes?.includes(CLASSES.PAPER)) {
@@ -157,7 +160,7 @@ const AuthorPage = () => {
     useEffect(() => {
         loadAuthorData();
         loadMorePapers();
-    }, []);
+    }, [loadAuthorData, loadMorePapers]);
 
     return (
         <>

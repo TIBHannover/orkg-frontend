@@ -16,8 +16,7 @@ import RelatedResources from 'components/Comparison/RelatedResources/RelatedReso
 import RelatedFigures from 'components/Comparison/RelatedResources/RelatedFigures';
 import ExportCitation from 'components/Comparison/Export/ExportCitation';
 import ComparisonMetaData from 'components/Comparison/ComparisonMetaData';
-import MarkFeatured from 'components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
-import MarkUnlisted from 'components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
+import MarkFeaturedUnlistedContainer from 'components/Comparison/MarkFeaturedUnlistedContainer';
 import Share from 'components/Comparison/Share.js';
 import HistoryModal from 'components/Comparison/HistoryModal/HistoryModal';
 import useComparisonVersions from 'components/Comparison/hooks/useComparisonVersions';
@@ -430,12 +429,11 @@ function Comparison(props) {
                                 <h2 className="h4 mb-4 mt-4">
                                     {metaData.title ? metaData.title : 'Compare'}{' '}
                                     {metaData.id && (
-                                        <>
-                                            <MarkFeatured size="xs" resourceId={metaData?.id} featured={metaData?.featured} />
-                                            <div className="d-inline-block ml-1">
-                                                <MarkUnlisted size="xs" resourceId={metaData?.id} unlisted={metaData?.unlisted} />
-                                            </div>
-                                        </>
+                                        <MarkFeaturedUnlistedContainer
+                                            id={metaData?.id}
+                                            featured={metaData?.featured}
+                                            unlisted={metaData?.unlisted}
+                                        />
                                     )}
                                 </h2>
 
