@@ -20,8 +20,6 @@ function useResearchFieldPapers({ researchFieldId, initialSort, initialIncludeSu
     const loadData = useCallback(
         (page, total) => {
             setIsLoading(true);
-            const featured = sort === 'featured' ? true : false;
-            const unlisted = sort === 'unlisted' ? true : false;
             // Papers
             let papersService;
             if (sort === 'combined') {
@@ -33,7 +31,7 @@ function useResearchFieldPapers({ researchFieldId, initialSort, initialIncludeSu
                     sortBy: 'created_at',
                     desc: true,
                     subfields: includeSubFields,
-                    featured: null,
+                    featured: false,
                     unlisted: false
                 });
                 const featuredPapersService = getPapersByResearchFieldId({
@@ -44,7 +42,7 @@ function useResearchFieldPapers({ researchFieldId, initialSort, initialIncludeSu
                     desc: true,
                     subfields: includeSubFields,
                     featured: true,
-                    unlisted: null
+                    unlisted: false
                 });
                 papersService = Promise.all([newPapersService, featuredPapersService]).then(([newPapers, featuredPapers]) => {
                     // merge two arrays and alternate values
@@ -62,7 +60,7 @@ function useResearchFieldPapers({ researchFieldId, initialSort, initialIncludeSu
                         sortBy: 'created_at',
                         desc: true,
                         items: pageSize,
-                        featured: featured
+                        featured: sort === 'featured' ? true : null
                     });
                 } else {
                     papersService = getPapersByResearchFieldId({
@@ -72,8 +70,8 @@ function useResearchFieldPapers({ researchFieldId, initialSort, initialIncludeSu
                         sortBy: 'created_at',
                         desc: true,
                         subfields: includeSubFields,
-                        featured: featured,
-                        unlisted: unlisted
+                        featured: sort === 'featured' ? true : null,
+                        unlisted: sort === 'unlisted' ? true : false
                     });
                 }
             }
@@ -125,13 +123,6 @@ function useResearchFieldPapers({ researchFieldId, initialSort, initialIncludeSu
         setIsLastPageReached(false);
         setPage(0);
         setTotalElements(0);
-        /*
-        TODO: Remove the featured sort with it's not the main research field
-        if (researchFieldId !== MISC.RESEARCH_FIELD_MAIN && sort === 'featured') {
-            // Because filtering featured comparison based on research field is not supported
-            setSort('newest');
-        }
-        */
     }, [researchFieldId, sort, includeSubFields]);
 
     useEffect(() => {

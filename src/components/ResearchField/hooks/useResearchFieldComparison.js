@@ -21,8 +21,6 @@ function useResearchFieldComparison({ researchFieldId, initialSort, initialInclu
     const loadData = useCallback(
         (page, total) => {
             setIsLoading(true);
-            let featured = sort === 'featured' ? true : null;
-            featured = sort === 'unlisted' ? false : featured;
             // Comparisons
             let comparisonsService;
             if (sort === 'combined') {
@@ -34,7 +32,8 @@ function useResearchFieldComparison({ researchFieldId, initialSort, initialInclu
                     sortBy: 'created_at',
                     desc: true,
                     subfields: includeSubFields,
-                    featured: false
+                    featured: false,
+                    unlisted: false
                 });
                 const featuredComparisonsService = getComparisonsByResearchFieldId({
                     id: researchFieldId,
@@ -43,7 +42,8 @@ function useResearchFieldComparison({ researchFieldId, initialSort, initialInclu
                     sortBy: 'created_at',
                     desc: true,
                     subfields: includeSubFields,
-                    featured: true
+                    featured: true,
+                    unlisted: false
                 });
                 comparisonsService = Promise.all([newComparisonsService, featuredComparisonsService]).then(
                     ([newComparisons, featuredComparisons]) => {
@@ -62,7 +62,8 @@ function useResearchFieldComparison({ researchFieldId, initialSort, initialInclu
                         sortBy: 'created_at',
                         desc: true,
                         items: pageSize,
-                        featured: featured
+                        featured: sort === 'featured' ? true : null,
+                        unlisted: false
                     });
                 } else {
                     comparisonsService = getComparisonsByResearchFieldId({
@@ -72,7 +73,8 @@ function useResearchFieldComparison({ researchFieldId, initialSort, initialInclu
                         sortBy: 'created_at',
                         desc: true,
                         subfields: includeSubFields,
-                        featured: featured
+                        featured: sort === 'featured' ? true : null,
+                        unlisted: sort === 'unlisted' ? true : false
                     });
                 }
             }
@@ -131,13 +133,6 @@ function useResearchFieldComparison({ researchFieldId, initialSort, initialInclu
         setIsLastPageReached(false);
         setPage(0);
         setTotalElements(0);
-        /* 
-        TODO: Remove the featured sort with it's not the main research field
-        if (researchFieldId !== MISC.RESEARCH_FIELD_MAIN && sort === 'featured') {
-            // Because filtering featured comparison based on research field is not supported
-            setSort('newest');
-        }
-        */
     }, [researchFieldId, sort, includeSubFields]);
 
     useEffect(() => {

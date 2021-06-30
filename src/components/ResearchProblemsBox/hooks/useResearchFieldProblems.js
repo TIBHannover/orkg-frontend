@@ -15,11 +15,8 @@ function useResearchFieldProblems({ researchFieldId, initialSort, initialInclude
     const loadData = useCallback(
         (page, total) => {
             setIsLoading(true);
-            let featured = sort === 'featured' ? true : null;
-            featured = sort === 'unlisted' ? false : featured;
             // problems
             let problemsService;
-
             if (sort === 'combined') {
                 // in case of combined sort we list 50% featured and 50% newest items (new not featured)
                 const newService = getResearchProblemsByResearchFieldId({
@@ -29,7 +26,8 @@ function useResearchFieldProblems({ researchFieldId, initialSort, initialInclude
                     sortBy: 'created_at',
                     desc: true,
                     subfields: includeSubFields,
-                    featured: false
+                    featured: false,
+                    unlisted: false
                 });
                 const featuredService = getResearchProblemsByResearchFieldId({
                     id: researchFieldId,
@@ -38,7 +36,8 @@ function useResearchFieldProblems({ researchFieldId, initialSort, initialInclude
                     sortBy: 'created_at',
                     desc: true,
                     subfields: includeSubFields,
-                    featured: true
+                    featured: true,
+                    unlisted: false
                 });
                 problemsService = Promise.all([newService, featuredService]).then(([newC, featuredC]) => {
                     const combinedC = mergeAlternate(newC.content, featuredC.content);
@@ -56,7 +55,8 @@ function useResearchFieldProblems({ researchFieldId, initialSort, initialInclude
                     sortBy: 'created_at',
                     desc: true,
                     subfields: includeSubFields,
-                    featured: featured
+                    featured: sort === 'featured' ? true : null,
+                    unlisted: sort === 'unlisted' ? true : false
                 });
             }
             problemsService

@@ -64,7 +64,7 @@ const AuthorPage = () => {
                 id: params.authorId,
                 page: page,
                 items: pageSize,
-                sortBy: 'id',
+                sortBy: 'created_at',
                 desc: true
             }).then(result => {
                 // resource
