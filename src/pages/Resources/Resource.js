@@ -151,6 +151,9 @@ function Resource(props) {
                                         setHasVisualizationModelForGDC(false);
                                         toast.error('Error loading visualization preview');
                                     });
+                            } else {
+                                setVisualizationModelForGDC(undefined);
+                                setHasVisualizationModelForGDC(false);
                             }
                             if (responseJson.classes.includes(CLASSES.COMPARISON)) {
                                 getStatementsBySubjectAndPredicate({ subjectId: props.match.params.id, predicateId: PREDICATES.HAS_DOI }).then(st => {
