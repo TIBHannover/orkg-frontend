@@ -45,18 +45,20 @@ const ComparisonCard = props => {
                     </div>
                 )}
                 <div className="d-flex flex-column">
-                    <Link to={reverse(ROUTES.COMPARISON, { comparisonId: props.comparison.id })}>
-                        {props.comparison.label ? props.comparison.label : <em>No title</em>}
-                    </Link>
-
+                    <div>
+                        <Link to={reverse(ROUTES.COMPARISON, { comparisonId: props.comparison.id })}>
+                            {props.comparison.label ? props.comparison.label : <em>No title</em>}
+                        </Link>
+                        {props.showBadge && (
+                            <div className="d-inline-block ml-2">
+                                <CardBadge color="primary">Comparison</CardBadge>
+                            </div>
+                        )}
+                    </div>
                     <div className="d-inline-block d-md-none mt-1 mr-1">
                         {props.showBreadcrumbs && <RelativeBreadcrumbs researchField={props.comparison.researchField} />}
                     </div>
-                    {props.showBadge && (
-                        <div>
-                            <CardBadge color="primary">Comparison</CardBadge>
-                        </div>
-                    )}
+
                     <div>
                         <small>
                             <Icon size="sm" icon={faFile} className="mr-1" /> {props.comparison.contributions?.length} Contributions

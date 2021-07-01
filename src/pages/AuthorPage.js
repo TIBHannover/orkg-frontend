@@ -8,7 +8,7 @@ import { SubTitle, SubtitleSeparator } from 'components/styled';
 import SmartReviewCard from 'components/SmartReviewCard/SmartReviewCard';
 import ClassesBadgesFilter from 'components/ClassesBadgesFilter/ClassesBadgesFilter';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faOrcid } from '@fortawesome/free-brands-svg-icons';
+import { faOrcid, faLinkedin, faGoogle, faResearchgate } from '@fortawesome/free-brands-svg-icons';
 import { faSpinner, faExternalLinkAlt, faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 import styled from 'styled-components';
 import { getPaperData, getComparisonData, getVisualizationData } from 'utils';
@@ -19,10 +19,12 @@ import { NavLink, Link, useParams } from 'react-router-dom';
 import ContentLoader from 'react-content-loader';
 import ROUTES from 'constants/routes.js';
 import { reverse } from 'named-urls';
+import { filterObjectOfStatementsByPredicateAndClass } from 'utils';
 
 const AuthorMetaInfo = styled.div`
-    .key {
-        font-weight: bolder;
+    border-right: 1px ${props => props.theme.secondary} solid;
+    &:last-of-type {
+        border-right: none;
     }
     .value {
         margin-bottom: 10px;
@@ -35,7 +37,6 @@ const AuthorPage = () => {
     const [hasNextPage, setHasNextPage] = useState(false);
     const [page, setPage] = useState(0);
     const [author, setAuthor] = useState(null);
-    const [orcid, setORCID] = useState('');
     const [resources, setResources] = useState([]);
     const [isLastPageReached, setIsLastPageReached] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
@@ -45,15 +46,14 @@ const AuthorPage = () => {
     const loadAuthorData = useCallback(() => {
         // Get the author data
         getStatementsBySubject({ id: params.authorId }).then(authorStatements => {
-            const orcidStatement = authorStatements.find(statement => statement.predicate.id === PREDICATES.HAS_ORCID);
-            let orcid = null;
-            if (orcidStatement) {
-                orcid = orcidStatement.object.label;
-            }
+            const orcid = filterObjectOfStatementsByPredicateAndClass(authorStatements, PREDICATES.HAS_ORCID, true);
+            const linkedin = filterObjectOfStatementsByPredicateAndClass(authorStatements, 'P40005', true);
+            const researchgate = filterObjectOfStatementsByPredicateAndClass(authorStatements, 'P40004', true);
+            const googleScholar = filterObjectOfStatementsByPredicateAndClass(authorStatements, 'P40003', true);
+
             if (authorStatements.length > 0) {
-                setAuthor(authorStatements[0].subject);
+                setAuthor({ ...authorStatements[0].subject, orcid, linkedin, researchgate, googleScholar });
                 setLoading(false);
-                setORCID(orcid);
                 document.title = `${authorStatements[0].subject.label} - ORKG`;
             }
         });
@@ -206,22 +206,68 @@ const AuthorPage = () => {
                     </Container>
                     <Container className="p-0">
                         <div className="box rounded p-4 mb-3">
-                            <AuthorMetaInfo>
-                                <div className="key">Full name</div>
-                                <div className="value">{author.label}</div>
-                            </AuthorMetaInfo>
-                            {orcid && (
-                                <AuthorMetaInfo>
-                                    <div className="key">
-                                        ORCID <Icon color="#A6CE39" icon={faOrcid} />
-                                    </div>
-                                    <div className="value">
-                                        <a href={`https://orcid.org/${orcid}`} target="_blank" rel="noopener noreferrer">
-                                            {orcid} <Icon icon={faExternalLinkAlt} />
-                                        </a>
-                                    </div>
-                                </AuthorMetaInfo>
-                            )}
+                            <div className="d-flex">
+                                {author.orcid && (
+                                    <AuthorMetaInfo className="flex-grow-1 mr-3">
+                                        <div className="key">
+                                            ORCID <Icon color="#A6CE39" icon={faOrcid} />
+                                        </div>
+                                        <div className="value">
+                                            <a href={`https://orcid.org/${author.orcid.label}`} target="_blank" rel="noopener noreferrer">
+                                                {author.orcid.label} <Icon icon={faExternalLinkAlt} />
+                                            </a>
+                                        </div>
+                                    </AuthorMetaInfo>
+                                )}
+                                {author.googleScholar && (
+                                    <AuthorMetaInfo className="flex-grow-1 mr-3">
+                                        <div className="key">
+                                            Google Scholar <Icon icon={faGoogle} />
+                                        </div>
+                                        <div className="value">
+                                            <a
+                                                href={`https://scholar.google.com/citations?user=${author.googleScholar.label}=en&oi=ao`}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                            >
+                                                {author.googleScholar.label} <Icon icon={faExternalLinkAlt} />
+                                            </a>
+                                        </div>
+                                    </AuthorMetaInfo>
+                                )}
+                                {author.researchgate && (
+                                    <AuthorMetaInfo className="flex-grow-1 mr-3">
+                                        <div className="key">
+                                            ResearchGate <Icon icon={faResearchgate} />
+                                        </div>
+                                        <div className="value">
+                                            <a
+                                                href={`https://www.researchgate.net/profile/${author.researchgate.label}`}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                            >
+                                                {author.researchgate.label} <Icon icon={faExternalLinkAlt} />
+                                            </a>
+                                        </div>
+                                    </AuthorMetaInfo>
+                                )}
+                                {author.linkedin && (
+                                    <AuthorMetaInfo className="flex-grow-1 mr-3">
+                                        <div className="key">
+                                            Linkedin <Icon icon={faLinkedin} />
+                                        </div>
+                                        <div className="value">
+                                            <a
+                                                href={`https://linkedin.com/profile/${author.linkedin.label}`}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                            >
+                                                {author.linkedin.label} <Icon icon={faExternalLinkAlt} />
+                                            </a>
+                                        </div>
+                                    </AuthorMetaInfo>
+                                )}
+                            </div>
                         </div>
                     </Container>
                     <Container className="d-flex align-items-center mt-4 mb-4">

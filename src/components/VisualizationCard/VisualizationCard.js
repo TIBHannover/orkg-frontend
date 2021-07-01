@@ -50,20 +50,22 @@ const VisualizationCard = props => {
                     </div>
                 )}
                 <div className="d-flex flex-column flex-grow-1">
-                    <Link
-                        to={
-                            props.visualization.comparisonId
-                                ? reverse(ROUTES.COMPARISON, { comparisonId: props.visualization.comparisonId }) + '#Vis' + props.visualization.id
-                                : reverse(ROUTES.VISUALIZATION, { id: props.visualization.id })
-                        }
-                    >
-                        {props.visualization.label ? props.visualization.label : <em>No title</em>}
-                    </Link>
-                    {props.showBadge && (
-                        <div>
-                            <CardBadge color="primary">Visualization</CardBadge>
-                        </div>
-                    )}
+                    <div>
+                        <Link
+                            to={
+                                props.visualization.comparisonId
+                                    ? reverse(ROUTES.COMPARISON, { comparisonId: props.visualization.comparisonId }) + '#Vis' + props.visualization.id
+                                    : reverse(ROUTES.VISUALIZATION, { id: props.visualization.id })
+                            }
+                        >
+                            {props.visualization.label ? props.visualization.label : <em>No title</em>}
+                        </Link>
+                        {props.showBadge && (
+                            <div className="d-inline-block ml-2">
+                                <CardBadge color="primary">Visualization</CardBadge>
+                            </div>
+                        )}
+                    </div>
                     <div>
                         <small>
                             {props.visualization.authors && props.visualization.authors.length > 0 && (

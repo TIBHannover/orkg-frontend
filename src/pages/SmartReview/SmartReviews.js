@@ -20,7 +20,7 @@ const SmartReviews = () => {
         document.title = 'SmartReviews - ORKG';
     });
 
-    const renderListItem = versions => <SmartReviewCard key={versions[0]?.id} versions={versions} />;
+    const renderListItem = versions => <SmartReviewCard key={versions[0]?.id} versions={versions} showBadge={false} />;
 
     const fetchItems = async ({ resourceClass, page, pageSize }) => {
         let items = [];

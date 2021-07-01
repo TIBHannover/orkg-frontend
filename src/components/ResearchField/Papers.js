@@ -3,6 +3,7 @@ import { Container, Button, ListGroup, FormGroup, Label, Input } from 'reactstra
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner, faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import PaperCard from 'components/PaperCard/PaperCard';
+import ClassesBadgesFilter from 'components/ClassesBadgesFilter/ClassesBadgesFilter';
 import useResearchFieldPapers from 'components/ResearchField/hooks/useResearchFieldPapers';
 import ROUTES from 'constants/routes';
 import { Link } from 'react-router-dom';
@@ -44,7 +45,6 @@ const Papers = ({ id, boxShadow, showBreadcrumbs }) => {
                         </SubTitle>
                     </>
                 </div>
-
                 <Tippy
                     interactive={true}
                     trigger="click"

@@ -107,6 +107,7 @@ export const CardBadge = styled.div`
     padding: 1px 5px;
     margin-right: 6px;
     font-size: 70%;
+    cursor: default;
     border-radius: 4px;
     border: 1px ${props => props.theme.bodyColor} solid;
 `;
@@ -114,15 +115,22 @@ export const CardBadge = styled.div`
 export const CardBadgeFilter = styled.div`
     background: #fff;
     display: inline-block;
-    border: 1px ${props => props.theme.bodyColor} solid;
-    padding: 2px 10px;
+    border: 1px ${props => props.theme.lightDarker} solid;
+    color: ${props => props.theme.lightDarker};
+    padding: 2.5px 10px;
     margin-right: 6px;
     border-radius: 4px;
     cursor: pointer;
     position: relative;
+    /*
+    -webkit-transition: all 0.5s ease-in-out;
+    -moz-transition: all 0.5s ease-in-out;
+    -o-transition: all 0.5s ease-in-out;
+    transition: all 0.5s ease-in-out;
+    */
     &.active,
     &:hover {
-        color: ${props => props.theme.primary};
-        border: 1px ${props => props.theme.primary} solid;
+        color: ${props => props.theme.secondary};
+        border: 1px ${props => props.theme.secondaryDarker} solid;
     }
 `;

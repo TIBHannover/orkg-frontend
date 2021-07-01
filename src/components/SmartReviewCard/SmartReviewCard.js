@@ -49,12 +49,14 @@ const SmartReviewCard = ({ versions, showCurationFlags, showBadge }) => {
                     </div>
                 )}
                 <div className="d-flex flex-column flex-grow-1">
-                    <Link to={reverse(ROUTES.SMART_REVIEW, { id: versions[0]?.id })}>{versions[0]?.label}</Link>
-                    {showBadge && (
-                        <div>
-                            <CardBadge color="primary">SmartReview</CardBadge>
-                        </div>
-                    )}
+                    <div>
+                        <Link to={reverse(ROUTES.SMART_REVIEW, { id: versions[0]?.id })}>{versions[0]?.label}</Link>
+                        {showBadge && (
+                            <div className="d-inline-block ml-2">
+                                <CardBadge color="primary">SmartReview</CardBadge>
+                            </div>
+                        )}
+                    </div>
                     <div>
                         <small>
                             {!isLoadingMetaData && <Authors authors={authors} />}
@@ -101,7 +103,7 @@ SmartReviewCard.propTypes = {
 };
 
 SmartReviewCard.defaultProps = {
-    showBadge: true,
+    showBadge: false,
     showCurationFlags: true
 };
 

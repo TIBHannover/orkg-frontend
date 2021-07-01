@@ -63,12 +63,18 @@ const PaperCard = props => {
                     </div>
                 )}
                 <div className="d-flex flex-column flex-grow-1">
-                    <Link to={reverse(ROUTES.VIEW_PAPER, { resourceId: props.paper.id, contributionId: props.contribution?.id ?? undefined })}>
-                        {props.paper.title ? props.paper.title : <em>No title</em>}
-                    </Link>
-                    {props.contribution && <span className="text-muted"> - {props.contribution.title}</span>}
                     <div>
-                        {props.showBadge && <CardBadge color="primary">Paper</CardBadge>}
+                        <Link to={reverse(ROUTES.VIEW_PAPER, { resourceId: props.paper.id, contributionId: props.contribution?.id ?? undefined })}>
+                            {props.paper.title ? props.paper.title : <em>No title</em>}
+                        </Link>
+                        {props.contribution && <span className="text-muted"> - {props.contribution.title}</span>}
+                        {props.showBadge && (
+                            <div className="d-inline-block ml-2">
+                                <CardBadge color="primary">Paper</CardBadge>
+                            </div>
+                        )}
+                    </div>
+                    <div>
                         <div className="d-inline-block d-md-none mt-1 mr-1">
                             {props.showBreadcrumbs && <RelativeBreadcrumbs researchField={props.paper.researchField} />}
                         </div>
