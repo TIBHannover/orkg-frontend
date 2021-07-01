@@ -11,9 +11,9 @@ const MarkFeaturedUnlistedContainer = props => {
     });
     return (
         <>
-            <MarkFeatured size="xs" featured={isFeatured} handleChangeStatus={handleChangeStatus} />
+            <MarkFeatured size={props.size} featured={isFeatured} handleChangeStatus={handleChangeStatus} />
             <div className="d-inline-block ml-1">
-                <MarkUnlisted size="xs" unlisted={isUnlisted} handleChangeStatus={handleChangeStatus} />
+                <MarkUnlisted size={props.size} unlisted={isUnlisted} handleChangeStatus={handleChangeStatus} />
             </div>
         </>
     );
@@ -22,7 +22,12 @@ const MarkFeaturedUnlistedContainer = props => {
 MarkFeaturedUnlistedContainer.propTypes = {
     id: PropTypes.string.isRequired,
     featured: PropTypes.bool,
-    unlisted: PropTypes.bool
+    unlisted: PropTypes.bool,
+    size: PropTypes.string
+};
+
+MarkFeaturedUnlistedContainer.defaultProps = {
+    size: 'xs'
 };
 
 export default MarkFeaturedUnlistedContainer;

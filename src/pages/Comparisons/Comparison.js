@@ -430,6 +430,7 @@ function Comparison(props) {
                                     {metaData.title ? metaData.title : 'Compare'}{' '}
                                     {metaData.id && (
                                         <MarkFeaturedUnlistedContainer
+                                            size="xs"
                                             id={metaData?.id}
                                             featured={metaData?.featured}
                                             unlisted={metaData?.unlisted}
