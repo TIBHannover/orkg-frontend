@@ -131,7 +131,7 @@
     },
     "devDependencies": {
         "@babel/preset-env": "^7.12.11",
-        "@beam-australia/react-env": "^3.0.8",
+        "@beam-australia/react-env": "^3.1.1",
         "@testing-library/jest-dom": "^5.11.10",
         "@testing-library/react": "^11.2.6",
         "eslint-config-prettier": "^8.1.0",
