@@ -108,13 +108,13 @@ const ResearchProblemHeader = ({ id }) => {
                         <h1 className="h4 flex-shrink-0 mb-0">Research problem</h1>
                         <>
                             <SubtitleSeparator />
-                            <SubTitle className="h5 mb-0">
-                                {' '}
-                                {researchProblemData.label} <FeaturedMark size="xs" featured={isFeatured} handleChangeStatus={handleChangeStatus} />{' '}
+                            <SubTitle className="h5 mb-0"> {researchProblemData.label}</SubTitle>
+                            <>
+                                <FeaturedMark size="sm" featured={isFeatured} handleChangeStatus={handleChangeStatus} />{' '}
                                 <div className="d-inline-block ml-1">
-                                    <MarkUnlisted size="xs" resourceId={id} unlisted={isUnlisted} handleChangeStatus={handleChangeStatus} />
+                                    <MarkUnlisted size="sm" resourceId={id} unlisted={isUnlisted} handleChangeStatus={handleChangeStatus} />
                                 </div>
-                            </SubTitle>
+                            </>
                         </>
                         {editMode && (
                             <StatementBrowserDialog

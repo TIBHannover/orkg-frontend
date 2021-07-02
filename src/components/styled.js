@@ -16,7 +16,7 @@ export const SubTitle = styled.div`
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
-    margin-right: 20px;
+    margin-right: 10px;
     color: ${props => props.theme.secondary};
 `;
 
