@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, memo } from 'react';
 import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import styled from 'styled-components';
@@ -10,6 +10,7 @@ import { getVisualization } from 'services/similarity';
 import Tippy from '@tippyjs/react';
 import GDCVisualizationRenderer from 'libs/selfVisModel/RenderingComponents/GDCVisualizationRenderer';
 import { getStatementsBySubject } from 'services/backend/statements';
+import { isEqual } from 'lodash';
 
 const ResourceItem = styled.div`
     overflow: hidden;
@@ -30,18 +31,22 @@ const ThumbnailImg = styled.img`
 
 const Thumbnail = props => {
     const [thumbnail, setThumbnail] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         const loadThumbnail = () => {
             if (props.visualizations?.length > 0) {
+                setIsLoading(true);
                 getVisualization(props.visualizations[0].id)
                     .then(visualization => {
                         setThumbnail(visualization);
+                        setIsLoading(false);
                     })
                     .catch(err => {
                         console.log(err);
                     });
             } else if (props.figures?.length > 0) {
+                setIsLoading(true);
                 getStatementsBySubject({
                     id: props.figures[0].id
                 })
@@ -50,6 +55,7 @@ const Thumbnail = props => {
                         setThumbnail({
                             src: img ? img.label : ''
                         });
+                        setIsLoading(false);
                     })
                     .catch(err => {
                         console.log(err);
@@ -61,7 +67,7 @@ const Thumbnail = props => {
 
     return (
         <>
-            {thumbnail && thumbnail.src && (
+            {!isLoading && thumbnail && thumbnail.src && (
                 <Link to={reverse(ROUTES.COMPARISON, { comparisonId: props.id }) + '#' + props.figures[0].id}>
                     <Tippy content={props.figures[0].label}>
                         <ResourceItem key={props.figures[0].id}>
@@ -70,7 +76,7 @@ const Thumbnail = props => {
                     </Tippy>
                 </Link>
             )}
-            {thumbnail && !thumbnail.src && (
+            {!isLoading && thumbnail && !thumbnail.src && (
                 <Link to={reverse(ROUTES.COMPARISON, { comparisonId: props.id })}>
                     <Tippy content={props.visualizations[0].label}>
                         <ResourceItem key={thumbnail.figureId}>
@@ -79,6 +85,7 @@ const Thumbnail = props => {
                     </Tippy>
                 </Link>
             )}
+            {isLoading && <div style={{ height: '50px', width: '160px' }} />}
         </>
     );
 };
@@ -89,4 +96,4 @@ Thumbnail.propTypes = {
     figures: PropTypes.array
 };
 
-export default Thumbnail;
+export default memo(Thumbnail, isEqual);

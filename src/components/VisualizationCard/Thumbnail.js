@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, memo } from 'react';
 import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import styled from 'styled-components';
@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 import { getVisualization } from 'services/similarity';
 import Tippy from '@tippyjs/react';
 import GDCVisualizationRenderer from 'libs/selfVisModel/RenderingComponents/GDCVisualizationRenderer';
+import { isEqual } from 'lodash';
 
 const ResourceItem = styled.div`
     overflow: hidden;
@@ -21,13 +22,16 @@ const ResourceItem = styled.div`
 
 const Thumbnail = props => {
     const [thumbnail, setThumbnail] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         const loadThumbnail = () => {
             if (props.visualization) {
+                setIsLoading(true);
                 getVisualization(props.visualization.id)
                     .then(visualization => {
                         setThumbnail(visualization);
+                        setIsLoading(false);
                     })
                     .catch(err => {
                         console.log(err);
@@ -39,7 +43,7 @@ const Thumbnail = props => {
 
     return (
         <>
-            {thumbnail && (
+            {!isLoading && thumbnail && (
                 <Link to={reverse(ROUTES.VISUALIZATION, { id: props.visualization.id })}>
                     <Tippy content={props.visualization.label}>
                         <ResourceItem key={thumbnail.figureId}>
@@ -48,6 +52,7 @@ const Thumbnail = props => {
                     </Tippy>
                 </Link>
             )}
+            {isLoading && <div style={{ height: '50px', width: '160px' }} />}
         </>
     );
 };
@@ -56,4 +61,4 @@ Thumbnail.propTypes = {
     visualization: PropTypes.object
 };
 
-export default Thumbnail;
+export default memo(Thumbnail, isEqual);

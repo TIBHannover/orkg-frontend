@@ -92,7 +92,7 @@ export default function ClassesBadgesFilter() {
                 options={filters}
                 className="focus-primary"
                 classNamePrefix="react-select"
-                placeholder="Select type"
+                placeholder=""
                 components={{ Control, MultiValueContainer: () => null, Option: CustomOption }}
                 isMulti={true}
                 hideSelectedOptions={false}

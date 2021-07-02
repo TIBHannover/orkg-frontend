@@ -55,7 +55,11 @@ export const PREDICATES = {
     HAS_SYNONYM: 'hasSynonym',
     SHOW_PROPERTY: 'ShowProperty',
     HAS_ENTITY: 'HasEntity',
-    HAS_REFERENCE: 'HasReference'
+    HAS_REFERENCE: 'HasReference',
+    WEBSITE: 'website',
+    LINKED_IN_ID: 'linkedInID',
+    RESEARCH_GATE_ID: 'researchGateID',
+    GOOGLE_SCHOLAR_ID: 'googleScholarID'
 };
 
 export const CLASSES = {

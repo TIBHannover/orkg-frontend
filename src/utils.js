@@ -228,20 +228,46 @@ export const getPaperData = (resource, paperStatements) => {
 };
 
 /**
- * Parse smart review statements and return a a smart review object
+ * Parse smart review statements and return a smart review object
  * @param {Object} resource Smart Review resource
  * @param {Array} statements Smart Review Statements
  */
 export const getSmartReviewData = (resource, statements) => {
     const description = filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.DESCRIPTION, true);
     const paperId = filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.HAS_PAPER, true)?.id;
-
+    const researchField = filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.HAS_RESEARCH_FIELD, true, CLASSES.RESEARCH_FIELD);
+    const authors = filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.HAS_AUTHOR, false);
     return {
         ...resource,
         id: resource.id,
         label: resource.label ? resource.label : 'No Title',
         description: description?.label ?? '',
+        researchField,
+        authors,
         paperId
+    };
+};
+
+/**
+ * Parse author statements and return an author object
+ * @param {Object} resource Author resource
+ * @param {Array} statements Author Statements
+ */
+export const getAuthorData = (resource, statements) => {
+    const orcid = filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.HAS_ORCID, true);
+    const website = filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.WEBSITE, true);
+    const linkedIn = filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.LINKED_IN_ID, true);
+    const researchGate = filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.RESEARCH_GATE_ID, true);
+    const googleScholar = filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.GOOGLE_SCHOLAR_ID, true);
+
+    return {
+        ...resource,
+        label: resource.label ? resource.label : 'No Name',
+        orcid,
+        website,
+        linkedIn,
+        researchGate,
+        googleScholar
     };
 };
 
@@ -1221,4 +1247,26 @@ export const checkCookie = () => {
     cookies.set('testcookie', 1, { path: env('PUBLIC_URL'), maxAge: 5 });
     const cookieEnabled = cookies.get('testcookie') ? cookies.get('testcookie') : null;
     return cookieEnabled ? true : false;
+};
+
+/**
+ * Parse resource statements and return an object of its type
+ * @param {Object} resource resource
+ * @param {Array} statements Statements
+ */
+export const getDataBasedOnType = (resource, statements) => {
+    if (resource?.classes?.includes(CLASSES.PAPER)) {
+        return getPaperData(resource, statements);
+    }
+    if (resource?.classes?.includes(CLASSES.COMPARISON)) {
+        return getComparisonData(resource, statements);
+    }
+    if (resource?.classes?.includes(CLASSES.VISUALIZATION)) {
+        return getVisualizationData(resource, statements);
+    }
+    if (resource?.classes?.includes(CLASSES.SMART_REVIEW)) {
+        return getSmartReviewData(resource, statements);
+    } else {
+        return undefined;
+    }
 };
