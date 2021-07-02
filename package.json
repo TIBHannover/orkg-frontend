@@ -127,7 +127,8 @@
         "flow": "flow",
         "lint": "eslint src/**/*.js",
         "lint:fix": "eslint src/**/*.js --fix",
-        "version": "auto-changelog && git add CHANGELOG.md"
+        "version": "auto-changelog && git add CHANGELOG.md",
+        "prepare": "husky install"
     },
     "devDependencies": {
         "@babel/preset-env": "^7.12.11",
@@ -137,9 +138,9 @@
         "eslint-config-prettier": "^8.1.0",
         "eslint-plugin-jsx-a11y": "^6.4.1",
         "eslint-plugin-prettier": "^3.3.1",
-        "faker": "^5.5.2",
-        "flow-bin": "^0.148.0",
-        "husky": "^4.3.7",
+        "faker": "^5.5.3",
+        "flow-bin": "^0.154.0",
+        "husky": "^7.0.0",
         "jest-canvas-mock": "^2.3.0",
         "jest-junit": "^12.0.0",
         "lint-staged": "^10.5.4",
@@ -160,11 +161,6 @@
         "src/**/*.{js,jsx}": [
             "npm run --silent lint:fix"
         ]
-    },
-    "husky": {
-        "hooks": {
-            "pre-commit": "lint-staged"
-        }
     },
     "browserslist": [
         ">0.2%",
