@@ -1,7 +1,7 @@
 import { Col } from 'reactstrap';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
-import NumberFormat from 'react-number-format';
+import CountUp from 'react-countup';
 
 const StatsBoxStyled = styled(Col)`
     padding: 0 !important;
@@ -26,7 +26,7 @@ const InlineStatsBox = props => {
         <StatsBoxStyled className={props.className} style={props.hideBorder ? { border: 0 } : {}}>
             {!props.isLoading ? (
                 <Number>
-                    <NumberFormat value={props.number} displayType="text" thousandSeparator={' '} />
+                    <CountUp duration={1.1} end={props.number} separator=" " />
                 </Number>
             ) : (
                 'Loading...'

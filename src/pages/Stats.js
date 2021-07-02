@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Container, Row } from 'reactstrap';
 import { CLASSES } from 'constants/graphSettings';
-import { faBars, faFile, faTag, faChartBar, faCubes, faUsers } from '@fortawesome/free-solid-svg-icons';
+import { faFile, faTag, faChartBar, faCubes, faUsers } from '@fortawesome/free-solid-svg-icons';
 import ColoredStatsBox from 'components/Stats/ColoredStatsBox';
 import InlineStatsBox from 'components/Stats/InlineStatsBox';
 import { toast } from 'react-toastify';
@@ -33,76 +33,27 @@ const Stats = () => {
 
             <Container>
                 <Row>
-                    <ColoredStatsBox number={stats.papers} label="Papers" icon={faFile} color="blue" className="mr-3" isLoading={isLoading} />
-                    <ColoredStatsBox
-                        number={stats.comparisons}
-                        label="Comparisons"
-                        icon={faCubes}
-                        color="gray"
-                        className="mr-3"
-                        isLoading={isLoading}
-                    />
-                    <ColoredStatsBox
-                        number={stats.visualizations}
-                        label="Visualizations"
-                        icon={faChartBar}
-                        color="black"
-                        className="mr-3"
-                        isLoading={isLoading}
-                    />
-
-                    <ColoredStatsBox number={stats.problems} label="Research problems" icon={faTag} color="orange" isLoading={isLoading} />
+                    <ColoredStatsBox number={stats.papers} label="Papers" icon={faFile} className="mr-3" isLoading={isLoading} />
+                    <ColoredStatsBox number={stats.comparisons} label="Comparisons" icon={faCubes} className="mr-3" isLoading={isLoading} />
+                    <ColoredStatsBox number={stats.visualizations} label="Visualizations" icon={faChartBar} className="mr-3" isLoading={isLoading} />
+                    <ColoredStatsBox number={stats.problems} label="Research problems" icon={faTag} isLoading={isLoading} />
                 </Row>
             </Container>
 
-            <Container className="mt-2">
+            <Container className="mt-3">
                 <Row>
-                    <ColoredStatsBox
-                        number={stats.contributions}
-                        label="Contributions"
-                        icon={faBars}
-                        color="green"
-                        className="mr-3"
-                        isLoading={isLoading}
-                    />
-                    <ColoredStatsBox
-                        number={stats.fields}
-                        label="Research fields"
-                        icon={faBars}
-                        color="gray"
-                        className="mr-3"
-                        isLoading={isLoading}
-                    />
-                    <ColoredStatsBox number={stats.templates} label="Templates" icon={faBars} color="black" className="mr-3" isLoading={isLoading} />
-                    <ColoredStatsBox number={stats.smart_reviews} label="SmartReviews" icon={faBars} color="orange" isLoading={isLoading} />
+                    <ColoredStatsBox number={stats.contributions} label="Contributions" className="mr-3" isLoading={isLoading} />
+                    <ColoredStatsBox number={stats.fields} label="Research fields" className="mr-3" isLoading={isLoading} />
+                    <ColoredStatsBox number={stats.templates} label="Templates" className="mr-3" isLoading={isLoading} />
+                    <ColoredStatsBox number={stats.smart_reviews} label="SmartReviews" isLoading={isLoading} />
                 </Row>
             </Container>
-            <Container className="mt-2">
+            <Container className="mt-3">
                 <Row>
-                    <ColoredStatsBox number={stats.users} label="Users" icon={faUsers} color="green" className="mr-3" isLoading={isLoading} />
-                    <ColoredStatsBox
-                        number={stats.organizations}
-                        label="Organizations"
-                        icon={faBars}
-                        color="gray"
-                        className="mr-3"
-                        isLoading={isLoading}
-                    />
-                    <ColoredStatsBox
-                        number={stats.observatories}
-                        label="Observatories"
-                        icon={faBars}
-                        color="black"
-                        className="mr-3"
-                        isLoading={isLoading}
-                    />
-                    <ColoredStatsBox
-                        number={stats.extras?.[CLASSES.BENCHMARK]}
-                        label="Benchmarks"
-                        icon={faBars}
-                        color="orange"
-                        isLoading={isLoading}
-                    />
+                    <ColoredStatsBox number={stats.users} label="Users" icon={faUsers} className="mr-3" isLoading={isLoading} />
+                    <ColoredStatsBox number={stats.organizations} label="Organizations" className="mr-3" isLoading={isLoading} />
+                    <ColoredStatsBox number={stats.observatories} label="Observatories" className="mr-3" isLoading={isLoading} />
+                    <ColoredStatsBox number={stats.extras?.[CLASSES.BENCHMARK]} label="Benchmarks" isLoading={isLoading} />
                 </Row>
             </Container>
             <Container>

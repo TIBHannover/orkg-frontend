@@ -2,29 +2,14 @@ import { Col } from 'reactstrap';
 import styled from 'styled-components';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import PropTypes from 'prop-types';
-import NumberFormat from 'react-number-format';
+import CountUp from 'react-countup';
 
 const StatsBoxStyled = styled(Col)`
-    color: #fff;
+    color: ${props => props.theme.bodyColor};
     padding: 0 !important;
     display: flex;
-
-    &.gray {
-        background-color: ${props => props.theme.secondary};
-    }
-
-    &.blue {
-        background-color: #4ca7d0;
-    }
-    &.green {
-        background-color: #4aa84e;
-    }
-    &.orange {
-        background-color: #cc7138;
-    }
-    &.black {
-        background-color: #4f4d50;
-    }
+    min-height: 74px !important;
+    position: relative;
 `;
 
 const IconContainer = styled.div`
@@ -34,27 +19,11 @@ const IconContainer = styled.div`
     align-items: center;
     justify-content: center;
     display: flex;
-
-    &.gray {
-        background-color: ${props => props.theme.dark};
-    }
-
-    &.blue {
-        background-color: #3f90b4;
-    }
-    &.green {
-        background-color: #2c8930;
-    }
-    &.orange {
-        background-color: #a75929;
-    }
-    &.black {
-        background-color: #2f2d2f;
-    }
+    color: ${props => props.theme.secondary};
 `;
 
 const LabelWrapper = styled.div`
-    padding-left: 15px;
+    padding: 0 15px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -63,36 +32,41 @@ const LabelWrapper = styled.div`
 const Number = styled.div`
     font-size: 26px;
     line-height: 1;
+    color: ${props => props.theme.dark};
 `;
 
 const Label = styled.div`
+    margin-top: 5px;
     font-size: 18px;
 `;
 
 const ColoredStatsBox = props => {
     return (
-        <StatsBoxStyled className={`box rounded ${props.className} ${props.color}`}>
-            <IconContainer className={`rounded-left ${props.color}`}>
-                <Icon icon={props.icon} />
-            </IconContainer>
-            <LabelWrapper>
-                {!props.isLoading ? (
-                    <Number>
-                        <NumberFormat value={props.number} displayType="text" thousandSeparator={' '} />
-                    </Number>
-                ) : (
-                    'Loading...'
+        <StatsBoxStyled className={`box rounded ${props.className} ${props.icon ? '' : 'text-center'}`}>
+            <div className="d-flex flex-grow-1 mt-2 mb-2" style={{ minHeight: '74px' }}>
+                {props.icon && (
+                    <IconContainer className={`rounded-left `}>
+                        <Icon icon={props.icon} />
+                    </IconContainer>
                 )}
-                <Label>{props.label}</Label>
-            </LabelWrapper>
+                <LabelWrapper className="flex-grow-1">
+                    {!props.isLoading ? (
+                        <Number>
+                            <CountUp duration={1.1} end={props.number} separator=" " />
+                        </Number>
+                    ) : (
+                        'Loading...'
+                    )}
+                    <Label>{props.label}</Label>
+                </LabelWrapper>
+            </div>
         </StatsBoxStyled>
     );
 };
 
 ColoredStatsBox.propTypes = {
-    icon: PropTypes.object.isRequired,
+    icon: PropTypes.object,
     label: PropTypes.string.isRequired,
-    color: PropTypes.oneOf(['blue', 'green', 'orange', 'black']).isRequired,
     number: PropTypes.number,
     className: PropTypes.string,
     isLoading: PropTypes.bool
