@@ -81,7 +81,7 @@ const TableCellValue = forwardRef(({ value, index, setDisableCreate, propertyId 
                             {value._class === 'resource' && <TableCellValueResource value={value} />}
                             {value._class === 'literal' && (
                                 <div role="textbox" tabIndex="0" onDoubleClick={handleStartEdit}>
-                                    {value.label}
+                                    {value.label || <i>No label</i>}
                                 </div>
                             )}
                         </ValuePlugins>

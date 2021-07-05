@@ -9,7 +9,7 @@ const TableCellValueResource = ({ value }) => {
     return (
         <>
             <Button color="link" className="p-0 text-wrap" style={{ maxWidth: '100%' }} onClick={() => setIsModalOpen(true)}>
-                {value.label}
+                {value.label || <i>No label</i>}
             </Button>
             {isModelOpen && (
                 <StatementBrowserDialog toggleModal={v => setIsModalOpen(!v)} id={value.id} label={value.label} show enableEdit syncBackend />
