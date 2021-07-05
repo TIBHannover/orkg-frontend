@@ -11,6 +11,8 @@ import CreateContributionModal from 'components/CreateContributionModal/CreateCo
 import CreatePaperModal from 'components/CreatePaperModal/CreatePaperModal';
 import routes from 'constants/routes';
 import { reverse } from 'named-urls';
+import queryString from 'query-string';
+import { useLocation } from 'react-router';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -28,6 +30,7 @@ const ContributionEditor = () => {
     const isLoading = useSelector(state => state.contributionEditor.isLoading);
     const hasFailed = useSelector(state => state.contributionEditor.hasFailed);
     const dispatch = useDispatch();
+    const location = useLocation();
     const contributionIds = getContributionIds();
     const numPWCStatement = useSelector(state => {
         return (
@@ -36,6 +39,8 @@ const ContributionEditor = () => {
             )?.length ?? 0
         );
     });
+    const hasPreviousVersion = queryString.parse(location.search).hasPreviousVersion;
+
     useEffect(() => {
         document.title = 'Contribution editor - ORKG';
     }, []);
@@ -95,7 +100,9 @@ const ContributionEditor = () => {
                 <ButtonGroup>
                     <Button
                         tag={Link}
-                        to={`${reverse(routes.COMPARISON)}?contributions=${contributionIds.join(',')}`}
+                        to={`${reverse(routes.COMPARISON)}?contributions=${contributionIds.join(',')}${
+                            hasPreviousVersion ? `&hasPreviousVersion=${hasPreviousVersion}` : ''
+                        }`}
                         color="secondary"
                         size="sm"
                         style={{ marginRight: 2 }}

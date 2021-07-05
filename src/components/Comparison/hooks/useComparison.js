@@ -417,6 +417,13 @@ function useComparison({ id }) {
                     setResponseHash(responseHash);
                 }
             })
+            .then(() => {
+                if (!comparisonId && queryString.parse(location.search)?.hasPreviousVersion) {
+                    getResource(queryString.parse(location.search).hasPreviousVersion).then(prevVersion =>
+                        setMetaData({ ...metaData, hasPreviousVersion: prevVersion })
+                    );
+                }
+            })
             .catch(error => {
                 console.log(error);
                 setErrors(get_error_message(error));
@@ -628,7 +635,12 @@ function useComparison({ id }) {
             });
 
             if (isConfirmed) {
-                history.push(reverse(ROUTES.CONTRIBUTION_EDITOR) + `?contributions=${contributionsList.join(',')}`);
+                history.push(
+                    reverse(ROUTES.CONTRIBUTION_EDITOR) +
+                        `?contributions=${contributionsList.join(',')}${
+                            metaData?.hasPreviousVersion ? `&hasPreviousVersion=${metaData?.hasPreviousVersion.id}` : ''
+                        }`
+                );
             }
         }
     };
