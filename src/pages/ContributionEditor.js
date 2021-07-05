@@ -1,4 +1,4 @@
-import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
+import { faPlusCircle, faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { loadContributions, removeContributions } from 'actions/contributionEditor';
 import CreateProperty from 'components/ContributionEditor/CreateProperty';
@@ -14,6 +14,7 @@ import { reverse } from 'named-urls';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import env from '@beam-australia/react-env';
 import { Alert, Button, ButtonGroup, Container } from 'reactstrap';
 
 const ContributionEditor = () => {
@@ -28,7 +29,13 @@ const ContributionEditor = () => {
     const hasFailed = useSelector(state => state.contributionEditor.hasFailed);
     const dispatch = useDispatch();
     const contributionIds = getContributionIds();
-
+    const numPWCStatement = useSelector(state => {
+        return (
+            Object.keys(state.contributionEditor?.statements).filter?.(
+                statementId => state.contributionEditor?.statements[statementId]?.created_by === env('PWC_USER_ID')
+            )?.length ?? 0
+        );
+    });
     useEffect(() => {
         document.title = 'Contribution editor - ORKG';
     }, []);
@@ -108,7 +115,17 @@ const ContributionEditor = () => {
                         Start adding contributions by clicking the button <em>Add contribution</em> on the right
                     </Alert>
                 )}
-
+                {numPWCStatement > 0 && (
+                    <Alert color="info">
+                        Some contributions was imported from an external source and our provenance feature is in active development, and due to that,
+                        those contributions cannot be edited. <br />
+                        Meanwhile, you can visit{' '}
+                        <a href="https://paperswithcode.com/" target="_blank" rel="noopener noreferrer">
+                            paperswithcode <Icon icon={faExternalLinkAlt} className="mr-1" />
+                        </a>{' '}
+                        website to suggest changes.
+                    </Alert>
+                )}
                 {!hasFailed && isLoadingInit && <TableLoadingIndicator contributionAmount={contributionAmount} />}
 
                 {!hasFailed && !isLoadingInit && contributionAmount > 0 && (

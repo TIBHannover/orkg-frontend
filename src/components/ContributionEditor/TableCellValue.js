@@ -8,6 +8,7 @@ import { CLASSES, ENTITIES, PREDICATES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
 import { forwardRef, memo, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import env from '@beam-australia/react-env';
 import Textarea from 'react-textarea-autosize';
 import styled from 'styled-components';
 
@@ -80,12 +81,18 @@ const TableCellValue = forwardRef(({ value, index, setDisableCreate, propertyId 
                         <ValuePlugins type={value._class} options={{ inModal: true }}>
                             {value._class === 'resource' && <TableCellValueResource value={value} />}
                             {value._class === 'literal' && (
-                                <div role="textbox" tabIndex="0" onDoubleClick={handleStartEdit}>
+                                <div
+                                    role="textbox"
+                                    tabIndex="0"
+                                    onDoubleClick={env('PWC_USER_ID') !== value.created_by ? handleStartEdit : undefined}
+                                >
                                     {value.label || <i>No label</i>}
                                 </div>
                             )}
                         </ValuePlugins>
-                        <TableCellButtons onEdit={handleStartEdit} onDelete={handleDelete} backgroundColor="rgba(240, 242, 247, 0.8)" />
+                        {env('PWC_USER_ID') !== value.created_by && (
+                            <TableCellButtons onEdit={handleStartEdit} onDelete={handleDelete} backgroundColor="rgba(240, 242, 247, 0.8)" />
+                        )}
                     </Value>
                 </>
             ) : (
