@@ -413,7 +413,7 @@ function Comparison(props) {
                                         >
                                             Go back
                                         </span>{' '}
-                                        or <Link to={ROUTES.HOME}>go to the homepage {contributionsList.length}</Link>.
+                                        or <Link to={ROUTES.HOME}>go to the homepage</Link>.
                                     </>
                                 )}
                             </Alert>
