@@ -49,8 +49,6 @@
         "rdf": "^4.1.0",
         "react": "^17.0.2",
         "react-app-polyfill": "^2.0.0",
-        "react-bootstrap-table-next": "^4.0.3",
-        "react-bootstrap-table2-editor": "^1.4.0",
         "react-content-loader": "^6.0.3",
         "react-cookie": "^4.0.3",
         "react-copy-to-clipboard": "^5.0.3",
