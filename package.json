@@ -15,7 +15,6 @@
         "@trainiac/html2canvas": "^1.0.0",
         "@xobotyi/scrollbar-width": "^1.9.5",
         "array-move": "^3.0.1",
-        "auto-changelog": "^2.3.0",
         "body-scroll-lock": "^3.1.5",
         "bootstrap": "^4.5.3",
         "capitalize": "^2.0.3",
@@ -82,7 +81,6 @@
         "react-router": "^5.2.0",
         "react-router-config": "^5.0.1",
         "react-router-dom": "^5.2.0",
-        "react-scripts": "4.0.3",
         "react-scroll-sync": "^0.9.0",
         "react-select": "^4.3.1",
         "react-select-async-paginate": "^0.5.3",
@@ -135,6 +133,7 @@
         "@beam-australia/react-env": "^3.1.1",
         "@testing-library/jest-dom": "^5.14.1",
         "@testing-library/react": "^12.0.0",
+        "auto-changelog": "^2.3.0",
         "eslint-config-prettier": "^8.3.0",
         "eslint-plugin-jsx-a11y": "^6.4.1",
         "eslint-plugin-prettier": "^3.3.1",
@@ -145,7 +144,8 @@
         "jest-junit": "^12.2.0",
         "lint-staged": "^11.0.0",
         "msw": "^0.30.1",
-        "prettier": "1.18.2"
+        "prettier": "1.18.2",
+        "react-scripts": "^4.0.3"
     },
     "auto-changelog": {
         "template": "./keepachangelog.hbs",
