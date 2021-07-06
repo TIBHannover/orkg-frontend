@@ -100,6 +100,7 @@ const ClassesBadgesFilter = props => {
                 isClearable={false}
                 isDisabled={props.disabled}
                 styles={customStyles}
+                blurInputOnSelect={true}
             />
         </div>
     );
