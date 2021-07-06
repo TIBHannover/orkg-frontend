@@ -5,8 +5,7 @@ import ObservatoriesCarousel from 'components/ObservatoriesCarousel/Observatorie
 import useResearchFieldObservatories from 'components/ResearchField/hooks/useResearchFieldObservatories';
 import LastUpdatesBox from 'components/LastUpdatesBox/LastUpdatesBox';
 import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
-import Comparisons from 'components/ResearchField/Comparisons';
-import Papers from 'components/ResearchField/Papers';
+import IntegratedList from 'components/ResearchField/IntegratedList';
 import { useParams } from 'react-router-dom';
 import ResearchProblemsBox from 'components/ResearchProblemsBox/ResearchProblemsBox';
 
@@ -38,8 +37,7 @@ const ResearchField = () => {
                 </Row>
             </Container>
 
-            <Comparisons id={researchFieldId} boxShadow />
-            <Papers id={researchFieldId} boxShadow />
+            <IntegratedList id={researchFieldId} boxShadow />
             <ComparisonPopup />
         </>
     );

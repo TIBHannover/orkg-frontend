@@ -1,18 +1,16 @@
-import { useState, useCallback } from 'react';
-import { CLASSES } from 'constants/graphSettings';
+import { useCallback } from 'react';
 import Select, { components } from 'react-select';
+import PropTypes from 'prop-types';
+import { toast } from 'react-toastify';
 
-export default function ClassesBadgesFilter() {
-    const filters = [
-        { id: CLASSES.PAPER, label: 'Paper' },
-        { id: CLASSES.COMPARISON, label: 'Comparison' },
-        { id: CLASSES.VISUALIZATION, label: 'Visualization' },
-        { id: CLASSES.SMART_REVIEW, label: 'SmartReview' }
-    ];
-    const [classes, setClasses] = useState(filters.slice(1));
-
+const ClassesBadgesFilter = props => {
     const handleSelect = value => {
-        setClasses(value);
+        if (value.length < 1) {
+            toast.dismiss();
+            toast.info('At least one type should be selected');
+        } else {
+            props.setClassesFilter(value);
+        }
     };
 
     const Control = useCallback(({ ...innerProps }) => {
@@ -87,9 +85,9 @@ export default function ClassesBadgesFilter() {
     return (
         <div className="mr-1" style={{ width: '180px' }}>
             <Select
-                value={classes}
+                value={props.classesFilter}
                 onChange={handleSelect}
-                options={filters}
+                options={props.initialClassFilterOptions}
                 className="focus-primary"
                 classNamePrefix="react-select"
                 placeholder=""
@@ -97,10 +95,25 @@ export default function ClassesBadgesFilter() {
                 isMulti={true}
                 hideSelectedOptions={false}
                 getOptionLabel={({ label }) => label}
+                openMenuOnClick={true}
                 getOptionValue={({ id }) => id}
                 isClearable={false}
+                isDisabled={props.disabled}
                 styles={customStyles}
             />
         </div>
     );
-}
+};
+
+ClassesBadgesFilter.propTypes = {
+    initialClassFilterOptions: PropTypes.array.isRequired,
+    setClassesFilter: PropTypes.func.isRequired,
+    classesFilter: PropTypes.array.isRequired,
+    disabled: PropTypes.bool
+};
+
+ClassesBadgesFilter.defaultProps = {
+    disabled: false
+};
+
+export default ClassesBadgesFilter;

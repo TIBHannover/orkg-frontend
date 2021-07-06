@@ -653,8 +653,9 @@ function convertTreeToFlat(treeStructure) {
  */
 export const groupVersionsOfComparisons = (comparisons, sortFunc = (a, b) => new Date(b.created_at) - new Date(a.created_at)) => {
     // 1- Remove duplicated and keep the ones with hasPreviousVersion
+    let result = comparisons.filter(c => c?.classes?.includes(CLASSES.COMPARISON));
     // 2- Make a tree of versions
-    let result = list_to_tree(uniqBy(sortBy(comparisons, 'hasPreviousVersion'), 'id'));
+    result = list_to_tree(uniqBy(sortBy(result, 'hasPreviousVersion'), 'id'));
     // 3- We flat the versions  inside the roots
     for (let i = 0; i < result.length; i += 1) {
         // Always the new version if the main resource
@@ -662,7 +663,7 @@ export const groupVersionsOfComparisons = (comparisons, sortFunc = (a, b) => new
         result[i] = { ...arrayVersions[0], versions: arrayVersions };
     }
     // 4- We sort the roots
-    result = result.sort(sortFunc);
+    result = [...result, ...comparisons.filter(c => !c?.classes?.includes(CLASSES.COMPARISON))].sort(sortFunc);
     return result;
 };
 
