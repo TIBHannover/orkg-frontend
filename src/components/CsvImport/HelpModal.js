@@ -37,9 +37,9 @@ const HelpModal = props => {
                     </li>
                     <li>
                         <strong>Special cell values.</strong> By default each cell value is considered a literal (i.e. text). It is possible to
-                        prepend <i>resource:</i> to a cell value to create a resource instead. Also, it is possible to use an existing ORKG resource.
-                        Use as cell value <i>orkg:</i> followed by the resource ID (e.g. <i>orkg:R100</i>). See the CSV example below for more
-                        details.
+                        prepend <i>resource:</i> to a cell value or the header cell to create a resource instead. Also, it is possible to use an
+                        existing ORKG resource. Use as cell value <i>orkg:</i> followed by the resource ID (e.g. <i>orkg:R100</i>). See the CSV
+                        example below for more details.
                     </li>
                 </ul>
                 <hr />
