@@ -1,6 +1,7 @@
 import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Papers from 'components/ResearchField/Papers';
+import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
 import ResearchFieldSelector from 'components/ResearchFieldSelector/ResearchFieldSelector';
 import { getResearchFieldsStats } from 'services/backend/stats';
 import { MISC } from 'constants/graphSettings';
@@ -116,6 +117,7 @@ const ResearchFields = () => {
                         </Col>
                     </Row>
                 </div>
+                <ComparisonPopup />
             </Container>
         </>
     );
