@@ -39,6 +39,10 @@ function useBenchmarkDatasetResource({ datasetId = null, problemId = null }) {
     }, [datasetId, problemId]);
 
     useEffect(() => {
+        setData(null);
+        setProblemData(null);
+        setIsLoadingData(true);
+        setIsFailedLoadingData(true);
         loadResourceData();
     }, [loadResourceData]);
     return [data, problemData, isLoadingData, isFailedLoadingData, loadResourceData];

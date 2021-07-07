@@ -16,6 +16,13 @@ export const getDatasetBenchmarksByDatasetId = (datasetId, problemId) => {
 };
 
 /**
+ * Get the list of research problems of a dataset
+ * */
+export const getResearchProblemsByDatasetId = datasetId => {
+    return submitGetRequest(`${datasetsUrl}${datasetId}/problems`);
+};
+
+/**
  * Get the datasets for a research problem: (a.k.a. Benchmark Summary)
  * */
 export const getDatasetsBenchmarksByResearchProblemId = resourceId => {
