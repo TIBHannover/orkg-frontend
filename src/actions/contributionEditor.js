@@ -45,9 +45,10 @@ export const loadContributions = contributionIds => async dispatch => {
         contributions[contributionId] = { ...contribution, paperId: paper.id };
         papers[paper.id] = paper;
 
-        for (const { id, predicate: property, object } of contributionStatements) {
+        for (const { id, predicate: property, object, created_by } of contributionStatements) {
             statements[id] = {
                 contributionId,
+                created_by: created_by,
                 propertyId: property.id,
                 objectId: object.id,
                 type: object._class
