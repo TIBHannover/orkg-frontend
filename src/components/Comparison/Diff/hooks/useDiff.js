@@ -26,7 +26,7 @@ const useDiff = () => {
             comparisonText += `Contribution ${index + 1}: ${contribution.label}\n`;
         }
 
-        for (const [index, reference] of comparison.reference.entries()) {
+        for (const [index, reference] of comparison.references.entries()) {
             comparisonText += `Reference ${index + 1}: ${reference.label}\n`;
         }
 

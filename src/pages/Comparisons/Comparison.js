@@ -514,7 +514,7 @@ function Comparison(props) {
                                     <li key={`ref${index}`}>
                                         <small>
                                             <i>
-                                                <ValuePlugins type="literal">{reference}</ValuePlugins>
+                                                <ValuePlugins type="literal">{reference.label}</ValuePlugins>
                                             </i>
                                         </small>
                                     </li>
