@@ -1,5 +1,4 @@
 import PropTypes from 'prop-types';
-import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 import 'handsontable/dist/handsontable.full.css';
 import { HotTable } from '@handsontable/react';
 import { updateTableData } from 'actions/pdfAnnotation';
