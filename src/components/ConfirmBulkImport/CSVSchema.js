@@ -108,7 +108,7 @@ export default function checkDataValidation(data) {
         const DoiIndex = header.indexOf('paper:doi');
         validations.push({ context: 'Doi', ...doiSchema.validate(values.map(v => v[DoiIndex])) });
     }
-    // validate DOI
+    // validate url
     if (header && header.includes('paper:url')) {
         const UrlIndex = header.indexOf('paper:url');
         validations.push({ context: 'URL', ...urlSchema.validate(values.map(v => v[UrlIndex])) });
