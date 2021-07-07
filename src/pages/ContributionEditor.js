@@ -124,8 +124,8 @@ const ContributionEditor = () => {
                 )}
                 {numPWCStatement > 0 && (
                     <Alert color="info">
-                        Some contributions was imported from an external source and our provenance feature is in active development, and due to that,
-                        those contributions cannot be edited. <br />
+                        Some contributions were imported from an external source and our provenance feature is in active development. Therefore, those
+                        contributions cannot be edited. <br />
                         Meanwhile, you can visit{' '}
                         <a href="https://paperswithcode.com/" target="_blank" rel="noopener noreferrer">
                             paperswithcode <Icon icon={faExternalLinkAlt} className="mr-1" />
