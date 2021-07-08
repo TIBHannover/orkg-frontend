@@ -129,8 +129,7 @@ export default function ValueItemTemplate(props) {
             if (existingResourceId && !resource.isFetched && !resource.isFetching && props.value?._class !== ENTITIES.LITERAL) {
                 dispatch(
                     fetchStatementsForResource({
-                        resourceId: props.value.resourceId,
-                        existingResourceId
+                        resourceId: existingResourceId
                     })
                 ).then(() => {
                     return generatedFormattedLabel(labelFormat);

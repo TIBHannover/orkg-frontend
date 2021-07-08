@@ -143,8 +143,7 @@ export default function ValueItem(props) {
         if (existingResourceId) {
             dispatch(
                 fetchStatementsForResource({
-                    resourceId: props.value.resourceId,
-                    existingResourceId,
+                    resourceId: existingResourceId,
                     depth: 3
                 })
             );
@@ -180,8 +179,7 @@ export default function ValueItem(props) {
 
         dispatch(
             fetchStatementsForResource({
-                resourceId: ressource.id,
-                existingResourceId: ressource.id
+                resourceId: ressource.id
             })
         );
     };

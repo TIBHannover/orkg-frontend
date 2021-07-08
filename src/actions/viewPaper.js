@@ -32,7 +32,6 @@ export const selectContribution = ({ contributionId: id, contributionIsLoaded, c
         dispatch(
             fetchStatementsForResource({
                 resourceId: id,
-                existingResourceId: id,
                 isContribution: true,
                 depth: 3 // load depth 3 the first time
             })

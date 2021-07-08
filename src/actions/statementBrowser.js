@@ -854,9 +854,13 @@ export const updateContributionLabel = data => dispatch => {
  * @param {Number} depth - The required depth
  * @return {Boolean} if the resource statements should be fetched or not
  */
-function shouldFetchStatementsForResource(state, resourceId, depth) {
+function shouldFetchStatementsForResource(state, resourceId, depth, nodeType) {
     const resource = state.statementBrowser.resources.byId[resourceId];
-    if (!resource || !resource.isFetched || (resource.isFetched && resource.fetchedDepth < depth)) {
+    // We should not load if the node is a literal or it doesn't exist in the backend
+    if (
+        nodeType !== ENTITIES.LITERAL &&
+        (!resource || (resource.existingResourceId && !resource.isFetched) || (resource.isFetched && resource.fetchedDepth < depth))
+    ) {
         return true;
     } else {
         return false;
@@ -904,13 +908,12 @@ function statementExists(state, statementId) {
  * Recursive function to add statements to a resource
  *
  * @param {Array} statements - Statements
- * @param {String} rootId - The subject id
- * @param {String} resourceId - The resource id in the SB
+ * @param {String} resourceId - The subject id in the SB
  * @param {String} depth - The current depth
  */
-export function addStatements(statements, rootId, resourceId, depth) {
+export function addStatements(statements, resourceId, depth) {
     return (dispatch, getState) => {
-        let resourceStatements = filterStatementsBySubjectId(statements, rootId);
+        let resourceStatements = filterStatementsBySubjectId(statements, resourceId);
         // Sort predicates and values by label
         resourceStatements = orderBy(
             resourceStatements,
@@ -922,53 +925,50 @@ export function addStatements(statements, rootId, resourceId, depth) {
         );
 
         return Promise.all(
-            resourceStatements.map(firstLevelS => {
-                const valueId = guid();
-                // Get the property id if it exists
-                let propertyId = getPropertyIdByByResourceAndPredicateId(getState(), resourceId, firstLevelS.predicate.id);
-                // check whether there already exist a property for this, then combine
+            resourceStatements.map(statement => {
+                // Check whether there already exist a property for this, then combine
+                let propertyId = getPropertyIdByByResourceAndPredicateId(getState(), resourceId, statement.predicate.id);
                 if (!propertyId) {
-                    // create the property
+                    // Create the property
                     propertyId = guid();
                     dispatch(
                         createProperty({
                             propertyId: propertyId,
                             resourceId: resourceId,
-                            existingPredicateId: firstLevelS.predicate.id,
+                            existingPredicateId: statement.predicate.id,
                             isExistingProperty: true,
-                            isTemplate: false,
-                            ...firstLevelS.predicate
+                            ...statement.predicate
                         })
                     );
                 }
-                let addValue = Promise.resolve();
-                if (!statementExists(getState(), firstLevelS.id)) {
+                let addStatement = Promise.resolve();
+                if (!statementExists(getState(), statement.id)) {
                     // add the value if the statement doesn't exist
-                    addValue = dispatch(
+                    const valueId = guid();
+                    addStatement = dispatch(
                         createValue({
                             valueId: valueId,
-                            existingResourceId: firstLevelS.object.id,
+                            existingResourceId: statement.object.id,
                             propertyId: propertyId,
                             isExistingValue: true,
                             existingStatement: true,
-                            statementId: firstLevelS.id,
-                            isFetched: false,
+                            statementId: statement.id,
+                            isFetched: depth > 1 ? true : false,
                             fetchedDepth: depth - 1,
-                            ...firstLevelS.object
+                            ...statement.object
                         })
                     );
                 }
-                return addValue.then(() => {
-                    if (filterStatementsBySubjectId(statements, firstLevelS.object.id)?.length) {
-                        // recursive
-                        // Add required properties and Add statements
-                        return dispatch(createRequiredPropertiesInResource(firstLevelS.object.id))
-                            .then(() => dispatch(addStatements(statements, firstLevelS.object.id, firstLevelS.object.id, depth - 1)))
+                return addStatement.then(() => {
+                    if (filterStatementsBySubjectId(statements, statement.object.id)?.length) {
+                        // Add required properties and add statements
+                        return dispatch(createRequiredPropertiesInResource(statement.object.id))
+                            .then(() => dispatch(addStatements(statements, statement.object.id, depth - 1)))
                             .then(() => {
-                                // set the resource as fetched
+                                // Set the resource as fetched
                                 dispatch({
-                                    type: type.SET_STATEMENT_IS_FECHTED,
-                                    resourceId: firstLevelS.object.id,
+                                    type: type.SET_STATEMENT_IS_FETCHED,
+                                    resourceId: statement.object.id,
                                     depth: depth - 1
                                 });
                             });
@@ -985,75 +985,77 @@ export function addStatements(statements, rootId, resourceId, depth) {
  * Fetch statements of a resource
  *
  * @param {String} resourceId - Resource ID
- * @param {String} existingResourceId - Existing resource ID
  * @param {Boolean} isContribution - If the resource if a contribution
- * @param {String} rootNodeType - root node type (predicate|resource|class)
+ * @param {String} rootNodeType - root node type (predicate|resource|class), no resolving endpoint yet!
  * @param {Number} depth - The required depth
  * @return {Promise} Promise object
  */
-export const fetchStatementsForResource = ({
-    resourceId,
-    existingResourceId,
-    isContribution = false,
-    rootNodeType = ENTITIES.RESOURCE,
-    depth = 1
-}) => {
-    // Get the resource classes
+export const fetchStatementsForResource = ({ resourceId, isContribution = false, rootNodeType = ENTITIES.RESOURCE, depth = 1 }) => {
     return (dispatch, getState) => {
-        if (shouldFetchStatementsForResource(getState(), existingResourceId, depth)) {
+        if (shouldFetchStatementsForResource(getState(), resourceId, depth, rootNodeType)) {
             dispatch({
                 type: type.IS_FETCHING_STATEMENTS,
                 resourceId: resourceId
             });
-            return getEntity(rootNodeType, existingResourceId).then(root => {
-                // We have custom templates for predicates and classes
-                // so add the corresponding classes on the root node
-                const mapEntitiesClasses = {
-                    [ENTITIES.PREDICATE]: [CLASSES.PREDICATE],
-                    [ENTITIES.CLASS]: [CLASSES.CLASS],
-                    [ENTITIES.RESOURCE]: root.classes ?? []
-                };
-                let allClasses = mapEntitiesClasses[rootNodeType];
-                // set the resource classes (initialize doesn't set the classes)
-                dispatch(updateResourceClasses({ resourceId, classes: allClasses }));
-                // fetch the statements
-                return getStatementsBundleBySubject({ id: existingResourceId, maxLevel: depth }).then(response => {
-                    let rootStatements = response.statements;
-                    // 1 - collect all classes Ids
-                    allClasses = uniq([
-                        ...allClasses,
-                        ...flatten(
-                            rootStatements
-                                .map(s => s.object)
-                                .filter(o => o.classes)
-                                .map(o => o.classes)
-                        )
-                    ]);
-                    // 2- if it's a contribution add research problem to paper redux
-                    if (isContribution) {
-                        dispatch(addResearchProblemsToContribution(rootStatements, existingResourceId));
-                        // filter out the research problem statements
-                        rootStatements = rootStatements.filter(
-                            s => !(s.subject.id === existingResourceId && s.predicate.id === PREDICATES.HAS_RESEARCH_PROBLEM)
-                        );
-                    }
-                    // 3 - load templates
-                    const templatesOfClassesLoading = allClasses && allClasses?.map(classID => dispatch(fetchTemplatesOfClassIfNeeded(classID)));
-                    return Promise.all(templatesOfClassesLoading)
-                        .then(() => dispatch(createRequiredPropertiesInResource(resourceId))) // Add required properties
-                        .then(() => dispatch(addStatements(rootStatements, existingResourceId, resourceId, depth))) // Add statements
-                        .then(() => {
-                            dispatch({
-                                type: type.DONE_FETCHING_STATEMENTS
+            // Get the resource classes
+            return getEntity(rootNodeType, resourceId)
+                .then(root => {
+                    // We have custom templates for predicates and classes
+                    // so add the corresponding classes on the root node
+                    const mapEntitiesClasses = {
+                        [ENTITIES.PREDICATE]: [CLASSES.PREDICATE],
+                        [ENTITIES.CLASS]: [CLASSES.CLASS],
+                        [ENTITIES.RESOURCE]: root.classes ?? []
+                    };
+                    let allClasses = mapEntitiesClasses[rootNodeType];
+                    // set the resource classes (initialize doesn't set the classes)
+                    dispatch(updateResourceClasses({ resourceId, classes: allClasses }));
+                    // fetch the statements
+                    return getStatementsBundleBySubject({ id: resourceId, maxLevel: depth }).then(response => {
+                        let rootStatements = response.statements;
+                        // 1 - collect all classes Ids
+                        allClasses = uniq([
+                            ...allClasses,
+                            ...flatten(
+                                rootStatements
+                                    .map(s => s.object)
+                                    .filter(o => o.classes)
+                                    .map(o => o.classes)
+                            )
+                        ]);
+                        // 2- if it's a contribution add research problem to paper redux
+                        if (isContribution) {
+                            dispatch(addResearchProblemsToContribution(rootStatements, resourceId));
+                            // filter out the research problem statements
+                            rootStatements = rootStatements.filter(
+                                s => !(s.subject.id === resourceId && s.predicate.id === PREDICATES.HAS_RESEARCH_PROBLEM)
+                            );
+                        }
+                        // 3 - load templates
+                        const templatesOfClassesLoading = allClasses && allClasses?.map(classID => dispatch(fetchTemplatesOfClassIfNeeded(classID)));
+                        return Promise.all(templatesOfClassesLoading)
+                            .then(() => dispatch(createRequiredPropertiesInResource(resourceId))) // Add required properties
+                            .then(() => dispatch(addStatements(rootStatements, resourceId, depth))) // Add statements
+                            .then(() => {
+                                // Set fetching is done
+                                dispatch({
+                                    type: type.DONE_FETCHING_STATEMENTS
+                                });
+                                dispatch({
+                                    type: type.SET_STATEMENT_IS_FETCHED,
+                                    resourceId: resourceId,
+                                    depth: depth
+                                });
                             });
-                            dispatch({
-                                type: type.SET_STATEMENT_IS_FECHTED,
-                                resourceId: resourceId,
-                                depth: depth
-                            });
-                        });
+                    });
+                })
+                .catch(error => {
+                    console.log(error);
+                    dispatch({
+                        type: type.FAILED_FETCHING_STATEMENTS,
+                        resourceId: resourceId
+                    });
                 });
-            });
         } else {
             return Promise.resolve();
         }

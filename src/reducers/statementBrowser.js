@@ -236,8 +236,8 @@ export default (state = initialState, action) => {
                     newState = dotProp.set(newState, 'resources.byId', ids => ({
                         ...ids,
                         [payload.resourceId]: {
-                            existingResourceId: payload.existingResourceId && payload.isExistingValue ? payload.existingResourceId : null,
                             ...payload,
+                            existingResourceId: payload.existingResourceId && payload.isExistingValue ? payload.existingResourceId : null,
                             propertyIds: []
                         }
                     }));
@@ -476,13 +476,6 @@ export default (state = initialState, action) => {
             };
         }
 
-        case type.CLEAR_SELECTED_PROPERTY: {
-            return {
-                ...state,
-                selectedProperty: ''
-            };
-        }
-
         case type.STATEMENT_BROWSER_LOAD_DATA: {
             const { payload } = action;
             return {
@@ -496,7 +489,7 @@ export default (state = initialState, action) => {
             };
         }
 
-        case type.SET_STATEMENT_IS_FECHTED: {
+        case type.SET_STATEMENT_IS_FETCHED: {
             const { resourceId, depth } = action;
 
             let newState = dotProp.set(state, `resources.byId.${resourceId}.isFetched`, true);
@@ -520,6 +513,20 @@ export default (state = initialState, action) => {
                 ...newState
             };
         }
+
+        case type.FAILED_FETCHING_STATEMENTS: {
+            const { resourceId } = action;
+            let newState = dotProp.set(state, `isFetchingStatements`, false);
+            if (resourceId) {
+                newState = dotProp.set(newState, `resources.byId.${resourceId}.isFetching`, false);
+                newState = dotProp.set(newState, `resources.byId.${resourceId}.isFailedFetching`, true);
+            }
+
+            return {
+                ...newState
+            };
+        }
+
         case type.STATEMENT_BROWSER_UPDATE_CONTRIBUTION_LABEL: {
             const newLabel = action.payload.label;
             const contribId = action.payload.id;
