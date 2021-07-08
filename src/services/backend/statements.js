@@ -2,7 +2,7 @@ import { url } from 'constants/misc';
 import { submitGetRequest, submitPostRequest, submitDeleteRequest, submitPutRequest } from 'network';
 import queryString from 'query-string';
 import { PREDICATES, MISC, CLASSES } from 'constants/graphSettings';
-import { getStatementsBySubjectId, getTemplateComponentData, filterObjectOfStatementsByPredicateAndClass } from 'utils';
+import { filterStatementsBySubjectId, getTemplateComponentData, filterObjectOfStatementsByPredicateAndClass } from 'utils';
 import { sortMethod } from 'utils';
 
 export const statementsUrl = `${url}statements/`;
@@ -89,9 +89,18 @@ export const getStatementsBySubject = ({ id, page = 0, items: size = 9999, sortB
     return submitGetRequest(`${statementsUrl}subject/${encodeURIComponent(id)}/?${params}`).then(res => res.content);
 };
 
+/**
+ * Fetching statements for a thing as a bundle
+ * A Bundle is a collection of statements that represents the sub-graph starting from a certain Thing in the KG.
+ *
+ * @param {String} id - Thing id
+ * @param {String} maxLevel - The number of levels in the graph to fetch
+ * @param {Array} blacklist - List of classes ids to ignore while parsing the graph
+ * @return {Promise} Promise object
+ */
 export const getStatementsBundleBySubject = ({ id, maxLevel = 10, blacklist = [] }) => {
     const params = queryString.stringify(
-        { maxLevel /*blacklist: blacklist.join(',')*/ },
+        { maxLevel, blacklist: blacklist.join(',') },
         {
             skipNull: true,
             skipEmptyString: true
@@ -199,8 +208,8 @@ export const getStatementsByPredicateAndLiteral = ({ predicateId, literal, subje
  */
 export const getTemplateById = templateId => {
     return getStatementsBundleBySubject({ id: templateId, maxLevel: 2 }).then(response => {
-        const label = getStatementsBySubjectId(response.statements, templateId)?.[0].subject.label;
-        const statements = getStatementsBySubjectId(response.statements, templateId);
+        const label = filterStatementsBySubjectId(response.statements, templateId)?.[0].subject.label;
+        const statements = filterStatementsBySubjectId(response.statements, templateId);
         const templatePredicate = filterObjectOfStatementsByPredicateAndClass(
             response.statements,
             PREDICATES.TEMPLATE_OF_PREDICATE,
@@ -244,7 +253,7 @@ export const getTemplateById = templateId => {
         );
 
         const components = templateComponents.map(component =>
-            getTemplateComponentData(component, getStatementsBySubjectId(response.statements, component.id))
+            getTemplateComponentData(component, filterStatementsBySubjectId(response.statements, component.id))
         );
 
         return {

@@ -58,9 +58,9 @@ const useViewPaper = ({ paperId, contributionId }) => {
                     setIsLoading(false);
                     return;
                 }
-
+                // Load the paper metadata but skip the research field and contribution data
                 Promise.all([
-                    getStatementsBundleBySubject({ id: paperId, maxLevel: 2, blacklist: [CLASSES.RESEARCH_FIELD] }),
+                    getStatementsBundleBySubject({ id: paperId, maxLevel: 2, blacklist: [CLASSES.RESEARCH_FIELD, CLASSES.CONTRIBUTION] }),
                     getIsVerified(paperId).catch(() => false)
                 ]).then(([paperStatements, verified]) => {
                     const paperData = getPaperData_ViewPaper(paperResource, paperStatements.statements?.filter(s => s.subject.id === paperId));
