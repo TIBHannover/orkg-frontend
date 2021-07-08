@@ -39,7 +39,14 @@ export const getEntities = (entityType, params) => {
     }
 };
 
-export const getEntity = (entityType, id) => {
+/**
+ * Get entity by ID
+ *
+ * @param {String} entityType - Entity Type
+ * @param {String} id - Entity ID
+ * @return {Promise} Promise object
+ */
+export const getEntity = (entityType = ENTITIES.RESOURCE, id) => {
     switch (entityType) {
         case ENTITIES.RESOURCE:
             return getResource(id);

@@ -1286,6 +1286,6 @@ export const checkCookie = () => {
     return cookieEnabled ? true : false;
 };
 
-export const getStatementsBySubjectId = (statements, subjectId) => {
+export const filterStatementsBySubjectId = (statements, subjectId) => {
     return statements.filter(statement => statement.subject.id === subjectId);
 };

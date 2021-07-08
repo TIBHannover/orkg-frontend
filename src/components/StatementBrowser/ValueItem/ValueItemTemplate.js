@@ -127,7 +127,6 @@ export default function ValueItemTemplate(props) {
                 return props.value.label;
             }
             if (existingResourceId && !resource.isFetched && !resource.isFetching && props.value?._class !== ENTITIES.LITERAL) {
-                /*
                 dispatch(
                     fetchStatementsForResource({
                         resourceId: props.value.resourceId,
@@ -136,7 +135,6 @@ export default function ValueItemTemplate(props) {
                 ).then(() => {
                     return generatedFormattedLabel(labelFormat);
                 });
-                */
                 return generatedFormattedLabel(labelFormat);
             } else {
                 return generatedFormattedLabel(labelFormat);
