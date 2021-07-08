@@ -75,7 +75,7 @@ const UserAvatar = ({ userId, size, appendToTooltip, showDisplayName }) => {
                             )}
                         </Link>
                         {showDisplayName && !isLoadingContributor && (
-                            <Link to={reverse(ROUTES.USER_PROFILE, { userId: userId })}>{!isLoadingContributor && contributor.display_name}</Link>
+                            <Link to={reverse(ROUTES.USER_PROFILE, { userId: userId })}>{!isLoadingContributor && contributor?.display_name}</Link>
                         )}
                     </span>
                 </Tippy>

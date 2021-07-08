@@ -2,6 +2,7 @@ import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import OntologyItem from 'components/SmartReview/DataTable/OntologyItem';
 import SelectEntitiesModal from 'components/SmartReview/DataTable/SelectEntitiesModal';
+import ValuePlugins from 'components/ValuePlugins/ValuePlugins';
 import { capitalize, orderBy } from 'lodash';
 import PropTypes from 'prop-types';
 import React, { useMemo, useState } from 'react';
@@ -114,7 +115,7 @@ const SectionOntology = ({ section, isEditable = false }) => {
                                     sectionId={section.id}
                                 />
                             ) : (
-                                entityStatement.object?.label
+                                <ValuePlugins type="literal">{entityStatement.object?.label}</ValuePlugins>
                             )}
                         </td>
                     </tr>

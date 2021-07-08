@@ -188,7 +188,7 @@ export default function ValueItemTemplate(props) {
 
                     {props.value._class === ENTITIES.LITERAL && (
                         <div className="literalLabel">
-                            <ValuePlugins type={ENTITIES.LITERAL}>{props.value.label}</ValuePlugins>
+                            <ValuePlugins type={ENTITIES.LITERAL}>{props.value.label || <i>No label</i>}</ValuePlugins>
                         </div>
                     )}
 

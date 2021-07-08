@@ -16,7 +16,12 @@ import {
 import { toast } from 'react-toastify';
 import ROUTES from 'constants/routes.js';
 import PropTypes from 'prop-types';
-import { createLiteralStatement, createResourceStatement, getStatementsByPredicateAndLiteral } from 'services/backend/statements';
+import {
+    createLiteralStatement,
+    createResourceStatement,
+    getStatementsByPredicateAndLiteral,
+    getStatementsBySubjectAndPredicate
+} from 'services/backend/statements';
 import { generateDOIForComparison, createObject } from 'services/backend/misc';
 import { createLiteral } from 'services/backend/literals';
 import { createResource } from 'services/backend/resources';
@@ -34,7 +39,7 @@ import { reverse } from 'named-urls';
 import { useHistory } from 'react-router-dom';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { Link } from 'react-router-dom';
-import { getPropertyObjectFromData } from 'utils';
+import { getPropertyObjectFromData, filterObjectOfStatementsByPredicateAndClass } from 'utils';
 import styled from 'styled-components';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
 import { slugify } from 'utils';
@@ -251,23 +256,41 @@ function Publish(props) {
             if (props.comparisonId && props.authors.length === 0) {
                 await saveCreators(comparisonCreators, props.comparisonId);
             }
+            // Load ORCID of curators
+            let comparisonCreatorsORCID = comparisonCreators.map(async curator => {
+                if (!curator.orcid && curator._class === ENTITIES.RESOURCE) {
+                    const statements = await getStatementsBySubjectAndPredicate({ subjectId: curator.id, predicateId: PREDICATES.HAS_ORCID });
+                    return { ...curator, orcid: filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.HAS_ORCID, true)?.label };
+                } else {
+                    return curator;
+                }
+            });
+            comparisonCreatorsORCID = await Promise.all(comparisonCreatorsORCID);
             if (title && title.trim() !== '' && description && description.trim() !== '') {
-                const response = await generateDOIForComparison(
+                generateDOIForComparison(
                     comparisonId,
                     title,
                     subject ? subject.label : '',
                     description,
                     props.contributionsList,
-                    comparisonCreators.map(c => ({ creator: c.label, orcid: c.orcid })),
+                    comparisonCreatorsORCID.map(c => ({ creator: c.label, orcid: c.orcid })),
                     `${props.publicURL}${reverse(ROUTES.COMPARISON, { comparisonId: comparisonId })}`
-                );
-                props.setMetaData(prevMetaData => ({
-                    ...prevMetaData,
-                    doi: response.data.attributes.doi
-                }));
-                const doiResponse = await createLiteral(response.data.attributes.doi);
-                createResourceStatement(comparisonId, PREDICATES.HAS_DOI, doiResponse.id);
-                toast.success('DOI has been registered successfully');
+                )
+                    .then(doiResponse => {
+                        props.setMetaData(prevMetaData => ({
+                            ...prevMetaData,
+                            doi: doiResponse.data.attributes.doi
+                        }));
+                        createLiteral(doiResponse.data.attributes.doi).then(doiLiteral => {
+                            createResourceStatement(comparisonId, PREDICATES.HAS_DOI, doiLiteral.id);
+                            setIsLoading(false);
+                            toast.success('DOI has been registered successfully');
+                        });
+                    })
+                    .catch(error => {
+                        toast.error(`Error publishing a DOI`);
+                        setIsLoading(false);
+                    });
             } else {
                 throw Error('Please enter a title and a description');
             }

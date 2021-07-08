@@ -15,6 +15,11 @@ const MarkdownContainer = styled.p`
         padding-left: 1.5em;
         border-left: 5px solid rgba(0, 0, 0, 0.1);
     }
+    table td,
+    table th {
+        border: 1px solid #c4c4c4;
+        padding: 3px 5px;
+    }
 `;
 
 /**

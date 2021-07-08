@@ -413,7 +413,7 @@ function Comparison(props) {
                                         >
                                             Go back
                                         </span>{' '}
-                                        or <Link to={ROUTES.HOME}>go to the homepage {contributionsList.length}</Link>.
+                                        or <Link to={ROUTES.HOME}>go to the homepage</Link>.
                                     </>
                                 )}
                             </Alert>
@@ -514,7 +514,7 @@ function Comparison(props) {
                                     <li key={`ref${index}`}>
                                         <small>
                                             <i>
-                                                <ValuePlugins type="literal">{reference}</ValuePlugins>
+                                                <ValuePlugins type="literal">{reference.label}</ValuePlugins>
                                             </i>
                                         </small>
                                     </li>

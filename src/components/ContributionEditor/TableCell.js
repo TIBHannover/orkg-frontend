@@ -4,10 +4,13 @@ import { Item, ItemInner } from 'components/Comparison/TableCell';
 import { isEqual } from 'lodash';
 import PropTypes from 'prop-types';
 import { memo, useState } from 'react';
+import env from '@beam-australia/react-env';
+import { useSelector } from 'react-redux';
 import FlipMove from 'react-flip-move';
 
 const TableCell = ({ values, contributionId, propertyId }) => {
     const [disableCreate, setDisableCreate] = useState(false);
+    const contribution = useSelector(state => state.contributionEditor.contributions[contributionId] || '');
 
     return (
         <Item className="position-relative">
@@ -28,12 +31,14 @@ const TableCell = ({ values, contributionId, propertyId }) => {
                         );
                     })}
                 </FlipMove>
-                <TableCellValueCreate
-                    isVisible={!disableCreate}
-                    contributionId={contributionId}
-                    propertyId={propertyId}
-                    isEmptyCell={values.length === 0}
-                />
+                {env('PWC_USER_ID') !== contribution?.created_by && (
+                    <TableCellValueCreate
+                        isVisible={!disableCreate}
+                        contributionId={contributionId}
+                        propertyId={propertyId}
+                        isEmptyCell={values.length === 0}
+                    />
+                )}
             </ItemInner>
         </Item>
     );

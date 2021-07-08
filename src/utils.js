@@ -280,7 +280,7 @@ export const getComparisonData = (resource, comparisonStatements) => {
         label: resource.label ? resource.label : 'No Title',
         authors: authors ? authors.sort((a, b) => a.s_created_at.localeCompare(b.s_created_at)) : [], // sort authors by their statement creation time (s_created_at)
         contributions: contributions,
-        reference: references,
+        references,
         doi: doi ? doi.label : '',
         description: description ? description.label : '',
         icon: icon ? icon.label : '',
