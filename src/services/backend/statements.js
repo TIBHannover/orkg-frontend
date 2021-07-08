@@ -208,7 +208,7 @@ export const getStatementsByPredicateAndLiteral = ({ predicateId, literal, subje
  */
 export const getTemplateById = templateId => {
     return getStatementsBundleBySubject({ id: templateId, maxLevel: 2 }).then(response => {
-        const label = filterStatementsBySubjectId(response.statements, templateId)?.[0].subject.label;
+        const label = filterStatementsBySubjectId(response.statements, templateId)?.[0]?.subject.label ?? '';
         const statements = filterStatementsBySubjectId(response.statements, templateId);
         const templatePredicate = filterObjectOfStatementsByPredicateAndClass(
             response.statements,

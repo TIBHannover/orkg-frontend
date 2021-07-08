@@ -200,6 +200,7 @@ Statements.propTypes = {
 };
 
 Statements.defaultProps = {
+    enableEdit: false,
     openExistingResourcesInDialog: false,
     initialSubjectId: null,
     initialSubjectLabel: null,
