@@ -1,11 +1,10 @@
 import { render, screen, fireEvent, waitFor, waitForElementToBeRemoved } from 'testUtils';
 import AddProperty from '../AddProperty';
+import { statementBrowserStrictTemplate } from '../__mocks__/StatementBrowserData';
 
 const setup = (
     initialState = {},
     props = {
-        inTemplate: false,
-        isDisabled: false,
         resourceId: 'R1',
         syncBackend: false
     }
@@ -16,8 +15,6 @@ const setup = (
 describe('Add property', () => {
     test('should render add property button', async () => {
         const config = {
-            inTemplate: false,
-            isDisabled: false,
             resourceId: 'R1',
             syncBackend: false
         };
@@ -27,8 +24,6 @@ describe('Add property', () => {
 
     test('should show input form with a cancel button when clicking on add', async () => {
         const config = {
-            inTemplate: false,
-            isDisabled: false,
             resourceId: 'R1',
             syncBackend: false
         };
@@ -39,6 +34,17 @@ describe('Add property', () => {
         expect(screen.getByLabelText(/Select or type to enter a property/i)).toBeInTheDocument();
         expect(screen.getByRole('textbox')).toBeInTheDocument();
         expect(screen.getByRole('button', { name: 'Cancel' })).toBeInTheDocument();
+    });
+
+    test('should show a disabled button if the template is strict', async () => {
+        const config = {
+            resourceId: 'R142012',
+            syncBackend: false
+        };
+        setup(statementBrowserStrictTemplate, config);
+        const addButton = screen.getByRole('button', { name: 'Add property' });
+        expect(addButton).toBeInTheDocument();
+        expect(addButton).toHaveAttribute('disabled');
     });
 
     test('should add existing property', async () => {
