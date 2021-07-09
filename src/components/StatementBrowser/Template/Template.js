@@ -1,5 +1,5 @@
 import { ListGroup } from 'reactstrap';
-import { canAddProperty as canAddPropertyAction, doneAnimation } from 'actions/statementBrowser';
+import { doneAnimation } from 'actions/statementBrowser';
 import AddProperty from 'components/StatementBrowser/AddProperty/AddProperty';
 import TemplateHeader from 'components/StatementBrowser/TemplateHeader/TemplateHeader';
 import StatementItem from 'components/StatementBrowser/StatementItem/StatementItem';
@@ -11,7 +11,6 @@ const Template = props => {
     const dispatch = useDispatch();
     const statementBrowser = useSelector(state => state.statementBrowser);
     const { properties, resources } = statementBrowser;
-    const canAddProperty = useSelector(state => canAddPropertyAction(state, props.value.resourceId));
 
     let propertyIds = [];
     let shared = 1;
@@ -63,13 +62,7 @@ const Template = props => {
                     <div className="row no-gutters">
                         <div className="col-4 propertyHolder" />
                     </div>
-                    <AddProperty
-                        isDisabled={!canAddProperty}
-                        syncBackend={props.syncBackend}
-                        inTemplate={true}
-                        contextStyle="Template"
-                        resourceId={props.value.resourceId}
-                    />
+                    <AddProperty syncBackend={props.syncBackend} inTemplate={true} resourceId={props.value.resourceId} />
                 </AddPropertyWrapper>
             </ListGroup>
         </AnimationContainer>

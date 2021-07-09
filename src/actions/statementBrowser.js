@@ -4,7 +4,7 @@ import { prefillStatements } from './addPaper';
 import { orderBy, uniq, isEqual } from 'lodash';
 import { PREDICATES, CLASSES, ENTITIES } from 'constants/graphSettings';
 import { getEntity } from 'services/backend/misc';
-import { flatten } from 'lodash';
+import { flatten, uniqBy } from 'lodash';
 import { getTemplateById, getTemplatesByClass, getStatementsBundleBySubject } from 'services/backend/statements';
 import { createResource as createResourceApi } from 'services/backend/resources';
 
@@ -66,7 +66,7 @@ export const initializeWithoutContribution = data => dispatch => {
 };
 
 /**
- * Initialise the statement browser with a resource then add the required properties
+ * Initialize the statement browser with a resource then add the required properties
  *
  * @param {Object} data - Initial resource
  * @param {string} data.label - The label of the resource.
@@ -90,6 +90,27 @@ export function initializeWithResource(data) {
             })
         ).then(() => dispatch(createRequiredPropertiesInResource(resourceId)));
     };
+}
+
+/**
+ * Get new properties that are not saved in the backend yet
+ *
+ * @param {Object} state - Current state of the Store
+ * @return {Promise} List of new properties
+ */
+export function getNewPropertiesList(state) {
+    const newPropertiesList = [];
+    for (const key in state.statementBrowser.properties.byId) {
+        const property = state.statementBrowser.properties.byId[key];
+        if (!property.existingPredicateId) {
+            newPropertiesList.push({
+                id: null,
+                label: property.label
+            });
+        }
+    }
+    //  ensure no properties with duplicate Labels exist
+    return uniqBy(newPropertiesList, 'label');
 }
 
 /**

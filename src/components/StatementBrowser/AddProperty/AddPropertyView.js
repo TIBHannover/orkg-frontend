@@ -1,7 +1,7 @@
 import { InputGroupAddon, Button, InputGroup } from 'reactstrap';
 import { AddPropertyStyle, AddPropertyContentStyle, AddPropertyFormStyle, StyledButton } from 'components/StatementBrowser/styled';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
 import { ENTITIES } from 'constants/graphSettings';
 import defaultProperties from './helpers/defaultProperties';
@@ -9,14 +9,14 @@ import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
 import Tippy from '@tippyjs/react';
 import PropTypes from 'prop-types';
 
-export default function AddPropertyTemplate(props) {
+const AddPropertyView = props => {
     return (
         <AddPropertyStyle className={props.inTemplate ? 'inTemplate' : 'mt-3'}>
             <AddPropertyContentStyle
-                onClick={() => (props.inTemplate && !props.showAddProperty ? props.handleShowAddProperty() : undefined)}
+                onClick={() => (!props.isLoading && props.inTemplate && !props.showAddProperty ? props.setShowAddProperty(true) : undefined)}
                 className={`${props.inTemplate ? 'inTemplate' : 'noTemplate'} ${props.showAddProperty ? 'col-12 large' : ''}`}
             >
-                {!props.showAddProperty ? (
+                {props.isLoading || !props.showAddProperty ? (
                     <ConditionalWrapper
                         condition={props.isDisabled}
                         wrapper={children => (
@@ -26,14 +26,22 @@ export default function AddPropertyTemplate(props) {
                         )}
                     >
                         <Button
-                            //className={this.props.inTemplate ? 'p-0' : ''}
                             color={props.inTemplate ? 'light' : 'secondary'}
-                            disabled={props.isDisabled}
-                            onClick={() => (!props.inTemplate ? props.handleShowAddProperty() : undefined)}
+                            disabled={props.isDisabled || props.isLoading}
+                            onClick={() => (!props.isLoading && !props.inTemplate ? props.setShowAddProperty(true) : undefined)}
                             style={props.inTemplate && props.isDisabled ? { opacity: '1', color: '#21252975' } : undefined}
                             size="sm"
                         >
-                            <Icon className="icon" size="sm" icon={faPlus} /> Add property
+                            {props.isLoading && (
+                                <>
+                                    <Icon icon={faSpinner} spin /> Loading
+                                </>
+                            )}
+                            {!props.isLoading && (
+                                <>
+                                    <Icon className="icon" size="sm" icon={faPlus} /> Add property
+                                </>
+                            )}
                         </Button>
                     </ConditionalWrapper>
                 ) : (
@@ -51,20 +59,17 @@ export default function AddPropertyTemplate(props) {
                                 onKeyDown={e => {
                                     if (e.keyCode === 27) {
                                         // escape
-                                        props.handleHideAddProperty();
+                                        props.setShowAddProperty(false);
                                     }
                                 }}
                                 additionalData={props.newProperties}
                                 disableBorderRadiusRight
                                 allowCreate
                                 defaultOptions={defaultProperties}
-                                onBlur={() => {
-                                    //props.handleHideAddProperty();
-                                }}
                                 inputGroup={false}
                             />
                             <InputGroupAddon addonType="append">
-                                <StyledButton outline onClick={() => props.handleHideAddProperty()}>
+                                <StyledButton outline onClick={() => props.setShowAddProperty(false)}>
                                     Cancel
                                 </StyledButton>
                             </InputGroupAddon>
@@ -74,15 +79,24 @@ export default function AddPropertyTemplate(props) {
             </AddPropertyContentStyle>
         </AddPropertyStyle>
     );
-}
+};
 
-AddPropertyTemplate.propTypes = {
-    inTemplate: PropTypes.bool.isRequired,
+AddPropertyView.propTypes = {
+    inTemplate: PropTypes.bool,
     showAddProperty: PropTypes.bool.isRequired,
+    setShowAddProperty: PropTypes.func.isRequired,
     handlePropertySelect: PropTypes.func.isRequired,
     toggleConfirmNewProperty: PropTypes.func.isRequired,
-    handleHideAddProperty: PropTypes.func.isRequired,
-    newProperties: PropTypes.array.isRequired,
-    handleShowAddProperty: PropTypes.func.isRequired,
-    isDisabled: PropTypes.bool.isRequired
+    newProperties: PropTypes.array,
+    isDisabled: PropTypes.bool,
+    isLoading: PropTypes.bool
 };
+
+AddPropertyView.defaultProps = {
+    inTemplate: false,
+    newProperties: [],
+    isDisabled: false,
+    isLoading: false
+};
+
+export default AddPropertyView;

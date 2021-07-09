@@ -15,13 +15,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-    canAddProperty as canAddPropertyFunction,
-    getSuggestedProperties,
-    initializeWithoutContribution,
-    initializeWithResource,
-    updateSettings
-} from 'actions/statementBrowser';
+import { getSuggestedProperties, initializeWithoutContribution, initializeWithResource, updateSettings } from 'actions/statementBrowser';
 
 const Statements = props => {
     const selectedResource = useSelector(state => state.statementBrowser.selectedResource);
@@ -29,7 +23,6 @@ const Statements = props => {
     const properties = useSelector(state => state.statementBrowser.properties);
     const level = useSelector(state => state.statementBrowser.level);
 
-    const canAddProperty = useSelector(state => canAddPropertyFunction(state, selectedResource));
     const suggestedProperties = useSelector(state => getSuggestedProperties(state, selectedResource));
     const resource = useSelector(state => selectedResource && state.statementBrowser.resources.byId[selectedResource]);
     const dispatch = useDispatch();
@@ -145,7 +138,7 @@ const Statements = props => {
                         </StyledStatementItem>
                     )}
 
-                    {shared <= 1 && props.enableEdit && <AddProperty isDisabled={!canAddProperty} syncBackend={props.syncBackend} />}
+                    {shared <= 1 && props.enableEdit && <AddProperty resourceId={selectedResource} syncBackend={props.syncBackend} />}
                     {shared <= 1 && props.enableEdit && suggestedProperties.length > 0 && <PropertySuggestions />}
                 </ListGroup>
             </div>
