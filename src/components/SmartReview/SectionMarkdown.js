@@ -158,16 +158,25 @@ const SectionMarkdown = props => {
         }
     };
 
+    const handleKeyPress = e => {
+        if (e.key === 'Enter') {
+            console.log('set entering things');
+            setEditMode(true);
+        }
+    };
+
     return (
         <>
             {!editMode && (
                 <Tippy hideOnClick={false} content="Double click to edit">
                     {markdownValue ? (
-                        <div role="button" tabIndex="0" onDoubleClick={() => setEditMode(true)}>
+                        <div role="button" tabIndex="0" onKeyPress={handleKeyPress} onDoubleClick={() => setEditMode(true)}>
                             <MarkdownRenderer text={markdownValue} id={markdown.id} />
                         </div>
                     ) : (
-                        <MarkdownPlaceholder onDoubleClick={() => setEditMode(true)}>Double click to edit this text</MarkdownPlaceholder>
+                        <MarkdownPlaceholder role="button" tabIndex="0" onKeyPress={handleKeyPress} onDoubleClick={() => setEditMode(true)}>
+                            Double click to edit this text
+                        </MarkdownPlaceholder>
                     )}
                 </Tippy>
             )}

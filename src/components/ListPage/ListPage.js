@@ -71,6 +71,12 @@ const ListPage = ({ label, resourceClass, renderListItem, buttons, fetchItems, b
 
     const loadNextPage = () => setPage(prevPage => prevPage + 1);
 
+    const handleKeyDown = e => {
+        if (e.key === 'Enter') {
+            loadNextPage();
+        }
+    };
+
     return (
         <>
             <Container className="d-flex align-items-center">
@@ -93,7 +99,7 @@ const ListPage = ({ label, resourceClass, renderListItem, buttons, fetchItems, b
                                 style={{ cursor: 'pointer' }}
                                 className="list-group-item list-group-item-action text-center mt-2"
                                 onClick={loadNextPage}
-                                onKeyDown={e => (e.key === 'Enter' ? loadNextPage : undefined)}
+                                onKeyDown={handleKeyDown}
                                 role="button"
                                 tabIndex={0}
                             >

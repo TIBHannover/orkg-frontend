@@ -130,8 +130,6 @@ function useComparison({ id }) {
                     if (!comparisonResource.classes.includes(CLASSES.COMPARISON)) {
                         throw new Error(`The requested resource is not of class "${CLASSES.COMPARISON}".`);
                     }
-                    // Update browser title
-                    document.title = `${comparisonResource.label} - Comparison - ORKG`;
                     return [comparisonResource, configurationData];
                 })
                 .then(([comparisonResource, configurationData]) => {

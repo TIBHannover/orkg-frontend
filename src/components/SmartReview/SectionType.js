@@ -108,7 +108,7 @@ const SectionType = props => {
             )}
 
             {!isDisabled && !editMode && (
-                <SectionTypeStyled className="focus-primary" onClick={() => setEditMode(true)}>
+                <SectionTypeStyled className="focus-primary" onClick={() => setEditMode(true)} aria-label={`Section type: ${typeValue.label}`}>
                     {typeValue.label}
                 </SectionTypeStyled>
             )}
@@ -125,6 +125,7 @@ const SectionType = props => {
                         blurInputOnSelect
                         autoFocus
                         openMenuOnFocus
+                        aria-label="Select the section type"
                     />
                 </SectionTypeContainerStyled>
             )}

@@ -62,8 +62,9 @@ const UserAvatar = ({ userId, size, appendToTooltip, showDisplayName }) => {
                     placement="bottom"
                     content={`${contributor?.display_name}${appendToTooltip}`}
                     disabled={showDisplayName || !userId || !contributor || isLoadingContributor}
+                    hideOnEsc
                 >
-                    <span>
+                    <span tabIndex="0">
                         <Link to={reverse(ROUTES.USER_PROFILE, { userId: userId })}>
                             {!isLoadingContributor && (
                                 <StyledGravatar className="rounded-circle" md5={contributor?.gravatar_id ?? 'example@example.com'} size={size} />
