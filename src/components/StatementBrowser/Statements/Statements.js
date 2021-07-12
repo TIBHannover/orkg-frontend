@@ -1,16 +1,14 @@
 import { useState, useEffect } from 'react';
 import { ListGroup, Button } from 'reactstrap';
-import StatementItem from 'components/StatementBrowser/StatementItem/StatementItem';
 import AddProperty from 'components/StatementBrowser/AddProperty/AddProperty';
 import Breadcrumbs from 'components/StatementBrowser/Breadcrumbs/Breadcrumbs';
-import Template from 'components/StatementBrowser/Template/Template';
 import PropertySuggestions from 'components/StatementBrowser/PropertySuggestions/PropertySuggestions';
 import SBEditorHelpModal from 'components/StatementBrowser/SBEditorHelpModal/SBEditorHelpModal';
+import StatementItemWrapper from 'components/StatementBrowser/StatementItem/StatementItemWrapper';
 import NoData from 'components/StatementBrowser/NoData/NoData';
 import { StyledLevelBox, StyledStatementItem } from 'components/StatementBrowser/styled';
 import { RESOURCE_TYPE_ID } from 'constants/misc';
 import { isArray } from 'lodash';
-import { useCookies } from 'react-cookie';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
@@ -19,14 +17,11 @@ import { getSuggestedProperties, initializeWithoutContribution, initializeWithRe
 
 const Statements = props => {
     const selectedResource = useSelector(state => state.statementBrowser.selectedResource);
-    const values = useSelector(state => state.statementBrowser.values);
-    const properties = useSelector(state => state.statementBrowser.properties);
     const level = useSelector(state => state.statementBrowser.level);
 
     const suggestedProperties = useSelector(state => getSuggestedProperties(state, selectedResource));
     const resource = useSelector(state => selectedResource && state.statementBrowser.resources.byId[selectedResource]);
     const dispatch = useDispatch();
-    const [cookies] = useCookies(['showedValueHelp']);
     const [helpModalOpen, setHelpModalOpen] = useState(false);
 
     useEffect(() => {
@@ -90,44 +85,24 @@ const Statements = props => {
                 {/*props.selectedResource && props.resources.byId[props.selectedResource].classes.length > 0 && (
                     <div className="text-muted mb-2">Classes: {props.resources.byId[props.selectedResource].classes.join(',')}</div>
                 )*/}
-                <ListGroup className="listGroupEnlarge">
+                <ListGroup tag="div" className="listGroupEnlarge">
                     {selectedResource && !resource.isFetching ? (
                         propertyIds.length > 0 ? (
                             propertyIds.map((propertyId, index) => {
-                                const property = properties.byId[propertyId];
-                                if (!property.isTemplate) {
-                                    return (
-                                        <StatementItem
-                                            key={`statement-p${propertyId}r${selectedResource}`}
-                                            id={propertyId}
-                                            property={property}
-                                            predicateLabel={property.label}
-                                            enableEdit={shared <= 1 ? props.enableEdit : false}
-                                            syncBackend={props.syncBackend}
-                                            isAnimated={property.isAnimated}
-                                            resourceId={selectedResource}
-                                            isLastItem={propertyIds.length === index + 1}
-                                            showValueHelp={cookies && !cookies.showedValueHelp && index === 0 ? true : false}
-                                        />
-                                    );
-                                } else {
-                                    return property.valueIds.map(valueId => {
-                                        const value = values.byId[valueId];
-                                        return (
-                                            <Template
-                                                key={`template-v${valueId}`}
-                                                id={valueId}
-                                                value={value}
-                                                propertyId={propertyId}
-                                                selectedResource={selectedResource}
-                                                enableEdit={props.enableEdit}
-                                                syncBackend={props.syncBackend}
-                                                openExistingResourcesInDialog={props.openExistingResourcesInDialog}
-                                                isAnimated={property.isAnimated}
-                                            />
-                                        );
-                                    });
-                                }
+                                return (
+                                    <StatementItemWrapper
+                                        key={`statement-p${propertyId}r${selectedResource}`}
+                                        enableEdit={props.enableEdit}
+                                        openExistingResourcesInDialog={props.openExistingResourcesInDialog}
+                                        isLastItem={propertyIds.length === index + 1}
+                                        isFirstItem={index === 0}
+                                        resourceId={selectedResource}
+                                        propertyId={propertyId}
+                                        shared={shared}
+                                        syncBackend={props.syncBackend}
+                                        renderTemplateBox={props.renderTemplateBox}
+                                    />
+                                );
                             })
                         ) : (
                             <NoData enableEdit={props.enableEdit} templatesFound={props.templatesFound} />
@@ -189,7 +164,8 @@ Statements.propTypes = {
     propertiesAsLinks: PropTypes.bool,
     resourcesAsLinks: PropTypes.bool,
     initOnLocationChange: PropTypes.bool.isRequired,
-    keyToKeepStateOnLocationChange: PropTypes.string
+    keyToKeepStateOnLocationChange: PropTypes.string,
+    renderTemplateBox: PropTypes.bool
 };
 
 Statements.defaultProps = {
@@ -204,7 +180,8 @@ Statements.defaultProps = {
     resourcesAsLinks: false,
     initOnLocationChange: true,
     keyToKeepStateOnLocationChange: null,
-    rootNodeType: RESOURCE_TYPE_ID
+    rootNodeType: RESOURCE_TYPE_ID,
+    renderTemplateBox: false
 };
 
 export default Statements;

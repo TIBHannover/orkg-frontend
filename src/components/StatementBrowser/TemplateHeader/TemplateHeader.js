@@ -67,17 +67,23 @@ export default function TemplateHeader(props) {
                     {!props.value.isEditing ? (
                         <>
                             {props.value.label}{' '}
-                            <div className={headerClasses}>
-                                <StatementOptionButton title="Edit label" icon={faPen} action={() => dispatch(toggleEditValue({ id: props.id }))} />
-                                <StatementOptionButton
-                                    requireConfirmation={true}
-                                    confirmationMessage="Are you sure to delete?"
-                                    title="Delete the template with its statements"
-                                    icon={faTrash}
-                                    action={handleDeleteTemplate}
-                                    onVisibilityChange={disable => setDisableHover(disable)}
-                                />
-                            </div>
+                            {props.enableEdit && (
+                                <div className={headerClasses}>
+                                    <StatementOptionButton
+                                        title="Edit label"
+                                        icon={faPen}
+                                        action={() => dispatch(toggleEditValue({ id: props.id }))}
+                                    />
+                                    <StatementOptionButton
+                                        requireConfirmation={true}
+                                        confirmationMessage="Are you sure to delete?"
+                                        title="Delete the template with its statements"
+                                        icon={faTrash}
+                                        action={handleDeleteTemplate}
+                                        onVisibilityChange={disable => setDisableHover(disable)}
+                                    />
+                                </div>
+                            )}
                         </>
                     ) : (
                         <>
@@ -115,5 +121,6 @@ TemplateHeader.propTypes = {
     resourceId: PropTypes.string.isRequired,
     propertyId: PropTypes.string.isRequired,
     statementId: PropTypes.string,
-    syncBackend: PropTypes.bool.isRequired
+    syncBackend: PropTypes.bool.isRequired,
+    enableEdit: PropTypes.bool.isRequired
 };

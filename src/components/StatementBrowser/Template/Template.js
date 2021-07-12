@@ -1,4 +1,3 @@
-import { ListGroup } from 'reactstrap';
 import { doneAnimation } from 'actions/statementBrowser';
 import AddProperty from 'components/StatementBrowser/AddProperty/AddProperty';
 import TemplateHeader from 'components/StatementBrowser/TemplateHeader/TemplateHeader';
@@ -16,13 +15,12 @@ const Template = props => {
     let shared = 1;
     if (Object.keys(resources.byId).length !== 0 && props.value.resourceId) {
         propertyIds = resources.byId[props.value.resourceId].propertyIds;
-        shared = resources.byId[props.value.resourceId].shared;
+        shared = resources.byId[props.value.resourceId].shared ?? 1;
     }
 
     return (
         <AnimationContainer
-            classNames="fadeIn"
-            className="mt-3 pb-3"
+            classNames="fadeIn mt-3 pb-3"
             in={true}
             timeout={!props.isAnimated ? { enter: 700 } : { enter: 0 }}
             addEndListener={() => {
@@ -32,13 +30,14 @@ const Template = props => {
             }}
             appear
         >
-            <ListGroup>
+            <div>
                 <TemplateHeader
                     syncBackend={props.syncBackend}
                     value={props.value}
                     id={props.id}
                     propertyId={props.propertyId}
                     resourceId={props.selectedResource}
+                    enableEdit={props.enableEdit}
                 />
                 {propertyIds.map((propertyId, index) => {
                     const property = properties.byId[propertyId];
@@ -58,13 +57,15 @@ const Template = props => {
                         />
                     );
                 })}
-                <AddPropertyWrapper>
-                    <div className="row no-gutters">
-                        <div className="col-4 propertyHolder" />
-                    </div>
-                    <AddProperty syncBackend={props.syncBackend} inTemplate={true} resourceId={props.value.resourceId} />
-                </AddPropertyWrapper>
-            </ListGroup>
+                {props.enableEdit && (
+                    <AddPropertyWrapper className="mb-3">
+                        <div className="row no-gutters">
+                            <div className="col-4 propertyHolder" />
+                        </div>
+                        <AddProperty syncBackend={props.syncBackend} inTemplate={true} resourceId={props.value.resourceId} />
+                    </AddPropertyWrapper>
+                )}
+            </div>
         </AnimationContainer>
     );
 };

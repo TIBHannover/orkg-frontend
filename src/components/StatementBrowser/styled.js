@@ -245,13 +245,24 @@ export const StatementsGroupStyle = styled(ListGroupItem)`
     padding: 0 !important;
     border-top: 1px solid rgba(0, 0, 0, 0.125) !important;
 
-    :last-of-type {
+    &:last-of-type {
         border-bottom-left-radius: 4px;
         border-bottom-right-radius: 4px;
     }
+
+    &.inTemplate:last-of-type {
+        border-bottom-left-radius: ${props => (!props.enableEdit ? '4px' : '0')};
+        border-bottom-right-radius: ${props => (!props.enableEdit ? '4px' : '0')};
+    }
+
     &.inTemplate:first-of-type {
         border-top: 0;
     }
+
+    &.inTemplate {
+        border-top-width: 0 !important;
+    }
+
     &.noTemplate {
         border-radius: 4px !important;
         margin-top: 0.75rem;

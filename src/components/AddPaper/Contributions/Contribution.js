@@ -70,6 +70,7 @@ class Contribution extends Component {
                                 initialSubjectId={this.props.resourceId}
                                 initialSubjectLabel={this.props.resourceLabel}
                                 templatesFound={false}
+                                renderTemplateBox={true}
                             />
                         </FormGroup>
                     </>

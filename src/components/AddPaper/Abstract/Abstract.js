@@ -8,7 +8,7 @@ import {
     nextStep,
     previousStep,
     createContribution,
-    prefillStatements,
+    fillStatements,
     createAnnotation,
     clearAnnotations,
     toggleAbstractDialog,
@@ -274,7 +274,7 @@ class Abstract extends Component {
             });
         }
         // Add the statements to the selected contribution
-        this.props.prefillStatements({ statements, resourceId: this.props.contributions.byId[this.props.selectedContribution].resourceId });
+        this.props.fillStatements({ statements, resourceId: this.props.contributions.byId[this.props.selectedContribution].resourceId });
         this.props.toggleAbstractDialog();
     };
 
@@ -414,7 +414,7 @@ Abstract.propTypes = {
     selectedContribution: PropTypes.string.isRequired,
     contributions: PropTypes.object.isRequired,
     createContribution: PropTypes.func.isRequired,
-    prefillStatements: PropTypes.func.isRequired,
+    fillStatements: PropTypes.func.isRequired,
     createAnnotation: PropTypes.func.isRequired,
     clearAnnotations: PropTypes.func.isRequired,
     resources: PropTypes.object.isRequired,
@@ -445,7 +445,7 @@ const mapDispatchToProps = dispatch => ({
     nextStep: () => dispatch(nextStep()),
     previousStep: () => dispatch(previousStep()),
     createContribution: data => dispatch(createContribution(data)),
-    prefillStatements: data => dispatch(prefillStatements(data)),
+    fillStatements: data => dispatch(fillStatements(data)),
     createAnnotation: data => dispatch(createAnnotation(data)),
     clearAnnotations: () => dispatch(clearAnnotations()),
     toggleAbstractDialog: () => dispatch(toggleAbstractDialog()),

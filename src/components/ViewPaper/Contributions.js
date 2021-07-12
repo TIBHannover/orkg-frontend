@@ -345,6 +345,7 @@ class Contributions extends Component {
                                                     templatesFound={false}
                                                     initOnLocationChange={false}
                                                     keyToKeepStateOnLocationChange={this.props.paperId}
+                                                    renderTemplateBox={true}
                                                 />
                                             )}
                                         </FormGroup>

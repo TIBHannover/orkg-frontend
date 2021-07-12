@@ -54,7 +54,7 @@ class Contributions extends Component {
         if (this.props.contributions.allIds.length === 0) {
             this.props.createContribution({
                 selectAfterCreation: true,
-                prefillStatements: true,
+                fillStatements: true,
                 researchField: this.props.selectedResearchField
             });
             this.props.updateSettings({

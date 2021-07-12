@@ -15,7 +15,7 @@ import { saveFullPaper } from 'services/backend/papers';
 import { createLiteral } from 'services/backend/literals';
 import { createPredicate } from 'services/backend/predicates';
 import { toast } from 'react-toastify';
-import { PREDICATES, ENTITIES } from 'constants/graphSettings';
+import { PREDICATES, ENTITIES, CLASSES } from 'constants/graphSettings';
 
 export const updateGeneralData = data => dispatch => {
     dispatch({
@@ -124,7 +124,7 @@ export const clearAnnotations = () => dispatch => {
     });
 };
 
-export const createContribution = ({ selectAfterCreation = false, prefillStatements: performPrefill = false, statements = null }) => (
+export const createContribution = ({ selectAfterCreation = false, fillStatements: performPrefill = false, statements = null }) => (
     dispatch,
     getState
 ) => {
@@ -144,7 +144,8 @@ export const createContribution = ({ selectAfterCreation = false, prefillStateme
     dispatch(
         createResource({
             resourceId: newResourceId,
-            label: newContributionLabel
+            label: newContributionLabel,
+            classes: [CLASSES.CONTRIBUTION]
         })
     );
 
@@ -168,7 +169,7 @@ export const createContribution = ({ selectAfterCreation = false, prefillStateme
 
     if (performPrefill && statements) {
         dispatch(
-            prefillStatements({
+            fillStatements({
                 statements,
                 resourceId: newResourceId
             })
@@ -177,15 +178,15 @@ export const createContribution = ({ selectAfterCreation = false, prefillStateme
 };
 
 /**
- * prefill the statements of a resource
+ * Fill the statements of a resource
  * (e.g : new store to show resource in dialog)
  * @param {Object} statements - Statement
  * @param {Array} statements.properties - The properties
  * @param {Array} statements.values - The values
  * @param {string} resourceId - The target resource ID
- * @param {boolean} syncBackend - Sync the prefill with the backend
+ * @param {boolean} syncBackend - Sync the fill with the backend
  */
-export const prefillStatements = ({ statements, resourceId, syncBackend = false }) => async (dispatch, getState) => {
+export const fillStatements = ({ statements, resourceId, syncBackend = false }) => async (dispatch, getState) => {
     // properties
     for (const property of statements.properties) {
         dispatch(
@@ -194,11 +195,6 @@ export const prefillStatements = ({ statements, resourceId, syncBackend = false 
                 existingPredicateId: property.existingPredicateId,
                 resourceId: resourceId,
                 label: property.label,
-                range: property.range ? property.range : null,
-                isTemplate: property.isTemplate ? property.isTemplate : false,
-                validationRules: property.validationRules ? property.validationRules : {},
-                minOccurs: property.minOccurs ? property.minOccurs : 0,
-                maxOccurs: property.maxOccurs ? property.maxOccurs : null,
                 isAnimated: property.isAnimated !== undefined ? property.isAnimated : false,
                 canDuplicate: property.canDuplicate ? true : false
             })
@@ -323,7 +319,7 @@ export const updateResearchProblems = data => dispatch => {
     });
 };
 
-// The function to customize merging objects (to handle using the same existing predicate twice in the same ressource)
+// The function to customize merging objects (to handle using the same existing predicate twice in the same resource)
 function customizer(objValue, srcValue) {
     if (isArray(objValue)) {
         return objValue.concat(srcValue);
@@ -383,7 +379,7 @@ export const saveAddPaper = data => {
         newProperties = newProperties.map(propertyId => ({ id: propertyId, label: data.properties.byId[propertyId].label }));
         newProperties = uniqBy(newProperties, 'label');
         newProperties = newProperties.map(property => ({ [property.label]: `_${property.id}` }));
-        // list of new reaserch problems
+        // list of new research problems
         const newResearchProblem = [];
         const paperObj = {
             // Set new predicates label and temp ID
@@ -405,7 +401,7 @@ export const saveAddPaper = data => {
                 // Set the contributions data
                 contributions: data.contributions.allIds.map(c => {
                     const contribution = data.contributions.byId[c];
-                    const researhProblem = {
+                    const researchProblem = {
                         [researchProblemPredicate]: contribution.researchProblems.map(rp => {
                             if (rp.hasOwnProperty('existingResourceId') && rp.existingResourceId) {
                                 return { '@id': rp.existingResourceId };
@@ -421,7 +417,11 @@ export const saveAddPaper = data => {
                     };
                     return {
                         name: contribution.label,
-                        values: Object.assign({}, researhProblem, getResourceObject(data, contribution.resourceId, newProperties))
+                        classes:
+                            data.resources.byId[contribution.resourceId].classes && data.resources.byId[contribution.resourceId].classes.length > 0
+                                ? data.resources.byId[contribution.resourceId].classes
+                                : null,
+                        values: Object.assign({}, researchProblem, getResourceObject(data, contribution.resourceId, newProperties))
                     };
                 })
             }

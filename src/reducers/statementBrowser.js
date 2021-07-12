@@ -130,12 +130,7 @@ export default (state = initialState, action) => {
                         isExistingProperty: payload.isExistingProperty ? payload.isExistingProperty : false,
                         isEditing: false,
                         isSaving: false,
-                        isTemplate: payload.isTemplate,
-                        isAnimated: payload.isAnimated !== undefined ? payload.isAnimated : false,
-                        range: payload.range ? payload.range : null,
-                        validationRules: payload.validationRules ? payload.validationRules : {},
-                        minOccurs: payload.minOccurs ? payload.minOccurs : 0,
-                        maxOccurs: payload.maxOccurs ? payload.maxOccurs : null
+                        isAnimated: payload.isAnimated !== undefined ? payload.isAnimated : false
                     }
                 }));
                 newState = dotProp.set(newState, 'properties.allIds', ids => [...ids, payload.propertyId]);

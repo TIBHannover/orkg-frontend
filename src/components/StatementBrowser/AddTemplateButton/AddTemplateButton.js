@@ -1,11 +1,12 @@
-import { createRef, Component } from 'react';
 import { Button } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPlus, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import TemplateDetailsTooltip from './TemplateDetailsTooltip';
 import { fillResourceWithTemplate } from 'actions/statementBrowser';
-import { connect } from 'react-redux';
+import { getTemplateById } from 'services/backend/statements';
+import { useDispatch } from 'react-redux';
 import Tippy from '@tippyjs/react';
+import { useState, useRef, useCallback } from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
@@ -30,59 +31,68 @@ const Label = styled.div`
     padding-left: 28px;
 `;
 
-class AddTemplateButton extends Component {
-    constructor(props) {
-        super(props);
+const AddTemplateButton = props => {
+    const [isAdding, setIsAdding] = useState(false);
+    const ref = useRef(null);
+    const dispatch = useDispatch();
+    const [template, setTemplate] = useState({});
+    const [isTemplateLoading, setIsTemplateLoading] = useState(false);
+    const [isLoaded, setIsLoaded] = useState(false);
 
-        this.state = {
-            isAdding: false
-        };
-        this.ref = createRef();
-    }
-
-    addTemplate = () => {
-        this.setState({ isAdding: true });
-        this.props
-            .fillResourceWithTemplate({
-                templateID: this.props.id,
-                selectedResource: this.props.selectedResource,
-                syncBackend: this.props.syncBackend
+    const addTemplate = useCallback(() => {
+        setIsAdding(true);
+        dispatch(
+            fillResourceWithTemplate({
+                templateID: props.id,
+                resourceId: props.resourceId,
+                syncBackend: props.syncBackend
             })
-            .then(Data => {
-                this.ref.current.removeAttribute('disabled');
-                this.setState({ isAdding: false });
-            });
-    };
+        ).then(() => {
+            ref.current.removeAttribute('disabled');
+            setIsAdding(false);
+        });
+    }, [dispatch, props.id, props.resourceId, props.syncBackend]);
 
-    render() {
-        return (
-            <Tippy content={<TemplateDetailsTooltip id={this.props.id} source={this.props.source} />}>
-                <span>
-                    <Button
-                        innerRef={this.ref}
-                        onClick={() => {
-                            this.ref.current.setAttribute('disabled', 'disabled');
-                            this.addTemplate();
-                        }}
-                        size="sm"
-                        color="light"
-                        className="mr-2 mb-2 position-relative px-3 rounded-pill border-0"
-                    >
-                        <IconWrapper>
-                            {!this.state.isAdding && <Icon size="sm" icon={faPlus} />}
-                            {this.state.isAdding && <Icon icon={faSpinner} spin />}
-                        </IconWrapper>
-                        <Label>{this.props.label}</Label>
-                    </Button>
-                </span>
-            </Tippy>
-        );
-    }
-}
+    const onTrigger = useCallback(() => {
+        if (!isLoaded) {
+            setIsTemplateLoading(true);
+            getTemplateById(props.id).then(template => {
+                setTemplate(template);
+                setIsLoaded(true);
+                setIsTemplateLoading(false);
+            });
+        }
+    }, [isLoaded, props.id]);
+
+    return (
+        <Tippy
+            onTrigger={onTrigger}
+            content={<TemplateDetailsTooltip id={props.id} source={props.source} isTemplateLoading={isTemplateLoading} template={template} />}
+        >
+            <span>
+                <Button
+                    innerRef={ref}
+                    onClick={() => {
+                        ref.current.setAttribute('disabled', 'disabled');
+                        addTemplate();
+                    }}
+                    size="sm"
+                    color="light"
+                    className="mr-2 mb-2 position-relative px-3 rounded-pill border-0"
+                >
+                    <IconWrapper>
+                        {!isAdding && <Icon size="sm" icon={faPlus} />}
+                        {isAdding && <Icon icon={faSpinner} spin />}
+                    </IconWrapper>
+                    <Label>{props.label}</Label>
+                </Button>
+            </span>
+        </Tippy>
+    );
+};
 
 AddTemplateButton.propTypes = {
-    fillResourceWithTemplate: PropTypes.func.isRequired,
-    selectedResource: PropTypes.string, // The resource to prefill with the template
+    resourceId: PropTypes.string, // The resource to prefill with the template
     label: PropTypes.string.isRequired,
     id: PropTypes.string.isRequired,
     source: PropTypes.object.isRequired,
@@ -94,11 +104,4 @@ AddTemplateButton.defaultProps = {
     syncBackend: false
 };
 
-const mapDispatchToProps = dispatch => ({
-    fillResourceWithTemplate: data => dispatch(fillResourceWithTemplate(data))
-});
-
-export default connect(
-    null,
-    mapDispatchToProps
-)(AddTemplateButton);
+export default AddTemplateButton;

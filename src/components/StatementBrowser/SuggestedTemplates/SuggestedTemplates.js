@@ -126,7 +126,7 @@ export default function SuggestedTemplates(props) {
                                 id={template.id}
                                 label={template.label}
                                 source={template.source}
-                                selectedResource={props.selectedResource}
+                                resourceId={props.selectedResource}
                                 syncBackend={props.syncBackend}
                             />
                         ))}

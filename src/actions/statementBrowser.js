@@ -1,6 +1,6 @@
 import * as type from './types.js';
 import { guid, filterStatementsBySubjectId, filterObjectOfStatementsByPredicateAndClass } from 'utils';
-import { prefillStatements } from './addPaper';
+import { fillStatements } from './addPaper';
 import { orderBy, uniq, isEqual } from 'lodash';
 import { PREDICATES, CLASSES, ENTITIES } from 'constants/graphSettings';
 import { getEntity } from 'services/backend/misc';
@@ -16,17 +16,17 @@ export const updateSettings = data => dispatch => {
 };
 
 /**
- * Initialise the statement browser without contibution
+ * Initialize the statement browser without contribution
  * (e.g : new store to show resource in dialog)
  * @param {Object} data - Initial resource
  * @param {string} data.label - The label of the resource.
  * @param {string} data.resourceId - The resource id.
  */
 export const initializeWithoutContribution = data => dispatch => {
-    // To initialise:
+    // To initialize:
     // 1. Create a resource (the one that is requested), so properties can be connected to this
     // 2. Select this resource (only a selected resource is shown)
-    // 3. Fetcht the statements related to this resource
+    // 3. Fetch the statements related to this resource
 
     const label = data.label;
     const resourceId = data.resourceId;
@@ -545,6 +545,23 @@ export const updateResourceClasses = data => dispatch => {
 };
 
 /**
+ * Add class to resource
+ *
+ * @param {String} resourceId - resource ID
+ * @param {String} classId - Classes ID
+ */
+export const addResourceClass = ({ resourceId, classId }) => (dispatch, getState) => {
+    const resource = getState().statementBrowser.resources.byId[resourceId];
+    if (resource) {
+        dispatch({
+            type: type.UPDATE_RESOURCE_CLASSES,
+            payload: { resourceId, classes: uniq([...resource.classes, classId]) }
+        });
+    }
+    return Promise.resolve();
+};
+
+/**
  * Create Value then fetch templates
  *
  * @param {Object} data - Value Object
@@ -684,85 +701,100 @@ export function fetchTemplateIfNeeded(templateID) {
 }
 
 /**
- * fill a resource with a template
+ * Check if the property has a template context
+ *
+ * @param {Object} state - Current state of the Store
+ * @param {String} propertyId - Property ID
+ */
+export function isTemplateContextProperty(state, propertyId) {
+    // template.predicate && template?.predicate.id !== PREDICATES.HAS_CONTRIBUTION;
+    const property = state.statementBrowser.properties.byId[propertyId];
+
+    for (const valueId of property.valueIds) {
+        const value = state.statementBrowser.values.byId[valueId];
+        // Get all template ids
+        const templateIds = getTemplateIDsByResourceID(state, value.resourceId);
+        // Check if one of the template is strict
+        for (const templateId of templateIds) {
+            const template = state.statementBrowser.templates[templateId];
+
+            if (template && template?.predicate?.id === property.existingPredicateId) {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
+/**
+ * Fill a resource with a template
  *
  * @param {String} templateID - Template ID
  * @param {String} selectedResource - The resource to fill with the template
  * @param {Boolean} syncBackend - syncBackend
  * @return {Promise} Promise object
  */
-export function fillResourceWithTemplate({ templateID, selectedResource, syncBackend = false }) {
+export function fillResourceWithTemplate({ templateID, resourceId, syncBackend = false }) {
     return async (dispatch, getState) => {
         return dispatch(fetchTemplateIfNeeded(templateID)).then(async templateDate => {
             const template = templateDate;
             // Check if it's a template
-            if (template) {
+            if (template && template?.components?.length > 0) {
                 // TODO : handle the case where the template isFetching
-                if (
-                    (!template.predicate && template.components && template.components.length > 0) ||
-                    template?.predicate.id === PREDICATES.HAS_CONTRIBUTION
-                ) {
+                if (!template.predicate || template?.predicate.id === PREDICATES.HAS_CONTRIBUTION) {
+                    // update the class of the current resource
+                    dispatch(addResourceClass({ resourceId, classId: template.class.id }));
                     // Add properties
-                    if (template.components && template.components.length > 0) {
-                        const statements = { properties: [], values: [] };
-
-                        for (const component of template.components) {
-                            statements['properties'].push({
-                                existingPredicateId: component.property.id,
-                                label: component.property.label,
-                                range: component.value ? component.value : null,
-                                validationRules: component.validationRules,
-                                minOccurs: component.minOccurs,
-                                maxOccurs: component.maxOccurs
-                            });
-                        }
-                        dispatch(prefillStatements({ statements, resourceId: selectedResource, syncBackend: syncBackend }));
+                    const statements = { properties: [], values: [] };
+                    for (const component of template?.components) {
+                        statements['properties'].push({
+                            existingPredicateId: component.property.id,
+                            label: component.property.label
+                        });
                     }
+                    dispatch(fillStatements({ statements, resourceId, syncBackend }));
                 } else if (template.predicate) {
                     // Add template to the statement browser
                     const statements = { properties: [], values: [] };
                     const pID = guid();
                     const vID = guid();
-                    const rID = guid();
-                    let newObject = null;
+                    let instanceResourceId = guid();
                     statements['properties'].push({
                         propertyId: pID,
                         existingPredicateId: template.predicate.id,
                         label: template.predicate.label,
-                        isTemplate: true,
                         isAnimated: false,
                         canDuplicate: true
                     });
                     if (syncBackend) {
-                        newObject = await createResourceApi(template.label, template.class ? [template.class.id] : []);
+                        const newObject = await createResourceApi(template.label, template.class ? [template.class.id] : []);
+                        instanceResourceId = newObject.id;
                     }
                     statements['values'].push({
                         valueId: vID,
                         label: template.label,
-                        existingResourceId: newObject ? newObject.id : rID,
+                        existingResourceId: instanceResourceId,
                         _class: ENTITIES.RESOURCE,
                         propertyId: pID,
                         classes: template.class ? [template.class.id] : []
                     });
-                    await dispatch(prefillStatements({ statements, resourceId: selectedResource, syncBackend: syncBackend }));
+                    await dispatch(fillStatements({ statements, resourceId: resourceId, syncBackend }));
                     // Add properties
-                    if (template.components && template.components.length > 0) {
-                        const statements = { properties: [], values: [] };
-                        for (const component of template.components) {
-                            statements['properties'].push({
-                                existingPredicateId: component.property.id,
-                                label: component.property.label,
-                                validationRules: component.validationRules
-                            });
-                        }
-                        await dispatch(
-                            prefillStatements({
-                                statements,
-                                resourceId: newObject ? newObject.id : rID,
-                                syncBackend: syncBackend
-                            })
-                        );
+                    const instanceStatements = { properties: [], values: [] };
+                    for (const component of template?.components) {
+                        instanceStatements['properties'].push({
+                            existingPredicateId: component.property.id,
+                            label: component.property.label
+                        });
                     }
+                    await dispatch(
+                        fillStatements({
+                            statements: instanceStatements,
+                            resourceId: instanceResourceId,
+                            syncBackend: syncBackend
+                        })
+                    );
                 }
             }
             return Promise.resolve();

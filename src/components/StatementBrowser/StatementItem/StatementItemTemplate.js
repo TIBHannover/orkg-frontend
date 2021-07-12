@@ -29,7 +29,7 @@ export default function StatementItemTemplate(props) {
     } = useStatementItemTemplate(props);
 
     return (
-        <StatementsGroupStyle className={`${props.inTemplate ? 'inTemplate' : 'noTemplate'}`}>
+        <StatementsGroupStyle tag="div" enableEdit={props.enableEdit} className={`${props.inTemplate ? 'inTemplate' : 'noTemplate'}`}>
             <div className="row no-gutters">
                 <PropertyStyle className={`col-4 ${props.property.isEditing ? 'editingLabel' : ''}`} tabIndex="0">
                     {!props.property.isEditing ? (

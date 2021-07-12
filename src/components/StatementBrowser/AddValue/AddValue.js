@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { createValue } from 'actions/statementBrowser';
-import { prefillStatements } from 'actions/addPaper';
+import { fillStatements } from 'actions/addPaper';
 import { createResourceStatement, createLiteralStatement } from 'services/backend/statements';
 import { createLiteral } from 'services/backend/literals';
 import { createPredicate } from 'services/backend/predicates';
@@ -58,7 +58,7 @@ const AddValue = props => {
      * Create statements for a resource starting from an array of statements
      *
      * @param {Array} data array of statement
-     * @return {Object} object of statements to use as an entry for prefillStatements action
+     * @return {Object} object of statements to use as an entry for fillStatements action
      */
     const generateStatementsFromExternalData = data => {
         const statements = { properties: [], values: [] };
@@ -102,7 +102,7 @@ const AddValue = props => {
                 );
                 //create statements
                 dispatch(
-                    prefillStatements({
+                    fillStatements({
                         statements: generateStatementsFromExternalData(statements),
                         resourceId: newObject.id,
                         syncBackend: props.syncBackend
@@ -128,7 +128,7 @@ const AddValue = props => {
                 const newObject = await handleAddValue(valueType, value, null);
                 // create statements
                 dispatch(
-                    prefillStatements({
+                    fillStatements({
                         statements: generateStatementsFromExternalData(statements),
                         resourceId: newObject,
                         syncBackend: props.syncBackend
