@@ -212,7 +212,7 @@ const useImportBulkData = ({ data, onFinish }) => {
                 publicationYear,
                 researchField,
                 url,
-                publishedIn: publishedIn,
+                publishedIn: null,
                 contributions: [
                     {
                         name: 'Contribution',
