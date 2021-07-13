@@ -94,7 +94,7 @@ const PaperHeader = props => {
                         </small>
                     </div>
                 )}
-                {viewPaper.doi && viewPaper.doi.label.startsWith('10.') && (
+                {viewPaper.doi && viewPaper.doi.label?.startsWith('10.') && (
                     <div className="flex-shrink-0">
                         <small>
                             DOI:{' '}
