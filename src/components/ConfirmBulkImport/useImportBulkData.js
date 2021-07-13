@@ -76,7 +76,7 @@ const useImportBulkData = ({ data, onFinish }) => {
                 if (paperMetadata) {
                     paperMetadata = parseCiteResult(paperMetadata);
                     title = paperMetadata.paperTitle;
-                    authors = paperMetadata.paperAuthors;
+                    authors = paperMetadata.paperAuthors.map(author => ({ label: author.label }));
                     publicationMonth = paperMetadata.publicationMonth;
                     publicationYear = paperMetadata.publicationYear;
                     publishedIn = paperMetadata.publishedIn;
@@ -212,7 +212,7 @@ const useImportBulkData = ({ data, onFinish }) => {
                 publicationYear,
                 researchField,
                 url,
-                publishedIn: null,
+                publishedIn: publishedIn,
                 contributions: [
                     {
                         name: 'Contribution',
