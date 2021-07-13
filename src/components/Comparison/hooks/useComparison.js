@@ -236,9 +236,13 @@ function useComparison({ id }) {
      */
     const loadProvenanceInfos = (observatory_id, organization_id) => {
         if (observatory_id && observatory_id !== MISC.UNKNOWN_ID) {
-            getObservatoryAndOrganizationInformation(observatory_id, organization_id).then(observatory => {
-                setProvenance(observatory);
-            });
+            getObservatoryAndOrganizationInformation(observatory_id, organization_id)
+                .then(observatory => {
+                    setProvenance(observatory);
+                })
+                .catch(() => {
+                    setProvenance(null);
+                });
         } else {
             setProvenance(null);
         }
