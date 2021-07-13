@@ -53,7 +53,8 @@ const HelpModal = props => {
                     <li>
                         <strong>paper:title</strong>
                         <br />
-                        Title of the paper
+                        Title of the paper. If the DOI of the paper is provided, we fetch its title, authors, publication month and year
+                        automatically.
                     </li>
                 </ul>
 
