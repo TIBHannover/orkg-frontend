@@ -14,6 +14,7 @@ import { useTable, useFlexLayout } from 'react-table';
 import { useSticky } from 'react-table-sticky';
 import { getPropertyObjectFromData } from 'utils';
 import PropTypes from 'prop-types';
+import { useMedia } from 'react-use';
 
 const compareProps = (prevProps, nextProps) => {
     // remove functions from equality check (mainly targeting "removeContribution"), otherwise it is always false
@@ -23,6 +24,7 @@ const compareProps = (prevProps, nextProps) => {
 const ComparisonTable = props => {
     const scrollContainerHead = useRef(null);
     const smallerFontSize = props.viewDensity === 'compact';
+    const isSmallScreen = useMedia('(max-width: 576px)');
 
     let cellPadding = 10;
     if (props.viewDensity === 'normal') {
@@ -82,7 +84,7 @@ const ComparisonTable = props => {
                     </Properties>
                 ),
                 accessor: 'property',
-                sticky: 'left',
+                sticky: !isSmallScreen ? 'left' : undefined,
                 Cell: info => {
                     return !props.transpose ? (
                         <Properties className="columnProperty">
@@ -201,7 +203,7 @@ const ComparisonTable = props => {
         ];
         // TODO: remove disable lint rule: useCallback for removeContribution and add used dependencies
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [props.transpose, props.properties, props.contributions, props.filterControlData, props.viewDensity]);
+    }, [props.transpose, props.properties, props.contributions, props.filterControlData, props.viewDensity, isSmallScreen]);
 
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable(
         {

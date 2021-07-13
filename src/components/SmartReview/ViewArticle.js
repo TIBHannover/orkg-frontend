@@ -61,7 +61,11 @@ const ViewArticle = () => {
                                 </h1>
                                 <div className="my-3">
                                     {researchField && (
-                                        <Link to={reverse(ROUTES.RESEARCH_FIELD, { researchFieldId: researchField.id })} target="_blank">
+                                        <Link
+                                            to={reverse(ROUTES.RESEARCH_FIELD, { researchFieldId: researchField.id })}
+                                            target="_blank"
+                                            aria-label={`Visit research field page of ${researchField.label}`}
+                                        >
                                             <Badge color="light" className="mr-2 mb-2">
                                                 <Icon icon={faBars} className="text-primary" /> {researchField.label}
                                             </Badge>

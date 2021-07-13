@@ -14,14 +14,21 @@ const AuthorsList = ({ authors }) => {
             {authors.length === 0 && <span className="text-muted mr-2">No authors added yet</span>}
             {authors.map((author, index) =>
                 author.classes && author.classes.includes(CLASSES.AUTHOR) ? (
-                    <Link key={index} to={reverse(ROUTES.AUTHOR_PAGE, { authorId: author.id })} target="_blank" rel="author" typeof="foaf:Person">
+                    <Link
+                        key={index}
+                        to={reverse(ROUTES.AUTHOR_PAGE, { authorId: author.id })}
+                        target="_blank"
+                        rel="author"
+                        typeof="foaf:Person"
+                        aria-label={`Visit the author page of ${author.label}`}
+                    >
                         <Badge color="light" className="mr-2 mb-2" key={index}>
                             <Icon icon={faUser} className="text-primary" /> {author.label}
                         </Badge>
                     </Link>
                 ) : (
                     <Badge color="light" className="mr-2 mb-2" key={index} typeof="foaf:Person">
-                        <Icon icon={faUser} className="text-secondary" /> {author.label}
+                        <Icon icon={faUser} className="text-secondary" aria-label="Author name" /> {author.label}
                     </Badge>
                 )
             )}

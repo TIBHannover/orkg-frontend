@@ -96,6 +96,12 @@ function Comparison(props) {
         }
     }, [params.comparisonId, loadVersions]);
 
+    useEffect(() => {
+        if (metaData?.title) {
+            document.title = `${metaData.title} - Comparison - ORKG`;
+        }
+    }, [metaData]);
+
     /** adding some additional state for meta data **/
 
     const [cookies, setCookie] = useCookies();

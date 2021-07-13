@@ -68,8 +68,14 @@ const Section = props => {
 
     return (
         <section>
-            <SectionStyled className="box rounded" onMouseEnter={() => setIsHovering(true)} onMouseLeave={() => setIsHovering(false)}>
-                <DeleteButton className={isHovering ? 'hover' : ''} color="primary" onClick={handleDelete}>
+            <SectionStyled
+                tabIndex="0"
+                className="box rounded"
+                onFocus={() => setIsHovering(true)}
+                onMouseEnter={() => setIsHovering(true)}
+                onMouseLeave={() => setIsHovering(false)}
+            >
+                <DeleteButton className={isHovering ? 'hover' : ''} color="primary" onClick={handleDelete} aria-label="Delete section">
                     <Icon icon={faTimes} />
                 </DeleteButton>
                 <SortableHandle />
@@ -80,6 +86,7 @@ const Section = props => {
                                 className="p-0 w-100"
                                 color="secondary"
                                 onClick={() => props.handleManualSort({ id: sectionId, direction: 'up' })}
+                                aria-label="Move section up"
                             >
                                 <Icon icon={faArrowUp} />
                             </Button>
@@ -93,6 +100,7 @@ const Section = props => {
                                 className="p-0 w-100"
                                 color="secondary"
                                 onClick={() => props.handleManualSort({ id: sectionId, direction: 'down' })}
+                                aria-label="Move section down"
                             >
                                 <Icon icon={faArrowDown} />
                             </Button>
