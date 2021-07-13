@@ -56,7 +56,7 @@ export default function checkDataValidation(data) {
     // Research field schema
     const researchFieldSchema = Joi.array().items(
         Joi.string()
-            .pattern(new RegExp('^R((1[2-9]|[2-9][0-9]|[1-3][0-9]{2}|4[0-6][0-9]|47[0-3]))$')) // resource id between 11 and 473
+            .pattern(new RegExp('^(orkg:)?R([0-9])+$')) // resource id between 11 and 473
             .allow('')
             .messages({
                 'string.base': `Paper #{#key+1} : research field ID should be a type of 'text'`,
