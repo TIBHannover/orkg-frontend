@@ -35,11 +35,9 @@ export default function checkDataValidation(data) {
     }));
 
     const paperSchema = Joi.object({
-        title: Joi.when('doi', { is: Joi.valid(), then: Joi.optional(), otherwise: Joi.string().required() })
-            .concat(Joi.when('doi', { is: '', then: Joi.string().required() }))
-            .messages({
-                'string.empty': `Title is not allowed to be empty.`
-            }),
+        title: Joi.when('doi', { is: Joi.valid(), then: Joi.optional(), otherwise: Joi.string().required() }).messages({
+            'string.empty': `Title is not allowed to be empty.`
+        }),
         publication_month: Joi.number()
             .integer()
             .max(12)
