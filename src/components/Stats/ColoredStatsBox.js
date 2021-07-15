@@ -12,16 +12,6 @@ const StatsBoxStyled = styled(Col)`
     position: relative;
 `;
 
-const IconContainer = styled.div`
-    width: 74px;
-    height: 74px;
-    font-size: 32px;
-    align-items: center;
-    justify-content: center;
-    display: flex;
-    color: ${props => props.theme.secondary};
-`;
-
 const LabelWrapper = styled.div`
     padding: 0 15px;
     display: flex;
@@ -42,13 +32,8 @@ const Label = styled.div`
 
 const ColoredStatsBox = props => {
     return (
-        <StatsBoxStyled className={`box rounded ${props.className} ${props.icon ? '' : 'text-center'}`}>
+        <StatsBoxStyled className={`box rounded ${props.className} text-center`}>
             <div className="d-flex flex-grow-1 mt-2 mb-2" style={{ minHeight: '74px' }}>
-                {props.icon && (
-                    <IconContainer className={`rounded-left `}>
-                        <Icon icon={props.icon} />
-                    </IconContainer>
-                )}
                 <LabelWrapper className="flex-grow-1">
                     {!props.isLoading ? (
                         <Number>
@@ -57,7 +42,10 @@ const ColoredStatsBox = props => {
                     ) : (
                         'Loading...'
                     )}
-                    <Label>{props.label}</Label>
+                    <Label>
+                        {props.icon && <Icon size="20" icon={props.icon} className="mr-2" />}
+                        {props.label}
+                    </Label>
                 </LabelWrapper>
             </div>
         </StatsBoxStyled>
