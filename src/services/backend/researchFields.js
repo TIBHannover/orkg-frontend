@@ -26,9 +26,10 @@ export const getContentByResearchFieldIdAndClasses = ({
     unlisted = null,
     classes = []
 }) => {
-    const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
+    // Sort is not supported in this endpoint
+    // const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
     const params = queryString.stringify(
-        { page: page, size: items, sort, featured, unlisted, classes: classes.join(',') },
+        { page: page, size: items, /* sort*/ featured, unlisted, classes: classes.join(',') },
         {
             skipNull: true,
             skipEmptyString: true

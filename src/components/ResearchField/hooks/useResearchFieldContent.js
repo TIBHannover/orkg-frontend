@@ -99,7 +99,6 @@ function useResearchFieldContent({
                                 const resourceSubject = find(result.content, {
                                     thingId: statements.id
                                 });
-                                console.log(resourceSubject);
                                 return getDataBasedOnType(resourceSubject, statements.statements);
                             });
                             setItems(prevResources => {
