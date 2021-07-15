@@ -40,13 +40,13 @@ class Boolean extends Component {
         if (this.trueValues.indexOf(labelToText.toLowerCase()) !== -1) {
             return (
                 <Check>
-                    <Icon icon={faCheck} />
+                    <Icon icon={faCheck} aria-label="Check mark" />
                 </Check>
             );
         } else if (this.falseValues.indexOf(labelToText.toLowerCase()) !== -1) {
             return (
                 <Cross>
-                    <Icon icon={faTimes} />
+                    <Icon icon={faTimes} aria-label="Cross mark" />
                 </Cross>
             );
         } else {

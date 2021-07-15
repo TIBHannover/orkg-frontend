@@ -264,7 +264,7 @@ export const ClickableScrollButton = styled.button`
 
     &.left {
         cursor: w-resize;
-        left: 250px;
+        left: ${props => props.leftOffset};
         top: 10px;
         height: calc(100% - 20px);
 

@@ -27,7 +27,13 @@ const ResearchField = () => {
         <div>
             <Tippy content="Research field">
                 <span>
-                    <Button size="sm" color="light" className="mr-2 mb-2" onClick={() => setIsOpenResearchFieldModal(true)}>
+                    <Button
+                        size="sm"
+                        color="light"
+                        className="mr-2 mb-2"
+                        onClick={() => setIsOpenResearchFieldModal(true)}
+                        aria-label={`Selected research field: ${researchField?.label ?? 'none'}`}
+                    >
                         <Icon icon={faBars} className="text-secondary" /> {researchField?.label ?? 'Research field'}
                     </Button>
                 </span>

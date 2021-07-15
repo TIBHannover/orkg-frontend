@@ -6,6 +6,7 @@ import { ScrollSync } from 'react-scroll-sync';
 import useResizeObserver from 'use-resize-observer';
 import { ClickableScrollButton, ReactTableWrapper, ScrollButton } from './styled';
 import PropTypes from 'prop-types';
+import { useMedia } from 'react-use';
 
 const SCROLL_AMOUNT = 500;
 
@@ -16,6 +17,7 @@ const TableScrollContainer = ({ children, className }) => {
     // can't use 'useMeasure' from 'react-use' because it doesn't allow setting a custom ref,
     // once merged: https://github.com/streamich/react-use/pull/1516, probably we can use that instead of use-resize-observer
     const { width: scrollContainerBodyWidth } = useResizeObserver({ ref: scrollContainerBody });
+    const isSmallScreen = useMedia('(max-width: 576px)');
 
     const handleScrollCallback = debounce(rtBody => {
         if (!rtBody) {
@@ -59,7 +61,7 @@ const TableScrollContainer = ({ children, className }) => {
         <>
             <ReactTableWrapper className={className}>
                 {showNextButton && <ClickableScrollButton className="right" onClick={scrollNext} />}
-                {showBackButton && <ClickableScrollButton className="left" onClick={scrollBack} />}
+                {showBackButton && <ClickableScrollButton className="left" leftOffset={!isSmallScreen ? '250px' : 0} onClick={scrollBack} />}
 
                 <ScrollSync onSync={handleScrollCallback}>{cloneElement(children, { scrollContainerBody })}</ScrollSync>
             </ReactTableWrapper>

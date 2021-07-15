@@ -130,8 +130,6 @@ function useComparison({ id }) {
                     if (!comparisonResource.classes.includes(CLASSES.COMPARISON)) {
                         throw new Error(`The requested resource is not of class "${CLASSES.COMPARISON}".`);
                     }
-                    // Update browser title
-                    document.title = `${comparisonResource.label} - Comparison - ORKG`;
                     return [comparisonResource, configurationData];
                 })
                 .then(([comparisonResource, configurationData]) => {
@@ -238,9 +236,13 @@ function useComparison({ id }) {
      */
     const loadProvenanceInfos = (observatory_id, organization_id) => {
         if (observatory_id && observatory_id !== MISC.UNKNOWN_ID) {
-            getObservatoryAndOrganizationInformation(observatory_id, organization_id).then(observatory => {
-                setProvenance(observatory);
-            });
+            getObservatoryAndOrganizationInformation(observatory_id, organization_id)
+                .then(observatory => {
+                    setProvenance(observatory);
+                })
+                .catch(() => {
+                    setProvenance(null);
+                });
         } else {
             setProvenance(null);
         }
@@ -415,6 +417,13 @@ function useComparison({ id }) {
                     setResponseHash(comparisonData.response_hash);
                 } else {
                     setResponseHash(responseHash);
+                }
+            })
+            .then(() => {
+                if (!comparisonId && queryString.parse(location.search)?.hasPreviousVersion) {
+                    getResource(queryString.parse(location.search).hasPreviousVersion).then(prevVersion =>
+                        setMetaData({ ...metaData, hasPreviousVersion: prevVersion })
+                    );
                 }
             })
             .catch(error => {
@@ -628,7 +637,12 @@ function useComparison({ id }) {
             });
 
             if (isConfirmed) {
-                history.push(reverse(ROUTES.CONTRIBUTION_EDITOR) + `?contributions=${contributionsList.join(',')}`);
+                history.push(
+                    reverse(ROUTES.CONTRIBUTION_EDITOR) +
+                        `?contributions=${contributionsList.join(',')}${
+                            metaData?.hasPreviousVersion ? `&hasPreviousVersion=${metaData?.hasPreviousVersion.id}` : ''
+                        }`
+                );
             }
         }
     };

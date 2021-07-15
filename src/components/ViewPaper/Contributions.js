@@ -236,7 +236,7 @@ class Contributions extends Component {
                                         <SuggestedTemplates
                                             syncBackend={true}
                                             selectedResource={this.props.selectedResource ? this.props.selectedResource : selectedContributionId}
-                                            researchField={this.props.researchField.id}
+                                            researchField={this.props.researchField?.id}
                                             researchProblems={this.props.researchProblemsIds}
                                             disabled={shared > 1 ? true : false}
                                         />
