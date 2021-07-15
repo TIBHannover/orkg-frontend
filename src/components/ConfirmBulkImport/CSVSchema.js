@@ -26,12 +26,12 @@ export default function checkDataValidation(data) {
     }
 
     const papersObjects = values.map(value => ({
-        title: header.indexOf('paper:title') ? value[header.indexOf('paper:title')] : '',
-        publication_month: header.indexOf('paper:publication_month') ? value[header.indexOf('paper:publication_month')] : '',
-        publication_year: header.indexOf('paper:publication_year') ? value[header.indexOf('paper:publication_year')] : '',
-        research_field: header.indexOf('paper:research_field') ? value[header.indexOf('paper:research_field')] : '',
-        doi: header.indexOf('paper:doi') ? value[header.indexOf('paper:doi')] : '',
-        url: header.indexOf('paper:url') ? value[header.indexOf('paper:url')] : ''
+        title: header.indexOf('paper:title') !== -1 ? value[header.indexOf('paper:title')] : '',
+        publication_month: header.indexOf('paper:publication_month') !== -1 ? value[header.indexOf('paper:publication_month')] : '',
+        publication_year: header.indexOf('paper:publication_year') !== -1 ? value[header.indexOf('paper:publication_year')] : '',
+        research_field: header.indexOf('paper:research_field') !== -1 ? value[header.indexOf('paper:research_field')] : '',
+        doi: header.indexOf('paper:doi') !== -1 ? value[header.indexOf('paper:doi')] : '',
+        url: header.indexOf('paper:url') !== -1 ? value[header.indexOf('paper:url')] : ''
     }));
 
     const paperSchema = Joi.object({
