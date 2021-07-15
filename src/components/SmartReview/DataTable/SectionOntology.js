@@ -2,6 +2,7 @@ import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import OntologyItem from 'components/SmartReview/DataTable/OntologyItem';
 import SelectEntitiesModal from 'components/SmartReview/DataTable/SelectEntitiesModal';
+import ValuePlugins from 'components/ValuePlugins/ValuePlugins';
 import { capitalize, orderBy } from 'lodash';
 import PropTypes from 'prop-types';
 import React, { useMemo, useState } from 'react';
@@ -48,14 +49,14 @@ const SectionOntology = ({ section, isEditable = false }) => {
     };
 
     return (
-        <Table size="sm" bordered>
+        <Table size="sm" bordered responsive>
             <thead className="bg-light">
                 <tr>
                     <th width="20%">
                         <div className="d-flex justify-content-between align-items-center">
                             <span>Label</span>
                             {isEditable && (
-                                <Button color="secondary" size="sm" onClick={() => handleOpenEditModal('entities')}>
+                                <Button color="secondary" size="sm" onClick={() => handleOpenEditModal('entities')} aria-label="Edit labels">
                                     <Icon icon={faPen} /> Edit
                                 </Button>
                             )}
@@ -65,7 +66,7 @@ const SectionOntology = ({ section, isEditable = false }) => {
                         <div className="d-flex justify-content-between align-items-center">
                             <span>Property</span>
                             {isEditable && (
-                                <Button color="secondary" size="sm" onClick={() => handleOpenEditModal('properties')}>
+                                <Button color="secondary" size="sm" onClick={() => handleOpenEditModal('properties')} aria-label="Edit properties">
                                     <Icon icon={faPen} /> Edit
                                 </Button>
                             )}
@@ -114,7 +115,7 @@ const SectionOntology = ({ section, isEditable = false }) => {
                                     sectionId={section.id}
                                 />
                             ) : (
-                                entityStatement.object?.label
+                                <ValuePlugins type="literal">{entityStatement.object?.label}</ValuePlugins>
                             )}
                         </td>
                     </tr>

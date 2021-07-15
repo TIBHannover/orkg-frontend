@@ -50,7 +50,7 @@ const DescriptionTooltip = props => {
             onTrigger={onTrigger}
             content={
                 <>
-                    {renderTypeLabel()} : {props.id}
+                    {renderTypeLabel()}: {props.id}
                     <br />
                     Description:{' '}
                     {!isLoading ? (
@@ -72,7 +72,7 @@ const DescriptionTooltip = props => {
             }
             arrow={true}
         >
-            <span>{props.children}</span>
+            <span tabIndex="0">{props.children}</span>
         </Tippy>
     );
 };

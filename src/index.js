@@ -5,6 +5,7 @@ import 'jspdf/dist/polyfills.es.js';
 import ReactDOM from 'react-dom';
 import App from './App';
 import { unregister } from './registerServiceWorker';
+import theme from 'assets/scss/ThemeVariables';
 import { Provider } from 'react-redux';
 import configureStore, { history } from './store';
 import rootReducer from './reducers/rootReducer';
@@ -14,10 +15,6 @@ import { MatomoProvider, createInstance } from '@datapunt/matomo-tracker-react';
 import { DndProvider } from 'react-dnd';
 import env from '@beam-australia/react-env';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-
-// Extract Sass variables into a JS object
-// eslint-disable-next-line import/no-webpack-loader-syntax
-const theme = require('sass-extract-loader?{plugins: ["sass-extract-js"]}!./assets/scss/ThemeVariables.scss');
 
 const matomoInstance =
     env('MATOMO_TRACKER') === 'true'
