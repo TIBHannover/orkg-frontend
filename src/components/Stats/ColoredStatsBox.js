@@ -9,6 +9,10 @@ const StatsBoxStyled = styled(Col)`
     padding: 0 !important;
     display: flex;
 
+    &.gray {
+        background-color: ${props => props.theme.secondary};
+    }
+
     &.blue {
         background-color: #4ca7d0;
     }
@@ -30,6 +34,10 @@ const IconContainer = styled.div`
     align-items: center;
     justify-content: center;
     display: flex;
+
+    &.gray {
+        background-color: ${props => props.theme.dark};
+    }
 
     &.blue {
         background-color: #3f90b4;

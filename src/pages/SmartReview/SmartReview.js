@@ -1,4 +1,14 @@
-import { faCheckCircle, faDownload, faEllipsisV, faHistory, faPen, faSpinner, faTimes, faUpload } from '@fortawesome/free-solid-svg-icons';
+import {
+    faCheckCircle,
+    faDownload,
+    faEllipsisV,
+    faHistory,
+    faPen,
+    faQuoteRight,
+    faSpinner,
+    faTimes,
+    faUpload
+} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import { toggleHistoryModal as toggleHistoryModalAction, setIsEditing } from 'actions/smartReview';
@@ -26,6 +36,12 @@ import { NavLink, useHistory } from 'react-router-dom';
 import { Button, ButtonGroup, Container, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledButtonDropdown } from 'reactstrap';
 import Confirm from 'reactstrap-confirm';
 import { createGlobalStyle } from 'styled-components';
+import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
+import ReferencesModal from 'components/SmartReview/References/ReferencesModal';
+import ReferencesSection from 'components/SmartReview/References/ReferencesSection';
+import ShouldPublishModal from 'components/SmartReview/ShouldPublishModal';
+import { usePrevious } from 'react-use';
+import LoadingOverlay from 'components/SmartReview/LoadingOverlay';
 
 const GlobalStyle = createGlobalStyle`
     // ensure printing only prints the contents and no other elements
@@ -49,27 +65,42 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 const SmartReview = () => {
-    const { id } = useParams();
-    const { load, isLoading, isNotFound, getVersions } = useLoad();
+    const [isOpenPublishModal, setIsOpenPublishModal] = useState(false);
+    const [isOpenShouldPublishModal, setIsOpenShouldPublishModal] = useState(false);
+    const [isOpenReferencesModal, setIsOpenReferencesModal] = useState(false);
     const isLoadingInline = useSelector(state => state.smartReview.isLoading);
     const isEditing = useSelector(state => state.smartReview.isEditing);
-    const [isOpenPublishModal, setIsOpenPublishModal] = useState(false);
     const isPublished = useSelector(state => state.smartReview.isPublished);
     const paper = useSelector(state => state.smartReview.paper);
     const isOpenHistoryModal = useSelector(state => state.smartReview.isOpenHistoryModal);
     const researchField = useSelector(state => state.smartReview.researchField);
+    const versions = useSelector(state => state.smartReview.versions);
+    const prevIsEditing = usePrevious(isEditing);
     const dispatch = useDispatch();
     const history = useHistory();
-    const versions = useSelector(state => state.smartReview.versions);
+    const { load, isLoading, isNotFound, getVersions } = useLoad();
+    const { id } = useParams();
     const version = versions.find(version => version.id === id);
     const versionNumber = versions.length ? versions.length - versions.findIndex(version => version.id === id) : null;
     const publicationDate = version ? moment(version.date).format('DD MMMM YYYY') : null;
 
     useEffect(() => {
-        document.title = 'SmartReview - ORKG';
-
         load(id);
     }, [id, load]);
+
+    useEffect(() => {
+        let title = 'SmartReview - ORKG';
+        if (paper.title) {
+            title = `${paper.title} - SmartReview - ORKG`;
+        }
+        document.title = title;
+    }, [paper]);
+
+    useEffect(() => {
+        if (prevIsEditing && !isEditing) {
+            setIsOpenShouldPublishModal(true);
+        }
+    }, [isEditing, prevIsEditing]);
 
     const handleEdit = async () => {
         if (isPublished) {
@@ -102,9 +133,9 @@ const SmartReview = () => {
                 prefix="doco: http://purl.org/spar/doco/ fabio: http://purl.org/spar/fabio/ deo: http://purl.org/spar/deo/ c4o: http://purl.org/spar/c4o foaf: http://xmlns.com/foaf/0.1/"
                 typeof="fabio:ScholarlyWork"
             >
-                <div className="d-flex">
-                    <div className="d-flex align-items-center flex-grow-1">
-                        <h1 className="h4 mt-4 mb-4">SmartReview</h1>
+                <div className="d-flex flex-wrap mt-4 mb-4">
+                    <div className="d-flex align-items-center flex-grow-1 flex-wrap">
+                        <h1 className="h4 m-0">SmartReview</h1>
                         {publicationDate && (
                             <>
                                 <SubtitleSeparator />
@@ -128,6 +159,7 @@ const SmartReview = () => {
                                                 icon={faCheckCircle}
                                                 className="text-secondary"
                                                 style={{ fontSize: '125%', verticalAlign: 'middle' }}
+                                                aria-label="All changes are saved"
                                             />
                                         </span>
                                     </Tippy>
@@ -143,21 +175,49 @@ const SmartReview = () => {
                                         size="sm"
                                         style={{ marginLeft: 1 }}
                                         onClick={() => window.print()}
+                                        aria-label="Print article"
                                     >
                                         <Icon icon={faDownload} />
                                     </Button>
                                 </>
                             )}
 
-                            <Button className="flex-shrink-0" color="secondary" size="sm" style={{ marginLeft: 1 }} onClick={toggleHistoryModal}>
-                                <Icon icon={faHistory} /> History
-                            </Button>
                             {!isEditing ? (
-                                <Button className="flex-shrink-0" color="secondary" size="sm" style={{ marginLeft: 1 }} onClick={handleEdit}>
-                                    <Icon icon={faPen} /> Edit
-                                </Button>
+                                <>
+                                    <Button
+                                        className="flex-shrink-0"
+                                        color="secondary"
+                                        size="sm"
+                                        style={{ marginLeft: 1 }}
+                                        onClick={toggleHistoryModal}
+                                        aria-label="View article history"
+                                    >
+                                        <Icon icon={faHistory} /> History
+                                    </Button>
+
+                                    <RequireAuthentication
+                                        component={Button}
+                                        className="flex-shrink-0"
+                                        color="secondary"
+                                        size="sm"
+                                        style={{ marginLeft: 1 }}
+                                        onClick={handleEdit}
+                                    >
+                                        <Icon icon={faPen} /> Edit
+                                    </RequireAuthentication>
+                                </>
                             ) : (
                                 <>
+                                    <Button
+                                        className="flex-shrink-0"
+                                        color="secondary"
+                                        size="sm"
+                                        style={{ marginLeft: 1 }}
+                                        onClick={() => setIsOpenReferencesModal(true)}
+                                        aria-label="Manage article references"
+                                    >
+                                        <Icon icon={faQuoteRight} /> References
+                                    </Button>
                                     <Button
                                         className="flex-shrink-0"
                                         color="secondary"
@@ -193,6 +253,8 @@ const SmartReview = () => {
                     </div>
                 </div>
             </Container>
+            <LoadingOverlay />
+
             {!isLoading && isEditing && (
                 <main>
                     <header>
@@ -206,6 +268,9 @@ const SmartReview = () => {
                     <Container>
                         <AcknowledgementsSection />
                     </Container>
+                    <Container>
+                        <ReferencesSection />
+                    </Container>
                 </main>
             )}
             {!isLoading && !isEditing && <ViewArticle />}
@@ -215,6 +280,10 @@ const SmartReview = () => {
                 <PublishModal toggle={() => setIsOpenPublishModal(v => !v)} id={id} getVersions={getVersions} paperId={paper.id} show />
             )}
             {isOpenHistoryModal && <HistoryModal toggle={toggleHistoryModal} id={id} show />}
+            {isOpenReferencesModal && <ReferencesModal toggle={() => setIsOpenReferencesModal(v => !v)} id={id} show />}
+            {isOpenShouldPublishModal && (
+                <ShouldPublishModal toggle={() => setIsOpenShouldPublishModal(v => !v)} show openPublishModal={() => setIsOpenPublishModal(true)} />
+            )}
         </div>
     );
 };

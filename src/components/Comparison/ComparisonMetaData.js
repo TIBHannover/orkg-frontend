@@ -1,4 +1,4 @@
-import { Badge, NavLink } from 'reactstrap';
+import { Badge } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faCalendar, faUser } from '@fortawesome/free-solid-svg-icons';
 import ValuePlugins from 'components/ValuePlugins/ValuePlugins';
@@ -7,13 +7,13 @@ import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import moment from 'moment';
+import { CLASSES } from 'constants/graphSettings';
 
 function ComparisonMetaData(props) {
     return (
         <div>
             {props.metaData.title ? (
                 <>
-                    {/*<PreviewComponent comparisonId={props.metaData.id} propagateClick={props.propagateClick} reloadingFlag={props.reloadingFlag} />*/}
                     {props.metaData.description && (
                         <div style={{ lineHeight: 1.5 }} className="h6 mb-2">
                             {props.metaData.description}
@@ -30,28 +30,15 @@ function ComparisonMetaData(props) {
                             ''
                         )}
 
-                        {props.authors && props.authors.length > 0 && (
+                        {props.metaData.authors && props.metaData.authors.length > 0 && (
                             <>
-                                {props.authors.map((author, index) =>
-                                    author.id && author.id !== '' && author.orcid && author.orcid !== '' ? (
+                                {props.metaData.authors.map((author, index) =>
+                                    author?.classes?.includes(CLASSES.AUTHOR) ? (
                                         <Link className="p-0" to={reverse(ROUTES.AUTHOR_PAGE, { authorId: author.id })} key={index}>
                                             <Badge color="light" className="mr-2 mb-2">
                                                 <Icon icon={faUser} className="text-primary" /> {author.label}
                                             </Badge>
                                         </Link>
-                                    ) : author.orcid && author.orcid !== '' ? (
-                                        <NavLink
-                                            className="p-0"
-                                            style={{ display: 'contents' }}
-                                            href={'https://orcid.org/' + author.orcid}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            key={index}
-                                        >
-                                            <Badge color="light" className="mr-2 mb-2">
-                                                <Icon icon={faUser} className="text-primary" /> {author.label}
-                                            </Badge>
-                                        </NavLink>
                                     ) : (
                                         <Badge color="light" className="mr-2 mb-2" key={index}>
                                             <Icon icon={faUser} className="text-secondary" /> {author.label}
@@ -86,8 +73,6 @@ function ComparisonMetaData(props) {
 ComparisonMetaData.propTypes = {
     metaData: PropTypes.object,
     authors: PropTypes.array
-    // reloadingFlag: PropTypes.bool,
-    // propagateClick: PropTypes.func
 };
 
 export default ComparisonMetaData;

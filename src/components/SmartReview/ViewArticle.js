@@ -4,7 +4,10 @@ import Tippy from '@tippyjs/react';
 import { toggleHistoryModal as toggleHistoryModalAction } from 'actions/smartReview';
 import Acknowledgements from 'components/SmartReview/Acknowledgements';
 import AuthorsList from 'components/SmartReview/AuthorsList';
+import SectionDataTable from 'components/SmartReview/DataTable/SectionOntology';
 import MarkdownRenderer from 'components/SmartReview/MarkdownRenderer';
+import Outline from 'components/SmartReview/Outline';
+import ListReferences from 'components/SmartReview/References/ListReferences';
 import SectionVisualization from 'components/SmartReview/SectionVisualization';
 import { SectionStyled } from 'components/SmartReview/styled';
 import ViewArticleStatementBrowser from 'components/SmartReview/ViewArticleStatementBrowser';
@@ -29,12 +32,12 @@ const ViewArticle = () => {
     const dispatch = useDispatch();
     const latestVersionId = versions?.[0]?.id;
     const newVersionAvailable = isPublished && latestVersionId !== id;
-
     const toggleHistoryModal = () => dispatch(toggleHistoryModalAction());
 
     return (
         <>
-            <Container className="print-only p-0">
+            <Container className="print-only p-0" style={{ position: 'relative' }}>
+                <Outline />
                 {!isPublished && (
                     <Alert color="warning" fade={false} className="box">
                         Warning: you are viewing an unpublished version of this article. The content can be changed by anyone.{' '}
@@ -51,14 +54,18 @@ const ViewArticle = () => {
                 )}
                 <main>
                     <article>
-                        <SectionStyled className="box rounded pr-4">
+                        <SectionStyled className="box rounded">
                             <header>
                                 <h1 className="mb-2 mt-4" style={{ whiteSpace: 'pre-line' }} typeof="doco:Title" property="c4o:hasContent">
                                     {paper.title}
                                 </h1>
                                 <div className="my-3">
                                     {researchField && (
-                                        <Link to={reverse(ROUTES.RESEARCH_FIELD, { researchFieldId: researchField.id })} target="_blank">
+                                        <Link
+                                            to={reverse(ROUTES.RESEARCH_FIELD, { researchFieldId: researchField.id })}
+                                            target="_blank"
+                                            aria-label={`Visit research field page of ${researchField.label}`}
+                                        >
                                             <Badge color="light" className="mr-2 mb-2">
                                                 <Icon icon={faBars} className="text-primary" /> {researchField.label}
                                             </Badge>
@@ -73,14 +80,21 @@ const ViewArticle = () => {
                                         CLASSES.RESOURCE_SECTION,
                                         CLASSES.PROPERTY_SECTION,
                                         CLASSES.COMPARISON_SECTION,
-                                        CLASSES.VISUALIZATION_SECTION
+                                        CLASSES.VISUALIZATION_SECTION,
+                                        CLASSES.ONTOLOGY_SECTION
                                     ].includes(section.type.id)
                                 ) {
                                     return (
                                         <section key={section.id} typeof="doco:Section">
-                                            <h2 className="h4 border-bottom mt-5" typeof="doco:SectionTitle" property="c4o:hasContent">
+                                            <h2
+                                                id={`section-${section.id}`}
+                                                className="h4 border-bottom mt-5"
+                                                typeof="doco:SectionTitle"
+                                                property="c4o:hasContent"
+                                            >
                                                 {section.title.label}
                                             </h2>
+                                            {section.type.id === CLASSES.ONTOLOGY_SECTION && <SectionDataTable key={section.id} section={section} />}
                                             {section?.contentLink?.objectId && (
                                                 <>
                                                     {section.type.id !== CLASSES.COMPARISON_SECTION &&
@@ -117,7 +131,11 @@ const ViewArticle = () => {
                                                             </>
                                                         )}
                                                     {section.type.id === CLASSES.COMPARISON_SECTION && (
-                                                        <SectionComparison key={section.id} id={section.contentLink.objectId} />
+                                                        <SectionComparison
+                                                            key={section.id}
+                                                            id={section.contentLink.objectId}
+                                                            sectionId={section.id}
+                                                        />
                                                     )}
                                                     {section.type.id === CLASSES.VISUALIZATION_SECTION && (
                                                         <SectionVisualization key={section.id} id={section.contentLink.objectId} />
@@ -134,21 +152,34 @@ const ViewArticle = () => {
                                                 style={{ whiteSpace: 'pre-line' }}
                                                 typeof="doco:SectionTitle"
                                                 property="c4o:hasContent"
+                                                id={`section-${section.id}`}
                                             >
                                                 {section.title.label}
                                             </h2>
-                                            <MarkdownRenderer text={section.markdown.label} />
+                                            <MarkdownRenderer text={section.markdown.label} id={section.markdown.id} />
                                         </section>
                                     );
                                 }
                             })}
                             <section typeof="doco:Section deo:Acknowledgements">
-                                <h2 className="h4 border-bottom mt-5" typeof="doco:SectionTitle" property="c4o:hasContent">
+                                <h2
+                                    id="section-acknowledgements"
+                                    className="h4 border-bottom mt-5"
+                                    typeof="doco:SectionTitle"
+                                    property="c4o:hasContent"
+                                >
                                     <Tippy content="Acknowledgements are automatically generated based on ORKG users that contributed to resources used in this article">
                                         <span>Acknowledgements</span>
                                     </Tippy>
                                 </h2>
                                 <Acknowledgements />
+                            </section>
+
+                            <section typeof="doco:Section deo:Reference">
+                                <h2 id="section-references" className="h4 border-bottom mt-4" typeof="doco:SectionTitle" property="c4o:hasContent">
+                                    References
+                                </h2>
+                                <ListReferences />
                             </section>
                         </SectionStyled>
                     </article>

@@ -1,3 +1,4 @@
+import { Button } from 'reactstrap';
 import styled from 'styled-components';
 import Gravatar from 'react-gravatar';
 
@@ -55,5 +56,46 @@ export const ContributorsAvatars = styled.div`
 
     & > div:last-child {
         margin-right: 0;
+    }
+`;
+
+export const SearchStyled = styled.div`
+    &&& {
+        padding: 0;
+        margin-left: 1px !important;
+        display: flex;
+    }
+`;
+
+export const InputStyled = styled.input`
+    background: transparent;
+    line-height: 0.7;
+    padding: 2px 10px;
+    height: 28px;
+    border: 0;
+    color: #fff;
+    width: 200px;
+    animation: width 0.2s normal forwards ease-in-out;
+    outline: 0;
+
+    &::placeholder {
+        color: #fff;
+        opacity: 0.6;
+    }
+
+    @keyframes width {
+        from {
+            width: 50px;
+        }
+        to {
+            width: 200px;
+        }
+    }
+`;
+
+export const SearchButtonStyled = styled(Button)`
+    &&& {
+        color: #fff;
+        border: 0;
     }
 `;

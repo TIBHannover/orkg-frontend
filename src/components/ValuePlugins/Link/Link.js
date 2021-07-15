@@ -3,12 +3,12 @@ import PropTypes from 'prop-types';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import { renderToString } from 'react-dom/server';
-
+import ReactStringReplace from 'react-string-replace';
 class Link extends Component {
     constructor(props) {
         super(props);
         // eslint-disable-next-line no-useless-escape
-        const expression = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?/gi;
+        const expression = /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/gi;
         this.supportedValues = new RegExp(expression);
     }
 
@@ -21,11 +21,13 @@ class Link extends Component {
         }
 
         if (this.props.type === 'literal' && labelToText.match(this.supportedValues)) {
-            return (
-                <a href={labelToText.indexOf('://') === -1 ? 'http://' + labelToText : labelToText} target="_blank" rel="noopener noreferrer">
-                    {labelToText} <Icon icon={faExternalLinkAlt} />
-                </a>
-            );
+            return ReactStringReplace(labelToText, this.supportedValues, (match, i) => {
+                return (
+                    <a key={i} href={match.indexOf('://') === -1 ? 'http://' + match : match} target="_blank" rel="noopener noreferrer">
+                        {match} <Icon icon={faExternalLinkAlt} />
+                    </a>
+                );
+            });
         } else {
             return label;
         }

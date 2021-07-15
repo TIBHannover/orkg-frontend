@@ -18,7 +18,6 @@ const routes = {
     ADD_ORGANIZATION: '/addOrganization',
     ORGANIZATION: '/organizations/:id',
     ADD_OBSERVATORY: '/organizations/:id/addObservatory',
-    ORGANIZATION_OBSERVATORIES: '/organizations/:id/observatories',
     OBSERVATORY: '/observatory/:id',
     ADD_PAPER: {
         GENERAL_DATA: '/add-paper'
@@ -27,6 +26,7 @@ const routes = {
     CONTRIBUTION: '/contribution/:id',
     COMPARISON_SHORTLINK: '/c/:shortCode',
     COMPARISON: '/comparison/:comparisonId?',
+    COMPARISON_DIFF: '/comparison/diff/:oldId-:newId',
     PAPERS: '/papers',
     COMPARISONS: '/comparisons',
     VISUALIZATIONS: '/visualizations',
@@ -44,6 +44,8 @@ const routes = {
     PDF_TEXT_ANNOTATION: '/pdf-text-annotation',
     PDF_ANNOTATION: '/pdf-annotation',
     CSV_IMPORT: '/csv-import',
+    BENCHMARKS: '/benchmarks',
+    BENCHMARK: '/benchmark/:resourceId',
     SMART_REVIEW: '/smart-review/:id',
     SMART_REVIEWS: '/smart-reviews',
     USER_UNPUBLISHED_REVIEWS: '/user-unpublished-reviews',

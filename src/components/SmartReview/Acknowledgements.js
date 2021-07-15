@@ -6,11 +6,17 @@ const Acknowledgements = () => {
     const contributors = useSelector(state => state.smartReview.contributors);
 
     return (
-        <div className="d-flex mb-4">
+        <div className="d-flex mb-4 flex-wrap">
             {contributors &&
-                contributors.map(contributor => (
-                    <div className="mr-1" key={contributor.id}>
-                        <UserAvatar userId={contributor.id} size={40} appendToTooltip={` (contributed ${contributor.percentage}% to this article)`} />
+                contributors.map(({ id, percentage }) => (
+                    <div className="mr-1" key={id}>
+                        <UserAvatar
+                            userId={id}
+                            size={40}
+                            appendToTooltip={
+                                percentage > 0 ? ` (contributed ~${percentage}% to this article)` : ' (contributed less than 1% to this article)'
+                            }
+                        />
                     </div>
                 ))}
         </div>

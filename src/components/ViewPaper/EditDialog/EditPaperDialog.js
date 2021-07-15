@@ -88,7 +88,11 @@ const EditPaperDialog = ({ paperData, isOpen, toggle, afterUpdate, showPaperLink
             label: 'Research Field',
             type: 'researchField',
             value: researchField,
-            onChange: setResearchField
+            onChange: value =>
+                setResearchField({
+                    ...value,
+                    statementId: researchField?.statementId ?? ''
+                })
         },
         month: {
             label: 'Publication month',

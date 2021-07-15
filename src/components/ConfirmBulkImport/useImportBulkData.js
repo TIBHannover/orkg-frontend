@@ -3,10 +3,12 @@ import { CLASSES, MISC, PREDICATES } from 'constants/graphSettings';
 import { omit, isString } from 'lodash';
 import { getStatementsBySubject } from 'services/backend/statements';
 import { getPaperByDOI } from 'services/backend/misc';
-import { createResource, getResourcesByClass } from 'services/backend/resources';
+import { createResource, getResourcesByClass, getResources } from 'services/backend/resources';
 import { getResource } from 'services/backend/resources';
 import { getPredicate, getPredicates, createPredicate } from 'services/backend/predicates';
 import { saveFullPaper } from 'services/backend/papers';
+import Cite from 'citation-js';
+import { parseCiteResult } from 'utils';
 import { toast } from 'react-toastify';
 
 const PREDEFINED_COLUMNS = [
@@ -54,14 +56,32 @@ const useImportBulkData = ({ data, onFinish }) => {
                 rowObject[headerItem].push(row[index]);
             }
 
-            const title = getFirstValue(rowObject, 'paper:title');
+            let title = getFirstValue(rowObject, 'paper:title');
             let authors = getFirstValue(rowObject, 'paper:authors', []);
             authors = authors.length ? authors.split(';').map(name => ({ label: name })) : [];
-            const publicationMonth = getFirstValue(rowObject, 'paper:publication_month');
-            const publicationYear = getFirstValue(rowObject, 'paper:publication_year');
+            let publicationMonth = getFirstValue(rowObject, 'paper:publication_month');
+            let publicationYear = getFirstValue(rowObject, 'paper:publication_year');
             const doi = getFirstValue(rowObject, 'paper:doi');
             const url = getFirstValue(rowObject, 'paper:url');
             let researchField = getFirstValue(rowObject, 'paper:research_field', MISC.RESEARCH_FIELD_MAIN);
+            let publishedIn = null;
+            let paperMetadata = null;
+            if (doi) {
+                try {
+                    paperMetadata = await Cite.async(doi);
+                } catch (error) {
+                    paperMetadata = null;
+                }
+
+                if (paperMetadata) {
+                    paperMetadata = parseCiteResult(paperMetadata);
+                    title = paperMetadata.paperTitle;
+                    authors = paperMetadata.paperAuthors.map(author => ({ label: author.label }));
+                    publicationMonth = paperMetadata.publicationMonth;
+                    publicationYear = paperMetadata.publicationYear;
+                    publishedIn = paperMetadata.publishedIn;
+                }
+            }
 
             rowObject = omit(rowObject, PREDEFINED_COLUMNS);
 
@@ -81,8 +101,8 @@ const useImportBulkData = ({ data, onFinish }) => {
                 }
 
                 // property has mapping
-                if (!propertyId && hasMapping(property)) {
-                    const id = cleanLabel(property);
+                if (!propertyId && propertyHasMapping(property)) {
+                    const id = cleanLabelProperty(property);
                     try {
                         const fetchedPredicate = await getPredicate(id);
                         if (fetchedPredicate) {
@@ -96,14 +116,14 @@ const useImportBulkData = ({ data, onFinish }) => {
                 // no property id found
                 if (!propertyId) {
                     // property label already exists, get the ID
-                    const fetchedPredicate = await getPredicates({ q: property, exact: true });
+                    const fetchedPredicate = await getPredicates({ q: cleanLabelProperty(property), exact: true });
                     if (fetchedPredicate.totalElements) {
                         propertyId = fetchedPredicate.content[0].id;
-                        _idToLabel[propertyId] = property;
+                        _idToLabel[propertyId] = cleanLabelProperty(property);
                         valueToId[property] = propertyId;
                     } else {
                         // property does not exist, it will be created when saving the papers
-                        propertyId = property;
+                        propertyId = cleanLabelProperty(property);
                         valueToId[property] = property;
                     }
                 }
@@ -142,15 +162,34 @@ const useImportBulkData = ({ data, onFinish }) => {
                         }
                     }
 
-                    // this will always create a new resource, not matter whether there already exists one
-                    // (this is different from the CSV import from the Python script, where there is a lookup on the label)
-                    if (!valueObject && (isNewResource(value) || propertyId === PREDICATES.HAS_RESEARCH_PROBLEM)) {
+                    // This will look up for a resource with the same label a new resource,
+                    // It will creates a new resource if no existence
+                    // (during saving all resources that shares the same label will get the same resource ID)
+                    if (
+                        !valueObject &&
+                        (property.startsWith('resource:') || isNewResource(value) || propertyId === PREDICATES.HAS_RESEARCH_PROBLEM)
+                    ) {
                         const classes = propertyId === PREDICATES.HAS_RESEARCH_PROBLEM ? [CLASSES.PROBLEM] : undefined;
 
-                        valueObject = {
-                            label: cleanNewResource(value),
-                            class: classes
-                        };
+                        let fetchedResource;
+                        if (property.startsWith('resource:')) {
+                            fetchedResource = await getResources({ q: cleanNewResource(value), exact: true });
+                        }
+                        if (propertyId === PREDICATES.HAS_RESEARCH_PROBLEM) {
+                            fetchedResource = await getResourcesByClass({ id: CLASSES.PROBLEM, q: cleanNewResource(value), exact: true });
+                        }
+                        if (fetchedResource?.totalElements) {
+                            valueToId[cleanNewResource(value)] = fetchedResource.content[0].id;
+                            _idToLabel[fetchedResource.content[0].id] = cleanNewResource(value);
+                            valueObject = {
+                                '@id': valueToId[cleanNewResource(value)]
+                            };
+                        } else {
+                            valueObject = {
+                                label: cleanNewResource(value),
+                                class: classes
+                            };
+                        }
                     }
 
                     if (!valueObject) {
@@ -173,7 +212,7 @@ const useImportBulkData = ({ data, onFinish }) => {
                 publicationYear,
                 researchField,
                 url,
-                publishedIn: null,
+                publishedIn: publishedIn,
                 contributions: [
                     {
                         name: 'Contribution',
@@ -213,8 +252,16 @@ const useImportBulkData = ({ data, onFinish }) => {
         return paperResources.length ? paperResources[0].id : null;
     };
 
+    const cleanLabelProperty = label => {
+        return label.replace(/^(resource:)/, '').replace(/^(orkg:)/, '');
+    };
+
     const cleanLabel = label => {
         return label.replace(/^(orkg:)/, '');
+    };
+
+    const propertyHasMapping = value => {
+        return isString(value) && (value.startsWith('orkg:') || value.replace(/^(resource:)/, '').startsWith('orkg:'));
     };
 
     const hasMapping = value => {

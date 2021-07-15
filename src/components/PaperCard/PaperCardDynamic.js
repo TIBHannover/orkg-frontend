@@ -9,7 +9,8 @@ import RelativeBreadcrumbs from 'components/RelativeBreadcrumbs/RelativeBreadcru
 import UserAvatar from 'components/UserAvatar/UserAvatar';
 import Authors from './Authors';
 import PropTypes from 'prop-types';
-import { getPublicationMonth, getPublicationYear, getAuthors, getResearchField } from 'utils';
+import { CLASSES, PREDICATES } from 'constants/graphSettings';
+import { filterObjectOfStatementsByPredicateAndClass } from 'utils';
 import moment from 'moment';
 import ContentLoader from 'react-content-loader';
 
@@ -49,14 +50,19 @@ const PaperCardDynamic = props => {
      * @param {Array} paperStatements
      */
     const getPaperDataForViewAllPapers = paperStatements => {
-        const publicationYear = getPublicationYear(paperStatements)[0]; // gets year[0] and resourceId[1]
-        const publicationMonth = getPublicationMonth(paperStatements)[0]; // gets month[0] and resourceId[1]
-        const authors = getAuthors(paperStatements);
-        const researchField = getResearchField(paperStatements);
+        const publicationYear = filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_PUBLICATION_YEAR, true);
+        const publicationMonth = filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_PUBLICATION_MONTH, true);
+        const authors = filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_AUTHOR, false);
+        const researchField = filterObjectOfStatementsByPredicateAndClass(
+            paperStatements,
+            PREDICATES.HAS_RESEARCH_FIELD,
+            true,
+            CLASSES.RESEARCH_FIELD
+        );
         return {
             publicationYear,
             publicationMonth,
-            authorNames: authors.sort((a, b) => a.created_at.localeCompare(b.created_at)),
+            authors: authors ? authors.sort((a, b) => a.created_at.localeCompare(b.created_at)) : [],
             researchField
         };
     };
@@ -72,14 +78,14 @@ const PaperCardDynamic = props => {
                     {!isLoading && (
                         <>
                             <small>
-                                <Authors authors={optimizedPaperObject.authorNames} />
+                                <Authors authors={optimizedPaperObject.authors} />
                                 {(optimizedPaperObject.publicationMonth || optimizedPaperObject.publicationYear) && (
                                     <Icon size="sm" icon={faCalendar} className="ml-2 mr-1" />
                                 )}
-                                {optimizedPaperObject.publicationMonth && optimizedPaperObject.publicationMonth > 0
-                                    ? moment(optimizedPaperObject.publicationMonth, 'M').format('MMMM')
+                                {optimizedPaperObject.publicationMonth && optimizedPaperObject.publicationMonth.label > 0
+                                    ? moment(optimizedPaperObject.publicationMonth.label, 'M').format('MMMM')
                                     : ''}{' '}
-                                {optimizedPaperObject.publicationYear}
+                                {optimizedPaperObject.publicationYear?.label && optimizedPaperObject.publicationYear.label}
                             </small>
                             <div className="d-block d-md-none">
                                 <RelativeBreadcrumbs researchField={optimizedPaperObject.researchField} />
@@ -124,7 +130,7 @@ PaperCardDynamic.propTypes = {
     paper: PropTypes.shape({
         id: PropTypes.string.isRequired,
         title: PropTypes.string,
-        authorNames: PropTypes.array,
+        authors: PropTypes.array,
         publicationMonth: PropTypes.string,
         publicationYear: PropTypes.string,
         paperData: PropTypes.object,

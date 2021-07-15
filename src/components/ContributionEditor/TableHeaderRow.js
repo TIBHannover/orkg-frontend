@@ -11,6 +11,7 @@ import { upperFirst } from 'lodash';
 import { Button } from 'reactstrap';
 import useConfirmPropertyModal from 'components/StatementBrowser/AddProperty/hooks/useConfirmPropertyModal';
 import { PREDICATES, ENTITIES } from 'constants/graphSettings';
+import env from '@beam-australia/react-env';
 
 const TableHeaderRow = ({ property }) => {
     const [isOpenStatementBrowser, setIsOpenStatementBrowser] = useState(false);
@@ -18,6 +19,9 @@ const TableHeaderRow = ({ property }) => {
     const [inputValue, setInputValue] = useState(property.label);
     const statements = useSelector(state => state.contributionEditor.statements);
     const statementIds = Object.keys(statements).filter(statementId => statements[statementId].propertyId === property.id);
+    const pwcStatementIds = Object.keys(statements).filter(
+        statementId => statements[statementId].propertyId === property.id && statements[statementId].created_by === env('PWC_USER_ID')
+    );
     const dispatch = useDispatch();
     const { confirmProperty } = useConfirmPropertyModal();
 
@@ -79,11 +83,13 @@ const TableHeaderRow = ({ property }) => {
                         <Button onClick={() => setIsOpenStatementBrowser(true)} color="link" className="text-light m-0 p-0 text-left">
                             {upperFirst(property.label)}
                         </Button>
-                        <TableCellButtons
-                            onEdit={!isResearchProblem ? handleStartEdit : null}
-                            onDelete={!isResearchProblem ? handleDelete : null}
-                            backgroundColor="rgba(139, 145, 165, 0.8)"
-                        />
+                        {pwcStatementIds.length === 0 && (
+                            <TableCellButtons
+                                onEdit={!isResearchProblem ? handleStartEdit : null}
+                                onDelete={!isResearchProblem ? handleDelete : null}
+                                backgroundColor="rgba(139, 145, 165, 0.8)"
+                            />
+                        )}
                     </div>
                 </PropertiesInner>
             </Properties>

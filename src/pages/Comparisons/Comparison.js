@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Alert, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Button, ButtonGroup, Badge } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faEllipsisV, faLightbulb, faHistory, faWindowMaximize, faChartBar, faExternalLinkAlt, faFilter } from '@fortawesome/free-solid-svg-icons';
@@ -17,14 +17,16 @@ import RelatedFigures from 'components/Comparison/RelatedResources/RelatedFigure
 import ExportCitation from 'components/Comparison/Export/ExportCitation';
 import ComparisonMetaData from 'components/Comparison/ComparisonMetaData';
 import Share from 'components/Comparison/Share.js';
-import ComparisonVersions from 'components/Comparison/ComparisonVersions.js';
+import HistoryModal from 'components/Comparison/HistoryModal/HistoryModal';
+import useComparisonVersions from 'components/Comparison/hooks/useComparisonVersions';
+import NewerVersionWarning from 'components/Comparison/HistoryModal/NewerVersionWarning';
 import Publish from 'components/Comparison/Publish/Publish';
 import { ContainerAnimated, ComparisonTypeButton } from 'components/Comparison/styled';
 import useComparison from 'components/Comparison/hooks/useComparison';
 import ShareLinkMarker from 'components/ShareLinkMarker/ShareLinkMarker';
 import { getResource } from 'services/backend/resources';
 import ROUTES from 'constants/routes.js';
-import { useHistory, Link } from 'react-router-dom';
+import { useHistory, Link, useParams } from 'react-router-dom';
 import { openAuthDialog } from 'actions/auth';
 import { CSVLink } from 'react-csv';
 import { generateRdfDataVocabularyFile, areAllRulesEmpty } from 'utils';
@@ -50,7 +52,6 @@ function Comparison(props) {
         data,
         filterControlData,
         matrixData,
-        authors,
         errors,
         transpose,
         comparisonType,
@@ -64,7 +65,6 @@ function Comparison(props) {
         isFailedLoadingMetaData,
         isLoadingComparisonResult,
         isFailedLoadingComparisonResult,
-        hasNextVersions,
         createdBy,
         provenance,
         researchField,
@@ -81,12 +81,26 @@ function Comparison(props) {
         setResponseHash,
         setUrlNeedsToUpdate,
         setShortLink,
-        setAuthors,
         loadCreatedBy,
         loadProvenanceInfos,
         loadVisualizations,
         handleEditContributions
     } = useComparison({});
+
+    const params = useParams();
+    const { versions, isLoadingVersions, hasNextVersion, loadVersions } = useComparisonVersions({ comparisonId: params.comparisonId });
+
+    useEffect(() => {
+        if (params.comparisonId) {
+            loadVersions(params.comparisonId);
+        }
+    }, [params.comparisonId, loadVersions]);
+
+    useEffect(() => {
+        if (metaData?.title) {
+            document.title = `${metaData.title} - Comparison - ORKG`;
+        }
+    }, [metaData]);
 
     /** adding some additional state for meta data **/
 
@@ -352,9 +366,8 @@ function Comparison(props) {
                                     >
                                         Publish
                                     </DropdownItem>
-                                    {(metaData?.hasPreviousVersion || (hasNextVersions && hasNextVersions.length > 0)) && (
+                                    {!isLoadingVersions && versions?.length > 1 && (
                                         <>
-                                            {' '}
                                             <DropdownItem divider />
                                             <DropdownItem onClick={() => setShowComparisonVersions(v => !v)}>
                                                 <Icon icon={faHistory} /> <span className="mr-2">History</span>
@@ -375,6 +388,11 @@ function Comparison(props) {
                     </div>
                 )}
             </ContainerAnimated>
+
+            {!isLoadingVersions && hasNextVersion && (
+                <NewerVersionWarning versions={versions} comparisonId={metaData?.id || metaData?.hasPreviousVersion?.id} />
+            )}
+
             <ContainerAnimated className="box rounded pt-4 pb-4 pl-5 pr-5 clearfix position-relative" style={containerStyle}>
                 <ShareLinkMarker typeOfLink="comparison" title={metaData?.title} />
                 {!isLoadingMetaData && (isFailedLoadingComparisonResult || isFailedLoadingMetaData) && (
@@ -401,7 +419,7 @@ function Comparison(props) {
                                         >
                                             Go back
                                         </span>{' '}
-                                        or <Link to={ROUTES.HOME}>go to the homepage {contributionsList.length}</Link>.
+                                        or <Link to={ROUTES.HOME}>go to the homepage</Link>.
                                     </>
                                 )}
                             </Alert>
@@ -415,7 +433,7 @@ function Comparison(props) {
                             <div className="flex-grow-1">
                                 <h2 className="h4 mb-4 mt-4">{metaData.title ? metaData.title : 'Compare'}</h2>
 
-                                {!isFailedLoadingMetaData && <ComparisonMetaData authors={authors} metaData={metaData} />}
+                                {!isFailedLoadingMetaData && <ComparisonMetaData metaData={metaData} />}
                             </div>
 
                             {metaData.id && provenance && <ObservatoryBox provenance={provenance} />}
@@ -453,7 +471,6 @@ function Comparison(props) {
                                             contributions,
                                             properties,
                                             data,
-                                            authors, // do we need this? maybe to add a new author who creates the comparison
                                             contributionsList,
                                             predicatesList
                                         }) && (
@@ -503,7 +520,7 @@ function Comparison(props) {
                                     <li key={`ref${index}`}>
                                         <small>
                                             <i>
-                                                <ValuePlugins type="literal">{reference}</ValuePlugins>
+                                                <ValuePlugins type="literal">{reference.label}</ValuePlugins>
                                             </i>
                                         </small>
                                     </li>
@@ -539,12 +556,11 @@ function Comparison(props) {
                 setShortLink={setShortLink}
                 subject={!metaData?.subject && researchField ? researchField : metaData?.subject}
             />
-            {(metaData?.hasPreviousVersion || (hasNextVersions && hasNextVersions.length > 0)) && (
-                <ComparisonVersions
-                    showDialog={showComparisonVersions}
+            {!isLoadingVersions && versions?.length > 1 && showComparisonVersions && (
+                <HistoryModal
+                    comparisonId={metaData?.id || metaData?.hasPreviousVersion?.id}
                     toggle={() => setShowComparisonVersions(v => !v)}
-                    metaData={metaData}
-                    hasNextVersions={hasNextVersions}
+                    showDialog={showComparisonVersions}
                 />
             )}
             <Publish
@@ -558,12 +574,13 @@ function Comparison(props) {
                 contributionsList={contributionsList}
                 predicatesList={predicatesList}
                 comparisonType={comparisonType}
+                responseHash={responseHash ?? ''}
                 comparisonURLConfig={comparisonURLConfig}
-                authors={authors}
-                setAuthors={setAuthors}
+                authors={metaData?.authors}
                 loadCreatedBy={loadCreatedBy}
                 loadProvenanceInfos={loadProvenanceInfos}
                 data={data}
+                nextVersions={!isLoadingVersions && hasNextVersion ? versions : []}
             />
 
             <AddContribution onAddContributions={addContributions} showDialog={showAddContribution} toggle={() => setShowAddContribution(v => !v)} />
@@ -603,7 +620,6 @@ function Comparison(props) {
                     contributions,
                     properties,
                     data,
-                    authors, // do we need this? maybe to add a new author who creates the comparison
                     contributionsList,
                     predicatesList
                 }}
