@@ -6,7 +6,7 @@ const Acknowledgements = () => {
     const contributors = useSelector(state => state.smartReview.contributors);
 
     return (
-        <div className="d-flex mb-4">
+        <div className="d-flex mb-4 flex-wrap">
             {contributors &&
                 contributors.map(({ id, percentage }) => (
                     <div className="mr-1" key={id}>

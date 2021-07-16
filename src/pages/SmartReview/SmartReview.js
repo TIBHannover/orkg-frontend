@@ -85,9 +85,16 @@ const SmartReview = () => {
     const publicationDate = version ? moment(version.date).format('DD MMMM YYYY') : null;
 
     useEffect(() => {
-        document.title = 'SmartReview - ORKG';
         load(id);
     }, [id, load]);
+
+    useEffect(() => {
+        let title = 'SmartReview - ORKG';
+        if (paper.title) {
+            title = `${paper.title} - SmartReview - ORKG`;
+        }
+        document.title = title;
+    }, [paper]);
 
     useEffect(() => {
         if (prevIsEditing && !isEditing) {
@@ -126,9 +133,9 @@ const SmartReview = () => {
                 prefix="doco: http://purl.org/spar/doco/ fabio: http://purl.org/spar/fabio/ deo: http://purl.org/spar/deo/ c4o: http://purl.org/spar/c4o foaf: http://xmlns.com/foaf/0.1/"
                 typeof="fabio:ScholarlyWork"
             >
-                <div className="d-flex">
-                    <div className="d-flex align-items-center flex-grow-1">
-                        <h1 className="h4 mt-4 mb-4">SmartReview</h1>
+                <div className="d-flex flex-wrap mt-4 mb-4">
+                    <div className="d-flex align-items-center flex-grow-1 flex-wrap">
+                        <h1 className="h4 m-0">SmartReview</h1>
                         {publicationDate && (
                             <>
                                 <SubtitleSeparator />
@@ -152,6 +159,7 @@ const SmartReview = () => {
                                                 icon={faCheckCircle}
                                                 className="text-secondary"
                                                 style={{ fontSize: '125%', verticalAlign: 'middle' }}
+                                                aria-label="All changes are saved"
                                             />
                                         </span>
                                     </Tippy>
@@ -167,6 +175,7 @@ const SmartReview = () => {
                                         size="sm"
                                         style={{ marginLeft: 1 }}
                                         onClick={() => window.print()}
+                                        aria-label="Print article"
                                     >
                                         <Icon icon={faDownload} />
                                     </Button>
@@ -181,6 +190,7 @@ const SmartReview = () => {
                                         size="sm"
                                         style={{ marginLeft: 1 }}
                                         onClick={toggleHistoryModal}
+                                        aria-label="View article history"
                                     >
                                         <Icon icon={faHistory} /> History
                                     </Button>
@@ -204,6 +214,7 @@ const SmartReview = () => {
                                         size="sm"
                                         style={{ marginLeft: 1 }}
                                         onClick={() => setIsOpenReferencesModal(true)}
+                                        aria-label="Manage article references"
                                     >
                                         <Icon icon={faQuoteRight} /> References
                                     </Button>

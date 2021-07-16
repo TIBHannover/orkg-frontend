@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import readingTime from 'reading-time';
 import styled from 'styled-components';
 
-const Wrapper = styled.div`
+const Wrapper = styled.aside`
     position: absolute;
     left: -200px;
     height: 100%;

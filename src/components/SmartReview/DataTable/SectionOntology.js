@@ -49,14 +49,14 @@ const SectionOntology = ({ section, isEditable = false }) => {
     };
 
     return (
-        <Table size="sm" bordered>
+        <Table size="sm" bordered responsive>
             <thead className="bg-light">
                 <tr>
                     <th width="20%">
                         <div className="d-flex justify-content-between align-items-center">
                             <span>Label</span>
                             {isEditable && (
-                                <Button color="secondary" size="sm" onClick={() => handleOpenEditModal('entities')}>
+                                <Button color="secondary" size="sm" onClick={() => handleOpenEditModal('entities')} aria-label="Edit labels">
                                     <Icon icon={faPen} /> Edit
                                 </Button>
                             )}
@@ -66,7 +66,7 @@ const SectionOntology = ({ section, isEditable = false }) => {
                         <div className="d-flex justify-content-between align-items-center">
                             <span>Property</span>
                             {isEditable && (
-                                <Button color="secondary" size="sm" onClick={() => handleOpenEditModal('properties')}>
+                                <Button color="secondary" size="sm" onClick={() => handleOpenEditModal('properties')} aria-label="Edit properties">
                                     <Icon icon={faPen} /> Edit
                                 </Button>
                             )}

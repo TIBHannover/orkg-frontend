@@ -22,16 +22,22 @@ const useContributionEditor = () => {
         return without(uniq(contributionIds), undefined, null, '') ?? [];
     }, [location.search]);
 
+    const hasPreviousVersion = queryString.parse(location.search).hasPreviousVersion;
+
     const handleAddContributions = ids => {
         const idsQueryString = [...getContributionIds(), ...ids].join(',');
-        history.push(`${ROUTES.CONTRIBUTION_EDITOR}?contributions=${idsQueryString}`);
+        history.push(
+            `${ROUTES.CONTRIBUTION_EDITOR}?contributions=${idsQueryString}${hasPreviousVersion ? `&hasPreviousVersion=${hasPreviousVersion}` : ''}`
+        );
     };
 
     const handleRemoveContribution = id => {
         const idsQueryString = getContributionIds()
             .filter(_id => _id !== id)
             .join(',');
-        history.push(`${ROUTES.CONTRIBUTION_EDITOR}?contributions=${idsQueryString}`);
+        history.push(
+            `${ROUTES.CONTRIBUTION_EDITOR}?contributions=${idsQueryString}${hasPreviousVersion ? `&hasPreviousVersion=${hasPreviousVersion}` : ''}`
+        );
     };
 
     // make an object that supports retrieving statements by propertyId and contributionId
