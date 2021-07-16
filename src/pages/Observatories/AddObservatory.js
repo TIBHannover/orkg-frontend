@@ -16,6 +16,7 @@ import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { openAuthDialog } from 'actions/auth';
 import { connect } from 'react-redux';
 import slugify from 'slugify';
+import { getPublicUrl } from 'utils';
 import Tooltip from 'components/Utils/Tooltip';
 import REGEX from 'constants/regex';
 
@@ -31,9 +32,7 @@ class AddObservatory extends Component {
             researchField: '',
             organizationName: '',
             permalink: '',
-            publicObservatoryRoute: `${window.location.protocol}//${window.location.host}${window.location.pathname
-                .replace(reverse(ROUTES.ADD_OBSERVATORY, { id: this.props.match.params.id }), reverse(ROUTES.OBSERVATORY, { id: ' ' }))
-                .replace(/\/$/, '')}`,
+            publicObservatoryRoute: `${getPublicUrl()}${reverse(ROUTES.OBSERVATORY, { id: ' ' })}`,
             isLoadingOrganization: true,
             errorLoadingOrganization: null,
             organizationId: ''

@@ -10,6 +10,7 @@ import PropTypes from 'prop-types';
 import REGEX from 'constants/regex';
 import { connect } from 'react-redux';
 import { reverse } from 'named-urls';
+import { getPublicUrl } from 'utils';
 import slugify from 'slugify';
 import ROUTES from 'constants/routes';
 import Tooltip from 'components/Utils/Tooltip';
@@ -27,9 +28,8 @@ class AddOrganization extends Component {
             logo: '',
             editorState: 'edit'
         };
-        this.publicOrganizationRoute = `${window.location.protocol}//${window.location.host}${window.location.pathname
-            .replace(reverse(ROUTES.ADD_ORGANIZATION), reverse(ROUTES.ORGANIZATION, { id: ' ' }))
-            .replace(/\/$/, '')}`;
+
+        this.publicOrganizationRoute = `${getPublicUrl()}${reverse(ROUTES.ORGANIZATION, { id: ' ' })}`;
     }
 
     componentDidMount() {
