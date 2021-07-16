@@ -38,7 +38,7 @@ export function hashCode(s) {
  */
 
 export function getArrayParamFromQueryString(locationSearch, param) {
-    const values = queryString.parse(decodeURIComponent(locationSearch), { arrayFormat: 'comma' })[param];
+    const values = queryString.parse(locationSearch, { arrayFormat: 'comma' })[param];
     if (!values) {
         return [];
     }
