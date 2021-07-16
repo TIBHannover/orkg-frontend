@@ -37,7 +37,7 @@ function OrganizationCard(props) {
         <div className="col-4 mb-3">
             {props.organization.logo && (
                 <StyledOrganizationCard className="card h-100">
-                    <Link className="logoContainer" to={reverse(ROUTES.ORGANIZATION, { id: props.organization.id })}>
+                    <Link className="logoContainer" to={reverse(ROUTES.ORGANIZATION, { id: props.organization.display_id })}>
                         <img className="mx-auto p-2" src={props.organization.logo} alt={`${props.organization.name} logo`} />
                     </Link>
                     <CardBody>

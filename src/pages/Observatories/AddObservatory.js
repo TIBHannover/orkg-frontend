@@ -98,7 +98,8 @@ class AddObservatory extends Component {
         this.setState({ [event.target.name]: event.target.value });
         if (event.target.name === 'name') {
             this.setState({
-                permalink: slugify(event.target.value.trim(), { replacement: '_', remove: /[*+~%\\<>/;.(){}?,'"!:@#-^|]/g, lower: false })
+                // eslint-disable-next-line no-useless-escape
+                permalink: slugify(event.target.value.trim(), { replacement: '_', remove: /[*+~%\\<>/;.(){}?,'"!:@\#\-^|]/g, lower: false })
             });
         }
     };
