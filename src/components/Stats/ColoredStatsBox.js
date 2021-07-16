@@ -15,9 +15,17 @@ const StatsBoxStyled = styled(Col)`
     & a:hover {
         text-decoration: none;
         color: ${props => props.theme.primary};
+        .number {
+            color: ${props => props.theme.primary};
+        }
     }
     & a {
         color: ${props => props.theme.bodyColor};
+    }
+    .number {
+        font-size: 26px;
+        line-height: 1;
+        color: ${props => props.theme.dark};
     }
     transition: color 0.5s ease;
 `;
@@ -27,12 +35,6 @@ const LabelWrapper = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: center;
-`;
-
-const Number = styled.div`
-    font-size: 26px;
-    line-height: 1;
-    color: ${props => props.theme.dark};
 `;
 
 const Label = styled.div`
@@ -54,9 +56,9 @@ const ColoredStatsBox = props => {
                 <div className="d-flex flex-grow-1 mt-2 mb-2" style={{ minHeight: '74px' }}>
                     <LabelWrapper className="flex-grow-1">
                         {!props.isLoading ? (
-                            <Number>
+                            <div className="number">
                                 <CountUp duration={1.1} end={props.number} separator=" " />
-                            </Number>
+                            </div>
                         ) : (
                             'Loading...'
                         )}

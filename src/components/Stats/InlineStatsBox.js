@@ -15,17 +15,21 @@ const StatsBoxStyled = styled(Col)`
     & a:hover {
         text-decoration: none;
         color: ${props => props.theme.primary};
+        .number {
+            color: ${props => props.theme.primary};
+        }
     }
     & a {
         color: ${props => props.theme.bodyColor};
     }
     transition: color 0.5s ease;
+    .number {
+        font-size: 37px;
+        color: #8b91a5;
+    }
 `;
 
-const Number = styled.div`
-    font-size: 37px;
-    color: #8b91a5;
-`;
+const Number = styled.div``;
 
 const Label = styled.div`
     font-size: 18px;
@@ -36,9 +40,9 @@ const InlineStatsBox = props => {
         <StatsBoxStyled className="text-center" style={props.hideBorder ? { border: 0 } : {}}>
             <ConditionalWrapper condition={props.link} wrapper={children => <Link to={props.link}>{children}</Link>}>
                 {!props.isLoading ? (
-                    <Number>
+                    <div className="number">
                         <CountUp duration={1.1} end={props.number} separator=" " />
-                    </Number>
+                    </div>
                 ) : (
                     'Loading...'
                 )}
