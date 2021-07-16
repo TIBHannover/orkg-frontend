@@ -29,8 +29,6 @@ const StatsBoxStyled = styled(Col)`
     }
 `;
 
-const Number = styled.div``;
-
 const Label = styled.div`
     font-size: 18px;
 `;
