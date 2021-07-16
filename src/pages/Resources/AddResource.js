@@ -12,7 +12,8 @@ import { reverse } from 'named-urls';
 import REGEX from 'constants/regex';
 import Cite from 'citation-js';
 import ROUTES from 'constants/routes';
-import { PREDICATES, ENTITIES } from 'constants/graphSettings';
+import { useSelector } from 'react-redux';
+import { PREDICATES, ENTITIES, CLASSES } from 'constants/graphSettings';
 import { getArrayParamFromQueryString } from 'utils';
 
 const AddResource = () => {
@@ -21,6 +22,7 @@ const AddResource = () => {
     const [label, setLabel] = useState('');
     const [classes, setClasses] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
+    const isCurationAllowed = useSelector(state => state.auth.user?.isCurationAllowed);
     const [isLoadingDefaultClasses, setIsLoadingDefaultClasses] = useState(false);
     const history = useHistory();
     const location = useLocation();
@@ -29,7 +31,10 @@ const AddResource = () => {
         // Set document title
         document.title = 'Add resource - ORKG';
         const getDefaultClass = async () => {
-            const classes = getArrayParamFromQueryString(location.search, 'classes');
+            let classes = getArrayParamFromQueryString(location.search, 'classes');
+            if (!isCurationAllowed) {
+                classes = classes.filter(c => c !== CLASSES.RESEARCH_FIELD); // only admins can add research field resources
+            }
             if (classes && classes.length > 0) {
                 setIsLoadingDefaultClasses(true);
                 const fetchDefaultClasses = classes.map(c => getClassById(c));

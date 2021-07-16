@@ -4,13 +4,14 @@ import { createLiteralValue, createResourceValue } from 'actions/contributionEdi
 import Autocomplete from 'components/Autocomplete/Autocomplete';
 import StatementOptionButton from 'components/StatementBrowser/StatementOptionButton/StatementOptionButton';
 import { StyledDropdownItem, StyledDropdownToggle } from 'components/StatementBrowser/styled';
-import { CLASSES, PREDICATES, ENTITIES } from 'constants/graphSettings';
+import { CLASSES, ENTITIES, PREDICATES } from 'constants/graphSettings';
 import { upperFirst } from 'lodash';
 import PropTypes from 'prop-types';
 import { memo, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import Textarea from 'react-textarea-autosize';
 import { useClickAway } from 'react-use';
-import { DropdownMenu, Input, InputGroup, InputGroupButtonDropdown } from 'reactstrap';
+import { DropdownMenu, InputGroup, InputGroupButtonDropdown } from 'reactstrap';
 import styled from 'styled-components';
 
 const CreateButtonContainer = styled.div`
@@ -98,7 +99,7 @@ const TableCellValueCreate = ({ isVisible, contributionId, propertyId, isEmptyCe
                             <Autocomplete
                                 optionsClass={propertyId === PREDICATES.HAS_RESEARCH_PROBLEM ? CLASSES.PROBLEM : undefined}
                                 entityType={ENTITIES.RESOURCE}
-                                excludeClasses={`${CLASSES.CONTRIBUTION},${CLASSES.PROBLEM},${CLASSES.CONTRIBUTION_TEMPLATE}`}
+                                excludeClasses={`${CLASSES.CONTRIBUTION},${CLASSES.PROBLEM},${CLASSES.TEMPLATE}`}
                                 placeholder={propertyId === PREDICATES.HAS_RESEARCH_PROBLEM ? 'Enter a research problem' : 'Enter a resource'}
                                 onChange={handleChangeAutocomplete}
                                 menuPortalTarget={document.body}
@@ -109,15 +110,15 @@ const TableCellValueCreate = ({ isVisible, contributionId, propertyId, isEmptyCe
                                 cssClasses="form-control-sm"
                             />
                         ) : (
-                            <Input
+                            <Textarea
                                 placeholder="Enter a value"
                                 name="literalValue"
                                 type="text"
-                                bsSize="sm"
                                 value={value}
                                 onChange={e => setValue(e.target.value)}
                                 onKeyPress={handleKeyPress}
                                 autoFocus
+                                className="form-control text-center"
                             />
                         )}
                         {propertyId !== PREDICATES.HAS_RESEARCH_PROBLEM && (

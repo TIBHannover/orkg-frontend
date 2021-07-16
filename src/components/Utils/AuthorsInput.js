@@ -158,7 +158,7 @@ class AuthorsInput extends Component {
         /** Regular expression to check whether an input string is a valid ORCID id.  */
         const ORCID_REGEX = '^\\s*(?:(?:https?://)?orcid.org/)?([0-9]{4})-?([0-9]{4})-?([0-9]{4})-?(([0-9]{4})|([0-9]{3}X))\\s*$';
         const supportedORCID = new RegExp(ORCID_REGEX);
-        return Boolean(value && value.match(supportedORCID));
+        return Boolean(value && value.replaceAll('−', '-').match(supportedORCID));
     };
 
     saveAuthor = authorInput => {
@@ -166,7 +166,7 @@ class AuthorsInput extends Component {
             if (this.isORCID(authorInput.label)) {
                 this.setState({ authorNameLoading: true });
                 // Get the full name from ORCID API
-                const orcid = authorInput.label.match(/([0-9]{4})-?([0-9]{4})-?([0-9]{4})-?(([0-9]{4})|([0-9]{3}X))/g)[0];
+                const orcid = authorInput.label.replaceAll('−', '-').match(/([0-9]{4})-?([0-9]{4})-?([0-9]{4})-?(([0-9]{4})|([0-9]{3}X))/g)[0];
                 getPersonFullNameByORCID(orcid)
                     .then(authorFullName => {
                         const newAuthor = {
@@ -239,7 +239,7 @@ class AuthorsInput extends Component {
     editAuthor = key => {
         this.setState({
             editIndex: key,
-            authorInput: this.props.value[key].orcid ? this.props.value[key].orcid : this.props.value[key],
+            authorInput: { ...this.props.value[key], label: this.props.value[key].orcid ? this.props.value[key].orcid : this.props.value[key].label },
             editMode: true
         });
         this.toggle('showAuthorForm');

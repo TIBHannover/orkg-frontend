@@ -39,6 +39,10 @@ export default class AbstractRenderer extends Component {
         this.setState({ updateFlipFlop: !this.state.updateFlipFlop });
     };
 
+    createChartVisualization = () => {
+        this.setState({ updateFlipFlop: !this.state.updateFlipFlop });
+    };
+
     createVisualization = () => {
         // get the rendering method
         const renderingMethod = this.selfVisModel.getRenderingMethod();
@@ -66,7 +70,6 @@ export default class AbstractRenderer extends Component {
         return (
             <div
                 style={{
-                    // backgroundColor: 'yellow',
                     width: this.props.visualizationWidth + 'px'
                 }}
             >

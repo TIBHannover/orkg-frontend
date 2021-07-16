@@ -89,6 +89,13 @@ export const setPaperAuthors = payload => dispatch => {
     });
 };
 
+export const setPaperObservatory = payload => dispatch => {
+    dispatch({
+        type: type.SET_PAPER_OBSERVATORY,
+        payload
+    });
+};
+
 export const addToComparison = ({ contributionId, contributionData }) => dispatch => {
     dispatch({
         type: type.ADD_TO_COMPARISON,

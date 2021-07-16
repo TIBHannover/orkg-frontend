@@ -67,9 +67,13 @@ export const submitPostRequest = (url, headers, data, jsonStringify = true, send
                 if (!response.ok) {
                     const json = response.json();
                     if (json.then) {
-                        json.then(reject);
+                        return json.then(reject);
                     } else {
-                        reject(new Error(`Error response. (${response.status}) ${response.statusText}`));
+                        return reject({
+                            error: new Error(`Error response. (${response.status}) ${response.statusText}`),
+                            statusCode: response.status,
+                            statusText: response.statusText
+                        });
                     }
                 } else {
                     const json = response.json();

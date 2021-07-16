@@ -1,4 +1,4 @@
-import * as type from '../actions/types';
+import * as type from 'actions/types';
 import dotProp from 'dot-prop-immutable';
 import assign from 'lodash/assign';
 import { asyncLocalStorage } from 'utils';
@@ -9,23 +9,26 @@ const initialState = {
         byId: {},
         allIds: []
     },
-    title: '',
-    paperResourceId: 0,
+    paperResource: {
+        id: '',
+        label: '',
+        created_at: null,
+        classes: [],
+        shared: 0,
+        created_by: '00000000-0000-0000-0000-000000000000',
+        observatory_id: '00000000-0000-0000-0000-000000000000',
+        extraction_method: 'UNKNOWN',
+        organization_id: '00000000-0000-0000-0000-000000000000'
+    },
     authors: [],
-    publicationMonth: 0,
-    publicationMonthResourceId: 0,
-    publicationYear: 0,
-    publicationYearResourceId: 0,
-    doi: '',
-    doiResourceId: 0,
+    publicationMonth: {},
+    publicationYear: {},
+    doi: {},
     researchField: {},
     verified: false,
-    publishedIn: '',
-    url: '',
-    urlResourceId: 0,
-    createdBy: null
+    publishedIn: {},
+    url: {}
 };
-//const cookies = new Cookies();
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default (state = initialState, action) => {
@@ -35,23 +38,7 @@ export default (state = initialState, action) => {
 
             return {
                 ...state,
-                title: typeof payload.title ? payload.title : state.title,
-                paperResourceId: typeof payload.paperResourceId !== 'undefined' ? payload.paperResourceId : state.paperResourceId,
-                authors: typeof payload.authors !== 'undefined' ? payload.authors : state.authors,
-                publicationMonth: typeof payload.publicationMonth !== 'undefined' ? payload.publicationMonth : state.publicationMonth,
-                publicationMonthResourceId:
-                    typeof payload.publicationMonthResourceId !== 'undefined' ? payload.publicationMonthResourceId : state.publicationMonthResourceId,
-                publicationYear: typeof payload.publicationYear !== 'undefined' ? payload.publicationYear : state.publicationYear,
-                publicationYearResourceId:
-                    typeof payload.publicationYearResourceId !== 'undefined' ? payload.publicationYearResourceId : state.publicationYearResourceId,
-                doi: typeof payload.doi !== 'undefined' ? payload.doi : state.doi,
-                doiResourceId: typeof payload.doiResourceId !== 'undefined' ? payload.doiResourceId : state.doiResourceId,
-                researchField: typeof payload.researchField !== 'undefined' ? payload.researchField : state.researchField,
-                verified: typeof payload.verified !== 'undefined' ? payload.verified : state.verified,
-                publishedIn: typeof payload.publishedIn !== 'undefined' ? payload.publishedIn : state.publishedIn,
-                url: typeof payload.url !== 'undefined' ? payload.url : state.url,
-                urlResourceId: typeof payload.urlResourceId !== 'undefined' ? payload.urlResourceId : state.urlResourceId,
-                createdBy: typeof payload.createdBy !== 'undefined' ? payload.createdBy : state.createdBy
+                ...payload
             };
         }
 
@@ -72,6 +59,15 @@ export default (state = initialState, action) => {
             const { payload } = action;
 
             return dotProp.set(state, 'authors', payload.authors);
+        }
+
+        case type.SET_PAPER_OBSERVATORY: {
+            const { payload } = action;
+            let newState = dotProp.set(state, 'paperResource.observatory_id', payload.observatory_id);
+            newState = dotProp.set(newState, 'paperResource.organization_id', payload.organization_id);
+            return {
+                ...newState
+            };
         }
 
         case type.UPDATE_RESEARCH_PROBLEMS: {

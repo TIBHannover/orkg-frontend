@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 const ShareCreatedContent = ({ typeOfLink, title }) => {
     const [source, target] = useSingleton();
     return (
-        <div>
+        <div className="mb-2">
             <Tippy placement="bottom" singleton={source} delay={500} />
             <div className="mb-3 mt-2">Share: </div>
             <Tippy singleton={target} content={`Share this ${typeOfLink ? typeOfLink : 'page'} on Facebook`}>

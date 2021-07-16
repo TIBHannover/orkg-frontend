@@ -46,7 +46,14 @@ function PaperHeaderBar(props) {
                             props.paperTitle
                         )}
                     </div>
-                    <PaperMenuBar id={props.id} editMode={props.editMode} paperLink={props.paperLink} toggle={props.toggle} />
+                    <PaperMenuBar
+                        disableEdit={props.disableEdit}
+                        id={props.id}
+                        label={props.paperTitle}
+                        editMode={props.editMode}
+                        paperLink={props.paperLink}
+                        toggle={props.toggle}
+                    />
                 </Container>
             </PaperHeaderBarContainer>
         </AnimationContainer>
@@ -54,6 +61,7 @@ function PaperHeaderBar(props) {
 }
 PaperHeaderBar.propTypes = {
     editMode: PropTypes.bool.isRequired,
+    disableEdit: PropTypes.bool.isRequired,
     paperLink: PropTypes.string,
     toggle: PropTypes.func.isRequired,
     paperTitle: PropTypes.string.isRequired,

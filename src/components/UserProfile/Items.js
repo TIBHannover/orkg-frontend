@@ -3,9 +3,12 @@ import PropTypes from 'prop-types';
 import PaperCard from 'components/PaperCard/PaperCard';
 import ComparisonCard from 'components/ComparisonCard/ComparisonCard';
 import { getStatementsBySubjects } from 'services/backend/statements';
-import { getPaperData, getComparisonData } from 'utils';
-import { find } from 'lodash';
+import { getPaperData, getComparisonData, groupVersionsOfComparisons } from 'utils';
+import { find, flatten } from 'lodash';
 import { Button, ListGroup } from 'reactstrap';
+import { useHistory } from 'react-router-dom';
+import { reverse } from 'named-urls';
+import ROUTES from 'constants/routes.js';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { getResourcesByClass } from 'services/backend/resources';
@@ -13,17 +16,18 @@ import useDeletePapers from 'components/ViewPaper/hooks/useDeletePapers';
 import { CLASSES } from 'constants/graphSettings';
 
 const Items = props => {
-    const pageSize = 5;
+    const pageSize = props.filterClass === CLASSES.COMPARISON ? 10 : 5;
     const [isLoading, setIsLoading] = useState(false);
     const [hasNextPage, setHasNextPage] = useState(false);
     const [page, setPage] = useState(0);
     const [resources, setResources] = useState([]);
     const [selectedItems, setSelectedItems] = useState([]);
+    const history = useHistory();
 
     const finishLoadingCallback = () => {
         // reload the papers, in case page is already 0, manually call loadItems()
-        if (page === 0) {
-            loadItems();
+        if (page === 1) {
+            loadItems(0);
         } else {
             setPage(0);
         }
@@ -34,51 +38,66 @@ const Items = props => {
         finishLoadingCallback
     });
 
-    const loadItems = useCallback(() => {
-        setIsLoading(true);
+    const comparePapers = () => {
+        const contributionIds = flatten(resources.filter(r => selectedItems.includes(r.id))?.map(c => c.contributions?.map(c => c.id)));
+        history.push(reverse(ROUTES.COMPARISON) + `?contributions=${contributionIds.join(',')}`);
+    };
 
-        getResourcesByClass({
-            id: props.filterClass,
-            page: page,
-            items: pageSize,
-            sortBy: 'id',
-            desc: true,
-            creator: props.userId,
-            returnContent: true
-        }).then(result => {
-            // Resources
-            if (result.length === 0) {
-                setIsLoading(false);
-                setHasNextPage(false);
-                return;
-            }
-            // Fetch the data of each resource
-            getStatementsBySubjects({
-                ids: result.map(p => p.id)
-            })
-                .then(resourcesStatements => {
-                    const resources = resourcesStatements.map(resourceStatements => {
-                        const resourceSubject = find(result, { id: resourceStatements.id });
-                        if (props.filterClass === CLASSES.PAPER) {
-                            return getPaperData(resourceSubject, resourceStatements.statements);
-                        }
-                        if (props.filterClass === CLASSES.COMPARISON) {
-                            return getComparisonData(resourceSubject, resourceStatements.statements);
-                        }
-                        return null;
-                    });
-                    setResources(prevResources => [...prevResources, ...resources]);
-                    setIsLoading(false);
-                    setHasNextPage(resources.length < pageSize || resources.length === 0 ? false : true);
-                })
-                .catch(error => {
+    const loadItems = useCallback(
+        page => {
+            setIsLoading(true);
+
+            getResourcesByClass({
+                id: props.filterClass,
+                page: page,
+                items: pageSize,
+                sortBy: 'created_at',
+                desc: true,
+                creator: props.userId
+            }).then(result => {
+                // Resources
+                if (result.totalElements === 0) {
                     setIsLoading(false);
                     setHasNextPage(false);
+                    return;
+                }
+                // Fetch the data of each resource
+                getStatementsBySubjects({
+                    ids: result.content.map(p => p.id)
+                })
+                    .then(resourcesStatements => {
+                        const new_resources = resourcesStatements.map(resourceStatements => {
+                            const resourceSubject = find(result.content, { id: resourceStatements.id });
+                            if (props.filterClass === CLASSES.PAPER) {
+                                return getPaperData(resourceSubject, resourceStatements.statements);
+                            }
+                            if (props.filterClass === CLASSES.COMPARISON) {
+                                return getComparisonData(resourceSubject, resourceStatements.statements);
+                            }
+                            return null;
+                        });
+                        if (props.filterClass === CLASSES.COMPARISON) {
+                            setResources(prevResources =>
+                                groupVersionsOfComparisons([...flatten([...prevResources.map(c => c.versions), ...prevResources]), ...new_resources])
+                            );
+                        } else {
+                            setResources(prevResources => [...prevResources, ...new_resources]);
+                        }
 
-                    console.log(error);
-                });
-        });
-    }, [page, props.filterClass, props.userId]);
+                        setIsLoading(false);
+                        setHasNextPage(!result.last);
+                        setPage(page + 1);
+                    })
+                    .catch(error => {
+                        setIsLoading(false);
+                        setHasNextPage(false);
+
+                        console.log(error);
+                    });
+            });
+        },
+        [pageSize, props.filterClass, props.userId]
+    );
 
     useEffect(() => {
         if (loadingDeletePapers) {
@@ -88,14 +107,16 @@ const Items = props => {
         }
     }, [loadingDeletePapers]);
 
-    useEffect(() => {
-        loadItems();
-    }, [loadItems]);
-
     // reset resources when the userId has changed
     useEffect(() => {
         setResources([]);
+        setHasNextPage(false);
+        setPage(0);
     }, [props.userId]);
+
+    useEffect(() => {
+        loadItems(0);
+    }, [loadItems]);
 
     const handleSelect = paperId => {
         if (selectedItems.includes(paperId)) {
@@ -107,7 +128,7 @@ const Items = props => {
 
     const handleLoadMore = () => {
         if (!isLoading) {
-            setPage(page + 1);
+            loadItems(page);
         }
     };
 
@@ -166,9 +187,17 @@ const Items = props => {
             )}
 
             {selectedItems.length > 0 && (
-                <Button size="sm" color="danger" className="mt-2" onClick={deletePapers}>
-                    Delete selected {props.filterLabel} ({selectedItems.length})
-                </Button>
+                <>
+                    {props.filterClass === CLASSES.PAPER && (
+                        <Button size="sm" color="secondary" className="mt-2 mr-2" onClick={comparePapers}>
+                            Compare selected {props.filterLabel} ({selectedItems.length})
+                        </Button>
+                    )}
+
+                    <Button size="sm" color="danger" className="mt-2" onClick={deletePapers}>
+                        Delete selected {props.filterLabel} ({selectedItems.length})
+                    </Button>
+                </>
             )}
         </div>
     );

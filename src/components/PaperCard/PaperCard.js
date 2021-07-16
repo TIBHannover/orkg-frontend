@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 import ROUTES from 'constants/routes.js';
-import AddToComparison from 'components/ViewPaper/AddToComparison';
+import AddToComparison from 'components/PaperCard/AddToComparison';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
 import RelativeBreadcrumbs from 'components/RelativeBreadcrumbs/RelativeBreadcrumbs';
 import Authors from './Authors';
@@ -61,40 +61,35 @@ const PaperCard = props => {
                         )}
                         <br />
                         <small>
-                            <Authors authors={props.paper.authorNames} />
+                            <Authors authors={props.paper.authors} />
                             {(props.paper.publicationMonth || props.paper.publicationYear) && (
                                 <Icon size="sm" icon={faCalendar} className="ml-2 mr-1" />
                             )}
-                            {props.paper.publicationMonth && props.paper.publicationMonth > 0
-                                ? moment(props.paper.publicationMonth, 'M').format('MMMM')
+                            {props.paper.publicationMonth && props.paper.publicationMonth.label > 0
+                                ? moment(props.paper.publicationMonth.label, 'M').format('MMMM')
                                 : ''}{' '}
-                            {props.paper.publicationYear}
+                            {props.paper.publicationYear?.label ?? null}
                         </small>
-                        {props.showBreadcrumbs && (
-                            <div className="d-block d-md-none mt-1">
-                                <RelativeBreadcrumbs researchField={props.paper.researchField} />
-                            </div>
-                        )}
+                        <div className="d-flex d-md-none mt-1">
+                            {props.showBreadcrumbs && <RelativeBreadcrumbs researchField={props.paper.researchField} />}
+                            {props.showAddToComparison && (
+                                <div className="d-flex ml-1 text-left">
+                                    <AddToComparison paper={props.paper} contributionId={props.contribution?.id} />
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </div>
-                <div className="col-md-3 text-right d-flex align-items-end" style={{ flexDirection: 'column' }}>
+                <div className="col-md-3 text-right d-flex align-items-end flex-column">
                     <div style={{ flex: 1 }}>
-                        {props.showBreadcrumbs && (
-                            <div className="d-none d-md-block">
-                                <RelativeBreadcrumbs researchField={props.paper.researchField} />
-                            </div>
-                        )}
-
-                        {props.contribution && (
-                            <div className="options mr-2">
-                                <AddToComparison
-                                    contributionId={props.contribution.id}
-                                    paperId={props.paper.id}
-                                    paperTitle={props.paper.title}
-                                    contributionTitle={props.contribution.title}
-                                />
-                            </div>
-                        )}
+                        <div className="d-none d-md-flex align-items-center">
+                            {props.showBreadcrumbs && <RelativeBreadcrumbs researchField={props.paper.researchField} />}
+                            {props.showAddToComparison && (
+                                <div className="d-flex ml-1 mb-2 text-left">
+                                    <AddToComparison paper={props.paper} contributionId={props.contribution?.id} />
+                                </div>
+                            )}
+                        </div>
                     </div>
                     <UserAvatar userId={props.paper.created_by} />
                 </div>
@@ -107,9 +102,9 @@ PaperCard.propTypes = {
     paper: PropTypes.shape({
         id: PropTypes.string.isRequired,
         title: PropTypes.string,
-        authorNames: PropTypes.array,
-        publicationMonth: PropTypes.any,
-        publicationYear: PropTypes.string,
+        authors: PropTypes.array,
+        publicationMonth: PropTypes.object,
+        publicationYear: PropTypes.object,
         researchField: PropTypes.shape({
             id: PropTypes.string.isRequired,
             label: PropTypes.string
@@ -123,6 +118,7 @@ PaperCard.propTypes = {
     selectable: PropTypes.bool,
     selected: PropTypes.bool,
     showBreadcrumbs: PropTypes.bool.isRequired,
+    showAddToComparison: PropTypes.bool.isRequired,
     onSelect: PropTypes.func
 };
 
@@ -130,6 +126,7 @@ PaperCard.defaultProps = {
     selectable: false,
     selected: false,
     showBreadcrumbs: true,
+    showAddToComparison: true,
     onChange: () => {}
 };
 

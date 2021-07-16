@@ -151,10 +151,10 @@ export default function ValueItemTemplate(props) {
                         <Button className="p-0 text-left" color="link" onClick={props.handleOnClick} style={{ userSelect: 'text' }}>
                             {props.showHelp && props.value.type === 'object' ? (
                                 <Pulse content="Click on the resource to browse it">
-                                    <ValuePlugins type="resource">{getLabel() || ''}</ValuePlugins>
+                                    <ValuePlugins type="resource">{getLabel() || <i>No label</i>}</ValuePlugins>
                                 </Pulse>
                             ) : (
-                                <ValuePlugins type="resource">{getLabel() || ''}</ValuePlugins>
+                                <ValuePlugins type="resource">{getLabel() || <i>No label</i>}</ValuePlugins>
                             )}
 
                             {props.resource && props.resource.existingResourceId && openExistingResourcesInDialog ? (
@@ -169,22 +169,22 @@ export default function ValueItemTemplate(props) {
                     )}
 
                     {props.resource && props.value.type === 'object' && !props.resource.isFetching && resourcesAsLinks && (
-                        <Link to={reverse(ROUTES.RESOURCE, { id: props.value.resourceId })}>{props.value.label}</Link>
+                        <Link to={reverse(ROUTES.RESOURCE, { id: props.value.resourceId })}>{props.value.label || <i>No label</i>}</Link>
                     )}
 
                     {!props.resource && props.value.type === 'class' && resourcesAsLinks && (
-                        <Link to={reverse(ROUTES.CLASS, { id: props.value.resourceId })}>{props.value.label}</Link>
+                        <Link to={reverse(ROUTES.CLASS, { id: props.value.resourceId })}>{props.value.label || <i>No label</i>}</Link>
                     )}
 
                     {!props.resource && props.value.type === 'predicate' && resourcesAsLinks && (
-                        <Link to={reverse(ROUTES.PROPERTY, { id: props.value.resourceId })}>{props.value.label}</Link>
+                        <Link to={reverse(ROUTES.PROPERTY, { id: props.value.resourceId })}>{props.value.label || <i>No label</i>}</Link>
                     )}
 
                     {props.resource && props.resource.isFetching && props.value.type === 'object' && 'Loading...'}
 
                     {props.value.type === 'literal' && (
                         <div className="literalLabel">
-                            <ValuePlugins type="literal">{props.value.label}</ValuePlugins>
+                            <ValuePlugins type="literal">{props.value.label || <i>No label</i>}</ValuePlugins>
                         </div>
                     )}
 

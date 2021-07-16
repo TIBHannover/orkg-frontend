@@ -1,5 +1,6 @@
 import { Input } from 'reactstrap';
 import PropTypes from 'prop-types';
+import Textarea from 'react-textarea-autosize';
 
 export default function InputField(props) {
     let inputFormType = 'text';
@@ -12,6 +13,21 @@ export default function InputField(props) {
                 inputFormType = 'text';
                 break;
         }
+    }
+
+    if (inputFormType === 'text') {
+        return (
+            <Textarea
+                placeholder="Enter a value"
+                name="literalValue"
+                value={props.inputValue}
+                onChange={(e, value) => props.setInputValue(e ? e.target.value : value)}
+                onKeyDown={props.onKeyDown}
+                onBlur={props.onBlur}
+                className="form-control"
+                autoFocus
+            />
+        );
     }
 
     return (

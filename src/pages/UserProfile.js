@@ -10,6 +10,7 @@ import { useSelector } from 'react-redux';
 import Gravatar from 'react-gravatar';
 import styled from 'styled-components';
 import { CLASSES, MISC } from 'constants/graphSettings';
+import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import { Link } from 'react-router-dom';
@@ -99,10 +100,14 @@ const UserProfile = props => {
                         if (userData.organization_id !== MISC.UNKNOWN_ID) {
                             const promise1 = getOrganization(userData.organization_id);
                             promises.push(promise1);
+                        } else {
+                            promises.push(Promise.resolve());
                         }
                         if (userData.observatory_id !== MISC.UNKNOWN_ID) {
                             const promise2 = getObservatoryById(userData.observatory_id);
                             promises.push(promise2);
+                        } else {
+                            promises.push(Promise.resolve());
                         }
 
                         Promise.all(promises)
@@ -149,12 +154,7 @@ const UserProfile = props => {
                 {!isLoadingUserData && (
                     <Row>
                         <div className="col-md-2 text-center d-flex align-items-center justify-content-center mb-3 mb-md-0">
-                            <StyledGravatar
-                                className="rounded-circle"
-                                md5={userData?.gravatar_id ?? 'example@example.com'}
-                                size={100}
-                                id="TooltipExample"
-                            />
+                            <StyledGravatar className="rounded-circle" md5={userData?.gravatar_id ?? 'example@example.com'} size={100} />
                         </div>
                         <div className="col-md-10 box rounded p-4">
                             <div className="row">
@@ -217,6 +217,7 @@ const UserProfile = props => {
             <Container className="p-0">
                 <Items filterLabel="papers" filterClass={CLASSES.PAPER} userId={userId} showDelete={userId === currentUserId} />
             </Container>
+            <ComparisonPopup />
             {/*
             TODO: support for activity feed
             <Container className="box mt-4 pt-4 pb-3 pl-5 pr-5">

@@ -192,14 +192,14 @@ function ExportToLatex(props) {
             }
         }
 
-        return { authorNames: authorNamesArray.reverse(), publicationYear };
+        return { authors: authorNamesArray.reverse(), publicationYear };
     };
 
     const createCiteBibtex = (contribution, paperStatements) => {
         let ref;
         if (paperStatements) {
             const contributionData = parsePaperStatements(paperStatements);
-            const authors = contributionData.authorNames.map(a => ({ literal: a }));
+            const authors = contributionData.authors.map(a => ({ literal: a }));
             ref = new Cite({
                 id: contribution.paperId,
                 title: contribution.title,

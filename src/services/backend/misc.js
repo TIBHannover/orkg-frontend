@@ -19,6 +19,10 @@ export const generateDOIForComparison = (comparison_id, title, subject, descript
     );
 };
 
+export const createObject = payload => {
+    return submitPostRequest(`${url}objects/`, { 'Content-Type': 'application/json' }, payload);
+};
+
 export const getEntities = (entityType, params) => {
     // { page = 0, items: size = 9999, sortBy = 'created_at', desc = true, q = null, exact = false, returnContent = false }
     // for resources there additional parameter: exclude

@@ -45,13 +45,7 @@ const CsvImport = () => {
 
     const validateCsv = _data => {
         const validations = checkDataValidation(_data);
-        for (const { context, error } of validations) {
-            if (error) {
-                setError(`<b>${context}</b>: ${error.message}`);
-                return;
-            }
-        }
-        return setError(null);
+        return setError(validations);
     };
 
     const title = (

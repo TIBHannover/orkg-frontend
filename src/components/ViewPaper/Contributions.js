@@ -236,7 +236,7 @@ class Contributions extends Component {
                                         <SuggestedTemplates
                                             syncBackend={true}
                                             selectedResource={this.props.selectedResource ? this.props.selectedResource : selectedContributionId}
-                                            researchField={this.props.researchField.id}
+                                            researchField={this.props.researchField?.id}
                                             researchProblems={this.props.researchProblemsIds}
                                             disabled={shared > 1 ? true : false}
                                         />
@@ -407,12 +407,7 @@ class Contributions extends Component {
                                 </StyledHorizontalContribution>
                             </AnimationContainer>
                         </TransitionGroup>
-                        <ProvenanceBox
-                            resourceId={this.props.paperId}
-                            contributors={this.props.contributors}
-                            observatoryInfo={this.props.observatoryInfo}
-                            changeObservatory={this.props.changeObservatory}
-                        />
+                        <ProvenanceBox />
                     </Row>
                 </Container>
             </div>
@@ -435,11 +430,8 @@ Contributions.propTypes = {
     handleChangeContributionLabel: PropTypes.func.isRequired,
     handleCreateContribution: PropTypes.func.isRequired,
     toggleDeleteContribution: PropTypes.func.isRequired,
-    observatoryInfo: PropTypes.object,
-    contributors: PropTypes.array,
     researchField: PropTypes.object.isRequired,
-    selectedResource: PropTypes.string,
-    changeObservatory: PropTypes.func
+    selectedResource: PropTypes.string
 };
 
 const mapStateToProps = (state, ownProps) => {

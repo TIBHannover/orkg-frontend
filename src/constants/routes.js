@@ -18,7 +18,6 @@ const routes = {
     ADD_ORGANIZATION: '/addOrganization',
     ORGANIZATION: '/organizations/:id',
     ADD_OBSERVATORY: '/organizations/:id/addObservatory',
-    ORGANIZATION_OBSERVATORIES: '/organizations/:id/observatories',
     OBSERVATORY: '/observatory/:id',
     ADD_PAPER: {
         GENERAL_DATA: '/add-paper'
@@ -27,6 +26,7 @@ const routes = {
     CONTRIBUTION: '/contribution/:id',
     COMPARISON_SHORTLINK: '/c/:shortCode',
     COMPARISON: '/comparison/:comparisonId?',
+    COMPARISON_DIFF: '/comparison/diff/:oldId-:newId',
     PAPERS: '/papers',
     COMPARISONS: '/comparisons',
     VISUALIZATIONS: '/visualizations',
@@ -39,14 +39,21 @@ const routes = {
     LICENSE: '/license',
     DATA_PROTECTION: '/data-protection',
     TERMS_OF_USE: '/terms-of-use',
+    SEARCH: '/search/:searchTerm?',
+    STATS: '/stats',
     DATA: '/data',
     CHANGELOG: '/changelog',
-    STATS: '/stats',
-    SEARCH: '/search/:searchTerm?',
     FEATURED_COMPARISONS: '/featured-comparisons',
     PDF_TEXT_ANNOTATION: '/pdf-text-annotation',
     PDF_ANNOTATION: '/pdf-annotation',
     CSV_IMPORT: '/csv-import',
+    BENCHMARKS: '/benchmarks',
+    BENCHMARK: '/benchmark/:resourceId',
+    SMART_REVIEW: '/smart-review/:id',
+    SMART_REVIEWS: '/smart-reviews',
+    USER_UNPUBLISHED_REVIEWS: '/user-unpublished-reviews',
+    SMART_REVIEW_NEW: '/smart-review/new',
+    SMART_REVIEW_DIFF: '/smart-review/diff/:oldId-:newId',
     TOOLS: '/tools',
     CONTRIBUTION_EDITOR: '/contribution-editor',
     ADD_COMPARISON: '/add-comparison',
@@ -54,6 +61,8 @@ const routes = {
     PREDICATES: '/predicates',
     PREDICATE: '/predicate/:id',
     TPDL: '/tpdl',
-    EXPORT_DATA: '/export-data'
+    EXPORT_DATA: '/export-data',
+    CURATION_CALL: '/open-call-curation-grant',
+    WEBINAR_MAY_11: '/webinar-may-11'
 };
 export default routes;

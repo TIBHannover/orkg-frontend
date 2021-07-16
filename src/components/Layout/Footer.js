@@ -51,9 +51,10 @@ const Footer = () => (
     <FooterWrapper>
         <Container>
             <footer className="pt-4 pb-4">
+                <h1 className="sr-only">More information about ORKG</h1>
                 <Row>
                     <FooterCol md={3}>
-                        <h5>ORKG</h5>
+                        <h2 className="h5">ORKG</h2>
                         <hr className="mr-5" />
                         <Row>
                             <div className="float-left ml-3">
@@ -67,7 +68,7 @@ const Footer = () => (
                         </Row>
                     </FooterCol>
                     <FooterCol md={3}>
-                        <h5>About</h5>
+                        <h2 className="h5">About</h2>
                         <hr className="mr-5" />
                         <ul className="p-0" style={{ listStyle: 'none' }}>
                             <li>
@@ -94,7 +95,7 @@ const Footer = () => (
                         </ul>
                     </FooterCol>
                     <FooterCol md={3}>
-                        <h5>Technical</h5>
+                        <h2 className="h5">Technical</h2>
                         <hr className="mr-5" />
                         <ul className="p-0" style={{ listStyle: 'none' }}>
                             <li>
@@ -119,7 +120,7 @@ const Footer = () => (
                         </ul>
                     </FooterCol>
                     <FooterCol md={3}>
-                        <h5>More</h5>
+                        <h2 className="h5">More</h2>
                         <hr className="mr-5" />
                         <ul className="p-0" style={{ listStyle: 'none' }}>
                             <li>

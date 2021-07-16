@@ -6,6 +6,7 @@ import AuthorPage from 'pages/AuthorPage';
 import VenuePage from 'pages/VenuePage';
 import AddResource from 'pages/Resources/AddResource';
 import Comparison from 'pages/Comparisons/Comparison';
+import ComparisonDiff from 'pages/Comparisons/ComparisonDiff';
 import Home from 'pages/Home';
 import License from 'pages/License';
 import DataProtection from 'pages/DataProtection';
@@ -36,7 +37,6 @@ import OrganizationDetails from 'pages/Organizations/OrganizationDetails';
 import AddOrganization from 'pages/Organizations/AddOrganization';
 import AddObservatory from 'pages/Observatories/AddObservatory';
 import Observatory from 'pages/Observatories/Observatory';
-import OrganizationObservatories from 'pages/Observatories/OrganizationObservatories';
 import SearchResults from 'pages/Search';
 import ViewPaper from 'pages/ViewPaper';
 import Stats from 'pages/Stats';
@@ -46,11 +46,20 @@ import FeaturedComparisons from 'pages/FeaturedComparisons';
 import Data from 'pages/Data';
 import Contribution from 'pages/Contribution';
 import CsvImport from 'pages/CsvImport';
+import SmartReview from 'pages/SmartReview/SmartReview';
+import SmartReviews from 'pages/SmartReview/SmartReviews';
+import UserUnpublishedArticles from 'pages/SmartReview/UserUnpublishedArticles';
+import SmartReviewNew from 'pages/SmartReview/SmartReviewNew';
+import SmartReviewDiff from 'pages/SmartReview/SmartReviewDiff';
 import Tools from 'pages/Tools';
 import AddComparison from 'pages/AddComparison';
 import requireAuthentication from 'requireAuthentication';
+import Benchmarks from 'pages/Benchmarks/Benchmarks';
+import Benchmark from 'pages/Benchmarks/Benchmark';
 import { reverse } from 'named-urls';
 import ContributionEditor from 'pages/ContributionEditor';
+import CurationCall from 'pages/CurationCall';
+import WebinarMay11 from 'pages/WebinarMay11';
 
 // use lazy loading of pages that contain large dependencies
 // run "npm run analyze" to ensure the listed dependencies are not loaded elsewhere and thus end up in the bundle
@@ -137,6 +146,10 @@ const routes = [
         component: ViewPaper
     },
     {
+        path: ROUTES.COMPARISON_DIFF,
+        component: ComparisonDiff
+    },
+    {
         path: ROUTES.COMPARISON_SHORTLINK,
         exact: true,
         component: RedirectShortLinks
@@ -194,6 +207,7 @@ const routes = [
         exact: true,
         component: Comparisons
     },
+
     {
         path: ROUTES.VISUALIZATIONS,
         exact: true,
@@ -273,11 +287,6 @@ const routes = [
         component: Observatory
     },
     {
-        path: ROUTES.ORGANIZATION_OBSERVATORIES,
-        exact: true,
-        component: OrganizationObservatories
-    },
-    {
         path: ROUTES.PDF_TEXT_ANNOTATION,
         exact: true,
         component: PdfTextAnnotation
@@ -307,6 +316,35 @@ const routes = [
         component: requireAuthentication(CsvImport)
     },
     {
+        path: ROUTES.BENCHMARKS,
+        exact: true,
+        component: Benchmarks
+    },
+    {
+        path: ROUTES.BENCHMARK,
+        component: Benchmark
+    },
+    {
+        path: ROUTES.SMART_REVIEW_NEW,
+        component: requireAuthentication(SmartReviewNew)
+    },
+    {
+        path: ROUTES.SMART_REVIEW_DIFF,
+        component: SmartReviewDiff
+    },
+    {
+        path: ROUTES.SMART_REVIEW,
+        component: SmartReview
+    },
+    {
+        path: ROUTES.SMART_REVIEWS,
+        component: SmartReviews
+    },
+    {
+        path: ROUTES.USER_UNPUBLISHED_REVIEWS,
+        component: requireAuthentication(UserUnpublishedArticles)
+    },
+    {
         path: ROUTES.CONTRIBUTION_EDITOR,
         component: requireAuthentication(ContributionEditor)
     },
@@ -317,6 +355,14 @@ const routes = [
     {
         path: ROUTES.TOOLS,
         component: Tools
+    },
+    {
+        path: ROUTES.CURATION_CALL,
+        component: CurationCall
+    },
+    {
+        path: ROUTES.WEBINAR_MAY_11,
+        component: WebinarMay11
     },
     /* Don't add routes below this line */
     {

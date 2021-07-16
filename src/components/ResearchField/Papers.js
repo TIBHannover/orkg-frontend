@@ -141,7 +141,7 @@ const Papers = ({ id, boxShadow, showBreadcrumbs }) => {
                     </div>
                 )}
                 {isLoading && (
-                    <div className={`text-center mt-4 mb-4 ${page === 0 ? 'p-5 container rounded' : ''} ${boxShadow ? 'box' : ''}`}>
+                    <div className={`text-center mt-4 mb-4 ${page === 0 ? 'p-5 container rounded' : ''} ${boxShadow && page === 0 ? 'box' : ''}`}>
                         {page !== 0 && (
                             <>
                                 <Icon icon={faSpinner} spin /> Loading

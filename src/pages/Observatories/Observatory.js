@@ -96,36 +96,36 @@ const Observatory = () => {
                             </Card>
                         </Container>
                     )}
+                    <Container className="p-0">
+                        <Row className="mt-3">
+                            <Col md="4" className="d-flex">
+                                <ResearchProblemsBox observatoryId={observatoryId} organizationsList={organizationsList} />
+                            </Col>
+                            <Col md="4" className="d-flex">
+                                <OrganizationsBox
+                                    observatoryId={observatoryId}
+                                    organizationsList={organizationsList}
+                                    isLoadingOrganizations={isLoadingOrganizations}
+                                />
+                            </Col>
+                            <Col md="4" className="d-flex">
+                                <MembersBox observatoryId={observatoryId} organizationsList={organizationsList} />
+                            </Col>
+                        </Row>
+                    </Container>
+                    <Comparisons observatoryId={observatoryId} />
+                    <Papers observatoryId={observatoryId} />
+                    <EditObservatory
+                        showDialog={showEditDialog}
+                        toggle={() => setShowEditDialog(v => !v)}
+                        label={label}
+                        id={observatoryId}
+                        description={description}
+                        researchField={researchField}
+                        updateObservatoryMetadata={updateObservatoryMetadata}
+                    />
                 </>
             )}
-            <Container className="p-0">
-                <Row className="mt-3">
-                    <Col md="4" className="d-flex">
-                        <ResearchProblemsBox observatoryId={observatoryId} organizationsList={organizationsList} />
-                    </Col>
-                    <Col md="4" className="d-flex">
-                        <OrganizationsBox
-                            observatoryId={observatoryId}
-                            organizationsList={organizationsList}
-                            isLoadingOrganizations={isLoadingOrganizations}
-                        />
-                    </Col>
-                    <Col md="4" className="d-flex">
-                        <MembersBox observatoryId={observatoryId} organizationsList={organizationsList} />
-                    </Col>
-                </Row>
-            </Container>
-            <Comparisons observatoryId={observatoryId} />
-            <Papers observatoryId={observatoryId} />
-            <EditObservatory
-                showDialog={showEditDialog}
-                toggle={() => setShowEditDialog(v => !v)}
-                label={label}
-                id={observatoryId}
-                description={description}
-                researchField={researchField}
-                updateObservatoryMetadata={updateObservatoryMetadata}
-            />
         </>
     );
 };

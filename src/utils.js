@@ -1,13 +1,26 @@
 import capitalize from 'capitalize';
-import queryString from 'query-string';
-import { flattenDepth, uniq, isString, find, flatten, last } from 'lodash';
-import rdf from 'rdf';
-import ROUTES from 'constants/routes';
-import { PREDICATES, MISC, CLASSES } from 'constants/graphSettings';
-import { reverse } from 'named-urls';
-import { PREDICATE_TYPE_ID, RESOURCE_TYPE_ID } from 'constants/misc';
 import { FILTER_TYPES } from 'constants/comparisonFilterTypes';
+import { CLASSES, MISC, PREDICATES, ENTITIES } from 'constants/graphSettings';
+import { PREDICATE_TYPE_ID, RESOURCE_TYPE_ID } from 'constants/misc';
+import ROUTES from 'constants/routes';
+import { find, flatten, flattenDepth, isEqual, isString, last, uniq, sortBy, uniqBy } from 'lodash';
+import { unescape } from 'he';
+import { reverse } from 'named-urls';
+import queryString from 'query-string';
+import rdf from 'rdf';
+import { createLiteral as createLiteralApi } from 'services/backend/literals';
+import { createResource } from 'services/backend/resources';
+import {
+    createLiteralStatement,
+    createResourceStatement,
+    deleteStatementsByIds,
+    getStatementsByPredicateAndLiteral
+} from 'services/backend/statements';
+import { Cookies } from 'react-cookie';
+import env from '@beam-australia/react-env';
 import slugifyString from 'slugify';
+
+const cookies = new Cookies();
 
 export function hashCode(s) {
     return s.split('').reduce((a, b) => {
@@ -165,36 +178,19 @@ export const get_error_message = (errors, field = null) => {
  * @param {Array} paperStatements
  */
 export const getPaperData_ViewPaper = (paperResource, paperStatements) => {
-    const researchField = getResearchField(paperStatements);
-    const publishedIn = getPublishedIn(paperStatements);
-    const [publicationYear, publicationYearResourceId] = getPublicationYear(paperStatements);
-
-    const authors = getAuthors(paperStatements);
-    const contributions = getContributions(paperStatements);
-
-    // publication month
-    const [publicationMonth, publicationMonthResourceId] = getPublicationMonth(paperStatements);
-    // DOI
-    const [doi, doiResourceId] = getDOI(paperStatements);
-    //url
-    const [url, urlResourceId] = getURL(paperStatements);
+    const authors = filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_AUTHOR, false);
+    const contributions = filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_CONTRIBUTION, false, CLASSES.CONTRIBUTION);
 
     return {
-        title: paperResource.label,
-        paperResourceId: paperResource.id,
+        paperResource: paperResource,
+        authors: authors ? authors.sort((a, b) => a.s_created_at.localeCompare(b.s_created_at)) : [], // statements are ordered desc, so first author is last => thus reverse
         contributions: contributions.sort((a, b) => a.label.localeCompare(b.label)), // sort contributions ascending, so contribution 1, is actually the first one
-        authors: authors.reverse(), // statements are ordered desc, so first author is last => thus reverse
-        publicationMonth: parseInt(publicationMonth),
-        publicationMonthResourceId,
-        publicationYear: parseInt(publicationYear),
-        publicationYearResourceId,
-        doi,
-        doiResourceId,
-        researchField,
-        publishedIn,
-        url,
-        urlResourceId,
-        createdBy: paperResource.created_by !== MISC.UNKNOWN_ID ? paperResource.created_by : null
+        publicationMonth: filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_PUBLICATION_MONTH, true),
+        publicationYear: filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_PUBLICATION_YEAR, true),
+        doi: filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_DOI, true),
+        researchField: filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_RESEARCH_FIELD, true, CLASSES.RESEARCH_FIELD),
+        publishedIn: filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_VENUE, true),
+        url: filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.URL, true)
     };
 };
 
@@ -206,13 +202,15 @@ export const getPaperData_ViewPaper = (paperResource, paperStatements) => {
  */
 
 export const getPaperData = (resource, paperStatements) => {
-    // research field
-    const researchField = getResearchField(paperStatements);
-    const publicationYear = getPublicationYear(paperStatements)[0]; // gets year[0] and resourceId[1]
-    const publicationMonth = getPublicationMonth(paperStatements)[0]; // gets month[0] and resourceId[1]
-    const [doi, doiResourceId] = getDOI(paperStatements); // more complex object, returns doi and doi resources as an array
-    const authors = getAuthors(paperStatements);
-    const contributions = getContributions(paperStatements);
+    let doi = filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_DOI, true);
+    if (doi && doi.label.includes('10.') && !doi.label.startsWith('10.')) {
+        doi = { ...doi, label: doi.label.substring(doi.label.indexOf('10.')) };
+    }
+    const researchField = filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_RESEARCH_FIELD, true, CLASSES.RESEARCH_FIELD);
+    const publicationYear = filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_PUBLICATION_YEAR, true);
+    const publicationMonth = filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_PUBLICATION_MONTH, true); // gets month[0] and resourceId[1]
+    const authors = filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_AUTHOR, false);
+    const contributions = filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_CONTRIBUTION, false, CLASSES.CONTRIBUTION);
     const order = getOrder(paperStatements);
 
     return {
@@ -222,9 +220,8 @@ export const getPaperData = (resource, paperStatements) => {
         publicationMonth,
         researchField,
         doi,
-        doiResourceId,
-        authorNames: authors.sort((a, b) => a.created_at.localeCompare(b.created_at)),
-        contributions: contributions.sort((a, b) => a.label.localeCompare(b.label)),
+        authors: authors ? authors.sort((a, b) => a.s_created_at.localeCompare(b.s_created_at)) : [],
+        contributions: contributions ? contributions.sort((a, b) => a.label.localeCompare(b.label)) : [], // sort contributions ascending, so contribution 1, is actually the first one
         order,
         created_by: resource.created_by !== MISC.UNKNOWN_ID ? resource.created_by : null
     };
@@ -237,44 +234,65 @@ export const getPaperData = (resource, paperStatements) => {
  * @param {Array} comparisonStatements
  */
 export const getComparisonData = (resource, comparisonStatements) => {
-    // description
-    const description = comparisonStatements.find(statement => statement.predicate.id === PREDICATES.DESCRIPTION);
-
-    // reference
-    const reference = comparisonStatements.find(statement => statement.predicate.id === PREDICATES.REFERENCE);
-
-    // url
-    const url = comparisonStatements.find(statement => statement.predicate.id === PREDICATES.URL);
-
-    // icon
-    const icon = comparisonStatements.find(statement => statement.predicate.id === PREDICATES.ICON);
-
-    // type
-    const type = comparisonStatements.find(statement => statement.predicate.id === PREDICATES.TYPE);
-
-    // order
-    const order = comparisonStatements.find(statement => statement.predicate.id === PREDICATES.ORDER);
-
-    // onHomePage
-    const onHomePage = comparisonStatements.find(statement => statement.predicate.id === PREDICATES.ON_HOMEPAGE);
-
-    // subject
-    const subject = comparisonStatements.find(statement => statement.predicate.id === PREDICATES.HAS_SUBJECT);
+    const description = filterObjectOfStatementsByPredicateAndClass(comparisonStatements, PREDICATES.DESCRIPTION, true);
+    const contributions = filterObjectOfStatementsByPredicateAndClass(
+        comparisonStatements,
+        PREDICATES.COMPARE_CONTRIBUTION,
+        false,
+        CLASSES.CONTRIBUTION
+    );
+    const references = filterObjectOfStatementsByPredicateAndClass(comparisonStatements, PREDICATES.REFERENCE, false);
+    const doi = filterObjectOfStatementsByPredicateAndClass(comparisonStatements, PREDICATES.HAS_DOI, true);
+    const hasPreviousVersion = filterObjectOfStatementsByPredicateAndClass(
+        comparisonStatements,
+        PREDICATES.HAS_PREVIOUS_VERSION,
+        true,
+        CLASSES.COMPARISON
+    );
+    const icon = filterObjectOfStatementsByPredicateAndClass(comparisonStatements, PREDICATES.ICON, true);
+    const type = filterObjectOfStatementsByPredicateAndClass(comparisonStatements, PREDICATES.TYPE, true);
+    const order = filterObjectOfStatementsByPredicateAndClass(comparisonStatements, PREDICATES.ORDER, true);
+    const onHomePage = filterObjectOfStatementsByPredicateAndClass(comparisonStatements, PREDICATES.ON_HOMEPAGE, true);
+    const subject = filterObjectOfStatementsByPredicateAndClass(comparisonStatements, PREDICATES.HAS_SUBJECT, true, CLASSES.RESEARCH_FIELD);
+    const resources = filterObjectOfStatementsByPredicateAndClass(
+        comparisonStatements,
+        PREDICATES.RELATED_RESOURCE,
+        false,
+        CLASSES.COMPARISON_RELATED_RESOURCE
+    );
+    const figures = filterObjectOfStatementsByPredicateAndClass(
+        comparisonStatements,
+        PREDICATES.RELATED_FIGURE,
+        false,
+        CLASSES.COMPARISON_RELATED_FIGURE
+    );
+    const visualizations = filterObjectOfStatementsByPredicateAndClass(
+        comparisonStatements,
+        PREDICATES.HAS_VISUALIZATION,
+        false,
+        CLASSES.VISUALIZATION
+    );
+    const authors = filterObjectOfStatementsByPredicateAndClass(comparisonStatements, PREDICATES.HAS_AUTHOR, false);
+    const properties = filterObjectOfStatementsByPredicateAndClass(comparisonStatements, PREDICATES.HAS_PROPERTY, false);
 
     return {
-        id: resource.id,
+        ...resource,
         label: resource.label ? resource.label : 'No Title',
-        created_at: url ? url.object.created_at : '',
-        nbContributions: url ? getArrayParamFromQueryString(url.object.label, 'contributions').length : 0,
-        url: url ? url.object.label : '',
-        reference: reference ? reference.object.label : '',
-        description: description ? description.object.label : '',
-        icon: icon ? icon.object.label : '',
-        order: order ? order.object.label : Infinity,
-        type: type ? type.object.id : '',
+        authors: authors ? authors.sort((a, b) => a.s_created_at.localeCompare(b.s_created_at)) : [], // sort authors by their statement creation time (s_created_at)
+        contributions: contributions,
+        references,
+        doi: doi ? doi.label : '',
+        description: description ? description.label : '',
+        icon: icon ? icon.label : '',
+        order: order ? order.label : Infinity,
+        type: type ? type.id : '',
         onHomePage: onHomePage ? true : false,
-        researchField: subject ? subject.object : null,
-        created_by: resource.created_by !== MISC.UNKNOWN_ID ? resource.created_by : null
+        researchField: subject,
+        hasPreviousVersion,
+        visualizations,
+        figures,
+        resources,
+        properties
     };
 };
 
@@ -288,14 +306,14 @@ export const getVisualizationData = (id, label, visualizationStatements) => {
     // description
     const description = visualizationStatements.find(statement => statement.predicate.id === PREDICATES.DESCRIPTION);
 
-    const authors = getAuthors(visualizationStatements);
+    const authors = filterObjectOfStatementsByPredicateAndClass(visualizationStatements, PREDICATES.HAS_AUTHOR, false);
 
     return {
         id,
         label,
         created_at: description ? description.object.created_at : '',
         description: description ? description.object.label : '',
-        authorNames: authors.sort((a, b) => a.created_at.localeCompare(b.created_at))
+        authors: authors ? authors.sort((a, b) => a.s_created_at.localeCompare(b.s_created_at)) : []
     };
 };
 
@@ -444,44 +462,50 @@ export const generateRdfDataVocabularyFile = (data, contributions, properties, m
 };
 
 /**
- * Filter a list of statements by predicate id and return the object
+ * Filter a list of statements by predicate id and return the object (including the statement id and created_at)
  *
  * @param {Array} statementsArray Array of statements
  * @param {String} predicateID Predicate ID
  * @param {Boolean} isUnique if this predicate is unique and has one value
  */
-export const filterObjectOfStatementsByPredicate = (statementsArray, predicateID, isUnique = true) => {
+export const filterObjectOfStatementsByPredicateAndClass = (statementsArray, predicateID, isUnique = true, classID = null) => {
     if (!statementsArray) {
-        return null;
+        return isUnique ? null : [];
     }
-    const result = statementsArray.filter(statement => statement.predicate.id === predicateID);
+    let result = statementsArray.filter(statement => statement.predicate.id === predicateID);
+    if (classID) {
+        result = statementsArray.filter(statement => statement.object.classes && statement.object.classes.includes(classID));
+    }
     if (result.length > 0 && isUnique) {
-        return result[0].object;
+        return { ...result[0].object, statementId: result[0].id, s_created_at: result[0].created_at };
     } else if (result.length > 0 && !isUnique) {
-        return result.map(s => s.object);
+        return result.map(s => ({ ...s.object, statementId: s.id, s_created_at: s.created_at }));
     } else {
-        return null;
+        return isUnique ? null : [];
     }
 };
 
 /**
- * Filter a list of statements by predicate id and return the subject
+ * Filter a list of statements by predicate id and return the subject (including the statement id and created_at)
  *
  * @param {Array} statementsArray Array of statements
  * @param {String} predicateID Predicate ID
  * @param {Boolean} isUnique if this predicate is unique and has one value
  */
-export const filterSubjectOfStatementsByPredicate = (statementsArray, predicateID, isUnique = true) => {
+export const filterSubjectOfStatementsByPredicateAndClass = (statementsArray, predicateID, isUnique = true, classID = null) => {
     if (!statementsArray) {
-        return null;
+        return isUnique ? null : [];
     }
-    const result = statementsArray.filter(statement => statement.predicate.id === predicateID);
+    let result = statementsArray.filter(statement => statement.predicate.id === predicateID);
+    if (classID) {
+        result = statementsArray.filter(statement => statement.subject.classes && statement.subject.classes.includes(classID));
+    }
     if (result.length > 0 && isUnique) {
-        return result[0].subject;
+        return { ...result[0].subject, statementId: result[0].id, s_created_at: result[0].created_at };
     } else if (result.length > 0 && !isUnique) {
-        return result.map(s => s.subject);
+        return result.map(s => ({ ...s.subject, statementId: s.id, s_created_at: s.created_at }));
     } else {
-        return null;
+        return isUnique ? null : [];
     }
 };
 
@@ -552,6 +576,57 @@ export const similarPropertiesByLabel = (propertyLabel, propertyData) => {
     return uniq(result);
 };
 
+export function list_to_tree(list) {
+    const map = {};
+    let node;
+    const roots = [];
+    let i;
+    list = sortBy(list, 'hasPreviousVersion');
+    for (i = 0; i < list.length; i += 1) {
+        map[list[i].id] = i; // initialize the map
+        const v = list[i].hasPreviousVersion;
+        list[i].versions = v && !list.find(c => c.id === v.id) ? [list[i].hasPreviousVersion] : []; // initialize the versions
+    }
+    for (i = 0; i < list.length; i += 1) {
+        node = list[i];
+        // Check that map[node.hasPreviousVersion.id] exists : The parent could be not part of the list (not fetched yet!)
+        if (node.hasPreviousVersion && node.hasPreviousVersion.id !== null && map[node.hasPreviousVersion.id]) {
+            list[map[node.hasPreviousVersion.id]].versions.push(node);
+        } else {
+            roots.push(node);
+        }
+    }
+    return roots;
+}
+
+function convertTreeToFlat(treeStructure) {
+    const flatten = (children, extractChildren) =>
+        Array.prototype.concat.apply(children, children.map(x => flatten(extractChildren(x) || [], extractChildren)));
+    const extractChildren = x => x.versions ?? [];
+    const flat = flatten(extractChildren(treeStructure), extractChildren);
+    return flat;
+}
+
+/**
+ * Group comparisons versions
+ * @param {Array} comparisons comparison data objects
+ * @param {Function} sortFunc Sort function
+ */
+export const groupVersionsOfComparisons = (comparisons, sortFunc = (a, b) => new Date(b.created_at) - new Date(a.created_at)) => {
+    // 1- Remove duplicated and keep the ones with hasPreviousVersion
+    // 2- Make a tree of versions
+    let result = list_to_tree(uniqBy(sortBy(comparisons, 'hasPreviousVersion'), 'id'));
+    // 3- We flat the versions  inside the roots
+    for (let i = 0; i < result.length; i += 1) {
+        // Always the new version if the main resource
+        const arrayVersions = [...convertTreeToFlat(result[i]), result[i]].sort(sortFunc);
+        result[i] = { ...arrayVersions[0], versions: arrayVersions };
+    }
+    // 4- We sort the roots
+    result = result.sort(sortFunc);
+    return result;
+};
+
 /**
  * Compare input value to select options
  * Built-ins https://github.com/JedWatson/react-select/blob/d2a820efc70835adf864169eebc76947783a15e2/packages/react-select/src/Creatable.js
@@ -565,37 +640,6 @@ export const compareOption = (inputValue = '', option) => {
     const optionURI = String(option.uri).toLowerCase();
     return optionValue === candidate || optionLabel === candidate || optionURI === candidate;
 };
-
-/** Helper Functions to increase structure, readability and reuse **/
-/** ------------------------------------------------------------- **/
-// HERE THE INPUT IS 'paperStatements'  and output is based on some filtering
-
-export function getPublicationMonth(paperStatements) {
-    // publication month
-    const publicationMonthStatements = paperStatements.filter(statement => statement.predicate.id === PREDICATES.HAS_PUBLICATION_MONTH);
-    let publicationMonthResourceId = 0;
-    let publicationMonth = 0;
-
-    if (publicationMonthStatements.length > 0) {
-        publicationMonth = publicationMonthStatements[0].object.label;
-        publicationMonthResourceId = publicationMonthStatements[0].object.id;
-    }
-
-    return [publicationMonth, publicationMonthResourceId];
-}
-
-export function getPublicationYear(paperStatements) {
-    let publicationYear = paperStatements.filter(statement => statement.predicate.id === PREDICATES.HAS_PUBLICATION_YEAR);
-    let publicationYearResourceId = 0;
-    if (publicationYear.length > 0) {
-        publicationYearResourceId = publicationYear[0].object.id;
-        publicationYear = publicationYear[0].object.label;
-    } else {
-        publicationYear = '';
-    }
-
-    return [publicationYear, publicationYearResourceId];
-}
 
 // TODO: could be part of a 'parseDoi' hook when the add paper wizard is refactored to support hooks
 export const parseCiteResult = paper => {
@@ -612,7 +656,7 @@ export const parseCiteResult = paper => {
         paperTitle = title;
         if (subtitle && subtitle.length > 0) {
             // include the subtitle
-            paperTitle = `${paperTitle}: ${subtitle[0]}`;
+            paperTitle = unescape(`${paperTitle}: ${subtitle[0]}`);
         }
         if (author) {
             paperAuthors = author.map(author => {
@@ -621,7 +665,7 @@ export const parseCiteResult = paper => {
                     fullname = author.literal ? author.literal : '';
                 }
                 return {
-                    label: fullname,
+                    label: unescape(fullname),
                     id: fullname,
                     orcid: author.ORCID ? author.ORCID : ''
                 };
@@ -637,7 +681,7 @@ export const parseCiteResult = paper => {
         }
         doi = DOI ? DOI : '';
         if (containerTitle && isString(containerTitle)) {
-            publishedIn = containerTitle;
+            publishedIn = unescape(containerTitle);
         }
     } catch (e) {
         console.log('Error setting paper data: ', e);
@@ -652,86 +696,6 @@ export const parseCiteResult = paper => {
         publishedIn
     };
 };
-
-function getURL(paperStatements) {
-    let url = paperStatements.filter(statement => statement.predicate.id === PREDICATES.URL);
-    let urlResourceId = 0;
-
-    if (url.length > 0) {
-        urlResourceId = url[0].object.id;
-        url = url[0].object.label;
-    } else {
-        url = null;
-    }
-    return [url, urlResourceId];
-}
-
-function getPublishedIn(paperStatements) {
-    // venue
-    let publishedIn = paperStatements.filter(statement => statement.predicate.id === PREDICATES.HAS_VENUE);
-
-    if (publishedIn.length > 0) {
-        publishedIn = { ...publishedIn[0].object, statementId: publishedIn[0].id };
-    } else {
-        publishedIn = '';
-    }
-    return publishedIn;
-}
-
-export function getResearchField(paperStatements) {
-    let researchField = paperStatements.filter(statement => statement.predicate.id === PREDICATES.HAS_RESEARCH_FIELD);
-    if (researchField.length > 0) {
-        researchField = { ...researchField[0].object, statementId: researchField[0].id };
-    } else {
-        researchField = {};
-    }
-    return researchField;
-}
-
-export function getAuthors(paperStatements) {
-    const authors = paperStatements.filter(statement => statement.predicate.id === PREDICATES.HAS_AUTHOR);
-    const authorNamesArray = [];
-    if (authors.length > 0) {
-        for (const author of authors) {
-            authorNamesArray.push({
-                id: author.object.id,
-                statementId: author.id,
-                class: author.object._class,
-                label: author.object.label,
-                classes: author.object.classes,
-                created_at: author.created_at
-            });
-        }
-    }
-    return authorNamesArray;
-}
-
-function getDOI(paperStatements) {
-    let doi = paperStatements.filter(statement => statement.predicate.id === PREDICATES.HAS_DOI);
-    let doiResourceId = 0;
-    if (doi.length > 0) {
-        doiResourceId = doi[0].object.id;
-        doi = doi[0].object.label;
-
-        if (doi.includes('10.') && !doi.startsWith('10.')) {
-            doi = doi.substring(doi.indexOf('10.'));
-        }
-    } else {
-        doi = '';
-    }
-    return [doi, doiResourceId];
-}
-
-function getContributions(paperStatements) {
-    const contributions = paperStatements.filter(statement => statement.predicate.id === PREDICATES.HAS_CONTRIBUTION);
-    const contributionArray = [];
-    if (contributions.length > 0) {
-        for (const contribution of contributions) {
-            contributionArray.push({ ...contribution.object, statementId: contribution.id });
-        }
-    }
-    return contributionArray;
-}
 
 function getOrder(paperStatements) {
     let order = paperStatements.filter(statement => statement.predicate.id === PREDICATES.ORDER);
@@ -807,6 +771,75 @@ export function truncStringPortion(str, firstCharCount = str.length, endCharCoun
     }
 }
 
+// TODO: refactor the authors dialog and create a hook to put this function
+export async function saveAuthors({ prevAuthors, newAuthors, paperId }) {
+    if (isEqual(prevAuthors, newAuthors)) {
+        return null;
+    }
+
+    const statementsIds = [];
+    // remove all authors statement from reducer
+    for (const author of prevAuthors) {
+        statementsIds.push(author.statementId);
+    }
+    deleteStatementsByIds(statementsIds);
+
+    // Add all authors from the state
+    const authors = newAuthors;
+    for (const [i, author] of newAuthors.entries()) {
+        // create the author
+        if (author.orcid) {
+            // Create author with ORCID
+            // check if there's an author resource
+            const responseJson = await getStatementsByPredicateAndLiteral({
+                predicateId: PREDICATES.HAS_ORCID,
+                literal: author.orcid,
+                subjectClass: CLASSES.AUTHOR,
+                items: 1
+            });
+            if (responseJson.length > 0) {
+                // Author resource exists
+                const authorResource = responseJson[0];
+                const authorStatement = await createResourceStatement(paperId, PREDICATES.HAS_AUTHOR, authorResource.subject.id);
+                authors[i].statementId = authorStatement.id;
+                authors[i].id = authorResource.subject.id;
+                authors[i].class = authorResource.subject._class;
+                authors[i].classes = authorResource.subject.classes;
+            } else {
+                // Author resource doesn't exist
+                // Create resource author
+                const authorResource = await createResource(author.label, [CLASSES.AUTHOR]);
+                const createLiteral = await createLiteralApi(author.orcid);
+                await createLiteralStatement(authorResource.id, PREDICATES.HAS_ORCID, createLiteral.id);
+                const authorStatement = await createResourceStatement(paperId, PREDICATES.HAS_AUTHOR, authorResource.id);
+                authors[i].statementId = authorStatement.id;
+                authors[i].id = authorResource.id;
+                authors[i].class = authorResource._class;
+                authors[i].classes = authorResource.classes;
+            }
+        } else {
+            // Author resource exists
+            if (author.label !== author.id) {
+                const authorStatement = await createResourceStatement(paperId, PREDICATES.HAS_AUTHOR, author.id);
+                authors[i].statementId = authorStatement.id;
+                authors[i].id = author.id;
+                authors[i].class = author._class;
+                authors[i].classes = author.classes;
+            } else {
+                // Author resource doesn't exist
+                const newLiteral = await createLiteralApi(author.label);
+                // Create literal of author
+                const authorStatement = await createLiteralStatement(paperId, PREDICATES.HAS_AUTHOR, newLiteral.id);
+                authors[i].statementId = authorStatement.id;
+                authors[i].id = newLiteral.id;
+                authors[i].class = authorStatement.object._class;
+                authors[i].classes = authorStatement.object.classes;
+            }
+        }
+    }
+
+    return authors;
+}
 /**
  * Stringify filter type of comparison
  *
@@ -1027,6 +1060,22 @@ export const getResourceLink = (classId, resourceId) => {
 };
 
 /**
+ * Get resource link based on entity type
+ *
+ * @param {String} _class Entity type
+ * @param {String} id ID
+ * @result {String} Link of the resource
+ */
+export const getLinkByEntityType = (_class, id) => {
+    const links = {
+        [ENTITIES.RESOURCE]: ROUTES.RESOURCE,
+        [ENTITIES.CLASS]: ROUTES.CLASS,
+        [ENTITIES.PREDICATE]: ROUTES.PROPERTY
+    };
+    return links[_class] ? reverse(links[_class], { id }) : '';
+};
+
+/**
  * Get resource type label based on class
  *
  * @param {String} classId class ID
@@ -1152,4 +1201,14 @@ export const getPropertyObjectFromData = (data, value) => {
     return notEmptyCell && notEmptyCell.path?.length && notEmptyCell.pathLabels?.length
         ? { id: last(notEmptyCell.path), label: last(notEmptyCell.pathLabels) }
         : value;
+};
+
+/**
+ * check if Cookies is enabled
+ * @return {Boolean}
+ */
+export const checkCookie = () => {
+    cookies.set('testcookie', 1, { path: env('PUBLIC_URL'), maxAge: 5 });
+    const cookieEnabled = cookies.get('testcookie') ? cookies.get('testcookie') : null;
+    return cookieEnabled ? true : false;
 };
