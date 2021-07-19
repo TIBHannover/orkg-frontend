@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Container, Row } from 'reactstrap';
 import { CLASSES } from 'constants/graphSettings';
-import { faFile, faTag, faChartBar, faCubes, faUsers } from '@fortawesome/free-solid-svg-icons';
 import ColoredStatsBox from 'components/Stats/ColoredStatsBox';
 import InlineStatsBox from 'components/Stats/InlineStatsBox';
 import { toast } from 'react-toastify';
@@ -35,19 +34,11 @@ const Stats = () => {
 
             <Container>
                 <Row>
-                    <ColoredStatsBox
-                        link={reverse(ROUTES.PAPERS)}
-                        number={stats.papers}
-                        label="Papers"
-                        icon={faFile}
-                        className="mr-3"
-                        isLoading={isLoading}
-                    />
+                    <ColoredStatsBox link={reverse(ROUTES.PAPERS)} number={stats.papers} label="Papers" className="mr-3" isLoading={isLoading} />
                     <ColoredStatsBox
                         link={reverse(ROUTES.COMPARISONS)}
                         number={stats.comparisons}
                         label="Comparisons"
-                        icon={faCubes}
                         className="mr-3"
                         isLoading={isLoading}
                     />
@@ -55,11 +46,10 @@ const Stats = () => {
                         link={reverse(ROUTES.VISUALIZATIONS)}
                         number={stats.visualizations}
                         label="Visualizations"
-                        icon={faChartBar}
                         className="mr-3"
                         isLoading={isLoading}
                     />
-                    <ColoredStatsBox number={stats.problems} label="Research problems" icon={faTag} isLoading={isLoading} />
+                    <ColoredStatsBox number={stats.problems} label="Research problems" isLoading={isLoading} />
                 </Row>
             </Container>
 
@@ -85,7 +75,7 @@ const Stats = () => {
             </Container>
             <Container className="mt-3">
                 <Row>
-                    <ColoredStatsBox number={stats.users} label="Users" icon={faUsers} className="mr-3" isLoading={isLoading} />
+                    <ColoredStatsBox number={stats.users} label="Users" className="mr-3" isLoading={isLoading} />
                     <ColoredStatsBox
                         link={reverse(ROUTES.ORGANIZATIONS)}
                         number={stats.organizations}

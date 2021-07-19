@@ -1,6 +1,5 @@
 import { Col } from 'reactstrap';
 import styled from 'styled-components';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
@@ -62,10 +61,7 @@ const ColoredStatsBox = props => {
                         ) : (
                             'Loading...'
                         )}
-                        <Label>
-                            {props.icon && <Icon size="20" icon={props.icon} className="mr-2" />}
-                            {props.label}
-                        </Label>
+                        <Label>{props.label}</Label>
                     </LabelWrapper>
                 </div>
             </ConditionalWrapper>
@@ -74,7 +70,6 @@ const ColoredStatsBox = props => {
 };
 
 ColoredStatsBox.propTypes = {
-    icon: PropTypes.object,
     label: PropTypes.string.isRequired,
     number: PropTypes.number,
     className: PropTypes.string,
