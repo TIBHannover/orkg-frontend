@@ -244,7 +244,7 @@ function Benchmark() {
                         <Card>
                             <CardBody>
                                 <div>
-                                    <i>Research problem :</i>{' '}
+                                    <i>Research problem:</i>{' '}
                                     <Link
                                         to={reverseWithSlug(ROUTES.RESEARCH_PROBLEM, { researchProblemId: problemData.id, slug: problemData.label })}
                                         style={{ textDecoration: 'none', flex: 1 }}
@@ -253,7 +253,7 @@ function Benchmark() {
                                     </Link>
                                 </div>
                                 <div>
-                                    <i>Dataset :</i> {resourceData.label}
+                                    <i>Dataset:</i> {resourceData.label}
                                 </div>
 
                                 <>{resourceData.description && <p className="m-0">{resourceData.description}</p>}</>
