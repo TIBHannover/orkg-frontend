@@ -19,6 +19,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 
 const Observatory = () => {
     const [error, setError] = useState(null);
+    const [observatoryId, setObservatoryId] = useState(null);
     const [label, setLabel] = useState(null);
     const [description, setDescription] = useState('');
     const [researchField, setResearchField] = useState(null);
@@ -35,6 +36,7 @@ const Observatory = () => {
             getObservatoryById(id)
                 .then(observatory => {
                     document.title = `${observatory.name} - Details`;
+                    setObservatoryId(observatory.id);
                     setLabel(observatory.name);
                     setDescription(observatory.description);
                     setIsLoading(false);
@@ -71,7 +73,6 @@ const Observatory = () => {
             {!isLoading && !error && label && (
                 <>
                     <Breadcrumbs researchFieldId={researchField?.id} />
-
                     <Container className="d-flex align-items-center mt-4 mb-4">
                         <h1 className="h5 flex-shrink-0 mb-0">Observatory</h1>
                         <>
@@ -95,36 +96,36 @@ const Observatory = () => {
                             </Card>
                         </Container>
                     )}
+                    <Container className="p-0">
+                        <Row className="mt-3">
+                            <Col md="4" className="d-flex">
+                                <ResearchProblemsBox observatoryId={observatoryId} organizationsList={organizationsList} />
+                            </Col>
+                            <Col md="4" className="d-flex">
+                                <OrganizationsBox
+                                    observatoryId={observatoryId}
+                                    organizationsList={organizationsList}
+                                    isLoadingOrganizations={isLoadingOrganizations}
+                                />
+                            </Col>
+                            <Col md="4" className="d-flex">
+                                <MembersBox observatoryId={observatoryId} organizationsList={organizationsList} />
+                            </Col>
+                        </Row>
+                    </Container>
+                    <Comparisons observatoryId={observatoryId} />
+                    <Papers observatoryId={observatoryId} />
+                    <EditObservatory
+                        showDialog={showEditDialog}
+                        toggle={() => setShowEditDialog(v => !v)}
+                        label={label}
+                        id={observatoryId}
+                        description={description}
+                        researchField={researchField}
+                        updateObservatoryMetadata={updateObservatoryMetadata}
+                    />
                 </>
             )}
-
-            <Container className="p-0">
-                <Row className="mt-3">
-                    <Col md="4" className="d-flex">
-                        <ResearchProblemsBox observatoryId={id} organizationsList={organizationsList} />
-                    </Col>
-                    <Col md="4" className="d-flex">
-                        <OrganizationsBox observatoryId={id} organizationsList={organizationsList} isLoadingOrganizations={isLoadingOrganizations} />
-                    </Col>
-                    <Col md="4" className="d-flex">
-                        <MembersBox observatoryId={id} organizationsList={organizationsList} />
-                    </Col>
-                </Row>
-            </Container>
-
-            <Comparisons observatoryId={id} />
-
-            <Papers observatoryId={id} />
-
-            <EditObservatory
-                showDialog={showEditDialog}
-                toggle={() => setShowEditDialog(v => !v)}
-                label={label}
-                id={id}
-                description={description}
-                researchField={researchField}
-                updateObservatoryMetadata={updateObservatoryMetadata}
-            />
         </>
     );
 };

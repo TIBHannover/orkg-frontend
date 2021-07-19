@@ -98,7 +98,7 @@ function ObservatoriesCarousel(props) {
                     <ObservatoryCardStyled className="">
                         {!observatory.logo && (
                             <Card style={{ border: 0 }}>
-                                <Link to={reverse(ROUTES.OBSERVATORY, { id: observatory.id })} style={{ textDecoration: 'none' }}>
+                                <Link to={reverse(ROUTES.OBSERVATORY, { id: observatory.display_id })} style={{ textDecoration: 'none' }}>
                                     <CardBody className="pt-0 mb-0">
                                         <CardTitle tag="h5">{observatory.name}</CardTitle>
                                         <CardSubtitle tag="h6" style={{ height: '20px' }} className="mb-1 text-muted">
@@ -109,7 +109,7 @@ function ObservatoriesCarousel(props) {
                                 <div className="mt-3 mb-3 pl-2 pr-2">
                                     <Link
                                         className="text-center d-flex"
-                                        to={reverse(ROUTES.OBSERVATORY, { id: observatory.id })}
+                                        to={reverse(ROUTES.OBSERVATORY, { id: observatory.display_id })}
                                         style={{ textDecoration: 'none', height: '80px', width: '100%', overflow: 'hidden' }}
                                     >
                                         {observatory.orgs.slice(0, 2).map((
