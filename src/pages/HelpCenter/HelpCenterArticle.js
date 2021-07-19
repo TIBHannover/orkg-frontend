@@ -1,6 +1,7 @@
 import CheckSlug from 'components/CheckSlug/CheckSlug';
 import PageContentLoader from 'components/Page/PageContentLoader';
 import usePage from 'components/Page/usePage';
+import { CmsPage } from 'components/styled';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import NotFound from 'pages/NotFound';
@@ -21,6 +22,10 @@ const HelpCenterArticle = () => {
         const pagePromise = getHelpArticle(params.id);
         loadPage({ pagePromise });
     }, [params, loadPage]);
+
+    useEffect(() => {
+        document.title = `${page?.title ?? ''} - ORKG`;
+    }, [page]);
 
     if (isNotFound) {
         return <NotFound />;
@@ -55,7 +60,7 @@ const HelpCenterArticle = () => {
                             <BreadcrumbItem active>{page.title}</BreadcrumbItem>
                         </Breadcrumb>
                         <h1 className="h3 my-4">{page.title}</h1>
-                        {page?.content}
+                        <CmsPage>{page?.content}</CmsPage>
                     </>
                 )}
             </Container>

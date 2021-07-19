@@ -111,6 +111,9 @@ const Footer = () => (
                                 </a>
                             </li>
                             <li>
+                                <Link to={reverse(ROUTES.PAGE, { url: ROUTES_CMS.ACCESSIBILITY_STATEMENT })}>Accessibility</Link>
+                            </li>
+                            <li>
                                 <Link to={reverse(ROUTES.PAGE, { url: ROUTES_CMS.LICENSE })}>License</Link>
                             </li>
                         </ul>

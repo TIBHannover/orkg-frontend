@@ -61,8 +61,8 @@ import HelpCenter from 'pages/HelpCenter/HelpCenter';
 import HelpCenterCategory from 'pages/HelpCenter/HelpCenterCategory';
 import HelpCenterArticle from 'pages/HelpCenter/HelpCenterArticle';
 import HelpCenterSearch from 'pages/HelpCenter/HelpCenterSearch';
-import ROUTES_CMS from 'constants/routesCms';
 import WebinarMay11 from 'pages/WebinarMay11';
+import CurationCall from 'pages/CurationCall';
 
 // use lazy loading of pages that contain large dependencies
 // run "npm run analyze" to ensure the listed dependencies are not loaded elsewhere and thus end up in the bundle
@@ -369,8 +369,8 @@ const routes = [
     },
     // redirect legacy route
     {
-        path: '/open-call-curation-grant',
-        component: () => <Redirect to={{ pathname: reverse(ROUTES.PAGE, { url: ROUTES_CMS.CURATION_CALL }), state: { status: 301 } }} />
+        path: ROUTES.CURATION_CALL,
+        component: CurationCall
     },
     {
         path: ROUTES.HELP_CENTER,

@@ -9,7 +9,7 @@ const routes = {
     IMPRINT: 'imprint',
     LICENSE: 'license',
     CONTACT: 'contact',
-    CURATION_CALL: 'open-call-curation-grant'
+    ACCESSIBILITY_STATEMENT: 'accessibility-statement'
 };
 
 export default routes;

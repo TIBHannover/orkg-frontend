@@ -11,6 +11,7 @@ const HelpCenterCategory = () => {
     const [category, setCategory] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [isNotFound, setIsNotFound] = useState(false);
+    const [articles, setArticles] = useState([]);
     const params = useParams();
 
     useEffect(() => {
@@ -21,6 +22,7 @@ const HelpCenterCategory = () => {
             try {
                 setIsLoading(true);
                 const _category = await getHelpCategory(params.id);
+                setArticles(_category.help_articles.sort((a, b) => (parseInt(a.order) > parseInt(b.order) ? 1 : -1)));
                 setCategory(_category);
             } catch (e) {
                 setIsNotFound(true);
@@ -54,7 +56,7 @@ const HelpCenterCategory = () => {
                         </Breadcrumb>
                         <h1 className="h3 my-4">{category.title}</h1>
                         <ul>
-                            {category.help_articles.map(article => (
+                            {articles.map(article => (
                                 <li key={article.id}>
                                     <Link
                                         to={reverseWithSlug(ROUTES.HELP_CENTER_ARTICLE, {

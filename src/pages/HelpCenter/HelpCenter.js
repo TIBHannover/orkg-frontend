@@ -20,7 +20,12 @@ const HelpCenter = () => {
             setHasFailed(false);
 
             try {
-                setCategories(await getHelpCategories());
+                let categories = await getHelpCategories();
+                categories = categories.map(category => ({
+                    ...category,
+                    help_articles: category.help_articles.sort((a, b) => (parseInt(a.order) > parseInt(b.order) ? 1 : -1))
+                }));
+                setCategories(categories);
             } catch (e) {
                 setHasFailed(true);
             } finally {

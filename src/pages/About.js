@@ -1,6 +1,7 @@
 import CheckSlug from 'components/CheckSlug/CheckSlug';
 import PageContentLoader from 'components/Page/PageContentLoader';
 import usePage from 'components/Page/usePage';
+import { CmsPage } from 'components/styled';
 import ROUTES from 'constants/routes';
 import NotFound from 'pages/NotFound';
 import { useEffect, useState } from 'react';
@@ -55,6 +56,10 @@ const About = () => {
         getMenu();
     }, [menuItems.length]);
 
+    useEffect(() => {
+        document.title = `${page?.title ?? ''} - ORKG`;
+    }, [page]);
+
     if (isNotFound) {
         return <NotFound />;
     }
@@ -89,7 +94,7 @@ const About = () => {
 
                 {isLoading && <PageContentLoader />}
 
-                {!isLoading && page?.content}
+                <CmsPage>{!isLoading && page?.content}</CmsPage>
             </Container>
         </div>
     );
