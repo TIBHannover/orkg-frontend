@@ -12,7 +12,7 @@ const ReferencesSection = () => {
                 </Tippy>
             </SectionTypeStyled>
 
-            <h2 id="section-acknowledgements" className="h4 border-bottom pb-1 mb-3">
+            <h2 id="section-references" className="h4 border-bottom pb-1 mb-3">
                 <Tippy content="This section is automatically generated, it is not possible to change it">
                     <span>References</span>
                 </Tippy>

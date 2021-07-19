@@ -774,7 +774,7 @@ export function truncStringPortion(str, firstCharCount = str.length, endCharCoun
 // TODO: refactor the authors dialog and create a hook to put this function
 export async function saveAuthors({ prevAuthors, newAuthors, paperId }) {
     if (isEqual(prevAuthors, newAuthors)) {
-        return null;
+        return prevAuthors;
     }
 
     const statementsIds = [];
