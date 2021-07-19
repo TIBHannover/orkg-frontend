@@ -4,8 +4,8 @@ import queryString from 'query-string';
 
 export const statsUrl = `${url}stats/`;
 
-export const getStats = () => {
-    return submitGetRequest(statsUrl);
+export const getStats = (extra = []) => {
+    return submitGetRequest(`${statsUrl}?extra=${extra.join(',')}`);
 };
 
 export const getResearchFieldsStats = () => {
