@@ -15,6 +15,7 @@ import { Link } from 'react-router-dom';
 import useStatementItemTemplate from './hooks/useStatementItemTemplate';
 import ROUTES from 'constants/routes.js';
 import { PREDICATE_TYPE_ID } from 'constants/misc';
+import MathJax from 'components/ValuePlugins/MathJax/MathJax';
 
 export default function StatementItemTemplate(props) {
     const {
@@ -42,7 +43,7 @@ export default function StatementItemTemplate(props) {
                                         className={!propertiesAsLinks ? 'text-dark' : ''}
                                     >
                                         <DescriptionTooltip id={props.property.existingPredicateId} typeId={PREDICATE_TYPE_ID}>
-                                            {props.predicateLabel}
+                                            <MathJax type="literal">{props.predicateLabel}</MathJax>
                                         </DescriptionTooltip>
                                     </Link>
                                 ) : (

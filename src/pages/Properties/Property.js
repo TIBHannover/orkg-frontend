@@ -11,6 +11,7 @@ import { EditModeHeader, Title } from 'pages/ViewPaper';
 import PropTypes from 'prop-types';
 import { PREDICATE_TYPE_ID } from 'constants/misc';
 import { useLocation } from 'react-router-dom';
+import MathJax from 'components/ValuePlugins/MathJax/MathJax';
 import PropertyStatements from 'components/PropertyStatements/PropertyStatements';
 
 function Property(props) {
@@ -76,7 +77,9 @@ function Property(props) {
                             <div className="mb-2">
                                 <div className="pb-2 mb-3">
                                     <h3 className="" style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
-                                        {label || (
+                                        {label ? (
+                                            <MathJax type="literal">{label}</MathJax>
+                                        ) : (
                                             <i>
                                                 <small>No label</small>
                                             </i>
