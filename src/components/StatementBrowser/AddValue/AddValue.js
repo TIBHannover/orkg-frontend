@@ -171,7 +171,7 @@ const AddValue = props => {
             }
             dispatch(
                 createValue({
-                    label: inputValue,
+                    label: inputValue?.toString(),
                     type: valueType,
                     ...(valueType === 'literal' && { datatype: datatype }),
                     propertyId: props.propertyId ? props.propertyId : selectedProperty,
@@ -186,7 +186,7 @@ const AddValue = props => {
             dispatch(
                 createValue({
                     valueId,
-                    label: inputValue,
+                    label: inputValue?.toString(),
                     type: valueType,
                     ...(valueType === 'literal' && { datatype: datatype }),
                     propertyId: props.propertyId ? props.propertyId : selectedProperty,

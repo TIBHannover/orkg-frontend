@@ -13,6 +13,7 @@ import useToggle from './helpers/useToggle';
 import validationSchema from './helpers/validationSchema';
 import InputField from 'components/StatementBrowser/InputField/InputField';
 import Tippy from '@tippyjs/react';
+import { getConfigByType } from 'constants/DataTypes';
 import { CLASSES, MISC, ENTITIES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
 
@@ -28,6 +29,7 @@ export default function AddValueTemplate(props) {
 
     const [valueType, setValueType] = useState(props.isLiteral ? 'literal' : 'object');
     const [inputValue, setInputValue] = useState('');
+    const [inputDataType, setInputDataType] = useState(MISC.DEFAULT_LITERAL_DATATYPE);
     const [dropdownValueTypeOpen, setDropdownValueTypeOpen] = useToggle(false);
     const [showAddValue, setShowAddValue] = useToggle(false);
     const [isValid, setIsValid] = useState(true);
@@ -68,7 +70,7 @@ export default function AddValueTemplate(props) {
         return resourceInputRef.current.state.menuIsOpen && resourceInputRef.current.props.options.length > 0;
     };
 
-    const validateValue = () => {
+    const getSchema = () => {
         if (props.valueClass && ['Date', 'Number', 'String'].includes(props.valueClass.id)) {
             let component;
             if (props.components && props.components.length > 0) {
@@ -82,21 +84,10 @@ export default function AddValueTemplate(props) {
                 };
             }
             const schema = validationSchema(component);
-            const { error, value } = schema.validate(inputValue);
-            if (error) {
-                setFormFeedback(error.message);
-                setIsValid(false);
-                return false;
-            } else {
-                setInputValue(value);
-                setFormFeedback(null);
-                setIsValid(true);
-                return value;
-            }
+            return schema;
         } else {
-            setFormFeedback(null);
-            setIsValid(true);
-            return inputValue;
+            const config = getConfigByType(inputDataType);
+            return config.schema;
         }
     };
 
@@ -116,13 +107,19 @@ export default function AddValueTemplate(props) {
                     return MISC.DEFAULT_LITERAL_DATATYPE;
             }
         } else {
-            return MISC.DEFAULT_LITERAL_DATATYPE;
+            return getConfigByType(inputDataType).type;
         }
     };
 
     const onSubmit = () => {
-        const validatedValue = validateValue();
-        if (validatedValue !== false) {
+        const { error } = getSchema().validate(inputValue);
+        if (error) {
+            setFormFeedback(error.message);
+            setIsValid(false);
+        } else {
+            //setInputValue(value);
+            setFormFeedback(null);
+            setIsValid(true);
             props.handleAddValue(valueType, inputValue, getDataType());
             setShowAddValue(false);
         }
@@ -135,6 +132,14 @@ export default function AddValueTemplate(props) {
             resourceInputRef.current.focus();
         }
     }, [valueType]);
+
+    useEffect(() => {
+        setFormFeedback(null);
+        setIsValid(true);
+        if (inputDataType === 'xs:boolean') {
+            setInputValue(v => Boolean(v).toString());
+        }
+    }, [inputDataType]);
 
     useEffect(() => {
         if (!showAddValue) {
@@ -293,24 +298,29 @@ export default function AddValueTemplate(props) {
                                 handleCreateExistingLabel={handleCreateExistingLabel}
                             />
                         ) : (
-                            <InputField
-                                components={props.components}
-                                valueClass={props.valueClass}
-                                inputValue={inputValue}
-                                setInputValue={setInputValue}
-                                setShowAddValue={setShowAddValue}
-                                onSubmit={onSubmit}
-                                isValid={isValid}
-                                literalInputRef={literalInputRef}
-                                onKeyDown={e => {
-                                    if (e.keyCode === 27) {
-                                        // escape
-                                        setShowAddValue(false);
-                                    } else if (e.keyCode === 13) {
-                                        onSubmit();
-                                    }
-                                }}
-                            />
+                            <>
+                                <InputField
+                                    components={props.components}
+                                    valueClass={props.valueClass}
+                                    inputValue={inputValue}
+                                    setInputValue={setInputValue}
+                                    setShowAddValue={setShowAddValue}
+                                    setInputDataType={setInputDataType}
+                                    inputDataType={inputDataType}
+                                    onSubmit={onSubmit}
+                                    isValid={isValid}
+                                    isLiteral={valueType === 'literal'}
+                                    literalInputRef={literalInputRef}
+                                    onKeyDown={e => {
+                                        if (e.keyCode === 27) {
+                                            // escape
+                                            setShowAddValue(false);
+                                        } else if (e.keyCode === 13) {
+                                            onSubmit();
+                                        }
+                                    }}
+                                />
+                            </>
                         )}
                         <InputGroupAddon addonType="append">
                             <StyledButton
@@ -325,7 +335,7 @@ export default function AddValueTemplate(props) {
                             </StyledButton>
                             <StyledButton
                                 outline
-                                disabled={!inputValue || disabledCreate}
+                                disabled={!inputValue?.toString() || disabledCreate}
                                 onClick={() => {
                                     onSubmit();
                                 }}

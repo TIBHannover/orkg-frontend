@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { toggleEditValue } from 'actions/statementBrowser';
 import { InputGroup, InputGroupAddon, Button, FormFeedback } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -17,9 +17,11 @@ import { getValueClass, isInlineResource as isInlineResourceUtil } from 'compone
 import { reverse } from 'named-urls';
 import { Link } from 'react-router-dom';
 import ROUTES from 'constants/routes.js';
+import { getConfigByType } from 'constants/DataTypes';
 import { useDispatch, useSelector } from 'react-redux';
 import { CLASSES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
+import Joi from 'joi';
 
 export default function ValueItemTemplate(props) {
     const dispatch = useDispatch();
@@ -58,7 +60,7 @@ export default function ValueItemTemplate(props) {
 
     const [disableHover, setDisableHover] = useState(false);
     const [draftLabel, setDraftLabel] = useState(props.value.label);
-
+    const [draftDataType, setDraftDataType] = useState(props.value.datatype);
     const [isValid, setIsValid] = useState(true);
     const [formFeedback, setFormFeedback] = useState(null);
 
@@ -67,7 +69,7 @@ export default function ValueItemTemplate(props) {
         disableHover: disableHover
     });
 
-    const validateValue = () => {
+    const getSchema = () => {
         if (valueClass && ['Date', 'Number', 'String'].includes(valueClass.id)) {
             let component;
             if (props.components && props.components.length > 0) {
@@ -81,29 +83,34 @@ export default function ValueItemTemplate(props) {
                 };
             }
             const schema = validationSchema(component);
-            const { error, value } = schema.validate(draftLabel);
-            if (error) {
-                setFormFeedback(error.message);
-                setIsValid(false);
-                return false;
-            } else {
-                setDraftLabel(value);
-                setFormFeedback(null);
-                return value;
-            }
-        } else {
-            setFormFeedback(null);
-            return draftLabel;
+            return schema;
+        } else if (props.value.type === 'literal') {
+            const config = getConfigByType(draftDataType);
+            return config.schema;
         }
+        return Joi.string();
     };
 
     const onSubmit = () => {
-        const validatedValue = validateValue();
-        if (validatedValue !== false) {
-            props.commitChangeLabel(draftLabel);
+        const { error } = getSchema().validate(draftLabel);
+        if (error) {
+            setFormFeedback(error.message);
+            setIsValid(false);
+        } else {
+            // setDraftLabel(value);
+            setFormFeedback(null);
+            props.commitChangeLabel(draftLabel, draftDataType);
             dispatch(toggleEditValue({ id: props.id }));
         }
     };
+
+    useEffect(() => {
+        setFormFeedback(null);
+        setIsValid(true);
+        if (draftDataType === 'xs:boolean') {
+            setDraftLabel(v => Boolean(v));
+        }
+    }, [draftDataType]);
 
     const generatedFormattedLabel = labelFormat => {
         const valueObject = {};
@@ -151,10 +158,10 @@ export default function ValueItemTemplate(props) {
                         <Button className="p-0 text-left" color="link" onClick={props.handleOnClick} style={{ userSelect: 'text' }}>
                             {props.showHelp && props.value.type === 'object' ? (
                                 <Pulse content="Click on the resource to browse it">
-                                    <ValuePlugins type="resource">{getLabel() || <i>No label</i>}</ValuePlugins>
+                                    <ValuePlugins type="resource">{getLabel() !== '' ? getLabel().toString() : <i>No label</i>}</ValuePlugins>
                                 </Pulse>
                             ) : (
-                                <ValuePlugins type="resource">{getLabel() || <i>No label</i>}</ValuePlugins>
+                                <ValuePlugins type="resource">{getLabel() !== '' ? getLabel().toString() : <i>No label</i>}</ValuePlugins>
                             )}
 
                             {props.resource && props.resource.existingResourceId && openExistingResourcesInDialog ? (
@@ -184,7 +191,7 @@ export default function ValueItemTemplate(props) {
 
                     {props.value.type === 'literal' && (
                         <div className="literalLabel">
-                            <ValuePlugins type="literal">{props.value.label || <i>No label</i>}</ValuePlugins>
+                            <ValuePlugins type="literal">{props.value.label !== '' ? props.value.label.toString() : <i>No label</i>}</ValuePlugins>
                         </div>
                     )}
 
@@ -226,14 +233,18 @@ export default function ValueItemTemplate(props) {
                 </div>
             ) : (
                 <div>
-                    <InputGroup size="sm">
+                    <InputGroup size="sm " className="d-flex">
                         <InputField
                             components={props.components}
                             valueClass={valueClass}
                             inputValue={draftLabel}
+                            className="flex-3"
                             setInputValue={setDraftLabel}
+                            setInputDataType={setDraftDataType}
+                            inputDataType={draftDataType}
+                            isLiteral={props.value.type === 'literal'}
                             onKeyDown={e => (e.keyCode === 13 || e.keyCode === 27) && e.target.blur()} // stop editing on enter and escape
-                            onBlur={() => onSubmit()}
+                            //onBlur={() => onSubmit()}
                             isValid={isValid}
                         />
                         <InputGroupAddon addonType="append">
