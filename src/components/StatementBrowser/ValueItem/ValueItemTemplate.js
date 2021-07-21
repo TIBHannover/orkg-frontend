@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from 'react';
 import { toggleEditValue } from 'actions/statementBrowser';
-import { InputGroup, InputGroupAddon, Button, FormFeedback } from 'reactstrap';
+import { InputGroup, InputGroupAddon, Button, FormFeedback, Badge } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { fetchStatementsForResource } from 'actions/statementBrowser';
 import { faTrash, faPen, faExternalLinkAlt, faTable } from '@fortawesome/free-solid-svg-icons';
@@ -57,6 +57,7 @@ export default function ValueItemTemplate(props) {
     });
 
     const resource = useSelector(state => state.statementBrowser.resources.byId[props.value.resourceId]);
+    const isCurationAllowed = useSelector(state => state.auth.user?.isCurationAllowed);
 
     const [disableHover, setDisableHover] = useState(false);
     const [draftLabel, setDraftLabel] = useState(props.value.label);
@@ -192,6 +193,11 @@ export default function ValueItemTemplate(props) {
                     {props.value.type === 'literal' && (
                         <div className="literalLabel">
                             <ValuePlugins type="literal">{props.value.label !== '' ? props.value.label.toString() : <i>No label</i>}</ValuePlugins>
+                            {isCurationAllowed && (
+                                <small>
+                                    <Badge className="ml-2">{props.value.datatype}</Badge>
+                                </small>
+                            )}
                         </div>
                     )}
 
