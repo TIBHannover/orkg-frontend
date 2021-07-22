@@ -1,11 +1,13 @@
-import { Input } from 'reactstrap';
+import { Input, InputGroupAddon } from 'reactstrap';
 import PropTypes from 'prop-types';
 import DATA_TYPES, { getConfigByType } from 'constants/DataTypes';
+import { useSelector } from 'react-redux';
 import Textarea from 'react-textarea-autosize';
 
 export default function InputField(props) {
     let isClassDatatype = false;
     let inputFormType = 'text';
+    const isCurationAllowed = useSelector(state => state.auth.user?.isCurationAllowed);
 
     if (props.valueClass?.id) {
         isClassDatatype = true;
@@ -71,24 +73,27 @@ export default function InputField(props) {
     };
     return (
         <>
-            {Forms[inputFormType] || Forms.default}
             {props.isLiteral && !isClassDatatype && (
-                <Input
-                    bsSize="sm"
-                    onChange={e => props.setInputDataType(e.target.value)}
-                    value={props.inputDataType}
-                    type="select"
-                    name="datatype"
-                    className="flex-grow-0 d-flex"
-                    style={{ flexBasis: '120px', height: 'auto' }}
-                >
-                    {DATA_TYPES.map(dt => (
-                        <option key={dt.type} value={dt.type}>
-                            {dt.type}
-                        </option>
-                    ))}
-                </Input>
+                <>
+                    {/*<InputGroupAddon addonType="append">Type</InputGroupAddon>*/}
+                    <Input
+                        bsSize="sm"
+                        onChange={e => props.setInputDataType(e.target.value)}
+                        value={props.inputDataType}
+                        type="select"
+                        name="datatype"
+                        className="flex-grow-0 d-flex"
+                        style={{ flexBasis: '105px', height: 'auto' }}
+                    >
+                        {DATA_TYPES.map(dt => (
+                            <option key={dt.type} value={dt.type}>
+                                {!isCurationAllowed ? dt.name : dt.type}
+                            </option>
+                        ))}
+                    </Input>
+                </>
             )}
+            {Forms[inputFormType] || Forms.default}
         </>
     );
 }

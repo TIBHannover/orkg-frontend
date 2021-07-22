@@ -109,7 +109,7 @@ export default function ValueItemTemplate(props) {
         setFormFeedback(null);
         setIsValid(true);
         if (draftDataType === 'xs:boolean') {
-            setDraftLabel(v => Boolean(v));
+            setDraftLabel(v => Boolean(v).toString());
         }
     }, [draftDataType]);
 

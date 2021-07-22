@@ -1,13 +1,13 @@
 import Joi from 'joi';
 import { MISC } from 'constants/graphSettings';
-//https://www.w3.org/TR/xmlschema-2/#boolean
+//https://www.w3.org/TR/xmlschema-2
 
 const DATA_TYPES = [
-    { type: MISC.DEFAULT_LITERAL_DATATYPE, schema: Joi.string(), inputFormType: 'textarea' },
-    { type: 'xsd:decimal', schema: Joi.number(), inputFormType: 'text' },
-    { type: 'xs:integer', schema: Joi.number().integer(), inputFormType: 'text' },
-    { type: 'xs:boolean', schema: Joi.boolean(), inputFormType: 'boolean' },
-    { type: 'xsd:date', schema: Joi.date(), inputFormType: 'date' }
+    { name: 'String', type: MISC.DEFAULT_LITERAL_DATATYPE, schema: Joi.string(), inputFormType: 'textarea' },
+    { name: 'Decimal', type: 'xsd:decimal', schema: Joi.number(), inputFormType: 'text' },
+    { name: 'Integer', type: 'xsd:integer', schema: Joi.number().integer(), inputFormType: 'text' },
+    { name: 'Boolean', type: 'xsd:boolean', schema: Joi.boolean(), inputFormType: 'boolean' },
+    { name: 'Date', type: 'xsd:date', schema: Joi.date(), inputFormType: 'date' }
 ];
 
 export const getConfigByType = type => {
