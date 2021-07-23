@@ -1,16 +1,12 @@
-import { Input, InputGroupAddon } from 'reactstrap';
+import { Input } from 'reactstrap';
 import PropTypes from 'prop-types';
-import DATA_TYPES, { getConfigByType } from 'constants/DataTypes';
-import { useSelector } from 'react-redux';
+import { getConfigByType } from 'constants/DataTypes';
 import Textarea from 'react-textarea-autosize';
 
 export default function InputField(props) {
-    let isClassDatatype = false;
     let inputFormType = 'text';
-    const isCurationAllowed = useSelector(state => state.auth.user?.isCurationAllowed);
 
     if (props.valueClass?.id) {
-        isClassDatatype = true;
         switch (props.valueClass.id) {
             case 'Date':
                 inputFormType = 'date';
@@ -19,7 +15,7 @@ export default function InputField(props) {
                 inputFormType = 'text';
                 break;
         }
-    } else if (props.isLiteral) {
+    } else if (props.inputDataType !== 'object') {
         const config = getConfigByType(props.inputDataType);
         inputFormType = config.inputFormType;
     }
@@ -32,6 +28,7 @@ export default function InputField(props) {
                 value={props.inputValue}
                 onChange={(e, value) => props.setInputValue(e ? e.target.value : value)}
                 onKeyDown={props.onKeyDown}
+                inputRef={props.literalInputRef}
                 onBlur={props.onBlur}
                 className="form-control"
                 autoFocus
@@ -42,8 +39,9 @@ export default function InputField(props) {
                 <Input
                     onChange={(e, value) => props.setInputValue(e ? e.target.value : value)}
                     value={props.inputValue}
+                    innerRef={props.literalInputRef}
                     type="select"
-                    name="datatype"
+                    name="literalValue"
                     bsSize="sm"
                     className="flex-grow-1 d-flex"
                 >
@@ -71,43 +69,17 @@ export default function InputField(props) {
             </>
         )
     };
-    return (
-        <>
-            {props.isLiteral && !isClassDatatype && (
-                <>
-                    {/*<InputGroupAddon addonType="append">Type</InputGroupAddon>*/}
-                    <Input
-                        bsSize="sm"
-                        onChange={e => props.setInputDataType(e.target.value)}
-                        value={props.inputDataType}
-                        type="select"
-                        name="datatype"
-                        className="flex-grow-0 d-flex"
-                        style={{ flexBasis: '105px', height: 'auto' }}
-                    >
-                        {DATA_TYPES.map(dt => (
-                            <option key={dt.type} value={dt.type}>
-                                {!isCurationAllowed ? dt.name : dt.type}
-                            </option>
-                        ))}
-                    </Input>
-                </>
-            )}
-            {Forms[inputFormType] || Forms.default}
-        </>
-    );
+
+    return <>{Forms[inputFormType] || Forms.default}</>;
 }
 
 InputField.propTypes = {
-    components: PropTypes.array.isRequired,
     valueClass: PropTypes.object,
     setInputValue: PropTypes.func.isRequired,
     onKeyDown: PropTypes.func.isRequired,
     onBlur: PropTypes.func,
     inputValue: PropTypes.string.isRequired,
     inputDataType: PropTypes.string.isRequired,
-    setInputDataType: PropTypes.func.isRequired,
     isValid: PropTypes.bool.isRequired,
-    isLiteral: PropTypes.bool.isRequired,
     literalInputRef: PropTypes.oneOfType([PropTypes.func, PropTypes.shape({ current: PropTypes.instanceOf(Element) })])
 };

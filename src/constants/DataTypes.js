@@ -1,13 +1,40 @@
 import Joi from 'joi';
-import { MISC } from 'constants/graphSettings';
+import { MISC, ENTITIES } from 'constants/graphSettings';
 //https://www.w3.org/TR/xmlschema-2
 
 const DATA_TYPES = [
-    { name: 'String', type: MISC.DEFAULT_LITERAL_DATATYPE, schema: Joi.string(), inputFormType: 'textarea' },
-    { name: 'Decimal', type: 'xsd:decimal', schema: Joi.number(), inputFormType: 'text' },
-    { name: 'Integer', type: 'xsd:integer', schema: Joi.number().integer(), inputFormType: 'text' },
-    { name: 'Boolean', type: 'xsd:boolean', schema: Joi.boolean(), inputFormType: 'boolean' },
-    { name: 'Date', type: 'xsd:date', schema: Joi.date(), inputFormType: 'date' }
+    {
+        name: 'Resource',
+        tooltip: (
+            <>
+                Choose Resource to link this to a resource which can contain values on its own. <br /> To fetch an existing resource by ID type “#”
+                without quotes following with the resource ID (e.g: #R12).
+            </>
+        ),
+        type: 'object',
+        _class: 'object',
+        schema: Joi.string(),
+        inputFormType: 'autocomplete'
+    },
+    {
+        name: 'Text',
+        tooltip: 'Choose Text for values like plain text or mathematical expressions using TeX delimiters $$...$$',
+        type: MISC.DEFAULT_LITERAL_DATATYPE,
+        _class: ENTITIES.LITERAL,
+        schema: Joi.string(),
+        inputFormType: 'textarea'
+    },
+    { name: 'Decimal', type: 'xsd:decimal', _class: ENTITIES.LITERAL, schema: Joi.number(), inputFormType: 'text' },
+    { name: 'Integer', type: 'xsd:integer', _class: ENTITIES.LITERAL, schema: Joi.number().integer(), inputFormType: 'text' },
+    {
+        name: 'Boolean',
+        tooltip: 'Choose Boolean for "true" or "false" value',
+        type: 'xsd:boolean',
+        _class: ENTITIES.LITERAL,
+        schema: Joi.boolean(),
+        inputFormType: 'boolean'
+    },
+    { name: 'Date', type: 'xsd:date', _class: ENTITIES.LITERAL, schema: Joi.date(), inputFormType: 'date' }
 ];
 
 export const getConfigByType = type => {

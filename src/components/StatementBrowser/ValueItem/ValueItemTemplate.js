@@ -17,9 +17,10 @@ import { getValueClass, isInlineResource as isInlineResourceUtil } from 'compone
 import { reverse } from 'named-urls';
 import { Link } from 'react-router-dom';
 import ROUTES from 'constants/routes.js';
+import DatatypeSelector from 'components/StatementBrowser/DatatypeSelector/DatatypeSelector';
 import { getConfigByType } from 'constants/DataTypes';
 import { useDispatch, useSelector } from 'react-redux';
-import { CLASSES } from 'constants/graphSettings';
+import { CLASSES, ENTITIES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
 import Joi from 'joi';
 
@@ -61,7 +62,7 @@ export default function ValueItemTemplate(props) {
 
     const [disableHover, setDisableHover] = useState(false);
     const [draftLabel, setDraftLabel] = useState(props.value.label);
-    const [draftDataType, setDraftDataType] = useState(props.value.datatype);
+    const [draftDataType, setDraftDataType] = useState(props.value.type === 'literal' ? props.value.datatype : 'object');
     const [isValid, setIsValid] = useState(true);
     const [formFeedback, setFormFeedback] = useState(null);
 
@@ -240,15 +241,14 @@ export default function ValueItemTemplate(props) {
             ) : (
                 <div>
                     <InputGroup size="sm " className="d-flex">
+                        {!valueClass && props.value.type === ENTITIES.LITERAL && (
+                            <DatatypeSelector entity={props.value.type} valueType={draftDataType} setValueType={setDraftDataType} />
+                        )}
                         <InputField
-                            components={props.components}
                             valueClass={valueClass}
                             inputValue={draftLabel}
-                            className="flex-3"
                             setInputValue={setDraftLabel}
-                            setInputDataType={setDraftDataType}
                             inputDataType={draftDataType}
-                            isLiteral={props.value.type === 'literal'}
                             onKeyDown={e => (e.keyCode === 13 || e.keyCode === 27) && e.target.blur()} // stop editing on enter and escape
                             //onBlur={() => onSubmit()}
                             isValid={isValid}
