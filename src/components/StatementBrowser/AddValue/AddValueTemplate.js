@@ -124,7 +124,7 @@ export default function AddValueTemplate(props) {
             setIsValid(true);
             // Check for a possible conversion possible
             const suggestions = getSuggestionByTypeAndValue(inputDataType, inputValue);
-            if (suggestions.length > 0) {
+            if (suggestions.length > 0 && !props.valueClass) {
                 console.log(suggestions);
                 setSuggestionType(suggestions[0]);
                 confirmConversion.current.show();
