@@ -24,8 +24,7 @@ const DatatypeSelector = props => {
             padding: '0',
             border: '0',
             fontSize: '0.875rem',
-            position: 'relative',
-            zIndex: '99'
+            position: 'relative'
         }),
         control: provided => ({
             ...provided,

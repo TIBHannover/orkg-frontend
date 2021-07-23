@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { toggleEditValue } from 'actions/statementBrowser';
 import { InputGroup, InputGroupAddon, Button, FormFeedback, Badge } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -18,9 +18,11 @@ import { reverse } from 'named-urls';
 import { Link } from 'react-router-dom';
 import ROUTES from 'constants/routes.js';
 import DatatypeSelector from 'components/StatementBrowser/DatatypeSelector/DatatypeSelector';
-import { getConfigByType } from 'constants/DataTypes';
+import { getConfigByType, getSuggestionByTypeAndValue } from 'constants/DataTypes';
+import Tippy from '@tippyjs/react';
 import { useDispatch, useSelector } from 'react-redux';
-import { CLASSES, ENTITIES } from 'constants/graphSettings';
+import { CLASSES, ENTITIES, MISC } from 'constants/graphSettings';
+import ConfirmConversionTooltip from 'components/StatementBrowser/ConfirmConversionTooltip/ConfirmConversionTooltip';
 import PropTypes from 'prop-types';
 import Joi from 'joi';
 
@@ -32,6 +34,9 @@ export default function ValueItemTemplate(props) {
     let valueClass = getValueClass(props.components);
     valueClass = valueClass ? valueClass : props.predicate?.range ? props.predicate.range : null;
     const isInlineResource = useSelector(state => isInlineResourceUtil(state, valueClass));
+
+    const confirmConversion = useRef(null);
+    const [suggestionType, setSuggestionType] = useState(null);
 
     const values = useSelector(state => state.statementBrowser.values);
     const properties = useSelector(state => state.statementBrowser.properties);
@@ -93,6 +98,26 @@ export default function ValueItemTemplate(props) {
         return Joi.string();
     };
 
+    /**
+     * Get the correct xsd datatype if it's literal
+     */
+    const getDataType = dt => {
+        if (valueClass && props.value.type === ENTITIES.LITERAL) {
+            switch (valueClass.id) {
+                case 'String':
+                    return MISC.DEFAULT_LITERAL_DATATYPE;
+                case 'Number':
+                    return 'xsd:decimal';
+                case 'Date':
+                    return 'xsd:date';
+                default:
+                    return MISC.DEFAULT_LITERAL_DATATYPE;
+            }
+        } else {
+            return getConfigByType(dt).type;
+        }
+    };
+
     const onSubmit = () => {
         const { error } = getSchema().validate(draftLabel);
         if (error) {
@@ -101,15 +126,34 @@ export default function ValueItemTemplate(props) {
         } else {
             // setDraftLabel(value);
             setFormFeedback(null);
-            props.commitChangeLabel(draftLabel, draftDataType);
-            dispatch(toggleEditValue({ id: props.id }));
+            // Check for a possible conversion possible
+            const suggestions = getSuggestionByTypeAndValue(draftDataType, draftLabel);
+            if (suggestions.length > 0 && !valueClass) {
+                setSuggestionType(suggestions[0]);
+                confirmConversion.current.show();
+            } else {
+                props.commitChangeLabel(draftLabel, getDataType(draftDataType));
+                dispatch(toggleEditValue({ id: props.id }));
+            }
         }
+    };
+
+    const acceptSuggestion = () => {
+        confirmConversion.current.hide();
+        props.commitChangeLabel(draftLabel, suggestionType.type);
+        setDraftDataType(suggestionType.type);
+        dispatch(toggleEditValue({ id: props.id }));
+    };
+
+    const rejectSuggestion = () => {
+        props.commitChangeLabel(draftLabel, getDataType(draftDataType));
+        dispatch(toggleEditValue({ id: props.id }));
     };
 
     useEffect(() => {
         setFormFeedback(null);
         setIsValid(true);
-        if (draftDataType === 'xs:boolean') {
+        if (draftDataType === 'xsd:boolean') {
             setDraftLabel(v => Boolean(v).toString());
         }
     }, [draftDataType]);
@@ -255,7 +299,21 @@ export default function ValueItemTemplate(props) {
                         />
                         <InputGroupAddon addonType="append">
                             <StyledButton outline onClick={() => onSubmit()}>
-                                Done
+                                <Tippy
+                                    onCreate={instance => (confirmConversion.current = instance)}
+                                    content={
+                                        <ConfirmConversionTooltip
+                                            rejectSuggestion={rejectSuggestion}
+                                            acceptSuggestion={acceptSuggestion}
+                                            suggestionType={suggestionType}
+                                        />
+                                    }
+                                    interactive={true}
+                                    trigger="manual"
+                                    placement="top"
+                                >
+                                    <span>Done</span>
+                                </Tippy>
                             </StyledButton>
                         </InputGroupAddon>
                     </InputGroup>
