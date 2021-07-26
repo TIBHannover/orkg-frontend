@@ -1,6 +1,6 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { toggleEditValue } from 'actions/statementBrowser';
-import { InputGroup, InputGroupAddon, Button, FormFeedback } from 'reactstrap';
+import { InputGroup, InputGroupAddon, Button, FormFeedback, Badge } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { fetchStatementsForResource } from 'actions/statementBrowser';
 import { faTrash, faPen, faExternalLinkAlt, faTable } from '@fortawesome/free-solid-svg-icons';
@@ -17,9 +17,14 @@ import { getValueClass, isInlineResource as isInlineResourceUtil } from 'compone
 import { reverse } from 'named-urls';
 import { Link } from 'react-router-dom';
 import ROUTES from 'constants/routes.js';
+import DatatypeSelector from 'components/StatementBrowser/DatatypeSelector/DatatypeSelector';
+import { getConfigByType, getSuggestionByTypeAndValue } from 'constants/DataTypes';
+import Tippy from '@tippyjs/react';
 import { useDispatch, useSelector } from 'react-redux';
-import { CLASSES, ENTITIES } from 'constants/graphSettings';
+import { CLASSES, ENTITIES, MISC } from 'constants/graphSettings';
+import ConfirmConversionTooltip from 'components/StatementBrowser/ConfirmConversionTooltip/ConfirmConversionTooltip';
 import PropTypes from 'prop-types';
+import Joi from 'joi';
 
 export default function ValueItemTemplate(props) {
     const dispatch = useDispatch();
@@ -29,6 +34,9 @@ export default function ValueItemTemplate(props) {
     let valueClass = getValueClass(props.components);
     valueClass = valueClass ? valueClass : props.predicate?.range ? props.predicate.range : null;
     const isInlineResource = useSelector(state => isInlineResourceUtil(state, valueClass));
+
+    const confirmConversion = useRef(null);
+    const [suggestionType, setSuggestionType] = useState(null);
 
     const values = useSelector(state => state.statementBrowser.values);
     const properties = useSelector(state => state.statementBrowser.properties);
@@ -56,10 +64,11 @@ export default function ValueItemTemplate(props) {
     });
 
     const resource = useSelector(state => state.statementBrowser.resources.byId[props.value.resourceId]);
+    const isCurationAllowed = useSelector(state => state.auth.user?.isCurationAllowed);
 
     const [disableHover, setDisableHover] = useState(false);
     const [draftLabel, setDraftLabel] = useState(props.value.label);
-
+    const [draftDataType, setDraftDataType] = useState(props.value.type === 'literal' ? props.value.datatype : 'object');
     const [isValid, setIsValid] = useState(true);
     const [formFeedback, setFormFeedback] = useState(null);
 
@@ -68,7 +77,7 @@ export default function ValueItemTemplate(props) {
         disableHover: disableHover
     });
 
-    const validateValue = () => {
+    const getSchema = () => {
         if (valueClass && ['Date', 'Number', 'String'].includes(valueClass.id)) {
             let component;
             if (props.components && props.components.length > 0) {
@@ -82,29 +91,73 @@ export default function ValueItemTemplate(props) {
                 };
             }
             const schema = validationSchema(component);
-            const { error, value } = schema.validate(draftLabel);
-            if (error) {
-                setFormFeedback(error.message);
-                setIsValid(false);
-                return false;
-            } else {
-                setDraftLabel(value);
-                setFormFeedback(null);
-                return value;
+            return schema;
+        } else if (props.value.type === 'literal') {
+            const config = getConfigByType(draftDataType);
+            return config.schema;
+        }
+        return Joi.string();
+    };
+
+    /**
+     * Get the correct xsd datatype if it's literal
+     */
+    const getDataType = dt => {
+        if (valueClass && props.value.type === ENTITIES.LITERAL) {
+            switch (valueClass.id) {
+                case 'String':
+                    return MISC.DEFAULT_LITERAL_DATATYPE;
+                case 'Number':
+                    return 'xsd:decimal';
+                case 'Date':
+                    return 'xsd:date';
+                default:
+                    return MISC.DEFAULT_LITERAL_DATATYPE;
             }
         } else {
-            setFormFeedback(null);
-            return draftLabel;
+            return getConfigByType(dt).type;
         }
     };
 
     const onSubmit = () => {
-        const validatedValue = validateValue();
-        if (validatedValue !== false) {
-            props.commitChangeLabel(draftLabel);
-            dispatch(toggleEditValue({ id: props.id }));
+        const { error } = getSchema().validate(draftLabel);
+        if (error) {
+            setFormFeedback(error.message);
+            setIsValid(false);
+        } else {
+            // setDraftLabel(value);
+            setFormFeedback(null);
+            // Check for a possible conversion possible
+            const suggestions = getSuggestionByTypeAndValue(draftDataType, draftLabel);
+            if (suggestions.length > 0 && !valueClass) {
+                setSuggestionType(suggestions[0]);
+                confirmConversion.current.show();
+            } else {
+                props.commitChangeLabel(draftLabel, getDataType(draftDataType));
+                dispatch(toggleEditValue({ id: props.id }));
+            }
         }
     };
+
+    const acceptSuggestion = () => {
+        confirmConversion.current.hide();
+        props.commitChangeLabel(draftLabel, suggestionType.type);
+        setDraftDataType(suggestionType.type);
+        dispatch(toggleEditValue({ id: props.id }));
+    };
+
+    const rejectSuggestion = () => {
+        props.commitChangeLabel(draftLabel, getDataType(draftDataType));
+        dispatch(toggleEditValue({ id: props.id }));
+    };
+
+    useEffect(() => {
+        setFormFeedback(null);
+        setIsValid(true);
+        if (draftDataType === 'xsd:boolean') {
+            setDraftLabel(v => Boolean(v).toString());
+        }
+    }, [draftDataType]);
 
     const generatedFormattedLabel = labelFormat => {
         const valueObject = {};
@@ -152,10 +205,10 @@ export default function ValueItemTemplate(props) {
                         <Button className="p-0 text-left" color="link" onClick={props.handleOnClick} style={{ userSelect: 'text' }}>
                             {props.showHelp && props.value._class === ENTITIES.RESOURCE ? (
                                 <Pulse content="Click on the resource to browse it">
-                                    <ValuePlugins type="resource">{getLabel() || <i>No label</i>}</ValuePlugins>
+                                    <ValuePlugins type="resource">{getLabel() !== '' ? getLabel().toString() : <i>No label</i>}</ValuePlugins>
                                 </Pulse>
                             ) : (
-                                <ValuePlugins type="resource">{getLabel() || <i>No label</i>}</ValuePlugins>
+                                <ValuePlugins type="resource">{getLabel() !== '' ? getLabel().toString() : <i>No label</i>}</ValuePlugins>
                             )}
 
                             {props.resource && props.resource.existingResourceId && openExistingResourcesInDialog ? (
@@ -185,7 +238,14 @@ export default function ValueItemTemplate(props) {
 
                     {props.value._class === ENTITIES.LITERAL && (
                         <div className="literalLabel">
-                            <ValuePlugins type={ENTITIES.LITERAL}>{props.value.label || <i>No label</i>}</ValuePlugins>
+                            <ValuePlugins type={ENTITIES.LITERAL}>
+                                {props.value.label !== '' ? props.value.label.toString() : <i>No label</i>}
+                            </ValuePlugins>
+                            {isCurationAllowed && (
+                                <small>
+                                    <Badge className="ml-2">{props.value.datatype}</Badge>
+                                </small>
+                            )}
                         </div>
                     )}
 
@@ -227,19 +287,36 @@ export default function ValueItemTemplate(props) {
                 </div>
             ) : (
                 <div>
-                    <InputGroup size="sm">
+                    <InputGroup size="sm " className="d-flex">
+                        {!valueClass && props.value.type === ENTITIES.LITERAL && (
+                            <DatatypeSelector entity={props.value.type} valueType={draftDataType} setValueType={setDraftDataType} />
+                        )}
                         <InputField
-                            components={props.components}
                             valueClass={valueClass}
                             inputValue={draftLabel}
                             setInputValue={setDraftLabel}
+                            inputDataType={draftDataType}
                             onKeyDown={e => (e.keyCode === 13 || e.keyCode === 27) && e.target.blur()} // stop editing on enter and escape
-                            onBlur={() => onSubmit()}
+                            //onBlur={() => onSubmit()}
                             isValid={isValid}
                         />
                         <InputGroupAddon addonType="append">
                             <StyledButton outline onClick={() => onSubmit()}>
-                                Done
+                                <Tippy
+                                    onCreate={instance => (confirmConversion.current = instance)}
+                                    content={
+                                        <ConfirmConversionTooltip
+                                            rejectSuggestion={rejectSuggestion}
+                                            acceptSuggestion={acceptSuggestion}
+                                            suggestionType={suggestionType}
+                                        />
+                                    }
+                                    interactive={true}
+                                    trigger="manual"
+                                    placement="top"
+                                >
+                                    <span>Done</span>
+                                </Tippy>
                             </StyledButton>
                         </InputGroupAddon>
                     </InputGroup>
