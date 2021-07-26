@@ -412,7 +412,7 @@ class Header extends Component {
                                             tag="a"
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            href="https://gitlab.com/TIBHannover/orkg/orkg-frontend/-/wikis/home"
+                                            href="https://gitlab.com/TIBHannover/orkg/orkg-frontend/"
                                         >
                                             GitLab <Icon size="sm" icon={faExternalLinkAlt} />
                                         </DropdownItem>

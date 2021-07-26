@@ -71,11 +71,11 @@ const ResearchFields = () => {
                             <div>
                                 Further information about the taxonomy can be found in the{' '}
                                 <a
-                                    href="https://gitlab.com/TIBHannover/orkg/orkg-frontend/-/wikis/ORKG-Research-fields-taxonomy"
+                                    href="https://www.orkg.org/orkg/help-center/article/20/ORKG_Research_fields_taxonomy"
                                     target="_blank"
                                     rel="noopener noreferrer"
                                 >
-                                    ORKG wiki
+                                    ORKG help center
                                 </a>
                             </div>
                         </div>

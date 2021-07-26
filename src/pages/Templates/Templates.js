@@ -177,11 +177,11 @@ const Templates = () => {
                     Templates allows to specify the structure of content types, and they can be used when describing research contributions. Further
                     information about templates can be also found in the{' '}
                     <a
-                        href="https://gitlab.com/TIBHannover/orkg/orkg-frontend/-/wikis/Templates-for-structuring-contribution-descriptions"
+                        href="https://www.orkg.org/orkg/help-center/article/9/Templates_for_structuring_contribution_descriptions"
                         target="_blank"
                         rel="noopener noreferrer"
                     >
-                        ORKG wiki
+                        ORKG help center
                     </a>
                     .
                 </Alert>

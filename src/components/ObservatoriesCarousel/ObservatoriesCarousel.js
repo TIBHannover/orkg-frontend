@@ -161,11 +161,11 @@ function ObservatoriesCarousel(props) {
                         <small className="text-muted">
                             How observatories are managed?{' '}
                             <a
-                                href="https://gitlab.com/TIBHannover/orkg/orkg-frontend/-/wikis/Observatories"
+                                href="https://www.orkg.org/orkg/help-center/article/8/Observatories_for_specific_research_fields"
                                 target="_blank"
                                 rel="noopener noreferrer"
                             >
-                                ORKG wiki
+                                ORKG help center
                             </a>
                         </small>
                     </div>
