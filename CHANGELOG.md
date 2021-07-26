@@ -5,6 +5,13 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [V0.46](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.45...V0.46) - 2021-07-26
+
+### Changes
+
+- feat: Integration of Strapi CMS [`#564`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/564)
+
+---
 ## [V0.45](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.44.1...V0.45) - 2021-07-21
 
 ### Changes
