@@ -282,9 +282,9 @@ function Resource(props) {
                                                 <a
                                                     target="_blank"
                                                     rel="noopener noreferrer"
-                                                    href="https://gitlab.com/TIBHannover/orkg/orkg-frontend/-/wikis/ORKG-Research-fields-taxonomy"
+                                                    href="https://www.orkg.org/orkg/help-center/article/20/ORKG_Research_fields_taxonomy"
                                                 >
-                                                    Wiki page
+                                                    ORKG help center
                                                 </a>{' '}
                                                 if you have any suggestions to improve the research fields taxonomy.
                                             </>

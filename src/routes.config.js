@@ -8,9 +8,6 @@ import AddResource from 'pages/Resources/AddResource';
 import Comparison from 'pages/Comparisons/Comparison';
 import ComparisonDiff from 'pages/Comparisons/ComparisonDiff';
 import Home from 'pages/Home';
-import License from 'pages/License';
-import DataProtection from 'pages/DataProtection';
-import TermsOfUse from 'pages/TermsOfUse';
 import Changelog from 'pages/Changelog/Changelog';
 import NotFound from 'pages/NotFound';
 import Papers from 'pages/Papers';
@@ -58,8 +55,14 @@ import Benchmarks from 'pages/Benchmarks/Benchmarks';
 import Benchmark from 'pages/Benchmarks/Benchmark';
 import { reverse } from 'named-urls';
 import ContributionEditor from 'pages/ContributionEditor';
-import CurationCall from 'pages/CurationCall';
+import Page from 'pages/Page';
+import About from 'pages/About';
+import HelpCenter from 'pages/HelpCenter/HelpCenter';
+import HelpCenterCategory from 'pages/HelpCenter/HelpCenterCategory';
+import HelpCenterArticle from 'pages/HelpCenter/HelpCenterArticle';
+import HelpCenterSearch from 'pages/HelpCenter/HelpCenterSearch';
 import WebinarMay11 from 'pages/WebinarMay11';
+import CurationCall from 'pages/CurationCall';
 
 // use lazy loading of pages that contain large dependencies
 // run "npm run analyze" to ensure the listed dependencies are not loaded elsewhere and thus end up in the bundle
@@ -238,18 +241,6 @@ const routes = [
         component: AuthorPage
     },
     {
-        path: ROUTES.LICENSE,
-        component: License
-    },
-    {
-        path: ROUTES.DATA_PROTECTION,
-        component: DataProtection
-    },
-    {
-        path: ROUTES.TERMS_OF_USE,
-        component: TermsOfUse
-    },
-    {
         path: ROUTES.CHANGELOG,
         component: Changelog
     },
@@ -357,8 +348,33 @@ const routes = [
         component: Tools
     },
     {
+        path: ROUTES.PAGE,
+        component: Page
+    },
+    {
+        path: ROUTES.ABOUT,
+        component: About
+    },
+    {
+        path: ROUTES.HELP_CENTER_CATEGORY,
+        component: HelpCenterCategory
+    },
+    {
+        path: ROUTES.HELP_CENTER_ARTICLE,
+        component: HelpCenterArticle
+    },
+    {
+        path: ROUTES.HELP_CENTER_SEARCH,
+        component: HelpCenterSearch
+    },
+    // redirect legacy route
+    {
         path: ROUTES.CURATION_CALL,
         component: CurationCall
+    },
+    {
+        path: ROUTES.HELP_CENTER,
+        component: HelpCenter
     },
     {
         path: ROUTES.WEBINAR_MAY_11,
