@@ -5,6 +5,44 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [V0.46](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.45...V0.46) - 2021-07-26
+
+### Changes
+
+- feat: Integration of Strapi CMS [`#564`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/564)
+
+---
+## [V0.45](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.44.1...V0.45) - 2021-07-21
+
+### Changes
+
+- fix: Issue with fetch statements for resource [`#648`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/648)
+- enhancement(Benchmark): Show benchmark of a research problem on dataset [`#628`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/628)
+- feat(Stats): add additional statistics [`#625`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/625)
+- fix(SmartReview): save authors without change [`#645`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/645)
+- feat(Observatories): human-readable URLs [`#507`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/507)
+- fix(Comparison): Remove decoding before parsing comparison configuration [`#643`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/643)
+- fix(SmartReview): preserve order of ontology items, rely on backend default sorting [`#612`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/612)
+
+---
+## [V0.44.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.44...V0.44.1) - 2021-07-15
+
+### Changes
+
+- fix(CSV import): Validation schema [`#642`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/642)
+
+---
+## [V0.44](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.43...V0.44) - 2021-07-13
+
+### Changes
+
+- fix: make several UI components more accessible [`#636`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/636)
+- fix: Paper cannot be edited when no research field is provided [`#641`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/641)
+- feat(CSV import): Fetch metadata if DOI is provided [`#640`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/640)
+- fix(CSV Import): Research field validation [`#639`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/639)
+- feat(ValuePlugins): support inline clickable links [`#635`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/635)
+
+---
 ## [V0.43](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.42.1...V0.43) - 2021-07-07
 
 ### Changes

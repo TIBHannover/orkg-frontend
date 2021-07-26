@@ -99,3 +99,9 @@ export const SearchButtonStyled = styled(Button)`
         border: 0;
     }
 `;
+
+export const CmsPage = styled.div`
+    img {
+        max-width: 100%;
+    }
+`;

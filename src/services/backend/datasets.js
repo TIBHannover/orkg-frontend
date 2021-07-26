@@ -7,12 +7,19 @@ export const datasetsUrl = `${url}datasets/`;
 // https://gitlab.com/TIBHannover/orkg/orkg-backend/-/issues/263
 
 /**
- * Get a dataset benchmark summary.
+ * Get a dataset benchmark summary for a research problem
  * Each benchmark on the dataset is define by the following attributes:
  * model_name, score, metric, paper_title, code_urls
  * */
-export const getDatasetBenchmarksByDatasetId = resourceId => {
-    return submitGetRequest(`${datasetsUrl}${encodeURIComponent(resourceId)}/summary`);
+export const getDatasetBenchmarksByDatasetId = (datasetId, problemId) => {
+    return submitGetRequest(`${datasetsUrl}${datasetId}/problem/${problemId}/summary`);
+};
+
+/**
+ * Get the list of research problems of a dataset
+ * */
+export const getResearchProblemsByDatasetId = datasetId => {
+    return submitGetRequest(`${datasetsUrl}${datasetId}/problems`);
 };
 
 /**

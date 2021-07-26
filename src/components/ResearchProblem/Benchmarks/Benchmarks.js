@@ -22,7 +22,7 @@ const Benchmarks = props => {
                     </div>
                 </Container>
                 <Container className="p-0">
-                    {benchmarks.length > 0 && <BenchmarksCarousel benchmarks={benchmarks} />}
+                    {benchmarks.length > 0 && <BenchmarksCarousel problemId={props.id} benchmarks={benchmarks} />}
                     {isLoadingData && (
                         <>
                             <ContentLoader

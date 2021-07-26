@@ -163,7 +163,7 @@ const UserProfile = props => {
                                     {observatoryData && (
                                         <div className="mt-3 align-items-end">
                                             <b className="d-block">Member of the observatory</b>
-                                            <Link to={reverse(ROUTES.OBSERVATORY, { id: observatoryData?.id })} className="text-center">
+                                            <Link to={reverse(ROUTES.OBSERVATORY, { id: observatoryData?.display_id })} className="text-center">
                                                 {observatoryData?.name}
                                             </Link>
                                         </div>
@@ -172,10 +172,12 @@ const UserProfile = props => {
                                 <div className="col-md-4 mt-4 mt-md-0">
                                     {organizationData && (
                                         <StyledOrganizationCard>
-                                            <Link className="logoContainer" to={reverse(ROUTES.ORGANIZATION, { id: organizationData.id })}>
+                                            <Link className="logoContainer" to={reverse(ROUTES.ORGANIZATION, { id: organizationData.display_id })}>
                                                 <img className="mx-auto p-2" src={organizationData.logo} alt={`${organizationData.name} logo`} />
                                             </Link>
-                                            <Link to={reverse(ROUTES.ORGANIZATION, { id: organizationData.id })}>{organizationData?.name}</Link>
+                                            <Link to={reverse(ROUTES.ORGANIZATION, { id: organizationData.display_id })}>
+                                                {organizationData?.name}
+                                            </Link>
                                         </StyledOrganizationCard>
                                     )}
                                 </div>

@@ -402,24 +402,19 @@ class Header extends Component {
                                         About <FontAwesomeIcon style={{ marginTop: '4px' }} icon={faChevronDown} pull="right" />
                                     </DropdownToggle>
                                     <DropdownMenu>
-                                        <DropdownItem tag="a" target="_blank" rel="noopener noreferrer" href="https://projects.tib.eu/orkg/">
-                                            About ORKG <Icon size="sm" icon={faExternalLinkAlt} />
+                                        <DropdownItem tag={RouterNavLink} exact to={reverse(ROUTES.ABOUT, {})}>
+                                            About ORKG
+                                        </DropdownItem>
+                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.HELP_CENTER}>
+                                            Help center
                                         </DropdownItem>
                                         <DropdownItem
                                             tag="a"
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            href="https://projects.tib.eu/orkg/documentation/"
+                                            href="https://gitlab.com/TIBHannover/orkg/orkg-frontend/"
                                         >
-                                            Features <Icon size="sm" icon={faExternalLinkAlt} />
-                                        </DropdownItem>
-                                        <DropdownItem
-                                            tag="a"
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            href="https://gitlab.com/TIBHannover/orkg/orkg-frontend/-/wikis/home"
-                                        >
-                                            Documentation <Icon size="sm" icon={faExternalLinkAlt} />
+                                            GitLab <Icon size="sm" icon={faExternalLinkAlt} />
                                         </DropdownItem>
                                         <DropdownItem divider />
                                         <DropdownItem tag={RouterNavLink} exact to={ROUTES.STATS}>

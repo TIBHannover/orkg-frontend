@@ -40,8 +40,8 @@ function Benchmarks() {
                         </p>
                         <div>
                             Further information about benchmarks can be also found in the{' '}
-                            <a href="https://gitlab.com/TIBHannover/orkg/orkg-frontend/-/wikis/Benchmarks" target="_blank" rel="noopener noreferrer">
-                                ORKG wiki
+                            <a href="https://www.orkg.org/orkg/help-center/article/21/Benchmarks" target="_blank" rel="noopener noreferrer">
+                                ORKG help center
                             </a>
                         </div>
                     </div>

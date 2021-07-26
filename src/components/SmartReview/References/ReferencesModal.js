@@ -60,7 +60,7 @@ const ReferencesModal = ({ show, toggle }) => {
     const updateReference = useCallback(
         ({ bibtex, literalId }) => {
             setIsParsingBibtex(true);
-            console.log('updateReference');
+
             parseBibtex({ bibtex, checkForDuplicate: false })
                 .then(parsedReference => {
                     if (parsedReference) {
@@ -83,7 +83,7 @@ const ReferencesModal = ({ show, toggle }) => {
     const createReference = useCallback(
         bibtex => {
             setIsParsingBibtex(true);
-            console.log('createReference');
+
             parseBibtex({ bibtex, checkForDuplicate: true })
                 .then(parsedReference => {
                     if (!parsedReference) {
