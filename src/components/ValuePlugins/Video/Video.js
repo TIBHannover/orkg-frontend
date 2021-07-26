@@ -4,6 +4,7 @@ import { renderToString } from 'react-dom/server';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faVideo } from '@fortawesome/free-solid-svg-icons';
 import { Modal, ModalHeader, ModalBody } from 'reactstrap';
+import REGEX from 'constants/regex';
 import styled from 'styled-components';
 
 const VideoContainer = styled.div`
@@ -24,11 +25,6 @@ const IframeFullWidth = styled.iframe`
 class Video extends Component {
     constructor(props) {
         super(props);
-        // eslint-disable-next-line no-useless-escape
-        this.expressionTib = new RegExp(/^(https?:)?\/\/av\.tib\.eu(\/(media|player)?(\?.*)?)\//);
-        this.expressionYoutube = new RegExp(/^(https?:)?\/\/(www.)?youtube\.com\/watch\?v=/);
-        this.expressionDailymotion = new RegExp(/^(https?:)?\/\/(www.)?dailymotion\.com\/video\//);
-        this.expressionVimeo = new RegExp(/^(https?:)?\/\/(www.)?vimeo\.com\//);
         this.state = {
             showVideoDialog: false
         };
@@ -50,25 +46,25 @@ class Video extends Component {
 
         if (
             this.props.type === 'literal' &&
-            (labelToText.match(this.expressionTib) ||
-                labelToText.match(this.expressionYoutube) ||
-                labelToText.match(this.expressionDailymotion) ||
-                labelToText.match(this.expressionVimeo))
+            (labelToText.match(new RegExp(REGEX.TIB_URL)) ||
+                labelToText.match(new RegExp(REGEX.YOUTUBE_URL)) ||
+                labelToText.match(new RegExp(REGEX.DAILYMOTION_URL)) ||
+                labelToText.match(new RegExp(REGEX.VIMEO_URL)))
         ) {
             const videoId = labelToText
-                .replace(this.expressionTib, '')
-                .replace(this.expressionYoutube, '')
-                .replace(this.expressionDailymotion, '')
-                .replace(this.expressionVimeo, '');
+                .replace(new RegExp(REGEX.TIB_URL), '')
+                .replace(new RegExp(REGEX.YOUTUBE_URL), '')
+                .replace(new RegExp(REGEX.DAILYMOTION_URL), '')
+                .replace(new RegExp(REGEX.VIMEO_URL), '');
 
             let providerUrl = '';
-            if (labelToText.match(this.expressionTib)) {
+            if (labelToText.match(new RegExp(REGEX.TIB_URL))) {
                 providerUrl = '//av.tib.eu/player/';
-            } else if (labelToText.match(this.expressionYoutube)) {
+            } else if (labelToText.match(new RegExp(REGEX.YOUTUBE_URL))) {
                 providerUrl = 'https://www.youtube.com/embed/';
-            } else if (labelToText.match(this.expressionDailymotion)) {
+            } else if (labelToText.match(new RegExp(REGEX.DAILYMOTION_URL))) {
                 providerUrl = 'https://www.dailymotion.com/embed/video/';
-            } else if (labelToText.match(this.expressionVimeo)) {
+            } else if (labelToText.match(new RegExp(REGEX.VIMEO_URL))) {
                 providerUrl = 'https://player.vimeo.com/video/';
             }
             if (!this.props.options.inModal) {
