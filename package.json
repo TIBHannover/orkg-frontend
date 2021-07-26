@@ -102,6 +102,7 @@
         "slugify": "^1.5.3",
         "source-map-explorer": "^2.5.2",
         "stopwords-en": "^0.3.0",
+        "strict-mode": "^1.1.5",
         "string-format": "^2.0.0",
         "styled-components": "^5.3.0",
         "typed.js": "^2.0.12",
