@@ -3,6 +3,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { Button, ButtonGroup } from 'reactstrap';
 import PropTypes from 'prop-types';
+import a from 'indefinite';
 
 const ConfirmConversionTooltip = props => {
     const yesButtonRef = useRef(null);
@@ -14,7 +15,8 @@ const ConfirmConversionTooltip = props => {
     return (
         <div className="text-center p-1" style={{ width: '200px', color: '#fff', fontSize: '0.95rem', wordBreak: 'normal' }}>
             <p className="mb-2">
-                The value you entered looks like a <b>{props.suggestionType?.name}</b>. Do you want to convert it?
+                The value you entered looks like {a(props.suggestionType?.name, { articleOnly: true })} <b>{props.suggestionType?.name}</b>. Do you
+                want to convert it?
             </p>
             <ButtonGroup size="sm" className="mt-1 mb-1  d-flex">
                 <Button
