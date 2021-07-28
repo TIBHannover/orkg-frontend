@@ -18,7 +18,6 @@ import { getSuggestedProperties, initializeWithoutContribution, initializeWithRe
 const Statements = props => {
     const selectedResource = useSelector(state => state.statementBrowser.selectedResource);
     const level = useSelector(state => state.statementBrowser.level);
-
     const suggestedProperties = useSelector(state => getSuggestedProperties(state, selectedResource));
     const resource = useSelector(state => selectedResource && state.statementBrowser.resources.byId[selectedResource]);
     const dispatch = useDispatch();

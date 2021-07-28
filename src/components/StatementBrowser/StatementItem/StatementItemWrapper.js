@@ -16,11 +16,8 @@ export default function StatementItemWrapper(props) {
             <StatementItem
                 key={`statement-p${props.propertyId}r${props.resourceId}`}
                 id={props.propertyId}
-                property={property}
-                predicateLabel={property.label}
                 enableEdit={props.shared <= 1 ? props.enableEdit : false}
                 syncBackend={props.syncBackend}
-                isAnimated={property.isAnimated}
                 resourceId={props.resourceId}
                 isLastItem={props.isLastItem}
                 showValueHelp={cookies && !cookies.showedValueHelp && props.isFirstItem ? true : false}
@@ -39,7 +36,6 @@ export default function StatementItemWrapper(props) {
                     enableEdit={props.enableEdit}
                     syncBackend={props.syncBackend}
                     openExistingResourcesInDialog={props.openExistingResourcesInDialog}
-                    isAnimated={property.isAnimated}
                 />
             );
         });

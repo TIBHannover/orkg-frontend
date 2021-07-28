@@ -3,11 +3,15 @@ import useStatementItem from './hooks/useStatementItem';
 import PropTypes from 'prop-types';
 
 export default function StatementItem(props) {
-    const { predicateLabel, handleChange, handleDeleteStatement } = useStatementItem(props);
+    const { property, predicateLabel, handleChange, handleDeleteStatement } = useStatementItem({
+        propertyId: props.id,
+        resourceId: props.resourceId,
+        syncBackend: props.syncBackend
+    });
 
     return (
         <StatementItemTemplate
-            property={props.property}
+            property={property}
             id={props.id}
             isLastItem={props.isLastItem}
             enableEdit={props.enableEdit}
@@ -24,8 +28,6 @@ export default function StatementItem(props) {
 
 StatementItem.propTypes = {
     id: PropTypes.string.isRequired,
-    property: PropTypes.object.isRequired,
-    predicateLabel: PropTypes.string.isRequired,
     enableEdit: PropTypes.bool.isRequired,
     syncBackend: PropTypes.bool.isRequired,
     isLastItem: PropTypes.bool.isRequired,

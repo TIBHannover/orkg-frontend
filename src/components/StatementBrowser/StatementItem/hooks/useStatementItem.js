@@ -7,35 +7,33 @@ import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
 import { guid } from 'utils';
 
-function useStatementItem(props) {
+function useStatementItem({ propertyId, resourceId, syncBackend }) {
     const dispatch = useDispatch();
-
-    const selectedResource = useSelector(state => state.statementBrowser.selectedResource);
-    const property = useSelector(state => state.statementBrowser.properties.byId[props.id]);
+    const property = useSelector(state => state.statementBrowser.properties.byId[propertyId]);
     const values = useSelector(state => state.statementBrowser.values);
 
-    const [predicateLabel, setPredicateLabel] = useState(props.predicateLabel);
+    const [predicateLabel, setPredicateLabel] = useState(property.label);
 
     useEffect(() => {
         const getPredicateLabel = () => {
-            if (props.predicateLabel.match(new RegExp('^R[0-9]*$'))) {
-                getResource(props.predicateLabel)
+            if (property.label.match(new RegExp('^R[0-9]*$'))) {
+                getResource(property.label)
                     .catch(e => {
                         console.log(e);
-                        setPredicateLabel(props.predicateLabel.charAt(0).toUpperCase() + props.predicateLabel.slice(1));
+                        setPredicateLabel(property.label.charAt(0).toUpperCase() + property.label.slice(1));
                     })
                     .then(r => {
-                        setPredicateLabel(`${r.label.charAt(0).toUpperCase() + r.label.slice(1)} (${props.predicateLabel})`);
+                        setPredicateLabel(`${r.label.charAt(0).toUpperCase() + r.label.slice(1)} (${property.label})`);
                     });
             } else {
-                setPredicateLabel(props.predicateLabel.charAt(0).toUpperCase() + props.predicateLabel.slice(1));
+                setPredicateLabel(property.label.charAt(0).toUpperCase() + property.label.slice(1));
             }
         };
         getPredicateLabel();
-    }, [props.predicateLabel]);
+    }, [property.label]);
 
     const handleDeleteStatement = useCallback(async () => {
-        if (props.syncBackend) {
+        if (syncBackend) {
             // Delete All related statements
             if (property && property.valueIds.length > 0) {
                 for (const valueId of property.valueIds) {
@@ -47,15 +45,15 @@ function useStatementItem(props) {
         }
         dispatch(
             deleteProperty({
-                id: props.id,
-                resourceId: props.resourceId ? props.resourceId : selectedResource
+                id: propertyId,
+                resourceId: resourceId
             })
         );
-    }, [dispatch, property, props.id, props.resourceId, props.syncBackend, selectedResource, values.byId]);
+    }, [dispatch, property, propertyId, resourceId, syncBackend, values.byId]);
 
     const changePredicate = useCallback(
         async newProperty => {
-            if (props.syncBackend) {
+            if (syncBackend) {
                 const predicate = property;
                 const existingPredicateId = predicate ? predicate.existingPredicateId : false;
                 if (existingPredicateId) {
@@ -63,27 +61,27 @@ function useStatementItem(props) {
                     for (const value of oldValues) {
                         await updateStatement(values.byId[value].statementId, { predicate_id: newProperty.id });
                     }
-                    dispatch(changeProperty({ propertyId: props.id, newProperty: newProperty }));
+                    dispatch(changeProperty({ propertyId: propertyId, newProperty: newProperty }));
                     toast.success('Property updated successfully');
                 }
             } else {
-                dispatch(changeProperty({ propertyId: props.id, newProperty: newProperty }));
+                dispatch(changeProperty({ propertyId: propertyId, newProperty: newProperty }));
             }
-            dispatch(doneSavingProperty({ id: props.id }));
+            dispatch(doneSavingProperty({ id: propertyId }));
         },
-        [dispatch, property, props.id, props.syncBackend, values.byId]
+        [dispatch, property, propertyId, syncBackend, values.byId]
     );
 
     const handleChange = useCallback(
         async (selectedOption, a) => {
             // Check if the user changed the property
-            if (props.predicateLabel !== selectedOption.label || property.existingPredicateId !== selectedOption.id) {
-                dispatch(isSavingProperty({ id: props.id })); // Show the saving message instead of the property label
+            if (predicateLabel !== selectedOption.label || property.existingPredicateId !== selectedOption.id) {
+                dispatch(isSavingProperty({ id: propertyId })); // Show the saving message instead of the property label
                 if (a.action === 'select-option') {
                     changePredicate({ ...selectedOption, isExistingProperty: true });
                 } else if (a.action === 'create-option') {
                     let newPredicate = null;
-                    if (props.syncBackend) {
+                    if (syncBackend) {
                         newPredicate = await createPredicate(selectedOption.label);
                         newPredicate['isExistingProperty'] = true;
                     } else {
@@ -93,13 +91,9 @@ function useStatementItem(props) {
                 }
             }
         },
-        [changePredicate, dispatch, property, props.id, props.predicateLabel, props.syncBackend]
+        [changePredicate, dispatch, predicateLabel, property.existingPredicateId, propertyId, syncBackend]
     );
 
-    return {
-        predicateLabel,
-        handleChange,
-        handleDeleteStatement
-    };
+    return { property, predicateLabel, handleChange, handleDeleteStatement };
 }
 export default useStatementItem;

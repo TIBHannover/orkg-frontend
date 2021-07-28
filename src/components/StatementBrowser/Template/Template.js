@@ -8,9 +8,8 @@ import PropTypes from 'prop-types';
 
 const Template = props => {
     const dispatch = useDispatch();
-    const statementBrowser = useSelector(state => state.statementBrowser);
-    const { properties, resources } = statementBrowser;
-
+    const resources = useSelector(state => state.statementBrowser.resources);
+    const property = useSelector(state => state.statementBrowser.properties.byId[props.propertyId]);
     let propertyIds = [];
     let shared = 1;
     if (Object.keys(resources.byId).length !== 0 && props.value.resourceId) {
@@ -22,9 +21,9 @@ const Template = props => {
         <AnimationContainer
             classNames="fadeIn mt-3 pb-3"
             in={true}
-            timeout={!props.isAnimated ? { enter: 700 } : { enter: 0 }}
+            timeout={!property.isAnimated ? { enter: 700 } : { enter: 0 }}
             addEndListener={() => {
-                if (!props.isAnimated) {
+                if (!property.isAnimated) {
                     dispatch(doneAnimation({ id: props.propertyId }));
                 }
             }}
@@ -39,24 +38,19 @@ const Template = props => {
                     resourceId={props.selectedResource}
                     enableEdit={props.enableEdit}
                 />
-                {propertyIds.map((propertyId, index) => {
-                    const property = properties.byId[propertyId];
-                    return (
-                        <StatementItem
-                            key={'statement-' + index}
-                            id={propertyId}
-                            property={property}
-                            predicateLabel={property.label}
-                            enableEdit={shared <= 1 ? props.enableEdit : false}
-                            syncBackend={props.syncBackend}
-                            isLastItem={propertyIds.length === index + 1}
-                            showValueHelp={false}
-                            inTemplate={true}
-                            contextStyle="Template"
-                            resourceId={props.value.resourceId}
-                        />
-                    );
-                })}
+                {propertyIds.map((propertyId, index) => (
+                    <StatementItem
+                        key={'statement-' + index}
+                        id={propertyId}
+                        enableEdit={shared <= 1 ? props.enableEdit : false}
+                        syncBackend={props.syncBackend}
+                        isLastItem={propertyIds.length === index + 1}
+                        showValueHelp={false}
+                        inTemplate={true}
+                        contextStyle="Template"
+                        resourceId={props.value.resourceId}
+                    />
+                ))}
                 {props.enableEdit && (
                     <AddPropertyWrapper className="mb-3">
                         <div className="row no-gutters">
@@ -76,8 +70,7 @@ Template.propTypes = {
     value: PropTypes.object.isRequired,
     selectedResource: PropTypes.string.isRequired,
     syncBackend: PropTypes.bool.isRequired,
-    enableEdit: PropTypes.bool.isRequired,
-    isAnimated: PropTypes.bool
+    enableEdit: PropTypes.bool.isRequired
 };
 
 export default Template;
