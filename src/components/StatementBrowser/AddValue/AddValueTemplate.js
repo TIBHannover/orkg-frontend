@@ -5,7 +5,6 @@ import StatementOptionButton from 'components/StatementBrowser/StatementOptionBu
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPlus, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
-import useToggle from './helpers/useToggle';
 import InputField from 'components/StatementBrowser/InputField/InputField';
 import DatatypeSelector from 'components/StatementBrowser/DatatypeSelector/DatatypeSelector';
 import ConfirmConversionTooltip from 'components/StatementBrowser/ConfirmConversionTooltip/ConfirmConversionTooltip';
@@ -18,7 +17,7 @@ export default function AddValueTemplate(props) {
     const literalInputRef = useRef(null);
     const resourceInputRef = useRef(null);
 
-    const [showAddValue, setShowAddValue] = useToggle(false);
+    const [showAddValue, setShowAddValue] = useState(false);
     const [isValid, setIsValid] = useState(true);
     const [formFeedback, setFormFeedback] = useState(null);
     const [templateIsLoading] = useState(false); // to show loading indicator of the template if the value class has a template
