@@ -10,7 +10,6 @@ import { getRuleByProperty, getValuesByProperty, getDataByProperty } from 'utils
 import styled from 'styled-components';
 import { upperFirst } from 'lodash';
 import { PREDICATE_TYPE_ID } from 'constants/misc';
-import MathJax from 'components/ValuePlugins/MathJax/MathJax';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
@@ -78,7 +77,7 @@ const PropertyValue = ({ id, label, property, similar, filterControlData, update
                     typeId={PREDICATE_TYPE_ID}
                     extraContent={similar && similar.length ? `This property is merged with : ${similar.join(', ')}` : ''}
                 >
-                    <MathJax type="literal">{upperFirst(label)}</MathJax>
+                    {upperFirst(label)}
                     {similar && similar.length > 0 && '*'}
                 </DescriptionTooltip>
             </Button>
