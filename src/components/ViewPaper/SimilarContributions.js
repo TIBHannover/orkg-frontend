@@ -84,7 +84,7 @@ class SimilarContributions extends Component {
                                         role="button"
                                     >
                                         <Row className="h-100">
-                                            <Col xs={2} style={{ marginRight: 10 }}>
+                                            <Col className="d-none d-md-block" md={2} style={{ marginRight: 10 }}>
                                                 <Similarity>
                                                     <span>
                                                         {parseInt(contribution.similarityPercentage) === 1
@@ -95,7 +95,19 @@ class SimilarContributions extends Component {
                                                 </Similarity>
                                             </Col>
                                             <Col>
-                                                {contribution.title ? contribution.title : <em>No title</em>}
+                                                {contribution.title ? (
+                                                    <>
+                                                        {contribution.title}{' '}
+                                                        <span className="text-dark d-flex d-md-none">
+                                                            {parseInt(contribution.similarityPercentage) === 1
+                                                                ? 99
+                                                                : parseInt(contribution.similarityPercentage * 100)}
+                                                            %
+                                                        </span>
+                                                    </>
+                                                ) : (
+                                                    <em>No title</em>
+                                                )}
                                                 {contribution.contributionLabel && (
                                                     <div className="simContributionLabel">{contribution.contributionLabel}</div>
                                                 )}
