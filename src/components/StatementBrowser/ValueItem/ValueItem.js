@@ -1,207 +1,30 @@
-import { useState } from 'react';
-import {
-    selectResource,
-    fetchStatementsForResource,
-    deleteValue,
-    updateValueLabel,
-    createResource,
-    doneSavingValue,
-    isSavingValue,
-    changeValue
-} from 'actions/statementBrowser';
 import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
 import RDFDataCube from 'components/RDFDataCube/RDFDataCube';
-import { updateStatement, deleteStatementById } from 'services/backend/statements';
-import { createResource as createResourceAPICall, updateResource } from 'services/backend/resources';
-import { updateLiteral } from 'services/backend/literals';
-import { toast } from 'react-toastify';
-import { guid } from 'utils';
 import ValueItemTemplate from './ValueItemTemplate';
-import { useDispatch, useSelector } from 'react-redux';
+import useValueItem from './hooks/useValueItem';
 import PropTypes from 'prop-types';
-import { ENTITIES, PREDICATES } from 'constants/graphSettings';
+import { PREDICATES, ENTITIES } from 'constants/graphSettings';
 
 export default function ValueItem(props) {
-    const dispatch = useDispatch();
-
-    const value = useSelector(state => state.statementBrowser.values.byId[props.id]);
-    const property = useSelector(state => state.statementBrowser.properties.byId[props.propertyId]);
-    const openExistingResourcesInDialog = useSelector(state => state.statementBrowser.openExistingResourcesInDialog);
-    const resource = useSelector(state => state.statementBrowser.resources.byId[props.value.resourceId]);
-
-    const [modal, setModal] = useState(false);
-    const [modalDataset, setModalDataset] = useState(false);
-    const [dialogResourceId, setDialogResourceId] = useState(null);
-    const [dialogResourceLabel, setDialogResourceLabel] = useState(null);
-
-    const commitChangeLabel = async (draftLabel, draftDataType) => {
-        // Check if the user changed the label
-        if (draftLabel !== props.value.label || draftDataType !== props.value.datatype) {
-            dispatch(
-                updateValueLabel({
-                    label: draftLabel,
-                    datatype: draftDataType,
-                    valueId: props.id
-                })
-            );
-            if (props.syncBackend) {
-                dispatch(isSavingValue({ id: props.id })); // To show the saving message instead of the value label
-                if (props.value.resourceId) {
-                    if (props.value.type === ENTITIES.LITERAL) {
-                        await updateLiteral(props.value.resourceId, draftLabel, draftDataType);
-                        toast.success('Literal updated successfully');
-                    } else {
-                        await updateResource(props.value.resourceId, draftLabel);
-                        toast.success('Resource label updated successfully');
-                    }
-                }
-                dispatch(doneSavingValue({ id: props.id }));
-            }
-        }
-    };
-
-    const handleChangeResource = async (selectedOption, a) => {
-        // Check if the user changed the value
-        if (props.value.label !== selectedOption.label || props.value.resourceId !== selectedOption.id) {
-            dispatch(isSavingValue({ id: props.id })); // To show the saving message instead of the value label
-            if (a.action === 'select-option') {
-                changeValueInStatementBrowser({ ...selectedOption, isExistingValue: true });
-            } else if (a.action === 'create-option') {
-                let newResource = null;
-                if (props.syncBackend) {
-                    newResource = await createResourceAPICall(selectedOption.label);
-                    newResource['isExistingValue'] = true;
-                } else {
-                    newResource = {
-                        id: guid(),
-                        isExistingValue: false,
-                        label: selectedOption.label,
-                        _class: ENTITIES.RESOURCE,
-                        classes: [],
-                        shared: 1
-                    };
-                }
-                await changeValueInStatementBrowser(newResource);
-            }
-            dispatch(doneSavingValue({ id: props.id }));
-        }
-    };
-
-    const changeValueInStatementBrowser = async newResource => {
-        if (props.syncBackend && props.value.statementId) {
-            await updateStatement(props.value.statementId, { object_id: newResource.id });
-            dispatch(
-                changeValue({
-                    valueId: props.id,
-                    ...{
-                        classes: newResource.classes,
-                        label: newResource.label,
-                        resourceId: newResource.id,
-                        existingResourceId: newResource.id,
-                        isExistingValue: newResource.isExistingValue,
-                        existingStatement: true,
-                        statementId: props.value.statementId,
-                        shared: newResource.shared
-                    }
-                })
-            );
-            toast.success('Value updated successfully');
-        } else {
-            dispatch(
-                changeValue({
-                    valueId: props.id,
-                    ...{
-                        classes: newResource.classes,
-                        label: newResource.label,
-                        resourceId: newResource.id,
-                        existingResourceId: newResource.isExistingValue ? newResource.id : null,
-                        isExistingValue: newResource.isExistingValue,
-                        existingStatement: false,
-                        statementId: null,
-                        shared: newResource.shared
-                    }
-                })
-            );
-        }
-    };
-
-    const handleDeleteValue = async () => {
-        if (props.syncBackend) {
-            await deleteStatementById(props.value.statementId);
-            toast.success('Statement deleted successfully');
-        }
-        dispatch(
-            deleteValue({
-                id: props.id,
-                propertyId: props.propertyId
-            })
-        );
-    };
-
-    const handleResourceClick = async e => {
-        const existingResourceId = resource.existingResourceId;
-
-        if (existingResourceId) {
-            dispatch(
-                fetchStatementsForResource({
-                    resourceId: existingResourceId,
-                    depth: 3
-                })
-            );
-        }
-
-        dispatch(
-            selectResource({
-                increaseLevel: true,
-                resourceId: props.value.resourceId,
-                label: props.value.label,
-                propertyLabel: property?.label
-            })
-        );
-    };
-
-    const handleDatasetResourceClick = ressource => {
-        dispatch(
-            createResource({
-                label: ressource.rlabel ? ressource.rlabel : ressource.label,
-                existingResourceId: ressource.id,
-                resourceId: ressource.id
-            })
-        );
-
-        dispatch(
-            selectResource({
-                increaseLevel: true,
-                resourceId: ressource.id,
-                label: ressource.rlabel ? ressource.rlabel : ressource.label,
-                propertyLabel: property?.label
-            })
-        );
-
-        dispatch(
-            fetchStatementsForResource({
-                resourceId: ressource.id
-            })
-        );
-    };
-
-    const handleExistingResourceClick = async () => {
-        const existingResourceId = resource.existingResourceId ? resource.existingResourceId : props.value.resourceId;
-
-        // Load template of this class
-        //show the statement browser
-        setDialogResourceId(existingResourceId);
-        setDialogResourceLabel(resource.label);
-        setModal(true);
-    };
-
-    const handleDatasetClick = () => {
-        const existingResourceId = resource.existingResourceId;
-
-        setModalDataset(true);
-        setDialogResourceId(existingResourceId);
-        setDialogResourceLabel(resource.label);
-    };
+    const {
+        value,
+        resource,
+        modal,
+        setModal,
+        property,
+        commitChangeLabel,
+        handleChangeResource,
+        handleDeleteValue,
+        handleDatasetResourceClick,
+        handleDatasetClick,
+        modalDataset,
+        dialogResourceId,
+        dialogResourceLabel,
+        setModalDataset,
+        openExistingResourcesInDialog,
+        handleExistingResourceClick,
+        handleResourceClick
+    } = useValueItem({ valueId: props.id, propertyId: props.propertyId, syncBackend: props.syncBackend, contextStyle: props.contextStyle });
 
     const existingResourceId = resource ? resource.existingResourceId : false;
     let handleOnClick = null;
@@ -215,7 +38,6 @@ export default function ValueItem(props) {
     } else if (props.value._class === ENTITIES.RESOURCE) {
         handleOnClick = handleResourceClick;
     }
-
     return (
         <>
             <ValueItemTemplate

@@ -103,7 +103,7 @@ export default function TemplateHeader(props) {
                 <div className="type">
                     Template{' '}
                     <StatementOptionButton
-                        title="A template is a defined structure of a contribution, this stucture is mostly shared between papers in the same research field."
+                        title="A template is a defined structure of a contribution, this structure is mostly shared between papers in the same research field."
                         icon={faQuestion}
                         iconWrapperSize="20px"
                         iconSize="10px"

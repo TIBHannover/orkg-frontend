@@ -91,7 +91,7 @@ export default function ValueItemTemplate(props) {
             }
             const schema = validationSchema(component);
             return schema;
-        } else if (props.value.type === 'literal') {
+        } else if (props.value.type === ENTITIES.LITERAL) {
             const config = getConfigByType(draftDataType);
             return config.schema;
         }
