@@ -4,7 +4,9 @@ import {
     getComponentsByResourceIDAndPredicateID,
     fetchTemplatesOfClassIfNeeded,
     createRequiredPropertiesInResource,
-    selectResource
+    selectResource,
+    getValueClass,
+    isLiteral
 } from 'actions/statementBrowser';
 import { createResourceStatement } from 'services/backend/statements';
 import { fillStatements } from 'actions/addPaper';
@@ -15,7 +17,6 @@ import validationSchema from '../helpers/validationSchema';
 import { getConfigByType } from 'constants/DataTypes';
 import { useDispatch, useSelector } from 'react-redux';
 import { guid } from 'utils';
-import { getValueClass, isLiteral } from '../helpers/utils';
 import { ENTITIES, CLASSES, MISC } from 'constants/graphSettings';
 
 const useAddValue = ({ resourceId, propertyId, syncBackend }) => {

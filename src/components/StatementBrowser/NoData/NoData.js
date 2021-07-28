@@ -1,7 +1,7 @@
 import { StyledStatementItem } from 'components/StatementBrowser/styled';
 import PropTypes from 'prop-types';
 
-export default function NoData(props) {
+const NoData = props => {
     return (
         <StyledStatementItem style={{ marginBottom: 0 }} className="noTemplate">
             No data yet
@@ -18,7 +18,7 @@ export default function NoData(props) {
             <br />
         </StyledStatementItem>
     );
-}
+};
 
 NoData.propTypes = {
     enableEdit: PropTypes.bool.isRequired,
@@ -28,3 +28,5 @@ NoData.propTypes = {
 NoData.defaultProps = {
     enableEdit: false
 };
+
+export default NoData;

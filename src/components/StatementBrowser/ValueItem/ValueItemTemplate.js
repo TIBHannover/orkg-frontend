@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
-import { toggleEditValue } from 'actions/statementBrowser';
+import { toggleEditValue, getValueClass, isInlineResource as isInlineResourceUtil } from 'actions/statementBrowser';
 import { InputGroup, InputGroupAddon, Button, FormFeedback, Badge } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { fetchStatementsForResource } from 'actions/statementBrowser';
@@ -13,7 +13,6 @@ import format from 'string-format';
 import ValuePlugins from 'components/ValuePlugins/ValuePlugins';
 import validationSchema from 'components/StatementBrowser/AddValue/helpers/validationSchema';
 import InputField from 'components/StatementBrowser/InputField/InputField';
-import { getValueClass, isInlineResource as isInlineResourceUtil } from 'components/StatementBrowser/AddValue/helpers/utils';
 import { reverse } from 'named-urls';
 import { Link } from 'react-router-dom';
 import ROUTES from 'constants/routes.js';

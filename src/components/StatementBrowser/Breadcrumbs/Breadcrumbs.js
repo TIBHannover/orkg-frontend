@@ -11,8 +11,10 @@ import Tippy from '@tippyjs/react';
 
 const Breadcrumbs = () => {
     const dispatch = useDispatch();
-    const statementBrowser = useSelector(state => state.statementBrowser);
-    const { resourceHistory, selectedResource, resources, openExistingResourcesInDialog } = statementBrowser;
+    const resourceHistory = useSelector(state => state.statementBrowser.resourceHistory);
+    const selectedResource = useSelector(state => state.statementBrowser.selectedResource);
+    const openExistingResourcesInDialog = useSelector(state => state.statementBrowser.openExistingResourcesInDialog);
+    const resources = useSelector(state => state.statementBrowser.resources);
 
     const handleOnClick = (id, historyIndex) => {
         dispatch(
