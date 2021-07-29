@@ -6,12 +6,12 @@ import { faCalendar, faUser } from '@fortawesome/free-solid-svg-icons';
 import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
 import moment from 'moment';
 import Tippy from '@tippyjs/react';
-import { RESOURCE_TYPE_ID } from 'constants/misc';
 import ROUTES from 'constants/routes.js';
 import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
+import { ENTITIES } from 'constants/graphSettings';
 
 const VisualizationCard = styled.div`
     margin: 0 2px;
@@ -120,7 +120,7 @@ const SingleVisualizationComponent = props => {
                                 <div className="mb-2">
                                     <i>Created by: </i>
                                     {props.input.authors.map(author => {
-                                        if (author && author.class === RESOURCE_TYPE_ID) {
+                                        if (author && author.class === ENTITIES.RESOURCE) {
                                             return (
                                                 <Link
                                                     className="d-inline-block mr-2 mb-2"

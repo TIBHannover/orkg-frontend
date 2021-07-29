@@ -13,7 +13,7 @@ import Tippy from '@tippyjs/react';
 import { CLASSES, ENTITIES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
 
-export default function AddValueTemplate(props) {
+export default function AddValueView(props) {
     const literalInputRef = useRef(null);
     const resourceInputRef = useRef(null);
 
@@ -233,7 +233,7 @@ export default function AddValueTemplate(props) {
     );
 }
 
-AddValueTemplate.propTypes = {
+AddValueView.propTypes = {
     newResources: PropTypes.array.isRequired,
     handleAddValue: PropTypes.func.isRequired,
     isDisabled: PropTypes.bool,

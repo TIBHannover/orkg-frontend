@@ -7,10 +7,10 @@ import SameAsStatements from 'pages/SameAsStatements';
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { updateSettings } from 'actions/statementBrowser';
-import { CLASS_TYPE_ID, PREDICATE_TYPE_ID, RESOURCE_TYPE_ID } from 'constants/misc';
 import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes';
+import { ENTITIES } from 'constants/graphSettings';
 
 class StatementBrowserDialog extends Component {
     constructor(props) {
@@ -24,13 +24,13 @@ class StatementBrowserDialog extends Component {
     render() {
         let route = ROUTES.RESOURCE;
         switch (this.props.type) {
-            case PREDICATE_TYPE_ID:
+            case ENTITIES.PREDICATE:
                 route = ROUTES.PROPERTY;
                 break;
             case 'property':
                 route = ROUTES.PROPERTY;
                 break;
-            case CLASS_TYPE_ID:
+            case ENTITIES.CLASS:
                 route = ROUTES.CLASS;
                 break;
             default:
@@ -72,7 +72,7 @@ class StatementBrowserDialog extends Component {
                 </ModalHeader>
                 <ModalBody>
                     <Statements
-                        rootNodeType={this.props.type === RESOURCE_TYPE_ID ? RESOURCE_TYPE_ID : PREDICATE_TYPE_ID}
+                        rootNodeType={this.props.type === ENTITIES.RESOURCE ? ENTITIES.RESOURCE : ENTITIES.PREDICATE}
                         enableEdit={this.props.enableEdit}
                         syncBackend={this.props.syncBackend}
                         initialSubjectId={this.props.id}
@@ -105,7 +105,7 @@ StatementBrowserDialog.defaultProps = {
     newStore: true,
     enableEdit: false,
     syncBackend: false,
-    type: RESOURCE_TYPE_ID
+    type: ENTITIES.RESOURCE
 };
 
 const mapStateToProps = state => {

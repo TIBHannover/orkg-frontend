@@ -32,7 +32,6 @@ import env from '@beam-australia/react-env';
 import { getVisualization } from 'services/similarity';
 import GDCVisualizationRenderer from 'libs/selfVisModel/RenderingComponents/GDCVisualizationRenderer';
 import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
-import { CLASS_TYPE_ID } from 'constants/misc';
 import { reverseWithSlug } from 'utils';
 import PapersWithCodeModal from 'components/PapersWithCodeModal/PapersWithCodeModal';
 
@@ -331,7 +330,7 @@ function Resource(props) {
 
                                                 return (
                                                     <i key={index}>
-                                                        <DescriptionTooltip id={classObject.id} typeId={CLASS_TYPE_ID}>
+                                                        <DescriptionTooltip id={classObject.id} typeId={ENTITIES.CLASS}>
                                                             <Link to={reverse(ROUTES.CLASS, { id: classObject.id })}>{classObject.label}</Link>
                                                             {separator}
                                                         </DescriptionTooltip>

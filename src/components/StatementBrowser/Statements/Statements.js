@@ -7,13 +7,13 @@ import SBEditorHelpModal from 'components/StatementBrowser/SBEditorHelpModal/SBE
 import StatementItemWrapper from 'components/StatementBrowser/StatementItem/StatementItemWrapper';
 import NoData from 'components/StatementBrowser/NoData/NoData';
 import { StyledLevelBox, StyledStatementItem } from 'components/StatementBrowser/styled';
-import { RESOURCE_TYPE_ID } from 'constants/misc';
 import { isArray } from 'lodash';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { getSuggestedProperties, initializeWithoutContribution, initializeWithResource, updateSettings } from 'actions/statementBrowser';
+import { ENTITIES } from 'constants/graphSettings';
 
 const Statements = props => {
     const selectedResource = useSelector(state => state.statementBrowser.selectedResource);
@@ -179,7 +179,7 @@ Statements.defaultProps = {
     resourcesAsLinks: false,
     initOnLocationChange: true,
     keyToKeepStateOnLocationChange: null,
-    rootNodeType: RESOURCE_TYPE_ID,
+    rootNodeType: ENTITIES.RESOURCE,
     renderTemplateBox: false
 };
 

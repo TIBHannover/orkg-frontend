@@ -1,6 +1,6 @@
 import { render, screen } from 'testUtils';
 import StatementBrowser from '../StatementBrowser';
-import { RESOURCE_TYPE_ID } from 'constants/misc';
+import { ENTITIES } from 'constants/graphSettings';
 
 const setup = (
     initialState = {},
@@ -8,7 +8,7 @@ const setup = (
         initialSubjectId: 'R1',
         initialSubjectLabel: null,
         newStore: true,
-        rootNodeType: RESOURCE_TYPE_ID
+        rootNodeType: ENTITIES.RESOURCE
     }
 ) => {
     render(<StatementBrowser {...props} />, { initialState });
@@ -20,7 +20,7 @@ describe('statement browser', () => {
             initialSubjectId: 'R1',
             initialSubjectLabel: null,
             newStore: true,
-            rootNodeType: RESOURCE_TYPE_ID
+            rootNodeType: ENTITIES.RESOURCE
         };
         setup({}, config);
         expect(screen.queryByText(/Loading/i)).toBeInTheDocument();
@@ -34,7 +34,7 @@ describe('statement browser', () => {
             initialSubjectId: 'R44727',
             initialSubjectLabel: null,
             newStore: true,
-            rootNodeType: RESOURCE_TYPE_ID
+            rootNodeType: ENTITIES.RESOURCE
         };
         setup({}, config);
         expect(screen.queryByText(/Loading/i)).toBeInTheDocument();

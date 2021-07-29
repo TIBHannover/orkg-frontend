@@ -23,7 +23,8 @@ export default function ValueItem(props) {
         setModalDataset,
         openExistingResourcesInDialog,
         handleExistingResourceClick,
-        handleResourceClick
+        handleResourceClick,
+        getLabel
     } = useValueItem({ valueId: props.id, propertyId: props.propertyId, syncBackend: props.syncBackend, contextStyle: props.contextStyle });
 
     const existingResourceId = resource ? resource.existingResourceId : false;
@@ -54,6 +55,7 @@ export default function ValueItem(props) {
                 handleDeleteValue={handleDeleteValue}
                 showHelp={props.showHelp}
                 components={props.components}
+                getLabel={getLabel}
             />
 
             {modal ? (

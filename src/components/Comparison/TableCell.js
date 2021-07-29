@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import StatementBrowserDialog from '../StatementBrowser/StatementBrowserDialog';
 import ValuePlugins from '../ValuePlugins/ValuePlugins';
-import { PREDICATE_TYPE_ID, RESOURCE_TYPE_ID } from 'constants/misc';
 import Tippy from '@tippyjs/react';
 import { ENTITIES } from 'constants/graphSettings';
 
@@ -42,7 +41,7 @@ class TableCell extends Component {
             modal: false,
             dialogResourceId: null,
             dialogResourceLabel: null,
-            dialogResourceType: RESOURCE_TYPE_ID
+            dialogResourceType: ENTITIES.RESOURCE
         };
     }
 
@@ -51,7 +50,7 @@ class TableCell extends Component {
             {
                 dialogResourceId: id,
                 dialogResourceLabel: label,
-                dialogResourceType: type ? type : RESOURCE_TYPE_ID
+                dialogResourceType: type ? type : ENTITIES.RESOURCE
             },
             () => {
                 this.setState({ modal: true });
@@ -70,7 +69,7 @@ class TableCell extends Component {
             <div className="fullPath">
                 Path of this value :{' '}
                 {data.pathLabels?.map((path, index) => {
-                    const resourceType = index % 2 === 0 ? RESOURCE_TYPE_ID : PREDICATE_TYPE_ID;
+                    const resourceType = index % 2 === 0 ? ENTITIES.RESOURCE : ENTITIES.PREDICATE;
                     return (
                         <span key={index}>
                             <span

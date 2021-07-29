@@ -6,10 +6,10 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPlus, faSpinner, faAngleDoubleDown } from '@fortawesome/free-solid-svg-icons';
 import { getResources } from 'services/backend/resources';
 import { ButtonGroup, Container, ListGroup, ListGroupItem } from 'reactstrap';
-import { RESOURCE_TYPE_ID } from 'constants/misc';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import HeaderSearchButton from 'components/HeaderSearchButton/HeaderSearchButton';
+import { ENTITIES } from 'constants/graphSettings';
 
 const Resources = () => {
     const pageSize = 25;
@@ -69,7 +69,7 @@ const Resources = () => {
                     >
                         <Icon icon={faPlus} /> Create resource
                     </RequireAuthentication>
-                    <HeaderSearchButton placeholder="Search resources..." type={RESOURCE_TYPE_ID} />
+                    <HeaderSearchButton placeholder="Search resources..." type={ENTITIES.RESOURCE} />
                 </ButtonGroup>
             </Container>
 

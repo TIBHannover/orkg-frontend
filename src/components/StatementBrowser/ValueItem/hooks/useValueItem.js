@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import {
     selectResource,
     fetchStatementsForResource,
@@ -7,8 +7,10 @@ import {
     createResource,
     doneSavingValue,
     isSavingValue,
-    changeValue
+    changeValue,
+    generatedFormattedLabel
 } from 'actions/statementBrowser';
+import { uniq } from 'lodash';
 import { updateStatement, deleteStatementById } from 'services/backend/statements';
 import { createResource as createResourceAPICall, updateResource } from 'services/backend/resources';
 import { updateLiteral } from 'services/backend/literals';
@@ -29,6 +31,29 @@ const useValueItem = ({ valueId, propertyId, syncBackend, contextStyle }) => {
     const [modalDataset, setModalDataset] = useState(false);
     const [dialogResourceId, setDialogResourceId] = useState(null);
     const [dialogResourceLabel, setDialogResourceLabel] = useState(null);
+
+    const { hasLabelFormat, labelFormat } = useSelector(state => {
+        // get all template ids
+        let templateIds = [];
+        const filter_classes = value?.classes?.filter(c => c) ?? [];
+        for (const c of filter_classes) {
+            if (state.statementBrowser?.classes?.[c]) {
+                templateIds = templateIds.concat(state.statementBrowser?.classes[c]?.templateIds);
+            }
+        }
+        templateIds = uniq(templateIds);
+        // check if it formatted label
+        let hasLabelFormat = false;
+        let labelFormat = '';
+        for (const templateId of templateIds) {
+            const template = state.statementBrowser.templates[templateId];
+            if (template && template.hasLabelFormat) {
+                hasLabelFormat = true;
+                labelFormat = template.labelFormat;
+            }
+        }
+        return { hasLabelFormat, labelFormat };
+    });
 
     const commitChangeLabel = async (draftLabel, draftDataType) => {
         // Check if the user changed the label
@@ -199,6 +224,30 @@ const useValueItem = ({ valueId, propertyId, syncBackend, contextStyle }) => {
         setDialogResourceLabel(resource.label);
     };
 
+    const getLabel = useCallback(() => {
+        const existingResourceId = resource ? resource.existingResourceId : false;
+        if (value.classes) {
+            if (!hasLabelFormat) {
+                return value.label;
+            }
+            if (existingResourceId && !resource.isFetched && !resource.isFetching && value?._class !== ENTITIES.LITERAL) {
+                dispatch(
+                    fetchStatementsForResource({
+                        resourceId: existingResourceId
+                    })
+                ).then(() => {
+                    return dispatch(generatedFormattedLabel(resource, labelFormat));
+                });
+                return dispatch(generatedFormattedLabel(resource, labelFormat));
+            } else {
+                return dispatch(generatedFormattedLabel(resource, labelFormat));
+            }
+        } else {
+            return value.label;
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [resource, hasLabelFormat, labelFormat]);
+
     return {
         resource,
         value,
@@ -216,7 +265,8 @@ const useValueItem = ({ valueId, propertyId, syncBackend, contextStyle }) => {
         setModalDataset,
         openExistingResourcesInDialog,
         handleExistingResourceClick,
-        handleResourceClick
+        handleResourceClick,
+        getLabel
     };
 };
 

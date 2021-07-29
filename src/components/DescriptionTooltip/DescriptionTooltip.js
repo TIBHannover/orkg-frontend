@@ -4,8 +4,7 @@ import Tippy from '@tippyjs/react';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { getStatementsBySubjectAndPredicate } from 'services/backend/statements';
-import { CLASSES, PREDICATES } from 'constants/graphSettings';
-import { CLASS_TYPE_ID, PREDICATE_TYPE_ID, RESOURCE_TYPE_ID } from 'constants/misc';
+import { CLASSES, PREDICATES, ENTITIES } from 'constants/graphSettings';
 
 const DescriptionTooltip = props => {
     const [description, setDescription] = useState('');
@@ -32,11 +31,11 @@ const DescriptionTooltip = props => {
 
     const renderTypeLabel = () => {
         switch (props.typeId) {
-            case PREDICATE_TYPE_ID:
+            case ENTITIES.PREDICATE:
                 return 'Property';
-            case RESOURCE_TYPE_ID:
+            case ENTITIES.RESOURCE:
                 return 'Resource';
-            case CLASS_TYPE_ID:
+            case ENTITIES.CLASS:
                 return 'Class';
             case CLASSES.PROBLEM:
                 return 'Research problem';

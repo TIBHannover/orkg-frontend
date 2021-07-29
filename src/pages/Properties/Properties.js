@@ -5,11 +5,11 @@ import { faPlus, faSpinner, faAngleDoubleDown } from '@fortawesome/free-solid-sv
 import { getPredicates } from 'services/backend/predicates';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import { ButtonGroup, Container, ListGroup, ListGroupItem } from 'reactstrap';
-import { PREDICATE_TYPE_ID } from 'constants/misc';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes';
 import { Link } from 'react-router-dom';
 import HeaderSearchButton from 'components/HeaderSearchButton/HeaderSearchButton';
+import { ENTITIES } from 'constants/graphSettings';
 
 const Properties = () => {
     const pageSize = 25;
@@ -63,7 +63,7 @@ const Properties = () => {
                     <RequireAuthentication component={Link} color="secondary" size="sm" className="btn btn-secondary btn-sm" to={ROUTES.ADD_PROPERTY}>
                         <Icon icon={faPlus} /> Create property
                     </RequireAuthentication>
-                    <HeaderSearchButton placeholder="Search properties..." type={PREDICATE_TYPE_ID} />
+                    <HeaderSearchButton placeholder="Search properties..." type={ENTITIES.PREDICATE} />
                 </ButtonGroup>
             </Container>
 

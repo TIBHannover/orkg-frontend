@@ -6,6 +6,7 @@ import { orderBy, uniq, isEqual } from 'lodash';
 import { PREDICATES, CLASSES, ENTITIES } from 'constants/graphSettings';
 import { getEntity } from 'services/backend/misc';
 import { flatten, uniqBy } from 'lodash';
+import format from 'string-format';
 import { getTemplateById, getTemplatesByClass, getStatementsBundleBySubject } from 'services/backend/statements';
 import { createResource as createResourceApi } from 'services/backend/resources';
 
@@ -1163,4 +1164,28 @@ export function isInlineResource(state, valueClass) {
         }
     }
     return false;
+}
+
+/**
+ * Get formatted label of resource
+ * @param {String} resource Resource object
+ * @param {String} labelFormat Current state of the Store
+ * @return {String} Formatted label
+ */
+export function generatedFormattedLabel(resource, labelFormat) {
+    return (dispatch, getState) => {
+        const valueObject = {};
+        for (const propertyId of resource.propertyIds) {
+            const property = getState().statementBrowser.properties.byId[propertyId];
+            valueObject[property.existingPredicateId] =
+                property?.valueIds && property.valueIds.length > 0
+                    ? getState().statementBrowser.values.byId[property.valueIds[0]].label
+                    : property.label;
+        }
+        if (Object.keys(valueObject).length > 0) {
+            return format(labelFormat, valueObject);
+        } else {
+            return resource.label;
+        }
+    };
 }

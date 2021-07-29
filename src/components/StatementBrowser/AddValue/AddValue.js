@@ -1,5 +1,5 @@
 import useAddValue from './hooks/useAddValue';
-import AddValueTemplate from './AddValueTemplate';
+import AddValueView from './AddValueView';
 import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
 import PropTypes from 'prop-types';
 
@@ -43,7 +43,7 @@ const AddValue = props => {
                     enableEdit={true}
                 />
             )}
-            <AddValueTemplate
+            <AddValueView
                 predicate={property}
                 propertyId={props.propertyId}
                 newResources={newResources}

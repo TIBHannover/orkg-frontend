@@ -14,7 +14,6 @@ import { reverse } from 'named-urls';
 import { Link } from 'react-router-dom';
 import useStatementItemTemplate from './hooks/useStatementItemTemplate';
 import ROUTES from 'constants/routes.js';
-import { PREDICATE_TYPE_ID } from 'constants/misc';
 
 export default function StatementItemTemplate(props) {
     const {
@@ -41,7 +40,7 @@ export default function StatementItemTemplate(props) {
                                         target={!propertiesAsLinks ? '_blank' : '_self'}
                                         className={!propertiesAsLinks ? 'text-dark' : ''}
                                     >
-                                        <DescriptionTooltip id={props.property.existingPredicateId} typeId={PREDICATE_TYPE_ID}>
+                                        <DescriptionTooltip id={props.property.existingPredicateId} typeId={ENTITIES.PREDICATE}>
                                             {props.predicateLabel}
                                         </DescriptionTooltip>
                                     </Link>

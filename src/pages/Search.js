@@ -9,13 +9,12 @@ import { getClassById } from 'services/backend/classes';
 import { getResources, getResourcesByClass } from 'services/backend/resources';
 import { getPredicates } from 'services/backend/predicates';
 import ROUTES from 'constants/routes';
-import { PREDICATE_TYPE_ID, RESOURCE_TYPE_ID } from 'constants/misc';
 import Results from 'components/Search/Results';
 import Filters from 'components/Search/Filters';
 import { getArrayParamFromQueryString } from 'utils';
 import { unionBy } from 'lodash';
 import { toast } from 'react-toastify';
-import { CLASSES } from 'constants/graphSettings';
+import { CLASSES, ENTITIES } from 'constants/graphSettings';
 import { getPaperByDOI } from 'services/backend/misc';
 import REGEX from 'constants/regex';
 
@@ -46,7 +45,7 @@ class Search extends Component {
             {
                 label: 'Property',
                 labelPlural: 'Properties',
-                id: PREDICATE_TYPE_ID
+                id: ENTITIES.PREDICATE
             },
             {
                 label: 'Research Problem',
@@ -56,7 +55,7 @@ class Search extends Component {
             {
                 label: 'Resource',
                 labelPlural: 'Resources',
-                id: RESOURCE_TYPE_ID
+                id: ENTITIES.RESOURCE
             },
             {
                 label: 'Template',
@@ -171,18 +170,18 @@ class Search extends Component {
         let results = [];
 
         try {
-            if (filterType === PREDICATE_TYPE_ID) {
+            if (filterType === ENTITIES.PREDICATE) {
                 results = await getPredicates({
-                    page: this.state.currentPage[PREDICATE_TYPE_ID] || 0,
+                    page: this.state.currentPage[ENTITIES.PREDICATE] || 0,
                     items: this.itemsPerFilter,
                     sortBy: 'id',
                     desc: true,
                     q: searchQuery,
                     returnContent: true
                 });
-            } else if (filterType === RESOURCE_TYPE_ID) {
+            } else if (filterType === ENTITIES.RESOURCE) {
                 results = await getResources({
-                    page: this.state.currentPage[RESOURCE_TYPE_ID] || 0,
+                    page: this.state.currentPage[ENTITIES.RESOURCE] || 0,
                     items: this.itemsPerFilter,
                     sortBy: 'id',
                     desc: true,

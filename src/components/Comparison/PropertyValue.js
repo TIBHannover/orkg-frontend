@@ -9,7 +9,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { getRuleByProperty, getValuesByProperty, getDataByProperty } from 'utils';
 import styled from 'styled-components';
 import { upperFirst } from 'lodash';
-import { PREDICATE_TYPE_ID } from 'constants/misc';
+import { ENTITIES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
@@ -74,7 +74,7 @@ const PropertyValue = ({ id, label, property, similar, filterControlData, update
             <Button onClick={handleOpenStatementBrowser} color="link" className="text-left text-light m-0 p-0">
                 <DescriptionTooltip
                     id={property?.id}
-                    typeId={PREDICATE_TYPE_ID}
+                    typeId={ENTITIES.PREDICATE}
                     extraContent={similar && similar.length ? `This property is merged with : ${similar.join(', ')}` : ''}
                 >
                     {upperFirst(label)}
@@ -112,7 +112,7 @@ const PropertyValue = ({ id, label, property, similar, filterControlData, update
             {showStatementBrowser && (
                 <StatementBrowserDialog
                     show={true}
-                    type={PREDICATE_TYPE_ID}
+                    type={ENTITIES.PREDICATE}
                     toggleModal={() => setShowStatementBrowser(v => !v)}
                     id={property.id}
                     label={property.label}
