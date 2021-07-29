@@ -69,7 +69,7 @@ const About = () => {
             {!isLoading && params?.id && page?.title && <CheckSlug label={page.title} route={ROUTES.ABOUT} />}
 
             <Container>
-                <h1 className="h4 mt-4 mb-4">About ORKG</h1>
+                <h1 className="h4 mt-4 mb-4">About</h1>
             </Container>
 
             <Container className="box rounded pt-4 pb-4 pl-5 pr-5">

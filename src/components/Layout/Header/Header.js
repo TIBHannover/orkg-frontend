@@ -403,7 +403,7 @@ class Header extends Component {
                                     </DropdownToggle>
                                     <DropdownMenu>
                                         <DropdownItem tag={RouterNavLink} exact to={reverse(ROUTES.ABOUT, {})}>
-                                            About ORKG
+                                            About
                                         </DropdownItem>
                                         <DropdownItem tag={RouterNavLink} exact to={ROUTES.HELP_CENTER}>
                                             Help center
