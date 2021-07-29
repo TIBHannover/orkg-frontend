@@ -199,15 +199,6 @@ const useValueItem = ({ valueId, propertyId, syncBackend, contextStyle }) => {
         setDialogResourceLabel(resource.label);
     };
 
-    const existingResourceId = resource ? resource.existingResourceId : false;
-    let handleOnClick = null;
-
-    if (value._class === ENTITIES.RESOURCE && (existingResourceId || contextStyle !== 'StatementBrowser') && openExistingResourcesInDialog) {
-        handleOnClick = handleExistingResourceClick;
-    } else if (value._class === ENTITIES.RESOURCE) {
-        handleOnClick = handleResourceClick;
-    }
-
     return {
         resource,
         value,
@@ -219,12 +210,13 @@ const useValueItem = ({ valueId, propertyId, syncBackend, contextStyle }) => {
         handleDeleteValue,
         handleDatasetResourceClick,
         handleDatasetClick,
-        handleOnClick,
         modalDataset,
         dialogResourceId,
         dialogResourceLabel,
-        existingResourceId,
-        setModalDataset
+        setModalDataset,
+        openExistingResourcesInDialog,
+        handleExistingResourceClick,
+        handleResourceClick
     };
 };
 

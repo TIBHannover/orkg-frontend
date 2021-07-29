@@ -7,8 +7,8 @@ import { PREDICATES, ENTITIES } from 'constants/graphSettings';
 
 export default function ValueItem(props) {
     const {
-        value,
         resource,
+        value,
         modal,
         setModal,
         property,
