@@ -15,6 +15,7 @@ import ROUTES from 'constants/routes';
 import { useSelector } from 'react-redux';
 import { PREDICATES, ENTITIES, CLASSES } from 'constants/graphSettings';
 import { getArrayParamFromQueryString } from 'utils';
+import TitleBar from 'components/TitleBar/TitleBar';
 
 const AddResource = () => {
     const isDOI = new RegExp(REGEX.DOI);
@@ -115,11 +116,9 @@ const AddResource = () => {
 
     return (
         <>
-            <Container className="d-flex align-items-center">
-                <h1 className="h4 mt-4 mb-4">Create resource</h1>
-            </Container>
+            <TitleBar>Create resource</TitleBar>
             <Container className="box rounded pt-4 pb-4 pl-5 pr-5">
-                <div className="pl-3 pr-3 pt-2">
+                <div className="pt-2">
                     <FormGroup>
                         <Label for="ResourceLabel">Resource label or DOI</Label>
                         <Input

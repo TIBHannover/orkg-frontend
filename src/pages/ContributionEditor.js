@@ -18,6 +18,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import env from '@beam-australia/react-env';
 import { Alert, Button, ButtonGroup, Container } from 'reactstrap';
+import TitleBar from 'components/TitleBar/TitleBar';
 
 const ContributionEditor = () => {
     const [isOpenAddContribution, setIsOpenAddContribution] = useState(false);
@@ -93,29 +94,29 @@ const ContributionEditor = () => {
 
     return (
         <>
-            <Container className="d-flex align-items-center">
-                <div className="d-flex mt-4 mb-4 align-items-center flex-grow-1">
-                    <h1 className="h4 m-0">Contribution editor</h1>
-                </div>
-                <ButtonGroup>
-                    <Button
-                        tag={Link}
-                        to={`${reverse(routes.COMPARISON)}?contributions=${contributionIds.join(',')}${
-                            hasPreviousVersion ? `&hasPreviousVersion=${hasPreviousVersion}` : ''
-                        }`}
-                        color="secondary"
-                        size="sm"
-                        style={{ marginRight: 2 }}
-                        disabled={contributionAmount < 2}
-                    >
-                        View comparison
-                    </Button>
-
-                    <Button color="secondary" size="sm" onClick={() => setIsOpenAddContribution(true)}>
-                        <Icon icon={faPlusCircle} /> Add contribution
-                    </Button>
-                </ButtonGroup>
-            </Container>
+            <TitleBar
+                buttonGroup={
+                    <>
+                        <Button
+                            tag={Link}
+                            to={`${reverse(routes.COMPARISON)}?contributions=${contributionIds.join(',')}${
+                                hasPreviousVersion ? `&hasPreviousVersion=${hasPreviousVersion}` : ''
+                            }`}
+                            color="secondary"
+                            size="sm"
+                            style={{ marginRight: 2 }}
+                            disabled={contributionAmount < 2}
+                        >
+                            View comparison
+                        </Button>
+                        <Button color="secondary" size="sm" onClick={() => setIsOpenAddContribution(true)}>
+                            <Icon icon={faPlusCircle} /> Add contribution
+                        </Button>
+                    </>
+                }
+            >
+                Contribution editor
+            </TitleBar>
             <Container className="box rounded p-4" style={containerStyle}>
                 {!hasFailed && contributionAmount === 0 && (
                     <Alert color="info">

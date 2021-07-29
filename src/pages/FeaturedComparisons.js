@@ -11,6 +11,7 @@ import { PREDICATES, CLASSES } from 'constants/graphSettings';
 import { kebabCase, isString } from 'lodash';
 import { useLocation, useHistory } from 'react-router';
 import styled from 'styled-components';
+import TitleBar from 'components/TitleBar/TitleBar';
 
 const Header = styled.h2`
     &:hover a {
@@ -125,14 +126,15 @@ const FeaturedComparisons = () => {
 
     return (
         <div>
-            <Container className="p-0 d-flex align-items-center">
-                <h1 className="h4 mt-4 mb-4 flex-grow-1">Featured paper comparisons</h1>
-                <ButtonGroup className="flex-shrink-0">
+            <TitleBar
+                buttonGroup={
                     <Link to={ROUTES.COMPARISONS} className="btn btn-secondary flex-shrink-0 btn-sm">
                         View all comparisons
                     </Link>
-                </ButtonGroup>
-            </Container>
+                }
+            >
+                Featured paper comparisons
+            </TitleBar>
             <Container className="box rounded pt-4 pb-4 pl-5 pr-5">
                 <Alert color="info" fade={false}>
                     With the paper data inside the ORKG, you can build powerful paper comparisons. On this page, we list the featured comparisons that

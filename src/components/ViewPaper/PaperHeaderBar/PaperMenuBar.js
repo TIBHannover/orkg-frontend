@@ -15,59 +15,52 @@ function PaperMenuBar(props) {
 
     return (
         <>
-            <ButtonGroup className="flex-shrink-0">
-                {props.paperLink && (
-                    <a href={props.paperLink} className="btn btn-secondary flex-shrink-0 btn-sm" target="_blank" rel="noopener noreferrer">
-                        <Icon icon={faFile} style={{ margin: '2px 4px 0 0' }} /> View paper
-                    </a>
-                )}
-                <Button
+            {props.paperLink && (
+                <a href={props.paperLink} className="btn btn-secondary flex-shrink-0 btn-sm" target="_blank" rel="noopener noreferrer">
+                    <Icon icon={faFile} style={{ margin: '2px 4px 0 0' }} /> View paper
+                </a>
+            )}
+            <Button className="flex-shrink-0" color="secondary" size="sm" style={{ marginRight: 2 }} onClick={() => props.toggle('showGraphModal')}>
+                <Icon icon={faProjectDiagram} style={{ margin: '2px 4px 0 0' }} /> Graph view
+            </Button>
+
+            {!props.editMode && (
+                <RequireAuthentication
+                    component={Button}
                     className="flex-shrink-0"
+                    style={{ marginRight: 2 }}
                     color="secondary"
                     size="sm"
-                    style={{ marginLeft: 1 }}
-                    onClick={() => props.toggle('showGraphModal')}
+                    onClick={() => (!props.disableEdit ? props.toggle('editMode') : setIsOpenPWCModal(true))}
                 >
-                    <Icon icon={faProjectDiagram} style={{ margin: '2px 4px 0 0' }} /> Graph view
+                    <Icon icon={faPen} /> Edit
+                </RequireAuthentication>
+            )}
+
+            {props.editMode && (
+                <Button
+                    className="flex-shrink-0"
+                    style={{ marginRight: 2 }}
+                    color="secondary-darker"
+                    size="sm"
+                    disabled={props.disableEdit}
+                    onClick={() => props.toggle('editMode')}
+                >
+                    <Icon icon={faTimes} /> Stop editing
                 </Button>
+            )}
 
-                {!props.editMode && (
-                    <RequireAuthentication
-                        component={Button}
-                        className="flex-shrink-0"
-                        style={{ marginLeft: 1 }}
-                        color="secondary"
-                        size="sm"
-                        onClick={() => (!props.disableEdit ? props.toggle('editMode') : setIsOpenPWCModal(true))}
-                    >
-                        <Icon icon={faPen} /> Edit
-                    </RequireAuthentication>
-                )}
+            <ButtonDropdown isOpen={menuOpen} toggle={() => setMenuOpen(v => !v)}>
+                <DropdownToggle size="sm" color="secondary" className="px-3 rounded-right">
+                    <Icon icon={faEllipsisV} />
+                </DropdownToggle>
+                <DropdownMenu right>
+                    <DropdownItem tag={NavLink} exact to={reverse(ROUTES.RESOURCE, { id: props.id })}>
+                        View resource
+                    </DropdownItem>
+                </DropdownMenu>
+            </ButtonDropdown>
 
-                {props.editMode && (
-                    <Button
-                        className="flex-shrink-0"
-                        style={{ marginLeft: 1 }}
-                        color="secondary-darker"
-                        size="sm"
-                        disabled={props.disableEdit}
-                        onClick={() => props.toggle('editMode')}
-                    >
-                        <Icon icon={faTimes} /> Stop editing
-                    </Button>
-                )}
-
-                <ButtonDropdown isOpen={menuOpen} toggle={() => setMenuOpen(v => !v)} nav inNavbar>
-                    <DropdownToggle size="sm" color="secondary" className="px-3 rounded-right" style={{ marginLeft: 2 }}>
-                        <Icon icon={faEllipsisV} />
-                    </DropdownToggle>
-                    <DropdownMenu right>
-                        <DropdownItem tag={NavLink} exact to={reverse(ROUTES.RESOURCE, { id: props.id })}>
-                            View resource
-                        </DropdownItem>
-                    </DropdownMenu>
-                </ButtonDropdown>
-            </ButtonGroup>
             <PapersWithCodeModal isOpen={isOpenPWCModal} toggle={() => setIsOpenPWCModal(v => !v)} label={props.label} />
         </>
     );

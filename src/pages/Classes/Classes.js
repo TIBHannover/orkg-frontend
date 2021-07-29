@@ -8,6 +8,7 @@ import { getClasses } from 'services/backend/classes';
 import { reverse } from 'named-urls';
 import { Link } from 'react-router-dom';
 import ROUTES from 'constants/routes';
+import TitleBar from 'components/TitleBar/TitleBar';
 
 const Classes = () => {
     const pageSize = 25;
@@ -50,14 +51,13 @@ const Classes = () => {
 
     return (
         <>
-            <Container className="d-flex align-items-center">
-                <div className="d-flex flex-grow-1 mt-4 mb-4">
-                    <h1 className="h4">View all classes</h1>
-                    <div className="text-muted ml-3 mt-1">
+            <TitleBar
+                titleAddition={
+                    <div className="text-muted mt-1">
                         {totalElements === 0 && isNextPageLoading ? <Icon icon={faSpinner} spin /> : totalElements} classes
                     </div>
-                </div>
-                <ButtonGroup>
+                }
+                buttonGroup={
                     <RequireAuthentication
                         component={Link}
                         color="secondary"
@@ -67,8 +67,10 @@ const Classes = () => {
                     >
                         <Icon icon={faPlus} /> Create class
                     </RequireAuthentication>
-                </ButtonGroup>
-            </Container>
+                }
+            >
+                View all classes
+            </TitleBar>
 
             <Container className="p-0">
                 <ListGroup flush className="box rounded" style={{ overflow: 'hidden' }}>

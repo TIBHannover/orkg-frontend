@@ -43,7 +43,7 @@ import { NavLink } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import env from '@beam-australia/react-env';
 import AppliedRule from 'components/Comparison/Filters/AppliedRule';
-import MainTitle from 'components/MainTitle/MainTitle';
+import TitleBar from 'components/TitleBar/TitleBar';
 
 function Comparison(props) {
     const {
@@ -208,187 +208,187 @@ function Comparison(props) {
     return (
         <div>
             <Breadcrumbs researchFieldId={metaData?.subject ? metaData?.subject.id : researchField ? researchField.id : null} />
-            <MainTitle
-                title={
-                    <>
-                        Contribution comparison{' '}
-                        {!isFailedLoadingMetaData && contributionsList.length > 1 && (
-                            <Tippy content="The amount of compared contributions">
-                                <span>
-                                    <Badge color="secondary" pill style={{ fontSize: '65%' }}>
-                                        {contributionsList.length}
-                                    </Badge>
-                                </span>
-                            </Tippy>
-                        )}
-                    </>
+            <TitleBar
+                buttonGroup={
+                    contributionsList.length > 1 &&
+                    !isLoadingComparisonResult &&
+                    !isFailedLoadingComparisonResult && (
+                        <>
+                            <Dropdown group isOpen={dropdownDensityOpen} toggle={() => setDropdownDensityOpen(v => !v)} style={{ marginRight: 2 }}>
+                                <DropdownToggle color="secondary" size="sm">
+                                    <Icon icon={faWindowMaximize} className="mr-1" /> View
+                                </DropdownToggle>
+                                <DropdownMenu>
+                                    <DropdownItem onClick={handleFullWidth}>
+                                        <span className="mr-2">{fullWidth ? 'Reduced width' : 'Full width'}</span>
+                                    </DropdownItem>
+                                    <DropdownItem onClick={() => toggleTranspose(v => !v)}>Transpose table</DropdownItem>
+                                    <DropdownItem divider />
+                                    <DropdownItem header>View density</DropdownItem>
+                                    <DropdownItem active={viewDensity === 'spacious'} onClick={() => handleViewDensity('spacious')}>
+                                        Spacious
+                                    </DropdownItem>
+                                    <DropdownItem active={viewDensity === 'normal'} onClick={() => handleViewDensity('normal')}>
+                                        Normal
+                                    </DropdownItem>
+                                    <DropdownItem active={viewDensity === 'compact'} onClick={() => handleViewDensity('compact')}>
+                                        Compact
+                                    </DropdownItem>
+                                </DropdownMenu>
+                            </Dropdown>
+                            {!!metaData.id ? (
+                                <Button
+                                    color="secondary"
+                                    size="sm"
+                                    onClick={() => {
+                                        setUseReconstructedData(false);
+                                        setShowVisualizationModal(!showVisualizationModal);
+                                    }}
+                                    style={{ marginRight: 2 }}
+                                >
+                                    <Icon icon={faChartBar} className="mr-1" /> Visualize
+                                </Button>
+                            ) : (
+                                <Tippy
+                                    hideOnClick={false}
+                                    content="Cannot use self-visualization-service for unpublished comparison. You must publish the comparison first to use this functionality."
+                                >
+                                    <span style={{ marginRight: 2 }} className="btn btn-secondary btn-sm disabled">
+                                        <Icon icon={faChartBar} className="mr-1" /> Visualize
+                                    </span>
+                                </Tippy>
+                            )}
+                            <Dropdown group isOpen={dropdownOpen} toggle={() => setDropdownOpen(v => !v)}>
+                                <DropdownToggle color="secondary" size="sm" className="rounded-right">
+                                    <span className="mr-2">More</span> <Icon icon={faEllipsisV} />
+                                </DropdownToggle>
+                                <DropdownMenu right style={{ zIndex: '1031' }}>
+                                    <DropdownItem header>Customize</DropdownItem>
+                                    <DropdownItem onClick={() => setShowAddContribution(v => !v)}>Add contribution</DropdownItem>
+                                    <DropdownItem onClick={() => setShowPropertiesDialog(v => !v)}>Select properties</DropdownItem>
+                                    <Dropdown isOpen={dropdownMethodOpen} toggle={() => setDropdownMethodOpen(v => !v)} direction="left">
+                                        <DropdownToggle tag="div" className="dropdown-item" style={{ cursor: 'pointer' }}>
+                                            Comparison method
+                                        </DropdownToggle>
+                                        <DropdownMenu>
+                                            <div className="d-flex px-2">
+                                                <ComparisonTypeButton
+                                                    color="link"
+                                                    className="p-0 m-1"
+                                                    onClick={() => handleChangeType('merge')}
+                                                    active={comparisonType !== 'path'}
+                                                >
+                                                    <img src={IntelligentMerge} alt="Intelligent merge example" />
+                                                </ComparisonTypeButton>
+
+                                                <ComparisonTypeButton
+                                                    color="link"
+                                                    className="p-0 m-1"
+                                                    onClick={() => handleChangeType('path')}
+                                                    active={comparisonType === 'path'}
+                                                >
+                                                    <img src={ExactMatch} alt="Exact match example" />
+                                                </ComparisonTypeButton>
+                                            </div>
+                                        </DropdownMenu>
+                                    </Dropdown>
+                                    <DropdownItem onClick={handleEditContributions}>Edit contributions</DropdownItem>
+
+                                    <DropdownItem divider />
+                                    <DropdownItem header>Export</DropdownItem>
+                                    <DropdownItem onClick={() => setShowLatexDialog(v => !v)}>Export as LaTeX</DropdownItem>
+                                    {matrixData ? (
+                                        <CSVLink
+                                            data={matrixData}
+                                            filename="ORKG Contribution Comparison.csv"
+                                            className="dropdown-item"
+                                            target="_blank"
+                                            onClick={() => setDropdownOpen(v => !v)}
+                                        >
+                                            Export as CSV
+                                        </CSVLink>
+                                    ) : (
+                                        ''
+                                    )}
+                                    <GeneratePdf id="comparisonTable" />
+                                    <DropdownItem
+                                        onClick={() =>
+                                            generateRdfDataVocabularyFile(
+                                                data,
+                                                contributions,
+                                                properties,
+                                                metaData.id
+                                                    ? {
+                                                          title: metaData.title,
+                                                          description: metaData.description,
+                                                          creator: metaData.createdBy,
+                                                          date: metaData.createdAt
+                                                      }
+                                                    : { title: '', description: '', creator: '', date: '' }
+                                            )
+                                        }
+                                    >
+                                        Export as RDF
+                                    </DropdownItem>
+                                    {metaData?.id && metaData?.doi && (
+                                        <DropdownItem onClick={() => setShowExportCitationsDialog(v => !v)}>Export Citation</DropdownItem>
+                                    )}
+                                    {metaData?.id && (
+                                        <DropdownItem
+                                            tag="a"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            href={`https://mybinder.org/v2/gl/TIBHannover%2Forkg%2Forkg-notebook-boilerplate/HEAD?urlpath=notebooks%2FComparison.ipynb%3Fcomparison_id%3D%22${metaData.id}%22%26autorun%3Dtrue`}
+                                        >
+                                            Jupyter Notebook <Icon size="sm" icon={faExternalLinkAlt} />
+                                        </DropdownItem>
+                                    )}
+                                    <DropdownItem divider />
+                                    <DropdownItem onClick={() => setShowShareDialog(v => !v)}>Share link</DropdownItem>
+                                    <DropdownItem
+                                        onClick={e => {
+                                            if (!props.user) {
+                                                props.openAuthDialog({ action: 'signin', signInRequired: true });
+                                            } else {
+                                                setShowPublishDialog(v => !v);
+                                            }
+                                        }}
+                                    >
+                                        Publish
+                                    </DropdownItem>
+                                    {!isLoadingVersions && versions?.length > 1 && (
+                                        <>
+                                            <DropdownItem divider />
+                                            <DropdownItem onClick={() => setShowComparisonVersions(v => !v)}>
+                                                <Icon icon={faHistory} /> <span className="mr-2">History</span>
+                                            </DropdownItem>
+                                        </>
+                                    )}
+                                    {metaData?.id && (
+                                        <>
+                                            <DropdownItem divider />
+                                            <DropdownItem tag={NavLink} exact to={reverse(ROUTES.RESOURCE, { id: metaData.id })}>
+                                                View resource
+                                            </DropdownItem>
+                                        </>
+                                    )}
+                                </DropdownMenu>
+                            </Dropdown>
+                        </>
+                    )
                 }
             >
-                {contributionsList.length > 1 && !isLoadingComparisonResult && !isFailedLoadingComparisonResult && (
-                    <>
-                        <Dropdown group isOpen={dropdownDensityOpen} toggle={() => setDropdownDensityOpen(v => !v)} style={{ marginRight: 2 }}>
-                            <DropdownToggle color="secondary" size="sm">
-                                <Icon icon={faWindowMaximize} className="mr-1" /> View
-                            </DropdownToggle>
-                            <DropdownMenu container="body">
-                                <DropdownItem onClick={handleFullWidth}>
-                                    <span className="mr-2">{fullWidth ? 'Reduced width' : 'Full width'}</span>
-                                </DropdownItem>
-                                <DropdownItem onClick={() => toggleTranspose(v => !v)}>Transpose table</DropdownItem>
-                                <DropdownItem divider />
-                                <DropdownItem header>View density</DropdownItem>
-                                <DropdownItem active={viewDensity === 'spacious'} onClick={() => handleViewDensity('spacious')}>
-                                    Spacious
-                                </DropdownItem>
-                                <DropdownItem active={viewDensity === 'normal'} onClick={() => handleViewDensity('normal')}>
-                                    Normal
-                                </DropdownItem>
-                                <DropdownItem active={viewDensity === 'compact'} onClick={() => handleViewDensity('compact')}>
-                                    Compact
-                                </DropdownItem>
-                            </DropdownMenu>
-                        </Dropdown>
-                        {!!metaData.id ? (
-                            <Button
-                                color="secondary"
-                                size="sm"
-                                onClick={() => {
-                                    setUseReconstructedData(false);
-                                    setShowVisualizationModal(!showVisualizationModal);
-                                }}
-                                style={{ marginRight: 2 }}
-                            >
-                                <Icon icon={faChartBar} className="mr-1" /> Visualize
-                            </Button>
-                        ) : (
-                            <Tippy
-                                hideOnClick={false}
-                                content="Cannot use self-visualization-service for unpublished comparison. You must publish the comparison first to use this functionality."
-                            >
-                                <span style={{ marginRight: 2 }} className="btn btn-secondary btn-sm disabled">
-                                    <Icon icon={faChartBar} className="mr-1" /> Visualize
-                                </span>
-                            </Tippy>
-                        )}
-                        <Dropdown group isOpen={dropdownOpen} toggle={() => setDropdownOpen(v => !v)}>
-                            <DropdownToggle color="secondary" size="sm" className="rounded-right">
-                                <span className="mr-2">More</span> <Icon icon={faEllipsisV} />
-                            </DropdownToggle>
-                            <DropdownMenu right style={{ zIndex: '1031' }} container={document.body}>
-                                <DropdownItem header>Customize</DropdownItem>
-                                <DropdownItem onClick={() => setShowAddContribution(v => !v)}>Add contribution</DropdownItem>
-                                <DropdownItem onClick={() => setShowPropertiesDialog(v => !v)}>Select properties</DropdownItem>
-                                <Dropdown isOpen={dropdownMethodOpen} toggle={() => setDropdownMethodOpen(v => !v)} direction="left">
-                                    <DropdownToggle tag="div" className="dropdown-item" style={{ cursor: 'pointer' }}>
-                                        Comparison method
-                                    </DropdownToggle>
-                                    <DropdownMenu>
-                                        <div className="d-flex px-2">
-                                            <ComparisonTypeButton
-                                                color="link"
-                                                className="p-0 m-1"
-                                                onClick={() => handleChangeType('merge')}
-                                                active={comparisonType !== 'path'}
-                                            >
-                                                <img src={IntelligentMerge} alt="Intelligent merge example" />
-                                            </ComparisonTypeButton>
-
-                                            <ComparisonTypeButton
-                                                color="link"
-                                                className="p-0 m-1"
-                                                onClick={() => handleChangeType('path')}
-                                                active={comparisonType === 'path'}
-                                            >
-                                                <img src={ExactMatch} alt="Exact match example" />
-                                            </ComparisonTypeButton>
-                                        </div>
-                                    </DropdownMenu>
-                                </Dropdown>
-                                <DropdownItem onClick={handleEditContributions}>Edit contributions</DropdownItem>
-
-                                <DropdownItem divider />
-                                <DropdownItem header>Export</DropdownItem>
-                                <DropdownItem onClick={() => setShowLatexDialog(v => !v)}>Export as LaTeX</DropdownItem>
-                                {matrixData ? (
-                                    <CSVLink
-                                        data={matrixData}
-                                        filename="ORKG Contribution Comparison.csv"
-                                        className="dropdown-item"
-                                        target="_blank"
-                                        onClick={() => setDropdownOpen(v => !v)}
-                                    >
-                                        Export as CSV
-                                    </CSVLink>
-                                ) : (
-                                    ''
-                                )}
-                                <GeneratePdf id="comparisonTable" />
-                                <DropdownItem
-                                    onClick={() =>
-                                        generateRdfDataVocabularyFile(
-                                            data,
-                                            contributions,
-                                            properties,
-                                            metaData.id
-                                                ? {
-                                                      title: metaData.title,
-                                                      description: metaData.description,
-                                                      creator: metaData.createdBy,
-                                                      date: metaData.createdAt
-                                                  }
-                                                : { title: '', description: '', creator: '', date: '' }
-                                        )
-                                    }
-                                >
-                                    Export as RDF
-                                </DropdownItem>
-                                {metaData?.id && metaData?.doi && (
-                                    <DropdownItem onClick={() => setShowExportCitationsDialog(v => !v)}>Export Citation</DropdownItem>
-                                )}
-                                {metaData?.id && (
-                                    <DropdownItem
-                                        tag="a"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        href={`https://mybinder.org/v2/gl/TIBHannover%2Forkg%2Forkg-notebook-boilerplate/HEAD?urlpath=notebooks%2FComparison.ipynb%3Fcomparison_id%3D%22${metaData.id}%22%26autorun%3Dtrue`}
-                                    >
-                                        Jupyter Notebook <Icon size="sm" icon={faExternalLinkAlt} />
-                                    </DropdownItem>
-                                )}
-                                <DropdownItem divider />
-                                <DropdownItem onClick={() => setShowShareDialog(v => !v)}>Share link</DropdownItem>
-                                <DropdownItem
-                                    onClick={e => {
-                                        if (!props.user) {
-                                            props.openAuthDialog({ action: 'signin', signInRequired: true });
-                                        } else {
-                                            setShowPublishDialog(v => !v);
-                                        }
-                                    }}
-                                >
-                                    Publish
-                                </DropdownItem>
-                                {!isLoadingVersions && versions?.length > 1 && (
-                                    <>
-                                        <DropdownItem divider />
-                                        <DropdownItem onClick={() => setShowComparisonVersions(v => !v)}>
-                                            <Icon icon={faHistory} /> <span className="mr-2">History</span>
-                                        </DropdownItem>
-                                    </>
-                                )}
-                                {metaData?.id && (
-                                    <>
-                                        <DropdownItem divider />
-                                        <DropdownItem tag={NavLink} exact to={reverse(ROUTES.RESOURCE, { id: metaData.id })}>
-                                            View resource
-                                        </DropdownItem>
-                                    </>
-                                )}
-                            </DropdownMenu>
-                        </Dropdown>
-                    </>
+                Contribution comparison{' '}
+                {!isFailedLoadingMetaData && contributionsList.length > 1 && (
+                    <Tippy content="The amount of compared contributions">
+                        <span>
+                            <Badge color="secondary" pill style={{ fontSize: '65%' }}>
+                                {contributionsList.length}
+                            </Badge>
+                        </span>
+                    </Tippy>
                 )}
-            </MainTitle>
+            </TitleBar>
 
             {!isLoadingVersions && hasNextVersion && (
                 <NewerVersionWarning versions={versions} comparisonId={metaData?.id || metaData?.hasPreviousVersion?.id} />

@@ -3,21 +3,29 @@ import styled from 'styled-components';
 import Gravatar from 'react-gravatar';
 
 export const SubtitleSeparator = styled.div`
+    @media (max-width: 480px) {
+        display: none;
+    }
     background: ${props => props.theme.secondary};
     width: 2px;
     height: 24px;
-    margin: 0 15px;
+    margin: 3px 15px;
     content: '';
     display: block;
     opacity: 0.7;
+    float: left;
 `;
 
 export const SubTitle = styled.div`
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
+    float: left;
     margin-right: 20px;
     color: ${props => props.theme.secondary};
+    margin-top: 3px;
+    min-width: 0;
+    margin-bottom: 0;
 `;
 
 export const StyledGravatar = styled(Gravatar)`

@@ -11,6 +11,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { Button, ButtonDropdown, Col, Container, DropdownItem, DropdownMenu, DropdownToggle, Row } from 'reactstrap';
 import { reverseWithSlug } from 'utils';
+import TitleBar from 'components/TitleBar/TitleBar';
 
 const ResearchFields = () => {
     const [menuOpen, setMenuOpen] = useState(false);
@@ -46,20 +47,22 @@ const ResearchFields = () => {
 
     return (
         <>
-            <Container className="d-flex align-items-center">
-                <h1 className="h4 mt-4 mb-4 flex-grow-1">Research fields taxonomy</h1>
-
-                <ButtonDropdown isOpen={menuOpen} toggle={() => setMenuOpen(v => !v)} nav inNavbar>
-                    <DropdownToggle size="sm" color="secondary" className="px-3 rounded-right" style={{ marginLeft: 2 }}>
-                        <Icon icon={faEllipsisV} />
-                    </DropdownToggle>
-                    <DropdownMenu right>
-                        <DropdownItem tag={NavLink} exact to={reverse(ROUTES.RESOURCE, { id: MISC.RESEARCH_FIELD_MAIN })}>
-                            View resource
-                        </DropdownItem>
-                    </DropdownMenu>
-                </ButtonDropdown>
-            </Container>
+            <TitleBar
+                buttonGroup={
+                    <ButtonDropdown isOpen={menuOpen} toggle={() => setMenuOpen(v => !v)} nav inNavbar>
+                        <DropdownToggle size="sm" color="secondary" className="px-3 rounded-right" style={{ marginLeft: 2 }}>
+                            <Icon icon={faEllipsisV} />
+                        </DropdownToggle>
+                        <DropdownMenu right>
+                            <DropdownItem tag={NavLink} exact to={reverse(ROUTES.RESOURCE, { id: MISC.RESEARCH_FIELD_MAIN })}>
+                                View resource
+                            </DropdownItem>
+                        </DropdownMenu>
+                    </ButtonDropdown>
+                }
+            >
+                Research fields taxonomy
+            </TitleBar>
             <Container className="p-0">
                 <div className="box rounded-lg p-4">
                     <div className="d-flex">

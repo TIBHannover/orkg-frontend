@@ -10,6 +10,7 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import ROUTES from 'constants/routes';
+import TitleBar from 'components/TitleBar/TitleBar';
 
 class Organizations extends Component {
     constructor(props) {
@@ -51,20 +52,24 @@ class Organizations extends Component {
     render() {
         return (
             <>
-                <Container className="d-flex align-items-center">
-                    <h1 className="h4 mt-4 mb-4 flex-grow-1">View all organizations </h1>
-                    {!!this.props.user && this.props.user.isCurationAllowed && (
-                        <RequireAuthentication
-                            component={Link}
-                            color="secondary"
-                            size="sm"
-                            className="btn btn-secondary btn-sm flex-shrink-0"
-                            to={ROUTES.ADD_ORGANIZATION}
-                        >
-                            <Icon icon={faPlus} /> Create new organization
-                        </RequireAuthentication>
-                    )}
-                </Container>
+                <TitleBar
+                    buttonGroup={
+                        !!this.props.user &&
+                        this.props.user.isCurationAllowed && (
+                            <RequireAuthentication
+                                component={Link}
+                                color="secondary"
+                                size="sm"
+                                className="btn btn-secondary btn-sm flex-shrink-0"
+                                to={ROUTES.ADD_ORGANIZATION}
+                            >
+                                <Icon icon={faPlus} /> Create new organization
+                            </RequireAuthentication>
+                        )
+                    }
+                >
+                    View all organizations
+                </TitleBar>
                 <Container className="box rounded pt-4 pb-4 pl-5 pr-5 clearfix">
                     {this.state.organizations.length > 0 && (
                         <div className="mt-3 row justify-content-center">
