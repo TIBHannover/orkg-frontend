@@ -8,16 +8,23 @@ import {
     doneSavingValue,
     isSavingValue,
     changeValue,
-    generatedFormattedLabel
+    getValueClass,
+    getComponentsByResourceIDAndPredicateID,
+    generatedFormattedLabel,
+    isLiteral,
+    isInlineResource as isInlineResourceUtil
 } from 'actions/statementBrowser';
 import { uniq } from 'lodash';
 import { updateStatement, deleteStatementById } from 'services/backend/statements';
 import { createResource as createResourceAPICall, updateResource } from 'services/backend/resources';
 import { updateLiteral } from 'services/backend/literals';
+import validationSchema from 'components/StatementBrowser/AddValue/helpers/validationSchema';
+import { getConfigByType } from 'constants/DataTypes';
 import { toast } from 'react-toastify';
 import { guid } from 'utils';
+import Joi from 'joi';
 import { useDispatch, useSelector } from 'react-redux';
-import { ENTITIES } from 'constants/graphSettings';
+import { ENTITIES, MISC } from 'constants/graphSettings';
 
 const useValueItem = ({ valueId, propertyId, syncBackend, contextStyle }) => {
     const dispatch = useDispatch();
@@ -26,6 +33,10 @@ const useValueItem = ({ valueId, propertyId, syncBackend, contextStyle }) => {
     const property = useSelector(state => state.statementBrowser.properties.byId[propertyId]);
     const openExistingResourcesInDialog = useSelector(state => state.statementBrowser.openExistingResourcesInDialog);
     const resource = useSelector(state => state.statementBrowser.resources.byId[value.resourceId]);
+
+    const [draftLabel, setDraftLabel] = useState(value.label);
+    const [draftDataType, setDraftDataType] = useState(value.type === 'literal' ? value.datatype : 'object');
+    const isInlineResource = useSelector(state => isInlineResourceUtil(state, valueClass));
 
     const [modal, setModal] = useState(false);
     const [modalDataset, setModalDataset] = useState(false);
@@ -54,6 +65,53 @@ const useValueItem = ({ valueId, propertyId, syncBackend, contextStyle }) => {
         }
         return { hasLabelFormat, labelFormat };
     });
+
+    const valueClass = useSelector(state =>
+        getValueClass(getComponentsByResourceIDAndPredicateID(state, value.resourceId, property?.existingPredicateId))
+    );
+
+    const schema = useSelector(state => {
+        const components = getComponentsByResourceIDAndPredicateID(state, value.resourceId, property?.existingPredicateId);
+        if (valueClass && ['Date', 'Number', 'String'].includes(valueClass.id)) {
+            let component;
+            if (components && components.length > 0) {
+                component = components[0];
+            }
+            if (!component) {
+                component = {
+                    value: valueClass,
+                    property: { id: property.id, label: property.label },
+                    validationRules: property.validationRules
+                };
+            }
+            const schema = validationSchema(component);
+            return schema;
+        } else if (value.type === ENTITIES.LITERAL) {
+            const config = getConfigByType(draftDataType);
+            return config.schema;
+        }
+        return Joi.string();
+    });
+
+    /**
+     * Get the correct xsd datatype if it's literal
+     */
+    const getDataType = dt => {
+        if (valueClass && value._class === ENTITIES.LITERAL) {
+            switch (valueClass.id) {
+                case 'String':
+                    return MISC.DEFAULT_LITERAL_DATATYPE;
+                case 'Number':
+                    return 'xsd:decimal';
+                case 'Date':
+                    return 'xsd:date';
+                default:
+                    return MISC.DEFAULT_LITERAL_DATATYPE;
+            }
+        } else {
+            return getConfigByType(dt).type;
+        }
+    };
 
     const commitChangeLabel = async (draftLabel, draftDataType) => {
         // Check if the user changed the label
@@ -266,7 +324,16 @@ const useValueItem = ({ valueId, propertyId, syncBackend, contextStyle }) => {
         openExistingResourcesInDialog,
         handleExistingResourceClick,
         handleResourceClick,
-        getLabel
+        getLabel,
+        schema,
+        getDataType,
+        draftLabel,
+        draftDataType,
+        setDraftLabel,
+        setDraftDataType,
+        valueClass,
+        isLiteral,
+        isInlineResource
     };
 };
 

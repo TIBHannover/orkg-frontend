@@ -1,6 +1,6 @@
 import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
 import RDFDataCube from 'components/RDFDataCube/RDFDataCube';
-import ValueItemTemplate from './ValueItemTemplate';
+import ValueItemView from './ValueItemView';
 import useValueItem from './hooks/useValueItem';
 import PropTypes from 'prop-types';
 import { PREDICATES, ENTITIES } from 'constants/graphSettings';
@@ -24,7 +24,15 @@ export default function ValueItem(props) {
         openExistingResourcesInDialog,
         handleExistingResourceClick,
         handleResourceClick,
-        getLabel
+        getLabel,
+        schema,
+        getDataType,
+        draftLabel,
+        draftDataType,
+        setDraftLabel,
+        setDraftDataType,
+        valueClass,
+        isInlineResource
     } = useValueItem({ valueId: props.id, propertyId: props.propertyId, syncBackend: props.syncBackend, contextStyle: props.contextStyle });
 
     const existingResourceId = resource ? resource.existingResourceId : false;
@@ -41,7 +49,7 @@ export default function ValueItem(props) {
     }
     return (
         <>
-            <ValueItemTemplate
+            <ValueItemView
                 isProperty={[PREDICATES.TEMPLATE_COMPONENT_PROPERTY, PREDICATES.TEMPLATE_OF_PREDICATE].includes(property?.existingPredicateId)}
                 id={props.id}
                 value={value}
@@ -54,8 +62,15 @@ export default function ValueItem(props) {
                 enableEdit={props.enableEdit}
                 handleDeleteValue={handleDeleteValue}
                 showHelp={props.showHelp}
-                components={props.components}
                 getLabel={getLabel}
+                schema={schema}
+                getDataType={getDataType}
+                draftLabel={draftLabel}
+                draftDataType={draftDataType}
+                setDraftLabel={setDraftLabel}
+                setDraftDataType={setDraftDataType}
+                valueClass={valueClass}
+                isInlineResource={isInlineResource}
             />
 
             {modal ? (
@@ -91,8 +106,7 @@ ValueItem.propTypes = {
     enableEdit: PropTypes.bool.isRequired,
     syncBackend: PropTypes.bool.isRequired,
     contextStyle: PropTypes.string.isRequired,
-    showHelp: PropTypes.bool,
-    components: PropTypes.array.isRequired
+    showHelp: PropTypes.bool
 };
 
 ValueItem.defaultProps = {

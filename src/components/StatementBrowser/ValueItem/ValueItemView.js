@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { toggleEditValue, getValueClass, isInlineResource as isInlineResourceUtil } from 'actions/statementBrowser';
+import { toggleEditValue } from 'actions/statementBrowser';
 import { InputGroup, InputGroupAddon, Button, FormFeedback, Badge } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faTrash, faPen, faExternalLinkAlt, faTable } from '@fortawesome/free-solid-svg-icons';
@@ -8,27 +8,22 @@ import { StyledButton, ValueItemStyle } from 'components/StatementBrowser/styled
 import Pulse from 'components/Utils/Pulse';
 import classNames from 'classnames';
 import ValuePlugins from 'components/ValuePlugins/ValuePlugins';
-import validationSchema from 'components/StatementBrowser/AddValue/helpers/validationSchema';
 import InputField from 'components/StatementBrowser/InputField/InputField';
 import { Link } from 'react-router-dom';
 import DatatypeSelector from 'components/StatementBrowser/DatatypeSelector/DatatypeSelector';
-import { getConfigByType, getSuggestionByTypeAndValue } from 'constants/DataTypes';
+import { getSuggestionByTypeAndValue } from 'constants/DataTypes';
 import Tippy from '@tippyjs/react';
 import { useDispatch, useSelector } from 'react-redux';
-import { CLASSES, ENTITIES, MISC } from 'constants/graphSettings';
+import { CLASSES, ENTITIES } from 'constants/graphSettings';
 import ConfirmConversionTooltip from 'components/StatementBrowser/ConfirmConversionTooltip/ConfirmConversionTooltip';
 import PropTypes from 'prop-types';
 import { getResourceLink } from 'utils';
-import Joi from 'joi';
+import InfoTippy from './InfoTippy';
 
-export default function ValueItemTemplate(props) {
+export default function ValueItemView(props) {
     const dispatch = useDispatch();
-    const statementBrowser = useSelector(state => state.statementBrowser);
-    const { resourcesAsLinks, openExistingResourcesInDialog } = statementBrowser;
-
-    let valueClass = getValueClass(props.components);
-    valueClass = valueClass ? valueClass : props.predicate?.range ? props.predicate.range : null;
-    const isInlineResource = useSelector(state => isInlineResourceUtil(state, valueClass));
+    const resourcesAsLinks = useSelector(state => state.statementBrowser.resourcesAsLinks);
+    const openExistingResourcesInDialog = useSelector(state => state.statementBrowser.openExistingResourcesInDialog);
 
     const confirmConversion = useRef(null);
     const [suggestionType, setSuggestionType] = useState(null);
@@ -36,8 +31,7 @@ export default function ValueItemTemplate(props) {
     const isCurationAllowed = useSelector(state => state.auth.user?.isCurationAllowed);
 
     const [disableHover, setDisableHover] = useState(false);
-    const [draftLabel, setDraftLabel] = useState(props.value.label);
-    const [draftDataType, setDraftDataType] = useState(props.value.type === 'literal' ? props.value.datatype : 'object');
+
     const [isValid, setIsValid] = useState(true);
     const [formFeedback, setFormFeedback] = useState(null);
 
@@ -46,50 +40,8 @@ export default function ValueItemTemplate(props) {
         disableHover: disableHover
     });
 
-    const getSchema = () => {
-        if (valueClass && ['Date', 'Number', 'String'].includes(valueClass.id)) {
-            let component;
-            if (props.components && props.components.length > 0) {
-                component = props.components[0];
-            }
-            if (!component) {
-                component = {
-                    value: valueClass,
-                    property: { id: props.predicate.id, label: props.predicate.label },
-                    validationRules: props.predicate.validationRules
-                };
-            }
-            const schema = validationSchema(component);
-            return schema;
-        } else if (props.value.type === ENTITIES.LITERAL) {
-            const config = getConfigByType(draftDataType);
-            return config.schema;
-        }
-        return Joi.string();
-    };
-
-    /**
-     * Get the correct xsd datatype if it's literal
-     */
-    const getDataType = dt => {
-        if (valueClass && props.value.type === ENTITIES.LITERAL) {
-            switch (valueClass.id) {
-                case 'String':
-                    return MISC.DEFAULT_LITERAL_DATATYPE;
-                case 'Number':
-                    return 'xsd:decimal';
-                case 'Date':
-                    return 'xsd:date';
-                default:
-                    return MISC.DEFAULT_LITERAL_DATATYPE;
-            }
-        } else {
-            return getConfigByType(dt).type;
-        }
-    };
-
     const onSubmit = () => {
-        const { error } = getSchema().validate(draftLabel);
+        const { error } = props.schema.validate(props.draftLabel);
         if (error) {
             setFormFeedback(error.message);
             setIsValid(false);
@@ -97,12 +49,12 @@ export default function ValueItemTemplate(props) {
             // setDraftLabel(value);
             setFormFeedback(null);
             // Check for a possible conversion possible
-            const suggestions = getSuggestionByTypeAndValue(draftDataType, draftLabel);
-            if (suggestions.length > 0 && !valueClass) {
+            const suggestions = getSuggestionByTypeAndValue(props.draftDataType, props.draftLabel);
+            if (suggestions.length > 0 && !props.valueClass) {
                 setSuggestionType(suggestions[0]);
                 confirmConversion.current.show();
             } else {
-                props.commitChangeLabel(draftLabel, getDataType(draftDataType));
+                props.commitChangeLabel(props.draftLabel, props.getDataType(props.draftDataType));
                 dispatch(toggleEditValue({ id: props.id }));
             }
         }
@@ -110,23 +62,23 @@ export default function ValueItemTemplate(props) {
 
     const acceptSuggestion = () => {
         confirmConversion.current.hide();
-        props.commitChangeLabel(draftLabel, suggestionType.type);
-        setDraftDataType(suggestionType.type);
+        props.commitChangeLabel(props.draftLabel, suggestionType.type);
+        props.setDraftDataType(suggestionType.type);
         dispatch(toggleEditValue({ id: props.id }));
     };
 
     const rejectSuggestion = () => {
-        props.commitChangeLabel(draftLabel, getDataType(draftDataType));
+        props.commitChangeLabel(props.draftLabel, props.getDataType(props.draftDataType));
         dispatch(toggleEditValue({ id: props.id }));
     };
 
     useEffect(() => {
         setFormFeedback(null);
         setIsValid(true);
-        if (draftDataType === 'xsd:boolean') {
-            setDraftLabel(v => Boolean(v).toString());
+        if (props.draftDataType === 'xsd:boolean') {
+            props.setDraftLabel(v => Boolean(v).toString());
         }
-    }, [draftDataType]);
+    }, [props, props.draftDataType]);
 
     return (
         <ValueItemStyle>
@@ -183,7 +135,7 @@ export default function ValueItemTemplate(props) {
                                     <StatementOptionButton
                                         title="Edit value"
                                         icon={faPen}
-                                        action={isInlineResource ? props.handleOnClick : () => dispatch(toggleEditValue({ id: props.id }))}
+                                        action={props.isInlineResource ? props.handleOnClick : () => dispatch(toggleEditValue({ id: props.id }))}
                                     />
                                 )}
 
@@ -204,6 +156,8 @@ export default function ValueItemTemplate(props) {
                                     action={props.handleDeleteValue}
                                     onVisibilityChange={disable => setDisableHover(disable)}
                                 />
+
+                                {props.resource && <InfoTippy id={props.id} />}
                             </>
                         )}
                     </div>
@@ -211,14 +165,14 @@ export default function ValueItemTemplate(props) {
             ) : (
                 <div>
                     <InputGroup size="sm " className="d-flex">
-                        {!valueClass && props.value.type === ENTITIES.LITERAL && (
-                            <DatatypeSelector entity={props.value.type} valueType={draftDataType} setValueType={setDraftDataType} />
+                        {!props.valueClass && props.value.type === ENTITIES.LITERAL && (
+                            <DatatypeSelector entity={props.value.type} valueType={props.draftDataType} setValueType={props.setDraftDataType} />
                         )}
                         <InputField
-                            valueClass={valueClass}
-                            inputValue={draftLabel}
-                            setInputValue={setDraftLabel}
-                            inputDataType={draftDataType}
+                            valueClass={props.valueClass}
+                            inputValue={props.draftLabel}
+                            setInputValue={props.setDraftLabel}
+                            inputDataType={props.draftDataType}
                             onKeyDown={e => (e.keyCode === 13 || e.keyCode === 27) && e.target.blur()} // stop editing on enter and escape
                             //onBlur={() => onSubmit()}
                             isValid={isValid}
@@ -250,7 +204,7 @@ export default function ValueItemTemplate(props) {
     );
 }
 
-ValueItemTemplate.propTypes = {
+ValueItemView.propTypes = {
     id: PropTypes.string.isRequired,
     value: PropTypes.object.isRequired,
     resource: PropTypes.object,
@@ -258,9 +212,16 @@ ValueItemTemplate.propTypes = {
     showHelp: PropTypes.bool,
     enableEdit: PropTypes.bool.isRequired,
     predicate: PropTypes.object,
-    components: PropTypes.array.isRequired,
     commitChangeLabel: PropTypes.func.isRequired,
     handleDatasetClick: PropTypes.func.isRequired,
     handleDeleteValue: PropTypes.func.isRequired,
-    getLabel: PropTypes.func.isRequired
+    getLabel: PropTypes.func.isRequired,
+    schema: PropTypes.object,
+    getDataType: PropTypes.func,
+    draftLabel: PropTypes.string.isRequired,
+    draftDataType: PropTypes.string.isRequired,
+    setDraftLabel: PropTypes.func,
+    setDraftDataType: PropTypes.func,
+    valueClass: PropTypes.object,
+    isInlineResource: PropTypes.bool
 };

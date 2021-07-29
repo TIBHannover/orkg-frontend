@@ -1,21 +1,10 @@
 import { useState } from 'react';
-import {
-    getComponentsByResourceIDAndPredicateID,
-    canAddValue as canAddValueAction,
-    canDeleteProperty as canDeletePropertyAction
-} from 'actions/statementBrowser';
+import { canAddValue as canAddValueAction, canDeleteProperty as canDeletePropertyAction } from 'actions/statementBrowser';
 import classNames from 'classnames';
 import { useDispatch, useSelector } from 'react-redux';
 
 function useStatementItem(props) {
     const dispatch = useDispatch();
-    const components = useSelector(state =>
-        getComponentsByResourceIDAndPredicateID(
-            state,
-            props.resourceId ? props.resourceId : state.statementBrowser.selectedResource,
-            props.property.existingPredicateId
-        )
-    );
     const canAddValue = useSelector(state =>
         canAddValueAction(state, props.resourceId ? props.resourceId : state.statementBrowser.selectedResource, props.id)
     );
@@ -37,7 +26,6 @@ function useStatementItem(props) {
         dispatch,
         setDisableHover,
         values,
-        components,
         canAddValue
     };
 }

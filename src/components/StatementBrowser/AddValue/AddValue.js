@@ -48,7 +48,6 @@ const AddValue = props => {
                 propertyId={props.propertyId}
                 newResources={newResources}
                 handleAddValue={handleAddValue}
-                components={props.components}
                 isDisabled={props.isDisabled}
                 isLiteral={isLiteralField}
                 valueClass={valueClass}

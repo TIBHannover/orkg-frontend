@@ -16,16 +16,9 @@ import useStatementItemTemplate from './hooks/useStatementItemTemplate';
 import ROUTES from 'constants/routes.js';
 
 export default function StatementItemTemplate(props) {
-    const {
-        propertiesAsLinks,
-        propertyOptionsClasses,
-        canDeleteProperty,
-        dispatch,
-        setDisableHover,
-        values,
-        components,
-        canAddValue
-    } = useStatementItemTemplate(props);
+    const { propertiesAsLinks, propertyOptionsClasses, canDeleteProperty, dispatch, setDisableHover, values, canAddValue } = useStatementItemTemplate(
+        props
+    );
 
     return (
         <StatementsGroupStyle tag="div" enableEdit={props.enableEdit} className={`${props.inTemplate ? 'inTemplate' : 'noTemplate'}`}>
@@ -114,7 +107,6 @@ export default function StatementItemTemplate(props) {
                                         propertyId={props.id}
                                         contextStyle="Template"
                                         showHelp={props.showValueHelp && index === 0 ? true : false}
-                                        components={components}
                                     />
                                 );
                             })}
@@ -126,7 +118,6 @@ export default function StatementItemTemplate(props) {
                         {props.enableEdit && (
                             <AddValue
                                 isDisabled={!canAddValue}
-                                components={components}
                                 contextStyle="Template"
                                 propertyId={props.id}
                                 resourceId={props.resourceId}
