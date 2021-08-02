@@ -39,7 +39,7 @@ const DATA_TYPES = [
         weight: 1
     },
     { name: 'Date', type: 'xsd:date', _class: ENTITIES.LITERAL, schema: Joi.date(), inputFormType: 'date', weight: 1 },
-    { name: 'URI', type: 'xsd:anyURI', _class: ENTITIES.LITERAL, schema: Joi.string().uri(), inputFormType: 'text', weight: 1 }
+    { name: 'URL', type: 'xsd:anyURI', _class: ENTITIES.LITERAL, schema: Joi.string().uri(), inputFormType: 'text', weight: 1 }
 ];
 
 export const getConfigByType = type => {

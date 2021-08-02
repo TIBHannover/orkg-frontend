@@ -133,7 +133,7 @@ function TemplateComponentValue(props) {
                     </>
                 )}
 
-                {props.value && ['Number', 'String'].includes(props.value.id) && (
+                {props.value && ['Number', 'Integer', 'String'].includes(props.value.id) && (
                     <ValidationRules validationRules={props.validationRules} id={props.id} value={props.value} enableEdit={props.enableEdit} />
                 )}
             </div>

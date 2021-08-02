@@ -77,7 +77,7 @@ export default function ValueItemTemplate(props) {
     });
 
     const getSchema = () => {
-        if (valueClass && ['Date', 'Number', 'String'].includes(valueClass.id)) {
+        if (valueClass && ['Date', 'Number', 'String', 'Boolean', 'Integer', 'URI'].includes(valueClass.id)) {
             let component;
             if (props.components && props.components.length > 0) {
                 component = props.components[0];
@@ -108,8 +108,14 @@ export default function ValueItemTemplate(props) {
                     return MISC.DEFAULT_LITERAL_DATATYPE;
                 case 'Number':
                     return 'xsd:decimal';
+                case 'Integer':
+                    return 'xsd:integer';
                 case 'Date':
                     return 'xsd:date';
+                case 'Boolean':
+                    return 'xsd:boolean';
+                case 'URI':
+                    return 'xsd:anyURI';
                 default:
                     return MISC.DEFAULT_LITERAL_DATATYPE;
             }

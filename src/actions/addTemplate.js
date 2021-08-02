@@ -216,7 +216,7 @@ export const saveTemplate = data => {
                 const orderLiteral = await createLiteral(index);
                 promises.push(createResourceStatement(component.id, PREDICATES.TEMPLATE_COMPONENT_ORDER, orderLiteral.id));
                 // save validation rules
-                if (property.value && ['Number', 'String'].includes(property.value.id) && property.validationRules) {
+                if (property.value && ['Number', 'Integer', 'String'].includes(property.value.id) && property.validationRules) {
                     for (const key in property.validationRules) {
                         if (property.validationRules.hasOwnProperty(key)) {
                             if (property.validationRules[key]) {

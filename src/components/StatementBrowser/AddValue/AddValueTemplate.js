@@ -73,7 +73,7 @@ export default function AddValueTemplate(props) {
     };
 
     const getSchema = () => {
-        if (props.valueClass && ['Date', 'Number', 'String'].includes(props.valueClass.id)) {
+        if (props.valueClass && ['Date', 'Number', 'String', 'Boolean', 'Integer', 'URI'].includes(props.valueClass.id)) {
             let component;
             if (props.components && props.components.length > 0) {
                 component = props.components[0];
@@ -103,8 +103,14 @@ export default function AddValueTemplate(props) {
                     return MISC.DEFAULT_LITERAL_DATATYPE;
                 case 'Number':
                     return 'xsd:decimal';
+                case 'Integer':
+                    return 'xsd:integer';
                 case 'Date':
                     return 'xsd:date';
+                case 'Boolean':
+                    return 'xsd:boolean';
+                case 'URI':
+                    return 'xsd:anyURI';
                 default:
                     return MISC.DEFAULT_LITERAL_DATATYPE;
             }

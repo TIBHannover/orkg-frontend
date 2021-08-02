@@ -11,6 +11,9 @@ export default function InputField(props) {
             case 'Date':
                 inputFormType = 'date';
                 break;
+            case 'Boolean':
+                inputFormType = 'boolean';
+                break;
             default:
                 inputFormType = 'text';
                 break;

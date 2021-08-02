@@ -13,6 +13,15 @@ export default function validationSchema(component) {
             case 'String':
                 schema = Joi.string();
                 break;
+            case 'Integer':
+                schema = Joi.number().integer();
+                break;
+            case 'Boolean':
+                schema = Joi.boolean();
+                break;
+            case 'URI':
+                schema = Joi.string().uri();
+                break;
             default:
                 break;
         }
