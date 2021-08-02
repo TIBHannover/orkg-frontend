@@ -76,9 +76,7 @@ function Property(props) {
                             <div className="mb-2">
                                 <div className="pb-2 mb-3">
                                     <h3 className="" style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
-                                        {label ? (
-                                            { label }
-                                        ) : (
+                                        {label || (
                                             <i>
                                                 <small>No label</small>
                                             </i>
