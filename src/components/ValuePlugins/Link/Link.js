@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import { renderToString } from 'react-dom/server';
+import REGEX from 'constants/regex';
 import ReactStringReplace from 'react-string-replace';
 class Link extends Component {
     constructor(props) {
@@ -12,6 +13,15 @@ class Link extends Component {
         this.supportedValues = new RegExp(expression);
     }
 
+    doesMatch = label => {
+        const excludeMatch =
+            label.match(new RegExp(REGEX.TIB_URL)) ||
+            label.match(new RegExp(REGEX.YOUTUBE_URL)) ||
+            label.match(new RegExp(REGEX.DAILYMOTION_URL)) ||
+            label.match(new RegExp(REGEX.VIMEO_URL)) ||
+            label.match(new RegExp(REGEX.IMAGE_URL));
+        return label.match(this.supportedValues) && !excludeMatch;
+    };
     render() {
         const label = this.props.children;
         const labelToText = renderToString(label);
@@ -20,7 +30,7 @@ class Link extends Component {
             return '';
         }
 
-        if (this.props.type === 'literal' && labelToText.match(this.supportedValues)) {
+        if (this.props.type === 'literal' && this.doesMatch(labelToText)) {
             return ReactStringReplace(labelToText, this.supportedValues, (match, i) => {
                 return (
                     <a key={i} href={match.indexOf('://') === -1 ? 'http://' + match : match} target="_blank" rel="noopener noreferrer">
