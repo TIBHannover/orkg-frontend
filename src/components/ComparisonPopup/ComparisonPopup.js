@@ -173,10 +173,7 @@ class ComparisonPopup extends Component {
                                         condition={contributionAmount > 1}
                                         wrapper={children => <Link to={comparisonUrl}>{children}</Link>}
                                     >
-                                        <Tippy
-                                            disabled={contributionAmount > 1}
-                                            content="Please select a minimum of two research contributions to compare on."
-                                        >
+                                        <Tippy disabled={contributionAmount > 1} content="Please select at least two contributions">
                                             <span>
                                                 <StartComparison disabled={contributionAmount <= 1} color="primary-darker" className="mb-2">
                                                     Start comparison
