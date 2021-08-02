@@ -9,18 +9,16 @@ import ImageAsFigure from './Images/ImagesAsFiguers';
 
 class ValuePlugins extends Component {
     render() {
-        // Because videos are links, Video needs to be inside Link
+        // Link exclude videos and images pattern
         return (
             <Boolean>
                 <Latex type={this.props.type}>
                     <Doi type={this.props.type}>
-                        <Link type={this.props.type}>
-                            <Video type={this.props.type} options={this.props.options}>
-                                <ImageAsFigure type={this.props.type} options={this.props.options}>
-                                    {this.props.children}
-                                </ImageAsFigure>
-                            </Video>
-                        </Link>
+                        <Video type={this.props.type} options={this.props.options}>
+                            <ImageAsFigure type={this.props.type} options={this.props.options}>
+                                <Link type={this.props.type}>{this.props.children}</Link>
+                            </ImageAsFigure>
+                        </Video>
                     </Doi>
                 </Latex>
             </Boolean>
