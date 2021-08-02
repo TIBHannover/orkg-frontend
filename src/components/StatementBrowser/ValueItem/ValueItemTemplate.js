@@ -246,7 +246,9 @@ export default function ValueItemTemplate(props) {
                             <ValuePlugins type="literal">{props.value.label !== '' ? props.value.label.toString() : <i>No label</i>}</ValuePlugins>
                             {isCurationAllowed && (
                                 <small>
-                                    <Badge className="ml-2">{props.value.datatype}</Badge>
+                                    <Badge color="light" className="ml-2">
+                                        {props.value.datatype}
+                                    </Badge>
                                 </small>
                             )}
                         </div>
