@@ -5,7 +5,7 @@ export default function validationSchema(component) {
     if (component.value) {
         switch (component.value.id) {
             case 'Date':
-                schema = Joi.date();
+                schema = Joi.date().iso();
                 break;
             case 'Number':
                 schema = Joi.number();

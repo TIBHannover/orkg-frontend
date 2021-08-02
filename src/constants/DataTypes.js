@@ -38,7 +38,7 @@ const DATA_TYPES = [
         inputFormType: 'boolean',
         weight: 1
     },
-    { name: 'Date', type: 'xsd:date', _class: ENTITIES.LITERAL, schema: Joi.date(), inputFormType: 'date', weight: 1 },
+    { name: 'Date', type: 'xsd:date', _class: ENTITIES.LITERAL, schema: Joi.date().iso(), inputFormType: 'date', weight: 1 },
     { name: 'URL', type: 'xsd:anyURI', _class: ENTITIES.LITERAL, schema: Joi.string().uri(), inputFormType: 'text', weight: 1 }
 ];
 
