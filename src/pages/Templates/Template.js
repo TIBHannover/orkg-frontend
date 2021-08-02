@@ -1,20 +1,5 @@
 import { Component } from 'react';
-import {
-    Container,
-    Button,
-    Row,
-    Col,
-    TabContent,
-    TabPane,
-    Nav,
-    NavItem,
-    NavLink,
-    ButtonGroup,
-    ButtonDropdown,
-    DropdownToggle,
-    DropdownMenu,
-    DropdownItem
-} from 'reactstrap';
+import { Button, Row, Col, TabContent, TabPane, Nav, NavItem, NavLink, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import GeneralSettings from 'components/Templates/Tabs/GeneralSettings/GeneralSettings';
 import TemplateEditorHeaderBar from 'components/Templates/TemplateEditorHeaderBar';
 import ComponentsTab from 'components/Templates/Tabs/ComponentsTab/ComponentsTab';

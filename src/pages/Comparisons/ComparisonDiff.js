@@ -12,7 +12,7 @@ import ReactDiffViewer from 'react-diff-viewer';
 import { useHistory, useParams } from 'react-router-dom';
 import { useLocation } from 'react-use';
 import { getComparisonData } from 'utils';
-import { Alert, Button, ButtonGroup, Container } from 'reactstrap';
+import { Alert, Button } from 'reactstrap';
 import queryString from 'query-string';
 import { getStatementsBySubject } from 'services/backend/statements';
 import { getResource } from 'services/backend/resources';

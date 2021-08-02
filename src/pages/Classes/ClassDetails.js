@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Container, Table, ButtonGroup, Button } from 'reactstrap';
+import { Container, Table, Button } from 'reactstrap';
 import { getStatementsByObjectAndPredicate } from 'services/backend/statements';
 import { getClassById } from 'services/backend/classes';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';

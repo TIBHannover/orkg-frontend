@@ -5,7 +5,7 @@ import ContentLoader from 'react-content-loader';
 import PropTypes from 'prop-types';
 import { useCallback, useEffect, useState } from 'react';
 import { usePrevious } from 'react-use';
-import { ButtonGroup, Container, ListGroup } from 'reactstrap';
+import { Container, ListGroup } from 'reactstrap';
 import TitleBar from 'components/TitleBar/TitleBar';
 
 const ListPage = ({ label, resourceClass, renderListItem, buttons, fetchItems, boxShadow, pageSize = 25 }) => {

@@ -19,7 +19,9 @@ const theme = {
     borderRadius: '6px',
     themeColors: {
         primaryDarker: 'rgb(198, 29, 29)',
-        secondaryDarker: 'rgb(80, 85, 101)'
+        secondaryDarker: 'rgb(80, 85, 101)',
+        lightDarker: 'rgb(219, 221, 229)',
+        body: 'rgb(79, 79, 79)'
     },
     formFeedbackFontSize: '90%',
     inputBorderRadius: '6px',
@@ -41,7 +43,15 @@ const theme = {
     badgeFontWeight: 500,
     badgePaddingY: '0.3rem',
     badgePaddingX: '0.8rem',
-    listGroupBorderColor: 'rgba(0, 0, 0, 0.125)'
+    listGroupBorderColor: 'rgba(0, 0, 0, 0.125)',
+    gridBreakpoints: {
+        xs: 0,
+        sm: '576px',
+        md: '768px',
+        lg: '992px',
+        xl: '1200px',
+        xxl: '1400px'
+    }
 };
 
 export default theme;

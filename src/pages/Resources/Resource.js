@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { Container, Button, FormGroup, Label, FormText, ButtonGroup, Alert } from 'reactstrap';
+import { Container, Button, FormGroup, Label, FormText, Alert } from 'reactstrap';
 import { getClassById } from 'services/backend/classes';
 import { updateResourceClasses as updateResourceClassesNetwork } from 'services/backend/resources';
 import { getResource } from 'services/backend/resources';

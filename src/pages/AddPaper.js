@@ -83,15 +83,6 @@ const AnimationContainer = styled(CSSTransition)`
     }
 `;
 
-const PaperTitle = styled.div`
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    margin-right: 20px;
-    color: #62687d;
-    margin-top: 5px;
-`;
-
 class AddPaper extends Component {
     constructor(props) {
         super(props);

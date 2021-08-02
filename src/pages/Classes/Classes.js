@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Container, ListGroup, ListGroupItem, ButtonGroup } from 'reactstrap';
+import { Container, ListGroup, ListGroupItem } from 'reactstrap';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import ShortRecord from 'components/ShortRecord/ShortRecord';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';

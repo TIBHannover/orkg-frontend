@@ -6,7 +6,7 @@ import { Button, ButtonGroup, Container } from 'reactstrap';
 import styled from 'styled-components';
 
 const ContainerStyled = styled(Container)`
-    @media (max-width: 480px) {
+    @media (max-width: ${props => props.theme.gridBreakpoints.sm}) {
         margin-top: 1rem !important;
         flex-wrap: wrap;
     }
@@ -14,10 +14,11 @@ const ContainerStyled = styled(Container)`
 const ButtonGroupStyled = styled(ButtonGroup)`
     margin-left: auto;
 
-    @media (max-width: 480px) {
+    @media (max-width: ${props => props.theme.gridBreakpoints.sm}) {
         display: none;
         flex-direction: column;
         width: 100%;
+        margin-top: 0.2rem;
 
         > {
             margin-right: 0 !important;
@@ -54,7 +55,7 @@ const MenuButton = styled(Button)`
     flex-grow: 0;
     margin-left: auto;
 
-    @media (max-width: 480px) {
+    @media (max-width: ${props => props.theme.gridBreakpoints.sm}) {
         display: block;
     }
 `;

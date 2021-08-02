@@ -17,7 +17,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import env from '@beam-australia/react-env';
-import { Alert, Button, ButtonGroup, Container } from 'reactstrap';
+import { Alert, Button, Container } from 'reactstrap';
 import TitleBar from 'components/TitleBar/TitleBar';
 
 const ContributionEditor = () => {

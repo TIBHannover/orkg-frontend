@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { Container, Row, Col, Button, Card, CardBody } from 'reactstrap';
-import { ButtonGroup } from 'reactstrap';
 import { getOrganization } from 'services/backend/organizations';
 import InternalServerError from 'pages/InternalServerError';
 import Members from 'components/Organization/Members';

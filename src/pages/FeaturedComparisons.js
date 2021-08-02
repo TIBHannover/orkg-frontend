@@ -1,5 +1,5 @@
 import { Fragment, useState, useEffect, useCallback } from 'react';
-import { Container, Alert, Row, ButtonGroup } from 'reactstrap';
+import { Container, Alert, Row } from 'reactstrap';
 import ROUTES from 'constants/routes';
 import FeaturedComparisonsItem from 'components/FeaturedComparisons/FeaturedComparisonsItem';
 import { getStatementsBySubjects } from 'services/backend/statements';

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { getStatementsBySubjects, getStatementsByObjectAndPredicate } from 'services/backend/statements';
 import { getResourcesByClass } from 'services/backend/resources';
-import { Container, ButtonGroup, ListGroup } from 'reactstrap';
+import { Container, ListGroup } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { getVisualizationData } from 'utils';

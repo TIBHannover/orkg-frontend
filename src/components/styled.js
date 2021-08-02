@@ -86,6 +86,10 @@ export const InputStyled = styled.input`
     animation: width 0.2s normal forwards ease-in-out;
     outline: 0;
 
+    @media (max-width: ${props => props.theme.gridBreakpoints.sm}) {
+        width: 100% !important;
+    }
+
     &::placeholder {
         color: #fff;
         opacity: 0.6;
