@@ -141,8 +141,12 @@ class Observatories extends Component {
                     </p>
                     <p>
                         Further information about observatories can be also found in the{' '}
-                        <a href="https://gitlab.com/TIBHannover/orkg/orkg-frontend/-/wikis/Observatories" target="_blank" rel="noopener noreferrer">
-                            ORKG wiki
+                        <a
+                            href="https://www.orkg.org/orkg/help-center/article/8/Observatories_for_specific_research_fields"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            ORKG help center
                         </a>
                         .
                     </p>

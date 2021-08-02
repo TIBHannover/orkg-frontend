@@ -835,6 +835,47 @@ function shouldFetchStatementsForResource(state, resourceId, depth) {
     }
 }
 
+/**
+ * Get the list of property id of a resource by existing predicate id
+ *
+ * @param {Object} state - Current state of the Store
+ * @param {String} resourceId - Resource ID
+ * @param {String} existingPredicateId - existing predicate ID
+ * @return {String} - property id
+ */
+export function getPropertyIdByByResourceAndPredicateId(state, resourceId, existingPredicateId) {
+    if (!resourceId) {
+        return null;
+    }
+    const resource = state.statementBrowser.resources.byId[resourceId];
+    if (!resource) {
+        return null;
+    }
+
+    const propertyIds = resource.propertyIds ?? [];
+    let propertyId;
+    if (propertyIds?.length > 0) {
+        propertyId = propertyIds.find(propertyId => {
+            const property = state.statementBrowser.properties.byId[propertyId];
+            return property.existingPredicateId === existingPredicateId;
+        });
+        return propertyId ?? null; // return a list without null values (predicates that aren't in the database)
+    } else {
+        return null;
+    }
+}
+
+/**
+ * Check if it should add a statement for resources
+ *
+ * @param {Object} state - Current state of the Store
+ * @param {String} statementId - Statement ID
+ * @return {Boolean} if the statement should be added or not
+ */
+function statementExists(state, statementId) {
+    return !!state.statementBrowser.values.allIds.find(id => state.statementBrowser.values.byId[id].statementId === statementId);
+}
+
 // TODO: support literals (currently not working in backend)
 /**
  * Fetch statements of a resource
@@ -933,8 +974,6 @@ export const fetchStatementsForResource = data => {
                         });
 
                         for (const statement of resourceStatements) {
-                            let propertyId = guid();
-                            const valueId = guid();
                             // filter out research problem to show differently
                             if (isContribution && statement.predicate.id === PREDICATES.HAS_RESEARCH_PROBLEM) {
                                 researchProblems.push({
@@ -943,8 +982,12 @@ export const fetchStatementsForResource = data => {
                                     statementId: statement.id
                                 });
                             } else {
+                                // Check whether there already exist a property for this, then combine
+                                let propertyId = getPropertyIdByByResourceAndPredicateId(getState(), resourceId, statement.predicate.id);
                                 // check whether there already exist a property for this, then combine
-                                if (existingProperties.filter(e => e.existingPredicateId === statement.predicate.id).length === 0) {
+                                if (!propertyId) {
+                                    // Create the property
+                                    propertyId = guid();
                                     dispatch(
                                         createProperty({
                                             propertyId: propertyId,
@@ -955,32 +998,31 @@ export const fetchStatementsForResource = data => {
                                             isTemplate: false
                                         })
                                     );
-
-                                    existingProperties.push({
-                                        existingPredicateId: statement.predicate.id,
-                                        propertyId
-                                    });
-                                } else {
-                                    propertyId = existingProperties.filter(e => e.existingPredicateId === statement.predicate.id)[0].propertyId;
+                                }
+                                let addStatement = Promise.resolve();
+                                if (!statementExists(getState(), statement.id)) {
+                                    // add the value if the statement doesn't exist
+                                    const valueId = guid();
+                                    addStatement = dispatch(
+                                        createValue({
+                                            valueId: valueId,
+                                            existingResourceId: statement.object.id,
+                                            propertyId: propertyId,
+                                            label: statement.object.label,
+                                            type: statement.object._class === 'resource' ? 'object' : statement.object._class, // TODO: change 'object' to 'resource' (wrong term used here, since it is always an object)
+                                            classes: statement.object.classes ? statement.object.classes : [],
+                                            ...(statement.object._class === 'literal' && {
+                                                datatype: statement.object.datatype ?? MISC.DEFAULT_LITERAL_DATATYPE
+                                            }),
+                                            isExistingValue: true,
+                                            existingStatement: true,
+                                            statementId: statement.id,
+                                            shared: statement.object.shared
+                                        })
+                                    );
                                 }
 
-                                dispatch(
-                                    createValue({
-                                        valueId: valueId,
-                                        existingResourceId: statement.object.id,
-                                        propertyId: propertyId,
-                                        label: statement.object.label,
-                                        type: statement.object._class === 'resource' ? 'object' : statement.object._class, // TODO: change 'object' to 'resource' (wrong term used here, since it is always an object)
-                                        classes: statement.object.classes ? statement.object.classes : [],
-                                        ...(statement.object._class === 'literal' && {
-                                            datatype: statement.object.datatype ?? MISC.DEFAULT_LITERAL_DATATYPE
-                                        }),
-                                        isExistingValue: true,
-                                        existingStatement: true,
-                                        statementId: statement.id,
-                                        shared: statement.object.shared
-                                    })
-                                ).then(() => {
+                                addStatement.then(() => {
                                     if (depth >= 1 && statement.object._class === 'resource') {
                                         dispatch(
                                             fetchStatementsForResource({
