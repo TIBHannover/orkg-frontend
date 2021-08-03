@@ -1,8 +1,21 @@
-# Changelog
-
 All notable changes to the ORKG will be documented in this file. The format is based on [Keep a
 Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
+
+---
+## [V0.47](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.46...V0.47) - 2021-08-03
+
+### Changes
+
+- Replace title about page [`#655`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/655)
+- fix: wrap top menu to prevent horizontal scrolling on small screens [`#654`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/654)
+- feat(SB): Select datatype of literal [`#647`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/647)
+- fix(Header): improve responsiveness [`#657`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/657)
+- feat(ValuePlugins): support inline Latex and AsciiMath [`#646`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/646)
+- UX(Comparison popup): Start comparison only if two contributions are selected [`#652`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/652)
+- style: Enhance similar contributions elements in small screens [`#653`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/653)
+- fix: Exclude videos and images patterns from link ValuePlugin [`#651`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/651)
+- chore: remove unused packages [`#650`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/650)
 
 ---
 ## [V0.46](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.45...V0.46) - 2021-07-26
