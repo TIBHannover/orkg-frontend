@@ -444,7 +444,7 @@ class Header extends Component {
                                     </DropdownToggle>
                                     <DropdownMenu>
                                         <DropdownItem tag={RouterNavLink} exact to={reverse(ROUTES.ABOUT, {})} onClick={this.closeMenu}>
-                                            About ORKG
+                                            About
                                         </DropdownItem>
                                         <DropdownItem tag={RouterNavLink} exact to={ROUTES.HELP_CENTER} onClick={this.closeMenu}>
                                             Help center

@@ -69,7 +69,7 @@ const About = () => {
         <div>
             {!isLoading && params?.id && page?.title && <CheckSlug label={page.title} route={ROUTES.ABOUT} />}
 
-            <TitleBar>About ORKG</TitleBar>
+            <TitleBar>About</TitleBar>
 
             <Container className="box rounded pt-4 pb-4 pl-5 pr-5">
                 {!isLoadingMenu && menuItems.length > 0 && (
