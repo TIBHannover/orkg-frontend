@@ -2,6 +2,7 @@ import CheckSlug from 'components/CheckSlug/CheckSlug';
 import PageContentLoader from 'components/Page/PageContentLoader';
 import usePage from 'components/Page/usePage';
 import { CmsPage } from 'components/styled';
+import TitleBar from 'components/TitleBar/TitleBar';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import NotFound from 'pages/NotFound';
@@ -35,9 +36,7 @@ const HelpCenterArticle = () => {
         <div>
             {!isLoading && params?.id && page?.title && <CheckSlug label={page.title} route={ROUTES.HELP_CENTER_ARTICLE} />}
 
-            <Container>
-                <h1 className="h4 mt-4 mb-4">Help center</h1>
-            </Container>
+            <TitleBar>Help center</TitleBar>
 
             <Container className="box rounded pt-4 pb-4 pl-5 pr-5">
                 {isLoading && <PageContentLoader />}

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { getStatementsBySubjects } from 'services/backend/statements';
 import { getResourcesByClass } from 'services/backend/resources';
-import { Container, ButtonGroup, ListGroup } from 'reactstrap';
+import { Container, ListGroup } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { getComparisonData, groupVersionsOfComparisons } from 'utils';
@@ -9,6 +9,7 @@ import { find, flatten } from 'lodash';
 import ComparisonCard from 'components/ComparisonCard/ComparisonCard';
 import { CLASSES } from 'constants/graphSettings';
 import HeaderSearchButton from 'components/HeaderSearchButton/HeaderSearchButton';
+import TitleBar from 'components/TitleBar/TitleBar';
 
 const Comparisons = () => {
     const pageSize = 15;
@@ -70,17 +71,16 @@ const Comparisons = () => {
 
     return (
         <>
-            <Container className="d-flex align-items-center">
-                <div className="d-flex flex-grow-1 mt-4 mb-4">
-                    <h1 className="h4">View all published comparisons</h1>
-                    <div className="text-muted ml-3 mt-1">
+            <TitleBar
+                titleAddition={
+                    <div className="text-muted mt-1">
                         {totalElements === 0 && isNextPageLoading ? <Icon icon={faSpinner} spin /> : totalElements} comparisons
                     </div>
-                </div>
-                <ButtonGroup>
-                    <HeaderSearchButton placeholder="Search comparisons..." type={CLASSES.COMPARISON} />
-                </ButtonGroup>
-            </Container>
+                }
+                buttonGroup={<HeaderSearchButton placeholder="Search comparisons..." type={CLASSES.COMPARISON} />}
+            >
+                View all published comparisons
+            </TitleBar>
 
             <Container className="p-0">
                 <ListGroup flush className="box rounded" style={{ overflow: 'hidden' }}>

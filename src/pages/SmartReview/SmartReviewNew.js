@@ -2,6 +2,7 @@ import { faQuestionCircle, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import useSave from 'components/SmartReview/hooks/useSave';
+import TitleBar from 'components/TitleBar/TitleBar';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import React, { useEffect, useState } from 'react';
@@ -29,11 +30,7 @@ const SmartReviewNew = () => {
 
     return (
         <>
-            <Container>
-                <div className="d-flex align-items-center">
-                    <h1 className="h4 mt-4 mb-4 flex-grow-1">Create SmartReview</h1>
-                </div>
-            </Container>
+            <TitleBar>Create SmartReview</TitleBar>
             <Container className="box rounded pt-4 pb-4 pl-5 pr-5">
                 <p>
                     SmartReviews are dynamic, community maintained scholarly articles and are especially suitable for survey papers. Before creating

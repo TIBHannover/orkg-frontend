@@ -7,6 +7,7 @@ import { toast } from 'react-toastify';
 import { getStats } from 'services/backend/stats';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
+import TitleBar from 'components/TitleBar/TitleBar';
 
 const Stats = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -28,9 +29,7 @@ const Stats = () => {
 
     return (
         <div>
-            <Container>
-                <h1 className="h4 mt-4 mb-4">General statistics</h1>
-            </Container>
+            <TitleBar>General statistics</TitleBar>
 
             <Container>
                 <Row>

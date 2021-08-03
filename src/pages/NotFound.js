@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import ROUTES from 'constants/routes.js';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faBug } from '@fortawesome/free-solid-svg-icons';
+import TitleBar from 'components/TitleBar/TitleBar';
 
 class NotFound extends Component {
     componentDidMount = () => {
@@ -13,9 +14,7 @@ class NotFound extends Component {
     render() {
         return (
             <div>
-                <Container className="p-0">
-                    <h1 className="h4 mt-4 mb-4">An error has occurred</h1>
-                </Container>
+                <TitleBar>An error has occurred</TitleBar>
                 <Container className="box rounded pt-4 pb-4 pl-5 pr-5">
                     <div className="container">
                         <div className="row justify-content-center">

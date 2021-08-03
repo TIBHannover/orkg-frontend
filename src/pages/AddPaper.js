@@ -18,6 +18,8 @@ import { openTour, closeTour, blockNavigation, loadPaperData } from '../actions/
 import { Prompt } from 'react-router';
 import GizmoGraphViewModal from '../components/ViewPaper/GraphView/GizmoGraphViewModal';
 import env from '@beam-australia/react-env';
+import TitleBar from 'components/TitleBar/TitleBar';
+import { SubTitle, SubtitleSeparator } from 'components/styled';
 
 const Help = styled.div`
     box-sizing: border-box;
@@ -79,24 +81,6 @@ const AnimationContainer = styled(CSSTransition)`
         opacity: 1;
         transition: 1s opacity;
     }
-`;
-
-const SubtitleSeparator = styled.div`
-    background: ${props => props.theme.secondary};
-    width: 2px;
-    height: 30px;
-    margin: 0 15px;
-    content: '';
-    display: block;
-    opacity: 0.7;
-`;
-
-const PaperTitle = styled.div`
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    margin-right: 20px;
-    color: #62687d;
 `;
 
 class AddPaper extends Component {
@@ -194,38 +178,32 @@ class AddPaper extends Component {
         return (
             <div>
                 <Prompt when={this.props.addPaper.shouldBlockNavigation} message="You have unsaved changes, are you sure you want to leave?" />
-                <Container className="p-0 mt-4 mb-4 d-flex align-items-center">
-                    <h1 className="h4 flex-shrink-0 mb-0">Add paper</h1>
 
-                    {this.props.currentStep > 1 && (
-                        <>
-                            <SubtitleSeparator />
+                <TitleBar
+                    titleAddition={
+                        this.props.currentStep > 1 && (
+                            <>
+                                <SubtitleSeparator />
+                                <SubTitle>{this.props.addPaper.title}</SubTitle>
+                            </>
+                        )
+                    }
+                    buttonGroup={
+                        <Button
+                            color="secondary"
+                            size="sm"
+                            className="flex-shrink-0"
+                            style={{ marginLeft: 'auto' }}
+                            onClick={() => this.toggle('showGraphModal')}
+                        >
+                            <Icon icon={faProjectDiagram} className="mr-1" /> View graph
+                        </Button>
+                    }
+                    wrap={false}
+                >
+                    Add paper
+                </TitleBar>
 
-                            <PaperTitle>{this.props.addPaper.title}</PaperTitle>
-                        </>
-                    )}
-
-                    {/*<Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggleDropdown} className="mb-4 mt-4 float-right" style={{ marginLeft: 'auto' }}>
-                        <DropdownToggle color="secondary" size="sm">
-                            <Icon icon={faBars} className="mr-2" /> Options
-                        </DropdownToggle>
-                        <DropdownMenu>
-                            <DropdownItem onClick={() => this.toggle('showGraphModal')}>Show graph visualization</DropdownItem>
-                        </DropdownMenu>
-                    </Dropdown>*/}
-
-                    <Button
-                        color="secondary"
-                        size="sm"
-                        className="flex-shrink-0"
-                        style={{ marginLeft: 'auto' }}
-                        onClick={() => this.toggle('showGraphModal')}
-                    >
-                        <Icon icon={faProjectDiagram} className="mr-1" /> View graph
-                    </Button>
-
-                    <div className="clearfix" />
-                </Container>
                 <Container className="box rounded pt-4 pb-4 pl-md-5 pr-md-5 clearfix ">
                     <ProgressBar currentStep={currentStep} />
 

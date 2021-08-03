@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ButtonDropdown, DropdownToggle, Container, ListGroup, ListGroupItem, DropdownItem, DropdownMenu, ButtonGroup } from 'reactstrap';
+import { ButtonDropdown, DropdownToggle, Container, ListGroup, ListGroupItem, DropdownItem, DropdownMenu } from 'reactstrap';
 import { getStatementsBySubjects } from 'services/backend/statements';
 import { getResourcesByClass } from 'services/backend/resources';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -8,6 +8,7 @@ import PaperCardDynamic from 'components/PaperCard/PaperCardDynamic';
 import { CLASSES } from 'constants/graphSettings';
 import { useSelector } from 'react-redux';
 import HeaderSearchButton from 'components/HeaderSearchButton/HeaderSearchButton';
+import TitleBar from 'components/TitleBar/TitleBar';
 
 const Papers = () => {
     const pageSize = 25;
@@ -98,31 +99,35 @@ const Papers = () => {
 
     return (
         <>
-            <Container className="d-flex align-items-center">
-                <div className="d-flex flex-grow-1 mt-4 mb-4">
-                    <h1 className="h4">View all papers</h1>
-                    <div className="text-muted ml-3 mt-1">
+            <TitleBar
+                titleAddition={
+                    <div className="text-muted mt-1">
                         {totalElements === 0 && isNextPageLoading ? <Icon icon={faSpinner} spin /> : totalElements} papers
                     </div>
-                </div>
-                <ButtonGroup>
-                    {!!user && user.isCurationAllowed && (
-                        <ButtonDropdown size="sm" isOpen={dropdownOpen} toggle={toggle}>
-                            <DropdownToggle caret color="secondary">
-                                {verified === true && 'Verified'}
-                                {verified === false && 'Unverified'}
-                                {verified === null && 'All'}
-                            </DropdownToggle>
-                            <DropdownMenu>
-                                <DropdownItem onClick={e => changeFilter(null)}>All</DropdownItem>
-                                <DropdownItem onClick={e => changeFilter(true)}>Verified</DropdownItem>
-                                <DropdownItem onClick={e => changeFilter(false)}>Unverified</DropdownItem>
-                            </DropdownMenu>
-                        </ButtonDropdown>
-                    )}
-                    {verified === null && <HeaderSearchButton placeholder="Search papers..." type={CLASSES.PAPER} />}
-                </ButtonGroup>
-            </Container>
+                }
+                buttonGroup={
+                    <>
+                        {!!user && user.isCurationAllowed && (
+                            <ButtonDropdown size="sm" isOpen={dropdownOpen} toggle={toggle}>
+                                <DropdownToggle caret color="secondary">
+                                    {verified === true && 'Verified'}
+                                    {verified === false && 'Unverified'}
+                                    {verified === null && 'All'}
+                                </DropdownToggle>
+                                <DropdownMenu>
+                                    <DropdownItem onClick={e => changeFilter(null)}>All</DropdownItem>
+                                    <DropdownItem onClick={e => changeFilter(true)}>Verified</DropdownItem>
+                                    <DropdownItem onClick={e => changeFilter(false)}>Unverified</DropdownItem>
+                                </DropdownMenu>
+                            </ButtonDropdown>
+                        )}
+                        {verified === null && <HeaderSearchButton placeholder="Search papers..." type={CLASSES.PAPER} />}
+                    </>
+                }
+            >
+                View all papers
+            </TitleBar>
+
             <Container className="p-0">
                 <ListGroup flush className="box rounded" style={{ overflow: 'hidden' }}>
                     {paperResources.length > 0 &&

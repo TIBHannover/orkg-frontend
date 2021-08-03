@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { getStatementsBySubjects, getStatementsByObjectAndPredicate } from 'services/backend/statements';
 import { getResourcesByClass } from 'services/backend/resources';
-import { Container, ButtonGroup, ListGroup } from 'reactstrap';
+import { Container, ListGroup } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { getVisualizationData } from 'utils';
@@ -9,6 +9,7 @@ import { find } from 'lodash';
 import VisualizationCard from 'components/VisualizationCard/VisualizationCard';
 import { CLASSES, PREDICATES } from 'constants/graphSettings';
 import HeaderSearchButton from 'components/HeaderSearchButton/HeaderSearchButton';
+import TitleBar from 'components/TitleBar/TitleBar';
 
 const Visualizations = () => {
     const pageSize = 10;
@@ -73,17 +74,16 @@ const Visualizations = () => {
 
     return (
         <>
-            <Container className="d-flex align-items-center">
-                <div className="d-flex flex-grow-1 mt-4 mb-4">
-                    <h1 className="h4">View all published visualizations</h1>
-                    <div className="text-muted ml-3 mt-1">
+            <TitleBar
+                buttonGroup={<HeaderSearchButton placeholder="Search visualizations..." type={CLASSES.VISUALIZATION} />}
+                titleAddition={
+                    <div className="text-muted mt-1">
                         {totalElements === 0 && isNextPageLoading ? <Icon icon={faSpinner} spin /> : totalElements} visualizations
                     </div>
-                </div>
-                <ButtonGroup>
-                    <HeaderSearchButton placeholder="Search visualizations..." type={CLASSES.VISUALIZATION} />
-                </ButtonGroup>
-            </Container>
+                }
+            >
+                View all published visualizations
+            </TitleBar>
 
             <Container className="p-0">
                 <ListGroup flush className="box rounded" style={{ overflow: 'hidden' }}>

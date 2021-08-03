@@ -21,6 +21,10 @@ export const ShareSideBox = styled.div`
     box-shadow: 8px 0px 8px 0px rgba(0, 0, 0, 0.03);
     align-items: center;
     justify-content: center;
+
+    @media (max-width: 650px) {
+        display: none;
+    }
 `;
 
 const ShareLinkMarker = ({ typeOfLink, title }) => {

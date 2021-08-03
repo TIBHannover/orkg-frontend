@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Alert, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Button, ButtonGroup, Badge } from 'reactstrap';
+import { Alert, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Button, Badge } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faEllipsisV, faLightbulb, faHistory, faWindowMaximize, faChartBar, faExternalLinkAlt, faFilter } from '@fortawesome/free-solid-svg-icons';
 import ComparisonLoadingComponent from 'components/Comparison/ComparisonLoadingComponent';
@@ -43,6 +43,7 @@ import { NavLink } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import env from '@beam-australia/react-env';
 import AppliedRule from 'components/Comparison/Filters/AppliedRule';
+import TitleBar from 'components/TitleBar/TitleBar';
 
 function Comparison(props) {
     const {
@@ -207,24 +208,13 @@ function Comparison(props) {
     return (
         <div>
             <Breadcrumbs researchFieldId={metaData?.subject ? metaData?.subject.id : researchField ? researchField.id : null} />
-            <ContainerAnimated className="d-flex align-items-center">
-                <h1 className="h4 mt-4 mb-4 flex-grow-1">
-                    Contribution comparison{' '}
-                    {!isFailedLoadingMetaData && contributionsList.length > 1 && (
-                        <Tippy content="The amount of compared contributions">
-                            <span>
-                                <Badge color="secondary" pill style={{ fontSize: '65%' }}>
-                                    {contributionsList.length}
-                                </Badge>
-                            </span>
-                        </Tippy>
-                    )}
-                </h1>
-
-                {contributionsList.length > 1 && !isLoadingComparisonResult && !isFailedLoadingComparisonResult && (
-                    <div style={{ marginLeft: 'auto' }} className="flex-shrink-0 mt-4">
-                        <ButtonGroup className="float-right mb-4 ml-1">
-                            <Dropdown group isOpen={dropdownDensityOpen} toggle={() => setDropdownDensityOpen(v => !v)} style={{ marginRight: 3 }}>
+            <TitleBar
+                buttonGroup={
+                    contributionsList.length > 1 &&
+                    !isLoadingComparisonResult &&
+                    !isFailedLoadingComparisonResult && (
+                        <>
+                            <Dropdown group isOpen={dropdownDensityOpen} toggle={() => setDropdownDensityOpen(v => !v)} style={{ marginRight: 2 }}>
                                 <DropdownToggle color="secondary" size="sm">
                                     <Icon icon={faWindowMaximize} className="mr-1" /> View
                                 </DropdownToggle>
@@ -254,7 +244,7 @@ function Comparison(props) {
                                         setUseReconstructedData(false);
                                         setShowVisualizationModal(!showVisualizationModal);
                                     }}
-                                    style={{ marginRight: 3 }}
+                                    style={{ marginRight: 2 }}
                                 >
                                     <Icon icon={faChartBar} className="mr-1" /> Visualize
                                 </Button>
@@ -263,7 +253,7 @@ function Comparison(props) {
                                     hideOnClick={false}
                                     content="Cannot use self-visualization-service for unpublished comparison. You must publish the comparison first to use this functionality."
                                 >
-                                    <span style={{ marginRight: 3 }} className="btn btn-secondary btn-sm disabled">
+                                    <span style={{ marginRight: 2 }} className="btn btn-secondary btn-sm disabled">
                                         <Icon icon={faChartBar} className="mr-1" /> Visualize
                                     </span>
                                 </Tippy>
@@ -384,10 +374,21 @@ function Comparison(props) {
                                     )}
                                 </DropdownMenu>
                             </Dropdown>
-                        </ButtonGroup>
-                    </div>
+                        </>
+                    )
+                }
+            >
+                Contribution comparison{' '}
+                {!isFailedLoadingMetaData && contributionsList.length > 1 && (
+                    <Tippy content="The amount of compared contributions">
+                        <span>
+                            <Badge color="secondary" pill style={{ fontSize: '65%' }}>
+                                {contributionsList.length}
+                            </Badge>
+                        </span>
+                    </Tippy>
                 )}
-            </ContainerAnimated>
+            </TitleBar>
 
             {!isLoadingVersions && hasNextVersion && (
                 <NewerVersionWarning versions={versions} comparisonId={metaData?.id || metaData?.hasPreviousVersion?.id} />

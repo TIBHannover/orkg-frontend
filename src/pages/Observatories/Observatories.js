@@ -11,6 +11,7 @@ import styled from 'styled-components';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { groupBy } from 'lodash';
+import TitleBar from 'components/TitleBar/TitleBar';
 
 const TabPaneStyled = styled(TabPane)`
     border-top: 0;
@@ -131,9 +132,7 @@ class Observatories extends Component {
     render() {
         return (
             <>
-                <Container>
-                    <h1 className="h4 mt-4 mb-4">View all observatories</h1>
-                </Container>
+                <TitleBar>View all observatories</TitleBar>
                 <Container className="box rounded p-4 clearfix">
                     <p>
                         <i>Observatories</i> organize research contributions in a particular research field and are curated by research organizations
