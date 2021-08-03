@@ -10,6 +10,7 @@ import ContributorsBox from 'components/TopContributors/ContributorsBox';
 import useResearchFieldSelector from 'components/Home/hooks/useResearchFieldSelector';
 import { MISC } from 'constants/graphSettings';
 import { toast } from 'react-toastify';
+import HomeAlerts from 'components/HomeAlerts/HomeAlerts';
 
 export default function Home() {
     const location = useLocation();
@@ -33,6 +34,7 @@ export default function Home() {
 
     return (
         <Container style={{ marginTop: -70 }}>
+            <HomeAlerts />
             <Row>
                 <Col md="12">
                     <div className="box rounded-lg p-3">
