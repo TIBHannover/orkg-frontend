@@ -34,12 +34,13 @@ export default function ValueItem(props) {
     const [dialogResourceId, setDialogResourceId] = useState(null);
     const [dialogResourceLabel, setDialogResourceLabel] = useState(null);
 
-    const commitChangeLabel = async draftLabel => {
+    const commitChangeLabel = async (draftLabel, draftDataType) => {
         // Check if the user changed the label
-        if (draftLabel !== props.value.label) {
+        if (draftLabel !== props.value.label || draftDataType !== props.value.datatype) {
             dispatch(
                 updateValueLabel({
                     label: draftLabel,
+                    datatype: draftDataType,
                     valueId: props.id
                 })
             );
@@ -47,8 +48,8 @@ export default function ValueItem(props) {
                 dispatch(isSavingValue({ id: props.id })); // To show the saving message instead of the value label
                 if (props.value.resourceId) {
                     if (props.value.type === 'literal') {
-                        await updateLiteral(props.value.resourceId, draftLabel);
-                        toast.success('Literal label updated successfully');
+                        await updateLiteral(props.value.resourceId, draftLabel, draftDataType);
+                        toast.success('Literal updated successfully');
                     } else {
                         await updateResource(props.value.resourceId, draftLabel);
                         toast.success('Resource label updated successfully');
