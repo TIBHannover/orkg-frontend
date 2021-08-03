@@ -8,7 +8,7 @@ import { useRouteMatch, useHistory } from 'react-router-dom';
 import { Form, Input, Button, InputGroup, InputGroupAddon } from 'reactstrap';
 import { isString } from 'lodash';
 
-const SearchForm = props => {
+const SearchForm = ({ placeholder, onSearch = null }) => {
     const PROPERTY_PATTERN = /^#P([0-9])+$/;
     const RESOURCE_PATTERN = /^#R([0-9])+$/;
     const MINIMUM_LENGTH_PATTERN = 3;
@@ -38,14 +38,16 @@ const SearchForm = props => {
         } else {
             route = reverse(ROUTES.SEARCH, { searchTerm: encodeURIComponent(value) });
         }
+        onSearch && onSearch();
+
         return history.push(route);
     };
 
     return (
-        <Form className="mt-2 mt-md-0 mr-3 search-box mb-2 mb-md-0" inline onSubmit={handleSubmit} style={{ minWidth: 57 }}>
+        <Form className="mt-2 mt-md-0 mx-2 search-box mb-2 mb-md-0" inline onSubmit={handleSubmit} style={{ minWidth: 57 }}>
             <InputGroup>
                 <Input
-                    placeholder={props.placeholder}
+                    placeholder={placeholder}
                     value={value}
                     onChange={handleChange}
                     aria-label="Search ORKG"
@@ -63,7 +65,8 @@ const SearchForm = props => {
 };
 
 SearchForm.propTypes = {
-    placeholder: PropTypes.string.isRequired
+    placeholder: PropTypes.string.isRequired,
+    onSearch: PropTypes.func
 };
 
 export default SearchForm;

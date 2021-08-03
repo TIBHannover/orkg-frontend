@@ -19,6 +19,7 @@ $border-radius: 6px;
 $theme-colors: (
     primary-darker: $primary-darker,
     secondary-darker: $secondary-darker,
+    light-darker: $light-darker,
     body: $body-color
 );
 
@@ -55,3 +56,13 @@ $badge-padding-x: 0.8rem;
 
 // List group
 $list-group-border-color: rgba(0, 0, 0, 0.125);
+
+// Breakpoints (no changed made, copied to make them available to styled-components)
+$grid-breakpoints: (
+    xs: 0,
+    sm: 576px,
+    md: 768px,
+    lg: 992px,
+    xl: 1200px,
+    xxl: 1400px
+);
