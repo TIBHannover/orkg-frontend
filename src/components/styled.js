@@ -9,7 +9,7 @@ export const SubtitleSeparator = styled.div`
     background: ${props => props.theme.secondary};
     width: 2px;
     height: 24px;
-    margin: 3px 15px;
+    margin: 3px 15px 3px 0;
     content: '';
     display: block;
     opacity: 0.7;
