@@ -5,13 +5,22 @@ export default function validationSchema(component) {
     if (component.value) {
         switch (component.value.id) {
             case 'Date':
-                schema = Joi.date();
+                schema = Joi.date().iso();
                 break;
             case 'Number':
                 schema = Joi.number();
                 break;
             case 'String':
                 schema = Joi.string();
+                break;
+            case 'Integer':
+                schema = Joi.number().integer();
+                break;
+            case 'Boolean':
+                schema = Joi.boolean();
+                break;
+            case 'URI':
+                schema = Joi.string().uri();
                 break;
             default:
                 break;

@@ -1,4 +1,4 @@
-import { Provider } from 'react-redux';
+import { Provider, useSelector } from 'react-redux';
 import configureStore from 'store';
 import { useState, useEffect } from 'react';
 import Statements from 'components/StatementBrowser/Statements/Statements';
@@ -6,13 +6,18 @@ import PropTypes from 'prop-types';
 
 const StatementBrowser = props => {
     const [store, setStore] = useState(null);
+    const auth = useSelector(state => state.auth);
     const { newStore } = props;
 
     useEffect(() => {
         if (newStore) {
-            setStore(configureStore());
+            setStore(
+                configureStore({
+                    auth
+                })
+            );
         }
-    }, [newStore]);
+    }, [auth, newStore]);
 
     // no new store is needed, so render the statement browser
     if (!newStore) {

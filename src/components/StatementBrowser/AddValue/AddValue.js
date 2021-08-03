@@ -38,7 +38,7 @@ const AddValue = props => {
     const getIsLiteralField = () => {
         let result = isLiteral(props.components);
         if (predicate && predicate.range) {
-            result = ['Date', 'Number', 'String'].includes(predicate.range.id) ? true : false;
+            result = ['Date', 'Number', 'String', 'Boolean', 'Integer', 'URI'].includes(predicate.range.id) ? true : false;
         }
         return result;
     };
@@ -171,7 +171,7 @@ const AddValue = props => {
             }
             dispatch(
                 createValue({
-                    label: inputValue,
+                    label: inputValue?.toString(),
                     type: valueType,
                     ...(valueType === 'literal' && { datatype: datatype }),
                     propertyId: props.propertyId ? props.propertyId : selectedProperty,
@@ -186,7 +186,7 @@ const AddValue = props => {
             dispatch(
                 createValue({
                     valueId,
-                    label: inputValue,
+                    label: inputValue?.toString(),
                     type: valueType,
                     ...(valueType === 'literal' && { datatype: datatype }),
                     propertyId: props.propertyId ? props.propertyId : selectedProperty,

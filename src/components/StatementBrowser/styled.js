@@ -267,6 +267,13 @@ export const PropertyStyle = styled.div`
     overflow-wrap: break-word;
     border-radius: 3px 0 0 3px;
 
+    @media (max-width: ${props => props.theme.gridBreakpoints.md}) {
+        width: 100%;
+        max-width: 100%;
+        flex: auto;
+        border-radius: 3px 3px 0 0;
+    }
+
     & > div {
         padding: 8px;
     }
@@ -322,6 +329,13 @@ export const ValuesStyle = styled.div`
     }
     background-color: #fff;
     border-radius: 0 3px 3px 0;
+
+    @media (max-width: ${props => props.theme.gridBreakpoints.md}) {
+        width: 100%;
+        max-width: 100%;
+        flex: auto;
+        border-radius: 3px 3px 0 0;
+    }
 `;
 
 export const TemplateHeaderStyle = styled.div`
