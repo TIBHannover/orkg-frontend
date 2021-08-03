@@ -4,12 +4,13 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPlus, faSpinner, faAngleDoubleDown } from '@fortawesome/free-solid-svg-icons';
 import { getPredicates } from 'services/backend/predicates';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
-import { ButtonGroup, Container, ListGroup, ListGroupItem } from 'reactstrap';
+import { Container, ListGroup, ListGroupItem } from 'reactstrap';
 import { PREDICATE_TYPE_ID } from 'constants/misc';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes';
 import { Link } from 'react-router-dom';
 import HeaderSearchButton from 'components/HeaderSearchButton/HeaderSearchButton';
+import TitleBar from 'components/TitleBar/TitleBar';
 
 const Properties = () => {
     const pageSize = 25;
@@ -52,20 +53,29 @@ const Properties = () => {
 
     return (
         <>
-            <Container className="d-flex align-items-center">
-                <div className="d-flex flex-grow-1 mt-4 mb-4">
-                    <h1 className="h4">View all properties</h1>
-                    <div className="text-muted ml-3 mt-1">
+            <TitleBar
+                titleAddition={
+                    <div className="text-muted mt-1">
                         {totalElements === 0 && isNextPageLoading ? <Icon icon={faSpinner} spin /> : totalElements} properties
                     </div>
-                </div>
-                <ButtonGroup>
-                    <RequireAuthentication component={Link} color="secondary" size="sm" className="btn btn-secondary btn-sm" to={ROUTES.ADD_PROPERTY}>
-                        <Icon icon={faPlus} /> Create property
-                    </RequireAuthentication>
-                    <HeaderSearchButton placeholder="Search properties..." type={PREDICATE_TYPE_ID} />
-                </ButtonGroup>
-            </Container>
+                }
+                buttonGroup={
+                    <>
+                        <RequireAuthentication
+                            component={Link}
+                            color="secondary"
+                            size="sm"
+                            className="btn btn-secondary btn-sm"
+                            to={ROUTES.ADD_PROPERTY}
+                        >
+                            <Icon icon={faPlus} /> Create property
+                        </RequireAuthentication>
+                        <HeaderSearchButton placeholder="Search properties..." type={PREDICATE_TYPE_ID} />
+                    </>
+                }
+            >
+                View all properties
+            </TitleBar>
 
             <Container className="p-0">
                 <ListGroup flush className="box rounded" style={{ overflow: 'hidden' }}>

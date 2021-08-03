@@ -14,6 +14,7 @@ import { getPublicUrl } from 'utils';
 import slugify from 'slugify';
 import ROUTES from 'constants/routes';
 import Tooltip from 'components/Utils/Tooltip';
+import TitleBar from 'components/TitleBar/TitleBar';
 
 class AddOrganization extends Component {
     constructor(props) {
@@ -118,9 +119,7 @@ class AddOrganization extends Component {
 
         return (
             <>
-                <Container className="d-flex align-items-center">
-                    <h3 className="h4 my-4 flex-grow-1">Create new organization</h3>
-                </Container>
+                <TitleBar>Create new organization</TitleBar>
                 <Container className="box rounded pt-4 pb-4 pl-5 pr-5">
                     {!!this.props.user && this.props.user.isCurationAllowed && (
                         <Form className="pl-3 pr-3 pt-2">

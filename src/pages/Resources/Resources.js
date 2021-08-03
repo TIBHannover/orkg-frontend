@@ -5,11 +5,12 @@ import { Link } from 'react-router-dom';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPlus, faSpinner, faAngleDoubleDown } from '@fortawesome/free-solid-svg-icons';
 import { getResources } from 'services/backend/resources';
-import { ButtonGroup, Container, ListGroup, ListGroupItem } from 'reactstrap';
+import { Container, ListGroup, ListGroupItem } from 'reactstrap';
 import { RESOURCE_TYPE_ID } from 'constants/misc';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import HeaderSearchButton from 'components/HeaderSearchButton/HeaderSearchButton';
+import TitleBar from 'components/TitleBar/TitleBar';
 
 const Resources = () => {
     const pageSize = 25;
@@ -52,26 +53,29 @@ const Resources = () => {
 
     return (
         <>
-            <Container className="d-flex align-items-center">
-                <div className="d-flex flex-grow-1 mt-4 mb-4">
-                    <h1 className="h4">View all resources</h1>
-                    <div className="text-muted ml-3 mt-1">
+            <TitleBar
+                titleAddition={
+                    <div className="text-muted mt-1">
                         {totalElements === 0 && isNextPageLoading ? <Icon icon={faSpinner} spin /> : totalElements} resources
                     </div>
-                </div>
-                <ButtonGroup>
-                    <RequireAuthentication
-                        component={Link}
-                        color="secondary"
-                        size="sm"
-                        className="btn btn-secondary btn-sm flex-shrink-0"
-                        to={ROUTES.ADD_RESOURCE}
-                    >
-                        <Icon icon={faPlus} /> Create resource
-                    </RequireAuthentication>
-                    <HeaderSearchButton placeholder="Search resources..." type={RESOURCE_TYPE_ID} />
-                </ButtonGroup>
-            </Container>
+                }
+                buttonGroup={
+                    <>
+                        <RequireAuthentication
+                            component={Link}
+                            color="secondary"
+                            size="sm"
+                            className="btn btn-secondary btn-sm flex-shrink-0"
+                            to={ROUTES.ADD_RESOURCE}
+                        >
+                            <Icon icon={faPlus} /> Create resource
+                        </RequireAuthentication>
+                        <HeaderSearchButton placeholder="Search resources..." type={RESOURCE_TYPE_ID} />
+                    </>
+                }
+            >
+                View all resources
+            </TitleBar>
 
             <Container className="p-0">
                 <ListGroup flush className="box rounded" style={{ overflow: 'hidden' }}>

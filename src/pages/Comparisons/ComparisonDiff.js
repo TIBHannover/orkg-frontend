@@ -12,10 +12,11 @@ import ReactDiffViewer from 'react-diff-viewer';
 import { useHistory, useParams } from 'react-router-dom';
 import { useLocation } from 'react-use';
 import { getComparisonData } from 'utils';
-import { Alert, Button, ButtonGroup, Container } from 'reactstrap';
+import { Alert, Button } from 'reactstrap';
 import queryString from 'query-string';
 import { getStatementsBySubject } from 'services/backend/statements';
 import { getResource } from 'services/backend/resources';
+import TitleBar from 'components/TitleBar/TitleBar';
 
 const ComparisonDiff = () => {
     const { oldId, newId } = useParams();
@@ -66,21 +67,20 @@ const ComparisonDiff = () => {
 
     return (
         <>
-            <Container>
-                <div className="d-flex align-items-center">
-                    <h1 className="h4 mt-4 mb-4 flex-grow-1">Compare versions</h1>
-                    <div style={{ marginLeft: 'auto' }} className="flex-shrink-0 mt-4">
-                        <ButtonGroup className="float-right mb-4 ml-1">
-                            <Button size="sm" color="secondary" onClick={() => setIsOpenHistoryModal(true)}>
-                                <Icon icon={faHistory} className="mr-1" /> View history
-                            </Button>
-                            <Button size="sm" color="secondary" onClick={() => setFullWidth(v => !v)} style={{ marginLeft: 1 }}>
-                                <Icon icon={faArrowsAltH} className="mr-1" /> Full width
-                            </Button>
-                        </ButtonGroup>
-                    </div>
-                </div>
-            </Container>
+            <TitleBar
+                buttonGroup={
+                    <>
+                        <Button size="sm" color="secondary" onClick={() => setIsOpenHistoryModal(true)}>
+                            <Icon icon={faHistory} className="mr-1" /> View history
+                        </Button>
+                        <Button size="sm" color="secondary" onClick={() => setFullWidth(v => !v)} style={{ marginLeft: 1 }}>
+                            <Icon icon={faArrowsAltH} className="mr-1" /> Full width
+                        </Button>
+                    </>
+                }
+            >
+                Compare versions
+            </TitleBar>
             <ContainerAnimated style={containerStyle} className="box rounded p-0 overflow-hidden">
                 {switchedVersions && (
                     <div className="m-3">

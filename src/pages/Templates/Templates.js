@@ -12,6 +12,7 @@ import { reverse } from 'named-urls';
 import { debounce } from 'lodash';
 import ROUTES from 'constants/routes';
 import { CLASSES, PREDICATES, ENTITIES } from 'constants/graphSettings';
+import TitleBar from 'components/TitleBar/TitleBar';
 
 const Templates = () => {
     const pageSize = 25;
@@ -154,24 +155,27 @@ const Templates = () => {
 
     return (
         <>
-            <Container className="d-flex align-items-center">
-                <div className="d-flex flex-grow-1 mt-4 mb-4">
-                    <h1 className="h4">View all templates</h1>
-                    <div className="text-muted ml-3 mt-1">
+            <TitleBar
+                titleAddition={
+                    <div className="text-muted mt-1">
                         {totalElements === 0 && isNextPageLoading ? <Icon icon={faSpinner} spin /> : totalElements}{' '}
                         {isFilterApplied() ? 'template found by applying the filter' : 'template'}
                     </div>
-                </div>
-                <RequireAuthentication
-                    component={Link}
-                    color="secondary"
-                    size="sm"
-                    className="btn btn-secondary btn-sm flex-shrink-0"
-                    to={reverse(ROUTES.TEMPLATE)}
-                >
-                    <Icon icon={faPlus} /> Create template
-                </RequireAuthentication>
-            </Container>
+                }
+                buttonGroup={
+                    <RequireAuthentication
+                        component={Link}
+                        color="secondary"
+                        size="sm"
+                        className="btn btn-secondary btn-sm flex-shrink-0"
+                        to={reverse(ROUTES.TEMPLATE)}
+                    >
+                        <Icon icon={faPlus} /> Create template
+                    </RequireAuthentication>
+                }
+            >
+                View all templates
+            </TitleBar>
             <Container className="box rounded pt-4 pb-2 pl-5 pr-5 clearfix">
                 <Alert color="info" fade={false}>
                     Templates allows to specify the structure of content types, and they can be used when describing research contributions. Further

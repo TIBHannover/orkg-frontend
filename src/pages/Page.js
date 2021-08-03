@@ -1,6 +1,7 @@
 import PageContentLoader from 'components/Page/PageContentLoader';
 import usePage from 'components/Page/usePage';
 import { CmsPage } from 'components/styled';
+import TitleBar from 'components/TitleBar/TitleBar';
 import NotFound from 'pages/NotFound';
 import { useEffect } from 'react';
 import { useParams } from 'react-router';
@@ -29,9 +30,7 @@ const Page = () => {
 
     return (
         <div>
-            <Container>
-                <h1 className="h4 mt-4 mb-4">{page?.title}</h1>
-            </Container>
+            <TitleBar>{page?.title}</TitleBar>
 
             <Container className="box rounded pt-4 pb-4 pl-5 pr-5">
                 {isLoading && <PageContentLoader />}
