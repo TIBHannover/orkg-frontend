@@ -16,10 +16,11 @@ const StyledMathJax = styled(MathJax)`
     }
 `;
 
-class Latex extends Component {
+class AsciiMath extends Component {
     constructor(props) {
         super(props);
-        const expression = /(\${2}.*\${2})/gm;
+        // eslint-disable-next-line no-useless-escape
+        const expression = /(\`.*\`)/g;
         this.supportedValues = new RegExp(expression);
     }
 
@@ -37,7 +38,7 @@ class Latex extends Component {
                     <StyledMathJax
                         key={i}
                         config={{
-                            jax: ['input/TeX', 'output/SVG'],
+                            jax: ['input/AsciiMath', 'output/CommonHTML'],
                             showMathMenu: false,
                             SVG: {
                                 useFontCache: false,
@@ -55,9 +56,9 @@ class Latex extends Component {
     }
 }
 
-Latex.propTypes = {
+AsciiMath.propTypes = {
     children: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,
     type: PropTypes.oneOf(['resource', 'literal'])
 };
 
-export default Latex;
+export default AsciiMath;
