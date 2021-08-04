@@ -1,4 +1,4 @@
-import { Container } from 'reactstrap';
+import { ButtonGroup, Container } from 'reactstrap';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import PaperMenuBar from './PaperMenuBar';
@@ -46,14 +46,16 @@ function PaperHeaderBar(props) {
                             props.paperTitle
                         )}
                     </div>
-                    <PaperMenuBar
-                        disableEdit={props.disableEdit}
-                        id={props.id}
-                        label={props.paperTitle}
-                        editMode={props.editMode}
-                        paperLink={props.paperLink}
-                        toggle={props.toggle}
-                    />
+                    <ButtonGroup className="flex-shrink-0">
+                        <PaperMenuBar
+                            disableEdit={props.disableEdit}
+                            id={props.id}
+                            label={props.paperTitle}
+                            editMode={props.editMode}
+                            paperLink={props.paperLink}
+                            toggle={props.toggle}
+                        />
+                    </ButtonGroup>
                 </Container>
             </PaperHeaderBarContainer>
         </AnimationContainer>
