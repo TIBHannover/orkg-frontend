@@ -16,7 +16,7 @@ function useContributionComparison(contributionId) {
         page => {
             setIsLoading(true);
 
-            // Get the statements that contains the research problem as an object
+            // Get the statements that contains the contribution as an object
             getStatementsByObjectAndPredicate({
                 objectId: contributionId,
                 predicateId: PREDICATES.COMPARE_CONTRIBUTION,
@@ -26,7 +26,7 @@ function useContributionComparison(contributionId) {
                 desc: true
             }).then(result => {
                 // Comparisons
-                if (result.length > 0) {
+                if (result.filter(contribution => contribution.subject.classes.includes(CLASSES.COMPARISON)).length > 0) {
                     // Fetch the data of each comparison
                     getStatementsBySubjects({
                         ids: result.filter(contribution => contribution.subject.classes.includes(CLASSES.COMPARISON)).map(c => c.subject.id)
