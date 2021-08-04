@@ -206,10 +206,15 @@ export const ItemHeaderInner = styled.div`
 `;
 
 export const Contribution = styled.div`
-    color: #ffa5a5;
-    font-size: 85%;
+    color: #fff;
+    font-size: 90%;
+    font-style: italic;
+    border-top: 1px solid #d75050;
+    margin-top: 2px;
+    padding-top: 2px;
     &.contribution-editor {
-        color: ${props => props.theme.secondary};
+        color: ${props => props.theme.secondaryDarker};
+        border-top-color: #d0d5e8;
     }
 `;
 
