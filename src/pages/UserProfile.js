@@ -15,6 +15,7 @@ import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import TitleBar from 'components/TitleBar/TitleBar';
 
 const StyledGravatar = styled(Gravatar)`
     border: 3px solid ${props => props.theme.dark};
@@ -204,16 +205,12 @@ const UserProfile = props => {
                 )}
             </Container>
 
-            <Container className="d-flex align-items-center mt-4 mb-4">
-                <h1 className="h4 flex-grow-1">Published comparisons</h1>
-            </Container>
+            <TitleBar>Published comparisons</TitleBar>
             <Container className="p-0">
                 <Items filterLabel="comparisons" filterClass={CLASSES.COMPARISON} userId={userId} />
             </Container>
 
-            <Container className="d-flex align-items-center mt-4 mb-4">
-                <h1 className="h4 flex-grow-1">Added papers</h1>
-            </Container>
+            <TitleBar>Added papers</TitleBar>
             <Container className="p-0">
                 <Items filterLabel="papers" filterClass={CLASSES.PAPER} userId={userId} showDelete={userId === currentUserId} />
             </Container>

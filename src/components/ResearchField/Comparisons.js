@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, forwardRef } from 'react';
 import { Button, Container, ListGroup, FormGroup, Label, Input } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner, faChevronDown } from '@fortawesome/free-solid-svg-icons';
@@ -10,7 +10,20 @@ import ROUTES from 'constants/routes';
 import ContentLoader from 'react-content-loader';
 import { stringifySort } from 'utils';
 import { Link } from 'react-router-dom';
+import TitleBar from 'components/TitleBar/TitleBar';
 import PropTypes from 'prop-types';
+
+const SortButton = forwardRef((props, ref) => {
+    return (
+        <Button innerRef={ref} color="secondary" className="pl-3 pr-3" size="sm">
+            {stringifySort(props.sort)} <Icon icon={faChevronDown} />
+        </Button>
+    );
+});
+
+SortButton.propTypes = {
+    sort: PropTypes.string.isRequired
+};
 
 const Comparisons = ({ id, boxShadow }) => {
     const {
@@ -30,9 +43,9 @@ const Comparisons = ({ id, boxShadow }) => {
 
     return (
         <>
-            <Container className="d-flex align-items-center mt-4 mb-4">
-                <div className="d-flex flex-grow-1">
-                    <h1 className="h5 flex-shrink-0 mb-0">Comparisons</h1>
+            <TitleBar
+                titleSize="h5"
+                titleAddition={
                     <>
                         <SubtitleSeparator />
                         <SubTitle className="mb-0">
@@ -41,58 +54,60 @@ const Comparisons = ({ id, boxShadow }) => {
                             </small>
                         </SubTitle>
                     </>
-                </div>
+                }
+                buttonGroup={
+                    <>
+                        <Tippy
+                            interactive={true}
+                            trigger="click"
+                            placement="bottom-end"
+                            onCreate={instance => setTippy(instance)}
+                            content={
+                                <div className="p-2">
+                                    <FormGroup>
+                                        <Label for="sortComparisons">Sort</Label>
+                                        <Input
+                                            value={sort}
+                                            onChange={e => {
+                                                tippy.hide();
+                                                setSort(e.target.value);
+                                            }}
+                                            bsSize="sm"
+                                            type="select"
+                                            name="sort"
+                                            id="sortComparisons"
+                                            disabled={isLoading}
+                                        >
+                                            <option value="newest">Newest first</option>
+                                            <option value="oldest">Oldest first</option>
+                                        </Input>
+                                    </FormGroup>
+                                    <FormGroup check>
+                                        <Label check>
+                                            <Input
+                                                onChange={e => {
+                                                    tippy.hide();
+                                                    setIncludeSubFields(e.target.checked);
+                                                }}
+                                                checked={includeSubFields}
+                                                type="checkbox"
+                                                style={{ marginTop: '0.1rem' }}
+                                                disabled={isLoading}
+                                            />
+                                            Include subfields
+                                        </Label>
+                                    </FormGroup>
+                                </div>
+                            }
+                        >
+                            <SortButton sort={sort} />
+                        </Tippy>
+                    </>
+                }
+            >
+                Comparisons
+            </TitleBar>
 
-                <Tippy
-                    interactive={true}
-                    trigger="click"
-                    placement="bottom-end"
-                    onCreate={instance => setTippy(instance)}
-                    content={
-                        <div className="p-2">
-                            <FormGroup>
-                                <Label for="sortComparisons">Sort</Label>
-                                <Input
-                                    value={sort}
-                                    onChange={e => {
-                                        tippy.hide();
-                                        setSort(e.target.value);
-                                    }}
-                                    bsSize="sm"
-                                    type="select"
-                                    name="sort"
-                                    id="sortComparisons"
-                                    disabled={isLoading}
-                                >
-                                    <option value="newest">Newest first</option>
-                                    <option value="oldest">Oldest first</option>
-                                </Input>
-                            </FormGroup>
-                            <FormGroup check>
-                                <Label check>
-                                    <Input
-                                        onChange={e => {
-                                            tippy.hide();
-                                            setIncludeSubFields(e.target.checked);
-                                        }}
-                                        checked={includeSubFields}
-                                        type="checkbox"
-                                        style={{ marginTop: '0.1rem' }}
-                                        disabled={isLoading}
-                                    />
-                                    Include subfields
-                                </Label>
-                            </FormGroup>
-                        </div>
-                    }
-                >
-                    <span>
-                        <Button color="secondary" className="flex-shrink-0 pl-3 pr-3 ml-auto" size="sm">
-                            {stringifySort(sort)} <Icon icon={faChevronDown} />
-                        </Button>
-                    </span>
-                </Tippy>
-            </Container>
             <Container className="p-0">
                 {comparisons.length > 0 && (
                     <ListGroup className={boxShadow ? 'box' : ''}>

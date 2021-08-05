@@ -60,12 +60,12 @@ const MenuButton = styled(Button)`
     }
 `;
 
-const TitleBar = ({ buttonGroup = null, titleAddition = null, children = '', wrap = true }) => {
+const TitleBar = ({ buttonGroup = null, titleAddition = null, children = '', wrap = true, titleSize = 'h4' }) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     return (
         <ContainerStyled className={`d-flex mt-4 mb-4 align-items-center ${wrap ? 'flex-wrap' : ''}`}>
-            <h1 className={`h4 m-0 mr-3  ${!wrap ? 'flex-shrink-0' : ''}`}>{children}</h1> {titleAddition}
+            <h1 className={`${titleSize} m-0 mr-3  ${!wrap ? 'flex-shrink-0' : ''}`}>{children}</h1> {titleAddition}
             {buttonGroup && (
                 <MenuButton
                     aria-label="Open action menu"
@@ -89,6 +89,7 @@ TitleBar.propTypes = {
     buttonGroup: PropTypes.oneOfType([PropTypes.node, PropTypes.string]),
     titleAddition: PropTypes.oneOfType([PropTypes.node, PropTypes.string]),
     children: PropTypes.oneOfType([PropTypes.node, PropTypes.string]),
+    titleSize: PropTypes.string,
     wrap: PropTypes.bool
 };
 

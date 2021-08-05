@@ -359,18 +359,19 @@ function Benchmark() {
                             </CardBody>
                         </Card>
                     </Container>
-
-                    <Container className="d-flex align-items-center mt-4 mb-4">
-                        <div className="d-flex flex-grow-1">
-                            <h1 className="h5 flex-shrink-0 mb-0">Papers</h1>
+                    <TitleBar
+                        titleSize="h5"
+                        titleAddition={
                             <>
                                 <SubtitleSeparator />
                                 <SubTitle className="mb-0">
                                     <small className="text-muted mb-0 text-small">Data imported from paperswithcode.com</small>
                                 </SubTitle>
                             </>
-                        </div>
-                    </Container>
+                        }
+                    >
+                        Papers
+                    </TitleBar>
                     <Container className="p-0">
                         <Card>
                             <Table {...getTableProps()}>
