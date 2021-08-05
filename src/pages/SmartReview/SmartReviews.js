@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { faPlus, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
