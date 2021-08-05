@@ -31,8 +31,8 @@ const Comparisons = ({ id, boxShadow }) => {
     return (
         <>
             <Container className="d-flex align-items-center mt-4 mb-4">
-                <div className="d-flex flex-grow-1">
-                    <h1 className="h5 flex-shrink-0 mb-0">Comparisons</h1>
+                <div className="d-flex flex-grow-1 align-items-center">
+                    <h1 className="h5 flex-shrink-0 mb-0 mr-3">Comparisons</h1>
                     <>
                         <SubtitleSeparator />
                         <SubTitle className="mb-0">
