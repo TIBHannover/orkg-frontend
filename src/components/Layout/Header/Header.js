@@ -80,11 +80,40 @@ const StyledLink = styled(Link)`
 `;
 
 const StyledGravatar = styled(Gravatar)`
-    border: 3px solid ${props => props.theme.avatarBorderColor};
+    border: 3px solid ${props => props.theme.dark};
     cursor: pointer;
 `;
 
 const StyledTopBar = styled.div`
+    @media (max-width: ${props => props.theme.gridBreakpoints.md}) {
+        .navbar-collapse {
+            margin-top: 0.4rem;
+        }
+        .nav-item {
+            border-top: 1px solid ${props => props.theme.light};
+        }
+        .btn {
+            width: 100%;
+        }
+        .btn-group {
+            display: block !important;
+        }
+        .dropdown-menu {
+            width: 100%;
+        }
+        .label {
+            display: inline;
+        }
+        .input-group {
+            width: 100%;
+        }
+        &.home-page {
+            .nav-item {
+                border-top-color: ${props => props.theme.secondaryDarker};
+            }
+        }
+    }
+
     margin-bottom: 0;
     padding-top: 72px;
 
@@ -106,22 +135,22 @@ const StyledAuthTooltip = styled(Tooltip)`
     }
     & .tooltip-inner {
         font-size: 16px;
-        background-color: ${props => props.theme.darkblue};
+        background-color: ${props => props.theme.secondary};
         max-width: 410px;
         box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.13);
 
         .btn {
-            border-color: ${props => props.theme.darkblue};
-            background-color: ${props => props.theme.buttonDark};
+            border-color: ${props => props.theme.secondary};
+            background-color: ${props => props.theme.dark};
 
             &:hover {
-                background-color: ${props => props.theme.darkblueDarker};
+                background-color: ${props => props.theme.secondaryDarker};
             }
         }
     }
 
     & .arrow:before {
-        border-bottom-color: ${props => props.theme.darkblue} !important;
+        border-bottom-color: ${props => props.theme.secondary} !important;
     }
 `;
 
@@ -235,6 +264,12 @@ class Header extends Component {
         });
     }
 
+    closeMenu = () => {
+        this.setState({
+            isOpen: false
+        });
+    };
+
     toggleUserTooltip = () => {
         this.setState({
             userTooltipOpen: !this.state.userTooltipOpen
@@ -258,6 +293,8 @@ class Header extends Component {
             this.props.openAuthDialog({ action: 'signin', signInRequired: true, redirectRoute });
             // Don't follow the link when user is not authenticated
             e.preventDefault();
+        } else {
+            this.toggle();
         }
     };
 
@@ -268,17 +305,28 @@ class Header extends Component {
         const email = this.props.user && this.props.user.email ? this.props.user.email : 'example@example.com';
         const greeting = greetingTime(new Date());
         const cookieInfoDismissed = cookies.get('cookieInfoDismissed') ? cookies.get('cookieInfoDismissed') : null;
+        const navbarClasses = `
+            ${this.state.isHomePageStyle ? 'home-page' : ''}
+            ${this.state.isHomePageStyle && this.state.isOpen ? 'shadow' : ''}
+        `;
 
         return (
             <StyledTopBar className={this.state.isHomePageStyle ? 'home-page' : ''}>
-                <Navbar className={this.state.isHomePageStyle ? 'home-page' : ''} expand="md" fixed="top" id="main-navbar">
+                <Navbar
+                    light={!this.state.isHomePageStyle}
+                    dark={this.state.isHomePageStyle}
+                    className={navbarClasses}
+                    expand="md"
+                    fixed="top"
+                    id="main-navbar"
+                >
                     <GlobalStyle scrollbarWidth={scrollbarWidth(true)} cookieInfoDismissed={cookieInfoDismissed} />
 
                     <div
                         style={{ display: 'flex', width: '100%', transition: 'width 1s ease-in-out' }}
-                        className={!this.state.isHomePageStyle ? 'p-0 container' : ''}
+                        className={!this.state.isHomePageStyle ? 'p-0 container' : 'container-sm'}
                     >
-                        <StyledLink to={ROUTES.HOME} className="mr-4 p-0">
+                        <StyledLink to={ROUTES.HOME} className="mr-4 p-0" onClick={this.closeMenu}>
                             {!this.state.isHomePageStyle && <Logo />}
                             {this.state.isHomePageStyle && <LogoWhite />}
                         </StyledLink>
@@ -293,26 +341,35 @@ class Header extends Component {
                                         View <FontAwesomeIcon style={{ marginTop: '4px' }} icon={faChevronDown} pull="right" />
                                     </DropdownToggle>
                                     <DropdownMenu>
-                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.PAPERS}>
-                                            Papers
-                                        </DropdownItem>
-                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.COMPARISONS}>
+                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.COMPARISONS} onClick={this.closeMenu}>
                                             Comparisons
                                         </DropdownItem>
-                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.VISUALIZATIONS}>
+                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.PAPERS} onClick={this.closeMenu}>
+                                            Papers
+                                        </DropdownItem>
+                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.VISUALIZATIONS} onClick={this.closeMenu}>
                                             Visualizations
                                         </DropdownItem>
-                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.RESEARCH_FIELDS}>
+                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.SMART_REVIEWS} onClick={this.closeMenu}>
+                                            SmartReviews{' '}
+                                            <small>
+                                                <Badge color="info">Beta</Badge>
+                                            </small>
+                                        </DropdownItem>
+                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.BENCHMARKS} onClick={this.closeMenu}>
+                                            Benchmarks
+                                        </DropdownItem>
+                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.RESEARCH_FIELDS} onClick={this.closeMenu}>
                                             Research fields
                                         </DropdownItem>
                                         <DropdownItem divider />
-                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.OBSERVATORIES}>
+                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.OBSERVATORIES} onClick={this.closeMenu}>
                                             Observatories{' '}
                                             <small>
                                                 <Badge color="info">Beta</Badge>
                                             </small>
                                         </DropdownItem>
-                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.ORGANIZATIONS}>
+                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.ORGANIZATIONS} onClick={this.closeMenu}>
                                             Organizations{' '}
                                             <small>
                                                 <Badge color="info">Beta</Badge>
@@ -322,13 +379,13 @@ class Header extends Component {
 
                                         <DropdownItem header>Advanced views</DropdownItem>
 
-                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.RESOURCES}>
+                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.RESOURCES} onClick={this.closeMenu}>
                                             Resources
                                         </DropdownItem>
-                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.PROPERTIES}>
+                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.PROPERTIES} onClick={this.closeMenu}>
                                             Properties
                                         </DropdownItem>
-                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.CLASSES}>
+                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.CLASSES} onClick={this.closeMenu}>
                                             Classes
                                         </DropdownItem>
                                     </DropdownMenu>
@@ -340,7 +397,7 @@ class Header extends Component {
                                         Tools <FontAwesomeIcon style={{ marginTop: '4px' }} icon={faChevronDown} pull="right" />
                                     </DropdownToggle>
                                     <DropdownMenu>
-                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.TOOLS}>
+                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.TOOLS} onClick={this.closeMenu}>
                                             Tools overview
                                         </DropdownItem>
                                         <DropdownItem divider />
@@ -369,12 +426,12 @@ class Header extends Component {
                                         >
                                             Survey table import
                                         </DropdownItem>
-                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.TEMPLATES}>
+                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.TEMPLATES} onClick={this.closeMenu}>
                                             Templates
                                         </DropdownItem>
                                         <DropdownItem divider />
                                         <DropdownItem header>Data export</DropdownItem>
-                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.DATA}>
+                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.DATA} onClick={this.closeMenu}>
                                             Data Access
                                         </DropdownItem>
                                     </DropdownMenu>
@@ -386,39 +443,35 @@ class Header extends Component {
                                         About <FontAwesomeIcon style={{ marginTop: '4px' }} icon={faChevronDown} pull="right" />
                                     </DropdownToggle>
                                     <DropdownMenu>
-                                        <DropdownItem tag="a" target="_blank" rel="noopener noreferrer" href="https://projects.tib.eu/orkg/">
-                                            About ORKG <Icon size="sm" icon={faExternalLinkAlt} />
+                                        <DropdownItem tag={RouterNavLink} exact to={reverse(ROUTES.ABOUT, {})} onClick={this.closeMenu}>
+                                            About
+                                        </DropdownItem>
+                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.HELP_CENTER} onClick={this.closeMenu}>
+                                            Help center
                                         </DropdownItem>
                                         <DropdownItem
                                             tag="a"
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            href="https://projects.tib.eu/orkg/documentation/"
+                                            href="https://gitlab.com/TIBHannover/orkg/orkg-frontend/"
+                                            onClick={this.closeMenu}
                                         >
-                                            Features <Icon size="sm" icon={faExternalLinkAlt} />
-                                        </DropdownItem>
-                                        <DropdownItem
-                                            tag="a"
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            href="https://gitlab.com/TIBHannover/orkg/orkg-frontend/-/wikis/home"
-                                        >
-                                            Documentation <Icon size="sm" icon={faExternalLinkAlt} />
+                                            GitLab <Icon size="sm" icon={faExternalLinkAlt} />
                                         </DropdownItem>
                                         <DropdownItem divider />
-                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.STATS}>
+                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.STATS} onClick={this.closeMenu}>
                                             Statistics
                                         </DropdownItem>
                                     </DropdownMenu>
                                 </UncontrolledButtonDropdown>
                             </Nav>
 
-                            <SearchForm placeholder="Search..." />
+                            <SearchForm placeholder="Search..." onSearch={this.closeMenu} />
 
-                            <AddNew isHomePageStyle={this.state.isHomePageStyle} />
+                            <AddNew isHomePageStyle={this.state.isHomePageStyle} onAdd={this.closeMenu} />
 
                             {!!this.props.user && (
-                                <div>
+                                <div className="ml-2">
                                     <StyledGravatar className="rounded-circle" email={email} size={40} id="TooltipExample" />
                                     <StyledAuthTooltip
                                         fade={false}
@@ -470,15 +523,17 @@ class Header extends Component {
                             )}
 
                             {!this.props.user && (
-                                <Button
-                                    color={!this.state.isHomePageStyle ? 'secondary' : 'darkblue'}
-                                    className="pl-4 pr-4 flex-shrink-0 sign-in"
-                                    outline
-                                    onClick={() => this.props.openAuthDialog({ action: 'signin' })}
-                                >
-                                    {' '}
-                                    <FontAwesomeIcon className="mr-1" icon={faUser} /> Sign in
-                                </Button>
+                                <div className="mx-2 flex-shrink-0">
+                                    <Button
+                                        color="secondary"
+                                        className="pl-4 pr-4 sign-in"
+                                        outline
+                                        onClick={() => this.props.openAuthDialog({ action: 'signin' })}
+                                    >
+                                        {' '}
+                                        <FontAwesomeIcon className="mr-1" icon={faUser} /> Sign in
+                                    </Button>
+                                </div>
                             )}
                         </Collapse>
 

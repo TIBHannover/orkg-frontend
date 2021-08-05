@@ -59,7 +59,7 @@ export default function AddContribution(props) {
     const loadMoreResults = (searchQuery, page) => {
         if (searchQuery.length === 0) {
             setPaperResult([]);
-            setCurrentPage(1);
+            setCurrentPage(0);
             setIsNextPageLoading(false);
             return;
         }
@@ -89,11 +89,11 @@ export default function AddContribution(props) {
                             setPaperResult([paperData]);
                             setIsNextPageLoading(false);
                             setHasNextPage(false);
-                            setCurrentPage(1);
+                            setCurrentPage(0);
                         })
                 )
                 .catch(() => {
-                    if (page === 1) {
+                    if (page === 0) {
                         setPaperResult([]);
                     }
                     setIsNextPageLoading(false);
@@ -127,13 +127,13 @@ export default function AddContribution(props) {
                             })
                         );
                         Promise.all(paper).then(paperData => {
-                            setPaperResult([...(page === 1 ? [] : paperResult), ...paperData]);
+                            setPaperResult([...(page === 0 ? [] : paperResult), ...paperData]);
                             setIsNextPageLoading(false);
                             setHasNextPage(results.length < numberOfPaper ? false : true);
                             setCurrentPage(page);
                         });
                     } else {
-                        if (page === 1) {
+                        if (page === 0) {
                             setPaperResult([]);
                         }
                         setIsNextPageLoading(false);
@@ -176,7 +176,7 @@ export default function AddContribution(props) {
 
     useEffect(() => {
         setHasNextPage(false);
-        setCurrentPage(1);
+        setCurrentPage(0);
         setSelectedContributions([]);
         setIsNextPageLoading(true);
         debouncedGetLoadMoreResults(searchPaper, 0);
@@ -322,7 +322,7 @@ export default function AddContribution(props) {
             <ModalFooter className="d-flex">
                 {props.allowCreate && (
                     <div className="flex-grow-1">
-                        <Button color="lightblue" onClick={() => props.onCreatePaper(searchPaper)}>
+                        <Button color="light" onClick={() => props.onCreatePaper(searchPaper)}>
                             Add new paper
                         </Button>
                     </div>

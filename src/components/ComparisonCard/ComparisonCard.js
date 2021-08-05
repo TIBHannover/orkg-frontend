@@ -1,215 +1,83 @@
-import { Component } from 'react';
-import { Row, Col, Collapse } from 'reactstrap';
+import { Row, Col } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import styled from 'styled-components';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faCalendar, faFile } from '@fortawesome/free-solid-svg-icons';
+import { faCalendar, faFile, faChartBar, faPaperclip } from '@fortawesome/free-solid-svg-icons';
 import ROUTES from 'constants/routes.js';
 import PropTypes from 'prop-types';
 import moment from 'moment';
+import Versions from './Versions';
+import Thumbnail from './Thumbnail';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
 import RelativeBreadcrumbs from 'components/RelativeBreadcrumbs/RelativeBreadcrumbs';
-import { getStatementsBySubjects } from 'services/backend/statements';
 import { truncate } from 'lodash';
-import { getRelatedFiguresData, getRelatedResourcesData } from 'utils';
 
-const PaperCardStyled = styled.div`
-    & .options {
-        display: none;
-    }
-
-    &.selected {
-        background: ${props => props.theme.bodyBg};
-    }
-
-    &:hover .options,
-    &.selected .options {
-        display: block;
-    }
-
+const ComparisonCardStyled = styled.li`
     &:last-child {
         border-bottom-right-radius: ${props => (props.rounded === 'true' ? '0 !important' : '')};
     }
 `;
 
-const ResourceItem = styled.div`
-    overflow: hidden;
-    border: 1px solid #d8d8d8;
-    border-radius: 5px;
-    padding-left: 0px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-left: 4px;
-`;
-
-const Img = styled.img`
-    height: 50px;
-    max-width: 100%;
-    object-fit: contain;
-`;
-
-const RelatedResourceWrapper = styled.div`
-    overflow: hidden;
-    display: flex;
-    margin-top: 0px;
-`;
-
-class ComparisonCard extends Component {
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            relatedFigures: [],
-            openBox: false,
-            relatedResources: []
-        };
-    }
-
-    componentDidMount() {
-        if (this.props.loadResources) {
-            this.loadFigures();
-            this.loadResources();
-        }
-    }
-
-    loadFigures = () => {
-        if (this.props.comparison.figures && this.props.comparison.figures.length > 0) {
-            getStatementsBySubjects({
-                ids: this.props.comparison.figures.map(resource => resource.id)
-            })
-                .then(figuresStatements => {
-                    this.setState({ relatedFigures: getRelatedFiguresData(figuresStatements) });
-                })
-                .catch(err => {
-                    console.log(err);
-                });
-        }
-    };
-
-    loadResources = async () => {
-        if (this.props.comparison.resources && this.props.comparison.resources.length > 0) {
-            /*
-            let relatedResources = this.props.comparison.resources
-                .filter(r => r._class === 'literal')
-                .map(resource => ({
-                    url: resource.label
-                }));
-             */
-            getStatementsBySubjects({
-                // No support for related resources in the format  Resource -[Url]-> "Literal url"
-                ids: this.props.comparison.resources.filter(r => r._class !== 'literal').map(resource => resource.id)
-            }).then(resourcesStatements => {
-                this.setState({ relatedResources: getRelatedResourcesData(resourcesStatements) });
-            });
-        }
-    };
-
-    handleChange = () => {
-        this.setState({ openBox: !this.state.openBox });
-    };
-
-    render() {
-        return (
-            <PaperCardStyled
-                {...(((this.state.relatedFigures && this.state.relatedFigures.length > 0) ||
-                    (this.state.relatedResources && this.state.relatedResources.length > 0)) && {
-                    onClick: this.handleChange,
-                    ...{ style: { cursor: 'pointer' } }
-                })}
-                rounded={this.props.rounded}
-                className="list-group-item list-group-item-action "
-            >
-                <Row>
-                    <Col md={9} aria-expanded={this.state.openBox}>
-                        <Link to={reverse(ROUTES.COMPARISON, { comparisonId: this.props.comparison.id })}>
-                            {this.props.comparison.label ? this.props.comparison.label : <em>No title</em>}
-                        </Link>
-                        <br />
-                        {this.props.comparison.created_at && (
-                            <div>
-                                <small>
-                                    <Icon size="sm" icon={faFile} className="mr-1" /> {this.props.comparison.nbContributions} Contributions
-                                    <Icon size="sm" icon={faCalendar} className="ml-2 mr-1" />{' '}
-                                    {moment(this.props.comparison.created_at).format('DD-MM-YYYY')}
-                                </small>
-                            </div>
-                        )}
-                        {this.props.comparison.description && (
-                            <div>
-                                <small className="text-muted">{truncate(this.props.comparison.description, { length: 150 })}</small>
-                            </div>
-                        )}
-                    </Col>
-
-                    <div className="col-3 text-right d-flex align-items-end" style={{ flexDirection: 'column' }}>
-                        <div style={{ flex: 1 }}>
-                            <RelativeBreadcrumbs researchField={this.props.comparison.researchField} />
-                            <div style={{ marginTop: '8px' }}>
-                                {!this.state.openBox &&
-                                    this.state.relatedFigures.slice(0, 2).map(url => (
-                                        <ResourceItem key={url.figureId} style={{ float: 'right', padding: '3px' }}>
-                                            <div>
-                                                <Img src={url.src} alt={url.alt} />
-                                            </div>
-                                        </ResourceItem>
-                                    ))}
-                            </div>
+const ComparisonCard = props => {
+    return (
+        <ComparisonCardStyled rounded={props.rounded} className="list-group-item list-group-item-action ">
+            <Row>
+                <Col md={9}>
+                    <Link to={reverse(ROUTES.COMPARISON, { comparisonId: props.comparison.id })}>
+                        {props.comparison.label ? props.comparison.label : <em>No title</em>}
+                    </Link>
+                    <br />
+                    {props.comparison.created_at && (
+                        <div>
+                            <small>
+                                <Icon size="sm" icon={faFile} className="mr-1" /> {props.comparison.contributions?.length} Contributions
+                                <Icon size="sm" icon={faChartBar} className="ml-2 mr-1" /> {props.comparison.visualizations?.length} Visualizations
+                                {(props.comparison.resources?.length > 0 || props.comparison.figures?.length > 0) && (
+                                    <>
+                                        <Icon size="sm" icon={faPaperclip} className="ml-2 mr-1" />{' '}
+                                        {props.comparison.resources.length + props.comparison.resources.length} attachments
+                                    </>
+                                )}
+                                <Icon size="sm" icon={faCalendar} className="ml-2 mr-1" /> {moment(props.comparison.created_at).format('DD-MM-YYYY')}
+                            </small>
                         </div>
-                        <UserAvatar userId={this.props.comparison.created_by} />
+                    )}
+                    {props.comparison.description && (
+                        <div>
+                            <small className="text-muted">{truncate(props.comparison.description, { length: 200 })}</small>
+                        </div>
+                    )}
+                    <div className="d-block d-md-none mt-1">
+                        <RelativeBreadcrumbs researchField={props.comparison.researchField} />
                     </div>
-                </Row>
-                <Collapse isOpen={this.state.openBox}>
-                    <hr />
-                    <RelatedResourceWrapper>
-                        {this.state.relatedFigures.length > 0 && (
-                            <div style={{ color: '#e86161' }}>
-                                Figures
-                                <div style={{ display: 'flex' }}>
-                                    {this.state.relatedFigures.map(url => (
-                                        <ResourceItem key={url.figureId}>
-                                            <Link to={reverse(ROUTES.COMPARISON, { comparisonId: this.props.comparison.id }) + '#' + url.figureId}>
-                                                <div style={{ padding: '5px' }}>
-                                                    <Img src={url.src} alt={url.alt} style={{ height: '80px' }} />
-                                                </div>
-                                            </Link>
-                                        </ResourceItem>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
-                        {this.state.relatedResources.length > 0 && (
-                            <div style={{ color: '#e86161' }}>
-                                Resources
-                                <div style={{ display: 'flex' }}>
-                                    {this.state.relatedResources.map(resource => (
-                                        <ResourceItem key={resource.id}>
-                                            <Link to={reverse(ROUTES.COMPARISON, { comparisonId: this.props.comparison.id }) + '#' + resource.id}>
-                                                <div style={{ padding: '5px' }}>
-                                                    <Img src={resource.image} alt={resource.title} style={{ height: '80px' }} />
-                                                </div>
-                                            </Link>
-                                        </ResourceItem>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
-                    </RelatedResourceWrapper>
-                </Collapse>
-            </PaperCardStyled>
-        );
-    }
-}
+                    {props.showHistory && props.comparison.versions && props.comparison.versions.length > 1 && (
+                        <Versions versions={props.comparison.versions} id={props.comparison.id} />
+                    )}
+                </Col>
+
+                <div className="col-md-3 text-right d-flex align-items-end flex-column">
+                    <div className="flex-grow-1 mb-1">
+                        <div className="d-none d-md-flex align-items-end justify-content-end">
+                            <RelativeBreadcrumbs researchField={props.comparison.researchField} />
+                        </div>
+                        <div className="d-none d-md-flex align-items-end justify-content-end mt-1">
+                            <Thumbnail figures={props.comparison.figures} visualizations={props.comparison.visualizations} id={props.comparison.id} />
+                        </div>
+                    </div>
+                    <UserAvatar userId={props.comparison.created_by} />
+                </div>
+            </Row>
+        </ComparisonCardStyled>
+    );
+};
 
 ComparisonCard.propTypes = {
     comparison: PropTypes.shape({
         id: PropTypes.string.isRequired,
         label: PropTypes.string,
         description: PropTypes.string,
-        nbContributions: PropTypes.number,
-        url: PropTypes.string,
-        reference: PropTypes.string,
+        contributions: PropTypes.array,
         created_at: PropTypes.string,
         resources: PropTypes.array,
         figures: PropTypes.array,
@@ -217,10 +85,15 @@ ComparisonCard.propTypes = {
             id: PropTypes.string.isRequired,
             label: PropTypes.string
         }),
-        created_by: PropTypes.string
+        created_by: PropTypes.string,
+        versions: PropTypes.array,
+        visualizations: PropTypes.array
     }).isRequired,
     rounded: PropTypes.string,
-    loadResources: PropTypes.bool
+    showHistory: PropTypes.bool
 };
 
+ComparisonCard.defaultProps = {
+    showHistory: true
+};
 export default ComparisonCard;

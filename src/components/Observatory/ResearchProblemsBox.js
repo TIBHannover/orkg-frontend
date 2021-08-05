@@ -14,7 +14,7 @@ import capitalize from 'capitalize';
 const ResearchProblemsBox = ({ observatoryId, organizationsList }) => {
     const user = useSelector(state => state.auth.user);
     const [openModal, setOpenModal] = useState(false);
-    const [showAddResearchProblemDialog, setShowAddResearchProblemDialog] = useState(null);
+    const [showAddResearchProblemDialog, setShowAddResearchProblemDialog] = useState(false);
     const [isLoadingProblems, setIsLoadingProblems] = useState(null);
     const [problemsList, setProblemsList] = useState([]);
 
@@ -72,7 +72,7 @@ const ResearchProblemsBox = ({ observatoryId, organizationsList }) => {
                     )}
                     {problemsList?.length > 5 && (
                         <div className="text-center mt-3">
-                            <Button size="sm" onClick={() => setOpenModal(v => !v)} color="lightblue">
+                            <Button size="sm" onClick={() => setOpenModal(v => !v)} color="light">
                                 View more
                             </Button>
                             {openModal && (

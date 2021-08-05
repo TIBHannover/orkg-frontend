@@ -18,6 +18,7 @@ import { toast } from 'react-toastify';
 import { CLASSES } from 'constants/graphSettings';
 import { getPaperByDOI } from 'services/backend/misc';
 import REGEX from 'constants/regex';
+import TitleBar from 'components/TitleBar/TitleBar';
 
 class Search extends Component {
     constructor(props) {
@@ -72,6 +73,11 @@ class Search extends Component {
                 label: 'Visualization',
                 labelPlural: 'Visualizations',
                 id: CLASSES.VISUALIZATION
+            },
+            {
+                label: 'SmartReview',
+                labelPlural: 'SmartReviews',
+                id: CLASSES.SMART_REVIEW_PUBLISHED
             }
         ];
 
@@ -269,10 +275,8 @@ class Search extends Component {
         const allFilters = unionBy(this.defaultsFilters, this.state.selectedFilters, 'id');
         return (
             <div>
+                <TitleBar>Search results</TitleBar>
                 <Container>
-                    <h1 className="h4 mt-4 mb-4">Search results</h1>
-                </Container>
-                <Container className="mt-4">
                     <Row>
                         <Col className="col-sm-4 px-0">
                             <div className="box rounded mr-4 p-4 h-100">

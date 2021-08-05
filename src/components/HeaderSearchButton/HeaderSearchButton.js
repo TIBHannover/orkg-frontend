@@ -7,48 +7,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useHistory } from 'react-router';
 import { useClickAway } from 'react-use';
 import { Button } from 'reactstrap';
-import styled from 'styled-components';
-
-const SearchStyled = styled.div`
-    &&& {
-        padding: 0;
-        margin-left: 1px !important;
-        display: flex;
-    }
-`;
-
-const InputStyled = styled.input`
-    background: transparent;
-    line-height: 0.7;
-    padding: 2px 10px;
-    height: 28px;
-    border: 0;
-    color: #fff;
-    width: 200px;
-    animation: width 0.2s normal forwards ease-in-out;
-    outline: 0;
-
-    &::placeholder {
-        color: #fff;
-        opacity: 0.6;
-    }
-
-    @keyframes width {
-        from {
-            width: 50px;
-        }
-        to {
-            width: 200px;
-        }
-    }
-`;
-
-const SearchButtonStyled = styled(Button)`
-    &&& {
-        color: #fff;
-        border: 0;
-    }
-`;
+import { SearchStyled, InputStyled, SearchButtonStyled } from 'components/styled';
 
 const HeaderSearchButton = ({ placeholder, type }) => {
     const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -87,7 +46,7 @@ const HeaderSearchButton = ({ placeholder, type }) => {
     };
 
     return isSearchOpen ? (
-        <SearchStyled className="btn btn-darkblue btn-sm active" ref={refContainer}>
+        <SearchStyled className="btn btn-secondary btn-sm active" ref={refContainer}>
             <InputStyled
                 type="text"
                 placeholder={placeholder}
@@ -101,7 +60,7 @@ const HeaderSearchButton = ({ placeholder, type }) => {
             </SearchButtonStyled>
         </SearchStyled>
     ) : (
-        <Button size="sm" color="darkblue" style={{ marginLeft: 1 }} className="px-3" onClick={() => setIsSearchOpen(true)}>
+        <Button size="sm" color="secondary" style={{ marginLeft: 1 }} className="px-3" onClick={() => setIsSearchOpen(true)}>
             <Icon icon={faSearch} />
         </Button>
     );

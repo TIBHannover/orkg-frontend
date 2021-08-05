@@ -7,7 +7,6 @@ import { reverse } from 'named-urls';
 import ROUTES from '../../constants/routes.js';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import queryString from 'query-string';
 
 const Comparison = styled(Card)`
     border-width: 1px !important; //TODO: remove once style of 1px border is applied globally
@@ -48,8 +47,8 @@ const ComparisonText = styled(CardText)`
 class FeaturedComparisonsItem extends Component {
     render() {
         const icon = require('@fortawesome/free-solid-svg-icons')[this.props.icon];
-        const contributionString = queryString.parse(this.props.link).contributions;
-        const contributionsLength = typeof contributionString === 'string' ? contributionString.split(',').length : 0;
+
+        const contributionsLength = this.props.contributions ? this.props.contributions.length : 0;
 
         return (
             <Col sm="6" className="mb-4">
@@ -63,7 +62,7 @@ class FeaturedComparisonsItem extends Component {
                                 <Col sm="9">
                                     <ComparisonTitle tag="h5">{this.props.title}</ComparisonTitle>
                                     <ComparisonText>{this.props.description}</ComparisonText>
-                                    <Badge color="lightblue">{contributionsLength} contributions</Badge>
+                                    <Badge color="light">{contributionsLength} contributions</Badge>
                                 </Col>
                             </Row>
                         </ComparisonBody>
@@ -80,7 +79,7 @@ FeaturedComparisonsItem.propTypes = {
     title: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
     id: PropTypes.string.isRequired,
-    link: PropTypes.string.isRequired
+    contributions: PropTypes.array.isRequired
 };
 
 export default withRouter(FeaturedComparisonsItem);

@@ -50,7 +50,7 @@ const CellSelector = props => {
                                     <Button
                                         className="p-0 m-0"
                                         size="sm"
-                                        color="darkblue"
+                                        color="secondary"
                                         style={{
                                             borderBottomLeftRadius: '0',
                                             borderBottomRightRadius: '0'
@@ -137,13 +137,15 @@ const CellSelector = props => {
     **/
 
     const setFullColumnSelection = (columnId, value) => {
-        const colItems = selfVisModel.modelAccess.getCol(columnId);
         selfVisModel.mrrModel.propertyAnchors[columnId].setSelectedColumn(value);
+        selfVisModel.applySelectionToCustomizationState(selfVisModel.mrrModel.propertyAnchors[columnId], value);
+        // const colItems = selfVisModel.modelAccess.getCol(columnId);
 
-        for (let i = 0; i < selfVisModel.mrrModel.contributionAnchors.length; i++) {
-            selfVisModel.mrrModel.contributionAnchors[i].setSelectedRow(true);
-            colItems[i].setItemSelected(value);
-        }
+        // this is currently not needed
+        // for (let i = 0; i < selfVisModel.mrrModel.contributionAnchors.length; i++) {
+        //     selfVisModel.mrrModel.contributionAnchors[i].setSelectedRow(true);
+        //     colItems[i].setItemSelected(value);
+        // }
     };
 
     return (

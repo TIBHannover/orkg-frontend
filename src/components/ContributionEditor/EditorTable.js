@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 import { ScrollSyncPane } from 'react-scroll-sync';
 import { useFlexLayout, useTable } from 'react-table';
 import { useSticky } from 'react-table-sticky';
+import FlipMove from 'react-flip-move';
 
 const EditorTable = ({ scrollContainerBody }) => {
     const { contributions, papers, statements, properties, resources, literals } = useSelector(state => state.contributionEditor);
@@ -57,20 +58,25 @@ const EditorTable = ({ scrollContainerBody }) => {
                 {/* paddingBottom for the 'add value' bottom, which is positioned partially below the table */}
                 <div ref={scrollContainerBody} style={{ overflow: 'auto', paddingBottom: 15 }}>
                     <div {...getTableBodyProps()} className="comparisonBody" style={{ width: '100%' }}>
-                        {rows.map((row, i) => {
-                            prepareRow(row);
-                            return (
-                                <div {...row.getRowProps()} className="tr">
-                                    {row.cells.map(cell => {
-                                        return (
+                        <FlipMove duration={700} enterAnimation="accordionVertical" leaveAnimation="accordionVertical">
+                            {rows.map(row => {
+                                prepareRow(row);
+                                return (
+                                    <div
+                                        {...row.getRowProps()}
+                                        key={row.values.property.staticRowId}
+                                        className="tr d-flex"
+                                        style={{ zIndex: 100 - row.index }}
+                                    >
+                                        {row.cells.map(cell => (
                                             <div {...cell.getCellProps()} className="td">
                                                 {cell.render('Cell')}
                                             </div>
-                                        );
-                                    })}
-                                </div>
-                            );
-                        })}
+                                        ))}
+                                    </div>
+                                );
+                            })}
+                        </FlipMove>
                     </div>
                 </div>
             </ScrollSyncPane>

@@ -47,7 +47,7 @@ const OrganizationsBox = ({ isLoadingOrganizations, organizationsList, observato
                                                 paddingBottom: '11px'
                                             }}
                                         >
-                                            <Link to={reverse(ROUTES.ORGANIZATION, { id: organization.id })}>
+                                            <Link to={reverse(ROUTES.ORGANIZATION, { id: organization.display_id })}>
                                                 <img
                                                     style={{ marginTop: 12 }}
                                                     height="50"
@@ -67,7 +67,7 @@ const OrganizationsBox = ({ isLoadingOrganizations, organizationsList, observato
                                                 textAlign: 'center'
                                             }}
                                         >
-                                            <Link to={reverse(ROUTES.ORGANIZATION, { id: organization.id })}>{organization.name}</Link>
+                                            <Link to={reverse(ROUTES.ORGANIZATION, { id: organization.display_id })}>{organization.name}</Link>
                                         </div>
                                     );
                                 }

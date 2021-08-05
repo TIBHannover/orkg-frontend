@@ -90,7 +90,7 @@ const DoiItem = ({ toggleItem, isExpanded, value, onChange, onPopulateMetadata, 
             <InputGroup>
                 <Input value={value} onChange={e => onChange(e.target.value)} disabled={isLoading} valid={isValid} invalid={isValid === false} />
                 <InputGroupAddon addonType="append">
-                    <Button color="darkblue" onClick={handleLookup} disabled={isLoading}>
+                    <Button color="secondary" onClick={handleLookup} disabled={isLoading}>
                         {!isLoading ? 'Lookup' : <Icon icon={faSpinner} spin />}
                     </Button>
                 </InputGroupAddon>

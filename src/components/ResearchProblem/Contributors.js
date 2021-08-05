@@ -13,7 +13,7 @@ import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 
 const Contributors = ({ researchProblemId }) => {
-    const { contributors, isLoading } = useResearchProblemContributors({
+    const { contributors, isLoading, isLoadingFailed } = useResearchProblemContributors({
         researchProblemId,
         pageSize: 19
     });
@@ -60,11 +60,14 @@ const Contributors = ({ researchProblemId }) => {
                     )}
                 </ContributorsAvatars>
             )}
-            {!isLoading && contributors?.length === 0 && (
-                <div className="mt-4 mb-4">
+            {!isLoading && !isLoadingFailed && contributors?.length === 0 && (
+                <div className="mt-2 mb-2">
                     No contributors in this research field yet.
                     <i> Be the first contributor!</i>
                 </div>
+            )}
+            {!isLoading && isLoadingFailed && (
+                <div className="mt-2 mb-2 text-danger">Something went wrong while loading contributors of this research field.</div>
             )}
             {contributors.length > 18 && openModal && (
                 <ContributorsModal openModal={openModal} setOpenModal={setOpenModal} researchProblemId={researchProblemId} />

@@ -19,7 +19,7 @@ const CarouselContainer = styled.div`
         width: 10px !important;
         height: 10px !important;
         border-radius: 100% !important;
-        background-color: ${props => props.theme.orkgPrimaryColor} !important;
+        background-color: ${props => props.theme.primary} !important;
     }
 `;
 
@@ -45,11 +45,11 @@ const CarouselIndicatorsStyled = styled(CarouselIndicators)`
         margin: 0;
     }
 
-    background: ${props => props.theme.ultraLightBlue};
+    background: ${props => props.theme.lightLighter};
 `;
 
 const StyledGravatar = styled(Gravatar)`
-    border: 2px solid ${props => props.theme.darkblue};
+    border: 2px solid ${props => props.theme.secondary};
     cursor: pointer;
     &:hover {
         border: 2px solid ${props => props.theme.primaryColor};
@@ -58,7 +58,7 @@ const StyledGravatar = styled(Gravatar)`
 
 const CardFooterStyled = styled(CardFooter)`
     && {
-        background: ${props => props.theme.ultraLightBlue};
+        background: ${props => props.theme.lightLighter};
     }
 `;
 
@@ -98,7 +98,7 @@ function ObservatoriesCarousel(props) {
                     <ObservatoryCardStyled className="">
                         {!observatory.logo && (
                             <Card style={{ border: 0 }}>
-                                <Link to={reverse(ROUTES.OBSERVATORY, { id: observatory.id })} style={{ textDecoration: 'none' }}>
+                                <Link to={reverse(ROUTES.OBSERVATORY, { id: observatory.display_id })} style={{ textDecoration: 'none' }}>
                                     <CardBody className="pt-0 mb-0">
                                         <CardTitle tag="h5">{observatory.name}</CardTitle>
                                         <CardSubtitle tag="h6" style={{ height: '20px' }} className="mb-1 text-muted">
@@ -109,7 +109,7 @@ function ObservatoriesCarousel(props) {
                                 <div className="mt-3 mb-3 pl-2 pr-2">
                                     <Link
                                         className="text-center d-flex"
-                                        to={reverse(ROUTES.OBSERVATORY, { id: observatory.id })}
+                                        to={reverse(ROUTES.OBSERVATORY, { id: observatory.display_id })}
                                         style={{ textDecoration: 'none', height: '80px', width: '100%', overflow: 'hidden' }}
                                     >
                                         {observatory.orgs.slice(0, 2).map((
@@ -161,11 +161,11 @@ function ObservatoriesCarousel(props) {
                         <small className="text-muted">
                             How observatories are managed?{' '}
                             <a
-                                href="https://gitlab.com/TIBHannover/orkg/orkg-frontend/-/wikis/Observatories"
+                                href="https://www.orkg.org/orkg/help-center/article/8/Observatories_for_specific_research_fields"
                                 target="_blank"
                                 rel="noopener noreferrer"
                             >
-                                ORKG wiki
+                                ORKG help center
                             </a>
                         </small>
                     </div>

@@ -12,10 +12,12 @@ const DragHandle = styled.span`
     color: #a5a5a5;
     width: 30px;
     text-align: center;
+    flex-shrink: 0;
 `;
 
 const DragHandlePlaceholder = styled.span`
     width: 30px;
+    flex-shrink: 0;
 `;
 
 const ListGroupItemStyled = styled(ListGroupItem)`
@@ -42,7 +44,7 @@ function SelectProperties(props) {
                 checked={property.active}
             />
             <Tooltip message="Amount of contributions" hideDefaultIcon>
-                <Badge color="lightblue">{property.contributionAmount}</Badge>
+                <Badge color="light">{property.contributionAmount}</Badge>
             </Tooltip>
         </ListGroupItemStyled>
     ));

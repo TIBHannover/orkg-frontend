@@ -43,8 +43,8 @@ const ToolContainer = styled(Link)`
 `;
 
 const ImgContainer = styled.div`
-    border-top: 2px solid ${props => props.theme.ultraLightBlueDarker};
-    border-bottom: 2px solid ${props => props.theme.ultraLightBlueDarker};
+    border-top: 2px solid ${props => props.theme.lightDarker};
+    border-bottom: 2px solid ${props => props.theme.lightDarker};
     height: 160px;
     display: flex;
     align-items: center;

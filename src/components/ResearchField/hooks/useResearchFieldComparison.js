@@ -5,7 +5,8 @@ import { getComparisonsByResearchFieldId } from 'services/backend/researchFields
 import { getResourcesByClass } from 'services/backend/resources';
 import { getStatementsBySubjects } from 'services/backend/statements';
 import { MISC } from 'constants/graphSettings';
-import { getComparisonData } from 'utils';
+import { getComparisonData, groupVersionsOfComparisons } from 'utils';
+import { flatten } from 'lodash';
 
 function useResearchFieldComparison({ researchFieldId, initialSort, initialIncludeSubFields, pageSize = 10 }) {
     const [isLoading, setIsLoading] = useState(false);
@@ -24,9 +25,9 @@ function useResearchFieldComparison({ researchFieldId, initialSort, initialInclu
             let papersService;
             if (researchFieldId === MISC.RESEARCH_FIELD_MAIN) {
                 papersService = getResourcesByClass({
-                    id: sort === 'newest' || sort === 'featured' ? CLASSES.FEATURED_COMPARISON : CLASSES.COMPARISON,
+                    id: sort === 'featured' ? CLASSES.FEATURED_COMPARISON_HOME_PAGE : CLASSES.COMPARISON,
                     sortBy: 'created_at',
-                    desc: true,
+                    desc: sort === 'newest' || sort === 'featured' ? true : false,
                     items: pageSize
                 });
             } else {
@@ -54,7 +55,15 @@ function useResearchFieldComparison({ researchFieldId, initialSort, initialInclu
                                 return getComparisonData(resourceSubject, comparisonStatements.statements);
                             });
 
-                            setComparisons(prevResources => [...prevResources, ...papers]);
+                            setComparisons(prevResources => {
+                                const sortFunc =
+                                    sort === 'newest' || sort === 'featured' ? undefined : (a, b) => new Date(a.created_at) - new Date(b.created_at);
+                                return groupVersionsOfComparisons(
+                                    [...flatten([...prevResources.map(c => c.versions), ...prevResources]), ...papers],
+                                    sortFunc
+                                );
+                            });
+
                             setIsLoading(false);
                             setHasNextPage(!result.last);
                             setIsLastPageReached(result.last);

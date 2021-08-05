@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { Container, Button } from 'reactstrap';
 
 export const SubtitleSeparator = styled.div`
-    background: ${props => props.theme.darkblue};
+    background: ${props => props.theme.secondary};
     width: 2px;
     height: 30px;
     margin: 0 15px;
@@ -40,7 +40,7 @@ export const ComparisonTypeButton = styled(Button)`
 export const ScrollButton = styled(Button)`
     &&& {
         border-radius: 30px;
-        color: ${props => props.theme.darkblue};
+        color: ${props => props.theme.secondary};
         width: 30px;
         height: 30px;
         cursor: pointer;
@@ -201,15 +201,20 @@ export const ItemHeaderInner = styled.div`
         color: #fff !important;
     }
     &.contribution-editor {
-        background: ${props => props.theme.themeColors.lightblue};
+        background: ${props => props.theme.light};
     }
 `;
 
 export const Contribution = styled.div`
-    color: #ffa5a5;
-    font-size: 85%;
+    color: #fff;
+    font-size: 90%;
+    font-style: italic;
+    border-top: 1px solid #d75050;
+    margin-top: 2px;
+    padding-top: 2px;
     &.contribution-editor {
-        color: ${props => props.theme.themeColors.darkblue};
+        color: ${props => props.theme.secondaryDarker};
+        border-top-color: #d0d5e8;
     }
 `;
 
@@ -232,11 +237,11 @@ export const Delete = styled.button`
         background: #fff;
     }
     &.contribution-editor {
-        color: ${props => props.theme.themeColors.lightblue};
+        color: ${props => props.theme.light};
         right: -5px;
-        background: ${props => props.theme.themeColors.darkblue};
+        background: ${props => props.theme.secondary};
         &:hover {
-            background: ${props => props.theme.themeColors.darkblueDarker};
+            background: ${props => props.theme.secondaryDarker};
         }
     }
 `;
@@ -264,7 +269,7 @@ export const ClickableScrollButton = styled.button`
 
     &.left {
         cursor: w-resize;
-        left: 250px;
+        left: ${props => props.leftOffset};
         top: 10px;
         height: calc(100% - 20px);
 

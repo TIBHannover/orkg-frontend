@@ -8,8 +8,20 @@ const defaultDatatypes = [
         id: 'String'
     },
     {
-        label: 'Number',
+        label: 'Decimal',
         id: 'Number'
+    },
+    {
+        label: 'Integer',
+        id: 'Integer'
+    },
+    {
+        label: 'Boolean',
+        id: 'Boolean'
+    },
+    {
+        label: 'URI',
+        id: 'URI'
     }
 ];
 

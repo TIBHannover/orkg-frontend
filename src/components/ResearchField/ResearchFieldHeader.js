@@ -1,17 +1,5 @@
 import { useState, useEffect } from 'react';
-import {
-    Container,
-    Button,
-    ButtonGroup,
-    ButtonDropdown,
-    DropdownToggle,
-    DropdownMenu,
-    DropdownItem,
-    Card,
-    CardBody,
-    CardTitle,
-    Badge
-} from 'reactstrap';
+import { Container, Button, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Card, CardBody, CardTitle, Badge } from 'reactstrap';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
 import { SubTitle, SubtitleSeparator } from 'components/styled';
@@ -22,6 +10,7 @@ import ExternalDescription from 'components/ResearchProblem/ExternalDescription'
 import Contributors from 'components/TopContributors/Contributors';
 import { NavLink } from 'react-router-dom';
 import ContentLoader from 'react-content-loader';
+import { useSelector } from 'react-redux';
 import ROUTES from 'constants/routes.js';
 import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
@@ -31,10 +20,12 @@ import CheckSlug from 'components/CheckSlug/CheckSlug';
 import CheckClasses from 'components/CheckClasses/CheckClasses';
 import { reverseWithSlug } from 'utils';
 import { CLASSES } from 'constants/graphSettings';
+import TitleBar from 'components/TitleBar/TitleBar';
 
 const ResearchFieldHeader = ({ id }) => {
     const [menuOpen, setMenuOpen] = useState(false);
     const [editMode, setEditMode] = useState(false);
+    const isCurationAllowed = useSelector(state => state.auth.user?.isCurationAllowed);
     const [showMoreFields, setShowMoreFields] = useState(false);
     const [researchFieldData, subResearchFields, isLoading, isFailedLoading, loadResearchFieldData] = useResearchField();
     const prevEditMode = usePrevious({ editMode });
@@ -86,60 +77,76 @@ const ResearchFieldHeader = ({ id }) => {
             )}
             {!isLoading && !isFailedLoading && (
                 <>
-                    <Container className="d-flex align-items-center mt-4 mb-4">
-                        <h1 className="h5 flex-shrink-0 mb-0">Research field</h1>
-                        <>
-                            <SubtitleSeparator />
-                            <SubTitle className="h5 mb-0"> {researchFieldData.label}</SubTitle>
-                        </>
-                        {editMode && (
-                            <StatementBrowserDialog
-                                show={editMode}
-                                toggleModal={() => setEditMode(v => !v)}
-                                id={id}
-                                label={researchFieldData.label}
-                                enableEdit={true}
-                                syncBackend={true}
-                            />
-                        )}
-                        <ButtonGroup className="flex-shrink-0" style={{ marginLeft: 'auto' }}>
-                            <RequireAuthentication
-                                component={Button}
-                                size="sm"
-                                color="darkblue"
-                                className="float-right"
-                                onClick={() => setEditMode(v => !v)}
-                            >
-                                <Icon icon={faPen} /> Edit
-                            </RequireAuthentication>
-                            <ButtonDropdown isOpen={menuOpen} toggle={() => setMenuOpen(v => !v)} nav inNavbar>
-                                <DropdownToggle size="sm" color="darkblue" className="px-3 rounded-right" style={{ marginLeft: 2 }}>
-                                    <Icon icon={faEllipsisV} />
-                                </DropdownToggle>
-                                <DropdownMenu right>
-                                    <DropdownItem tag={NavLink} exact to={reverse(ROUTES.RESOURCE, { id })}>
-                                        View resource
-                                    </DropdownItem>
-                                </DropdownMenu>
-                            </ButtonDropdown>
-                        </ButtonGroup>
-                    </Container>
+                    {editMode && (
+                        <StatementBrowserDialog
+                            show={editMode}
+                            toggleModal={() => setEditMode(v => !v)}
+                            id={id}
+                            label={researchFieldData.label}
+                            enableEdit={true}
+                            syncBackend={true}
+                        />
+                    )}
+                    <TitleBar
+                        titleAddition={
+                            <>
+                                <SubtitleSeparator />
+                                <SubTitle>{researchFieldData.label}</SubTitle>
+                            </>
+                        }
+                        buttonGroup={
+                            <>
+                                {isCurationAllowed && (
+                                    <RequireAuthentication
+                                        component={Button}
+                                        size="sm"
+                                        color="secondary"
+                                        className="float-right"
+                                        onClick={() => setEditMode(v => !v)}
+                                        style={{ marginRight: 2 }}
+                                    >
+                                        <Icon icon={faPen} /> Edit
+                                    </RequireAuthentication>
+                                )}
+                                <ButtonDropdown isOpen={menuOpen} toggle={() => setMenuOpen(v => !v)} nav inNavbar>
+                                    <DropdownToggle size="sm" color="secondary" className="px-3 rounded-right">
+                                        <Icon icon={faEllipsisV} />
+                                    </DropdownToggle>
+                                    <DropdownMenu right>
+                                        <DropdownItem tag={NavLink} exact to={reverse(ROUTES.RESOURCE, { id })}>
+                                            View resource
+                                        </DropdownItem>
+                                    </DropdownMenu>
+                                </ButtonDropdown>
+                            </>
+                        }
+                        wrap={false}
+                    >
+                        Research field
+                    </TitleBar>
+
                     <Container className="p-0">
                         <Card>
-                            <CardBody>
-                                <CardTitle tag="h5">Description</CardTitle>
-                                {researchFieldData.description && <p className="m-0">{researchFieldData.description}</p>}
-                                {!researchFieldData.description && <p className="m-0">No description for this research field yet!</p>}
-                                {researchFieldData.sameAs && (
-                                    <ExternalDescription
-                                        query={researchFieldData.sameAs ? researchFieldData.sameAs.label : researchFieldData.label}
-                                    />
-                                )}
-                            </CardBody>
-
+                            {(researchFieldData.description || researchFieldData.sameAs) && (
+                                <>
+                                    <CardBody>
+                                        {researchFieldData.description && (
+                                            <>
+                                                <CardTitle tag="h5">Description</CardTitle>
+                                                {researchFieldData.description && <p className="m-0">{researchFieldData.description}</p>}
+                                            </>
+                                        )}
+                                        {researchFieldData.sameAs && (
+                                            <ExternalDescription
+                                                query={researchFieldData.sameAs ? researchFieldData.sameAs.label : researchFieldData.label}
+                                            />
+                                        )}
+                                    </CardBody>
+                                    <hr className="m-0" />
+                                </>
+                            )}
                             {subResearchFields && subResearchFields.length > 0 && (
                                 <>
-                                    <hr className="m-0" />
                                     <CardBody>
                                         <CardTitle tag="h5">Subfields</CardTitle>
                                         <div>
@@ -151,7 +158,7 @@ const ResearchFieldHeader = ({ id }) => {
                                                         slug: subfield.label
                                                     })}
                                                 >
-                                                    <Badge color="lightblue" className="mr-2 mb-2">
+                                                    <Badge color="light" className="mr-2 mb-2">
                                                         {subfield.label}
                                                     </Badge>
                                                 </Link>
@@ -166,7 +173,7 @@ const ResearchFieldHeader = ({ id }) => {
                                                             slug: subfield.label
                                                         })}
                                                     >
-                                                        <Badge color="lightblue" className="mr-2 mb-2">
+                                                        <Badge color="light" className="mr-2 mb-2">
                                                             {subfield.label}
                                                         </Badge>
                                                     </Link>
@@ -178,10 +185,10 @@ const ResearchFieldHeader = ({ id }) => {
                                             )}
                                         </div>
                                     </CardBody>
+                                    <hr className="m-0" />
                                 </>
                             )}
 
-                            <hr className="m-0" />
                             <CardBody>
                                 <Contributors researchFieldId={id} />
                             </CardBody>

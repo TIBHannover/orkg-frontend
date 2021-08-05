@@ -10,11 +10,13 @@ import { getPaperData } from 'utils';
 import { find } from 'lodash';
 import PropTypes from 'prop-types';
 import { PREDICATES } from 'constants/graphSettings';
+import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
 import { NavLink } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import ContentLoader from 'react-content-loader';
 import ROUTES from 'constants/routes.js';
 import { reverse } from 'named-urls';
+import TitleBar from 'components/TitleBar/TitleBar';
 
 const AuthorMetaInfo = styled.div`
     .key {
@@ -136,29 +138,31 @@ class AuthorPage extends Component {
                 )}
                 {!this.state.loading && (
                     <div>
-                        <Container className="p-0 d-flex align-items-center">
-                            <h1 className="h4 mt-4 mb-4 flex-grow-1">Author: {this.state.author.label}</h1>
-
-                            <ButtonDropdown
-                                isOpen={this.state.menuOpen}
-                                toggle={() =>
-                                    this.setState(prevState => ({
-                                        menuOpen: !prevState.menuOpen
-                                    }))
-                                }
-                                nav
-                                inNavbar
-                            >
-                                <DropdownToggle size="sm" color="darkblue" className="px-3 rounded-right" style={{ marginLeft: 2 }}>
-                                    <Icon icon={faEllipsisV} />
-                                </DropdownToggle>
-                                <DropdownMenu right>
-                                    <DropdownItem tag={NavLink} exact to={reverse(ROUTES.RESOURCE, { id: this.props.match.params.authorId })}>
-                                        View resource
-                                    </DropdownItem>
-                                </DropdownMenu>
-                            </ButtonDropdown>
-                        </Container>
+                        <TitleBar
+                            buttonGroup={
+                                <ButtonDropdown
+                                    isOpen={this.state.menuOpen}
+                                    toggle={() =>
+                                        this.setState(prevState => ({
+                                            menuOpen: !prevState.menuOpen
+                                        }))
+                                    }
+                                    nav
+                                    inNavbar
+                                >
+                                    <DropdownToggle size="sm" color="secondary" className="px-3 rounded-right" style={{ marginLeft: 2 }}>
+                                        <Icon icon={faEllipsisV} />
+                                    </DropdownToggle>
+                                    <DropdownMenu right>
+                                        <DropdownItem tag={NavLink} exact to={reverse(ROUTES.RESOURCE, { id: this.props.match.params.authorId })}>
+                                            View resource
+                                        </DropdownItem>
+                                    </DropdownMenu>
+                                </ButtonDropdown>
+                            }
+                        >
+                            Author: {this.state.author.label}
+                        </TitleBar>
                         <Container className="p-0">
                             <div className="box rounded p-4 mb-3">
                                 <AuthorMetaInfo>
@@ -260,6 +264,7 @@ class AuthorPage extends Component {
                                 </div>
                             )}
                         </Container>
+                        <ComparisonPopup />
                     </div>
                 )}
             </>

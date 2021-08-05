@@ -7,6 +7,7 @@ import { Contribution, Delete, ItemHeader, ItemHeaderInner } from 'components/Co
 import EditPaperDialog from 'components/ViewPaper/EditDialog/EditPaperDialog';
 import useEditPaper from 'components/ViewPaper/EditDialog/hooks/useEditPaper';
 import PropTypes from 'prop-types';
+import env from '@beam-australia/react-env';
 import { memo, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Button } from 'reactstrap';
@@ -42,9 +43,13 @@ const TableHeaderColumn = ({ contribution, paper }) => {
     return (
         <ItemHeader key={contribution.id}>
             <ItemHeaderInner className="position-relative contribution-editor">
-                <Tippy content="Edit paper's metadata">
+                <Tippy content="Edit paper's metadata" disabled={env('PWC_USER_ID') === contribution.created_by}>
                     <span>
-                        <Button color="link" className="text-darkblueDarker p-0 text-left" onClick={handleEditPaper}>
+                        <Button
+                            color="link"
+                            className="text-secondary-darker p-0 text-left"
+                            onClick={env('PWC_USER_ID') !== contribution.created_by ? handleEditPaper : undefined}
+                        >
                             {paper.label || <em>No title</em>}
                         </Button>
                     </span>

@@ -13,7 +13,8 @@ import { reverseWithSlug } from 'utils';
 
 const BreadcrumbStyled = styled.ul`
     list-style: none;
-    display: inline-block;
+    display: flex;
+    margin-bottom: 5px;
     font-size: small;
     padding: 0;
 
@@ -29,9 +30,9 @@ const BreadcrumbStyled = styled.ul`
             }
         }
         & > a {
-            color: ${props => props.theme.darkblue};
+            color: ${props => props.theme.secondary};
             display: block;
-            background: ${props => props.theme.ultraLightBlueDarker};
+            background: ${props => props.theme.lightDarker};
             text-decoration: none;
             position: relative;
             line-height: 20px;
@@ -65,7 +66,7 @@ const BreadcrumbStyled = styled.ul`
                 content: '';
                 position: absolute;
                 top: 0;
-                border: 0 solid ${props => props.theme.ultraLightBlueDarker};
+                border: 0 solid ${props => props.theme.lightDarker};
                 border-width: 10px 6px;
                 width: 0;
                 height: 0;
@@ -77,7 +78,7 @@ const BreadcrumbStyled = styled.ul`
             &:after {
                 left: 100%;
                 border-color: transparent;
-                border-left-color: ${props => props.theme.ultraLightBlueDarker};
+                border-left-color: ${props => props.theme.lightDarker};
             }
             &:hover,
             &:active {

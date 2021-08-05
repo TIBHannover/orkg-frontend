@@ -10,13 +10,15 @@ import { useSelector } from 'react-redux';
 import Gravatar from 'react-gravatar';
 import styled from 'styled-components';
 import { CLASSES, MISC } from 'constants/graphSettings';
+import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import TitleBar from 'components/TitleBar/TitleBar';
 
 const StyledGravatar = styled(Gravatar)`
-    border: 3px solid ${props => props.theme.avatarBorderColor};
+    border: 3px solid ${props => props.theme.dark};
 `;
 
 const StyledOrganizationCard = styled.div`
@@ -70,7 +72,7 @@ const StyledActivity = styled.div`
         display: inline-block;
     }
     a {
-        color: ${props => props.theme.ORKGPrimaryColor};
+        color: ${props => props.theme.primary};
     }
 
     &:last-child {
@@ -99,10 +101,14 @@ const UserProfile = props => {
                         if (userData.organization_id !== MISC.UNKNOWN_ID) {
                             const promise1 = getOrganization(userData.organization_id);
                             promises.push(promise1);
+                        } else {
+                            promises.push(Promise.resolve());
                         }
                         if (userData.observatory_id !== MISC.UNKNOWN_ID) {
                             const promise2 = getObservatoryById(userData.observatory_id);
                             promises.push(promise2);
+                        } else {
+                            promises.push(Promise.resolve());
                         }
 
                         Promise.all(promises)
@@ -148,34 +154,31 @@ const UserProfile = props => {
             <Container>
                 {!isLoadingUserData && (
                     <Row>
-                        <div className="col-2 text-center d-flex align-items-center justify-content-center">
-                            <StyledGravatar
-                                className="rounded-circle"
-                                md5={userData?.gravatar_id ?? 'example@example.com'}
-                                size={100}
-                                id="TooltipExample"
-                            />
+                        <div className="col-md-2 text-center d-flex align-items-center justify-content-center mb-3 mb-md-0">
+                            <StyledGravatar className="rounded-circle" md5={userData?.gravatar_id ?? 'example@example.com'} size={100} />
                         </div>
-                        <div className="col-10 box rounded p-4">
+                        <div className="col-md-10 box rounded p-4">
                             <div className="row">
-                                <div className="col-8 d-flex" style={{ flexDirection: 'column' }}>
+                                <div className="col-md-8 d-flex" style={{ flexDirection: 'column' }}>
                                     <h2 className="h3 flex-grow-1">{userData.display_name}</h2>
                                     {observatoryData && (
                                         <div className="mt-3 align-items-end">
                                             <b className="d-block">Member of the observatory</b>
-                                            <Link to={reverse(ROUTES.OBSERVATORY, { id: observatoryData?.id })} className="text-center">
+                                            <Link to={reverse(ROUTES.OBSERVATORY, { id: observatoryData?.display_id })} className="text-center">
                                                 {observatoryData?.name}
                                             </Link>
                                         </div>
                                     )}
                                 </div>
-                                <div className="col-4">
+                                <div className="col-md-4 mt-4 mt-md-0">
                                     {organizationData && (
                                         <StyledOrganizationCard>
-                                            <Link className="logoContainer" to={reverse(ROUTES.ORGANIZATION, { id: organizationData.id })}>
+                                            <Link className="logoContainer" to={reverse(ROUTES.ORGANIZATION, { id: organizationData.display_id })}>
                                                 <img className="mx-auto p-2" src={organizationData.logo} alt={`${organizationData.name} logo`} />
                                             </Link>
-                                            <Link to={reverse(ROUTES.ORGANIZATION, { id: organizationData.id })}>{organizationData?.name}</Link>
+                                            <Link to={reverse(ROUTES.ORGANIZATION, { id: organizationData.display_id })}>
+                                                {organizationData?.name}
+                                            </Link>
                                         </StyledOrganizationCard>
                                     )}
                                 </div>
@@ -202,19 +205,16 @@ const UserProfile = props => {
                 )}
             </Container>
 
-            <Container className="d-flex align-items-center mt-4 mb-4">
-                <h1 className="h4 flex-grow-1">Published comparisons</h1>
-            </Container>
+            <TitleBar>Published comparisons</TitleBar>
             <Container className="p-0">
                 <Items filterLabel="comparisons" filterClass={CLASSES.COMPARISON} userId={userId} />
             </Container>
 
-            <Container className="d-flex align-items-center mt-4 mb-4">
-                <h1 className="h4 flex-grow-1">Added papers</h1>
-            </Container>
+            <TitleBar>Added papers</TitleBar>
             <Container className="p-0">
                 <Items filterLabel="papers" filterClass={CLASSES.PAPER} userId={userId} showDelete={userId === currentUserId} />
             </Container>
+            <ComparisonPopup />
             {/*
             TODO: support for activity feed
             <Container className="box mt-4 pt-4 pb-3 pl-5 pr-5">

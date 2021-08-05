@@ -1,10 +1,6 @@
-import { configure } from 'enzyme';
 import 'jest-canvas-mock';
-import Adapter from 'enzyme-adapter-react-16';
 import '@testing-library/jest-dom/extend-expect';
 import { server } from 'services/mocks/server';
-
-configure({ adapter: new Adapter() });
 
 beforeAll(() => {
     server.listen();
@@ -18,3 +14,14 @@ afterEach(() => {
 afterAll(() => {
     server.close();
 });
+
+// required due to the usage of react-slick https://github.com/akiran/react-slick/issues/742
+window.matchMedia =
+    window.matchMedia ||
+    function() {
+        return {
+            matches: false,
+            addListener: function() {},
+            removeListener: function() {}
+        };
+    };

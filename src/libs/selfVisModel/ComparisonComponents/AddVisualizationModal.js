@@ -15,14 +15,14 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 
 const TabButtons = styled(Row)`
-    border-bottom: 2px solid ${props => props.theme.ultraLightBlueDarker};
+    border-bottom: 2px solid ${props => props.theme.lightDarker};
 `;
 
 const TabButton = styled.div`
     cursor: pointer;
     padding: 4px 20px;
-    background-color: ${props => (props.active ? props.theme.primary : props.theme.themeColors.lightblue)};
-    border: ${props => (props.active ? 'none' : '1px solid ' + props.theme.ultraLightBlueDarker)};
+    background-color: ${props => (props.active ? props.theme.primary : props.theme.light)};
+    border: ${props => (props.active ? 'none' : '1px solid ' + props.theme.lightDarker)};
     border-bottom: 0;
     color: ${props => (props.active ? '#ffffff' : '')};
     font-size: 18px;
@@ -85,7 +85,7 @@ function AddVisualizationModal(props) {
                     // set the state last tab;
                     setProcessStep(2);
                 } else {
-                    // reset the model
+                    // reset the model >> this is called when we start the visualization modal
                     new SelfVisDataModel().resetCustomizationModel();
                     setProcessStep(0);
                 }
@@ -132,7 +132,7 @@ function AddVisualizationModal(props) {
                     Create comparison visualization
                     <Button
                         outline
-                        color="darkblue"
+                        color="secondary"
                         size="sm"
                         className="ml-3"
                         onClick={() => {
@@ -181,7 +181,19 @@ function AddVisualizationModal(props) {
                     />
                 </ModalBody>
                 <ModalFooter className="p-2">
-                    {/*Added hint to select at least one mapper at the top*/}
+                    {/*
+                    <Button
+                        color="primary"
+                        className="mr-2"
+                        onClick={() => {
+                            const mmr = new SelfVisDataModel(); // this is a singleton
+                            mmr.debug();
+                        }}
+                    >
+                        Debug
+                    </Button>
+                    */}
+
                     {processStep === 1 && (
                         <div style={{ position: 'absolute', left: 0 }}>Please select at least one mapper at the top of a column.</div>
                     )}

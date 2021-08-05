@@ -25,7 +25,7 @@ const PreviewContainer = styled.div`
     height: 100px;
     display: flex;
     align-items: center;
-    border: 1px ${props => props.theme.darkblue} solid;
+    border: 1px ${props => props.theme.secondary} solid;
     border-radius: 5px;
     overflow: hidden;
     transition: box-shadow 0.5s;
@@ -95,9 +95,9 @@ const VisualizationCard = props => {
                     <br />
                     <div>
                         <small>
-                            {props.visualization.authorNames && props.visualization.authorNames.length > 0 && (
+                            {props.visualization.authors && props.visualization.authors.length > 0 && (
                                 <>
-                                    <Icon size="sm" icon={faUser} /> {props.visualization.authorNames.map(a => a.label).join(', ')}
+                                    <Icon size="sm" icon={faUser} /> {props.visualization.authors.map(a => a.label).join(', ')}
                                 </>
                             )}
                             {props.visualization.created_at && (
@@ -124,7 +124,7 @@ VisualizationCard.propTypes = {
         id: PropTypes.string.isRequired,
         comparisonId: PropTypes.string,
         label: PropTypes.string,
-        authorNames: PropTypes.array,
+        authors: PropTypes.array,
         created_at: PropTypes.string,
         description: PropTypes.string
     }).isRequired

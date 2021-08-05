@@ -1,37 +1,36 @@
-// ORKG theme variables
-$ORKG-border-radius: 6px; // General border radius on inputs, buttons, boxes etc.
-$ORKG-primary-color: #e86161; // Primary color for buttons, icons, links etc.
-$ORKG-border-width: 1px; // Width of border for buttons, inputs
-
+/**
+ * 
+ * IMPORTANT: Please make sure to update ThemeVariables.js if you update any of the following variables
+ * 
+ */
 // Theme variables
-$primary: $ORKG-primary-color;
-$darkblue: #80869b;
-$darkblueDarker: darken($darkblue, 20%);
-//$secondary: #3C4C58;
-$light: #e9ecef;
-$ultra-light-blue: #f8f9fb;
-$ultra-light-blue-darker: #dbdde5;
-$body-bg: #e9ebf2;
-$body-color: #4f4f4f; //#646464;
-$border-width: $ORKG-border-width;
-$border-radius: $ORKG-border-radius;
-
-// Add a new theme color
+$primary: #e86161;
+$primary-darker: darken($primary, 20%);
+$secondary: #80869b;
+$secondary-darker: darken($secondary, 20%);
+$light: #e9ebf2;
+$light-lighter: #f8f9fb;
+$light-darker: #dbdde5;
+$dark: #5b6176;
+$body-bg: $light;
+$body-color: #4f4f4f;
+$border-width: 1px;
+$border-radius: 6px;
 $theme-colors: (
-    lightblue: $body-bg,
-    darkblue: $darkblue,
-    darkblueDarker: $darkblueDarker,
-    primaryDarker: darken($ORKG-primary-color, 20%)
+    primary-darker: $primary-darker,
+    secondary-darker: $secondary-darker,
+    light-darker: $light-darker,
+    body: $body-color
 );
 
 // Forms
 $form-feedback-font-size: 90%;
 
 // Inputs
-$input-border-radius: $ORKG-border-radius;
-$input-border-radius-sm: $ORKG-border-radius;
-$btn-border-radius: $ORKG-border-radius;
-$btn-border-radius: $ORKG-border-radius;
+$input-border-radius: $border-radius;
+$input-border-radius-sm: $border-radius;
+$btn-border-radius: $border-radius;
+$btn-border-radius: $border-radius;
 $btn-border-radius-sm: $btn-border-radius;
 $btn-border-radius-lg: $btn-border-radius;
 $input-bg: #f7f7f7;
@@ -55,8 +54,15 @@ $badge-font-weight: 500;
 $badge-padding-y: 0.3rem;
 $badge-padding-x: 0.8rem;
 
-// Bootstrap Vars
+// List group
 $list-group-border-color: rgba(0, 0, 0, 0.125);
 
-$button-dark: #5b6176;
-$avatar-border-color: #676d81;
+// Breakpoints (no changed made, copied to make them available to styled-components)
+$grid-breakpoints: (
+    xs: 0,
+    sm: 576px,
+    md: 768px,
+    lg: 992px,
+    xl: 1200px,
+    xxl: 1400px
+);

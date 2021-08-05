@@ -47,7 +47,7 @@ const Observatories = ({ organizationsId }) => {
                                 <div key={`c${index}`} className="list-group-item list-group-item-action pr-2 p-3">
                                     <div>
                                         <div>
-                                            <Link to={reverse(ROUTES.OBSERVATORY, { id: observatory.id })}>{observatory.name}</Link>
+                                            <Link to={reverse(ROUTES.OBSERVATORY, { id: observatory.display_id })}>{observatory.name}</Link>
                                         </div>
                                         <Dotdotdot clamp={3}>
                                             <small className="text-muted">{observatory.description}</small>

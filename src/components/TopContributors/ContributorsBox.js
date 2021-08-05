@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 import { Button } from 'reactstrap';
 
 const ContributorsBox = ({ researchFieldId }) => {
-    const { contributors, isLoading } = useContributors({ researchFieldId, pageSize: 5 });
+    const { contributors, isLoading } = useContributors({ researchFieldId, pageSize: 30 });
     const [openModal, setOpenModal] = useState(false);
 
     return (
@@ -25,7 +25,7 @@ const ContributorsBox = ({ researchFieldId }) => {
                                 <ContributorCard
                                     contributor={{
                                         ...contributor.profile,
-                                        subTitle: `${contributor.contributions} contribution${contributor.contributions > 1 ? 's' : ''}`
+                                        subTitle: `${contributor.counts.total} contribution${contributor.counts.total > 1 ? 's' : ''}`
                                     }}
                                 />
                                 {contributors.slice(0, 4).length - 1 !== index && <hr className="mb-0 mt-1" />}
@@ -42,7 +42,7 @@ const ContributorsBox = ({ researchFieldId }) => {
                 )}
                 {!isLoading && contributors?.length > 4 && (
                     <div className="text-center mt-3">
-                        <Button size="sm" onClick={() => setOpenModal(v => !v)} color="lightblue">
+                        <Button size="sm" onClick={() => setOpenModal(v => !v)} color="light">
                             View more
                         </Button>
                         {openModal && <ContributorsModal openModal={openModal} setOpenModal={setOpenModal} researchFieldId={researchFieldId} />}

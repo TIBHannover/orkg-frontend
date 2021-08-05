@@ -1,4 +1,4 @@
-import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
+import { faPlusCircle, faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { loadContributions, removeContributions } from 'actions/contributionEditor';
 import CreateProperty from 'components/ContributionEditor/CreateProperty';
@@ -11,10 +11,14 @@ import CreateContributionModal from 'components/CreateContributionModal/CreateCo
 import CreatePaperModal from 'components/CreatePaperModal/CreatePaperModal';
 import routes from 'constants/routes';
 import { reverse } from 'named-urls';
+import queryString from 'query-string';
+import { useLocation } from 'react-router';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { Alert, Button, ButtonGroup, Container } from 'reactstrap';
+import env from '@beam-australia/react-env';
+import { Alert, Button, Container } from 'reactstrap';
+import TitleBar from 'components/TitleBar/TitleBar';
 
 const ContributionEditor = () => {
     const [isOpenAddContribution, setIsOpenAddContribution] = useState(false);
@@ -27,7 +31,16 @@ const ContributionEditor = () => {
     const isLoading = useSelector(state => state.contributionEditor.isLoading);
     const hasFailed = useSelector(state => state.contributionEditor.hasFailed);
     const dispatch = useDispatch();
+    const location = useLocation();
     const contributionIds = getContributionIds();
+    const numPWCStatement = useSelector(state => {
+        return (
+            Object.keys(state.contributionEditor?.statements).filter?.(
+                statementId => state.contributionEditor?.statements[statementId]?.created_by === env('PWC_USER_ID')
+            )?.length ?? 0
+        );
+    });
+    const hasPreviousVersion = queryString.parse(location.search).hasPreviousVersion;
 
     useEffect(() => {
         document.title = 'Contribution editor - ORKG';
@@ -81,34 +94,46 @@ const ContributionEditor = () => {
 
     return (
         <>
-            <Container className="d-flex align-items-center">
-                <div className="d-flex mt-4 mb-4 align-items-center flex-grow-1">
-                    <h1 className="h4 m-0">Contribution editor</h1>
-                </div>
-                <ButtonGroup>
-                    <Button
-                        tag={Link}
-                        to={`${reverse(routes.COMPARISON)}?contributions=${contributionIds.join(',')}`}
-                        color="darkblue"
-                        size="sm"
-                        style={{ marginRight: 2 }}
-                        disabled={contributionAmount < 2}
-                    >
-                        View comparison
-                    </Button>
-
-                    <Button color="darkblue" size="sm" onClick={() => setIsOpenAddContribution(true)}>
-                        <Icon icon={faPlusCircle} /> Add contribution
-                    </Button>
-                </ButtonGroup>
-            </Container>
+            <TitleBar
+                buttonGroup={
+                    <>
+                        <Button
+                            tag={Link}
+                            to={`${reverse(routes.COMPARISON)}?contributions=${contributionIds.join(',')}${
+                                hasPreviousVersion ? `&hasPreviousVersion=${hasPreviousVersion}` : ''
+                            }`}
+                            color="secondary"
+                            size="sm"
+                            style={{ marginRight: 2 }}
+                            disabled={contributionAmount < 2}
+                        >
+                            View comparison
+                        </Button>
+                        <Button color="secondary" size="sm" onClick={() => setIsOpenAddContribution(true)}>
+                            <Icon icon={faPlusCircle} /> Add contribution
+                        </Button>
+                    </>
+                }
+            >
+                Contribution editor
+            </TitleBar>
             <Container className="box rounded p-4" style={containerStyle}>
                 {!hasFailed && contributionAmount === 0 && (
                     <Alert color="info">
                         Start adding contributions by clicking the button <em>Add contribution</em> on the right
                     </Alert>
                 )}
-
+                {numPWCStatement > 0 && (
+                    <Alert color="info">
+                        Some contributions were imported from an external source and our provenance feature is in active development. Therefore, those
+                        contributions cannot be edited. <br />
+                        Meanwhile, you can visit{' '}
+                        <a href="https://paperswithcode.com/" target="_blank" rel="noopener noreferrer">
+                            paperswithcode <Icon icon={faExternalLinkAlt} className="mr-1" />
+                        </a>{' '}
+                        website to suggest changes.
+                    </Alert>
+                )}
                 {!hasFailed && isLoadingInit && <TableLoadingIndicator contributionAmount={contributionAmount} />}
 
                 {!hasFailed && !isLoadingInit && contributionAmount > 0 && (

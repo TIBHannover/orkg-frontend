@@ -1,5 +1,6 @@
 import { Container, Row, Col, Badge } from 'reactstrap';
 import ROUTES from 'constants/routes';
+import ROUTES_CMS from 'constants/routesCms';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faTwitter } from '@fortawesome/free-brands-svg-icons';
@@ -11,6 +12,7 @@ import INFAI_LOGO from 'assets/img/poweredby/infAI.png';
 import EU_LOGO from 'assets/img/poweredby/co-funded-h2020-horiz_en.png';
 import EOSC_LOGO from 'assets/img/poweredby/EOSC.png';
 import styled from 'styled-components';
+import { reverse } from 'named-urls';
 
 const FooterWrapper = styled.div`
     background: #e0e2ea;
@@ -19,21 +21,21 @@ const FooterWrapper = styled.div`
 `;
 
 const FooterCol = styled(Col)`
-    color: ${props => props.theme.darkblueDarker};
+    color: ${props => props.theme.secondaryDarker};
     margin: 10px 0;
     font-size: 0.95rem;
 
     h5 {
         font-weight: 500;
         text-transform: uppercase;
-        color: ${props => props.theme.darkblueDarker};
+        color: ${props => props.theme.secondaryDarker};
         font-size: 1.1rem;
     }
     .description {
         font-size: 0.85rem;
     }
     a {
-        color: ${props => props.theme.darkblueDarker};
+        color: ${props => props.theme.secondaryDarker};
     }
 `;
 
@@ -51,9 +53,10 @@ const Footer = () => (
     <FooterWrapper>
         <Container>
             <footer className="pt-4 pb-4">
+                <h1 className="sr-only">More information about ORKG</h1>
                 <Row>
                     <FooterCol md={3}>
-                        <h5>ORKG</h5>
+                        <h2 className="h5">ORKG</h2>
                         <hr className="mr-5" />
                         <Row>
                             <div className="float-left ml-3">
@@ -67,41 +70,35 @@ const Footer = () => (
                         </Row>
                     </FooterCol>
                     <FooterCol md={3}>
-                        <h5>About</h5>
+                        <h2 className="h5">About</h2>
                         <hr className="mr-5" />
                         <ul className="p-0" style={{ listStyle: 'none' }}>
                             <li>
-                                <a href="https://projects.tib.eu/orkg/" target="_blank" rel="noopener noreferrer">
-                                    About us
-                                </a>
+                                <Link to={reverse(ROUTES.ABOUT, {})}>About us</Link>
                             </li>
                             <li>
+                                <Link to={ROUTES.HELP_CENTER}>Help center</Link>
+                            </li>
+                            {/*<li>
                                 <a href="https://projects.tib.eu/orkg/get-involved/" target="_blank" rel="noopener noreferrer">
                                     Get involved
                                 </a>
+                            </li>*/}
+                            <li>
+                                <Link to={reverse(ROUTES.PAGE, { url: ROUTES_CMS.DATA_PROTECTION })}>Data protection</Link>
                             </li>
                             <li>
-                                <Link to={ROUTES.DATA_PROTECTION}>Data protection</Link>
+                                <Link to={reverse(ROUTES.PAGE, { url: ROUTES_CMS.TERMS_OF_USE })}>Terms of use</Link>
                             </li>
                             <li>
-                                <Link to={ROUTES.TERMS_OF_USE}>Terms of use</Link>
-                            </li>
-                            <li>
-                                <a href="https://projects.tib.eu/orkg/imprint/" target="_blank" rel="noopener noreferrer">
-                                    Imprint
-                                </a>
+                                <Link to={reverse(ROUTES.PAGE, { url: ROUTES_CMS.IMPRINT })}>Imprint</Link>
                             </li>
                         </ul>
                     </FooterCol>
                     <FooterCol md={3}>
-                        <h5>Technical</h5>
+                        <h2 className="h5">Technical</h2>
                         <hr className="mr-5" />
                         <ul className="p-0" style={{ listStyle: 'none' }}>
-                            <li>
-                                <a href="https://gitlab.com/TIBHannover/orkg/orkg-frontend/-/wikis/home" target="_blank" rel="noopener noreferrer">
-                                    Documentation
-                                </a>
-                            </li>
                             <li>
                                 <Link to={ROUTES.DATA}>Data Access</Link>
                             </li>
@@ -110,16 +107,19 @@ const Footer = () => (
                             </li>
                             <li>
                                 <a href="https://gitlab.com/TIBHannover/orkg/orkg-frontend/" target="_blank" rel="noopener noreferrer">
-                                    Gitlab
+                                    GitLab
                                 </a>
                             </li>
                             <li>
-                                <Link to={ROUTES.LICENSE}>License</Link>
+                                <Link to={reverse(ROUTES.PAGE, { url: ROUTES_CMS.ACCESSIBILITY_STATEMENT })}>Accessibility</Link>
+                            </li>
+                            <li>
+                                <Link to={reverse(ROUTES.PAGE, { url: ROUTES_CMS.LICENSE })}>License</Link>
                             </li>
                         </ul>
                     </FooterCol>
                     <FooterCol md={3}>
-                        <h5>More</h5>
+                        <h2 className="h5">More</h2>
                         <hr className="mr-5" />
                         <ul className="p-0" style={{ listStyle: 'none' }}>
                             <li>
@@ -129,9 +129,7 @@ const Footer = () => (
                                 </TwitterLink>
                             </li>
                             <li>
-                                <a href="https://projects.tib.eu/orkg/contact/" target="_blank" rel="noopener noreferrer">
-                                    Contact us
-                                </a>
+                                <Link to={reverse(ROUTES.PAGE, { url: ROUTES_CMS.CONTACT })}>Contact us</Link>
                             </li>
                             <li>
                                 <a href="https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues" target="_blank" rel="noopener noreferrer">

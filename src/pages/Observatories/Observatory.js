@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Col, Row, Container, Button, ButtonGroup, Card, CardBody, CardTitle } from 'reactstrap';
+import { Col, Row, Container, Button, Card, CardBody } from 'reactstrap';
 import { getOrganization } from 'services/backend/organizations';
 import { getObservatoryById } from 'services/backend/observatories';
 import InternalServerError from 'pages/InternalServerError';
@@ -12,15 +12,15 @@ import MembersBox from 'components/Observatory/MembersBox';
 import Breadcrumbs from 'components/Breadcrumbs/Breadcrumbs';
 import { SubTitle, SubtitleSeparator } from 'components/styled';
 import NotFound from 'pages/NotFound';
-import ROUTES from 'constants/routes';
-import { useParams, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { reverseWithSlug } from 'utils';
+import TitleBar from 'components/TitleBar/TitleBar';
 
 const Observatory = () => {
     const [error, setError] = useState(null);
+    const [observatoryId, setObservatoryId] = useState(null);
     const [label, setLabel] = useState(null);
     const [description, setDescription] = useState('');
     const [researchField, setResearchField] = useState(null);
@@ -37,6 +37,7 @@ const Observatory = () => {
             getObservatoryById(id)
                 .then(observatory => {
                     document.title = `${observatory.name} - Details`;
+                    setObservatoryId(observatory.id);
                     setLabel(observatory.name);
                     setDescription(observatory.description);
                     setIsLoading(false);
@@ -72,75 +73,65 @@ const Observatory = () => {
             {!isLoading && error && <>{error.statusCode === 404 ? <NotFound /> : <InternalServerError />}</>}
             {!isLoading && !error && label && (
                 <>
-                    <Breadcrumbs researchFieldId={researchField?.id} disableLastField />
-
-                    <Container className="d-flex align-items-center mt-4 mb-4">
-                        <h1 className="h5 flex-shrink-0 mb-0">Observatory</h1>
-                        <>
-                            <SubtitleSeparator />
-                            <SubTitle className="h5 mb-0"> {label}</SubTitle>
-                        </>
-                        {!!user && user.isCurationAllowed && (
-                            <ButtonGroup className="flex-shrink-0" style={{ marginLeft: 'auto' }}>
-                                <Button color="darkblue" size="sm" onClick={() => setShowEditDialog(v => !v)}>
+                    <Breadcrumbs researchFieldId={researchField?.id} />
+                    <TitleBar
+                        titleAddition={
+                            <>
+                                <SubtitleSeparator />
+                                <SubTitle>{label}</SubTitle>
+                            </>
+                        }
+                        buttonGroup={
+                            !!user &&
+                            user.isCurationAllowed && (
+                                <Button color="secondary" size="sm" onClick={() => setShowEditDialog(v => !v)}>
                                     <Icon icon={faPen} /> Edit
                                 </Button>
-                            </ButtonGroup>
-                        )}
-                    </Container>
+                            )
+                        }
+                        wrap={false}
+                    >
+                        Observatory
+                    </TitleBar>
+                    {description && (
+                        <Container className="p-0">
+                            <Card>
+                                <CardBody>
+                                    <div className="mb-4">{description}</div>
+                                </CardBody>
+                            </Card>
+                        </Container>
+                    )}
                     <Container className="p-0">
-                        <Card>
-                            <CardBody>
-                                <CardTitle tag="h5">Description</CardTitle>
-                                {description && <div className="mb-4">{description}</div>}
-                                {!description && <div className="mb-4">No description for this observatory yet!</div>}
-                                {researchField && researchField.id && (
-                                    <div className="flex-grow-1 mt-2">
-                                        Research field:
-                                        <Link
-                                            className="ml-2"
-                                            to={reverseWithSlug(ROUTES.RESEARCH_FIELD, {
-                                                researchFieldId: researchField.id,
-                                                slug: researchField.label
-                                            })}
-                                        >
-                                            {researchField && researchField.label}
-                                        </Link>
-                                    </div>
-                                )}
-                            </CardBody>
-                        </Card>
+                        <Row className="mt-3">
+                            <Col md="4" className="d-flex">
+                                <ResearchProblemsBox observatoryId={observatoryId} organizationsList={organizationsList} />
+                            </Col>
+                            <Col md="4" className="d-flex">
+                                <OrganizationsBox
+                                    observatoryId={observatoryId}
+                                    organizationsList={organizationsList}
+                                    isLoadingOrganizations={isLoadingOrganizations}
+                                />
+                            </Col>
+                            <Col md="4" className="d-flex">
+                                <MembersBox observatoryId={observatoryId} organizationsList={organizationsList} />
+                            </Col>
+                        </Row>
                     </Container>
+                    <Comparisons observatoryId={observatoryId} />
+                    <Papers observatoryId={observatoryId} />
+                    <EditObservatory
+                        showDialog={showEditDialog}
+                        toggle={() => setShowEditDialog(v => !v)}
+                        label={label}
+                        id={observatoryId}
+                        description={description}
+                        researchField={researchField}
+                        updateObservatoryMetadata={updateObservatoryMetadata}
+                    />
                 </>
             )}
-
-            <Container className="p-0">
-                <Row className="mt-3">
-                    <Col md="4" className="d-flex">
-                        <ResearchProblemsBox observatoryId={id} organizationsList={organizationsList} />
-                    </Col>
-                    <Col md="4" className="d-flex">
-                        <OrganizationsBox observatoryId={id} organizationsList={organizationsList} isLoadingOrganizations={isLoadingOrganizations} />
-                    </Col>
-                    <Col md="4" className="d-flex">
-                        <MembersBox observatoryId={id} organizationsList={organizationsList} />
-                    </Col>
-                </Row>
-            </Container>
-
-            <Comparisons observatoryId={id} />
-
-            <Papers observatoryId={id} />
-
-            <EditObservatory
-                showDialog={showEditDialog}
-                toggle={() => setShowEditDialog(v => !v)}
-                label={label}
-                id={id}
-                description={description}
-                researchField={researchField}
-                updateObservatoryMetadata={updateObservatoryMetadata}
-            />
         </>
     );
 };

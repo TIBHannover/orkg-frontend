@@ -161,7 +161,7 @@ class Contributions extends Component {
                             Specify research contributions
                         </Tooltip>
                     </h2>
-                    <Button onClick={this.props.toggleAbstractDialog} outline size="sm" className="flex-shrink-0 ml-auto" color="darkblue">
+                    <Button onClick={this.props.toggleAbstractDialog} outline size="sm" className="flex-shrink-0 ml-auto" color="secondary">
                         <Icon icon={faMagic} /> Abstract annotator
                     </Button>
                 </div>

@@ -11,6 +11,7 @@ import styled from 'styled-components';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { groupBy } from 'lodash';
+import TitleBar from 'components/TitleBar/TitleBar';
 
 const TabPaneStyled = styled(TabPane)`
     border-top: 0;
@@ -18,7 +19,7 @@ const TabPaneStyled = styled(TabPane)`
 
 export const StyledResearchFieldWrapper = styled.div`
     border-radius: ${props => props.theme.borderRadius};
-    border: ${props => props.theme.borderWidth} solid ${props => props.theme.orkgPrimaryColor};
+    border: ${props => props.theme.borderWidth} solid ${props => props.theme.primary};
     padding: 15px 30px;
 `;
 
@@ -34,8 +35,8 @@ const StyledResearchFieldItem = styled(NavLink)`
     transition: 0.3s background;
     border-top-left-radius: ${props => props.theme.borderRadius};
     border-bottom-left-radius: ${props => props.theme.borderRadius};
-    border: 1px solid ${props => props.theme.ultraLightBlueDarker};
-    background-color: ${props => props.theme.ultraLightBlue};
+    border: 1px solid ${props => props.theme.lightDarker};
+    background-color: ${props => props.theme.lightLighter};
     color: inherit;
 
     cursor: pointer !important;
@@ -45,10 +46,10 @@ const StyledResearchFieldItem = styled(NavLink)`
     }
 
     &.active {
-        background: ${props => props.theme.orkgPrimaryColor};
+        background: ${props => props.theme.primary};
         color: #fff;
         cursor: initial !important;
-        border-color: ${props => props.theme.orkgPrimaryColor};
+        border-color: ${props => props.theme.primary};
     }
 `;
 
@@ -131,9 +132,7 @@ class Observatories extends Component {
     render() {
         return (
             <>
-                <Container>
-                    <h1 className="h4 mt-4 mb-4">View all observatories</h1>
-                </Container>
+                <TitleBar>View all observatories</TitleBar>
                 <Container className="box rounded p-4 clearfix">
                     <p>
                         <i>Observatories</i> organize research contributions in a particular research field and are curated by research organizations
@@ -141,8 +140,12 @@ class Observatories extends Component {
                     </p>
                     <p>
                         Further information about observatories can be also found in the{' '}
-                        <a href="https://gitlab.com/TIBHannover/orkg/orkg-frontend/-/wikis/Observatories" target="_blank" rel="noopener noreferrer">
-                            ORKG wiki
+                        <a
+                            href="https://www.orkg.org/orkg/help-center/article/8/Observatories_for_specific_research_fields"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            ORKG help center
                         </a>
                         .
                     </p>

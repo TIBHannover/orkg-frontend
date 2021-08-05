@@ -1,20 +1,5 @@
 import { Component } from 'react';
-import {
-    Container,
-    Button,
-    Row,
-    Col,
-    TabContent,
-    TabPane,
-    Nav,
-    NavItem,
-    NavLink,
-    ButtonGroup,
-    ButtonDropdown,
-    DropdownToggle,
-    DropdownMenu,
-    DropdownItem
-} from 'reactstrap';
+import { Button, Row, Col, TabContent, TabPane, Nav, NavItem, NavLink, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import GeneralSettings from 'components/Templates/Tabs/GeneralSettings/GeneralSettings';
 import TemplateEditorHeaderBar from 'components/Templates/TemplateEditorHeaderBar';
 import ComponentsTab from 'components/Templates/Tabs/ComponentsTab/ComponentsTab';
@@ -39,6 +24,7 @@ import ROUTES from 'constants/routes.js';
 import PropTypes from 'prop-types';
 import { reverse } from 'named-urls';
 import { NavLink as RouterNavLink } from 'react-router-dom';
+import TitleBar from 'components/TitleBar/TitleBar';
 
 const TabPaneStyled = styled(TabPane)`
     border: 1px solid #ced4da;
@@ -118,11 +104,10 @@ class Template extends Component {
 
         return (
             <>
-                <Container className="d-flex align-items-center">
-                    <div className="mt-4 mb-4 d-flex flex-grow-1">
-                        <h1 className="h4 m-0">{!this.props.match.params.id ? 'Create new template' : 'Template'}</h1>
+                <TitleBar
+                    titleAddition={
                         <Tippy content="Open help popup">
-                            <span className="ml-3">
+                            <span>
                                 <Button
                                     color="link"
                                     outline
@@ -131,53 +116,57 @@ class Template extends Component {
                                     className="p-0"
                                     onClick={() => this.toggle('helpModalOpen')}
                                 >
-                                    <Icon icon={faQuestionCircle} className="text-darkblue" />
+                                    <Icon icon={faQuestionCircle} className="text-secondary" />
                                 </Button>
                             </span>
                         </Tippy>
-                    </div>
-                    <ButtonGroup className="flex-shrink-0">
-                        {!this.props.editMode && !this.props.isSaving ? (
-                            <RequireAuthentication component={Button} color="darkblue" size="sm" onClick={() => this.props.setEditMode(true)}>
-                                <Icon icon={faPen} /> Edit
-                            </RequireAuthentication>
-                        ) : (
-                            <Button
-                                disabled={this.props.isSaving}
-                                style={{ marginLeft: 1 }}
-                                color="darkblueDarker"
-                                size="sm"
-                                onClick={() => this.props.saveTemplate(this.props.template)}
-                            >
-                                {this.props.isSaving && <Icon icon={faSpinner} spin />}
-                                {this.props.editMode && <Icon icon={faSave} />}
-                                {!this.props.isSaving ? ' Save' : ' Saving'}
-                            </Button>
-                        )}
-                        {this.props.match.params.id && (
-                            <ButtonDropdown
-                                className="flex-shrink-0"
-                                isOpen={this.state.menuOpen}
-                                toggle={() =>
-                                    this.setState(prevState => ({
-                                        menuOpen: !prevState.menuOpen
-                                    }))
-                                }
-                                nav
-                                inNavbar
-                            >
-                                <DropdownToggle size="sm" color="darkblue" className="px-3 rounded-right" style={{ marginLeft: 2 }}>
-                                    <Icon icon={faEllipsisV} />
-                                </DropdownToggle>
-                                <DropdownMenu right>
-                                    <DropdownItem tag={RouterNavLink} exact to={reverse(ROUTES.RESOURCE, { id: this.props.match.params.id })}>
-                                        View resource
-                                    </DropdownItem>
-                                </DropdownMenu>
-                            </ButtonDropdown>
-                        )}
-                    </ButtonGroup>
-                </Container>
+                    }
+                    buttonGroup={
+                        <>
+                            {!this.props.editMode && !this.props.isSaving ? (
+                                <RequireAuthentication component={Button} color="secondary" size="sm" onClick={() => this.props.setEditMode(true)}>
+                                    <Icon icon={faPen} /> Edit
+                                </RequireAuthentication>
+                            ) : (
+                                <Button
+                                    disabled={this.props.isSaving}
+                                    style={{ marginLeft: 1 }}
+                                    color="secondary-darker"
+                                    size="sm"
+                                    onClick={() => this.props.saveTemplate(this.props.template)}
+                                >
+                                    {this.props.isSaving && <Icon icon={faSpinner} spin />}
+                                    {this.props.editMode && <Icon icon={faSave} />}
+                                    {!this.props.isSaving ? ' Save' : ' Saving'}
+                                </Button>
+                            )}
+                            {this.props.match.params.id && (
+                                <ButtonDropdown
+                                    className="flex-shrink-0"
+                                    isOpen={this.state.menuOpen}
+                                    toggle={() =>
+                                        this.setState(prevState => ({
+                                            menuOpen: !prevState.menuOpen
+                                        }))
+                                    }
+                                    nav
+                                    inNavbar
+                                >
+                                    <DropdownToggle size="sm" color="secondary" className="px-3 rounded-right" style={{ marginLeft: 2 }}>
+                                        <Icon icon={faEllipsisV} />
+                                    </DropdownToggle>
+                                    <DropdownMenu right>
+                                        <DropdownItem tag={RouterNavLink} exact to={reverse(ROUTES.RESOURCE, { id: this.props.match.params.id })}>
+                                            View resource
+                                        </DropdownItem>
+                                    </DropdownMenu>
+                                </ButtonDropdown>
+                            )}
+                        </>
+                    }
+                >
+                    {!this.props.match.params.id ? 'Create new template' : 'Template'}
+                </TitleBar>
                 <StyledContainer className="p-0">
                     {this.state.showHeaderBar && <TemplateEditorHeaderBar id={this.props.match.params.id} />}
                     {(this.props.editMode || this.props.isSaving) && (

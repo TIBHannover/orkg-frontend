@@ -12,10 +12,10 @@ import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 
 const TableContainerStyled = styled.div`
     overflow: auto;
-    background: ${props => props.theme.ultraLightBlue};
+    background: ${props => props.theme.lightLighter};
     font-size: 90%;
     max-height: 500px;
-    border: 2px solid ${props => props.theme.darkblue};
+    border: 2px solid ${props => props.theme.secondary};
     border-radius: ${props => props.theme.borderRadius};
 `;
 
@@ -45,13 +45,7 @@ const CsvImport = () => {
 
     const validateCsv = _data => {
         const validations = checkDataValidation(_data);
-        for (const { context, error } of validations) {
-            if (error) {
-                setError(`<b>${context}</b>: ${error.message}`);
-                return;
-            }
-        }
-        return setError(null);
+        return setError(validations);
     };
 
     const title = (
@@ -67,7 +61,7 @@ const CsvImport = () => {
                         className="p-0"
                         onClick={() => setIsHelpModalOpen(true)}
                     >
-                        <Icon icon={faQuestionCircle} className="text-darkblue" />
+                        <Icon icon={faQuestionCircle} className="text-secondary" />
                     </Button>
                 </span>
             </Tippy>

@@ -5,8 +5,8 @@ import { ListGroupItem, DropdownItem, Button, DropdownToggle } from 'reactstrap'
 export const StyledStatementItem = styled(ListGroupItem)`
     padding: 0.5rem 0.75rem !important;
     cursor: default;
-    background-color: ${props => props.theme.ultraLightBlue} !important;
-    border-color: ${props => props.theme.ultraLightBlueDarker} !important;
+    background-color: ${props => props.theme.lightLighter} !important;
+    border-color: ${props => props.theme.lightDarker} !important;
     overflow-wrap: break-word;
     word-break: break-all;
     flex: 1;
@@ -18,7 +18,7 @@ export const StyledStatementItem = styled(ListGroupItem)`
     & > .statementItemIcon {
         font-size: 18px;
         margin-top: 3px;
-        color: ${props => props.theme.orkgPrimaryColor};
+        color: ${props => props.theme.primary};
 
         &.open {
             color: #fff;
@@ -35,8 +35,8 @@ export const StyledStatementItem = styled(ListGroupItem)`
     }
 
     &.statementActive {
-        background-color: ${props => props.theme.darkblue} !important;
-        border-color: ${props => props.theme.darkblue} !important;
+        background-color: ${props => props.theme.secondary} !important;
+        border-color: ${props => props.theme.secondary} !important;
         color: #fff;
 
         & .deletePredicate {
@@ -83,12 +83,12 @@ export const StyledDropdownItem = styled(DropdownItem)`
 /* Template Wizard */
 export const StyledButton = styled(Button)`
     border-color: #ced4da !important;
-    color: ${props => props.theme.buttonDark} !important;
-    background: ${props => props.theme.ultraLightBlueDarker} !important;
+    color: ${props => props.theme.dark} !important;
+    background: ${props => props.theme.lightDarker} !important;
     &:hover {
         color: #fff !important;
-        background-color: ${props => props.theme.darkblue} !important;
-        border-color: ${props => props.theme.darkblue} !important;
+        background-color: ${props => props.theme.secondary} !important;
+        border-color: ${props => props.theme.secondary} !important;
     }
 `;
 
@@ -99,13 +99,13 @@ export const StyledDropdownToggle = styled(DropdownToggle).withConfig({
     border-bottom-left-radius: ${props => (props.disableBorderRadiusLeft ? '0' : '4px !important')};
     border-top-right-radius: ${props => (props.disableBorderRadiusRight ? '0' : '4px !important')};
     border-bottom-right-radius: ${props => (props.disableBorderRadiusRight ? '0' : '4px !important')};
-    background: ${props => props.theme.ultraLightBlueDarker} !important;
-    color: ${props => props.theme.buttonDark} !important;
+    background: ${props => props.theme.lightDarker} !important;
+    color: ${props => props.theme.dark} !important;
     border-color: #ced4da !important;
     &:hover {
         color: #fff !important;
-        background-color: ${props => props.theme.darkblue} !important;
-        border-color: ${props => props.theme.darkblue} !important;
+        background-color: ${props => props.theme.secondary} !important;
+        border-color: ${props => props.theme.secondary} !important;
     }
 `;
 
@@ -183,7 +183,7 @@ export const AddPropertyContentStyle = styled.span`
     border-radius: 4px;
     max-width: 33.33%;
     font-size: 0.875rem;
-    color: ${props => props.theme.darkblue};
+    color: ${props => props.theme.secondary};
     transition: 0.3s max-width;
     cursor: pointer;
 
@@ -211,7 +211,7 @@ export const AddPropertyContentStyle = styled.span`
             padding: 0;
             border: 0 !important;
             .icon {
-                color: ${props => props.theme.darkblue};
+                color: ${props => props.theme.secondary};
             }
         }
     }
@@ -228,7 +228,7 @@ export const AddPropertyFormStyle = styled.div`
     }
 
     .input-group-prepend {
-        background-color: ${props => props.theme.ultraLightBlue};
+        background-color: ${props => props.theme.lightLighter};
         cursor: default;
         display: flex;
         border: 1px solid rgba(0, 0, 0, 0.125);
@@ -263,9 +263,16 @@ export const StatementsGroupStyle = styled(ListGroupItem)`
 `;
 
 export const PropertyStyle = styled.div`
-    background-color: ${props => props.theme.ultraLightBlue};
+    background-color: ${props => props.theme.lightLighter};
     overflow-wrap: break-word;
     border-radius: 3px 0 0 3px;
+
+    @media (max-width: ${props => props.theme.gridBreakpoints.md}) {
+        width: 100%;
+        max-width: 100%;
+        flex: auto;
+        border-radius: 3px 3px 0 0;
+    }
 
     & > div {
         padding: 8px;
@@ -304,14 +311,14 @@ export const PropertyStyle = styled.div`
         visibility: visible;
         opacity: 1;
         span {
-            color: ${props => props.theme.buttonDark};
+            color: ${props => props.theme.dark};
         }
     }
     &:focus-within .propertyOption {
         visibility: visible;
         opacity: 1;
         span {
-            color: ${props => props.theme.buttonDark};
+            color: ${props => props.theme.dark};
         }
     }
 `;
@@ -322,12 +329,19 @@ export const ValuesStyle = styled.div`
     }
     background-color: #fff;
     border-radius: 0 3px 3px 0;
+
+    @media (max-width: ${props => props.theme.gridBreakpoints.md}) {
+        width: 100%;
+        max-width: 100%;
+        flex: auto;
+        border-radius: 3px 3px 0 0;
+    }
 `;
 
 export const TemplateHeaderStyle = styled.div`
     cursor: default;
-    background-color: ${props => props.theme.darkblue};
-    border-color: ${props => props.theme.darkblue};
+    background-color: ${props => props.theme.secondary};
+    border-color: ${props => props.theme.secondary};
     border-top-left-radius: 6px;
     border-top-right-radius: 6px;
     color: #fff;
@@ -363,17 +377,17 @@ export const TemplateHeaderStyle = styled.div`
 
         &:focus {
             outline: 0;
-            border: 1px dashed ${props => props.theme.ultraLightBlueDarker};
+            border: 1px dashed ${props => props.theme.lightDarker};
             box-shadow: none;
         }
     }
     & .type {
         font-size: 0.9rem;
-        color: ${props => props.theme.ultraLightBlueDarker};
+        color: ${props => props.theme.lightDarker};
         opacity: 0.9;
         .span {
-            background-color: ${props => props.theme.buttonDark};
-            color: ${props => props.theme.darkblue};
+            background-color: ${props => props.theme.dark};
+            color: ${props => props.theme.secondary};
         }
     }
 `;

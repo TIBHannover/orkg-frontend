@@ -10,8 +10,8 @@ export const OptionButton = styled(Button)`
     margin: 0 2px !important;
     display: inline-block !important;
     border-radius: 100% !important;
-    background-color: ${props => props.theme.ultraLightBlueDarker}!important;
-    color: ${props => props.theme.buttonDark}!important;
+    background-color: ${props => props.theme.lightDarker}!important;
+    color: ${props => props.theme.dark}!important;
 
     & .icon-wrapper {
         display: flex !important;

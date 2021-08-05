@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { Container, Button, FormGroup, Label, FormText, ButtonGroup } from 'reactstrap';
+import { Container, Button, FormGroup, Label, FormText, Alert } from 'reactstrap';
 import { getClassById } from 'services/backend/classes';
 import { updateResourceClasses as updateResourceClassesNetwork } from 'services/backend/resources';
 import { getResource } from 'services/backend/resources';
@@ -28,11 +28,14 @@ import PropTypes from 'prop-types';
 import { orderBy } from 'lodash';
 import useDeleteResource from 'components/Resource/hooks/useDeleteResource';
 import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
+import env from '@beam-australia/react-env';
 import { getVisualization } from 'services/similarity';
 import GDCVisualizationRenderer from 'libs/selfVisModel/RenderingComponents/GDCVisualizationRenderer';
 import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
 import { CLASS_TYPE_ID } from 'constants/misc';
 import { reverseWithSlug } from 'utils';
+import PapersWithCodeModal from 'components/PapersWithCodeModal/PapersWithCodeModal';
+import TitleBar from 'components/TitleBar/TitleBar';
 
 const DEDICATED_PAGE_LINKS = {
     [CLASSES.PAPER]: {
@@ -76,6 +79,16 @@ const DEDICATED_PAGE_LINKS = {
         label: 'Contribution',
         route: ROUTES.CONTRIBUTION,
         routeParams: 'id'
+    },
+    [CLASSES.SMART_REVIEW]: {
+        label: 'SmartReview',
+        route: ROUTES.SMART_REVIEW,
+        routeParams: 'id'
+    },
+    [CLASSES.SMART_REVIEW_PUBLISHED]: {
+        label: 'SmartReview',
+        route: ROUTES.SMART_REVIEW,
+        routeParams: 'id'
     }
 };
 function Resource(props) {
@@ -94,9 +107,12 @@ function Resource(props) {
     const isCurationAllowed = useSelector(state => state.auth.user?.isCurationAllowed);
     const showDeleteButton = editMode && isCurationAllowed;
     const [hasObjectStatement, setHasObjectStatement] = useState(false);
+    const [hasDOI, setHasDOI] = useState(false);
     const { deleteResource } = useDeleteResource({ resourceId, redirect: true });
     const [canEdit, setCanEdit] = useState(false);
+    const [createdBy, setCreatedBy] = useState(null);
     const classesAutocompleteRef = useRef(null);
+    const [isOpenPWCModal, setIsOpenPWCModal] = useState(false);
 
     useEffect(() => {
         const findResource = async () => {
@@ -104,6 +120,7 @@ function Resource(props) {
             getResource(resourceId)
                 .then(responseJson => {
                     document.title = `${responseJson.label} - Resource - ORKG`;
+                    setCreatedBy(responseJson.created_by);
                     const classesCalls = responseJson.classes.map(classResource => getClassById(classResource));
                     Promise.all(classesCalls)
                         .then(classes => {
@@ -128,12 +145,20 @@ function Resource(props) {
                                 getStatementsBySubjectAndPredicate({ subjectId: props.match.params.id, predicateId: PREDICATES.HAS_DOI }).then(st => {
                                     if (st.length > 0) {
                                         setIsLoading(false);
-                                        setCanEdit(false);
+                                        setHasDOI(true);
+                                        setCanEdit(isCurationAllowed);
                                     } else {
                                         setIsLoading(false);
-                                        setCanEdit(true);
+                                        if (env('PWC_USER_ID') === responseJson.created_by) {
+                                            setCanEdit(false);
+                                        } else {
+                                            setCanEdit(true);
+                                        }
                                     }
                                 });
+                            } else if (responseJson.classes.includes(CLASSES.RESEARCH_FIELD)) {
+                                setIsLoading(false);
+                                setCanEdit(isCurationAllowed);
                             } else {
                                 setIsLoading(false);
                                 setCanEdit(true);
@@ -148,7 +173,7 @@ function Resource(props) {
                 });
         };
         findResource();
-    }, [location, props.match.params.id, resourceId]);
+    }, [location, props.match.params.id, resourceId, isCurationAllowed]);
 
     useEffect(() => {
         setCanBeDeleted((values.allIds.length === 0 || properties.allIds.length === 0) && !hasObjectStatement);
@@ -167,10 +192,13 @@ function Resource(props) {
                 return null;
             }
         }
-        const newClasses = !selected ? [] : selected;
+        let newClasses = !selected ? [] : selected;
         // Reset the statement browser and rely on React attribute 'key' to reinitialize the statement browser
         // (When a key changes, React will create a new component instance rather than update the current one)
         props.resetStatementBrowser();
+        if (!isCurationAllowed) {
+            newClasses = newClasses.filter(c => c.id !== CLASSES.RESEARCH_FIELD); // only admins can add research field resources
+        }
         setClasses(newClasses);
         await updateResourceClassesNetwork(resourceId, newClasses.map(c => c.id));
         toast.success('Resource classes updated successfully');
@@ -199,59 +227,88 @@ function Resource(props) {
             {!isLoading && error && <>{error.statusCode === 404 ? <NotFound /> : <InternalServerError />}</>}
             {!isLoading && !error && (
                 <>
-                    <Container className="d-flex align-items-center">
-                        <h1 className="h4 mt-4 mb-4 flex-grow-1">Resource view</h1>
-                        <ButtonGroup className="flex-shrink-0">
-                            <RequireAuthentication
-                                size="sm"
-                                component={Button}
-                                color="darkblue"
-                                style={{ marginRight: 2 }}
-                                tag={Link}
-                                to={ROUTES.ADD_RESOURCE}
-                            >
-                                <Icon icon={faPlus} className="mr-1" /> Create resource
-                            </RequireAuthentication>
-                            {dedicatedLink && (
-                                <Button
-                                    color="darkblue"
+                    <TitleBar
+                        buttonGroup={
+                            <>
+                                <RequireAuthentication
                                     size="sm"
-                                    tag={Link}
-                                    to={reverseWithSlug(dedicatedLink.route, {
-                                        [dedicatedLink.routeParams]: props.match.params.id,
-                                        slug: dedicatedLink.hasSlug ? label : undefined
-                                    })}
+                                    component={Button}
+                                    color="secondary"
                                     style={{ marginRight: 2 }}
+                                    tag={Link}
+                                    to={ROUTES.ADD_RESOURCE}
                                 >
-                                    <Icon icon={faExternalLinkAlt} className="mr-1" /> {dedicatedLink.label} view
-                                </Button>
-                            )}
-                            {canEdit ? (
-                                !editMode ? (
-                                    <RequireAuthentication
-                                        component={Button}
-                                        className="float-right"
-                                        color="darkblue"
+                                    <Icon icon={faPlus} className="mr-1" /> Create resource
+                                </RequireAuthentication>
+                                {dedicatedLink && (
+                                    <Button
+                                        color="secondary"
                                         size="sm"
-                                        onClick={() => setEditMode(v => !v)}
+                                        tag={Link}
+                                        to={reverseWithSlug(dedicatedLink.route, {
+                                            [dedicatedLink.routeParams]: props.match.params.id,
+                                            slug: dedicatedLink.hasSlug ? label : undefined
+                                        })}
+                                        style={{ marginRight: 2 }}
                                     >
-                                        <Icon icon={faPen} /> Edit
-                                    </RequireAuthentication>
-                                ) : (
-                                    <Button className="flex-shrink-0" color="darkblueDarker" size="sm" onClick={() => setEditMode(v => !v)}>
-                                        <Icon icon={faTimes} /> Stop editing
+                                        <Icon icon={faExternalLinkAlt} className="mr-1" /> {dedicatedLink.label} view
                                     </Button>
-                                )
-                            ) : (
-                                <Tippy hideOnClick={false} content="This resource can not be edited because it has a published DOI.">
-                                    <span className="btn btn-darkblue btn-sm disabled">
-                                        <Icon icon={faPen} /> <span>Edit</span>
-                                    </span>
-                                </Tippy>
-                            )}
-                        </ButtonGroup>
-                    </Container>
-
+                                )}
+                                {canEdit ? (
+                                    !editMode ? (
+                                        <RequireAuthentication
+                                            component={Button}
+                                            className="float-right"
+                                            color="secondary"
+                                            size="sm"
+                                            onClick={() => (env('PWC_USER_ID') === createdBy ? setIsOpenPWCModal(true) : setEditMode(v => !v))}
+                                        >
+                                            <Icon icon={faPen} /> Edit
+                                        </RequireAuthentication>
+                                    ) : (
+                                        <Button className="flex-shrink-0" color="secondary-darker" size="sm" onClick={() => setEditMode(v => !v)}>
+                                            <Icon icon={faTimes} /> Stop editing
+                                        </Button>
+                                    )
+                                ) : (
+                                    <Tippy
+                                        hideOnClick={false}
+                                        interactive={classes.find(c => c.id === CLASSES.RESEARCH_FIELD) ? true : false}
+                                        content={
+                                            env('PWC_USER_ID') === createdBy ? (
+                                                'This resource cannot be edited because it is from an external source. Our provenance feature is in active development.'
+                                            ) : classes.find(c => c.id === CLASSES.RESEARCH_FIELD) ? (
+                                                <>
+                                                    This resource can not be edited. Please visit the{' '}
+                                                    <a
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        href="https://www.orkg.org/orkg/help-center/article/20/ORKG_Research_fields_taxonomy"
+                                                    >
+                                                        ORKG help center
+                                                    </a>{' '}
+                                                    if you have any suggestions to improve the research fields taxonomy.
+                                                </>
+                                            ) : (
+                                                'This resource can not be edited because it has a published DOI.'
+                                            )
+                                        }
+                                    >
+                                        <span className="btn btn-secondary btn-sm disabled">
+                                            <Icon icon={faPen} /> <span>Edit</span>
+                                        </span>
+                                    </Tippy>
+                                )}
+                            </>
+                        }
+                    >
+                        Resource view
+                    </TitleBar>
+                    {editMode && hasDOI && (
+                        <Alert className="container" color="danger">
+                            This resource should not be edited because it has a published DOI, please make sure that you know what are you doing!
+                        </Alert>
+                    )}
                     {editMode && canEdit && (
                         <EditModeHeader className="box rounded-top">
                             <Title>
@@ -367,6 +424,7 @@ function Resource(props) {
                     </Container>
                 </>
             )}
+            <PapersWithCodeModal isOpen={isOpenPWCModal} toggle={() => setIsOpenPWCModal(v => !v)} />
         </>
     );
 }

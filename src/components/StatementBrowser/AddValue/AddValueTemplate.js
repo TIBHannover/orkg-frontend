@@ -1,17 +1,20 @@
 import { useState, useRef, useEffect } from 'react';
-import { InputGroup, InputGroupAddon, DropdownMenu, InputGroupButtonDropdown, FormFeedback } from 'reactstrap';
+import { InputGroup, InputGroupAddon, FormFeedback } from 'reactstrap';
 import { fetchTemplatesOfClassIfNeeded, selectResource, createRequiredPropertiesInResource } from 'actions/statementBrowser';
-import { StyledDropdownItem, StyledButton, StyledDropdownToggle, ValueItemStyle } from 'components/StatementBrowser/styled';
+import { StyledButton, ValueItemStyle } from 'components/StatementBrowser/styled';
 import StatementOptionButton from 'components/StatementBrowser/StatementOptionButton/StatementOptionButton';
 import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
 import defaultDatatypes from 'components/Templates/helpers/defaultDatatypes';
 import { useDispatch, useSelector } from 'react-redux';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faPlus, faBars, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
 import useToggle from './helpers/useToggle';
 import validationSchema from './helpers/validationSchema';
 import InputField from 'components/StatementBrowser/InputField/InputField';
+import DatatypeSelector from 'components/StatementBrowser/DatatypeSelector/DatatypeSelector';
+import ConfirmConversionTooltip from 'components/StatementBrowser/ConfirmConversionTooltip/ConfirmConversionTooltip';
+import { getConfigByType, getSuggestionByTypeAndValue } from 'constants/DataTypes';
 import Tippy from '@tippyjs/react';
 import { CLASSES, MISC, ENTITIES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
@@ -26,14 +29,15 @@ export default function AddValueTemplate(props) {
     const [dialogResourceId, setDialogResourceId] = useState(null);
     const [dialogResourceLabel, setDialogResourceLabel] = useState(null);
 
-    const [valueType, setValueType] = useState(props.isLiteral ? 'literal' : 'object');
+    const [entityType, setEntityType] = useState(getConfigByType(props.isLiteral ? MISC.DEFAULT_LITERAL_DATATYPE : 'object')._class);
     const [inputValue, setInputValue] = useState('');
-    const [dropdownValueTypeOpen, setDropdownValueTypeOpen] = useToggle(false);
+    const [inputDataType, setInputDataType] = useState(getConfigByType(props.isLiteral ? MISC.DEFAULT_LITERAL_DATATYPE : 'object').type);
     const [showAddValue, setShowAddValue] = useToggle(false);
     const [isValid, setIsValid] = useState(true);
     const [formFeedback, setFormFeedback] = useState(null);
     const [templateIsLoading, setTemplateIsLoading] = useState(false); // to show loading indicator of the template if the value class has a template
-
+    const confirmConversion = useRef(null);
+    const [suggestionType, setSuggestionType] = useState(null);
     // uniqueLabel is set to true when it's a research problem
     const [uniqueLabel, setUniqueLabel] = useState(props.valueClass && props.valueClass.id === CLASSES.PROBLEM ? true : false);
     const [disabledCreate, setDisabledCreate] = useState(false);
@@ -68,8 +72,8 @@ export default function AddValueTemplate(props) {
         return resourceInputRef.current.state.menuIsOpen && resourceInputRef.current.props.options.length > 0;
     };
 
-    const validateValue = () => {
-        if (props.valueClass && ['Date', 'Number', 'String'].includes(props.valueClass.id)) {
+    const getSchema = () => {
+        if (props.valueClass && ['Date', 'Number', 'String', 'Boolean', 'Integer', 'URI'].includes(props.valueClass.id)) {
             let component;
             if (props.components && props.components.length > 0) {
                 component = props.components[0];
@@ -82,21 +86,10 @@ export default function AddValueTemplate(props) {
                 };
             }
             const schema = validationSchema(component);
-            const { error, value } = schema.validate(inputValue);
-            if (error) {
-                setFormFeedback(error.message);
-                setIsValid(false);
-                return false;
-            } else {
-                setInputValue(value);
-                setFormFeedback(null);
-                setIsValid(true);
-                return value;
-            }
+            return schema;
         } else {
-            setFormFeedback(null);
-            setIsValid(true);
-            return inputValue;
+            const config = getConfigByType(inputDataType);
+            return config.schema;
         }
     };
 
@@ -104,37 +97,78 @@ export default function AddValueTemplate(props) {
      * Get the correct xsd datatype if it's literal
      */
     const getDataType = () => {
-        if (props.valueClass && valueType === 'literal') {
+        if (props.valueClass && entityType === 'literal') {
             switch (props.valueClass.id) {
                 case 'String':
                     return MISC.DEFAULT_LITERAL_DATATYPE;
                 case 'Number':
                     return 'xsd:decimal';
+                case 'Integer':
+                    return 'xsd:integer';
                 case 'Date':
                     return 'xsd:date';
+                case 'Boolean':
+                    return 'xsd:boolean';
+                case 'URI':
+                    return 'xsd:anyURI';
                 default:
                     return MISC.DEFAULT_LITERAL_DATATYPE;
             }
         } else {
-            return MISC.DEFAULT_LITERAL_DATATYPE;
+            return getConfigByType(inputDataType).type;
         }
     };
 
     const onSubmit = () => {
-        const validatedValue = validateValue();
-        if (validatedValue !== false) {
-            props.handleAddValue(valueType, inputValue, getDataType());
-            setShowAddValue(false);
+        const { error } = getSchema().validate(inputValue);
+        if (error) {
+            setFormFeedback(error.message);
+            setIsValid(false);
+        } else {
+            //setInputValue(value);
+            setFormFeedback(null);
+            setIsValid(true);
+            // Check for a possible conversion possible
+            const suggestions = getSuggestionByTypeAndValue(inputDataType, inputValue);
+            if (suggestions.length > 0 && !props.valueClass) {
+                console.log(suggestions);
+                setSuggestionType(suggestions[0]);
+                confirmConversion.current.show();
+            } else {
+                props.handleAddValue(entityType, inputValue, getDataType());
+                setShowAddValue(false);
+            }
         }
     };
 
+    const acceptSuggestion = () => {
+        confirmConversion.current.hide();
+        props.handleAddValue(suggestionType._class, inputValue, suggestionType.type);
+        setInputDataType(suggestionType.type);
+        setShowAddValue(false);
+    };
+
+    const rejectSuggestion = () => {
+        props.handleAddValue(entityType, inputValue, getDataType());
+        setShowAddValue(false);
+    };
+
     useEffect(() => {
-        if (valueType === 'literal' && literalInputRef.current) {
+        if (entityType === 'literal' && literalInputRef.current) {
             literalInputRef.current.focus();
-        } else if (resourceInputRef.current && (valueType === 'object' || valueType === 'property')) {
+        } else if (resourceInputRef.current && (entityType === 'object' || entityType === 'property')) {
             resourceInputRef.current.focus();
         }
-    }, [valueType]);
+    }, [entityType]);
+
+    useEffect(() => {
+        setFormFeedback(null);
+        setIsValid(true);
+        setEntityType(getConfigByType(inputDataType)._class);
+        if (inputDataType === 'xsd:boolean') {
+            setInputValue(v => Boolean(v).toString());
+        }
+    }, [inputDataType]);
 
     useEffect(() => {
         if (!showAddValue) {
@@ -143,7 +177,7 @@ export default function AddValueTemplate(props) {
     }, [showAddValue]);
 
     useEffect(() => {
-        setValueType(props.isLiteral ? 'literal' : 'object');
+        setInputDataType(getConfigByType(props.isLiteral ? MISC.DEFAULT_LITERAL_DATATYPE : 'object').type);
         setUniqueLabel(props.valueClass && props.valueClass.id === CLASSES.PROBLEM ? true : false);
         if (props.valueClass && !defaultDatatypes.map(t => t.id).includes(props.valueClass.id)) {
             setTemplateIsLoading(true);
@@ -174,14 +208,6 @@ export default function AddValueTemplate(props) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props]);
 
-    const resourceTooltip = (
-        <>
-            Choose resource to link this to a resource which can contain values on its own. <br /> To fetch an existing resource by ID type “#”
-            without quotes following with the resource ID (e.g: #R12).
-        </>
-    );
-    const literalTooltip = 'Choose literal for values like numbers, plain text or mathematical expressions using TeX delimiters $$...$$';
-
     return (
         <ValueItemStyle className={showAddValue ? 'editingLabel' : ''}>
             {modal ? (
@@ -203,10 +229,10 @@ export default function AddValueTemplate(props) {
                         title={!props.isDisabled ? 'Add value' : 'This property reached the maximum number of values set by template'}
                         icon={faPlus}
                         action={() => {
-                            if (isInlineResource && valueType !== 'literal') {
+                            if (isInlineResource && entityType !== 'literal') {
                                 // is the valueType is literal, it's not possible to set it as an object of a statement
                                 // 1 - create a resource
-                                props.handleAddValue(valueType, isInlineResource).then(resourceId => {
+                                props.handleAddValue(entityType, isInlineResource).then(resourceId => {
                                     // 2 - open the dialog on that resource
                                     if (openExistingResourcesInDialog) {
                                         dispatch(
@@ -240,36 +266,15 @@ export default function AddValueTemplate(props) {
             ) : (
                 <div>
                     <InputGroup size="sm">
-                        {!props.valueClass && (
-                            <InputGroupButtonDropdown addonType="prepend" isOpen={dropdownValueTypeOpen} toggle={setDropdownValueTypeOpen}>
-                                <StyledDropdownToggle disableBorderRadiusRight={true}>
-                                    <Tippy content={valueType === 'object' ? resourceTooltip : literalTooltip}>
-                                        <small>{valueType === 'object' ? 'Resource' : 'Literal'} </small>
-                                    </Tippy>
-                                    <Icon size="xs" icon={faBars} />
-                                </StyledDropdownToggle>
-                                <DropdownMenu>
-                                    <StyledDropdownItem onClick={() => setValueType('object')}>
-                                        <Tippy content={resourceTooltip}>
-                                            <span>Resource</span>
-                                        </Tippy>
-                                    </StyledDropdownItem>
-                                    <StyledDropdownItem onClick={() => setValueType('literal')}>
-                                        <Tippy content={literalTooltip}>
-                                            <span>Literal</span>
-                                        </Tippy>
-                                    </StyledDropdownItem>
-                                </DropdownMenu>
-                            </InputGroupButtonDropdown>
-                        )}
-                        {valueType === 'object' ? (
+                        {!props.valueClass && <DatatypeSelector valueType={inputDataType} setValueType={setInputDataType} />}
+                        {entityType === 'object' ? (
                             <AutoComplete
                                 entityType={ENTITIES.RESOURCE}
                                 excludeClasses={`${CLASSES.CONTRIBUTION},${CLASSES.PROBLEM},${CLASSES.TEMPLATE}`}
                                 optionsClass={props.valueClass ? props.valueClass.id : undefined}
                                 placeholder="Enter a resource"
                                 onItemSelected={i => {
-                                    props.handleValueSelect(valueType, i);
+                                    props.handleValueSelect(entityType, i);
                                     setShowAddValue(false);
                                 }}
                                 onInput={(e, value) => setInputValue(e ? e.target.value : value)}
@@ -285,7 +290,7 @@ export default function AddValueTemplate(props) {
                                         // escape
                                         setShowAddValue(false);
                                     } else if (e.keyCode === 13 && !isMenuOpen()) {
-                                        props.handleAddValue(valueType, inputValue);
+                                        props.handleAddValue(entityType, inputValue);
                                         setShowAddValue(false);
                                     }
                                 }}
@@ -293,24 +298,25 @@ export default function AddValueTemplate(props) {
                                 handleCreateExistingLabel={handleCreateExistingLabel}
                             />
                         ) : (
-                            <InputField
-                                components={props.components}
-                                valueClass={props.valueClass}
-                                inputValue={inputValue}
-                                setInputValue={setInputValue}
-                                setShowAddValue={setShowAddValue}
-                                onSubmit={onSubmit}
-                                isValid={isValid}
-                                literalInputRef={literalInputRef}
-                                onKeyDown={e => {
-                                    if (e.keyCode === 27) {
-                                        // escape
-                                        setShowAddValue(false);
-                                    } else if (e.keyCode === 13) {
-                                        onSubmit();
-                                    }
-                                }}
-                            />
+                            <>
+                                <InputField
+                                    valueClass={props.valueClass}
+                                    inputValue={inputValue}
+                                    setInputValue={setInputValue}
+                                    inputDataType={inputDataType}
+                                    onSubmit={onSubmit}
+                                    isValid={isValid}
+                                    literalInputRef={literalInputRef}
+                                    onKeyDown={e => {
+                                        if (e.keyCode === 27) {
+                                            // escape
+                                            setShowAddValue(false);
+                                        } else if (e.keyCode === 13) {
+                                            onSubmit();
+                                        }
+                                    }}
+                                />
+                            </>
                         )}
                         <InputGroupAddon addonType="append">
                             <StyledButton
@@ -325,7 +331,7 @@ export default function AddValueTemplate(props) {
                             </StyledButton>
                             <StyledButton
                                 outline
-                                disabled={!inputValue || disabledCreate}
+                                disabled={!inputValue?.toString() || disabledCreate}
                                 onClick={() => {
                                     onSubmit();
                                 }}
@@ -335,7 +341,21 @@ export default function AddValueTemplate(props) {
                                         <span>Create</span>
                                     </Tippy>
                                 ) : (
-                                    'Create'
+                                    <Tippy
+                                        onCreate={instance => (confirmConversion.current = instance)}
+                                        content={
+                                            <ConfirmConversionTooltip
+                                                rejectSuggestion={rejectSuggestion}
+                                                acceptSuggestion={acceptSuggestion}
+                                                suggestionType={suggestionType}
+                                            />
+                                        }
+                                        interactive={true}
+                                        trigger="manual"
+                                        placement="top"
+                                    >
+                                        <span>Create</span>
+                                    </Tippy>
                                 )}
                             </StyledButton>
                         </InputGroupAddon>

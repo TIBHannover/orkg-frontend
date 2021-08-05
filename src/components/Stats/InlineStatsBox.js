@@ -1,7 +1,9 @@
 import { Col } from 'reactstrap';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
-import NumberFormat from 'react-number-format';
+import CountUp from 'react-countup';
+import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
+import { Link } from 'react-router-dom';
 
 const StatsBoxStyled = styled(Col)`
     padding: 0 !important;
@@ -10,11 +12,21 @@ const StatsBoxStyled = styled(Col)`
     flex-direction: column;
     justify-content: center;
     align-items: center;
-`;
-
-const Number = styled.div`
-    font-size: 37px;
-    color: #8b91a5;
+    & a:hover {
+        text-decoration: none;
+        color: ${props => props.theme.primary};
+        .number {
+            color: ${props => props.theme.primary};
+        }
+    }
+    & a {
+        color: ${props => props.theme.bodyColor};
+    }
+    transition: color 0.5s ease;
+    .number {
+        font-size: 37px;
+        color: #8b91a5;
+    }
 `;
 
 const Label = styled.div`
@@ -23,25 +35,27 @@ const Label = styled.div`
 
 const InlineStatsBox = props => {
     return (
-        <StatsBoxStyled className={props.className} style={props.hideBorder ? { border: 0 } : {}}>
-            {!props.isLoading ? (
-                <Number>
-                    <NumberFormat value={props.number} displayType="text" thousandSeparator={' '} />
-                </Number>
-            ) : (
-                'Loading...'
-            )}
-            <Label>{props.label}</Label>
+        <StatsBoxStyled className="text-center" style={props.hideBorder ? { border: 0 } : {}}>
+            <ConditionalWrapper condition={props.link} wrapper={children => <Link to={props.link}>{children}</Link>}>
+                {!props.isLoading ? (
+                    <div className="number">
+                        <CountUp duration={1.1} end={props.number} separator=" " />
+                    </div>
+                ) : (
+                    'Loading...'
+                )}
+                <Label>{props.label}</Label>
+            </ConditionalWrapper>
         </StatsBoxStyled>
     );
 };
 
 InlineStatsBox.propTypes = {
     label: PropTypes.string.isRequired,
-    className: PropTypes.string,
     number: PropTypes.number,
     hideBorder: PropTypes.bool,
-    isLoading: PropTypes.bool
+    isLoading: PropTypes.bool,
+    link: PropTypes.string
 };
 
 InlineStatsBox.defaultProps = {

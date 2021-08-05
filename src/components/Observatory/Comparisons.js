@@ -5,10 +5,8 @@ import { getComparisonsByObservatoryId } from 'services/backend/observatories';
 import ComparisonCard from 'components/ComparisonCard/ComparisonCard';
 import RelatedResourcesCard from 'components/Observatory/RelatedResourcesCard';
 import ContentLoader from 'react-content-loader';
-import { getComparisonData } from 'utils';
+import { getComparisonData, groupVersionsOfComparisons } from 'utils';
 import { find } from 'lodash';
-import { filterObjectOfStatementsByPredicate } from 'utils';
-import { PREDICATES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
 
 const Comparisons = ({ observatoryId }) => {
@@ -26,16 +24,10 @@ const Comparisons = ({ observatoryId }) => {
                     }).then(resourcesStatements => {
                         const comparisonsData = resourcesStatements.map(resourceStatements => {
                             const comparisonSubject = find(comparisons, { id: resourceStatements.id });
-                            const resources = filterObjectOfStatementsByPredicate(resourceStatements.statements, PREDICATES.RELATED_RESOURCES, false);
-                            const figures = filterObjectOfStatementsByPredicate(resourceStatements.statements, PREDICATES.RELATED_FIGURE, false);
-
                             const data = getComparisonData(comparisonSubject, resourceStatements.statements);
-
-                            data.resources = resources;
-                            data.figures = figures;
                             return data;
                         });
-                        setComparisonsList(comparisonsData);
+                        setComparisonsList(groupVersionsOfComparisons(comparisonsData));
                         setIsLoadingComparisons(false);
                     });
                 })
@@ -54,19 +46,21 @@ const Comparisons = ({ observatoryId }) => {
                     <h1 className="h5 flex-shrink-0 mb-0">Figures</h1>
                 </div>
             </Container>
-            <Container className="box rounded-lg p-4 mt-4">
-                {!isLoadingComparisons ? (
-                    <div className="mb-4 mt-4">
-                        {comparisonsList.length > 0 ? (
-                            <RelatedResourcesCard figureStatements={comparisonsList} />
-                        ) : (
+            {!isLoadingComparisons ? (
+                <div className="mb-4 mt-4">
+                    {comparisonsList.length > 0 ? (
+                        <RelatedResourcesCard figureStatements={comparisonsList} />
+                    ) : (
+                        <Container className="box rounded-lg p-4 mt-4">
                             <div className="text-center mt-4 mb-4">No Figures</div>
-                        )}
-                    </div>
-                ) : (
+                        </Container>
+                    )}
+                </div>
+            ) : (
+                <Container className="box rounded-lg p-4 mt-4">
                     <div className="text-center mt-4 mb-4">Loading figures ...</div>
-                )}
-            </Container>
+                </Container>
+            )}
             <Container className="d-flex align-items-center mt-4 mb-4">
                 <div className="d-flex flex-grow-1">
                     <h1 className="h5 flex-shrink-0 mb-0">Comparisons</h1>
@@ -78,7 +72,7 @@ const Comparisons = ({ observatoryId }) => {
                         {comparisonsList.length > 0 ? (
                             <>
                                 {comparisonsList.map(comparison => {
-                                    return <ComparisonCard comparison={{ ...comparison }} key={`pc${comparison.id}`} loadResources={true} />;
+                                    return <ComparisonCard comparison={comparison} key={`pc${comparison.id}`} />;
                                 })}
                             </>
                         ) : (

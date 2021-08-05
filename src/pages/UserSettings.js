@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import classnames from 'classnames';
 import GeneralSettings from '../components/UserSettings/GeneralSettings';
 import Password from '../components/UserSettings/Password';
+import TitleBar from 'components/TitleBar/TitleBar';
 
 export const StyledSettingsMenu = styled.div`
     list-style: none;
@@ -19,7 +20,7 @@ export const StyledSettingsMenu = styled.div`
 
         &.active,
         &:hover {
-            background: ${props => props.theme.orkgPrimaryColor};
+            background: ${props => props.theme.primary};
             color: #fff;
         }
         &.active a {
@@ -52,9 +53,7 @@ class UserSettings extends Component {
 
     render = () => (
         <>
-            <Container className="p-0">
-                <h1 className="h4 mt-4 mb-4">Account Settings</h1>
-            </Container>
+            <TitleBar>Account settings</TitleBar>
             <Container className="p-0">
                 <Row>
                     <div className="col-3 justify-content-center">

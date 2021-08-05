@@ -56,13 +56,17 @@ export default function CustomOption(props) {
                     {props.children}
                     {truncatedDescription && (
                         <div>
-                            <small className="text-muted">{truncatedDescription}</small>
+                            <small className={!propsWithoutInnerProps.isFocused && !propsWithoutInnerProps.isSelected ? 'text-muted' : undefined}>
+                                {truncatedDescription}
+                            </small>
                         </div>
                     )}
                     {truncatedURI && (
                         <div>
                             <i>
-                                <small className="text-muted">{truncatedURI}</small>
+                                <small className={!propsWithoutInnerProps.isFocused && !propsWithoutInnerProps.isSelected ? 'text-muted' : undefined}>
+                                    {truncatedURI}
+                                </small>
                             </i>
                         </div>
                     )}
