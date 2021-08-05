@@ -10,6 +10,20 @@ export const EditableTitle = styled(Textarea)`
     resize: none;
 `;
 
+export const MoveButton = styled.div`
+    position: absolute;
+    left: 0;
+    width: 25px;
+    top: 25px;
+    display: none;
+    &.hover {
+        display: block;
+    }
+    &.down {
+        top: calc(100% - 30px);
+    }
+`;
+
 export const MoveHandle = styled.div`
     width: 25px;
     height: 100%;
@@ -25,7 +39,7 @@ export const MoveHandle = styled.div`
     z-index: 0;
     &.hover {
         background: ${props => props.theme.secondary};
-        color: #fff;
+        color: ${props => props.theme.secondary};
     }
 `;
 
@@ -43,7 +57,11 @@ export const DeleteButton = styled(Button)`
 
 export const SectionStyled = styled.div`
     position: relative;
-    padding: 10px 10px 10px 40px !important;
+    padding: 10px 40px 10px 40px !important;
+
+    a {
+        text-decoration: underline;
+    }
 `;
 
 export const SectionTypeStyled = styled.button`

@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import {
     Container,
     Button,
-    ButtonGroup,
     ButtonDropdown,
     DropdownToggle,
     DropdownMenu,
@@ -38,6 +37,7 @@ import CheckSlug from 'components/CheckSlug/CheckSlug';
 import { reverseWithSlug } from 'utils';
 import CheckClasses from 'components/CheckClasses/CheckClasses';
 import { CLASSES } from 'constants/graphSettings';
+import TitleBar from 'components/TitleBar/TitleBar';
 
 const ResearchProblemHeader = ({ id }) => {
     const [menuOpen, setMenuOpen] = useState(false);
@@ -96,44 +96,51 @@ const ResearchProblemHeader = ({ id }) => {
             <Breadcrumbs researchFieldId={!isLoadingResearchFields && researchFields.length ? researchFields[0].field.id : null} disableLastField />
             {!isLoading && !isFailedLoading && (
                 <>
-                    <Container className="d-flex align-items-center mt-4 mb-4">
-                        <h1 className="h5 flex-shrink-0 mb-0">Research problem</h1>
-                        <>
-                            <SubtitleSeparator />
-                            <SubTitle className="h5 mb-0"> {researchProblemData.label}</SubTitle>
-                        </>
-                        {editMode && (
-                            <StatementBrowserDialog
-                                show={editMode}
-                                toggleModal={() => setEditMode(v => !v)}
-                                id={id}
-                                label={researchProblemData.label}
-                                enableEdit={true}
-                                syncBackend={true}
-                            />
-                        )}
-                        <ButtonGroup className="flex-shrink-0" style={{ marginLeft: 'auto' }}>
-                            <RequireAuthentication
-                                component={Button}
-                                size="sm"
-                                color="secondary"
-                                className="float-right"
-                                onClick={() => setEditMode(v => !v)}
-                            >
-                                <Icon icon={faPen} /> Edit
-                            </RequireAuthentication>
-                            <ButtonDropdown isOpen={menuOpen} toggle={() => setMenuOpen(v => !v)} nav inNavbar>
-                                <DropdownToggle size="sm" color="secondary" className="px-3 rounded-right" style={{ marginLeft: 2 }}>
-                                    <Icon icon={faEllipsisV} />
-                                </DropdownToggle>
-                                <DropdownMenu right>
-                                    <DropdownItem tag={NavLink} exact to={reverse(ROUTES.RESOURCE, { id })}>
-                                        View resource
-                                    </DropdownItem>
-                                </DropdownMenu>
-                            </ButtonDropdown>
-                        </ButtonGroup>
-                    </Container>
+                    <TitleBar
+                        titleAddition={
+                            <>
+                                <SubtitleSeparator />
+                                <SubTitle>{researchProblemData.label}</SubTitle>
+                            </>
+                        }
+                        buttonGroup={
+                            <>
+                                <RequireAuthentication
+                                    component={Button}
+                                    size="sm"
+                                    color="secondary"
+                                    className="float-right"
+                                    onClick={() => setEditMode(v => !v)}
+                                    style={{ marginRight: 2 }}
+                                >
+                                    <Icon icon={faPen} /> Edit
+                                </RequireAuthentication>
+                                <ButtonDropdown isOpen={menuOpen} toggle={() => setMenuOpen(v => !v)} nav inNavbar>
+                                    <DropdownToggle size="sm" color="secondary" className="px-3 rounded-right">
+                                        <Icon icon={faEllipsisV} />
+                                    </DropdownToggle>
+                                    <DropdownMenu right>
+                                        <DropdownItem tag={NavLink} exact to={reverse(ROUTES.RESOURCE, { id })}>
+                                            View resource
+                                        </DropdownItem>
+                                    </DropdownMenu>
+                                </ButtonDropdown>
+                            </>
+                        }
+                        wrap={false}
+                    >
+                        Research problem
+                    </TitleBar>
+                    {editMode && (
+                        <StatementBrowserDialog
+                            show={editMode}
+                            toggleModal={() => setEditMode(v => !v)}
+                            id={id}
+                            label={researchProblemData.label}
+                            enableEdit={true}
+                            syncBackend={true}
+                        />
+                    )}
                     <Container className="p-0">
                         <Card>
                             <CardBody>

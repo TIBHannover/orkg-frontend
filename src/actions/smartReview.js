@@ -28,6 +28,21 @@ export const setIsLoading = isLoading => dispatch => {
     });
 };
 
+export const setIsEditing = isEditing => dispatch => {
+    dispatch({
+        type: type.ARTICLE_WRITER_SET_IS_EDITING,
+        isEditing
+    });
+};
+export const setVersions = versions => dispatch => {
+    dispatch({
+        type: type.ARTICLE_WRITER_SET_VERSIONS,
+        payload: {
+            versions
+        }
+    });
+};
+
 export const updateTitle = ({ id, title }) => async dispatch => {
     // on purpose don't have a blocking update there (so don't wait with dispatching the change before updating resource)
     dispatch({
@@ -106,6 +121,7 @@ export const updateAuthors = authorResources => async dispatch => {
 
 export const createSection = ({ contributionId, afterIndex, sectionType }) => async (dispatch, getState) => {
     dispatch(setIsLoading(true));
+    dispatch(setIsLoadingSort(true));
 
     let typeId = '';
     let sectionResourceId = null;
@@ -121,7 +137,13 @@ export const createSection = ({ contributionId, afterIndex, sectionType }) => as
         await createLiteralStatement(sectionResource.id, PREDICATES.HAS_CONTENT, markdownLiteral.id);
         sectionResourceId = sectionResource.id;
         markdownLiteralId = markdownLiteral.id;
-    } else if (sectionType === 'resource' || sectionType === 'property' || sectionType === 'comparison' || sectionType === 'visualization') {
+    } else if (
+        sectionType === 'resource' ||
+        sectionType === 'property' ||
+        sectionType === 'comparison' ||
+        sectionType === 'visualization' ||
+        sectionType === 'ontology'
+    ) {
         // link section
         if (sectionType === 'resource') {
             typeId = CLASSES.RESOURCE_SECTION;
@@ -131,6 +153,8 @@ export const createSection = ({ contributionId, afterIndex, sectionType }) => as
             typeId = CLASSES.COMPARISON_SECTION;
         } else if (sectionType === 'visualization') {
             typeId = CLASSES.VISUALIZATION_SECTION;
+        } else if (sectionType === 'ontology') {
+            typeId = CLASSES.ONTOLOGY_SECTION;
         }
 
         const sectionResource = await createResource('', [typeId]);
@@ -175,6 +199,7 @@ export const deleteSection = id => async dispatch => {
     //await deleteResource(id);
 
     dispatch(setIsLoading(false));
+    dispatch(setUsedReferences({ sectionId: id, references: {} }));
 };
 
 export const moveSection = ({ contributionId, sections, oldIndex, newIndex }) => async dispatch => {
@@ -183,8 +208,18 @@ export const moveSection = ({ contributionId, sections, oldIndex, newIndex }) =>
     dispatch(sortSections({ contributionId, sections: sectionsNewOrder }));
 };
 
+export const setIsLoadingSort = isLoading => dispatch => {
+    dispatch({
+        type: type.ARTICLE_WRITER_SET_IS_LOADING_SORT,
+        payload: {
+            isLoading
+        }
+    });
+};
+
 export const sortSections = ({ contributionId, sections }) => async dispatch => {
     dispatch(setIsLoading(true));
+    dispatch(setIsLoadingSort(true));
 
     dispatch({
         type: type.ARTICLE_WRITER_SORT_SECTIONS,
@@ -193,7 +228,7 @@ export const sortSections = ({ contributionId, sections }) => async dispatch => 
         }
     });
 
-    const sectionSubjectStatement = await getStatementsBySubject({ id: contributionId });
+    const sectionSubjectStatement = await getStatementsBySubjectAndPredicate({ subjectId: contributionId, predicateId: PREDICATES.HAS_SECTION });
     const sectionSubjectStatementIds = sectionSubjectStatement.map(stmt => stmt.id);
     await deleteStatementsByIds(sectionSubjectStatementIds);
 
@@ -202,6 +237,7 @@ export const sortSections = ({ contributionId, sections }) => async dispatch => 
     }
 
     dispatch(setIsLoading(false));
+    dispatch(setIsLoadingSort(false));
 };
 
 export const toggleHistoryModal = () => ({
@@ -226,5 +262,133 @@ export const setResearchField = ({ statementId, paperId, researchField }) => asy
         payload: {
             researchField
         }
+    });
+};
+
+export const setComparisonData = ({ id, data }) => ({
+    type: type.ARTICLE_WRITER_SET_COMPARISON_DATA,
+    payload: {
+        id,
+        data
+    }
+});
+
+export const saveEntities = ({ sectionId, entities }) => async dispatch => {
+    // delete existing statements
+    const entityStatements = await getStatementsBySubject({ id: sectionId });
+    const entityStatementIds = entityStatements.filter(statement => statement.predicate.id === PREDICATES.HAS_ENTITY).map(statement => statement.id);
+    await deleteStatementsByIds(entityStatementIds);
+
+    // create new statements, import to use await to ensure statements are created in the correct order
+    for (const entity of entities) {
+        await createResourceStatement(sectionId, PREDICATES.HAS_ENTITY, entity.id);
+    }
+
+    dispatch({
+        type: type.ARTICLE_WRITER_UPDATE_DATA_TABLE,
+        payload: {
+            sectionId,
+            dataTable: {
+                entities
+            }
+        }
+    });
+};
+
+export const saveShowProperties = ({ sectionId, properties }) => async dispatch => {
+    // delete existing statements
+    const propertyStatements = await getStatementsBySubject({ id: sectionId });
+    const propertyStatementIds = propertyStatements
+        .filter(statement => statement.predicate.id === PREDICATES.SHOW_PROPERTY)
+        .map(statement => statement.id);
+    await deleteStatementsByIds(propertyStatementIds);
+
+    // create new statements
+    for (const property of properties) {
+        await createResourceStatement(sectionId, PREDICATES.SHOW_PROPERTY, property.id);
+    }
+
+    dispatch({
+        type: type.ARTICLE_WRITER_UPDATE_DATA_TABLE,
+        payload: {
+            sectionId,
+            dataTable: {
+                properties
+            }
+        }
+    });
+};
+
+export const reloadDataTableStatements = ({ id, sectionId }) => async dispatch => {
+    const statements = await getStatementsBySubject({ id });
+
+    dispatch({
+        type: type.ARTICLE_WRITER_SET_DATA_TABLE_STATEMENTS,
+        payload: {
+            id,
+            sectionId,
+            statements
+        }
+    });
+};
+
+export const createReference = ({ contributionId, bibtex, parsedReference }) => dispatch => {
+    return createLiteral(bibtex)
+        .then(async literal => {
+            const { id: statementId } = await createLiteralStatement(contributionId, PREDICATES.HAS_REFERENCE, literal.id);
+            dispatch({
+                type: type.ARTICLE_WRITER_REFERENCE_ADD,
+                payload: {
+                    reference: {
+                        literal,
+                        parsedReference,
+                        statementId
+                    }
+                }
+            });
+            return Promise.resolve();
+        })
+        .catch(e => {
+            console.log(e);
+            return Promise.resolve();
+        });
+};
+
+export const deleteReference = statementId => dispatch => {
+    return deleteStatementById(statementId)
+        .then(() => {
+            dispatch({
+                type: type.ARTICLE_WRITER_REFERENCE_REMOVE,
+                payload: {
+                    statementId
+                }
+            });
+            return Promise.resolve();
+        })
+        .catch(e => {
+            console.log(e);
+            return Promise.resolve();
+        });
+};
+
+export const updateReference = ({ literalId, bibtex, parsedReference }) => dispatch => {
+    return updateLiteral(literalId, bibtex)
+        .then(literal => {
+            dispatch({
+                type: type.ARTICLE_WRITER_REFERENCE_UPDATE,
+                payload: { literalId, bibtex, parsedReference }
+            });
+            return Promise.resolve();
+        })
+        .catch(e => {
+            console.log(e);
+            return Promise.resolve();
+        });
+};
+
+export const setUsedReferences = ({ sectionId, references }) => async dispatch => {
+    dispatch({
+        type: type.ARTICLE_WRITER_SET_USED_REFERENCES,
+        payload: { sectionId, references }
     });
 };

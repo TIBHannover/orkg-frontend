@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Col, Row, Container, Button, ButtonGroup, Card, CardBody } from 'reactstrap';
+import { Col, Row, Container, Button, Card, CardBody } from 'reactstrap';
 import { getOrganization } from 'services/backend/organizations';
 import { getObservatoryById } from 'services/backend/observatories';
 import InternalServerError from 'pages/InternalServerError';
@@ -16,9 +16,11 @@ import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import TitleBar from 'components/TitleBar/TitleBar';
 
 const Observatory = () => {
     const [error, setError] = useState(null);
+    const [observatoryId, setObservatoryId] = useState(null);
     const [label, setLabel] = useState(null);
     const [description, setDescription] = useState('');
     const [researchField, setResearchField] = useState(null);
@@ -35,6 +37,7 @@ const Observatory = () => {
             getObservatoryById(id)
                 .then(observatory => {
                     document.title = `${observatory.name} - Details`;
+                    setObservatoryId(observatory.id);
                     setLabel(observatory.name);
                     setDescription(observatory.description);
                     setIsLoading(false);
@@ -71,21 +74,25 @@ const Observatory = () => {
             {!isLoading && !error && label && (
                 <>
                     <Breadcrumbs researchFieldId={researchField?.id} />
-
-                    <Container className="d-flex align-items-center mt-4 mb-4">
-                        <h1 className="h5 flex-shrink-0 mb-0">Observatory</h1>
-                        <>
-                            <SubtitleSeparator />
-                            <SubTitle className="h5 mb-0"> {label}</SubTitle>
-                        </>
-                        {!!user && user.isCurationAllowed && (
-                            <ButtonGroup className="flex-shrink-0" style={{ marginLeft: 'auto' }}>
+                    <TitleBar
+                        titleAddition={
+                            <>
+                                <SubtitleSeparator />
+                                <SubTitle>{label}</SubTitle>
+                            </>
+                        }
+                        buttonGroup={
+                            !!user &&
+                            user.isCurationAllowed && (
                                 <Button color="secondary" size="sm" onClick={() => setShowEditDialog(v => !v)}>
                                     <Icon icon={faPen} /> Edit
                                 </Button>
-                            </ButtonGroup>
-                        )}
-                    </Container>
+                            )
+                        }
+                        wrap={false}
+                    >
+                        Observatory
+                    </TitleBar>
                     {description && (
                         <Container className="p-0">
                             <Card>
@@ -95,36 +102,36 @@ const Observatory = () => {
                             </Card>
                         </Container>
                     )}
+                    <Container className="p-0">
+                        <Row className="mt-3">
+                            <Col md="4" className="d-flex">
+                                <ResearchProblemsBox observatoryId={observatoryId} organizationsList={organizationsList} />
+                            </Col>
+                            <Col md="4" className="d-flex">
+                                <OrganizationsBox
+                                    observatoryId={observatoryId}
+                                    organizationsList={organizationsList}
+                                    isLoadingOrganizations={isLoadingOrganizations}
+                                />
+                            </Col>
+                            <Col md="4" className="d-flex">
+                                <MembersBox observatoryId={observatoryId} organizationsList={organizationsList} />
+                            </Col>
+                        </Row>
+                    </Container>
+                    <Comparisons observatoryId={observatoryId} />
+                    <Papers observatoryId={observatoryId} />
+                    <EditObservatory
+                        showDialog={showEditDialog}
+                        toggle={() => setShowEditDialog(v => !v)}
+                        label={label}
+                        id={observatoryId}
+                        description={description}
+                        researchField={researchField}
+                        updateObservatoryMetadata={updateObservatoryMetadata}
+                    />
                 </>
             )}
-
-            <Container className="p-0">
-                <Row className="mt-3">
-                    <Col md="4" className="d-flex">
-                        <ResearchProblemsBox observatoryId={id} organizationsList={organizationsList} />
-                    </Col>
-                    <Col md="4" className="d-flex">
-                        <OrganizationsBox observatoryId={id} organizationsList={organizationsList} isLoadingOrganizations={isLoadingOrganizations} />
-                    </Col>
-                    <Col md="4" className="d-flex">
-                        <MembersBox observatoryId={id} organizationsList={organizationsList} />
-                    </Col>
-                </Row>
-            </Container>
-
-            <Comparisons observatoryId={id} />
-
-            <Papers observatoryId={id} />
-
-            <EditObservatory
-                showDialog={showEditDialog}
-                toggle={() => setShowEditDialog(v => !v)}
-                label={label}
-                id={id}
-                description={description}
-                researchField={researchField}
-                updateObservatoryMetadata={updateObservatoryMetadata}
-            />
         </>
     );
 };

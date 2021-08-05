@@ -14,6 +14,7 @@ import * as type from 'actions/types';
 import { createResource, getResource } from 'services/backend/resources';
 import { createPredicate, getPredicate } from 'services/backend/predicates';
 import { toast } from 'react-toastify';
+import { guid } from 'utils';
 
 export const loadContributions = contributionIds => async dispatch => {
     const resources = {};
@@ -44,14 +45,18 @@ export const loadContributions = contributionIds => async dispatch => {
         contributions[contributionId] = { ...contribution, paperId: paper.id };
         papers[paper.id] = paper;
 
-        for (const { id, predicate: property, object } of contributionStatements) {
+        for (const { id, predicate: property, object, created_by } of contributionStatements) {
             statements[id] = {
                 contributionId,
+                created_by: created_by,
                 propertyId: property.id,
                 objectId: object.id,
                 type: object._class
             };
-            properties[property.id] = property;
+            properties[property.id] = {
+                ...property,
+                staticRowId: guid()
+            };
             if (object._class === 'resource') {
                 resources[object.id] = object;
             }

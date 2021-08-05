@@ -5,7 +5,8 @@ import { useDispatch } from 'react-redux';
 import { getResource } from 'services/backend/resources';
 import { getStatementsBundleBySubject, getStatementsByObjectAndPredicate, getStatementsBySubjects } from 'services/backend/statements';
 import { getResourceData } from 'services/similarity';
-import { uniq } from 'lodash';
+import { countBy, orderBy } from 'lodash';
+import Cite from 'citation-js';
 
 const useLoad = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -21,6 +22,7 @@ const useLoad = () => {
         }
 
         let paperStatements = [];
+        const paramId = id;
 
         // for published articles
         if (paperResource.classes.includes(CLASSES.SMART_REVIEW_PUBLISHED)) {
@@ -106,6 +108,7 @@ const useLoad = () => {
             const type = section.classes.length > 1 ? section.classes.find(_class => _class !== CLASSES.SECTION) : section.classes[0];
             let markdown = null;
             let contentLink = null;
+            let dataTable = null;
 
             if ([CLASSES.RESOURCE_SECTION, CLASSES.PROPERTY_SECTION, CLASSES.COMPARISON_SECTION, CLASSES.VISUALIZATION_SECTION].includes(type)) {
                 const linkStatement = section.statements.find(statement => statement.predicate.id === PREDICATES.HAS_LINK);
@@ -115,6 +118,28 @@ const useLoad = () => {
                     id: section?.id,
                     objectId: link?.id,
                     label: link?.label
+                };
+            } else if (type === CLASSES.ONTOLOGY_SECTION) {
+                const properties =
+                    section.statements
+                        .filter(statement => statement.predicate.id === PREDICATES.SHOW_PROPERTY)
+                        .map(statement => statement.object)
+                        .reverse() ?? [];
+
+                const entities =
+                    section.statements
+                        .filter(statement => statement.predicate.id === PREDICATES.HAS_ENTITY)
+                        .map(statement => statement.object)
+                        .reverse() ?? [];
+
+                const entityStatements = entities.flatMap(entity => ({
+                    ...entity,
+                    statements: paperStatements.filter(statement => statement.subject.id === entity.id)
+                }));
+
+                dataTable = {
+                    properties,
+                    entities: entityStatements
                 };
             } else {
                 const contentStatement = section.statements.find(statement => statement.predicate.id === PREDICATES.HAS_CONTENT);
@@ -135,14 +160,17 @@ const useLoad = () => {
                     id: type
                 },
                 markdown,
-                contentLink
+                contentLink,
+                dataTable
             });
         }
 
         // contributors
         const contributors = getAllContributors(paperStatements);
+        const references = await getReferences(paperStatements, contributionResource.id);
 
         return {
+            articleId: paramId,
             paper: {
                 id: paperResource.id,
                 title: paperResource.label
@@ -154,21 +182,39 @@ const useLoad = () => {
             versions,
             researchField,
             statements: paperStatements,
-            contributors
+            contributors,
+            references
         };
     }, []);
 
+    const getReferences = async (statements, contributionId) => {
+        const referenceStatements = statements.filter(
+            statement => statement.subject.id === contributionId && statement.predicate.id === PREDICATES.HAS_REFERENCE
+        );
+        const parseReferences = referenceStatements.map(reference => Cite.async(reference.object.label).catch(e => console.log(e)));
+
+        return (await Promise.all(parseReferences)).map((parsedReference, index) => ({
+            parsedReference: parsedReference?.data?.[0] ?? {},
+            literal: referenceStatements[index].object,
+            statementId: referenceStatements[index].id
+        }));
+    };
+
     const getAllContributors = statements => {
-        //paperStatements
-        let contributors = [];
-
-        for (const statement of statements) {
-            contributors.push(statement.subject.created_by);
-            contributors.push(statement.object.created_by);
+        if (statements.length === 0) {
+            return [];
         }
-        contributors = contributors.filter(contributor => contributor !== MISC.UNKNOWN_ID);
+        const contributors = statements
+            .flatMap(statement => [statement.subject.created_by, statement.object.created_by, statement.created_by])
+            .filter(contributor => contributor !== MISC.UNKNOWN_ID);
 
-        return uniq(contributors);
+        const statementAmountPerContributor = countBy(contributors);
+        const contributorsWithPercentage = Object.keys(statementAmountPerContributor).map(contributorId => ({
+            id: contributorId,
+            percentage: Math.round((statementAmountPerContributor[contributorId] / contributors.length) * 100)
+        }));
+
+        return orderBy(contributorsWithPercentage, 'percentage', 'desc');
     };
 
     const load = useCallback(
@@ -226,7 +272,7 @@ const useLoad = () => {
         return statements.filter(statement => statement.object.id === objectId);
     };
 
-    return { load, isLoading, isNotFound, getArticleById };
+    return { load, isLoading, isNotFound, getArticleById, getVersions };
 };
 
 export default useLoad;

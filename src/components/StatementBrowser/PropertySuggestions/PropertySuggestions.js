@@ -28,7 +28,7 @@ function PropertySuggestions(props) {
                         />
                         {c.property.label}
                         <Badge pill className="ml-2">
-                            {c.value.label}
+                            {c.value?.label ?? ''}
                         </Badge>
                     </ListGroupItem>
                 ))}

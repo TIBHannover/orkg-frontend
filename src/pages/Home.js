@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useLocation, useHistory } from 'react-router';
-import { Container, Row, Col, Alert } from 'reactstrap';
+import { Container, Row, Col } from 'reactstrap';
 import ResearchFieldCards from 'components/Home/ResearchFieldCards';
 import ObservatoriesBox from 'components/Home/ObservatoriesBox';
 import FeaturedItemsBox from 'components/Home/FeaturedItemsBox';
@@ -10,9 +10,6 @@ import ContributorsBox from 'components/TopContributors/ContributorsBox';
 import useResearchFieldSelector from 'components/Home/hooks/useResearchFieldSelector';
 import { MISC } from 'constants/graphSettings';
 import { toast } from 'react-toastify';
-import moment from 'moment';
-import { Link } from 'react-router-dom';
-import ROUTES from 'constants/routes';
 
 export default function Home() {
     const location = useLocation();
@@ -36,18 +33,6 @@ export default function Home() {
 
     return (
         <Container style={{ marginTop: -70 }}>
-            {moment() < moment('2021-06-01T00:00:00') && (
-                <Alert color="info" className="box mt-2">
-                    The ORKG <strong>Curation Grant Competition</strong> has launched. Apply until 31st of May 2021.{' '}
-                    <Link to={ROUTES.CURATION_CALL}>Find out more</Link>
-                </Alert>
-            )}
-            {moment() < moment('2021-05-13T00:00:00') && (
-                <Alert color="info" className="box mt-2">
-                    <strong>Webinar:</strong> Open Research Knowledge Graph - 11th May 2021, 14:00 - 15:00 (CEST).{' '}
-                    <Link to={ROUTES.WEBINAR_MAY_11}>More information</Link>
-                </Alert>
-            )}
             <Row>
                 <Col md="12">
                     <div className="box rounded-lg p-3">

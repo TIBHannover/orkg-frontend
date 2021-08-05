@@ -13,7 +13,8 @@ import { reverseWithSlug } from 'utils';
 
 const BreadcrumbStyled = styled.ul`
     list-style: none;
-    display: inline-block;
+    display: flex;
+    margin-bottom: 5px;
     font-size: small;
     padding: 0;
 

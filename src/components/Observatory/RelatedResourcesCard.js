@@ -2,28 +2,22 @@ import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { getStatementsBySubjects } from 'services/backend/statements';
 import styled from 'styled-components';
-import { Button } from 'reactstrap';
 import ROUTES from 'constants/routes';
 import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faArrowCircleRight, faArrowCircleLeft } from '@fortawesome/free-solid-svg-icons';
-import ItemsCarousel from 'react-items-carousel';
+import { StyledSlider } from 'components/ResearchProblem/Benchmarks/styled';
 import { flatMap, find } from 'lodash';
 import { getRelatedFiguresData } from 'utils';
-
-const NO_OF_CARDS = 5;
-const CHEVRON_WIDTH = 40;
-
-const Wrapper = styled.div`
-    padding: 0 ${CHEVRON_WIDTH}px;
-`;
 
 const SlideItem = styled.div`
     overflow: hidden;
     border: 1px solid #d8d8d8;
     border-radius: 5px;
     padding-left: 0px;
+    margin: 0 10px;
+    background: #fff;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -34,6 +28,7 @@ const SlideImg = styled.img`
     max-width: 100%;
     object-fit: contain;
 `;
+
 class RelatedResourcesCard extends Component {
     constructor(props) {
         super(props);
@@ -92,27 +87,46 @@ class RelatedResourcesCard extends Component {
     };
 
     render() {
+        const settings = {
+            dots: false,
+            infinite: false,
+            speed: 500,
+            slidesToShow: 5,
+            centerMode: false,
+            slidesToScroll: 1,
+            nextArrow: <Icon icon={faArrowCircleRight} />,
+            prevArrow: <Icon icon={faArrowCircleLeft} />,
+            rows: 1,
+            responsive: [
+                {
+                    breakpoint: 1024,
+                    settings: {
+                        slidesToShow: 3,
+                        slidesToScroll: 3
+                    }
+                },
+                {
+                    breakpoint: 600,
+                    settings: {
+                        slidesToShow: 2,
+                        slidesToScroll: 2
+                    }
+                },
+                {
+                    breakpoint: 480,
+                    settings: {
+                        slidesToShow: 1,
+                        slidesToScroll: 1
+                    }
+                }
+            ]
+        };
+
         return !this.state.loadingFigures ? (
             this.state.relatedFigures.length > 0 ? (
-                <Wrapper>
-                    <ItemsCarousel
-                        gutter={12}
-                        numberOfCards={NO_OF_CARDS}
-                        activeItemIndex={this.state.activeItemIndex}
-                        requestToChangeActive={this.onChange}
-                        rightChevron={
-                            <Button color="link" className="p-0">
-                                <Icon icon={faArrowCircleRight} className="text-secondary h3 m-0" />
-                            </Button>
-                        }
-                        leftChevron={
-                            <Button color="link" className="p-0">
-                                <Icon icon={faArrowCircleLeft} className="text-secondary h3 m-0" />
-                            </Button>
-                        }
-                        chevronWidth={CHEVRON_WIDTH}
-                        outsideChevron
-                        children={this.state.relatedFigures.map(url => (
+                <div className="container">
+                    <StyledSlider {...settings}>
+                        {this.state.relatedFigures.map(url => (
                             <SlideItem key={url.figureId}>
                                 <Link to={reverse(ROUTES.COMPARISON, { comparisonId: url.id }) + '#' + url.figureId}>
                                     <div className="logoContainer">
@@ -121,8 +135,8 @@ class RelatedResourcesCard extends Component {
                                 </Link>
                             </SlideItem>
                         ))}
-                    />
-                </Wrapper>
+                    </StyledSlider>
+                </div>
             ) : (
                 <div className="text-center mt-4 mb-4">No Figures</div>
             )

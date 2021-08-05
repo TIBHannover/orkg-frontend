@@ -7,12 +7,14 @@ import ROUTES from 'constants/routes.js';
 import PaperCard from 'components/PaperCard/PaperCard';
 import { getPaperData } from 'utils';
 import { find } from 'lodash';
+import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner, faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
 import { PREDICATES } from 'constants/graphSettings';
 import { NavLink } from 'react-router-dom';
 import { reverse } from 'named-urls';
+import TitleBar from 'components/TitleBar/TitleBar';
 
 class VenuePage extends Component {
     constructor(props) {
@@ -118,29 +120,31 @@ class VenuePage extends Component {
                 )}
                 {!this.state.loading && (
                     <div>
-                        <Container className="d-flex align-items-center">
-                            <h1 className="h4 mt-4 mb-4 flex-grow-1">Venue</h1>
-
-                            <ButtonDropdown
-                                isOpen={this.state.menuOpen}
-                                toggle={() =>
-                                    this.setState(prevState => ({
-                                        menuOpen: !prevState.menuOpen
-                                    }))
-                                }
-                                nav
-                                inNavbar
-                            >
-                                <DropdownToggle size="sm" color="secondary" className="px-3 rounded-right" style={{ marginLeft: 2 }}>
-                                    <Icon icon={faEllipsisV} />
-                                </DropdownToggle>
-                                <DropdownMenu right>
-                                    <DropdownItem tag={NavLink} exact to={reverse(ROUTES.RESOURCE, { id: this.props.match.params.venueId })}>
-                                        View resource
-                                    </DropdownItem>
-                                </DropdownMenu>
-                            </ButtonDropdown>
-                        </Container>
+                        <TitleBar
+                            buttonGroup={
+                                <ButtonDropdown
+                                    isOpen={this.state.menuOpen}
+                                    toggle={() =>
+                                        this.setState(prevState => ({
+                                            menuOpen: !prevState.menuOpen
+                                        }))
+                                    }
+                                    nav
+                                    inNavbar
+                                >
+                                    <DropdownToggle size="sm" color="secondary" className="px-3 rounded-right" style={{ marginLeft: 2 }}>
+                                        <Icon icon={faEllipsisV} />
+                                    </DropdownToggle>
+                                    <DropdownMenu right>
+                                        <DropdownItem tag={NavLink} exact to={reverse(ROUTES.RESOURCE, { id: this.props.match.params.venueId })}>
+                                            View resource
+                                        </DropdownItem>
+                                    </DropdownMenu>
+                                </ButtonDropdown>
+                            }
+                        >
+                            Venue
+                        </TitleBar>
                         <Container className="p-0">
                             <Card>
                                 <CardHeader>
@@ -202,6 +206,7 @@ class VenuePage extends Component {
                                 <div className="text-center mt-3">You have reached the last page.</div>
                             )}
                         </Container>
+                        <ComparisonPopup />
                     </div>
                 )}
             </>

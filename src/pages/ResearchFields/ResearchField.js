@@ -4,6 +4,7 @@ import ResearchFieldHeader from 'components/ResearchField/ResearchFieldHeader';
 import ObservatoriesCarousel from 'components/ObservatoriesCarousel/ObservatoriesCarousel';
 import useResearchFieldObservatories from 'components/ResearchField/hooks/useResearchFieldObservatories';
 import LastUpdatesBox from 'components/LastUpdatesBox/LastUpdatesBox';
+import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
 import Comparisons from 'components/ResearchField/Comparisons';
 import Papers from 'components/ResearchField/Papers';
 import { useParams } from 'react-router-dom';
@@ -39,6 +40,7 @@ const ResearchField = () => {
 
             <Comparisons id={researchFieldId} boxShadow />
             <Papers id={researchFieldId} boxShadow />
+            <ComparisonPopup />
         </>
     );
 };

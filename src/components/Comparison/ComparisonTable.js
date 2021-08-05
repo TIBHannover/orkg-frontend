@@ -1,4 +1,5 @@
 import { memo, useRef, useMemo } from 'react';
+import { Alert } from 'reactstrap';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import PropertyValue from 'components/Comparison/PropertyValue';
@@ -13,6 +14,7 @@ import { useTable, useFlexLayout } from 'react-table';
 import { useSticky } from 'react-table-sticky';
 import { getPropertyObjectFromData } from 'utils';
 import PropTypes from 'prop-types';
+import { useMedia } from 'react-use';
 
 const compareProps = (prevProps, nextProps) => {
     // remove functions from equality check (mainly targeting "removeContribution"), otherwise it is always false
@@ -22,6 +24,7 @@ const compareProps = (prevProps, nextProps) => {
 const ComparisonTable = props => {
     const scrollContainerHead = useRef(null);
     const smallerFontSize = props.viewDensity === 'compact';
+    const isSmallScreen = useMedia('(max-width: 576px)');
 
     let cellPadding = 10;
     if (props.viewDensity === 'normal') {
@@ -39,7 +42,7 @@ const ComparisonTable = props => {
                           return {
                               property: property,
                               values: props.contributions.map((contribution, index2) => {
-                                  const data = props.data[property.id][index2];
+                                  const data = props.data[property.id] ? props.data[property.id][index2] : null;
                                   return data;
                               })
                           };
@@ -50,7 +53,7 @@ const ComparisonTable = props => {
                           values: props.properties
                               .filter(property => property.active)
                               .map((property, index2) => {
-                                  const data = props.data[property.id][index];
+                                  const data = props.data[property.id] ? props.data[property.id][index] : null;
                                   return data;
                               })
                       };
@@ -81,7 +84,7 @@ const ComparisonTable = props => {
                     </Properties>
                 ),
                 accessor: 'property',
-                sticky: 'left',
+                sticky: !isSmallScreen ? 'left' : undefined,
                 Cell: info => {
                     return !props.transpose ? (
                         <Properties className="columnProperty">
@@ -200,7 +203,7 @@ const ComparisonTable = props => {
         ];
         // TODO: remove disable lint rule: useCallback for removeContribution and add used dependencies
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [props.transpose, props.properties, props.contributions, props.filterControlData, props.viewDensity]);
+    }, [props.transpose, props.properties, props.contributions, props.filterControlData, props.viewDensity, isSmallScreen]);
 
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable(
         {
@@ -258,6 +261,11 @@ const ComparisonTable = props => {
                     </div>
                 </ScrollSyncPane>
             </div>
+            {rows.length === 0 && (
+                <Alert className="mt-3" color="info">
+                    This contributions have no data to compare on!
+                </Alert>
+            )}
         </ReactTableWrapper>
     );
 };

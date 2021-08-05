@@ -82,7 +82,6 @@ const UserUnpublishedArticles = () => {
                 fetchItems={fetchItems}
                 buttons={buttons}
                 pageSize={50}
-                hideEmptyList={true}
             />
         </>
     );

@@ -330,6 +330,9 @@ export default (state = initialState, action) => {
         case type.UPDATE_VALUE_LABEL: {
             const { payload } = action;
             let newState = dotProp.set(state, `values.byId.${payload.valueId}.label`, payload.label);
+            if (payload.datatype) {
+                newState = dotProp.set(newState, `values.byId.${payload.valueId}.datatype`, payload.datatype);
+            }
             // Update all the labels of the same resource ID
             const resourceId = dotProp.get(state, `values.byId.${payload.valueId}.resourceId`);
             if (resourceId) {

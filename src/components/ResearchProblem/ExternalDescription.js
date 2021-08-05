@@ -23,7 +23,7 @@ class ExternalDescription extends Component {
         if (this.props.query.match(this.expressionWikipedia)) {
             return <WikipediaSummary externalResource={this.props.query} />;
         }
-        return <>No description available</>;
+        return null;
     }
 }
 

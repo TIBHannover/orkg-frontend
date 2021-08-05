@@ -1,6 +1,7 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { renderToString } from 'react-dom/server';
+import REGEX from 'constants/regex';
 import styled from 'styled-components';
 
 const ImageContainer = styled.div`
@@ -16,12 +17,6 @@ const Image = styled.img`
 `;
 
 class ImageAsFigure extends Component {
-    constructor(props) {
-        super(props);
-        // eslint-disable-next-line no-useless-escape
-        this.expressionImage = new RegExp(/^(https):(\/\/[^"']*\.(?:png|jpg|jpeg|gif|svg))/i);
-    }
-
     render() {
         const label = this.props.children;
         const labelToText = renderToString(label);
@@ -29,7 +24,7 @@ class ImageAsFigure extends Component {
             return '';
         }
 
-        if (this.props.type === 'literal' && labelToText.match(this.expressionImage)) {
+        if (this.props.type === 'literal' && labelToText.match(new RegExp(REGEX.IMAGE_URL))) {
             // we found a image regex:
             return (
                 <ImageContainer>

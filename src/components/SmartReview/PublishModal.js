@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
-import { Button, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import { Alert, Button, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import { createLiteralStatement, createResourceStatement, getStatementsBundleBySubject } from 'services/backend/statements';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
@@ -11,11 +11,15 @@ import { createResourceData } from 'services/similarity';
 import { toast } from 'react-toastify';
 import { reverse } from 'named-urls';
 import routes from 'constants/routes';
+import { Link } from 'react-router-dom';
+import { setVersions } from 'actions/smartReview';
+import { useDispatch } from 'react-redux';
 
-const PublishModal = ({ id, show, toggle }) => {
+const PublishModal = ({ id, show, toggle, getVersions, paperId }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [updateMessage, setUpdateMessage] = useState('');
     const [publishedId, setPublishedId] = useState(null);
+    const dispatch = useDispatch();
 
     const handlePublish = async () => {
         setIsLoading(true);
@@ -34,6 +38,11 @@ const PublishModal = ({ id, show, toggle }) => {
                 resourceId: versionResource.id,
                 data: { rootResource: id, statements }
             });
+
+            // reload versions to ensure new versions appears in history
+            const versions = await getVersions(paperId);
+            dispatch(setVersions(versions));
+
             toast.success('Article published successfully');
             setPublishedId(versionResource.id);
             setIsLoading(false);
@@ -47,6 +56,10 @@ const PublishModal = ({ id, show, toggle }) => {
         <Modal isOpen={show} toggle={toggle}>
             <ModalHeader toggle={toggle}>Publish article</ModalHeader>
             <ModalBody>
+                <Alert color="info">
+                    Once an article is published, the current state is saved and will be persistent over time. The update message is used to identify
+                    why a version is published
+                </Alert>
                 {!publishedId ? (
                     <FormGroup>
                         <Label for="update-message">Update message</Label>
@@ -59,7 +72,9 @@ const PublishModal = ({ id, show, toggle }) => {
                         />
                     </FormGroup>
                 ) : (
-                    <a href={reverse(routes.SMART_REVIEW, { id: publishedId })}>View the published article</a>
+                    <Link to={reverse(routes.SMART_REVIEW, { id: publishedId })} onClick={toggle}>
+                        View the published article
+                    </Link>
                 )}
             </ModalBody>
             {!publishedId && (
@@ -76,7 +91,9 @@ const PublishModal = ({ id, show, toggle }) => {
 PublishModal.propTypes = {
     id: PropTypes.string.isRequired,
     toggle: PropTypes.func.isRequired,
-    show: PropTypes.bool.isRequired
+    show: PropTypes.bool.isRequired,
+    getVersions: PropTypes.func.isRequired,
+    paperId: PropTypes.string.isRequired
 };
 
 export default PublishModal;

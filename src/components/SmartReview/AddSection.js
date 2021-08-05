@@ -61,7 +61,7 @@ const AddSection = props => {
 
     return (
         <InvisibleByDefault className="d-flex align-items-center justify-content-center add position-relative">
-            <AddSectionStyled color="link" className="p-0" onClick={handleShowToolbar}>
+            <AddSectionStyled color="link" className="p-0" onClick={handleShowToolbar} aria-label="Add section">
                 <Icon icon={faPlusCircle} />
             </AddSectionStyled>
             {isToolbarVisible && (
@@ -81,6 +81,9 @@ const AddSection = props => {
                         </Button>
                         <Button color="dark" onClick={() => handleAddSection('property')}>
                             Property
+                        </Button>
+                        <Button color="dark" onClick={() => handleAddSection('ontology')}>
+                            Ontology
                         </Button>
                     </ButtonGroup>
                 </Toolbar>

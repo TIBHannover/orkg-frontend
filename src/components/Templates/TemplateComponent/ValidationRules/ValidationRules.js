@@ -39,7 +39,7 @@ function ValidationRules(props) {
                     </FormGroup>
                 </>
             )}
-            {props.value && props.value.id === 'Number' && (
+            {props.value && (props.value.id === 'Number' || props.value.id === 'Integer') && (
                 <>
                     <FormGroup row>
                         <Label className="text-right text-muted" for="minimumValueInput" sm={3}>

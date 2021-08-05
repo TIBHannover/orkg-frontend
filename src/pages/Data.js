@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { Container, Button, Card, CardTitle, CardText, Row, Col } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPython } from '@fortawesome/free-brands-svg-icons';
+import TitleBar from 'components/TitleBar/TitleBar';
 
 const Data = () => {
     useEffect(() => {
@@ -10,9 +11,7 @@ const Data = () => {
 
     return (
         <div>
-            <Container>
-                <h1 className="h4 mt-4 mb-4">Data Access</h1>
-            </Container>
+            <TitleBar>Data Access</TitleBar>
             <Container className="box rounded pt-4 pb-4 pl-5 pr-5">
                 <Row className="mb-4">
                     <Col sm="6" className="mt-4">

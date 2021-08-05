@@ -18,7 +18,7 @@ export const PREDICATES = {
     ON_HOMEPAGE: 'onHomepage',
     SAME_AS: 'SAME_AS',
     SUB_PROBLEM: 'subProblem',
-    RELATED_RESOURCES: 'RelatedResource',
+    RELATED_RESOURCE: 'RelatedResource',
     RELATED_FIGURE: 'RelatedFigure',
     IMAGE: 'Image',
     TEMPLATE_OF_RESEARCH_FIELD: 'TemplateOfResearchField',
@@ -42,10 +42,20 @@ export const PREDICATES = {
     HAS_PROPERTY: 'hasProperty',
     HAS_PREVIOUS_VERSION: 'hasPreviousVersion',
     HAS_SUBJECT: 'hasSubject',
+    HAS_BENCHMARK: 'hasBenchmark',
+    HAS_MODEL: 'hasModel',
+    HAS_DATASET: 'hasDataset',
+    HAS_EVALUATION: 'HasEvaluation',
+    HAS_METRIC: 'HAS_METRIC',
+    HAS_VALUE: 'HAS_VALUE',
     HAS_SECTION: 'HasSection',
     HAS_LINK: 'HasLink',
     HAS_VISUALIZATION: 'hasVisualization',
-    HAS_PAPER: 'HasPaper'
+    HAS_PAPER: 'HasPaper',
+    HAS_SYNONYM: 'hasSynonym',
+    SHOW_PROPERTY: 'ShowProperty',
+    HAS_ENTITY: 'HasEntity',
+    HAS_REFERENCE: 'HasReference'
 };
 
 export const CLASSES = {
@@ -61,12 +71,18 @@ export const CLASSES = {
     COMPARISON: 'Comparison',
     FEATURED_COMPARISON: 'FeaturedComparison',
     FEATURED_COMPARISON_CATEGORY: 'FeaturedComparisonCategory',
+    FEATURED_COMPARISON_HOME_PAGE: 'FeaturedComparisonHomePage',
     TEMPLATE: 'ContributionTemplate',
     PREDICATE: 'Predicates',
     CLASS: 'Classes',
     QB_DATASET_CLASS: 'QBDataset',
     LOCATION: 'DCLocation',
     SENTENCE: 'Sentence',
+    BENCHMARK: 'Benchmark',
+    MODEL: 'Model',
+    DATASET: 'Dataset',
+    EVALUATION: 'Evaluation',
+    METRIC: 'Metric',
     SMART_REVIEW: 'SmartReview',
     SMART_REVIEW_PUBLISHED: 'SmartReviewPublished',
     SECTION: 'Section',
@@ -75,7 +91,10 @@ export const CLASSES = {
     PROPERTY_SECTION: 'PropertySection',
     COMPARISON_SECTION: 'ComparisonSection',
     VISUALIZATION_SECTION: 'VisualizationSection',
-    VISUALIZATION: 'Visualization'
+    VISUALIZATION: 'Visualization',
+    COMPARISON_RELATED_RESOURCE: 'ComparisonRelatedResource',
+    COMPARISON_RELATED_FIGURE: 'ComparisonRelatedFigure',
+    ONTOLOGY_SECTION: 'OntologySection'
 };
 
 export const MISC = {
@@ -84,8 +103,10 @@ export const MISC = {
     UNKNOWN_ID: '00000000-0000-0000-0000-000000000000'
 };
 
+/* entities usually are returned by the backend (in _class) to specify the type of node  */
 export const ENTITIES = {
     CLASS: 'class',
     PREDICATE: 'predicate',
-    RESOURCE: 'resource'
+    RESOURCE: 'resource',
+    LITERAL: 'literal'
 };

@@ -12,8 +12,10 @@ import { reverse } from 'named-urls';
 import REGEX from 'constants/regex';
 import Cite from 'citation-js';
 import ROUTES from 'constants/routes';
-import { PREDICATES, ENTITIES } from 'constants/graphSettings';
+import { useSelector } from 'react-redux';
+import { PREDICATES, ENTITIES, CLASSES } from 'constants/graphSettings';
 import { getArrayParamFromQueryString } from 'utils';
+import TitleBar from 'components/TitleBar/TitleBar';
 
 const AddResource = () => {
     const isDOI = new RegExp(REGEX.DOI);
@@ -21,6 +23,7 @@ const AddResource = () => {
     const [label, setLabel] = useState('');
     const [classes, setClasses] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
+    const isCurationAllowed = useSelector(state => state.auth.user?.isCurationAllowed);
     const [isLoadingDefaultClasses, setIsLoadingDefaultClasses] = useState(false);
     const history = useHistory();
     const location = useLocation();
@@ -29,7 +32,10 @@ const AddResource = () => {
         // Set document title
         document.title = 'Add resource - ORKG';
         const getDefaultClass = async () => {
-            const classes = getArrayParamFromQueryString(location.search, 'classes');
+            let classes = getArrayParamFromQueryString(location.search, 'classes');
+            if (!isCurationAllowed) {
+                classes = classes.filter(c => c !== CLASSES.RESEARCH_FIELD); // only admins can add research field resources
+            }
             if (classes && classes.length > 0) {
                 setIsLoadingDefaultClasses(true);
                 const fetchDefaultClasses = classes.map(c => getClassById(c));
@@ -110,11 +116,9 @@ const AddResource = () => {
 
     return (
         <>
-            <Container className="d-flex align-items-center">
-                <h1 className="h4 mt-4 mb-4">Create resource</h1>
-            </Container>
+            <TitleBar>Create resource</TitleBar>
             <Container className="box rounded pt-4 pb-4 pl-5 pr-5">
-                <div className="pl-3 pr-3 pt-2">
+                <div className="pt-2">
                     <FormGroup>
                         <Label for="ResourceLabel">Resource label or DOI</Label>
                         <Input

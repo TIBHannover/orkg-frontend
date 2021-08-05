@@ -204,8 +204,8 @@ export const getTemplateById = templateId => {
 
             const templateComponents = templateStatements.filter(statement => statement.predicate.id === PREDICATES.TEMPLATE_COMPONENT);
 
-            const components = getStatementsBySubjects({ ids: templateComponents.map(component => component.object.id) }).then(
-                componentsStatements => {
+            const components = getStatementsBySubjects({ ids: templateComponents.map(component => component.object.id) })
+                .then(componentsStatements => {
                     return componentsStatements.map(componentStatements => {
                         const property = componentStatements.statements.find(
                             statement => statement.predicate.id === PREDICATES.TEMPLATE_COMPONENT_PROPERTY
@@ -257,8 +257,10 @@ export const getTemplateById = templateId => {
                                     : {}
                         };
                     });
-                }
-            );
+                })
+                .catch(() => {
+                    return Promise.resolve([]);
+                });
 
             return Promise.all([components]).then(templateComponents => ({
                 id: templateId,
@@ -273,7 +275,7 @@ export const getTemplateById = templateId => {
                 labelFormat: templateFormatLabel ? templateFormatLabel.object.label : '',
                 hasLabelFormat: templateFormatLabel ? true : false,
                 isStrict: templateIsStrict ? true : false,
-                components: templateComponents[0].sort((c1, c2) => sortMethod(c1.order, c2.order)),
+                components: templateComponents?.length > 0 ? templateComponents[0].sort((c1, c2) => sortMethod(c1.order, c2.order)) : [],
                 class: templateClass
                     ? {
                           id: templateClass.object.id,
@@ -313,6 +315,9 @@ export const getParentResearchFields = (researchFieldId, parents = []) => {
         }).then(parentResearchField => {
             if (parentResearchField && parentResearchField[0]) {
                 parents.push(parentResearchField[0].object);
+                if (parents.find(p => p.id === parentResearchField[0].subject.id)) {
+                    return Promise.resolve(parents);
+                }
                 return getParentResearchFields(parentResearchField[0].subject.id, parents);
             } else {
                 return Promise.resolve(parents);

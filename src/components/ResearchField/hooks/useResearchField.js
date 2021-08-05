@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { getResource } from 'services/backend/resources';
 import { getStatementsBySubjectAndPredicate, getStatementsBySubject } from 'services/backend/statements';
 import { getResearchFieldsStats } from 'services/backend/stats';
-import { filterObjectOfStatementsByPredicate } from 'utils';
+import { filterObjectOfStatementsByPredicateAndClass } from 'utils';
 import { orderBy } from 'lodash';
 import { useParams } from 'react-router-dom';
 import { PREDICATES } from 'constants/graphSettings';
@@ -30,12 +30,11 @@ function useResearchField(initialVal = {}) {
                     setIsFailedLoadingData(true);
                 });
 
-            // Get description, same as and sub-problems of the research problem
+            // Get description and same as
             getStatementsBySubject({ id: rfId }).then(statements => {
-                const description = filterObjectOfStatementsByPredicate(statements, PREDICATES.DESCRIPTION, true);
-                const sameAs = filterObjectOfStatementsByPredicate(statements, PREDICATES.SAME_AS, true);
-                const subProblems = filterObjectOfStatementsByPredicate(statements, PREDICATES.SUB_PROBLEM, false);
-                setData(data => ({ ...data, description: description?.label, sameAs: sameAs, subProblems: subProblems ?? [] }));
+                const description = filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.DESCRIPTION, true);
+                const sameAs = filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.SAME_AS, true);
+                setData(data => ({ ...data, description: description?.label, sameAs: sameAs }));
             });
 
             getStatementsBySubjectAndPredicate({ subjectId: rfId, predicateId: PREDICATES.HAS_SUB_RESEARCH_FIELD }).then(result => {

@@ -19,26 +19,22 @@ const PaperHeader = props => {
     const viewPaper = useSelector(state => state.viewPaper, shallowEqual);
     const isCurationAllowed = useSelector(state => state.auth.user?.isCurationAllowed);
     const userId = useSelector(state => state.auth.user?.id);
-    const [deletePapers] = useDeletePapers({ paperIds: [viewPaper.paperResourceId], redirect: true });
+    const [deletePapers] = useDeletePapers({ paperIds: [viewPaper.paperResource.id], redirect: true });
     const dispatch = useDispatch();
-    const userCreatedThisPaper = viewPaper.createdBy && userId && viewPaper.createdBy === userId; // make sure a user is signed in (not null)
+    const userCreatedThisPaper = viewPaper.paperResource.created_by && userId && viewPaper.paperResource.created_by === userId; // make sure a user is signed in (not null)
     const showDeleteButton = props.editMode && (isCurationAllowed || userCreatedThisPaper);
 
     const handleUpdatePaper = data => {
         // TODO: the viewPaper store should be refactored to directly support the updated data that is passed
         dispatch(
             loadPaper({
-                title: data.paper.label,
-                publicationMonth: parseInt(data.month?.label) || 0,
-                publicationMonthResourceId: data.month?.id,
-                publicationYear: parseInt(data.year?.label) || 0,
-                publicationYearResourceId: data.year?.id,
-                doi: data.doi?.label,
-                doiResourceId: data.doi?.id,
+                paperResource: { ...viewPaper.paperResource, label: data.paper.label },
+                publicationMonth: { ...viewPaper.publicationMonth, label: parseInt(data.month?.label) || 0, id: data.month?.id },
+                publicationYear: { ...viewPaper.publicationYear, label: parseInt(data.year?.label) || 0, id: data.year?.id },
+                doi: { ...viewPaper.doi, label: data.doi?.label, id: data.doi?.id },
                 authors: data.authors,
                 publishedIn: data.publishedIn,
-                url: data.url?.label,
-                urlResourceId: data.url?.id,
+                url: { ...viewPaper.url, label: data.url?.label, id: data.url?.id },
                 researchField: data.researchField,
                 verified: data.isVerified
             })
@@ -49,19 +45,17 @@ const PaperHeader = props => {
     return (
         <>
             <div className="d-flex align-items-start">
-                <h2 className="h4 mt-4 mb-3 flex-grow-1">{viewPaper.title ? viewPaper.title : <em>No title</em>}</h2>
+                <h2 className="h4 mt-4 mb-3 flex-grow-1">{viewPaper.paperResource.label ? viewPaper.paperResource.label : <em>No title</em>}</h2>
             </div>
 
             <div className="clearfix" />
 
-            {viewPaper.publicationMonth || viewPaper.publicationYear ? (
+            {(viewPaper.publicationMonth || viewPaper.publicationYear) && (
                 <span className="badge badge-light mr-2">
                     <Icon icon={faCalendar} className="text-primary" />{' '}
-                    {viewPaper.publicationMonth ? moment(viewPaper.publicationMonth, 'M').format('MMMM') : ''}{' '}
-                    {viewPaper.publicationYear ? viewPaper.publicationYear : ''}
+                    {viewPaper.publicationMonth ? moment(viewPaper.publicationMonth.label, 'M').format('MMMM') : ''}{' '}
+                    {viewPaper.publicationYear ? viewPaper.publicationYear.label : ''}
                 </span>
-            ) : (
-                ''
             )}
             {viewPaper.researchField && viewPaper.researchField.id && (
                 <Link
@@ -100,12 +94,12 @@ const PaperHeader = props => {
                         </small>
                     </div>
                 )}
-                {viewPaper.doi && viewPaper.doi.startsWith('10.') && (
+                {viewPaper.doi && viewPaper.doi.label?.startsWith('10.') && (
                     <div className="flex-shrink-0">
                         <small>
                             DOI:{' '}
-                            <a href={`https://doi.org/${viewPaper.doi}`} target="_blank" rel="noopener noreferrer">
-                                {viewPaper.doi}
+                            <a href={`https://doi.org/${viewPaper.doi.label}`} target="_blank" rel="noopener noreferrer">
+                                {viewPaper.doi.label}
                             </a>
                         </small>
                     </div>
@@ -135,29 +129,14 @@ const PaperHeader = props => {
             {isOpenEditModal && (
                 <EditPaperDialog
                     paperData={{
-                        paper: {
-                            id: viewPaper.paperResourceId,
-                            label: viewPaper.title
-                        },
-                        month: {
-                            id: viewPaper.publicationMonthResourceId,
-                            label: viewPaper.publicationMonth
-                        },
-                        year: {
-                            id: viewPaper.publicationYearResourceId,
-                            label: viewPaper.publicationYear
-                        },
+                        paper: viewPaper.paperResource,
+                        month: viewPaper.publicationMonth,
+                        year: viewPaper.publicationYear,
                         authors: viewPaper.authors,
-                        doi: {
-                            id: viewPaper.doiResourceId,
-                            label: viewPaper.doi
-                        },
+                        doi: viewPaper.doi,
                         publishedIn: viewPaper.publishedIn,
                         researchField: viewPaper.researchField,
-                        url: {
-                            id: viewPaper.urlResourceId,
-                            label: viewPaper.url
-                        },
+                        url: viewPaper.url,
                         isVerified: viewPaper.verified
                     }}
                     afterUpdate={handleUpdatePaper}

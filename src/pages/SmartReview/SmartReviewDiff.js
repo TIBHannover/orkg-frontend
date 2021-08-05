@@ -11,8 +11,9 @@ import ContentLoader from 'react-content-loader';
 import ReactDiffViewer from 'react-diff-viewer';
 import { useHistory, useParams } from 'react-router-dom';
 import { useLocation } from 'react-use';
-import { Alert, Button, ButtonGroup, Container } from 'reactstrap';
+import { Alert, Button } from 'reactstrap';
 import queryString from 'query-string';
+import TitleBar from 'components/TitleBar/TitleBar';
 
 const SmartReviewDiff = () => {
     const { oldId, newId } = useParams();
@@ -70,18 +71,15 @@ const SmartReviewDiff = () => {
 
     return (
         <>
-            <Container>
-                <div className="d-flex align-items-center">
-                    <h1 className="h4 mt-4 mb-4 flex-grow-1">Compare SmartReview versions</h1>
-                    <div style={{ marginLeft: 'auto' }} className="flex-shrink-0 mt-4">
-                        <ButtonGroup className="float-right mb-4 ml-1">
-                            <Button size="sm" color="secondary" onClick={() => setFullWidth(v => !v)}>
-                                <Icon icon={faArrowsAltH} className="mr-1" /> Full width
-                            </Button>
-                        </ButtonGroup>
-                    </div>
-                </div>
-            </Container>
+            <TitleBar
+                buttonGroup={
+                    <Button size="sm" color="secondary" onClick={() => setFullWidth(v => !v)}>
+                        <Icon icon={faArrowsAltH} className="mr-1" /> Full width
+                    </Button>
+                }
+            >
+                Compare SmartReview versions
+            </TitleBar>
             <ContainerAnimated style={containerStyle} className="box rounded p-0 overflow-hidden">
                 {switchedVersions && (
                     <div className="m-3">

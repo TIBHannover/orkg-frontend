@@ -1,4 +1,4 @@
-import { Container, Button } from 'reactstrap';
+import { Container, Button, ListGroup } from 'reactstrap';
 import ComparisonCard from 'components/ComparisonCard/ComparisonCard';
 import useContributionComparison from './hooks/useContributionComparison';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -22,7 +22,7 @@ const Title = styled.div`
 
 const StyledLoadMoreButton = styled.div`
     padding-top: 0;
-    & span {
+    button {
         cursor: pointer;
         border: 1px solid rgba(0, 0, 0, 0.125);
         border-top: 0;
@@ -52,7 +52,7 @@ function ContributionComparisons(props) {
 
             <Container className="mt-3 p-0">
                 {comparisons.length > 0 && (
-                    <div>
+                    <ListGroup>
                         {comparisons.map(comparison => {
                             return (
                                 comparison && (
@@ -64,7 +64,7 @@ function ContributionComparisons(props) {
                                 )
                             );
                         })}
-                    </div>
+                    </ListGroup>
                 )}
                 {!isLoadingComparisons && hasNextPage && (
                     <StyledLoadMoreButton className="text-right action">
@@ -80,13 +80,12 @@ function ContributionComparisons(props) {
                 )}
                 {isLoadingComparisons && (
                     <StyledLoadMoreButton className="text-right action">
-                        <Button color="link" size="sm" className="btn btn-link btn-sm">
-                            {' '}
+                        <Button color="link" size="sm" className="btn btn-link btn-sm" disabled>
                             <Icon icon={faSpinner} spin /> Loading...
                         </Button>
                     </StyledLoadMoreButton>
                 )}
-                {!hasNextPage && isLastPageReached && <div className="text-center mt-3">You have reached the last page.</div>}
+                {!hasNextPage && isLastPageReached && <div className="text-center mt-2">You have reached the last page</div>}
             </Container>
         </div>
     );
