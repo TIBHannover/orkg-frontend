@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { faPlus, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
@@ -16,10 +15,6 @@ import { getStatementsBySubjects } from 'services/backend/statements';
 
 const SmartReviews = () => {
     const user = useSelector(state => state.auth.user);
-
-    useEffect(() => {
-        document.title = 'SmartReviews - ORKG';
-    });
 
     const renderListItem = versions => (
         <ShortRecord key={versions[0]?.id} header={versions[0]?.label} href={reverse(ROUTES.SMART_REVIEW, { id: versions[0]?.id })}>
@@ -90,15 +85,13 @@ const SmartReviews = () => {
     );
 
     return (
-        <>
-            <ListPage
-                label="SmartReviews"
-                resourceClass={CLASSES.SMART_REVIEW_PUBLISHED}
-                renderListItem={renderListItem}
-                fetchItems={fetchItems}
-                buttons={buttons}
-            />
-        </>
+        <ListPage
+            label="SmartReviews"
+            resourceClass={CLASSES.SMART_REVIEW_PUBLISHED}
+            renderListItem={renderListItem}
+            fetchItems={fetchItems}
+            buttons={buttons}
+        />
     );
 };
 

@@ -341,17 +341,14 @@ class Header extends Component {
                                         View <FontAwesomeIcon style={{ marginTop: '4px' }} icon={faChevronDown} pull="right" />
                                     </DropdownToggle>
                                     <DropdownMenu>
-                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.PAPERS} onClick={this.closeMenu}>
-                                            Papers
-                                        </DropdownItem>
                                         <DropdownItem tag={RouterNavLink} exact to={ROUTES.COMPARISONS} onClick={this.closeMenu}>
                                             Comparisons
                                         </DropdownItem>
+                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.PAPERS} onClick={this.closeMenu}>
+                                            Papers
+                                        </DropdownItem>
                                         <DropdownItem tag={RouterNavLink} exact to={ROUTES.VISUALIZATIONS} onClick={this.closeMenu}>
                                             Visualizations
-                                        </DropdownItem>
-                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.RESEARCH_FIELDS} onClick={this.closeMenu}>
-                                            Research fields
                                         </DropdownItem>
                                         <DropdownItem tag={RouterNavLink} exact to={ROUTES.SMART_REVIEWS} onClick={this.closeMenu}>
                                             SmartReviews{' '}
@@ -361,6 +358,9 @@ class Header extends Component {
                                         </DropdownItem>
                                         <DropdownItem tag={RouterNavLink} exact to={ROUTES.BENCHMARKS} onClick={this.closeMenu}>
                                             Benchmarks
+                                        </DropdownItem>
+                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.RESEARCH_FIELDS} onClick={this.closeMenu}>
+                                            Research fields
                                         </DropdownItem>
                                         <DropdownItem divider />
                                         <DropdownItem tag={RouterNavLink} exact to={ROUTES.OBSERVATORIES} onClick={this.closeMenu}>
