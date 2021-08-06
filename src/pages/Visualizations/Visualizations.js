@@ -1,9 +1,9 @@
 import ListPage from 'components/ListPage/ListPage';
 import VisualizationCard from 'components/VisualizationCard/VisualizationCard';
-import { CLASSES, PREDICATES } from 'constants/graphSettings';
+import { CLASSES } from 'constants/graphSettings';
 import { find } from 'lodash';
 import { getResourcesByClass } from 'services/backend/resources';
-import { getStatementsByObjectAndPredicate, getStatementsBySubjects } from 'services/backend/statements';
+import { getStatementsBySubjects } from 'services/backend/statements';
 import { getVisualizationData } from 'utils';
 
 const Visualizations = () => {
@@ -19,22 +19,9 @@ const Visualizations = () => {
         }).then(result =>
             getStatementsBySubjects({ ids: result.content.map(p => p.id) })
                 .then(visualizationsStatements =>
-                    Promise.all(
-                        visualizationsStatements.map(visualizationStatements =>
-                            // Fetch the comparison id of each visualization
-                            getStatementsByObjectAndPredicate({
-                                objectId: visualizationStatements.id,
-                                predicateId: PREDICATES.HAS_VISUALIZATION
-                            }).then(comparisonStatement => ({
-                                comparisonId: comparisonStatement.length > 0 ? comparisonStatement[0].subject.id : null,
-                                ...getVisualizationData(
-                                    visualizationStatements.id,
-                                    find(result.content, { id: visualizationStatements.id }).label,
-                                    visualizationStatements.statements
-                                )
-                            }))
-                        )
-                    )
+                    visualizationsStatements.map(visualizationStatements => {
+                        return getVisualizationData(find(result.content, { id: visualizationStatements.id }), visualizationStatements.statements);
+                    })
                 )
                 .then(visualizationsData => {
                     return { ...result, items: visualizationsData };

@@ -119,6 +119,7 @@ const FeaturedPapers = ({ researchFieldId }) => {
                                         }}
                                         showAddToComparison={false}
                                         key={`pc${paper.id}`}
+                                        showBadge={false}
                                     />
                                 );
                             })}

@@ -6,7 +6,6 @@ import ROUTES from 'constants/routes.js';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faEllipsisH, faSpinner, faHome, faAngleDoubleRight } from '@fortawesome/free-solid-svg-icons';
 import { getParentResearchFields } from 'services/backend/statements';
-import { truncate } from 'lodash';
 import PropTypes from 'prop-types';
 import Tippy from '@tippyjs/react';
 import { reverseWithSlug } from 'utils';
@@ -17,6 +16,14 @@ const BreadcrumbStyled = styled.ul`
     margin-bottom: 5px;
     font-size: small;
     padding: 0;
+
+    & .truncate {
+        width: 120px;
+        white-space: nowrap;
+        overflow: hidden !important;
+        text-overflow: ellipsis;
+        text-align: left;
+    }
 
     & > li {
         float: left;
@@ -155,9 +162,9 @@ const RelativeBreadcrumbs = ({ researchField }) => {
             </li>
 
             <li>
-                <Tippy content={researchField.label} disabled={researchField.label?.length <= 15}>
+                <Tippy content={researchField.label} disabled={researchField.label?.length <= 18}>
                     <Link to={reverseWithSlug(ROUTES.RESEARCH_FIELD, { researchFieldId: researchField.id, slug: researchField.label })}>
-                        {truncate(researchField.label, { length: 15 })}
+                        <div className="truncate">{researchField.label}</div>
                     </Link>
                 </Tippy>
             </li>
@@ -169,8 +176,7 @@ RelativeBreadcrumbs.propTypes = {
     researchField: PropTypes.shape({
         id: PropTypes.string.isRequired,
         label: PropTypes.string
-    }),
-    maximumLabelLength: PropTypes.number
+    })
 };
 
 export default RelativeBreadcrumbs;

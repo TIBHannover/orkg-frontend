@@ -1,9 +1,10 @@
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import ListPage from 'components/ListPage/ListPage';
-import PaperCardDynamic from 'components/PaperCard/PaperCardDynamic';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import { CLASSES } from 'constants/graphSettings';
+import PaperCard from 'components/PaperCard/PaperCard';
+import { getPaperData } from 'utils';
 import ROUTES from 'constants/routes';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -18,9 +19,19 @@ const Papers = () => {
     const [statements, setStatements] = useState([]);
     const user = useSelector(state => state.auth.user);
 
-    const renderListItem = ({ label, id, created_by }) => (
-        <PaperCardDynamic paper={{ title: label, id, paperData: statements.find(({ id: _id }) => _id === id), created_by }} key={id} />
-    );
+    const renderListItem = paper => {
+        const paperCardData = statements.find(({ id }) => id === paper.id);
+        return (
+            <PaperCard
+                paper={{
+                    title: paper.label,
+                    ...paper,
+                    ...(!paperCardData ? { isLoading: true } : getPaperData(paper, paperCardData?.statements))
+                }}
+                key={paper.id}
+            />
+        );
+    };
 
     const fetchItems = async ({ page, pageSize }) => {
         const { content: items, last, totalElements } = await getResourcesByClass({
