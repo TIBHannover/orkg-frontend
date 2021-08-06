@@ -45,7 +45,7 @@ describe('literal value', () => {
         const { label, setDisableCreate } = setup('literal');
 
         fireEvent.click(screen.getByRole('button', { name: /edit/i, hidden: true }));
-        const input = screen.getByPlaceholderText(/enter a literal/i);
+        const input = screen.getByPlaceholderText(/enter a value/i);
 
         expect(input).toBeInTheDocument();
         expect(input.value).toBe(label);
