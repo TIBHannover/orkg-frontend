@@ -125,13 +125,11 @@ export default function AddValueTemplate(props) {
             setFormFeedback(error.message);
             setIsValid(false);
         } else {
-            //setInputValue(value);
             setFormFeedback(null);
             setIsValid(true);
             // Check for a possible conversion possible
             const suggestions = getSuggestionByTypeAndValue(inputDataType, inputValue);
             if (suggestions.length > 0 && !props.valueClass) {
-                console.log(suggestions);
                 setSuggestionType(suggestions[0]);
                 confirmConversion.current.show();
             } else {
@@ -304,7 +302,6 @@ export default function AddValueTemplate(props) {
                                     inputValue={inputValue}
                                     setInputValue={setInputValue}
                                     inputDataType={inputDataType}
-                                    onSubmit={onSubmit}
                                     isValid={isValid}
                                     literalInputRef={literalInputRef}
                                     onKeyDown={e => {

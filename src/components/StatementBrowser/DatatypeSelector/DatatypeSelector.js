@@ -31,8 +31,10 @@ const DatatypeSelector = props => {
             height: '100% !important',
             minHeight: 'calc(1.5em + 0.5rem + 2px)',
             fontSize: '100%',
-            borderTopRightRadius: 0,
-            borderBottomRightRadius: 0,
+            borderTopLeftRadius: props.disableBorderRadiusLeft ? 0 : 'inherit',
+            borderBottomLeftRadius: props.disableBorderRadiusLeft ? 0 : 'inherit',
+            borderTopRightRadius: props.disableBorderRadiusRight ? 0 : 'inherit',
+            borderBottomRightRadius: props.disableBorderRadiusRight ? 0 : 'inherit',
             borderRight: 0,
             backgroundColor: theme.light,
             color: theme.secondaryDarker
@@ -89,7 +91,14 @@ const DatatypeSelector = props => {
 DatatypeSelector.propTypes = {
     valueType: PropTypes.string,
     setValueType: PropTypes.func,
-    entity: PropTypes.string
+    entity: PropTypes.string,
+    disableBorderRadiusLeft: PropTypes.bool,
+    disableBorderRadiusRight: PropTypes.bool
+};
+
+DatatypeSelector.defaultProps = {
+    disableBorderRadiusLeft: false,
+    disableBorderRadiusRight: true
 };
 
 export default DatatypeSelector;

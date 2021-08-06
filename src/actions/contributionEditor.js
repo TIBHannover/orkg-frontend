@@ -120,8 +120,8 @@ export const updateLiteral = payload => async dispatch => {
         payload: payload
     });
 
-    const { id, label } = payload;
-    await updateLiteralApi(id, label);
+    const { id, label, datatype } = payload;
+    await updateLiteralApi(id, label, datatype);
     dispatch(finishLoading());
 };
 
@@ -184,11 +184,11 @@ export const createResourceValue = ({
     dispatch(finishLoading());
 };
 
-export const createLiteralValue = ({ contributionId, propertyId, label }) => async dispatch => {
+export const createLiteralValue = ({ contributionId, propertyId, label, datatype }) => async dispatch => {
     dispatch(startLoading());
 
     // fetch the selected resource id
-    const literal = await createLiteral(label);
+    const literal = await createLiteral(label, datatype);
 
     if (!literal) {
         return;

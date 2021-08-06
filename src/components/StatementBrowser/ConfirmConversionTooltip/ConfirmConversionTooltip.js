@@ -42,7 +42,7 @@ const ConfirmConversionTooltip = props => {
 ConfirmConversionTooltip.propTypes = {
     acceptSuggestion: PropTypes.func.isRequired,
     rejectSuggestion: PropTypes.func.isRequired,
-    suggestionType: PropTypes.object.isRequired
+    suggestionType: PropTypes.object
 };
 
 ConfirmConversionTooltip.defaultProps = {};
