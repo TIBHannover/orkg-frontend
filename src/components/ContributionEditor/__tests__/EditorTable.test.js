@@ -2,7 +2,6 @@ import TableScrollContainer from 'components/Comparison/TableScrollContainer';
 import { PREDICATES } from 'constants/graphSettings';
 import { fireEvent, render, screen, waitFor, within } from 'testUtils';
 import EditTable from '../EditorTable';
-import selectEvent from 'react-select-event';
 import { contribution, contributionLiteralOnly } from '../__mocks__/ComparisonData';
 
 jest.mock('react-flip-move', () => ({ children }) => children);

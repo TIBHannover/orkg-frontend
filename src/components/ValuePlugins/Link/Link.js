@@ -45,7 +45,7 @@ class Link extends Component {
 }
 
 Link.propTypes = {
-    children: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,
+    children: PropTypes.oneOfType([PropTypes.string, PropTypes.object, PropTypes.arrayOf(PropTypes.node), PropTypes.node]).isRequired,
     type: PropTypes.oneOf(['resource', 'literal'])
 };
 
