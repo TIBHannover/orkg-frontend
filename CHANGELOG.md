@@ -3,6 +3,20 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [V0.48](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.47...V0.48) - 2021-08-09
+
+### Changes
+
+- fix(ContributionEditor): make property column always visible [`#668`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/668)
+- fix: add missing return instruction in getLabel [`#670`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/670)
+- fix(Comparison): correct color for transposed first table cell [`#669`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/669)
+- refactor(ListPage): use ListPage component for all pages listing entities [`#661`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/661)
+- Style: Section titles in research field page needs a margin right [`#665`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/665)
+- fix(Paper): fix styling is listed comparisons [`#663`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/663)
+- feat(SmartReview): mention ORKG in acknowledgements [`#660`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/660)
+- style(Comparison): make contribution labels better visible [`#659`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/659)
+
+---
 ## [V0.47](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.46...V0.47) - 2021-08-03
 
 ### Changes
