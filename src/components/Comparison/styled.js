@@ -89,7 +89,7 @@ export const ReactTableWrapper = styled.div`
                 background: #8b91a5;
             }
             .tr:hover .td .columnContribution > div:first-child {
-                color: #e86161;
+                color: ${props => props.theme.primary};
                 background: #d77171;
             }
         }
@@ -158,7 +158,7 @@ export const Properties = styled.div`
 `;
 
 export const PropertiesInner = styled.div`
-    background: ${props => (props.transpose ? '#E86161' : '#80869B')};
+    background: ${props => (props.transpose ? props => props.theme.primary : props => props.theme.secondary)};
     height: 100%;
     color: #fff;
     padding: ${props => props.cellPadding ?? 10}px 10px;
@@ -172,6 +172,7 @@ export const PropertiesInner = styled.div`
 
     &.first {
         border-radius: 11px 11px 0 0;
+        background: ${props => props.theme.secondary};
     }
 
     &.last {
@@ -190,7 +191,7 @@ export const ItemHeader = styled.div`
 
 export const ItemHeaderInner = styled.div`
     padding: 5px 10px;
-    background: ${props => (!props.transpose ? '#E86161' : '#80869B')};
+    background: ${props => (!props.transpose ? props => props.theme.primary : props => props.theme.secondary)};
     border-radius: 11px 11px 0 0;
     color: #fff;
     height: 100%;
@@ -227,7 +228,7 @@ export const Delete = styled.button`
     border-radius: 20px;
     width: 24px;
     height: 24px;
-    color: #e86161;
+    color: ${props => props.theme.primary};
     cursor: pointer;
     justify-content: center;
     display: flex;
