@@ -6,7 +6,7 @@ import TableCellValueResource from 'components/ContributionEditor/TableCellValue
 import DatatypeSelector from 'components/StatementBrowser/DatatypeSelector/DatatypeSelector';
 import InputField from 'components/StatementBrowser/InputField/InputField';
 import ValuePlugins from 'components/ValuePlugins/ValuePlugins';
-import { CLASSES, ENTITIES, PREDICATES } from 'constants/graphSettings';
+import { CLASSES, ENTITIES, PREDICATES, MISC } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
 import { forwardRef, memo, useState, useRef, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
@@ -32,7 +32,9 @@ const TableCellValue = forwardRef(({ value, index, setDisableCreate, propertyId 
     const [formFeedback, setFormFeedback] = useState(null);
     const [isValid, setIsValid] = useState(true);
     const [draftLabel, setDraftLabel] = useState(value.label);
-    const [draftDataType, setDraftDataType] = useState(value._class === ENTITIES.LITERAL ? value.datatype : 'object');
+    const [draftDataType, setDraftDataType] = useState(
+        value._class === ENTITIES.LITERAL ? value.datatype ?? MISC.DEFAULT_LITERAL_DATATYPE : 'object'
+    );
 
     const refContainer = useRef(null);
     const confirmConversion = useRef(null);
