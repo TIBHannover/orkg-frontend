@@ -15,6 +15,7 @@ import classNames from 'classnames';
 
 const FilterButton = styled(Button)`
     &&& {
+        position: relative;
         padding: 0 5px;
         color: ${props => props.theme.lightDarker};
         &:hover,
@@ -24,8 +25,8 @@ const FilterButton = styled(Button)`
 
         & .cross {
             position: absolute;
-            right: 22px;
-            top: 12px;
+            right: 12px;
+            top: 2px;
             width: 12px;
             height: 12px;
         }
