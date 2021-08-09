@@ -185,7 +185,7 @@ export default function ValueItemTemplate(props) {
                 return props.value.label;
             }
             if (existingResourceId && !resource.isFetched && !resource.isFetching && props.value.type !== 'literal') {
-                dispatch(
+                return dispatch(
                     fetchStatementsForResource({
                         resourceId: props.value.resourceId,
                         existingResourceId
