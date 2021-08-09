@@ -87,7 +87,7 @@ const ContributionEditor = () => {
     };
 
     const contributionAmount = contributionIds.length;
-    const containerStyle = contributionAmount > 3 ? { maxWidth: 'calc(100% - 20px)' } : undefined;
+    const containerStyle = contributionAmount > 2 ? { maxWidth: 'calc(100% - 20px)' } : undefined;
 
     // if is loading and there are no contributions in the store, it means it is loading for the first time
     const isLoadingInit = Object.keys(contributions).length === 0 && isLoading;
