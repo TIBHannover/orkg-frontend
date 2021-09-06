@@ -10,6 +10,7 @@ import ContributorsBox from 'components/TopContributors/ContributorsBox';
 import useResearchFieldSelector from 'components/Home/hooks/useResearchFieldSelector';
 import { MISC } from 'constants/graphSettings';
 import { toast } from 'react-toastify';
+import env from '@beam-australia/react-env';
 import HomeAlerts from 'components/HomeAlerts/HomeAlerts';
 
 export default function Home() {
@@ -33,7 +34,7 @@ export default function Home() {
     }
 
     return (
-        <Container style={{ marginTop: -70 }}>
+        <Container style={{ marginTop: env('IS_TESTING_SERVER') === 'true' ? -20 : -70 }}>
             <HomeAlerts />
             <Row>
                 <Col md="12">
