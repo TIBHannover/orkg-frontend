@@ -25,4 +25,4 @@ export const getHelpCategories = () => submitGetRequest(`${url}help-categories?_
 
 export const getHelpCategory = id => submitGetRequest(`${url}help-categories/${id}`);
 
-export const getHomeAlerts = () => submitGetRequest(`${url}home-alerts`);
+export const getHomeAlerts = () => submitGetRequest(`${url}home-alerts`).catch(() => []);
