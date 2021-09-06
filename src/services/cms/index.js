@@ -24,3 +24,5 @@ export const getHelpArticles = ({ where = '' }) => submitGetRequest(`${url}help-
 export const getHelpCategories = () => submitGetRequest(`${url}help-categories?_sort=order`);
 
 export const getHelpCategory = id => submitGetRequest(`${url}help-categories/${id}`);
+
+export const getHomeAlerts = () => submitGetRequest(`${url}home-alerts`).catch(() => []);
