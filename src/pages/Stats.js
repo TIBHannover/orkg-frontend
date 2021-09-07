@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { Container, Row } from 'reactstrap';
 import { CLASSES } from 'constants/graphSettings';
 import ColoredStatsBox from 'components/Stats/ColoredStatsBox';
-import InlineStatsBox from 'components/Stats/InlineStatsBox';
 import { toast } from 'react-toastify';
 import { getStats } from 'services/backend/stats';
 import ROUTES from 'constants/routes';
@@ -65,13 +64,13 @@ const Stats = () => {
                 <h1 className="h4 mt-4 mb-4">Technical values</h1>
             </Container>
 
-            <Container className="box rounded py-4 px-5">
+            <Container>
                 <Row>
-                    <InlineStatsBox link={reverse(ROUTES.RESOURCES)} number={stats.resources} label="Resources" isLoading={isLoading} />
-                    <InlineStatsBox link={reverse(ROUTES.PROPERTIES)} number={stats.predicates} label="Properties" isLoading={isLoading} />
-                    <InlineStatsBox number={stats.statements} label="Statements" isLoading={isLoading} />
-                    <InlineStatsBox number={stats.literals} label="Literals" isLoading={isLoading} />
-                    <InlineStatsBox link={reverse(ROUTES.CLASSES)} number={stats.classes} label="Classes" hideBorder isLoading={isLoading} />
+                    <ColoredStatsBox link={reverse(ROUTES.BENCHMARKS)} number={stats.resources} label="Resources" isLoading={isLoading} />
+                    <ColoredStatsBox link={reverse(ROUTES.PROPERTIES)} number={stats.predicates} label="Properties" isLoading={isLoading} />
+                    <ColoredStatsBox number={stats.statements} label="Statements" isLoading={isLoading} />
+                    <ColoredStatsBox number={stats.literals} label="Literals" isLoading={isLoading} />
+                    <ColoredStatsBox link={reverse(ROUTES.CLASSES)} number={stats.classes} label="Classes" isLoading={isLoading} />
                 </Row>
             </Container>
         </div>
