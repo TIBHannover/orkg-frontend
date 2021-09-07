@@ -12,6 +12,7 @@ import PropTypes from 'prop-types';
 import { useLocation } from 'react-router-dom';
 import PropertyStatements from 'components/PropertyStatements/PropertyStatements';
 import { ENTITIES } from 'constants/graphSettings';
+import TitleBar from 'components/TitleBar/TitleBar';
 
 function Property(props) {
     const location = useLocation();
@@ -46,24 +47,27 @@ function Property(props) {
             {!isLoading && error && <>{error.statusCode === 404 ? <NotFound /> : <InternalServerError />}</>}
             {!isLoading && !error && (
                 <>
-                    <Container className="d-flex align-items-center">
-                        <h1 className="h4 mt-4 mb-4 flex-grow-1">Property view</h1>
-                        {!editMode ? (
-                            <RequireAuthentication
-                                component={Button}
-                                className="float-right flex-shrink-0"
-                                color="secondary"
-                                size="sm"
-                                onClick={() => setEditMode(v => !v)}
-                            >
-                                <Icon icon={faPen} /> Edit
-                            </RequireAuthentication>
-                        ) : (
-                            <Button className="float-right flex-shrink-0" color="secondary-darker" size="sm" onClick={() => setEditMode(v => !v)}>
-                                <Icon icon={faTimes} /> Stop editing
-                            </Button>
-                        )}
-                    </Container>
+                    <TitleBar
+                        buttonGroup={
+                            !editMode ? (
+                                <RequireAuthentication
+                                    component={Button}
+                                    className="float-right flex-shrink-0"
+                                    color="secondary"
+                                    size="sm"
+                                    onClick={() => setEditMode(v => !v)}
+                                >
+                                    <Icon icon={faPen} /> Edit
+                                </RequireAuthentication>
+                            ) : (
+                                <Button className="float-right flex-shrink-0" color="secondary-darker" size="sm" onClick={() => setEditMode(v => !v)}>
+                                    <Icon icon={faTimes} /> Stop editing
+                                </Button>
+                            )
+                        }
+                    >
+                        Property view
+                    </TitleBar>
                     <Container className="p-0 clearfix">
                         {editMode && (
                             <EditModeHeader className="box rounded-top">

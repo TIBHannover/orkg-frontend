@@ -14,6 +14,8 @@ import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { faFile } from '@fortawesome/free-regular-svg-icons';
 import { reverse } from 'named-urls';
+import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
+import Tippy from '@tippyjs/react';
 const cookies = new Cookies();
 
 const ComparisonPopupStyled = styled.div`
@@ -167,11 +169,18 @@ class ComparisonPopup extends Component {
                                     ))}
                                 </List>
                                 <div className="w-100 text-center">
-                                    <Link to={comparisonUrl}>
-                                        <StartComparison color="primary-darker" className="mb-2">
-                                            Start comparison
-                                        </StartComparison>
-                                    </Link>
+                                    <ConditionalWrapper
+                                        condition={contributionAmount > 1}
+                                        wrapper={children => <Link to={comparisonUrl}>{children}</Link>}
+                                    >
+                                        <Tippy disabled={contributionAmount > 1} content="Please select at least two contributions">
+                                            <span>
+                                                <StartComparison disabled={contributionAmount <= 1} color="primary-darker" className="mb-2">
+                                                    Start comparison
+                                                </StartComparison>
+                                            </span>
+                                        </Tippy>
+                                    </ConditionalWrapper>
                                 </div>
                             </ComparisonBox>
                         )}

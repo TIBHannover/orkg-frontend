@@ -72,7 +72,7 @@ const useValueItem = ({ valueId, propertyId, syncBackend, contextStyle }) => {
 
     const schema = useSelector(state => {
         const components = getComponentsByResourceIDAndPredicateID(state, value.resourceId, property?.existingPredicateId);
-        if (valueClass && ['Date', 'Number', 'String'].includes(valueClass.id)) {
+        if (valueClass && ['Date', 'Number', 'String', 'Boolean', 'Integer', 'URI'].includes(valueClass.id)) {
             let component;
             if (components && components.length > 0) {
                 component = components[0];
@@ -103,8 +103,14 @@ const useValueItem = ({ valueId, propertyId, syncBackend, contextStyle }) => {
                     return MISC.DEFAULT_LITERAL_DATATYPE;
                 case 'Number':
                     return 'xsd:decimal';
+                case 'Integer':
+                    return 'xsd:integer';
                 case 'Date':
                     return 'xsd:date';
+                case 'Boolean':
+                    return 'xsd:boolean';
+                case 'URI':
+                    return 'xsd:anyURI';
                 default:
                     return MISC.DEFAULT_LITERAL_DATATYPE;
             }

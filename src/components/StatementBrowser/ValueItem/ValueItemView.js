@@ -118,7 +118,9 @@ export default function ValueItemView(props) {
                             </ValuePlugins>
                             {isCurationAllowed && (
                                 <small>
-                                    <Badge className="ml-2">{props.value.datatype}</Badge>
+                                    <Badge color="light" className="ml-2">
+                                        {props.value.datatype}
+                                    </Badge>
                                 </small>
                             )}
                         </div>

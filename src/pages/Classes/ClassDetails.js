@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Container, Table, ButtonGroup, Button } from 'reactstrap';
+import { Container, Table, Button } from 'reactstrap';
 import { getStatementsByObjectAndPredicate } from 'services/backend/statements';
 import { getClassById } from 'services/backend/classes';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -15,7 +15,8 @@ import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes.js';
 import { useLocation } from 'react-router-dom';
-import { CLASSES, ENTITIES, PREDICATES } from 'constants/graphSettings';
+import { CLASSES, PREDICATES, ENTITIES } from 'constants/graphSettings';
+import TitleBar from 'components/TitleBar/TitleBar';
 
 function ClassDetails(props) {
     const location = useLocation();
@@ -69,37 +70,33 @@ function ClassDetails(props) {
             {isLoading && <Container className="box rounded pt-4 pb-4 pl-5 pr-5 mt-5 clearfix">Loading ...</Container>}
             {!isLoading && error && <>{error.statusCode === 404 ? <NotFound /> : <InternalServerError />}</>}
             {!isLoading && !error && (
-                <Container className="mt-5 clearfix">
-                    <div className="box clearfix pt-4 pb-4 pl-5 pr-5 rounded">
-                        <div className="mb-2">
-                            <div className="pb-2 mb-3">
-                                <h3 className="" style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
-                                    Class:{' '}
-                                    {label || (
-                                        <i>
-                                            <small>No label</small>
-                                        </i>
-                                    )}
-                                    <ButtonGroup className="float-right mb-4 ml-1">
-                                        <RequireAuthentication
-                                            component={Link}
-                                            to={`${ROUTES.ADD_RESOURCE}?classes=${props.match.params.id}`}
-                                            className="float-right btn btn-secondary flex-shrink-0 btn-sm"
-                                        >
-                                            <Icon icon={faPlus} /> Add resource
-                                        </RequireAuthentication>
-                                        <RequireAuthentication
-                                            component={Button}
-                                            size="sm"
-                                            color="secondary"
-                                            onClick={() => setModalImportIsOpen(true)}
-                                        >
-                                            <Icon icon={faFileCsv} /> Import Instances
-                                        </RequireAuthentication>
-                                    </ButtonGroup>
-                                </h3>
-                            </div>
-                        </div>
+                <>
+                    <TitleBar
+                        buttonGroup={
+                            <>
+                                {' '}
+                                <RequireAuthentication
+                                    component={Link}
+                                    to={`${ROUTES.ADD_RESOURCE}?classes=${props.match.params.id}`}
+                                    className="float-right btn btn-secondary flex-shrink-0 btn-sm"
+                                    style={{ marginRight: 2 }}
+                                >
+                                    <Icon icon={faPlus} /> Add resource
+                                </RequireAuthentication>
+                                <RequireAuthentication component={Button} size="sm" color="secondary" onClick={() => setModalImportIsOpen(true)}>
+                                    <Icon icon={faFileCsv} /> Import Instances
+                                </RequireAuthentication>
+                            </>
+                        }
+                    >
+                        Class:{' '}
+                        {label || (
+                            <i>
+                                <small>No label</small>
+                            </i>
+                        )}
+                    </TitleBar>
+                    <Container className="box rounded pt-4 pb-4 pl-5 pr-5">
                         <Table bordered>
                             <tbody>
                                 <tr>
@@ -180,8 +177,8 @@ function ClassDetails(props) {
                             toggle={() => setModalImportIsOpen(v => !v)}
                             callBack={() => setKeyInstances(Math.random())}
                         />
-                    </div>
-                </Container>
+                    </Container>
+                </>
             )}
         </>
     );

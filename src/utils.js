@@ -195,8 +195,7 @@ export const getPaperData_ViewPaper = (paperResource, paperStatements) => {
 
 /**
  * Parse paper statements and return a a paper object
- * @param {String} id
- * @param {String} label
+ * @param {Object} resource Paper resource
  * @param {Array} paperStatements
  */
 
@@ -213,6 +212,7 @@ export const getPaperData = (resource, paperStatements) => {
     const order = getOrder(paperStatements);
 
     return {
+        ...resource,
         id: resource.id,
         label: resource.label ? resource.label : 'No Title',
         publicationYear,
@@ -227,9 +227,52 @@ export const getPaperData = (resource, paperStatements) => {
 };
 
 /**
+ * Parse smart review statements and return a smart review object
+ * @param {Object} resource Smart Review resource
+ * @param {Array} statements Smart Review Statements
+ */
+export const getSmartReviewData = (resource, statements) => {
+    const description = filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.DESCRIPTION, true);
+    const paperId = filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.HAS_PAPER, true)?.id;
+    const researchField = filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.HAS_RESEARCH_FIELD, true, CLASSES.RESEARCH_FIELD);
+    const authors = filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.HAS_AUTHOR, false);
+    return {
+        ...resource,
+        id: resource.id,
+        label: resource.label ? resource.label : 'No Title',
+        description: description?.label ?? '',
+        researchField,
+        authors,
+        paperId
+    };
+};
+
+/**
+ * Parse author statements and return an author object
+ * @param {Object} resource Author resource
+ * @param {Array} statements Author Statements
+ */
+export const getAuthorData = (resource, statements) => {
+    const orcid = filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.HAS_ORCID, true);
+    const website = filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.WEBSITE, true);
+    const linkedIn = filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.LINKED_IN_ID, true);
+    const researchGate = filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.RESEARCH_GATE_ID, true);
+    const googleScholar = filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.GOOGLE_SCHOLAR_ID, true);
+
+    return {
+        ...resource,
+        label: resource.label ? resource.label : 'No Name',
+        orcid,
+        website,
+        linkedIn,
+        researchGate,
+        googleScholar
+    };
+};
+
+/**
  * Parse comparison statements and return a comparison object
- * @param {String} id
- * @param {String } label
+ * @param {Object} resource Comparison resource
  * @param {Array} comparisonStatements
  */
 export const getComparisonData = (resource, comparisonStatements) => {
@@ -370,16 +413,12 @@ export const getTemplateComponentData = (component, componentStatements) => {
  * @param {String } label
  * @param {Array} visualizationStatements
  */
-export const getVisualizationData = (id, label, visualizationStatements) => {
-    // description
+export const getVisualizationData = (resource, visualizationStatements) => {
     const description = visualizationStatements.find(statement => statement.predicate.id === PREDICATES.DESCRIPTION);
-
     const authors = filterObjectOfStatementsByPredicateAndClass(visualizationStatements, PREDICATES.HAS_AUTHOR, false);
 
     return {
-        id,
-        label,
-        created_at: description ? description.object.created_at : '',
+        ...resource,
         description: description ? description.object.label : '',
         authors: authors ? authors.sort((a, b) => a.s_created_at.localeCompare(b.s_created_at)) : []
     };
@@ -1217,34 +1256,14 @@ export const getResourceTypeLabel = classId => {
  * @result {String} Label
  */
 export const stringifySort = sort => {
-    let label = 'Newest first';
-    switch (sort) {
-        case 'newest': {
-            label = 'Newest first';
-            break;
-        }
-        case 'oldest': {
-            label = 'Oldest first';
-            break;
-        }
-        case 'featured': {
-            label = 'Featured';
-            break;
-        }
-        case 'top': {
-            label = 'Last 30 days';
-            break;
-        }
-        case 'all': {
-            label = 'All time';
-            break;
-        }
-        default: {
-            label = 'Newest first';
-            break;
-        }
-    }
-    return label;
+    const stringsSortMapping = {
+        newest: 'Newest first',
+        oldest: 'Oldest first',
+        featured: 'Featured',
+        top: 'Last 30 days',
+        all: 'All time'
+    };
+    return stringsSortMapping[sort] ?? stringsSortMapping['newest'];
 };
 
 /**
@@ -1299,4 +1318,26 @@ export const checkCookie = () => {
 
 export const filterStatementsBySubjectId = (statements, subjectId) => {
     return statements.filter(statement => statement.subject.id === subjectId);
+};
+
+/**
+ * Parse resource statements and return an object of its type
+ * @param {Object} resource resource
+ * @param {Array} statements Statements
+ */
+export const getDataBasedOnType = (resource, statements) => {
+    if (resource?.classes?.includes(CLASSES.PAPER)) {
+        return getPaperData(resource, statements);
+    }
+    if (resource?.classes?.includes(CLASSES.COMPARISON)) {
+        return getComparisonData(resource, statements);
+    }
+    if (resource?.classes?.includes(CLASSES.VISUALIZATION)) {
+        return getVisualizationData(resource, statements);
+    }
+    if (resource?.classes?.includes(CLASSES.SMART_REVIEW)) {
+        return getSmartReviewData(resource, statements);
+    } else {
+        return undefined;
+    }
 };

@@ -35,7 +35,7 @@ const useAddValue = ({ resourceId, propertyId, syncBackend }) => {
 
     const schema = useSelector(state => {
         const components = getComponentsByResourceIDAndPredicateID(state, resourceId, property?.existingPredicateId);
-        if (valueClass && ['Date', 'Number', 'String'].includes(valueClass.id)) {
+        if (valueClass && ['Date', 'Number', 'String', 'Boolean', 'Integer', 'URI'].includes(valueClass.id)) {
             let component;
             if (components && components.length > 0) {
                 component = components[0];
@@ -107,8 +107,14 @@ const useAddValue = ({ resourceId, propertyId, syncBackend }) => {
                     return MISC.DEFAULT_LITERAL_DATATYPE;
                 case 'Number':
                     return 'xsd:decimal';
+                case 'Integer':
+                    return 'xsd:integer';
                 case 'Date':
                     return 'xsd:date';
+                case 'Boolean':
+                    return 'xsd:boolean';
+                case 'URI':
+                    return 'xsd:anyURI';
                 default:
                     return MISC.DEFAULT_LITERAL_DATATYPE;
             }

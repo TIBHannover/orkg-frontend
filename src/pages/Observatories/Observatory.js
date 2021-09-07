@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Col, Row, Container, Button, ButtonGroup, Card, CardBody } from 'reactstrap';
+import { Col, Row, Container, Button, Card, CardBody } from 'reactstrap';
 import { getOrganization } from 'services/backend/organizations';
 import { getObservatoryById } from 'services/backend/observatories';
 import InternalServerError from 'pages/InternalServerError';
@@ -16,6 +16,7 @@ import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import TitleBar from 'components/TitleBar/TitleBar';
 
 const Observatory = () => {
     const [error, setError] = useState(null);
@@ -73,20 +74,25 @@ const Observatory = () => {
             {!isLoading && !error && label && (
                 <>
                     <Breadcrumbs researchFieldId={researchField?.id} />
-                    <Container className="d-flex align-items-center mt-4 mb-4">
-                        <h1 className="h5 flex-shrink-0 mb-0">Observatory</h1>
-                        <>
-                            <SubtitleSeparator />
-                            <SubTitle className="h5 mb-0"> {label}</SubTitle>
-                        </>
-                        {!!user && user.isCurationAllowed && (
-                            <ButtonGroup className="flex-shrink-0" style={{ marginLeft: 'auto' }}>
+                    <TitleBar
+                        titleAddition={
+                            <>
+                                <SubtitleSeparator />
+                                <SubTitle>{label}</SubTitle>
+                            </>
+                        }
+                        buttonGroup={
+                            !!user &&
+                            user.isCurationAllowed && (
                                 <Button color="secondary" size="sm" onClick={() => setShowEditDialog(v => !v)}>
                                     <Icon icon={faPen} /> Edit
                                 </Button>
-                            </ButtonGroup>
-                        )}
-                    </Container>
+                            )
+                        }
+                        wrap={false}
+                    >
+                        Observatory
+                    </TitleBar>
                     {description && (
                         <Container className="p-0">
                             <Card>

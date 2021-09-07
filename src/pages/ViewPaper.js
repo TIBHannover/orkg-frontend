@@ -16,6 +16,7 @@ import env from '@beam-australia/react-env';
 import PaperHeaderBar from 'components/ViewPaper/PaperHeaderBar/PaperHeaderBar';
 import PaperMenuBar from 'components/ViewPaper/PaperHeaderBar/PaperMenuBar';
 import styled from 'styled-components';
+import TitleBar from 'components/TitleBar/TitleBar';
 
 export const EditModeHeader = styled(Container)`
     background-color: #80869b !important;
@@ -89,17 +90,20 @@ const ViewPaper = () => {
                     <Breadcrumbs researchFieldId={viewPaper.researchField ? viewPaper.researchField.id : null} />
 
                     <VisibilitySensor onChange={handleShowHeaderBar}>
-                        <Container className="d-flex align-items-center">
-                            <h1 className="h4 mt-4 mb-4 flex-grow-1">View paper</h1>
-                            <PaperMenuBar
-                                disableEdit={env('PWC_USER_ID') === viewPaper.paperResource.created_by}
-                                editMode={editMode}
-                                paperLink={paperLink}
-                                toggle={toggle}
-                                id={resourceId}
-                                label={viewPaper.paperResource?.label}
-                            />
-                        </Container>
+                        <TitleBar
+                            buttonGroup={
+                                <PaperMenuBar
+                                    disableEdit={env('PWC_USER_ID') === viewPaper.paperResource.created_by}
+                                    editMode={editMode}
+                                    paperLink={paperLink}
+                                    toggle={toggle}
+                                    id={resourceId}
+                                    label={viewPaper.paperResource?.label}
+                                />
+                            }
+                        >
+                            View paper
+                        </TitleBar>
                     </VisibilitySensor>
 
                     {editMode && (

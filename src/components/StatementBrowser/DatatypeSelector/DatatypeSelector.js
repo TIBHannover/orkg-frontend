@@ -28,7 +28,7 @@ const DatatypeSelector = props => {
         }),
         control: provided => ({
             ...provided,
-            height: 'calc(1.5em + 0.5rem + 2px)',
+            height: '100% !important',
             minHeight: 'calc(1.5em + 0.5rem + 2px)',
             fontSize: '100%',
             borderTopRightRadius: 0,

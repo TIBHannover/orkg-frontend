@@ -1,9 +1,8 @@
-import { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import ROUTES from '../../constants/routes.js';
+import ROUTES from 'constants/routes';
 import { Row, Col, Alert } from 'reactstrap';
 
 const CardsContainer = styled(Row)`
@@ -65,58 +64,59 @@ const Similarity = styled.span`
     height: 100%;
 `;
 
-class SimilarContributions extends Component {
-    render() {
-        return (
-            <>
-                {this.props.similaireContributions.length > 0 && (
-                    <CardsContainer>
-                        {this.props.similaireContributions.map((contribution, index) => {
-                            return (
-                                <CardWrapper key={`sim${index}`} md={4} className="mt-2 justify-content-center">
-                                    <Card
-                                        key={`s${contribution.contributionId}`}
-                                        to={reverse(ROUTES.VIEW_PAPER, {
-                                            resourceId: contribution.paperId,
-                                            contributionId: contribution.contributionId
-                                        })}
-                                        className="justify-content-center"
-                                        role="button"
-                                    >
-                                        <Row className="h-100">
-                                            <Col xs={2} style={{ marginRight: 10 }}>
-                                                <Similarity>
-                                                    <span>
-                                                        {parseInt(contribution.similarityPercentage) === 1
-                                                            ? 99
-                                                            : parseInt(contribution.similarityPercentage * 100)}
-                                                        <br />%
-                                                    </span>
-                                                </Similarity>
-                                            </Col>
-                                            <Col>
-                                                {contribution.title ? contribution.title : <em>No title</em>}
-                                                {contribution.contributionLabel && (
-                                                    <div className="simContributionLabel">{contribution.contributionLabel}</div>
-                                                )}
-                                            </Col>
-                                        </Row>
-                                    </Card>
-                                </CardWrapper>
-                            );
-                        })}
-                    </CardsContainer>
-                )}
-                {this.props.similaireContributions.length === 0 && (
-                    <Alert color="light">We couldn't find any similar contribution, please try again later</Alert>
-                )}
-            </>
-        );
-    }
-}
+const SimilarContributions = ({ similarContributions = [] }) => {
+    return (
+        <>
+            {similarContributions.length > 0 && (
+                <CardsContainer>
+                    {similarContributions.map((contribution, index) => {
+                        const percentage = parseInt(contribution.similarityPercentage) === 1 ? 99 : parseInt(contribution.similarityPercentage * 100);
+                        return (
+                            <CardWrapper key={`sim${index}`} lg={4} className="mt-2 justify-content-center">
+                                <Card
+                                    key={`s${contribution.contributionId}`}
+                                    to={reverse(ROUTES.VIEW_PAPER, {
+                                        resourceId: contribution.paperId,
+                                        contributionId: contribution.contributionId
+                                    })}
+                                    className="justify-content-center"
+                                    role="button"
+                                >
+                                    <Row className="h-100">
+                                        <Col className="d-none d-lg-block" lg={2} style={{ marginRight: 10 }}>
+                                            <Similarity>
+                                                <span>
+                                                    {percentage}
+                                                    <br />%
+                                                </span>
+                                            </Similarity>
+                                        </Col>
+                                        <Col>
+                                            {contribution.title ? (
+                                                <>
+                                                    {contribution.title} <span className="text-dark d-flex d-lg-none">{percentage}%</span>
+                                                </>
+                                            ) : (
+                                                <em>No title</em>
+                                            )}
+                                            {contribution.contributionLabel && (
+                                                <div className="simContributionLabel">{contribution.contributionLabel}</div>
+                                            )}
+                                        </Col>
+                                    </Row>
+                                </Card>
+                            </CardWrapper>
+                        );
+                    })}
+                </CardsContainer>
+            )}
+            {similarContributions.length === 0 && <Alert color="light">We couldn't find any similar contribution, please try again later</Alert>}
+        </>
+    );
+};
 
 SimilarContributions.propTypes = {
-    similaireContributions: PropTypes.array.isRequired
+    similarContributions: PropTypes.array.isRequired
 };
 
 export default SimilarContributions;

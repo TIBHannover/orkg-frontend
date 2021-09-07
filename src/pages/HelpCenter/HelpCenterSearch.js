@@ -1,4 +1,5 @@
 import HelpCenterSearchInput from 'components/HelpCenterSearchInput/HelpCenterSearchInput';
+import TitleBar from 'components/TitleBar/TitleBar';
 import ROUTES from 'constants/routes';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
@@ -41,9 +42,7 @@ const HelpCenterSearch = () => {
 
     return (
         <div>
-            <Container>
-                <h1 className="h4 mt-4 mb-4">Help center</h1>
-            </Container>
+            <TitleBar>Help center</TitleBar>
 
             <Container className="box rounded pt-4 pb-4 pl-5 pr-5">
                 {isLoading && 'Loading...'}

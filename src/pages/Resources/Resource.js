@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { Container, Button, FormGroup, Label, FormText, ButtonGroup, Alert } from 'reactstrap';
+import { Container, Button, FormGroup, Label, FormText, Alert } from 'reactstrap';
 import { getClassById } from 'services/backend/classes';
 import { updateResourceClasses as updateResourceClassesNetwork } from 'services/backend/resources';
 import { getResource } from 'services/backend/resources';
@@ -34,6 +34,7 @@ import GDCVisualizationRenderer from 'libs/selfVisModel/RenderingComponents/GDCV
 import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
 import { reverseWithSlug } from 'utils';
 import PapersWithCodeModal from 'components/PapersWithCodeModal/PapersWithCodeModal';
+import TitleBar from 'components/TitleBar/TitleBar';
 
 const DEDICATED_PAGE_LINKS = {
     [CLASSES.PAPER]: {
@@ -138,7 +139,11 @@ function Resource(props) {
                                         setHasVisualizationModelForGDC(false);
                                         toast.error('Error loading visualization preview');
                                     });
+                            } else {
+                                setVisualizationModelForGDC(undefined);
+                                setHasVisualizationModelForGDC(false);
                             }
+
                             if (responseJson.classes.includes(CLASSES.COMPARISON)) {
                                 getStatementsBySubjectAndPredicate({ subjectId: props.match.params.id, predicateId: PREDICATES.HAS_DOI }).then(st => {
                                     if (st.length > 0) {
@@ -225,80 +230,83 @@ function Resource(props) {
             {!isLoading && error && <>{error.statusCode === 404 ? <NotFound /> : <InternalServerError />}</>}
             {!isLoading && !error && (
                 <>
-                    <Container className="d-flex align-items-center">
-                        <h1 className="h4 mt-4 mb-4 flex-grow-1">Resource view</h1>
-                        <ButtonGroup className="flex-shrink-0">
-                            <RequireAuthentication
-                                size="sm"
-                                component={Button}
-                                color="secondary"
-                                style={{ marginRight: 2 }}
-                                tag={Link}
-                                to={ROUTES.ADD_RESOURCE}
-                            >
-                                <Icon icon={faPlus} className="mr-1" /> Create resource
-                            </RequireAuthentication>
-                            {dedicatedLink && (
-                                <Button
-                                    color="secondary"
+                    <TitleBar
+                        buttonGroup={
+                            <>
+                                <RequireAuthentication
                                     size="sm"
-                                    tag={Link}
-                                    to={reverseWithSlug(dedicatedLink.route, {
-                                        [dedicatedLink.routeParams]: props.match.params.id,
-                                        slug: dedicatedLink.hasSlug ? label : undefined
-                                    })}
+                                    component={Button}
+                                    color="secondary"
                                     style={{ marginRight: 2 }}
+                                    tag={Link}
+                                    to={ROUTES.ADD_RESOURCE}
                                 >
-                                    <Icon icon={faExternalLinkAlt} className="mr-1" /> {dedicatedLink.label} view
-                                </Button>
-                            )}
-                            {canEdit ? (
-                                !editMode ? (
-                                    <RequireAuthentication
-                                        component={Button}
-                                        className="float-right"
+                                    <Icon icon={faPlus} className="mr-1" /> Create resource
+                                </RequireAuthentication>
+                                {dedicatedLink && (
+                                    <Button
                                         color="secondary"
                                         size="sm"
-                                        onClick={() => (env('PWC_USER_ID') === createdBy ? setIsOpenPWCModal(true) : setEditMode(v => !v))}
+                                        tag={Link}
+                                        to={reverseWithSlug(dedicatedLink.route, {
+                                            [dedicatedLink.routeParams]: props.match.params.id,
+                                            slug: dedicatedLink.hasSlug ? label : undefined
+                                        })}
+                                        style={{ marginRight: 2 }}
                                     >
-                                        <Icon icon={faPen} /> Edit
-                                    </RequireAuthentication>
-                                ) : (
-                                    <Button className="flex-shrink-0" color="secondary-darker" size="sm" onClick={() => setEditMode(v => !v)}>
-                                        <Icon icon={faTimes} /> Stop editing
+                                        <Icon icon={faExternalLinkAlt} className="mr-1" /> {dedicatedLink.label} view
                                     </Button>
-                                )
-                            ) : (
-                                <Tippy
-                                    hideOnClick={false}
-                                    interactive={classes.find(c => c.id === CLASSES.RESEARCH_FIELD) ? true : false}
-                                    content={
-                                        env('PWC_USER_ID') === createdBy ? (
-                                            'This resource cannot be edited because it is from an external source. Our provenance feature is in active development.'
-                                        ) : classes.find(c => c.id === CLASSES.RESEARCH_FIELD) ? (
-                                            <>
-                                                This resource can not be edited. Please visit the{' '}
-                                                <a
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    href="https://www.orkg.org/orkg/help-center/article/20/ORKG_Research_fields_taxonomy"
-                                                >
-                                                    ORKG help center
-                                                </a>{' '}
-                                                if you have any suggestions to improve the research fields taxonomy.
-                                            </>
-                                        ) : (
-                                            'This resource can not be edited because it has a published DOI.'
-                                        )
-                                    }
-                                >
-                                    <span className="btn btn-secondary btn-sm disabled">
-                                        <Icon icon={faPen} /> <span>Edit</span>
-                                    </span>
-                                </Tippy>
-                            )}
-                        </ButtonGroup>
-                    </Container>
+                                )}
+                                {canEdit ? (
+                                    !editMode ? (
+                                        <RequireAuthentication
+                                            component={Button}
+                                            className="float-right"
+                                            color="secondary"
+                                            size="sm"
+                                            onClick={() => (env('PWC_USER_ID') === createdBy ? setIsOpenPWCModal(true) : setEditMode(v => !v))}
+                                        >
+                                            <Icon icon={faPen} /> Edit
+                                        </RequireAuthentication>
+                                    ) : (
+                                        <Button className="flex-shrink-0" color="secondary-darker" size="sm" onClick={() => setEditMode(v => !v)}>
+                                            <Icon icon={faTimes} /> Stop editing
+                                        </Button>
+                                    )
+                                ) : (
+                                    <Tippy
+                                        hideOnClick={false}
+                                        interactive={classes.find(c => c.id === CLASSES.RESEARCH_FIELD) ? true : false}
+                                        content={
+                                            env('PWC_USER_ID') === createdBy ? (
+                                                'This resource cannot be edited because it is from an external source. Our provenance feature is in active development.'
+                                            ) : classes.find(c => c.id === CLASSES.RESEARCH_FIELD) ? (
+                                                <>
+                                                    This resource can not be edited. Please visit the{' '}
+                                                    <a
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        href="https://www.orkg.org/orkg/help-center/article/20/ORKG_Research_fields_taxonomy"
+                                                    >
+                                                        ORKG help center
+                                                    </a>{' '}
+                                                    if you have any suggestions to improve the research fields taxonomy.
+                                                </>
+                                            ) : (
+                                                'This resource can not be edited because it has a published DOI.'
+                                            )
+                                        }
+                                    >
+                                        <span className="btn btn-secondary btn-sm disabled">
+                                            <Icon icon={faPen} /> <span>Edit</span>
+                                        </span>
+                                    </Tippy>
+                                )}
+                            </>
+                        }
+                    >
+                        Resource view
+                    </TitleBar>
                     {editMode && hasDOI && (
                         <Alert className="container" color="danger">
                             This resource should not be edited because it has a published DOI, please make sure that you know what are you doing!

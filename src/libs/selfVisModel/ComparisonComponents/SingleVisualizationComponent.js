@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Badge } from 'reactstrap';
 import { Chart } from 'react-google-charts';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faCalendar, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faCalendar, faUser, faLink } from '@fortawesome/free-solid-svg-icons';
 import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
 import moment from 'moment';
 import Tippy from '@tippyjs/react';
@@ -26,6 +26,11 @@ const DescriptionHeader = styled.div`
     background: ${props => props.theme.primary};
     padding: 5px;
     text-overflow: ellipsis;
+    &::selection,
+    &::-moz-selection {
+        color: ${props => props.theme.secondary};
+        background: ${props => props.theme.light} !important;
+    }
 `;
 
 const SingleVisualizationComponent = props => {
@@ -82,7 +87,14 @@ const SingleVisualizationComponent = props => {
                         // height: windowHeight + 100 + 'px'
                     }}
                 >
-                    <DescriptionHeader>{props.input.label.length > 0 ? 'Title: ' + props.input.label : 'No Title'}</DescriptionHeader>
+                    <DescriptionHeader>
+                        {props.input.label.length > 0 ? 'Title: ' + props.input.label : 'No Title'}
+                        <Tippy content="Go to resource page">
+                            <Link className="ml-2 resourceLink" to={reverse(ROUTES.RESOURCE, { id: props.input.id })}>
+                                <Icon icon={faLink} color="#fff" />
+                            </Link>
+                        </Tippy>
+                    </DescriptionHeader>
                     {isHovering && (
                         <Chart
                             chartType={visMethod}

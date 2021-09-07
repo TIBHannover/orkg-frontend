@@ -25,6 +25,7 @@ const StatsBoxStyled = styled(Col)`
         font-size: 26px;
         line-height: 1;
         color: ${props => props.theme.dark};
+        white-space: nowrap;
     }
     transition: color 0.5s ease;
 `;
@@ -43,7 +44,7 @@ const Label = styled.div`
 
 const ColoredStatsBox = props => {
     return (
-        <StatsBoxStyled className={`d-flex flex-grow-1 ${props.className} text-center box rounded`}>
+        <StatsBoxStyled className={`d-flex flex-grow-1 ${props.className} text-center box rounded mb-3 mx-2`}>
             <ConditionalWrapper
                 condition={props.link}
                 wrapper={children => (

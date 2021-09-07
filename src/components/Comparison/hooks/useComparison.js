@@ -615,36 +615,27 @@ function useComparison({ id }) {
     };
 
     const handleEditContributions = async () => {
-        if (metaData?.id || responseHash) {
-            const isConfirmed = await Confirm({
-                title: 'This is a published comparison',
-                message: `The comparison you are viewing is published, which means it cannot be modified. To make changes, fetch the live comparison data and try this action again`,
-                cancelColor: 'light',
-                confirmText: 'Fetch live data'
-            });
+        const isConfirmed = await Confirm({
+            title: 'Edit contribution data',
+            message: `You are about the edit the contributions displayed in the comparison. Changing this data does not only affect this comparison, but also other parts of the ORKG`,
+            cancelColor: 'light',
+            confirmText: 'Continue'
+        });
 
-            if (isConfirmed) {
-                setUrlNeedsToUpdate(true);
-                setResponseHash(null);
-                setShouldFetchLiveComparison(true);
-            }
-        } else {
-            const isConfirmed = await Confirm({
-                title: 'Edit contribution data',
-                message: `You are about the edit the contributions displayed in the comparison. Changing this data does not only affect this comparison, but also other parts of the ORKG`,
-                cancelColor: 'light',
-                confirmText: 'Continue'
-            });
-
-            if (isConfirmed) {
-                history.push(
-                    reverse(ROUTES.CONTRIBUTION_EDITOR) +
-                        `?contributions=${contributionsList.join(',')}${
-                            metaData?.hasPreviousVersion ? `&hasPreviousVersion=${metaData?.hasPreviousVersion.id}` : ''
-                        }`
-                );
-            }
+        if (isConfirmed) {
+            history.push(
+                reverse(ROUTES.CONTRIBUTION_EDITOR) +
+                    `?contributions=${contributionsList.join(',')}${
+                        metaData?.hasPreviousVersion ? `&hasPreviousVersion=${metaData?.hasPreviousVersion.id}` : ''
+                    }`
+            );
         }
+    };
+
+    const fetchLiveData = () => {
+        setUrlNeedsToUpdate(true);
+        setResponseHash(null);
+        setShouldFetchLiveComparison(true);
     };
 
     useEffect(() => {
@@ -763,7 +754,8 @@ function useComparison({ id }) {
         loadCreatedBy,
         loadProvenanceInfos,
         loadVisualizations,
-        handleEditContributions
+        handleEditContributions,
+        fetchLiveData
     };
 }
 export default useComparison;

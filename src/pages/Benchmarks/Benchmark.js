@@ -20,6 +20,7 @@ import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowser
 import { useParams } from 'react-router-dom';
 import { usePrevious } from 'react-use';
 import { useTable, useSortBy } from 'react-table';
+import TitleBar from 'components/TitleBar/TitleBar';
 
 function getTicksAxisH(data) {
     const dateRange = data.slice(1).map(function(value, index) {
@@ -200,46 +201,53 @@ function Benchmark() {
             {!isLoading && isFailedLoading && <div className="text-center mt-4 mb-4">Failed loading the resource</div>}
             {!isLoading && !isFailedLoading && (
                 <>
-                    <Container className="d-flex align-items-center mt-4 mb-4">
-                        <h1 className="h5 flex-shrink-0 mb-0">Benchmark</h1>
-                        <>
-                            <SubtitleSeparator />
-                            <SubTitle className="h5 mb-0">
-                                {problemData.label} on {resourceData.label}
-                            </SubTitle>
-                        </>
-                        {editMode && (
-                            <StatementBrowserDialog
-                                show={editMode}
-                                toggleModal={() => setEditMode(v => !v)}
-                                id={datasetId}
-                                label={resourceData.label}
-                                enableEdit={true}
-                                syncBackend={true}
-                            />
-                        )}
-                        <ButtonGroup className="flex-shrink-0" style={{ marginLeft: 'auto' }}>
-                            <RequireAuthentication
-                                component={Button}
-                                size="sm"
-                                color="secondary"
-                                className="float-right"
-                                onClick={() => setEditMode(v => !v)}
-                            >
-                                <Icon icon={faPen} /> Edit
-                            </RequireAuthentication>
-                            <ButtonDropdown isOpen={menuOpen} toggle={() => setMenuOpen(v => !v)} nav inNavbar>
-                                <DropdownToggle size="sm" color="secondary" className="px-3 rounded-right" style={{ marginLeft: 2 }}>
-                                    <Icon icon={faEllipsisV} />
-                                </DropdownToggle>
-                                <DropdownMenu right>
-                                    <DropdownItem tag={NavLink} exact to={reverse(ROUTES.RESOURCE, { id: datasetId })}>
-                                        View resource
-                                    </DropdownItem>
-                                </DropdownMenu>
-                            </ButtonDropdown>
-                        </ButtonGroup>
-                    </Container>
+                    <TitleBar
+                        titleAddition={
+                            <>
+                                <SubtitleSeparator />
+                                <SubTitle>
+                                    {problemData.label} on {resourceData.label}
+                                </SubTitle>
+                            </>
+                        }
+                        buttonGroup={
+                            <>
+                                <RequireAuthentication
+                                    component={Button}
+                                    size="sm"
+                                    color="secondary"
+                                    className="float-right"
+                                    onClick={() => setEditMode(v => !v)}
+                                >
+                                    <Icon icon={faPen} /> Edit
+                                </RequireAuthentication>
+                                <ButtonDropdown isOpen={menuOpen} toggle={() => setMenuOpen(v => !v)} nav inNavbar>
+                                    <DropdownToggle size="sm" color="secondary" className="px-3 rounded-right" style={{ marginLeft: 2 }}>
+                                        <Icon icon={faEllipsisV} />
+                                    </DropdownToggle>
+                                    <DropdownMenu right>
+                                        <DropdownItem tag={NavLink} exact to={reverse(ROUTES.RESOURCE, { id: datasetId })}>
+                                            View resource
+                                        </DropdownItem>
+                                    </DropdownMenu>
+                                </ButtonDropdown>
+                            </>
+                        }
+                    >
+                        Benchmark
+                    </TitleBar>
+
+                    {editMode && (
+                        <StatementBrowserDialog
+                            show={editMode}
+                            toggleModal={() => setEditMode(v => !v)}
+                            id={datasetId}
+                            label={resourceData.label}
+                            enableEdit={true}
+                            syncBackend={true}
+                        />
+                    )}
+
                     <Container className="p-0">
                         <Card>
                             <CardBody>
@@ -351,18 +359,19 @@ function Benchmark() {
                             </CardBody>
                         </Card>
                     </Container>
-
-                    <Container className="d-flex align-items-center mt-4 mb-4">
-                        <div className="d-flex flex-grow-1">
-                            <h1 className="h5 flex-shrink-0 mb-0">Papers</h1>
+                    <TitleBar
+                        titleSize="h5"
+                        titleAddition={
                             <>
                                 <SubtitleSeparator />
                                 <SubTitle className="mb-0">
                                     <small className="text-muted mb-0 text-small">Data imported from paperswithcode.com</small>
                                 </SubTitle>
                             </>
-                        </div>
-                    </Container>
+                        }
+                    >
+                        Papers
+                    </TitleBar>
                     <Container className="p-0">
                         <Card>
                             <Table {...getTableProps()}>
