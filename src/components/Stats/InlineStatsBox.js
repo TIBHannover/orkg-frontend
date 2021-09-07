@@ -6,12 +6,13 @@ import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
 import { Link } from 'react-router-dom';
 
 const StatsBoxStyled = styled(Col)`
-    padding: 0 !important;
+    padding: 0 0.5rem !important;
     display: flex;
     border-right: 2px solid #d9dbe3;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    margin: 0.5rem 0;
     & a:hover {
         text-decoration: none;
         color: ${props => props.theme.primary};
@@ -26,6 +27,7 @@ const StatsBoxStyled = styled(Col)`
     .number {
         font-size: 37px;
         color: #8b91a5;
+        white-space: nowrap;
     }
 `;
 
