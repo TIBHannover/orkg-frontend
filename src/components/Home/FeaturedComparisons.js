@@ -111,7 +111,11 @@ const FeaturedComparisons = ({ researchFieldId }) => {
                     <>
                         <ListGroupStyled>
                             {comparisons.map(comparison => {
-                                return comparison && <ComparisonCard comparison={comparison} key={`pc${comparison.id}`} showHistory={false} />;
+                                return (
+                                    comparison && (
+                                        <ComparisonCard comparison={comparison} key={`pc${comparison.id}`} showHistory={false} showBadge={false} />
+                                    )
+                                );
                             })}
                         </ListGroupStyled>
 

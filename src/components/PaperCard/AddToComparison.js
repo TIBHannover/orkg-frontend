@@ -98,7 +98,7 @@ const AddToComparison = ({ contributionId, paper }) => {
     return (
         <Tippy
             theme={!contributionId && paper.contributions?.length > 1 ? 'visualizationPreview' : undefined}
-            placement="bottom"
+            placement="bottom-start"
             interactiveDebounce={75}
             interactive={!contributionId && paper.contributions?.length > 1 ? true : false}
             content={
