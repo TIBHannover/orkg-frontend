@@ -26,11 +26,11 @@ test('should show literal input when add button is clicked', () => {
     expect(screen.getByPlaceholderText(/enter a value/i)).toBeInTheDocument();
 });
 
-test('should switch to autocomplete when resource type is selected', () => {
+test('should switch to autocomplete when resource type is selected', async () => {
     setup();
     fireEvent.click(screen.getByRole('button', { name: /add value/i, hidden: true }));
     fireEvent.click(screen.getByRole('menuitem', { name: /resource/i, hidden: true }));
-    expect(screen.getByRole('textbox', { name: /enter a resource/i })).toBeInTheDocument();
+    await waitFor(() => expect(screen.getByRole('textbox', { name: /enter a resource/i })).toBeInTheDocument());
 });
 
 test('should switch to literal input when literal type is selected', async () => {

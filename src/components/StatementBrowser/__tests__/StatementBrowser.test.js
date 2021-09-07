@@ -38,7 +38,6 @@ describe('statement browser', () => {
         };
         setup({}, config);
         expect(screen.queryByText(/Loading/i)).toBeInTheDocument();
-        screen.debug();
         expect(await screen.findByText(/3.1/i)).toBeInTheDocument();
         expect(await screen.findByText(/Lombardy, Italy/i)).toBeInTheDocument();
         expect(await screen.findByText(/Determination of the COVID-19 basic reproduction number/i)).toBeInTheDocument();

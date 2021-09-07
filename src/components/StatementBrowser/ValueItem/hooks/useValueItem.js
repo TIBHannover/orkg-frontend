@@ -34,6 +34,10 @@ const useValueItem = ({ valueId, propertyId, syncBackend, contextStyle }) => {
     const openExistingResourcesInDialog = useSelector(state => state.statementBrowser.openExistingResourcesInDialog);
     const resource = useSelector(state => state.statementBrowser.resources.byId[value.resourceId]);
 
+    const valueClass = useSelector(state =>
+        getValueClass(getComponentsByResourceIDAndPredicateID(state, value.resourceId, property?.existingPredicateId))
+    );
+
     const [draftLabel, setDraftLabel] = useState(value.label);
     const [draftDataType, setDraftDataType] = useState(value.type === 'literal' ? value.datatype : 'object');
     const isInlineResource = useSelector(state => isInlineResourceUtil(state, valueClass));
@@ -65,10 +69,6 @@ const useValueItem = ({ valueId, propertyId, syncBackend, contextStyle }) => {
         }
         return { hasLabelFormat, labelFormat };
     });
-
-    const valueClass = useSelector(state =>
-        getValueClass(getComponentsByResourceIDAndPredicateID(state, value.resourceId, property?.existingPredicateId))
-    );
 
     const schema = useSelector(state => {
         const components = getComponentsByResourceIDAndPredicateID(state, value.resourceId, property?.existingPredicateId);
@@ -295,14 +295,14 @@ const useValueItem = ({ valueId, propertyId, syncBackend, contextStyle }) => {
                 return value.label;
             }
             if (existingResourceId && !resource.isFetched && !resource.isFetching && value?._class !== ENTITIES.LITERAL) {
-                dispatch(
+                return dispatch(
                     fetchStatementsForResource({
                         resourceId: existingResourceId
                     })
                 ).then(() => {
                     return dispatch(generatedFormattedLabel(resource, labelFormat));
                 });
-                return dispatch(generatedFormattedLabel(resource, labelFormat));
+                //return dispatch(generatedFormattedLabel(resource, labelFormat));
             } else {
                 return dispatch(generatedFormattedLabel(resource, labelFormat));
             }
