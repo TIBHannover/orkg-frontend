@@ -25,6 +25,7 @@ const StatsBoxStyled = styled(Col)`
         font-size: 26px;
         line-height: 1;
         color: ${props => props.theme.dark};
+        white-space: nowrap;
     }
     transition: color 0.5s ease;
 `;
