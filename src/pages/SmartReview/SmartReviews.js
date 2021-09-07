@@ -1,38 +1,21 @@
 import { faPlus, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import Tippy from '@tippyjs/react';
 import ListPage from 'components/ListPage/ListPage';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
-import ShortRecord from 'components/ShortRecord/ShortRecord';
-import { CLASSES, PREDICATES } from 'constants/graphSettings';
+import { CLASSES } from 'constants/graphSettings';
+import SmartReviewCard from 'components/SmartReviewCard/SmartReviewCard';
 import ROUTES from 'constants/routes';
 import { useSelector } from 'react-redux';
 import { groupBy } from 'lodash';
-import { reverse } from 'named-urls';
 import { Link } from 'react-router-dom';
+import { getSmartReviewData } from 'utils';
 import { getResourcesByClass } from 'services/backend/resources';
 import { getStatementsBySubjects } from 'services/backend/statements';
 
 const SmartReviews = () => {
     const user = useSelector(state => state.auth.user);
 
-    const renderListItem = versions => (
-        <ShortRecord key={versions[0]?.id} header={versions[0]?.label} href={reverse(ROUTES.SMART_REVIEW, { id: versions[0]?.id })}>
-            {versions.length > 1 && (
-                <>
-                    All versions:{' '}
-                    {versions.map((version, index) => (
-                        <span key={version.id}>
-                            <Tippy content={version.description}>
-                                <Link to={reverse(ROUTES.SMART_REVIEW, { id: version.id })}>Version {versions.length - index}</Link>
-                            </Tippy>{' '}
-                            {index < versions.length - 1 && ' • '}
-                        </span>
-                    ))}
-                </>
-            )}
-        </ShortRecord>
-    );
+    const renderListItem = versions => <SmartReviewCard key={versions[0]?.id} versions={versions} showBadge={false} />;
 
     const fetchItems = async ({ resourceClass, page, pageSize }) => {
         let items = [];
@@ -47,11 +30,9 @@ const SmartReviews = () => {
 
         if (resources.length) {
             items = await getStatementsBySubjects({ ids: resources.map(item => item.id) }).then(statements =>
-                statements.map(statementsForSubject => ({
-                    ...resources.find(resource => resource.id === statementsForSubject.id),
-                    description: statementsForSubject.statements.find(statement => statement.predicate.id === PREDICATES.DESCRIPTION)?.object?.label,
-                    paperId: statementsForSubject.statements.find(statement => statement.predicate.id === PREDICATES.HAS_PAPER)?.object?.id
-                }))
+                statements.map(statementsForSubject => {
+                    return getSmartReviewData(resources.find(resource => resource.id === statementsForSubject.id), statementsForSubject.statements);
+                })
             );
             const groupedByPaper = groupBy(items, 'paperId');
             items = Object.keys(groupedByPaper).map(paperId => [...groupedByPaper[paperId]]);
