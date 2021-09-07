@@ -30,7 +30,7 @@ test('should show literal input when add button is clicked', () => {
 test('should switch to autocomplete when resource type is selected', async () => {
     setup();
     fireEvent.click(screen.getByRole('button', { name: /add value/i, hidden: true }));
-    await waitFor(() => selectEvent.select(screen.getByText(/text/i), ['Resource']));
+    await selectEvent.select(screen.getByText(/text/i), ['Resource'], { container: document.body });
     expect(screen.getByRole('textbox', { name: /enter a resource/i })).toBeInTheDocument();
 });
 
@@ -38,9 +38,9 @@ test('should switch to literal input when literal type is selected', async () =>
     setup();
     fireEvent.click(screen.getByRole('button', { name: /add value/i, hidden: true }));
     // use wait for to prevent "Can't perform a React state update on an unmounted component. This is a no-op" warning
-    await waitFor(() => selectEvent.select(screen.getByText(/text/i), ['Resource']));
+    await selectEvent.select(screen.getByText(/text/i), ['Resource'], { container: document.body });
     expect(screen.getByRole('textbox', { name: /enter a resource/i })).toBeInTheDocument();
-    await waitFor(() => selectEvent.select(screen.getByText('Resource'), ['Text']));
+    await selectEvent.select(screen.getByText('Resource'), ['Text'], { container: document.body });
     expect(screen.getByPlaceholderText(/enter a value/i)).toBeInTheDocument();
 });
 
