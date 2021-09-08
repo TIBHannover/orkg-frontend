@@ -77,8 +77,8 @@ const useImportBulkData = ({ data, onFinish }) => {
                     paperMetadata = parseCiteResult(paperMetadata);
                     title = paperMetadata.paperTitle;
                     authors = paperMetadata.paperAuthors.map(author => ({ label: author.label }));
-                    publicationMonth = paperMetadata.publicationMonth;
-                    publicationYear = paperMetadata.publicationYear;
+                    publicationMonth = paperMetadata.paperPublicationMonth;
+                    publicationYear = paperMetadata.paperPublicationYear;
                     publishedIn = paperMetadata.publishedIn;
                 }
             }
