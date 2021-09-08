@@ -161,7 +161,7 @@ class ComparisonPopup extends Component {
                                     </Badge>{' '}
                                     Compare contributions
                                     <div className="float-right">
-                                        <Tippy trigger="mouseenter" content="Remove all contributions from comparison" zIndex={999}>
+                                        <Tippy trigger="mouseenter" content="Remove all contributions from comparison" zIndex={9999}>
                                             <Tippy
                                                 onShow={this.onShow}
                                                 onShown={this.onShown}
@@ -174,7 +174,7 @@ class ComparisonPopup extends Component {
                                                         className="text-center p-1"
                                                         style={{ color: '#fff', fontSize: '0.95rem', wordBreak: 'normal' }}
                                                     >
-                                                        <p className="mb-2">Are you sure you want to remove all contributions from comparison?</p>
+                                                        <p className="mb-2">Are you sure?</p>
                                                         <ButtonGroup size="sm" className="mt-1 mb-1">
                                                             <Button
                                                                 onClick={() => {
