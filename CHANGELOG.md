@@ -3,6 +3,17 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [V0.49](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.48...V0.49) - 2021-09-08
+
+### Changes
+
+- ux(Comparison popup): Replace delete confirmation with tooltip [`#674`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/674)
+- fix(Stats): improve responsiveness of stats boxes [`#672`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/672)
+- feat(Author): Show ORCID/Google Scholar profiles for authors and refactor Cards [`#667`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/667)
+- feat(Home): support alerts via the CMS [`#658`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/658)
+- feat(Comparison): load live data, only allow editing when live data is fetched [`#662`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/662)
+
+---
 ## [V0.48](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.47...V0.48) - 2021-08-09
 
 ### Changes
