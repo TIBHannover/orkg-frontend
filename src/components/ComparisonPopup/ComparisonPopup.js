@@ -1,7 +1,7 @@
 import { createRef, Component } from 'react';
-import { Badge, Container, Navbar } from 'reactstrap';
+import { Badge, Container, Navbar, Button, ButtonGroup } from 'reactstrap';
 import { ComparisonBoxButton, ComparisonBox, Header, List, ContributionItem, Title, Number, Remove, StartComparison } from './styled';
-import { faChevronDown, faChevronUp, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faChevronDown, faChevronUp, faTimes, faTrash, faCheck } from '@fortawesome/free-solid-svg-icons';
 import { loadComparisonFromLocalStorage, removeFromComparison } from 'actions/viewPaper';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { Link } from 'react-router-dom';
@@ -9,13 +9,13 @@ import PropTypes from 'prop-types';
 import { Cookies } from 'react-cookie';
 import ROUTES from 'constants/routes.js';
 import Tooltip from '../Utils/Tooltip';
-import Confirm from 'reactstrap-confirm';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { faFile } from '@fortawesome/free-regular-svg-icons';
 import { reverse } from 'named-urls';
 import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
 import Tippy from '@tippyjs/react';
+
 const cookies = new Cookies();
 
 const ComparisonPopupStyled = styled.div`
@@ -43,7 +43,9 @@ class ComparisonPopup extends Component {
             showComparisonBox: false
         };
 
-        this.comparisionPopup = createRef();
+        this.yesButtonRef = createRef();
+        this.cancelButtonRef = createRef();
+        this.comparisonPopup = createRef();
     }
 
     componentDidMount() {
@@ -73,25 +75,54 @@ class ComparisonPopup extends Component {
     };
 
     handleClickOutside = event => {
-        if (this.comparisionPopup.current && !this.comparisionPopup.current.contains(event.target) && this.state.showComparisonBox) {
+        if (this.comparisonPopup.current && !this.comparisonPopup.current.contains(event.target) && this.state.showComparisonBox) {
             this.toggleComparisonBox();
         }
     };
 
     removeAllContributionFromComparison = async allIds => {
-        const result = await Confirm({
-            title: 'Are you sure?',
-            message: 'Are you sure you want to remove all contributions from comparison?',
-            cancelColor: 'light'
-        });
-
-        if (result) {
-            allIds.map(contributionId => this.removeFromComparison(contributionId));
-        }
+        allIds.map(contributionId => this.removeFromComparison(contributionId));
     };
 
     removeFromComparison = id => {
         this.props.removeFromComparison(id);
+    };
+
+    onShow = () => {
+        document.addEventListener('keydown', this.onKeyPressed);
+    };
+
+    onShown = () => {
+        this.yesButtonRef.current.focus();
+    };
+
+    onHide = () => {
+        document.removeEventListener('keydown', this.onKeyPressed);
+    };
+
+    onKeyPressed = e => {
+        if (e.keyCode === 27) {
+            // escape
+            this.tippy.hide();
+        }
+        if (e.keyCode === 9) {
+            // Tab
+            e.preventDefault();
+            e.stopPropagation();
+            if (document.activeElement === this.yesButtonRef.current) {
+                this.cancelButtonRef.current.focus();
+            } else {
+                this.yesButtonRef.current.focus();
+            }
+        }
+    };
+
+    closeTippy = () => {
+        this.tippy.hide();
+    };
+
+    onCreate = tippy => {
+        this.tippy = tippy;
     };
 
     render() {
@@ -109,7 +140,7 @@ class ComparisonPopup extends Component {
         return (
             <ComparisonPopupStyled
                 cookieInfoDismissed={cookieInfoDismissed}
-                ref={node => (this.comparisionPopup.current = node)}
+                ref={node => (this.comparisonPopup.current = node)}
                 className="fixed-bottom p-0 offset-sm-2 offset-md-8"
                 style={{ width: '340px', zIndex: '1000' }}
             >
@@ -130,14 +161,54 @@ class ComparisonPopup extends Component {
                                     </Badge>{' '}
                                     Compare contributions
                                     <div className="float-right">
-                                        <Tooltip message="Remove all contributions from comparison" hideDefaultIcon>
-                                            <Icon
-                                                className="ml-2 mr-2"
-                                                size="sm"
-                                                onClick={() => this.removeAllContributionFromComparison(allIds)}
-                                                icon={faTrash}
-                                            />
-                                        </Tooltip>
+                                        <Tippy trigger="mouseenter" content="Remove all contributions from comparison" zIndex={999}>
+                                            <Tippy
+                                                onShow={this.onShow}
+                                                onShown={this.onShown}
+                                                onHide={this.onHide}
+                                                onCreate={this.onCreate}
+                                                interactive={true}
+                                                trigger="click"
+                                                content={
+                                                    <div
+                                                        className="text-center p-1"
+                                                        style={{ color: '#fff', fontSize: '0.95rem', wordBreak: 'normal' }}
+                                                    >
+                                                        <p className="mb-2">Are you sure you want to remove all contributions from comparison?</p>
+                                                        <ButtonGroup size="sm" className="mt-1 mb-1">
+                                                            <Button
+                                                                onClick={() => {
+                                                                    this.removeAllContributionFromComparison(allIds);
+                                                                    this.closeTippy();
+                                                                }}
+                                                                innerRef={this.yesButtonRef}
+                                                                className="px-2"
+                                                                color="danger"
+                                                                style={{ paddingTop: 2, paddingBottom: 2 }}
+                                                            >
+                                                                <Icon icon={faCheck} className="mr-1" />
+                                                                Remove
+                                                            </Button>
+                                                            <Button
+                                                                onClick={() => {
+                                                                    this.closeTippy();
+                                                                }}
+                                                                innerRef={this.cancelButtonRef}
+                                                                className="px-2"
+                                                                style={{ paddingTop: 2, paddingBottom: 2 }}
+                                                            >
+                                                                {' '}
+                                                                <Icon icon={faTimes} className="mr-1" /> Cancel
+                                                            </Button>
+                                                        </ButtonGroup>
+                                                    </div>
+                                                }
+                                            >
+                                                <span>
+                                                    <Icon className="ml-2 mr-2" size="sm" onClick={e => e.stopPropagation()} icon={faTrash} />
+                                                </span>
+                                            </Tippy>
+                                        </Tippy>
                                         <Icon icon={faChevronDown} />
                                     </div>
                                 </Header>
