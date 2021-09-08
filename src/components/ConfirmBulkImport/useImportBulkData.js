@@ -18,7 +18,8 @@ const PREDEFINED_COLUMNS = [
     'paper:publication_year',
     'paper:doi',
     'paper:url',
-    'paper:research_field'
+    'paper:research_field',
+    'paper:published_in'
 ];
 
 const useImportBulkData = ({ data, onFinish }) => {
@@ -64,7 +65,7 @@ const useImportBulkData = ({ data, onFinish }) => {
             const doi = getFirstValue(rowObject, 'paper:doi');
             const url = getFirstValue(rowObject, 'paper:url');
             let researchField = getFirstValue(rowObject, 'paper:research_field', MISC.RESEARCH_FIELD_MAIN);
-            let publishedIn = null;
+            let publishedIn = getFirstValue(rowObject, 'paper:published_in');
             let paperMetadata = null;
             if (doi) {
                 try {
@@ -212,7 +213,7 @@ const useImportBulkData = ({ data, onFinish }) => {
                 publicationYear,
                 researchField,
                 url,
-                publishedIn: publishedIn,
+                publishedIn,
                 contributions: [
                     {
                         name: 'Contribution',
