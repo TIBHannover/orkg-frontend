@@ -81,6 +81,12 @@ const HelpModal = props => {
                     </li>
 
                     <li>
+                        <strong>paper:published_in</strong>
+                        <br />
+                        The conference or journal name.
+                    </li>
+
+                    <li>
                         <strong>paper:research_field</strong>
                         <br />
                         Research field ID (e.g., R11 for the most general field: 'Research field', only existing fields can be used:{' '}
