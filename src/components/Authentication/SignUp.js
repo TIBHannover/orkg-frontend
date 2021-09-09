@@ -7,10 +7,12 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { useDispatch } from 'react-redux';
 import { get_error_message, checkCookie } from 'utils';
+import ROUTES_CMS from 'constants/routesCms';
 import ROUTES from 'constants/routes';
 import { Cookies } from 'react-cookie';
 import env from '@beam-australia/react-env';
 import InfoSheet from 'assets/pdf/infosheet-data-protection.pdf';
+import { reverse } from 'named-urls';
 
 const cookies = new Cookies();
 
@@ -154,7 +156,7 @@ export default function SignUp() {
                         label={
                             <>
                                 I accept the{' '}
-                                <Link to={ROUTES.TERMS_OF_USE} target="_blank">
+                                <Link to={reverse(ROUTES.PAGE, { url: ROUTES_CMS.TERMS_OF_USE })} target="_blank">
                                     Special Conditions ORKG
                                 </Link>
                             </>
@@ -171,7 +173,7 @@ export default function SignUp() {
                             <>
                                 I agree to the processing of my personal data provided here by Technische Informationsbibliothek (TIB). In accordance
                                 with the{' '}
-                                <Link to={ROUTES.DATA_PROTECTION} target="_blank">
+                                <Link to={reverse(ROUTES.PAGE, { url: ROUTES_CMS.DATA_PROTECTION })} target="_blank">
                                     data protection declaration
                                 </Link>{' '}
                                 as well as the{' '}
