@@ -95,7 +95,6 @@ export default function ValueItemView(props) {
                             ) : (
                                 <ValuePlugins type="resource">{props.getLabel() !== '' ? props.getLabel().toString() : <i>No label</i>}</ValuePlugins>
                             )}
-
                             {props.resource && props.resource.existingResourceId && openExistingResourcesInDialog && (
                                 <span>
                                     {' '}
@@ -105,7 +104,7 @@ export default function ValueItemView(props) {
                         </Button>
                     )}
 
-                    {!props.resource && props.value._class !== ENTITIES.LITERAL && resourcesAsLinks && (
+                    {props.resource && props.value._class !== ENTITIES.LITERAL && resourcesAsLinks && (
                         <Link to={getResourceLink(props.value._class, props.value.resourceId)}>{props.value.label || <i>No label</i>}</Link>
                     )}
 
