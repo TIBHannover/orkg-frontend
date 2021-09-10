@@ -3,6 +3,14 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [V0.50](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.49...V0.50) - 2021-09-10
+
+### Changes
+
+- fix: Links to terms of use and data protection [`#676`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/676)
+- feat(CSV import): Add paper venue column and fix fetching publication month and year [`#675`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/675)
+
+---
 ## [V0.49](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.48...V0.49) - 2021-09-08
 
 ### Changes
