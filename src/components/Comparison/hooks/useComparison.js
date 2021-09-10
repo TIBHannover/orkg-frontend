@@ -83,6 +83,8 @@ function useComparison({ id }) {
 
     // reference to previous comparison type
     const prevComparisonType = usePrevious(comparisonType);
+    // reference to previous comparison id
+    const prevComparisonId = usePrevious(comparisonId);
 
     // loading indicators
     const [isLoadingMetaData, setIsLoadingMetaData] = useState(false);
@@ -669,16 +671,19 @@ function useComparison({ id }) {
      * Update comparison if:
      *  1/ Contribution list changed
      *  2/ Comparison type changed
+     *  2/ Comparison id changed
      */
     useEffect(() => {
         if (
             contributionsList.length > 0 &&
-            (prevComparisonType !== comparisonType || !contributionsList.every(id => contributions.map(c => c.id).includes(id)))
+            (prevComparisonId !== comparisonId ||
+                prevComparisonType !== comparisonType ||
+                !contributionsList.every(id => contributions.map(c => c.id).includes(id)))
         ) {
             getComparisonResult();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [comparisonType, contributionsList.length]);
+    }, [comparisonId, comparisonType, contributionsList.length]);
 
     /**
      * Update URL if
