@@ -3,6 +3,13 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [V0.50.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.50...V0.50.1) - 2021-09-10
+
+### Changes
+
+- fix: Preview for visualization shows error message [`#678`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/678)
+
+---
 ## [V0.50](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.49...V0.50) - 2021-09-10
 
 ### Changes
