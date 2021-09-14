@@ -1144,10 +1144,10 @@ export const getValueClass = components => {
 };
 
 /**
- * Check if the resource has an inline format
+ * Check if the class has an inline format
  * (its template has hasLabelFormat == true)
  * @param {Object} state Current state of the Store
- * @param {Object[]} components Array of components
+ * @param {Object[]} valueClass Class ID
  * @return {String|Boolean} the template label or false
  */
 export function isInlineResource(state, valueClass) {
@@ -1164,6 +1164,18 @@ export function isInlineResource(state, valueClass) {
         }
     }
     return false;
+}
+
+/**
+ * Check if a value has an inline format
+ * (its template has hasLabelFormat == true)
+ * @param {Object} state Current state of the Store
+ * @param {Object[]} valueId Value ID
+ * @return {Boolean} true or false
+ */
+export function isValueHasFormattedLabel(state, valueId) {
+    const value = state.statementBrowser.values.byId[valueId];
+    return value.classes?.some(elt => isInlineResource(state, elt));
 }
 
 /**

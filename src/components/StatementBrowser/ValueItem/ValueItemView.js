@@ -2,11 +2,9 @@ import { useState, useEffect, useRef } from 'react';
 import { toggleEditValue } from 'actions/statementBrowser';
 import { InputGroup, InputGroupAddon, Button, FormFeedback, Badge } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faTrash, faPen, faExternalLinkAlt, faTable } from '@fortawesome/free-solid-svg-icons';
-import StatementOptionButton from 'components/StatementBrowser/StatementOptionButton/StatementOptionButton';
+import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import { StyledButton, ValueItemStyle } from 'components/StatementBrowser/styled';
 import Pulse from 'components/Utils/Pulse';
-import classNames from 'classnames';
 import ValuePlugins from 'components/ValuePlugins/ValuePlugins';
 import InputField from 'components/StatementBrowser/InputField/InputField';
 import { Link } from 'react-router-dom';
@@ -14,11 +12,11 @@ import DatatypeSelector from 'components/StatementBrowser/DatatypeSelector/Datat
 import { getSuggestionByTypeAndValue } from 'constants/DataTypes';
 import Tippy from '@tippyjs/react';
 import { useDispatch, useSelector } from 'react-redux';
-import { CLASSES, ENTITIES } from 'constants/graphSettings';
+import { ENTITIES } from 'constants/graphSettings';
 import ConfirmConversionTooltip from 'components/StatementBrowser/ConfirmConversionTooltip/ConfirmConversionTooltip';
 import PropTypes from 'prop-types';
 import { getResourceLink } from 'utils';
-import InfoTippy from './InfoTippy';
+import ValueItemOptions from './ValueItemOptions/ValueItemOptions';
 
 export default function ValueItemView(props) {
     const dispatch = useDispatch();
@@ -30,15 +28,8 @@ export default function ValueItemView(props) {
 
     const isCurationAllowed = useSelector(state => state.auth.user?.isCurationAllowed);
 
-    const [disableHover, setDisableHover] = useState(false);
-
     const [isValid, setIsValid] = useState(true);
     const [formFeedback, setFormFeedback] = useState(null);
-
-    const valueOptionClasses = classNames({
-        valueOptions: true,
-        disableHover: disableHover
-    });
 
     const onSubmit = () => {
         const { error } = props.schema.validate(props.draftLabel);
@@ -85,7 +76,7 @@ export default function ValueItemView(props) {
             {!props.value.isEditing ? (
                 <div>
                     {props.resource && !props.resource.isFetching && props.value._class === ENTITIES.RESOURCE && !resourcesAsLinks && (
-                        <Button className="p-0 text-left" color="link" onClick={props.handleOnClick} style={{ userSelect: 'text' }}>
+                        <Button className="p-0 text-left objectLabel" color="link" onClick={props.handleOnClick} style={{ userSelect: 'text' }}>
                             {props.showHelp && props.value._class === ENTITIES.RESOURCE ? (
                                 <Pulse content="Click on the resource to browse it">
                                     <ValuePlugins type="resource">
@@ -105,7 +96,9 @@ export default function ValueItemView(props) {
                     )}
 
                     {props.resource && props.value._class !== ENTITIES.LITERAL && resourcesAsLinks && (
-                        <Link to={getResourceLink(props.value._class, props.value.resourceId)}>{props.value.label || <i>No label</i>}</Link>
+                        <Link className="objectLabel" to={getResourceLink(props.value._class, props.value.resourceId)}>
+                            {props.value.label || <i>No label</i>}
+                        </Link>
                     )}
 
                     {props.resource && props.resource.isFetching && props.value._class === ENTITIES.RESOURCE && 'Loading...'}
@@ -125,43 +118,12 @@ export default function ValueItemView(props) {
                         </div>
                     )}
 
-                    <div className={valueOptionClasses}>
-                        {!props.value.isEditing && props.value.classes && props.value.classes.includes(CLASSES.QB_DATASET_CLASS) && (
-                            <StatementOptionButton title="Visualize data in tabular form" icon={faTable} action={props.handleDatasetClick} />
-                        )}
-
-                        {props.enableEdit && (
-                            <>
-                                {((props.resource && !props.resource.existingResourceId) || props.value.shared <= 1) && (
-                                    <StatementOptionButton
-                                        title="Edit value"
-                                        icon={faPen}
-                                        action={props.isInlineResource ? props.handleOnClick : () => dispatch(toggleEditValue({ id: props.id }))}
-                                    />
-                                )}
-
-                                {props.resource && props.resource.existingResourceId && props.value.shared > 1 && (
-                                    <StatementOptionButton
-                                        title="A shared resource cannot be edited directly"
-                                        icon={faPen}
-                                        action={() => null}
-                                        onVisibilityChange={disable => setDisableHover(disable)}
-                                    />
-                                )}
-
-                                <StatementOptionButton
-                                    requireConfirmation={true}
-                                    title="Delete value"
-                                    confirmationMessage="Are you sure to delete?"
-                                    icon={faTrash}
-                                    action={props.handleDeleteValue}
-                                    onVisibilityChange={disable => setDisableHover(disable)}
-                                />
-
-                                {props.resource && <InfoTippy id={props.id} />}
-                            </>
-                        )}
-                    </div>
+                    <ValueItemOptions
+                        id={props.id}
+                        enableEdit={props.enableEdit}
+                        syncBackend={props.syncBackend}
+                        handleOnClick={props.handleOnClick}
+                    />
                 </div>
             ) : (
                 <div>
@@ -212,10 +174,9 @@ ValueItemView.propTypes = {
     handleOnClick: PropTypes.func,
     showHelp: PropTypes.bool,
     enableEdit: PropTypes.bool.isRequired,
+    syncBackend: PropTypes.bool.isRequired,
     predicate: PropTypes.object,
     commitChangeLabel: PropTypes.func.isRequired,
-    handleDatasetClick: PropTypes.func.isRequired,
-    handleDeleteValue: PropTypes.func.isRequired,
     getLabel: PropTypes.func.isRequired,
     schema: PropTypes.object,
     getDataType: PropTypes.func,

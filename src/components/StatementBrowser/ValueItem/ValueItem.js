@@ -1,5 +1,4 @@
 import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
-import RDFDataCube from 'components/RDFDataCube/RDFDataCube';
 import ValueItemView from './ValueItemView';
 import useValueItem from './hooks/useValueItem';
 import PropTypes from 'prop-types';
@@ -14,13 +13,8 @@ export default function ValueItem(props) {
         property,
         commitChangeLabel,
         handleChangeResource,
-        handleDeleteValue,
-        handleDatasetResourceClick,
-        handleDatasetClick,
-        modalDataset,
         dialogResourceId,
         dialogResourceLabel,
-        setModalDataset,
         openExistingResourcesInDialog,
         handleExistingResourceClick,
         handleResourceClick,
@@ -47,6 +41,7 @@ export default function ValueItem(props) {
     } else if (props.value._class === ENTITIES.RESOURCE) {
         handleOnClick = handleResourceClick;
     }
+
     return (
         <>
             <ValueItemView
@@ -58,9 +53,7 @@ export default function ValueItem(props) {
                 handleOnClick={handleOnClick}
                 handleChangeResource={handleChangeResource}
                 commitChangeLabel={commitChangeLabel}
-                handleDatasetClick={handleDatasetClick}
                 enableEdit={props.enableEdit}
-                handleDeleteValue={handleDeleteValue}
                 showHelp={props.showHelp}
                 getLabel={getLabel}
                 schema={schema}
@@ -71,6 +64,7 @@ export default function ValueItem(props) {
                 setDraftDataType={setDraftDataType}
                 valueClass={valueClass}
                 isInlineResource={isInlineResource}
+                syncBackend={props.syncBackend}
             />
 
             {modal ? (
@@ -84,16 +78,6 @@ export default function ValueItem(props) {
                 />
             ) : (
                 ''
-            )}
-
-            {modalDataset && (
-                <RDFDataCube
-                    show={modalDataset}
-                    handleResourceClick={handleDatasetResourceClick}
-                    toggleModal={() => setModalDataset(prev => !prev)}
-                    resourceId={dialogResourceId}
-                    resourceLabel={dialogResourceLabel}
-                />
             )}
         </>
     );

@@ -2,9 +2,7 @@ import { useState, useCallback } from 'react';
 import {
     selectResource,
     fetchStatementsForResource,
-    deleteValue,
     updateValueLabel,
-    createResource,
     doneSavingValue,
     isSavingValue,
     changeValue,
@@ -15,7 +13,7 @@ import {
     isInlineResource as isInlineResourceUtil
 } from 'actions/statementBrowser';
 import { uniq } from 'lodash';
-import { updateStatement, deleteStatementById } from 'services/backend/statements';
+import { updateStatement } from 'services/backend/statements';
 import { createResource as createResourceAPICall, updateResource } from 'services/backend/resources';
 import { updateLiteral } from 'services/backend/literals';
 import validationSchema from 'components/StatementBrowser/AddValue/helpers/validationSchema';
@@ -43,7 +41,6 @@ const useValueItem = ({ valueId, propertyId, syncBackend, contextStyle }) => {
     const isInlineResource = useSelector(state => isInlineResourceUtil(state, valueClass));
 
     const [modal, setModal] = useState(false);
-    const [modalDataset, setModalDataset] = useState(false);
     const [dialogResourceId, setDialogResourceId] = useState(null);
     const [dialogResourceLabel, setDialogResourceLabel] = useState(null);
 
@@ -210,19 +207,6 @@ const useValueItem = ({ valueId, propertyId, syncBackend, contextStyle }) => {
         }
     };
 
-    const handleDeleteValue = async () => {
-        if (syncBackend) {
-            await deleteStatementById(value.statementId);
-            toast.success('Statement deleted successfully');
-        }
-        dispatch(
-            deleteValue({
-                id: valueId,
-                propertyId: propertyId
-            })
-        );
-    };
-
     const handleResourceClick = async e => {
         const existingResourceId = resource.existingResourceId;
 
@@ -245,31 +229,6 @@ const useValueItem = ({ valueId, propertyId, syncBackend, contextStyle }) => {
         );
     };
 
-    const handleDatasetResourceClick = resource => {
-        dispatch(
-            createResource({
-                label: resource.rlabel ? resource.rlabel : resource.label,
-                existingResourceId: resource.id,
-                resourceId: resource.id
-            })
-        );
-
-        dispatch(
-            selectResource({
-                increaseLevel: true,
-                resourceId: resource.id,
-                label: resource.rlabel ? resource.rlabel : resource.label,
-                propertyLabel: property?.label
-            })
-        );
-
-        dispatch(
-            fetchStatementsForResource({
-                resourceId: resource.id
-            })
-        );
-    };
-
     const handleExistingResourceClick = async () => {
         const existingResourceId = resource.existingResourceId ? resource.existingResourceId : value.resourceId;
 
@@ -278,14 +237,6 @@ const useValueItem = ({ valueId, propertyId, syncBackend, contextStyle }) => {
         setDialogResourceId(existingResourceId);
         setDialogResourceLabel(resource.label);
         setModal(true);
-    };
-
-    const handleDatasetClick = () => {
-        const existingResourceId = resource.existingResourceId;
-
-        setModalDataset(true);
-        setDialogResourceId(existingResourceId);
-        setDialogResourceLabel(resource.label);
     };
 
     const getLabel = useCallback(() => {
@@ -320,13 +271,8 @@ const useValueItem = ({ valueId, propertyId, syncBackend, contextStyle }) => {
         property,
         commitChangeLabel,
         handleChangeResource,
-        handleDeleteValue,
-        handleDatasetResourceClick,
-        handleDatasetClick,
-        modalDataset,
         dialogResourceId,
         dialogResourceLabel,
-        setModalDataset,
         openExistingResourcesInDialog,
         handleExistingResourceClick,
         handleResourceClick,
