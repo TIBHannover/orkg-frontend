@@ -131,7 +131,6 @@ export default function AddValueTemplate(props) {
             // Check for a possible conversion possible
             const suggestions = getSuggestionByTypeAndValue(inputDataType, inputValue);
             if (suggestions.length > 0 && !props.valueClass) {
-                console.log(suggestions);
                 setSuggestionType(suggestions[0]);
                 confirmConversion.current.show();
             } else {
@@ -205,8 +204,7 @@ export default function AddValueTemplate(props) {
             setTemplateIsLoading(false);
             setIsInlineResource(false);
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [props]);
+    }, [classes, dispatch, props.isLiteral, props.valueClass, templates]);
 
     return (
         <ValueItemStyle className={showAddValue ? 'editingLabel' : ''}>
