@@ -1,5 +1,5 @@
 import { ListGroup, ListGroupItem, Badge } from 'reactstrap';
-import StatementOptionButton from 'components/StatementBrowser/StatementOptionButton/StatementOptionButton';
+import StatementActionButton from 'components/StatementBrowser/StatementActionButton/StatementActionButton';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { getSuggestedProperties, createProperty } from 'actions/statementBrowser';
 import { useSelector, useDispatch } from 'react-redux';
@@ -15,7 +15,7 @@ const PropertySuggestions = () => {
             <ListGroup>
                 {suggestedProperties.map((c, index) => (
                     <ListGroupItem key={`suggested-property-${index}`}>
-                        <StatementOptionButton
+                        <StatementActionButton
                             className="mr-2"
                             title="Add property"
                             icon={faPlus}

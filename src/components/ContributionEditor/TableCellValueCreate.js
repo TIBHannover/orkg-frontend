@@ -2,7 +2,7 @@ import { faBars, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { createLiteralValue, createResourceValue } from 'actions/contributionEditor';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
-import StatementOptionButton from 'components/StatementBrowser/StatementOptionButton/StatementOptionButton';
+import StatementActionButton from 'components/StatementBrowser/StatementActionButton/StatementActionButton';
 import { StyledDropdownItem, StyledDropdownToggle } from 'components/StatementBrowser/styled';
 import { CLASSES, ENTITIES, PREDICATES } from 'constants/graphSettings';
 import { upperFirst } from 'lodash';
@@ -88,7 +88,7 @@ const TableCellValueCreate = ({ isVisible, contributionId, propertyId, isEmptyCe
             {!isCreating && isVisible && (
                 <div className={isEmptyCell ? 'h-100' : ''} role="button" tabIndex="0" onDoubleClick={() => setIsCreating(true)}>
                     <CreateButtonContainer className="create-button">
-                        <StatementOptionButton title="Add value" icon={faPlus} action={() => setIsCreating(true)} />
+                        <StatementActionButton title="Add value" icon={faPlus} action={() => setIsCreating(true)} />
                     </CreateButtonContainer>
                 </div>
             )}

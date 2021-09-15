@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { InputGroup, InputGroupAddon, FormFeedback } from 'reactstrap';
 import { StyledButton, ValueItemStyle } from 'components/StatementBrowser/styled';
-import StatementOptionButton from 'components/StatementBrowser/StatementOptionButton/StatementOptionButton';
+import StatementActionButton from 'components/StatementBrowser/StatementActionButton/StatementActionButton';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPlus, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
@@ -113,7 +113,7 @@ export default function AddValueView(props) {
         <ValueItemStyle className={showAddValue ? 'editingLabel' : ''}>
             {!showAddValue ? (
                 !templateIsLoading ? ( //Show loading indicator if the template is still loading
-                    <StatementOptionButton
+                    <StatementActionButton
                         isDisabled={props.isDisabled}
                         title={!props.isDisabled ? 'Add value' : 'This property reached the maximum number of values set by template'}
                         icon={faPlus}

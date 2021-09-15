@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { canAddValue as canAddValueAction, canDeleteProperty as canDeletePropertyAction } from 'actions/statementBrowser';
 import classNames from 'classnames';
 import { useDispatch, useSelector } from 'react-redux';
@@ -12,11 +11,10 @@ function useStatementItem(props) {
         canDeletePropertyAction(state, props.resourceId ? props.resourceId : state.statementBrowser.selectedResource, props.id)
     );
     const propertiesAsLinks = useSelector(state => state.statementBrowser.propertiesAsLinks);
-    const [disableHover, setDisableHover] = useState(false);
+
     const values = useSelector(state => state.statementBrowser.values);
     const propertyOptionsClasses = classNames({
-        propertyOptions: true,
-        disableHover: disableHover
+        propertyOptions: true
     });
 
     return {
@@ -24,7 +22,7 @@ function useStatementItem(props) {
         propertyOptionsClasses,
         canDeleteProperty,
         dispatch,
-        setDisableHover,
+
         values,
         canAddValue
     };

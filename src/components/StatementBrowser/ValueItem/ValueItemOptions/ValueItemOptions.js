@@ -1,9 +1,8 @@
 import { useState } from 'react';
 import { toggleEditValue } from 'actions/statementBrowser';
 import { selectResource, fetchStatementsForResource, deleteValue, createResource, isValueHasFormattedLabel } from 'actions/statementBrowser';
-import { faTrash, faPen, faTable } from '@fortawesome/free-solid-svg-icons';
-import StatementOptionButton from 'components/StatementBrowser/StatementOptionButton/StatementOptionButton';
-import classNames from 'classnames';
+import { faTrash, faPen, faTable, faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
+import StatementActionButton from 'components/StatementBrowser/StatementActionButton/StatementActionButton';
 import { deleteStatementById } from 'services/backend/statements';
 import { useDispatch, useSelector } from 'react-redux';
 import { CLASSES } from 'constants/graphSettings';
@@ -12,7 +11,7 @@ import RDFDataCube from 'components/RDFDataCube/RDFDataCube';
 import { toast } from 'react-toastify';
 import InfoTippy from './InfoTippy';
 
-export default function ValueItemOptions({ id, enableEdit, syncBackend, handleOnClick }) {
+const ValueItemOptions = ({ id, enableEdit, syncBackend, handleOnClick }) => {
     const value = useSelector(state => state.statementBrowser.values.byId[id]);
     const resource = useSelector(state => state.statementBrowser.resources.byId[value.resourceId]);
     const property = useSelector(state => state.statementBrowser.properties.byId[value.propertyId]);
@@ -24,12 +23,6 @@ export default function ValueItemOptions({ id, enableEdit, syncBackend, handleOn
     const [modalDataset, setModalDataset] = useState(false);
     const [dialogResourceId, setDialogResourceId] = useState(null);
     const [dialogResourceLabel, setDialogResourceLabel] = useState(null);
-
-    const [disableHover, setDisableHover] = useState(false);
-    const valueOptionClasses = classNames({
-        valueOptions: true,
-        disableHover: disableHover
-    });
 
     const handleDeleteValue = async () => {
         if (syncBackend) {
@@ -78,15 +71,15 @@ export default function ValueItemOptions({ id, enableEdit, syncBackend, handleOn
     };
 
     return (
-        <div className={valueOptionClasses}>
+        <div className="valueOptions">
             {!value.isEditing && value.classes && value.classes.includes(CLASSES.QB_DATASET_CLASS) && (
-                <StatementOptionButton title="Visualize data in tabular form" icon={faTable} action={handleDatasetClick} />
+                <StatementActionButton title="Visualize data in tabular form" icon={faTable} action={handleDatasetClick} />
             )}
 
             {enableEdit && (
                 <>
                     {((resource && !resource.existingResourceId) || value.shared <= 1) && (
-                        <StatementOptionButton
+                        <StatementActionButton
                             title="Edit value"
                             icon={faPen}
                             action={hasFormattedLabel ? handleOnClick : () => dispatch(toggleEditValue({ id: id }))}
@@ -94,21 +87,28 @@ export default function ValueItemOptions({ id, enableEdit, syncBackend, handleOn
                     )}
 
                     {resource && resource.existingResourceId && value.shared > 1 && (
-                        <StatementOptionButton
-                            title="A shared resource cannot be edited directly"
-                            icon={faPen}
-                            action={() => null}
-                            onVisibilityChange={disable => setDisableHover(disable)}
-                        />
+                        <StatementActionButton title="A shared resource cannot be edited directly" icon={faPen} action={() => null} />
                     )}
 
-                    <StatementOptionButton
-                        requireConfirmation={true}
+                    <StatementActionButton
                         title="Delete value"
-                        confirmationMessage="Are you sure to delete?"
                         icon={faTrash}
                         action={handleDeleteValue}
-                        onVisibilityChange={disable => setDisableHover(disable)}
+                        requireConfirmation={true}
+                        confirmationMessage="Are you sure to delete?"
+                        confirmationButtons={[
+                            {
+                                title: 'Delete',
+                                color: 'danger',
+                                icon: faCheck,
+                                action: handleDeleteValue
+                            },
+                            {
+                                title: 'Cancel',
+                                color: 'secondary',
+                                icon: faTimes
+                            }
+                        ]}
                     />
 
                     {resource && <InfoTippy id={id} />}
@@ -125,7 +125,7 @@ export default function ValueItemOptions({ id, enableEdit, syncBackend, handleOn
             )}
         </div>
     );
-}
+};
 
 ValueItemOptions.propTypes = {
     id: PropTypes.string.isRequired,
@@ -133,3 +133,5 @@ ValueItemOptions.propTypes = {
     syncBackend: PropTypes.bool.isRequired,
     handleOnClick: PropTypes.func
 };
+
+export default ValueItemOptions;

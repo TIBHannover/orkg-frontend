@@ -324,6 +324,9 @@ export const PropertyStyle = styled.div`
         span {
             color: ${props => props.theme.dark};
         }
+        span:hover {
+            color: #fff;
+        }
     }
     &:focus-within .propertyOption {
         visibility: visible;

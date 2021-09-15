@@ -1,10 +1,10 @@
 import { toggleEditPropertyLabel } from 'actions/statementBrowser';
-import { faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faPen, faTrash, faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { ListGroup, InputGroup } from 'reactstrap';
 import PropTypes from 'prop-types';
 import ValueItem from 'components/StatementBrowser/ValueItem/ValueItem';
 import AddValue from 'components/StatementBrowser/AddValue/AddValue';
-import StatementOptionButton from 'components/StatementBrowser/StatementOptionButton/StatementOptionButton';
+import StatementActionButton from 'components/StatementBrowser/StatementActionButton/StatementActionButton';
 import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
 import { StatementsGroupStyle, PropertyStyle, ValuesStyle } from 'components/StatementBrowser/styled';
 import defaultProperties from 'components/StatementBrowser/AddProperty/helpers/defaultProperties';
@@ -16,9 +16,7 @@ import useStatementItemTemplate from './hooks/useStatementItemTemplate';
 import ROUTES from 'constants/routes.js';
 
 export default function StatementItemTemplate(props) {
-    const { propertiesAsLinks, propertyOptionsClasses, canDeleteProperty, dispatch, setDisableHover, values, canAddValue } = useStatementItemTemplate(
-        props
-    );
+    const { propertiesAsLinks, propertyOptionsClasses, canDeleteProperty, dispatch, values, canAddValue } = useStatementItemTemplate(props);
 
     return (
         <StatementsGroupStyle tag="div" className={`${props.inTemplate ? 'inTemplate' : 'noTemplate'}`}>
@@ -43,7 +41,7 @@ export default function StatementItemTemplate(props) {
                             </div>
                             {props.enableEdit && (
                                 <div className={propertyOptionsClasses}>
-                                    <StatementOptionButton
+                                    <StatementActionButton
                                         isDisabled={!canDeleteProperty}
                                         title={
                                             canDeleteProperty
@@ -53,18 +51,29 @@ export default function StatementItemTemplate(props) {
                                         icon={faPen}
                                         action={() => dispatch(toggleEditPropertyLabel({ id: props.id }))}
                                     />
-                                    <StatementOptionButton
+                                    <StatementActionButton
                                         isDisabled={!canDeleteProperty}
                                         title={
                                             canDeleteProperty
                                                 ? 'Delete property'
                                                 : "This property can not be deleted because it's required by the template"
                                         }
+                                        icon={faTrash}
                                         requireConfirmation={true}
                                         confirmationMessage="Are you sure to delete?"
-                                        icon={faTrash}
-                                        action={props.handleDeleteStatement}
-                                        onVisibilityChange={disable => setDisableHover(disable)}
+                                        confirmationButtons={[
+                                            {
+                                                title: 'Delete',
+                                                color: 'danger',
+                                                icon: faCheck,
+                                                action: props.handleDeleteStatement
+                                            },
+                                            {
+                                                title: 'Cancel',
+                                                color: 'secondary',
+                                                icon: faTimes
+                                            }
+                                        ]}
                                     />
                                 </div>
                             )}

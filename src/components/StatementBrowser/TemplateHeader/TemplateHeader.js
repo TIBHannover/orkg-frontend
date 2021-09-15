@@ -1,19 +1,17 @@
 import { useState } from 'react';
 import { deleteValue, toggleEditValue, updateValueLabel, isSavingValue, doneSavingValue, deleteProperty } from 'actions/statementBrowser';
 import { Input } from 'reactstrap';
-import { faTrash, faPen, faQuestion } from '@fortawesome/free-solid-svg-icons';
-import StatementOptionButton from 'components/StatementBrowser/StatementOptionButton/StatementOptionButton';
+import { faTrash, faPen, faQuestion, faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
+import StatementActionButton from 'components/StatementBrowser/StatementActionButton/StatementActionButton';
 import { TemplateHeaderStyle } from 'components/StatementBrowser/styled';
 import { deleteStatementById } from 'services/backend/statements';
 import { updateResource } from 'services/backend/resources';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
-import classNames from 'classnames';
 
 export default function TemplateHeader(props) {
     const dispatch = useDispatch();
-    const [disableHover, setDisableHover] = useState(false);
     const [draftLabel, setDraftLabel] = useState(props.value.label);
 
     const commitChangeLabel = async () => {
@@ -55,11 +53,6 @@ export default function TemplateHeader(props) {
         );
     };
 
-    const headerClasses = classNames({
-        headerOptions: true,
-        disableHover: disableHover
-    });
-
     return (
         <div>
             <TemplateHeaderStyle className="d-flex">
@@ -68,19 +61,30 @@ export default function TemplateHeader(props) {
                         <>
                             {props.value.label}{' '}
                             {props.enableEdit && (
-                                <div className={headerClasses}>
-                                    <StatementOptionButton
+                                <div className="headerOptions">
+                                    <StatementActionButton
                                         title="Edit label"
                                         icon={faPen}
                                         action={() => dispatch(toggleEditValue({ id: props.id }))}
                                     />
-                                    <StatementOptionButton
-                                        requireConfirmation={true}
-                                        confirmationMessage="Are you sure to delete?"
+                                    <StatementActionButton
                                         title="Delete the template with its statements"
                                         icon={faTrash}
-                                        action={handleDeleteTemplate}
-                                        onVisibilityChange={disable => setDisableHover(disable)}
+                                        requireConfirmation={true}
+                                        confirmationMessage="Are you sure to delete?"
+                                        confirmationButtons={[
+                                            {
+                                                title: 'Delete',
+                                                color: 'danger',
+                                                icon: faCheck,
+                                                action: handleDeleteTemplate
+                                            },
+                                            {
+                                                title: 'Cancel',
+                                                color: 'secondary',
+                                                icon: faTimes
+                                            }
+                                        ]}
                                     />
                                 </div>
                             )}
@@ -102,11 +106,9 @@ export default function TemplateHeader(props) {
                 </div>
                 <div className="type">
                     Template{' '}
-                    <StatementOptionButton
+                    <StatementActionButton
                         title="A template is a defined structure of a contribution, this structure is mostly shared between papers in the same research field."
                         icon={faQuestion}
-                        iconWrapperSize="20px"
-                        iconSize="10px"
                         action={() => null}
                     />
                 </div>
