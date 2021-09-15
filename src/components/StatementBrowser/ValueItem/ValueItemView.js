@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { toggleEditValue } from 'actions/statementBrowser';
 import { InputGroup, InputGroupAddon, Button, FormFeedback, Badge } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
+import { faExternalLinkAlt, faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { StyledButton, ValueItemStyle } from 'components/StatementBrowser/styled';
 import Pulse from 'components/Utils/Pulse';
 import ValuePlugins from 'components/ValuePlugins/ValuePlugins';
@@ -13,13 +13,18 @@ import { getSuggestionByTypeAndValue } from 'constants/DataTypes';
 import Tippy from '@tippyjs/react';
 import { useDispatch, useSelector } from 'react-redux';
 import { ENTITIES } from 'constants/graphSettings';
-import ConfirmConversionTooltip from 'components/StatementBrowser/ConfirmConversionTooltip/ConfirmConversionTooltip';
+import a from 'indefinite';
+import ConfirmationTooltip from 'components/StatementBrowser/ConfirmationTooltip/ConfirmationTooltip';
 import PropTypes from 'prop-types';
 import { getResourceLink } from 'utils';
 import ValueItemOptions from './ValueItemOptions/ValueItemOptions';
 
 export default function ValueItemView(props) {
     const dispatch = useDispatch();
+    const confirmButtonRef = useRef(null);
+    const onShown = () => {
+        confirmButtonRef.current.focus();
+    };
     const resourcesAsLinks = useSelector(state => state.statementBrowser.resourcesAsLinks);
     const openExistingResourcesInDialog = useSelector(state => state.statementBrowser.openExistingResourcesInDialog);
 
@@ -143,19 +148,40 @@ export default function ValueItemView(props) {
                         <InputGroupAddon addonType="append">
                             <StyledButton outline onClick={() => onSubmit()}>
                                 <Tippy
+                                    onShown={onShown}
                                     onCreate={instance => (confirmConversion.current = instance)}
                                     content={
-                                        <ConfirmConversionTooltip
-                                            rejectSuggestion={rejectSuggestion}
-                                            acceptSuggestion={acceptSuggestion}
-                                            suggestionType={suggestionType}
+                                        <ConfirmationTooltip
+                                            message={
+                                                <p className="mb-2">
+                                                    The value you entered looks like {a(suggestionType?.name || '', { articleOnly: true })}{' '}
+                                                    <b>{suggestionType?.name}</b>. Do you want to convert it?
+                                                </p>
+                                            }
+                                            closeTippy={() => confirmConversion.current.hide()}
+                                            ref={confirmButtonRef}
+                                            confirmationMessage="Are you sure to delete?"
+                                            buttons={[
+                                                {
+                                                    title: 'Convert',
+                                                    color: 'success',
+                                                    icon: faCheck,
+                                                    action: acceptSuggestion
+                                                },
+                                                {
+                                                    title: 'Keep',
+                                                    color: 'secondary',
+                                                    icon: faTimes,
+                                                    action: rejectSuggestion
+                                                }
+                                            ]}
                                         />
                                     }
                                     interactive={true}
                                     trigger="manual"
                                     placement="top"
                                 >
-                                    <span>Done</span>
+                                    <span tabIndex="0">Done</span>
                                 </Tippy>
                             </StyledButton>
                         </InputGroupAddon>

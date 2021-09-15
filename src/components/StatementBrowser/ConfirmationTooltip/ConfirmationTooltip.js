@@ -14,6 +14,10 @@ const ConfirmationTooltipStyled = styled.div`
     }
 `;
 
+/**
+ * This component is made to be a content for a tippy
+ * Make sure to use ref props when you use this component
+ */
 const ConfirmationTooltip = forwardRef((props, ref) => {
     const buttonsRef = useRef([]);
 
@@ -58,7 +62,7 @@ const ConfirmationTooltip = forwardRef((props, ref) => {
 
     return (
         <ConfirmationTooltipStyled className="text-center p-1">
-            <p className="mb-2">{props.message}</p>
+            <div className="mb-2">{props.message}</div>
             <ButtonGroup tabIndex="0" size="sm" className="my-1">
                 {props.buttons.map((button, i) => (
                     <Button
@@ -81,7 +85,7 @@ const ConfirmationTooltip = forwardRef((props, ref) => {
 });
 
 ConfirmationTooltip.propTypes = {
-    message: PropTypes.string.isRequired,
+    message: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
     closeTippy: PropTypes.func.isRequired,
     buttons: PropTypes.arrayOf(
         PropTypes.shape({

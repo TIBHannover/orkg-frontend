@@ -2,7 +2,7 @@ import { useRef } from 'react';
 import Tippy from '@tippyjs/react';
 import ActionButtonView from './ActionButtonView';
 import PropTypes from 'prop-types';
-import ConfirmationTooltip from './ConfirmationTooltip';
+import ConfirmationTooltip from '../ConfirmationTooltip/ConfirmationTooltip';
 
 const StatementActionButton = props => {
     const tippy = useRef(null);

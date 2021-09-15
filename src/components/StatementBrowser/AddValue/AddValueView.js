@@ -3,11 +3,12 @@ import { InputGroup, InputGroupAddon, FormFeedback } from 'reactstrap';
 import { StyledButton, ValueItemStyle } from 'components/StatementBrowser/styled';
 import StatementActionButton from 'components/StatementBrowser/StatementActionButton/StatementActionButton';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faPlus, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faSpinner, faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
 import InputField from 'components/StatementBrowser/InputField/InputField';
 import DatatypeSelector from 'components/StatementBrowser/DatatypeSelector/DatatypeSelector';
-import ConfirmConversionTooltip from 'components/StatementBrowser/ConfirmConversionTooltip/ConfirmConversionTooltip';
+import a from 'indefinite';
+import ConfirmationTooltip from 'components/StatementBrowser/ConfirmationTooltip/ConfirmationTooltip';
 import { getConfigByType, getSuggestionByTypeAndValue } from 'constants/DataTypes';
 import Tippy from '@tippyjs/react';
 import { CLASSES, ENTITIES } from 'constants/graphSettings';
@@ -16,7 +17,10 @@ import PropTypes from 'prop-types';
 export default function AddValueView(props) {
     const literalInputRef = useRef(null);
     const resourceInputRef = useRef(null);
-
+    const confirmButtonRef = useRef(null);
+    const onShown = () => {
+        confirmButtonRef.current.focus();
+    };
     const [showAddValue, setShowAddValue] = useState(false);
     const [isValid, setIsValid] = useState(true);
     const [formFeedback, setFormFeedback] = useState(null);
@@ -75,7 +79,6 @@ export default function AddValueView(props) {
     };
 
     const acceptSuggestion = () => {
-        confirmConversion.current.hide();
         props.handleAddValue(suggestionType._class, { label: props.inputValue, datatype: suggestionType.type });
         props.setInputDataType(suggestionType.type);
         setShowAddValue(false);
@@ -208,15 +211,37 @@ export default function AddValueView(props) {
                                     </Tippy>
                                 ) : (
                                     <Tippy
+                                        onShown={onShown}
                                         onCreate={instance => (confirmConversion.current = instance)}
                                         content={
-                                            <ConfirmConversionTooltip
-                                                rejectSuggestion={rejectSuggestion}
-                                                acceptSuggestion={acceptSuggestion}
-                                                suggestionType={suggestionType}
+                                            <ConfirmationTooltip
+                                                message={
+                                                    <p className="mb-2">
+                                                        The value you entered looks like {a(suggestionType?.name || '', { articleOnly: true })}{' '}
+                                                        <b>{suggestionType?.name}</b>. Do you want to convert it?
+                                                    </p>
+                                                }
+                                                closeTippy={() => confirmConversion.current.hide()}
+                                                ref={confirmButtonRef}
+                                                confirmationMessage="Are you sure to delete?"
+                                                buttons={[
+                                                    {
+                                                        title: 'Convert',
+                                                        color: 'success',
+                                                        icon: faCheck,
+                                                        action: acceptSuggestion
+                                                    },
+                                                    {
+                                                        title: 'Keep',
+                                                        color: 'secondary',
+                                                        icon: faTimes,
+                                                        action: rejectSuggestion
+                                                    }
+                                                ]}
                                             />
                                         }
                                         interactive={true}
+                                        appendTo={document.body}
                                         trigger="manual"
                                         placement="top"
                                     >
