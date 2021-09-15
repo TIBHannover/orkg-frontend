@@ -365,9 +365,8 @@ function Autocomplete(props) {
                 foundIndex = selected.findIndex(x => x.id === action.option.id);
             }
             try {
-                const internalClass = await await getClasses({
-                    uri: encodeURIComponent(props.isMulti ? action.option.uri.trim() : selected.uri.trim()),
-                    returnContent: true
+                const internalClass = await getClasses({
+                    uri: props.isMulti ? action.option.uri.trim() : selected.uri.trim()
                 });
                 if (props.isMulti) {
                     selected[foundIndex] = internalClass;
