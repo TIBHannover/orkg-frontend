@@ -1,80 +1,21 @@
-import { useState, useEffect, useRef } from 'react';
-import { toggleEditValue } from 'actions/statementBrowser';
-import { InputGroup, InputGroupAddon, Button, FormFeedback, Badge } from 'reactstrap';
+import { Button, Badge } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faExternalLinkAlt, faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
-import { StyledButton, ValueItemStyle } from 'components/StatementBrowser/styled';
+import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
+import { ValueItemStyle } from 'components/StatementBrowser/styled';
 import Pulse from 'components/Utils/Pulse';
 import ValuePlugins from 'components/ValuePlugins/ValuePlugins';
-import InputField from 'components/StatementBrowser/InputField/InputField';
 import { Link } from 'react-router-dom';
-import DatatypeSelector from 'components/StatementBrowser/DatatypeSelector/DatatypeSelector';
-import { getSuggestionByTypeAndValue } from 'constants/DataTypes';
-import Tippy from '@tippyjs/react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { ENTITIES } from 'constants/graphSettings';
-import a from 'indefinite';
-import ConfirmationTooltip from 'components/StatementBrowser/ConfirmationTooltip/ConfirmationTooltip';
 import PropTypes from 'prop-types';
 import { getResourceLink } from 'utils';
 import ValueItemOptions from './ValueItemOptions/ValueItemOptions';
+import ValueForm from 'components/StatementBrowser/ValueForm/ValueForm';
 
 export default function ValueItemView(props) {
-    const dispatch = useDispatch();
-    const confirmButtonRef = useRef(null);
-    const onShown = () => {
-        confirmButtonRef.current.focus();
-    };
     const resourcesAsLinks = useSelector(state => state.statementBrowser.resourcesAsLinks);
     const openExistingResourcesInDialog = useSelector(state => state.statementBrowser.openExistingResourcesInDialog);
-
-    const confirmConversion = useRef(null);
-    const [suggestionType, setSuggestionType] = useState(null);
-
     const isCurationAllowed = useSelector(state => state.auth.user?.isCurationAllowed);
-
-    const [isValid, setIsValid] = useState(true);
-    const [formFeedback, setFormFeedback] = useState(null);
-
-    const onSubmit = () => {
-        const { error } = props.schema.validate(props.draftLabel);
-        if (error) {
-            setFormFeedback(error.message);
-            setIsValid(false);
-        } else {
-            // setDraftLabel(value);
-            setFormFeedback(null);
-            // Check for a possible conversion possible
-            const suggestions = getSuggestionByTypeAndValue(props.draftDataType, props.draftLabel);
-            if (suggestions.length > 0 && !props.valueClass) {
-                setSuggestionType(suggestions[0]);
-                confirmConversion.current.show();
-            } else {
-                props.commitChangeLabel(props.draftLabel, props.getDataType(props.draftDataType));
-                dispatch(toggleEditValue({ id: props.id }));
-            }
-        }
-    };
-
-    const acceptSuggestion = () => {
-        confirmConversion.current.hide();
-        props.commitChangeLabel(props.draftLabel, suggestionType.type);
-        props.setDraftDataType(suggestionType.type);
-        dispatch(toggleEditValue({ id: props.id }));
-    };
-
-    const rejectSuggestion = () => {
-        props.commitChangeLabel(props.draftLabel, props.getDataType(props.draftDataType));
-        dispatch(toggleEditValue({ id: props.id }));
-    };
-
-    useEffect(() => {
-        setFormFeedback(null);
-        setIsValid(true);
-        if (props.draftDataType === 'xsd:boolean') {
-            props.setDraftLabel(v => Boolean(v).toString());
-        }
-    }, [props, props.draftDataType]);
 
     return (
         <ValueItemStyle>
@@ -131,63 +72,7 @@ export default function ValueItemView(props) {
                     />
                 </div>
             ) : (
-                <div>
-                    <InputGroup size="sm " className="d-flex">
-                        {!props.valueClass && props.value.type === ENTITIES.LITERAL && (
-                            <DatatypeSelector entity={props.value.type} valueType={props.draftDataType} setValueType={props.setDraftDataType} />
-                        )}
-                        <InputField
-                            valueClass={props.valueClass}
-                            inputValue={props.draftLabel}
-                            setInputValue={props.setDraftLabel}
-                            inputDataType={props.draftDataType}
-                            onKeyDown={e => (e.keyCode === 13 || e.keyCode === 27) && e.target.blur()} // stop editing on enter and escape
-                            //onBlur={() => onSubmit()}
-                            isValid={isValid}
-                        />
-                        <InputGroupAddon addonType="append">
-                            <StyledButton outline onClick={() => onSubmit()}>
-                                <Tippy
-                                    onShown={onShown}
-                                    onCreate={instance => (confirmConversion.current = instance)}
-                                    content={
-                                        <ConfirmationTooltip
-                                            message={
-                                                <p className="mb-2">
-                                                    The value you entered looks like {a(suggestionType?.name || '', { articleOnly: true })}{' '}
-                                                    <b>{suggestionType?.name}</b>. Do you want to convert it?
-                                                </p>
-                                            }
-                                            closeTippy={() => confirmConversion.current.hide()}
-                                            ref={confirmButtonRef}
-                                            confirmationMessage="Are you sure to delete?"
-                                            buttons={[
-                                                {
-                                                    title: 'Convert',
-                                                    color: 'success',
-                                                    icon: faCheck,
-                                                    action: acceptSuggestion
-                                                },
-                                                {
-                                                    title: 'Keep',
-                                                    color: 'secondary',
-                                                    icon: faTimes,
-                                                    action: rejectSuggestion
-                                                }
-                                            ]}
-                                        />
-                                    }
-                                    interactive={true}
-                                    trigger="manual"
-                                    placement="top"
-                                >
-                                    <span tabIndex="0">Done</span>
-                                </Tippy>
-                            </StyledButton>
-                        </InputGroupAddon>
-                    </InputGroup>
-                    {!isValid && <FormFeedback className="d-block">{formFeedback}</FormFeedback>}
-                </div>
+                <ValueForm id={props.id} syncBackend={props.syncBackend} />
             )}
         </ValueItemStyle>
     );
@@ -201,15 +86,5 @@ ValueItemView.propTypes = {
     showHelp: PropTypes.bool,
     enableEdit: PropTypes.bool.isRequired,
     syncBackend: PropTypes.bool.isRequired,
-    predicate: PropTypes.object,
-    commitChangeLabel: PropTypes.func.isRequired,
-    getLabel: PropTypes.func.isRequired,
-    schema: PropTypes.object,
-    getDataType: PropTypes.func,
-    draftLabel: PropTypes.string.isRequired,
-    draftDataType: PropTypes.string.isRequired,
-    setDraftLabel: PropTypes.func,
-    setDraftDataType: PropTypes.func,
-    valueClass: PropTypes.object,
-    isInlineResource: PropTypes.bool
+    getLabel: PropTypes.func.isRequired
 };

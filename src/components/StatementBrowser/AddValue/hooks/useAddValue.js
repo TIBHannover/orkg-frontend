@@ -13,47 +13,22 @@ import { fillStatements } from 'actions/addPaper';
 import { createLiteral } from 'services/backend/literals';
 import { createPredicate } from 'services/backend/predicates';
 import { createResource } from 'services/backend/resources';
-import validationSchema from '../helpers/validationSchema';
 import { getConfigByType } from 'constants/DataTypes';
 import { useDispatch, useSelector } from 'react-redux';
 import { guid } from 'utils';
-import { ENTITIES, CLASSES, MISC } from 'constants/graphSettings';
+import { ENTITIES, MISC } from 'constants/graphSettings';
 
 const useAddValue = ({ resourceId, propertyId, syncBackend }) => {
     const dispatch = useDispatch();
     const property = useSelector(state => state.statementBrowser.properties.byId[propertyId]);
     const valueClass = useSelector(state => getValueClass(getComponentsByResourceIDAndPredicateID(state, resourceId, property?.existingPredicateId)));
     const isLiteralField = useSelector(state => isLiteral(getComponentsByResourceIDAndPredicateID(state, resourceId, property?.existingPredicateId)));
-    const isUniqLabel = valueClass && valueClass.id === CLASSES.PROBLEM ? true : false;
     const openExistingResourcesInDialog = useSelector(state => state.statementBrowser.openExistingResourcesInDialog);
     const [modal, setModal] = useState(false);
     const [dialogResourceId, setDialogResourceId] = useState(null);
     const [dialogResourceLabel, setDialogResourceLabel] = useState(null);
     const [entityType, setEntityType] = useState(getConfigByType(isLiteralField ? MISC.DEFAULT_LITERAL_DATATYPE : ENTITIES.RESOURCE)._class);
-    const [inputValue, setInputValue] = useState('');
-    const [inputDataType, setInputDataType] = useState(getConfigByType(isLiteralField ? MISC.DEFAULT_LITERAL_DATATYPE : ENTITIES.RESOURCE).type);
-
-    const schema = useSelector(state => {
-        const components = getComponentsByResourceIDAndPredicateID(state, resourceId, property?.existingPredicateId);
-        if (valueClass && ['Date', 'Number', 'String', 'Boolean', 'Integer', 'URI'].includes(valueClass.id)) {
-            let component;
-            if (components && components.length > 0) {
-                component = components[0];
-            }
-            if (!component) {
-                component = {
-                    value: valueClass,
-                    property: { id: property.id, label: property.label },
-                    validationRules: property.validationRules
-                };
-            }
-            const schema = validationSchema(component);
-            return schema;
-        } else {
-            const config = getConfigByType(inputDataType);
-            return config.schema;
-        }
-    });
+    const [, setInputValue] = useState('');
 
     if (valueClass) {
         dispatch(fetchTemplatesOfClassIfNeeded(valueClass.id));
@@ -78,50 +53,6 @@ const useAddValue = ({ resourceId, propertyId, syncBackend }) => {
             return false;
         }
     });
-
-    const newResources = useSelector(state => {
-        const newResourcesList = [];
-
-        for (const key in state.statementBrowser.resources.byId) {
-            const resource = state.statementBrowser.resources.byId[key];
-
-            if (!resource.existingResourceId && resource.label && resource.id) {
-                newResourcesList.push({
-                    id: resource.id,
-                    label: resource.label,
-                    ...(resource.shared ? { shared: resource.shared } : {}),
-                    ...(resource.classes ? { classes: resource.classes } : {})
-                });
-            }
-        }
-        return newResourcesList;
-    });
-
-    /**
-     * Get the correct xsd datatype if it's literal
-     */
-    const getDataType = () => {
-        if (valueClass && entityType === 'literal') {
-            switch (valueClass.id) {
-                case 'String':
-                    return MISC.DEFAULT_LITERAL_DATATYPE;
-                case 'Number':
-                    return 'xsd:decimal';
-                case 'Integer':
-                    return 'xsd:integer';
-                case 'Date':
-                    return 'xsd:date';
-                case 'Boolean':
-                    return 'xsd:boolean';
-                case 'URI':
-                    return 'xsd:anyURI';
-                default:
-                    return MISC.DEFAULT_LITERAL_DATATYPE;
-            }
-        } else {
-            return getConfigByType(inputDataType).type;
-        }
-    };
 
     /**
      * Create statements for a resource starting from an array of statements
@@ -239,21 +170,9 @@ const useAddValue = ({ resourceId, propertyId, syncBackend }) => {
     return {
         modal,
         setModal,
-        property,
-        valueClass,
-        isLiteralField,
         isBlankNode,
-        isUniqLabel,
-        inputDataType,
-        inputValue,
         entityType,
-        schema,
-        getDataType,
-        setInputDataType,
-        setEntityType,
         setInputValue,
-        handleAddValue,
-        newResources,
         dialogResourceId,
         dialogResourceLabel,
         createBlankNode

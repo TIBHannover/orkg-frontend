@@ -20,7 +20,7 @@ const InfoTippy = props => {
             content={
                 <div className="p-1">
                     <ul className="p-0 mb-0" style={{ listStyle: 'none' }}>
-                        <li className="mb-1">Node id: {value.id}</li>
+                        {value.id && <li className="mb-1">Node id: {value.id}</li>}
                         <li className="mb-1">Node type: {capitalize(value._class)}</li>
                         {value.classes?.length > 0 && (
                             <li className="mb-1">
@@ -41,14 +41,16 @@ const InfoTippy = props => {
                                 <Icon icon={faClock} /> {moment(value.created_at).fromNow()}
                             </span>
                         </li>
-                        <li>
-                            Created by:{' '}
-                            {value.created_by !== MISC.UNKNOWN_ID ? (
-                                <UserAvatar linkTarget="_blank" size={18} showDisplayName={true} userId={value.created_by} />
-                            ) : (
-                                'Unknown'
-                            )}
-                        </li>
+                        {value.created_by && (
+                            <li>
+                                Created by:{' '}
+                                {value.created_by !== MISC.UNKNOWN_ID ? (
+                                    <UserAvatar linkTarget="_blank" size={18} showDisplayName={true} userId={value.created_by} />
+                                ) : (
+                                    'Unknown'
+                                )}
+                            </li>
+                        )}
                     </ul>
                 </div>
             }
