@@ -87,7 +87,12 @@ const ValueItemOptions = ({ id, enableEdit, syncBackend, handleOnClick }) => {
                     )}
 
                     {resource && resource.existingResourceId && value.shared > 1 && (
-                        <StatementActionButton title="A shared resource cannot be edited directly" icon={faPen} action={() => null} />
+                        <StatementActionButton
+                            isDisabled={true}
+                            title="A shared resource cannot be edited directly"
+                            icon={faPen}
+                            action={() => null}
+                        />
                     )}
 
                     <StatementActionButton
