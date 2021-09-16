@@ -34,7 +34,7 @@ const TemplateDetailsTooltip = ({ template, isTemplateLoading, source }) => {
 TemplateDetailsTooltip.propTypes = {
     source: PropTypes.object.isRequired,
     template: PropTypes.object.isRequired,
-    isTemplateLoading: PropTypes.object.isRequired
+    isTemplateLoading: PropTypes.bool.isRequired
 };
 
 export default TemplateDetailsTooltip;
