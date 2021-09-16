@@ -1,7 +1,9 @@
 import * as type from './types.js';
 import { createResource, fetchStatementsForResource, selectResource } from './statementBrowser';
 
-export const selectContribution = ({ contributionId: id, contributionIsLoaded, contributionLabel }) => dispatch => {
+export const selectContribution = ({ contributionId: id, contributionLabel }) => (dispatch, getState) => {
+    const contributionIsLoaded = !!getState().statementBrowser.resources.byId[id];
+
     if (!contributionIsLoaded) {
         //let resourceId = guid(); //use this as ID in the future, when changing the data is possible
 
@@ -77,6 +79,13 @@ export const selectContribution = ({ contributionId: id, contributionIsLoaded, c
 export const loadPaper = payload => dispatch => {
     dispatch({
         type: type.LOAD_PAPER,
+        payload
+    });
+};
+
+export const setPaperContributions = payload => dispatch => {
+    dispatch({
+        type: type.SET_PAPER_CONTRIBUTIONS,
         payload
     });
 };

@@ -1,8 +1,8 @@
-import { Container, Alert, UncontrolledAlert } from 'reactstrap';
+import { Container, UncontrolledAlert } from 'reactstrap';
 import NotFound from 'pages/NotFound';
 import ContentLoader from 'react-content-loader';
 import { useParams, useLocation } from 'react-router-dom';
-import Contributions from 'components/ViewPaper/Contributions';
+import Contributions from 'components/ViewPaper/Contirbutions/Contributions';
 import useViewPaper from 'components/ViewPaper/hooks/useViewPaper';
 import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
 import PaperHeader from 'components/ViewPaper/PaperHeader';
@@ -36,7 +36,7 @@ export const Title = styled.div`
 `;
 
 const ViewPaper = () => {
-    const { resourceId, contributionId } = useParams();
+    const { resourceId } = useParams();
     const location = useLocation();
     const viewPaper = useSelector(state => state.viewPaper);
     const paperLink = useSelector(state =>
@@ -52,20 +52,13 @@ const ViewPaper = () => {
         isLoadingFailed,
         showHeaderBar,
         editMode,
+        showGraphModal,
         toggle,
         handleShowHeaderBar,
-        isLoadingContributionFailed,
-        selectedContribution,
-        contributions,
-        handleChangeContributionLabel,
         setEditMode,
-        handleCreateContribution,
-        toggleDeleteContribution,
-        setShowGraphModal,
-        showGraphModal
+        setShowGraphModal
     } = useViewPaper({
-        paperId: resourceId,
-        contributionId
+        paperId: resourceId
     });
 
     let comingFromWizard = queryString.parse(location.search);
@@ -117,7 +110,7 @@ const ViewPaper = () => {
                         className={`box pt-md-4 pb-md-4 pl-md-5 pr-md-5 pt-sm-2 pb-sm-2 pl-sm-2 pr-sm-2 clearfix position-relative 
                                 ${editMode ? 'rounded-bottom' : 'rounded'}`}
                     >
-                        <ShareLinkMarker typeOfLink="paper" title={viewPaper.paperResource.label} />
+                        {!isLoading && <ShareLinkMarker typeOfLink="paper" title={viewPaper.paperResource.label} />}
 
                         {isLoading && (
                             <ContentLoader
@@ -150,29 +143,13 @@ const ViewPaper = () => {
                                 <PaperHeader editMode={editMode} />
                             </>
                         )}
-                        {!isLoadingFailed && !isLoadingContributionFailed && (
+                        {!isLoading && (
                             <>
                                 <hr className="mt-3" />
 
-                                <Contributions
-                                    selectedContribution={selectedContribution}
-                                    contributions={contributions}
-                                    paperId={resourceId}
-                                    paperTitle={viewPaper.paperResource.label}
-                                    enableEdit={editMode}
-                                    toggleEditMode={() => setEditMode(v => !v)}
-                                    handleChangeContributionLabel={handleChangeContributionLabel}
-                                    handleCreateContribution={handleCreateContribution}
-                                    toggleDeleteContribution={toggleDeleteContribution}
-                                />
+                                <Contributions enableEdit={editMode} toggleEditMode={() => setEditMode(v => !v)} />
 
                                 <ComparisonPopup />
-                            </>
-                        )}
-                        {!isLoadingFailed && isLoadingContributionFailed && (
-                            <>
-                                <hr className="mt-4 mb-5" />
-                                <Alert color="danger">Failed to load contributions.</Alert>
                             </>
                         )}
                     </Container>

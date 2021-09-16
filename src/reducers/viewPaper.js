@@ -42,6 +42,11 @@ export default (state = initialState, action) => {
             };
         }
 
+        case type.SET_PAPER_CONTRIBUTIONS: {
+            const { payload } = action;
+            return dotProp.set(state, 'contributions', payload);
+        }
+
         case type.SET_RESEARCH_PROBLEMS: {
             const { payload } = action;
 

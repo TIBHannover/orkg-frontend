@@ -27,7 +27,7 @@ const useAddValue = ({ resourceId, propertyId, syncBackend }) => {
     const [modal, setModal] = useState(false);
     const [dialogResourceId, setDialogResourceId] = useState(null);
     const [dialogResourceLabel, setDialogResourceLabel] = useState(null);
-    const [entityType, setEntityType] = useState(getConfigByType(isLiteralField ? MISC.DEFAULT_LITERAL_DATATYPE : ENTITIES.RESOURCE)._class);
+    const [entityType] = useState(getConfigByType(isLiteralField ? MISC.DEFAULT_LITERAL_DATATYPE : ENTITIES.RESOURCE)._class);
     const [, setInputValue] = useState('');
 
     if (valueClass) {
