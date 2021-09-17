@@ -45,7 +45,7 @@ export default function StatementItemTemplate(props) {
                                         isDisabled={!canDeleteProperty}
                                         title={
                                             canDeleteProperty
-                                                ? 'Edit property'
+                                                ? 'Change property'
                                                 : "This property can not be changes because it's required by the template"
                                         }
                                         icon={faPen}
