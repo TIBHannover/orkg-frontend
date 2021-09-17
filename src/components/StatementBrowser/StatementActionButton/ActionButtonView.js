@@ -19,10 +19,6 @@ const handleIconWrapperSize = wrappersize => {
 };
 
 export const OptionButtonStyled = styled.span`
-    :first-of-type {
-        margin-left: 0 !important;
-    }
-
     .btn {
         display: inline-block;
         border-radius: 100%;
