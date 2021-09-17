@@ -35,7 +35,6 @@ const StatementActionButton = props => {
         }
     };
 
-    /* Tippy doesn't work when reference element is disabled, so adding span around tippyChildren fixes it  */
     const tippyChildren = (
         <ActionButtonView title={props.title} icon={props.icon} action={handleClick} isDisabled={props.isDisabled} size={props.iconSize} />
     );
@@ -65,7 +64,7 @@ const StatementActionButton = props => {
     ) : (
         <>
             <Tippy hideOnClick={false} interactive={false} trigger="mouseenter" content={props.title}>
-                <span tabIndex="0">{tippyChildren}</span>
+                {tippyChildren}
             </Tippy>
         </>
     );
