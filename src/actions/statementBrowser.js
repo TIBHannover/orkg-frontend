@@ -17,6 +17,16 @@ export const updateSettings = data => dispatch => {
     });
 };
 
+export const setIsHelpModalOpen = data => dispatch => {
+    dispatch({
+        type: type.SET_IS_HELP_MODAL_OPEN,
+        payload: {
+            articleId: data.articleId,
+            isOpen: data.isOpen
+        }
+    });
+};
+
 /**
  * Initialize the statement browser without contribution
  * (e.g : new store to show resource in dialog)

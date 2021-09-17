@@ -12,6 +12,8 @@ const initialState = {
     openExistingResourcesInDialog: false,
     propertiesAsLinks: false, // if false the link appears in black font color and opens in a new window
     resourcesAsLinks: false,
+    isHelpModalOpen: false,
+    helpCenterArticleId: null,
     initOnLocationChange: true,
     keyToKeepStateOnLocationChange: null,
     resources: {
@@ -40,6 +42,12 @@ const initialState = {
 // eslint-disable-next-line import/no-anonymous-default-export
 export default (state = initialState, action) => {
     switch (action.type) {
+        case type.SET_IS_HELP_MODAL_OPEN: {
+            const { payload } = action;
+            const newState = dotProp.set(state, `isHelpModalOpen`, payload.isOpen);
+            return dotProp.set(newState, `helpCenterArticleId`, payload.articleId);
+        }
+
         case type.CREATE_RESOURCE: {
             const { payload } = action;
 

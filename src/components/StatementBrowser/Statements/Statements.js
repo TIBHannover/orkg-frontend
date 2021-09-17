@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { ListGroup, Button } from 'reactstrap';
 import AddProperty from 'components/StatementBrowser/AddProperty/AddProperty';
 import Breadcrumbs from 'components/StatementBrowser/Breadcrumbs/Breadcrumbs';
@@ -12,7 +12,13 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
-import { getSuggestedProperties, initializeWithoutContribution, initializeWithResource, updateSettings } from 'actions/statementBrowser';
+import {
+    setIsHelpModalOpen,
+    getSuggestedProperties,
+    initializeWithoutContribution,
+    initializeWithResource,
+    updateSettings
+} from 'actions/statementBrowser';
 import { ENTITIES } from 'constants/graphSettings';
 
 const Statements = props => {
@@ -21,7 +27,6 @@ const Statements = props => {
     const suggestedProperties = useSelector(state => getSuggestedProperties(state, selectedResource));
     const resource = useSelector(state => selectedResource && state.statementBrowser.resources.byId[selectedResource]);
     const dispatch = useDispatch();
-    const [helpModalOpen, setHelpModalOpen] = useState(false);
 
     useEffect(() => {
         if (props.initialSubjectId) {
@@ -137,7 +142,7 @@ const Statements = props => {
             {props.enableEdit && (
                 <div className="clearfix mb-3">
                     <span className="ml-3 float-right">
-                        <Button outline color="secondary" size="sm" onClick={() => setHelpModalOpen(v => !v)}>
+                        <Button outline color="secondary" size="sm" onClick={() => dispatch(setIsHelpModalOpen({ isOpen: true }))}>
                             <Icon className="mr-1" icon={faQuestionCircle} /> Help
                         </Button>
                     </span>
@@ -146,7 +151,7 @@ const Statements = props => {
 
             {level !== 0 && <Breadcrumbs />}
 
-            <SBEditorHelpModal isOpen={helpModalOpen} toggle={() => setHelpModalOpen(v => !v)} />
+            <SBEditorHelpModal />
             {elements}
         </>
     );

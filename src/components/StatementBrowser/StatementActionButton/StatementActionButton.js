@@ -63,7 +63,7 @@ const StatementActionButton = props => {
         </Tippy>
     ) : (
         <>
-            <Tippy hideOnClick={false} interactive={false} trigger="mouseenter" content={props.title}>
+            <Tippy hideOnClick={false} interactive={props.interactive} trigger="mouseenter" content={props.title}>
                 {tippyChildren}
             </Tippy>
         </>
@@ -71,7 +71,7 @@ const StatementActionButton = props => {
 };
 
 StatementActionButton.propTypes = {
-    title: PropTypes.string.isRequired,
+    title: PropTypes.oneOfType([PropTypes.object, PropTypes.string]).isRequired,
     icon: PropTypes.object.isRequired,
     iconSize: PropTypes.oneOf(['xs', 'sm', 'lg']),
     action: PropTypes.func,
@@ -80,6 +80,7 @@ StatementActionButton.propTypes = {
     onVisibilityChange: PropTypes.func,
     requireConfirmation: PropTypes.bool,
     confirmationMessage: PropTypes.string,
+    interactive: PropTypes.bool,
     confirmationButtons: PropTypes.arrayOf(
         PropTypes.shape({
             title: PropTypes.string.isRequired,
@@ -92,6 +93,7 @@ StatementActionButton.propTypes = {
 
 StatementActionButton.defaultProps = {
     requireConfirmation: false,
+    interactive: false,
     appendTo: 'parent',
     action: () => {}
 };

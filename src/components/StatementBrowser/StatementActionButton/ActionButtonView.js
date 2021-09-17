@@ -1,6 +1,7 @@
 import { forwardRef } from 'react';
 import { Button } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { isString } from 'lodash';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
@@ -51,7 +52,14 @@ export const OptionButtonStyled = styled.span`
 const ActionButtonView = forwardRef((props, ref) => {
     return (
         <OptionButtonStyled ref={ref} tabIndex="0" className="mx-1">
-            <Button className="p-0" wrappersize={props.size} disabled={props.isDisabled} color="link" onClick={props.action} aria-label={props.title}>
+            <Button
+                className="p-0"
+                wrappersize={props.size}
+                disabled={props.isDisabled}
+                color="link"
+                onClick={props.action}
+                aria-label={isString(props.title) ? props.title : props.title.toString()}
+            >
                 <span className="icon-wrapper">
                     <Icon size={props.size} icon={props.icon} />
                 </span>
@@ -61,7 +69,7 @@ const ActionButtonView = forwardRef((props, ref) => {
 });
 
 ActionButtonView.propTypes = {
-    title: PropTypes.string.isRequired,
+    title: PropTypes.oneOfType([PropTypes.object, PropTypes.string]).isRequired,
     icon: PropTypes.object.isRequired,
     size: PropTypes.oneOf(['xs', 'sm', 'lg']).isRequired,
     action: PropTypes.func,

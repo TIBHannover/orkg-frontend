@@ -1,12 +1,22 @@
 import { useState } from 'react';
+import { Button } from 'reactstrap';
 import { toggleEditValue } from 'actions/statementBrowser';
-import { selectResource, fetchStatementsForResource, deleteValue, createResource, isValueHasFormattedLabel } from 'actions/statementBrowser';
-import { faTrash, faPen, faTable, faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
+import {
+    setIsHelpModalOpen,
+    selectResource,
+    fetchStatementsForResource,
+    deleteValue,
+    createResource,
+    isValueHasFormattedLabel
+} from 'actions/statementBrowser';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { faTrash, faPen, faTable, faCheck, faTimes, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import StatementActionButton from 'components/StatementBrowser/StatementActionButton/StatementActionButton';
 import { deleteStatementById } from 'services/backend/statements';
 import { useDispatch, useSelector } from 'react-redux';
 import { CLASSES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
+import HELP_CENTER_ARTICLES from 'constants/helpCenterArticles';
 import RDFDataCube from 'components/RDFDataCube/RDFDataCube';
 import { toast } from 'react-toastify';
 import InfoTippy from './InfoTippy';
@@ -72,8 +82,19 @@ const ValueItemOptions = ({ id, enableEdit, syncBackend, handleOnClick }) => {
 
     return (
         <div className="valueOptions">
-            {!value.isEditing && value.classes && value.classes.includes(CLASSES.QB_DATASET_CLASS) && (
-                <StatementActionButton title="Visualize data in tabular form" icon={faTable} action={handleDatasetClick} />
+            {value.classes?.includes(CLASSES.QB_DATASET_CLASS) && (
+                <>
+                    {modalDataset && (
+                        <RDFDataCube
+                            show={modalDataset}
+                            handleResourceClick={handleDatasetResourceClick}
+                            toggleModal={() => setModalDataset(prev => !prev)}
+                            resourceId={dialogResourceId}
+                            resourceLabel={dialogResourceLabel}
+                        />
+                    )}
+                    <StatementActionButton title="Visualize data in tabular form" icon={faTable} action={handleDatasetClick} />
+                </>
             )}
 
             {enableEdit && (
@@ -86,10 +107,24 @@ const ValueItemOptions = ({ id, enableEdit, syncBackend, handleOnClick }) => {
                         />
                     )}
 
-                    {resource && resource.existingResourceId && value.shared > 1 && (
+                    {resource?.existingResourceId && value.shared > 1 && (
                         <StatementActionButton
                             isDisabled={true}
-                            title="A shared resource cannot be edited directly"
+                            interactive={true}
+                            title={
+                                <>
+                                    A shared resource cannot be edited directly{' '}
+                                    <Button
+                                        color="link"
+                                        className="p-0"
+                                        onClick={() =>
+                                            dispatch(setIsHelpModalOpen({ isOpen: true, articleId: HELP_CENTER_ARTICLES.RESOURCE_SHARED }))
+                                        }
+                                    >
+                                        <Icon icon={faQuestionCircle} />
+                                    </Button>
+                                </>
+                            }
                             icon={faPen}
                             action={() => null}
                         />
@@ -116,17 +151,8 @@ const ValueItemOptions = ({ id, enableEdit, syncBackend, handleOnClick }) => {
                         ]}
                     />
 
-                    {resource && <InfoTippy id={id} />}
+                    <InfoTippy id={id} />
                 </>
-            )}
-            {modalDataset && (
-                <RDFDataCube
-                    show={modalDataset}
-                    handleResourceClick={handleDatasetResourceClick}
-                    toggleModal={() => setModalDataset(prev => !prev)}
-                    resourceId={dialogResourceId}
-                    resourceLabel={dialogResourceLabel}
-                />
             )}
         </div>
     );
