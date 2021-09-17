@@ -12,6 +12,7 @@ const initialState = {
     openExistingResourcesInDialog: false,
     propertiesAsLinks: false, // if false the link appears in black font color and opens in a new window
     resourcesAsLinks: false,
+    isTemplatesModalOpen: false,
     isHelpModalOpen: false,
     helpCenterArticleId: null,
     initOnLocationChange: true,
@@ -46,6 +47,11 @@ export default (state = initialState, action) => {
             const { payload } = action;
             const newState = dotProp.set(state, `isHelpModalOpen`, payload.isOpen);
             return dotProp.set(newState, `helpCenterArticleId`, payload.articleId);
+        }
+
+        case type.SET_IS_TEMPLATES_MODAL_OPEN: {
+            const { payload } = action;
+            return dotProp.set(state, `isTemplatesModalOpen`, payload.isOpen);
         }
 
         case type.CREATE_RESOURCE: {

@@ -27,6 +27,15 @@ export const setIsHelpModalOpen = data => dispatch => {
     });
 };
 
+export const setIsTemplateModalOpen = data => dispatch => {
+    dispatch({
+        type: type.SET_IS_TEMPLATES_MODAL_OPEN,
+        payload: {
+            isOpen: data.isOpen
+        }
+    });
+};
+
 /**
  * Initialize the statement browser without contribution
  * (e.g : new store to show resource in dialog)

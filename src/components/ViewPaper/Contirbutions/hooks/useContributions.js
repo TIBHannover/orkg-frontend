@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { createResourceStatement, deleteStatementById } from 'services/backend/statements';
 import { updateResource, createResource } from 'services/backend/resources';
-import { getResearchProblemsOfContribution } from 'actions/statementBrowser';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { updateContributionLabel } from 'actions/statementBrowser';
@@ -27,27 +26,6 @@ const useContributions = ({ paperId, contributionId }) => {
             ? state.viewPaper.researchProblems[selectedContribution]
             : []
     );
-    const researchProblemsIds = useSelector(state => {
-        // All the research problem ids (concatenation of the research problem input field and the statement browser)
-        return [
-            ...getResearchProblemsOfContribution(
-                state,
-                state.addPaper.contributions.byId[selectedContribution] ? state.addPaper.contributions.byId[selectedContribution].resourceId : []
-            ),
-            ...(researchProblems.length > 0 ? researchProblems.map(c => c.id) : [])
-        ];
-    });
-
-    const selectedResource = useSelector(state => state.statementBrowser.selectedResource);
-    const resourceObj = useSelector(state => state.statementBrowser.resources.byId[selectedResource ? selectedResource : selectedContribution]);
-    const researchField = useSelector(state => state.viewPaper.researchField);
-
-    let shared = 1;
-    if (resourceObj) {
-        shared = resourceObj.shared;
-    } else {
-        shared = 0;
-    }
 
     const [isLoading, setIsLoading] = useState(true);
     const [isLoadingContributionFailed, setLoadingContributionFailed] = useState(false);
@@ -213,13 +191,9 @@ const useContributions = ({ paperId, contributionId }) => {
         isSimilarContributionsFailedLoading,
         similarContributions,
         selectedContribution,
-        selectedResource,
-        paperTitle: paperResource.label,
-        researchProblemsIds,
-        researchField,
         contributions,
         researchProblems,
-        shared,
+        paperTitle: paperResource.label,
         handleChangeContributionLabel,
         handleCreateContribution,
         toggleDeleteContribution,

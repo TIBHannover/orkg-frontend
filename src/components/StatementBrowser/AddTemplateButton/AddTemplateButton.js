@@ -95,7 +95,7 @@ AddTemplateButton.propTypes = {
     resourceId: PropTypes.string, // The resource to prefill with the template
     label: PropTypes.string.isRequired,
     id: PropTypes.string.isRequired,
-    source: PropTypes.object.isRequired,
+    source: PropTypes.object,
     syncBackend: PropTypes.bool.isRequired
 };
 

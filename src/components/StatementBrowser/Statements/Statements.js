@@ -4,22 +4,25 @@ import AddProperty from 'components/StatementBrowser/AddProperty/AddProperty';
 import Breadcrumbs from 'components/StatementBrowser/Breadcrumbs/Breadcrumbs';
 import PropertySuggestions from 'components/StatementBrowser/PropertySuggestions/PropertySuggestions';
 import SBEditorHelpModal from 'components/StatementBrowser/SBEditorHelpModal/SBEditorHelpModal';
+import TemplatesModal from 'components/StatementBrowser/TemplatesModal/TemplatesModal';
+import Tippy from '@tippyjs/react';
 import StatementItemWrapper from 'components/StatementBrowser/StatementItem/StatementItemWrapper';
 import NoData from 'components/StatementBrowser/NoData/NoData';
 import { StyledLevelBox, StyledStatementItem } from 'components/StatementBrowser/styled';
 import { isArray } from 'lodash';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faSpinner, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
+import { faSpinner, faQuestionCircle, faPuzzlePiece } from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import {
     setIsHelpModalOpen,
+    setIsTemplateModalOpen,
     getSuggestedProperties,
     initializeWithoutContribution,
     initializeWithResource,
     updateSettings
 } from 'actions/statementBrowser';
-import { ENTITIES } from 'constants/graphSettings';
+import { CLASSES, ENTITIES } from 'constants/graphSettings';
 
 const Statements = props => {
     const selectedResource = useSelector(state => state.statementBrowser.selectedResource);
@@ -140,18 +143,45 @@ const Statements = props => {
     return (
         <>
             {props.enableEdit && (
-                <div className="clearfix mb-3">
-                    <span className="ml-3 float-right">
-                        <Button outline color="secondary" size="sm" onClick={() => dispatch(setIsHelpModalOpen({ isOpen: true }))}>
-                            <Icon className="mr-1" icon={faQuestionCircle} /> Help
-                        </Button>
-                    </span>
-                </div>
+                <>
+                    <div className="clearfix mb-3">
+                        <span className="ml-3 float-right">
+                            {/* We have custom templates for predicates and classes*/}
+                            {!resource?.classes?.some(c => [CLASSES.PREDICATE, CLASSES.CLASSES].includes(c)) && (
+                                <>
+                                    <Tippy content="Select a template to use it in your data">
+                                        <span>
+                                            <Button
+                                                outline
+                                                color="secondary"
+                                                size="sm"
+                                                onClick={() => dispatch(setIsTemplateModalOpen({ isOpen: true }))}
+                                            >
+                                                <Icon className="mr-1" icon={faPuzzlePiece} /> Templates
+                                            </Button>
+                                        </span>
+                                    </Tippy>
+                                    <TemplatesModal syncBackend={props.syncBackend} />
+                                </>
+                            )}
+                            <Button
+                                className="ml-2"
+                                outline
+                                color="secondary"
+                                size="sm"
+                                onClick={() => dispatch(setIsHelpModalOpen({ isOpen: true }))}
+                            >
+                                <Icon className="mr-1" icon={faQuestionCircle} /> Help
+                            </Button>
+                        </span>
+                    </div>
+                </>
             )}
 
             {level !== 0 && <Breadcrumbs />}
 
             <SBEditorHelpModal />
+
             {elements}
         </>
     );

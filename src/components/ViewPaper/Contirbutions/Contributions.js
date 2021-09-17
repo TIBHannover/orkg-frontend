@@ -18,7 +18,6 @@ import styled from 'styled-components';
 import { StyledHorizontalContributionsList, StyledHorizontalContribution, AddContribution } from 'components/AddPaper/Contributions/styled';
 import Tippy from '@tippyjs/react';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import SuggestedTemplates from 'components/StatementBrowser/SuggestedTemplates/SuggestedTemplates';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { CLASSES } from 'constants/graphSettings';
 import useContributions from './hooks/useContributions';
@@ -68,13 +67,9 @@ const Contributions = props => {
         isSimilarContributionsFailedLoading,
         similarContributions,
         selectedContribution,
-        selectedResource,
-        researchProblemsIds,
-        researchField,
         contributions,
         researchProblems,
         paperTitle,
-        shared,
         handleChangeContributionLabel,
         handleCreateContribution,
         toggleDeleteContribution,
@@ -141,15 +136,6 @@ const Contributions = props => {
                     <TransitionGroup className="col-md-9" exit={false}>
                         <AnimationContainer key={selectedContribution} classNames="fadeIn" timeout={{ enter: 500, exit: 0 }}>
                             <StyledHorizontalContribution>
-                                {!isLoading && props.enableEdit && (
-                                    <SuggestedTemplates
-                                        syncBackend={true}
-                                        selectedResource={selectedResource ? selectedResource : selectedContribution}
-                                        researchField={researchField?.id}
-                                        researchProblems={researchProblemsIds}
-                                        disabled={shared > 1 ? true : false}
-                                    />
-                                )}
                                 {!isLoading && !isLoadingContributionFailed && (
                                     <AddToComparison
                                         contributionId={selectedContribution}

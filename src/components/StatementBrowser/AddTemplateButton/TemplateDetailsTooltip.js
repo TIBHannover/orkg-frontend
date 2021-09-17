@@ -13,10 +13,24 @@ const TemplateDetailsTooltip = ({ template, isTemplateLoading, source }) => {
                             <i>{source.label}</i>
                         </div>
                     )}
+                    {template.class && (
+                        <div className="mb-1">
+                            <b>Target class:</b>
+                            <br />
+                            <i>{template.class?.label}</i>
+                        </div>
+                    )}
+                    {template.predicate && (
+                        <div className="mb-1">
+                            <b>Property:</b>
+                            <br />
+                            <i>{template.predicate?.label}</i>
+                        </div>
+                    )}
                     {template.components && template.components.length > 0 && (
                         <div>
                             <b>Properties: </b>
-                            <ul>
+                            <ul className="pl-3">
                                 {template.components &&
                                     template.components.length > 0 &&
                                     template.components.map(component => {
@@ -32,7 +46,7 @@ const TemplateDetailsTooltip = ({ template, isTemplateLoading, source }) => {
 };
 
 TemplateDetailsTooltip.propTypes = {
-    source: PropTypes.object.isRequired,
+    source: PropTypes.object,
     template: PropTypes.object.isRequired,
     isTemplateLoading: PropTypes.bool.isRequired
 };
