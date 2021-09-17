@@ -1,11 +1,16 @@
 import { useState, useEffect, useCallback } from 'react';
 import ContentLoader from 'react-content-loader';
+import { setIsHelpModalOpen } from 'actions/statementBrowser';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { getStatementsByObjectAndPredicate, getParentResearchFields } from 'services/backend/statements';
 import Tooltip from 'components/Utils/Tooltip';
 import AddTemplateButton from 'components/StatementBrowser/AddTemplateButton/AddTemplateButton';
+import HELP_CENTER_ARTICLES from 'constants/helpCenterArticles';
+import { useDispatch } from 'react-redux';
 import { flattenDepth, uniqBy } from 'lodash';
 import PropTypes from 'prop-types';
-import { FormGroup, Label, UncontrolledAlert } from 'reactstrap';
+import { FormGroup, Label, UncontrolledAlert, Button } from 'reactstrap';
 import { CLASSES, PREDICATES } from 'constants/graphSettings';
 
 export default function SuggestedTemplates(props) {
@@ -14,6 +19,8 @@ export default function SuggestedTemplates(props) {
     const [loadedProblems, setLoadedProblems] = useState([]);
     const [loadingFieldTemplates, setLoadingFieldTemplates] = useState({ isLoading: false, failed: false });
     const [loadingProblemTemplates, setLoadingProblemTemplates] = useState({ isLoading: false, failed: false });
+
+    const dispatch = useDispatch();
 
     /**
      * Fetch the templates of a resource
@@ -89,7 +96,18 @@ export default function SuggestedTemplates(props) {
     const loadingFailed = loadingFieldTemplates.failed && loadingProblemTemplates.failed;
 
     if (props.disabled) {
-        return <UncontrolledAlert color="info">A shared resource cannot be edited directly</UncontrolledAlert>;
+        return (
+            <UncontrolledAlert color="info">
+                A shared resource cannot be edited directly{' '}
+                <Button
+                    color="link"
+                    className="p-0"
+                    onClick={() => dispatch(setIsHelpModalOpen({ isOpen: true, articleId: HELP_CENTER_ARTICLES.RESOURCE_SHARED }))}
+                >
+                    <Icon icon={faQuestionCircle} />
+                </Button>
+            </UncontrolledAlert>
+        );
     }
 
     return (
