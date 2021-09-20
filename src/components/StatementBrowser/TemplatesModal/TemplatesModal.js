@@ -5,10 +5,12 @@ import PropTypes from 'prop-types';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faAngleDoubleDown, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import ContentLoader from 'react-content-loader';
+import Tippy, { useSingleton } from '@tippyjs/react';
 import AddTemplateButton from 'components/StatementBrowser/AddTemplateButton/AddTemplateButton';
 import useTemplates from './hooks/useTemplates';
 
 const TemplatesModal = props => {
+    const [source, target] = useSingleton();
     const isTemplatesModalOpen = useSelector(state => state.statementBrowser.isTemplatesModalOpen);
     const selectedResource = useSelector(state => state.statementBrowser.selectedResource);
     const resource = useSelector(state => selectedResource && state.statementBrowser.resources.byId[selectedResource]);
@@ -28,6 +30,7 @@ const TemplatesModal = props => {
         <Modal isOpen={isTemplatesModalOpen} toggle={() => dispatch(setIsTemplateModalOpen({ isOpen: !isTemplatesModalOpen }))} size="lg">
             <ModalHeader toggle={() => dispatch(setIsTemplateModalOpen({ isOpen: !isTemplatesModalOpen }))}>Select templates</ModalHeader>
             <ModalBody>
+                <Tippy ignoreAttributes={true} singleton={source} delay={500} />
                 <div className="clearfix">
                     <FormGroup>
                         <Label for="filterLabel">Template label</Label>
@@ -53,6 +56,7 @@ const TemplatesModal = props => {
                             <div>
                                 {templatesSuggestions.map(template => (
                                     <AddTemplateButton
+                                        tippyTarget={target}
                                         key={`t${template.id}`}
                                         id={template.id}
                                         label={template.label}

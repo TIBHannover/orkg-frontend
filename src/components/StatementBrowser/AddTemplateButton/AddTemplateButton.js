@@ -67,6 +67,8 @@ const AddTemplateButton = props => {
     return (
         <Tippy
             onTrigger={onTrigger}
+            interactive={true}
+            singleton={props.tippyTarget}
             content={<TemplateDetailsTooltip id={props.id} source={props.source} isTemplateLoading={isTemplateLoading} template={template} />}
         >
             <span>
@@ -96,7 +98,8 @@ AddTemplateButton.propTypes = {
     label: PropTypes.string.isRequired,
     id: PropTypes.string.isRequired,
     source: PropTypes.object,
-    syncBackend: PropTypes.bool.isRequired
+    syncBackend: PropTypes.bool.isRequired,
+    tippyTarget: PropTypes.object
 };
 
 AddTemplateButton.defaultProps = {
