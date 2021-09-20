@@ -48,7 +48,7 @@ const AddTemplateButton = props => {
                 syncBackend: props.syncBackend
             })
         ).then(() => {
-            ref.current.removeAttribute('disabled');
+            ref.current?.removeAttribute('disabled');
             setIsAdding(false);
         });
     }, [dispatch, props.id, props.resourceId, props.syncBackend]);
