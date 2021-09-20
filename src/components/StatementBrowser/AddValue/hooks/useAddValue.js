@@ -141,15 +141,7 @@ const useAddValue = ({ resourceId, propertyId, syncBackend }) => {
                 }
                 newStatement = await createResourceStatement(resourceId, property?.existingPredicateId, newEntity.id);
             }
-            //create statements
-            value.statements &&
-                dispatch(
-                    fillStatements({
-                        statements: generateStatementsFromExternalData(value.statements),
-                        resourceId: newEntity.id,
-                        syncBackend: syncBackend
-                    })
-                );
+
             dispatch(
                 createValue({
                     ...newEntity,
@@ -162,6 +154,15 @@ const useAddValue = ({ resourceId, propertyId, syncBackend }) => {
                     statementId: newStatement?.id
                 })
             );
+            //create statements
+            value.statements &&
+                dispatch(
+                    fillStatements({
+                        statements: generateStatementsFromExternalData(value.statements),
+                        resourceId: newEntity.id ?? existingResourceId,
+                        syncBackend: syncBackend
+                    })
+                );
             return newEntity.id ?? existingResourceId;
         },
         [dispatch, property?.existingPredicateId, propertyId, resourceId, syncBackend, valueClass]
