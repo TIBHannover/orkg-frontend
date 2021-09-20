@@ -64,7 +64,8 @@ export default (state = initialState, action) => {
                     existingResourceId: payload.existingResourceId ? payload.existingResourceId : null,
                     shared: payload.shared ? payload.shared : 1,
                     propertyIds: [],
-                    classes: payload.classes ? payload.classes : []
+                    classes: payload.classes ? payload.classes : [],
+                    _class: payload._class ? payload._class : ENTITIES.RESOURCE
                 }
             }));
 
@@ -326,7 +327,9 @@ export default (state = initialState, action) => {
 
         case type.UPDATE_RESOURCE_CLASSES: {
             const { payload } = action;
-            const newState = dotProp.set(state, `resources.byId.${payload.resourceId}.classes`, payload.classes);
+            const valueId = dotProp.get(state, `resources.byId.${payload.resourceId}.valueId`);
+            let newState = dotProp.set(state, `resources.byId.${payload.resourceId}.classes`, payload.classes);
+            newState = dotProp.set(newState, `values.byId.${valueId}.classes`, payload.classes);
             return newState;
         }
 

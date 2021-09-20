@@ -8,7 +8,7 @@ import { getEntity } from 'services/backend/misc';
 import { flatten, uniqBy } from 'lodash';
 import format from 'string-format';
 import { getTemplateById, getTemplatesByClass, getStatementsBundleBySubject } from 'services/backend/statements';
-import { createResource as createResourceApi } from 'services/backend/resources';
+import { createResource as createResourceApi, updateResourceClasses as updateResourceClassesApi } from 'services/backend/resources';
 
 export const updateSettings = data => dispatch => {
     dispatch({
@@ -65,7 +65,8 @@ export const initializeWithoutContribution = data => dispatch => {
             label: label,
             existingResourceId: resourceId,
             resourceId: resourceId,
-            classes: classes
+            classes: classes,
+            _class: data.rootNodeType
         })
     );
 
@@ -557,27 +558,20 @@ export const updatePropertyLabel = data => dispatch => {
  * @param {String=} data.resourceId - resource ID
  * @param {Array=} data.classes - Classes of value
  */
-export const updateResourceClasses = data => dispatch => {
-    dispatch({
-        type: type.UPDATE_RESOURCE_CLASSES,
-        payload: data
-    });
-    return Promise.resolve();
-};
-
-/**
- * Add class to resource
- *
- * @param {String} resourceId - resource ID
- * @param {String} classId - Classes ID
- */
-export const addResourceClass = ({ resourceId, classId }) => (dispatch, getState) => {
+export const updateResourceClasses = ({ resourceId, classes, syncBackend = false }) => (dispatch, getState) => {
     const resource = getState().statementBrowser.resources.byId[resourceId];
     if (resource) {
         dispatch({
             type: type.UPDATE_RESOURCE_CLASSES,
-            payload: { resourceId, classes: uniq([...resource.classes, classId]) }
+            payload: { resourceId, classes: uniq(classes) }
         });
+        // Fetch templates
+        const templatesOfClassesLoading = classes && classes?.map(classID => dispatch(fetchTemplatesOfClassIfNeeded(classID)));
+        // Add required properties
+        Promise.all(templatesOfClassesLoading).then(() => dispatch(createRequiredPropertiesInResource(resourceId)));
+        if (syncBackend) {
+            return updateResourceClassesApi(resourceId, uniq(classes));
+        }
     }
     return Promise.resolve();
 };
@@ -670,7 +664,8 @@ export const createResource = data => dispatch => {
             label: data.label,
             existingResourceId: data.existingResourceId,
             shared: data.shared ? data.shared : 1,
-            classes: data.classes ? data.classes : []
+            classes: data.classes ? data.classes : [],
+            _class: data._class ? data._class : ENTITIES.RESOURCE
         }
     });
 };
@@ -765,7 +760,13 @@ export function fillResourceWithTemplate({ templateID, resourceId, syncBackend =
                 // TODO : handle the case where the template isFetching
                 if (!template.predicate || template?.predicate.id === PREDICATES.HAS_CONTRIBUTION) {
                     // update the class of the current resource
-                    dispatch(addResourceClass({ resourceId, classId: template.class.id }));
+                    dispatch(
+                        updateResourceClasses({
+                            resourceId,
+                            classes: [...getState().statementBrowser.resources.byId[resourceId].classes, template.class.id],
+                            syncBackend: syncBackend
+                        })
+                    );
                     // Add properties
                     const statements = { properties: [], values: [] };
                     for (const component of template?.components) {
@@ -1083,7 +1084,7 @@ export const fetchStatementsForResource = ({ resourceId, isContribution = false,
                     };
                     let allClasses = mapEntitiesClasses[rootNodeType];
                     // set the resource classes (initialize doesn't set the classes)
-                    dispatch(updateResourceClasses({ resourceId, classes: allClasses }));
+                    dispatch(updateResourceClasses({ resourceId, classes: allClasses, syncBackend: false }));
                     // fetch the statements
                     return getStatementsBundleBySubject({ id: resourceId, maxLevel: depth }).then(response => {
                         let rootStatements = response.statements;

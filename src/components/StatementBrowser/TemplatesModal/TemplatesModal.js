@@ -92,6 +92,7 @@ const TemplatesModal = props => {
                             <div>
                                 {templates.map(template => (
                                     <AddTemplateButton
+                                        tippyTarget={target}
                                         key={`t${template.id}`}
                                         id={template.id}
                                         label={template.label}

@@ -23,6 +23,7 @@ import {
     updateSettings
 } from 'actions/statementBrowser';
 import { CLASSES, ENTITIES } from 'constants/graphSettings';
+import ClassesItem from 'components/StatementBrowser/ClassesItem/ClassesItem';
 
 const Statements = props => {
     const selectedResource = useSelector(state => state.statementBrowser.selectedResource);
@@ -89,9 +90,7 @@ const Statements = props => {
 
         return (
             <div>
-                {/*props.selectedResource && props.resources.byId[props.selectedResource].classes.length > 0 && (
-                    <div className="text-muted mb-2">Classes: {props.resources.byId[props.selectedResource].classes.join(',')}</div>
-                )*/}
+                <ClassesItem enableEdit={props.enableEdit} syncBackend={props.syncBackend} />
                 <ListGroup tag="div" className="listGroupEnlarge">
                     {selectedResource && !resource.isFetching ? (
                         propertyIds.length > 0 ? (
