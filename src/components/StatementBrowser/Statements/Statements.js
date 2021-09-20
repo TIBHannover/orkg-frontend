@@ -146,7 +146,7 @@ const Statements = props => {
                     <div className="clearfix mb-3">
                         <span className="ml-3 float-right">
                             {/* We have custom templates for predicates and classes*/}
-                            {!resource?.classes?.some(c => [CLASSES.PREDICATE, CLASSES.CLASSES].includes(c)) && (
+                            {resource._class === ENTITIES.RESOURCE && (
                                 <>
                                     <Tippy content="Select a template to use it in your data">
                                         <span>

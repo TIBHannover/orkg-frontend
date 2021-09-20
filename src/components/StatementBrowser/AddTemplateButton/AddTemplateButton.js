@@ -68,10 +68,9 @@ const AddTemplateButton = props => {
         <Tippy
             onTrigger={onTrigger}
             interactive={true}
-            singleton={props.tippyTarget}
             content={<TemplateDetailsTooltip id={props.id} source={props.source} isTemplateLoading={isTemplateLoading} template={template} />}
         >
-            <span>
+            <span tabIndex="0">
                 <Button
                     innerRef={ref}
                     onClick={() => {
