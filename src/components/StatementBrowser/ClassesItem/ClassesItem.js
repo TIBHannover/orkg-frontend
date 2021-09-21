@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import { getClassById } from 'services/backend/classes';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes.js';
-import { updateResourceClasses } from 'actions/statementBrowser';
+import { updateResourceClasses, removeEmptyPropertiesOfClass } from 'actions/statementBrowser';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import PropTypes from 'prop-types';
@@ -66,6 +66,10 @@ const ClassesItem = props => {
             } else {
                 return null;
             }
+        }
+        if (action.action === 'remove-value') {
+            // Remove the properties related to the template if they have no values
+            dispatch(removeEmptyPropertiesOfClass({ resourceId: selectedResource, classId: action.removedValue?.id }));
         }
         const newClasses = !selected ? [] : selected;
         setClasses(newClasses);

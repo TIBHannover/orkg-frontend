@@ -1,7 +1,7 @@
-import { CustomInput } from 'reactstrap';
+import { CustomInput, Button } from 'reactstrap';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
-import { updatePreferences } from 'actions/statementBrowser';
+import { updatePreferences, setIsPreferencesOpen } from 'actions/statementBrowser';
 import { Cookies } from 'react-cookie';
 import env from '@beam-australia/react-env';
 
@@ -59,6 +59,12 @@ export default function Preferences() {
                     onChange={settingsInputSwitched}
                     checked={preferences['showLiteralDataTypes']}
                 />
+            </div>
+
+            <div className="mt-3">
+                <Button size="sm" onClick={() => dispatch(setIsPreferencesOpen(false))}>
+                    Close
+                </Button>
             </div>
         </PreferencesStyle>
     );

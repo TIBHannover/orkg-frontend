@@ -208,6 +208,40 @@ export function getPropertyIdByByResourceAndPredicateId(state, resourceId, exist
 }
 
 /**
+ * Remove properties with no values of resource based on the template of a class
+ * (This should be called before removing the class from the source it self)
+ * @param {String} resourceId Resource ID
+ * @param {String} classId Class ID
+ */
+export function removeEmptyPropertiesOfClass({ resourceId, classId }) {
+    return (dispatch, getState) => {
+        const components = getComponentsByResourceID(getState(), resourceId, classId);
+        const existingPropertyIdsToRemove = components.map(mp => mp.property?.id).filter(p => p);
+        const resource = getState().statementBrowser.resources.byId[resourceId];
+        if (!resource) {
+            return [];
+        }
+        let propertyIds = resource.propertyIds;
+        if (propertyIds) {
+            propertyIds = resource.propertyIds ? resource.propertyIds : [];
+            for (const propertyId of propertyIds) {
+                const property = getState().statementBrowser.properties.byId[propertyId];
+                if (existingPropertyIdsToRemove.includes(property.existingPredicateId) && property.valueIds?.length === 0) {
+                    dispatch(
+                        deleteProperty({
+                            id: property.propertyId,
+                            resourceId: resourceId
+                        })
+                    );
+                }
+            }
+        } else {
+            return [];
+        }
+    };
+}
+
+/**
  * Create required properties based on the used template
  *
  * @param {String} resourceId Resource ID
@@ -317,7 +351,7 @@ export function getTemplateIDsByResourceID(state, resourceId) {
  * validationRules: Array
  * }[]} list of components
  */
-export function getComponentsByResourceID(state, resourceId) {
+export function getComponentsByResourceID(state, resourceId, classId = null) {
     if (!resourceId) {
         return [];
     }
@@ -333,7 +367,7 @@ export function getComponentsByResourceID(state, resourceId) {
     let components = [];
     for (const templateId of templateIds) {
         const template = state.statementBrowser.templates[templateId];
-        if (template && template.components) {
+        if (template && template.components && (!classId || classId === template.class?.id)) {
             components = components.concat(template.components);
         }
     }
