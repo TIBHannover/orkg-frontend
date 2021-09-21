@@ -238,6 +238,7 @@ const Contributions = props => {
                                                     templatesFound={false}
                                                     initOnLocationChange={false}
                                                     keyToKeepStateOnLocationChange={resourceId}
+                                                    renderTemplateBox={true}
                                                 />
                                             )}
                                         </FormGroup>

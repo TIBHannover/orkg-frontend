@@ -77,10 +77,10 @@ const ClassesItem = props => {
     return (
         <div>
             {selectedResource && resource._class === ENTITIES.RESOURCE && (
-                <ClassesStyle className="text-muted mb-3 d-flex align-items-center">
+                <ClassesStyle className="text-muted mb-3 d-flex align-items-center clearfix">
                     <Icon icon={faTags} className="mr-1" /> Classes:{' '}
                     {!editMode && !isLoading && (
-                        <div className="mx-1">
+                        <div className="mx-1" style={{ padding: '3.5px 0' }}>
                             {classes?.map((c, index) => (
                                 <Fragment key={c.id}>
                                     <Link target="_blank" to={reverse(ROUTES.CLASS, { id: c.id })}>
@@ -92,7 +92,11 @@ const ClassesItem = props => {
                             {classes?.length === 0 && <i>No classes</i>}
                         </div>
                     )}
-                    {isLoading && <i>Loading ...</i>}
+                    {!editMode && isLoading && (
+                        <div style={{ padding: '3.5px 0' }}>
+                            <i>Loading ...</i>
+                        </div>
+                    )}
                     {props.enableEdit && editMode && (
                         <div className="flex-grow-1 ml-1 ">
                             <InputGroup size="sm">
@@ -108,11 +112,11 @@ const ClassesItem = props => {
                                     autoLoadOption={true}
                                     openMenuOnFocus={true}
                                     allowCreate={true}
-                                    isClearable
                                     innerRef={classesAutocompleteRef}
                                     isMulti
                                     autoFocus={false}
                                     ols={true}
+                                    cssClasses="form-control-sm"
                                     inputId="classes-autocomplete"
                                 />
 
