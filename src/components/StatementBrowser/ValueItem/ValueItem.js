@@ -29,8 +29,7 @@ const ValueItem = props => {
     } = useValueItem({ valueId: props.id, propertyId: props.propertyId, syncBackend: props.syncBackend, contextStyle: props.contextStyle });
 
     const resourcesAsLinks = useSelector(state => state.statementBrowser.resourcesAsLinks);
-    const isCurationAllowed = useSelector(state => state.auth.user?.isCurationAllowed);
-
+    const preferences = useSelector(state => state.statementBrowser.preferences);
     const existingResourceId = resource ? resource.existingResourceId : false;
     let handleOnClick = null;
 
@@ -74,7 +73,7 @@ const ValueItem = props => {
                         {value._class === ENTITIES.LITERAL && (
                             <div className="literalLabel">
                                 <ValuePlugins type={ENTITIES.LITERAL}>{value.label !== '' ? value.label.toString() : <i>No label</i>}</ValuePlugins>
-                                {isCurationAllowed && (
+                                {preferences['showLiteralDataTypes'] && (
                                     <small>
                                         <Badge color="light" className="ml-2">
                                             {value.datatype}

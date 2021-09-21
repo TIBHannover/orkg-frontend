@@ -16,6 +16,7 @@ import InfoTippy from './InfoTippy';
 
 const ValueItemOptions = ({ id, enableEdit, syncBackend, handleOnClick }) => {
     const value = useSelector(state => state.statementBrowser.values.byId[id]);
+    const preferences = useSelector(state => state.statementBrowser.preferences);
     const resource = useSelector(state => state.statementBrowser.resources.byId[value.resourceId]);
     const hasFormattedLabel = useSelector(state => isValueHasFormattedLabel(state, id));
 
@@ -103,7 +104,7 @@ const ValueItemOptions = ({ id, enableEdit, syncBackend, handleOnClick }) => {
                             ]}
                         />
 
-                        <InfoTippy id={id} />
+                        {preferences['showStatementInfo'] && <InfoTippy id={id} />}
                     </>
                 )}
             </div>

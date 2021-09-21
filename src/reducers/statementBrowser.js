@@ -3,6 +3,14 @@ import dotProp from 'dot-prop-immutable';
 import { ENTITIES, MISC } from 'constants/graphSettings';
 import { match } from 'path-to-regexp';
 import ROUTES from 'constants/routes';
+import { Cookies } from 'react-cookie';
+
+const cookies = new Cookies();
+
+const getPreferenceFromCookies = p => {
+    const cookieName = `preferences.${p}`;
+    return cookies.get(cookieName) ? cookies.get(cookieName) === 'true' : undefined;
+};
 
 const initialState = {
     selectedResource: '',
@@ -17,6 +25,12 @@ const initialState = {
     helpCenterArticleId: null,
     initOnLocationChange: true,
     keyToKeepStateOnLocationChange: null,
+    isPreferencesOpen: false,
+    preferences: {
+        showClasses: getPreferenceFromCookies('showClasses') ?? false,
+        showStatementInfo: getPreferenceFromCookies('showStatementInfo') ?? true,
+        showLiteralDataTypes: getPreferenceFromCookies('showLiteralDataTypes') ?? false
+    },
     resources: {
         byId: {},
         allIds: []
@@ -52,6 +66,26 @@ export default (state = initialState, action) => {
         case type.SET_IS_TEMPLATES_MODAL_OPEN: {
             const { payload } = action;
             return dotProp.set(state, `isTemplatesModalOpen`, payload.isOpen);
+        }
+
+        case type.SET_IS_PREFERENCES_OPEN: {
+            const { payload } = action;
+            return dotProp.set(state, `isPreferencesOpen`, payload);
+        }
+
+        case type.UPDATE_PREFERENCES: {
+            const { payload } = action;
+
+            return {
+                ...state,
+                preferences: {
+                    showClasses: typeof payload.showClasses === 'boolean' ? payload.showClasses : state.preferences.showClasses,
+                    showStatementInfo:
+                        typeof payload.showStatementInfo === 'boolean' ? payload.showStatementInfo : state.preferences.showStatementInfo,
+                    showLiteralDataTypes:
+                        typeof payload.showLiteralDataTypes === 'boolean' ? payload.showLiteralDataTypes : state.preferences.showLiteralDataTypes
+                }
+            };
         }
 
         case type.CREATE_RESOURCE: {

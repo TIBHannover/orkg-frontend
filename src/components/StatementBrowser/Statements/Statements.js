@@ -11,22 +11,26 @@ import NoData from 'components/StatementBrowser/NoData/NoData';
 import { StyledLevelBox, StyledStatementItem } from 'components/StatementBrowser/styled';
 import { isArray } from 'lodash';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faSpinner, faQuestionCircle, faPuzzlePiece } from '@fortawesome/free-solid-svg-icons';
+import { faSpinner, faQuestionCircle, faPuzzlePiece, faCogs, faTimes } from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import {
     setIsHelpModalOpen,
     setIsTemplateModalOpen,
+    setIsPreferencesOpen,
     getSuggestedProperties,
     initializeWithoutContribution,
     initializeWithResource,
     updateSettings
 } from 'actions/statementBrowser';
-import { CLASSES, ENTITIES } from 'constants/graphSettings';
+import { ENTITIES } from 'constants/graphSettings';
 import ClassesItem from 'components/StatementBrowser/ClassesItem/ClassesItem';
+import Preferences from 'components/StatementBrowser/Preferences/Preferences';
 
 const Statements = props => {
     const selectedResource = useSelector(state => state.statementBrowser.selectedResource);
+    const isPreferencesOpen = useSelector(state => state.statementBrowser.isPreferencesOpen);
+    const preferences = useSelector(state => state.statementBrowser.preferences);
     const level = useSelector(state => state.statementBrowser.level);
     const suggestedProperties = useSelector(state => getSuggestedProperties(state, selectedResource));
     const resource = useSelector(state => selectedResource && state.statementBrowser.resources.byId[selectedResource]);
@@ -90,7 +94,7 @@ const Statements = props => {
 
         return (
             <div>
-                <ClassesItem enableEdit={props.enableEdit} syncBackend={props.syncBackend} />
+                {preferences['showClasses'] && <ClassesItem enableEdit={props.enableEdit} syncBackend={props.syncBackend} />}
                 <ListGroup tag="div" className="listGroupEnlarge">
                     {selectedResource && !resource.isFetching ? (
                         propertyIds.length > 0 ? (
@@ -172,16 +176,37 @@ const Statements = props => {
                             >
                                 <Icon className="mr-1" icon={faQuestionCircle} /> Help
                             </Button>
+                            <Tippy content={isPreferencesOpen ? 'Close preferences' : 'Preferences'}>
+                                <span>
+                                    <Button
+                                        className="ml-2 px-2"
+                                        outline
+                                        active={isPreferencesOpen}
+                                        color="secondary"
+                                        size="sm"
+                                        onClick={() => dispatch(setIsPreferencesOpen(!isPreferencesOpen))}
+                                    >
+                                        <Icon fixedWidth={true} className="mr-1" icon={!isPreferencesOpen ? faCogs : faTimes} />
+                                    </Button>
+                                </span>
+                            </Tippy>
                         </span>
                     </div>
                 </>
             )}
-
-            {level !== 0 && <Breadcrumbs />}
+            {(!isPreferencesOpen || !props.enableEdit) && (
+                <>
+                    {level !== 0 && <Breadcrumbs />}
+                    {elements}
+                </>
+            )}
+            {isPreferencesOpen && props.enableEdit && (
+                <>
+                    <Preferences />
+                </>
+            )}
 
             <SBEditorHelpModal />
-
-            {elements}
         </>
     );
 };

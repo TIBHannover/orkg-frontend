@@ -27,6 +27,20 @@ export const setIsHelpModalOpen = data => dispatch => {
     });
 };
 
+export const setIsPreferencesOpen = data => dispatch => {
+    dispatch({
+        type: type.SET_IS_PREFERENCES_OPEN,
+        payload: data
+    });
+};
+
+export const updatePreferences = data => dispatch => {
+    dispatch({
+        type: type.UPDATE_PREFERENCES,
+        payload: data
+    });
+};
+
 export const setIsTemplateModalOpen = data => dispatch => {
     dispatch({
         type: type.SET_IS_TEMPLATES_MODAL_OPEN,
