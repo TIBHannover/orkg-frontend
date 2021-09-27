@@ -1,13 +1,9 @@
-import { Badge } from 'reactstrap';
+import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faCalendar, faUser } from '@fortawesome/free-solid-svg-icons';
+import AuthorBadges from 'components/Badges/AuthorBadges/AuthorBadges';
 import ValuePlugins from 'components/ValuePlugins/ValuePlugins';
-import ROUTES from 'constants/routes.js';
-import { Link } from 'react-router-dom';
-import { reverse } from 'named-urls';
-import PropTypes from 'prop-types';
 import moment from 'moment';
-import { CLASSES } from 'constants/graphSettings';
+import PropTypes from 'prop-types';
 
 function ComparisonMetaData(props) {
     return (
@@ -30,23 +26,7 @@ function ComparisonMetaData(props) {
                             ''
                         )}
 
-                        {props.metaData.authors && props.metaData.authors.length > 0 && (
-                            <>
-                                {props.metaData.authors.map((author, index) =>
-                                    author?.classes?.includes(CLASSES.AUTHOR) ? (
-                                        <Link className="p-0" to={reverse(ROUTES.AUTHOR_PAGE, { authorId: author.id })} key={index}>
-                                            <Badge color="light" className="mr-2 mb-2">
-                                                <Icon icon={faUser} className="text-primary" /> {author.label}
-                                            </Badge>
-                                        </Link>
-                                    ) : (
-                                        <Badge color="light" className="mr-2 mb-2" key={index}>
-                                            <Icon icon={faUser} className="text-secondary" /> {author.label}
-                                        </Badge>
-                                    )
-                                )}
-                            </>
-                        )}
+                        {props.metaData.authors && props.metaData.authors.length > 0 && <AuthorBadges authors={props.metaData.authors} />}
                     </div>
                     {props.metaData.doi && (
                         <div>
