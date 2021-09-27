@@ -5,11 +5,11 @@ import { reverse } from 'named-urls';
 import dotProp from 'dot-prop-immutable';
 import PropTypes from 'prop-types';
 import ContentLoader from 'react-content-loader';
-import { getClassById } from 'services/backend/classes';
+import { getClassById, getClasses } from 'services/backend/classes';
 import { getResources, getResourcesByClass } from 'services/backend/resources';
 import { getPredicates } from 'services/backend/predicates';
 import ROUTES from 'constants/routes';
-import { PREDICATE_TYPE_ID, RESOURCE_TYPE_ID } from 'constants/misc';
+import { CLASS_TYPE_ID, PREDICATE_TYPE_ID, RESOURCE_TYPE_ID } from 'constants/misc';
 import Results from 'components/Search/Results';
 import Filters from 'components/Search/Filters';
 import { getArrayParamFromQueryString } from 'utils';
@@ -48,6 +48,11 @@ class Search extends Component {
                 label: 'Property',
                 labelPlural: 'Properties',
                 id: PREDICATE_TYPE_ID
+            },
+            {
+                label: 'Class',
+                labelPlural: 'Classes',
+                id: CLASS_TYPE_ID
             },
             {
                 label: 'Research Problem',
@@ -192,6 +197,15 @@ class Search extends Component {
                         .map(df => df.id)
                         .concat(this.ignoredClasses)
                         .join(','),
+                    returnContent: true
+                });
+            } else if (filterType === CLASS_TYPE_ID) {
+                results = await getClasses({
+                    page: this.state.currentPage[CLASS_TYPE_ID] || 0,
+                    items: this.itemsPerFilter,
+                    sortBy: 'id',
+                    desc: true,
+                    q: searchQuery,
                     returnContent: true
                 });
             } else {
