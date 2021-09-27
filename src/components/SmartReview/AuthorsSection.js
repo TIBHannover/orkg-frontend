@@ -1,7 +1,7 @@
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
-import AuthorsList from 'components/SmartReview/AuthorsList';
+import AuthorBadges from 'components/Badges/AuthorBadges/AuthorBadges';
 import AuthorsModal from 'components/SmartReview/AuthorsModal';
 import { SectionStyled, SectionTypeStyled } from 'components/SmartReview/styled';
 import React, { useState } from 'react';
@@ -19,7 +19,7 @@ const AuthorsSection = () => {
                     <span>authors</span>
                 </Tippy>
             </SectionTypeStyled>
-            <AuthorsList authors={authorResources} />
+            <AuthorBadges authors={authorResources} />
             <Button size="sm" color="secondary" className="ml-2" onClick={() => setShowModal(true)} aria-label="Edit article authors">
                 <Icon icon={faPen} /> Edit
             </Button>
