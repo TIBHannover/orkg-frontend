@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { faBars, faCalendar, faCheckCircle, faPen, faTrash, faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { loadPaper } from 'actions/viewPaper';
@@ -13,6 +14,7 @@ import { Link } from 'react-router-dom';
 import { Badge, Button } from 'reactstrap';
 import EditPaperDialog from './EditDialog/EditPaperDialog';
 import { reverseWithSlug } from 'utils';
+import { getAltMetrics } from 'services/backend/papers';
 
 const PaperHeader = props => {
     const [isOpenEditModal, setIsOpenEditModal] = useState(false);
@@ -20,9 +22,19 @@ const PaperHeader = props => {
     const isCurationAllowed = useSelector(state => state.auth.user?.isCurationAllowed);
     const userId = useSelector(state => state.auth.user?.id);
     const [deletePapers] = useDeletePapers({ paperIds: [viewPaper.paperResource.id], redirect: true });
+    const [altMetrics, setAltMetrics] = useState(null);
     const dispatch = useDispatch();
     const userCreatedThisPaper = viewPaper.paperResource.created_by && userId && viewPaper.paperResource.created_by === userId; // make sure a user is signed in (not null)
     const showDeleteButton = props.editMode && (isCurationAllowed || userCreatedThisPaper);
+
+    useEffect(() => {
+        const loadAltMetrics = () => {
+            getAltMetrics(viewPaper.doi.label).then(result => {
+                setAltMetrics(result);
+            });
+        };
+        loadAltMetrics();
+    }, []);
 
     const handleUpdatePaper = data => {
         // TODO: the viewPaper store should be refactored to directly support the updated data that is passed
@@ -91,6 +103,15 @@ const PaperHeader = props => {
                             >
                                 {viewPaper.publishedIn.label}
                             </Link>
+                        </small>
+                    </div>
+                )}
+                {altMetrics && (
+                    <div className="flex-shrink-0 mr-2">
+                        <small>
+                            <a href={altMetrics.details_url} target="_blank" rel="noopener noreferrer">
+                                <img src={altMetrics.images.small} height="60px" />
+                            </a>
                         </small>
                     </div>
                 )}
