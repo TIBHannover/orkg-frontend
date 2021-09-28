@@ -34,7 +34,7 @@ const PaperHeader = props => {
             });
         };
         loadAltMetrics();
-    }, []);
+    }, [viewPaper.doi.label]);
 
     const handleUpdatePaper = data => {
         // TODO: the viewPaper store should be refactored to directly support the updated data that is passed
@@ -110,7 +110,7 @@ const PaperHeader = props => {
                     <div className="flex-shrink-0 mr-2">
                         <small>
                             <a href={altMetrics.details_url} target="_blank" rel="noopener noreferrer">
-                                <img src={altMetrics.images.small} height="60px" />
+                                <img src={altMetrics.images.small} height="60px" alt="Alt metrics icon" />
                             </a>
                         </small>
                     </div>
