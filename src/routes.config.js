@@ -63,6 +63,9 @@ import HelpCenterArticle from 'pages/HelpCenter/HelpCenterArticle';
 import HelpCenterSearch from 'pages/HelpCenter/HelpCenterSearch';
 import WebinarMay11 from 'pages/WebinarMay11';
 import CurationCall from 'pages/CurationCall';
+import LiteratureLists from 'pages/LiteratureList/LiteratureLists';
+import LiteratureListNew from 'pages/LiteratureList/LiteratureListNew';
+import LiteratureList from 'pages/LiteratureList/LiteratureList';
 
 // use lazy loading of pages that contain large dependencies
 // run "npm run analyze" to ensure the listed dependencies are not loaded elsewhere and thus end up in the bundle
@@ -366,6 +369,18 @@ const routes = [
     {
         path: ROUTES.HELP_CENTER_SEARCH,
         component: HelpCenterSearch
+    },
+    {
+        path: ROUTES.LITERATURE_LISTS,
+        component: LiteratureLists
+    },
+    {
+        path: ROUTES.LITERATURE_LIST_NEW,
+        component: LiteratureListNew
+    },
+    {
+        path: ROUTES.LITERATURE_LIST,
+        component: LiteratureList
     },
     // redirect legacy route
     {

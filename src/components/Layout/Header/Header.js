@@ -356,6 +356,12 @@ class Header extends Component {
                                                 <Badge color="info">Beta</Badge>
                                             </small>
                                         </DropdownItem>
+                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.LITERATURE_LISTS} onClick={this.closeMenu}>
+                                            Literature list{' '}
+                                            <small>
+                                                <Badge color="info">Beta</Badge>
+                                            </small>
+                                        </DropdownItem>
                                         <DropdownItem tag={RouterNavLink} exact to={ROUTES.BENCHMARKS} onClick={this.closeMenu}>
                                             Benchmarks
                                         </DropdownItem>

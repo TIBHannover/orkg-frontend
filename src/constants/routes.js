@@ -66,6 +66,10 @@ const routes = {
     HELP_CENTER_ARTICLE: '/help-center/article/:id/:slug',
     HELP_CENTER_SEARCH: '/help-center/search/:searchQuery',
     CURATION_CALL: '/open-call-curation-grant',
-    WEBINAR_MAY_11: '/webinar-may-11'
+    WEBINAR_MAY_11: '/webinar-may-11',
+    LITERATURE_LISTS: '/literature-lists',
+    LITERATURE_LIST: '/literature-list/:id',
+    LITERATURE_LIST_NEW: '/literature-list/new',
+    LITERATURE_LIST_DIFF: '/literature-list/diff/:oldId-:newId'
 };
 export default routes;

@@ -1,0 +1,75 @@
+import { deleteSection, updateSectionMarkdown, updateSectionTitle } from 'actions/literatureList';
+import MarkdownEditor from 'components/ArticleBuilder/MarkdownEditor/MarkdownEditor';
+import AddSection from 'components/LiteratureList/AddSection';
+import { EditableTitle } from 'components/ArticleBuilder/styled';
+import SortableSection from 'components/ArticleBuilder/SortableSection/SortableSection';
+import { CLASSES } from 'constants/graphSettings';
+import PropTypes from 'prop-types';
+import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { SortableElement } from 'react-sortable-hoc';
+import Confirm from 'reactstrap-confirm';
+
+const EditSection = props => {
+    const { type, content, title: titleProp, id } = props.section;
+    const [title, setTitle] = useState(titleProp);
+    const dispatch = useDispatch();
+
+    const handleBlurTitle = e => {
+        dispatch(
+            updateSectionTitle({
+                sectionId: id,
+                title: e.target.value
+            })
+        );
+    };
+
+    const handleDelete = async () => {
+        const confirm = await Confirm({
+            title: 'Are you sure?',
+            message: 'Are you sure you want to delete this section?',
+            cancelColor: 'light'
+        });
+
+        if (confirm) {
+            dispatch(deleteSection(id));
+        }
+    };
+
+    const handleUpdateMarkdown = markdown => {
+        dispatch(
+            updateSectionMarkdown({
+                id: content.id,
+                markdown
+            })
+        );
+    };
+
+    return (
+        <section>
+            <SortableSection handleDelete={handleDelete} handleSort={direction => props.handleManualSort({ id, direction })}>
+                <h2 id={`section-${id}`} className="h4 border-bottom pb-1 mb-3" placeholder="trd">
+                    <EditableTitle
+                        value={title}
+                        className="focus-primary"
+                        onChange={e => setTitle(e.target.value)}
+                        onBlur={handleBlurTitle}
+                        placeholder="Enter a section title..."
+                        resize="false"
+                    />
+                </h2>
+                {type === CLASSES.TEXT_SECTION && <MarkdownEditor label={content.text} handleUpdate={handleUpdateMarkdown} />}
+                {type === CLASSES.LIST_SECTION && <>literature list</>}
+            </SortableSection>
+            <AddSection index={props.atIndex} />
+        </section>
+    );
+};
+
+EditSection.propTypes = {
+    section: PropTypes.object.isRequired,
+    atIndex: PropTypes.number.isRequired,
+    handleManualSort: PropTypes.func.isRequired
+};
+
+export default SortableElement(EditSection);
