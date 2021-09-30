@@ -3,7 +3,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import AuthorBadges from 'components/Badges/AuthorBadges/AuthorBadges';
 import AuthorsModal from 'components/SmartReview/AuthorsModal';
-import { SectionStyled, SectionTypeStyled } from 'components/SmartReview/styled';
+import { SectionStyled, SectionTypeStyled } from 'components/ArticleBuilder/styled';
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Button } from 'reactstrap';

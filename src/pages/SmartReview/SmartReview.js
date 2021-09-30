@@ -18,7 +18,7 @@ import AddSection from 'components/SmartReview/AddSection';
 import AuthorsSection from 'components/SmartReview/AuthorsSection';
 import HistoryModal from 'components/SmartReview/HistoryModal';
 import useLoad from 'components/SmartReview/hooks/useLoad';
-import LoadingArticle from 'components/SmartReview/LoadingArticle';
+import LoadingArticle from 'components/ArticleBuilder/LoadingArticle';
 import PublishModal from 'components/SmartReview/PublishModal';
 import Sections from 'components/SmartReview/Sections';
 import Title from 'components/SmartReview/Title';
@@ -40,7 +40,7 @@ import ReferencesModal from 'components/SmartReview/References/ReferencesModal';
 import ReferencesSection from 'components/SmartReview/References/ReferencesSection';
 import ShouldPublishModal from 'components/SmartReview/ShouldPublishModal';
 import { usePrevious } from 'react-use';
-import LoadingOverlay from 'components/SmartReview/LoadingOverlay';
+import LoadingOverlay from 'components/ArticleBuilder/LoadingOverlay';
 import TitleBar from 'components/TitleBar/TitleBar';
 
 const GlobalStyle = createGlobalStyle`

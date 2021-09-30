@@ -1,7 +1,7 @@
 import { faArrowDown, faArrowUp, faBars, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
-import { DeleteButton, MoveButton, MoveHandle, SectionStyled } from 'components/SmartReview/styled';
+import { DeleteButton, MoveButton, MoveHandle, SectionStyled } from 'components/ArticleBuilder/styled';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import { sortableHandle } from 'react-sortable-hoc';

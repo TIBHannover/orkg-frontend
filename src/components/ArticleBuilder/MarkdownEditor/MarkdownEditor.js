@@ -4,12 +4,11 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import ReactTextareaAutocomplete from '@webscopeio/react-textarea-autocomplete';
 import '@webscopeio/react-textarea-autocomplete/style.css';
-import { updateSectionMarkdown } from 'actions/smartReview';
-import MarkdownRenderer from 'components/SmartReview/MarkdownRenderer';
+import MarkdownRenderer from 'components/ArticleBuilder/MarkdownEditor/MarkdownRenderer';
+import MarkdownRendererReferences from 'components/SmartReview/MarkdownRenderer';
 import { MarkdownPlaceholder } from 'components/ArticleBuilder/styled';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import Textarea from 'react-textarea-autosize';
 import { toast } from 'react-toastify';
 import { ButtonGroup } from 'reactstrap';
@@ -52,22 +51,19 @@ const ItemResource = ({ entity: { resource } }) => (
 );
 const Loading = () => <div>Loading</div>;
 
-const SectionMarkdown = props => {
+const MarkdownEditor = ({ label, handleUpdate, references = null, literalId = null }) => {
     const [markdownValue, setMarkdownValue] = useState('');
     const [editMode, setEditMode] = useState(false);
     const [markdownEditorRef, setMarkdownEditorRef] = useState(null);
     const [selectionRange, setSelectionRange] = useState(null);
-    const { markdown } = props;
-    const dispatch = useDispatch();
-    const references = useSelector(state => state.smartReview.references);
 
     // initial data loading
     useEffect(() => {
-        if (!markdown) {
+        if (!label) {
             return;
         }
-        setMarkdownValue(markdown.label);
-    }, [markdown]);
+        setMarkdownValue(label);
+    }, [label]);
 
     // set focus to editor when starting edit mode
     useEffect(() => {
@@ -93,12 +89,7 @@ const SectionMarkdown = props => {
         }
         setEditMode(false);
 
-        dispatch(
-            updateSectionMarkdown({
-                id: markdown.id,
-                markdown: markdownValue
-            })
-        );
+        handleUpdate(markdownValue);
     };
 
     const wrapText = (e, openTag, closeTag = '') => {
@@ -141,6 +132,7 @@ const SectionMarkdown = props => {
                 : [];
         }
     };
+
     const autocompleteTriggers = {
         '[!': {
             dataProvider: findResources,
@@ -160,7 +152,6 @@ const SectionMarkdown = props => {
 
     const handleKeyPress = e => {
         if (e.key === 'Enter') {
-            console.log('set entering things');
             setEditMode(true);
         }
     };
@@ -171,7 +162,11 @@ const SectionMarkdown = props => {
                 <Tippy hideOnClick={false} content="Double click to edit">
                     {markdownValue ? (
                         <div role="button" tabIndex="0" onKeyPress={handleKeyPress} onDoubleClick={() => setEditMode(true)}>
-                            <MarkdownRenderer text={markdownValue} id={markdown.id} />
+                            {references ? (
+                                <MarkdownRendererReferences text={markdownValue} id={literalId} />
+                            ) : (
+                                <MarkdownRenderer text={markdownValue} />
+                            )}
                         </div>
                     ) : (
                         <MarkdownPlaceholder role="button" tabIndex="0" onKeyPress={handleKeyPress} onDoubleClick={() => setEditMode(true)}>
@@ -229,11 +224,13 @@ const SectionMarkdown = props => {
                                     <Icon icon={faImage} />
                                 </div>
                             </Tippy>
-                            <Tippy content="Add a citation">
-                                <div role="button" tabIndex="0" className="btn btn-dark" onMouseDown={e => wrapText(e, '[@', ']')}>
-                                    <Icon icon={faQuoteLeft} />
-                                </div>
-                            </Tippy>
+                            {references && (
+                                <Tippy content="Add a citation">
+                                    <div role="button" tabIndex="0" className="btn btn-dark" onMouseDown={e => wrapText(e, '[@', ']')}>
+                                        <Icon icon={faQuoteLeft} />
+                                    </div>
+                                </Tippy>
+                            )}
                             <Tippy content="Add table">
                                 <div
                                     role="button"
@@ -263,7 +260,7 @@ const SectionMarkdown = props => {
                         }}
                         dropdownStyle={{ zIndex: 100 }}
                         minChar={0}
-                        trigger={autocompleteTriggers}
+                        trigger={references ? autocompleteTriggers : {}}
                         onChange={e => {
                             setMarkdownValue(e.target.value);
                             if (e.target.value.length > 3899) {
@@ -279,8 +276,8 @@ const SectionMarkdown = props => {
     );
 };
 
-SectionMarkdown.propTypes = {
+MarkdownEditor.propTypes = {
     markdown: PropTypes.object.isRequired
 };
 
-export default SectionMarkdown;
+export default MarkdownEditor;

@@ -8,7 +8,7 @@ import MarkdownRenderer from 'components/SmartReview/MarkdownRenderer';
 import Outline from 'components/SmartReview/Outline';
 import ListReferences from 'components/SmartReview/References/ListReferences';
 import SectionVisualization from 'components/SmartReview/SectionVisualization';
-import { SectionStyled } from 'components/SmartReview/styled';
+import { SectionStyled } from 'components/ArticleBuilder/styled';
 import ViewArticleStatementBrowser from 'components/SmartReview/ViewArticleStatementBrowser';
 import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
 import { CLASSES } from 'constants/graphSettings';
