@@ -1089,6 +1089,10 @@ export const getResourceLink = (classId, resourceId) => {
             link = reverse(ROUTES.PROPERTY, { id: resourceId });
             break;
         }
+        case ENTITIES.CLASS: {
+            link = reverse(ROUTES.CLASS, { id: resourceId });
+            break;
+        }
         default: {
             link = reverse(ROUTES.RESOURCE, { id: resourceId });
             break;
