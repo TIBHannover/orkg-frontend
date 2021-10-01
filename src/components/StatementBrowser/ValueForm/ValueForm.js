@@ -139,7 +139,7 @@ const ValueForm = props => {
                         optionsClass={ENTITIES.RESOURCE && valueClass ? valueClass.id : undefined}
                         placeholder={`Enter a ${entityType}`}
                         onItemSelected={i => {
-                            handleAddValue(entityType, { ...i, label: i.value });
+                            handleAddValue(entityType, { ...i, label: i.value, selected: true });
                             props.setShowAddValue?.(false);
                         }}
                         onInput={(e, value) => setInputValue(e ? e.target.value : value)}
@@ -155,7 +155,7 @@ const ValueForm = props => {
                                 // escape
                                 props.setShowAddValue?.(false);
                             } else if (e.keyCode === 13 && !isMenuOpen()) {
-                                handleAddValue(entityType, { label: inputValue });
+                                handleAddValue(entityType, { label: inputValue, selected: true });
                                 props.setShowAddValue?.(false);
                             }
                         }}

@@ -208,30 +208,23 @@ const useValueForm = ({ valueId, resourceId, propertyId, syncBackend }) => {
             let newStatement = null;
             const existingResourceId = guid();
             if (syncBackend) {
-                switch (entityType) {
-                    case ENTITIES.RESOURCE:
-                        newEntity = await createResource(value.label, valueClass ? [valueClass.id] : []);
-                        break;
-                    case ENTITIES.PREDICATE:
-                        newEntity = await createPredicate(value.label);
-                        break;
-                    case ENTITIES.LITERAL:
-                        newEntity = await createLiteral(value.label, value.datatype);
-                        break;
-                    default:
-                        newEntity = await createLiteral(value.label, value.datatype);
+                if (!value.selected) {
+                    switch (entityType) {
+                        case ENTITIES.RESOURCE:
+                            newEntity = await createResource(value.label, valueClass ? [valueClass.id] : []);
+                            break;
+                        case ENTITIES.PREDICATE:
+                            newEntity = await createPredicate(value.label);
+                            break;
+                        case ENTITIES.LITERAL:
+                            newEntity = await createLiteral(value.label, value.datatype);
+                            break;
+                        default:
+                            newEntity = await createLiteral(value.label, value.datatype);
+                    }
                 }
                 newStatement = await createResourceStatement(resourceId, property?.existingPredicateId, newEntity.id);
             }
-            //create statements
-            value.statements &&
-                dispatch(
-                    fillStatements({
-                        statements: generateStatementsFromExternalData(value.statements),
-                        resourceId: newEntity.id,
-                        syncBackend: syncBackend
-                    })
-                );
             dispatch(
                 createValue({
                     ...newEntity,
@@ -244,6 +237,15 @@ const useValueForm = ({ valueId, resourceId, propertyId, syncBackend }) => {
                     statementId: newStatement?.id
                 })
             );
+            //create statements
+            value.statements &&
+                dispatch(
+                    fillStatements({
+                        statements: generateStatementsFromExternalData(value.statements),
+                        resourceId: newEntity.id ?? existingResourceId,
+                        syncBackend: syncBackend
+                    })
+                );
             return newEntity.id ?? existingResourceId;
         },
         [dispatch, property?.existingPredicateId, propertyId, resourceId, syncBackend, valueClass]
