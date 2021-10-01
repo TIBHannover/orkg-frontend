@@ -1,7 +1,7 @@
 import capitalize from 'capitalize';
 import { FILTER_TYPES } from 'constants/comparisonFilterTypes';
 import { CLASSES, MISC, PREDICATES, ENTITIES } from 'constants/graphSettings';
-import { CLASS_TYPE_ID, PREDICATE_TYPE_ID, RESOURCE_TYPE_ID } from 'constants/misc';
+import { PREDICATE_TYPE_ID, RESOURCE_TYPE_ID } from 'constants/misc';
 import ROUTES from 'constants/routes';
 import { find, flatten, flattenDepth, isEqual, isString, last, uniq, sortBy, uniqBy } from 'lodash';
 import { unescape } from 'he';
@@ -1089,7 +1089,7 @@ export const getResourceLink = (classId, resourceId) => {
             link = reverse(ROUTES.PROPERTY, { id: resourceId });
             break;
         }
-        case CLASS_TYPE_ID: {
+        case ENTITIES.CLASS: {
             link = reverse(ROUTES.CLASS, { id: resourceId });
             break;
         }

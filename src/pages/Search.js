@@ -9,13 +9,13 @@ import { getClassById, getClasses } from 'services/backend/classes';
 import { getResources, getResourcesByClass } from 'services/backend/resources';
 import { getPredicates } from 'services/backend/predicates';
 import ROUTES from 'constants/routes';
-import { CLASS_TYPE_ID, PREDICATE_TYPE_ID, RESOURCE_TYPE_ID } from 'constants/misc';
+import { PREDICATE_TYPE_ID, RESOURCE_TYPE_ID } from 'constants/misc';
 import Results from 'components/Search/Results';
 import Filters from 'components/Search/Filters';
 import { getArrayParamFromQueryString } from 'utils';
 import { unionBy } from 'lodash';
 import { toast } from 'react-toastify';
-import { CLASSES } from 'constants/graphSettings';
+import { CLASSES, ENTITIES } from 'constants/graphSettings';
 import { getPaperByDOI } from 'services/backend/misc';
 import REGEX from 'constants/regex';
 import TitleBar from 'components/TitleBar/TitleBar';
@@ -52,7 +52,7 @@ class Search extends Component {
             {
                 label: 'Class',
                 labelPlural: 'Classes',
-                id: CLASS_TYPE_ID
+                id: ENTITIES.CLASS
             },
             {
                 label: 'Research Problem',
@@ -199,9 +199,9 @@ class Search extends Component {
                         .join(','),
                     returnContent: true
                 });
-            } else if (filterType === CLASS_TYPE_ID) {
+            } else if (filterType === ENTITIES.CLASS) {
                 results = await getClasses({
-                    page: this.state.currentPage[CLASS_TYPE_ID] || 0,
+                    page: this.state.currentPage[ENTITIES.CLASS] || 0,
                     items: this.itemsPerFilter,
                     sortBy: 'id',
                     desc: true,
