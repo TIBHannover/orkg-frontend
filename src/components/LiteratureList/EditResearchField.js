@@ -12,7 +12,7 @@ const EditResearchField = () => {
     const list = useSelector(state => state.literatureList.literatureList);
     const dispatch = useDispatch();
     const [isOpenResearchFieldModal, setIsOpenResearchFieldModal] = useState(false);
-    console.log(researchField);
+
     const handleSelectField = researchField => {
         dispatch(
             setResearchField({

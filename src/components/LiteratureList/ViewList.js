@@ -1,16 +1,18 @@
 import Tippy from '@tippyjs/react';
 import { toggleHistoryModal as toggleHistoryModalAction } from 'actions/literatureList';
+import { SectionStyled } from 'components/ArticleBuilder/styled';
 import AuthorBadges from 'components/Badges/AuthorBadges/AuthorBadges';
 import ResearchFieldBadge from 'components/Badges/ResearchFieldBadge/ResearchFieldBadge';
+import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
 import Contributors from 'components/LiteratureList/Contributors';
-import { SectionStyled } from 'components/ArticleBuilder/styled';
+import PaperCard from 'components/LiteratureList/PaperCard';
+import { CLASSES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
-import { Alert, Button, Container } from 'reactstrap';
-import { CLASSES } from 'constants/graphSettings';
+import { Alert, Button, Container, ListGroup } from 'reactstrap';
 
 const ViewList = () => {
     const { id } = useParams();
@@ -61,6 +63,17 @@ const ViewList = () => {
                                     {section.content.text}
                                 </section>
                             );
+                        } else if (section.type === CLASSES.LIST_SECTION) {
+                            return (
+                                <section key={section.id}>
+                                    <h2 className="h4 border-bottom mt-5">{section.title}</h2>
+                                    <ListGroup>
+                                        {section.content.map(paper => (
+                                            <PaperCard paper={paper} contributions={paper.contributions} showAddToComparison />
+                                        ))}
+                                    </ListGroup>
+                                </section>
+                            );
                         }
                         return null;
                     })}
@@ -75,6 +88,8 @@ const ViewList = () => {
                     </section>
                 </SectionStyled>
             </main>
+
+            <ComparisonPopup />
         </Container>
     );
 };

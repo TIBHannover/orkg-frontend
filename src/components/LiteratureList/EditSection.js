@@ -1,14 +1,19 @@
 import { deleteSection, updateSectionMarkdown, updateSectionTitle } from 'actions/literatureList';
 import MarkdownEditor from 'components/ArticleBuilder/MarkdownEditor/MarkdownEditor';
-import AddSection from 'components/LiteratureList/AddSection';
-import { EditableTitle } from 'components/ArticleBuilder/styled';
 import SortableSection from 'components/ArticleBuilder/SortableSection/SortableSection';
+import { EditableTitle } from 'components/ArticleBuilder/styled';
+import AddSection from 'components/LiteratureList/AddSection';
+import PaperCard from 'components/LiteratureList/PaperCard';
 import { CLASSES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { SortableElement } from 'react-sortable-hoc';
+import { Button, ListGroup } from 'reactstrap';
 import Confirm from 'reactstrap-confirm';
+import { faBars, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import EditSectionList from 'components/LiteratureList/EditSectionList';
 
 const EditSection = props => {
     const { type, content, title: titleProp, id } = props.section;
@@ -59,7 +64,7 @@ const EditSection = props => {
                     />
                 </h2>
                 {type === CLASSES.TEXT_SECTION && <MarkdownEditor label={content.text} handleUpdate={handleUpdateMarkdown} />}
-                {type === CLASSES.LIST_SECTION && <>literature list</>}
+                {type === CLASSES.LIST_SECTION && <EditSectionList papers={content} section={props.section} />}
             </SortableSection>
             <AddSection index={props.atIndex} />
         </section>

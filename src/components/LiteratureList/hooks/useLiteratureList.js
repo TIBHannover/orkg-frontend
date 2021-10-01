@@ -103,7 +103,17 @@ const useLiteratureList = () => {
 
             // TODO: support for list section
             if ([CLASSES.LIST_SECTION].includes(type)) {
-                content = {};
+                content = section.statements
+                    .filter(statement => statement.predicate.id === PREDICATES.HAS_PAPER)
+                    .map(statement => ({
+                        ...statement.object,
+                        title: statement.object.label,
+                        authors: getObjectsByPredicateAndSubject(statements, PREDICATES.HAS_AUTHOR, statement.object.id),
+                        publicationMonth: getObjectsByPredicateAndSubject(statements, PREDICATES.HAS_PUBLICATION_MONTH, statement.object.id)?.[0],
+                        publicationYear: getObjectsByPredicateAndSubject(statements, PREDICATES.HAS_PUBLICATION_YEAR, statement.object.id)?.[0],
+                        description: getObjectsByPredicateAndSubject(statements, PREDICATES.DESCRIPTION, statement.object.id)?.[0],
+                        contributions: getObjectsByPredicateAndSubject(statements, PREDICATES.HAS_CONTRIBUTION, statement.object.id)
+                    }));
             } else if ([CLASSES.TEXT_SECTION].includes(type)) {
                 const contentStatement = section.statements.find(statement => statement.predicate.id === PREDICATES.HAS_CONTENT);
                 content = {
