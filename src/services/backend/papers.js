@@ -34,7 +34,3 @@ export const indexContributionsByPaperId = async paperId => {
 
     return contributionStatements.map(statement => indexContribution(statement.object.id));
 };
-
-export const getAltMetrics = doi => {
-    return submitGetRequest(`https://api.altmetric.com/v1/doi/${doi}`);
-};

@@ -14,7 +14,7 @@ import { Link } from 'react-router-dom';
 import { Badge, Button } from 'reactstrap';
 import EditPaperDialog from './EditDialog/EditPaperDialog';
 import { reverseWithSlug } from 'utils';
-import { getAltMetrics } from 'services/backend/papers';
+import { getAltMetrics } from 'services/altmetric/index';
 
 const PaperHeader = props => {
     const [isOpenEditModal, setIsOpenEditModal] = useState(false);
@@ -28,13 +28,15 @@ const PaperHeader = props => {
     const showDeleteButton = props.editMode && (isCurationAllowed || userCreatedThisPaper);
 
     useEffect(() => {
-        const loadAltMetrics = () => {
-            getAltMetrics(viewPaper.doi.label).then(result => {
-                setAltMetrics(result);
-            });
+        if (!viewPaper.doi?.label) {
+            return;
+        }
+        const loadAltMetrics = async () => {
+            const altMetrics = await getAltMetrics(viewPaper.doi?.label);
+            setAltMetrics(altMetrics);
         };
         loadAltMetrics();
-    }, [viewPaper.doi.label]);
+    }, [viewPaper.doi?.label]);
 
     const handleUpdatePaper = data => {
         // TODO: the viewPaper store should be refactored to directly support the updated data that is passed
@@ -58,6 +60,15 @@ const PaperHeader = props => {
         <>
             <div className="d-flex align-items-start">
                 <h2 className="h4 mt-4 mb-3 flex-grow-1">{viewPaper.paperResource.label ? viewPaper.paperResource.label : <em>No title</em>}</h2>
+                {altMetrics && (
+                    <div className="flex-shrink-0 mr-2">
+                        <small>
+                            <a href={altMetrics.details_url} target="_blank" rel="noopener noreferrer">
+                                <img src={altMetrics.images.small} height="60px" alt="Alt metrics icon" />
+                            </a>
+                        </small>
+                    </div>
+                )}
             </div>
 
             <div className="clearfix" />
@@ -103,15 +114,6 @@ const PaperHeader = props => {
                             >
                                 {viewPaper.publishedIn.label}
                             </Link>
-                        </small>
-                    </div>
-                )}
-                {altMetrics && (
-                    <div className="flex-shrink-0 mr-2">
-                        <small>
-                            <a href={altMetrics.details_url} target="_blank" rel="noopener noreferrer">
-                                <img src={altMetrics.images.small} height="60px" alt="Alt metrics icon" />
-                            </a>
                         </small>
                     </div>
                 )}
