@@ -45,9 +45,19 @@ export default function Preferences() {
                     type="switch"
                     id="showStatementInfo"
                     name="showStatementInfo"
-                    label="Show information about values"
+                    label="Show information about statement"
                     onChange={settingsInputSwitched}
                     checked={preferences['showStatementInfo']}
+                />
+            </div>
+            <div className="mb-2">
+                <CustomInput
+                    type="switch"
+                    id="showValueInfo"
+                    name="showValueInfo"
+                    label="Show information tooltip of values"
+                    onChange={settingsInputSwitched}
+                    checked={preferences['showValueInfo']}
                 />
             </div>
             <div className="mb-2">

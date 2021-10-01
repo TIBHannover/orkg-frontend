@@ -1,5 +1,6 @@
 import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
 import { useSelector } from 'react-redux';
+import { Fragment } from 'react';
 import useValueItem from './hooks/useValueItem';
 import PropTypes from 'prop-types';
 import { ENTITIES } from 'constants/graphSettings';
@@ -11,6 +12,8 @@ import Pulse from 'components/Utils/Pulse';
 import ValuePlugins from 'components/ValuePlugins/ValuePlugins';
 import { Link } from 'react-router-dom';
 import { getResourceLink } from 'utils';
+import capitalize from 'capitalize';
+import Tippy from '@tippyjs/react';
 import ValueItemOptions from './ValueItemOptions/ValueItemOptions';
 import ValueForm from 'components/StatementBrowser/ValueForm/ValueForm';
 
@@ -44,45 +47,80 @@ const ValueItem = props => {
             <ValueItemStyle>
                 {!value.isEditing ? (
                     <div>
-                        {resource && !resource.isFetching && value._class === ENTITIES.RESOURCE && !resourcesAsLinks && (
-                            <Button className="p-0 text-left objectLabel" color="link" onClick={handleOnClick} style={{ userSelect: 'text' }}>
-                                {props.showHelp && value._class === ENTITIES.RESOURCE ? (
-                                    <Pulse content="Click on the resource to browse it">
-                                        <ValuePlugins type="resource">{getLabel() !== '' ? getLabel().toString() : <i>No label</i>}</ValuePlugins>
-                                    </Pulse>
-                                ) : (
-                                    <ValuePlugins type="resource">{getLabel() !== '' ? getLabel().toString() : <i>No label</i>}</ValuePlugins>
+                        <Tippy
+                            disabled={!preferences['showValueInfo']}
+                            delay={[500, 0]}
+                            interactive={true}
+                            content={
+                                <div className="p-1">
+                                    <ul className="p-0 mb-0" style={{ listStyle: 'none' }}>
+                                        {value.id && (
+                                            <li className="mb-1">
+                                                {capitalize(value._class)} id: {value.id}
+                                            </li>
+                                        )}
+                                        {value.classes?.length > 0 && (
+                                            <li className="mb-1">
+                                                Instance of:{' '}
+                                                {value.classes.map((c, index) => (
+                                                    <Fragment key={index}>
+                                                        <Link to={getResourceLink(ENTITIES.CLASS, c)} target="_blank">
+                                                            {c}
+                                                        </Link>
+                                                        {index + 1 < value.classes.length && ','}
+                                                    </Fragment>
+                                                ))}
+                                            </li>
+                                        )}
+                                    </ul>
+                                </div>
+                            }
+                        >
+                            <span tabIndex="0">
+                                {resource && !resource.isFetching && value._class === ENTITIES.RESOURCE && !resourcesAsLinks && (
+                                    <Button className="p-0 text-left objectLabel" color="link" onClick={handleOnClick} style={{ userSelect: 'text' }}>
+                                        {props.showHelp && value._class === ENTITIES.RESOURCE ? (
+                                            <Pulse content="Click on the resource to browse it">
+                                                <ValuePlugins type="resource">
+                                                    {getLabel() !== '' ? getLabel().toString() : <i>No label</i>}
+                                                </ValuePlugins>
+                                            </Pulse>
+                                        ) : (
+                                            <ValuePlugins type="resource">{getLabel() !== '' ? getLabel().toString() : <i>No label</i>}</ValuePlugins>
+                                        )}
+                                        {resource && resource.existingResourceId && openExistingResourcesInDialog && (
+                                            <span>
+                                                {' '}
+                                                <Icon icon={faExternalLinkAlt} />
+                                            </span>
+                                        )}
+                                    </Button>
                                 )}
-                                {resource && resource.existingResourceId && openExistingResourcesInDialog && (
-                                    <span>
-                                        {' '}
-                                        <Icon icon={faExternalLinkAlt} />
-                                    </span>
+
+                                {resource && value._class !== ENTITIES.LITERAL && resourcesAsLinks && (
+                                    <Link className="objectLabel" to={getResourceLink(value._class, value.resourceId)}>
+                                        {value.label || <i>No label</i>}
+                                    </Link>
                                 )}
-                            </Button>
-                        )}
 
-                        {resource && value._class !== ENTITIES.LITERAL && resourcesAsLinks && (
-                            <Link className="objectLabel" to={getResourceLink(value._class, value.resourceId)}>
-                                {value.label || <i>No label</i>}
-                            </Link>
-                        )}
+                                {resource && resource.isFetching && value._class === ENTITIES.RESOURCE && 'Loading...'}
 
-                        {resource && resource.isFetching && value._class === ENTITIES.RESOURCE && 'Loading...'}
-
-                        {value._class === ENTITIES.LITERAL && (
-                            <div className="literalLabel">
-                                <ValuePlugins type={ENTITIES.LITERAL}>{value.label !== '' ? value.label.toString() : <i>No label</i>}</ValuePlugins>
-                                {preferences['showLiteralDataTypes'] && (
-                                    <small>
-                                        <Badge color="light" className="ml-2">
-                                            {value.datatype}
-                                        </Badge>
-                                    </small>
+                                {value._class === ENTITIES.LITERAL && (
+                                    <div className="literalLabel">
+                                        <ValuePlugins type={ENTITIES.LITERAL}>
+                                            {value.label !== '' ? value.label.toString() : <i>No label</i>}
+                                        </ValuePlugins>
+                                        {preferences['showLiteralDataTypes'] && (
+                                            <small>
+                                                <Badge color="light" className="ml-2">
+                                                    {value.datatype}
+                                                </Badge>
+                                            </small>
+                                        )}
+                                    </div>
                                 )}
-                            </div>
-                        )}
-
+                            </span>
+                        </Tippy>
                         <ValueItemOptions id={props.id} enableEdit={props.enableEdit} syncBackend={props.syncBackend} handleOnClick={handleOnClick} />
                     </div>
                 ) : (

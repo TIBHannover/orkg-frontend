@@ -29,6 +29,7 @@ const initialState = {
     preferences: {
         showClasses: getPreferenceFromCookies('showClasses') ?? false,
         showStatementInfo: getPreferenceFromCookies('showStatementInfo') ?? true,
+        showValueInfo: getPreferenceFromCookies('showValueInfo') ?? true,
         showLiteralDataTypes: getPreferenceFromCookies('showLiteralDataTypes') ?? false
     },
     resources: {
@@ -82,6 +83,7 @@ export default (state = initialState, action) => {
                     showClasses: typeof payload.showClasses === 'boolean' ? payload.showClasses : state.preferences.showClasses,
                     showStatementInfo:
                         typeof payload.showStatementInfo === 'boolean' ? payload.showStatementInfo : state.preferences.showStatementInfo,
+                    showValueInfo: typeof payload.showValueInfo === 'boolean' ? payload.showValueInfo : state.preferences.showValueInfo,
                     showLiteralDataTypes:
                         typeof payload.showLiteralDataTypes === 'boolean' ? payload.showLiteralDataTypes : state.preferences.showLiteralDataTypes
                 }
