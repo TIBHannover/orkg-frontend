@@ -16,6 +16,26 @@ import capitalize from 'capitalize';
 import Tippy from '@tippyjs/react';
 import ValueItemOptions from './ValueItemOptions/ValueItemOptions';
 import ValueForm from 'components/StatementBrowser/ValueForm/ValueForm';
+import styled from 'styled-components';
+
+const Circle = styled.div`
+    width: 18px;
+    height: 18px;
+    text-align: center;
+    color: white;
+    display: inline-block;
+    border: 1px ${props => props.theme.secondaryDarker} solid;
+    line-height: 18px;
+    margin-right: 3px;
+    border-radius: 100%;
+    font-size: small;
+    font-weight: bold;
+    background: ${props => props.theme.secondary};
+
+    &:hover {
+        background: ${props => props.theme.primary};
+    }
+`;
 
 const ValueItem = props => {
     const {
@@ -79,6 +99,8 @@ const ValueItem = props => {
                             <span tabIndex="0">
                                 {resource && !resource.isFetching && value._class === ENTITIES.RESOURCE && !resourcesAsLinks && (
                                     <Button className="p-0 text-left objectLabel" color="link" onClick={handleOnClick} style={{ userSelect: 'text' }}>
+                                        {value._class === ENTITIES.CLASS && <Circle>C</Circle>}
+                                        {value._class === ENTITIES.PREDICATE && <Circle>P</Circle>}
                                         {props.showHelp && value._class === ENTITIES.RESOURCE ? (
                                             <Pulse content="Click on the resource to browse it">
                                                 <ValuePlugins type="resource">
@@ -99,6 +121,8 @@ const ValueItem = props => {
 
                                 {resource && value._class !== ENTITIES.LITERAL && resourcesAsLinks && (
                                     <Link className="objectLabel" to={getResourceLink(value._class, value.resourceId)}>
+                                        {value._class === ENTITIES.CLASS && <Circle>C</Circle>}
+                                        {value._class === ENTITIES.PREDICATE && <Circle>P</Circle>}
                                         {value.label || <i>No label</i>}
                                     </Link>
                                 )}
