@@ -26,3 +26,6 @@ export const getHelpCategories = () => submitGetRequest(`${url}help-categories?_
 export const getHelpCategory = id => submitGetRequest(`${url}help-categories/${id}`);
 
 export const getHomeAlerts = () => submitGetRequest(`${url}home-alerts`).catch(() => []);
+
+export const getNewsCards = ({ limit = 10, sort = 'created_at' }) =>
+    submitGetRequest(`${url}news-cards?_limit=${limit}&_sort=${sort}`).catch(() => []);
