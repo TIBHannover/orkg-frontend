@@ -164,6 +164,25 @@ export const ValueItemStyle = styled(ListGroupItem)`
         text-decoration: none;
         cursor: text;
     }
+
+    .typeCircle {
+        width: 18px;
+        height: 18px;
+        line-height: 18px;
+        text-align: center;
+        color: white;
+        display: inline-block;
+        border: 1px ${props => props.theme.secondaryDarker} solid;
+        margin-right: 3px;
+        border-radius: 100%;
+        font-size: 12px;
+        font-weight: bold;
+        background: ${props => props.theme.secondary};
+    }
+
+    &:hover .typeCircle {
+        background: ${props => props.theme.primary};
+    }
 `;
 
 export const AddPropertyStyle = styled.div`
