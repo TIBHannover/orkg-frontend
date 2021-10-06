@@ -1,5 +1,5 @@
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
+import { faInfoCircle, faTags, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import Tippy from '@tippyjs/react';
 import { components } from 'react-select';
 import styled from 'styled-components';
@@ -70,6 +70,37 @@ export default function CustomOption(props) {
                             </i>
                         </div>
                     )}
+                    <div>
+                        {props.data.shared > 0 && (
+                            <span>
+                                <small>
+                                    <Icon icon={faArrowRight} color="#5b6176" />
+                                </small>{' '}
+                                <i>
+                                    <small
+                                        className={!propsWithoutInnerProps.isFocused && !propsWithoutInnerProps.isSelected ? 'text-muted' : undefined}
+                                    >
+                                        {` Referred: ${props.data.shared} time${props.data.shared > 1 ? 's' : ''}`}
+                                    </small>
+                                </i>
+                            </span>
+                        )}
+                        {props.data.classes?.length > 0 && (
+                            <span>
+                                <small>
+                                    {' '}
+                                    <Icon icon={faTags} color="#5b6176" /> {' Type: '}
+                                </small>
+                                <i>
+                                    <small
+                                        className={!propsWithoutInnerProps.isFocused && !propsWithoutInnerProps.isSelected ? 'text-muted' : undefined}
+                                    >
+                                        {props.data.classes.join(', ')}
+                                    </small>
+                                </i>
+                            </span>
+                        )}
+                    </div>
                 </StyledLabel>
                 <span>
                     {((truncatedDescription && props.data.description.length > MAXIMUM_DESCRIPTION_LENGTH) ||
