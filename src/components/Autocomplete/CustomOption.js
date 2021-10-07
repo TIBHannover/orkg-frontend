@@ -186,7 +186,7 @@ export default function CustomOption(props) {
                                                         Statements:
                                                         <ul className="px-3 mb-0">
                                                             {statements.slice(0, 5).map(s => (
-                                                                <li>
+                                                                <li key={s.id}>
                                                                     {s.predicate.label}:{' '}
                                                                     {truncate(s.object.label ? s.object.label : '', {
                                                                         length: MAXIMUM_DESCRIPTION_LENGTH

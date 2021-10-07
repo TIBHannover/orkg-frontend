@@ -621,6 +621,12 @@ export default (state = initialState, action) => {
                 };
             } else {
                 newState = initialState;
+                newState = dotProp.set(newState, `preferences`, {
+                    showClasses: getPreferenceFromCookies('showClasses') ?? false,
+                    showStatementInfo: getPreferenceFromCookies('showStatementInfo') ?? true,
+                    showValueInfo: getPreferenceFromCookies('showValueInfo') ?? true,
+                    showLiteralDataTypes: getPreferenceFromCookies('showLiteralDataTypes') ?? false
+                });
             }
             return { ...newState };
         }

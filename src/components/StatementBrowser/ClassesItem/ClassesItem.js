@@ -82,7 +82,7 @@ const ClassesItem = props => {
         <div>
             {selectedResource && resource._class === ENTITIES.RESOURCE && (
                 <ClassesStyle className="text-muted mb-3 d-flex align-items-center clearfix">
-                    <Icon icon={faTags} className="mr-1" /> Classes:{' '}
+                    <Icon icon={faTags} className="mr-1" /> Instance of:{' '}
                     {!editMode && !isLoading && (
                         <div className="mx-1" style={{ padding: '3.5px 0' }}>
                             {classes?.map((c, index) => (
