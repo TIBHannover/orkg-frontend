@@ -72,7 +72,7 @@ const PropertyValue = ({ id, label, property, similar, filterControlData, update
 
     return (
         <>
-            <Button onClick={handleOpenStatementBrowser} color="link" className="text-left text-light m-0 p-0">
+            <Button onClick={handleOpenStatementBrowser} color="link" className="text-left text-light m-0 p-0 text-break">
                 <DescriptionTooltip
                     id={property?.id}
                     typeId={ENTITIES.PREDICATE}

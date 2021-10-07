@@ -3,6 +3,19 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [V0.51](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.50.1...V0.51) - 2021-10-07
+
+### Changes
+
+- fix(Autocomplete): Loading external classes [`#688`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/688)
+- feat(Autocomplete): use TIB Terminology Service for class lookup [`#686`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/686)
+- feat(ViewPaper): support for Altmetric [`#685`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/685)
+- fix(Comparison): fix overflowing property values [`#684`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/684)
+- feat(Search): support class label lookup [`#683`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/683)
+- fix(DatatypeSelector): preserve selected value on rerender [`#680`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/680)
+- fix(Autocomplete): resolve issue with selecting an existing class from external ontologies [`#679`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/679)
+
+---
 ## [V0.50.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.50...V0.50.1) - 2021-09-10
 
 ### Changes
