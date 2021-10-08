@@ -135,13 +135,16 @@ const ValueForm = props => {
                 {!editMode && entityType !== ENTITIES.LITERAL ? (
                     <AutoComplete
                         entityType={entityType}
-                        excludeClasses={ENTITIES.RESOURCE && valueClass ? `${CLASSES.CONTRIBUTION},${CLASSES.PROBLEM},${CLASSES.TEMPLATE}` : null}
-                        optionsClass={ENTITIES.RESOURCE && valueClass ? valueClass.id : undefined}
+                        excludeClasses={
+                            entityType === ENTITIES.RESOURCE && valueClass ? `${CLASSES.CONTRIBUTION},${CLASSES.PROBLEM},${CLASSES.TEMPLATE}` : null
+                        }
+                        optionsClass={entityType === ENTITIES.RESOURCE && valueClass ? valueClass.id : undefined}
                         placeholder={`Enter a ${entityType}`}
                         onItemSelected={i => {
                             handleAddValue(entityType, { ...i, label: i.value, selected: true });
                             props.setShowAddValue?.(false);
                         }}
+                        ols={entityType === ENTITIES.CLASS ? true : false}
                         onInput={(e, value) => setInputValue(e ? e.target.value : value)}
                         value={inputValue}
                         additionalData={newResources}

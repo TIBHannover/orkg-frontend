@@ -12,8 +12,8 @@ const DATA_TYPES = [
                 without quotes following with the resource ID (e.g: #R12).
             </>
         ),
-        type: 'resource',
-        _class: 'resource',
+        type: ENTITIES.RESOURCE,
+        _class: ENTITIES.RESOURCE,
         schema: Joi.string(),
         inputFormType: 'autocomplete',
         weight: 0
@@ -39,7 +39,9 @@ const DATA_TYPES = [
         weight: 1
     },
     { name: 'Date', type: 'xsd:date', _class: ENTITIES.LITERAL, schema: Joi.date().iso(), inputFormType: 'date', weight: 1 },
-    { name: 'URL', type: 'xsd:anyURI', _class: ENTITIES.LITERAL, schema: Joi.string().uri(), inputFormType: 'text', weight: 1 }
+    { name: 'URL', type: 'xsd:anyURI', _class: ENTITIES.LITERAL, schema: Joi.string().uri(), inputFormType: 'text', weight: 1 },
+    { name: 'Class', type: ENTITIES.CLASS, _class: ENTITIES.CLASS, schema: Joi.string(), inputFormType: 'autocomplete', weight: 0 },
+    { name: 'Property', type: ENTITIES.PREDICATE, _class: ENTITIES.PREDICATE, schema: Joi.string(), inputFormType: 'autocomplete', weight: 0 }
 ];
 
 export const getConfigByType = type => {

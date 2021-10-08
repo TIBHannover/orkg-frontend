@@ -7,7 +7,7 @@ import { faTrash, faPen, faTable, faCheck, faTimes, faQuestionCircle } from '@fo
 import StatementActionButton from 'components/StatementBrowser/StatementActionButton/StatementActionButton';
 import { deleteStatementById } from 'services/backend/statements';
 import { useDispatch, useSelector } from 'react-redux';
-import { CLASSES } from 'constants/graphSettings';
+import { CLASSES, ENTITIES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
 import HELP_CENTER_ARTICLES from 'constants/helpCenterArticles';
 import RDFDataCube from 'components/RDFDataCube/RDFDataCube';
@@ -52,13 +52,15 @@ const ValueItemOptions = ({ id, enableEdit, syncBackend, handleOnClick }) => {
             <div className="valueOptions">
                 {enableEdit && (
                     <>
-                        {((resource && !resource.existingResourceId) || value.shared <= 1) && (
-                            <StatementActionButton
-                                title="Edit value"
-                                icon={faPen}
-                                action={hasFormattedLabel ? handleOnClick : () => dispatch(toggleEditValue({ id: id }))}
-                            />
-                        )}
+                        {((resource && !resource.existingResourceId) || value.shared <= 1) &&
+                            resource._class !== ENTITIES.PREDICATE &&
+                            resource._class !== ENTITIES.CLASS && (
+                                <StatementActionButton
+                                    title="Edit value"
+                                    icon={faPen}
+                                    action={hasFormattedLabel ? handleOnClick : () => dispatch(toggleEditValue({ id: id }))}
+                                />
+                            )}
 
                         {resource?.existingResourceId && value.shared > 1 && (
                             <StatementActionButton

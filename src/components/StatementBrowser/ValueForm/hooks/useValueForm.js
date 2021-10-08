@@ -12,6 +12,7 @@ import {
 import { createResourceStatement } from 'services/backend/statements';
 import { createResource, updateResource } from 'services/backend/resources';
 import { createLiteral, updateLiteral } from 'services/backend/literals';
+import { createClass } from 'services/backend/classes';
 import { fillStatements } from 'actions/addPaper';
 import { createPredicate } from 'services/backend/predicates';
 import validationSchema from '../helpers/validationSchema';
@@ -218,6 +219,9 @@ const useValueForm = ({ valueId, resourceId, propertyId, syncBackend }) => {
                             break;
                         case ENTITIES.LITERAL:
                             newEntity = await createLiteral(value.label, value.datatype);
+                            break;
+                        case ENTITIES.CLASS:
+                            newEntity = await createClass(value.label);
                             break;
                         default:
                             newEntity = await createLiteral(value.label, value.datatype);
