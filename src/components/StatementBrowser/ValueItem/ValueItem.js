@@ -77,7 +77,7 @@ const ValueItem = props => {
                             }
                         >
                             <span tabIndex="0">
-                                {resource && !resource.isFetching && value._class === ENTITIES.RESOURCE && !resourcesAsLinks && (
+                                {resource && !resource.isFetching && value._class !== ENTITIES.LITERAL && !resourcesAsLinks && (
                                     <Button className="p-0 text-left objectLabel" color="link" onClick={handleOnClick} style={{ userSelect: 'text' }}>
                                         {value._class === ENTITIES.CLASS && <div className="typeCircle">C</div>}
                                         {value._class === ENTITIES.PREDICATE && <div className="typeCircle">P</div>}
