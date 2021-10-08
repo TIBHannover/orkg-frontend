@@ -16,7 +16,7 @@ import { createClass } from 'services/backend/classes';
 import { fillStatements } from 'actions/addPaper';
 import { createPredicate } from 'services/backend/predicates';
 import validationSchema from '../helpers/validationSchema';
-import { getConfigByType } from 'constants/DataTypes';
+import { getConfigByType, getConfigByClassId } from 'constants/DataTypes';
 import { useDispatch, useSelector } from 'react-redux';
 import { guid } from 'utils';
 import { toast } from 'react-toastify';
@@ -39,10 +39,17 @@ const useValueForm = ({ valueId, resourceId, propertyId, syncBackend }) => {
     );
     const isUniqLabel = valueClass && valueClass.id === CLASSES.PROBLEM ? true : false;
 
-    const [entityType, setEntityType] = useState(getConfigByType(isLiteralField ? MISC.DEFAULT_LITERAL_DATATYPE : ENTITIES.RESOURCE)._class);
+    const [entityType, setEntityType] = useState(
+        !valueClass?.id
+            ? getConfigByType(isLiteralField ? MISC.DEFAULT_LITERAL_DATATYPE : ENTITIES.RESOURCE)._class
+            : getConfigByClassId(valueClass.id)._class
+    );
+
     const [inputValue, setInputValue] = useState(editMode ? value.label : '');
     const [inputDataType, setInputDataType] = useState(
-        getConfigByType(isLiteralField ? (editMode ? value.datatype : MISC.DEFAULT_LITERAL_DATATYPE) : ENTITIES.RESOURCE).type
+        !valueClass?.id
+            ? getConfigByType(isLiteralField ? (editMode ? value.datatype : MISC.DEFAULT_LITERAL_DATATYPE) : ENTITIES.RESOURCE).type
+            : getConfigByClassId(valueClass.id).type
     );
     const [disabledCreate, setDisabledCreate] = useState(false);
 

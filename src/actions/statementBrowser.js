@@ -1,5 +1,4 @@
 import * as type from './types.js';
-import defaultDatatypes from 'components/Templates/helpers/defaultDatatypes';
 import { guid, filterStatementsBySubjectId, filterObjectOfStatementsByPredicateAndClass } from 'utils';
 import { fillStatements } from './addPaper';
 import { orderBy, uniq, isEqual } from 'lodash';
@@ -9,6 +8,7 @@ import { flatten, uniqBy } from 'lodash';
 import format from 'string-format';
 import { getTemplateById, getTemplatesByClass, getStatementsBundleBySubject } from 'services/backend/statements';
 import { createResource as createResourceApi, updateResourceClasses as updateResourceClassesApi } from 'services/backend/resources';
+import DATA_TYPES from 'constants/DataTypes.js';
 
 export const updateSettings = data => dispatch => {
     dispatch({
@@ -1194,7 +1194,11 @@ export const fetchStatementsForResource = ({ resourceId, isContribution = false,
 export const isLiteral = components => {
     let isLiteral = false;
     for (const typeId of components.map(tc => tc.value?.id)) {
-        if (defaultDatatypes.map(t => t.id).includes(typeId)) {
+        if (
+            DATA_TYPES.filter(dt => dt._class === ENTITIES.LITERAL)
+                .map(t => t.classId)
+                .includes(typeId)
+        ) {
             isLiteral = true;
             break;
         }
@@ -1219,7 +1223,12 @@ export const getValueClass = components => {
  * @return {String|Boolean} the template label or false
  */
 export function isInlineResource(state, valueClass) {
-    if (valueClass && !defaultDatatypes.map(t => t.id).includes(valueClass.id)) {
+    if (
+        valueClass &&
+        !DATA_TYPES.filter(dt => dt._class === ENTITIES.LITERAL)
+            .map(t => t.classId)
+            .includes(valueClass.id)
+    ) {
         if (state.statementBrowser.classes[valueClass.id] && state.statementBrowser.classes[valueClass.id].templateIds) {
             const templateIds = state.statementBrowser.classes[valueClass.id].templateIds;
             //check if it's an inline resource

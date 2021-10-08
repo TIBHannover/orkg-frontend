@@ -110,9 +110,9 @@ const ValueForm = props => {
     };
 
     useEffect(() => {
-        if (entityType === 'literal' && literalInputRef.current) {
+        if (entityType === ENTITIES.LITERAL && literalInputRef.current) {
             literalInputRef.current.focus();
-        } else if (autocompleteInputRef.current && (entityType === ENTITIES.RESOURCE || entityType === 'property')) {
+        } else if (autocompleteInputRef.current && (entityType === ENTITIES.RESOURCE || entityType === ENTITIES.PREDICATE)) {
             autocompleteInputRef.current.focus();
         }
     }, [entityType]);
