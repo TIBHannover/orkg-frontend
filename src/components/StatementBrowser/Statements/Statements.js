@@ -21,7 +21,8 @@ import {
     getSuggestedProperties,
     initializeWithoutContribution,
     initializeWithResource,
-    updateSettings
+    updateSettings,
+    setInitialPath
 } from 'actions/statementBrowser';
 import { ENTITIES } from 'constants/graphSettings';
 import ClassesItem from 'components/StatementBrowser/ClassesItem/ClassesItem';
@@ -63,6 +64,8 @@ const Statements = props => {
                     keyToKeepStateOnLocationChange: props.keyToKeepStateOnLocationChange
                 })
             );
+
+            dispatch(setInitialPath(props.initialPath));
         } else {
             dispatch(
                 updateSettings({
@@ -81,7 +84,8 @@ const Statements = props => {
         props.openExistingResourcesInDialog,
         props.propertiesAsLinks,
         props.resourcesAsLinks,
-        props.rootNodeType
+        props.rootNodeType,
+        props.initialPath
     ]);
 
     const statements = () => {
@@ -216,6 +220,12 @@ Statements.propTypes = {
     openExistingResourcesInDialog: PropTypes.bool,
     initialSubjectId: PropTypes.string,
     initialSubjectLabel: PropTypes.string,
+    initialPath: PropTypes.array(
+        PropTypes.shape({
+            id: PropTypes.string.isRequired,
+            label: PropTypes.string.isRequired
+        })
+    ),
     syncBackend: PropTypes.bool.isRequired,
     newStore: PropTypes.bool,
     templatesFound: PropTypes.bool,
@@ -239,7 +249,8 @@ Statements.defaultProps = {
     initOnLocationChange: true,
     keyToKeepStateOnLocationChange: null,
     rootNodeType: ENTITIES.RESOURCE,
-    renderTemplateBox: false
+    renderTemplateBox: false,
+    initialPath: []
 };
 
 export default Statements;

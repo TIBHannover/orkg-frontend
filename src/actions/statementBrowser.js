@@ -41,6 +41,14 @@ export const updatePreferences = data => dispatch => {
     });
 };
 
+export const setInitialPath = data => dispatch => {
+    data?.length > 0 &&
+        dispatch({
+            type: type.SET_RESOURCE_HISTORY,
+            payload: data
+        });
+};
+
 export const setIsTemplateModalOpen = data => dispatch => {
     dispatch({
         type: type.SET_IS_TEMPLATES_MODAL_OPEN,
@@ -955,7 +963,14 @@ export function selectResource(data) {
     };
 }
 
-export const goToResourceHistory = data => dispatch => {
+export const goToResourceHistory = data => (dispatch, getState) => {
+    if (!getState().statementBrowser.resources.byId[data.id]) {
+        dispatch(
+            fetchStatementsForResource({
+                resourceId: data.id
+            })
+        );
+    }
     dispatch({
         type: type.GOTO_RESOURCE_HISTORY,
         payload: data

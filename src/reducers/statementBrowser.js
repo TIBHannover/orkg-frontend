@@ -2,6 +2,7 @@ import * as type from '../actions/types';
 import dotProp from 'dot-prop-immutable';
 import { ENTITIES, MISC } from 'constants/graphSettings';
 import { match } from 'path-to-regexp';
+import { last } from 'lodash';
 import ROUTES from 'constants/routes';
 import { Cookies } from 'react-cookie';
 
@@ -164,14 +165,14 @@ export default (state = initialState, action) => {
         case type.CREATE_PROPERTY: {
             const { payload } = action;
             let newState;
-            if (
-                dotProp.get(state, `resources.byId.${payload.resourceId}`) &&
-                dotProp.get(state, `resources.byId.${payload.resourceId}.propertyIds`)
-            ) {
-                newState = dotProp.set(state, `resources.byId.${payload.resourceId}.propertyIds`, propertyIds => [
-                    ...propertyIds,
-                    payload.propertyId
-                ]);
+            if (dotProp.get(state, `resources.byId.${payload.resourceId}`)) {
+                newState = dotProp.set(
+                    dotProp.get(state, `resources.byId.${payload.resourceId}.propertyIds`)
+                        ? state
+                        : dotProp.set(state, `resources.byId.${payload.resourceId}.propertyIds`, []),
+                    `resources.byId.${payload.resourceId}.propertyIds`,
+                    propertyIds => [...propertyIds, payload.propertyId]
+                );
                 newState = dotProp.set(newState, 'properties.byId', ids => ({
                     ...ids,
                     [payload.propertyId]: {
@@ -466,6 +467,40 @@ export default (state = initialState, action) => {
             }
 
             return { ...newState };
+        }
+
+        case type.SET_RESOURCE_HISTORY: {
+            const { payload } = action;
+            const lastResourceId = last(state.resourceHistory.allIds);
+            let newState = dotProp.set(state, 'resourceHistory.byId', ids => ({
+                ...ids,
+                ...(lastResourceId
+                    ? {
+                          [lastResourceId]: {
+                              ...state.resourceHistory.byId[lastResourceId],
+                              propertyLabel: last(payload.filter(pt => pt._class === ENTITIES.PREDICATE))?.label
+                          }
+                      }
+                    : {})
+            }));
+            newState = dotProp.set(newState, 'resourceHistory.allIds', ids => [
+                ...payload.filter(pt => pt._class !== ENTITIES.PREDICATE).map(pt => pt.id),
+                ...ids
+            ]);
+            payload.map((pt, index) => {
+                if (pt._class !== ENTITIES.PREDICATE) {
+                    newState = dotProp.set(newState, 'resourceHistory.byId', ids => ({
+                        ...ids,
+                        [pt.id]: {
+                            id: pt.id,
+                            label: pt.label,
+                            propertyLabel: payload[index - 1]?.label
+                        }
+                    }));
+                }
+                return null;
+            });
+            return { ...newState, level: payload.length - 1 };
         }
 
         case type.GOTO_RESOURCE_HISTORY: {
