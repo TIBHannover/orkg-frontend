@@ -16,6 +16,8 @@ import env from '@beam-australia/react-env';
 import PaperHeaderBar from 'components/ViewPaper/PaperHeaderBar/PaperHeaderBar';
 import PaperMenuBar from 'components/ViewPaper/PaperHeaderBar/PaperMenuBar';
 import styled from 'styled-components';
+import { Helmet } from 'react-helmet';
+import moment from 'moment';
 import TitleBar from 'components/TitleBar/TitleBar';
 
 export const EditModeHeader = styled(Container)`
@@ -71,6 +73,32 @@ const ViewPaper = () => {
     let comingFromWizard = queryString.parse(location.search);
     comingFromWizard = comingFromWizard ? comingFromWizard.comingFromWizard === 'true' : false;
 
+    const getSEODescription = () => {
+        return `Published: ${viewPaper.publicationMonth ? moment(viewPaper.publicationMonth.label, 'M').format('MMMM') : ''} ${
+            viewPaper.publicationYear ? viewPaper.publicationYear.label : ''
+        } • Research field: ${viewPaper?.researchField?.label} • Authors: ${viewPaper?.authors?.map(author => author.label).join(', ')}`;
+    };
+
+    const ldJson = {
+        mainEntity: {
+            headline: viewPaper.paperResource?.label,
+            description: getSEODescription(),
+            ...(viewPaper?.doi?.label ? { sameAs: `https://doi.org/${viewPaper.doi.label}` } : {}),
+            author: viewPaper?.authors?.map(author => ({
+                name: author.label,
+                ...(author.orcid ? { url: `http://orcid.org/${author.orcid}` } : {}),
+                '@type': 'Person'
+            })),
+            datePublished: `${viewPaper?.publicationMonth ? moment(viewPaper?.publicationMonth?.label, 'M').format('MMMM') : ''} ${
+                viewPaper?.publicationYear ? viewPaper?.publicationYear?.label : ''
+            }`,
+            about: viewPaper?.researchField?.label,
+            '@type': 'ScholarlyArticle'
+        },
+        '@context': 'https://schema.org',
+        '@type': 'WebPage'
+    };
+
     return (
         <div>
             {!isLoading && isLoadingFailed && <NotFound />}
@@ -86,8 +114,15 @@ const ViewPaper = () => {
                             paperTitle={viewPaper.paperResource.label}
                         />
                     )}
-
                     <Breadcrumbs researchFieldId={viewPaper.researchField ? viewPaper.researchField.id : null} />
+
+                    <Helmet>
+                        <title>{`${viewPaper.paperResource?.label} - ORKG`}</title>
+                        <meta property="og:title" content={`${viewPaper.paperResource?.label} - ORKG`} />
+                        <meta property="og:type" content="article" />
+                        <meta property="og:description" content={getSEODescription()} />
+                        <script type="application/ld+json">{JSON.stringify(ldJson)}</script>
+                    </Helmet>
 
                     <VisibilitySensor onChange={handleShowHeaderBar}>
                         <TitleBar

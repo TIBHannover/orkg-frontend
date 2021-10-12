@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { useLocation, useHistory } from 'react-router';
 import { Container, Row, Col } from 'reactstrap';
 import ResearchFieldCards from 'components/Home/ResearchFieldCards';
@@ -11,6 +10,7 @@ import ContributorsBox from 'components/TopContributors/ContributorsBox';
 import useResearchFieldSelector from 'components/Home/hooks/useResearchFieldSelector';
 import { MISC } from 'constants/graphSettings';
 import { toast } from 'react-toastify';
+import { Helmet } from 'react-helmet';
 import env from '@beam-australia/react-env';
 import HomeAlerts from 'components/HomeAlerts/HomeAlerts';
 
@@ -22,10 +22,6 @@ export default function Home() {
         label: 'Main'
     });
 
-    useEffect(() => {
-        document.title = 'Open Research Knowledge Graph';
-    }, []);
-
     const showSignOutMessage = location.state && location.state.signedOut;
 
     if (showSignOutMessage) {
@@ -36,6 +32,15 @@ export default function Home() {
 
     return (
         <Container style={{ marginTop: env('IS_TESTING_SERVER') === 'true' ? -20 : -70 }}>
+            <Helmet>
+                <title>Open Research Knowledge Graph</title>
+                <meta property="og:title" content="Open Research Knowledge Graph" />
+                <meta property="og:type" content="website" />
+                <meta
+                    property="og:description"
+                    content="The Open Research Knowledge Graph (ORKG) aims to describe research papers in a structured manner. With the ORKG, papers are easier to find and compare."
+                />
+            </Helmet>
             <HomeAlerts />
             <Row>
                 <Col md="12">
