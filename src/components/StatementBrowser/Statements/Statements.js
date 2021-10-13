@@ -220,7 +220,7 @@ Statements.propTypes = {
     openExistingResourcesInDialog: PropTypes.bool,
     initialSubjectId: PropTypes.string,
     initialSubjectLabel: PropTypes.string,
-    initialPath: PropTypes.array(
+    initialPath: PropTypes.arrayOf(
         PropTypes.shape({
             id: PropTypes.string.isRequired,
             label: PropTypes.string.isRequired

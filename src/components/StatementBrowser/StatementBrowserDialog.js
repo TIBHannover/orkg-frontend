@@ -100,7 +100,7 @@ StatementBrowserDialog.propTypes = {
     openExistingResourcesInDialog: PropTypes.bool.isRequired,
     updateSettings: PropTypes.func.isRequired,
     type: PropTypes.string,
-    initialPath: PropTypes.array(
+    initialPath: PropTypes.arrayOf(
         PropTypes.shape({
             id: PropTypes.string.isRequired,
             label: PropTypes.string.isRequired
