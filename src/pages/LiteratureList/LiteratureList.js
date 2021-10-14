@@ -32,6 +32,7 @@ const LiteratureList = () => {
     const isOpenHistoryModal = useSelector(state => state.literatureList.isOpenHistoryModal);
     const researchField = useSelector(state => state.literatureList.researchField);
     const isLoadingInline = useSelector(state => state.literatureList.isLoading);
+    const isLoadingSortSection = useSelector(state => state.literatureList.isLoadingSortSection);
     const versions = useSelector(state => state.literatureList.versions);
     const version = versions.find(version => version.id === id);
     const publicationDate = version ? moment(version.date).format('DD MMMM YYYY') : null;
@@ -172,7 +173,7 @@ const LiteratureList = () => {
             >
                 Literature list
             </TitleBar>
-            <LoadingOverlay />
+            <LoadingOverlay isLoading={isLoadingSortSection} />
 
             {!isLoading && !isEditing && <ViewList />}
             {!isLoading && isEditing && <EditList />}

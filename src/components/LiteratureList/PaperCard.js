@@ -24,7 +24,7 @@ const PaperCard = props => {
     const showActionButtons = props.showAddToComparison || props.selectable;
 
     return (
-        <PaperCardStyled className={`list-group-item d-flex pr-3 ${showActionButtons ? ' pl-2  ' : ' pl-3  '} ${props.selected ? 'selected' : ''}`}>
+        <PaperCardStyled className={`d-flex pr-3 ${showActionButtons ? ' pl-2  ' : ' pl-3  '} ${props.selected ? 'selected' : ''}`}>
             <div className="col-md-9 d-flex p-0">
                 {showActionButtons && (
                     <div className="d-flex flex-column flex-shrink-0" style={{ width: '25px' }}>
@@ -46,7 +46,7 @@ const PaperCard = props => {
                             target="_blank"
                             to={reverse(ROUTES.VIEW_PAPER, { resourceId: props.paper.id, contributionId: props.contribution?.id ?? undefined })}
                         >
-                            {props.paper.title ? props.paper.title : <em>No title</em>}
+                            {props.paper.paper.label ? props.paper.paper.label : <em>No title</em>}
                         </Link>
                         {props.contribution && <span className="text-muted"> - {props.contribution.title}</span>}
                         {props.showBadge && (
@@ -82,16 +82,12 @@ const PaperCard = props => {
                     <div>
                         <small>
                             <Authors authors={props.paper.authors} />
-                            {(props.paper.publicationMonth || props.paper.publicationYear) && (
-                                <Icon size="sm" icon={faCalendar} className="ml-2 mr-1" />
-                            )}
-                            {props.paper.publicationMonth && props.paper.publicationMonth.label > 0
-                                ? moment(props.paper.publicationMonth.label, 'M').format('MMMM')
-                                : ''}{' '}
-                            {props.paper.publicationYear?.label ?? null}
+                            {(props.paper.month || props.paper.year) && <Icon size="sm" icon={faCalendar} className="ml-2 mr-1" />}
+                            {props.paper.month && props.paper.month.label > 0 ? moment(props.paper.month.label, 'M').format('MMMM') : ''}{' '}
+                            {props.paper.year?.label ?? null}
                         </small>
                         {props.paper.description?.label && (
-                            <p className="mb-0 mt-1 w-100 pt-0 border-top" style={{ lineHeight: 1.2 }}>
+                            <p className="mb-0 mt-1 w-100 pt-0" style={{ lineHeight: 1.2 }}>
                                 <small className="text-muted">{props.paper.description?.label}</small>
                             </p>
                         )}
@@ -114,10 +110,10 @@ const PaperCard = props => {
 PaperCard.propTypes = {
     paper: PropTypes.shape({
         id: PropTypes.string.isRequired,
-        title: PropTypes.string,
+        paper: PropTypes.object,
         authors: PropTypes.array,
-        publicationMonth: PropTypes.object,
-        publicationYear: PropTypes.object,
+        month: PropTypes.object,
+        year: PropTypes.object,
         researchField: PropTypes.shape({
             id: PropTypes.string.isRequired,
             label: PropTypes.string

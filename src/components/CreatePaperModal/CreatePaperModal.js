@@ -35,7 +35,7 @@ const CreatePaperModal = ({ isOpen, toggle, onCreatePaper, initialValue }) => {
     }, [initialValue]);
 
     const handleCreate = async () => {
-        const contributionId = await createPaper({
+        const ids = await createPaper({
             title,
             month,
             year,
@@ -46,9 +46,8 @@ const CreatePaperModal = ({ isOpen, toggle, onCreatePaper, initialValue }) => {
             url,
             setOpenItem
         });
-
-        if (contributionId) {
-            onCreatePaper(contributionId);
+        if (ids) {
+            onCreatePaper(ids);
         }
     };
 

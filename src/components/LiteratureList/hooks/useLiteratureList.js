@@ -11,6 +11,7 @@ import {
     createResourceStatement,
     getStatementsBundleBySubject,
     getStatementsByObjectAndPredicate,
+    getStatementsBySubject,
     getStatementsBySubjects
 } from 'services/backend/statements';
 import { createResourceData, getResourceData } from 'services/similarity';
@@ -47,7 +48,9 @@ const useLiteratureList = () => {
             isPublished = true;
         } else if (listResource.classes.includes(CLASSES.LITERATURE_LIST)) {
             ({ statements } = await getStatementsBundleBySubject({
-                id
+                id,
+                blacklist: [CLASSES.RESEARCH_FIELD],
+                maxLevel: 5
             }));
         } else {
             console.log('no literature list classes found');
@@ -95,25 +98,28 @@ const useLiteratureList = () => {
         }
 
         const sections = [];
+        const papers = {};
         for (const [index, section] of sectionResources.entries()) {
             const sectionStatements = getStatementsBySubjectId(statements, section.id);
             sectionResources[index].statements = sectionStatements;
             const type = section.classes.length > 1 ? section.classes.find(_class => _class !== CLASSES.SECTION) : section.classes[0];
             let content = null;
+            let entries = null;
 
             // TODO: support for list section
             if ([CLASSES.LIST_SECTION].includes(type)) {
-                content = section.statements
+                entries = section.statements
                     .filter(statement => statement.predicate.id === PREDICATES.HAS_PAPER)
-                    .map(statement => ({
-                        ...statement.object,
-                        title: statement.object.label,
-                        authors: getObjectsByPredicateAndSubject(statements, PREDICATES.HAS_AUTHOR, statement.object.id),
-                        publicationMonth: getObjectsByPredicateAndSubject(statements, PREDICATES.HAS_PUBLICATION_MONTH, statement.object.id)?.[0],
-                        publicationYear: getObjectsByPredicateAndSubject(statements, PREDICATES.HAS_PUBLICATION_YEAR, statement.object.id)?.[0],
-                        description: getObjectsByPredicateAndSubject(statements, PREDICATES.DESCRIPTION, statement.object.id)?.[0],
-                        contributions: getObjectsByPredicateAndSubject(statements, PREDICATES.HAS_CONTRIBUTION, statement.object.id)
-                    }));
+                    .map(statement => {
+                        const paperId = statement.object.id;
+                        const data = getPaperDataFromStatements({ paperResource: statement.object, statements });
+                        papers[paperId] = data;
+                        return {
+                            paperId,
+                            statementId: statement.id
+                        };
+                    })
+                    .reverse();
             } else if ([CLASSES.TEXT_SECTION].includes(type)) {
                 const contentStatement = section.statements.find(statement => statement.predicate.id === PREDICATES.HAS_CONTENT);
                 content = {
@@ -126,7 +132,8 @@ const useLiteratureList = () => {
                 id: section.id,
                 title: section.label,
                 type,
-                content
+                content,
+                entries
             });
         }
 
@@ -144,9 +151,37 @@ const useLiteratureList = () => {
             versions,
             researchField,
             statements,
-            contributors
+            contributors,
+            papers
         };
     }, []);
+
+    // (TODO: use the same object shape as the EditPaperDialog?)
+    /*            [PREDICATES.HAS_PUBLICATION_MONTH]: 'month',
+            [PREDICATES.HAS_PUBLICATION_YEAR]: 'year',
+            [PREDICATES.HAS_DOI]: 'doi',
+            [PREDICATES.HAS_VENUE]: 'publishedIn',
+            [PREDICATES.HAS_RESEARCH_FIELD]: 'researchField',
+            [PREDICATES.URL]: 'url'
+            */
+    const getPaperDataFromStatements = ({ paperResource, statements }) => ({
+        //...paperResource,
+        paper: paperResource,
+        authors: getObjectsByPredicateAndSubject(statements, PREDICATES.HAS_AUTHOR, paperResource.id),
+        month: getObjectsByPredicateAndSubject(statements, PREDICATES.HAS_PUBLICATION_MONTH, paperResource.id)?.[0],
+        year: getObjectsByPredicateAndSubject(statements, PREDICATES.HAS_PUBLICATION_YEAR, paperResource.id)?.[0],
+        //description: getObjectsByPredicateAndSubject(statements, PREDICATES.DESCRIPTION, paperResource.id)?.[0],
+        doi: getObjectsByPredicateAndSubject(statements, PREDICATES.HAS_DOI, paperResource.id),
+        publishedIn: getObjectsByPredicateAndSubject(statements, PREDICATES.HAS_VENUE, paperResource.id),
+        url: getObjectsByPredicateAndSubject(statements, PREDICATES.URL, paperResource.id),
+        contributions: getObjectsByPredicateAndSubject(statements, PREDICATES.HAS_CONTRIBUTION, paperResource.id)
+    });
+
+    const getPaperData = async paperId => {
+        const statements = await getStatementsBySubject({ id: paperId });
+        const paperResource = await getResource(paperId);
+        return getPaperDataFromStatements({ paperResource, statements });
+    };
 
     const getAllContributors = statements => {
         if (statements.length === 0) {
@@ -247,7 +282,7 @@ const useLiteratureList = () => {
         }
     };
 
-    return { load, isLoading, isNotFound, getListById, getVersions, publishList };
+    return { load, isLoading, isNotFound, getListById, getVersions, publishList, getPaperDataFromStatements, getPaperData };
 };
 
 export default useLiteratureList;

@@ -6,6 +6,7 @@ import { createResource, updateResource } from 'services/backend/resources';
 import {
     createLiteralStatement,
     createResourceStatement,
+    deleteStatementById,
     deleteStatementsByIds,
     getStatementsByObject,
     getStatementsBySubject,
@@ -200,7 +201,6 @@ export const setIsLoadingSort = isLoading => dispatch => {
 
 export const moveSection = ({ listId, sections, oldIndex, newIndex }) => async dispatch => {
     const sectionsNewOrder = arrayMove(sections, oldIndex, newIndex);
-    console.log('{ listId, sections, oldIndex, newIndex }', { listId, sections, oldIndex, newIndex });
     dispatch(sortSections({ listId, sections: sectionsNewOrder }));
 };
 
@@ -216,3 +216,63 @@ export const setVersions = versions => dispatch => {
 export const toggleHistoryModal = () => ({
     type: type.LITERATURE_LIST_TOGGLE_HISTORY_MODAL
 });
+
+export const addListEntry = ({ entry, sectionId }) => async dispatch => {
+    const statement = await createResourceStatement(sectionId, PREDICATES.HAS_PAPER, entry.paper.id);
+
+    dispatch({
+        type: type.LITERATURE_LIST_ADD_LIST_ENTRY,
+        payload: {
+            entry,
+            statementId: statement.id,
+            sectionId
+        }
+    });
+};
+
+export const deleteListEntry = ({ statementId, sectionId }) => async dispatch => {
+    deleteStatementById(statementId);
+    dispatch({
+        type: type.LITERATURE_LIST_DELETE_LIST_ENTRY,
+        payload: {
+            statementId,
+            sectionId
+        }
+    });
+};
+
+export const updateListEntry = entry => async dispatch => {
+    console.log('paper', entry);
+    dispatch({
+        type: type.LITERATURE_LIST_UPDATE_LIST_ENTRY,
+        payload: {
+            entry
+        }
+    });
+};
+
+export const sortListEntries = ({ sectionId, entries, oldIndex, newIndex }) => async dispatch => {
+    dispatch(setIsLoading(true));
+    dispatch(setIsLoadingSort(true));
+
+    const entriesNewOrder = arrayMove(entries, oldIndex, newIndex);
+
+    dispatch({
+        type: type.LITERATURE_LIST_SORT_LIST_ENTRIES,
+        payload: {
+            entries: entriesNewOrder,
+            sectionId
+        }
+    });
+
+    const sectionSubjectStatement = await getStatementsBySubjectAndPredicate({ subjectId: sectionId, predicateId: PREDICATES.HAS_PAPER });
+    const sectionSubjectStatementIds = sectionSubjectStatement.map(stmt => stmt.id);
+    await deleteStatementsByIds(sectionSubjectStatementIds);
+
+    for (const entry of entriesNewOrder) {
+        await createResourceStatement(sectionId, PREDICATES.HAS_PAPER, entry.paperId);
+    }
+
+    dispatch(setIsLoading(false));
+    dispatch(setIsLoadingSort(false));
+};

@@ -89,8 +89,23 @@ export const getStatementsBySubject = ({ id, page = 0, items: size = 9999, sortB
     return submitGetRequest(`${statementsUrl}subject/${encodeURIComponent(id)}/?${params}`).then(res => res.content);
 };
 
-export const getStatementsBundleBySubject = ({ id, maxLevel = 10 }) => {
-    const params = queryString.stringify({ maxLevel });
+/**
+ * Fetching statements for a thing as a bundle
+ * A Bundle is a collection of statements that represents the sub-graph starting from a certain Thing in the KG.
+ *
+ * @param {String} id - Thing id
+ * @param {String} maxLevel - The number of levels in the graph to fetch
+ * @param {Array} blacklist - List of classes ids to ignore while parsing the graph
+ * @return {Promise} Promise object
+ */
+export const getStatementsBundleBySubject = ({ id, maxLevel = 10, blacklist = [] }) => {
+    const params = queryString.stringify(
+        { maxLevel, blacklist: blacklist.join(',') },
+        {
+            skipNull: true,
+            skipEmptyString: true
+        }
+    );
     return submitGetRequest(`${statementsUrl}${encodeURIComponent(id)}/bundle/?${params}`);
 };
 

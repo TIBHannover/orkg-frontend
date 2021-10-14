@@ -64,7 +64,7 @@ const EditSection = props => {
                     />
                 </h2>
                 {type === CLASSES.TEXT_SECTION && <MarkdownEditor label={content.text} handleUpdate={handleUpdateMarkdown} />}
-                {type === CLASSES.LIST_SECTION && <EditSectionList papers={content} section={props.section} />}
+                {type === CLASSES.LIST_SECTION && <EditSectionList section={props.section} />}
             </SortableSection>
             <AddSection index={props.atIndex} />
         </section>

@@ -10,6 +10,7 @@ const initialState = {
     //contributionId: 0,
     sections: [],
     versions: [],
+    papers: {},
     //comparisons: {},
     researchField: {},
     isLoading: false,
@@ -134,6 +135,48 @@ const literatureList = (state = initialState, action) => {
                 ...state,
                 isOpenHistoryModal: !state.isOpenHistoryModal
             };
+        }
+
+        case type.LITERATURE_LIST_SET_IS_LOADING_SORT: {
+            const { isLoading } = action.payload;
+
+            return {
+                ...state,
+                isLoadingSortSection: isLoading
+            };
+        }
+        case type.LITERATURE_LIST_ADD_LIST_ENTRY: {
+            const { entry, sectionId, statementId } = action.payload;
+            const index = state.sections.findIndex(section => section.id === sectionId);
+            const newState = dotProp.set(state, `sections.${index}.entries`, [
+                ...state.sections[index].entries,
+                {
+                    statementId,
+                    paperId: entry.paper.id
+                }
+            ]);
+            return dotProp.set(newState, `papers.${entry.paper.id}`, entry);
+        }
+
+        case type.LITERATURE_LIST_DELETE_LIST_ENTRY: {
+            const { statementId, sectionId } = action.payload;
+            const sectionIndex = state.sections.findIndex(section => section.id === sectionId);
+            const entryIndex = state.sections[sectionIndex].entries.findIndex(section => section.statementId === statementId);
+            return dotProp.delete(state, `sections.${sectionIndex}.entries.${entryIndex}`);
+        }
+
+        case type.LITERATURE_LIST_UPDATE_LIST_ENTRY: {
+            const { entry, statementId, sectionId } = action.payload;
+            //const sectionIndex = state.sections.findIndex(section => section.id === sectionId);
+            //const entryIndex = state.sections[sectionIndex].entries.findIndex(section => section.statementId === statementId);
+            return dotProp.set(state, `papers.${entry.paper.id}`, { ...state.papers[entry.paper.id], ...entry });
+            //return dotProp.delete(state, `sections.${sectionIndex}.entries.${entryIndex}`);
+        }
+
+        case type.LITERATURE_LIST_SORT_LIST_ENTRIES: {
+            const { sectionId, entries } = action.payload;
+            const sectionIndex = state.sections.findIndex(section => section.id === sectionId);
+            return dotProp.set(state, `sections.${sectionIndex}.entries`, entries);
         }
 
         /*case type.ARTICLE_WRITER_SET_IS_EDITING: {

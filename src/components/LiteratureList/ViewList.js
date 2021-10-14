@@ -12,7 +12,7 @@ import { reverse } from 'named-urls';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
-import { Alert, Button, Container, ListGroup } from 'reactstrap';
+import { Alert, Button, Container, ListGroup, ListGroupItem } from 'reactstrap';
 
 const ViewList = () => {
     const { id } = useParams();
@@ -22,6 +22,7 @@ const ViewList = () => {
     const isPublished = useSelector(state => state.literatureList.isPublished);
     const versions = useSelector(state => state.literatureList.versions);
     const researchField = useSelector(state => state.literatureList.researchField);
+    const papers = useSelector(state => state.literatureList.papers);
     const dispatch = useDispatch();
     const latestVersionId = versions?.[0]?.id;
     const newVersionAvailable = isPublished && latestVersionId !== id;
@@ -68,8 +69,14 @@ const ViewList = () => {
                                 <section key={section.id}>
                                     <h2 className="h4 border-bottom mt-5">{section.title}</h2>
                                     <ListGroup>
-                                        {section.content.map(paper => (
-                                            <PaperCard paper={paper} contributions={paper.contributions} showAddToComparison />
+                                        {section.entries.map(paper => (
+                                            <ListGroupItem>
+                                                <PaperCard
+                                                    paper={papers[paper.paperId]}
+                                                    contributions={papers[paper.paperId].contributions}
+                                                    showAddToComparison
+                                                />
+                                            </ListGroupItem>
                                         ))}
                                     </ListGroup>
                                 </section>

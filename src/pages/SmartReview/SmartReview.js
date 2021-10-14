@@ -69,6 +69,7 @@ const SmartReview = () => {
     const [isOpenShouldPublishModal, setIsOpenShouldPublishModal] = useState(false);
     const [isOpenReferencesModal, setIsOpenReferencesModal] = useState(false);
     const isLoadingInline = useSelector(state => state.smartReview.isLoading);
+    const isLoadingSortSection = useSelector(state => state.smartReview.isLoadingSortSection);
     const isEditing = useSelector(state => state.smartReview.isEditing);
     const isPublished = useSelector(state => state.smartReview.isPublished);
     const paper = useSelector(state => state.smartReview.paper);
@@ -248,7 +249,7 @@ const SmartReview = () => {
             >
                 SmartReview
             </TitleBar>
-            <LoadingOverlay />
+            <LoadingOverlay isLoading={isLoadingSortSection} />
 
             {!isLoading && isEditing && (
                 <main

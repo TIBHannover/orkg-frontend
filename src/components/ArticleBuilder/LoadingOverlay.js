@@ -1,6 +1,6 @@
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { useSelector } from 'react-redux';
+import PropTypes from 'prop-types';
 import { CSSTransition } from 'react-transition-group';
 import styled from 'styled-components';
 
@@ -40,11 +40,9 @@ const AnimationContainer = styled(CSSTransition)`
     }
 `;
 
-const LoadingOverlay = () => {
-    const isLoadingSortSection = useSelector(state => state.smartReview.isLoadingSortSection);
-
+const LoadingOverlay = ({ isLoading = false }) => {
     return (
-        <AnimationContainer in={isLoadingSortSection} unmountOnExit classNames="fade-in" timeout={800}>
+        <AnimationContainer in={isLoading} unmountOnExit classNames="fade-in" timeout={800}>
             <div>
                 <Overlay className="text-secondary">
                     <Icon icon={faSpinner} className="mr-2" spin />
@@ -53,6 +51,10 @@ const LoadingOverlay = () => {
             </div>
         </AnimationContainer>
     );
+};
+
+LoadingOverlay.propTypes = {
+    isLoading: PropTypes.bool
 };
 
 export default LoadingOverlay;
