@@ -15,7 +15,7 @@ export const getPageByUrl = _url => submitGetRequest(`${url}pages?url=${_url}`).
 
 export const getAboutPage = id => submitGetRequest(`${url}about-pages/${id}`);
 
-export const getAboutPages = () => submitGetRequest(`${url}about-pages/menu?_sort=order`);
+export const getAboutPages = () => submitGetRequest(`${url}about-pages/menu?_sort=order`).catch(() => []);
 
 export const getHelpArticle = id => submitGetRequest(`${url}help-articles/${id}`);
 
