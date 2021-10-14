@@ -24,11 +24,7 @@ const PaperCard = props => {
     const showActionButtons = props.showAddToComparison || props.selectable;
 
     return (
-        <PaperCardStyled
-            className={`list-group-item list-group-item-action d-flex pr-3 ${showActionButtons ? ' pl-2  ' : ' pl-3  '} ${
-                props.selected ? 'selected' : ''
-            }`}
-        >
+        <PaperCardStyled className={`list-group-item d-flex pr-3 ${showActionButtons ? ' pl-2  ' : ' pl-3  '} ${props.selected ? 'selected' : ''}`}>
             <div className="col-md-9 d-flex p-0">
                 {showActionButtons && (
                     <div className="d-flex flex-column flex-shrink-0" style={{ width: '25px' }}>

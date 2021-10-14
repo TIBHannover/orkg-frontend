@@ -28,7 +28,7 @@ const VisualizationCard = props => {
     });
 
     return (
-        <VisualizationCardStyled className={`list-group-item list-group-item-action d-flex pr-3 pl-3 `}>
+        <VisualizationCardStyled className={`list-group-item d-flex pr-3 pl-3 `}>
             <div className="col-md-9 d-flex p-0">
                 <div className="d-flex flex-column flex-grow-1">
                     <div>
