@@ -16,21 +16,21 @@ const TemplatesModal = props => {
     const resource = useSelector(state => selectedResource && state.statementBrowser.resources.byId[selectedResource]);
     const {
         templates,
-        templatesSuggestions,
-        isLoadingSuggestions,
+        featuredTemplates,
+        isLoadingFeatured,
         isNextPageLoading,
         hasNextPage,
         filterLabel,
         handleLabelFilter,
         loadMoreTemplates
-    } = useTemplates();
+    } = useTemplates({ onlyFeatured: false });
     const dispatch = useDispatch();
 
     return (
         <>
             <Tippy singleton={source} delay={500} />
-            <Modal isOpen={isTemplatesModalOpen} toggle={() => dispatch(setIsTemplateModalOpen({ isOpen: !isTemplatesModalOpen }))} size="lg">
-                <ModalHeader toggle={() => dispatch(setIsTemplateModalOpen({ isOpen: !isTemplatesModalOpen }))}>Select templates</ModalHeader>
+            <Modal size="lg" isOpen={isTemplatesModalOpen} toggle={() => dispatch(setIsTemplateModalOpen({ isOpen: !isTemplatesModalOpen }))}>
+                <ModalHeader toggle={() => dispatch(setIsTemplateModalOpen({ isOpen: !isTemplatesModalOpen }))}>Template gallery</ModalHeader>
                 <ModalBody>
                     <div className="clearfix">
                         <FormGroup>
@@ -45,17 +45,19 @@ const TemplatesModal = props => {
                         </FormGroup>
 
                         {/*!isNextPageLoading && loadingFailed && <UncontrolledAlert color="info">Failed to load templates</UncontrolledAlert>*/}
-                        {(templates.length > 0 || (templatesSuggestions.length > 0 && filterLabel === '')) && (
+                        {(templates.length > 0 || (featuredTemplates.length > 0 && filterLabel === '')) && (
                             <Alert color="info">
-                                Select a template to use it in <b>{resource.label}</b> resource.
+                                Choose a template to use it in <b>{resource.label}</b> resource.
+                                <br />
+                                <small>Clicking on one of the templates will add it to the resource</small>
                             </Alert>
                         )}
 
-                        {filterLabel === '' && templatesSuggestions.length > 0 && (
+                        {filterLabel === '' && featuredTemplates.length > 0 && (
                             <FormGroup>
-                                <p>Suggestions from the research field:</p>
+                                <p>Featured templates:</p>
                                 <div>
-                                    {templatesSuggestions.map(template => (
+                                    {featuredTemplates.map(template => (
                                         <AddTemplateButton
                                             tippyTarget={target}
                                             key={`t${template.id}`}
@@ -70,7 +72,7 @@ const TemplatesModal = props => {
                             </FormGroup>
                         )}
 
-                        {(isLoadingSuggestions || isNextPageLoading) && templates.length === 0 && (
+                        {(isLoadingFeatured || isNextPageLoading) && templates.length === 0 && (
                             <ContentLoader
                                 height="100%"
                                 width="100%"
@@ -89,7 +91,7 @@ const TemplatesModal = props => {
 
                         {templates.length > 0 && (
                             <FormGroup>
-                                {filterLabel === '' && templatesSuggestions.length > 0 && <p>Other templates:</p>}
+                                {filterLabel === '' && featuredTemplates.length > 0 && <p>Other templates:</p>}
                                 <div>
                                     {templates.map(template => (
                                         <AddTemplateButton
@@ -123,7 +125,7 @@ const TemplatesModal = props => {
                             </ListGroupItem>
                         )}
 
-                        {templates.length === 0 && !isNextPageLoading && (
+                        {templates.length === 0 && !isNextPageLoading && featuredTemplates.length === 0 && (
                             <Alert color="info">
                                 No templates
                                 {filterLabel && ' match this filter'}.

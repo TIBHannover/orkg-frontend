@@ -6,17 +6,23 @@ import { debounce } from 'lodash';
 import { getResourcesByClass } from 'services/backend/resources';
 import { CLASSES, PREDICATES } from 'constants/graphSettings';
 
-const useTemplates = () => {
+const useTemplates = ({ onlyFeatured = false }) => {
     const [filterLabel, setFilterLabel] = useState('');
     const pageSize = 25;
     const [templates, setTemplates] = useState([]);
-    const [templatesSuggestions, setTemplatesSuggestions] = useState([]);
+    const [featuredTemplates, setFeaturedTemplates] = useState([]);
     const [isNextPageLoading, setIsNextPageLoading] = useState(false);
-    const [isLoadingSuggestions, setIsLoadingSuggestions] = useState(false);
+    const [isLoadingFeatured, setIsLoadingFeatured] = useState(false);
     const [hasNextPage, setHasNextPage] = useState(false);
     const [page, setPage] = useState(0);
     const [isLastPageReached, setIsLastPageReached] = useState(false);
     const [totalElements, setTotalElements] = useState(0);
+
+    const selectedResource = useSelector(state => state.statementBrowser.selectedResource);
+    const researchField = useSelector(state => state.viewPaper.researchField?.id || state.addPaper.selectedResearchField);
+    const researchProblems = useSelector(state =>
+        state.viewPaper.researchProblems[selectedResource]?.length > 0 ? state.viewPaper.researchProblems[selectedResource] : []
+    );
 
     /**
      * Fetch the templates of a resource
@@ -24,50 +30,37 @@ const useTemplates = () => {
      * @param {String} resourceId Resource Id
      * @param {String} predicateId Predicate Id
      */
-    const getTemplatesOfResourceId = useCallback(
-        (resourceId, predicateId, p = null) => {
-            return getStatementsByObjectAndPredicate({
-                objectId: resourceId,
-                predicateId: predicateId,
-                page: p !== null ? p : page,
-                items: pageSize,
-                sortBy: 'created_at',
-                desc: true,
-                returnContent: false
-            }).then(statements => {
-                // Filter statement with subjects of type Template
-                return {
-                    ...statements,
-                    content: statements.content
-                        .filter(statement => statement.subject.classes.includes(CLASSES.TEMPLATE))
-                        .map(st => ({ id: st.subject.id, label: st.subject.label, source: resourceId }))
-                }; // return the template Object
-            });
-        },
-        [page]
-    );
+    const getTemplatesOfResourceId = useCallback((resourceId, predicateId, p = null) => {
+        return getStatementsByObjectAndPredicate({
+            objectId: resourceId,
+            predicateId: predicateId,
+            page: p !== null ? p : 0,
+            items: pageSize,
+            sortBy: 'created_at',
+            desc: true,
+            returnContent: false
+        }).then(statements => {
+            // Filter statement with subjects of type Template
+            return {
+                ...statements,
+                content: statements.content
+                    .filter(statement => statement.subject.classes.includes(CLASSES.TEMPLATE))
+                    .map(st => ({ id: st.subject.id, label: st.subject.label }))
+            }; // return the template Object
+        });
+    }, []);
 
-    const loadMoreTemplates = (researchField, researchProblem, fClass, label) => {
+    const loadMoreTemplates = label => {
         setIsNextPageLoading(true);
-        let apiCalls = [];
-        if (researchField) {
-            apiCalls = getTemplatesOfResourceId(researchField.id, PREDICATES.TEMPLATE_OF_RESEARCH_FIELD);
-        } else if (researchProblem) {
-            apiCalls = getTemplatesOfResourceId(researchProblem.id, PREDICATES.TEMPLATE_OF_RESEARCH_PROBLEM);
-        } else if (fClass) {
-            apiCalls = getTemplatesOfResourceId(fClass.id, PREDICATES.TEMPLATE_OF_CLASS);
-        } else {
-            apiCalls = getResourcesByClass({
-                id: CLASSES.TEMPLATE,
-                page: page,
-                q: label,
-                items: pageSize,
-                sortBy: 'created_at',
-                desc: true
-            });
-        }
-
-        apiCalls.then(result => {
+        const searchCall = getResourcesByClass({
+            id: CLASSES.TEMPLATE,
+            page: page,
+            q: label,
+            items: pageSize,
+            sortBy: 'created_at',
+            desc: true
+        });
+        searchCall.then(result => {
             setTemplates(prevTemplates => [...prevTemplates, ...result.content]);
             setIsNextPageLoading(false);
             setHasNextPage(!result.last);
@@ -77,12 +70,43 @@ const useTemplates = () => {
         });
     };
 
+    useEffect(() => {
+        const loadFeaturedTemplates = async () => {
+            setIsLoadingFeatured(true);
+            const researchFieldTemplates = researchField
+                ? await getParentResearchFields(researchField).then(parents => {
+                      return [...parents.map(rf => getTemplatesOfResourceId(rf.id, PREDICATES.TEMPLATE_OF_RESEARCH_FIELD, 0))];
+                  })
+                : [];
+
+            const researchProblemsTemplates =
+                researchProblems?.length > 0
+                    ? researchProblems.map(rp => getTemplatesOfResourceId(rp.id, PREDICATES.TEMPLATE_OF_RESEARCH_PROBLEM, 0))
+                    : [];
+
+            Promise.all([...researchFieldTemplates, ...researchProblemsTemplates])
+                .then(fT => {
+                    setFeaturedTemplates(uniqBy(fT.map(c => c.content).flat(), 'id'));
+                    setIsLoadingFeatured(false);
+                })
+                .catch(e => {
+                    setFeaturedTemplates([]);
+                    setIsLoadingFeatured(false);
+                });
+        };
+        loadFeaturedTemplates();
+    }, [researchField, getTemplatesOfResourceId, researchProblems]);
+
     const debouncedGetLoadMoreResults = useRef(debounce(loadMoreTemplates, 500));
 
     useEffect(() => {
-        setIsNextPageLoading(true);
-        debouncedGetLoadMoreResults.current(null, null, null, filterLabel);
-    }, [filterLabel]);
+        if (!onlyFeatured || filterLabel !== '') {
+            setIsNextPageLoading(true);
+            debouncedGetLoadMoreResults.current(filterLabel);
+        } else {
+            setIsNextPageLoading(false);
+        }
+    }, [filterLabel, onlyFeatured]);
 
     const handleLabelFilter = e => {
         setTemplates([]);
@@ -93,42 +117,12 @@ const useTemplates = () => {
         setFilterLabel(e.target.value);
     };
 
-    const selectedResource = useSelector(state => state.statementBrowser.selectedResource);
-    const researchField = useSelector(state => state.viewPaper.researchField?.id || state.addPaper.selectedResearchField);
-    const researchProblems = useSelector(state =>
-        state.viewPaper.researchProblems[selectedResource] && state.viewPaper.researchProblems[selectedResource].length > 0
-            ? state.viewPaper.researchProblems[selectedResource]
-            : []
-    );
-
-    /**
-     * Fetch templates for research fields
-     */
-    useEffect(() => {
-        setIsLoadingSuggestions(true);
-        if (researchField) {
-            getParentResearchFields(researchField).then(parents => {
-                Promise.all([...parents.map(rf => getTemplatesOfResourceId(rf.id, PREDICATES.TEMPLATE_OF_RESEARCH_FIELD, 0))])
-                    .then(sT => {
-                        setTemplatesSuggestions(sT.map(c => c.content).flat());
-                        setIsLoadingSuggestions(false);
-                    })
-                    .catch(e => {
-                        setTemplatesSuggestions([]);
-                        setIsLoadingSuggestions(false);
-                    });
-            });
-        } else {
-            setIsLoadingSuggestions(false);
-        }
-    }, [researchField, getTemplatesOfResourceId, researchProblems]);
-
     return {
         templates: uniqBy(templates, 'id'),
-        templatesSuggestions: uniqBy(templatesSuggestions, 'id'),
+        featuredTemplates: featuredTemplates,
         researchField,
         isNextPageLoading,
-        isLoadingSuggestions,
+        isLoadingFeatured,
         hasNextPage,
         filterLabel,
         isLastPageReached,

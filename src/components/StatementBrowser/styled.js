@@ -175,7 +175,7 @@ export const ValueItemStyle = styled(ListGroupItem)`
         border: 1px ${props => props.theme.secondaryDarker} solid;
         margin-right: 3px;
         border-radius: 100%;
-        font-size: 12px;
+        font-size: 9px;
         font-weight: bold;
         background: ${props => props.theme.secondary};
     }
