@@ -41,9 +41,19 @@ class Latex extends Component {
                             showMathMenu: false,
                             SVG: {
                                 useFontCache: false,
-                                useGlobalCache: false
+                                useGlobalCache: false,
+                                linebreaks: { automatic: true, width: 'container' }
                             },
-                            skipStartupTypeset: true
+                            skipStartupTypeset: true,
+                            'HTML-CSS': {
+                                linebreaks: { automatic: true, width: 'container' }
+                            }
+                        }}
+                        onLoad={() => {
+                            if (!window.MathJax) {
+                                return;
+                            }
+                            window.MathJax.Hub.Queue(['Rerender', window.MathJax.Hub]);
                         }}
                         math={match}
                     />
