@@ -94,7 +94,9 @@ const useTemplates = ({ onlyFeatured = false }) => {
                     setIsLoadingFeatured(false);
                 });
         };
-        loadFeaturedTemplates();
+        if (researchField || researchProblems?.length > 0) {
+            loadFeaturedTemplates();
+        }
     }, [researchField, getTemplatesOfResourceId, researchProblems]);
 
     const debouncedGetLoadMoreResults = useRef(debounce(loadMoreTemplates, 500));

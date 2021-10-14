@@ -72,7 +72,7 @@ const TemplateDetailsTooltip = ({ template, isTemplateLoading, source }) => {
                                     <p>
                                         <LinkStyled target="_blank" to={reverse(ROUTES.CLASS, { id: template.class?.id })}>
                                             <i>
-                                                <div className="typeCircle">C</div> {template.class?.label}
+                                                <span className="typeCircle">C</span> {template.class?.label}
                                             </i>
                                         </LinkStyled>
                                     </p>
@@ -88,7 +88,7 @@ const TemplateDetailsTooltip = ({ template, isTemplateLoading, source }) => {
                                     <p>
                                         <LinkStyled target="_blank" to={reverse(ROUTES.CLASS, { id: template.class?.id })}>
                                             <i>
-                                                <div className="typeCircle">C</div> {template.class?.label}
+                                                <span className="typeCircle">C</span> {template.class?.label}
                                             </i>
                                         </LinkStyled>
                                     </p>
