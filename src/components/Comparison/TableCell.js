@@ -69,38 +69,57 @@ class TableCell extends Component {
     };
 
     PathTooltipContent = (data, cellDataValue) => {
-        const onItemClick = (index, path) => {
-            const resourceType = this.state.isEqualPaths
-                ? index % 2 === 0
-                    ? ENTITIES.RESOURCE
-                    : ENTITIES.PREDICATE
-                : index % 2 !== 0
-                ? ENTITIES.RESOURCE
-                : ENTITIES.PREDICATE;
-            this.openStatementBrowser(
-                data.path[this.state.isEqualPaths ? index : index + 1],
-                path,
-                resourceType,
-                resourceType === ENTITIES.RESOURCE
-                    ? data.pathLabels.slice(0, this.state.isEqualPaths ? index : index + 1).map((l, i) => ({
-                          id: cellDataValue.path[i],
-                          label: l,
-                          _class: i % 2 === 0 ? ENTITIES.RESOURCE : ENTITIES.PREDICATE
-                      }))
-                    : []
-            );
-        };
         return (
             <div className="fullPath">
                 Path of this value :{' '}
                 {data.pathLabels?.map((path, index) => {
+                    const resourceType = this.state.isEqualPaths
+                        ? index % 2 === 0
+                            ? ENTITIES.RESOURCE
+                            : ENTITIES.PREDICATE
+                        : index % 2 !== 0
+                        ? ENTITIES.RESOURCE
+                        : ENTITIES.PREDICATE;
                     return (
                         <span key={index}>
                             <span
-                                className="btn-link"
-                                onClick={() => onItemClick(index, path)}
-                                style={{ cursor: 'pointer' }}
-                                onKeyDown={e => (e.keyCode === 13 ? () => onItemClick(index, path) : undefined)}
+                                className={resourceType !== ENTITIES.PREDICATE ? 'btn-link' : ''}
+                                onClick={() =>
+                                    resourceType !== ENTITIES.PREDICATE
+                                        ? this.openStatementBrowser(
+                                              data.path[this.state.isEqualPaths ? index : index + 1],
+                                              path,
+                                              resourceType,
+                                              resourceType === ENTITIES.RESOURCE
+                                                  ? data.pathLabels.slice(0, this.state.isEqualPaths ? index : index + 1).map((l, i) => ({
+                                                        id: cellDataValue.path[i],
+                                                        label: l,
+                                                        _class: i % 2 === 0 ? ENTITIES.RESOURCE : ENTITIES.PREDICATE
+                                                    }))
+                                                  : []
+                                          )
+                                        : null
+                                }
+                                style={{ cursor: resourceType !== ENTITIES.PREDICATE ? 'pointer' : 'default' }}
+                                onKeyDown={e =>
+                                    e.keyCode === 13
+                                        ? () =>
+                                              resourceType !== ENTITIES.PREDICATE
+                                                  ? this.openStatementBrowser(
+                                                        data.path[this.state.isEqualPaths ? index : index + 1],
+                                                        path,
+                                                        resourceType,
+                                                        resourceType === ENTITIES.RESOURCE
+                                                            ? data.pathLabels.slice(0, this.state.isEqualPaths ? index : index + 1).map((l, i) => ({
+                                                                  id: cellDataValue.path[i],
+                                                                  label: l,
+                                                                  _class: i % 2 === 0 ? ENTITIES.RESOURCE : ENTITIES.PREDICATE
+                                                              }))
+                                                            : []
+                                                    )
+                                                  : null
+                                        : undefined
+                                }
                                 role="button"
                                 tabIndex={0}
                             >
