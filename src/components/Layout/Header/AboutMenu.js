@@ -8,6 +8,17 @@ import { DropdownItem, DropdownMenu, DropdownToggle, UncontrolledButtonDropdown 
 import { getAboutPagesMenu } from 'services/cms';
 import { reverseWithSlug } from 'utils';
 import { reverse } from 'named-urls';
+import styled from 'styled-components';
+
+const StyledButtonDropdown = styled(UncontrolledButtonDropdown)`
+    @media (max-width: ${props => props.theme.gridBreakpoints.md}) {
+        .dropdown-menu {
+            position: relative !important;
+            transform: none !important;
+            border: 0 !important;
+        }
+    }
+`;
 
 const AboutMenu = ({ closeMenu }) => {
     const [items, setItems] = useState([]);
@@ -20,25 +31,31 @@ const AboutMenu = ({ closeMenu }) => {
     }, []);
 
     return (
-        <UncontrolledButtonDropdown direction="right" className="w-100">
+        <StyledButtonDropdown direction="right" className="w-100 nav inNavbar">
             <DropdownToggle
                 onClick={() => (items.length > 0 ? null : closeMenu())}
                 to={reverse(ROUTES.ABOUT, {})}
                 tag={items.length > 0 ? 'button' : RouterNavLink}
-                className="dropdown-item w-100 pr-3"
+                className="dropdown-item w-100"
             >
                 About {items.length > 0 && <Icon style={{ marginTop: '4px' }} icon={faChevronRight} pull="right" />}
             </DropdownToggle>
             {items.length > 0 && (
                 <DropdownMenu>
                     {items.map(({ id, title }) => (
-                        <DropdownItem tag={RouterNavLink} exact to={reverseWithSlug(ROUTES.ABOUT, { id, slug: title })} onClick={() => closeMenu()}>
+                        <DropdownItem
+                            key={id}
+                            tag={RouterNavLink}
+                            exact
+                            to={reverseWithSlug(ROUTES.ABOUT, { id, slug: title })}
+                            onClick={() => closeMenu()}
+                        >
                             {title}
                         </DropdownItem>
                     ))}
                 </DropdownMenu>
             )}
-        </UncontrolledButtonDropdown>
+        </StyledButtonDropdown>
     );
 };
 
