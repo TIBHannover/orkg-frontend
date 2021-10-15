@@ -1,11 +1,11 @@
 import { faBars, faPen, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { deleteListEntry, updateListEntry } from 'actions/literatureList';
+import { deleteListEntry, updateListEntry, updateListEntryDescription } from 'actions/literatureList';
 import PaperCard from 'components/LiteratureList/PaperCard';
 import EditPaperDialog from 'components/ViewPaper/EditDialog/EditPaperDialog';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { SortableElement, sortableHandle } from 'react-sortable-hoc';
 import { toast } from 'react-toastify';
 import { Button, ListGroupItem } from 'reactstrap';
@@ -35,10 +35,11 @@ const Toolbar = styled.div`
 // className={isHovering ? 'hover' : ''}
 const SortableHandle = sortableHandle(() => <Icon icon={faBars} className="text-white sortable-handle" />);
 
-const EditSectionListItem = ({ paper, sectionId, statementId }) => {
+const EditSectionListItem = ({ entry, sectionId, statementId }) => {
     const [isHovering, setIsHovering] = useState(false);
     const [isOpenEditModal, setIsOpenEditModal] = useState(false);
-    const [description, setDescription] = useState('');
+    const paper = useSelector(state => state.literatureList.papers[entry.paperId]);
+    const [description, setDescription] = useState(entry.description?.label);
     const dispatch = useDispatch();
 
     const handleDelete = async () => {
@@ -56,8 +57,8 @@ const EditSectionListItem = ({ paper, sectionId, statementId }) => {
 
     const handleUpdatePaper = async data => {
         dispatch(updateListEntry(data));
+        dispatch(updateListEntryDescription({ description, entryId: entry.entry.id, descriptionLiteralId: entry.description?.id, sectionId }));
         setIsOpenEditModal(false);
-        console.log('description', description);
     };
 
     const handleEditPaper = async () => {
@@ -94,7 +95,7 @@ const EditSectionListItem = ({ paper, sectionId, statementId }) => {
                         </Button>
                     </Toolbar>
                 )}
-                <PaperCard paper={paper} contributions={paper.contributions} showAddToComparison />
+                <PaperCard paper={paper} contributions={paper.contributions} description={entry.description} showAddToComparison />
             </div>
             {isOpenEditModal && (
                 <EditPaperDialog
@@ -111,7 +112,7 @@ const EditSectionListItem = ({ paper, sectionId, statementId }) => {
 };
 
 EditSectionListItem.propTypes = {
-    paper: PropTypes.object.isRequired,
+    entry: PropTypes.object.isRequired,
     sectionId: PropTypes.string.isRequired,
     statementId: PropTypes.string.isRequired
 };

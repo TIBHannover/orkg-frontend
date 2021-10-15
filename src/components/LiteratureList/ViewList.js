@@ -69,11 +69,12 @@ const ViewList = () => {
                                 <section key={section.id}>
                                     <h2 className="h4 border-bottom mt-5">{section.title}</h2>
                                     <ListGroup>
-                                        {section.entries.map(paper => (
+                                        {section.entries.map(entry => (
                                             <ListGroupItem>
                                                 <PaperCard
-                                                    paper={papers[paper.paperId]}
-                                                    contributions={papers[paper.paperId].contributions}
+                                                    description={entry.description}
+                                                    paper={papers[entry.paperId]}
+                                                    contributions={papers[entry.paperId].contributions}
                                                     showAddToComparison
                                                 />
                                             </ListGroupItem>

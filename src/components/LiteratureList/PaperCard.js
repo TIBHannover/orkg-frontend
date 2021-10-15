@@ -30,7 +30,7 @@ const PaperCard = props => {
                     <div className="d-flex flex-column flex-shrink-0" style={{ width: '25px' }}>
                         {props.selectable && (
                             <div>
-                                <CustomInput type="checkbox" id={props.paper.id + 'input'} onChange={props.onSelect} checked={props.selected} />
+                                <CustomInput type="checkbox" id={props.paper.paper.id + 'input'} onChange={props.onSelect} checked={props.selected} />
                             </div>
                         )}
                         {!props.selectable && props.showAddToComparison && !!props.paper.contributions?.length && (
@@ -44,7 +44,7 @@ const PaperCard = props => {
                     <div>
                         <Link
                             target="_blank"
-                            to={reverse(ROUTES.VIEW_PAPER, { resourceId: props.paper.id, contributionId: props.contribution?.id ?? undefined })}
+                            to={reverse(ROUTES.VIEW_PAPER, { resourceId: props.paper.paper.id, contributionId: props.contribution?.id ?? undefined })}
                         >
                             {props.paper.paper.label ? props.paper.paper.label : <em>No title</em>}
                         </Link>
@@ -86,9 +86,9 @@ const PaperCard = props => {
                             {props.paper.month && props.paper.month.label > 0 ? moment(props.paper.month.label, 'M').format('MMMM') : ''}{' '}
                             {props.paper.year?.label ?? null}
                         </small>
-                        {props.paper.description?.label && (
-                            <p className="mb-0 mt-1 w-100 pt-0" style={{ lineHeight: 1.2 }}>
-                                <small className="text-muted">{props.paper.description?.label}</small>
+                        {props.description?.label && (
+                            <p className="mb-0 mt-1 w-100 pt-0" style={{ lineHeight: 1.2, whiteSpace: 'pre-line' }}>
+                                <small className="text-muted">{props.description?.label}</small>
                             </p>
                         )}
                     </div>
@@ -122,8 +122,7 @@ PaperCard.propTypes = {
         created_by: PropTypes.string,
         featured: PropTypes.bool,
         unlisted: PropTypes.bool,
-        isLoading: PropTypes.bool,
-        description: PropTypes.string
+        isLoading: PropTypes.bool
     }).isRequired,
     contribution: PropTypes.shape({
         id: PropTypes.string.isRequired,
@@ -134,7 +133,8 @@ PaperCard.propTypes = {
     showBreadcrumbs: PropTypes.bool.isRequired,
     showAddToComparison: PropTypes.bool.isRequired,
     showBadge: PropTypes.bool.isRequired,
-    onSelect: PropTypes.func
+    onSelect: PropTypes.func,
+    description: PropTypes.string
 };
 
 PaperCard.defaultProps = {
@@ -143,7 +143,8 @@ PaperCard.defaultProps = {
     showBreadcrumbs: true,
     showAddToComparison: true,
     showBadge: false,
-    onChange: () => {}
+    onChange: () => {},
+    description: null
 };
 
 export default PaperCard;

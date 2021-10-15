@@ -120,13 +120,10 @@ const AddEntryModal = ({ sectionId, isOpen, setIsOpen }) => {
     };
 
     const addPaperToList = async paperId => {
-        /*const statements = await getStatementsBySubject({ id: paperId });
-        const paperResource = await getResource(paperId);*/
-        const entry = await getPaperData(paperId);
-        console.log('entry', entry);
+        const paperData = await getPaperData(paperId);
         dispatch(
             addListEntry({
-                entry,
+                paperData,
                 sectionId
             })
         );

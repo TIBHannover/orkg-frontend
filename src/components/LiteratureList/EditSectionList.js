@@ -16,7 +16,7 @@ const SortableList = SortableContainer(({ items, papers, section, handleManualSo
             return (
                 <EditSectionListItem
                     key={`item${item.statementId}`}
-                    paper={papers[item.paperId]}
+                    entry={item}
                     index={index}
                     statementId={item.statementId}
                     sectionId={section.id}

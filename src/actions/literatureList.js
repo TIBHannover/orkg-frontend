@@ -217,15 +217,18 @@ export const toggleHistoryModal = () => ({
     type: type.LITERATURE_LIST_TOGGLE_HISTORY_MODAL
 });
 
-export const addListEntry = ({ entry, sectionId }) => async dispatch => {
-    const statement = await createResourceStatement(sectionId, PREDICATES.HAS_PAPER, entry.paper.id);
+export const addListEntry = ({ paperData, sectionId }) => async dispatch => {
+    const entryResource = await createResource('Entry');
+    const statement = await createResourceStatement(sectionId, PREDICATES.HAS_ENTRY, entryResource.id);
+    await createResourceStatement(entryResource.id, PREDICATES.HAS_PAPER, paperData.paper.id);
 
     dispatch({
         type: type.LITERATURE_LIST_ADD_LIST_ENTRY,
         payload: {
-            entry,
+            entry: entryResource,
             statementId: statement.id,
-            sectionId
+            sectionId,
+            paperData: paperData
         }
     });
 };
@@ -242,13 +245,33 @@ export const deleteListEntry = ({ statementId, sectionId }) => async dispatch =>
 };
 
 export const updateListEntry = entry => async dispatch => {
-    console.log('paper', entry);
     dispatch({
         type: type.LITERATURE_LIST_UPDATE_LIST_ENTRY,
         payload: {
             entry
         }
     });
+};
+
+export const updateListEntryDescription = ({ description, entryId, descriptionLiteralId, sectionId }) => async dispatch => {
+    console.log('{ description, entryId, descriptionLiteralId, sectionId }', { description, entryId, descriptionLiteralId, sectionId });
+    dispatch(setIsLoading(true));
+    if (!descriptionLiteralId) {
+        const descriptionLiteral = await createLiteral(description);
+        createLiteralStatement(entryId, PREDICATES.DESCRIPTION, descriptionLiteral.id);
+    } else {
+        updateLiteral(descriptionLiteralId, description);
+    }
+
+    dispatch({
+        type: type.LITERATURE_LIST_UPDATE_LIST_ENTRY_DESCRIPTION,
+        payload: {
+            description,
+            entryId,
+            sectionId
+        }
+    });
+    dispatch(setIsLoading(false));
 };
 
 export const sortListEntries = ({ sectionId, entries, oldIndex, newIndex }) => async dispatch => {
@@ -265,12 +288,12 @@ export const sortListEntries = ({ sectionId, entries, oldIndex, newIndex }) => a
         }
     });
 
-    const sectionSubjectStatement = await getStatementsBySubjectAndPredicate({ subjectId: sectionId, predicateId: PREDICATES.HAS_PAPER });
+    const sectionSubjectStatement = await getStatementsBySubjectAndPredicate({ subjectId: sectionId, predicateId: PREDICATES.HAS_ENTRY });
     const sectionSubjectStatementIds = sectionSubjectStatement.map(stmt => stmt.id);
     await deleteStatementsByIds(sectionSubjectStatementIds);
 
     for (const entry of entriesNewOrder) {
-        await createResourceStatement(sectionId, PREDICATES.HAS_PAPER, entry.paperId);
+        await createResourceStatement(sectionId, PREDICATES.HAS_ENTRY, entry.entry.id);
     }
 
     dispatch(setIsLoading(false));

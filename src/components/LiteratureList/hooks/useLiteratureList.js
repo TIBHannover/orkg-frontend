@@ -109,14 +109,22 @@ const useLiteratureList = () => {
             // TODO: support for list section
             if ([CLASSES.LIST_SECTION].includes(type)) {
                 entries = section.statements
-                    .filter(statement => statement.predicate.id === PREDICATES.HAS_PAPER)
+                    .filter(statement => statement.predicate.id === PREDICATES.HAS_ENTRY)
                     .map(statement => {
-                        const paperId = statement.object.id;
-                        const data = getPaperDataFromStatements({ paperResource: statement.object, statements });
+                        const entry = statement.object;
+                        const entryId = entry.id;
+                        const entryStatements = getStatementsBySubjectId(statements, entryId);
+                        const paper = entryStatements.find(statement => statement.predicate.id === PREDICATES.HAS_PAPER)?.object;
+                        const description = entryStatements.find(statement => statement.predicate.id === PREDICATES.DESCRIPTION)?.object;
+                        const paperId = paper?.id;
+                        const data = getPaperDataFromStatements({ paperResource: paper, statements });
                         papers[paperId] = data;
+
                         return {
+                            entry,
                             paperId,
-                            statementId: statement.id
+                            statementId: statement.id,
+                            description
                         };
                     })
                     .reverse();

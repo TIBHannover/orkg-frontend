@@ -60,7 +60,8 @@ export const PREDICATES = {
     LINKED_IN_ID: 'linkedInID',
     RESEARCH_GATE_ID: 'researchGateID',
     GOOGLE_SCHOLAR_ID: 'googleScholarID',
-    HAS_LIST: 'HasList'
+    HAS_LIST: 'HasList',
+    HAS_ENTRY: 'HasEntry'
 };
 
 export const CLASSES = {
