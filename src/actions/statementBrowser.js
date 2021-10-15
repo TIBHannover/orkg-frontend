@@ -702,6 +702,34 @@ export const doneSavingValue = data => dispatch => {
     });
 };
 
+export const isAddingValue = data => dispatch => {
+    dispatch({
+        type: type.IS_ADDING_VALUE,
+        payload: data
+    });
+};
+
+export const doneAddingValue = data => dispatch => {
+    dispatch({
+        type: type.DONE_ADDING_VALUE,
+        payload: data
+    });
+};
+
+export const isDeletingValue = data => dispatch => {
+    dispatch({
+        type: type.IS_DELETING_VALUE,
+        payload: data
+    });
+};
+
+export const doneDeletingValue = data => dispatch => {
+    dispatch({
+        type: type.DONE_DELETING_VALUE,
+        payload: data
+    });
+};
+
 export const updateValueLabel = data => dispatch => {
     dispatch({
         type: type.UPDATE_VALUE_LABEL,

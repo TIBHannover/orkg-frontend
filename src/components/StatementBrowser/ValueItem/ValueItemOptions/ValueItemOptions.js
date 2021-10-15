@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { Button } from 'reactstrap';
 import { toggleEditValue } from 'actions/statementBrowser';
-import { setIsHelpModalOpen, deleteValue, isValueHasFormattedLabel } from 'actions/statementBrowser';
+import { setIsHelpModalOpen, deleteValue, isValueHasFormattedLabel, isDeletingValue, doneDeletingValue } from 'actions/statementBrowser';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faTrash, faPen, faTable, faCheck, faTimes, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
+import { faTrash, faPen, faTable, faCheck, faTimes, faQuestionCircle, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import StatementActionButton from 'components/StatementBrowser/StatementActionButton/StatementActionButton';
 import { deleteStatementById } from 'services/backend/statements';
 import { useDispatch, useSelector } from 'react-redux';
@@ -26,7 +26,9 @@ const ValueItemOptions = ({ id, enableEdit, syncBackend, handleOnClick }) => {
 
     const handleDeleteValue = async () => {
         if (syncBackend) {
+            dispatch(isDeletingValue({ id: id }));
             await deleteStatementById(value.statementId);
+            dispatch(doneDeletingValue({ id: id }));
             toast.success('Statement deleted successfully');
         }
         dispatch(
@@ -52,7 +54,8 @@ const ValueItemOptions = ({ id, enableEdit, syncBackend, handleOnClick }) => {
             <div className="valueOptions">
                 {enableEdit && (
                     <>
-                        {((resource && !resource.existingResourceId) || value.shared <= 1) &&
+                        {!value.isSaving &&
+                            ((resource && !resource.existingResourceId) || value.shared <= 1) &&
                             resource._class !== ENTITIES.PREDICATE &&
                             resource._class !== ENTITIES.CLASS && (
                                 <StatementActionButton
@@ -62,6 +65,9 @@ const ValueItemOptions = ({ id, enableEdit, syncBackend, handleOnClick }) => {
                                 />
                             )}
 
+                        {value.isSaving && (
+                            <StatementActionButton isDisabled={true} title="Saving value" icon={faSpinner} iconSpin={true} action={() => null} />
+                        )}
                         {resource?.existingResourceId && value.shared > 1 && (
                             <StatementActionButton
                                 isDisabled={true}
@@ -85,27 +91,32 @@ const ValueItemOptions = ({ id, enableEdit, syncBackend, handleOnClick }) => {
                             />
                         )}
 
-                        <StatementActionButton
-                            title="Delete value"
-                            icon={faTrash}
-                            action={handleDeleteValue}
-                            requireConfirmation={true}
-                            confirmationMessage="Are you sure to delete?"
-                            confirmationButtons={[
-                                {
-                                    title: 'Delete',
-                                    color: 'danger',
-                                    icon: faCheck,
-                                    action: handleDeleteValue
-                                },
-                                {
-                                    title: 'Cancel',
-                                    color: 'secondary',
-                                    icon: faTimes
-                                }
-                            ]}
-                        />
+                        {!value.isDeleting && (
+                            <StatementActionButton
+                                title="Delete value"
+                                icon={faTrash}
+                                action={handleDeleteValue}
+                                requireConfirmation={true}
+                                confirmationMessage="Are you sure to delete?"
+                                confirmationButtons={[
+                                    {
+                                        title: 'Delete',
+                                        color: 'danger',
+                                        icon: faCheck,
+                                        action: handleDeleteValue
+                                    },
+                                    {
+                                        title: 'Cancel',
+                                        color: 'secondary',
+                                        icon: faTimes
+                                    }
+                                ]}
+                            />
+                        )}
 
+                        {value.isDeleting && (
+                            <StatementActionButton isDisabled={true} title="Deleting value" icon={faSpinner} iconSpin={true} action={() => null} />
+                        )}
                         {preferences['showStatementInfo'] && <InfoTippy id={id} />}
                     </>
                 )}

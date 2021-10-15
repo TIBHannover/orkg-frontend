@@ -368,6 +368,30 @@ export default (state = initialState, action) => {
             return newState;
         }
 
+        case type.IS_ADDING_VALUE: {
+            const { payload } = action;
+            const newState = dotProp.set(state, `properties.byId.${payload.id}.isAddingValue`, v => true);
+            return newState;
+        }
+
+        case type.DONE_ADDING_VALUE: {
+            const { payload } = action;
+            const newState = dotProp.set(state, `properties.byId.${payload.id}.isAddingValue`, v => false);
+            return newState;
+        }
+
+        case type.IS_DELETING_VALUE: {
+            const { payload } = action;
+            const newState = dotProp.set(state, `values.byId.${payload.id}.isDeleting`, v => true);
+            return newState;
+        }
+
+        case type.DONE_DELETING_VALUE: {
+            const { payload } = action;
+            const newState = dotProp.set(state, `values.byId.${payload.id}.isDeleting`, v => false);
+            return newState;
+        }
+
         case type.TOGGLE_EDIT_VALUE: {
             const { payload } = action;
             const newState = dotProp.set(state, `values.byId.${payload.id}.isEditing`, v => !v);

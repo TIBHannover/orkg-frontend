@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import useAddValue from './hooks/useAddValue';
 import { ENTITIES } from 'constants/graphSettings';
+import { useSelector } from 'react-redux';
 import ValueForm from 'components/StatementBrowser/ValueForm/ValueForm';
 import { ValueItemStyle } from 'components/StatementBrowser/styled';
 import StatementActionButton from 'components/StatementBrowser/StatementActionButton/StatementActionButton';
@@ -17,6 +18,7 @@ const AddValue = props => {
     });
 
     const [showAddValue, setShowAddValue] = useState(false);
+    const isAddingValue = useSelector(state => state.statementBrowser.properties.byId[props.propertyId].isAddingValue ?? false);
 
     const [templateIsLoading] = useState(false); // to show loading indicator of the template if the value class has a template
 
@@ -34,7 +36,7 @@ const AddValue = props => {
             )}
             <ValueItemStyle className={showAddValue ? 'editingLabel' : ''}>
                 {!showAddValue ? (
-                    !templateIsLoading ? ( //Show loading indicator if the template is still loading
+                    !templateIsLoading && !isAddingValue ? ( //Show loading indicator if the template is still loading
                         <StatementActionButton
                             isDisabled={props.isDisabled}
                             title={!props.isDisabled ? 'Add value' : 'This property reached the maximum number of values set by template'}

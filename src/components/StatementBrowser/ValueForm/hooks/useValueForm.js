@@ -7,7 +7,9 @@ import {
     isLiteral,
     updateValueLabel,
     doneSavingValue,
-    isSavingValue
+    isSavingValue,
+    isAddingValue,
+    doneAddingValue
 } from 'actions/statementBrowser';
 import { createResourceStatement } from 'services/backend/statements';
 import { createResource, updateResource } from 'services/backend/resources';
@@ -56,13 +58,6 @@ const useValueForm = ({ valueId, resourceId, propertyId, syncBackend }) => {
     const commitChangeLabel = async (draftLabel, draftDataType) => {
         // Check if the user changed the label
         if (draftLabel !== value.label || draftDataType !== value.datatype) {
-            dispatch(
-                updateValueLabel({
-                    label: draftLabel,
-                    datatype: draftDataType,
-                    valueId: valueId
-                })
-            );
             if (syncBackend) {
                 dispatch(isSavingValue({ id: valueId })); // To show the saving message instead of the value label
                 if (value.resourceId) {
@@ -76,6 +71,13 @@ const useValueForm = ({ valueId, resourceId, propertyId, syncBackend }) => {
                 }
                 dispatch(doneSavingValue({ id: valueId }));
             }
+            dispatch(
+                updateValueLabel({
+                    label: draftLabel,
+                    datatype: draftDataType,
+                    valueId: valueId
+                })
+            );
         }
     };
 
@@ -216,6 +218,7 @@ const useValueForm = ({ valueId, resourceId, propertyId, syncBackend }) => {
             let newStatement = null;
             const existingResourceId = guid();
             if (syncBackend) {
+                dispatch(isAddingValue({ id: propertyId }));
                 if (!value.selected) {
                     switch (entityType) {
                         case ENTITIES.RESOURCE:
@@ -235,6 +238,7 @@ const useValueForm = ({ valueId, resourceId, propertyId, syncBackend }) => {
                     }
                 }
                 newStatement = await createResourceStatement(resourceId, property?.existingPredicateId, newEntity.id);
+                dispatch(doneAddingValue({ id: propertyId }));
             }
             dispatch(
                 createValue({
