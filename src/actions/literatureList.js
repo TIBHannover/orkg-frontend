@@ -142,11 +142,8 @@ export const createSection = ({ listId, afterIndex, sectionType }) => async (dis
         typeId = CLASSES.LIST_SECTION;
 
         const sectionResource = await createResource('', [typeId]);
-        const markdownLiteral = await createLiteral('');
         await createResourceStatement(listId, PREDICATES.HAS_SECTION, sectionResource.id);
-        await createLiteralStatement(sectionResource.id, PREDICATES.HAS_CONTENT, markdownLiteral.id);
         sectionResourceId = sectionResource.id;
-        markdownLiteralId = markdownLiteral.id;
     }
     dispatch({
         type: type.LITERATURE_LIST_CREATE_SECTION,

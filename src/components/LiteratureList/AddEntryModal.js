@@ -1,21 +1,19 @@
-import { faPlus, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { addListEntry } from 'actions/literatureList';
 import Cite from 'citation-js';
+import CreatePaperModal from 'components/CreatePaperModal/CreatePaperModal';
 import useLiteratureList from 'components/LiteratureList/hooks/useLiteratureList';
 import { MISC } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
+import Textarea from 'react-textarea-autosize';
 import { toast } from 'react-toastify';
-import { Button, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import { Button, FormGroup, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import { getPaperByDOI } from 'services/backend/misc';
 import { saveFullPaper } from 'services/backend/papers';
-import { getResource } from 'services/backend/resources';
-import { getStatementsBySubject } from 'services/backend/statements';
 import { parseCiteResult } from 'utils';
-import Textarea from 'react-textarea-autosize';
-import CreatePaperModal from 'components/CreatePaperModal/CreatePaperModal';
 
 const AddEntryModal = ({ sectionId, isOpen, setIsOpen }) => {
     const [isOpenCreatePaper, setIsOpenCreatePaper] = useState(false);
@@ -47,42 +45,49 @@ const AddEntryModal = ({ sectionId, isOpen, setIsOpen }) => {
 
         if (!paperId) {
             try {
-                const paper = await Cite.async(entryParsed);
-                if (!paper) {
+                const papers = await Cite.async(entryParsed);
+                if (!papers) {
                     toast.error('An error occurred');
                     setIsLoading(false);
                     return;
                 }
-                const { paperTitle, paperAuthors, paperPublicationMonth, paperPublicationYear, doi, publishedIn } = parseCiteResult(paper);
+                for (const paper of papers.data) {
+                    paperId = null; // reset because of the loop
+                    const { paperTitle, paperAuthors, paperPublicationMonth, paperPublicationYear, doi, publishedIn } = parseCiteResult({
+                        data: [paper]
+                    });
 
-                if (doi) {
-                    paperId = await getPaperIdByDoi(doi);
-                }
+                    if (doi) {
+                        paperId = await getPaperIdByDoi(doi);
+                    }
 
-                if (!paperId) {
-                    const savedPaper = await saveFullPaper(
-                        {
-                            paper: {
-                                title: paperTitle,
-                                researchField: MISC.RESEARCH_FIELD_MAIN,
-                                authors: paperAuthors.length
-                                    ? paperAuthors.map(author => ({ label: author.label, ...(author.orcid ? { orcid: author.orcid } : {}) }))
-                                    : null,
-                                publicationMonth: paperPublicationMonth || undefined,
-                                publicationYear: paperPublicationYear || undefined,
-                                doi: doi || undefined,
-                                publishedIn: publishedIn || undefined,
-                                contributions: [
-                                    {
-                                        name: 'Contribution'
-                                    }
-                                ]
-                            }
-                        },
-                        true
-                    );
-                    paperId = savedPaper.id;
+                    if (!paperId) {
+                        const savedPaper = await saveFullPaper(
+                            {
+                                paper: {
+                                    title: paperTitle,
+                                    researchField: MISC.RESEARCH_FIELD_MAIN,
+                                    authors: paperAuthors.length
+                                        ? paperAuthors.map(author => ({ label: author.label, ...(author.orcid ? { orcid: author.orcid } : {}) }))
+                                        : null,
+                                    publicationMonth: paperPublicationMonth || undefined,
+                                    publicationYear: paperPublicationYear || undefined,
+                                    doi: doi || undefined,
+                                    publishedIn: publishedIn || undefined,
+                                    contributions: [
+                                        {
+                                            name: 'Contribution'
+                                        }
+                                    ]
+                                }
+                            },
+                            true
+                        );
+                        paperId = savedPaper.id;
+                    }
+                    await addPaperToList(paperId);
                 }
+                toast.success(`Successfully added ${papers.data?.length} entries`);
             } catch (e) {
                 const validationMessages = {
                     'This format is not supported or recognized':
@@ -94,22 +99,9 @@ const AddEntryModal = ({ sectionId, isOpen, setIsOpen }) => {
                 setIsLoading(false);
                 return;
             }
-        }
-        if (paperId) {
-            /*const statements = await getStatementsBySubject({ id: paperId });
-            const paperResource = await getResource(paperId);
-            dispatch(
-                addListEntry({
-                    entry: getPaperDataFromStatements({ paperResource, statements }),
-                    sectionId
-                })
-            );*/
-            await addPaperToList(paperId);
-
-            toast.success('The entry has been added successfully');
         } else {
-            toast.error('An error occurred, please try this action again');
-            setIsLoading(false);
+            await addPaperToList(paperId);
+            toast.success('The entry has been added successfully');
         }
     };
 

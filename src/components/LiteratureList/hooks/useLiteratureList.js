@@ -164,21 +164,11 @@ const useLiteratureList = () => {
         };
     }, []);
 
-    // (TODO: use the same object shape as the EditPaperDialog?)
-    /*            [PREDICATES.HAS_PUBLICATION_MONTH]: 'month',
-            [PREDICATES.HAS_PUBLICATION_YEAR]: 'year',
-            [PREDICATES.HAS_DOI]: 'doi',
-            [PREDICATES.HAS_VENUE]: 'publishedIn',
-            [PREDICATES.HAS_RESEARCH_FIELD]: 'researchField',
-            [PREDICATES.URL]: 'url'
-            */
     const getPaperDataFromStatements = ({ paperResource, statements }) => ({
-        //...paperResource,
         paper: paperResource,
-        authors: getObjectsByPredicateAndSubject(statements, PREDICATES.HAS_AUTHOR, paperResource.id),
+        authors: getObjectsByPredicateAndSubject(statements, PREDICATES.HAS_AUTHOR, paperResource.id).reverse(),
         month: getObjectsByPredicateAndSubject(statements, PREDICATES.HAS_PUBLICATION_MONTH, paperResource.id)?.[0],
         year: getObjectsByPredicateAndSubject(statements, PREDICATES.HAS_PUBLICATION_YEAR, paperResource.id)?.[0],
-        //description: getObjectsByPredicateAndSubject(statements, PREDICATES.DESCRIPTION, paperResource.id)?.[0],
         doi: getObjectsByPredicateAndSubject(statements, PREDICATES.HAS_DOI, paperResource.id),
         publishedIn: getObjectsByPredicateAndSubject(statements, PREDICATES.HAS_VENUE, paperResource.id),
         url: getObjectsByPredicateAndSubject(statements, PREDICATES.URL, paperResource.id),

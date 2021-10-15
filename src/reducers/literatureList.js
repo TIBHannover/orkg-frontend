@@ -99,7 +99,8 @@ const literatureList = (state = initialState, action) => {
                                   id: markdownId,
                                   text: ''
                               }
-                            : undefined
+                            : undefined,
+                        entries: []
                     },
                     ...state.sections.slice(afterIndex)
                 ]
