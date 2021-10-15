@@ -7,7 +7,7 @@ import AddValue from 'components/StatementBrowser/AddValue/AddValue';
 import StatementActionButton from 'components/StatementBrowser/StatementActionButton/StatementActionButton';
 import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
 import { StatementsGroupStyle, PropertyStyle, ValuesStyle } from 'components/StatementBrowser/styled';
-import defaultProperties from 'components/StatementBrowser/AddProperty/helpers/defaultProperties';
+import defaultProperties from 'constants/defaultProperties';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
 import { ENTITIES } from 'constants/graphSettings';
 import { reverse } from 'named-urls';

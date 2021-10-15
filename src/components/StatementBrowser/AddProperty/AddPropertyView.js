@@ -4,7 +4,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPlus, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
 import { ENTITIES } from 'constants/graphSettings';
-import defaultProperties from './helpers/defaultProperties';
+import defaultProperties from 'constants/defaultProperties';
 import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
 import Tippy from '@tippyjs/react';
 import PropTypes from 'prop-types';
