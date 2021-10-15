@@ -6,20 +6,20 @@ import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 import ROUTES from 'constants/routes.js';
 import RelativeBreadcrumbs from 'components/RelativeBreadcrumbs/RelativeBreadcrumbs';
 import Authors from 'components/PaperCard/Authors';
-import useCardData from './hooks/useCardData';
+import useCardData from 'components/SmartReviewCard/hooks/useCardData';
 import PropTypes from 'prop-types';
 import { CardBadge } from 'components/styled';
 import moment from 'moment';
 import Tippy from '@tippyjs/react';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
 
-const SmartReviewCardStyled = styled.div`
+const CardStyled = styled.div`
     &:last-child {
         border-bottom-right-radius: ${props => (props.rounded === 'true' ? '0 !important' : '')};
     }
 `;
 
-const SmartReviewCard = ({ versions, showBadge }) => {
+const ListCard = ({ versions, showBadge }) => {
     const { researchField, authors, isLoading: isLoadingMetaData } = useCardData({
         id: versions[0]?.id,
         initResearchField: versions[0]?.researchField,
@@ -27,14 +27,14 @@ const SmartReviewCard = ({ versions, showBadge }) => {
     });
 
     return (
-        <SmartReviewCardStyled className="list-group-item list-group-item-action d-flex pr-3 pl-3">
+        <CardStyled className="list-group-item list-group-item-action d-flex pr-3 pl-3">
             <div className="col-md-9 d-flex p-0">
                 <div className="d-flex flex-column flex-grow-1">
                     <div>
-                        <Link to={reverse(ROUTES.SMART_REVIEW, { id: versions[0]?.id })}>{versions[0]?.label}</Link>
+                        <Link to={reverse(ROUTES.LITERATURE_LIST, { id: versions[0]?.id })}>{versions[0]?.label}</Link>
                         {showBadge && (
                             <div className="d-inline-block ml-2">
-                                <CardBadge color="primary">SmartReview</CardBadge>
+                                <CardBadge color="primary">Literature list</CardBadge>
                             </div>
                         )}
                     </div>
@@ -55,7 +55,7 @@ const SmartReviewCard = ({ versions, showBadge }) => {
                             {versions.map((version, index) => (
                                 <span key={version.id}>
                                     <Tippy content={version.description}>
-                                        <Link to={reverse(ROUTES.SMART_REVIEW, { id: version.id })}>Version {versions.length - index}</Link>
+                                        <Link to={reverse(ROUTES.LITERATURE_LIST, { id: version.id })}>Version {versions.length - index}</Link>
                                     </Tippy>{' '}
                                     {index < versions.length - 1 && ' • '}
                                 </span>
@@ -73,17 +73,17 @@ const SmartReviewCard = ({ versions, showBadge }) => {
                 </div>
                 <UserAvatar userId={versions[0]?.created_by} />
             </div>
-        </SmartReviewCardStyled>
+        </CardStyled>
     );
 };
 
-SmartReviewCard.propTypes = {
+ListCard.propTypes = {
     versions: PropTypes.array.isRequired,
     showBadge: PropTypes.bool.isRequired
 };
 
-SmartReviewCard.defaultProps = {
+ListCard.defaultProps = {
     showBadge: false
 };
 
-export default SmartReviewCard;
+export default ListCard;

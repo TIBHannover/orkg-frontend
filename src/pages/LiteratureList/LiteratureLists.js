@@ -1,21 +1,21 @@
-import { faPlus, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import { faEyeSlash, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import ListPage from 'components/ListPage/ListPage';
+import ListCard from 'components/LiteratureList/ListCard';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import { CLASSES } from 'constants/graphSettings';
-import SmartReviewCard from 'components/SmartReviewCard/SmartReviewCard';
 import ROUTES from 'constants/routes';
-import { useSelector } from 'react-redux';
 import { groupBy } from 'lodash';
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { getSmartReviewData } from 'utils';
 import { getResourcesByClass } from 'services/backend/resources';
 import { getStatementsBySubjects } from 'services/backend/statements';
+import { getSmartReviewData } from 'utils';
 
 const LiteratureLists = () => {
     const user = useSelector(state => state.auth.user);
 
-    const renderListItem = versions => <SmartReviewCard key={versions[0]?.id} versions={versions} showBadge={false} />;
+    const renderListItem = versions => <ListCard key={versions[0]?.id} versions={versions} showBadge={false} />;
 
     const fetchItems = async ({ resourceClass, page, pageSize }) => {
         let items = [];

@@ -70,7 +70,7 @@ const ViewList = () => {
                                     <h2 className="h4 border-bottom mt-5">{section.title}</h2>
                                     <ListGroup>
                                         {section.entries.map(entry => (
-                                            <ListGroupItem>
+                                            <ListGroupItem className="p-2">
                                                 <PaperCard
                                                     description={entry.description}
                                                     paper={papers[entry.paperId]}
