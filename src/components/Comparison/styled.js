@@ -85,8 +85,16 @@ export const ReactTableWrapper = styled.div`
             .tr:hover .td > div > div {
                 background: #e7eaf1;
             }
+            .tr .td > div > .itemGroup,
+            .tr:hover .td > div > .itemGroup {
+                background: ${props => props.theme.lightDarker};
+            }
             .tr:hover .td .columnProperty > div {
                 background: #8b91a5;
+            }
+            .tr .td .columnPropertyGroup > div,
+            .tr:hover .td .columnPropertyGroup > div {
+                background: ${props => props.theme.secondaryDarker};
             }
             .tr:hover .td .columnContribution > div:first-child {
                 color: ${props => props.theme.primary};

@@ -3,7 +3,7 @@ import { FILTER_TYPES } from 'constants/comparisonFilterTypes';
 import { CLASSES, MISC, PREDICATES, ENTITIES } from 'constants/graphSettings';
 import { PREDICATE_TYPE_ID, RESOURCE_TYPE_ID } from 'constants/misc';
 import ROUTES from 'constants/routes';
-import { find, flatten, flattenDepth, isEqual, isString, last, uniq, sortBy, uniqBy } from 'lodash';
+import { find, flatten, flattenDepth, isEqual, isString, last, uniq, sortBy, uniqBy, isEmpty } from 'lodash';
 import { unescape } from 'he';
 import { reverse } from 'named-urls';
 import queryString from 'query-string';
@@ -915,7 +915,7 @@ export const stringifyType = type => {
  * @param {String} propertyId Property ID
  * @return {Array} Rules
  */
-export const getRuleByProperty = (filterControlData, propertyId) => filterControlData.find(item => item.property.id === propertyId).rules;
+export const getRuleByProperty = (filterControlData, propertyId) => filterControlData.find(item => item.property.id === propertyId)?.rules;
 
 /**
  * get Values by property
@@ -924,7 +924,7 @@ export const getRuleByProperty = (filterControlData, propertyId) => filterContro
  * @param {String} propertyId Property ID
  * @return {Array} values
  */
-export const getValuesByProperty = (filterControlData, propertyId) => filterControlData.find(item => item.property.id === propertyId).values;
+export const getValuesByProperty = (filterControlData, propertyId) => filterControlData.find(item => item.property.id === propertyId)?.values;
 
 /**
  * get data for each property
@@ -1264,4 +1264,61 @@ export const getDataBasedOnType = (resource, statements) => {
     } else {
         return undefined;
     }
+};
+
+// returns the position of the first differing character between
+// $left and $right, or -1 if either is empty
+export const strcmppos = (left, right) => {
+    if (isEmpty(left) || isEmpty(right)) {
+        return -1;
+    }
+    let i;
+    i = 0;
+    while (left[i] && left[i] === right[i]) {
+        i++;
+    }
+    return i - 1;
+};
+
+// returns the part of the string preceding (but not including) the
+// final directory delimiter, or empty if none are found
+export const truncate_to_last_dir = str => {
+    return str.substr(0, str.lastIndexOf('/')).toString();
+};
+
+export const group_array_by_directory_prefix = strings => {
+    const groups = {};
+    const numStrings = strings?.length;
+    let i;
+    for (i = 0; i < numStrings; i++) {
+        let j;
+        for (j = i + 1; j < numStrings; j++) {
+            const pos = strcmppos(strings[i], strings[j]);
+            const prefix = truncate_to_last_dir(strings[i].substr(0, pos + 1));
+            // append to grouping for this prefix. include both strings - this
+            // gives duplicates which we'll merge later
+            groups[prefix] = groups[prefix]
+                ? [
+                      ...groups[prefix],
+                      {
+                          0: strings[i],
+                          1: strings[j]
+                      }
+                  ]
+                : [
+                      {
+                          0: strings[i],
+                          1: strings[j]
+                      }
+                  ];
+        }
+    }
+    let _key_;
+    for (_key_ in groups) {
+        let group;
+        group = groups[_key_];
+        // to remove duplicates introduced above
+        group = uniq(flatten(group));
+    }
+    return groups;
 };
