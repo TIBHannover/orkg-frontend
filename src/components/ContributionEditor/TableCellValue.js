@@ -78,18 +78,18 @@ const TableCellValue = forwardRef(({ value, index, setDisableCreate, propertyId 
                 <>
                     {index > 0 && <ItemInnerSeparator className="my-0" />}
                     <Value className="position-relative">
-                        <ValuePlugins type={value._class} options={{ inModal: true }}>
-                            {value._class === 'resource' && <TableCellValueResource value={value} />}
-                            {value._class === 'literal' && (
-                                <div
-                                    role="textbox"
-                                    tabIndex="0"
-                                    onDoubleClick={env('PWC_USER_ID') !== value.created_by ? handleStartEdit : undefined}
-                                >
+                        {value._class === 'resource' && (
+                            <ValuePlugins type={value._class} options={{ inModal: true }}>
+                                <TableCellValueResource value={value} />
+                            </ValuePlugins>
+                        )}
+                        {value._class === 'literal' && (
+                            <div role="textbox" tabIndex="0" onDoubleClick={env('PWC_USER_ID') !== value.created_by ? handleStartEdit : undefined}>
+                                <ValuePlugins type={value._class} options={{ inModal: true }}>
                                     {value.label || <i>No label</i>}
-                                </div>
-                            )}
-                        </ValuePlugins>
+                                </ValuePlugins>
+                            </div>
+                        )}
                         {env('PWC_USER_ID') !== value.created_by && (
                             <TableCellButtons onEdit={handleStartEdit} onDelete={handleDelete} backgroundColor="rgba(240, 242, 247, 0.8)" />
                         )}
