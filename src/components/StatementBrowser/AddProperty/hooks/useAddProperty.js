@@ -50,6 +50,8 @@ function useAddProperty({ resourceId, syncBackend }) {
 
             if (confirmNewProperty) {
                 handleNewProperty(label);
+            } else {
+                setShowAddProperty(false);
             }
         },
         [confirmProperty, dispatch, resourceId, syncBackend]

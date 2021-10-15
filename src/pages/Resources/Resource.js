@@ -177,7 +177,7 @@ function Resource(props) {
             }
         }
         return null;
-    }, [resource.classes]);
+    }, [resource?.classes]);
 
     const dedicatedLink = getDedicatedLink();
 

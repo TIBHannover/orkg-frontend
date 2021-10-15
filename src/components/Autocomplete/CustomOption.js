@@ -131,8 +131,7 @@ export default function CustomOption(props) {
                     </div>
                 </StyledLabel>
                 <span>
-                    {((truncatedDescription && props.data.description.length > MAXIMUM_DESCRIPTION_LENGTH) ||
-                        (props.data.tooltipData && props.data.tooltipData.length > 0)) && (
+                    {props.data.tooltipData && props.data.tooltipData.length > 0 && (
                         <div className="info mr-1">
                             <Tippy
                                 interactive={true}
@@ -170,7 +169,7 @@ export default function CustomOption(props) {
                             </Tippy>
                         </div>
                     )}
-                    {!props.data.tooltipData && (
+                    {!props.data.tooltipData && !props.data.__isNew__ && (
                         <div className="info mr-1">
                             <Tippy
                                 appendTo={document.body}
