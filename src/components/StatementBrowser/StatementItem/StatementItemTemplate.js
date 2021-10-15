@@ -1,5 +1,5 @@
 import { toggleEditPropertyLabel } from 'actions/statementBrowser';
-import { faPen, faTrash, faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faPen, faTrash, faCheck, faTimes, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { ListGroup, InputGroup } from 'reactstrap';
 import PropTypes from 'prop-types';
 import ValueItem from 'components/StatementBrowser/ValueItem/ValueItem';
@@ -25,7 +25,7 @@ export default function StatementItemTemplate(props) {
                     {!props.property.isEditing ? (
                         <div>
                             <div className="propertyLabel">
-                                {props.property.existingPredicateId ? (
+                                {!props.property.isSaving && props.property.existingPredicateId && (
                                     <Link
                                         to={reverse(ROUTES.PROPERTY, { id: props.property.existingPredicateId })}
                                         target={!propertiesAsLinks ? '_blank' : '_self'}
@@ -35,46 +35,69 @@ export default function StatementItemTemplate(props) {
                                             {props.predicateLabel}
                                         </DescriptionTooltip>
                                     </Link>
-                                ) : (
-                                    props.predicateLabel
                                 )}
+                                {!props.property.isSaving && !props.property.existingPredicateId && props.predicateLabel}
+                                {props.property.isSaving && 'Saving...'}
                             </div>
                             {props.enableEdit && (
                                 <div className={propertyOptionsClasses}>
-                                    <StatementActionButton
-                                        isDisabled={!canDeleteProperty}
-                                        title={
-                                            canDeleteProperty
-                                                ? 'Change property'
-                                                : "This property can not be changes because it's required by the template"
-                                        }
-                                        icon={faPen}
-                                        action={() => dispatch(toggleEditPropertyLabel({ id: props.id }))}
-                                    />
-                                    <StatementActionButton
-                                        isDisabled={!canDeleteProperty}
-                                        title={
-                                            canDeleteProperty
-                                                ? 'Delete property'
-                                                : "This property can not be deleted because it's required by the template"
-                                        }
-                                        icon={faTrash}
-                                        requireConfirmation={true}
-                                        confirmationMessage="Are you sure to delete?"
-                                        confirmationButtons={[
-                                            {
-                                                title: 'Delete',
-                                                color: 'danger',
-                                                icon: faCheck,
-                                                action: props.handleDeleteStatement
-                                            },
-                                            {
-                                                title: 'Cancel',
-                                                color: 'secondary',
-                                                icon: faTimes
+                                    {!props.property.isSaving && (
+                                        <StatementActionButton
+                                            isDisabled={!canDeleteProperty}
+                                            title={
+                                                canDeleteProperty
+                                                    ? 'Change property'
+                                                    : "This property can not be changes because it's required by the template"
                                             }
-                                        ]}
-                                    />
+                                            icon={faPen}
+                                            action={() => dispatch(toggleEditPropertyLabel({ id: props.id }))}
+                                        />
+                                    )}
+                                    {props.property.isSaving && (
+                                        <StatementActionButton
+                                            isDisabled={true}
+                                            title="Changing property"
+                                            icon={faSpinner}
+                                            iconSpin={true}
+                                            action={() => null}
+                                        />
+                                    )}
+
+                                    {!props.property.isDeleting && (
+                                        <StatementActionButton
+                                            isDisabled={!canDeleteProperty}
+                                            title={
+                                                canDeleteProperty
+                                                    ? 'Delete property'
+                                                    : "This property can not be deleted because it's required by the template"
+                                            }
+                                            icon={faTrash}
+                                            requireConfirmation={true}
+                                            confirmationMessage="Are you sure to delete?"
+                                            confirmationButtons={[
+                                                {
+                                                    title: 'Delete',
+                                                    color: 'danger',
+                                                    icon: faCheck,
+                                                    action: props.handleDeleteStatement
+                                                },
+                                                {
+                                                    title: 'Cancel',
+                                                    color: 'secondary',
+                                                    icon: faTimes
+                                                }
+                                            ]}
+                                        />
+                                    )}
+                                    {props.property.isDeleting && (
+                                        <StatementActionButton
+                                            isDisabled={true}
+                                            title="Deleting property"
+                                            icon={faSpinner}
+                                            iconSpin={true}
+                                            action={() => null}
+                                        />
+                                    )}
                                 </div>
                             )}
                         </div>

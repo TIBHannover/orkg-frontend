@@ -1,5 +1,12 @@
 import { useState, useEffect, useCallback } from 'react';
-import { changeProperty, isSavingProperty, doneSavingProperty, deleteProperty } from 'actions/statementBrowser';
+import {
+    changeProperty,
+    isSavingProperty,
+    doneSavingProperty,
+    deleteProperty,
+    isDeletingProperty,
+    doneDeletingProperty
+} from 'actions/statementBrowser';
 import { updateStatement, deleteStatementById } from 'services/backend/statements';
 import { createPredicate } from 'services/backend/predicates';
 import { getResource } from 'services/backend/resources';
@@ -11,7 +18,6 @@ function useStatementItem({ propertyId, resourceId, syncBackend }) {
     const dispatch = useDispatch();
     const property = useSelector(state => state.statementBrowser.properties.byId[propertyId]);
     const values = useSelector(state => state.statementBrowser.values);
-
     const [predicateLabel, setPredicateLabel] = useState(property.label);
 
     useEffect(() => {
@@ -36,38 +42,71 @@ function useStatementItem({ propertyId, resourceId, syncBackend }) {
         if (syncBackend) {
             // Delete All related statements
             if (property && property.valueIds.length > 0) {
+                const apiCalls = [];
+                dispatch(isDeletingProperty({ id: propertyId }));
                 for (const valueId of property.valueIds) {
                     const value = values.byId[valueId];
-                    deleteStatementById(value.statementId);
+                    apiCalls.push(deleteStatementById(value.statementId));
                 }
-                toast.success(`${property.valueIds.length} ${property.valueIds.length === 1 ? 'Statement' : 'Statements'} deleted successfully`);
+                Promise.all(apiCalls)
+                    .then(() => {
+                        dispatch(doneDeletingProperty({ id: propertyId }));
+                        dispatch(
+                            deleteProperty({
+                                id: propertyId,
+                                resourceId: resourceId
+                            })
+                        );
+                        toast.success(
+                            `${property.valueIds.length} ${property.valueIds.length === 1 ? 'Statement' : 'Statements'} deleted successfully`
+                        );
+                    })
+                    .catch(e => {
+                        dispatch(doneDeletingProperty({ id: propertyId }));
+                        toast.error(`Something went wrong while deleting the ${property.valueIds.length === 1 ? 'statement' : 'statements'}.`);
+                    });
+            } else {
+                dispatch(
+                    deleteProperty({
+                        id: propertyId,
+                        resourceId: resourceId
+                    })
+                );
             }
+        } else {
+            dispatch(
+                deleteProperty({
+                    id: propertyId,
+                    resourceId: resourceId
+                })
+            );
         }
-        dispatch(
-            deleteProperty({
-                id: propertyId,
-                resourceId: resourceId
-            })
-        );
     }, [dispatch, property, propertyId, resourceId, syncBackend, values.byId]);
 
     const changePredicate = useCallback(
         async newProperty => {
+            dispatch(isSavingProperty({ id: propertyId }));
             if (syncBackend) {
                 const predicate = property;
-                const existingPredicateId = predicate ? predicate.existingPredicateId : false;
-                if (existingPredicateId) {
-                    const oldValues = predicate.valueIds;
-                    for (const value of oldValues) {
-                        await updateStatement(values.byId[value].statementId, { predicate_id: newProperty.id });
-                    }
-                    dispatch(changeProperty({ propertyId: propertyId, newProperty: newProperty }));
-                    toast.success('Property updated successfully');
+                const apiCalls = [];
+                const oldValues = predicate.valueIds;
+                for (const value of oldValues) {
+                    apiCalls.push(updateStatement(values.byId[value].statementId, { predicate_id: newProperty.id }));
                 }
+                Promise.all(apiCalls)
+                    .then(() => {
+                        dispatch(changeProperty({ propertyId: propertyId, newProperty: newProperty }));
+                        toast.success('Property changed successfully');
+                        dispatch(doneSavingProperty({ id: propertyId }));
+                    })
+                    .catch(() => {
+                        toast.error(`Something went wrong while changing the property`);
+                        dispatch(doneSavingProperty({ id: propertyId }));
+                    });
             } else {
                 dispatch(changeProperty({ propertyId: propertyId, newProperty: newProperty }));
+                dispatch(doneSavingProperty({ id: propertyId }));
             }
-            dispatch(doneSavingProperty({ id: propertyId }));
         },
         [dispatch, property, propertyId, syncBackend, values.byId]
     );

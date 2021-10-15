@@ -57,7 +57,7 @@ const ActionButtonView = forwardRef((props, ref) => {
                 aria-label={isString(props.title) ? props.title : props.title.toString()}
             >
                 <span className="icon-wrapper">
-                    <Icon size={props.size} icon={props.icon} />
+                    <Icon size={props.size} icon={props.icon} spin={props.iconSpin} />
                 </span>
             </Button>
         </OptionButtonStyled>
@@ -67,6 +67,7 @@ const ActionButtonView = forwardRef((props, ref) => {
 ActionButtonView.propTypes = {
     title: PropTypes.oneOfType([PropTypes.object, PropTypes.string]).isRequired,
     icon: PropTypes.object.isRequired,
+    iconSpin: PropTypes.bool.isRequired,
     size: PropTypes.oneOf(['xs', 'sm', 'lg']).isRequired,
     action: PropTypes.func,
     isDisabled: PropTypes.bool

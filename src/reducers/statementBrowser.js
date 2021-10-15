@@ -239,6 +239,12 @@ export default (state = initialState, action) => {
             return newState;
         }
 
+        case type.IS_DELETING_PROPERTY: {
+            const { payload } = action;
+            const newState = dotProp.set(state, `properties.byId.${payload.id}.isDeleting`, v => true);
+            return newState;
+        }
+
         case type.DONE_ANIMATION: {
             const { payload } = action;
             const newState = dotProp.set(state, `properties.byId.${payload.id}.isAnimated`, v => true);
@@ -248,6 +254,12 @@ export default (state = initialState, action) => {
         case type.DONE_SAVING_PROPERTY: {
             const { payload } = action;
             const newState = dotProp.set(state, `properties.byId.${payload.id}.isSaving`, v => false);
+            return newState;
+        }
+
+        case type.DONE_DELETING_PROPERTY: {
+            const { payload } = action;
+            const newState = dotProp.set(state, `properties.byId.${payload.id}.isDeleting`, v => false);
             return newState;
         }
 

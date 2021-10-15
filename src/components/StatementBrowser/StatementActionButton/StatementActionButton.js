@@ -36,7 +36,14 @@ const StatementActionButton = props => {
     };
 
     const tippyChildren = (
-        <ActionButtonView title={props.title} icon={props.icon} action={handleClick} isDisabled={props.isDisabled} size={props.iconSize} />
+        <ActionButtonView
+            title={props.title}
+            icon={props.icon}
+            iconSpin={props.iconSpin}
+            action={handleClick}
+            isDisabled={props.isDisabled}
+            size={props.iconSize}
+        />
     );
 
     return props.requireConfirmation && !props.isDisabled ? (
@@ -73,6 +80,7 @@ const StatementActionButton = props => {
 StatementActionButton.propTypes = {
     title: PropTypes.oneOfType([PropTypes.object, PropTypes.string]).isRequired,
     icon: PropTypes.object.isRequired,
+    iconSpin: PropTypes.bool.isRequired,
     iconSize: PropTypes.oneOf(['xs', 'sm', 'lg']),
     action: PropTypes.func,
     isDisabled: PropTypes.bool,
@@ -92,6 +100,7 @@ StatementActionButton.propTypes = {
 };
 
 StatementActionButton.defaultProps = {
+    iconSpin: false,
     requireConfirmation: false,
     interactive: false,
     appendTo: 'parent',

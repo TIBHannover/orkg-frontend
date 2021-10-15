@@ -586,6 +586,20 @@ export const doneAnimation = data => dispatch => {
     });
 };
 
+export const isDeletingProperty = data => dispatch => {
+    dispatch({
+        type: type.IS_DELETING_PROPERTY,
+        payload: data
+    });
+};
+
+export const doneDeletingProperty = data => dispatch => {
+    dispatch({
+        type: type.DONE_DELETING_PROPERTY,
+        payload: data
+    });
+};
+
 export const isSavingProperty = data => dispatch => {
     dispatch({
         type: type.IS_SAVING_PROPERTY,
