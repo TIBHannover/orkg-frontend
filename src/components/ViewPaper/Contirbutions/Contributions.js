@@ -15,10 +15,11 @@ import RequireAuthentication from 'components/RequireAuthentication/RequireAuthe
 import { reverse } from 'named-urls';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
+import { useSelector } from 'react-redux';
 import { StyledHorizontalContributionsList, StyledHorizontalContribution, AddContribution } from 'components/AddPaper/Contributions/styled';
 import Tippy from '@tippyjs/react';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { CLASSES } from 'constants/graphSettings';
 import useContributions from './hooks/useContributions';
 import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
@@ -78,6 +79,7 @@ const Contributions = props => {
         paperId: resourceId,
         contributionId
     });
+    const isAddingContribution = useSelector(state => state.viewPaper.isAddingContribution);
 
     return (
         <div>
@@ -120,10 +122,10 @@ const Contributions = props => {
                                 })}
                                 {props.enableEdit && (
                                     <li>
-                                        <AddContribution color="link" onClick={() => handleCreateContribution()}>
+                                        <AddContribution disabled={isAddingContribution} color="link" onClick={() => handleCreateContribution()}>
                                             <Tippy content="Add contribution">
                                                 <span>
-                                                    <Icon size="xs" icon={faPlus} />
+                                                    <Icon size="xs" icon={!isAddingContribution ? faPlus : faSpinner} spin={isAddingContribution} />
                                                 </span>
                                             </Tippy>
                                         </AddContribution>

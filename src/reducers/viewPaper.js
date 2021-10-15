@@ -27,7 +27,8 @@ const initialState = {
     researchField: {},
     verified: false,
     publishedIn: {},
-    url: {}
+    url: {},
+    isAddingContribution: false
 };
 
 // eslint-disable-next-line import/no-anonymous-default-export
@@ -40,6 +41,14 @@ export default (state = initialState, action) => {
                 ...state,
                 ...payload
             };
+        }
+
+        case type.IS_ADDING_CONTRIBUTION: {
+            return dotProp.set(state, 'isAddingContribution', true);
+        }
+
+        case type.DONE_ADDING_CONTRIBUTION: {
+            return dotProp.set(state, 'isAddingContribution', false);
         }
 
         case type.SET_PAPER_CONTRIBUTIONS: {

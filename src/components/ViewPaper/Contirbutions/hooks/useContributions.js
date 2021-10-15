@@ -11,7 +11,7 @@ import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes.js';
 import { getResource } from 'services/backend/resources';
 import { getSimilarContribution } from 'services/similarity/index';
-import { selectContribution, updateResearchProblems, setPaperContributions } from 'actions/viewPaper';
+import { selectContribution, updateResearchProblems, setPaperContributions, isAddingContribution, doneAddingContribution } from 'actions/viewPaper';
 
 const useContributions = ({ paperId, contributionId }) => {
     const [similarContributions, setSimilarContributions] = useState([]);
@@ -119,9 +119,11 @@ const useContributions = ({ paperId, contributionId }) => {
     };
 
     const handleCreateContribution = async () => {
+        dispatch(isAddingContribution());
         const newContribution = await createResource(`Contribution ${contributions.length + 1}`, [CLASSES.CONTRIBUTION]);
         const statement = await createResourceStatement(paperId, PREDICATES.HAS_CONTRIBUTION, newContribution.id);
         dispatch(setPaperContributions([...contributions, { ...statement.object, statementId: statement.id }]));
+        dispatch(doneAddingContribution());
         toast.success('Contribution created successfully');
     };
 

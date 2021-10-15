@@ -83,6 +83,18 @@ export const loadPaper = payload => dispatch => {
     });
 };
 
+export const isAddingContribution = () => dispatch => {
+    dispatch({
+        type: type.IS_ADDING_CONTRIBUTION
+    });
+};
+
+export const doneAddingContribution = () => dispatch => {
+    dispatch({
+        type: type.DONE_ADDING_CONTRIBUTION
+    });
+};
+
 export const setPaperContributions = payload => dispatch => {
     dispatch({
         type: type.SET_PAPER_CONTRIBUTIONS,
