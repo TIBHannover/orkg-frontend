@@ -9,11 +9,11 @@ const ExistingDoiModal = props => {
 
     return (
         <Modal size="lg" isOpen={show}>
-            <ModalHeader toggle={toggle}>Warning: DOI already in ORKG</ModalHeader>
+            <ModalHeader toggle={toggle}>Warning: Paper already in ORKG</ModalHeader>
             <ModalBody>
                 <Alert color="info">
-                    The DOI <i>`{props.existingPaper.doi?.label}`</i> is already linked in ORKG. Please view the paper and contribute to improve the
-                    content. In case you want you can continue to create a new paper for this DOI.
+                    The paper <i>`{props.existingPaper.doi?.label || props.existingPaper.title}`</i> exists already in the ORKG. Please view the paper
+                    and contribute to improve the content. In case you want you can continue to create a new paper.
                 </Alert>
                 <strong>Existing paper:</strong> <PaperCard paper={props.existingPaper} showAddToComparison={false} />
             </ModalBody>
