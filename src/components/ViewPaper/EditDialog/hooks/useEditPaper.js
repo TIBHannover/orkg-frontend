@@ -142,10 +142,13 @@ const useEditPaper = () => {
                 };
             }
             if (property.id === PREDICATES.HAS_AUTHOR) {
-                data.authors.push(object);
+                data.authors.push({
+                    ...object,
+                    statementId
+                });
             }
         }
-
+        data.authors.reverse();
         return data;
     };
 
