@@ -66,6 +66,7 @@ import CurationCall from 'pages/CurationCall';
 import LiteratureLists from 'pages/LiteratureList/LiteratureLists';
 import LiteratureListNew from 'pages/LiteratureList/LiteratureListNew';
 import LiteratureList from 'pages/LiteratureList/LiteratureList';
+import LiteratureListsUnpublished from 'pages/LiteratureList/LiteratureListsUnpublished';
 import LiteratureListDiff from 'pages/LiteratureList/LiteratureListDiff';
 
 // use lazy loading of pages that contain large dependencies
@@ -374,6 +375,10 @@ const routes = [
     {
         path: ROUTES.LITERATURE_LISTS,
         component: LiteratureLists
+    },
+    {
+        path: ROUTES.LITERATURE_LISTS_UNPUBLISHED,
+        component: LiteratureListsUnpublished
     },
     {
         path: ROUTES.LITERATURE_LIST_NEW,

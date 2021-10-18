@@ -56,7 +56,7 @@ const LiteratureLists = () => {
                     color="secondary"
                     size="sm"
                     className="btn btn-secondary btn-sm"
-                    to={ROUTES.USER_UNPUBLISHED_REVIEWS}
+                    to={ROUTES.LITERATURE_LISTS_UNPUBLISHED}
                     style={{ marginLeft: 1 }}
                 >
                     <Icon icon={faEyeSlash} /> My unpublished lists

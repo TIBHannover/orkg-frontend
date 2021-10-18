@@ -1,4 +1,4 @@
-import useDiff from 'components/Comparison/Diff/hooks/useDiff';
+import useDiff from 'components/DiffView/useDiff';
 import DiffView from 'components/DiffView/DiffView';
 import ROUTES from 'constants/routes';
 import React from 'react';
