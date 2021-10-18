@@ -30,6 +30,40 @@ const useDiff = () => {
         return articleText;
     }, []);
 
+    const literatureListToPlainText = useCallback(article => {
+        let articleText = '';
+        articleText += `Title: ${article.literatureList.title}\n\n`;
+
+        if (article.researchField) {
+            articleText += `Research field: ${article.researchField.label}\n\n`;
+        }
+
+        for (const [index, author] of article.authorResources.entries()) {
+            articleText += `Author ${index + 1}: ${author.label}\n`;
+        }
+
+        for (const section of article.sections) {
+            articleText += '------------------Section------------------\n';
+            articleText += `Title: ${section.title}\n`;
+
+            if (section.content) {
+                articleText += `Content:\n${section.content.text}\n\n`;
+            }
+            if (section.entries) {
+                articleText += `Section entries:\n`;
+                for (const entry of section.entries) {
+                    articleText += `Paper: ${article?.papers?.[entry.paperId]?.paper?.label}`;
+                    if (entry.description) {
+                        articleText += `\nDescription: ${entry.description.label}`;
+                    }
+                    articleText += `\n\n`;
+                }
+            }
+        }
+
+        return articleText;
+    }, []);
+
     const comparisonToPlainText = useCallback(comparison => {
         let comparisonText = '';
         comparisonText += `Title: ${comparison.label}\n\n`;
@@ -72,7 +106,7 @@ const useDiff = () => {
         return numericOldId > numericNewId;
     }, []);
 
-    return { smartReviewToPlainText, comparisonToPlainText, isOldIdHigherThanNewId };
+    return { smartReviewToPlainText, comparisonToPlainText, isOldIdHigherThanNewId, literatureListToPlainText };
 };
 
 export default useDiff;

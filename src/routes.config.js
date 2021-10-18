@@ -66,6 +66,7 @@ import CurationCall from 'pages/CurationCall';
 import LiteratureLists from 'pages/LiteratureList/LiteratureLists';
 import LiteratureListNew from 'pages/LiteratureList/LiteratureListNew';
 import LiteratureList from 'pages/LiteratureList/LiteratureList';
+import LiteratureListDiff from 'pages/LiteratureList/LiteratureListDiff';
 
 // use lazy loading of pages that contain large dependencies
 // run "npm run analyze" to ensure the listed dependencies are not loaded elsewhere and thus end up in the bundle
@@ -377,6 +378,10 @@ const routes = [
     {
         path: ROUTES.LITERATURE_LIST_NEW,
         component: LiteratureListNew
+    },
+    {
+        path: ROUTES.LITERATURE_LIST_DIFF,
+        component: LiteratureListDiff
     },
     {
         path: ROUTES.LITERATURE_LIST,

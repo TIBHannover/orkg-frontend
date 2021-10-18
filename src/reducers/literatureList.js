@@ -1,5 +1,7 @@
 import * as type from 'actions/types';
+import { match } from 'path-to-regexp';
 import dotProp from 'dot-prop-immutable';
+import ROUTES from 'constants/routes';
 
 const initialState = {
     id: null,
@@ -177,6 +179,17 @@ const literatureList = (state = initialState, action) => {
             const { sectionId, entries } = action.payload;
             const sectionIndex = state.sections.findIndex(section => section.id === sectionId);
             return dotProp.set(state, `sections.${sectionIndex}.entries`, entries);
+        }
+
+        case '@@router/LOCATION_CHANGE': {
+            const matchList = match(ROUTES.LITERATURE_LIST);
+            const parsed_payload = matchList(action.payload.location.pathname);
+            if (parsed_payload && parsed_payload.params?.id === state.id) {
+                return state;
+            }
+            return {
+                ...initialState
+            };
         }
 
         default: {

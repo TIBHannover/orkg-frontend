@@ -1,33 +1,33 @@
 import Tippy from '@tippyjs/react';
 import DiffView from 'components/DiffView/DiffView';
 import useDiff from 'components/DiffView/useDiff';
-import useLoad from 'components/SmartReview/hooks/useLoad';
+import useLiteratureList from 'components/LiteratureList/hooks/useLiteratureList';
 import ROUTES from 'constants/routes';
 import moment from 'moment';
 import { reverse } from 'named-urls';
 import React from 'react';
 
-const SmartReviewDiff = () => {
-    const { smartReviewToPlainText } = useDiff();
-    const { getArticleById } = useLoad();
+const LiteratureListDiff = () => {
+    const { literatureListToPlainText } = useDiff();
+    const { getListById } = useLiteratureList();
 
     const getData = async ({ oldId, newId }) => {
-        const oldArticle = await getArticleById(oldId);
-        const newArticle = await getArticleById(newId);
+        const oldList = await getListById(oldId);
+        const newList = await getListById(newId);
 
-        if (!oldArticle || !newArticle || oldArticle.paper?.id !== newArticle.paper?.id) {
-            throw new Error('Articles not found');
+        if (!oldList || !newList || oldList.literatureList?.id !== newList.literatureList?.id) {
+            throw new Error('Lists not found');
         }
 
         return {
-            oldText: smartReviewToPlainText(oldArticle),
-            newText: smartReviewToPlainText(newArticle),
-            oldTitleData: getTitleData(oldArticle),
-            newTitleData: getTitleData(newArticle)
+            oldText: literatureListToPlainText(oldList),
+            newText: literatureListToPlainText(newList),
+            oldTitleData: getTitleData(oldList),
+            newTitleData: getTitleData(newList)
         };
     };
 
-    const getTitleData = ({ versions, articleId: id }) => {
+    const getTitleData = ({ versions, id }) => {
         const version = versions.find(version => version.id === id);
         if (!version) {
             return null;
@@ -38,7 +38,7 @@ const SmartReviewDiff = () => {
 
         return {
             creator: version.creator,
-            route: reverse(ROUTES.SMART_REVIEW, { id: version.id }),
+            route: reverse(ROUTES.LITERATURE_LIST, { id: version.id }),
             headerText: version && (
                 <Tippy content={`Update message: ${version.description}`}>
                     <span>
@@ -46,11 +46,11 @@ const SmartReviewDiff = () => {
                     </span>
                 </Tippy>
             ),
-            buttonText: 'View article'
+            buttonText: 'View list'
         };
     };
 
-    return <DiffView diffRoute={ROUTES.SMART_REVIEW_DIFF} type="SmartReview" getData={getData} />;
+    return <DiffView diffRoute={ROUTES.LITERATURE_LIST_DIFF} type="literature list" getData={getData} />;
 };
 
-export default SmartReviewDiff;
+export default LiteratureListDiff;

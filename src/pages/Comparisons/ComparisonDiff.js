@@ -32,7 +32,7 @@ const ComparisonDiff = () => {
         buttonText: 'View comparison'
     });
 
-    return <DiffView diffRoute={ROUTES.COMPARISON_DIFF} typeRoute={ROUTES.COMPARISON} type="comparison" getData={getData} />;
+    return <DiffView diffRoute={ROUTES.COMPARISON_DIFF} type="comparison" getData={getData} />;
 };
 
 export default ComparisonDiff;

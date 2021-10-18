@@ -17,9 +17,8 @@ import PropTypes from 'prop-types';
 
 const DiffView = ({ type, diffRoute, getData }) => {
     const { oldId, newId } = useParams();
-    const { getArticleById } = useLoad();
-    const [oldArticleText, setOldArticleText] = useState('');
-    const [newArticleText, setNewArticleText] = useState('');
+    const [oldText, setOldText] = useState('');
+    const [newText, setNewText] = useState('');
     const [oldTitleData, setOldTitleData] = useState({});
     const [newTitleData, setNewTitleData] = useState({});
     const [isLoading, setIsLoading] = useState(false);
@@ -44,12 +43,12 @@ const DiffView = ({ type, diffRoute, getData }) => {
             return;
         }
 
-        const getArticles = async () => {
+        const getContent = async () => {
             setIsLoading(true);
             try {
                 const { oldText, newText, oldTitleData, newTitleData } = await getData({ oldId, newId });
-                setOldArticleText(oldText);
-                setNewArticleText(newText);
+                setOldText(oldText);
+                setNewText(newText);
                 setOldTitleData(oldTitleData);
                 setNewTitleData(newTitleData);
                 setHasFailed(false);
@@ -59,8 +58,8 @@ const DiffView = ({ type, diffRoute, getData }) => {
             setIsLoading(false);
         };
 
-        getArticles();
-    }, [oldId, newId, getArticleById, isOldIdHigherThanNewId, history, diffRoute, getData]);
+        getContent();
+    }, [oldId, newId, isOldIdHigherThanNewId, history, diffRoute, getData]);
 
     const handleDismiss = () => {
         history.push(reverse(diffRoute, { oldId, newId }));
@@ -90,8 +89,8 @@ const DiffView = ({ type, diffRoute, getData }) => {
                 )}
                 {!isLoading && !hasFailed && (
                     <ReactDiffViewer
-                        oldValue={oldArticleText}
-                        newValue={newArticleText}
+                        oldValue={oldText}
+                        newValue={newText}
                         splitView={true}
                         showDiffOnly={false}
                         leftTitle={<DiffTitle data={oldTitleData} />}
@@ -121,9 +120,7 @@ const DiffView = ({ type, diffRoute, getData }) => {
 DiffView.propTypes = {
     type: PropTypes.string.isRequired,
     diffRoute: PropTypes.string.isRequired,
-    typeRoute: PropTypes.string.isRequired,
-    getData: PropTypes.func.isRequired,
-    getTitleData: PropTypes.func.isRequired
+    getData: PropTypes.func.isRequired
 };
 
 export default DiffView;
