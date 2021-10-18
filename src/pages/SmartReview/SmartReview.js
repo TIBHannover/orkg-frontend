@@ -129,7 +129,7 @@ const SmartReview = () => {
 
     const ldJson = {
         mainEntity: {
-            headline: `${paper?.title} - SmartReview - ORKG`,
+            headline: `${paper?.title ?? ''} - SmartReview - ORKG`,
             description: version?.description,
             author: authors?.map(author => ({
                 name: author?.label,
@@ -149,8 +149,8 @@ const SmartReview = () => {
             {researchField && <Breadcrumbs researchFieldId={researchField.id} />}
             <GlobalStyle />
             <Helmet>
-                <title>{`${paper?.title} - SmartReview - ORKG`}</title>
-                <meta property="og:title" content={`${paper?.title} - SmartReview - ORKG`} />
+                <title>{`${paper?.title ?? 'Unpublished'} - SmartReview - ORKG`}</title>
+                <meta property="og:title" content={`${paper?.title ?? 'Unpublished'} - SmartReview - ORKG`} />
                 <meta property="og:type" content="article" />
                 <meta property="og:description" content={version?.description} />
                 <script type="application/ld+json">{JSON.stringify(ldJson)}</script>
