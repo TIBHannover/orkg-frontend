@@ -61,15 +61,20 @@ const useValueForm = ({ valueId, resourceId, propertyId, syncBackend }) => {
             if (syncBackend) {
                 dispatch(isSavingValue({ id: valueId })); // To show the saving message instead of the value label
                 if (value.resourceId) {
-                    if (value._class === ENTITIES.LITERAL) {
-                        await updateLiteral(value.resourceId, draftLabel, draftDataType);
-                        toast.success('Literal updated successfully');
-                    } else {
-                        await updateResource(value.resourceId, draftLabel);
-                        toast.success('Resource label updated successfully');
-                    }
+                    const apiCall =
+                        value._class === ENTITIES.LITERAL
+                            ? updateLiteral(value.resourceId, draftLabel, draftDataType)
+                            : updateResource(value.resourceId, draftLabel);
+                    apiCall
+                        .then(() => {
+                            toast.success(`${value._class === ENTITIES.LITERAL ? 'Resource' : 'Literal'} label updated successfully`);
+                            dispatch(doneSavingValue({ id: valueId }));
+                        })
+                        .catch(() => {
+                            toast.error('Something went wrong while updating the label.');
+                            dispatch(doneSavingValue({ id: valueId }));
+                        });
                 }
-                dispatch(doneSavingValue({ id: valueId }));
             }
             dispatch(
                 updateValueLabel({
@@ -216,52 +221,70 @@ const useValueForm = ({ valueId, resourceId, propertyId, syncBackend }) => {
         async (entityType, value) => {
             let newEntity = { id: value.id, label: value.label, shared: value.shared, classes: value.classes, datatype: value.datatype };
             let newStatement = null;
+            let apiError = false;
             const existingResourceId = guid();
             if (syncBackend) {
                 dispatch(isAddingValue({ id: propertyId }));
+                let apiCall;
                 if (!value.selected) {
                     switch (entityType) {
                         case ENTITIES.RESOURCE:
-                            newEntity = await createResource(value.label, valueClass ? [valueClass.id] : []);
+                            apiCall = createResource(value.label, valueClass ? [valueClass.id] : []);
                             break;
                         case ENTITIES.PREDICATE:
-                            newEntity = await createPredicate(value.label);
+                            apiCall = createPredicate(value.label);
                             break;
                         case ENTITIES.LITERAL:
-                            newEntity = await createLiteral(value.label, value.datatype);
+                            apiCall = createLiteral(value.label, value.datatype);
                             break;
                         case ENTITIES.CLASS:
-                            newEntity = await createClass(value.label);
+                            apiCall = createClass(value.label);
                             break;
                         default:
-                            newEntity = await createLiteral(value.label, value.datatype);
+                            apiCall = createLiteral(value.label, value.datatype);
                     }
+                } else {
+                    apiCall = Promise.resolve(newEntity);
                 }
-                newStatement = await createResourceStatement(resourceId, property?.existingPredicateId, newEntity.id);
-                dispatch(doneAddingValue({ id: propertyId }));
+                await apiCall
+                    .then(response => {
+                        newEntity = response;
+                        return createResourceStatement(resourceId, property?.existingPredicateId, newEntity.id);
+                    })
+                    .then(newS => {
+                        dispatch(doneAddingValue({ id: propertyId }));
+                        newStatement = newS;
+                    })
+                    .catch(() => {
+                        apiError = true;
+                        toast.error('Something went wrong while adding the value.');
+                        dispatch(doneAddingValue({ id: propertyId }));
+                    });
             }
-            dispatch(
-                createValue({
-                    ...newEntity,
-                    //valueId: newEntity.id ?? existingResourceId,
-                    classes: newEntity.classes ?? (valueClass ? [valueClass?.id] : []),
-                    _class: entityType,
-                    propertyId: propertyId,
-                    existingResourceId: newEntity.id ?? existingResourceId,
-                    isExistingValue: newEntity.id ? true : false,
-                    statementId: newStatement?.id
-                })
-            );
-            //create statements
-            value.statements &&
+            if (!apiError) {
                 dispatch(
-                    fillStatements({
-                        statements: generateStatementsFromExternalData(value.statements),
-                        resourceId: newEntity.id ?? existingResourceId,
-                        syncBackend: syncBackend
+                    createValue({
+                        ...newEntity,
+                        //valueId: newEntity.id ?? existingResourceId,
+                        classes: newEntity.classes ?? (valueClass ? [valueClass?.id] : []),
+                        _class: entityType,
+                        propertyId: propertyId,
+                        existingResourceId: newEntity.id ?? existingResourceId,
+                        isExistingValue: newEntity.id ? true : false,
+                        statementId: newStatement?.id
                     })
                 );
-            return newEntity.id ?? existingResourceId;
+                //create statements
+                value.statements &&
+                    dispatch(
+                        fillStatements({
+                            statements: generateStatementsFromExternalData(value.statements),
+                            resourceId: newEntity.id ?? existingResourceId,
+                            syncBackend: syncBackend
+                        })
+                    );
+                return newEntity.id ?? existingResourceId;
+            }
         },
         [dispatch, property?.existingPredicateId, propertyId, resourceId, syncBackend, valueClass]
     );

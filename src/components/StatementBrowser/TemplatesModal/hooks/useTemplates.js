@@ -97,7 +97,7 @@ const useTemplates = ({ onlyFeatured = false }) => {
         if (researchField || researchProblems?.length > 0) {
             loadFeaturedTemplates();
         }
-    }, [researchField, getTemplatesOfResourceId, researchProblems]);
+    }, [researchField, getTemplatesOfResourceId, JSON.stringify(researchProblems)]);
 
     const debouncedGetLoadMoreResults = useRef(debounce(loadMoreTemplates, 500));
 

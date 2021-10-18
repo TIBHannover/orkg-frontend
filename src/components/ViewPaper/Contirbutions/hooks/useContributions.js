@@ -120,11 +120,17 @@ const useContributions = ({ paperId, contributionId }) => {
 
     const handleCreateContribution = async () => {
         dispatch(isAddingContribution());
-        const newContribution = await createResource(`Contribution ${contributions.length + 1}`, [CLASSES.CONTRIBUTION]);
-        const statement = await createResourceStatement(paperId, PREDICATES.HAS_CONTRIBUTION, newContribution.id);
-        dispatch(setPaperContributions([...contributions, { ...statement.object, statementId: statement.id }]));
-        dispatch(doneAddingContribution());
-        toast.success('Contribution created successfully');
+        createResource(`Contribution ${contributions.length + 1}`, [CLASSES.CONTRIBUTION])
+            .then(newContribution => createResourceStatement(paperId, PREDICATES.HAS_CONTRIBUTION, newContribution.id))
+            .then(statement => {
+                dispatch(setPaperContributions([...contributions, { ...statement.object, statementId: statement.id }]));
+                dispatch(doneAddingContribution());
+                toast.success('Contribution created successfully');
+            })
+            .catch(() => {
+                dispatch(doneAddingContribution());
+                toast.error('Something went wrong while creating a new contribution.');
+            });
     };
 
     const toggleDeleteContribution = async contributionId => {
