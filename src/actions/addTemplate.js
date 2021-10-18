@@ -202,12 +202,12 @@ export const saveTemplate = data => {
                 if (property.value && property.value.id) {
                     promises.push(createResourceStatement(component.id, PREDICATES.TEMPLATE_COMPONENT_VALUE, property.value.id));
                 }
-                // save Minimum Occurence
+                // save Minimum Occurrence
                 if (property.minOccurs || property.minOccurs === 0) {
                     const minimumLiteral = await createLiteral(property.minOccurs);
                     promises.push(createResourceStatement(component.id, PREDICATES.TEMPLATE_COMPONENT_OCCURRENCE_MIN, minimumLiteral.id));
                 }
-                // save Maximum Occurence
+                // save Maximum Occurrence
                 if (property.maxOccurs || property.maxOccurs === 0) {
                     const maximumLiteral = await createLiteral(property.maxOccurs);
                     promises.push(createResourceStatement(component.id, PREDICATES.TEMPLATE_COMPONENT_OCCURRENCE_MAX, maximumLiteral.id));
@@ -225,7 +225,6 @@ export const saveTemplate = data => {
                             }
                         }
                     }
-                    promises.push(createResourceStatement(component.id, PREDICATES.TEMPLATE_COMPONENT_VALUE, property.value.id));
                 }
             }
         }

@@ -4,9 +4,11 @@ import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
 import ROUTES from 'constants/routes.js';
 import { reverse } from 'named-urls';
+import { useLocation } from 'react-router';
 import { useRouteMatch, useHistory } from 'react-router-dom';
 import { Form, Input, Button, InputGroup, InputGroupAddon } from 'reactstrap';
 import { isString } from 'lodash';
+import { getArrayParamFromQueryString } from 'utils';
 
 const SearchForm = ({ placeholder, onSearch = null }) => {
     const PROPERTY_PATTERN = /^#P([0-9])+$/;
@@ -17,6 +19,7 @@ const SearchForm = ({ placeholder, onSearch = null }) => {
     const match = useRouteMatch(ROUTES.SEARCH);
     const urlSearchQuery = match?.params?.searchTerm;
     const history = useHistory();
+    const location = useLocation();
 
     useEffect(() => {
         const decodedValue = isString(urlSearchQuery) ? decodeURIComponent(urlSearchQuery) : urlSearchQuery;
@@ -35,12 +38,13 @@ const SearchForm = ({ placeholder, onSearch = null }) => {
             const id = value.substring(1);
             setValue('');
             route = reverse(value.match(RESOURCE_PATTERN) ? ROUTES.RESOURCE : ROUTES.PROPERTY, { id });
-        } else {
-            route = reverse(ROUTES.SEARCH, { searchTerm: encodeURIComponent(value) });
+        } else if (isString(value) && value) {
+            const types = getArrayParamFromQueryString(location.search, 'types');
+            route = `${reverse(ROUTES.SEARCH, { searchTerm: encodeURIComponent(value) })}${types?.length > 0 ? `?types=${types.join(',')}` : ''}`;
         }
         onSearch && onSearch();
 
-        return history.push(route);
+        return route ? history.push(route) : null;
     };
 
     return (

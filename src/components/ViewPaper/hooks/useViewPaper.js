@@ -73,8 +73,6 @@ const useViewPaper = ({ paperId, contributionId }) => {
                 Promise.all([getStatementsBySubject({ id: paperId }), getIsVerified(paperId).catch(() => false)]).then(
                     ([paperStatements, verified]) => {
                         const paperData = getPaperData_ViewPaper(paperResource, paperStatements);
-                        // Set document title
-                        document.title = `${paperResource.label} - ORKG`;
                         dispatch(loadPaper({ ...paperData, verified: verified }));
                         setIsLoading(false);
                         setContributions(paperData.contributions);

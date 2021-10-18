@@ -37,16 +37,7 @@ const Classes = () => {
         </RequireAuthentication>
     );
 
-    return (
-        <ListPage
-            label="classes"
-            resourceClass={ENTITIES.CLASS}
-            renderListItem={renderListItem}
-            fetchItems={fetchItems}
-            buttons={buttons}
-            disableSearch
-        />
-    );
+    return <ListPage label="classes" resourceClass={ENTITIES.CLASS} renderListItem={renderListItem} fetchItems={fetchItems} buttons={buttons} />;
 };
 
 export default Classes;
