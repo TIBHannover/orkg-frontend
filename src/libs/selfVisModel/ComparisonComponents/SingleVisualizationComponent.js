@@ -90,7 +90,7 @@ const SingleVisualizationComponent = props => {
                     <DescriptionHeader>
                         {props.input.label.length > 0 ? 'Title: ' + props.input.label : 'No Title'}
                         <Tippy content="Go to resource page">
-                            <Link className="ml-2 resourceLink" to={reverse(ROUTES.RESOURCE, { id: props.input.id })}>
+                            <Link target="_blank" className="ml-2 resourceLink" to={reverse(ROUTES.RESOURCE, { id: props.input.id })}>
                                 <Icon icon={faLink} color="#fff" />
                             </Link>
                         </Tippy>
