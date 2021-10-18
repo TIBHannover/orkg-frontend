@@ -162,7 +162,7 @@ class TableCell extends Component {
         return (
             <>
                 <Item>
-                    <ItemInner cellPadding={cellPadding}>
+                    <ItemInner cellPadding={cellPadding} className={this.props.data === undefined ? 'itemGroup' : ''}>
                         {this.props.data &&
                             this.props.data.length > 0 &&
                             this.props.data.map((date, index) => {
@@ -227,7 +227,7 @@ class TableCell extends Component {
 }
 
 TableCell.propTypes = {
-    data: PropTypes.array.isRequired,
+    data: PropTypes.array,
     viewDensity: PropTypes.oneOf(['spacious', 'normal', 'compact'])
 };
 

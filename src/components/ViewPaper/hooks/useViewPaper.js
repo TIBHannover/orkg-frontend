@@ -55,8 +55,6 @@ const useViewPaper = ({ paperId }) => {
                     getIsVerified(paperId).catch(() => false)
                 ]).then(([paperStatements, verified]) => {
                     const paperData = getPaperData_ViewPaper(paperResource, paperStatements.statements?.filter(s => s.subject.id === paperId));
-                    // Set document title
-                    document.title = `${paperResource.label} - ORKG`;
                     dispatch(loadPaper({ ...paperData, verified: verified }));
                     setIsLoading(false);
                     setAuthorsORCID(paperStatements.statements, paperId);

@@ -8,6 +8,10 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faArrowsAlt } from '@fortawesome/free-solid-svg-icons';
 import { faPen, faTrash, faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
+import { reverse } from 'named-urls';
+import { Link } from 'react-router-dom';
+import ROUTES from 'constants/routes.js';
+import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
 import styled from 'styled-components';
 
 const DragHandler = styled.div`
@@ -28,7 +32,16 @@ function TemplateComponentProperty(props) {
             )}
             {!isEditing ? (
                 <div className="propertyLabel">
-                    {props.property.label.charAt(0).toUpperCase() + props.property.label.slice(1)}
+                    {props.property?.id ? (
+                        <Link to={reverse(ROUTES.PROPERTY, { id: props.property.id })} target="_blank" className="text-dark">
+                            <DescriptionTooltip id={props.property.id} typeId={ENTITIES.PREDICATE}>
+                                {props.property.label.charAt(0).toUpperCase() + props.property.label.slice(1)}
+                            </DescriptionTooltip>
+                        </Link>
+                    ) : (
+                        props.property.label.charAt(0).toUpperCase() + props.property.label.slice(1)
+                    )}
+
                     {props.enableEdit && (
                         <div className="propertyOptions">
                             <StatementActionButton title="Edit property" icon={faPen} action={() => setIsEditing(true)} />
