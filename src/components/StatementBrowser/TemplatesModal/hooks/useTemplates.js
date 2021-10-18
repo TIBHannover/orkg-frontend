@@ -97,6 +97,7 @@ const useTemplates = ({ onlyFeatured = false }) => {
         if (researchField || researchProblems?.length > 0) {
             loadFeaturedTemplates();
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [researchField, getTemplatesOfResourceId, JSON.stringify(researchProblems)]);
 
     const debouncedGetLoadMoreResults = useRef(debounce(loadMoreTemplates, 500));
