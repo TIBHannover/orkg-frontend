@@ -210,7 +210,11 @@ const Contributions = props => {
                                             )}
                                             {!isLoading && props.enableEdit && (
                                                 <>
-                                                    <ResearchProblemInput handler={handleResearchProblemsChange} value={researchProblems} />
+                                                    <ResearchProblemInput
+                                                        selectedContribution={selectedContribution}
+                                                        handler={handleResearchProblemsChange}
+                                                        value={researchProblems}
+                                                    />
                                                 </>
                                             )}
                                         </FormGroup>

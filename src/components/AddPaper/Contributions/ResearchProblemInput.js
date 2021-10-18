@@ -1,12 +1,14 @@
 import { Fragment, useState, useCallback } from 'react';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { StyledResearchFieldsInputFormControl, StyledResearchFieldBrowser } from './styled';
 import PropTypes from 'prop-types';
 import AsyncCreatableSelect from 'react-select/async-creatable';
 import { components } from 'react-select';
-import { connect } from 'react-redux';
 import { guid, compareOption } from 'utils';
 import { getResourcesByClass } from 'services/backend/resources';
 import styled from 'styled-components';
+import { useSelector } from 'react-redux';
 import { CLASSES } from 'constants/graphSettings';
 
 const StyledSelectOption = styled.div`
@@ -30,12 +32,27 @@ const StyledSelectOption = styled.div`
 function ResearchProblemInput(props) {
     const [problemBrowser, setProblemBrowser] = useState(null);
     const [inputValue, setInputValue] = useState('');
-    const [createOnBlur, setCreateOnBlur] = useState(true);
+    const [, setCreateOnBlur] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
+    const selectedContribution = useSelector(state => state.viewPaper.contributions?.find(c => props.selectedContribution === c.id));
+    const researchProblems = useSelector(state => {
+        const result = [];
+        // Add newly added problem from other contributions
+        for (const contributionId of Object.keys(state.viewPaper.researchProblems)) {
+            for (const rp of state.viewPaper.researchProblems[contributionId]) {
+                if (!rp.existingResourceId) {
+                    result.push({ ...rp, used: true });
+                }
+            }
+        }
+        return result;
+    });
 
     const loadOptions = useCallback(
         async value => {
+            setIsLoading(true);
             try {
-                // Get the resoures that contains 'Problem' as a class
+                // Get the resources that contains 'Problem' as a class
                 const responseJson = await getResourcesByClass({
                     id: CLASSES.PROBLEM,
                     page: 0,
@@ -46,16 +63,7 @@ function ResearchProblemInput(props) {
                     returnContent: true
                 });
 
-                const research_problems = [];
-                // Add newly added problem from other contributions
-                for (const contributionId of props.contributions.allIds) {
-                    const contribution = props.contributions.byId[contributionId];
-                    for (const rp of contribution.researchProblems) {
-                        if (!rp.existingResourceId) {
-                            research_problems.push({ ...rp, new: true });
-                        }
-                    }
-                }
+                const research_problems = researchProblems;
                 responseJson.map(item =>
                     research_problems.push({
                         label: item.label,
@@ -63,14 +71,15 @@ function ResearchProblemInput(props) {
                         existingResourceId: item.id
                     })
                 );
-
+                setIsLoading(false);
                 return research_problems;
             } catch (err) {
+                setIsLoading(false);
                 console.error(err);
                 return [];
             }
         },
-        [props.contributions]
+        [researchProblems]
     );
 
     const handleCreate = (inputValue, val) => {
@@ -99,10 +108,10 @@ function ResearchProblemInput(props) {
     const onInputChange = (inputVal, val) => {
         if (val.action === 'input-blur') {
             // check if there is an existing research problem
-
+            /*
             if (inputValue !== '' && createOnBlur) {
                 handleCreate(inputValue, { action: 'create-option', createdOptionLabel: inputValue }); //inputvalue is not provided on blur, so use the state value
-            }
+            }*/
             setInputValue('');
         } else if (val.action === 'input-change') {
             setInputValue(inputVal);
@@ -151,26 +160,22 @@ function ResearchProblemInput(props) {
 
     const MultiValueLabel = useCallback(iprops => {
         return (
-            <div
-                onClick={() => {
-                    this.setState({
-                        problemBrowser: iprops.data
-                    });
-                }}
-                onKeyDown={e =>
-                    e.keyCode === 13
-                        ? () =>
-                              this.setState({
-                                  problemBrowser: iprops.data
-                              })
-                        : undefined
-                }
-                role="button"
-                tabIndex={0}
-            >
+            <div onClick={() => null} onKeyDown={e => (e.keyCode === 13 ? () => null : undefined)} role="button" tabIndex={0}>
                 <components.MultiValueLabel {...iprops} />
             </div>
         );
+    }, []);
+
+    const MultiValueRemove = useCallback(({ children, ...iprops }) => {
+        if (!iprops.data.isDeleting) {
+            return <components.MultiValueRemove {...iprops}>{children}</components.MultiValueRemove>;
+        } else {
+            return (
+                <div className={iprops.innerProps.className} onMouseDown={undefined}>
+                    <Icon icon={faSpinner} size="xs" spin />
+                </div>
+            );
+        }
     }, []);
 
     const Option = useCallback(({ children, ...iprops }) => {
@@ -179,6 +184,7 @@ function ResearchProblemInput(props) {
                 <StyledSelectOption>
                     <span>{children}</span>
                     {iprops.data.new && <span className="badge">New</span>}
+                    {iprops.data.used && <span className="badge">Used</span>}
                 </StyledSelectOption>
             </components.Option>
         );
@@ -201,10 +207,11 @@ function ResearchProblemInput(props) {
                     openMenuOnClick={false}
                     placeholder="Select or type something..."
                     styles={customStyles}
-                    components={{ Menu, MultiValueLabel, Option }}
+                    components={{ Menu, MultiValueLabel, Option, MultiValueRemove }}
                     onKeyDown={onKeyDown}
                     cacheOptions
                     loadOptions={loadOptions}
+                    isLoading={isLoading || selectedContribution?.isAddingResearchProblem}
                     onCreateOption={inputValue => handleCreate(inputValue, { action: 'create-option', createdOptionLabel: inputValue })}
                     getNewOptionData={(inputValue, optionLabel) => ({ label: `Create research problem: "${inputValue}"`, id: inputValue })}
                     isValidNewOption={(inputValue, selectValue, selectOptions) => {
@@ -270,13 +277,7 @@ function ResearchProblemInput(props) {
 ResearchProblemInput.propTypes = {
     handler: PropTypes.func.isRequired,
     value: PropTypes.array.isRequired,
-    contributions: PropTypes.object.isRequired
+    selectedContribution: PropTypes.string
 };
 
-const mapStateToProps = state => {
-    return {
-        contributions: state.addPaper.contributions
-    };
-};
-
-export default connect(mapStateToProps)(ResearchProblemInput);
+export default ResearchProblemInput;

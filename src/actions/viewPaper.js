@@ -179,3 +179,31 @@ export const updateResearchProblems = data => dispatch => {
         payload: data
     });
 };
+
+export const isAddingResearchProblem = data => dispatch => {
+    dispatch({
+        type: type.IS_ADDING_RESEARCH_PROBLEM,
+        payload: data
+    });
+};
+
+export const doneAddingResearchProblem = data => dispatch => {
+    dispatch({
+        type: type.DONE_ADDING_RESEARCH_PROBLEM,
+        payload: data
+    });
+};
+
+export const isDeletingResearchProblem = data => dispatch => {
+    dispatch({
+        type: type.IS_DELETING_RESEARCH_PROBLEM,
+        payload: data
+    });
+};
+
+export const doneDeletingResearchProblem = data => dispatch => {
+    dispatch({
+        type: type.DONE_DELETING_RESEARCH_PROBLEM,
+        payload: data
+    });
+};

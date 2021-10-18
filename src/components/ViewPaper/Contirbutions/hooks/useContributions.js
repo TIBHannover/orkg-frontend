@@ -20,7 +20,11 @@ import {
     isDeletingContribution,
     doneDeletingContribution,
     isSavingContribution,
-    doneSavingContribution
+    doneSavingContribution,
+    isAddingResearchProblem,
+    doneAddingResearchProblem,
+    isDeletingResearchProblem,
+    doneDeletingResearchProblem
 } from 'actions/viewPaper';
 
 const useContributions = ({ paperId, contributionId }) => {
@@ -184,37 +188,77 @@ const useContributions = ({ paperId, contributionId }) => {
         }
     };
 
-    const handleResearchProblemsChange = async (problemsArray, a) => {
+    const handleResearchProblemsChange = (problemsArray, a) => {
         problemsArray = problemsArray ? problemsArray : [];
         if (a.action === 'select-option') {
-            const statement = await createResourceStatement(selectedContribution, PREDICATES.HAS_RESEARCH_PROBLEM, a.option.id);
-            //find the index of research problem
-            const objIndex = problemsArray.findIndex(obj => obj.id === a.option.id);
-            // set the statement of the research problem
-            const updatedObj = { ...problemsArray[objIndex], statementId: statement.id };
-            // update the research problem array
-            problemsArray = [...problemsArray.slice(0, objIndex), updatedObj, ...problemsArray.slice(objIndex + 1)];
-            toast.success('Research problem added successfully');
+            dispatch(isAddingResearchProblem({ id: selectedContribution }));
+            createResourceStatement(selectedContribution, PREDICATES.HAS_RESEARCH_PROBLEM, a.option.id)
+                .then(statement => {
+                    //find the index of research problem
+                    const objIndex = problemsArray.findIndex(obj => obj.id === a.option.id);
+                    // set the statement of the research problem
+                    const updatedObj = { ...problemsArray[objIndex], statementId: statement.id };
+                    // update the research problem array
+                    problemsArray = [...problemsArray.slice(0, objIndex), updatedObj, ...problemsArray.slice(objIndex + 1)];
+                    toast.success('Research problem added successfully');
+                    dispatch(
+                        updateResearchProblems({
+                            problemsArray,
+                            contributionId: selectedContribution
+                        })
+                    );
+                    dispatch(doneAddingResearchProblem({ id: selectedContribution }));
+                })
+                .catch(() => {
+                    toast.error('Something went wrong while adding research problem.');
+                    dispatch(doneAddingResearchProblem({ id: selectedContribution }));
+                });
         } else if (a.action === 'create-option') {
-            const newResource = await createResource(a.createdOptionLabel, [CLASSES.PROBLEM]);
-            const statement = await createResourceStatement(selectedContribution, PREDICATES.HAS_RESEARCH_PROBLEM, newResource.id);
-            //find the index of research problem
-            const objIndex = problemsArray.findIndex(obj => obj.id === a.createdOptionId);
-            // set the statement of the research problem
-            const updatedObj = { ...problemsArray[objIndex], statementId: statement.id, id: newResource.id };
-            // update the research problem array
-            problemsArray = [...problemsArray.slice(0, objIndex), updatedObj, ...problemsArray.slice(objIndex + 1)];
-            toast.success('Research problem added successfully');
+            let newResource;
+            dispatch(isAddingResearchProblem({ id: selectedContribution }));
+            createResource(a.createdOptionLabel, [CLASSES.PROBLEM])
+                .then(response => {
+                    newResource = response;
+                    return createResourceStatement(selectedContribution, PREDICATES.HAS_RESEARCH_PROBLEM, newResource.id);
+                })
+                .then(statement => {
+                    //find the index of research problem
+                    const objIndex = problemsArray.findIndex(obj => obj.id === a.createdOptionId);
+                    // set the statement of the research problem
+                    const updatedObj = { ...problemsArray[objIndex], statementId: statement.id, id: newResource.id };
+                    // update the research problem array
+                    problemsArray = [...problemsArray.slice(0, objIndex), updatedObj, ...problemsArray.slice(objIndex + 1)];
+                    toast.success('Research problem added successfully');
+                    dispatch(
+                        updateResearchProblems({
+                            problemsArray,
+                            contributionId: selectedContribution
+                        })
+                    );
+                    dispatch(doneAddingResearchProblem({ id: selectedContribution }));
+                })
+                .catch(() => {
+                    toast.error('Something went wrong while adding research problem.');
+                    dispatch(doneAddingResearchProblem({ id: selectedContribution }));
+                });
         } else if (a.action === 'remove-value') {
-            await deleteStatementById(a.removedValue.statementId);
-            toast.success('Research problem deleted successfully');
+            dispatch(isDeletingResearchProblem({ id: selectedContribution, problemId: a.removedValue.id }));
+            deleteStatementById(a.removedValue.statementId)
+                .then(() => {
+                    toast.success('Research problem deleted successfully');
+                    dispatch(doneDeletingResearchProblem({ id: selectedContribution, problemId: a.removedValue.id }));
+                    dispatch(
+                        updateResearchProblems({
+                            problemsArray,
+                            contributionId: selectedContribution
+                        })
+                    );
+                })
+                .catch(() => {
+                    toast.error('Something went wrong while deleting the research problem.');
+                    dispatch(doneAddingResearchProblem({ id: selectedContribution, problemId: a.removedValue.id }));
+                });
         }
-        dispatch(
-            updateResearchProblems({
-                problemsArray,
-                contributionId: selectedContribution
-            })
-        );
     };
 
     return {

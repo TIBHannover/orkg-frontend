@@ -130,6 +130,47 @@ export default (state = initialState, action) => {
             return dotProp.set(state, `researchProblems.${payload.contributionId}`, payload.problemsArray);
         }
 
+        case type.IS_ADDING_RESEARCH_PROBLEM: {
+            const { payload } = action;
+            const contributionIndex = dotProp
+                .get(state, 'contributions')
+                .map(c => c.id)
+                .indexOf(payload.id);
+            const newState = dotProp.set(state, `contributions.${contributionIndex}.isAddingResearchProblem`, true);
+            return newState;
+        }
+
+        case type.DONE_ADDING_RESEARCH_PROBLEM: {
+            const { payload } = action;
+            const contributionIndex = dotProp
+                .get(state, 'contributions')
+                .map(c => c.id)
+                .indexOf(payload.id);
+            const newState = dotProp.set(state, `contributions.${contributionIndex}.isAddingResearchProblem`, false);
+            return newState;
+        }
+
+        case type.IS_DELETING_RESEARCH_PROBLEM: {
+            const { payload } = action;
+            const rpIndex = dotProp
+                .get(state, `researchProblems.${payload.id}`)
+                .map(c => c.id)
+                .indexOf(payload.problemId);
+
+            const newState = dotProp.set(state, `researchProblems.${payload.id}.${rpIndex}.isDeleting`, true);
+            return newState;
+        }
+
+        case type.DONE_DELETING_RESEARCH_PROBLEM: {
+            const { payload } = action;
+            const rpIndex = dotProp
+                .get(state, `researchProblems.${payload.id}`)
+                .map(c => c.id)
+                .indexOf(payload.problemId);
+            const newState = dotProp.set(state, `researchProblems.${payload.id}.${rpIndex}.isDeleting`, false);
+            return newState;
+        }
+
         case type.LOAD_COMPARISON_FROM_LOCAL_STORAGE: {
             const { payload } = action;
             const newComparison = payload;
