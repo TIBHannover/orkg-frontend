@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from 'testUtils';
+import { render, screen, fireEvent, waitFor } from 'testUtils';
 import TableHeaderColumn from '../TableHeaderColumn';
 
 const setup = paperTitle => {
@@ -20,10 +20,10 @@ test('should show the paper and contribution title in the header', () => {
     expect(screen.queryByText(/contribution title/i)).toBeInTheDocument();
 });
 
-test('should open the edit paper modal when clicking the paper title button', () => {
+test('should open the edit paper modal when clicking the paper title button', async () => {
     setup('paper title');
     fireEvent.click(screen.queryByRole('button', { name: /paper title/i }));
-    expect(screen.getByRole('heading', { name: /edit paper/i })).toBeInTheDocument();
+    await waitFor(() => expect(screen.getByRole('heading', { name: /edit paper/i })).toBeInTheDocument());
 });
 
 test('should set "no title" when no paper title is provided', () => {

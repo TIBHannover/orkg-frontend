@@ -1,5 +1,6 @@
 import { render, screen, fireEvent, waitFor } from 'testUtils';
 import TableCellValueCreate from '../TableCellValueCreate';
+import selectEvent from 'react-select-event';
 
 const setup = () => {
     render(<TableCellValueCreate contributionId="R1" propertyId="P1" isEmptyCell isVisible={true} />);
@@ -26,10 +27,10 @@ test('should show literal input when add button is clicked', () => {
     expect(screen.getByPlaceholderText(/enter a value/i)).toBeInTheDocument();
 });
 
-test('should switch to autocomplete when resource type is selected', () => {
+test('should switch to autocomplete when resource type is selected', async () => {
     setup();
     fireEvent.click(screen.getByRole('button', { name: /add value/i, hidden: true }));
-    fireEvent.click(screen.getByRole('menuitem', { name: /resource/i, hidden: true }));
+    await selectEvent.select(screen.getByText(/text/i), ['Resource'], { container: document.body });
     expect(screen.getByRole('textbox', { name: /enter a resource/i })).toBeInTheDocument();
 });
 
@@ -37,10 +38,9 @@ test('should switch to literal input when literal type is selected', async () =>
     setup();
     fireEvent.click(screen.getByRole('button', { name: /add value/i, hidden: true }));
     // use wait for to prevent "Can't perform a React state update on an unmounted component. This is a no-op" warning
-    await waitFor(() => screen.getByRole('menuitem', { name: /resource/i, hidden: true }));
-    fireEvent.click(screen.getByRole('menuitem', { name: /resource/i, hidden: true }));
-    await waitFor(() => screen.getByRole('menuitem', { name: /literal/i, hidden: true }));
-    fireEvent.click(screen.getByRole('menuitem', { name: /literal/i, hidden: true }));
+    await selectEvent.select(screen.getByText(/text/i), ['Resource'], { container: document.body });
+    expect(screen.getByRole('textbox', { name: /enter a resource/i })).toBeInTheDocument();
+    await selectEvent.select(screen.getByText('Resource'), ['Text'], { container: document.body });
     expect(screen.getByPlaceholderText(/enter a value/i)).toBeInTheDocument();
 });
 

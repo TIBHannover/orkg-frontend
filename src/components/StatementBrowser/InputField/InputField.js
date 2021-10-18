@@ -31,7 +31,7 @@ export default function InputField(props) {
                 value={props.inputValue}
                 onChange={(e, value) => props.setInputValue(e ? e.target.value : value)}
                 onKeyDown={props.onKeyDown}
-                inputRef={props.literalInputRef}
+                ref={props.literalInputRef}
                 onBlur={props.onBlur}
                 className="form-control"
                 autoFocus

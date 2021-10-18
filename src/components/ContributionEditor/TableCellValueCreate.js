@@ -1,17 +1,18 @@
-import { faBars, faPlus } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { createLiteralValue, createResourceValue } from 'actions/contributionEditor';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
 import StatementOptionButton from 'components/StatementBrowser/StatementOptionButton/StatementOptionButton';
-import { StyledDropdownItem, StyledDropdownToggle } from 'components/StatementBrowser/styled';
-import { CLASSES, ENTITIES, PREDICATES } from 'constants/graphSettings';
-import { upperFirst } from 'lodash';
+import DatatypeSelector from 'components/StatementBrowser/DatatypeSelector/DatatypeSelector';
+import { CLASSES, ENTITIES, PREDICATES, MISC } from 'constants/graphSettings';
+import InputField from 'components/StatementBrowser/InputField/InputField';
 import PropTypes from 'prop-types';
-import { memo, useRef, useState } from 'react';
+import { memo, useRef, useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import Textarea from 'react-textarea-autosize';
 import { useClickAway } from 'react-use';
-import { DropdownMenu, InputGroup, InputGroupButtonDropdown } from 'reactstrap';
+import Tippy from '@tippyjs/react';
+import ConfirmConversionTooltip from 'components/StatementBrowser/ConfirmConversionTooltip/ConfirmConversionTooltip';
+import { InputGroup, FormFeedback } from 'reactstrap';
+import { getConfigByType, getSuggestionByTypeAndValue } from 'constants/DataTypes';
 import styled from 'styled-components';
 
 const CreateButtonContainer = styled.div`
@@ -25,50 +26,135 @@ const CreateButtonContainer = styled.div`
 
 const TableCellValueCreate = ({ isVisible, contributionId, propertyId, isEmptyCell }) => {
     const [value, setValue] = useState('');
-    const [type, setType] = useState(propertyId === PREDICATES.HAS_RESEARCH_PROBLEM ? 'resource' : 'literal');
     const [isCreating, setIsCreating] = useState(false);
-    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const [formFeedback, setFormFeedback] = useState(null);
+    const [inputDataType, setInputDataType] = useState(
+        getConfigByType(propertyId === PREDICATES.HAS_RESEARCH_PROBLEM ? 'object' : MISC.DEFAULT_LITERAL_DATATYPE).type
+    );
+    const [entityType, setEntityType] = useState(
+        getConfigByType(propertyId === PREDICATES.HAS_RESEARCH_PROBLEM ? 'object' : MISC.DEFAULT_LITERAL_DATATYPE)._class
+    );
+    const [isValid, setIsValid] = useState(true);
     const refContainer = useRef(null);
+    const confirmConversion = useRef(null);
+    const [suggestionType, setSuggestionType] = useState(null);
+    const [selectedObject, setSelectedObject] = useState(null);
     const dispatch = useDispatch();
 
     useClickAway(refContainer, () => {
-        setIsCreating(false);
+        //setIsCreating(false);
+        if (value === '') {
+            setIsCreating(false);
+        }
         createValue();
     });
 
     const createValue = () => {
-        if (type === 'literal' && value.trim()) {
-            handleCreateLiteral();
+        if (entityType === ENTITIES.LITERAL && value.trim()) {
+            onSubmit();
         }
     };
+
+    const getSchema = () => {
+        const config = getConfigByType(inputDataType);
+        return config.schema;
+    };
+
+    const acceptSuggestion = () => {
+        confirmConversion.current.hide();
+        dispatch(
+            createLiteralValue({
+                contributionId,
+                propertyId,
+                label: value,
+                datatype: suggestionType.type
+            })
+        );
+        setInputDataType(suggestionType.type);
+        closeCreate();
+    };
+
+    const rejectSuggestion = () => {
+        if (entityType === 'object') {
+            dispatch(
+                createResourceValue({
+                    contributionId,
+                    propertyId,
+                    resourceId: selectedObject.selected.id ?? null,
+                    resourceLabel: value,
+                    action: selectedObject.action,
+                    classes: propertyId === PREDICATES.HAS_RESEARCH_PROBLEM ? [CLASSES.PROBLEM] : []
+                })
+            );
+        } else {
+            dispatch(
+                createLiteralValue({
+                    contributionId,
+                    propertyId,
+                    label: value,
+                    datatype: getConfigByType(inputDataType).type
+                })
+            );
+        }
+        closeCreate();
+    };
+
+    const onSubmit = (selected = null, action = null) => {
+        const { error } = getSchema().validate(value);
+        if (error) {
+            setFormFeedback(error.message);
+            setIsValid(false);
+        } else {
+            setFormFeedback(null);
+            setIsValid(true);
+            // Check for a possible conversion possible
+            const suggestions = getSuggestionByTypeAndValue(inputDataType, value);
+            if (suggestions.length > 0 && propertyId !== PREDICATES.HAS_RESEARCH_PROBLEM) {
+                setSuggestionType(suggestions[0]);
+                confirmConversion.current.show();
+            } else {
+                if (entityType === 'object') {
+                    dispatch(
+                        createResourceValue({
+                            contributionId,
+                            propertyId,
+                            resourceId: selected.id ?? null,
+                            resourceLabel: value,
+                            action,
+                            classes: propertyId === PREDICATES.HAS_RESEARCH_PROBLEM ? [CLASSES.PROBLEM] : []
+                        })
+                    );
+                    closeCreate();
+                } else {
+                    dispatch(
+                        createLiteralValue({
+                            contributionId,
+                            propertyId,
+                            label: value,
+                            datatype: getConfigByType(inputDataType).type
+                        })
+                    );
+                    closeCreate();
+                }
+            }
+        }
+    };
+
+    useEffect(() => {
+        setFormFeedback(null);
+        setIsValid(true);
+        setEntityType(getConfigByType(inputDataType)._class);
+        if (inputDataType === 'xsd:boolean') {
+            setValue(v => Boolean(v).toString());
+        }
+    }, [inputDataType]);
 
     const handleChangeAutocomplete = async (selected, { action }) => {
         if (action !== 'create-option' && action !== 'select-option') {
             return;
         }
-
-        dispatch(
-            createResourceValue({
-                contributionId,
-                propertyId,
-                resourceId: selected.id ?? null,
-                resourceLabel: value,
-                action,
-                classes: propertyId === PREDICATES.HAS_RESEARCH_PROBLEM ? [CLASSES.PROBLEM] : []
-            })
-        );
-        closeCreate();
-    };
-
-    const handleCreateLiteral = () => {
-        dispatch(
-            createLiteralValue({
-                contributionId,
-                propertyId,
-                label: value
-            })
-        );
-        closeCreate();
+        setSelectedObject({ selected, action });
+        onSubmit(selected, action);
     };
 
     const handleKeyPress = e => {
@@ -78,8 +164,9 @@ const TableCellValueCreate = ({ isVisible, contributionId, propertyId, isEmptyCe
     };
 
     const closeCreate = () => {
+        setSelectedObject(null);
         setIsCreating(false);
-        setType(propertyId === PREDICATES.HAS_RESEARCH_PROBLEM ? 'resource' : 'literal');
+        setEntityType(getConfigByType(propertyId === PREDICATES.HAS_RESEARCH_PROBLEM ? 'object' : MISC.DEFAULT_LITERAL_DATATYPE)._class);
         setValue('');
     };
 
@@ -94,46 +181,62 @@ const TableCellValueCreate = ({ isVisible, contributionId, propertyId, isEmptyCe
             )}
             {isCreating && (
                 <div ref={refContainer} style={{ height: 35 }}>
-                    <InputGroup size="sm" style={{ width: 295 }}>
-                        {type === 'resource' ? (
-                            <Autocomplete
-                                optionsClass={propertyId === PREDICATES.HAS_RESEARCH_PROBLEM ? CLASSES.PROBLEM : undefined}
-                                entityType={ENTITIES.RESOURCE}
-                                excludeClasses={`${CLASSES.CONTRIBUTION},${CLASSES.PROBLEM},${CLASSES.TEMPLATE}`}
-                                placeholder={propertyId === PREDICATES.HAS_RESEARCH_PROBLEM ? 'Enter a research problem' : 'Enter a resource'}
-                                onChange={handleChangeAutocomplete}
-                                menuPortalTarget={document.body}
-                                onInput={(e, value) => setValue(e ? e.target.value : value)}
-                                value={value}
-                                openMenuOnFocus
-                                allowCreate
-                                cssClasses="form-control-sm"
+                    <Tippy
+                        onCreate={instance => (confirmConversion.current = instance)}
+                        content={
+                            <ConfirmConversionTooltip
+                                rejectSuggestion={rejectSuggestion}
+                                acceptSuggestion={acceptSuggestion}
+                                suggestionType={suggestionType}
                             />
-                        ) : (
-                            <Textarea
-                                placeholder="Enter a value"
-                                name="literalValue"
-                                type="text"
-                                value={value}
-                                onChange={e => setValue(e.target.value)}
-                                onKeyPress={handleKeyPress}
-                                autoFocus
-                                className="form-control text-center"
-                            />
-                        )}
-                        {propertyId !== PREDICATES.HAS_RESEARCH_PROBLEM && (
-                            <InputGroupButtonDropdown addonType="append" isOpen={isDropdownOpen} toggle={() => setIsDropdownOpen(v => !v)}>
-                                <StyledDropdownToggle disableBorderRadiusLeft={true}>
-                                    <small>{upperFirst(type)} </small>
-                                    <Icon size="xs" icon={faBars} />
-                                </StyledDropdownToggle>
-                                <DropdownMenu>
-                                    <StyledDropdownItem onClick={() => setType('resource')}>Resource</StyledDropdownItem>
-                                    <StyledDropdownItem onClick={() => setType('literal')}>Literal</StyledDropdownItem>
-                                </DropdownMenu>
-                            </InputGroupButtonDropdown>
-                        )}
-                    </InputGroup>
+                        }
+                        interactive={true}
+                        trigger="manual"
+                        placement="top"
+                    >
+                        <span>
+                            <InputGroup size="sm" style={{ width: 295 }}>
+                                {entityType === 'object' ? (
+                                    <Autocomplete
+                                        optionsClass={propertyId === PREDICATES.HAS_RESEARCH_PROBLEM ? CLASSES.PROBLEM : undefined}
+                                        entityType={ENTITIES.RESOURCE}
+                                        excludeClasses={`${CLASSES.CONTRIBUTION},${CLASSES.PROBLEM},${CLASSES.TEMPLATE}`}
+                                        placeholder={propertyId === PREDICATES.HAS_RESEARCH_PROBLEM ? 'Enter a research problem' : 'Enter a resource'}
+                                        onChange={handleChangeAutocomplete}
+                                        menuPortalTarget={document.body}
+                                        onInput={(e, value) => setValue(e ? e.target.value : value)}
+                                        value={value}
+                                        openMenuOnFocus
+                                        allowCreate
+                                        cssClasses="form-control-sm"
+                                    />
+                                ) : (
+                                    <>
+                                        <InputField
+                                            inputValue={value}
+                                            setInputValue={setValue}
+                                            inputDataType={inputDataType}
+                                            isValid={isValid}
+                                            onKeyDown={handleKeyPress}
+                                        />
+                                        {!isValid && (
+                                            <FormFeedback tooltip className="d-block">
+                                                {formFeedback}
+                                            </FormFeedback>
+                                        )}
+                                    </>
+                                )}
+                                {propertyId !== PREDICATES.HAS_RESEARCH_PROBLEM && (
+                                    <DatatypeSelector
+                                        disableBorderRadiusLeft={true}
+                                        disableBorderRadiusRight={false}
+                                        valueType={inputDataType}
+                                        setValueType={setInputDataType}
+                                    />
+                                )}
+                            </InputGroup>
+                        </span>
+                    </Tippy>
                 </div>
             )}
         </>
