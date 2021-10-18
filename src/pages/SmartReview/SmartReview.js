@@ -42,6 +42,7 @@ import ShouldPublishModal from 'components/SmartReview/ShouldPublishModal';
 import { usePrevious } from 'react-use';
 import LoadingOverlay from 'components/SmartReview/LoadingOverlay';
 import TitleBar from 'components/TitleBar/TitleBar';
+import { Helmet } from 'react-helmet';
 
 const GlobalStyle = createGlobalStyle`
     // ensure printing only prints the contents and no other elements
@@ -83,6 +84,7 @@ const SmartReview = () => {
     const version = versions.find(version => version.id === id);
     const versionNumber = versions.length ? versions.length - versions.findIndex(version => version.id === id) : null;
     const publicationDate = version ? moment(version.date).format('DD MMMM YYYY') : null;
+    const authors = useSelector(state => state.smartReview.authorResources);
 
     useEffect(() => {
         load(id);
@@ -125,10 +127,34 @@ const SmartReview = () => {
         return <NotFound />;
     }
 
+    const ldJson = {
+        mainEntity: {
+            headline: `${paper?.title} - SmartReview - ORKG`,
+            description: version?.description,
+            author: authors?.map(author => ({
+                name: author?.label,
+                ...(author?.orcid ? { url: `http://orcid.org/${author.orcid}` } : {}),
+                '@type': 'Person'
+            })),
+            datePublished: publicationDate,
+            about: researchField?.label,
+            '@type': 'ScholarlyArticle'
+        },
+        '@context': 'https://schema.org',
+        '@type': 'WebPage'
+    };
+
     return (
         <div>
             {researchField && <Breadcrumbs researchFieldId={researchField.id} />}
             <GlobalStyle />
+            <Helmet>
+                <title>{`${paper?.title} - SmartReview - ORKG`}</title>
+                <meta property="og:title" content={`${paper?.title} - SmartReview - ORKG`} />
+                <meta property="og:type" content="article" />
+                <meta property="og:description" content={version?.description} />
+                <script type="application/ld+json">{JSON.stringify(ldJson)}</script>
+            </Helmet>
             <TitleBar
                 titleAddition={
                     publicationDate && (
