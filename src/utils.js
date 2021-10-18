@@ -1268,7 +1268,7 @@ export const getDataBasedOnType = (resource, statements) => {
 
 // returns the position of the first differing character between
 // $left and $right, or -1 if either is empty
-export const strcmppos = (left, right) => {
+export const stringComparePosition = (left, right) => {
     if (isEmpty(left) || isEmpty(right)) {
         return -1;
     }
@@ -1282,19 +1282,19 @@ export const strcmppos = (left, right) => {
 
 // returns the part of the string preceding (but not including) the
 // final directory delimiter, or empty if none are found
-export const truncate_to_last_dir = str => {
+export const truncateToLastDir = str => {
     return str.substr(0, str.lastIndexOf('/')).toString();
 };
 
-export const group_array_by_directory_prefix = strings => {
+export const groupArrayByDirectoryPrefix = strings => {
     const groups = {};
     const numStrings = strings?.length;
     let i;
     for (i = 0; i < numStrings; i++) {
         let j;
         for (j = i + 1; j < numStrings; j++) {
-            const pos = strcmppos(strings[i], strings[j]);
-            const prefix = truncate_to_last_dir(strings[i].substr(0, pos + 1));
+            const pos = stringComparePosition(strings[i], strings[j]);
+            const prefix = truncateToLastDir(strings[i].substr(0, pos + 1));
             // append to grouping for this prefix. include both strings - this
             // gives duplicates which we'll merge later
             groups[prefix] = groups[prefix]

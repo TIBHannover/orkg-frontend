@@ -12,7 +12,7 @@ import { ReactTableWrapper, Contribution, Delete, ItemHeader, ItemHeaderInner, P
 import TableCell from './TableCell';
 import { useTable, useFlexLayout } from 'react-table';
 import { useSticky } from 'react-table-sticky';
-import { getPropertyObjectFromData, group_array_by_directory_prefix } from 'utils';
+import { getPropertyObjectFromData, groupArrayByDirectoryPrefix } from 'utils';
 import PropTypes from 'prop-types';
 import { useMedia } from 'react-use';
 
@@ -60,7 +60,7 @@ const ComparisonTable = props => {
                   }))
         ];
         if (!props.transpose && props.comparisonType === 'path') {
-            let groups = omit(group_array_by_directory_prefix(dataFrame.map((dO, index) => dO.property.id)), '');
+            let groups = omit(groupArrayByDirectoryPrefix(dataFrame.map((dO, index) => dO.property.id)), '');
             groups = Object.keys(groups);
             const shownGroups = [];
             groups.map(key => {
