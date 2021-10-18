@@ -18,7 +18,15 @@ const ExistingDoiModal = props => {
                 <strong>Existing paper:</strong> <PaperCard paper={props.existingPaper} showAddToComparison={false} />
             </ModalBody>
             <ModalFooter>
-                <Button color="primary" onClick={toggle}>
+                <Button
+                    color="primary"
+                    onClick={() => {
+                        toggle();
+                        if (props.onContinue) {
+                            props.onContinue();
+                        }
+                    }}
+                >
                     Continue
                 </Button>
             </ModalFooter>
@@ -27,7 +35,8 @@ const ExistingDoiModal = props => {
 };
 
 ExistingDoiModal.propTypes = {
-    existingPaper: PropTypes.object.isRequired
+    existingPaper: PropTypes.object.isRequired,
+    onContinue: PropTypes.func
 };
 
 export default ExistingDoiModal;
