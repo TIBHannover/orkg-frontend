@@ -36,7 +36,7 @@ import { useLocation } from 'react-router';
 import queryString from 'query-string';
 import { getPaperData } from 'utils';
 import { getStatementsBySubject } from 'services/backend/statements';
-import { getPaperByDOI } from 'services/backend/misc';
+import { getPaperByDOI, getPaperByTitle } from 'services/backend/misc';
 import { disableBodyScroll, enableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock';
 import ExistingDoiModal from './ExistingDoiModal';
 import { parseCiteResult } from 'utils';
@@ -88,6 +88,7 @@ const GeneralData = () => {
     const [validation, setValidation] = useState(null);
     const [errors, setErrors] = useState(null);
     const [existingPaper, setExistingPaper] = useState(null);
+    const [continueNextStep, setContinueNextStep] = useState(false);
 
     const disableBody = target =>
         disableBodyScroll(target, {
@@ -139,19 +140,6 @@ const GeneralData = () => {
             entryParsed = lookDoi.trim();
         }
 
-        // If the entry is a DOI check if it exists in the database
-        if (entryParsed.includes('10.') && entryParsed.startsWith('10.')) {
-            getPaperByDOI(entryParsed)
-                .then(result => {
-                    getStatementsBySubject({ id: result.id }).then(paperStatements => {
-                        setExistingPaper({ ...getPaperData(result, paperStatements), title: result.title });
-                    });
-                })
-                .catch(() => {
-                    setExistingPaper(null);
-                });
-        }
-
         await Cite.async(entryParsed)
             .catch(e => {
                 let validationMessage;
@@ -167,7 +155,7 @@ const GeneralData = () => {
                         validationMessage = 'An error occurred, reload the page and try again';
                         break;
                 }
-
+                setIsFetching(false);
                 setValidation(validationMessage);
                 setErrors(null);
                 return null;
@@ -175,8 +163,27 @@ const GeneralData = () => {
             .then(paper => {
                 if (paper) {
                     const parseResult = parseCiteResult(paper);
-                    setIsFetching(false);
-                    setErrors(null);
+                    let checkDatabase;
+                    // If the paper DOI already exists in the database
+                    if (parseResult.doi.includes('10.') && parseResult.doi.startsWith('10.')) {
+                        checkDatabase = getPaperByDOI(parseResult.doi);
+                    } else {
+                        checkDatabase = getPaperByTitle(parseResult.paperTitle);
+                    }
+
+                    checkDatabase
+                        .then(result => {
+                            getStatementsBySubject({ id: result.id }).then(paperStatements => {
+                                setExistingPaper({ ...getPaperData(result, paperStatements), title: result.title });
+                                setIsFetching(false);
+                                setErrors(null);
+                            });
+                        })
+                        .catch(() => {
+                            setIsFetching(false);
+                            setErrors(null);
+                            setExistingPaper(null);
+                        });
                     dispatch(
                         updateGeneralData({
                             showLookupTable: true,
@@ -266,7 +273,22 @@ const GeneralData = () => {
                     url
                 })
             );
-            dispatch(nextStep());
+            // If the paper title already exists in the database and not checked yet!
+            if (!existingPaper) {
+                getPaperByTitle(title)
+                    .then(result => {
+                        getStatementsBySubject({ id: result.id }).then(paperStatements => {
+                            setExistingPaper({ ...getPaperData(result, paperStatements), title: result.title });
+                            setContinueNextStep(true);
+                        });
+                    })
+                    .catch(() => {
+                        setExistingPaper(null);
+                        dispatch(nextStep());
+                    });
+            } else {
+                dispatch(nextStep());
+            }
         } else {
             setErrors(errors);
         }
@@ -424,7 +446,6 @@ const GeneralData = () => {
                                                     </Table>
                                                 </Card>
                                             </div>
-                                            {existingPaper && <ExistingDoiModal existingPaper={existingPaper} />}
                                         </>
                                     </Container>
                                 ) : (
@@ -433,6 +454,9 @@ const GeneralData = () => {
                             </TransitionGroup>
                         </div>
                     </Container>
+                )}
+                {existingPaper && (
+                    <ExistingDoiModal onContinue={() => (continueNextStep ? dispatch(nextStep()) : undefined)} existingPaper={existingPaper} />
                 )}
                 {dataEntry !== 'doi' && (
                     <Container key={2} classNames="fadeIn" timeout={{ enter: 500, exit: 0 }}>
