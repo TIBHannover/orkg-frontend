@@ -56,6 +56,46 @@ export default (state = initialState, action) => {
             return dotProp.set(state, 'contributions', payload);
         }
 
+        case type.IS_DELETING_CONTRIBUTION: {
+            const { payload } = action;
+            const contributionIndex = dotProp
+                .get(state, 'contributions')
+                .map(c => c.id)
+                .indexOf(payload.id);
+            const newState = dotProp.set(state, `contributions.${contributionIndex}.isDeleting`, true);
+            return newState;
+        }
+
+        case type.DONE_DELETING_CONTRIBUTION: {
+            const { payload } = action;
+            const contributionIndex = dotProp
+                .get(state, 'contributions')
+                .map(c => c.id)
+                .indexOf(payload.id);
+            const newState = dotProp.set(state, `contributions.${contributionIndex}.isDeleting`, false);
+            return newState;
+        }
+
+        case type.IS_SAVING_CONTRIBUTION: {
+            const { payload } = action;
+            const contributionIndex = dotProp
+                .get(state, 'contributions')
+                .map(c => c.id)
+                .indexOf(payload.id);
+            const newState = dotProp.set(state, `contributions.${contributionIndex}.isSaving`, true);
+            return newState;
+        }
+
+        case type.DONE_SAVING_CONTRIBUTION: {
+            const { payload } = action;
+            const contributionIndex = dotProp
+                .get(state, 'contributions')
+                .map(c => c.id)
+                .indexOf(payload.id);
+            const newState = dotProp.set(state, `contributions.${contributionIndex}.isSaving`, false);
+            return newState;
+        }
+
         case type.SET_RESEARCH_PROBLEMS: {
             const { payload } = action;
 

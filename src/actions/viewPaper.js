@@ -95,6 +95,34 @@ export const doneAddingContribution = () => dispatch => {
     });
 };
 
+export const isDeletingContribution = data => dispatch => {
+    dispatch({
+        type: type.IS_DELETING_CONTRIBUTION,
+        payload: data
+    });
+};
+
+export const doneDeletingContribution = data => dispatch => {
+    dispatch({
+        type: type.DONE_DELETING_CONTRIBUTION,
+        payload: data
+    });
+};
+
+export const isSavingContribution = data => dispatch => {
+    dispatch({
+        type: type.IS_SAVING_CONTRIBUTION,
+        payload: data
+    });
+};
+
+export const doneSavingContribution = data => dispatch => {
+    dispatch({
+        type: type.DONE_SAVING_CONTRIBUTION,
+        payload: data
+    });
+};
+
 export const setPaperContributions = payload => dispatch => {
     dispatch({
         type: type.SET_PAPER_CONTRIBUTIONS,
