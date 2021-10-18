@@ -30,12 +30,11 @@ const DatatypeSelector = props => {
             ...provided,
             height: '100% !important',
             minHeight: 'calc(1.5em + 0.5rem + 2px)',
-            fontSize: '100%',
-            borderTopLeftRadius: props.disableBorderRadiusLeft ? 0 : 'inherit',
-            borderBottomLeftRadius: props.disableBorderRadiusLeft ? 0 : 'inherit',
-            borderTopRightRadius: props.disableBorderRadiusRight ? 0 : 'inherit',
-            borderBottomRightRadius: props.disableBorderRadiusRight ? 0 : 'inherit',
-            borderRight: 0,
+            borderTopLeftRadius: props.disableBorderRadiusLeft ? 0 : undefined,
+            borderBottomLeftRadius: props.disableBorderRadiusLeft ? 0 : undefined,
+            borderTopRightRadius: props.disableBorderRadiusRight ? 0 : undefined,
+            borderBottomRightRadius: props.disableBorderRadiusRight ? 0 : undefined,
+            ...(props.disableBorderRadiusRight ? { borderRight: 0 } : {}),
             backgroundColor: theme.light,
             color: theme.secondaryDarker
         }),
@@ -68,6 +67,10 @@ const DatatypeSelector = props => {
             ...provided,
             paddingRight: '4px',
             border: '0'
+        }),
+        menu: provided => ({
+            ...provided,
+            fontSize: '0.875rem'
         })
     };
 
