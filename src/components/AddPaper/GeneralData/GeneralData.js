@@ -139,19 +139,6 @@ const GeneralData = () => {
             entryParsed = lookDoi.trim();
         }
 
-        // If the entry is a DOI check if it exists in the database
-        if (entryParsed.includes('10.') && entryParsed.startsWith('10.')) {
-            getPaperByDOI(entryParsed)
-                .then(result => {
-                    getStatementsBySubject({ id: result.id }).then(paperStatements => {
-                        setExistingPaper({ ...getPaperData(result, paperStatements), title: result.title });
-                    });
-                })
-                .catch(() => {
-                    setExistingPaper(null);
-                });
-        }
-
         await Cite.async(entryParsed)
             .catch(e => {
                 let validationMessage;
@@ -167,7 +154,7 @@ const GeneralData = () => {
                         validationMessage = 'An error occurred, reload the page and try again';
                         break;
                 }
-
+                setIsFetching(false);
                 setValidation(validationMessage);
                 setErrors(null);
                 return null;
@@ -175,8 +162,27 @@ const GeneralData = () => {
             .then(paper => {
                 if (paper) {
                     const parseResult = parseCiteResult(paper);
-                    setIsFetching(false);
-                    setErrors(null);
+
+                    // If the paper DOI already exists in the database
+                    if (parseResult.doi.includes('10.') && parseResult.doi.startsWith('10.')) {
+                        getPaperByDOI(parseResult.doi)
+                            .then(result => {
+                                getStatementsBySubject({ id: result.id }).then(paperStatements => {
+                                    setExistingPaper({ ...getPaperData(result, paperStatements), title: result.title });
+                                    setIsFetching(false);
+                                    setErrors(null);
+                                });
+                            })
+                            .catch(() => {
+                                setIsFetching(false);
+                                setErrors(null);
+                                setExistingPaper(null);
+                            });
+                    } else {
+                        setIsFetching(false);
+                        setErrors(null);
+                    }
+
                     dispatch(
                         updateGeneralData({
                             showLookupTable: true,
