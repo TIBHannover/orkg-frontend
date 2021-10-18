@@ -21,6 +21,7 @@ const theme = {
         primaryDarker: 'rgb(198, 29, 29)',
         secondaryDarker: 'rgb(80, 85, 101)',
         lightDarker: 'rgb(219, 221, 229)',
+        lightLighter: 'rgb(248, 249, 251)',
         body: 'rgb(79, 79, 79)'
     },
     formFeedbackFontSize: '90%',

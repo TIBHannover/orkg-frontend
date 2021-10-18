@@ -9,7 +9,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import { Link } from 'react-router-dom';
 import { Container, Nav, Navbar, NavItem, Alert } from 'reactstrap';
-import { getAboutPage, getAboutPages } from 'services/cms';
+import { getAboutPage, getAboutPagesMenu, getAboutPages } from 'services/cms';
 import { reverseWithSlug } from 'utils';
 
 const About = () => {
@@ -44,7 +44,10 @@ const About = () => {
         const getMenu = async () => {
             setIsLoadingMenu(true);
             try {
-                const _pages = await getAboutPages();
+                let _pages = await getAboutPagesMenu();
+                if (_pages?.length === 0) {
+                    _pages = await getAboutPages();
+                }
                 setMenuItems(_pages);
             } catch (e) {
                 console.log(e);

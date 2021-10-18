@@ -203,8 +203,7 @@ export default function AddValueTemplate(props) {
             setTemplateIsLoading(false);
             setIsInlineResource(false);
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [props]);
+    }, [classes, dispatch, props.isLiteral, props.valueClass, templates]);
 
     return (
         <ValueItemStyle className={showAddValue ? 'editingLabel' : ''}>

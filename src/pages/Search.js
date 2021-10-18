@@ -5,7 +5,7 @@ import { reverse } from 'named-urls';
 import dotProp from 'dot-prop-immutable';
 import PropTypes from 'prop-types';
 import ContentLoader from 'react-content-loader';
-import { getClassById } from 'services/backend/classes';
+import { getClassById, getClasses } from 'services/backend/classes';
 import { getResources, getResourcesByClass } from 'services/backend/resources';
 import { getPredicates } from 'services/backend/predicates';
 import ROUTES from 'constants/routes';
@@ -15,7 +15,7 @@ import Filters from 'components/Search/Filters';
 import { getArrayParamFromQueryString } from 'utils';
 import { unionBy } from 'lodash';
 import { toast } from 'react-toastify';
-import { CLASSES } from 'constants/graphSettings';
+import { CLASSES, ENTITIES } from 'constants/graphSettings';
 import { getPaperByDOI } from 'services/backend/misc';
 import REGEX from 'constants/regex';
 import TitleBar from 'components/TitleBar/TitleBar';
@@ -48,6 +48,11 @@ class Search extends Component {
                 label: 'Property',
                 labelPlural: 'Properties',
                 id: PREDICATE_TYPE_ID
+            },
+            {
+                label: 'Class',
+                labelPlural: 'Classes',
+                id: ENTITIES.CLASS
             },
             {
                 label: 'Research Problem',
@@ -194,6 +199,15 @@ class Search extends Component {
                         .join(','),
                     returnContent: true
                 });
+            } else if (filterType === ENTITIES.CLASS) {
+                results = await getClasses({
+                    page: this.state.currentPage[ENTITIES.CLASS] || 0,
+                    items: this.itemsPerFilter,
+                    sortBy: 'id',
+                    desc: true,
+                    q: searchQuery,
+                    returnContent: true
+                });
             } else {
                 results = await getResourcesByClass({
                     page: this.state.currentPage[filterType] || 0,
@@ -291,7 +305,7 @@ class Search extends Component {
                             </div>
                         </Col>
                         <Col className="col-sm-8 px-0">
-                            <div className="box rounded p-4 h-100">
+                            <div className="box rounded p-4">
                                 {this.isLoading() &&
                                     Object.keys(this.state.results).every(v => this.state.results[v] && this.state.results[v].length === 0) && (
                                         <ContentLoader

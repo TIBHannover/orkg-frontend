@@ -2,6 +2,7 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import ListPage from 'components/ListPage/ListPage';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
+import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
 import { CLASSES } from 'constants/graphSettings';
 import PaperCard from 'components/PaperCard/PaperCard';
 import { getPaperData } from 'utils';
@@ -91,16 +92,19 @@ const Papers = () => {
     );
 
     return (
-        <ListPage
-            label="papers"
-            resourceClass={CLASSES.PAPER}
-            renderListItem={renderListItem}
-            fetchItems={fetchItems}
-            buttons={buttons}
-            disableSearch={verified !== null}
-            reset={reset}
-            setReset={setReset}
-        />
+        <>
+            <ListPage
+                label="papers"
+                resourceClass={CLASSES.PAPER}
+                renderListItem={renderListItem}
+                fetchItems={fetchItems}
+                buttons={buttons}
+                disableSearch={verified !== null}
+                reset={reset}
+                setReset={setReset}
+            />
+            <ComparisonPopup />
+        </>
     );
 };
 

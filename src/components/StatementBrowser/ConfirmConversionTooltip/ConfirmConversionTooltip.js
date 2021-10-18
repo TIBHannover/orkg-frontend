@@ -45,6 +45,8 @@ ConfirmConversionTooltip.propTypes = {
     suggestionType: PropTypes.object
 };
 
-ConfirmConversionTooltip.defaultProps = {};
+ConfirmConversionTooltip.defaultProps = {
+    suggestionType: null
+};
 
 export default ConfirmConversionTooltip;
