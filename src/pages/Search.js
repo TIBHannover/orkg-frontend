@@ -305,7 +305,7 @@ class Search extends Component {
                             </div>
                         </Col>
                         <Col className="col-sm-8 px-0">
-                            <div className="box rounded p-4 h-100">
+                            <div className="box rounded p-4">
                                 {this.isLoading() &&
                                     Object.keys(this.state.results).every(v => this.state.results[v] && this.state.results[v].length === 0) && (
                                         <ContentLoader
