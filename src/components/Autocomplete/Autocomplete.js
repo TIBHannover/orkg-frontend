@@ -115,7 +115,7 @@ function Autocomplete(props) {
                 evt.target.setSelectionRange(len, len);
             }
         }
-        props.onKeyDown(evt);
+        props.onKeyDown?.(evt);
     };
 
     /**
