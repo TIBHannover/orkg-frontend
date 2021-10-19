@@ -1,5 +1,6 @@
 import Joi from 'joi';
 import { MISC, ENTITIES, CLASSES } from 'constants/graphSettings';
+import REGEX from 'constants/regex';
 import { orderBy } from 'lodash';
 //https://www.w3.org/TR/xmlschema-2
 
@@ -71,7 +72,9 @@ const DATA_TYPES = [
         type: 'xsd:anyURI',
         _class: ENTITIES.LITERAL,
         classId: CLASSES.URI,
-        schema: Joi.string().uri(),
+        schema: Joi.string()
+            .regex(REGEX.URL)
+            .message(`"value" must be a valid URL`),
         inputFormType: 'text',
         weight: 1
     },
