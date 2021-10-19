@@ -234,8 +234,8 @@ function Comparison(props) {
             <Breadcrumbs researchFieldId={metaData?.subject ? metaData?.subject.id : researchField ? researchField.id : null} />
 
             <Helmet>
-                <title>{`${metaData?.title} - Comparison - ORKG`}</title>
-                <meta property="og:title" content={`${metaData?.title} - Comparison - ORKG`} />
+                <title>{`${metaData?.title ?? 'Unpublished'} - Comparison - ORKG`}</title>
+                <meta property="og:title" content={`${metaData?.title ?? 'Unpublished'} - Comparison - ORKG`} />
                 <meta property="og:type" content="article" />
                 <meta property="og:description" content={metaData?.description} />
                 <script type="application/ld+json">{JSON.stringify(ldJson)}</script>

@@ -67,7 +67,7 @@ const Breadcrumbs = () => {
                             </div>
                             {resourceHistory.allIds.length === index + 1 && !openExistingResourcesInDialog && existingResourceId && (
                                 <Tippy content="Go to resource page">
-                                    <Link className="ml-2 resourceLink" to={reverse(ROUTES.RESOURCE, { id: selectedResource })}>
+                                    <Link target="_blank" className="ml-2 resourceLink" to={reverse(ROUTES.RESOURCE, { id: selectedResource })}>
                                         <Icon icon={faLink} color="#fff" />
                                     </Link>
                                 </Tippy>

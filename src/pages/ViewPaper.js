@@ -110,7 +110,7 @@ const ViewPaper = () => {
                     <Breadcrumbs researchFieldId={viewPaper.researchField ? viewPaper.researchField.id : null} />
 
                     <Helmet>
-                        <title>{`${viewPaper.paperResource?.label} - ORKG`}</title>
+                        <title>{`${viewPaper.paperResource?.label ?? 'Paper'} - ORKG`}</title>
                         <meta property="og:title" content={`${viewPaper.paperResource?.label} - ORKG`} />
                         <meta property="og:type" content="article" />
                         <meta property="og:description" content={getSEODescription()} />

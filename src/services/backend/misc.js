@@ -11,6 +11,10 @@ export const getPaperByDOI = doi => {
     return submitGetRequest(`${url}widgets/?doi=${doi}`);
 };
 
+export const getPaperByTitle = title => {
+    return submitGetRequest(`${url}widgets/?title=${title}`);
+};
+
 export const generateDOIForComparison = (comparison_id, title, subject, description, related_resources, authors, url) => {
     return submitPostRequest(
         doisUrl,
