@@ -96,6 +96,28 @@ function Autocomplete(props) {
         }
     }, [props.inputValue]);
 
+    // Support home and end keys for text Input
+    const handleKeyDown = evt => {
+        if (evt.key === 'Home') {
+            evt.preventDefault();
+            if (evt.shiftKey) {
+                evt.target.selectionStart = 0;
+            } else {
+                evt.target.setSelectionRange(0, 0);
+            }
+        }
+        if (evt.key === 'End') {
+            evt.preventDefault();
+            const len = evt.target.value.length;
+            if (evt.shiftKey) {
+                evt.target.selectionEnd = len;
+            } else {
+                evt.target.setSelectionRange(len, len);
+            }
+        }
+        props.onKeyDown(evt);
+    };
+
     /**
      * Lookup in ORKG backend
      *
@@ -681,7 +703,7 @@ function Autocomplete(props) {
                     defaultOptions={props.defaultOptions ?? true}
                     openMenuOnFocus={props.openMenuOnFocus}
                     onBlur={props.onBlur}
-                    onKeyDown={props.onKeyDown}
+                    onKeyDown={handleKeyDown}
                     selectRef={props.innerRef}
                     createOptionPosition="first"
                     menuPortalTarget={props.menuPortalTarget}
