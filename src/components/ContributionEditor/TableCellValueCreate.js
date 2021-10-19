@@ -167,6 +167,7 @@ const TableCellValueCreate = ({ isVisible, contributionId, propertyId, isEmptyCe
         setSelectedObject(null);
         setIsCreating(false);
         setEntityType(getConfigByType(propertyId === PREDICATES.HAS_RESEARCH_PROBLEM ? 'object' : MISC.DEFAULT_LITERAL_DATATYPE)._class);
+        setInputDataType(getConfigByType(propertyId === PREDICATES.HAS_RESEARCH_PROBLEM ? 'object' : MISC.DEFAULT_LITERAL_DATATYPE).type);
         setValue('');
     };
 
@@ -208,6 +209,7 @@ const TableCellValueCreate = ({ isVisible, contributionId, propertyId, isEmptyCe
                                         value={value}
                                         openMenuOnFocus
                                         allowCreate
+                                        allowCreateDuplicate
                                         cssClasses="form-control-sm"
                                     />
                                 ) : (

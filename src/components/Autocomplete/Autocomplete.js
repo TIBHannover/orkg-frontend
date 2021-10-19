@@ -705,8 +705,10 @@ function Autocomplete(props) {
                             // to disable the create button
                             props.handleCreateExistingLabel(inputValue, selectOptions);
                         }
-                        if (!props.allowCreate) {
+                        if (!props.allowCreate && !props.allowCreateDuplicate) {
                             return false;
+                        } else if (inputValue && props.allowCreateDuplicate) {
+                            return true;
                         } else {
                             return !(
                                 !inputValue ||
@@ -730,6 +732,7 @@ Autocomplete.propTypes = {
     onItemSelected: PropTypes.func,
     onChange: PropTypes.func,
     allowCreate: PropTypes.bool,
+    allowCreateDuplicate: PropTypes.bool,
     defaultOptions: PropTypes.array,
     additionalData: PropTypes.array,
     onNewItemSelected: PropTypes.func,
@@ -775,6 +778,7 @@ Autocomplete.defaultProps = {
     inputGroup: true,
     inputId: null,
     inputValue: null,
-    menuPortalTarget: null
+    menuPortalTarget: null,
+    allowCreateDuplicate: false
 };
 export default withTheme(Autocomplete);
