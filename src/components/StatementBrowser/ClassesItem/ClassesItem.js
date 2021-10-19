@@ -1,6 +1,7 @@
 import { useState, Fragment, useRef, useEffect } from 'react';
 import { Button, InputGroup, InputGroupAddon } from 'reactstrap';
-import { faPen, faTags } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { faPen, faTags, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import StatementActionButton from 'components/StatementBrowser/StatementActionButton/StatementActionButton';
 import { Link } from 'react-router-dom';
 import { getClassById } from 'services/backend/classes';
@@ -8,7 +9,6 @@ import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes.js';
 import { updateResourceClasses, removeEmptyPropertiesOfClass } from 'actions/statementBrowser';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
 import styled from 'styled-components';
@@ -34,6 +34,7 @@ const ClassesItem = props => {
     const classesAutocompleteRef = useRef(null);
     const [classes, setClasses] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
+    const [isSaving, setIsSaving] = useState(false);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -55,6 +56,7 @@ const ClassesItem = props => {
     }, [resource.classes]);
 
     const handleChangeClasses = async (selected, action) => {
+        setIsSaving(true);
         if (action.action === 'create-option') {
             const foundIndex = selected.findIndex(x => x.__isNew__);
             const newClass = await Confirm({
@@ -64,6 +66,7 @@ const ClassesItem = props => {
                 const foundIndex = selected.findIndex(x => x.__isNew__);
                 selected[foundIndex] = newClass;
             } else {
+                setIsSaving(false);
                 return null;
             }
         }
@@ -72,10 +75,18 @@ const ClassesItem = props => {
             dispatch(removeEmptyPropertiesOfClass({ resourceId: selectedResource, classId: action.removedValue?.id }));
         }
         const newClasses = !selected ? [] : selected;
-        setClasses(newClasses);
-        dispatch(updateResourceClasses({ resourceId: selectedResource, classes: newClasses?.map(c => c.id) ?? [], syncBackend: props.syncBackend }));
-        toast.dismiss();
-        props.syncBackend && toast.success('Resource classes updated successfully');
+        dispatch(updateResourceClasses({ resourceId: selectedResource, classes: newClasses?.map(c => c.id) ?? [], syncBackend: props.syncBackend }))
+            .then(() => {
+                setClasses(newClasses);
+                setIsSaving(false);
+                toast.dismiss();
+                props.syncBackend && toast.success('Resource classes updated successfully');
+            })
+            .catch(() => {
+                setIsSaving(false);
+                toast.dismiss();
+                toast.error('Something went wrong while updating the classes.');
+            });
     };
 
     return (
@@ -120,12 +131,15 @@ const ClassesItem = props => {
                                     isMulti
                                     autoFocus={false}
                                     ols={true}
+                                    isDisabled={isSaving}
                                     cssClasses="form-control-sm"
                                     inputId="classes-autocomplete"
                                 />
 
                                 <InputGroupAddon addonType="append">
-                                    <Button onClick={() => setEditMode(false)}>Done</Button>
+                                    <Button onClick={() => setEditMode(false)} disabled={isSaving}>
+                                        {!isSaving ? 'Done' : <Icon icon={faSpinner} spin={true} />}
+                                    </Button>
                                 </InputGroupAddon>
                             </InputGroup>
                         </div>
