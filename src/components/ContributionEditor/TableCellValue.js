@@ -35,7 +35,7 @@ const TableCellValue = forwardRef(({ value, index, setDisableCreate, propertyId 
     const [isValid, setIsValid] = useState(true);
     const [draftLabel, setDraftLabel] = useState(value.label);
     const [draftDataType, setDraftDataType] = useState(
-        value._class === ENTITIES.LITERAL ? value.datatype ?? MISC.DEFAULT_LITERAL_DATATYPE : 'object'
+        value._class === ENTITIES.LITERAL ? value.datatype ?? MISC.DEFAULT_LITERAL_DATATYPE : ENTITIES.RESOURCE
     );
 
     const refContainer = useRef(null);

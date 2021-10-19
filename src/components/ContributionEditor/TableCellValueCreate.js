@@ -31,10 +31,10 @@ const TableCellValueCreate = ({ isVisible, contributionId, propertyId, isEmptyCe
     const [isCreating, setIsCreating] = useState(false);
     const [formFeedback, setFormFeedback] = useState(null);
     const [inputDataType, setInputDataType] = useState(
-        getConfigByType(propertyId === PREDICATES.HAS_RESEARCH_PROBLEM ? 'object' : MISC.DEFAULT_LITERAL_DATATYPE).type
+        getConfigByType(propertyId === PREDICATES.HAS_RESEARCH_PROBLEM ? ENTITIES.RESOURCE : MISC.DEFAULT_LITERAL_DATATYPE).type
     );
     const [entityType, setEntityType] = useState(
-        getConfigByType(propertyId === PREDICATES.HAS_RESEARCH_PROBLEM ? 'object' : MISC.DEFAULT_LITERAL_DATATYPE)._class
+        getConfigByType(propertyId === PREDICATES.HAS_RESEARCH_PROBLEM ? ENTITIES.RESOURCE : MISC.DEFAULT_LITERAL_DATATYPE)._class
     );
     const [isValid, setIsValid] = useState(true);
     const refContainer = useRef(null);
@@ -83,7 +83,7 @@ const TableCellValueCreate = ({ isVisible, contributionId, propertyId, isEmptyCe
     };
 
     const rejectSuggestion = () => {
-        if (entityType === 'object') {
+        if (entityType === ENTITIES.RESOURCE) {
             dispatch(
                 createResourceValue({
                     contributionId,
@@ -121,7 +121,7 @@ const TableCellValueCreate = ({ isVisible, contributionId, propertyId, isEmptyCe
                 setSuggestionType(suggestions[0]);
                 confirmConversion.current.show();
             } else {
-                if (entityType === 'object') {
+                if (entityType === ENTITIES.RESOURCE) {
                     dispatch(
                         createResourceValue({
                             contributionId,
@@ -174,7 +174,7 @@ const TableCellValueCreate = ({ isVisible, contributionId, propertyId, isEmptyCe
     const closeCreate = () => {
         setSelectedObject(null);
         setIsCreating(false);
-        setEntityType(getConfigByType(propertyId === PREDICATES.HAS_RESEARCH_PROBLEM ? 'object' : MISC.DEFAULT_LITERAL_DATATYPE)._class);
+        setEntityType(getConfigByType(propertyId === PREDICATES.HAS_RESEARCH_PROBLEM ? ENTITIES.RESOURCE : MISC.DEFAULT_LITERAL_DATATYPE)._class);
         setValue('');
     };
 
@@ -224,7 +224,7 @@ const TableCellValueCreate = ({ isVisible, contributionId, propertyId, isEmptyCe
                     >
                         <span>
                             <InputGroup size="sm" style={{ width: 295 }}>
-                                {entityType === 'object' ? (
+                                {entityType === ENTITIES.RESOURCE ? (
                                     <Autocomplete
                                         optionsClass={propertyId === PREDICATES.HAS_RESEARCH_PROBLEM ? CLASSES.PROBLEM : undefined}
                                         entityType={ENTITIES.RESOURCE}
