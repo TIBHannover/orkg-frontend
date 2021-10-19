@@ -209,7 +209,7 @@ const TableCellValueCreate = ({ isVisible, contributionId, propertyId, isEmptyCe
                                         value={value}
                                         openMenuOnFocus
                                         allowCreate
-                                        allowCreateDuplicate
+                                        allowCreateDuplicate={propertyId === PREDICATES.HAS_RESEARCH_PROBLEM ? false : true}
                                         cssClasses="form-control-sm"
                                     />
                                 ) : (
