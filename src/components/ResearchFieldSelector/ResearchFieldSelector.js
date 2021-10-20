@@ -4,7 +4,7 @@ import { faMinusSquare, faPlusSquare, faSpinner } from '@fortawesome/free-solid-
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
 import { CLASSES, MISC, ENTITIES } from 'constants/graphSettings';
-import { sortBy, find, set } from 'lodash';
+import { sortBy, find, set, cloneDeep } from 'lodash';
 import { getParentResearchFields, getStatementsBySubjects } from 'services/backend/statements';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
@@ -60,7 +60,7 @@ const ResearchFieldSelector = ({ selectedResearchField, researchFields, updateRe
         setIsLoading(true);
         getParentResearchFields(selected.id).then(async parents => {
             parents = parents.reverse();
-            let fields = [...researchFields];
+            let fields = cloneDeep(researchFields);
 
             for (const parent of parents) {
                 fields = await getChildFields(parent.id, fields);
@@ -90,7 +90,7 @@ const ResearchFieldSelector = ({ selectedResearchField, researchFields, updateRe
     };
 
     const getFieldsByIds = useCallback(async (ids, previousFields = []) => {
-        const fields = [...previousFields];
+        const fields = cloneDeep(previousFields);
         const subfieldStatements = await getStatementsBySubjects({ ids });
 
         for (const { id, statements } of subfieldStatements) {
@@ -119,7 +119,7 @@ const ResearchFieldSelector = ({ selectedResearchField, researchFields, updateRe
 
     const getChildFields = useCallback(
         async (fieldId, previousFields, toggleExpand = false) => {
-            const fields = [...previousFields];
+            const fields = cloneDeep(previousFields);
             const fieldIndex = fields.findIndex(field => field.id === fieldId);
 
             if (fieldIndex !== -1) {

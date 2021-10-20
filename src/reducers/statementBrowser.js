@@ -348,33 +348,47 @@ export default (state = initialState, action) => {
             return newState;
         }
 
+        /** DEDUPLICATE CODE */
         case type.SELECT_RESOURCE: {
             const { payload } = action;
             const level = payload.increaseLevel ? state.level + 1 : state.level - 1;
+
+            let newState = dotProp.set(state, `selectedResource`, payload.resourceId);
+            newState = dotProp.set(newState, `level`, level > 0 ? level : 0);
+
             if (!state.initOnLocationChange && state.contributions[state.selectedContributionId]) {
                 // this wants to update the contribution object
-                const contribObj = state.contributions[state.selectedContributionId];
+                const contribObj = { ...state.contributions[state.selectedContributionId] };
                 if (payload.resourceId === state.selectedContributionId) {
                     if (contribObj.selectedResource === '') {
                         // there is no selected data yet;
-                        contribObj.selectedResource = payload.resourceId;
-                        contribObj.level = level > 0 ? level : 0;
+                        newState = dotProp.set(newState, `contributions.${state.selectedContributionId}.selectedResource`, payload.resourceId);
+                        newState = dotProp.set(newState, `contributions.${state.selectedContributionId}.level`, level > 0 ? level : 0);
+                        //contribObj.selectedResource = payload.resourceId;
+                        //contribObj.level = level > 0 ? level : 0;
                     }
                 } else {
                     // check if this resource exists in the contribution data ;
                     const isContributionResource = !!state.contributions[payload.resourceId];
                     if (!isContributionResource) {
-                        contribObj.selectedResource = payload.resourceId;
-                        contribObj.level = level > 0 ? level : 0;
+                        newState = dotProp.set(newState, `contributions.${state.selectedContributionId}.selectedResource`, payload.resourceId);
+                        newState = dotProp.set(newState, `contributions.${state.selectedContributionId}.level`, level > 0 ? level : 0);
+                        //contribObj.selectedResource = payload.resourceId;
+                        //contribObj.level = level > 0 ? level : 0;
                     }
                 }
             }
 
-            return {
+            return newState;
+            /*return {
                 ...state,
                 selectedResource: payload.resourceId,
-                level: level > 0 ? level : 0
-            };
+                level: level > 0 ? level : 0,
+                contributions: {
+                    ...state.contributions,
+                    [state.selectedContributionId]: contribObj
+                }
+            };*/
         }
 
         case type.RESET_LEVEL: {
@@ -414,11 +428,17 @@ export default (state = initialState, action) => {
                 const isContributionResource = !!newState.contributions[resourceId];
 
                 if (!isContributionResource) {
-                    contribObj.resourceHistory = newState.resourceHistory;
+                    newState = dotProp.set(newState, `contributions.${newState.selectedContributionId}.resourceHistory`, newState.resourceHistory);
+                    // contribObj.resourceHistory = newState.resourceHistory;
                 } else {
                     if (contribObj.resourceHistory.allIds.length === 0) {
                         // will ignore history updates if there is already some data;
-                        contribObj.resourceHistory = newState.resourceHistory;
+                        //contribObj.resourceHistory = newState.resourceHistory;
+                        newState = dotProp.set(
+                            newState,
+                            `contributions.${newState.selectedContributionId}.resourceHistory`,
+                            newState.resourceHistory
+                        );
                     }
                 }
             }
@@ -430,22 +450,37 @@ export default (state = initialState, action) => {
             const { payload } = action;
             const ids = state.resourceHistory.allIds.slice(0, payload.historyIndex + 1); //TODO: it looks like historyIndex can be derived, so remove it from payload
 
+            let newState = state;
             if (!state.initOnLocationChange && state.contributions[state.selectedContributionId]) {
-                const contribObj = state.contributions[state.selectedContributionId];
-                contribObj.resourceHistory = {
+                //const contribObj = state.contributions[state.selectedContributionId];
+
+                newState = dotProp.set(newState, `contributions.${state.selectedContributionId}.resourceHistory`, {
                     byId: {
                         ...state.resourceHistory.byId // TODO: remove the history item from byId object (not really necessary, but it is cleaner)
                     },
                     allIds: ids
-                };
-                contribObj.level = payload.historyIndex;
-                contribObj.selectedResource = payload.id;
-                contribObj.selectedProperty = state.resourceHistory.byId[payload.id].selectedProperty;
-                state.contributions[state.selectedContributionId] = contribObj;
+                });
+                newState = dotProp.set(newState, `contributions.${state.selectedContributionId}.level`, payload.historyIndex);
+                newState = dotProp.set(newState, `contributions.${state.selectedContributionId}.selectedResource`, payload.id);
+                newState = dotProp.set(
+                    newState,
+                    `contributions.${state.selectedContributionId}.selectedProperty`,
+                    state.resourceHistory.byId[payload.id].selectedProperty
+                );
+                /*contribObj.resourceHistory = {
+                    byId: {
+                        ...state.resourceHistory.byId // TODO: remove the history item from byId object (not really necessary, but it is cleaner)
+                    },
+                    allIds: ids
+                };*/
+                //contribObj.level = payload.historyIndex;
+                //contribObj.selectedResource = payload.id;
+                //contribObj.selectedProperty = state.resourceHistory.byId[payload.id].selectedProperty;
+                //state.contributions[state.selectedContributionId] = contribObj;
             }
 
             return {
-                ...state,
+                ...newState,
                 level: payload.historyIndex,
                 selectedResource: payload.id,
                 selectedProperty: state.resourceHistory.byId[payload.id].selectedProperty,
@@ -578,7 +613,8 @@ export default (state = initialState, action) => {
 
         /** -- Handling for creation of contribution objects**/
         case type.STATEMENT_BROWSER_CREATE_CONTRIBUTION_OBJECT: {
-            state.selectedContributionId = action.payload.id;
+            //state.selectedContributionId = action.payload.id;
+            let newState = { ...state, selectedContributionId: action.payload.id };
             if (!state.contributions.hasOwnProperty(action.payload.id)) {
                 const initData = {
                     selectedResource: '',
@@ -590,23 +626,29 @@ export default (state = initialState, action) => {
                         allIds: []
                     }
                 };
-                const updatedState = dotProp.set(state, `contributions.${action.payload.id}`, initData);
-                return { ...updatedState };
+                newState = dotProp.set(newState, `contributions.${action.payload.id}`, initData);
+                return newState;
             }
-            return { ...state };
+            return newState;
         }
 
         case type.STATEMENT_BROWSER_LOAD_CONTRIBUTION_HISTORY: {
             const contribObj = state.contributions[action.payload.id];
+            let newState = state;
             if (contribObj) {
-                state.selectedResource = contribObj.selectedResource;
-                state.selectedProperty = contribObj.selectedProperty;
-                state.isFetchingStatements = contribObj.isFetchingStatements;
-                state.level = contribObj.level;
-                state.resourceHistory = contribObj.resourceHistory;
+                newState = dotProp.set(newState, `selectedResource`, contribObj.selectedResource);
+                newState = dotProp.set(newState, `selectedProperty`, contribObj.selectedProperty);
+                newState = dotProp.set(newState, `isFetchingStatements`, contribObj.isFetchingStatements);
+                newState = dotProp.set(newState, `level`, contribObj.level);
+                newState = dotProp.set(newState, `resourceHistory`, contribObj.resourceHistory);
+                // state.selectedResource = contribObj.selectedResource;
+                // state.selectedProperty = contribObj.selectedProperty;
+                // state.isFetchingStatements = contribObj.isFetchingStatements;
+                // state.level = contribObj.level;
+                // state.resourceHistory = contribObj.resourceHistory;
             }
 
-            return { ...state };
+            return newState;
         }
 
         default: {
