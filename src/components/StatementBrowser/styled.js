@@ -156,6 +156,7 @@ export const ValueItemStyle = styled(ListGroupItem)`
         margin-right: 4px;
         text-decoration: underline;
         cursor: pointer;
+        line-height: 1.8;
     }
 
     .literalLabel {
@@ -163,6 +164,7 @@ export const ValueItemStyle = styled(ListGroupItem)`
         margin-right: 4px;
         text-decoration: none;
         cursor: text;
+        line-height: 1.8;
     }
 
     .typeCircle {

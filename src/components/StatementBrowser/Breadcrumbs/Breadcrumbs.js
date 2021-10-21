@@ -38,7 +38,7 @@ const Breadcrumbs = () => {
     };
 
     return (
-        <Container>
+        <Container className="ml-1">
             <BackButton className="btn btn-link border-0 align-baseline" onClick={handleBackClick}>
                 <Icon icon={faArrowLeft} /> <div className="d-none d-md-inline">Back</div>
             </BackButton>

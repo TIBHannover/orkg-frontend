@@ -48,7 +48,9 @@ const SBEditorHelpModal = () => {
 
     return (
         <Modal isOpen={isHelpModalOpen} toggle={() => dispatch(setIsHelpModalOpen({ isOpen: !isHelpModalOpen }))} size="lg">
-            <ModalHeader toggle={() => dispatch(setIsHelpModalOpen({ isOpen: !isHelpModalOpen }))}>ORKG Content editor help</ModalHeader>
+            <ModalHeader toggle={() => dispatch(setIsHelpModalOpen({ isOpen: !isHelpModalOpen }))}>
+                {helpCenterArticleId && !isLoadingPage && page ? page?.title : 'ORKG Content editor help'}{' '}
+            </ModalHeader>
 
             <ModalBody>
                 {!helpCenterArticleId && (
@@ -102,7 +104,6 @@ const SBEditorHelpModal = () => {
                 )}
                 {helpCenterArticleId && !isLoadingPage && page && (
                     <div className="pb-3 px-3">
-                        <h1 className="h5 my-2">{page?.title}</h1>
                         <CmsPage>{page?.content}</CmsPage>
                     </div>
                 )}

@@ -6,6 +6,7 @@ import StatementActionButton from 'components/StatementBrowser/StatementActionBu
 import { Link } from 'react-router-dom';
 import { getClassById } from 'services/backend/classes';
 import { reverse } from 'named-urls';
+import { CSSTransition } from 'react-transition-group';
 import ROUTES from 'constants/routes.js';
 import { updateResourceClasses, removeEmptyPropertiesOfClass } from 'actions/statementBrowser';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
@@ -27,6 +28,26 @@ export const ClassesStyle = styled.div`
     border: 1px solid rgba(0, 0, 0, 0.125) !important;
 `;
 
+const AnimationContainer = styled(CSSTransition)`
+    &.zoom-enter {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    &.zoom-enter-active {
+        opacity: 1;
+        transform: translateX(0);
+        transition: opacity 300ms, transform 300ms;
+    }
+    &.zoom-exit {
+        opacity: 1;
+    }
+    &.zoom-exit-active {
+        opacity: 0;
+        transform: scale(0.9);
+        transition: opacity 300ms, transform 300ms;
+    }
+`;
+
 const ClassesItem = props => {
     const selectedResource = useSelector(state => state.statementBrowser.selectedResource);
     const resource = useSelector(state => selectedResource && state.statementBrowser.resources.byId[selectedResource]);
@@ -36,6 +57,7 @@ const ClassesItem = props => {
     const [isLoading, setIsLoading] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
     const dispatch = useDispatch();
+    const preferences = useSelector(state => state.statementBrowser.preferences);
 
     useEffect(() => {
         const findClasses = async () => {
@@ -90,64 +112,69 @@ const ClassesItem = props => {
     };
 
     return (
-        <div>
-            {selectedResource && resource._class === ENTITIES.RESOURCE && (
-                <ClassesStyle className="text-muted mb-3 d-flex align-items-center clearfix">
-                    <Icon icon={faTags} className="mr-1" /> Instance of:{' '}
-                    {!editMode && !isLoading && (
-                        <div className="mx-1" style={{ padding: '3.5px 0' }}>
-                            {classes?.map((c, index) => (
-                                <Fragment key={c.id}>
-                                    <Link target="_blank" to={reverse(ROUTES.CLASS, { id: c.id })}>
-                                        {c.label}
-                                    </Link>
-                                    {index + 1 !== classes.length && ', '}
-                                </Fragment>
-                            ))}
-                            {classes?.length === 0 && <i>No classes</i>}
-                        </div>
-                    )}
-                    {!editMode && isLoading && (
-                        <div style={{ padding: '3.5px 0' }}>
-                            <i>Loading ...</i>
-                        </div>
-                    )}
-                    {props.enableEdit && editMode && (
-                        <div className="flex-grow-1 ml-1 ">
-                            <InputGroup size="sm">
-                                <AutoComplete
-                                    entityType={ENTITIES.CLASS}
-                                    onChange={(selected, action) => {
-                                        // blur the field allows to focus and open the menu again
-                                        classesAutocompleteRef.current && classesAutocompleteRef.current.blur();
-                                        handleChangeClasses(selected, action);
-                                    }}
-                                    placeholder="Specify the classes of the resource"
-                                    value={classes}
-                                    autoLoadOption={true}
-                                    openMenuOnFocus={true}
-                                    allowCreate={true}
-                                    innerRef={classesAutocompleteRef}
-                                    isMulti
-                                    autoFocus={false}
-                                    ols={true}
-                                    isDisabled={isSaving}
-                                    cssClasses="form-control-sm"
-                                    inputId="classes-autocomplete"
-                                />
+        <AnimationContainer in={preferences['showClasses']} timeout={300} classNames="zoom" unmountOnExit>
+            <div>
+                {selectedResource && resource._class === ENTITIES.RESOURCE && (
+                    <ClassesStyle className="text-muted mb-2 d-flex align-items-center clearfix">
+                        <Icon icon={faTags} className="mr-1" />
+                        <span> Instance of: </span>
+                        {!editMode && !isLoading && (
+                            <div className="mx-1" style={{ padding: '3.5px 0' }}>
+                                {classes?.map((c, index) => (
+                                    <Fragment key={c.id}>
+                                        <Link target="_blank" to={reverse(ROUTES.CLASS, { id: c.id })}>
+                                            {c.label}
+                                        </Link>
+                                        {index + 1 !== classes.length && ', '}
+                                    </Fragment>
+                                ))}
+                                {classes?.length === 0 && <i>No classes</i>}
+                            </div>
+                        )}
+                        {!editMode && isLoading && (
+                            <div style={{ padding: '3.5px 0' }}>
+                                <i>Loading ...</i>
+                            </div>
+                        )}
+                        {props.enableEdit && editMode && (
+                            <div className="flex-grow-1 ml-1 ">
+                                <InputGroup size="sm">
+                                    <AutoComplete
+                                        entityType={ENTITIES.CLASS}
+                                        onChange={(selected, action) => {
+                                            // blur the field allows to focus and open the menu again
+                                            classesAutocompleteRef.current && classesAutocompleteRef.current.blur();
+                                            handleChangeClasses(selected, action);
+                                        }}
+                                        placeholder="Specify the classes of the resource"
+                                        value={classes}
+                                        autoLoadOption={true}
+                                        openMenuOnFocus={true}
+                                        allowCreate={true}
+                                        innerRef={classesAutocompleteRef}
+                                        isMulti
+                                        autoFocus={false}
+                                        ols={true}
+                                        isDisabled={isSaving}
+                                        cssClasses="form-control-sm"
+                                        inputId="classes-autocomplete"
+                                    />
 
-                                <InputGroupAddon addonType="append">
-                                    <Button onClick={() => setEditMode(false)} disabled={isSaving}>
-                                        {!isSaving ? 'Done' : <Icon icon={faSpinner} spin={true} />}
-                                    </Button>
-                                </InputGroupAddon>
-                            </InputGroup>
-                        </div>
-                    )}
-                    {props.enableEdit && !editMode && <StatementActionButton title="Edit classes" icon={faPen} action={() => setEditMode(true)} />}
-                </ClassesStyle>
-            )}
-        </div>
+                                    <InputGroupAddon addonType="append">
+                                        <Button onClick={() => setEditMode(false)} disabled={isSaving}>
+                                            {!isSaving ? 'Done' : <Icon icon={faSpinner} spin={true} />}
+                                        </Button>
+                                    </InputGroupAddon>
+                                </InputGroup>
+                            </div>
+                        )}
+                        {props.enableEdit && !editMode && (
+                            <StatementActionButton title="Edit classes" icon={faPen} action={() => setEditMode(true)} />
+                        )}
+                    </ClassesStyle>
+                )}
+            </div>
+        </AnimationContainer>
     );
 };
 

@@ -117,9 +117,9 @@ const ValueItemOptions = ({ id, enableEdit, syncBackend, handleOnClick }) => {
                         {value.isDeleting && (
                             <StatementActionButton isDisabled={true} title="Deleting value" icon={faSpinner} iconSpin={true} action={() => null} />
                         )}
-                        {preferences['showStatementInfo'] && <InfoTippy id={id} />}
                     </>
                 )}
+                {preferences['showStatementInfo'] && <InfoTippy id={id} />}
             </div>
         </>
     );

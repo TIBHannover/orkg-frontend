@@ -1133,6 +1133,8 @@ export function addStatements(statements, resourceId, depth) {
                             isExistingValue: true,
                             existingStatement: true,
                             statementId: statement.id,
+                            statementCreatedBy: statement.created_by,
+                            statementCreatedAt: statement.created_at,
                             isFetched: depth > 1 ? true : false,
                             fetchedDepth: depth - 1,
                             ...statement.object

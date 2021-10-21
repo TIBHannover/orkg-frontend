@@ -18,15 +18,15 @@ const InfoTippy = props => {
                     <ul className="p-0 mb-0" style={{ listStyle: 'none' }}>
                         <li className="mb-1">
                             Created:{' '}
-                            <span title={value.created_at}>
-                                <Icon icon={faClock} /> {moment(value.created_at).fromNow()}
+                            <span title={value.statementCreatedAt}>
+                                <Icon icon={faClock} /> {moment(value.statementCreatedAt).fromNow()}
                             </span>
                         </li>
-                        {value.created_by && (
+                        {value.statementCreatedBy && (
                             <li>
                                 Created by:{' '}
-                                {value.created_by !== MISC.UNKNOWN_ID ? (
-                                    <UserAvatar linkTarget="_blank" size={18} showDisplayName={true} userId={value.created_by} />
+                                {value.statementCreatedBy !== MISC.UNKNOWN_ID ? (
+                                    <UserAvatar linkTarget="_blank" size={18} showDisplayName={true} userId={value.statementCreatedBy} />
                                 ) : (
                                     'Unknown'
                                 )}

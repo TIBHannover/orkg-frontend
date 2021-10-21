@@ -1,24 +1,25 @@
 import { CustomInput, Button } from 'reactstrap';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
-import { updatePreferences, setIsPreferencesOpen } from 'actions/statementBrowser';
+import { updatePreferences, setIsHelpModalOpen } from 'actions/statementBrowser';
+import HELP_CENTER_ARTICLES from 'constants/helpCenterArticles';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { Cookies } from 'react-cookie';
+import PropTypes from 'prop-types';
 import env from '@beam-australia/react-env';
 
 const cookies = new Cookies();
 
 export const PreferencesStyle = styled.div`
-    background-color: ${props => props.theme.lightLighter};
     overflow-wrap: break-word;
-    margin-top: -2px;
-    margin-right: -2px;
-    margin-bottom: -2px;
-    border-radius: 4px;
     padding: 8px;
-    border: 1px solid rgba(0, 0, 0, 0.125) !important;
+    .header {
+        border-bottom: 1px solid #fff;
+    }
 `;
 
-export default function Preferences() {
+export default function Preferences({ closeTippy }) {
     const preferences = useSelector(state => state.statementBrowser.preferences);
     const dispatch = useDispatch();
 
@@ -28,8 +29,20 @@ export default function Preferences() {
     };
 
     return (
-        <PreferencesStyle className="p-4">
-            <h5 className="mb-3">Preferences</h5>
+        <PreferencesStyle className="p-3">
+            <h5 className="text-white pb-2 mb-3 header">
+                Preferences
+                <Button
+                    color="link"
+                    className="p-0 float-right"
+                    onClick={() => {
+                        closeTippy();
+                        dispatch(setIsHelpModalOpen({ isOpen: true, articleId: HELP_CENTER_ARTICLES.PREFERENCES }));
+                    }}
+                >
+                    <Icon size="sm" icon={faQuestionCircle} />
+                </Button>
+            </h5>
             <div className="mb-2">
                 <CustomInput
                     type="switch"
@@ -45,7 +58,7 @@ export default function Preferences() {
                     type="switch"
                     id="showStatementInfo"
                     name="showStatementInfo"
-                    label="Show information about statement"
+                    label="Show information about the statement"
                     onChange={settingsInputSwitched}
                     checked={preferences['showStatementInfo']}
                 />
@@ -65,17 +78,15 @@ export default function Preferences() {
                     type="switch"
                     id="showLiteralDataTypes"
                     name="showLiteralDataTypes"
-                    label="Show datatype of literals"
+                    label="Show data type of literals"
                     onChange={settingsInputSwitched}
                     checked={preferences['showLiteralDataTypes']}
                 />
             </div>
-
-            <div className="mt-3">
-                <Button size="sm" onClick={() => dispatch(setIsPreferencesOpen(false))}>
-                    Close
-                </Button>
-            </div>
         </PreferencesStyle>
     );
 }
+
+Preferences.propTypes = {
+    closeTippy: PropTypes.func.isRequired
+};

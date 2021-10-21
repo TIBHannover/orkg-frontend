@@ -24,6 +24,7 @@ export const OptionButtonStyled = styled.span`
         border-radius: 100%;
         background-color: ${props => props.theme.lightDarker};
         color: ${props => props.theme.dark};
+        border-width: 0;
 
         & .icon-wrapper {
             display: flex;
