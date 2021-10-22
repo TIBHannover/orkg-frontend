@@ -1,19 +1,24 @@
-import { FormGroup, Modal, ModalHeader, ModalBody, Label, Input, ListGroupItem, Alert } from 'reactstrap';
+import { FormGroup, Modal, ModalHeader, ModalBody, Label, Input, ListGroupItem, Alert, InputGroup } from 'reactstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { setIsTemplateModalOpen } from 'actions/statementBrowser';
 import PropTypes from 'prop-types';
+import { useState } from 'react';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faAngleDoubleDown, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import ContentLoader from 'react-content-loader';
 import Tippy, { useSingleton } from '@tippyjs/react';
 import AddTemplateButton from 'components/StatementBrowser/AddTemplateButton/AddTemplateButton';
+import SearchFieldSelector from 'components/StatementBrowser/TemplatesModal/SearchFieldSelector/SearchFieldSelector';
 import useTemplates from './hooks/useTemplates';
+import Autocomplete from 'components/Autocomplete/Autocomplete';
+import { CLASSES, ENTITIES } from 'constants/graphSettings';
 
 const TemplatesModal = props => {
     const [source, target] = useSingleton();
     const isTemplatesModalOpen = useSelector(state => state.statementBrowser.isTemplatesModalOpen);
     const selectedResource = useSelector(state => state.statementBrowser.selectedResource);
     const resource = useSelector(state => selectedResource && state.statementBrowser.resources.byId[selectedResource]);
+    const [selectedField, setSelectedField] = useState({ id: 'label', label: 'By Label' });
     const {
         templates,
         featuredTemplates,
@@ -34,14 +39,36 @@ const TemplatesModal = props => {
                 <ModalBody>
                     <div className="clearfix">
                         <FormGroup>
-                            <Label for="filterLabel">Template label</Label>
-                            <Input
-                                placeholder="Search template by label"
-                                value={filterLabel}
-                                type="text"
-                                name="filterLabel"
-                                onChange={handleLabelFilter}
-                            />
+                            <Label for="filterLabel">Browser templates</Label>
+                            <InputGroup>
+                                <div className="col-3 m-0 p-0">
+                                    <SearchFieldSelector value={selectedField} setValue={setSelectedField} />
+                                </div>
+                                {selectedField.id === 'label' && (
+                                    <Input
+                                        placeholder="Search template by label"
+                                        value={filterLabel}
+                                        type="text"
+                                        name="filterLabel"
+                                        onChange={handleLabelFilter}
+                                    />
+                                )}
+                                {selectedField.id !== 'label' && (
+                                    <Autocomplete
+                                        entityType={ENTITIES.RESOURCE}
+                                        optionsClass={selectedField.id === 'rf' ? CLASSES.RESEARCH_FIELD : CLASSES.PROBLEM}
+                                        placeholder="Enter a research field"
+                                        onItemSelected={i => {
+                                            //setSubject({ ...i, label: i.value });
+                                        }}
+                                        value={null}
+                                        autoLoadOption={true}
+                                        openMenuOnFocus={false}
+                                        allowCreate={false}
+                                        inputId="research-field"
+                                    />
+                                )}
+                            </InputGroup>
                         </FormGroup>
 
                         {/*!isNextPageLoading && loadingFailed && <UncontrolledAlert color="info">Failed to load templates</UncontrolledAlert>*/}

@@ -118,13 +118,18 @@ const TemplateDetailsTooltip = ({ template, isTemplateLoading, source }) => {
                     {template.components?.length > 0 && (
                         <div>
                             <b>{template.predicate && template.predicate?.id !== PREDICATES.HAS_CONTRIBUTION ? 'With' : 'Add'} properties: </b>
-                            <ul className="pl-3">
+                            <ul className={`pl-3 ${template?.components?.length > 7 && 'mb-0'}`}>
                                 {template.components &&
                                     template.components.length > 0 &&
-                                    template.components.map(component => {
+                                    template.components.slice(0, 10).map(component => {
                                         return <li key={`t-${component.property.id}`}>{component.property.label}</li>;
                                     })}
                             </ul>
+                            {template.components && template.components.length > 7 && (
+                                <Link target="_blank" className="ml-2 mb-2 d-block" to={reverse(ROUTES.TEMPLATE, { id: template.id })}>
+                                    + {template.components?.length - 5} more
+                                </Link>
+                            )}
                         </div>
                     )}
                 </>
