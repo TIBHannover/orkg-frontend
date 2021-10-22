@@ -60,7 +60,7 @@ const ClassesItem = props => {
     const preferences = useSelector(state => state.statementBrowser.preferences);
 
     useEffect(() => {
-        const findClasses = async () => {
+        const findClasses = () => {
             setIsLoading(true);
             const classesCalls = resource.classes?.map(c => getClassById(c)) ?? [];
             Promise.all(classesCalls)
@@ -74,8 +74,10 @@ const ClassesItem = props => {
                     console.error(err);
                 });
         };
-        findClasses();
-    }, [resource.classes]);
+        if (resource?._class === ENTITIES.RESOURCE) {
+            findClasses();
+        }
+    }, [resource?._class, resource.classes]);
 
     const handleChangeClasses = async (selected, action) => {
         setIsSaving(true);

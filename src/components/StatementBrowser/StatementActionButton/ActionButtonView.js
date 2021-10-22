@@ -75,7 +75,8 @@ ActionButtonView.propTypes = {
 };
 
 ActionButtonView.defaultProps = {
-    size: 'xs'
+    size: 'xs',
+    iconSpin: false
 };
 
 export default ActionButtonView;

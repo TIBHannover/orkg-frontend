@@ -1,4 +1,4 @@
-import { render, screen } from 'testUtils';
+import { render, screen, waitFor } from 'testUtils';
 import StatementBrowser from '../StatementBrowser';
 import { ENTITIES } from 'constants/graphSettings';
 
@@ -23,7 +23,7 @@ describe('statement browser', () => {
             rootNodeType: ENTITIES.RESOURCE
         };
         setup({}, config);
-        expect(screen.queryByText(/Loading/i)).toBeInTheDocument();
+        await waitFor(() => expect(screen.queryByText(/Loading/i)).toBeInTheDocument());
         expect(await screen.findByText(/No data yet/i)).toBeInTheDocument();
     });
 });
@@ -37,7 +37,7 @@ describe('statement browser', () => {
             rootNodeType: ENTITIES.RESOURCE
         };
         setup({}, config);
-        expect(screen.queryByText(/Loading/i)).toBeInTheDocument();
+        await waitFor(() => expect(screen.queryByText(/Loading/i)).toBeInTheDocument());
         expect(await screen.findByText(/3.1/i)).toBeInTheDocument();
         expect(await screen.findByText(/Lombardy, Italy/i)).toBeInTheDocument();
         expect(await screen.findByText(/Determination of the COVID-19 basic reproduction number/i)).toBeInTheDocument();
