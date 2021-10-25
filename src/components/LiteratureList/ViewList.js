@@ -46,7 +46,7 @@ const ViewList = () => {
             )}
             <main>
                 <SectionStyled className="box rounded">
-                    <header>
+                    <header className="border-bottom">
                         <h1 className="mb-2 mt-4" style={{ whiteSpace: 'pre-line' }}>
                             {literatureList.title}
                         </h1>
@@ -60,14 +60,13 @@ const ViewList = () => {
                         if (section.type === CLASSES.TEXT_SECTION) {
                             return (
                                 <section key={section.id}>
-                                    <h2 className="h4 border-bottom mt-5">{section.title}</h2>
+                                    <h2 className="h4 mt-4">{section.title}</h2>
                                     {section.content.text}
                                 </section>
                             );
                         } else if (section.type === CLASSES.LIST_SECTION) {
                             return (
-                                <section key={section.id}>
-                                    <h2 className="h4 border-bottom mt-5">{section.title}</h2>
+                                <section key={section.id} className="mt-3">
                                     <ListGroup>
                                         {section.entries.map(entry => (
                                             <ListGroupItem className="p-2">

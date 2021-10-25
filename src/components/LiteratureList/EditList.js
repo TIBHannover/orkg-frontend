@@ -1,5 +1,6 @@
 import Tippy from '@tippyjs/react';
 import { SectionStyled } from 'components/ArticleBuilder/styled';
+import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
 import AddSection from 'components/LiteratureList/AddSection';
 import Contributors from 'components/LiteratureList/Contributors';
 import EditTitle from 'components/LiteratureList/EditTitle';
@@ -27,6 +28,7 @@ const EditList = () => (
                 <Contributors />
             </SectionStyled>
         </Container>
+        <ComparisonPopup />
     </main>
 );
 

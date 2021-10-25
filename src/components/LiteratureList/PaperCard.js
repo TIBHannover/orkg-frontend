@@ -35,7 +35,10 @@ const PaperCard = props => {
                         )}
                         {!props.selectable && props.showAddToComparison && !!props.paper.contributions?.length && (
                             <div>
-                                <AddToComparison paper={props.paper} contributionId={props.contribution?.id} />
+                                <AddToComparison
+                                    paper={{ ...props.paper.paper, contributions: props.paper.contributions }}
+                                    contributionId={props.contribution?.id}
+                                />
                             </div>
                         )}
                     </div>

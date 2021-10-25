@@ -53,16 +53,18 @@ const EditSection = props => {
     return (
         <section>
             <SortableSection handleDelete={handleDelete} handleSort={direction => props.handleManualSort({ id, direction })}>
-                <h2 id={`section-${id}`} className="h4 border-bottom pb-1 mb-3" placeholder="trd">
-                    <EditableTitle
-                        value={title}
-                        className="focus-primary"
-                        onChange={e => setTitle(e.target.value)}
-                        onBlur={handleBlurTitle}
-                        placeholder="Enter a section title..."
-                        resize="false"
-                    />
-                </h2>
+                {type !== CLASSES.LIST_SECTION && (
+                    <h2 id={`section-${id}`} className="h4 border-bottom pb-1 mb-3" placeholder="trd">
+                        <EditableTitle
+                            value={title}
+                            className="focus-primary"
+                            onChange={e => setTitle(e.target.value)}
+                            onBlur={handleBlurTitle}
+                            placeholder="Enter a section title..."
+                            resize="false"
+                        />
+                    </h2>
+                )}
                 {type === CLASSES.TEXT_SECTION && <MarkdownEditor label={content.text} handleUpdate={handleUpdateMarkdown} />}
                 {type === CLASSES.LIST_SECTION && <EditSectionList section={props.section} />}
             </SortableSection>

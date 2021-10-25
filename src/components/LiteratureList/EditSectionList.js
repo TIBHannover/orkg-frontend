@@ -41,7 +41,7 @@ const EditSectionList = ({ section }) => {
 
     return (
         <>
-            <div className="mb-3" style={{ pointerEvents: isSorting ? 'none' : 'all' }}>
+            <div className="mb-3 mt-2" style={{ pointerEvents: isSorting ? 'none' : 'all' }}>
                 <SortableList
                     items={section.entries}
                     papers={papers}
@@ -55,7 +55,7 @@ const EditSectionList = ({ section }) => {
             </div>
             <Button color="secondary" size="sm" className="mb-2" onClick={() => setIsOpenAddEntryModal(true)}>
                 <Icon icon={faPlus} className="mr-2" />
-                Add entry
+                Add entries
             </Button>
             <AddEntryModal sectionId={section.id} />
             <Button color="light" size="sm" className="mb-2 ml-2">

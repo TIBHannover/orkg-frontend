@@ -125,7 +125,7 @@ const AddEntryModal = ({ sectionId, isOpen, setIsOpen }) => {
     return (
         <>
             <Modal isOpen={isOpen} toggle={v => setIsOpen(!v)}>
-                <ModalHeader toggle={v => setIsOpen(!v)}>Add entry</ModalHeader>
+                <ModalHeader toggle={v => setIsOpen(!v)}>Add entries</ModalHeader>
                 <ModalBody>
                     <FormGroup>
                         <Label for="paper-value">Enter DOI or BibTeX</Label>
@@ -139,7 +139,7 @@ const AddEntryModal = ({ sectionId, isOpen, setIsOpen }) => {
                         </Button>
                     </div>
                     <Button color="primary" className="float-right" onClick={handleAdd}>
-                        {!isLoading ? 'Add entry' : <Icon icon={faSpinner} spin />}
+                        {!isLoading ? 'Add entries' : <Icon icon={faSpinner} spin />}
                     </Button>
                 </ModalFooter>
             </Modal>
