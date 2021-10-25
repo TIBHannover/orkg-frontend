@@ -68,10 +68,10 @@ const SearchFieldSelector = props => {
                 styles={customStyles}
                 classNamePrefix="react-select-dark"
                 value={props.value}
-                options={[{ id: 'label', label: 'By label' }, { id: 'rf', label: 'By research field' }, { id: 'rp', label: 'By research problem' }]}
+                options={props.options}
                 onChange={v => props.setValue(v)}
                 getOptionValue={({ id }) => id}
-                getOptionLabel={({ label }) => label}
+                getOptionLabel={({ label }) => `By ${label}`}
                 isClearable={false}
             />
         </>
@@ -81,6 +81,7 @@ const SearchFieldSelector = props => {
 SearchFieldSelector.propTypes = {
     value: PropTypes.object,
     setValue: PropTypes.func,
+    options: PropTypes.array,
     disableBorderRadiusLeft: PropTypes.bool,
     disableBorderRadiusRight: PropTypes.bool
 };

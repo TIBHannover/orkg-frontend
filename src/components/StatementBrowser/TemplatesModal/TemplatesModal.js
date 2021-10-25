@@ -1,8 +1,9 @@
-import { FormGroup, Modal, ModalHeader, ModalBody, Label, Input, ListGroupItem, Alert, InputGroup } from 'reactstrap';
+import { useState } from 'react';
+import { Button, FormGroup, Modal, ModalHeader, ModalBody, Label, Input, ListGroupItem, Alert, InputGroup, InputGroupAddon } from 'reactstrap';
 import { useDispatch, useSelector } from 'react-redux';
+import ResearchFieldSelectorModal from 'components/ResearchFieldSelector/ResearchFieldSelectorModal';
 import { setIsTemplateModalOpen } from 'actions/statementBrowser';
 import PropTypes from 'prop-types';
-import { useState } from 'react';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faAngleDoubleDown, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import ContentLoader from 'react-content-loader';
@@ -12,24 +13,38 @@ import SearchFieldSelector from 'components/StatementBrowser/TemplatesModal/Sear
 import useTemplates from './hooks/useTemplates';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
 import { CLASSES, ENTITIES } from 'constants/graphSettings';
+import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
 
 const TemplatesModal = props => {
     const [source, target] = useSingleton();
     const isTemplatesModalOpen = useSelector(state => state.statementBrowser.isTemplatesModalOpen);
     const selectedResource = useSelector(state => state.statementBrowser.selectedResource);
     const resource = useSelector(state => selectedResource && state.statementBrowser.resources.byId[selectedResource]);
-    const [selectedField, setSelectedField] = useState({ id: 'label', label: 'By Label' });
+    const [isOpenResearchFieldModal, setIsOpenResearchFieldModal] = useState(false);
     const {
+        filterOptions,
         templates,
         featuredTemplates,
         isLoadingFeatured,
         isNextPageLoading,
         hasNextPage,
-        filterLabel,
-        handleLabelFilter,
+        labelFilter,
+        targetFilter,
+        selectedFilter,
+        handleTargetFilterChange,
+        handleSelectedFilterChange,
+        handleLabelFilterChange,
         loadMoreTemplates
     } = useTemplates({ onlyFeatured: false });
+
     const dispatch = useDispatch();
+
+    const handleSelectField = ({ id, label }) => {
+        handleTargetFilterChange({
+            id,
+            label
+        });
+    };
 
     return (
         <>
@@ -39,40 +54,64 @@ const TemplatesModal = props => {
                 <ModalBody>
                     <div className="clearfix">
                         <FormGroup>
-                            <Label for="filterLabel">Browser templates</Label>
+                            <Label for="labelFilter">Browse templates</Label>
                             <InputGroup>
                                 <div className="col-3 m-0 p-0">
-                                    <SearchFieldSelector value={selectedField} setValue={setSelectedField} />
+                                    <SearchFieldSelector options={filterOptions} value={selectedFilter} setValue={handleSelectedFilterChange} />
                                 </div>
-                                {selectedField.id === 'label' && (
+                                {selectedFilter.id === CLASSES.TEMPLATE && (
                                     <Input
                                         placeholder="Search template by label"
-                                        value={filterLabel}
+                                        value={labelFilter}
                                         type="text"
-                                        name="filterLabel"
-                                        onChange={handleLabelFilter}
+                                        name="labelFilter"
+                                        onChange={handleLabelFilterChange}
                                     />
                                 )}
-                                {selectedField.id !== 'label' && (
-                                    <Autocomplete
-                                        entityType={ENTITIES.RESOURCE}
-                                        optionsClass={selectedField.id === 'rf' ? CLASSES.RESEARCH_FIELD : CLASSES.PROBLEM}
-                                        placeholder="Enter a research field"
-                                        onItemSelected={i => {
-                                            //setSubject({ ...i, label: i.value });
-                                        }}
-                                        value={null}
-                                        autoLoadOption={true}
-                                        openMenuOnFocus={false}
-                                        allowCreate={false}
-                                        inputId="research-field"
-                                    />
+                                {selectedFilter.id !== CLASSES.TEMPLATE && (
+                                    <ConditionalWrapper
+                                        condition={selectedFilter.id === CLASSES.RESEARCH_FIELD}
+                                        wrapper={children => (
+                                            <>
+                                                {children}
+                                                <InputGroupAddon addonType="append">
+                                                    <Button color="secondary" onClick={() => setIsOpenResearchFieldModal(true)}>
+                                                        Choose
+                                                    </Button>
+                                                </InputGroupAddon>
+
+                                                {isOpenResearchFieldModal && (
+                                                    <ResearchFieldSelectorModal
+                                                        isOpen
+                                                        toggle={v => setIsOpenResearchFieldModal(v => !v)}
+                                                        onSelectField={handleSelectField}
+                                                    />
+                                                )}
+                                            </>
+                                        )}
+                                    >
+                                        <Autocomplete
+                                            entityType={selectedFilter.entityType}
+                                            optionsClass={selectedFilter.entityType === ENTITIES.RESOURCE ? selectedFilter.id : undefined}
+                                            placeholder={selectedFilter.placeholder}
+                                            onItemSelected={i => {
+                                                handleTargetFilterChange({ ...i, label: i.value });
+                                            }}
+                                            value={targetFilter}
+                                            key={selectedFilter.id}
+                                            autoLoadOption={true}
+                                            openMenuOnFocus={false}
+                                            allowCreate={false}
+                                            cacheOptions={false}
+                                            inputId={selectedFilter.id}
+                                        />
+                                    </ConditionalWrapper>
                                 )}
                             </InputGroup>
                         </FormGroup>
 
                         {/*!isNextPageLoading && loadingFailed && <UncontrolledAlert color="info">Failed to load templates</UncontrolledAlert>*/}
-                        {(templates.length > 0 || (featuredTemplates.length > 0 && filterLabel === '')) && (
+                        {(templates.length > 0 || (featuredTemplates.length > 0 && labelFilter === '')) && (
                             <Alert color="info">
                                 Choose a template to use it in <b>{resource.label}</b> resource.
                                 <br />
@@ -80,7 +119,7 @@ const TemplatesModal = props => {
                             </Alert>
                         )}
 
-                        {filterLabel === '' && featuredTemplates.length > 0 && (
+                        {labelFilter === '' && !targetFilter && featuredTemplates.length > 0 && (
                             <FormGroup>
                                 <p>Featured templates:</p>
                                 <div>
@@ -118,7 +157,12 @@ const TemplatesModal = props => {
 
                         {templates.length > 0 && (
                             <FormGroup>
-                                {filterLabel === '' && featuredTemplates.length > 0 && <p>Other templates:</p>}
+                                {labelFilter === '' && !targetFilter && featuredTemplates.length > 0 && <p>Other templates:</p>}
+                                {targetFilter && (
+                                    <p>
+                                        Templates for {targetFilter.label} {selectedFilter.label}:
+                                    </p>
+                                )}
                                 <div>
                                     {templates.map(template => (
                                         <AddTemplateButton
@@ -140,7 +184,7 @@ const TemplatesModal = props => {
                                 style={{ cursor: 'pointer' }}
                                 className="text-center rounded p-1"
                                 action
-                                onClick={!isNextPageLoading ? () => loadMoreTemplates(null, null, null, filterLabel) : undefined}
+                                onClick={!isNextPageLoading ? () => loadMoreTemplates(selectedFilter, targetFilter, labelFilter) : undefined}
                             >
                                 <Icon icon={faAngleDoubleDown} /> Load more templates
                             </ListGroupItem>
@@ -155,7 +199,7 @@ const TemplatesModal = props => {
                         {templates.length === 0 && !isNextPageLoading && featuredTemplates.length === 0 && (
                             <Alert color="info">
                                 No templates
-                                {filterLabel && ' match this filter'}.
+                                {(labelFilter || targetFilter) && ' match this filter'}.
                             </Alert>
                         )}
                     </div>

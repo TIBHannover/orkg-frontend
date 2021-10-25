@@ -4,10 +4,31 @@ import { getStatementsByObjectAndPredicate, getParentResearchFields } from 'serv
 import { uniqBy } from 'lodash';
 import { debounce } from 'lodash';
 import { getResourcesByClass } from 'services/backend/resources';
-import { CLASSES, PREDICATES } from 'constants/graphSettings';
+import { CLASSES, ENTITIES, PREDICATES } from 'constants/graphSettings';
 
 const useTemplates = ({ onlyFeatured = false }) => {
-    const [filterLabel, setFilterLabel] = useState('');
+    const filterOptions = [
+        { id: CLASSES.TEMPLATE, label: 'label', predicate: null, placeholder: 'Search template by label', entityType: null },
+        {
+            id: CLASSES.RESEARCH_FIELD,
+            label: 'research field',
+            predicate: PREDICATES.TEMPLATE_OF_RESEARCH_FIELD,
+            placeholder: 'Search or choose a research field',
+            entityType: ENTITIES.RESOURCE
+        },
+        {
+            id: CLASSES.PROBLEM,
+            label: 'research problem',
+            predicate: PREDICATES.TEMPLATE_OF_RESEARCH_PROBLEM,
+            placeholder: 'Search a research problem',
+            entityType: ENTITIES.RESOURCE
+        },
+        { id: CLASSES.CLASS, label: 'class', predicate: PREDICATES.TEMPLATE_OF_CLASS, placeholder: 'Search a class', entityType: ENTITIES.CLASS }
+    ];
+
+    const [selectedFilter, setSelectedFilter] = useState(filterOptions[0]);
+    const [labelFilter, setLabelFilter] = useState('');
+    const [targetFilter, setTargetFilter] = useState(null);
     const pageSize = 25;
     const [templates, setTemplates] = useState([]);
     const [featuredTemplates, setFeaturedTemplates] = useState([]);
@@ -50,16 +71,22 @@ const useTemplates = ({ onlyFeatured = false }) => {
         });
     }, []);
 
-    const loadMoreTemplates = label => {
+    const loadMoreTemplates = (sf, target, label) => {
         setIsNextPageLoading(true);
-        const searchCall = getResourcesByClass({
-            id: CLASSES.TEMPLATE,
-            page: page,
-            q: label,
-            items: pageSize,
-            sortBy: 'created_at',
-            desc: true
-        });
+        let searchCall = Promise.resolve();
+        if (target) {
+            searchCall = getTemplatesOfResourceId(target.id, sf.predicate, page);
+        } else {
+            searchCall = getResourcesByClass({
+                id: CLASSES.TEMPLATE,
+                page: page,
+                q: label,
+                items: pageSize,
+                sortBy: 'created_at',
+                desc: true
+            });
+        }
+
         searchCall.then(result => {
             setTemplates(prevTemplates => [...prevTemplates, ...result.content]);
             setIsNextPageLoading(false);
@@ -103,34 +130,57 @@ const useTemplates = ({ onlyFeatured = false }) => {
     const debouncedGetLoadMoreResults = useRef(debounce(loadMoreTemplates, 500));
 
     useEffect(() => {
-        if (!onlyFeatured || filterLabel !== '') {
+        if (!onlyFeatured || targetFilter || labelFilter !== '') {
             setIsNextPageLoading(true);
-            debouncedGetLoadMoreResults.current(filterLabel);
+            debouncedGetLoadMoreResults.current(selectedFilter, targetFilter, labelFilter);
         } else {
             setIsNextPageLoading(false);
         }
-    }, [filterLabel, onlyFeatured]);
+    }, [labelFilter, onlyFeatured, selectedFilter, targetFilter]);
 
-    const handleLabelFilter = e => {
+    const handleSelectedFilterChange = selected => {
+        setLabelFilter('');
+        setTargetFilter(null);
+        setSelectedFilter(selected);
+    };
+
+    const handleLabelFilterChange = e => {
         setTemplates([]);
         setIsNextPageLoading(true);
         setHasNextPage(false);
         setIsLastPageReached(false);
         setPage(0);
-        setFilterLabel(e.target.value);
+        setTargetFilter(null);
+        setLabelFilter(e.target.value);
+    };
+
+    const handleTargetFilterChange = selected => {
+        setTemplates([]);
+        setIsNextPageLoading(true);
+        setHasNextPage(false);
+        setIsLastPageReached(false);
+        setPage(0);
+        setLabelFilter('');
+        setTargetFilter(selected);
     };
 
     return {
+        filterOptions,
         templates: uniqBy(templates, 'id'),
         featuredTemplates: featuredTemplates,
         researchField,
         isNextPageLoading,
         isLoadingFeatured,
         hasNextPage,
-        filterLabel,
+        labelFilter,
+        targetFilter,
         isLastPageReached,
         totalElements,
-        handleLabelFilter,
+        selectedFilter,
+        handleTargetFilterChange,
+        handleSelectedFilterChange,
+        setTargetFilter,
+        handleLabelFilterChange,
         loadMoreTemplates
     };
 };

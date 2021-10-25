@@ -96,6 +96,13 @@ function Autocomplete(props) {
         }
     }, [props.inputValue]);
 
+    // reset the value input if the selected value is null
+    useEffect(() => {
+        if (props.value === null) {
+            setInputValue('');
+        }
+    }, [props.value]);
+
     // Support home and end keys for text Input
     const handleKeyDown = evt => {
         if (evt.key === 'Home') {
@@ -699,7 +706,6 @@ function Autocomplete(props) {
                     aria-label={props.placeholder}
                     autoFocus={props.autoFocus}
                     cacheOptions={false}
-                    cache={false}
                     defaultOptions={props.defaultOptions ?? true}
                     openMenuOnFocus={props.openMenuOnFocus}
                     onBlur={props.onBlur}
@@ -783,7 +789,8 @@ Autocomplete.propTypes = {
     inputId: PropTypes.string,
     onChangeInputValue: PropTypes.func,
     inputValue: PropTypes.string,
-    menuPortalTarget: PropTypes.object
+    menuPortalTarget: PropTypes.object,
+    cacheOptions: PropTypes.bool
 };
 
 Autocomplete.defaultProps = {
@@ -801,6 +808,7 @@ Autocomplete.defaultProps = {
     inputId: null,
     inputValue: null,
     menuPortalTarget: null,
-    allowCreateDuplicate: false
+    allowCreateDuplicate: false,
+    cacheOptions: false
 };
 export default withTheme(Autocomplete);
