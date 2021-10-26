@@ -104,7 +104,15 @@ export const getConfigByType = type => {
 
 export const getConfigByClassId = classId => {
     return (
-        DATA_TYPES.find(dt => dt.classId === classId) || { type: MISC.DEFAULT_LITERAL_DATATYPE, validation: Joi.string(), inputFormType: 'textarea' }
+        DATA_TYPES.find(dt => dt.classId === classId) || {
+            name: 'Resource',
+            type: ENTITIES.RESOURCE,
+            _class: ENTITIES.RESOURCE,
+            classId: classId,
+            schema: Joi.string(),
+            inputFormType: 'autocomplete',
+            weight: 0
+        }
     );
 };
 
