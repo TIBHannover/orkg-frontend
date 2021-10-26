@@ -633,14 +633,14 @@ export const updateResourceClasses = ({ resourceId, classes, syncBackend = false
     if (resource) {
         dispatch({
             type: type.UPDATE_RESOURCE_CLASSES,
-            payload: { resourceId, classes: uniq(classes) }
+            payload: { resourceId, classes: uniq(classes?.filter(c => c) ?? []) }
         });
         // Fetch templates
-        const templatesOfClassesLoading = classes && classes?.map(classID => dispatch(fetchTemplatesOfClassIfNeeded(classID)));
+        const templatesOfClassesLoading = classes && classes?.filter(c => c).map(classID => dispatch(fetchTemplatesOfClassIfNeeded(classID)));
         // Add required properties
         Promise.all(templatesOfClassesLoading).then(() => dispatch(createRequiredPropertiesInResource(resourceId)));
         if (syncBackend) {
-            return updateResourceClassesApi(resourceId, uniq(classes));
+            return updateResourceClassesApi(resourceId, uniq(classes?.filter(c => c) ?? []));
         }
     }
     return Promise.resolve();
