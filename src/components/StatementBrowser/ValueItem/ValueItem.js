@@ -4,6 +4,7 @@ import { Fragment } from 'react';
 import useValueItem from './hooks/useValueItem';
 import PropTypes from 'prop-types';
 import { ENTITIES } from 'constants/graphSettings';
+import DATA_TYPES from 'constants/DataTypes';
 import { Button, Badge } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
@@ -125,7 +126,7 @@ const ValueItem = props => {
                                             {preferences['showLiteralDataTypes'] && (
                                                 <small>
                                                     <Badge color="light" className="ml-2">
-                                                        {value.datatype}
+                                                        {DATA_TYPES.find(dt => dt.type === value.datatype)?.name ?? value.datatype}
                                                     </Badge>
                                                 </small>
                                             )}
