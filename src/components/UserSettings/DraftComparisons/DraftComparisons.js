@@ -73,49 +73,57 @@ const DraftComparisons = () => {
         <>
             <h2 className="h5 mb-4">Saved draft comparisons</h2>
 
-            <ListGroup className="mb-3">
-                {draftComparisons.map(draftComparison => (
-                    <ListGroupItem key={draftComparison.id} className="d-flex justify-content-between align-items-center py-2">
-                        <Link to={reverse(ROUTES.COMPARISON) + draftComparison.url}>{draftComparison.label}</Link>
-                        <div className="flex-shrink-0">
-                            <Badge color="light" className="mr-2">
-                                <Icon icon={faCalendar} className="text-secondary" /> {moment(draftComparison.created_at).format('DD-MM-YYYY H:mm')}
-                            </Badge>
-                            <ButtonGroup>
-                                <Button
-                                    color="light"
-                                    size="sm"
-                                    className="py-0 px-2 text-secondary"
-                                    style={{ marginRight: 2 }}
-                                    onClick={() => handleEdit(draftComparison)}
-                                >
-                                    <Icon icon={faPen} />
-                                </Button>
-                                <Button color="light" size="sm" className="py-0 px-2 text-danger" onClick={() => handleDelete(draftComparison.id)}>
-                                    <Icon icon={faTrash} />
-                                </Button>
-                            </ButtonGroup>
-                        </div>
-                    </ListGroupItem>
-                ))}
-                {!isLoading && (page > 0 || !isLast) && (
-                    <ListGroupItem className="d-flex justify-content-between">
-                        <Button color="light" size="sm" disabled={page === 0} onClick={() => setPage(p => p - 1)}>
-                            <Icon icon={faAngleDoubleLeft} />
-                        </Button>
-                        <Button color="light" size="sm" disabled={isLast} onClick={() => setPage(p => p + 1)}>
-                            <Icon icon={faAngleDoubleRight} />
-                        </Button>
-                    </ListGroupItem>
-                )}
-                {isLoading && (
-                    <ListGroupItem className="text-center">
-                        <Icon icon={faSpinner} spin /> Loading
-                    </ListGroupItem>
-                )}
-            </ListGroup>
+            {(draftComparisons.length > 0 || isLoading) && (
+                <ListGroup className="mb-3">
+                    {draftComparisons.map(draftComparison => (
+                        <ListGroupItem key={draftComparison.id} className="d-flex justify-content-between align-items-center py-2">
+                            <Link to={reverse(ROUTES.COMPARISON) + draftComparison.url}>{draftComparison.label}</Link>
+                            <div className="flex-shrink-0">
+                                <Badge color="light" className="mr-2">
+                                    <Icon icon={faCalendar} className="text-secondary" />{' '}
+                                    {moment(draftComparison.created_at).format('DD-MM-YYYY H:mm')}
+                                </Badge>
+                                <ButtonGroup>
+                                    <Button
+                                        color="light"
+                                        size="sm"
+                                        className="py-0 px-2 text-secondary"
+                                        style={{ marginRight: 2 }}
+                                        onClick={() => handleEdit(draftComparison)}
+                                    >
+                                        <Icon icon={faPen} />
+                                    </Button>
+                                    <Button
+                                        color="light"
+                                        size="sm"
+                                        className="py-0 px-2 text-danger"
+                                        onClick={() => handleDelete(draftComparison.id)}
+                                    >
+                                        <Icon icon={faTrash} />
+                                    </Button>
+                                </ButtonGroup>
+                            </div>
+                        </ListGroupItem>
+                    ))}
+                    {!isLoading && (page > 0 || !isLast) && (
+                        <ListGroupItem className="d-flex justify-content-between">
+                            <Button color="light" size="sm" disabled={page === 0} onClick={() => setPage(p => p - 1)}>
+                                <Icon icon={faAngleDoubleLeft} />
+                            </Button>
+                            <Button color="light" size="sm" disabled={isLast} onClick={() => setPage(p => p + 1)}>
+                                <Icon icon={faAngleDoubleRight} />
+                            </Button>
+                        </ListGroupItem>
+                    )}
+                    {isLoading && (
+                        <ListGroupItem className="text-center">
+                            <Icon icon={faSpinner} spin /> Loading
+                        </ListGroupItem>
+                    )}
+                </ListGroup>
+            )}
 
-            {draftComparisons.length === 0 && <Alert color="info">You have no saved draft comparisons yet</Alert>}
+            {draftComparisons.length === 0 && !isLoading && <Alert color="info">You have no saved draft comparisons yet</Alert>}
 
             {isOpenEditModal && (
                 <EditTitleModal

@@ -1,23 +1,29 @@
-import { Container, Row, TabContent, TabPane } from 'reactstrap';
-import { Component } from 'react';
-import styled from 'styled-components';
-import classnames from 'classnames';
-import GeneralSettings from '../components/UserSettings/GeneralSettings';
-import Password from '../components/UserSettings/Password';
 import TitleBar from 'components/TitleBar/TitleBar';
 import DraftComparisons from 'components/UserSettings/DraftComparisons/DraftComparisons';
+import ROUTES from 'constants/routes';
+import { reverse } from 'named-urls';
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router';
+import { Link } from 'react-router-dom';
+import { Container, Row } from 'reactstrap';
+import styled from 'styled-components';
+import GeneralSettings from '../components/UserSettings/GeneralSettings';
+import Password from '../components/UserSettings/Password';
 
 export const StyledSettingsMenu = styled.div`
-    list-style: none;
     padding: 0;
     padding-top: 15px;
 
-    > div {
+    > a {
+        display: block;
         padding: 9px 10px 9px 15px;
         margin-bottom: 5px;
         transition: 0.3s background;
         border-radius: ${props => props.theme.borderRadius};
         cursor: pointer;
+        width: 100%;
+        text-decoration: none;
+        color: inherit;
 
         &.active,
         &:hover {
@@ -30,29 +36,15 @@ export const StyledSettingsMenu = styled.div`
     }
 `;
 
-class UserSettings extends Component {
-    constructor(props) {
-        super(props);
+const UserSettings = () => {
+    const [activeTab, setActiveTab] = useState('general');
+    const { tab } = useParams();
 
-        this.state = {
-            activeTab: 'general'
-        };
-    }
+    useEffect(() => {
+        setActiveTab(tab || 'general');
+    }, [tab]);
 
-    componentDidMount() {
-        // Set document title
-        document.title = 'User Settings - ORKG';
-    }
-
-    toggleTab = tab => {
-        if (this.state.activeTab !== tab) {
-            this.setState({
-                activeTab: tab
-            });
-        }
-    };
-
-    render = () => (
+    return (
         <>
             <TitleBar>My account</TitleBar>
             <Container className="p-0">
@@ -60,58 +52,32 @@ class UserSettings extends Component {
                     <div className="col-3 justify-content-center">
                         <Container className="box rounded p-3">
                             <StyledSettingsMenu>
-                                <div
-                                    role="button"
-                                    tabIndex={0}
-                                    onClick={() => this.toggleTab('general')}
-                                    className={classnames({
-                                        active: this.state.activeTab === 'general' || this.state.activeTab === 'delete'
-                                    })}
-                                    onKeyDown={e => (e.keyCode === 13 ? this.toggleTab('general') : undefined)}
-                                >
+                                <Link to={reverse(ROUTES.USER_SETTINGS, { tab: 'general' })} className={activeTab === 'general' && 'active'}>
                                     General settings
-                                </div>
-
-                                <div
-                                    className={classnames({ active: this.state.activeTab === 'password' })}
-                                    role="button"
-                                    tabIndex={0}
-                                    onClick={() => this.toggleTab('password')}
-                                    onKeyDown={e => (e.keyCode === 13 ? this.toggleTab('password') : undefined)}
+                                </Link>
+                                <Link to={reverse(ROUTES.USER_SETTINGS, { tab: 'password' })} className={activeTab === 'password' && 'active'}>
+                                    Password
+                                </Link>
+                                <Link
+                                    to={reverse(ROUTES.USER_SETTINGS, { tab: 'draft-comparisons' })}
+                                    className={activeTab === 'draft-comparisons' && 'active'}
                                 >
-                                    <div>Password</div>
-                                </div>
-
-                                <div
-                                    className={classnames({ active: this.state.activeTab === 'draftComparisons' })}
-                                    role="button"
-                                    tabIndex={0}
-                                    onClick={() => this.toggleTab('draftComparisons')}
-                                    onKeyDown={e => (e.keyCode === 13 ? this.toggleTab('draftComparisons') : undefined)}
-                                >
-                                    <div>Draft comparisons</div>
-                                </div>
+                                    Draft comparisons
+                                </Link>
                             </StyledSettingsMenu>
                         </Container>
                     </div>
                     <div className="col-9 justify-content-center">
-                        <TabContent className="box rounded pt-4 pb-3 pl-5 pr-5" activeTab={this.state.activeTab}>
-                            <TabPane tabId="general">
-                                <GeneralSettings />
-                            </TabPane>
-                            <TabPane tabId="password">
-                                <Password />
-                            </TabPane>
-                            <TabPane tabId="draftComparisons">
-                                <DraftComparisons />
-                            </TabPane>
-                            <TabPane tabId="delete">test3</TabPane>
-                        </TabContent>
+                        <div className="box rounded pt-4 pb-3 pl-5 pr-5">
+                            {activeTab === 'general' && <GeneralSettings />}
+                            {activeTab === 'password' && <Password />}
+                            {activeTab === 'draft-comparisons' && <DraftComparisons />}
+                        </div>
                     </div>
                 </Row>
             </Container>
         </>
     );
-}
+};
 
 export default UserSettings;

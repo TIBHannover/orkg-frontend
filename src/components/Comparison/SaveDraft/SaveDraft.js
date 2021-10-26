@@ -2,6 +2,7 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { CLASSES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
+import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -48,7 +49,8 @@ const SaveDraft = ({ isOpen, toggle, comparisonUrl }) => {
                     </>
                 ) : (
                     <Alert color="success">
-                        Draft comparison saved successfully. <Link to={ROUTES.USER_SETTINGS}>View my account</Link>
+                        Draft comparison saved successfully.{' '}
+                        <Link to={reverse(ROUTES.USER_SETTINGS, { tab: 'draft-comparisons' })}>View draft comparisons</Link>
                     </Alert>
                 )}
             </ModalBody>
