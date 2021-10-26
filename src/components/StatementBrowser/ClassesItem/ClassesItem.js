@@ -119,7 +119,7 @@ const ClassesItem = props => {
                 {selectedResource && resource._class === ENTITIES.RESOURCE && (
                     <ClassesStyle className="text-muted mb-2 d-flex align-items-center clearfix">
                         <Icon icon={faTags} className="mr-1" />
-                        <span> Instance of: </span>
+                        <span className="text-secondary-darker"> Instance of: </span>
                         {!editMode && !isLoading && (
                             <div className="mx-1" style={{ padding: '3.5px 0' }}>
                                 {classes?.map((c, index) => (
@@ -130,7 +130,7 @@ const ClassesItem = props => {
                                         {index + 1 !== classes.length && ', '}
                                     </Fragment>
                                 ))}
-                                {classes?.length === 0 && <i>No classes</i>}
+                                {classes?.length === 0 && <i className="text-secondary-darker">No classes</i>}
                             </div>
                         )}
                         {!editMode && isLoading && (

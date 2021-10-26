@@ -25,7 +25,7 @@ export default function StatementMenuHeader(props) {
                         <Button
                             className="p-0"
                             outline
-                            color="secondary"
+                            color="secondary-darker"
                             size="sm"
                             onClick={() => dispatch(setIsTemplateModalOpen({ isOpen: true }))}
                         >
@@ -38,12 +38,12 @@ export default function StatementMenuHeader(props) {
                         </Button>
                     )}
                     {props.enableEdit && (
-                        <Button outline color="secondary" size="sm" onClick={() => dispatch(setIsHelpModalOpen({ isOpen: true }))}>
+                        <Button outline color="secondary-darker" size="sm" onClick={() => dispatch(setIsHelpModalOpen({ isOpen: true }))}>
                             <Icon className="mr-1" icon={faQuestionCircle} /> Help
                         </Button>
                     )}
 
-                    <Button className="p-0" outline color={!props.enableEdit ? 'link' : 'secondary'} size="sm" onClick={() => null}>
+                    <Button className="p-0" outline color={!props.enableEdit ? 'link' : 'secondary-darker'} size="sm" onClick={() => null}>
                         <Tippy
                             onCreate={instance => (preferencesTippy.current = instance)}
                             onShow={() => dispatch(setIsPreferencesOpen(true))}
