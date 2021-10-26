@@ -57,10 +57,6 @@ const TemplateButton = props => {
 
     const deleteTemplate = useCallback(() => {
         setIsSaving(true);
-
-        console.log(props.resourceId);
-        console.log(props.classId);
-        console.log(resource.classes);
         // Remove the properties related to the template if they have no values
         dispatch(removeEmptyPropertiesOfClass({ resourceId: props.resourceId, classId: props.classId }));
         dispatch(
