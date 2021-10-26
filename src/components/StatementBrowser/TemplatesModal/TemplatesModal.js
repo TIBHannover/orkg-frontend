@@ -8,12 +8,34 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faAngleDoubleDown, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import ContentLoader from 'react-content-loader';
 import Tippy, { useSingleton } from '@tippyjs/react';
-import AddTemplateButton from 'components/StatementBrowser/AddTemplateButton/AddTemplateButton';
+import TemplateButton from 'components/StatementBrowser/TemplateButton/TemplateButton';
 import SearchFieldSelector from 'components/StatementBrowser/TemplatesModal/SearchFieldSelector/SearchFieldSelector';
 import useTemplates from './hooks/useTemplates';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
 import { CLASSES, ENTITIES } from 'constants/graphSettings';
 import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
+import { CSSTransition } from 'react-transition-group';
+import styled from 'styled-components';
+
+const AnimationContainer = styled(CSSTransition)`
+    &.zoom-enter {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    &.zoom-enter-active {
+        opacity: 1;
+        transform: translateX(0);
+        transition: opacity 300ms, transform 300ms;
+    }
+    &.zoom-exit {
+        opacity: 1;
+    }
+    &.zoom-exit-active {
+        opacity: 0;
+        transform: scale(0.9);
+        transition: opacity 300ms, transform 300ms;
+    }
+`;
 
 const TemplatesModal = props => {
     const [source, target] = useSingleton();
@@ -25,6 +47,7 @@ const TemplatesModal = props => {
         filterOptions,
         templates,
         featuredTemplates,
+        usedTemplates,
         isLoadingFeatured,
         isNextPageLoading,
         hasNextPage,
@@ -53,6 +76,25 @@ const TemplatesModal = props => {
                 <ModalHeader toggle={() => dispatch(setIsTemplateModalOpen({ isOpen: !isTemplatesModalOpen }))}>Template gallery</ModalHeader>
                 <ModalBody>
                     <div className="clearfix">
+                        <AnimationContainer in={usedTemplates?.length > 0} timeout={600} classNames="zoom" unmountOnExit>
+                            <div>
+                                <p>Used templates:</p>
+                                {usedTemplates.map(template => (
+                                    <TemplateButton
+                                        addMode={false}
+                                        tippyTarget={target}
+                                        key={`tr${template.id}`}
+                                        id={template.id}
+                                        label={template.label}
+                                        classId={template.classId}
+                                        source={template.source}
+                                        resourceId={selectedResource}
+                                        syncBackend={props.syncBackend}
+                                    />
+                                ))}
+                                <hr />
+                            </div>
+                        </AnimationContainer>
                         <FormGroup>
                             <Label for="labelFilter">Browse templates</Label>
                             <InputGroup>
@@ -124,7 +166,7 @@ const TemplatesModal = props => {
                                 <p>Featured templates:</p>
                                 <div>
                                     {featuredTemplates.map(template => (
-                                        <AddTemplateButton
+                                        <TemplateButton
                                             tippyTarget={target}
                                             key={`t${template.id}`}
                                             id={template.id}
@@ -165,7 +207,7 @@ const TemplatesModal = props => {
                                 )}
                                 <div>
                                     {templates.map(template => (
-                                        <AddTemplateButton
+                                        <TemplateButton
                                             tippyTarget={target}
                                             key={`t${template.id}`}
                                             id={template.id}

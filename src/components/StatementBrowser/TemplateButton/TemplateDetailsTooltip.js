@@ -34,7 +34,7 @@ export const LinkStyled = styled(Link)`
     }
 `;
 
-const TemplateDetailsTooltip = ({ template, isTemplateLoading, source }) => {
+const TemplateDetailsTooltip = ({ addMode, template, isTemplateLoading, source }) => {
     return (
         <div className="p-2">
             {isTemplateLoading && <>Loading...</>}
@@ -84,7 +84,7 @@ const TemplateDetailsTooltip = ({ template, isTemplateLoading, source }) => {
                         <>
                             {template.class?.id && (
                                 <div>
-                                    <b>Add class:</b>
+                                    <b>{addMode ? `Add` : `Remove`} class:</b>
                                     <p>
                                         <LinkStyled target="_blank" to={reverse(ROUTES.CLASS, { id: template.class?.id })}>
                                             <i>
@@ -96,7 +96,7 @@ const TemplateDetailsTooltip = ({ template, isTemplateLoading, source }) => {
                             )}
                         </>
                     )}
-                    {template.hasLabelFormat && (
+                    {addMode && template.hasLabelFormat && (
                         <div>
                             <b>Has formatted label:</b>
                             <p>
@@ -117,7 +117,10 @@ const TemplateDetailsTooltip = ({ template, isTemplateLoading, source }) => {
                     )}
                     {template.components?.length > 0 && (
                         <div>
-                            <b>{template.predicate && template.predicate?.id !== PREDICATES.HAS_CONTRIBUTION ? 'With' : 'Add'} properties: </b>
+                            <b>
+                                {template.predicate && template.predicate?.id !== PREDICATES.HAS_CONTRIBUTION ? 'With' : addMode ? 'Add' : 'Remove'}{' '}
+                                properties {!addMode ? '(with no values)' : ''}:{' '}
+                            </b>
                             <ul className={`pl-3 ${template?.components?.length > 7 && 'mb-0'}`}>
                                 {template.components &&
                                     template.components.length > 0 &&
@@ -141,7 +144,8 @@ const TemplateDetailsTooltip = ({ template, isTemplateLoading, source }) => {
 TemplateDetailsTooltip.propTypes = {
     source: PropTypes.object,
     template: PropTypes.object.isRequired,
-    isTemplateLoading: PropTypes.bool.isRequired
+    isTemplateLoading: PropTypes.bool.isRequired,
+    addMode: PropTypes.bool.isRequired
 };
 
 export default TemplateDetailsTooltip;

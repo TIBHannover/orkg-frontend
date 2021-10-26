@@ -1,17 +1,18 @@
 import { Button } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faPlus, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faSpinner, faTimes } from '@fortawesome/free-solid-svg-icons';
 import TemplateDetailsTooltip from './TemplateDetailsTooltip';
-import { fillResourceWithTemplate } from 'actions/statementBrowser';
+import { fillResourceWithTemplate, removeEmptyPropertiesOfClass, updateResourceClasses } from 'actions/statementBrowser';
 import { getTemplateById } from 'services/backend/statements';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Tippy from '@tippyjs/react';
 import { useState, useRef, useCallback } from 'react';
 import styled from 'styled-components';
+import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 
 const IconWrapper = styled.span`
-    background-color: #d1d5e4;
+    background-color: ${props => (props.addMode ? '#d1d5e4' : '#dc3545')};
     position: absolute;
     left: 0;
     height: 100%;
@@ -23,7 +24,7 @@ const IconWrapper = styled.span`
     display: flex;
     align-items: center;
     justify-content: center;
-    color: ${props => props.theme.secondary};
+    color: ${props => (props.addMode ? props.theme.secondary : 'white')};
     padding-left: 3px;
 `;
 
@@ -31,16 +32,17 @@ const Label = styled.div`
     padding-left: 28px;
 `;
 
-const AddTemplateButton = props => {
-    const [isAdding, setIsAdding] = useState(false);
+const TemplateButton = props => {
+    const [isSaving, setIsSaving] = useState(false);
     const ref = useRef(null);
     const dispatch = useDispatch();
     const [template, setTemplate] = useState({});
     const [isTemplateLoading, setIsTemplateLoading] = useState(false);
     const [isLoaded, setIsLoaded] = useState(false);
+    const resource = useSelector(state => props.resourceId && state.statementBrowser.resources.byId[props.resourceId]);
 
     const addTemplate = useCallback(() => {
-        setIsAdding(true);
+        setIsSaving(true);
         dispatch(
             fillResourceWithTemplate({
                 templateID: props.id,
@@ -49,9 +51,38 @@ const AddTemplateButton = props => {
             })
         ).then(() => {
             ref.current?.removeAttribute('disabled');
-            setIsAdding(false);
+            setIsSaving(false);
         });
     }, [dispatch, props.id, props.resourceId, props.syncBackend]);
+
+    const deleteTemplate = useCallback(() => {
+        setIsSaving(true);
+
+        console.log(props.resourceId);
+        console.log(props.classId);
+        console.log(resource.classes);
+        // Remove the properties related to the template if they have no values
+        dispatch(removeEmptyPropertiesOfClass({ resourceId: props.resourceId, classId: props.classId }));
+        dispatch(
+            updateResourceClasses({
+                resourceId: props.resourceId,
+                classes: resource.classes?.filter(c => c !== props.classId) ?? [],
+                syncBackend: props.syncBackend
+            })
+        )
+            .then(() => {
+                ref.current?.removeAttribute('disabled');
+                setIsSaving(false);
+                toast.dismiss();
+                props.syncBackend && toast.success('Resource classes updated successfully');
+            })
+            .catch(() => {
+                ref.current?.removeAttribute('disabled');
+                setIsSaving(false);
+                toast.dismiss();
+                toast.error('Something went wrong while updating the classes.');
+            });
+    }, [dispatch, props.classId, props.resourceId, props.syncBackend, resource.classes]);
 
     const onTrigger = useCallback(() => {
         if (!isLoaded) {
@@ -76,6 +107,7 @@ const AddTemplateButton = props => {
                     source={props.source}
                     isTemplateLoading={isTemplateLoading}
                     template={template}
+                    addMode={props.addMode}
                 />
             }
         >
@@ -84,15 +116,17 @@ const AddTemplateButton = props => {
                     innerRef={ref}
                     onClick={() => {
                         ref.current.setAttribute('disabled', 'disabled');
-                        addTemplate();
+                        props.addMode && addTemplate();
+                        !props.addMode && deleteTemplate();
                     }}
                     size="sm"
-                    color="light"
+                    color={props.addMode ? 'light' : 'danger'}
                     className="mr-2 mb-2 position-relative px-3 rounded-pill border-0"
                 >
-                    <IconWrapper>
-                        {!isAdding && <Icon size="sm" icon={faPlus} />}
-                        {isAdding && <Icon icon={faSpinner} spin />}
+                    <IconWrapper addMode={props.addMode}>
+                        {!isSaving && props.addMode && <Icon size="sm" icon={faPlus} />}
+                        {!isSaving && !props.addMode && <Icon size="sm" icon={faTimes} />}
+                        {isSaving && <Icon icon={faSpinner} spin />}
                     </IconWrapper>
                     <Label>{props.label}</Label>
                 </Button>
@@ -101,18 +135,21 @@ const AddTemplateButton = props => {
     );
 };
 
-AddTemplateButton.propTypes = {
-    resourceId: PropTypes.string, // The resource to prefill with the template
+TemplateButton.propTypes = {
+    addMode: PropTypes.bool.isRequired,
+    resourceId: PropTypes.string, // The resource that will contain the template
     label: PropTypes.string.isRequired,
     id: PropTypes.string.isRequired,
+    classId: PropTypes.string,
     source: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
     syncBackend: PropTypes.bool.isRequired,
     tippyTarget: PropTypes.object
 };
 
-AddTemplateButton.defaultProps = {
+TemplateButton.defaultProps = {
+    addMode: true,
     label: '',
     syncBackend: false
 };
 
-export default AddTemplateButton;
+export default TemplateButton;

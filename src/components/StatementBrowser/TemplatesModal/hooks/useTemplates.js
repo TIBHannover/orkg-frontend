@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { getStatementsByObjectAndPredicate, getParentResearchFields } from 'services/backend/statements';
-import { uniqBy } from 'lodash';
+import { uniqBy, differenceBy } from 'lodash';
 import { debounce } from 'lodash';
 import { getResourcesByClass } from 'services/backend/resources';
 import { CLASSES, ENTITIES, PREDICATES } from 'constants/graphSettings';
@@ -38,12 +38,15 @@ const useTemplates = ({ onlyFeatured = false }) => {
     const [page, setPage] = useState(0);
     const [isLastPageReached, setIsLastPageReached] = useState(false);
     const [totalElements, setTotalElements] = useState(0);
+    const [isLoadingUsedTemplates, setIsLoadingUsedTemplates] = useState(false);
+    const [usedTemplates, setUsedTemplates] = useState([]);
 
     const selectedResource = useSelector(state => state.statementBrowser.selectedResource);
     const researchField = useSelector(state => state.viewPaper.researchField?.id || state.addPaper.selectedResearchField);
     const researchProblems = useSelector(state =>
         state.viewPaper.researchProblems[selectedResource]?.length > 0 ? state.viewPaper.researchProblems[selectedResource] : []
     );
+    const resource = useSelector(state => selectedResource && state.statementBrowser.resources.byId[selectedResource]);
 
     /**
      * Fetch the templates of a resource
@@ -113,7 +116,15 @@ const useTemplates = ({ onlyFeatured = false }) => {
 
             Promise.all([...researchFieldTemplates, ...researchProblemsTemplates])
                 .then(fT => {
-                    setFeaturedTemplates(uniqBy(fT.map(c => c.content).flat(), 'id'));
+                    setFeaturedTemplates(
+                        uniqBy(
+                            fT
+                                .map(c => c.content)
+                                .filter(r => r.length)
+                                .flat(),
+                            'id'
+                        )
+                    );
                     setIsLoadingFeatured(false);
                 })
                 .catch(e => {
@@ -137,6 +148,25 @@ const useTemplates = ({ onlyFeatured = false }) => {
             setIsNextPageLoading(false);
         }
     }, [labelFilter, onlyFeatured, selectedFilter, targetFilter]);
+
+    useEffect(() => {
+        setIsLoadingUsedTemplates(true);
+        const apiCalls = resource?.classes?.map(c => getTemplatesOfResourceId(c, PREDICATES.TEMPLATE_OF_CLASS, 0));
+        Promise.all(apiCalls)
+            .then(tmpl => {
+                setUsedTemplates(
+                    tmpl
+                        .map((c, index) => c.content.map(t => ({ ...t, classId: resource?.classes[index] })))
+                        .filter(r => r.length)
+                        .flat()
+                );
+                setIsLoadingUsedTemplates(false);
+            })
+            .catch(() => {
+                setUsedTemplates([]);
+                setIsLoadingUsedTemplates(false);
+            });
+    }, [getTemplatesOfResourceId, resource?.classes]);
 
     const handleSelectedFilterChange = selected => {
         setLabelFilter('');
@@ -166,8 +196,10 @@ const useTemplates = ({ onlyFeatured = false }) => {
 
     return {
         filterOptions,
-        templates: uniqBy(templates, 'id'),
+        templates: differenceBy(uniqBy(templates, 'id'), usedTemplates, 'id'),
         featuredTemplates: featuredTemplates,
+        usedTemplates,
+        isLoadingUsedTemplates,
         researchField,
         isNextPageLoading,
         isLoadingFeatured,
