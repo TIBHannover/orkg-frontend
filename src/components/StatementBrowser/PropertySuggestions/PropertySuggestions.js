@@ -1,6 +1,6 @@
 import { ListGroup, ListGroupItem, Badge } from 'reactstrap';
-import StatementActionButton from 'components/StatementBrowser/StatementActionButton/StatementActionButton';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
 import { getSuggestedProperties, createProperty } from 'actions/statementBrowser';
 import { useSelector, useDispatch } from 'react-redux';
@@ -17,6 +17,7 @@ const PropertySuggestions = () => {
             <ListGroup>
                 {suggestedProperties.map((c, index) => (
                     <ListGroupItem
+                        action
                         onClick={() => {
                             dispatch(
                                 createProperty({
@@ -29,26 +30,9 @@ const PropertySuggestions = () => {
                             );
                         }}
                         style={{ cursor: 'pointer' }}
-                        key={`suggested-property-${index}`}
                     >
-                        <StatementActionButton
-                            className="mr-2"
-                            title="Add property"
-                            icon={faPlus}
-                            action={() => {
-                                dispatch(
-                                    createProperty({
-                                        resourceId: selectedResource,
-                                        existingPredicateId: c.property.id,
-                                        label: c.property.label,
-                                        isTemplate: false,
-                                        createAndSelect: true
-                                    })
-                                );
-                            }}
-                        />
-                        <DescriptionTooltip id={c.property.id} typeId={ENTITIES.PREDICATE}>
-                            {c.property.label}
+                        <DescriptionTooltip id={c.property.id} typeId={ENTITIES.PREDICATE} key={`suggested-property-${index}`}>
+                            <Icon icon={faPlus} className="mr-1 text-muted" /> {c.property.label}
                             <Badge pill className="ml-2">
                                 {c.value?.label ?? ''}
                             </Badge>
