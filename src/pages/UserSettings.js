@@ -5,6 +5,7 @@ import classnames from 'classnames';
 import GeneralSettings from '../components/UserSettings/GeneralSettings';
 import Password from '../components/UserSettings/Password';
 import TitleBar from 'components/TitleBar/TitleBar';
+import DraftComparisons from 'components/UserSettings/DraftComparisons/DraftComparisons';
 
 export const StyledSettingsMenu = styled.div`
     list-style: none;
@@ -53,7 +54,7 @@ class UserSettings extends Component {
 
     render = () => (
         <>
-            <TitleBar>Account settings</TitleBar>
+            <TitleBar>My account</TitleBar>
             <Container className="p-0">
                 <Row>
                     <div className="col-3 justify-content-center">
@@ -80,6 +81,16 @@ class UserSettings extends Component {
                                 >
                                     <div>Password</div>
                                 </div>
+
+                                <div
+                                    className={classnames({ active: this.state.activeTab === 'draftComparisons' })}
+                                    role="button"
+                                    tabIndex={0}
+                                    onClick={() => this.toggleTab('draftComparisons')}
+                                    onKeyDown={e => (e.keyCode === 13 ? this.toggleTab('draftComparisons') : undefined)}
+                                >
+                                    <div>Draft comparisons</div>
+                                </div>
                             </StyledSettingsMenu>
                         </Container>
                     </div>
@@ -90,6 +101,9 @@ class UserSettings extends Component {
                             </TabPane>
                             <TabPane tabId="password">
                                 <Password />
+                            </TabPane>
+                            <TabPane tabId="draftComparisons">
+                                <DraftComparisons />
                             </TabPane>
                             <TabPane tabId="delete">test3</TabPane>
                         </TabContent>
