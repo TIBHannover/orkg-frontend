@@ -8,7 +8,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faAngleDoubleDown, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import ContentLoader from 'react-content-loader';
 import Tippy, { useSingleton } from '@tippyjs/react';
-import TemplateButton from 'components/StatementBrowser/TemplateButton/TemplateButton';
+import TemplateButton from 'components/StatementBrowser/TemplatesModal/TemplateButton/TemplateButton';
 import SearchFieldSelector from 'components/StatementBrowser/TemplatesModal/SearchFieldSelector/SearchFieldSelector';
 import useTemplates from './hooks/useTemplates';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
@@ -43,6 +43,7 @@ const TemplatesModal = props => {
     const selectedResource = useSelector(state => state.statementBrowser.selectedResource);
     const resource = useSelector(state => selectedResource && state.statementBrowser.resources.byId[selectedResource]);
     const [isOpenResearchFieldModal, setIsOpenResearchFieldModal] = useState(false);
+    const onlyFeatured = true;
     const {
         filterOptions,
         templates,
@@ -58,7 +59,7 @@ const TemplatesModal = props => {
         handleSelectedFilterChange,
         handleLabelFilterChange,
         loadMoreTemplates
-    } = useTemplates({ onlyFeatured: false });
+    } = useTemplates({ onlyFeatured });
 
     const dispatch = useDispatch();
 
@@ -136,8 +137,12 @@ const TemplatesModal = props => {
                                             entityType={selectedFilter.entityType}
                                             optionsClass={selectedFilter.entityType === ENTITIES.RESOURCE ? selectedFilter.id : undefined}
                                             placeholder={selectedFilter.placeholder}
-                                            onItemSelected={i => {
-                                                handleTargetFilterChange({ ...i, label: i.value });
+                                            onChange={(i, { action }) => {
+                                                if (action === 'select-option') {
+                                                    handleTargetFilterChange({ ...i, label: i.label });
+                                                } else if (action === 'clear') {
+                                                    handleTargetFilterChange(null);
+                                                }
                                             }}
                                             value={targetFilter}
                                             key={selectedFilter.id}
@@ -146,14 +151,21 @@ const TemplatesModal = props => {
                                             allowCreate={false}
                                             cacheOptions={false}
                                             inputId={selectedFilter.id}
+                                            isClearable={true}
                                         />
                                     </ConditionalWrapper>
                                 )}
                             </InputGroup>
                         </FormGroup>
 
-                        {/*!isNextPageLoading && loadingFailed && <UncontrolledAlert color="info">Failed to load templates</UncontrolledAlert>*/}
-                        {(templates.length > 0 || (featuredTemplates.length > 0 && labelFilter === '')) && (
+                        {!isNextPageLoading && (targetFilter || labelFilter) && templates.length === 0 && (
+                            <Alert color="info">
+                                No templates
+                                {(labelFilter || targetFilter) && ' match this filter'}.
+                            </Alert>
+                        )}
+
+                        {(templates.length > 0 || (featuredTemplates.length > 0 && !labelFilter && !targetFilter)) && (
                             <Alert color="info">
                                 Choose a template to use it in <b>{resource.label}</b> resource.
                                 <br />
@@ -161,7 +173,15 @@ const TemplatesModal = props => {
                             </Alert>
                         )}
 
-                        {labelFilter === '' && !targetFilter && featuredTemplates.length > 0 && (
+                        {!isNextPageLoading && !targetFilter && !labelFilter && templates.length === 0 && featuredTemplates.length === 0 && (
+                            <Alert color="info">
+                                Use the template browser bellow to find a suitable template for <b>{resource.label}</b> resource.
+                                <br />
+                                <small>You can search by label or filter by research field, research problem or class.</small>
+                            </Alert>
+                        )}
+
+                        {!labelFilter && !targetFilter && featuredTemplates.length > 0 && (
                             <FormGroup>
                                 <p>Featured templates:</p>
                                 <div>
@@ -199,10 +219,10 @@ const TemplatesModal = props => {
 
                         {templates.length > 0 && (
                             <FormGroup>
-                                {labelFilter === '' && !targetFilter && featuredTemplates.length > 0 && <p>Other templates:</p>}
+                                {labelFilter === '' && !targetFilter && !onlyFeatured && featuredTemplates.length > 0 && <p>Other templates:</p>}
                                 {targetFilter && (
                                     <p>
-                                        Templates for {targetFilter.label} {selectedFilter.label}:
+                                        Templates for <i>{targetFilter.label}</i> {selectedFilter.label}:
                                     </p>
                                 )}
                                 <div>
@@ -236,13 +256,6 @@ const TemplatesModal = props => {
                             <ListGroupItem className="action text-center rounded p-1">
                                 <Icon icon={faSpinner} spin /> Loading...
                             </ListGroupItem>
-                        )}
-
-                        {templates.length === 0 && !isNextPageLoading && featuredTemplates.length === 0 && (
-                            <Alert color="info">
-                                No templates
-                                {(labelFilter || targetFilter) && ' match this filter'}.
-                            </Alert>
                         )}
                     </div>
                 </ModalBody>

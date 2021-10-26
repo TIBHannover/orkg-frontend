@@ -6,7 +6,7 @@ import { debounce } from 'lodash';
 import { getResourcesByClass } from 'services/backend/resources';
 import { CLASSES, ENTITIES, PREDICATES } from 'constants/graphSettings';
 
-const useTemplates = ({ onlyFeatured = false }) => {
+const useTemplates = ({ onlyFeatured = true }) => {
     const filterOptions = [
         { id: CLASSES.TEMPLATE, label: 'label', predicate: null, placeholder: 'Search template by label', entityType: null },
         {
@@ -75,29 +75,38 @@ const useTemplates = ({ onlyFeatured = false }) => {
     }, []);
 
     const loadMoreTemplates = (sf, target, label) => {
-        setIsNextPageLoading(true);
-        let searchCall = Promise.resolve();
-        if (target) {
-            searchCall = getTemplatesOfResourceId(target.id, sf.predicate, page);
-        } else {
-            searchCall = getResourcesByClass({
-                id: CLASSES.TEMPLATE,
-                page: page,
-                q: label,
-                items: pageSize,
-                sortBy: 'created_at',
-                desc: true
-            });
-        }
+        console.log('onlyFeatured');
+        console.log(onlyFeatured);
+        if (label || target || !onlyFeatured) {
+            setIsNextPageLoading(true);
+            let searchCall = Promise.resolve();
+            if (target) {
+                searchCall = getTemplatesOfResourceId(target.id, sf.predicate, page);
+            } else {
+                searchCall = getResourcesByClass({
+                    id: CLASSES.TEMPLATE,
+                    page: page,
+                    q: label,
+                    items: pageSize,
+                    sortBy: 'created_at',
+                    desc: true
+                });
+            }
 
-        searchCall.then(result => {
-            setTemplates(prevTemplates => [...prevTemplates, ...result.content]);
+            searchCall.then(result => {
+                setTemplates(prevTemplates => [...prevTemplates, ...result.content]);
+                setIsNextPageLoading(false);
+                setHasNextPage(!result.last);
+                setIsLastPageReached(result.last);
+                setPage(prevPage => prevPage + 1);
+                setTotalElements(result.totalElements);
+            });
+        } else {
+            setTemplates([]);
             setIsNextPageLoading(false);
-            setHasNextPage(!result.last);
-            setIsLastPageReached(result.last);
-            setPage(prevPage => prevPage + 1);
-            setTotalElements(result.totalElements);
-        });
+            setHasNextPage(false);
+            setIsLastPageReached(false);
+        }
     };
 
     useEffect(() => {
@@ -141,7 +150,7 @@ const useTemplates = ({ onlyFeatured = false }) => {
     const debouncedGetLoadMoreResults = useRef(debounce(loadMoreTemplates, 500));
 
     useEffect(() => {
-        if (!onlyFeatured || targetFilter || labelFilter !== '') {
+        if (targetFilter || labelFilter || !onlyFeatured) {
             setIsNextPageLoading(true);
             debouncedGetLoadMoreResults.current(selectedFilter, targetFilter, labelFilter);
         } else {
@@ -171,6 +180,7 @@ const useTemplates = ({ onlyFeatured = false }) => {
     const handleSelectedFilterChange = selected => {
         setLabelFilter('');
         setTargetFilter(null);
+        setTemplates([]);
         setSelectedFilter(selected);
     };
 
