@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 import Tippy from '@tippyjs/react';
+import { truncate } from 'lodash';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { getStatementsBySubjectAndPredicate } from 'services/backend/statements';
@@ -54,7 +55,7 @@ const DescriptionTooltip = props => {
                     Description:{' '}
                     {!isLoading ? (
                         description ? (
-                            description
+                            <> {truncate(description, { length: 300 })}</>
                         ) : (
                             <small className="font-italic">No description yet</small>
                         )
@@ -64,6 +65,7 @@ const DescriptionTooltip = props => {
                     {props.extraContent && (
                         <>
                             <br />
+
                             {props.extraContent}
                         </>
                     )}
