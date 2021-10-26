@@ -1,4 +1,4 @@
-import { faPlus, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import ListPage from 'components/ListPage/ListPage';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
@@ -11,6 +11,7 @@ import { Link } from 'react-router-dom';
 import { getSmartReviewData } from 'utils';
 import { getResourcesByClass } from 'services/backend/resources';
 import { getStatementsBySubjects } from 'services/backend/statements';
+import { reverse } from 'named-urls';
 
 const SmartReviews = () => {
     const user = useSelector(state => state.auth.user);
@@ -56,10 +57,10 @@ const SmartReviews = () => {
                     color="secondary"
                     size="sm"
                     className="btn btn-secondary btn-sm"
-                    to={ROUTES.USER_UNPUBLISHED_REVIEWS}
+                    to={reverse(ROUTES.USER_SETTINGS, { tab: 'draft-smart-reviews' })}
                     style={{ marginLeft: 1 }}
                 >
-                    <Icon icon={faEyeSlash} /> My unpublished articles
+                    Draft SmartReviews
                 </RequireAuthentication>
             )}
         </>

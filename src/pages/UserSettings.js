@@ -1,5 +1,6 @@
 import TitleBar from 'components/TitleBar/TitleBar';
 import DraftComparisons from 'components/UserSettings/DraftComparisons/DraftComparisons';
+import DraftSmartReviews from 'components/UserSettings/DraftSmartReviews/DraftSmartReviews';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import { useEffect, useState } from 'react';
@@ -58,21 +59,37 @@ const UserSettings = () => {
                                 <Link to={reverse(ROUTES.USER_SETTINGS, { tab: 'password' })} className={activeTab === 'password' && 'active'}>
                                     Password
                                 </Link>
+                                <hr />
                                 <Link
                                     to={reverse(ROUTES.USER_SETTINGS, { tab: 'draft-comparisons' })}
                                     className={activeTab === 'draft-comparisons' && 'active'}
                                 >
                                     Draft comparisons
                                 </Link>
+                                <Link
+                                    to={reverse(ROUTES.USER_SETTINGS, { tab: 'draft-smart-reviews' })}
+                                    className={activeTab === 'draft-smart-reviews' && 'active'}
+                                >
+                                    Draft SmartReviews
+                                </Link>
                             </StyledSettingsMenu>
                         </Container>
                     </div>
                     <div className="col-9 justify-content-center">
-                        <div className="box rounded pt-4 pb-3 pl-5 pr-5">
-                            {activeTab === 'general' && <GeneralSettings />}
-                            {activeTab === 'password' && <Password />}
-                            {activeTab === 'draft-comparisons' && <DraftComparisons />}
-                        </div>
+                        {activeTab === 'general' && (
+                            <div className="box rounded pt-4 pb-3 px-4">
+                                <GeneralSettings />
+                            </div>
+                        )}
+                        {activeTab === 'password' && (
+                            <div className="box rounded pt-4 pb-3 px-4">
+                                <Password />
+                            </div>
+                        )}
+
+                        {activeTab === 'draft-comparisons' && <DraftComparisons />}
+
+                        {activeTab === 'draft-smart-reviews' && <DraftSmartReviews />}
                     </div>
                 </Row>
             </Container>

@@ -9,7 +9,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { Alert, Badge, Button, ButtonGroup, ListGroup, ListGroupItem } from 'reactstrap';
+import { Alert, Button, ButtonGroup, ListGroup, ListGroupItem } from 'reactstrap';
 import Confirm from 'reactstrap-confirm';
 import { deleteResource, getResourcesByClass } from 'services/backend/resources';
 import { getResourceData } from 'services/similarity/index';
@@ -21,22 +21,32 @@ const DraftComparisons = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [editDraftComparison, setEditDraftComparison] = useState(null);
     const [isOpenEditModal, setIsOpenEditModal] = useState(null);
-
     const userId = useSelector(state => state.auth.user.id);
+
+    useEffect(() => {
+        document.title = 'Draft comparisons - ORKG';
+    });
 
     const getDraftComparisons = useCallback(async () => {
         setIsLoading(true);
-        const { content: _draftComparisons, last } = await getResourcesByClass({
-            id: CLASSES.COMPARISON_DRAFT,
-            page,
-            items: 10,
-            sortBy: 'created_at',
-            creator: userId,
-            desc: true
-        });
-        const draftComparisonUrls = await Promise.all(_draftComparisons.map(draftComparison => getResourceData(draftComparison.id)));
-        setIsLast(last);
-        setDraftComparisons(_draftComparisons.map((draftComparison, index) => ({ ...draftComparison, url: draftComparisonUrls[index].data.url })));
+
+        try {
+            const { content: _draftComparisons, last } = await getResourcesByClass({
+                id: CLASSES.COMPARISON_DRAFT,
+                page,
+                items: 10,
+                sortBy: 'created_at',
+                creator: userId,
+                desc: true
+            });
+            const draftComparisonUrls = await Promise.all(_draftComparisons.map(draftComparison => getResourceData(draftComparison.id)));
+            setIsLast(last);
+            setDraftComparisons(
+                _draftComparisons.map((draftComparison, index) => ({ ...draftComparison, url: draftComparisonUrls[index].data.url }))
+            );
+        } catch (e) {
+            toast.error('An error occurred, reload the page and try again');
+        }
         setIsLoading(false);
     }, [page, userId]);
 
@@ -71,18 +81,27 @@ const DraftComparisons = () => {
 
     return (
         <>
-            <h2 className="h5 mb-4">Saved draft comparisons</h2>
+            <div className="box rounded pt-4 pb-3 px-4 mb-3">
+                <h2 className="h5">View draft comparisons</h2>
+                <Alert color="info" className="mt-3" fade={false}>
+                    Comparisons can be saved as draft if you do not want to publish it yet. If you want to save a comparison as draft, first make a
+                    comparison. Click <em>More...</em> in the right top of the page, finally click on <em>Save as draft</em>
+                </Alert>
+            </div>
 
             {(draftComparisons.length > 0 || isLoading) && (
-                <ListGroup className="mb-3">
+                <ListGroup className="mb-3 box">
                     {draftComparisons.map(draftComparison => (
                         <ListGroupItem key={draftComparison.id} className="d-flex justify-content-between align-items-center py-2">
-                            <Link to={reverse(ROUTES.COMPARISON) + draftComparison.url}>{draftComparison.label}</Link>
+                            <div>
+                                <Link to={reverse(ROUTES.COMPARISON) + draftComparison.url}>{draftComparison.label}</Link> <br />
+                                <small>
+                                    <Icon icon={faCalendar} /> {moment(draftComparison.created_at).format('DD MMMM YYYY')}{' '}
+                                    <Icon icon={faClock} className="ml-2 mr-1" />
+                                    {moment(draftComparison.created_at).format('H:mm')}
+                                </small>
+                            </div>
                             <div className="flex-shrink-0">
-                                <Badge color="light" className="mr-2">
-                                    <Icon icon={faCalendar} className="text-secondary" />{' '}
-                                    {moment(draftComparison.created_at).format('DD-MM-YYYY H:mm')}
-                                </Badge>
                                 <ButtonGroup>
                                     <Button
                                         color="light"
