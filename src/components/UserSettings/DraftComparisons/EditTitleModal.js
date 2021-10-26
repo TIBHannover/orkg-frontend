@@ -24,7 +24,7 @@ function EditTitleModal({ isOpen, toggle, editItem, onChange }) {
 
     return (
         <Modal isOpen={isOpen} toggle={toggle}>
-            <ModalHeader toggle={toggle}>Edit title</ModalHeader>
+            <ModalHeader toggle={toggle}>Edit draft comparison title</ModalHeader>
             <ModalBody>
                 <FormGroup>
                     <Label for="draft-title">Title</Label>
