@@ -29,13 +29,20 @@ const PropertySuggestions = () => {
                                 })
                             );
                         }}
+                        className="py-2 px-3"
                         style={{ cursor: 'pointer' }}
                     >
                         <DescriptionTooltip id={c.property.id} typeId={ENTITIES.PREDICATE} key={`suggested-property-${index}`}>
-                            <Icon icon={faPlus} className="mr-1 text-muted" /> {c.property.label}
-                            <Badge pill className="ml-2">
-                                {c.value?.label ?? ''}
-                            </Badge>
+                            <div className="d-flex">
+                                <div className="flex-grow-1">
+                                    <Icon icon={faPlus} className="mr-1 text-muted" /> {c.property.label}
+                                </div>
+                                <small className="float-right">
+                                    <Badge pill className="ml-2">
+                                        {c.value?.label ?? ''}
+                                    </Badge>
+                                </small>
+                            </div>
                         </DescriptionTooltip>
                     </ListGroupItem>
                 ))}
