@@ -6,7 +6,9 @@ import {
     createRequiredPropertiesInResource,
     selectResource,
     getValueClass,
-    isLiteral
+    isLiteral,
+    isAddingValue,
+    doneAddingValue
 } from 'actions/statementBrowser';
 import { createResourceStatement } from 'services/backend/statements';
 import { fillStatements } from 'actions/addPaper';
@@ -82,9 +84,10 @@ const useAddValue = ({ resourceId, propertyId, syncBackend }) => {
         return statements;
     };
 
-    const createBlankNode = entityType => {
+    const createBlankNode = () => {
         // is the valueType is literal, it's not possible to set it as an object of a statement
         // 1 - create a resource
+        dispatch(isAddingValue({ id: propertyId }));
         handleAddValue(ENTITIES.RESOURCE, { label: isBlankNode, shared: 0 }).then(newResourceId => {
             // 2 - open the dialog on that resource
             if (openExistingResourcesInDialog) {
@@ -95,6 +98,7 @@ const useAddValue = ({ resourceId, propertyId, syncBackend }) => {
                         setModal(true);
                     })
                 );
+                dispatch(doneAddingValue({ id: propertyId }));
             } else {
                 dispatch(
                     selectResource({
@@ -104,6 +108,7 @@ const useAddValue = ({ resourceId, propertyId, syncBackend }) => {
                         propertyLabel: property.label
                     })
                 );
+                dispatch(doneAddingValue({ id: propertyId }));
             }
         });
     };
