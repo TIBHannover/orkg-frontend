@@ -92,8 +92,7 @@ const useValueItem = ({ valueId, propertyId }) => {
         } else {
             return value.label;
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [resource, hasLabelFormat, labelFormat]);
+    }, [resource, value.classes, value?._class, value.label, hasLabelFormat, dispatch, labelFormat]);
 
     return {
         resource,
