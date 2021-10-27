@@ -1,20 +1,21 @@
 import { useRef } from 'react';
-import { Button, ButtonGroup } from 'reactstrap';
+import { Button, ButtonGroup, UncontrolledAlert } from 'reactstrap';
 import SBEditorHelpModal from 'components/StatementBrowser/SBEditorHelpModal/SBEditorHelpModal';
 import TemplatesModal from 'components/StatementBrowser/TemplatesModal/TemplatesModal';
 import Tippy from '@tippyjs/react';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faQuestionCircle, faPuzzlePiece, faSlidersH, faTimes } from '@fortawesome/free-solid-svg-icons';
-import PropTypes from 'prop-types';
+import HELP_CENTER_ARTICLES from 'constants/helpCenterArticles';
 import { useDispatch, useSelector } from 'react-redux';
 import { setIsHelpModalOpen, setIsTemplateModalOpen, setIsPreferencesOpen } from 'actions/statementBrowser';
 import { ENTITIES } from 'constants/graphSettings';
 import Preferences from 'components/StatementBrowser/Preferences/Preferences';
-
+import PropTypes from 'prop-types';
 export default function StatementMenuHeader(props) {
     const isPreferencesOpen = useSelector(state => state.statementBrowser.isPreferencesOpen);
     const dispatch = useDispatch();
     const preferencesTippy = useRef(null);
+    const shared = props.resource?.shared ?? 0;
 
     return (
         <>
@@ -60,6 +61,19 @@ export default function StatementMenuHeader(props) {
                     </Button>
                 </ButtonGroup>
             </div>
+
+            {shared > 1 && props.enableEdit && (
+                <UncontrolledAlert color="info">
+                    A shared resource cannot be edited directly{' '}
+                    <Button
+                        color="link"
+                        className="p-0"
+                        onClick={() => dispatch(setIsHelpModalOpen({ isOpen: true, articleId: HELP_CENTER_ARTICLES.RESOURCE_SHARED }))}
+                    >
+                        <Icon icon={faQuestionCircle} />
+                    </Button>
+                </UncontrolledAlert>
+            )}
 
             <SBEditorHelpModal />
         </>
