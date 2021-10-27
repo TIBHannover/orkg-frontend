@@ -197,9 +197,10 @@ const useValueForm = ({ valueId, resourceId, propertyId, syncBackend }) => {
                 });
             }
             statements['values'].push({
-                type: 'literal',
+                _class: statement.value._class,
                 propertyId: createdProperties[statement.predicate.id],
-                label: statement.value.label
+                label: statement.value.label,
+                datatype: statement.value.datatype
             });
         }
         return statements;
@@ -207,6 +208,7 @@ const useValueForm = ({ valueId, resourceId, propertyId, syncBackend }) => {
 
     /**
      * When the user select a value from the autocomplete
+     *
      * @param {String} entityType The entity type (resource|predicate|literal|class)
      * @param {Object} value - The selected value
      * @param {String} value.id - ID of entity
@@ -226,7 +228,7 @@ const useValueForm = ({ valueId, resourceId, propertyId, syncBackend }) => {
             if (syncBackend) {
                 dispatch(isAddingValue({ id: propertyId }));
                 let apiCall;
-                if (!value.selected) {
+                if (!value.selected || value.external) {
                     switch (entityType) {
                         case ENTITIES.RESOURCE:
                             apiCall = createResource(value.label, valueClass ? [valueClass.id] : []);
@@ -252,7 +254,6 @@ const useValueForm = ({ valueId, resourceId, propertyId, syncBackend }) => {
                         return createResourceStatement(resourceId, property?.existingPredicateId, newEntity.id);
                     })
                     .then(newS => {
-                        dispatch(doneAddingValue({ id: propertyId }));
                         newStatement = newS;
                     })
                     .catch(() => {
@@ -276,13 +277,14 @@ const useValueForm = ({ valueId, resourceId, propertyId, syncBackend }) => {
                 );
                 //create statements
                 value.statements &&
-                    dispatch(
+                    (await dispatch(
                         fillStatements({
                             statements: generateStatementsFromExternalData(value.statements),
                             resourceId: newEntity.id ?? existingResourceId,
                             syncBackend: syncBackend
                         })
-                    );
+                    ));
+                dispatch(doneAddingValue({ id: propertyId }));
                 return newEntity.id ?? existingResourceId;
             }
         },

@@ -29,10 +29,11 @@ const PropertySuggestions = () => {
                                 })
                             );
                         }}
+                        key={`suggested-property-${index}`}
                         className="py-2 px-3"
                         style={{ cursor: 'pointer' }}
                     >
-                        <DescriptionTooltip id={c.property.id} typeId={ENTITIES.PREDICATE} key={`suggested-property-${index}`}>
+                        <DescriptionTooltip id={c.property.id} typeId={ENTITIES.PREDICATE}>
                             <div className="d-flex">
                                 <div className="flex-grow-1">
                                     <Icon icon={faPlus} className="mr-1 text-muted" /> {c.property.label}

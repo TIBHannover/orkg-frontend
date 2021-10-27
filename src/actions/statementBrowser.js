@@ -652,7 +652,7 @@ export const updateResourceClasses = ({ resourceId, classes, syncBackend = false
  * @param {Object} data - Value Object
  * @param {String=} data.valueId - value ID
  * @param {String=} data.existingResourceId - Existing resource ID
- * @param {String=} data._class - Type of value (resource|literal|predicate)
+ * @param {String=} data._class - The value type (resource|predicate|literal|class)
  * @param {Array=} data.classes - Classes of value
  */
 export function createValue(data) {

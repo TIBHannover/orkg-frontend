@@ -225,6 +225,11 @@ export default function CustomOption(props) {
                             {props.data.id}
                         </div>
                     )}
+                    {props.data.external && props.data.source && (
+                        <div onClick={onClick} className="badge" onKeyDown={e => (e.keyCode === 13 ? onClick : undefined)} role="button" tabIndex={0}>
+                            {props.data.source}
+                        </div>
+                    )}
                 </span>
             </StyledSelectOption>
         </components.Option>

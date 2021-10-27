@@ -253,6 +253,8 @@ export const fillStatements = ({ statements, resourceId, syncBackend = false }) 
             })
         );
     }
+
+    return Promise.resolve();
 };
 
 export const toggleAbstractDialog = data => dispatch => {

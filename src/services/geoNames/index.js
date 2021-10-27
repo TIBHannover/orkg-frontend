@@ -1,4 +1,4 @@
-import { PREDICATES } from 'constants/graphSettings';
+import { ENTITIES, PREDICATES } from 'constants/graphSettings';
 import env from '@beam-australia/react-env';
 
 /**
@@ -6,9 +6,9 @@ import env from '@beam-australia/react-env';
  *
  * @param {String} value Search input
  * @param {Array} prevOptions Loaded options for current search.
- * @return {Array} The list of loaded options including the options from geonames.org with ids = 'GeoNames' and a property external = true
+ * @return {Array} The list of loaded options including the options from geonames.org
  */
-export default async function getGeonames(value, options) {
+export default async function getGeoNames(value, options) {
     let responseXML = await fetch(
         env('GEONAMES_API_SEARCH_URL') + '?q=' + encodeURIComponent(value.trim()) + '&maxRows=10&type=rdf&username=' + env('GEONAMES_API_USERNAME')
     );
@@ -22,9 +22,10 @@ export default async function getGeonames(value, options) {
     const long = responseXML.getElementsByTagName('wgs84_pos:long');
     names.forEach(function(name, i) {
         const itemData = {
-            external: true,
-            id: 'GeoNames',
+            id: null,
             label: name.childNodes[0].nodeValue,
+            external: true,
+            source: 'GeoNames',
             statements: [],
             tooltipData: []
         };
@@ -32,7 +33,12 @@ export default async function getGeonames(value, options) {
         if (docs[i] && docs[i].attributes) {
             itemData['statements'].push({
                 predicate: { id: PREDICATES.SAME_AS, label: 'same as' },
-                value: { type: 'literal', label: docs[i].attributes.getNamedItem('rdf:about').nodeValue, id: null }
+                value: {
+                    _class: ENTITIES.LITERAL,
+                    label: docs[i].attributes.getNamedItem('rdf:about').nodeValue,
+                    id: null,
+                    datatype: 'xsd:anyURI'
+                }
             });
         }
         // add tooltip information

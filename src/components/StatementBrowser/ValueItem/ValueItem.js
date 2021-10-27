@@ -50,7 +50,7 @@ const ValueItem = props => {
                     <div>
                         {!value.isSaving && (
                             <Tippy
-                                disabled={!preferences['showValueInfo']}
+                                disabled={!preferences['showValueInfo'] || (!value.id && !value.classes)}
                                 delay={[500, 0]}
                                 interactive={true}
                                 content={

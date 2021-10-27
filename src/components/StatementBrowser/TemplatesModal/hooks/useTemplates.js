@@ -75,8 +75,6 @@ const useTemplates = ({ onlyFeatured = true }) => {
     }, []);
 
     const loadMoreTemplates = (sf, target, label) => {
-        console.log('onlyFeatured');
-        console.log(onlyFeatured);
         if (label || target || !onlyFeatured) {
             setIsNextPageLoading(true);
             let searchCall = Promise.resolve();
