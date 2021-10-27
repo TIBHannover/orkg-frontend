@@ -3,11 +3,11 @@ import * as type from '../actions/types';
 const initialState = {
     annotations: [],
     pdf: null,
-    encodedPdf: null,
+    pdf: null,
+    isLoadedPdfViewer: false,
     zoom: 1.2,
     showHighlights: false,
-    summaryFetched: false,
-    pdfViewer: null
+    summaryFetched: false
 };
 
 // eslint-disable-next-line import/no-anonymous-default-export
@@ -57,8 +57,7 @@ export default (state = initialState, action) => {
 
             return {
                 ...state,
-                pdf: payload.pdf,
-                encodedPdf: payload.encodedPdf
+                pdf: payload.pdf
             };
         }
 
@@ -89,12 +88,12 @@ export default (state = initialState, action) => {
             };
         }
 
-        case type.PDF_TEXT_ANNOTATION_SET_PDF_VIEWER: {
+        case type.PDF_TEXT_ANNOTATION_SET_IS_LOADED_PDF_VIEWER: {
             const { payload } = action;
 
             return {
                 ...state,
-                pdfViewer: payload.pdfViewer
+                isLoadedPdfViewer: payload.isLoadedPdfViewer
             };
         }
 
