@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { Fragment } from 'react';
 import useValueItem from './hooks/useValueItem';
 import PropTypes from 'prop-types';
-import { ENTITIES } from 'constants/graphSettings';
+import { CLASSES, ENTITIES } from 'constants/graphSettings';
 import DATA_TYPES from 'constants/DataTypes';
 import { Button, Badge } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -15,6 +15,9 @@ import { Link } from 'react-router-dom';
 import { getResourceLink } from 'utils';
 import capitalize from 'capitalize';
 import Tippy from '@tippyjs/react';
+import { reverseWithSlug } from 'utils';
+import ROUTES from 'constants/routes';
+import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
 import ValueItemOptions from './ValueItemOptions/ValueItemOptions';
 import ValueForm from 'components/StatementBrowser/ValueForm/ValueForm';
 
@@ -80,32 +83,47 @@ const ValueItem = props => {
                             >
                                 <span tabIndex="0">
                                     {resource && !resource.isFetching && value._class !== ENTITIES.LITERAL && !resourcesAsLinks && (
-                                        <Button
-                                            className="p-0 text-left objectLabel"
-                                            color="link"
-                                            onClick={handleOnClick}
-                                            style={{ userSelect: 'text' }}
-                                        >
-                                            {value._class === ENTITIES.CLASS && <div className="typeCircle">C</div>}
-                                            {value._class === ENTITIES.PREDICATE && <div className="typeCircle">P</div>}
-                                            {props.showHelp && value._class === ENTITIES.RESOURCE ? (
-                                                <Pulse content="Click on the resource to browse it">
-                                                    <ValuePlugins type="resource">
-                                                        {getLabel() !== '' ? getLabel().toString() : <i>No label</i>}
-                                                    </ValuePlugins>
-                                                </Pulse>
+                                        <>
+                                            {!props.enableEdit && resource?.classes?.includes(CLASSES.PROBLEM) ? (
+                                                <Link
+                                                    to={reverseWithSlug(ROUTES.RESEARCH_PROBLEM, {
+                                                        researchProblemId: existingResourceId,
+                                                        slug: resource.label
+                                                    })}
+                                                >
+                                                    <DescriptionTooltip id={existingResourceId} typeId={CLASSES.PROBLEM}>
+                                                        {resource.label}
+                                                    </DescriptionTooltip>
+                                                </Link>
                                             ) : (
-                                                <ValuePlugins type="resource">
-                                                    {getLabel() !== '' ? getLabel().toString() : <i>No label</i>}
-                                                </ValuePlugins>
+                                                <Button
+                                                    className="p-0 text-left objectLabel"
+                                                    color="link"
+                                                    onClick={handleOnClick}
+                                                    style={{ userSelect: 'text' }}
+                                                >
+                                                    {value._class === ENTITIES.CLASS && <div className="typeCircle">C</div>}
+                                                    {value._class === ENTITIES.PREDICATE && <div className="typeCircle">P</div>}
+                                                    {props.showHelp && value._class === ENTITIES.RESOURCE ? (
+                                                        <Pulse content="Click on the resource to browse it">
+                                                            <ValuePlugins type="resource">
+                                                                {getLabel() !== '' ? getLabel().toString() : <i>No label</i>}
+                                                            </ValuePlugins>
+                                                        </Pulse>
+                                                    ) : (
+                                                        <ValuePlugins type="resource">
+                                                            {getLabel() !== '' ? getLabel().toString() : <i>No label</i>}
+                                                        </ValuePlugins>
+                                                    )}
+                                                    {resource && resource.existingResourceId && openExistingResourcesInDialog && (
+                                                        <span>
+                                                            {' '}
+                                                            <Icon icon={faExternalLinkAlt} />
+                                                        </span>
+                                                    )}
+                                                </Button>
                                             )}
-                                            {resource && resource.existingResourceId && openExistingResourcesInDialog && (
-                                                <span>
-                                                    {' '}
-                                                    <Icon icon={faExternalLinkAlt} />
-                                                </span>
-                                            )}
-                                        </Button>
+                                        </>
                                     )}
 
                                     {resource && value._class !== ENTITIES.LITERAL && resourcesAsLinks && (

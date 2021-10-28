@@ -1,9 +1,7 @@
 import { forwardRef } from 'react';
 import StatementItem from 'components/StatementBrowser/StatementItem/StatementItem';
-import ResearchProblems from 'components/StatementBrowser/ResearchProblems/ResearchProblems';
 import Template from 'components/StatementBrowser/Template/Template';
 import { isTemplateContextProperty } from 'actions/statementBrowser';
-import { PREDICATES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
 import { useCookies } from 'react-cookie';
 import { useSelector } from 'react-redux';
@@ -18,23 +16,7 @@ const StatementItemWrapper = forwardRef((props, ref) => {
     if (!property) {
         return null;
     }
-    if (property.existingPredicateId === PREDICATES.HAS_RESEARCH_PROBLEM && props.renderTemplateBox) {
-        return (
-            <ResearchProblems
-                key={`statement-p${props.propertyId}r${props.resourceId}`}
-                id={props.propertyId}
-                enableEdit={props.shared <= 1 ? props.enableEdit : false}
-                syncBackend={props.syncBackend}
-                resourceId={props.resourceId}
-                isLastItem={props.isLastItem}
-                researchProblems={property.valueIds.map(valueId => {
-                    const value = values.byId[valueId];
-                    return value;
-                })}
-                ref={ref}
-            />
-        );
-    } else if (!isTemplate) {
+    if (!isTemplate) {
         return (
             <StatementItem
                 key={`statement-p${props.propertyId}r${props.resourceId}`}
