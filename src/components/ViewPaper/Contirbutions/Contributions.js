@@ -219,7 +219,7 @@ const Contributions = props => {
                         </AnimationContainer>
                     </TransitionGroup>
                     <div className="col-md-3">
-                        <div className="d-flex mb-2">
+                        <div className="d-flex mb-3 rounded px-3 py-2" style={{ border: '1px solid rgb(219,221,229)' }}>
                             <AddToComparison showLabel={true} paper={{ id: resourceId, label: paperTitle, contributions }} />
                         </div>
                         <ProvenanceBox />
