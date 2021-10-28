@@ -1,5 +1,5 @@
 import * as type from './types.js';
-import { guid } from '../utils';
+import { guid } from 'utils';
 import { mergeWith, isArray, uniqBy } from 'lodash';
 import {
     createResource,
@@ -7,7 +7,8 @@ import {
     createProperty,
     createValue,
     loadStatementBrowserData,
-    updateContributionLabel as updateContributionLabelInSB
+    updateContributionLabel as updateContributionLabelInSB,
+    fetchTemplatesOfClassIfNeeded
 } from './statementBrowser';
 import { createResource as createResourceApi } from 'services/backend/resources';
 import { createResourceStatement, createLiteralStatement } from 'services/backend/statements';
@@ -15,7 +16,7 @@ import { saveFullPaper } from 'services/backend/papers';
 import { createLiteral } from 'services/backend/literals';
 import { createPredicate } from 'services/backend/predicates';
 import { toast } from 'react-toastify';
-import { PREDICATES, ENTITIES, CLASSES } from 'constants/graphSettings';
+import { ENTITIES, CLASSES } from 'constants/graphSettings';
 
 export const updateGeneralData = data => dispatch => {
     dispatch({
@@ -167,6 +168,9 @@ export const createContribution = ({ selectAfterCreation = false, fillStatements
         });*/
     }
 
+    // Dispatch loading template of classes
+    dispatch(fetchTemplatesOfClassIfNeeded(CLASSES.CONTRIBUTION));
+
     if (performPrefill && statements) {
         dispatch(
             fillStatements({
@@ -314,13 +318,6 @@ export const updateContributionLabel = data => dispatch => {
     dispatch(updateContributionLabelInSB({ id: data.resourceId, label: data.label }));
 };
 
-export const updateResearchProblems = data => dispatch => {
-    dispatch({
-        type: type.UPDATE_RESEARCH_PROBLEMS,
-        payload: data
-    });
-};
-
 // The function to customize merging objects (to handle using the same existing predicate twice in the same resource)
 function customizer(objValue, srcValue) {
     if (isArray(objValue)) {
@@ -375,14 +372,11 @@ export const getResourceObject = (data, resourceId, newProperties) => {
 // Middleware function to transform frontend data to backend format
 export const saveAddPaper = data => {
     return async dispatch => {
-        const researchProblemPredicate = PREDICATES.HAS_RESEARCH_PROBLEM;
         // Get new properties (ensure that  no duplicate labels are in the new properties)
         let newProperties = data.properties.allIds.filter(propertyId => !data.properties.byId[propertyId].existingPredicateId);
         newProperties = newProperties.map(propertyId => ({ id: propertyId, label: data.properties.byId[propertyId].label }));
         newProperties = uniqBy(newProperties, 'label');
         newProperties = newProperties.map(property => ({ [property.label]: `_${property.id}` }));
-        // list of new research problems
-        const newResearchProblem = [];
         const paperObj = {
             // Set new predicates label and temp ID
             predicates: newProperties,
@@ -403,27 +397,13 @@ export const saveAddPaper = data => {
                 // Set the contributions data
                 contributions: data.contributions.allIds.map(c => {
                     const contribution = data.contributions.byId[c];
-                    const researchProblem = {
-                        [researchProblemPredicate]: contribution.researchProblems.map(rp => {
-                            if (rp.hasOwnProperty('existingResourceId') && rp.existingResourceId) {
-                                return { '@id': rp.existingResourceId };
-                            } else {
-                                if (newResearchProblem.includes(rp.id)) {
-                                    return { '@id': `_${rp.id}` };
-                                } else {
-                                    newResearchProblem.push(rp.id);
-                                    return { label: rp.label, '@temp': `_${rp.id}` };
-                                }
-                            }
-                        })
-                    };
                     return {
                         name: contribution.label,
                         classes:
                             data.resources.byId[contribution.resourceId].classes && data.resources.byId[contribution.resourceId].classes.length > 0
                                 ? data.resources.byId[contribution.resourceId].classes
                                 : null,
-                        values: Object.assign({}, researchProblem, getResourceObject(data, contribution.resourceId, newProperties))
+                        values: Object.assign({}, getResourceObject(data, contribution.resourceId, newProperties))
                     };
                 })
             }

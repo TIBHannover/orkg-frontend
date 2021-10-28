@@ -45,7 +45,7 @@ const ViewArticleStatementBrowser = ({ id }) => {
             {Object.keys(properties).map(propertyId => {
                 const property = properties[propertyId];
                 return (
-                    <StatementsGroupStyle className="noTemplate" key={propertyId}>
+                    <StatementsGroupStyle className="noTemplate list-group-item" key={propertyId}>
                         <div className="row no-gutters">
                             <PropertyStyle className="col-4" tabIndex="0">
                                 <div>

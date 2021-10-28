@@ -23,24 +23,6 @@ class Contribution extends Component {
         return (
             <StyledHorizontalContribution>
                 <Form>
-                    {/*<FormGroup>
-                        <Label>
-                            <Tooltip
-                                message={
-                                    <span>
-                                        Specify the research problems that this contribution addresses.{' '}
-                                        <span style={{ textDecoration: 'underline', cursor: 'pointer' }} onClick={() => this.handleLearnMore(0)}>
-                                            Learn more
-                                        </span>
-                                    </span>
-                                }
-                            >
-                                Research problems
-                            </Tooltip>
-                        </Label>
-                        <ResearchProblemInput handler={this.handleResearchProblemsChange} value={this.props.researchProblems} />
-                        </FormGroup>*/}
-
                     <>
                         <FormGroup>
                             <StatementBrowser
@@ -49,7 +31,6 @@ class Contribution extends Component {
                                 openExistingResourcesInDialog={false}
                                 initialSubjectId={this.props.resourceId}
                                 initialSubjectLabel={this.props.resourceLabel}
-                                templatesFound={false}
                                 renderTemplateBox={true}
                             />
                         </FormGroup>

@@ -261,7 +261,7 @@ export const AddPropertyFormStyle = styled.div`
     }
 `;
 
-export const StatementsGroupStyle = styled(ListGroupItem)`
+export const StatementsGroupStyle = styled.div`
     position: relative;
     padding: 0 !important;
     border-top: 1px solid rgba(0, 0, 0, 0.125) !important;

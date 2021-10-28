@@ -4,7 +4,6 @@ import assign from 'lodash/assign';
 import { asyncLocalStorage } from 'utils';
 
 const initialState = {
-    researchProblems: {},
     comparison: {
         byId: {},
         allIds: []
@@ -96,19 +95,6 @@ export default (state = initialState, action) => {
             return newState;
         }
 
-        case type.SET_RESEARCH_PROBLEMS: {
-            const { payload } = action;
-
-            const newState = dotProp.set(state, 'researchProblems', ids => ({
-                ...ids,
-                [payload.resourceId]: payload.researchProblems
-            }));
-
-            return {
-                ...newState
-            };
-        }
-
         case type.SET_PAPER_AUTHORS: {
             const { payload } = action;
 
@@ -122,53 +108,6 @@ export default (state = initialState, action) => {
             return {
                 ...newState
             };
-        }
-
-        case type.UPDATE_RESEARCH_PROBLEMS: {
-            const { payload } = action;
-
-            return dotProp.set(state, `researchProblems.${payload.contributionId}`, payload.problemsArray);
-        }
-
-        case type.IS_ADDING_RESEARCH_PROBLEM: {
-            const { payload } = action;
-            const contributionIndex = dotProp
-                .get(state, 'contributions')
-                .map(c => c.id)
-                .indexOf(payload.id);
-            const newState = dotProp.set(state, `contributions.${contributionIndex}.isAddingResearchProblem`, true);
-            return newState;
-        }
-
-        case type.DONE_ADDING_RESEARCH_PROBLEM: {
-            const { payload } = action;
-            const contributionIndex = dotProp
-                .get(state, 'contributions')
-                .map(c => c.id)
-                .indexOf(payload.id);
-            const newState = dotProp.set(state, `contributions.${contributionIndex}.isAddingResearchProblem`, false);
-            return newState;
-        }
-
-        case type.IS_DELETING_RESEARCH_PROBLEM: {
-            const { payload } = action;
-            const rpIndex = dotProp
-                .get(state, `researchProblems.${payload.id}`)
-                .map(c => c.id)
-                .indexOf(payload.problemId);
-
-            const newState = dotProp.set(state, `researchProblems.${payload.id}.${rpIndex}.isDeleting`, true);
-            return newState;
-        }
-
-        case type.DONE_DELETING_RESEARCH_PROBLEM: {
-            const { payload } = action;
-            const rpIndex = dotProp
-                .get(state, `researchProblems.${payload.id}`)
-                .map(c => c.id)
-                .indexOf(payload.problemId);
-            const newState = dotProp.set(state, `researchProblems.${payload.id}.${rpIndex}.isDeleting`, false);
-            return newState;
         }
 
         case type.LOAD_COMPARISON_FROM_LOCAL_STORAGE: {

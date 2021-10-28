@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { getStatementsByObjectAndPredicate, getParentResearchFields } from 'services/backend/statements';
+import { getResearchProblemsOfContribution } from 'actions/statementBrowser';
 import { uniqBy, differenceBy } from 'lodash';
 import { debounce } from 'lodash';
 import { getResourcesByClass } from 'services/backend/resources';
@@ -43,10 +44,10 @@ const useTemplates = ({ onlyFeatured = true }) => {
 
     const selectedResource = useSelector(state => state.statementBrowser.selectedResource);
     const researchField = useSelector(state => state.viewPaper.researchField?.id || state.addPaper.selectedResearchField);
-    const researchProblems = useSelector(state =>
-        state.viewPaper.researchProblems[selectedResource]?.length > 0 ? state.viewPaper.researchProblems[selectedResource] : []
-    );
     const resource = useSelector(state => selectedResource && state.statementBrowser.resources.byId[selectedResource]);
+    const researchProblems = useSelector(state =>
+        resource?.classes?.includes(CLASSES.CONTRIBUTION) ? getResearchProblemsOfContribution(state, selectedResource) : []
+    );
 
     /**
      * Fetch the templates of a resource
@@ -118,7 +119,7 @@ const useTemplates = ({ onlyFeatured = true }) => {
 
             const researchProblemsTemplates =
                 researchProblems?.length > 0
-                    ? researchProblems.map(rp => getTemplatesOfResourceId(rp.id, PREDICATES.TEMPLATE_OF_RESEARCH_PROBLEM, 0))
+                    ? researchProblems.map(rp => getTemplatesOfResourceId(rp, PREDICATES.TEMPLATE_OF_RESEARCH_PROBLEM, 0))
                     : [];
 
             Promise.all([...researchFieldTemplates, ...researchProblemsTemplates])

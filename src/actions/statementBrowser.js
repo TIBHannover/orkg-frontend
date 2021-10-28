@@ -1,5 +1,5 @@
 import * as type from './types.js';
-import { guid, filterStatementsBySubjectId, filterObjectOfStatementsByPredicateAndClass } from 'utils';
+import { guid, filterStatementsBySubjectId } from 'utils';
 import { fillStatements } from './addPaper';
 import { orderBy, uniq, isEqual } from 'lodash';
 import { PREDICATES, CLASSES, ENTITIES } from 'constants/graphSettings';
@@ -823,21 +823,21 @@ export function fetchTemplateIfNeeded(templateID) {
 export function isTemplateContextProperty(state, propertyId) {
     // template.predicate && template?.predicate.id !== PREDICATES.HAS_CONTRIBUTION;
     const property = state.statementBrowser.properties.byId[propertyId];
+    if (property) {
+        for (const valueId of property.valueIds) {
+            const value = state.statementBrowser.values.byId[valueId];
+            // Get all template ids
+            const templateIds = getTemplateIDsByResourceID(state, value.resourceId);
+            // Check if one of the template is strict
+            for (const templateId of templateIds) {
+                const template = state.statementBrowser.templates[templateId];
 
-    for (const valueId of property.valueIds) {
-        const value = state.statementBrowser.values.byId[valueId];
-        // Get all template ids
-        const templateIds = getTemplateIDsByResourceID(state, value.resourceId);
-        // Check if one of the template is strict
-        for (const templateId of templateIds) {
-            const template = state.statementBrowser.templates[templateId];
-
-            if (template && template?.predicate?.id === property.existingPredicateId) {
-                return true;
+                if (template && template?.predicate?.id === property.existingPredicateId) {
+                    return true;
+                }
             }
         }
     }
-
     return false;
 }
 
@@ -1048,32 +1048,6 @@ function shouldFetchStatementsForResource(state, resourceId, depth, nodeType) {
 }
 
 /**
- * Add research problems to paper redux state
- *
- * @param {Array} statements - statements of the contributions
- * @param {String} contributionId - Contribution ID
- */
-export function addResearchProblemsToContribution(statements, contributionId) {
-    return dispatch => {
-        // filter out research problem to show differently
-        const resourceStatements = filterStatementsBySubjectId(statements, contributionId);
-        const researchProblems = filterObjectOfStatementsByPredicateAndClass(
-            resourceStatements,
-            PREDICATES.HAS_RESEARCH_PROBLEM,
-            false,
-            CLASSES.PROBLEM
-        );
-        dispatch({
-            type: type.SET_RESEARCH_PROBLEMS,
-            payload: {
-                researchProblems,
-                resourceId: contributionId
-            }
-        });
-    };
-}
-
-/**
  * Check if it should add a statement for resources
  *
  * @param {Object} state - Current state of the Store
@@ -1167,12 +1141,11 @@ export function addStatements(statements, resourceId, depth) {
  * Fetch statements of a resource
  *
  * @param {String} resourceId - Resource ID
- * @param {Boolean} isContribution - If the resource if a contribution
  * @param {String} rootNodeType - root node type (predicate|resource|class), no resolving endpoint yet!
  * @param {Number} depth - The required depth
  * @return {Promise} Promise object
  */
-export const fetchStatementsForResource = ({ resourceId, isContribution = false, rootNodeType = ENTITIES.RESOURCE, depth = 1 }) => {
+export const fetchStatementsForResource = ({ resourceId, rootNodeType = ENTITIES.RESOURCE, depth = 1 }) => {
     return (dispatch, getState) => {
         if (shouldFetchStatementsForResource(getState(), resourceId, depth, rootNodeType)) {
             dispatch({
@@ -1194,30 +1167,21 @@ export const fetchStatementsForResource = ({ resourceId, isContribution = false,
                     dispatch(updateResourceClasses({ resourceId, classes: allClasses, syncBackend: false }));
                     // fetch the statements
                     return getStatementsBundleBySubject({ id: resourceId, maxLevel: depth }).then(response => {
-                        let rootStatements = response.statements;
                         // 1 - collect all classes Ids
                         allClasses = uniq([
                             ...allClasses,
                             ...flatten(
-                                rootStatements
+                                response.statements
                                     .map(s => s.object)
                                     .filter(o => o.classes)
                                     .map(o => o.classes)
                             )
                         ]);
-                        // 2- if it's a contribution add research problem to paper redux
-                        if (isContribution) {
-                            dispatch(addResearchProblemsToContribution(rootStatements, resourceId));
-                            // filter out the research problem statements
-                            rootStatements = rootStatements.filter(
-                                s => !(s.subject.id === resourceId && s.predicate.id === PREDICATES.HAS_RESEARCH_PROBLEM)
-                            );
-                        }
                         // 3 - load templates
                         const templatesOfClassesLoading = allClasses && allClasses?.map(classID => dispatch(fetchTemplatesOfClassIfNeeded(classID)));
                         return Promise.all(templatesOfClassesLoading)
                             .then(() => dispatch(createRequiredPropertiesInResource(resourceId))) // Add required properties
-                            .then(() => dispatch(addStatements(rootStatements, resourceId, depth))) // Add statements
+                            .then(() => dispatch(addStatements(response.statements, resourceId, depth))) // Add statements
                             .then(() => {
                                 // Set fetching is done
                                 dispatch({

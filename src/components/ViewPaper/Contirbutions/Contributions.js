@@ -1,5 +1,4 @@
-import { Alert, Col, Container, Form, FormGroup, Row, Button } from 'reactstrap';
-import AddToComparison from '../AddToComparison';
+import { Alert, Col, Container, FormGroup, Row } from 'reactstrap';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import ContentLoader from 'react-content-loader';
 import { Link } from 'react-router-dom';
@@ -7,23 +6,19 @@ import PropTypes from 'prop-types';
 import ROUTES from 'constants/routes';
 import SimilarContributions from '../SimilarContributions';
 import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
-import ResearchProblemInput from 'components/AddPaper/Contributions/ResearchProblemInput';
 import ContributionItemList from 'components/AddPaper/Contributions/ContributionItemList';
 import ContributionComparisons from 'components/ViewPaper/ContirbutionComparisons/ContributionComparisons';
 import ProvenanceBox from 'components/ViewPaper/ProvenanceBox/ProvenanceBox';
-import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import { reverse } from 'named-urls';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
+import AddToComparison from 'components/PaperCard/AddToComparison';
 import { useSelector } from 'react-redux';
 import { StyledHorizontalContributionsList, StyledHorizontalContribution, AddContribution } from 'components/AddPaper/Contributions/styled';
 import Tippy from '@tippyjs/react';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPlus, faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { CLASSES } from 'constants/graphSettings';
 import useContributions from './hooks/useContributions';
-import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
-import { reverseWithSlug } from 'utils';
 
 const Title = styled.div`
     font-size: 18px;
@@ -52,12 +47,6 @@ const AnimationContainer = styled(CSSTransition)`
     }
 `;
 
-const ResearchProblemButton = styled.span`
-    white-space: normal;
-    text-align: left;
-    user-select: text !important;
-`;
-
 const Contributions = props => {
     const { resourceId, contributionId } = useParams();
 
@@ -69,12 +58,10 @@ const Contributions = props => {
         similarContributions,
         selectedContribution,
         contributions,
-        researchProblems,
         paperTitle,
         handleChangeContributionLabel,
         handleCreateContribution,
-        toggleDeleteContribution,
-        handleResearchProblemsChange
+        toggleDeleteContribution
     } = useContributions({
         paperId: resourceId,
         contributionId
@@ -138,89 +125,9 @@ const Contributions = props => {
                     <TransitionGroup className="col-md-9" exit={false}>
                         <AnimationContainer key={selectedContribution} classNames="fadeIn" timeout={{ enter: 500, exit: 0 }}>
                             <StyledHorizontalContribution>
-                                {!isLoading && !isLoadingContributionFailed && (
-                                    <AddToComparison
-                                        contributionId={selectedContribution}
-                                        paperId={resourceId}
-                                        paperTitle={paperTitle}
-                                        contributionTitle={
-                                            contributions?.find(c => c.id === selectedContribution)
-                                                ? contributions?.find(c => c.id === selectedContribution).label
-                                                : 'Contribution'
-                                        }
-                                    />
-                                )}
                                 {!isLoadingContributionFailed && (
-                                    <Form>
+                                    <div>
                                         <FormGroup>
-                                            <Title style={{ marginTop: 0 }}>Research problems</Title>
-                                            {isLoading && (
-                                                <div>
-                                                    <ContentLoader
-                                                        height="100%"
-                                                        width="100%"
-                                                        viewBox="0 0 100 5"
-                                                        style={{ width: '100% !important' }}
-                                                        speed={2}
-                                                        backgroundColor="#f3f3f3"
-                                                        foregroundColor="#ecebeb"
-                                                    >
-                                                        <rect x="0" y="0" width="40" height="2" />
-                                                        <rect x="0" y="3" width="40" height="2" />
-                                                    </ContentLoader>
-                                                </div>
-                                            )}
-                                            {!isLoading && !props.enableEdit && (
-                                                <>
-                                                    {researchProblems &&
-                                                        researchProblems.length > 0 &&
-                                                        researchProblems.map((problem, index) => (
-                                                            <span key={index}>
-                                                                <Link
-                                                                    to={reverseWithSlug(ROUTES.RESEARCH_PROBLEM, {
-                                                                        researchProblemId: problem.id,
-                                                                        slug: problem.label
-                                                                    })}
-                                                                >
-                                                                    <ResearchProblemButton className="btn btn-link p-0 border-0 align-baseline">
-                                                                        <DescriptionTooltip id={problem.id} typeId={CLASSES.PROBLEM}>
-                                                                            {problem.label}
-                                                                        </DescriptionTooltip>
-                                                                    </ResearchProblemButton>
-                                                                </Link>
-                                                                <br />
-                                                            </span>
-                                                        ))}
-                                                    {researchProblems && researchProblems.length === 0 && (
-                                                        <i>
-                                                            No research problems added yet. Please contribute by{' '}
-                                                            <RequireAuthentication
-                                                                component={Button}
-                                                                className="m-0 p-0"
-                                                                style={{ verticalAlign: 'initial', fontStyle: 'italic' }}
-                                                                color="link"
-                                                                onClick={() => props.toggleEditMode()}
-                                                            >
-                                                                editing
-                                                            </RequireAuthentication>{' '}
-                                                            the paper.
-                                                        </i>
-                                                    )}
-                                                </>
-                                            )}
-                                            {!isLoading && props.enableEdit && (
-                                                <>
-                                                    <ResearchProblemInput
-                                                        selectedContribution={selectedContribution}
-                                                        handler={handleResearchProblemsChange}
-                                                        value={researchProblems}
-                                                    />
-                                                </>
-                                            )}
-                                        </FormGroup>
-
-                                        <FormGroup>
-                                            <Title>Contribution data</Title>
                                             {isLoading && (
                                                 <div>
                                                     <ContentLoader
@@ -241,7 +148,6 @@ const Contributions = props => {
                                                     enableEdit={props.enableEdit}
                                                     syncBackend={props.enableEdit}
                                                     openExistingResourcesInDialog={false}
-                                                    templatesFound={false}
                                                     initOnLocationChange={false}
                                                     keyToKeepStateOnLocationChange={resourceId}
                                                     renderTemplateBox={true}
@@ -299,7 +205,7 @@ const Contributions = props => {
                                         </div>
 
                                         {selectedContribution && <ContributionComparisons contributionId={selectedContribution} />}
-                                    </Form>
+                                    </div>
                                 )}
                                 {isLoadingContributionFailed && (
                                     <>
@@ -312,7 +218,12 @@ const Contributions = props => {
                             </StyledHorizontalContribution>
                         </AnimationContainer>
                     </TransitionGroup>
-                    <ProvenanceBox />
+                    <div className="col-md-3">
+                        <div className="d-flex mb-2">
+                            <AddToComparison showLabel={true} paper={{ id: resourceId, label: paperTitle, contributions }} />
+                        </div>
+                        <ProvenanceBox />
+                    </div>
                 </Row>
             </Container>
         </div>

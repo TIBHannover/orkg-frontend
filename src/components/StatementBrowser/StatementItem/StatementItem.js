@@ -1,8 +1,9 @@
+import { forwardRef } from 'react';
 import StatementItemTemplate from './StatementItemTemplate';
 import useStatementItem from './hooks/useStatementItem';
 import PropTypes from 'prop-types';
 
-export default function StatementItem(props) {
+const StatementItem = forwardRef((props, ref) => {
     const { property, predicateLabel, handleChange, handleDeleteStatement } = useStatementItem({
         propertyId: props.id,
         resourceId: props.resourceId,
@@ -13,7 +14,7 @@ export default function StatementItem(props) {
         <StatementItemTemplate
             property={property}
             id={props.id}
-            isLastItem={props.isLastItem}
+            ref={ref}
             enableEdit={props.enableEdit}
             predicateLabel={predicateLabel}
             syncBackend={props.syncBackend}
@@ -24,13 +25,12 @@ export default function StatementItem(props) {
             resourceId={props.resourceId}
         />
     );
-}
+});
 
 StatementItem.propTypes = {
     id: PropTypes.string.isRequired,
     enableEdit: PropTypes.bool.isRequired,
     syncBackend: PropTypes.bool.isRequired,
-    isLastItem: PropTypes.bool.isRequired,
     showValueHelp: PropTypes.bool,
     resourceId: PropTypes.string,
     inTemplate: PropTypes.bool
@@ -40,3 +40,5 @@ StatementItem.defaultProps = {
     resourceId: null,
     showValueHelp: false
 };
+
+export default StatementItem;

@@ -74,7 +74,7 @@ const ProvenanceBox = () => {
     const [activeTab, setActiveTab] = useState(1);
 
     return (
-        <div className="col-md-3">
+        <div>
             {env('PWC_USER_ID') === paperResource.created_by && (
                 <div className="mb-2">
                     <PWCProvenanceBox />

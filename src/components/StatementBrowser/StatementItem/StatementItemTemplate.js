@@ -1,3 +1,4 @@
+import { forwardRef } from 'react';
 import { toggleEditPropertyLabel } from 'actions/statementBrowser';
 import { faPen, faTrash, faCheck, faTimes, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { ListGroup, InputGroup } from 'reactstrap';
@@ -15,11 +16,11 @@ import { Link } from 'react-router-dom';
 import useStatementItemTemplate from './hooks/useStatementItemTemplate';
 import ROUTES from 'constants/routes.js';
 
-export default function StatementItemTemplate(props) {
+const StatementItemTemplate = forwardRef((props, ref) => {
     const { propertiesAsLinks, propertyOptionsClasses, canDeleteProperty, dispatch, values, canAddValue } = useStatementItemTemplate(props);
 
     return (
-        <StatementsGroupStyle tag="div" className={`${props.inTemplate ? 'inTemplate' : 'noTemplate'}`}>
+        <StatementsGroupStyle ref={ref} className={`${props.inTemplate ? 'inTemplate' : 'noTemplate'} list-group-item`}>
             <div className="row no-gutters">
                 <PropertyStyle className={`col-4 ${props.property.isEditing ? 'editingLabel' : ''}`} tabIndex="0">
                     {!props.property.isEditing ? (
@@ -161,12 +162,11 @@ export default function StatementItemTemplate(props) {
             </div>
         </StatementsGroupStyle>
     );
-}
+});
 
 StatementItemTemplate.propTypes = {
     property: PropTypes.object.isRequired,
     id: PropTypes.string.isRequired,
-    isLastItem: PropTypes.bool.isRequired,
     enableEdit: PropTypes.bool.isRequired,
     predicateLabel: PropTypes.string.isRequired,
     syncBackend: PropTypes.bool.isRequired,
@@ -176,3 +176,4 @@ StatementItemTemplate.propTypes = {
     handleDeleteStatement: PropTypes.func.isRequired,
     resourceId: PropTypes.string
 };
+export default StatementItemTemplate;

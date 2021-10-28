@@ -27,16 +27,29 @@ const ValueItemOptions = ({ id, enableEdit, syncBackend, handleOnClick }) => {
     const handleDeleteValue = async () => {
         if (syncBackend) {
             dispatch(isDeletingValue({ id: id }));
-            await deleteStatementById(value.statementId);
-            dispatch(doneDeletingValue({ id: id }));
-            toast.success('Statement deleted successfully');
+            deleteStatementById(value.statementId)
+                .then(() => {
+                    dispatch(doneDeletingValue({ id: id }));
+                    toast.success('Statement deleted successfully');
+                    dispatch(
+                        deleteValue({
+                            id: id,
+                            propertyId: value.propertyId
+                        })
+                    );
+                })
+                .catch(() => {
+                    dispatch(doneDeletingValue({ id: id }));
+                    toast.error('Something went wrong while deleting the value.');
+                });
+        } else {
+            dispatch(
+                deleteValue({
+                    id: id,
+                    propertyId: value.propertyId
+                })
+            );
         }
-        dispatch(
-            deleteValue({
-                id: id,
-                propertyId: value.propertyId
-            })
-        );
     };
 
     const handleDatasetClick = () => {

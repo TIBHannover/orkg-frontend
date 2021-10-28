@@ -1,6 +1,6 @@
 import * as type from '../actions/types';
 import dotProp from 'dot-prop-immutable';
-import { ENTITIES, MISC } from 'constants/graphSettings';
+import { ENTITIES, MISC, PREDICATES } from 'constants/graphSettings';
 import { match } from 'path-to-regexp';
 import { last } from 'lodash';
 import ROUTES from 'constants/routes';
@@ -166,13 +166,25 @@ export default (state = initialState, action) => {
             const { payload } = action;
             let newState;
             if (dotProp.get(state, `resources.byId.${payload.resourceId}`)) {
-                newState = dotProp.set(
-                    dotProp.get(state, `resources.byId.${payload.resourceId}.propertyIds`)
-                        ? state
-                        : dotProp.set(state, `resources.byId.${payload.resourceId}.propertyIds`, []),
-                    `resources.byId.${payload.resourceId}.propertyIds`,
-                    propertyIds => [...propertyIds, payload.propertyId]
-                );
+                // make sure that has research problem is always added first
+                if (payload.existingPredicateId === PREDICATES.HAS_RESEARCH_PROBLEM) {
+                    newState = dotProp.set(
+                        dotProp.get(state, `resources.byId.${payload.resourceId}.propertyIds`)
+                            ? state
+                            : dotProp.set(state, `resources.byId.${payload.resourceId}.propertyIds`, []),
+                        `resources.byId.${payload.resourceId}.propertyIds`,
+                        propertyIds => [payload.propertyId, ...propertyIds]
+                    );
+                } else {
+                    newState = dotProp.set(
+                        dotProp.get(state, `resources.byId.${payload.resourceId}.propertyIds`)
+                            ? state
+                            : dotProp.set(state, `resources.byId.${payload.resourceId}.propertyIds`, []),
+                        `resources.byId.${payload.resourceId}.propertyIds`,
+                        propertyIds => [...propertyIds, payload.propertyId]
+                    );
+                }
+
                 newState = dotProp.set(newState, 'properties.byId', ids => ({
                     ...ids,
                     [payload.propertyId]: {

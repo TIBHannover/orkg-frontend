@@ -11,6 +11,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
+import FlipMove from 'react-flip-move';
 import {
     getSuggestedProperties,
     initializeWithoutContribution,
@@ -93,26 +94,29 @@ const Statements = props => {
                 <ClassesItem enableEdit={props.enableEdit} syncBackend={props.syncBackend} />
                 <ListGroup tag="div" className="listGroupEnlarge">
                     {selectedResource && !resource.isFetching ? (
-                        propertyIds.length > 0 ? (
-                            propertyIds.map((propertyId, index) => {
-                                return (
-                                    <StatementItemWrapper
-                                        key={`statement-p${propertyId}r${selectedResource}`}
-                                        enableEdit={props.enableEdit}
-                                        openExistingResourcesInDialog={props.openExistingResourcesInDialog}
-                                        isLastItem={propertyIds.length === index + 1}
-                                        isFirstItem={index === 0}
-                                        resourceId={selectedResource}
-                                        propertyId={propertyId}
-                                        shared={shared}
-                                        syncBackend={props.syncBackend}
-                                        renderTemplateBox={props.renderTemplateBox}
-                                    />
-                                );
-                            })
-                        ) : (
-                            <NoData enableEdit={props.enableEdit} templatesFound={props.templatesFound} />
-                        )
+                        <>
+                            <FlipMove>
+                                {propertyIds.length > 0 &&
+                                    propertyIds.map((propertyId, index) => {
+                                        return (
+                                            <StatementItemWrapper
+                                                key={`statement-p${propertyId}r${selectedResource}`}
+                                                enableEdit={props.enableEdit}
+                                                openExistingResourcesInDialog={props.openExistingResourcesInDialog}
+                                                isLastItem={propertyIds.length === index + 1}
+                                                isFirstItem={index === 0}
+                                                resourceId={selectedResource}
+                                                propertyId={propertyId}
+                                                shared={shared}
+                                                syncBackend={props.syncBackend}
+                                                renderTemplateBox={props.renderTemplateBox}
+                                            />
+                                        );
+                                    })}
+                            </FlipMove>
+
+                            {propertyIds.length === 0 && <NoData enableEdit={props.enableEdit} />}
+                        </>
                     ) : (
                         <StyledStatementItem>
                             <Icon icon={faSpinner} spin /> Loading
@@ -165,7 +169,6 @@ Statements.propTypes = {
     ),
     syncBackend: PropTypes.bool.isRequired,
     newStore: PropTypes.bool,
-    templatesFound: PropTypes.bool,
     propertiesAsLinks: PropTypes.bool,
     resourcesAsLinks: PropTypes.bool,
     initOnLocationChange: PropTypes.bool.isRequired,
@@ -180,7 +183,6 @@ Statements.defaultProps = {
     initialSubjectLabel: null,
     syncBackend: false,
     newStore: false,
-    templatesFound: false,
     propertiesAsLinks: false,
     resourcesAsLinks: false,
     initOnLocationChange: true,
