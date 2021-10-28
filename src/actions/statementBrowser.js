@@ -1,7 +1,7 @@
 import * as type from './types.js';
 import { guid, filterStatementsBySubjectId } from 'utils';
 import { fillStatements } from './addPaper';
-import { orderBy, uniq, isEqual } from 'lodash';
+import { orderBy, uniq } from 'lodash';
 import { PREDICATES, CLASSES, ENTITIES } from 'constants/graphSettings';
 import { getEntity } from 'services/backend/misc';
 import { flatten, uniqBy } from 'lodash';
@@ -9,6 +9,7 @@ import format from 'string-format';
 import { getTemplateById, getTemplatesByClass, getStatementsBundleBySubject } from 'services/backend/statements';
 import { createResource as createResourceApi, updateResourceClasses as updateResourceClassesApi } from 'services/backend/resources';
 import DATA_TYPES from 'constants/DataTypes.js';
+import { toast } from 'react-toastify';
 
 export const updateSettings = data => dispatch => {
     dispatch({
@@ -435,18 +436,14 @@ export function createProperty(data) {
             if (resource && resource.propertyIds) {
                 const isExistingProperty = resource.propertyIds.find(p => {
                     if (getState().statementBrowser.properties.byId[p].existingPredicateId === data.existingPredicateId) {
-                        if (data.range) {
-                            // if the range is set check the equality also
-                            return isEqual(data.range, getState().statementBrowser.properties.byId[p].range) ? true : false;
-                        } else {
-                            return true;
-                        }
+                        return true;
                     } else {
                         return false;
                     }
                 });
                 if (isExistingProperty) {
-                    // Property already exists
+                    // Property exists already
+                    toast.info('This property exists already!');
                     return null;
                 }
             }
