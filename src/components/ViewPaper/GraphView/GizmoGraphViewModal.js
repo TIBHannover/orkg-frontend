@@ -315,20 +315,6 @@ class GraphView extends Component {
                     nodes.push({ id: contribution.resourceId, label: contribution.label, title: contribution.label });
                     edges.push({ from: 'title', to: contribution.resourceId, label: 'has contribution' });
 
-                    //research problems
-                    for (const problem of contribution.researchProblems) {
-                        nodes.push({
-                            id: contribution.resourceId + problem.label,
-                            label: problem.label,
-                            title: problem.label
-                        });
-                        edges.push({
-                            from: contribution.resourceId,
-                            to: contribution.resourceId + problem.label,
-                            label: 'has research problem'
-                        });
-                    }
-
                     //contribution statements
                     const statements = this.addPaperStatementsToGraph(contribution.resourceId, [], []);
                     nodes.push(...statements.nodes);
