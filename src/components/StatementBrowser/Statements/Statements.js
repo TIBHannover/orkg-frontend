@@ -5,6 +5,7 @@ import Breadcrumbs from 'components/StatementBrowser/Breadcrumbs/Breadcrumbs';
 import PropertySuggestions from 'components/StatementBrowser/PropertySuggestions/PropertySuggestions';
 import StatementItemWrapper from 'components/StatementBrowser/StatementItem/StatementItemWrapper';
 import NoData from 'components/StatementBrowser/NoData/NoData';
+import NotFound from 'components/StatementBrowser/NotFound/NotFound';
 import { StyledLevelBox, StyledStatementItem } from 'components/StatementBrowser/styled';
 import { isArray } from 'lodash';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -115,7 +116,8 @@ const Statements = props => {
                                     })}
                             </FlipMove>
 
-                            {propertyIds.length === 0 && <NoData enableEdit={props.enableEdit} />}
+                            {!resource.isFailedFetching && propertyIds.length === 0 && <NoData enableEdit={props.enableEdit} />}
+                            {resource.isFailedFetching && propertyIds.length === 0 && <NotFound />}
                         </>
                     ) : (
                         <StyledStatementItem>
