@@ -16,7 +16,9 @@ const Data = () => {
                 <Row className="mb-4">
                     <Col sm="6" className="mt-4">
                         <Card body>
-                            <CardTitle tag="h5">REST API</CardTitle>
+                            <CardTitle tag="h2" className="h5">
+                                REST API
+                            </CardTitle>
                             <CardText>You can access the Data by using the our REST API.</CardText>
                             <Button
                                 color="secondary"
@@ -32,7 +34,7 @@ const Data = () => {
                     </Col>
                     <Col sm="6" className="mt-4">
                         <Card body>
-                            <CardTitle tag="h5">
+                            <CardTitle tag="h2" className="h5">
                                 <Icon icon={faPython} /> Python Package
                             </CardTitle>
                             <CardText>Python package wrapping the ORKG API</CardText>
@@ -49,24 +51,44 @@ const Data = () => {
                         </Card>
                     </Col>
                     <Col sm="6" className="mt-4">
-                        <Card body>
-                            <CardTitle tag="h5">SPARQL endpoint</CardTitle>
+                        <Card body className="pb-3">
+                            <CardTitle tag="h2" className="h5">
+                                SPARQL endpoint
+                            </CardTitle>
                             <CardText>You can access the following SPARQL endpoint to explore our data using SPARQL queries.</CardText>
-                            <Button
-                                color="secondary"
-                                className="mr-3 pl-4 pr-4 flex-shrink-0"
-                                tag="a"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                href="https://www.orkg.org/orkg/triplestore"
-                            >
-                                Go to SPARQL endpoint
-                            </Button>
+                            <Row>
+                                <Col>
+                                    <Button
+                                        color="secondary"
+                                        className="pl-4 pr-4 mb-1"
+                                        tag="a"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        href="https://www.orkg.org/orkg/triplestore"
+                                    >
+                                        Virtuoso Query Editor
+                                    </Button>
+                                </Col>
+                                <Col>
+                                    <Button
+                                        color="secondary"
+                                        className="pl-4 pr-4 "
+                                        tag="a"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        href="https://www.orkg.org/orkg/sparql"
+                                    >
+                                        Visual SPARQL Editor
+                                    </Button>
+                                </Col>
+                            </Row>
                         </Card>
                     </Col>
                     <Col sm="6" className="mt-4">
                         <Card body>
-                            <CardTitle tag="h5">Export data: RDF Dump</CardTitle>
+                            <CardTitle tag="h2" className="h5">
+                                Export data: RDF Dump
+                            </CardTitle>
                             <CardText>You can download the Open Research Knowledge Graph RDF Dump in N-Triples format below</CardText>
                             <Button
                                 color="secondary"
