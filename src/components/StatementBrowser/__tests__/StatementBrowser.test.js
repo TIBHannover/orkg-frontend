@@ -2,6 +2,8 @@ import { render, screen, waitFor } from 'testUtils';
 import StatementBrowser from '../StatementBrowser';
 import { ENTITIES } from 'constants/graphSettings';
 
+jest.mock('react-flip-move', () => ({ children }) => children);
+
 const setup = (
     initialState = {},
     props = {

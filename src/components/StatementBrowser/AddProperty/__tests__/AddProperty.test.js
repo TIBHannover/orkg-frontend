@@ -2,6 +2,8 @@ import { render, screen, fireEvent, waitFor, waitForElementToBeRemoved } from 't
 import AddProperty from '../AddProperty';
 import { statementBrowserStrictTemplate } from '../__mocks__/StatementBrowserData';
 
+jest.mock('react-flip-move', () => ({ children }) => children);
+
 const setup = (
     initialState = {},
     props = {

@@ -53,7 +53,7 @@ const StatementItemWrapper = forwardRef((props, ref) => {
 
 StatementItemWrapper.propTypes = {
     renderTemplateBox: PropTypes.bool.isRequired,
-    propertyId: PropTypes.object.isRequired,
+    propertyId: PropTypes.string.isRequired,
     isLastItem: PropTypes.bool.isRequired,
     enableEdit: PropTypes.bool.isRequired,
     syncBackend: PropTypes.bool.isRequired,
