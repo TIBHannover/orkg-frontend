@@ -1,6 +1,6 @@
 import { doneAnimation } from 'actions/statementBrowser';
 import AddProperty from 'components/StatementBrowser/AddProperty/AddProperty';
-import TemplateHeader from 'components/StatementBrowser/TemplateHeader/TemplateHeader';
+import TemplateHeader from 'components/StatementBrowser/Template/TemplateHeader/TemplateHeader';
 import StatementItem from 'components/StatementBrowser/StatementItem/StatementItem';
 import { AddPropertyWrapper, AnimationContainer } from './styled';
 import { useDispatch, useSelector } from 'react-redux';
