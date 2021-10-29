@@ -1,5 +1,6 @@
 import * as type from 'actions/types';
 import dotProp from 'dot-prop-immutable';
+import { cloneDeep } from 'lodash';
 
 const initialState = {
     selectedTool: 'tableSelect', // possible values: 'tableSelect'
@@ -43,7 +44,7 @@ export default (state = initialState, action) => {
         case type.PDF_ANNOTATION_UPDATE_TABLE_DATA: {
             const { dataChanges, id } = action.payload;
 
-            const newData = state.tableData[id].slice(0);
+            const newData = cloneDeep([...state.tableData[id].slice(0)]);
 
             for (const [row, column, , newValue] of dataChanges) {
                 newData[row][column] = newValue;

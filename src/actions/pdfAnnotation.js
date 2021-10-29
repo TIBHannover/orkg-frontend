@@ -131,12 +131,12 @@ export const convertPdf = ({ files }) => dispatch => {
             const parseData = parse(data, {
                 style: true // retrieve content in <style> (hurts performance but required)
             });
-            const pages = parseData.querySelectorAll('.pf');
-            const styles = parseData.querySelectorAll('style');
+            const pages = parseData.querySelectorAll('.pf').map(page => page.outerHTML);
+            const styles = parseData.querySelectorAll('style').map(style => style.outerHTML);
 
             dispatch(
                 setFile({
-                    pdf,
+                    pdf: window.URL.createObjectURL(pdf),
                     pages,
                     styles
                 })
@@ -175,7 +175,6 @@ export const parsePdf = ({ pdf }) => dispatch => {
                 return response.text();
             }
         })
-        .then(str => new window.DOMParser().parseFromString(str, 'text/xml')) // parse as xml
         .then(function(data) {
             dispatch(setParsedPdfData(data));
         })

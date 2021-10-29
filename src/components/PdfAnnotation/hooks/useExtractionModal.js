@@ -5,7 +5,7 @@ import { setTableData } from 'actions/pdfAnnotation';
 import { toast } from 'react-toastify';
 import { readString } from 'react-papaparse';
 import { useSelector, useDispatch } from 'react-redux';
-import { zip, omit, isString } from 'lodash';
+import { zip, omit, isString, cloneDeep } from 'lodash';
 import { PREDICATES, MISC } from 'constants/graphSettings';
 import { getStatementsBySubject } from 'services/backend/statements';
 import { saveFullPaper } from 'services/backend/papers';
@@ -22,48 +22,51 @@ function useExtractionModal(props) {
     const extractionSuccessful = tableData && tableData.length > 0;
 
     useEffect(() => {
-        // only extract the table if it hasn't been extracted yet
-        if (tableData) {
-            return;
-        }
-
-        const csvTableToObject = csv => {
-            let fullData = [];
-
-            if (csv.length) {
-                fullData = readString(csv, {})['data']; //.join('\n')
+        const performTableExtraction = async () => {
+            // only extract the table if it hasn't been extracted yet
+            if (tableData) {
+                return;
             }
 
-            dispatch(setTableData(props.id, fullData));
-        };
+            const csvTableToObject = csv => {
+                let fullData = [];
 
-        setLoading(true);
-
-        const { x, y, w, h } = props.region;
-
-        const form = new FormData();
-        form.append('pdf', pdf);
-        form.append('region', pxToPoint(y) + ',' + pxToPoint(x) + ',' + pxToPoint(y + h) + ',' + pxToPoint(x + w));
-        form.append('page_number', props.pageNumber);
-
-        fetch(env('ANNOTATION_SERVICE_URL') + 'extractTable/', {
-            method: 'POST',
-            body: form
-        })
-            .then(response => {
-                if (!response.ok) {
-                    console.log('err');
-                } else {
-                    return response.json();
+                if (csv.length) {
+                    fullData = readString(csv, {})['data']; //.join('\n')
                 }
+
+                dispatch(setTableData(props.id, fullData));
+            };
+
+            setLoading(true);
+
+            const { x, y, w, h } = props.region;
+
+            const form = new FormData();
+            form.append('pdf', await fetch(pdf).then(content => content.blob()));
+            form.append('region', pxToPoint(y) + ',' + pxToPoint(x) + ',' + pxToPoint(y + h) + ',' + pxToPoint(x + w));
+            form.append('page_number', props.pageNumber);
+
+            fetch(env('ANNOTATION_SERVICE_URL') + 'extractTable/', {
+                method: 'POST',
+                body: form
             })
-            .then(function(data) {
-                csvTableToObject(data);
-                setLoading(false);
-            })
-            .catch(err => {
-                console.log(err);
-            });
+                .then(response => {
+                    if (!response.ok) {
+                        console.log('err');
+                    } else {
+                        return response.json();
+                    }
+                })
+                .then(function(data) {
+                    csvTableToObject(data);
+                    setLoading(false);
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+        };
+        performTableExtraction();
     }, [props.region, props.pageNumber, props.id, pdf, dispatch, tableData]);
 
     const pxToPoint = x => (x * 72) / 96;
@@ -294,7 +297,7 @@ function useExtractionModal(props) {
     };
 
     const transposeTable = () => {
-        const transposed = zip(...tableData);
+        const transposed = zip(...cloneDeep(tableData));
         dispatch(setTableData(props.id, transposed));
     };
 
