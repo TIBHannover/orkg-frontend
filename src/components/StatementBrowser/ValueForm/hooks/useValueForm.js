@@ -88,7 +88,7 @@ const useValueForm = ({ valueId, resourceId, propertyId, syncBackend }) => {
 
     const schema = useSelector(state => {
         const components = getComponentsByResourceIDAndPredicateID(state, resourceId, property?.existingPredicateId);
-        if (valueClass && ['Date', 'Number', 'String', 'Boolean', 'Integer', 'URI'].includes(valueClass.id)) {
+        if (valueClass && [CLASSES.DATE, CLASSES.DECIMAL, CLASSES.STRING, CLASSES.BOOLEAN, CLASSES.INTEGER, CLASSES.URI].includes(valueClass.id)) {
             let component;
             if (components && components.length > 0) {
                 component = components[0];
@@ -157,17 +157,17 @@ const useValueForm = ({ valueId, resourceId, propertyId, syncBackend }) => {
     const getDataType = () => {
         if (valueClass && entityType === ENTITIES.LITERAL) {
             switch (valueClass.id) {
-                case 'String':
+                case CLASSES.STRING:
                     return MISC.DEFAULT_LITERAL_DATATYPE;
-                case 'Number':
+                case CLASSES.DECIMAL:
                     return 'xsd:decimal';
-                case 'Integer':
+                case CLASSES.INTEGER:
                     return 'xsd:integer';
-                case 'Date':
+                case CLASSES.DATE:
                     return 'xsd:date';
-                case 'Boolean':
+                case CLASSES.BOOLEAN:
                     return 'xsd:boolean';
-                case 'URI':
+                case CLASSES.URI:
                     return 'xsd:anyURI';
                 default:
                     return MISC.DEFAULT_LITERAL_DATATYPE;

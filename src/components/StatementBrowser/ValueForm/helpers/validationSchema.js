@@ -1,25 +1,26 @@
 import Joi from 'joi';
+import { CLASSES } from 'constants/graphSettings';
 
 export default function validationSchema(component) {
     let schema;
     if (component.value) {
         switch (component.value.id) {
-            case 'Date':
+            case CLASSES.DATE:
                 schema = Joi.date().iso();
                 break;
-            case 'Number':
+            case CLASSES.DECIMAL:
                 schema = Joi.number();
                 break;
-            case 'String':
+            case CLASSES.STRING:
                 schema = Joi.string();
                 break;
-            case 'Integer':
+            case CLASSES.INTEGER:
                 schema = Joi.number().integer();
                 break;
-            case 'Boolean':
+            case CLASSES.BOOLEAN:
                 schema = Joi.boolean();
                 break;
-            case 'URI':
+            case CLASSES.URI:
                 schema = Joi.string().uri();
                 break;
             default:
