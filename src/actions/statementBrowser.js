@@ -443,7 +443,7 @@ export function createProperty(data) {
                 });
                 if (isExistingProperty) {
                     // Property exists already
-                    toast.info('This property exists already!');
+                    toast.info(`The property ${data.label} exists already!`);
                     return null;
                 }
             }

@@ -40,9 +40,9 @@ const ValueItem = props => {
     const existingResourceId = resource ? resource.existingResourceId : false;
     let handleOnClick = null;
 
-    if (value._class === ENTITIES.RESOURCE && (existingResourceId || props.contextStyle !== 'StatementBrowser') && openExistingResourcesInDialog) {
+    if (value._class !== ENTITIES.LITERAL && (existingResourceId || props.contextStyle !== 'StatementBrowser') && openExistingResourcesInDialog) {
         handleOnClick = handleExistingResourceClick;
-    } else if (value._class === ENTITIES.RESOURCE) {
+    } else if (value._class !== ENTITIES.LITERAL) {
         handleOnClick = handleResourceClick;
     }
 
