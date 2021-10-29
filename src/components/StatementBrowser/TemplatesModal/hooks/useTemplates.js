@@ -206,7 +206,7 @@ const useTemplates = ({ onlyFeatured = true }) => {
     return {
         filterOptions,
         templates: differenceBy(uniqBy(templates, 'id'), usedTemplates, 'id'),
-        featuredTemplates: featuredTemplates,
+        featuredTemplates: differenceBy(featuredTemplates, usedTemplates, 'id'),
         usedTemplates,
         isLoadingUsedTemplates,
         researchField,

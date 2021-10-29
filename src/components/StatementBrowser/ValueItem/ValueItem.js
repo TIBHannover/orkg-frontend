@@ -143,7 +143,7 @@ const ValueItem = props => {
                                             </ValuePlugins>
                                             {preferences['showLiteralDataTypes'] && (
                                                 <small>
-                                                    <Badge color="light" className="ml-2">
+                                                    <Badge color="light" className="ml-2" title={value.datatype}>
                                                         {DATA_TYPES.find(dt => dt.type === value.datatype)?.name ?? value.datatype}
                                                     </Badge>
                                                 </small>
