@@ -46,6 +46,7 @@ const useValueItem = ({ valueId, propertyId }) => {
             dispatch(
                 fetchStatementsForResource({
                     resourceId: existingResourceId,
+                    rootNodeType: resource._class,
                     depth: 3
                 })
             );
@@ -80,7 +81,8 @@ const useValueItem = ({ valueId, propertyId }) => {
             if (existingResourceId && !resource.isFetched && !resource.isFetching && value?._class !== ENTITIES.LITERAL) {
                 return dispatch(
                     fetchStatementsForResource({
-                        resourceId: existingResourceId
+                        resourceId: existingResourceId,
+                        rootNodeType: resource._class
                     })
                 ).then(() => {
                     return dispatch(generatedFormattedLabel(resource, labelFormat));
