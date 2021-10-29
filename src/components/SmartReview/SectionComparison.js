@@ -24,10 +24,14 @@ const SectionComparison = ({ id, sectionId }) => {
         dispatch(
             setComparisonData({
                 id,
-                data: comparisonData
+                data: {
+                    data,
+                    properties,
+                    metaData: comparisonData.metaData
+                }
             })
         );
-    }, [comparisonData, dispatch, id]);
+    }, [comparisonData, data, dispatch, id, properties]);
 
     useEffect(() => {
         const paperIds = contributions.map(contribution => contribution.paperId);

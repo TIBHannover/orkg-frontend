@@ -3,7 +3,7 @@ import { FILTER_TYPES } from 'constants/comparisonFilterTypes';
 import { CLASSES, MISC, PREDICATES, ENTITIES } from 'constants/graphSettings';
 import { PREDICATE_TYPE_ID, RESOURCE_TYPE_ID } from 'constants/misc';
 import ROUTES from 'constants/routes';
-import { find, flatten, flattenDepth, isEqual, isString, last, uniq, sortBy, uniqBy, isEmpty } from 'lodash';
+import { find, flatten, flattenDepth, isEqual, isString, last, uniq, sortBy, uniqBy, isEmpty, cloneDeep } from 'lodash';
 import { unescape } from 'he';
 import { reverse } from 'named-urls';
 import queryString from 'query-string';
@@ -824,7 +824,7 @@ export async function saveAuthors({ prevAuthors, newAuthors, paperId }) {
     deleteStatementsByIds(statementsIds);
 
     // Add all authors from the state
-    const authors = newAuthors;
+    const authors = cloneDeep(newAuthors);
     for (const [i, author] of newAuthors.entries()) {
         // create the author
         if (author.orcid) {
