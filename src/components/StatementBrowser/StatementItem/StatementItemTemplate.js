@@ -44,7 +44,7 @@ const StatementItemTemplate = forwardRef((props, ref) => {
                                 <div className={propertyOptionsClasses}>
                                     {!props.property.isSaving && (
                                         <StatementActionButton
-                                            isDisabled={!canDeleteProperty}
+                                            isDisabled={!canDeleteProperty || props.property.isDeleting}
                                             title={
                                                 canDeleteProperty
                                                     ? 'Change property'

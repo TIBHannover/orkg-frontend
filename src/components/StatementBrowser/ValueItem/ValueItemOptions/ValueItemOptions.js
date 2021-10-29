@@ -74,6 +74,7 @@ const ValueItemOptions = ({ id, enableEdit, syncBackend, handleOnClick }) => {
                                 <StatementActionButton
                                     title="Edit value"
                                     icon={faPen}
+                                    isDisabled={value.isDeleting}
                                     action={hasFormattedLabel ? handleOnClick : () => dispatch(toggleEditValue({ id: id }))}
                                 />
                             )}
