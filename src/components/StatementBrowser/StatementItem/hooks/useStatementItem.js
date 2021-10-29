@@ -13,12 +13,24 @@ import { getResource } from 'services/backend/resources';
 import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
 import { guid } from 'utils';
+import { canAddValue as canAddValueAction, canDeleteProperty as canDeletePropertyAction } from 'actions/statementBrowser';
+import classNames from 'classnames';
 
 function useStatementItem({ propertyId, resourceId, syncBackend }) {
     const dispatch = useDispatch();
     const property = useSelector(state => state.statementBrowser.properties.byId[propertyId]);
     const values = useSelector(state => state.statementBrowser.values);
     const [predicateLabel, setPredicateLabel] = useState(property.label);
+
+    const canAddValue = useSelector(state => canAddValueAction(state, resourceId ? resourceId : state.statementBrowser.selectedResource, propertyId));
+    const canDeleteProperty = useSelector(state =>
+        canDeletePropertyAction(state, resourceId ? resourceId : state.statementBrowser.selectedResource, propertyId)
+    );
+    const propertiesAsLinks = useSelector(state => state.statementBrowser.propertiesAsLinks);
+
+    const propertyOptionsClasses = classNames({
+        propertyOptions: true
+    });
 
     useEffect(() => {
         const getPredicateLabel = () => {
@@ -133,6 +145,17 @@ function useStatementItem({ propertyId, resourceId, syncBackend }) {
         [changePredicate, dispatch, predicateLabel, property.existingPredicateId, propertyId, syncBackend]
     );
 
-    return { property, predicateLabel, handleChange, handleDeleteStatement };
+    return {
+        propertiesAsLinks,
+        propertyOptionsClasses,
+        canDeleteProperty,
+        dispatch,
+        values,
+        canAddValue,
+        property,
+        predicateLabel,
+        handleChange,
+        handleDeleteStatement
+    };
 }
 export default useStatementItem;
