@@ -4,19 +4,14 @@ import { mergeWith, isArray, uniqBy } from 'lodash';
 import {
     createResource,
     selectResource,
-    createProperty,
-    createValue,
     loadStatementBrowserData,
     updateContributionLabel as updateContributionLabelInSB,
     fetchTemplatesOfClassIfNeeded
 } from './statementBrowser';
-import { createResource as createResourceApi } from 'services/backend/resources';
-import { createResourceStatement, createLiteralStatement } from 'services/backend/statements';
+import { fillStatements } from './statementBrowser';
 import { saveFullPaper } from 'services/backend/papers';
-import { createLiteral } from 'services/backend/literals';
-import { createPredicate } from 'services/backend/predicates';
 import { toast } from 'react-toastify';
-import { ENTITIES, CLASSES } from 'constants/graphSettings';
+import { CLASSES } from 'constants/graphSettings';
 
 export const updateGeneralData = data => dispatch => {
     dispatch({
@@ -179,86 +174,6 @@ export const createContribution = ({ selectAfterCreation = false, fillStatements
             })
         );
     }
-};
-
-/**
- * Fill the statements of a resource
- * (e.g : new store to show resource in dialog)
- * @param {Object} statements - Statement
- * @param {Array} statements.properties - The properties
- * @param {Array} statements.values - The values
- * @param {string} resourceId - The target resource ID
- * @param {boolean} syncBackend - Sync the fill with the backend
- */
-export const fillStatements = ({ statements, resourceId, syncBackend = false }) => async (dispatch, getState) => {
-    // properties
-    for (const property of statements.properties) {
-        dispatch(
-            createProperty({
-                propertyId: property.propertyId ? property.propertyId : guid(),
-                existingPredicateId: property.existingPredicateId,
-                resourceId: resourceId,
-                label: property.label,
-                isAnimated: property.isAnimated !== undefined ? property.isAnimated : false,
-                canDuplicate: property.canDuplicate ? true : false
-            })
-        );
-    }
-
-    // values
-    for (const value of statements.values) {
-        /**
-         * The resource ID of the value
-         * @type {string}
-         */
-        let newObject = null;
-        /**
-         * The statement of the value
-         * @type {string}
-         */
-        let newStatement = null;
-        /**
-         * The value ID in the statement browser
-         * @type {string}
-         */
-        const valueId = guid();
-
-        if (syncBackend) {
-            const predicate = getState().statementBrowser.properties.byId[value.propertyId];
-            if (value.existingResourceId) {
-                // The value exist in the database
-                newStatement = await createResourceStatement(resourceId, predicate.existingPredicateId, value.existingResourceId);
-            } else {
-                // The value doesn't exist in the database
-                switch (value._class) {
-                    case ENTITIES.RESOURCE:
-                        newObject = await createResourceApi(value.label, value.classes ? value.classes : []);
-                        newStatement = await createResourceStatement(resourceId, predicate.existingPredicateId, newObject.id);
-                        break;
-                    case ENTITIES.PREDICATE:
-                        newObject = await createPredicate(value.label);
-                        newStatement = await createResourceStatement(resourceId, predicate.existingPredicateId, newObject.id);
-                        break;
-                    default:
-                        newObject = await createLiteral(value.label, value.datatype);
-                        newStatement = await createLiteralStatement(resourceId, predicate.existingPredicateId, newObject.id);
-                }
-            }
-        }
-
-        dispatch(
-            createValue({
-                valueId: value.valueId ? value.valueId : valueId,
-                ...value,
-                propertyId: value.propertyId,
-                existingResourceId: syncBackend && newObject ? newObject.id : value.existingResourceId ? value.existingResourceId : null,
-                isExistingValue: syncBackend ? true : value.isExistingValue ? value.isExistingValue : false,
-                statementId: newStatement ? newStatement.id : null
-            })
-        );
-    }
-
-    return Promise.resolve();
 };
 
 export const toggleAbstractDialog = data => dispatch => {

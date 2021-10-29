@@ -8,10 +8,10 @@ import {
     getValueClass,
     isLiteral,
     isAddingValue,
-    doneAddingValue
+    doneAddingValue,
+    fillStatements
 } from 'actions/statementBrowser';
 import { createResourceStatement } from 'services/backend/statements';
-import { fillStatements } from 'actions/addPaper';
 import { createLiteral } from 'services/backend/literals';
 import { createPredicate } from 'services/backend/predicates';
 import { createResource } from 'services/backend/resources';
