@@ -87,7 +87,7 @@ const Statements = props => {
         let shared = 1;
         if (resource && selectedResource) {
             propertyIds = resource && isArray(resource.propertyIds) ? resource.propertyIds : [];
-            shared = resource ? resource.shared : 0;
+            shared = resource?.shared ?? 0;
         }
 
         return (
