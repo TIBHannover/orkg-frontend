@@ -14,7 +14,7 @@
         "@reduxjs/toolkit": "^1.6.2",
         "@tippyjs/react": "^4.2.5",
         "@trainiac/html2canvas": "^1.0.0",
-        "@webscopeio/react-textarea-autocomplete": "^4.7.3",
+        "@webscopeio/react-textarea-autocomplete": "^4.8.1",
         "@xobotyi/scrollbar-width": "^1.9.5",
         "array-move": "^3.0.1",
         "body-scroll-lock": "^3.1.5",

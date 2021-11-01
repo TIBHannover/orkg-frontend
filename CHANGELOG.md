@@ -3,6 +3,13 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [V0.52.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.52...V0.52.1) - 2021-10-21
+
+### Changes
+
+- fix(ContributionEditor): reset datatype on close, support for creating duplicate resources [`#705`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/705)
+
+---
 ## [V0.52](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.51...V0.52) - 2021-10-18
 
 ### Changes
