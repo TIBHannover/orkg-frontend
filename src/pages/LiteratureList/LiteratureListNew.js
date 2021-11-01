@@ -2,18 +2,22 @@ import { faQuestionCircle, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import TitleBar from 'components/TitleBar/TitleBar';
-import { CLASSES } from 'constants/graphSettings';
+import { CLASSES, PREDICATES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { Button, Container, FormGroup, Input, Label } from 'reactstrap';
+import { createLiteral } from 'services/backend/literals';
 import { createResource } from 'services/backend/resources';
+import { createLiteralStatement } from 'services/backend/statements';
 
 const LiteratureListNew = () => {
     const [title, setTitle] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const displayName = useSelector(state => state.auth.user.displayName);
     const history = useHistory();
 
     useEffect(() => {
@@ -28,6 +32,8 @@ const LiteratureListNew = () => {
 
         setIsLoading(true);
         const { id } = await createResource(title, [CLASSES.LITERATURE_LIST]);
+        const nameLiteral = await createLiteral(displayName);
+        await createLiteralStatement(id, PREDICATES.HAS_AUTHOR, nameLiteral.id);
         history.push(reverse(ROUTES.LITERATURE_LIST, { id }));
         setIsLoading(false);
     };

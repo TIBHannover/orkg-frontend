@@ -60,7 +60,7 @@ const ViewList = () => {
                         if (section.type === CLASSES.TEXT_SECTION) {
                             return (
                                 <section key={section.id}>
-                                    <h2 className="h4 mt-4">{section.title}</h2>
+                                    <h2 className={`h${section?.heading?.level} mt-4`}>{section.title}</h2>
                                     {section.content.text}
                                 </section>
                             );

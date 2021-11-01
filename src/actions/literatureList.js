@@ -86,6 +86,19 @@ export const updateSectionTitle = ({ sectionId, title }) => async dispatch => {
     dispatch(setIsLoading(false));
 };
 
+export const updateSectionHeadingLevel = ({ id, level }) => async dispatch => {
+    dispatch({
+        type: type.LITERATURE_LIST_UPDATE_SECTION_HEADING_LEVEL,
+        payload: {
+            level,
+            id
+        }
+    });
+    dispatch(setIsLoading(true));
+    await updateLiteral(id, level);
+    dispatch(setIsLoading(false));
+};
+
 export const updateSectionMarkdown = ({ id, markdown }) => async dispatch => {
     dispatch({
         type: type.LITERATURE_LIST_UPDATE_SECTION_MARKDOWN,
@@ -126,7 +139,8 @@ export const createSection = ({ listId, afterIndex, sectionType }) => async (dis
     let typeId = '';
     let sectionResourceId = null;
     let markdownLiteralId = null;
-
+    let headingLiteralId = null;
+    const headingLevel = 2;
     if (sectionType === 'text') {
         // markdown section
         typeId = CLASSES.TEXT_SECTION;
@@ -137,6 +151,9 @@ export const createSection = ({ listId, afterIndex, sectionType }) => async (dis
         await createLiteralStatement(sectionResource.id, PREDICATES.HAS_CONTENT, markdownLiteral.id);
         sectionResourceId = sectionResource.id;
         markdownLiteralId = markdownLiteral.id;
+        const headingLiteral = await createLiteral(headingLevel);
+        await createLiteralStatement(sectionResource.id, PREDICATES.HAS_HEADING_LEVEL, headingLiteral.id);
+        headingLiteralId = headingLiteral.id;
     } else if (sectionType === 'list') {
         // markdown section
         typeId = CLASSES.LIST_SECTION;
@@ -151,6 +168,8 @@ export const createSection = ({ listId, afterIndex, sectionType }) => async (dis
             afterIndex,
             sectionId: sectionResourceId,
             markdownId: markdownLiteralId,
+            headingId: headingLiteralId,
+            headingLevel,
             typeId
         }
     });

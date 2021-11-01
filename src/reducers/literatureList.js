@@ -79,6 +79,12 @@ const literatureList = (state = initialState, action) => {
             return dotProp.set(state, `sections.${index}.content.text`, markdown);
         }
 
+        case type.LITERATURE_LIST_UPDATE_SECTION_HEADING_LEVEL: {
+            const { id, level } = action.payload;
+            const index = state.sections.findIndex(section => section.heading && section.heading.id === id);
+            return dotProp.set(state, `sections.${index}.heading.level`, level);
+        }
+
         case type.LITERATURE_LIST_DELETE_SECTION: {
             const { id } = action.payload;
             const index = state.sections.findIndex(section => section.id === id);
@@ -86,7 +92,7 @@ const literatureList = (state = initialState, action) => {
         }
 
         case type.LITERATURE_LIST_CREATE_SECTION: {
-            const { afterIndex, sectionId, markdownId, typeId } = action.payload;
+            const { afterIndex, sectionId, markdownId, typeId, headingId, headingLevel } = action.payload;
 
             return {
                 ...state,
@@ -100,6 +106,12 @@ const literatureList = (state = initialState, action) => {
                             ? {
                                   id: markdownId,
                                   text: ''
+                              }
+                            : undefined,
+                        heading: headingId
+                            ? {
+                                  id: headingId,
+                                  level: headingLevel
                               }
                             : undefined,
                         entries: []

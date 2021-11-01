@@ -32,7 +32,7 @@ const EditTitle = () => {
 
     return (
         <SectionStyled className="box rounded mb-1">
-            <h1 className="h2 py-2 m-0">
+            <h1 className="py-2 m-0">
                 <EditableTitle
                     className="focus-primary"
                     value={title}

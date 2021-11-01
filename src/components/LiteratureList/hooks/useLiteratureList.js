@@ -103,12 +103,15 @@ const useLiteratureList = () => {
             const sectionStatements = getStatementsBySubjectId(statements, section.id);
             sectionResources[index].statements = sectionStatements;
             const type = section.classes.length > 1 ? section.classes.find(_class => _class !== CLASSES.SECTION) : section.classes[0];
-            let content = null;
-            let entries = null;
 
-            // TODO: support for list section
+            const sectionData = {
+                id: section.id,
+                title: section.label,
+                type
+            };
+
             if ([CLASSES.LIST_SECTION].includes(type)) {
-                entries = section.statements
+                sectionData.entries = section.statements
                     .filter(statement => statement.predicate.id === PREDICATES.HAS_ENTRY)
                     .map(statement => {
                         const entry = statement.object;
@@ -130,19 +133,19 @@ const useLiteratureList = () => {
                     .reverse();
             } else if ([CLASSES.TEXT_SECTION].includes(type)) {
                 const contentStatement = section.statements.find(statement => statement.predicate.id === PREDICATES.HAS_CONTENT);
-                content = {
+                sectionData.content = {
                     id: contentStatement?.object?.id,
                     text: contentStatement?.object?.label
                 };
+
+                const headingStatement = section.statements.find(statement => statement.predicate.id === PREDICATES.HAS_HEADING_LEVEL);
+                sectionData.heading = {
+                    id: headingStatement?.object?.id,
+                    level: headingStatement?.object?.label
+                };
             }
 
-            sections.push({
-                id: section.id,
-                title: section.label,
-                type,
-                content,
-                entries
-            });
+            sections.push(sectionData);
         }
 
         const contributors = getAllContributors(statements);
