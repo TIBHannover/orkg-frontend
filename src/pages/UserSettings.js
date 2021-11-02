@@ -53,22 +53,22 @@ const UserSettings = () => {
                     <div className="col-3 justify-content-center">
                         <Container className="box rounded p-3">
                             <StyledSettingsMenu>
-                                <Link to={reverse(ROUTES.USER_SETTINGS, { tab: 'general' })} className={activeTab === 'general' && 'active'}>
+                                <Link to={reverse(ROUTES.USER_SETTINGS, { tab: 'general' })} className={activeTab === 'general' ? 'active' : ''}>
                                     General settings
                                 </Link>
-                                <Link to={reverse(ROUTES.USER_SETTINGS, { tab: 'password' })} className={activeTab === 'password' && 'active'}>
+                                <Link to={reverse(ROUTES.USER_SETTINGS, { tab: 'password' })} className={activeTab === 'password' ? 'active' : ''}>
                                     Password
                                 </Link>
                                 <hr />
                                 <Link
                                     to={reverse(ROUTES.USER_SETTINGS, { tab: 'draft-comparisons' })}
-                                    className={activeTab === 'draft-comparisons' && 'active'}
+                                    className={activeTab === 'draft-comparisons' ? 'active' : ''}
                                 >
                                     Draft comparisons
                                 </Link>
                                 <Link
                                     to={reverse(ROUTES.USER_SETTINGS, { tab: 'draft-smart-reviews' })}
-                                    className={activeTab === 'draft-smart-reviews' && 'active'}
+                                    className={activeTab === 'draft-smart-reviews' ? 'active' : ''}
                                 >
                                     Draft SmartReviews
                                 </Link>
