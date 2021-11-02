@@ -238,9 +238,15 @@ export const updateResource = ({ statementId, action, resourceId = null, resourc
 export const updateLiteral = payload => async dispatch => {
     const { id, label, datatype } = payload;
     dispatch(setIsLoading(true));
-    dispatch(literalUpdated(payload));
-    await updateLiteralApi(id, label, datatype);
-    dispatch(setIsLoading(false));
+    updateLiteralApi(id, label, datatype)
+        .then(() => {
+            dispatch(literalUpdated(payload));
+            dispatch(setIsLoading(false));
+        })
+        .catch(() => {
+            toast.error(`Something went wrong while updating the literal.`);
+            dispatch(setIsLoading(false));
+        });
 };
 
 export const deleteStatement = id => dispatch => {
