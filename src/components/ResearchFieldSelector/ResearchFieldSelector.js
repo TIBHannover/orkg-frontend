@@ -240,11 +240,12 @@ const ResearchFieldSelector = ({ selectedResearchField, researchFields, updateRe
                 color="link"
                 disabled={!find(researchFields, f => f.isExpanded)}
                 className="float-right pr-0"
-                onClick={() =>
+                onClick={() => {
+                    const fields = cloneDeep(researchFields);
                     updateResearchField({
-                        researchFields: researchFields.map(f => set(f, 'isExpanded', false))
-                    })
-                }
+                        researchFields: fields.map(f => set(f, 'isExpanded', false))
+                    });
+                }}
             >
                 <Icon icon={faMinusSquare} /> Collapse all
             </CollapseButton>
