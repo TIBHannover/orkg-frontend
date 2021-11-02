@@ -3,14 +3,14 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import ListPage from 'components/ListPage/ListPage';
 import ListCard from 'components/LiteratureList/ListCard';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
-import { CLASSES } from 'constants/graphSettings';
+import { CLASSES, PREDICATES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import { groupBy } from 'lodash';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { getResourcesByClass } from 'services/backend/resources';
 import { getStatementsBySubjects } from 'services/backend/statements';
-import { getSmartReviewData } from 'utils';
+import { filterObjectOfStatementsByPredicateAndClass } from 'utils';
 
 const LiteratureLists = () => {
     const user = useSelector(state => state.auth.user);
@@ -31,11 +31,30 @@ const LiteratureLists = () => {
         if (resources.length) {
             items = await getStatementsBySubjects({ ids: resources.map(item => item.id) }).then(statements =>
                 statements.map(statementsForSubject => {
-                    return getSmartReviewData(resources.find(resource => resource.id === statementsForSubject.id), statementsForSubject.statements);
+                    const resource = resources.find(_resource => _resource.id === statementsForSubject.id);
+                    const _statements = statementsForSubject.statements;
+                    const description = filterObjectOfStatementsByPredicateAndClass(_statements, PREDICATES.DESCRIPTION, true);
+                    const listId = filterObjectOfStatementsByPredicateAndClass(_statements, PREDICATES.HAS_LIST, true)?.id;
+                    const researchField = filterObjectOfStatementsByPredicateAndClass(
+                        _statements,
+                        PREDICATES.HAS_RESEARCH_FIELD,
+                        true,
+                        CLASSES.RESEARCH_FIELD
+                    );
+                    const authors = filterObjectOfStatementsByPredicateAndClass(_statements, PREDICATES.HAS_AUTHOR, false);
+                    return {
+                        ...resource,
+                        id: resource.id,
+                        label: resource.label ? resource.label : 'No Title',
+                        description: description?.label ?? '',
+                        researchField,
+                        authors,
+                        listId
+                    };
                 })
             );
-            const groupedByPaper = groupBy(items, 'paperId');
-            items = Object.keys(groupedByPaper).map(paperId => [...groupedByPaper[paperId]]);
+            const groupedByPaper = groupBy(items, 'listId');
+            items = Object.keys(groupedByPaper).map(listId => [...groupedByPaper[listId]]);
         }
 
         return {
