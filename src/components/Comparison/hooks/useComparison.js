@@ -257,12 +257,12 @@ function useComparison({ id }) {
      * @return {Array} list of properties extended and sorted
      */
     const extendAndSortProperties = useCallback(
-        (comparisonData, cType) => {
+        (comparisonData, _comparisonType) => {
             // if there are properties in the query string
             if (predicatesList.length > 0) {
                 // Create an extended version of propertyIds (ADD the IDs of similar properties)
                 // Only use this on the 'merge' method because the if it's used in 'path' method, it will show properties that are not activated
-                const extendedPropertyIds = cType === 'merge' ? extendPropertyIds(predicatesList, comparisonData.data) : predicatesList;
+                const extendedPropertyIds = _comparisonType === 'merge' ? extendPropertyIds(predicatesList, comparisonData.data) : predicatesList;
                 // sort properties based on query string (is not presented in query string, sort at the bottom)
                 // TODO: sort by label when is not active
                 comparisonData.properties.sort((a, b) => {
