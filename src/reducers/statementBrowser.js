@@ -31,7 +31,7 @@ const initialState = {
         showClasses: getPreferenceFromCookies('showClasses') ?? false,
         showStatementInfo: getPreferenceFromCookies('showStatementInfo') ?? true,
         showValueInfo: getPreferenceFromCookies('showValueInfo') ?? true,
-        showLiteralDataTypes: getPreferenceFromCookies('showLiteralDataTypes') ?? false
+        showLiteralDataTypes: getPreferenceFromCookies('showLiteralDataTypes') ?? true
     },
     resources: {
         byId: {},
@@ -669,7 +669,13 @@ export default (state = initialState, action) => {
         }
 
         case type.RESET_STATEMENT_BROWSER: {
-            return initialState;
+            const newState = dotProp.set(initialState, `preferences`, {
+                showClasses: getPreferenceFromCookies('showClasses') ?? false,
+                showStatementInfo: getPreferenceFromCookies('showStatementInfo') ?? true,
+                showValueInfo: getPreferenceFromCookies('showValueInfo') ?? true,
+                showLiteralDataTypes: getPreferenceFromCookies('showLiteralDataTypes') ?? false
+            });
+            return newState;
         }
 
         case '@@router/LOCATION_CHANGE': {

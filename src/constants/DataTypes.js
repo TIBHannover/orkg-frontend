@@ -77,7 +77,7 @@ const DATA_TYPES = [
             .message(`"value" must be a valid URL`),
         inputFormType: 'text',
         weight: 1
-    },
+    } /*,
     {
         name: 'Class',
         type: ENTITIES.CLASS,
@@ -95,7 +95,7 @@ const DATA_TYPES = [
         schema: Joi.string(),
         inputFormType: 'autocomplete',
         weight: 0
-    }
+    }*/
 ];
 
 export const getConfigByType = type => {
