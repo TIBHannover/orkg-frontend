@@ -3,7 +3,6 @@ import * as type from '../actions/types';
 const initialState = {
     annotations: [],
     pdf: null,
-    pdf: null,
     isLoadedPdfViewer: false,
     zoom: 1.2,
     showHighlights: false,
@@ -98,6 +97,7 @@ export default (state = initialState, action) => {
         }
 
         case type.PDF_TEXT_ANNOTATION_RESET: {
+            window.URL.revokeObjectURL(state.pdf);
             return initialState;
         }
 

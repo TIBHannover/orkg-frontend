@@ -1,7 +1,7 @@
 import { guid } from 'utils';
 import { createSlice } from '@reduxjs/toolkit';
 import { getStatementsByObjectAndPredicate, getStatementsBySubjects, updateStatement } from 'services/backend/statements';
-import { CLASSES, PREDICATES } from 'constants/graphSettings';
+import { CLASSES, ENTITIES, PREDICATES } from 'constants/graphSettings';
 import { createResource as createResourceApi, getResource } from 'services/backend/resources';
 import { toast } from 'react-toastify';
 import { createLiteral as createLiteralApi, updateLiteral as updateLiteralApi } from 'services/backend/literals';
@@ -51,7 +51,7 @@ export const contributionEditorSlice = createSlice({
         },
         resourceAdded: (state, { payload: { statementId, contributionId, propertyId, resource } }) => {
             state.statements[statementId] = {
-                type: 'resource',
+                type: ENTITIES.RESOURCE,
                 contributionId,
                 propertyId,
                 objectId: resource.id
@@ -64,7 +64,7 @@ export const contributionEditorSlice = createSlice({
         },
         literalAdded: (state, { payload: { statementId, contributionId, propertyId, literal } }) => {
             state.statements[statementId] = {
-                type: 'literal',
+                type: ENTITIES.LITERAL,
                 contributionId,
                 propertyId,
                 objectId: literal.id
@@ -189,10 +189,10 @@ export const loadContributions = contributionIds => async dispatch => {
                 ...property,
                 staticRowId: guid()
             };
-            if (object._class === 'resource') {
+            if (object._class === ENTITIES.RESOURCE) {
                 resources[object.id] = object;
             }
-            if (object._class === 'literal') {
+            if (object._class === ENTITIES.LITERAL) {
                 literals[object.id] = object;
             }
         }

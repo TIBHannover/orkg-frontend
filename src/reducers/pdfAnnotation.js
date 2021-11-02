@@ -152,6 +152,7 @@ export default (state = initialState, action) => {
         }
 
         case type.PDF_ANNOTATION_RESET_DATA: {
+            window.URL.revokeObjectURL(state.pdf);
             return initialState;
         }
 

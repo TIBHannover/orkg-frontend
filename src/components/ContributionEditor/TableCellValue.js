@@ -1,5 +1,4 @@
-import { deleteStatement } from 'slices/contributionEditorSlice';
-import { updateLiteral, updateResource } from 'slices/contributionEditorSlice';
+import { deleteStatement, updateLiteral, updateResource } from 'slices/contributionEditorSlice';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
 import { ItemInnerSeparator } from 'components/Comparison/TableCell';
 import TableCellButtons from 'components/ContributionEditor/TableCellButtons';

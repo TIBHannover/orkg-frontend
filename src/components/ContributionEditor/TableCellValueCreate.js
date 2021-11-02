@@ -1,5 +1,5 @@
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import { createLiteral } from 'slices/contributionEditorSlice';
+import { createLiteral, createResource } from 'slices/contributionEditorSlice';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
 import StatementOptionButton from 'components/StatementBrowser/StatementOptionButton/StatementOptionButton';
 import DatatypeSelector from 'components/StatementBrowser/DatatypeSelector/DatatypeSelector';
@@ -14,7 +14,6 @@ import ConfirmConversionTooltip from 'components/StatementBrowser/ConfirmConvers
 import { InputGroup, FormFeedback } from 'reactstrap';
 import { getConfigByType, getSuggestionByTypeAndValue } from 'constants/DataTypes';
 import styled from 'styled-components';
-import { createResource } from 'slices/contributionEditorSlice';
 
 const CreateButtonContainer = styled.div`
     position: absolute;
