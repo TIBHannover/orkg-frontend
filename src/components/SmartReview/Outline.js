@@ -26,6 +26,8 @@ const Box = styled.div`
     border-radius: ${props => (props.editMode ? '6px' : '6px 0 0 6px')};
     margin-top: ${props => (props.editMode ? '0px' : '150px')};
     padding: 10px;
+    max-height: calc(100vh - 190px);
+    overflow-y: auto;
 
     a:focus {
         color: ${props => props.theme.secondary} !important;
