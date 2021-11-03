@@ -225,14 +225,16 @@ export const updateResource = ({ statementId, action, resourceId = null, resourc
 
     updateStatement(statementId, {
         object_id: resource.id
-    }).catch(() => toast.error(`Error updating statement, please refresh the page`));
-
-    dispatch(
-        resourceUpdated({
-            id: statementId,
-            resource
+    })
+        .then(() => {
+            dispatch(
+                resourceUpdated({
+                    id: statementId,
+                    resource
+                })
+            );
         })
-    );
+        .catch(() => toast.error(`Error updating statement, please refresh the page`));
 };
 
 export const updateLiteral = payload => async dispatch => {
@@ -250,8 +252,11 @@ export const updateLiteral = payload => async dispatch => {
 };
 
 export const deleteStatement = id => dispatch => {
-    deleteStatementById(id).catch(() => toast.error(`Error deleting statement, please refresh the page`));
-    dispatch(statementDeleted(id));
+    deleteStatementById(id)
+        .then(() => {
+            dispatch(statementDeleted(id));
+        })
+        .catch(() => toast.error(`Error deleting statement, please refresh the page`));
 };
 
 export const createResource = ({ contributionId, propertyId, action, classes = [], resourceId = null, resourceLabel = null }) => async dispatch => {
@@ -269,18 +274,22 @@ export const createResource = ({ contributionId, propertyId, action, classes = [
     }
 
     // create the new statement
-    const newStatement = await createResourceStatement(contributionId, propertyId, resource.id);
-
-    dispatch(
-        resourceAdded({
-            statementId: newStatement.id,
-            contributionId,
-            propertyId,
-            resource
+    createResourceStatement(contributionId, propertyId, resource.id)
+        .then(newStatement => {
+            dispatch(
+                resourceAdded({
+                    statementId: newStatement.id,
+                    contributionId,
+                    propertyId,
+                    resource
+                })
+            );
+            dispatch(setIsLoading(false));
         })
-    );
-
-    dispatch(setIsLoading(false));
+        .catch(() => {
+            toast.error(`Something went wrong while creating the resource.`);
+            dispatch(setIsLoading(false));
+        });
 };
 
 export const createLiteral = ({ contributionId, propertyId, label, datatype }) => async dispatch => {
@@ -294,18 +303,22 @@ export const createLiteral = ({ contributionId, propertyId, label, datatype }) =
     }
 
     // create the new statement
-    const newStatement = await createLiteralStatement(contributionId, propertyId, literal.id);
-
-    dispatch(
-        literalAdded({
-            statementId: newStatement.id,
-            contributionId,
-            propertyId,
-            literal
+    createLiteralStatement(contributionId, propertyId, literal.id)
+        .then(newStatement => {
+            dispatch(
+                literalAdded({
+                    statementId: newStatement.id,
+                    contributionId,
+                    propertyId,
+                    literal
+                })
+            );
+            dispatch(setIsLoading(false));
         })
-    );
-
-    dispatch(setIsLoading(false));
+        .catch(() => {
+            toast.error(`Something went wrong while creating the literal.`);
+            dispatch(setIsLoading(false));
+        });
 };
 
 export const createProperty = ({ action, id = null, label = null }) => async dispatch => {
@@ -317,13 +330,18 @@ export const createProperty = ({ action, id = null, label = null }) => async dis
 };
 
 export const deleteProperty = ({ id, statementIds }) => dispatch => {
-    deleteStatementsByIds(statementIds).catch(e => toast.error(`Error deleting statements, please refresh the page`));
-    dispatch(
-        propertyDeleted({
-            id,
-            statementIds
+    deleteStatementsByIds(statementIds)
+        .then(() => {
+            dispatch(
+                propertyDeleted({
+                    id,
+                    statementIds
+                })
+            );
         })
-    );
+        .catch(() => {
+            toast.error(`Error deleting statements, please refresh the page`);
+        });
 };
 
 export const updateProperty = ({ id, statementIds, action, newId = null, newLabel = null }) => async dispatch => {
@@ -332,13 +350,15 @@ export const updateProperty = ({ id, statementIds, action, newId = null, newLabe
         return;
     }
 
-    updateStatements(statementIds, { predicate_id: property.id }).catch(e => toast.error(`Error updating statements, please refresh the page`));
-
-    dispatch(
-        propertyUpdated({
-            id,
-            newProperty: property,
-            statementIds
+    updateStatements(statementIds, { predicate_id: property.id })
+        .then(() => {
+            dispatch(
+                propertyUpdated({
+                    id,
+                    newProperty: property,
+                    statementIds
+                })
+            );
         })
-    );
+        .catch(e => toast.error(`Error updating statements, please refresh the page`));
 };
