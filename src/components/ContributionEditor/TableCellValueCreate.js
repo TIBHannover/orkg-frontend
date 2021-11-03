@@ -1,5 +1,5 @@
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import { createLiteralValue, createResourceValue } from 'actions/contributionEditor';
+import { createLiteral, createResource } from 'slices/contributionEditorSlice';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
 import StatementOptionButton from 'components/StatementBrowser/StatementOptionButton/StatementOptionButton';
 import DatatypeSelector from 'components/StatementBrowser/DatatypeSelector/DatatypeSelector';
@@ -63,7 +63,7 @@ const TableCellValueCreate = ({ isVisible, contributionId, propertyId, isEmptyCe
     const acceptSuggestion = () => {
         confirmConversion.current.hide();
         dispatch(
-            createLiteralValue({
+            createLiteral({
                 contributionId,
                 propertyId,
                 label: value,
@@ -77,7 +77,7 @@ const TableCellValueCreate = ({ isVisible, contributionId, propertyId, isEmptyCe
     const rejectSuggestion = () => {
         if (entityType === 'object') {
             dispatch(
-                createResourceValue({
+                createResource({
                     contributionId,
                     propertyId,
                     resourceId: selectedObject.selected.id ?? null,
@@ -88,7 +88,7 @@ const TableCellValueCreate = ({ isVisible, contributionId, propertyId, isEmptyCe
             );
         } else {
             dispatch(
-                createLiteralValue({
+                createLiteral({
                     contributionId,
                     propertyId,
                     label: value,
@@ -115,7 +115,7 @@ const TableCellValueCreate = ({ isVisible, contributionId, propertyId, isEmptyCe
             } else {
                 if (entityType === 'object') {
                     dispatch(
-                        createResourceValue({
+                        createResource({
                             contributionId,
                             propertyId,
                             resourceId: selected.id ?? null,
@@ -127,7 +127,7 @@ const TableCellValueCreate = ({ isVisible, contributionId, propertyId, isEmptyCe
                     closeCreate();
                 } else {
                     dispatch(
-                        createLiteralValue({
+                        createLiteral({
                             contributionId,
                             propertyId,
                             label: value,

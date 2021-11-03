@@ -1,8 +1,6 @@
 import TableScrollContainer from 'components/Comparison/TableScrollContainer';
-import { PREDICATES } from 'constants/graphSettings';
-import { fireEvent, render, screen, waitFor, within } from 'testUtils';
+import { fireEvent, render, screen, waitFor, within, waitForElementToBeRemoved } from 'testUtils';
 import EditTable from '../EditorTable';
-import selectEvent from 'react-select-event';
 import { contribution, contributionLiteralOnly } from '../__mocks__/ComparisonData';
 
 jest.mock('react-flip-move', () => ({ children }) => children);
@@ -83,6 +81,7 @@ describe('literals', () => {
         const tooltip = screen.getByRole('tooltip', { name: /are you sure to delete?/i });
         fireEvent.click(within(tooltip).getByRole('button', { name: /delete/i }));
 
+        await waitForElementToBeRemoved(() => screen.queryByRole('cell', { name: /test literal/i, hidden: true }));
         expect(screen.queryByRole('cell', { name: /test literal/i, hidden: true })).not.toBeInTheDocument();
     });
 });

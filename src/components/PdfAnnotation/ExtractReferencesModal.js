@@ -4,14 +4,15 @@ import PropTypes from 'prop-types';
 import { updateTableData } from '../../actions/pdfAnnotation';
 import { toast } from 'react-toastify';
 import { useSelector, useDispatch } from 'react-redux';
-import { isString } from 'lodash';
+import { cloneDeep, isString } from 'lodash';
 
 const ExtractReferencesModal = props => {
     const [columns, setColumns] = useState([]);
     const [selectedColumn, setSelectedColumn] = useState('');
     const [formattingType, setFormattingType] = useState('numerical');
+    const [parsedPdfData, setParsePdfData] = useState({});
     const tableData = useSelector(state => state.pdfAnnotation.tableData[props.id]);
-    const parsedPdfData = useSelector(state => state.pdfAnnotation.parsedPdfData);
+    const pdfData = useSelector(state => state.pdfAnnotation.parsedPdfData);
     const cachedLabels = useSelector(state => state.pdfAnnotation.cachedLabels);
     const dispatch = useDispatch();
 
@@ -25,6 +26,11 @@ const ExtractReferencesModal = props => {
         setColumns(columns);
         setSelectedColumn(columns[0]); // select the first option
     }, [tableData, setColumns, setSelectedColumn]);
+
+    useEffect(() => {
+        const parsePdf = async () => setParsePdfData(await new window.DOMParser().parseFromString(pdfData, 'text/xml'));
+        parsePdf();
+    }, [pdfData]);
 
     // builds an object to convert citation keys used in the paper's text (e.g., [10]) and maps them to the internal IDs
     const citationKeyToInternalId = () => {
@@ -53,8 +59,9 @@ const ExtractReferencesModal = props => {
         props.clearImportError();
         const idMapping = citationKeyToInternalId();
         const allReferences = getAllReferences();
-        const tableHead = tableData[0];
-        const tableBody = tableData.slice(1);
+        const _tableData = cloneDeep([...tableData]);
+        const tableHead = _tableData[0];
+        const tableBody = _tableData.slice(1);
         const columnIndex = tableHead.indexOf(selectedColumn);
         const paperColumns = [
             'paper:title',
@@ -67,16 +74,18 @@ const ExtractReferencesModal = props => {
         ];
         const paperColumnsIndex = {};
 
+        const tableUpdates = [];
+
         for (const column of paperColumns) {
             if (tableHead.indexOf(column) === -1) {
-                dispatch(updateTableData(props.id, [[0, tableHead.length, null, column]]));
+                tableUpdates.push([0, tableHead.length, null, column]);
+                tableHead.push(column);
                 paperColumnsIndex[column] = tableHead.length - 1;
             } else {
                 paperColumnsIndex[column] = tableHead.indexOf(column);
             }
         }
 
-        const tableUpdates = [];
         let foundCount = 0;
         for (const [index, row] of tableBody.entries()) {
             const value = formatReferenceValue(row[columnIndex]);
@@ -109,9 +118,9 @@ const ExtractReferencesModal = props => {
                 tableUpdates.push([rowNumber, paperColumnsIndex['paper:doi'], null, reference['doi']]);
                 tableUpdates.push([rowNumber, paperColumnsIndex['paper:authors'], null, reference['authors'].join(';')]);
             }
-
-            dispatch(updateTableData(props.id, tableUpdates));
         }
+
+        dispatch(updateTableData(props.id, tableUpdates));
 
         // close the modal
         props.toggle();

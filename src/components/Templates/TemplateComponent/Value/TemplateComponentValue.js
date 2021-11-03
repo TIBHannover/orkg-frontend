@@ -12,30 +12,32 @@ import PropTypes from 'prop-types';
 import ValidationRules from '../ValidationRules/ValidationRules';
 
 function TemplateComponentValue(props) {
-    const [cardinality, setCaridinality] = useState(!props.minOccurs && !props.maxOccurs ? '0,*' : 'range');
+    const [cardinality, setCardinality] = useState(!props.minOccurs && !props.maxOccurs ? '0,*' : 'range');
     const classAutocompleteRef = useRef(null);
 
     const onChange = event => {
         const templateComponents = props.components.map((item, j) => {
+            const _item = { ...item };
             if (j === props.id) {
-                item[event.target.name] = event.target.value.toString();
+                _item[event.target.name] = event.target.value.toString();
             }
-            return item;
+            return _item;
         });
         props.setComponents(templateComponents);
     };
 
     const onChangeCardinality = event => {
-        setCaridinality(event.target.value);
+        setCardinality(event.target.value);
 
         if (event.target.value !== 'range') {
             const [minOccurs, maxOccurs] = event.target.value.split(',');
             const templateComponents = props.components.map((item, j) => {
+                const _item = { ...item };
                 if (j === props.id) {
-                    item['minOccurs'] = minOccurs;
-                    item['maxOccurs'] = maxOccurs !== '*' ? maxOccurs : '';
+                    _item.minOccurs = minOccurs;
+                    _item.maxOccurs = maxOccurs !== '*' ? maxOccurs : '';
                 }
-                return item;
+                return _item;
             });
             props.setComponents(templateComponents);
         }
