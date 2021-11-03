@@ -1,8 +1,7 @@
 import { faPlusCircle, faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { contributionsRemoved } from 'slices/contributionEditorSlice';
+import { contributionsRemoved, loadContributions } from 'slices/contributionEditorSlice';
 import CreateProperty from 'components/ContributionEditor/CreateProperty';
-import { loadContributions } from 'slices/contributionEditorSlice';
 import EditorTable from 'components/ContributionEditor/EditorTable';
 import useContributionEditor from 'components/ContributionEditor/hooks/useContributionEditor';
 import TableLoadingIndicator from 'components/ContributionEditor/TableLoadingIndicator';

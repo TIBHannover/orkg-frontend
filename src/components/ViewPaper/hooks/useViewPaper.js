@@ -42,10 +42,8 @@ const useViewPaper = ({ paperId, contributionId }) => {
                 for (const author of paperAuthors) {
                     const orcid = authorsORCID.find(a => a.subject.id === author.id);
                     if (orcid) {
-                        //author.orcid = orcid.object.label;
                         authorsArray.push({ ...author, orcid: orcid.object.label });
                     } else {
-                        //author.orcid = '';
                         authorsArray.push({ ...author, orcid: '' });
                     }
                 }
