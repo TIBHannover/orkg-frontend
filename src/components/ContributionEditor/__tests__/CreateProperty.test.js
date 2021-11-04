@@ -16,7 +16,7 @@ test('shows property autocomplete on click', async () => {
     const button = screen.getByRole('button', { name: /add property/i });
     fireEvent.click(button);
 
-    expect(screen.getByRole('textbox')).toBeInTheDocument();
+    await waitFor(() => expect(screen.getByRole('textbox')).toBeInTheDocument());
 });
 
 test('should hide the property autocomplete on blur', async () => {

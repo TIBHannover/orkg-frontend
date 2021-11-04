@@ -1,23 +1,22 @@
-import { useEffect } from 'react';
-import { faPlus, faCalendar } from '@fortawesome/free-solid-svg-icons';
+import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import ListPage from 'components/ListPage/ListPage';
-import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import ShortRecord from 'components/ShortRecord/ShortRecord';
 import { CLASSES, PREDICATES } from 'constants/graphSettings';
-import { useSelector } from 'react-redux';
 import ROUTES from 'constants/routes';
-import { reverse } from 'named-urls';
-import { Link } from 'react-router-dom';
 import moment from 'moment';
+import { reverse } from 'named-urls';
+import React, { useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { Alert } from 'reactstrap';
 import { getResourcesByClass } from 'services/backend/resources';
 import { getStatementsByObjectAndPredicate } from 'services/backend/statements';
 
-const UserUnpublishedArticles = () => {
+const DraftSmartReviews = () => {
     const user = useSelector(state => state.auth.user);
 
     useEffect(() => {
-        document.title = 'My unpublished articles - ORKG';
+        document.title = 'Draft SmartReviews - ORKG';
     });
 
     const renderListItem = article => (
@@ -67,24 +66,29 @@ const UserUnpublishedArticles = () => {
         }
     };
 
-    const buttons = (
-        <RequireAuthentication component={Link} color="secondary" size="sm" className="btn btn-secondary btn-sm" to={ROUTES.SMART_REVIEW_NEW}>
-            <Icon icon={faPlus} /> Create article
-        </RequireAuthentication>
-    );
-
     return (
-        <>
+        <div>
+            <div className="box rounded pt-4 pb-3 px-4 mb-3">
+                <h2 className="h5">View draft SmartReviews</h2>
+                <Alert color="info" className="mt-3" fade={false}>
+                    When you start working on a SmartReview, by default it is a draft version. Those versions are listed on this page. As soon as you
+                    publish a SmartReview, it becomes publicly listed
+                </Alert>
+            </div>
+
             <ListPage
-                label="unpublished SmartReviews"
+                label="draft SmartReviews"
                 resourceClass={CLASSES.SMART_REVIEW}
                 renderListItem={renderListItem}
                 fetchItems={fetchItems}
-                buttons={buttons}
                 pageSize={50}
+                disableSearch={true}
+                hideTitleBar
             />
-        </>
+        </div>
     );
 };
 
-export default UserUnpublishedArticles;
+DraftSmartReviews.propTypes = {};
+
+export default DraftSmartReviews;

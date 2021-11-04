@@ -246,7 +246,7 @@ export default function AddContribution(props) {
                             <ListGroup>
                                 {paperResult.map((paper, index) => {
                                     return (
-                                        <StyledListGroupItem action key={`result-${index}`} className="pt-2 pb-2">
+                                        <StyledListGroupItem key={`result-${index}`} className="pt-2 pb-2">
                                             <Label check className="pr-2 pl-2">
                                                 <Input type="checkbox" onChange={e => togglePaper(paper, e)} /> {paper.label}{' '}
                                                 <Tippy content="Open paper in new window">

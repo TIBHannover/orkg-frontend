@@ -25,6 +25,7 @@ import { ContainerAnimated, ComparisonTypeButton } from 'components/Comparison/s
 import useComparison from 'components/Comparison/hooks/useComparison';
 import ShareLinkMarker from 'components/ShareLinkMarker/ShareLinkMarker';
 import { getResource } from 'services/backend/resources';
+import moment from 'moment';
 import ROUTES from 'constants/routes.js';
 import { useHistory, Link, useParams } from 'react-router-dom';
 import { openAuthDialog } from 'actions/auth';
@@ -42,8 +43,10 @@ import PreviewVisualizationComparison from 'libs/selfVisModel/ComparisonComponen
 import { NavLink } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import env from '@beam-australia/react-env';
+import { Helmet } from 'react-helmet';
 import AppliedRule from 'components/Comparison/Filters/AppliedRule';
 import TitleBar from 'components/TitleBar/TitleBar';
+import SaveDraft from 'components/Comparison/SaveDraft/SaveDraft';
 
 function Comparison(props) {
     const {
@@ -121,6 +124,7 @@ function Comparison(props) {
     const [showLatexDialog, setShowLatexDialog] = useState(false);
     const [showShareDialog, setShowShareDialog] = useState(false);
     const [showPublishDialog, setShowPublishDialog] = useState(false);
+    const [showSaveDraftDialog, setShowSaveDraftDialog] = useState(false);
     const [showAddContribution, setShowAddContribution] = useState(false);
     const [showComparisonVersions, setShowComparisonVersions] = useState(false);
     const [showExportCitationsDialog, setShowExportCitationsDialog] = useState(false);
@@ -209,9 +213,35 @@ function Comparison(props) {
     const isPublished = metaData?.id || responseHash ? true : false;
     const publishedMessage = "Published comparisons cannot be edited, click 'Fetch live data' to reload the live comparison data";
 
+    const ldJson = {
+        mainEntity: {
+            headline: metaData?.title,
+            description: metaData?.description,
+            ...(metaData?.doi ? { sameAs: `https://doi.org/${metaData.doi}` } : {}),
+            author: metaData.authors?.map(author => ({
+                name: author.label,
+                ...(author.orcid ? { url: `http://orcid.org/${author.orcid}` } : {}),
+                '@type': 'Person'
+            })),
+            datePublished: metaData.createdAt ? moment(metaData.createdAt).format('DD MMMM YYYY') : '',
+            about: researchField?.label,
+            '@type': 'ScholarlyArticle'
+        },
+        '@context': 'https://schema.org',
+        '@type': 'WebPage'
+    };
+
     return (
         <div>
             <Breadcrumbs researchFieldId={metaData?.subject ? metaData?.subject.id : researchField ? researchField.id : null} />
+
+            <Helmet>
+                <title>{`${metaData?.title ?? 'Unpublished'} - Comparison - ORKG`}</title>
+                <meta property="og:title" content={`${metaData?.title ?? 'Unpublished'} - Comparison - ORKG`} />
+                <meta property="og:type" content="article" />
+                <meta property="og:description" content={metaData?.description} />
+                <script type="application/ld+json">{JSON.stringify(ldJson)}</script>
+            </Helmet>
             <TitleBar
                 buttonGroup={
                     contributionsList.length > 1 &&
@@ -394,6 +424,17 @@ function Comparison(props) {
                                         }}
                                     >
                                         Publish
+                                    </DropdownItem>
+                                    <DropdownItem
+                                        onClick={() => {
+                                            if (!props.user) {
+                                                props.openAuthDialog({ action: 'signin', signInRequired: true });
+                                            } else {
+                                                setShowSaveDraftDialog(true);
+                                            }
+                                        }}
+                                    >
+                                        Save as draft
                                     </DropdownItem>
                                     {!isLoadingVersions && versions?.length > 1 && (
                                         <>
@@ -622,6 +663,10 @@ function Comparison(props) {
                 data={data}
                 nextVersions={!isLoadingVersions && hasNextVersion ? versions : []}
             />
+
+            {showSaveDraftDialog && (
+                <SaveDraft isOpen={showSaveDraftDialog} toggle={() => setShowSaveDraftDialog(v => !v)} comparisonUrl={comparisonURLConfig} />
+            )}
 
             <AddContribution onAddContributions={addContributions} showDialog={showAddContribution} toggle={() => setShowAddContribution(v => !v)} />
 

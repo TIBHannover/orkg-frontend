@@ -54,8 +54,7 @@ function Autocomplete(props) {
     // Pagination params
     const PAGE_SIZE = 10;
     const defaultAdditional = {
-        page: 0,
-        pageOLS: undefined
+        page: 0
     };
 
     /**
@@ -244,7 +243,7 @@ function Autocomplete(props) {
      * @return {Boolean} Object.hasMore To detect end of options list for current search
      * @return {Number} Object.Object.page Next page number
      */
-    const loadOptions = async (value, prevOptions, { page, pageOLS }) => {
+    const loadOptions = async (value, prevOptions, { page }) => {
         try {
             const defaultOpts = props.defaultOptions ?? true;
             if ((!value || value === '' || value.trim() === '') && (!defaultOpts || !props.autoLoadOption)) {
@@ -253,8 +252,7 @@ function Autocomplete(props) {
                     options: [],
                     hasMore: false,
                     additional: {
-                        page: 0,
-                        pageOLS: undefined
+                        page: 0
                     }
                 };
             }
@@ -263,10 +261,10 @@ function Autocomplete(props) {
             let hasMore = false;
             if (props.requestUrl === olsBaseUrl) {
                 responseJson = await OntologyLookup(value, page);
-            } else if (pageOLS === undefined && selectedOntologies.length === 0) {
+            } else if (selectedOntologies.length === 0) {
                 responseJson = await InternalORKGLookup(value, page);
             } else if (props.ols) {
-                responseJson = await GetExternalClasses(value, pageOLS);
+                responseJson = await GetExternalClasses(value, page);
             }
 
             hasMore = !responseJson.last;
@@ -303,36 +301,21 @@ function Autocomplete(props) {
                 options = await getExternalData(value, options, props.optionsClass);
             }
 
-            if (!hasMore && pageOLS === undefined) {
-                hasMore = !props.ols ? hasMore : true; // when there is no more item in ORKG continue loading from OLS
-                return {
-                    options,
-                    hasMore,
+            return {
+                options,
+                hasMore,
 
-                    additional: {
-                        page: page + 1,
-                        pageOLS: 0
-                    }
-                };
-            } else {
-                return {
-                    options,
-                    hasMore,
-
-                    additional: {
-                        page: page + 1,
-                        pageOLS: pageOLS === undefined ? undefined : pageOLS + 1
-                    }
-                };
-            }
+                additional: {
+                    page: page + 1
+                }
+            };
         } catch (err) {
             console.error(err);
             return {
                 options: prevOptions,
                 hasMore: false,
                 additional: {
-                    page: 0,
-                    pageOLS: undefined
+                    page: 0
                 }
             };
         }
@@ -722,8 +705,10 @@ function Autocomplete(props) {
                             // to disable the create button
                             props.handleCreateExistingLabel(inputValue, selectOptions);
                         }
-                        if (!props.allowCreate) {
+                        if (!props.allowCreate && !props.allowCreateDuplicate) {
                             return false;
+                        } else if (inputValue && props.allowCreateDuplicate) {
+                            return true;
                         } else {
                             return !(
                                 !inputValue ||
@@ -747,6 +732,7 @@ Autocomplete.propTypes = {
     onItemSelected: PropTypes.func,
     onChange: PropTypes.func,
     allowCreate: PropTypes.bool,
+    allowCreateDuplicate: PropTypes.bool,
     defaultOptions: PropTypes.array,
     additionalData: PropTypes.array,
     onNewItemSelected: PropTypes.func,
@@ -792,6 +778,7 @@ Autocomplete.defaultProps = {
     inputGroup: true,
     inputId: null,
     inputValue: null,
-    menuPortalTarget: null
+    menuPortalTarget: null,
+    allowCreateDuplicate: false
 };
 export default withTheme(Autocomplete);

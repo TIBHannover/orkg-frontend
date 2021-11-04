@@ -30,10 +30,11 @@ const DatatypeSelector = props => {
             ...provided,
             height: '100% !important',
             minHeight: 'calc(1.5em + 0.5rem + 2px)',
-            fontSize: '100%',
-            borderTopRightRadius: 0,
-            borderBottomRightRadius: 0,
-            borderRight: 0,
+            borderTopLeftRadius: props.disableBorderRadiusLeft ? 0 : undefined,
+            borderBottomLeftRadius: props.disableBorderRadiusLeft ? 0 : undefined,
+            borderTopRightRadius: props.disableBorderRadiusRight ? 0 : undefined,
+            borderBottomRightRadius: props.disableBorderRadiusRight ? 0 : undefined,
+            ...(props.disableBorderRadiusRight ? { borderRight: 0 } : {}),
             backgroundColor: theme.light,
             color: theme.secondaryDarker
         }),
@@ -66,6 +67,10 @@ const DatatypeSelector = props => {
             ...provided,
             paddingRight: '4px',
             border: '0'
+        }),
+        menu: provided => ({
+            ...provided,
+            fontSize: '0.875rem'
         })
     };
 
@@ -81,6 +86,7 @@ const DatatypeSelector = props => {
                 getOptionValue={({ type }) => type}
                 getOptionLabel={({ name }) => name}
                 isClearable={false}
+                menuPortalTarget={document.body}
             />
         </>
     );
@@ -89,7 +95,14 @@ const DatatypeSelector = props => {
 DatatypeSelector.propTypes = {
     valueType: PropTypes.string,
     setValueType: PropTypes.func,
-    entity: PropTypes.string
+    entity: PropTypes.string,
+    disableBorderRadiusLeft: PropTypes.bool,
+    disableBorderRadiusRight: PropTypes.bool
+};
+
+DatatypeSelector.defaultProps = {
+    disableBorderRadiusLeft: false,
+    disableBorderRadiusRight: true
 };
 
 export default DatatypeSelector;

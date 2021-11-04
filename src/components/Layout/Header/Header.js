@@ -1,7 +1,7 @@
 import { createRef, Component } from 'react';
 import {
     Button,
-    UncontrolledButtonDropdown,
+    UncontrolledButtonDropdown as ButtonDropdown,
     Collapse,
     DropdownItem,
     DropdownMenu,
@@ -41,6 +41,7 @@ import env from '@beam-australia/react-env';
 import { toast } from 'react-toastify';
 import HomeBannerBg from 'assets/img/graph-background.svg';
 import { scrollbarWidth } from '@xobotyi/scrollbar-width';
+import AboutMenu from 'components/Layout/Header/AboutMenu';
 
 const cookies = new Cookies();
 
@@ -136,7 +137,7 @@ const StyledAuthTooltip = styled(Tooltip)`
     & .tooltip-inner {
         font-size: 16px;
         background-color: ${props => props.theme.secondary};
-        max-width: 410px;
+        max-width: 430px;
         box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.13);
 
         .btn {
@@ -152,6 +153,26 @@ const StyledAuthTooltip = styled(Tooltip)`
     & .arrow:before {
         border-bottom-color: ${props => props.theme.secondary} !important;
     }
+
+    @media (max-width: ${props => props.theme.gridBreakpoints.sm}) {
+        .btn-group {
+            width: 100%;
+            flex-direction: column;
+            .btn:first-child {
+                border-radius: ${props => props.theme.borderRadius} ${props => props.theme.borderRadius} 0 0;
+            }
+            .btn:last-child {
+                border-radius: 0 0 ${props => props.theme.borderRadius} ${props => props.theme.borderRadius};
+            }
+        }
+        .col-3 {
+            display: none;
+        }
+        .col-9 {
+            flex: 0 0 100%;
+            max-width: 100% !important;
+        }
+    }
 `;
 
 class Header extends Component {
@@ -162,6 +183,7 @@ class Header extends Component {
 
         this.state = {
             isOpen: false,
+            isOpenAboutMenu: false,
             userTooltipOpen: false,
             redirectLogout: false,
             isHomePageStyle: this.props.location.pathname === ROUTES.HOME ? true : false
@@ -264,9 +286,16 @@ class Header extends Component {
         });
     }
 
+    toggleAboutMenu = () => {
+        this.setState({
+            isOpenAboutMenu: !this.state.isOpenAboutMenu
+        });
+    };
+
     closeMenu = () => {
         this.setState({
-            isOpen: false
+            isOpen: false,
+            isOpenAboutMenu: false
         });
     };
 
@@ -336,7 +365,7 @@ class Header extends Component {
                         <Collapse isOpen={this.state.isOpen} navbar>
                             <Nav className="mr-auto flex-shrink-0" navbar>
                                 {/* view menu */}
-                                <UncontrolledButtonDropdown nav inNavbar>
+                                <ButtonDropdown nav inNavbar>
                                     <DropdownToggle nav className="ml-2">
                                         View <FontAwesomeIcon style={{ marginTop: '4px' }} icon={faChevronDown} pull="right" />
                                     </DropdownToggle>
@@ -395,10 +424,10 @@ class Header extends Component {
                                             Classes
                                         </DropdownItem>
                                     </DropdownMenu>
-                                </UncontrolledButtonDropdown>
+                                </ButtonDropdown>
 
                                 {/* tools menu */}
-                                <UncontrolledButtonDropdown nav inNavbar>
+                                <ButtonDropdown nav inNavbar>
                                     <DropdownToggle nav className="ml-2">
                                         Tools <FontAwesomeIcon style={{ marginTop: '4px' }} icon={faChevronDown} pull="right" />
                                     </DropdownToggle>
@@ -441,17 +470,15 @@ class Header extends Component {
                                             Data Access
                                         </DropdownItem>
                                     </DropdownMenu>
-                                </UncontrolledButtonDropdown>
+                                </ButtonDropdown>
 
                                 {/* about menu */}
-                                <UncontrolledButtonDropdown nav inNavbar>
-                                    <DropdownToggle nav className="ml-2">
+                                <ButtonDropdown isOpen={this.state.isOpenAboutMenu} toggle={this.toggleAboutMenu} nav inNavbar>
+                                    <DropdownToggle nav className="ml-2" onClick={this.toggleAboutMenu}>
                                         About <FontAwesomeIcon style={{ marginTop: '4px' }} icon={faChevronDown} pull="right" />
                                     </DropdownToggle>
                                     <DropdownMenu>
-                                        <DropdownItem tag={RouterNavLink} exact to={reverse(ROUTES.ABOUT, {})} onClick={this.closeMenu}>
-                                            About
-                                        </DropdownItem>
+                                        <AboutMenu closeMenu={this.closeMenu} />
                                         <DropdownItem tag={RouterNavLink} exact to={ROUTES.HELP_CENTER} onClick={this.closeMenu}>
                                             Help center
                                         </DropdownItem>
@@ -469,7 +496,7 @@ class Header extends Component {
                                             Statistics
                                         </DropdownItem>
                                     </DropdownMenu>
-                                </UncontrolledButtonDropdown>
+                                </ButtonDropdown>
                             </Nav>
 
                             <SearchForm placeholder="Search..." onSearch={this.closeMenu} />
@@ -517,10 +544,18 @@ class Header extends Component {
                                                     >
                                                         Profile
                                                     </Button>
-                                                    <Button color="secondary" onClick={this.toggleUserTooltip} tag={Link} to={ROUTES.USER_SETTINGS}>
-                                                        Settings
+                                                    <Button
+                                                        color="secondary"
+                                                        className="text-nowrap"
+                                                        onClick={this.toggleUserTooltip}
+                                                        tag={Link}
+                                                        to={reverse(ROUTES.USER_SETTINGS)}
+                                                    >
+                                                        My account
                                                     </Button>
-                                                    <Button onClick={this.handleSignOut}>Sign out</Button>
+                                                    <Button onClick={this.handleSignOut} className="text-nowrap">
+                                                        Sign out
+                                                    </Button>
                                                 </ButtonGroup>
                                             </div>
                                         </Row>

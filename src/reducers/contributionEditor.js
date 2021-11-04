@@ -38,8 +38,9 @@ export default function reducer(state = initialState, action) {
         }
 
         case type.CONTRIBUTION_EDITOR_LITERAL_UPDATE: {
-            const { id, label } = action.payload;
-            return dotProp.set(state, `literals.${id}.label`, label);
+            const { id, label, datatype } = action.payload;
+            const newState = dotProp.set(state, `literals.${id}.label`, label);
+            return dotProp.set(newState, `literals.${id}.datatype`, label, datatype);
         }
 
         case type.CONTRIBUTION_EDITOR_LOADING_START: {

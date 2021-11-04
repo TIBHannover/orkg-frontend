@@ -15,7 +15,9 @@ export const getPageByUrl = _url => submitGetRequest(`${url}pages?url=${_url}`).
 
 export const getAboutPage = id => submitGetRequest(`${url}about-pages/${id}`);
 
-export const getAboutPages = () => submitGetRequest(`${url}about-pages?_sort=order`);
+export const getAboutPages = () => submitGetRequest(`${url}about-pages?_sort=order`).catch(() => []);
+
+export const getAboutPagesMenu = () => submitGetRequest(`${url}about-pages/menu?_sort=order`).catch(() => []);
 
 export const getHelpArticle = id => submitGetRequest(`${url}help-articles/${id}`);
 
@@ -26,3 +28,6 @@ export const getHelpCategories = () => submitGetRequest(`${url}help-categories?_
 export const getHelpCategory = id => submitGetRequest(`${url}help-categories/${id}`);
 
 export const getHomeAlerts = () => submitGetRequest(`${url}home-alerts`).catch(() => []);
+
+export const getNewsCards = ({ limit = 10, sort = 'created_at' }) =>
+    submitGetRequest(`${url}news-cards?_limit=${limit}&_sort=${sort}`).catch(() => []);

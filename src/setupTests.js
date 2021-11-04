@@ -2,7 +2,7 @@ import 'jest-canvas-mock';
 import '@testing-library/jest-dom/extend-expect';
 import { server } from 'services/mocks/server';
 
-beforeAll(() => {
+beforeAll(async () => {
     server.listen();
     jest.setTimeout(20000);
 });

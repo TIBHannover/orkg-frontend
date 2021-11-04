@@ -4,7 +4,7 @@ import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowser
 import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
 import FilterWrapper from 'components/Comparison/Filters/FilterWrapper';
 import FilterModal from 'components/Comparison/Filters/FilterModal';
-import { faFilter } from '@fortawesome/free-solid-svg-icons';
+import { faFilter, faLevelUpAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { getRuleByProperty, getValuesByProperty, getDataByProperty } from 'utils';
 import styled from 'styled-components';
@@ -51,7 +51,7 @@ const FilterButton = styled(Button)`
     }
 `;
 
-const PropertyValue = ({ id, label, property, similar, filterControlData, updateRulesOfProperty, embeddedMode }) => {
+const PropertyValue = ({ id, label, property, similar, filterControlData, updateRulesOfProperty, embeddedMode, group, grouped = false }) => {
     const [showStatementBrowser, setShowStatementBrowser] = useState(false);
     const [showFilterDialog, setShowFilterDialog] = useState(false);
 
@@ -62,54 +62,61 @@ const PropertyValue = ({ id, label, property, similar, filterControlData, update
     };
 
     const getValuesNr = () => {
-        return Object.keys(getValuesByProperty(filterControlData, id)).length;
+        return !group ? Object.keys(getValuesByProperty(filterControlData, id)).length : 0;
     };
 
     const filterButtonClasses = classNames({
         'd-block': true,
-        active: getRuleByProperty(filterControlData, id).length > 0
+        active: !group ? getRuleByProperty(filterControlData, id).length > 0 : false
     });
 
     return (
         <>
-            <Button onClick={handleOpenStatementBrowser} color="link" className="text-left text-light m-0 p-0">
-                <DescriptionTooltip
-                    id={property?.id}
-                    typeId={PREDICATE_TYPE_ID}
-                    extraContent={similar && similar.length ? `This property is merged with : ${similar.join(', ')}` : ''}
-                >
-                    {upperFirst(label)}
-                    {similar && similar.length > 0 && '*'}
-                </DescriptionTooltip>
-            </Button>
-            {!embeddedMode && (
+            {!group && (
                 <>
-                    <FilterWrapper
-                        data={{
-                            rules: getRuleByProperty(filterControlData, id),
-                            disabled: getValuesNr() <= 1 && getRuleByProperty(filterControlData, id).length === 0
-                        }}
-                    >
-                        <FilterButton
-                            color="link"
-                            disabled={getValuesNr() <= 1}
-                            onClick={() => setShowFilterDialog(v => !v)}
-                            className={filterButtonClasses}
+                    <Button onClick={handleOpenStatementBrowser} color="link" className="text-left text-light m-0 p-0 text-break">
+                        <DescriptionTooltip
+                            id={property?.id}
+                            typeId={PREDICATE_TYPE_ID}
+                            extraContent={similar && similar.length ? `This property is merged with : ${similar.join(', ')}` : ''}
                         >
-                            <Icon size="xs" icon={faFilter} />
-                            {getValuesNr() <= 1 && <div className="cross" />}
-                        </FilterButton>
-                    </FilterWrapper>
+                            <div className={grouped ? 'ml-2' : ''}>
+                                {grouped && <Icon icon={faLevelUpAlt} rotation={90} className="mr-2" />}
+                                {upperFirst(label)}
+                                {similar && similar.length > 0 && '*'}
+                            </div>
+                        </DescriptionTooltip>
+                    </Button>
+                    {!embeddedMode && (
+                        <>
+                            <FilterWrapper
+                                data={{
+                                    rules: getRuleByProperty(filterControlData, id),
+                                    disabled: getValuesNr() <= 1 && getRuleByProperty(filterControlData, id).length === 0
+                                }}
+                            >
+                                <FilterButton
+                                    color="link"
+                                    disabled={getValuesNr() <= 1}
+                                    onClick={() => setShowFilterDialog(v => !v)}
+                                    className={filterButtonClasses}
+                                >
+                                    <Icon size="xs" icon={faFilter} />
+                                    {getValuesNr() <= 1 && <div className="cross" />}
+                                </FilterButton>
+                            </FilterWrapper>
 
-                    <FilterModal
-                        data={getDataByProperty(filterControlData, id)}
-                        updateRulesOfProperty={updateRulesFactory}
-                        showFilterDialog={showFilterDialog}
-                        toggleFilterDialog={() => setShowFilterDialog(v => !v)}
-                    />
+                            <FilterModal
+                                data={getDataByProperty(filterControlData, id)}
+                                updateRulesOfProperty={updateRulesFactory}
+                                showFilterDialog={showFilterDialog}
+                                toggleFilterDialog={() => setShowFilterDialog(v => !v)}
+                            />
+                        </>
+                    )}
                 </>
             )}
-
+            {group && label}
             {showStatementBrowser && (
                 <StatementBrowserDialog
                     show={true}
@@ -125,9 +132,11 @@ const PropertyValue = ({ id, label, property, similar, filterControlData, update
 
 PropertyValue.propTypes = {
     label: PropTypes.string.isRequired,
-    id: PropTypes.string.isRequired,
+    id: PropTypes.string,
     property: PropTypes.object.isRequired,
     similar: PropTypes.array,
+    group: PropTypes.bool,
+    grouped: PropTypes.bool,
     filterControlData: PropTypes.array.isRequired,
     updateRulesOfProperty: PropTypes.func.isRequired,
     embeddedMode: PropTypes.bool.isRequired

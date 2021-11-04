@@ -125,7 +125,6 @@ export default function AddValueTemplate(props) {
             setFormFeedback(error.message);
             setIsValid(false);
         } else {
-            //setInputValue(value);
             setFormFeedback(null);
             setIsValid(true);
             // Check for a possible conversion possible
@@ -302,7 +301,6 @@ export default function AddValueTemplate(props) {
                                     inputValue={inputValue}
                                     setInputValue={setInputValue}
                                     inputDataType={inputDataType}
-                                    onSubmit={onSubmit}
                                     isValid={isValid}
                                     literalInputRef={literalInputRef}
                                     onKeyDown={e => {
