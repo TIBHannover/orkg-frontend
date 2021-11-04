@@ -6,6 +6,7 @@ import RequireAuthentication from 'components/RequireAuthentication/RequireAuthe
 import { CLASSES, PREDICATES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import { groupBy } from 'lodash';
+import { reverse } from 'named-urls';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { getResourcesByClass } from 'services/backend/resources';
@@ -75,10 +76,10 @@ const LiteratureLists = () => {
                     color="secondary"
                     size="sm"
                     className="btn btn-secondary btn-sm"
-                    to={ROUTES.LITERATURE_LISTS_UNPUBLISHED}
+                    to={reverse(ROUTES.USER_SETTINGS, { tab: 'draft-literature-lists' })}
                     style={{ marginLeft: 1 }}
                 >
-                    <Icon icon={faEyeSlash} /> My unpublished lists
+                    Draft lists
                 </RequireAuthentication>
             )}
         </>

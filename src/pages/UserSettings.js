@@ -1,5 +1,6 @@
 import TitleBar from 'components/TitleBar/TitleBar';
 import DraftComparisons from 'components/UserSettings/DraftComparisons/DraftComparisons';
+import DraftLiteratureLists from 'components/UserSettings/DraftLiteratureLists/DraftLiteratureLists';
 import DraftSmartReviews from 'components/UserSettings/DraftSmartReviews/DraftSmartReviews';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
@@ -8,8 +9,8 @@ import { useParams } from 'react-router';
 import { Link } from 'react-router-dom';
 import { Container, Row } from 'reactstrap';
 import styled from 'styled-components';
-import GeneralSettings from '../components/UserSettings/GeneralSettings';
-import Password from '../components/UserSettings/Password';
+import GeneralSettings from 'components/UserSettings/GeneralSettings';
+import Password from 'components/UserSettings/Password';
 
 export const StyledSettingsMenu = styled.div`
     padding: 0;
@@ -37,6 +38,14 @@ export const StyledSettingsMenu = styled.div`
     }
 `;
 
+const TABS = {
+    GENERAL: 'general',
+    PASSWORD: 'password',
+    DRAFT_COMPARISONS: 'draft-comparisons',
+    DRAFT_SMART_REVIEWS: 'draft-smart-reviews',
+    DRAFT_LITERATURE_LISTS: 'draft-literature-lists'
+};
+
 const UserSettings = () => {
     const [activeTab, setActiveTab] = useState('general');
     const { tab } = useParams();
@@ -53,43 +62,57 @@ const UserSettings = () => {
                     <div className="col-3 justify-content-center">
                         <Container className="box rounded p-3">
                             <StyledSettingsMenu>
-                                <Link to={reverse(ROUTES.USER_SETTINGS, { tab: 'general' })} className={activeTab === 'general' ? 'active' : ''}>
+                                <Link
+                                    to={reverse(ROUTES.USER_SETTINGS, { tab: TABS.GENERAL })}
+                                    className={activeTab === TABS.GENERAL ? 'active' : ''}
+                                >
                                     General settings
                                 </Link>
-                                <Link to={reverse(ROUTES.USER_SETTINGS, { tab: 'password' })} className={activeTab === 'password' ? 'active' : ''}>
+                                <Link
+                                    to={reverse(ROUTES.USER_SETTINGS, { tab: TABS.PASSWORD })}
+                                    className={activeTab === TABS.PASSWORD ? 'active' : ''}
+                                >
                                     Password
                                 </Link>
                                 <hr />
                                 <Link
-                                    to={reverse(ROUTES.USER_SETTINGS, { tab: 'draft-comparisons' })}
-                                    className={activeTab === 'draft-comparisons' ? 'active' : ''}
+                                    to={reverse(ROUTES.USER_SETTINGS, { tab: TABS.DRAFT_COMPARISONS })}
+                                    className={activeTab === TABS.DRAFT_COMPARISONS ? 'active' : ''}
                                 >
                                     Draft comparisons
                                 </Link>
                                 <Link
-                                    to={reverse(ROUTES.USER_SETTINGS, { tab: 'draft-smart-reviews' })}
-                                    className={activeTab === 'draft-smart-reviews' ? 'active' : ''}
+                                    to={reverse(ROUTES.USER_SETTINGS, { tab: TABS.DRAFT_SMART_REVIEWS })}
+                                    className={activeTab === TABS.DRAFT_SMART_REVIEWS ? 'active' : ''}
                                 >
                                     Draft SmartReviews
+                                </Link>
+                                <Link
+                                    to={reverse(ROUTES.USER_SETTINGS, { tab: TABS.DRAFT_LITERATURE_LISTS })}
+                                    className={activeTab === TABS.DRAFT_LITERATURE_LISTS ? 'active' : ''}
+                                >
+                                    Draft literature list
                                 </Link>
                             </StyledSettingsMenu>
                         </Container>
                     </div>
                     <div className="col-9 justify-content-center">
-                        {activeTab === 'general' && (
+                        {activeTab === TABS.GENERAL && (
                             <div className="box rounded pt-4 pb-3 px-4">
                                 <GeneralSettings />
                             </div>
                         )}
-                        {activeTab === 'password' && (
+                        {activeTab === TABS.PASSWORD && (
                             <div className="box rounded pt-4 pb-3 px-4">
                                 <Password />
                             </div>
                         )}
 
-                        {activeTab === 'draft-comparisons' && <DraftComparisons />}
+                        {activeTab === TABS.DRAFT_COMPARISONS && <DraftComparisons />}
 
-                        {activeTab === 'draft-smart-reviews' && <DraftSmartReviews />}
+                        {activeTab === TABS.DRAFT_SMART_REVIEWS && <DraftSmartReviews />}
+
+                        {activeTab === TABS.DRAFT_LITERATURE_LISTS && <DraftLiteratureLists />}
                     </div>
                 </Row>
             </Container>
