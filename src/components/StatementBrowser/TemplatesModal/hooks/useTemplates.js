@@ -149,12 +149,8 @@ const useTemplates = ({ onlyFeatured = true }) => {
     const debouncedGetLoadMoreResults = useRef(debounce(loadMoreTemplates, 500));
 
     useEffect(() => {
-        if (targetFilter || labelFilter || !onlyFeatured) {
-            setIsNextPageLoading(true);
-            debouncedGetLoadMoreResults.current(selectedFilter, targetFilter, labelFilter);
-        } else {
-            setIsNextPageLoading(false);
-        }
+        setIsNextPageLoading(true);
+        debouncedGetLoadMoreResults.current(selectedFilter, targetFilter, labelFilter);
     }, [labelFilter, onlyFeatured, selectedFilter, targetFilter]);
 
     useEffect(() => {
@@ -177,9 +173,9 @@ const useTemplates = ({ onlyFeatured = true }) => {
     }, [getTemplatesOfResourceId, resource?.classes]);
 
     const handleSelectedFilterChange = selected => {
+        setTemplates([]);
         setLabelFilter('');
         setTargetFilter(null);
-        setTemplates([]);
         setSelectedFilter(selected);
     };
 
