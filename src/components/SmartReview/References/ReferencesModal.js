@@ -22,7 +22,7 @@ const ReferencesModal = ({ show, toggle }) => {
 
     useEffect(() => {
         setReferencesSorted(
-            references.sort((a, b) => a?.parsedReference?.author?.[0]?.family?.localeCompare(b?.parsedReference?.author?.[0]?.family))
+            [...references].sort((a, b) => a?.parsedReference?.author?.[0]?.family?.localeCompare(b?.parsedReference?.author?.[0]?.family))
         );
     }, [references]);
 

@@ -122,13 +122,16 @@ export default (state = initialState, action) => {
         case type.ADD_TO_COMPARISON: {
             const { payload } = action;
 
-            const comparisonContributions = assign(state.comparison.byId, {
-                [payload.contributionId]: {
-                    paperId: payload.contributionData.paperId,
-                    paperTitle: payload.contributionData.paperTitle,
-                    contributionTitle: payload.contributionData.contributionTitle
+            const comparisonContributions = assign(
+                { ...state.comparison.byId },
+                {
+                    [payload.contributionId]: {
+                        paperId: payload.contributionData.paperId,
+                        paperTitle: payload.contributionData.paperTitle,
+                        contributionTitle: payload.contributionData.contributionTitle
+                    }
                 }
-            });
+            );
             const newComparison = {
                 allIds: [...state.comparison.allIds, payload.contributionId],
                 byId: comparisonContributions

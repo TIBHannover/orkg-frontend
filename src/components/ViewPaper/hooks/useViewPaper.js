@@ -23,11 +23,9 @@ const useViewPaper = ({ paperId }) => {
             for (const author of paperAuthors) {
                 const orcid = paperStatements.find(s => s.subject.id === author.id && s.predicate.id === PREDICATES.HAS_ORCID);
                 if (orcid) {
-                    author.orcid = orcid.object.label;
-                    authorsArray.push(author);
+                    authorsArray.push({ ...author, orcid: orcid.object.label });
                 } else {
-                    author.orcid = '';
-                    authorsArray.push(author);
+                    authorsArray.push({ ...author, orcid: '' });
                 }
             }
             dispatch(

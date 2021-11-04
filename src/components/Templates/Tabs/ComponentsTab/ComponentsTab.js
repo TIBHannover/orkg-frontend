@@ -25,19 +25,21 @@ function ComponentsTab(props) {
                 const newPredicate = await createPredicate(selected.label);
                 selected = { id: newPredicate.id, label: selected.label };
                 const templateComponents = props.components.map((item, j) => {
+                    const _item = { ...item };
                     if (j === index) {
-                        item.property = !selected ? null : selected;
+                        _item.property = !selected ? null : selected;
                     }
-                    return item;
+                    return _item;
                 });
                 props.setComponents(templateComponents);
             }
         } else {
             const templateComponents = props.components.map((item, j) => {
+                const _item = { ...item };
                 if (j === index) {
-                    item.property = !selected ? null : selected;
+                    _item.property = !selected ? null : selected;
                 }
-                return item;
+                return _item;
             });
             props.setComponents(templateComponents);
         }
@@ -55,11 +57,12 @@ function ComponentsTab(props) {
             }
         }
         const templateComponents = props.components.map((item, j) => {
+            const _item = { ...item };
             if (j === index) {
-                item.value = !selected ? null : selected;
-                item.validationRules = {};
+                _item.value = !selected ? null : selected;
+                _item.validationRules = {};
             }
-            return item;
+            return _item;
         });
 
         props.setComponents(templateComponents);

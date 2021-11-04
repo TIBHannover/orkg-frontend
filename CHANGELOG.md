@@ -3,6 +3,14 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [V0.53](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.52.1...V0.53) - 2021-11-02
+
+### Changes
+
+- fix(Comparison): Disable extend property ids when using exact match approach [`#708`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/708)
+- feat(DataAccess): add link to visual SPARQL editor [`#709`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/709)
+
+---
 ## [V0.52.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.52...V0.52.1) - 2021-10-21
 
 ### Changes
