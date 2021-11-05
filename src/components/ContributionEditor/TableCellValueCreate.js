@@ -181,7 +181,7 @@ const TableCellValueCreate = ({ isVisible, contributionId, propertyId, isEmptyCe
                 </div>
             )}
             {isCreating && (
-                <div ref={refContainer} style={{ height: 35 }}>
+                <div ref={refContainer} style={{ minHeight: 35 }}>
                     <Tippy
                         onCreate={instance => (confirmConversion.current = instance)}
                         content={
@@ -196,7 +196,7 @@ const TableCellValueCreate = ({ isVisible, contributionId, propertyId, isEmptyCe
                         placement="top"
                     >
                         <span>
-                            <InputGroup size="sm" style={{ width: 295 }}>
+                            <InputGroup size="sm" style={{ minWidth: 295, zIndex: 100 }}>
                                 {entityType === 'object' ? (
                                     <Autocomplete
                                         optionsClass={propertyId === PREDICATES.HAS_RESEARCH_PROBLEM ? CLASSES.PROBLEM : undefined}
