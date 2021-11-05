@@ -6,6 +6,7 @@ import { createClass } from 'services/backend/classes';
 import { createResource, updateResource } from 'services/backend/resources';
 import { toast } from 'react-toastify';
 import { CLASSES, PREDICATES } from 'constants/graphSettings';
+import { cloneDeep } from 'lodash';
 
 export const setEditMode = data => dispatch => {
     dispatch({
@@ -108,12 +109,13 @@ export const loadTemplate = data => dispatch => {
     });
 };
 
-export const saveTemplate = data => {
+export const saveTemplate = templateData => {
     return async dispatch => {
         dispatch({
             type: type.IS_SAVING_TEMPLATE
         });
         dispatch(setEditMode(false));
+        const data = cloneDeep({ ...templateData });
 
         if (!data.label) {
             // Make the template label mandatory

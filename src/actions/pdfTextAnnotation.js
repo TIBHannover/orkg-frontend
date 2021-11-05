@@ -52,36 +52,25 @@ export const setShowHighlights = showHighlights => dispatch => {
     });
 };
 
-export const setPdfViewer = pdfViewer => dispatch => {
+export const setIsLoadedPdfViewer = isLoadedPdfViewer => dispatch => {
     dispatch({
-        type: type.PDF_TEXT_ANNOTATION_SET_PDF_VIEWER,
+        type: type.PDF_TEXT_ANNOTATION_SET_IS_LOADED_PDF_VIEWER,
         payload: {
-            pdfViewer
+            isLoadedPdfViewer
         }
     });
 };
-
-const toBase64 = file =>
-    new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = error => reject(error);
-    });
 
 export const uploadPdf = files => async dispatch => {
     if (files.length === 0) {
         return;
     }
-
-    const pdf = files[0];
-    const encodedPdf = await toBase64(files[0]);
+    const pdf = window.URL.createObjectURL(files[0]);
 
     dispatch({
         type: type.PDF_TEXT_ANNOTATION_SET_PDF,
         payload: {
-            pdf: pdf,
-            encodedPdf: encodedPdf
+            pdf
         }
     });
 };
