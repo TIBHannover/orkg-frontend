@@ -73,6 +73,7 @@ export const CLASSES = {
     AUTHOR: 'Author',
     VENUE: 'Venue',
     COMPARISON: 'Comparison',
+    COMPARISON_DRAFT: 'ComparisonDraft',
     FEATURED_COMPARISON: 'FeaturedComparison',
     FEATURED_COMPARISON_CATEGORY: 'FeaturedComparisonCategory',
     FEATURED_COMPARISON_HOME_PAGE: 'FeaturedComparisonHomePage',

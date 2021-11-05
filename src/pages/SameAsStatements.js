@@ -1,9 +1,9 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import DbpediaAbstract from './DbpediaAbstract';
-import WikidataDescription from './WikidataDescription';
-import WikipediaSummary from './WikipediaSummary';
+import DbpediaAbstract from 'components/ExternalDescription/DbpediaAbstract';
+import WikidataDescription from 'components/ExternalDescription/WikidataDescription';
+import WikipediaSummary from 'components/ExternalDescription/WikipediaSummary';
 import { PREDICATES } from 'constants/graphSettings';
 
 class SameAsStatements extends Component {
