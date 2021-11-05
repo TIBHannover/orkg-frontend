@@ -50,7 +50,7 @@ const UserSettings = () => {
             <TitleBar>My account</TitleBar>
             <Container className="p-0">
                 <Row>
-                    <div className="col-3 justify-content-center">
+                    <div className="col-md-3 mb-sm-2 justify-content-center">
                         <Container className="box rounded p-3">
                             <StyledSettingsMenu>
                                 <Link to={reverse(ROUTES.USER_SETTINGS, { tab: 'general' })} className={activeTab === 'general' ? 'active' : ''}>
@@ -75,7 +75,7 @@ const UserSettings = () => {
                             </StyledSettingsMenu>
                         </Container>
                     </div>
-                    <div className="col-9 justify-content-center">
+                    <div className="col-md-9 justify-content-center">
                         {activeTab === 'general' && (
                             <div className="box rounded pt-4 pb-3 px-4">
                                 <GeneralSettings />
