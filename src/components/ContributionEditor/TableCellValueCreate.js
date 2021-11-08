@@ -145,7 +145,7 @@ const TableCellValueCreate = ({ isVisible, contributionId, propertyId, isEmptyCe
         setIsValid(true);
         setEntityType(getConfigByType(inputDataType)._class);
         if (inputDataType === 'xsd:boolean') {
-            setValue(v => Boolean(v).toString());
+            setValue(v => Boolean(v === 'true').toString());
         }
     }, [inputDataType]);
 

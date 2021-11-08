@@ -164,7 +164,7 @@ export default function AddValueTemplate(props) {
         setIsValid(true);
         setEntityType(getConfigByType(inputDataType)._class);
         if (inputDataType === 'xsd:boolean') {
-            setInputValue(v => Boolean(v).toString());
+            setInputValue(v => Boolean(v === 'true').toString());
         }
     }, [inputDataType]);
 
