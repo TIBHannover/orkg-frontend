@@ -160,7 +160,7 @@ export default function ValueItemTemplate(props) {
         setFormFeedback(null);
         setIsValid(true);
         if (draftDataType === 'xsd:boolean') {
-            setDraftLabel(v => Boolean(v).toString());
+            setDraftLabel(v => Boolean(v === 'true').toString());
         }
     }, [draftDataType]);
 

@@ -113,7 +113,7 @@ const TableCellValue = forwardRef(({ value, index, setDisableCreate, propertyId 
         setFormFeedback(null);
         setIsValid(true);
         if (draftDataType === 'xsd:boolean') {
-            setDraftLabel(v => Boolean(v).toString());
+            setDraftLabel(v => Boolean(v === 'true').toString());
         }
     }, [draftDataType]);
 
