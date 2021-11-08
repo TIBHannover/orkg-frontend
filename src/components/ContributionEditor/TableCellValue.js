@@ -41,7 +41,7 @@ const TableCellValue = forwardRef(({ value, index, setDisableCreate, propertyId 
     const [suggestionType, setSuggestionType] = useState(null);
 
     useClickAway(refContainer, () => {
-        if (value._class === ENTITIES.LITERAL && (draftDataType !== value.datatype || draftLabel !== value.label) && draftLabel !== '') {
+        if (isEditing && value._class === ENTITIES.LITERAL && (draftDataType !== value.datatype || draftLabel !== value.label) && draftLabel !== '') {
             onSubmit();
         } else {
             handleStopEdit();
