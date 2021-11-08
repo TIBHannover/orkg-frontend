@@ -233,6 +233,7 @@ const TableCellValue = forwardRef(({ value, index, setDisableCreate, propertyId 
                                             disableBorderRadiusRight={false}
                                             valueType={draftDataType}
                                             setValueType={setDraftDataType}
+                                            menuPortalTarget={document.body} // use a portal to ensure the menu isn't blocked by other elements
                                         />
                                     </InputGroup>
                                 </span>

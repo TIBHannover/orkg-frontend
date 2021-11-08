@@ -23,8 +23,7 @@ const DatatypeSelector = props => {
             flexBasis: '100px',
             padding: '0',
             border: '0',
-            fontSize: '0.875rem',
-            position: 'relative'
+            fontSize: '0.875rem'
         }),
         control: provided => ({
             ...provided,
@@ -86,7 +85,7 @@ const DatatypeSelector = props => {
                 getOptionValue={({ type }) => type}
                 getOptionLabel={({ name }) => name}
                 isClearable={false}
-                menuPortalTarget={document.body}
+                menuPortalTarget={props.menuPortalTarget}
             />
         </>
     );
@@ -97,12 +96,14 @@ DatatypeSelector.propTypes = {
     setValueType: PropTypes.func,
     entity: PropTypes.string,
     disableBorderRadiusLeft: PropTypes.bool,
-    disableBorderRadiusRight: PropTypes.bool
+    disableBorderRadiusRight: PropTypes.bool,
+    menuPortalTarget: PropTypes.object
 };
 
 DatatypeSelector.defaultProps = {
     disableBorderRadiusLeft: false,
-    disableBorderRadiusRight: true
+    disableBorderRadiusRight: true,
+    menuPortalTarget: null
 };
 
 export default DatatypeSelector;
