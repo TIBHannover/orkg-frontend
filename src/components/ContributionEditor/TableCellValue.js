@@ -49,7 +49,7 @@ const TableCellValue = forwardRef(({ value, index, setDisableCreate, propertyId 
     };
 
     useClickAway(refContainer, () => {
-        if (value._class === ENTITIES.LITERAL && (draftDataType !== value.datatype || draftLabel !== value.label) && draftLabel !== '') {
+        if (isEditing && value._class === ENTITIES.LITERAL && (draftDataType !== value.datatype || draftLabel !== value.label) && draftLabel !== '') {
             onSubmit();
         } else {
             handleStopEdit();
@@ -121,7 +121,7 @@ const TableCellValue = forwardRef(({ value, index, setDisableCreate, propertyId 
         setFormFeedback(null);
         setIsValid(true);
         if (draftDataType === 'xsd:boolean') {
-            setDraftLabel(v => Boolean(v).toString());
+            setDraftLabel(v => Boolean(v === 'true').toString());
         }
     }, [draftDataType]);
 

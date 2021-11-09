@@ -3,6 +3,18 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [V0.54](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.53...V0.54) - 2021-11-08
+
+### Changes
+
+- fix(ContributionEditor): Saving the boolean value [`#718`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/718)
+- fix(Comparison): Publishing a new version of a comparison doesn't show the labels of existing references [`#710`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/710)
+- fix(SmartReview): fix author order list page, fix invalid formatted reference [`#714`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/714)
+- fix(SmartReview): scrollbars for overflowing outline items [`#713`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/713)
+- feature: support for draft comparisons, consolidate draft entity design [`#707`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/707)
+- refactor: transition to Redux Toolkit, starting with the contribution editor [`#706`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/706)
+
+---
 ## [V0.53](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.52.1...V0.53) - 2021-11-02
 
 ### Changes

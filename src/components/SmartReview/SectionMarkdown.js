@@ -38,7 +38,7 @@ const ItemReference = ({ entity: { reference } }) => (
     <div role="button" onMouseDown={e => e.preventDefault()} className="px-2 py-1">
         {reference.id}{' '}
         <span className="font-italic ml-2" style={{ opacity: 0.7 }}>
-            {reference?.author?.[0]?.family ?? ''} {reference.author.length > 0 ? 'et al.' : ''} {reference?.issued?.['date-parts']?.[0] ?? ''}
+            {reference?.author?.[0]?.family ?? ''} {reference?.author?.length > 0 ? 'et al.' : ''} {reference?.issued?.['date-parts']?.[0] ?? ''}
         </span>
     </div>
 );

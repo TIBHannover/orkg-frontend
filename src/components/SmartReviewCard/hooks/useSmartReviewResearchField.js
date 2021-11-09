@@ -37,7 +37,7 @@ function useSmartReviewResearchField({ smartReviewId, initResearchField = null, 
 
     return {
         researchField,
-        authors,
+        authors: authors.reverse(),
         isLoading
     };
 }

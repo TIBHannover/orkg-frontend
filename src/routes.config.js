@@ -45,7 +45,6 @@ import Contribution from 'pages/Contribution';
 import CsvImport from 'pages/CsvImport';
 import SmartReview from 'pages/SmartReview/SmartReview';
 import SmartReviews from 'pages/SmartReview/SmartReviews';
-import UserUnpublishedArticles from 'pages/SmartReview/UserUnpublishedArticles';
 import SmartReviewNew from 'pages/SmartReview/SmartReviewNew';
 import SmartReviewDiff from 'pages/SmartReview/SmartReviewDiff';
 import Tools from 'pages/Tools';
@@ -332,10 +331,6 @@ const routes = [
         component: SmartReviews
     },
     {
-        path: ROUTES.USER_UNPUBLISHED_REVIEWS,
-        component: requireAuthentication(UserUnpublishedArticles)
-    },
-    {
         path: ROUTES.CONTRIBUTION_EDITOR,
         component: requireAuthentication(ContributionEditor)
     },
@@ -379,6 +374,10 @@ const routes = [
     {
         path: ROUTES.WEBINAR_MAY_11,
         component: WebinarMay11
+    },
+    {
+        path: ROUTES.USER_UNPUBLISHED_REVIEWS,
+        component: () => <Redirect to={{ pathname: reverse(ROUTES.USER_SETTINGS, { tab: 'draft-smart-reviews' }), state: { status: 301 } }} />
     },
     /* Don't add routes below this line */
     {

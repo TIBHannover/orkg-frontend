@@ -102,7 +102,7 @@ function Publish(props) {
     useEffect(() => {
         setTitle(props.metaData && props.metaData.title ? props.metaData.title : '');
         setDescription(props.metaData && props.metaData.description ? props.metaData.description : '');
-        setReferences(props.metaData?.references && props.metaData.references.length > 0 ? props.metaData.references : ['']);
+        setReferences(props.metaData?.references?.length > 0 ? props.metaData.references.map(r => r.label) : ['']);
         setSubject(props.metaData && props.metaData.subject ? props.metaData.subject : undefined);
         setComparisonCreators(props.authors ? props.authors : []);
     }, [props.metaData, props.authors]);

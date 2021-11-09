@@ -137,7 +137,7 @@ const StyledAuthTooltip = styled(Tooltip)`
     & .tooltip-inner {
         font-size: 16px;
         background-color: ${props => props.theme.secondary};
-        max-width: 410px;
+        max-width: 430px;
         box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.13);
 
         .btn {
@@ -152,6 +152,26 @@ const StyledAuthTooltip = styled(Tooltip)`
 
     & .arrow:before {
         border-bottom-color: ${props => props.theme.secondary} !important;
+    }
+
+    @media (max-width: ${props => props.theme.gridBreakpoints.sm}) {
+        .btn-group {
+            width: 100%;
+            flex-direction: column;
+            .btn:first-child {
+                border-radius: ${props => props.theme.borderRadius} ${props => props.theme.borderRadius} 0 0;
+            }
+            .btn:last-child {
+                border-radius: 0 0 ${props => props.theme.borderRadius} ${props => props.theme.borderRadius};
+            }
+        }
+        .col-3 {
+            display: none;
+        }
+        .col-9 {
+            flex: 0 0 100%;
+            max-width: 100% !important;
+        }
     }
 `;
 
@@ -518,10 +538,18 @@ class Header extends Component {
                                                     >
                                                         Profile
                                                     </Button>
-                                                    <Button color="secondary" onClick={this.toggleUserTooltip} tag={Link} to={ROUTES.USER_SETTINGS}>
-                                                        Settings
+                                                    <Button
+                                                        color="secondary"
+                                                        className="text-nowrap"
+                                                        onClick={this.toggleUserTooltip}
+                                                        tag={Link}
+                                                        to={reverse(ROUTES.USER_SETTINGS)}
+                                                    >
+                                                        My account
                                                     </Button>
-                                                    <Button onClick={this.handleSignOut}>Sign out</Button>
+                                                    <Button onClick={this.handleSignOut} className="text-nowrap">
+                                                        Sign out
+                                                    </Button>
                                                 </ButtonGroup>
                                             </div>
                                         </Row>
