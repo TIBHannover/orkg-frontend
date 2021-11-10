@@ -18,7 +18,7 @@ const setup = (
 };
 
 describe('statement browser', () => {
-    test('should render statement browser', async () => {
+    it('should render statement browser', async () => {
         const config = {
             initialSubjectId: 'R1',
             initialSubjectLabel: null,

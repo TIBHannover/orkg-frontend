@@ -15,7 +15,7 @@ const setup = (
 };
 
 describe('Add property', () => {
-    test('should render add property button', async () => {
+    it('should render add property button', async () => {
         const config = {
             resourceId: 'R1',
             syncBackend: false
@@ -24,7 +24,7 @@ describe('Add property', () => {
         expect(screen.getByRole('button', { name: 'Add property' })).toBeInTheDocument();
     });
 
-    test('should show input form with a cancel button when clicking on add', async () => {
+    it('should show input form with a cancel button when clicking on add', async () => {
         const config = {
             resourceId: 'R1',
             syncBackend: false
@@ -38,7 +38,7 @@ describe('Add property', () => {
         expect(screen.getByRole('button', { name: 'Cancel' })).toBeInTheDocument();
     });
 
-    test('should show a disabled button if the template is strict', async () => {
+    it('should show a disabled button if the template is strict', async () => {
         const config = {
             resourceId: 'R142012',
             syncBackend: false
@@ -49,7 +49,7 @@ describe('Add property', () => {
         expect(addButton).toHaveAttribute('disabled');
     });
 
-    test('should add existing property', async () => {
+    it('should add existing property', async () => {
         const config = {
             inTemplate: false,
             isDisabled: false,
@@ -69,7 +69,7 @@ describe('Add property', () => {
         // TODO : Check if the property added to the statement browser
     });
 
-    test('should create new property', async () => {
+    it('should create new property', async () => {
         const config = {
             inTemplate: false,
             isDisabled: false,

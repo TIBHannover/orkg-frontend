@@ -18,7 +18,7 @@ const setup = async (
 };
 
 describe('formatted label', () => {
-    test('should render Basic reproduction number contribution', async () => {
+    it('should render Basic reproduction number contribution', async () => {
         const config = {
             initialSubjectId: 'R44727',
             initialSubjectLabel: null,
