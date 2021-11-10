@@ -31,12 +31,33 @@ export const contributionEditorSlice = createSlice({
     initialState,
     reducers: {
         contributionsAdded: (state, { payload: { contributions, statements, resources, literals, papers, properties } }) => {
-            state.contributions = contributions;
-            state.statements = statements;
-            state.resources = resources;
-            state.literals = literals;
-            state.papers = papers;
-            state.properties = properties;
+            return {
+                ...state,
+                contributions: {
+                    ...state.contributions,
+                    ...contributions
+                },
+                statements: {
+                    ...state.statements,
+                    ...statements
+                },
+                resources: {
+                    ...state.resources,
+                    ...resources
+                },
+                literals: {
+                    ...state.literals,
+                    ...literals
+                },
+                papers: {
+                    ...state.papers,
+                    ...papers
+                },
+                properties: {
+                    ...state.properties,
+                    ...properties
+                }
+            };
         },
         setIsLoading: (state, { payload }) => {
             state.isLoading = payload;
