@@ -145,8 +145,12 @@
         "react-scripts": "^4.0.3",
         "react-select-event": "^5.3.0"
     },
+    "jest-junit": {
+        "classNameTemplate": "{classname}",
+        "titleTemplate": "{title}"
+    },
     "auto-changelog": {
-        "template": "./keepachangelog.hbs",
+        "template": "./keepachangetestlog.hbs",
         "unreleased": false,
         "commitLimit": 0,
         "tagPattern": ".+",
