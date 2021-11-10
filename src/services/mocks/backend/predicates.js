@@ -22,6 +22,14 @@ const predicates = [
                         created_by: '00000000-0000-0000-0000-000000000000',
                         _class: 'predicate',
                         description: null
+                    },
+                    {
+                        id: `P1`,
+                        label: 'property 1',
+                        created_at: '2021-07-09T09:29:50.284483Z',
+                        created_by: '00000000-0000-0000-0000-000000000000',
+                        _class: 'predicate',
+                        description: null
                     }
                 ],
                 pageable: {
