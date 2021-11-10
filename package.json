@@ -147,7 +147,8 @@
     },
     "jest-junit": {
         "classNameTemplate": "{classname}",
-        "titleTemplate": "{title}"
+        "titleTemplate": "{title}",
+        "addFileAttribute": "true"
     },
     "auto-changelog": {
         "template": "./keepachangetestlog.hbs",
