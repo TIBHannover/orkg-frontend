@@ -45,7 +45,6 @@ describe('AddProperty no syncBackend', () => {
         fireEvent.click(addButton);
         expect(screen.getByRole('textbox', { id: 'addProperty' }));
         await selectEvent.create(screen.getByRole('textbox', { id: 'addProperty' }), 'test property');
-        expect(screen.queryByText(/Loading/i)).toBeInTheDocument();
         expect(screen.queryByText(/Create new property/i)).toBeInTheDocument();
         const createButton = screen.getByRole('button', { name: /Create new property/i });
         fireEvent.click(createButton);
@@ -61,7 +60,6 @@ describe('AddProperty syncBackend', () => {
         fireEvent.click(addButton);
         expect(screen.getByRole('textbox', { id: 'addProperty' }));
         await selectEvent.create(screen.getByRole('textbox', { id: 'addProperty' }), 'test property');
-        expect(screen.queryByText(/Loading/i)).toBeInTheDocument();
         const cancelButton = screen.getAllByRole('button', { name: /Cancel/i })[1];
         fireEvent.click(cancelButton);
         await waitForElementToBeRemoved(() => screen.queryByText(/Loading/i));
@@ -86,7 +84,6 @@ describe('AddProperty syncBackend', () => {
         fireEvent.click(addButton);
         expect(screen.getByRole('textbox', { id: 'addProperty' }));
         await selectEvent.create(screen.getByRole('textbox', { id: 'addProperty' }), 'test property');
-        expect(screen.queryByText(/Loading/i)).toBeInTheDocument();
         const createButton = screen.getByRole('button', { name: /Create new property/i });
         fireEvent.click(createButton);
         await waitForElementToBeRemoved(() => screen.queryByText(/Loading/i));
@@ -109,7 +106,6 @@ describe('AddProperty syncBackend', () => {
         fireEvent.click(addButton);
         expect(screen.getByRole('textbox', { id: 'addProperty' }));
         await selectEvent.create(screen.getByRole('textbox', { id: 'addProperty' }), 'test property');
-        expect(screen.queryByText(/Loading/i)).toBeInTheDocument();
         const cancelButton = screen.getAllByRole('button', { name: /Cancel/i })[1];
         fireEvent.click(cancelButton);
         await waitForElementToBeRemoved(() => screen.queryByText(/Loading/i));
