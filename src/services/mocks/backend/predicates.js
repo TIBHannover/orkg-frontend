@@ -69,6 +69,19 @@ const predicates = [
                 organization_id: '00000000-0000-0000-0000-000000000000'
             })
         );
+    }),
+    rest.post(`${predicatesUrl}`, (req, res, ctx) => {
+        const { label } = req.body;
+        return res(
+            ctx.json({
+                id: `P${faker.datatype.number()}`,
+                label: label,
+                created_at: '2021-11-10T15:12:12.33781Z',
+                created_by: '40f2034c-986b-451f-ac08-67b1bd23fe3d',
+                _class: 'predicate',
+                description: null
+            })
+        );
     })
 ];
 

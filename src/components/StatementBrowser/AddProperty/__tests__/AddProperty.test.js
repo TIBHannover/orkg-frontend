@@ -66,7 +66,6 @@ describe('Add property', () => {
         await waitForElementToBeRemoved(() => screen.queryByText(/Loading.../i));
         fireEvent.click(screen.getAllByText('property label 1')[1]);
         expect(screen.getByRole('button', { name: 'Add property' })).toBeInTheDocument();
-        // TODO : Check if the property added to the statement browser
     });
 
     it('should create new property', async () => {
@@ -87,6 +86,5 @@ describe('Add property', () => {
         await waitFor(() => screen.getAllByText(/Create "test property"/i));
         fireEvent.click(screen.getAllByText(/Create "test property"/i)[1]);
         expect(screen.queryByText(/Create new property/i)).toBeInTheDocument();
-        // TODO : Check if the property added to the statement browser
     });
 });

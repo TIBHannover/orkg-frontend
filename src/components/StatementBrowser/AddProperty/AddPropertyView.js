@@ -67,6 +67,7 @@ const AddPropertyView = props => {
                                 allowCreate
                                 defaultOptions={defaultProperties}
                                 inputGroup={false}
+                                inputId="addProperty"
                             />
                             <InputGroupAddon addonType="append">
                                 <StyledButton outline onClick={() => props.setShowAddProperty(false)}>
