@@ -95,7 +95,6 @@ describe('AddProperty no syncBackend', () => {
         await selectEvent.create(screen.getByRole('textbox', { id: 'addProperty' }), 'test property');
         const cancelButton = screen.getAllByRole('button', { name: /Cancel/i })[1];
         fireEvent.click(cancelButton);
-        await waitForElementToBeRemoved(() => screen.queryByText(/Loading/i));
         await waitFor(() => expect(screen.getByRole('button', { name: 'Add property' })).toBeInTheDocument());
     });
 });

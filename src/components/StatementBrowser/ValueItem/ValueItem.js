@@ -9,7 +9,6 @@ import { Button, Badge } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import { ValueItemStyle } from 'components/StatementBrowser/styled';
-import Pulse from 'components/Utils/Pulse';
 import ValuePlugins from 'components/ValuePlugins/ValuePlugins';
 import { Link } from 'react-router-dom';
 import { getResourceLink } from 'utils';
@@ -20,6 +19,10 @@ import ROUTES from 'constants/routes';
 import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
 import ValueItemOptions from './ValueItemOptions/ValueItemOptions';
 import ValueForm from 'components/StatementBrowser/ValueForm/ValueForm';
+import { Cookies } from 'react-cookie';
+import env from '@beam-australia/react-env';
+
+const cookies = new Cookies();
 
 const ValueItem = props => {
     const {
@@ -99,17 +102,21 @@ const ValueItem = props => {
                                                 <Button
                                                     className="p-0 text-left objectLabel"
                                                     color="link"
-                                                    onClick={handleOnClick}
+                                                    onClick={() => {
+                                                        cookies.set('showedValueHelp', true, { path: env('PUBLIC_URL'), maxAge: 604800 });
+                                                        handleOnClick();
+                                                    }}
                                                     style={{ userSelect: 'text' }}
                                                 >
                                                     {value._class === ENTITIES.CLASS && <div className="typeCircle">C</div>}
                                                     {value._class === ENTITIES.PREDICATE && <div className="typeCircle">P</div>}
                                                     {props.showHelp && value._class === ENTITIES.RESOURCE ? (
-                                                        <Pulse content="Click on the resource to browse it">
+                                                        <span style={{ position: 'relative' }}>
+                                                            <span className="pulsate-css" />
                                                             <ValuePlugins type="resource">
                                                                 {getLabel() !== '' ? getLabel().toString() : <i>No label</i>}
                                                             </ValuePlugins>
-                                                        </Pulse>
+                                                        </span>
                                                     ) : (
                                                         <ValuePlugins type="resource">
                                                             {getLabel() !== '' ? getLabel().toString() : <i>No label</i>}
