@@ -164,13 +164,7 @@ const StatementItem = forwardRef((props, ref) => {
                             </div>
                         )}
                         {props.enableEdit && (
-                            <AddValue
-                                isDisabled={!canAddValue}
-                                contextStyle="Template"
-                                propertyId={props.id}
-                                resourceId={props.resourceId}
-                                syncBackend={props.syncBackend}
-                            />
+                            <AddValue isDisabled={!canAddValue} propertyId={props.id} resourceId={props.resourceId} syncBackend={props.syncBackend} />
                         )}
                     </ListGroup>
                 </ValuesStyle>

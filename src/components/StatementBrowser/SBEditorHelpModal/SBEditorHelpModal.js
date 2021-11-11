@@ -17,7 +17,7 @@ const SBEditorHelpModal = () => {
     const { loadPage, page, isLoading: isLoadingPage, isNotFound } = usePage();
     const dispatch = useDispatch();
     const [articles, setArticles] = useState([]);
-    const [isLoading, setIsLoading] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
     const [hasFailed, setHasFailed] = useState(false);
 
     useEffect(() => {

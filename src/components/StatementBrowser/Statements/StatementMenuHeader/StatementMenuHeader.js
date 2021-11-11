@@ -13,6 +13,8 @@ import Preferences from 'components/StatementBrowser/Preferences/Preferences';
 import PropTypes from 'prop-types';
 export default function StatementMenuHeader(props) {
     const isPreferencesOpen = useSelector(state => state.statementBrowser.isPreferencesOpen);
+    const isHelpModalOpen = useSelector(state => state.statementBrowser.isHelpModalOpen);
+    const isTemplatesModalOpen = useSelector(state => state.statementBrowser.isTemplatesModalOpen);
     const dispatch = useDispatch();
     const preferencesTippy = useRef(null);
     const shared = props.resource?.shared ?? 0;
@@ -35,7 +37,7 @@ export default function StatementMenuHeader(props) {
                                     <Icon className="mr-1" icon={faPuzzlePiece} /> Templates
                                 </div>
                             </Tippy>
-                            <TemplatesModal syncBackend={props.syncBackend} />
+                            {isTemplatesModalOpen && <TemplatesModal syncBackend={props.syncBackend} />}
                         </Button>
                     )}
                     {props.enableEdit && (
@@ -75,7 +77,7 @@ export default function StatementMenuHeader(props) {
                 </UncontrolledAlert>
             )}
 
-            <SBEditorHelpModal />
+            {isHelpModalOpen && <SBEditorHelpModal />}
         </>
     );
 }

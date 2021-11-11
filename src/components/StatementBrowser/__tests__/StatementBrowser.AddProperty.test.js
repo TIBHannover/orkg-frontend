@@ -96,7 +96,7 @@ describe('AddProperty no syncBackend', () => {
         const cancelButton = screen.getAllByRole('button', { name: /Cancel/i })[1];
         fireEvent.click(cancelButton);
         await waitForElementToBeRemoved(() => screen.queryByText(/Loading/i));
-        expect(() => screen.getByText('Test property')).toThrow();
+        await waitFor(() => expect(screen.getByRole('button', { name: 'Add property' })).toBeInTheDocument());
     });
 });
 
@@ -119,7 +119,6 @@ describe('AddProperty syncBackend', () => {
         await selectEvent.create(screen.getByRole('textbox', { id: 'addProperty' }), 'test property');
         const createButton = screen.getByRole('button', { name: /Create new property/i });
         fireEvent.click(createButton);
-        await waitForElementToBeRemoved(() => screen.queryByText(/Loading/i));
         await waitFor(() => expect(screen.getByRole('link', { name: 'Test property' })).toBeInTheDocument());
     });
 });
@@ -141,6 +140,6 @@ describe('AddProperty syncBackend', () => {
         await selectEvent.create(screen.getByRole('textbox', { id: 'addProperty' }), 'test property');
         const cancelButton = screen.getAllByRole('button', { name: /Cancel/i })[1];
         fireEvent.click(cancelButton);
-        await waitFor(() => expect(() => screen.getByRole('link', { name: 'Test property' })).toThrow());
+        await waitFor(() => expect(screen.getByRole('button', { name: 'Add property' })).toBeInTheDocument());
     });
 });
