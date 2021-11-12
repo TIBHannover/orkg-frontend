@@ -1,7 +1,7 @@
 import { render, screen, fireEvent, waitFor } from 'testUtils';
 import StatementBrowser from '../StatementBrowser';
 import { ENTITIES } from 'constants/graphSettings';
-import { statementBrowserOneProperty } from '../AddValue/__mocks__/StatementBrowserData';
+import { statementBrowserOneProperty } from '../AddValue/__mocks__/StatementBrowserDataAddValue';
 import { ToastContainer } from 'react-toastify';
 
 jest.mock('react-flip-move', () => ({ children }) => children);
