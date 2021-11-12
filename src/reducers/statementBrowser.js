@@ -403,7 +403,9 @@ export default (state = initialState, action) => {
             const { payload } = action;
             const valueId = dotProp.get(state, `resources.byId.${payload.resourceId}.valueId`);
             let newState = dotProp.set(state, `resources.byId.${payload.resourceId}.classes`, payload.classes);
-            newState = dotProp.set(newState, `values.byId.${valueId}.classes`, payload.classes);
+            if (valueId) {
+                newState = dotProp.set(newState, `values.byId.${valueId}.classes`, payload.classes);
+            }
             return newState;
         }
 

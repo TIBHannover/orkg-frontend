@@ -75,10 +75,10 @@ const ClassesItem = props => {
                     console.error(err);
                 });
         };
-        if (resource?._class === ENTITIES.RESOURCE) {
+        if (preferences['showClasses'] && resource?._class === ENTITIES.RESOURCE) {
             findClasses();
         }
-    }, [resource?._class, resource.classes]);
+    }, [preferences, resource?._class, resource.classes]);
 
     const handleChangeClasses = async (selected, action) => {
         setIsSaving(true);

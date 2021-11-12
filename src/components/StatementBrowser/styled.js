@@ -119,25 +119,26 @@ export const ValueItemStyle = styled(ListGroupItem)`
     }
 
     .valueOptions {
-        visibility: hidden;
         display: inline-block !important;
-        transition: visibility 0.2s, opacity 0.2s;
+        transition: opacity 0.2s;
         opacity: 0;
+        // "visibility: hidden" behaves like a combination of "opacity: 0" and "pointer-events: none".
+        pointer-events: none;
 
         &.disableHover {
-            visibility: visible;
             opacity: 1;
+            pointer-events: auto;
         }
     }
 
     &:hover .valueOptions {
-        visibility: visible;
         opacity: 1;
+        pointer-events: auto;
     }
 
     &:focus-within .valueOptions {
-        visibility: visible;
         opacity: 1;
+        pointer-events: auto;
     }
 
     &.editingLabel {
@@ -327,21 +328,22 @@ export const PropertyStyle = styled.div`
     }
 
     & .propertyOptions {
-        visibility: hidden;
         opacity: 0;
-        transition: visibility 0.2s, opacity 0.2s;
+        // "visibility: hidden" behaves like a combination of "opacity: 0" and "pointer-events: none".
+        pointer-events: none;
+        transition: opacity 0.2s;
 
         &.disableHover {
-            visibility: visible;
             opacity: 1;
+            pointer-events: auto;
         }
     }
     &:focus {
         outline: 0;
     }
     &:hover .propertyOptions {
-        visibility: visible;
         opacity: 1;
+        pointer-events: auto;
         span {
             color: ${props => props.theme.dark};
         }
@@ -350,8 +352,8 @@ export const PropertyStyle = styled.div`
         }
     }
     &:focus-within .propertyOption {
-        visibility: visible;
         opacity: 1;
+        pointer-events: auto;
         span {
             color: ${props => props.theme.dark};
         }
