@@ -43,6 +43,7 @@ const StatementActionButton = props => {
             action={handleClick}
             isDisabled={props.isDisabled}
             size={props.iconSize}
+            testId={props.testId}
         />
     );
 
@@ -81,6 +82,7 @@ StatementActionButton.propTypes = {
     title: PropTypes.oneOfType([PropTypes.object, PropTypes.string]).isRequired,
     icon: PropTypes.object.isRequired,
     iconSpin: PropTypes.bool.isRequired,
+    testId: PropTypes.string,
     iconSize: PropTypes.oneOf(['xs', 'sm', 'lg']),
     action: PropTypes.func,
     isDisabled: PropTypes.bool,

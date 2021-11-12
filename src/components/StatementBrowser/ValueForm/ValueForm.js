@@ -251,7 +251,7 @@ const ValueForm = props => {
 
 ValueForm.propTypes = {
     id: PropTypes.string, // If the id is set (editMode)
-    propertyId: PropTypes.string.isRequired,
+    propertyId: PropTypes.string,
     resourceId: PropTypes.string,
     syncBackend: PropTypes.bool.isRequired,
     setShowAddValue: PropTypes.func,

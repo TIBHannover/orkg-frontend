@@ -73,6 +73,7 @@ const ValueItemOptions = ({ id, enableEdit, syncBackend, handleOnClick }) => {
                             resource._class !== ENTITIES.CLASS && (
                                 <StatementActionButton
                                     title="Edit value"
+                                    testId={id}
                                     icon={faPen}
                                     isDisabled={value.isDeleting}
                                     action={hasFormattedLabel ? handleOnClick : () => dispatch(toggleEditValue({ id: id }))}
