@@ -30,6 +30,8 @@ const clickOnEditValueButton = async (screen, valueId) => {
     const editButton = screen.getByTestId(valueId);
     expect(editButton).toBeInTheDocument();
     fireEvent.click(editButton);
+    expect(screen.getByRole('button', { name: 'Done' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Cancel' })).toBeInTheDocument();
 };
 
 const VALUE_IDS = {
@@ -43,12 +45,34 @@ const VALUE_IDS = {
 };
 
 describe('ValueItem', () => {
+    it('should cancel editing on clicking Cancel', async () => {
+        setup();
+        await clickOnEditValueButton(screen, VALUE_IDS['Date']);
+        expect(screen.queryByText(/Cancel/i)).toBeInTheDocument();
+        fireEvent.click(screen.getByRole('button', { name: 'Cancel' }));
+        expect(screen.queryByText(/Cancel/i)).toBeNull();
+        expect(screen.getByTestId(VALUE_IDS['Date'])).toBeInTheDocument();
+    });
+});
+
+describe('ValueItem', () => {
     it('should show edit form for date when editing a Date', async () => {
         setup();
         await clickOnEditValueButton(screen, VALUE_IDS['Date']);
         const inputForm = screen.getByPlaceholderText(/enter a value/i);
         expect(inputForm).toHaveAttribute('type', 'date');
         expect(inputForm).toHaveValue('2021-11-12');
+    });
+});
+
+describe('ValueItem', () => {
+    it('should change value of date after editing a Date', async () => {
+        setup();
+        await clickOnEditValueButton(screen, VALUE_IDS['Date']);
+        fireEvent.change(screen.getByPlaceholderText(/enter a value/i), { target: { value: '2018-10-25' } });
+        fireEvent.click(screen.getByRole('button', { name: 'Done' }));
+        await waitFor(() => expect(screen.getByText('2018-10-25')).toBeInTheDocument());
+        await waitFor(() => expect(screen.getByText('Date')).toHaveAttribute('title', 'xsd:date'));
     });
 });
 
@@ -63,12 +87,34 @@ describe('ValueItem', () => {
 });
 
 describe('ValueItem', () => {
+    it('should change value of integer after editing a Integer', async () => {
+        setup();
+        await clickOnEditValueButton(screen, VALUE_IDS['Integer']);
+        fireEvent.change(screen.getByPlaceholderText(/enter a value/i), { target: { value: '1' } });
+        fireEvent.click(screen.getByRole('button', { name: 'Done' }));
+        await waitFor(() => expect(screen.getByText('1')).toBeInTheDocument());
+        await waitFor(() => expect(screen.getByText('Integer')).toHaveAttribute('title', 'xsd:integer'));
+    });
+});
+
+describe('ValueItem', () => {
     it('should show edit form for text when editing a Decimal', async () => {
         setup();
         await clickOnEditValueButton(screen, VALUE_IDS['Decimal']);
         const inputForm = screen.getByPlaceholderText(/enter a value/i);
         expect(inputForm).toBeInTheDocument();
         expect(inputForm).toHaveValue('3.14');
+    });
+});
+
+describe('ValueItem', () => {
+    it('should change value of decimal after editing a Decimal', async () => {
+        setup();
+        await clickOnEditValueButton(screen, VALUE_IDS['Decimal']);
+        fireEvent.change(screen.getByPlaceholderText(/enter a value/i), { target: { value: '1.5' } });
+        fireEvent.click(screen.getByRole('button', { name: 'Done' }));
+        await waitFor(() => expect(screen.getByText('1.5')).toBeInTheDocument());
+        await waitFor(() => expect(screen.getByText('Decimal')).toHaveAttribute('title', 'xsd:decimal'));
     });
 });
 
@@ -83,12 +129,33 @@ describe('ValueItem', () => {
 });
 
 describe('ValueItem', () => {
+    it('should change value of text after editing a Text', async () => {
+        setup();
+        await clickOnEditValueButton(screen, VALUE_IDS['Text']);
+        fireEvent.change(screen.getByPlaceholderText(/enter a value/i), { target: { value: 'Literal 1' } });
+        fireEvent.click(screen.getByRole('button', { name: 'Done' }));
+        await waitFor(() => expect(screen.getByText('Literal 1')).toBeInTheDocument());
+        await waitFor(() => expect(screen.getByText('Text')).toHaveAttribute('title', 'xsd:string'));
+    });
+});
+
+describe('ValueItem', () => {
     it('should show edit form for text when editing a Resource', async () => {
         setup();
         await clickOnEditValueButton(screen, VALUE_IDS['Resource']);
         const inputForm = screen.getByPlaceholderText(/enter a value/i);
         expect(inputForm).toBeInTheDocument();
         expect(inputForm).toHaveValue('Lorem ipsum Resource');
+    });
+});
+
+describe('ValueItem', () => {
+    it('should change value of resource after editing a Resource', async () => {
+        setup();
+        await clickOnEditValueButton(screen, VALUE_IDS['Resource']);
+        fireEvent.change(screen.getByPlaceholderText(/enter a value/i), { target: { value: 'resource label 1' } });
+        fireEvent.click(screen.getByRole('button', { name: 'Done' }));
+        await waitFor(() => expect(screen.getByRole('button', { name: 'resource label 1' })).toBeInTheDocument());
     });
 });
 
@@ -103,11 +170,33 @@ describe('ValueItem', () => {
 });
 
 describe('ValueItem', () => {
+    it('should change value of boolean after editing a Boolean', async () => {
+        setup();
+        await clickOnEditValueButton(screen, VALUE_IDS['Boolean']);
+        fireEvent.change(screen.getByRole('combobox'), { target: { value: 'true' } });
+        fireEvent.click(screen.getByRole('button', { name: 'Done' }));
+        await waitFor(() => expect(screen.getByLabelText('Check mark')).toBeInTheDocument());
+        await waitFor(() => expect(screen.getByText('Boolean')).toHaveAttribute('title', 'xsd:boolean'));
+    });
+});
+
+describe('ValueItem', () => {
     it('should show edit form for text when editing a URL', async () => {
         setup();
         await clickOnEditValueButton(screen, VALUE_IDS['URL']);
         const inputForm = screen.getByPlaceholderText(/enter a value/i);
         expect(inputForm).toBeInTheDocument();
         expect(inputForm).toHaveValue('www.orkg.org');
+    });
+});
+
+describe('ValueItem', () => {
+    it('should change value of url after editing a URL', async () => {
+        setup();
+        await clickOnEditValueButton(screen, VALUE_IDS['URL']);
+        fireEvent.change(screen.getByPlaceholderText(/enter a value/i), { target: { value: 'www.tib.eu' } });
+        fireEvent.click(screen.getByRole('button', { name: 'Done' }));
+        await waitFor(() => expect(screen.getByText('www.tib.eu')).toBeInTheDocument());
+        await waitFor(() => expect(screen.getByText('URL')).toHaveAttribute('title', 'xsd:anyURI'));
     });
 });
