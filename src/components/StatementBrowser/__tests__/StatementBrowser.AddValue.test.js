@@ -131,15 +131,6 @@ describe('AddValue', () => {
 });
 
 describe('AddValue', () => {
-    it('should show text field on switch to URL datatype', async () => {
-        setup();
-        await clickOnAddButton(screen);
-        await selectEvent.select(screen.getByText('Resource'), ['URL'], { container: document.body });
-        expect(screen.getByPlaceholderText(/enter a value/i)).toBeInTheDocument();
-    });
-});
-
-describe('AddValue', () => {
     it('should add resource when selected from the option', async () => {
         setup();
         await clickOnAddButton(screen);
