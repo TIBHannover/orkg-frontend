@@ -11,7 +11,7 @@ import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowser
 import PropTypes from 'prop-types';
 
 const AddValue = props => {
-    const { modal, setModal, isBlankNode, entityType, dialogResourceId, dialogResourceLabel, createBlankNode } = useAddValue({
+    const { modal, property, setModal, isBlankNode, entityType, dialogResourceId, dialogResourceLabel, createBlankNode } = useAddValue({
         resourceId: props.resourceId,
         propertyId: props.propertyId,
         syncBackend: props.syncBackend
@@ -48,6 +48,7 @@ const AddValue = props => {
                                     setShowAddValue(true);
                                 }
                             }}
+                            testId={`add-value-${property.existingPredicateId}-${Boolean(isBlankNode)}`}
                         />
                     ) : (
                         <span>

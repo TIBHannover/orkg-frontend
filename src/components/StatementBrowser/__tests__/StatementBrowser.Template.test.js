@@ -1,4 +1,4 @@
-import { render, screen, waitFor, waitForElementToBeRemoved } from 'testUtils';
+import { render, screen, waitFor, fireEvent, waitForElementToBeRemoved } from 'testUtils';
 import StatementBrowser from '../StatementBrowser';
 import { ENTITIES } from 'constants/graphSettings';
 import { ToastContainer } from 'react-toastify';
@@ -33,5 +33,19 @@ describe('StatementBrowser', () => {
         await waitFor(() => expect(screen.getByText(/Basic reproduction number/i)).toBeInTheDocument());
         expect(screen.getByText(/Location/i)).toBeInTheDocument();
         expect(screen.getByText(/Time period/i)).toBeInTheDocument();
+    });
+});
+
+describe('AddValue', () => {
+    it('should add blank node', async () => {
+        setup();
+        await waitFor(() => expect(screen.queryByText(/Loading/i)).toBeInTheDocument());
+        await waitForElementToBeRemoved(() => screen.queryByText(/Loading/i));
+        await waitFor(() => expect(screen.getByText(/Basic reproduction number/i)).toBeInTheDocument());
+        // Basic reproduction number
+        await waitFor(() => expect(screen.getByTestId('add-value-P23140-true')).toBeInTheDocument());
+        fireEvent.click(screen.getByTestId('add-value-P23140-true'));
+        await waitFor(() => expect(screen.getByText(/has value/i)).toBeInTheDocument());
+        await waitFor(() => expect(screen.getByText(/Confidence interval/i)).toBeInTheDocument());
     });
 });

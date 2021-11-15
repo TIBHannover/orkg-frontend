@@ -96,14 +96,14 @@ const resources = [
         }
     }),
     rest.post(resourcesUrl, (req, res, ctx) => {
-        const { label } = req.body;
+        const { label, classes } = req.body;
 
         return res(
             ctx.json({
                 id: `R${faker.datatype.number()}`,
                 label: label,
                 created_at: '2020-06-22T10:38:53.178764Z',
-                classes: [],
+                classes: classes ?? [],
                 shared: 0,
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'resource',

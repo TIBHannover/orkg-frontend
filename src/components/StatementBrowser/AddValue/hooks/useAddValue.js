@@ -178,6 +178,7 @@ const useAddValue = ({ resourceId, propertyId, syncBackend }) => {
 
     return {
         modal,
+        property,
         setModal,
         isBlankNode,
         entityType,

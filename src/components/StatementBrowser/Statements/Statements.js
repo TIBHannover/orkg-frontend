@@ -116,7 +116,12 @@ const Statements = props => {
                                     })}
                             </FlipMove>
 
-                            {!resource.isFailedFetching && propertyIds.length === 0 && <NoData enableEdit={props.enableEdit} />}
+                            {!resource.isFailedFetching && propertyIds.length === 0 && (
+                                <>
+                                    {resource.classes.map(c => c.label ?? c).join(', ')}
+                                    <NoData enableEdit={props.enableEdit} />
+                                </>
+                            )}
                             {resource.isFailedFetching && propertyIds.length === 0 && <NotFound />}
                         </>
                     ) : (
