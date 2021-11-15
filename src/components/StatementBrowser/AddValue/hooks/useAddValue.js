@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import {
     createValue,
     getComponentsByResourceIDAndPredicateID,
@@ -32,9 +32,12 @@ const useAddValue = ({ resourceId, propertyId, syncBackend }) => {
     const [entityType] = useState(getConfigByType(isLiteralField ? MISC.DEFAULT_LITERAL_DATATYPE : ENTITIES.RESOURCE)._class);
     const [, setInputValue] = useState('');
 
-    if (valueClass) {
-        dispatch(fetchTemplatesOfClassIfNeeded(valueClass.id));
-    }
+    useEffect(() => {
+        if (valueClass) {
+            dispatch(fetchTemplatesOfClassIfNeeded(valueClass.id));
+        }
+    }, [dispatch, valueClass]);
+
     const isBlankNode = useSelector(state => {
         if (valueClass && !isLiteralField) {
             if (state.statementBrowser.classes[valueClass.id]?.templateIds) {

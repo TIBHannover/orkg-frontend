@@ -62,21 +62,38 @@ const resources = [
     ),
     rest.get(`${resourcesUrl}:id`, (req, res, ctx) => {
         const { id } = req.params;
-
-        return res(
-            ctx.json({
-                id,
-                label: 'resource label 1',
-                created_at: '2020-06-22T10:38:53.178764Z',
-                classes: [],
+        const MAPPING = {
+            R144080: {
+                id: 'R144080',
+                label: 'Test Resource R0',
+                created_at: '2021-11-15T11:20:41.326694Z',
+                classes: ['C4000'],
                 shared: 0,
-                created_by: '00000000-0000-0000-0000-000000000000',
+                created_by: '40f2034c-986b-451f-ac08-67b1bd23fe3d',
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
                 organization_id: '00000000-0000-0000-0000-000000000000'
-            })
-        );
+            }
+        };
+        if (MAPPING[id]) {
+            return res(ctx.json(MAPPING[id]));
+        } else {
+            return res(
+                ctx.json({
+                    id,
+                    label: 'resource label 1',
+                    created_at: '2020-06-22T10:38:53.178764Z',
+                    classes: [],
+                    shared: 0,
+                    created_by: '00000000-0000-0000-0000-000000000000',
+                    _class: 'resource',
+                    observatory_id: '00000000-0000-0000-0000-000000000000',
+                    extraction_method: 'UNKNOWN',
+                    organization_id: '00000000-0000-0000-0000-000000000000'
+                })
+            );
+        }
     }),
     rest.post(resourcesUrl, (req, res, ctx) => {
         const { label } = req.body;

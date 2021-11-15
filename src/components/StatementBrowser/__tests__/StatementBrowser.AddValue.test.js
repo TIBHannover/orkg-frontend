@@ -62,7 +62,7 @@ describe('AddValue', () => {
 });
 
 describe('AddValue', () => {
-    it('should show hide input form on Cancel', async () => {
+    it('should hide input form on Cancel', async () => {
         setup();
         await clickOnAddButton(screen);
         expect(() => screen.getByRole('button', { name: 'Add value' })).toThrow();

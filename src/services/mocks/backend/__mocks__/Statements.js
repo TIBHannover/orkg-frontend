@@ -716,6 +716,54 @@ export const templateOfClassC5001 = {
     empty: false
 };
 
+export const templateOfClassC4000 = {
+    content: [
+        {
+            id: 'S136485',
+            subject: {
+                id: 'R40006',
+                label: 'Basic reproduction number estimate',
+                created_at: '2020-05-20T10:15:47.930885+02:00',
+                classes: ['ContributionTemplate'],
+                shared: 0,
+                created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateOfClass',
+                label: 'Template of class',
+                created_at: '2020-03-10T13:47:00.32+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'C4000',
+                label: 'R40006',
+                uri: null,
+                created_at: '2020-06-03T20:21:11.980177+02:00',
+                created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a',
+                _class: 'class',
+                description: null
+            },
+            created_at: '2020-06-19T16:34:12.606443+02:00',
+            created_by: '00000000-0000-0000-0000-000000000000'
+        }
+    ],
+    pageable: { sort: { sorted: true, unsorted: false, empty: false }, pageNumber: 0, pageSize: 2000, offset: 0, paged: true, unpaged: false },
+    totalPages: 1,
+    totalElements: 1,
+    last: true,
+    first: true,
+    sort: { sorted: true, unsorted: false, empty: false },
+    size: 2000,
+    number: 0,
+    numberOfElements: 1,
+    empty: false
+};
 export const statementsR48000 = {
     root: 'R48000',
     statements: [
@@ -3137,6 +3185,829 @@ export const statementsR44415 = {
                 description: null
             },
             created_at: '2020-06-17T08:50:37.117284+02:00',
+            created_by: '00000000-0000-0000-0000-000000000000'
+        }
+    ]
+};
+
+export const statementsR0TemplateR40006 = {
+    root: 'R40006',
+    statements: [
+        {
+            id: 'S156036',
+            subject: {
+                id: 'R44546',
+                label: 'Determination of the COVID-19 basic reproduction number',
+                created_at: '2020-06-11T17:48:23.890503+02:00',
+                classes: ['Problem'],
+                shared: 36,
+                created_by: '1427a1ee-7551-47b1-9152-8274ab6cd7a4',
+                _class: 'resource',
+                observatory_id: '06144227-7efc-478c-8555-25147020f02f',
+                extraction_method: 'UNKNOWN',
+                organization_id: 'edc18168-c4ee-4cb8-a98a-136f748e912e'
+            },
+            predicate: {
+                id: 'description',
+                label: 'description',
+                created_at: '2021-11-15T11:45:22.754449Z',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description:
+                    'A textual comment helps clarify the meaning of RDF classes and properties. Such in-line documentation complements the use of both formal techniques (Ontology and rule languages) and informal (prose documentation, examples, test cases). A variety of documentation forms can be combined to indicate the intended meaning of the classes and properties described in an RDF vocabulary. Since RDF vocabularies are expressed as RDF graphs, vocabularies defined in other namespaces may be used to provide richer documentation.'
+            },
+            object: {
+                id: 'L94013',
+                label: 'This research problem aims at determining the basic reproduction rate of COVID-19.',
+                datatype: 'xsd:string',
+                created_at: '2020-10-16T14:19:45.023109+02:00',
+                created_by: '64acea2a-d2d7-4b28-9ada-8f9c0c5afea2',
+                _class: 'literal'
+            },
+            created_at: '2020-10-16T14:19:45.077826+02:00',
+            created_by: '64acea2a-d2d7-4b28-9ada-8f9c0c5afea2'
+        },
+        {
+            id: 'S155223',
+            subject: {
+                id: 'R44546',
+                label: 'Determination of the COVID-19 basic reproduction number',
+                created_at: '2020-06-11T17:48:23.890503+02:00',
+                classes: ['Problem'],
+                shared: 36,
+                created_by: '1427a1ee-7551-47b1-9152-8274ab6cd7a4',
+                _class: 'resource',
+                observatory_id: '06144227-7efc-478c-8555-25147020f02f',
+                extraction_method: 'UNKNOWN',
+                organization_id: 'edc18168-c4ee-4cb8-a98a-136f748e912e'
+            },
+            predicate: {
+                id: 'SAME_AS',
+                label: 'same as',
+                created_at: '2020-03-03T15:10:27.312+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: 'The property that determines that two given individuals are equal.'
+            },
+            object: {
+                id: 'L92962',
+                label: 'https://en.wikipedia.org/wiki/COVID-19_pandemic',
+                datatype: 'xsd:string',
+                created_at: '2020-10-13T12:50:52.620725+02:00',
+                created_by: '07a4c04e-f0ed-407e-a097-b676d5228a40',
+                _class: 'literal'
+            },
+            created_at: '2020-10-13T12:50:52.668608+02:00',
+            created_by: '07a4c04e-f0ed-407e-a097-b676d5228a40'
+        },
+        {
+            id: 'S136506',
+            subject: {
+                id: 'R44674',
+                label: 'Component for template R40006',
+                created_at: '2020-06-19T16:34:13.23205+02:00',
+                classes: [],
+                shared: 1,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateComponentOrder',
+                label: 'TemplateComponentOrder',
+                created_at: '2020-05-19T14:20:36.459531+02:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'L83423',
+                label: '2',
+                datatype: 'xsd:string',
+                created_at: '2020-06-19T16:34:13.503458+02:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'literal'
+            },
+            created_at: '2020-06-19T16:34:13.553935+02:00',
+            created_by: '00000000-0000-0000-0000-000000000000'
+        },
+        {
+            id: 'S136505',
+            subject: {
+                id: 'R44674',
+                label: 'Component for template R40006',
+                created_at: '2020-06-19T16:34:13.23205+02:00',
+                classes: [],
+                shared: 1,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateComponentOccurrenceMax',
+                label: 'TemplateComponentOccurrenceMax',
+                created_at: '2020-05-19T14:20:36.589812+02:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'L83422',
+                label: '1',
+                datatype: 'xsd:string',
+                created_at: '2020-06-19T16:34:13.445451+02:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'literal'
+            },
+            created_at: '2020-06-19T16:34:13.508003+02:00',
+            created_by: '00000000-0000-0000-0000-000000000000'
+        },
+        {
+            id: 'S136504',
+            subject: {
+                id: 'R44674',
+                label: 'Component for template R40006',
+                created_at: '2020-06-19T16:34:13.23205+02:00',
+                classes: [],
+                shared: 1,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateComponentOccurrenceMin',
+                label: 'TemplateComponentOccurrenceMin',
+                created_at: '2020-05-19T14:20:36.52552+02:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'L83421',
+                label: '1',
+                datatype: 'xsd:string',
+                created_at: '2020-06-19T16:34:13.290278+02:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'literal'
+            },
+            created_at: '2020-06-19T16:34:13.450494+02:00',
+            created_by: '00000000-0000-0000-0000-000000000000'
+        },
+        {
+            id: 'S136503',
+            subject: {
+                id: 'R40006',
+                label: 'Basic reproduction number estimate',
+                created_at: '2020-05-20T10:15:47.930885+02:00',
+                classes: ['ContributionTemplate'],
+                shared: 0,
+                created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateComponent',
+                label: 'Template component',
+                created_at: '2020-03-10T13:47:56.848+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'R44674',
+                label: 'Component for template R40006',
+                created_at: '2020-06-19T16:34:13.23205+02:00',
+                classes: [],
+                shared: 1,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            created_at: '2020-06-19T16:34:13.294788+02:00',
+            created_by: '00000000-0000-0000-0000-000000000000'
+        },
+        {
+            id: 'S136502',
+            subject: {
+                id: 'R44674',
+                label: 'Component for template R40006',
+                created_at: '2020-06-19T16:34:13.23205+02:00',
+                classes: [],
+                shared: 1,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateComponentProperty',
+                label: 'Template component property',
+                created_at: '2020-03-10T13:48:09.148+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'P15414',
+                label: 'Time period',
+                created_at: '2020-03-31T10:00:25.217+02:00',
+                created_by: '07a4c04e-f0ed-407e-a097-b676d5228a40',
+                _class: 'predicate',
+                description: null
+            },
+            created_at: '2020-06-19T16:34:13.294687+02:00',
+            created_by: '00000000-0000-0000-0000-000000000000'
+        },
+        {
+            id: 'S136501',
+            subject: {
+                id: 'R44674',
+                label: 'Component for template R40006',
+                created_at: '2020-06-19T16:34:13.23205+02:00',
+                classes: [],
+                shared: 1,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateComponentValue',
+                label: 'Template component value',
+                created_at: '2020-03-10T13:48:19.775+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'C2005',
+                label: 'time:Interval',
+                uri: 'http://www.w3.org/2006/time#Interval',
+                created_at: '2020-04-01T17:25:04.926+02:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'class',
+                description: null
+            },
+            created_at: '2020-06-19T16:34:13.294681+02:00',
+            created_by: '00000000-0000-0000-0000-000000000000'
+        },
+        {
+            id: 'S136500',
+            subject: {
+                id: 'R44673',
+                label: 'Component for template R40006',
+                created_at: '2020-06-19T16:34:12.967797+02:00',
+                classes: [],
+                shared: 1,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateComponentOrder',
+                label: 'TemplateComponentOrder',
+                created_at: '2020-05-19T14:20:36.459531+02:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'L83420',
+                label: '1',
+                datatype: 'xsd:string',
+                created_at: '2020-06-19T16:34:13.175066+02:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'literal'
+            },
+            created_at: '2020-06-19T16:34:13.229903+02:00',
+            created_by: '00000000-0000-0000-0000-000000000000'
+        },
+        {
+            id: 'S136499',
+            subject: {
+                id: 'R44673',
+                label: 'Component for template R40006',
+                created_at: '2020-06-19T16:34:12.967797+02:00',
+                classes: [],
+                shared: 1,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateComponentOccurrenceMax',
+                label: 'TemplateComponentOccurrenceMax',
+                created_at: '2020-05-19T14:20:36.589812+02:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'L83419',
+                label: '1',
+                datatype: 'xsd:string',
+                created_at: '2020-06-19T16:34:13.119383+02:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'literal'
+            },
+            created_at: '2020-06-19T16:34:13.175682+02:00',
+            created_by: '00000000-0000-0000-0000-000000000000'
+        },
+        {
+            id: 'S136498',
+            subject: {
+                id: 'R44673',
+                label: 'Component for template R40006',
+                created_at: '2020-06-19T16:34:12.967797+02:00',
+                classes: [],
+                shared: 1,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateComponentOccurrenceMin',
+                label: 'TemplateComponentOccurrenceMin',
+                created_at: '2020-05-19T14:20:36.52552+02:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'L83418',
+                label: '1',
+                datatype: 'xsd:string',
+                created_at: '2020-06-19T16:34:13.057898+02:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'literal'
+            },
+            created_at: '2020-06-19T16:34:13.119985+02:00',
+            created_by: '00000000-0000-0000-0000-000000000000'
+        },
+        {
+            id: 'S136497',
+            subject: {
+                id: 'R40006',
+                label: 'Basic reproduction number estimate',
+                created_at: '2020-05-20T10:15:47.930885+02:00',
+                classes: ['ContributionTemplate'],
+                shared: 0,
+                created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateComponent',
+                label: 'Template component',
+                created_at: '2020-03-10T13:47:56.848+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'R44673',
+                label: 'Component for template R40006',
+                created_at: '2020-06-19T16:34:12.967797+02:00',
+                classes: [],
+                shared: 1,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            created_at: '2020-06-19T16:34:13.061941+02:00',
+            created_by: '00000000-0000-0000-0000-000000000000'
+        },
+        {
+            id: 'S136496',
+            subject: {
+                id: 'R44673',
+                label: 'Component for template R40006',
+                created_at: '2020-06-19T16:34:12.967797+02:00',
+                classes: [],
+                shared: 1,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateComponentValue',
+                label: 'Template component value',
+                created_at: '2020-03-10T13:48:19.775+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'DCLocation',
+                label: 'dc:Location',
+                uri: 'http://purl.org/dc/terms/Location',
+                created_at: '2020-08-20T14:23:36.493994+02:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'class',
+                description: null
+            },
+            created_at: '2020-06-19T16:34:13.061776+02:00',
+            created_by: '00000000-0000-0000-0000-000000000000'
+        },
+        {
+            id: 'S136495',
+            subject: {
+                id: 'R44673',
+                label: 'Component for template R40006',
+                created_at: '2020-06-19T16:34:12.967797+02:00',
+                classes: [],
+                shared: 1,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateComponentProperty',
+                label: 'Template component property',
+                created_at: '2020-03-10T13:48:09.148+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'P5049',
+                label: 'location',
+                created_at: '2019-12-17T12:37:34.456+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            created_at: '2020-06-19T16:34:13.061678+02:00',
+            created_by: '00000000-0000-0000-0000-000000000000'
+        },
+        {
+            id: 'S136494',
+            subject: {
+                id: 'R44672',
+                label: 'Component for template R40006',
+                created_at: '2020-06-19T16:34:12.669564+02:00',
+                classes: [],
+                shared: 1,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateComponentOrder',
+                label: 'TemplateComponentOrder',
+                created_at: '2020-05-19T14:20:36.459531+02:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'L83417',
+                label: '0',
+                datatype: 'xsd:string',
+                created_at: '2020-06-19T16:34:12.916956+02:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'literal'
+            },
+            created_at: '2020-06-19T16:34:12.968857+02:00',
+            created_by: '00000000-0000-0000-0000-000000000000'
+        },
+        {
+            id: 'S136493',
+            subject: {
+                id: 'R44672',
+                label: 'Component for template R40006',
+                created_at: '2020-06-19T16:34:12.669564+02:00',
+                classes: [],
+                shared: 1,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateComponentOccurrenceMax',
+                label: 'TemplateComponentOccurrenceMax',
+                created_at: '2020-05-19T14:20:36.589812+02:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'L83416',
+                label: '1',
+                datatype: 'xsd:string',
+                created_at: '2020-06-19T16:34:12.857513+02:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'literal'
+            },
+            created_at: '2020-06-19T16:34:12.917436+02:00',
+            created_by: '00000000-0000-0000-0000-000000000000'
+        },
+        {
+            id: 'S136492',
+            subject: {
+                id: 'R44672',
+                label: 'Component for template R40006',
+                created_at: '2020-06-19T16:34:12.669564+02:00',
+                classes: [],
+                shared: 1,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateComponentOccurrenceMin',
+                label: 'TemplateComponentOccurrenceMin',
+                created_at: '2020-05-19T14:20:36.52552+02:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'L83415',
+                label: '1',
+                datatype: 'xsd:string',
+                created_at: '2020-06-19T16:34:12.798172+02:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'literal'
+            },
+            created_at: '2020-06-19T16:34:12.861684+02:00',
+            created_by: '00000000-0000-0000-0000-000000000000'
+        },
+        {
+            id: 'S136491',
+            subject: {
+                id: 'R44672',
+                label: 'Component for template R40006',
+                created_at: '2020-06-19T16:34:12.669564+02:00',
+                classes: [],
+                shared: 1,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateComponentProperty',
+                label: 'Template component property',
+                created_at: '2020-03-10T13:48:09.148+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'P23140',
+                label: 'Basic reproduction number',
+                created_at: '2020-06-11T17:54:44.198814+02:00',
+                created_by: '1427a1ee-7551-47b1-9152-8274ab6cd7a4',
+                _class: 'predicate',
+                description: null
+            },
+            created_at: '2020-06-19T16:34:12.800783+02:00',
+            created_by: '00000000-0000-0000-0000-000000000000'
+        },
+        {
+            id: 'S136490',
+            subject: {
+                id: 'R44672',
+                label: 'Component for template R40006',
+                created_at: '2020-06-19T16:34:12.669564+02:00',
+                classes: [],
+                shared: 1,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateComponentValue',
+                label: 'Template component value',
+                created_at: '2020-03-10T13:48:19.775+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'C5001',
+                label: 'R44415',
+                uri: null,
+                created_at: '2020-06-11T12:36:57.681872+02:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'class',
+                description: null
+            },
+            created_at: '2020-06-19T16:34:12.80053+02:00',
+            created_by: '00000000-0000-0000-0000-000000000000'
+        },
+        {
+            id: 'S136489',
+            subject: {
+                id: 'R40006',
+                label: 'Basic reproduction number estimate',
+                created_at: '2020-05-20T10:15:47.930885+02:00',
+                classes: ['ContributionTemplate'],
+                shared: 0,
+                created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateComponent',
+                label: 'Template component',
+                created_at: '2020-03-10T13:47:56.848+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'R44672',
+                label: 'Component for template R40006',
+                created_at: '2020-06-19T16:34:12.669564+02:00',
+                classes: [],
+                shared: 1,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            created_at: '2020-06-19T16:34:12.796139+02:00',
+            created_by: '00000000-0000-0000-0000-000000000000'
+        },
+        {
+            id: 'S136488',
+            subject: {
+                id: 'R40006',
+                label: 'Basic reproduction number estimate',
+                created_at: '2020-05-20T10:15:47.930885+02:00',
+                classes: ['ContributionTemplate'],
+                shared: 0,
+                created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateOfResearchProblem',
+                label: 'Template of research problem',
+                created_at: '2020-03-10T13:47:42.791+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'R44546',
+                label: 'Determination of the COVID-19 basic reproduction number',
+                created_at: '2020-06-11T17:48:23.890503+02:00',
+                classes: ['Problem'],
+                shared: 36,
+                created_by: '1427a1ee-7551-47b1-9152-8274ab6cd7a4',
+                _class: 'resource',
+                observatory_id: '06144227-7efc-478c-8555-25147020f02f',
+                extraction_method: 'UNKNOWN',
+                organization_id: 'edc18168-c4ee-4cb8-a98a-136f748e912e'
+            },
+            created_at: '2020-06-19T16:34:12.676038+02:00',
+            created_by: '00000000-0000-0000-0000-000000000000'
+        },
+        {
+            id: 'S136487',
+            subject: {
+                id: 'R40006',
+                label: 'Basic reproduction number estimate',
+                created_at: '2020-05-20T10:15:47.930885+02:00',
+                classes: ['ContributionTemplate'],
+                shared: 0,
+                created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateOfPredicate',
+                label: 'Template of predicate',
+                created_at: '2020-03-10T13:46:47.042+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'P31',
+                label: 'has contribution',
+                created_at: '2021-11-15T11:45:22.745495Z',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            created_at: '2020-06-19T16:34:12.670454+02:00',
+            created_by: '00000000-0000-0000-0000-000000000000'
+        },
+        {
+            id: 'S136486',
+            subject: {
+                id: 'R40006',
+                label: 'Basic reproduction number estimate',
+                created_at: '2020-05-20T10:15:47.930885+02:00',
+                classes: ['ContributionTemplate'],
+                shared: 0,
+                created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateOfResearchField',
+                label: 'Template of research field',
+                created_at: '2020-03-10T13:46:12.733+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'R12',
+                label: 'Life Sciences',
+                created_at: '2019-01-06T15:04:07.692Z',
+                classes: ['ResearchField'],
+                shared: 45,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            created_at: '2020-06-19T16:34:12.660337+02:00',
+            created_by: '00000000-0000-0000-0000-000000000000'
+        },
+        {
+            id: 'S136485',
+            subject: {
+                id: 'R40006',
+                label: 'Basic reproduction number estimate',
+                created_at: '2020-05-20T10:15:47.930885+02:00',
+                classes: ['ContributionTemplate'],
+                shared: 0,
+                created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateOfClass',
+                label: 'Template of class',
+                created_at: '2020-03-10T13:47:00.32+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'C4000',
+                label: 'R40006',
+                uri: null,
+                created_at: '2020-06-03T20:21:11.980177+02:00',
+                created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a',
+                _class: 'class',
+                description: null
+            },
+            created_at: '2020-06-19T16:34:12.606443+02:00',
             created_by: '00000000-0000-0000-0000-000000000000'
         }
     ]

@@ -6,10 +6,12 @@ import {
     templateOfClassC2005,
     templateOfClassC2003,
     templateOfClassC5001,
+    templateOfClassC4000,
     statementsR48000,
     statementsR35087,
     statementsR35077,
-    statementsR44415
+    statementsR44415,
+    statementsR0TemplateR40006
 } from 'services/mocks/backend/__mocks__/Statements';
 
 const statements = [
@@ -20,7 +22,8 @@ const statements = [
             R48000: statementsR48000,
             R35087: statementsR35087,
             R35077: statementsR35077,
-            R44415: statementsR44415
+            R44415: statementsR44415,
+            R40006: statementsR0TemplateR40006
         };
         if (MAPPING[id]) {
             return res(ctx.json(MAPPING[id]));
@@ -34,6 +37,7 @@ const statements = [
             Problem: templateOfClassProblem,
             C2005: templateOfClassC2005,
             C2003: templateOfClassC2003,
+            C4000: templateOfClassC4000,
             C5001: templateOfClassC5001
         };
         if (MAPPING[id]) {
