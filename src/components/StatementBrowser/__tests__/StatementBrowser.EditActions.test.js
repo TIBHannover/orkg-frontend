@@ -1,6 +1,7 @@
-import { render, screen, fireEvent, waitFor } from 'testUtils';
+import { render, screen, fireEvent, waitFor, waitForElementToBeRemoved } from 'testUtils';
 import StatementBrowser from '../StatementBrowser';
 import { ENTITIES } from 'constants/graphSettings';
+import selectEvent from 'react-select-event';
 import { statementBrowser1P7V } from '../ValueItem/__mocks__/StatementBrowserDataValueItem';
 import { ToastContainer } from 'react-toastify';
 
@@ -198,5 +199,54 @@ describe('ValueItem', () => {
         fireEvent.click(screen.getByRole('button', { name: 'Done' }));
         await waitFor(() => expect(screen.getByText('www.tib.eu')).toBeInTheDocument());
         await waitFor(() => expect(screen.getByText('URL')).toHaveAttribute('title', 'xsd:anyURI'));
+    });
+});
+
+describe('ValueItem', () => {
+    it('should change type of value after editing the type', async () => {
+        setup();
+        await clickOnEditValueButton(screen, VALUE_IDS['URL']);
+        // Could be a bug in react-select-event
+        await selectEvent.select(screen.getByText('URL'), ['Text'], { container: document.body });
+        await selectEvent.select(screen.getAllByText('URL')[0], ['Text'], { container: document.body });
+        fireEvent.click(screen.getByRole('button', { name: 'Done' }));
+        fireEvent.click(screen.getByRole('button', { name: 'Keep' }));
+        expect(screen.getAllByText('Text')).toHaveLength(2);
+        expect(screen.getByText('www.orkg.org')).toBeInTheDocument();
+        expect(screen.queryByText(/URL/i)).toBeNull();
+    });
+});
+
+describe('ValueItem', () => {
+    it('should change type of value after editing the type and value', async () => {
+        setup();
+        await clickOnEditValueButton(screen, VALUE_IDS['Date']);
+        // Could be a bug in react-select-event
+        await selectEvent.select(screen.getByText('Date'), ['Text'], { container: document.body });
+        await selectEvent.select(screen.getAllByText('Date')[0], ['Text'], { container: document.body });
+        fireEvent.change(screen.getByPlaceholderText(/enter a value/i), { target: { value: 'New text' } });
+        fireEvent.click(screen.getByRole('button', { name: 'Done' }));
+        await waitFor(() => expect(screen.getByText('New text')).toBeInTheDocument());
+        expect(screen.getAllByText('Text')).toHaveLength(2);
+        expect(screen.queryByText(/Date/i)).toBeNull();
+    });
+});
+
+describe('ValueItem', () => {
+    it('should not show datatype selector on resource edit', async () => {
+        setup();
+        await clickOnEditValueButton(screen, VALUE_IDS['Resource']);
+        expect(screen.queryByText(/Resource/i)).toBeNull();
+    });
+});
+
+describe('ValueItem', () => {
+    it('should not show resource datatype on literal edit', async () => {
+        setup();
+        await clickOnEditValueButton(screen, VALUE_IDS['Date']);
+        await selectEvent.select(screen.getByText('Date'), ['Date'], { container: document.body });
+        expect(screen.getAllByText(/Resource/i)).toHaveLength(1);
+        expect(screen.getAllByText('Text')).toHaveLength(2);
+        expect(screen.getAllByText('Date')).toHaveLength(2);
     });
 });
