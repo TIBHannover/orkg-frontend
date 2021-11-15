@@ -105,8 +105,9 @@ const CreatePaperModal = ({ isOpen, toggle, onCreatePaper, initialValue }) => {
             setYear(paper.year || year);
             setDoi(paper.doi || doi);
             setPublishedIn(paper.publishedIn || publishedIn);
+            setUrl(paper.url || url);
         },
-        [authors, doi, month, publishedIn, title, year]
+        [authors, doi, month, publishedIn, title, url, year]
     );
 
     const toggleItem = item => setOpenItem(openItem !== item ? item : null);

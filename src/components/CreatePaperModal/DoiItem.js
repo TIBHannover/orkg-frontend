@@ -58,7 +58,8 @@ const DoiItem = ({ toggleItem, isExpanded, value, onChange, onPopulateMetadata, 
                     month: parseResult.paperPublicationMonth,
                     year: parseResult.paperPublicationYear,
                     doi: parseResult.doi,
-                    publishedIn: parseResult.publishedIn
+                    publishedIn: parseResult.publishedIn,
+                    url: parseResult.url
                 });
 
                 setIsValid(true);
