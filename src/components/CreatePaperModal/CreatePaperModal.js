@@ -40,7 +40,7 @@ const CreatePaperModal = ({ isOpen, toggle, onCreatePaper, initialValue }) => {
             month,
             year,
             authors,
-            doi,
+            doi: REGEX.DOI.test(doi) ? doi : null,
             publishedIn,
             researchField,
             url,
