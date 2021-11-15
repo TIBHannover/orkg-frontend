@@ -233,6 +233,7 @@ const TableCellValueCreate = ({ isVisible, contributionId, propertyId, isEmptyCe
                                         disableBorderRadiusLeft={true}
                                         disableBorderRadiusRight={false}
                                         valueType={inputDataType}
+                                        menuPortalTarget={document.body} // use a portal to ensure the menu isn't blocked by other elements
                                         setValueType={setInputDataType}
                                     />
                                 )}
