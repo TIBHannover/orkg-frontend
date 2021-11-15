@@ -46,15 +46,42 @@ const Contributors = ({ researchFieldId }) => {
                                 offset={[0, 20]}
                                 placement="bottom"
                                 content={
-                                    <>
+                                    <div className="p-2">
                                         {contributor.profile.display_name}
                                         <br />
                                         {contributor?.counts && contributor.counts.total !== null && (
-                                            <i>
-                                                {contributor.counts.total} contribution{contributor.counts.total > 1 ? 's' : ''}
-                                            </i>
+                                            <ul className="p-0 pl-3 mb-0 mt-2">
+                                                <li>
+                                                    {contributor.counts.papers} paper{contributor.counts.papers > 1 ? 's' : ''}
+                                                </li>
+                                                <li>
+                                                    {contributor.counts.contributions} contribution{contributor.counts.contributions > 1 ? 's' : ''}
+                                                </li>
+                                                <li>
+                                                    {contributor.counts.comparisons} comparison{contributor.counts.comparisons > 1 ? 's' : ''}
+                                                </li>
+                                                <li>
+                                                    {contributor.counts.visualizations} visualization
+                                                    {contributor.counts.visualizations > 1 ? 's' : ''}
+                                                </li>
+                                                <li>
+                                                    {contributor.counts.problems} research problem{contributor.counts.problems > 1 ? 's' : ''}
+                                                </li>
+                                            </ul>
                                         )}
-                                    </>
+                                        {contributor?.counts && contributor.counts.total !== null && (
+                                            <>
+                                                <hr className="mb-1 mt-1" style={{ background: '#fff' }} />
+                                                <ul className="p-0 pl-3 mb-0 mt-2">
+                                                    <li>
+                                                        <i>
+                                                            <b>{contributor.counts.total} </b>total contributions
+                                                        </i>
+                                                    </li>
+                                                </ul>
+                                            </>
+                                        )}
+                                    </div>
                                 }
                             >
                                 <Link to={reverse(ROUTES.USER_PROFILE, { userId: contributor.profile.id })}>
