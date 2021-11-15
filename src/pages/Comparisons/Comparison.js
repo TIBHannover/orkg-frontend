@@ -294,7 +294,7 @@ function Comparison(props) {
                             )}
                             <Dropdown group isOpen={dropdownOpen} toggle={() => setDropdownOpen(v => !v)}>
                                 <DropdownToggle color="secondary" size="sm" className="rounded-right">
-                                    <span className="mr-2">More</span> <Icon icon={faEllipsisV} />
+                                    <span className="mr-2">Actions</span> <Icon icon={faEllipsisV} />
                                 </DropdownToggle>
                                 <DropdownMenu right style={{ zIndex: '1031' }}>
                                     <DropdownItem header>Customize</DropdownItem>
