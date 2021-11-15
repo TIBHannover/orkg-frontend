@@ -49,3 +49,46 @@ describe('AddValue', () => {
         await waitFor(() => expect(screen.getByText(/Confidence interval/i)).toBeInTheDocument());
     });
 });
+
+describe('AddValue', () => {
+    it('should disable add value after adding a value on the property that require only one value', async () => {
+        setup();
+        await waitFor(() => expect(screen.queryByText(/Loading/i)).toBeInTheDocument());
+        await waitForElementToBeRemoved(() => screen.queryByText(/Loading/i));
+        await waitFor(() => expect(screen.getByText(/Basic reproduction number/i)).toBeInTheDocument());
+        // Basic reproduction number
+        await waitFor(() => expect(screen.getByTestId('add-value-P23140-true')).toBeInTheDocument());
+        fireEvent.click(screen.getByTestId('add-value-P23140-true'));
+        await waitFor(() => expect(screen.getByText(/has value/i)).toBeInTheDocument());
+        fireEvent.click(screen.getByText(/back/i));
+        const addR0Value = screen.getByTestId('add-value-P23140-true');
+        expect(addR0Value).toBeInTheDocument();
+        expect(addR0Value).toHaveAttribute('disabled');
+    });
+});
+
+describe('AddValue', () => {
+    it('should disable edit property for required properties', async () => {
+        setup();
+        await waitFor(() => expect(screen.queryByText(/Loading/i)).toBeInTheDocument());
+        await waitForElementToBeRemoved(() => screen.queryByText(/Loading/i));
+        await waitFor(() => expect(screen.getByText(/Basic reproduction number/i)).toBeInTheDocument());
+        // Basic reproduction number
+        const changeR0Property = screen.getByTestId('change-property-P23140');
+        expect(changeR0Property).toBeInTheDocument();
+        expect(changeR0Property).toHaveAttribute('disabled');
+    });
+});
+
+describe('AddValue', () => {
+    it('should disable delete property for required properties', async () => {
+        setup();
+        await waitFor(() => expect(screen.queryByText(/Loading/i)).toBeInTheDocument());
+        await waitForElementToBeRemoved(() => screen.queryByText(/Loading/i));
+        await waitFor(() => expect(screen.getByText(/Basic reproduction number/i)).toBeInTheDocument());
+        // Basic reproduction number
+        const deleteR0Property = screen.getByTestId('delete-property-P23140');
+        expect(deleteR0Property).toBeInTheDocument();
+        expect(deleteR0Property).toHaveAttribute('disabled');
+    });
+});

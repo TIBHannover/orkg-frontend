@@ -67,6 +67,7 @@ const StatementItem = forwardRef((props, ref) => {
                                             }
                                             icon={faPen}
                                             action={() => dispatch(toggleEditPropertyLabel({ id: props.id }))}
+                                            testId={`change-property-${property.existingPredicateId}`}
                                         />
                                     )}
                                     {property.isSaving && (
@@ -103,6 +104,7 @@ const StatementItem = forwardRef((props, ref) => {
                                                     icon: faTimes
                                                 }
                                             ]}
+                                            testId={`delete-property-${property.existingPredicateId}`}
                                         />
                                     )}
                                     {property.isDeleting && (
