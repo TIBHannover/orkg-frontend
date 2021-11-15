@@ -20,7 +20,7 @@ export default async function getGeoNames(value, options) {
     const populations = responseXML.getElementsByTagName('gn:population');
     const lat = responseXML.getElementsByTagName('wgs84_pos:lat');
     const long = responseXML.getElementsByTagName('wgs84_pos:long');
-    names.forEach(function(name, i) {
+    names?.forEach?.(function(name, i) {
         const itemData = {
             id: null,
             label: name.childNodes[0].nodeValue,

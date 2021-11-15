@@ -1,6 +1,7 @@
 import { render, screen, waitFor, fireEvent, waitForElementToBeRemoved } from 'testUtils';
 import StatementBrowser from '../StatementBrowser';
 import { ENTITIES } from 'constants/graphSettings';
+import selectEvent from 'react-select-event';
 import { ToastContainer } from 'react-toastify';
 
 jest.mock('react-flip-move', () => ({ children }) => children);
@@ -90,5 +91,26 @@ describe('AddValue', () => {
         const deleteR0Property = screen.getByTestId('delete-property-P23140');
         expect(deleteR0Property).toBeInTheDocument();
         expect(deleteR0Property).toHaveAttribute('disabled');
+    });
+});
+
+describe('AddValue', () => {
+    it('should add value of the range specified by the template', async () => {
+        setup();
+        await waitFor(() => expect(screen.queryByText(/Loading/i)).toBeInTheDocument());
+        await waitForElementToBeRemoved(() => screen.queryByText(/Loading/i));
+        await waitFor(() => expect(screen.getByText(/Basic reproduction number/i)).toBeInTheDocument());
+        // Location
+        await waitFor(() => expect(screen.getByTestId('add-value-P5049-false')).toBeInTheDocument());
+        fireEvent.click(screen.getByTestId('add-value-P5049-false'));
+        fireEvent.change(screen.getByLabelText(/Enter a resource/i), { target: { value: 'Hannover' } });
+        await selectEvent.select(screen.getByRole('textbox', { name: /Enter a resource/i, hidden: true }), ['Hannover'], {
+            container: document.body
+        });
+        await waitFor(() => expect(screen.getByRole('button', { name: 'Hannover' })).toBeInTheDocument());
+        // Because location has cardinality 1, the button add should be disabled after adding a new value
+        const addLocationValue = screen.getByTestId('add-value-P5049-false');
+        expect(addLocationValue).toBeInTheDocument();
+        expect(addLocationValue).toHaveAttribute('disabled');
     });
 });
