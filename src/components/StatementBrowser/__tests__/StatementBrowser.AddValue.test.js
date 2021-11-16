@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, waitFor } from 'testUtils';
+import { render, screen, fireEvent, waitFor, waitForElementToBeRemoved } from 'testUtils';
 import StatementBrowser from '../StatementBrowser';
 import { ENTITIES } from 'constants/graphSettings';
 import selectEvent from 'react-select-event';
@@ -135,7 +135,8 @@ describe('AddValue', () => {
         setup();
         await clickOnAddButton(screen);
         fireEvent.change(screen.getByLabelText(/Enter a resource/i), { target: { value: 'resource label 1' } });
-        await selectEvent.select(screen.getByRole('textbox', { name: /Enter a resource/i, hidden: true }), 'resource label 1');
+        await selectEvent.select(screen.getByRole('textbox', { name: /Enter a resource/i }), 'resource label 1');
+        await waitForElementToBeRemoved(() => screen.queryByText(/Loading/i));
         await waitFor(() => expect(screen.getByRole('button', { name: 'resource label 1' })).toBeInTheDocument());
         const addButton = screen.getByRole('button', { name: 'Add value' });
         await waitFor(() => expect(addButton).toBeInTheDocument());
