@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { selectResource, fetchStatementsForResource, generatedFormattedLabel } from 'actions/statementBrowser';
 import { uniq } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
@@ -72,29 +72,31 @@ const useValueItem = ({ valueId, propertyId }) => {
         setModal(true);
     };
 
-    const getLabel = useCallback(() => {
+    useEffect(() => {
+        const loadResource = async () => {
+            await dispatch(
+                fetchStatementsForResource({
+                    resourceId: existingResourceId,
+                    rootNodeType: resource._class
+                })
+            );
+        };
         const existingResourceId = resource ? resource.existingResourceId : false;
+        if (existingResourceId && !resource.isFetched && !resource.isFetching && value?._class !== ENTITIES.RESOURCE) {
+            loadResource();
+        }
+    }, [dispatch, resource, value?._class]);
+
+    const formattedLabel = useMemo(() => {
         if (value.classes) {
             if (!hasLabelFormat) {
                 return value.label;
             }
-            if (existingResourceId && !resource.isFetched && !resource.isFetching && value?._class !== ENTITIES.LITERAL) {
-                return dispatch(
-                    fetchStatementsForResource({
-                        resourceId: existingResourceId,
-                        rootNodeType: resource._class
-                    })
-                ).then(() => {
-                    return dispatch(generatedFormattedLabel(resource, labelFormat));
-                });
-                //return dispatch(generatedFormattedLabel(resource, labelFormat));
-            } else {
-                return dispatch(generatedFormattedLabel(resource, labelFormat));
-            }
+            return dispatch(generatedFormattedLabel(resource, labelFormat));
         } else {
             return value.label;
         }
-    }, [resource, value.classes, value?._class, value.label, hasLabelFormat, dispatch, labelFormat]);
+    }, [dispatch, hasLabelFormat, labelFormat, resource, value.classes, value.label]);
 
     return {
         resource,
@@ -106,7 +108,7 @@ const useValueItem = ({ valueId, propertyId }) => {
         openExistingResourcesInDialog,
         handleExistingResourceClick,
         handleResourceClick,
-        getLabel
+        formattedLabel
     };
 };
 

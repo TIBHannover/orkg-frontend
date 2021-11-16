@@ -33,7 +33,7 @@ const setValueAndClickOnCreate = async (screen, datatype = 'Resource', value = '
     fireEvent.click(addButton);
     await waitFor(() => expect(screen.getByLabelText(/Enter a resource/i)).toBeInTheDocument());
     fireEvent.change(screen.getByLabelText(/Enter a resource/i), { target: { value } });
-    await selectEvent.select(screen.getByText('Resource'), [datatype], { container: document.body });
+    await selectEvent.select(screen.getByText('Resource'), [datatype]);
     fireEvent.click(screen.getByRole('button', { name: 'Create' }));
 };
 

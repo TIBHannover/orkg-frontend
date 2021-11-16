@@ -18,6 +18,9 @@ import faker from 'faker';
 const statements = [
     rest.get(`${statementsUrl}:id/bundle/`, (req, res, ctx) => {
         const { id } = req.params;
+        if (!id) {
+            throw new Error();
+        }
         const MAPPING = {
             R44727: r0COVIDStatements,
             R48000: statementsR48000,

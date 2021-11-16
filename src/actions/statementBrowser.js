@@ -1280,8 +1280,7 @@ export const fetchStatementsForResource = ({ resourceId, rootNodeType = ENTITIES
                             });
                     });
                 })
-                .catch(error => {
-                    console.log(error);
+                .catch(() => {
                     dispatch({
                         type: type.FAILED_FETCHING_STATEMENTS,
                         resourceId: resourceId

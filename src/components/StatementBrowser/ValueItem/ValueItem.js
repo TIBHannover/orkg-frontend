@@ -35,7 +35,7 @@ const ValueItem = props => {
         openExistingResourcesInDialog,
         handleExistingResourceClick,
         handleResourceClick,
-        getLabel
+        formattedLabel
     } = useValueItem({ valueId: props.id, propertyId: props.propertyId, syncBackend: props.syncBackend, contextStyle: props.contextStyle });
 
     const resourcesAsLinks = useSelector(state => state.statementBrowser.resourcesAsLinks);
@@ -114,12 +114,12 @@ const ValueItem = props => {
                                                         <span style={{ position: 'relative' }}>
                                                             <span className="pulsate-css" />
                                                             <ValuePlugins type="resource">
-                                                                {getLabel() !== '' ? getLabel().toString() : <i>No label</i>}
+                                                                {formattedLabel !== '' ? formattedLabel.toString() : <i>No label</i>}
                                                             </ValuePlugins>
                                                         </span>
                                                     ) : (
                                                         <ValuePlugins type="resource">
-                                                            {getLabel() !== '' ? getLabel().toString() : <i>No label</i>}
+                                                            {formattedLabel !== '' ? formattedLabel.toString() : <i>No label</i>}
                                                         </ValuePlugins>
                                                     )}
                                                     {resource && resource.existingResourceId && openExistingResourcesInDialog && (

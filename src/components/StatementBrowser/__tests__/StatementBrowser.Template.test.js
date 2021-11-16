@@ -104,10 +104,8 @@ describe('AddValue', () => {
         await waitFor(() => expect(screen.getByTestId('add-value-P5049-false')).toBeInTheDocument());
         fireEvent.click(screen.getByTestId('add-value-P5049-false'));
         fireEvent.change(screen.getByLabelText(/Enter a resource/i), { target: { value: 'Hannover' } });
-        await selectEvent.select(screen.getByRole('textbox', { name: /Enter a resource/i, hidden: true }), 'Hannover', {
-            container: document.body
-        });
-        await waitFor(() => expect(screen.getByRole('button', { name: 'Hannover' })).toBeInTheDocument());
+        await selectEvent.select(screen.getByRole('textbox', { name: /Enter a resource/i, hidden: true }), /Hannover/i);
+        await waitFor(() => expect(screen.getByText(/Hannover/i)).toBeInTheDocument());
         // Because location has cardinality 1, the button add should be disabled after adding a new value
         const addLocationValue = screen.getByTestId('add-value-P5049-false');
         expect(addLocationValue).toBeInTheDocument();

@@ -76,7 +76,7 @@ describe('AddValue', () => {
     it('should show text field on switch to Text datatype', async () => {
         setup();
         await clickOnAddButton(screen);
-        await selectEvent.select(screen.getByText('Resource'), ['Text'], { container: document.body });
+        await selectEvent.select(screen.getByText('Resource'), ['Text']);
         expect(screen.getByPlaceholderText(/enter a value/i)).toBeInTheDocument();
     });
 });
@@ -85,7 +85,7 @@ describe('AddValue', () => {
     it('should show text field on switch to Decimal datatype', async () => {
         setup();
         await clickOnAddButton(screen);
-        await selectEvent.select(screen.getByText('Resource'), ['Decimal'], { container: document.body });
+        await selectEvent.select(screen.getByText('Resource'), ['Decimal']);
         expect(screen.getByPlaceholderText(/enter a value/i)).toBeInTheDocument();
     });
 });
@@ -94,7 +94,7 @@ describe('AddValue', () => {
     it('should show text field on switch to Integer datatype', async () => {
         setup();
         await clickOnAddButton(screen);
-        await selectEvent.select(screen.getByText('Resource'), ['Integer'], { container: document.body });
+        await selectEvent.select(screen.getByText('Resource'), ['Integer']);
         expect(screen.getByPlaceholderText(/enter a value/i)).toBeInTheDocument();
     });
 });
@@ -103,7 +103,7 @@ describe('AddValue', () => {
     it('should show select option field on switch to Boolean datatype', async () => {
         setup();
         await clickOnAddButton(screen);
-        await selectEvent.select(screen.getByText('Resource'), ['Boolean'], { container: document.body });
+        await selectEvent.select(screen.getByText('Resource'), ['Boolean']);
         expect(screen.getByRole('option', { name: 'True' })).toBeInTheDocument();
         expect(screen.getByRole('option', { name: 'False' })).toBeInTheDocument();
         expect(screen.getByRole('option', { name: 'False' }).selected).toBe(true);
@@ -115,7 +115,7 @@ describe('AddValue', () => {
     it('should show date field on switch to Date datatype', async () => {
         setup();
         await clickOnAddButton(screen);
-        await selectEvent.select(screen.getByText('Resource'), ['Date'], { container: document.body });
+        await selectEvent.select(screen.getByText('Resource'), ['Date']);
         expect(screen.getByPlaceholderText(/enter a value/i)).toBeInTheDocument();
         expect(screen.getByPlaceholderText(/enter a value/i)).toHaveAttribute('type', 'date');
     });
@@ -125,7 +125,7 @@ describe('AddValue', () => {
     it('should show text field on switch to URL datatype', async () => {
         setup();
         await clickOnAddButton(screen);
-        await selectEvent.select(screen.getByText('Resource'), ['URL'], { container: document.body });
+        await selectEvent.select(screen.getByText('Resource'), ['URL']);
         expect(screen.getByPlaceholderText(/enter a value/i)).toBeInTheDocument();
     });
 });
@@ -135,9 +135,7 @@ describe('AddValue', () => {
         setup();
         await clickOnAddButton(screen);
         fireEvent.change(screen.getByLabelText(/Enter a resource/i), { target: { value: 'resource label 1' } });
-        await selectEvent.select(screen.getByRole('textbox', { name: /Enter a resource/i, hidden: true }), 'resource label 1', {
-            container: document.body
-        });
+        await selectEvent.select(screen.getByRole('textbox', { name: /Enter a resource/i, hidden: true }), 'resource label 1');
         await waitFor(() => expect(screen.getByRole('button', { name: 'resource label 1' })).toBeInTheDocument());
         const addButton = screen.getByRole('button', { name: 'Add value' });
         await waitFor(() => expect(addButton).toBeInTheDocument());
@@ -161,7 +159,7 @@ describe('AddValue', () => {
     it('should create a string literal when choosing Text datatype and clicking on create button', async () => {
         setup();
         await clickOnAddButton(screen);
-        await selectEvent.select(screen.getByText('Resource'), ['Text'], { container: document.body });
+        await selectEvent.select(screen.getByText('Resource'), ['Text']);
         fireEvent.change(screen.getByPlaceholderText(/enter a value/i), { target: { value: 'Literal 1' } });
         fireEvent.click(screen.getByRole('button', { name: 'Create' }));
         await waitFor(() => expect(screen.getByText('Literal 1')).toBeInTheDocument());
@@ -173,7 +171,7 @@ describe('AddValue', () => {
     it('should create an decimal literal when choosing Decimal datatype and clicking on create button', async () => {
         setup();
         await clickOnAddButton(screen);
-        await selectEvent.select(screen.getByText('Resource'), ['Decimal'], { container: document.body });
+        await selectEvent.select(screen.getByText('Resource'), ['Decimal']);
         fireEvent.change(screen.getByPlaceholderText(/enter a value/i), { target: { value: '1.5' } });
         fireEvent.click(screen.getByRole('button', { name: 'Create' }));
         await waitFor(() => expect(screen.getByText('1.5')).toBeInTheDocument());
@@ -185,7 +183,7 @@ describe('AddValue', () => {
     it('should create an integer literal when choosing Integer datatype and clicking on create button', async () => {
         setup();
         await clickOnAddButton(screen);
-        await selectEvent.select(screen.getByText('Resource'), ['Integer'], { container: document.body });
+        await selectEvent.select(screen.getByText('Resource'), ['Integer']);
         fireEvent.change(screen.getByPlaceholderText(/enter a value/i), { target: { value: '1' } });
         fireEvent.click(screen.getByRole('button', { name: 'Create' }));
         await waitFor(() => expect(screen.getByText('1')).toBeInTheDocument());
@@ -197,7 +195,7 @@ describe('AddValue', () => {
     it('should create a false boolean literal when choosing Boolean datatype and clicking on create button', async () => {
         setup();
         await clickOnAddButton(screen);
-        await selectEvent.select(screen.getByText('Resource'), ['Boolean'], { container: document.body });
+        await selectEvent.select(screen.getByText('Resource'), ['Boolean']);
         fireEvent.change(screen.getByRole('combobox'), { target: { value: 'false' } });
         fireEvent.click(screen.getByRole('button', { name: 'Create' }));
         await waitFor(() => expect(screen.getByLabelText('Cross mark')).toBeInTheDocument());
@@ -209,7 +207,7 @@ describe('AddValue', () => {
     it('should create a true boolean literal when choosing Boolean datatype and clicking on create button', async () => {
         setup();
         await clickOnAddButton(screen);
-        await selectEvent.select(screen.getByText('Resource'), ['Boolean'], { container: document.body });
+        await selectEvent.select(screen.getByText('Resource'), ['Boolean']);
         fireEvent.change(screen.getByRole('combobox'), { target: { value: 'true' } });
         fireEvent.click(screen.getByRole('button', { name: 'Create' }));
         await waitFor(() => expect(screen.getByLabelText('Check mark')).toBeInTheDocument());
@@ -221,7 +219,7 @@ describe('AddValue', () => {
     it('should create an date literal when choosing Date datatype and clicking on create button', async () => {
         setup();
         await clickOnAddButton(screen);
-        await selectEvent.select(screen.getByText('Resource'), ['Date'], { container: document.body });
+        await selectEvent.select(screen.getByText('Resource'), ['Date']);
         fireEvent.change(screen.getByPlaceholderText(/enter a value/i), { target: { value: '2021-11-10' } });
         fireEvent.click(screen.getByRole('button', { name: 'Create' }));
         await waitFor(() => expect(screen.getByText('2021-11-10')).toBeInTheDocument());
@@ -233,7 +231,7 @@ describe('AddValue', () => {
     it('should create an uri literal when choosing URL datatype and clicking on create button', async () => {
         setup();
         await clickOnAddButton(screen);
-        await selectEvent.select(screen.getByText('Resource'), ['URL'], { container: document.body });
+        await selectEvent.select(screen.getByText('Resource'), ['URL']);
         fireEvent.change(screen.getByPlaceholderText(/enter a value/i), { target: { value: 'https://www.orkg.org/' } });
         fireEvent.click(screen.getByRole('button', { name: 'Create' }));
         await waitFor(() => expect(screen.getByText('https://www.orkg.org/')).toBeInTheDocument());
