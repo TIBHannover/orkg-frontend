@@ -1,11 +1,16 @@
 import { rest } from 'msw';
 import { classesUrl } from 'services/backend/classes';
 import faker from 'faker';
-import { DClocationResources } from 'services/mocks/backend/__mocks__/Classes';
+import { DClocationResources, QBDatasetClasses } from 'services/mocks/backend/__mocks__/Classes';
 
 const resources = [
-    rest.get(classesUrl, (req, res, ctx) =>
-        res(
+    rest.get(classesUrl, (req, res, ctx) => {
+        const query = req.url.searchParams.get('q');
+
+        if (query === 'qb:') {
+            return res(ctx.json(QBDatasetClasses));
+        }
+        return res(
             ctx.json({
                 content: [
                     {
@@ -53,8 +58,8 @@ const resources = [
                 size: 10,
                 empty: true
             })
-        )
-    ),
+        );
+    }),
     rest.get(`${classesUrl}:id/resources/`, (req, res, ctx) => {
         const { id } = req.params;
         const MAPPING = {

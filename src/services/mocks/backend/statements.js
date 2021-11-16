@@ -11,7 +11,20 @@ import {
     statementsR35087,
     statementsR35077,
     statementsR44415,
-    statementsR0TemplateR40006
+    statementsR0TemplateR40006,
+    statementsR8184,
+    statementsR8174,
+    statementsR8185,
+    statementsR8182,
+    statementsR8181,
+    statementsR8177,
+    statementsR8172,
+    statementsR8173,
+    statementsR8178,
+    statementsR8175,
+    statementsR8166,
+    statementsR8170,
+    statementsR8184Object
 } from 'services/mocks/backend/__mocks__/Statements';
 import faker from 'faker';
 
@@ -33,6 +46,81 @@ const statements = [
             return res(ctx.json(MAPPING[id]));
         } else {
             return res(ctx.json({ root: id, statements: [] }));
+        }
+    }),
+    rest.get(`${statementsUrl}object/:id`, (req, res, ctx) => {
+        const { id } = req.params;
+        const MAPPING = {
+            R8184: statementsR8184Object
+        };
+        if (MAPPING[id]) {
+            return res(ctx.json(MAPPING[id]));
+        } else {
+            return res(
+                ctx.json({
+                    content: [],
+                    pageable: {
+                        sort: { sorted: true, unsorted: false, empty: false },
+                        pageNumber: 0,
+                        pageSize: 2000,
+                        offset: 0,
+                        paged: true,
+                        unpaged: false
+                    },
+                    totalPages: 0,
+                    totalElements: 0,
+                    last: true,
+                    first: true,
+                    sort: { sorted: true, unsorted: false, empty: false },
+                    size: 2000,
+                    number: 0,
+                    numberOfElements: 0,
+                    empty: true
+                })
+            );
+        }
+    }),
+    rest.get(`${statementsUrl}subject/:id/`, (req, res, ctx) => {
+        const { id } = req.params;
+        const MAPPING = {
+            R8184: statementsR8184,
+            R8174: statementsR8174,
+            R8185: statementsR8185,
+            R8182: statementsR8182,
+            R8181: statementsR8181,
+            R8177: statementsR8177,
+            R8172: statementsR8172,
+            R8173: statementsR8173,
+            R8178: statementsR8178,
+            R8175: statementsR8175,
+            R8166: statementsR8166,
+            R8170: statementsR8170
+        };
+        if (MAPPING[id]) {
+            return res(ctx.json(MAPPING[id]));
+        } else {
+            return res(
+                ctx.json({
+                    content: [],
+                    pageable: {
+                        sort: { sorted: true, unsorted: false, empty: false },
+                        pageNumber: 0,
+                        pageSize: 2000,
+                        offset: 0,
+                        paged: true,
+                        unpaged: false
+                    },
+                    totalPages: 0,
+                    totalElements: 0,
+                    last: true,
+                    first: true,
+                    sort: { sorted: true, unsorted: false, empty: false },
+                    size: 2000,
+                    number: 0,
+                    numberOfElements: 0,
+                    empty: true
+                })
+            );
         }
     }),
     rest.get(`${statementsUrl}object/:id/predicate/TemplateOfClass/`, (req, res, ctx) => {

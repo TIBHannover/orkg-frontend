@@ -4012,3 +4012,1808 @@ export const statementsR0TemplateR40006 = {
         }
     ]
 };
+
+// Resources of QBDataset
+
+export const statementsR8184 = {
+    content: [
+        {
+            id: 'S12405',
+            subject: {
+                id: 'R8184',
+                label: 'DILS2018 technical evaluation of ORKG comparison service',
+                created_at: '2019-12-19T15:07:00.643+01:00',
+                classes: ['QBDataset'],
+                shared: 3,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'P4007',
+                label: 'structure',
+                created_at: '2021-11-16T12:49:02.562702Z',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'R8174',
+                label: 'Data Structure Definition ESUC',
+                created_at: '2019-12-19T15:06:58.502+01:00',
+                classes: ['C8'],
+                shared: 1,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            created_at: '2019-12-19T15:07:01.31+01:00',
+            created_by: '00000000-0000-0000-0000-000000000000'
+        }
+    ],
+    pageable: { sort: { sorted: true, unsorted: false, empty: false }, pageNumber: 0, pageSize: 2000, offset: 0, paged: true, unpaged: false },
+    totalPages: 1,
+    totalElements: 1,
+    last: true,
+    first: true,
+    sort: { sorted: true, unsorted: false, empty: false },
+    size: 2000,
+    number: 0,
+    numberOfElements: 1,
+    empty: false
+};
+
+export const statementsR8174 = {
+    content: [
+        {
+            id: 'S12413',
+            subject: {
+                id: 'R8174',
+                label: 'Data Structure Definition ESUC',
+                created_at: '2019-12-19T15:06:58.502+01:00',
+                classes: ['C8'],
+                shared: 1,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'P4008',
+                label: 'component',
+                created_at: '2021-11-16T12:49:40.668611Z',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'R8185',
+                label: 'Component Specification 7 Contributions',
+                created_at: '2019-12-19T15:07:01.107+01:00',
+                classes: ['C6'],
+                shared: 1,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            created_at: '2019-12-19T15:07:02.056+01:00',
+            created_by: '00000000-0000-0000-0000-000000000000'
+        },
+        {
+            id: 'S12410',
+            subject: {
+                id: 'R8174',
+                label: 'Data Structure Definition ESUC',
+                created_at: '2019-12-19T15:06:58.502+01:00',
+                classes: ['C8'],
+                shared: 1,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'P4008',
+                label: 'component',
+                created_at: '2021-11-16T12:49:40.668611Z',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'R8182',
+                label: 'Component Specification 4 Contributions',
+                created_at: '2019-12-19T15:07:00.27+01:00',
+                classes: ['C6'],
+                shared: 1,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            created_at: '2019-12-19T15:07:01.763+01:00',
+            created_by: '00000000-0000-0000-0000-000000000000'
+        },
+        {
+            id: 'S12409',
+            subject: {
+                id: 'R8174',
+                label: 'Data Structure Definition ESUC',
+                created_at: '2019-12-19T15:06:58.502+01:00',
+                classes: ['C8'],
+                shared: 1,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'P4008',
+                label: 'component',
+                created_at: '2021-11-16T12:49:40.668611Z',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'R8181',
+                label: 'Component Specification 8 Contributions',
+                created_at: '2019-12-19T15:07:00.079+01:00',
+                classes: ['C6'],
+                shared: 1,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            created_at: '2019-12-19T15:07:01.71+01:00',
+            created_by: '00000000-0000-0000-0000-000000000000'
+        },
+        {
+            id: 'S12394',
+            subject: {
+                id: 'R8174',
+                label: 'Data Structure Definition ESUC',
+                created_at: '2019-12-19T15:06:58.502+01:00',
+                classes: ['C8'],
+                shared: 1,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'P4008',
+                label: 'component',
+                created_at: '2021-11-16T12:49:40.668611Z',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'R8177',
+                label: 'Component Specification 2 Contributions',
+                created_at: '2019-12-19T15:06:58.872+01:00',
+                classes: ['C6'],
+                shared: 1,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            created_at: '2019-12-19T15:07:00.439+01:00',
+            created_by: '00000000-0000-0000-0000-000000000000'
+        },
+        {
+            id: 'S12393',
+            subject: {
+                id: 'R8174',
+                label: 'Data Structure Definition ESUC',
+                created_at: '2019-12-19T15:06:58.502+01:00',
+                classes: ['C8'],
+                shared: 1,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'P4008',
+                label: 'component',
+                created_at: '2021-11-16T12:49:40.668611Z',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'R8172',
+                label: 'Component Specification 3 Contributions',
+                created_at: '2019-12-19T15:06:58.257+01:00',
+                classes: ['C6'],
+                shared: 1,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            created_at: '2019-12-19T15:07:00.382+01:00',
+            created_by: '00000000-0000-0000-0000-000000000000'
+        },
+        {
+            id: 'S12384',
+            subject: {
+                id: 'R8174',
+                label: 'Data Structure Definition ESUC',
+                created_at: '2019-12-19T15:06:58.502+01:00',
+                classes: ['C8'],
+                shared: 1,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'P4008',
+                label: 'component',
+                created_at: '2021-11-16T12:49:40.668611Z',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'R8173',
+                label: 'Component Specification System',
+                created_at: '2019-12-19T15:06:58.365+01:00',
+                classes: ['C6'],
+                shared: 1,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            created_at: '2019-12-19T15:06:59.388+01:00',
+            created_by: '00000000-0000-0000-0000-000000000000'
+        },
+        {
+            id: 'S12381',
+            subject: {
+                id: 'R8174',
+                label: 'Data Structure Definition ESUC',
+                created_at: '2019-12-19T15:06:58.502+01:00',
+                classes: ['C8'],
+                shared: 1,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'P4008',
+                label: 'component',
+                created_at: '2021-11-16T12:49:40.668611Z',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'R8178',
+                label: 'Component Specification 6 Contributions',
+                created_at: '2019-12-19T15:06:59.019+01:00',
+                classes: ['C6'],
+                shared: 1,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            created_at: '2019-12-19T15:06:59.04+01:00',
+            created_by: '00000000-0000-0000-0000-000000000000'
+        },
+        {
+            id: 'S12377',
+            subject: {
+                id: 'R8174',
+                label: 'Data Structure Definition ESUC',
+                created_at: '2019-12-19T15:06:58.502+01:00',
+                classes: ['C8'],
+                shared: 1,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'P4008',
+                label: 'component',
+                created_at: '2021-11-16T12:49:40.668611Z',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'R8175',
+                label: 'Component Specification 5 Contributions',
+                created_at: '2019-12-19T15:06:58.575+01:00',
+                classes: ['C6'],
+                shared: 1,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            created_at: '2019-12-19T15:06:58.59+01:00',
+            created_by: '00000000-0000-0000-0000-000000000000'
+        }
+    ],
+    pageable: { sort: { sorted: true, unsorted: false, empty: false }, pageNumber: 0, pageSize: 2000, offset: 0, paged: true, unpaged: false },
+    totalPages: 1,
+    totalElements: 8,
+    last: true,
+    first: true,
+    sort: { sorted: true, unsorted: false, empty: false },
+    size: 2000,
+    number: 0,
+    numberOfElements: 8,
+    empty: false
+};
+
+export const statementsR8185 = {
+    content: [
+        {
+            id: 'S12411',
+            subject: {
+                id: 'R8185',
+                label: 'Component Specification 7 Contributions',
+                created_at: '2019-12-19T15:07:01.107+01:00',
+                classes: ['C6'],
+                shared: 1,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'P5103',
+                label: 'order',
+                created_at: '2019-12-17T12:44:59.59+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'L8138',
+                label: '7',
+                datatype: 'xsd:string',
+                created_at: '2019-12-19T15:07:01.837+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'literal'
+            },
+            created_at: '2019-12-19T15:07:01.853+01:00',
+            created_by: '00000000-0000-0000-0000-000000000000'
+        },
+        {
+            id: 'S12401',
+            subject: {
+                id: 'R8185',
+                label: 'Component Specification 7 Contributions',
+                created_at: '2019-12-19T15:07:01.107+01:00',
+                classes: ['C6'],
+                shared: 1,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'P4006',
+                label: 'measure',
+                created_at: '2021-11-16T12:50:08.979291Z',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'R8183',
+                label: '7 Contributions',
+                created_at: '2019-12-19T15:07:00.501+01:00',
+                classes: ['C5', 'C2'],
+                shared: 1,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            created_at: '2019-12-19T15:07:01.148+01:00',
+            created_by: '00000000-0000-0000-0000-000000000000'
+        }
+    ],
+    pageable: { sort: { sorted: true, unsorted: false, empty: false }, pageNumber: 0, pageSize: 2000, offset: 0, paged: true, unpaged: false },
+    totalPages: 1,
+    totalElements: 2,
+    last: true,
+    first: true,
+    sort: { sorted: true, unsorted: false, empty: false },
+    size: 2000,
+    number: 0,
+    numberOfElements: 2,
+    empty: false
+};
+
+export const statementsR8182 = {
+    content: [
+        {
+            id: 'S12403',
+            subject: {
+                id: 'R8182',
+                label: 'Component Specification 4 Contributions',
+                created_at: '2019-12-19T15:07:00.27+01:00',
+                classes: ['C6'],
+                shared: 1,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'P4006',
+                label: 'measure',
+                created_at: '2021-11-16T12:50:33.941917Z',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'R8176',
+                label: '4 Contributions',
+                created_at: '2019-12-19T15:06:58.714+01:00',
+                classes: ['C5', 'C2'],
+                shared: 1,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            created_at: '2019-12-19T15:07:01.225+01:00',
+            created_by: '00000000-0000-0000-0000-000000000000'
+        },
+        {
+            id: 'S12392',
+            subject: {
+                id: 'R8182',
+                label: 'Component Specification 4 Contributions',
+                created_at: '2019-12-19T15:07:00.27+01:00',
+                classes: ['C6'],
+                shared: 1,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'P5103',
+                label: 'order',
+                created_at: '2019-12-17T12:44:59.59+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'L8130',
+                label: '4',
+                datatype: 'xsd:string',
+                created_at: '2019-12-19T15:07:00.325+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'literal'
+            },
+            created_at: '2019-12-19T15:07:00.34+01:00',
+            created_by: '00000000-0000-0000-0000-000000000000'
+        }
+    ],
+    pageable: { sort: { sorted: true, unsorted: false, empty: false }, pageNumber: 0, pageSize: 2000, offset: 0, paged: true, unpaged: false },
+    totalPages: 1,
+    totalElements: 2,
+    last: true,
+    first: true,
+    sort: { sorted: true, unsorted: false, empty: false },
+    size: 2000,
+    number: 0,
+    numberOfElements: 2,
+    empty: false
+};
+
+export const statementsR8181 = {
+    content: [
+        {
+            id: 'S12398',
+            subject: {
+                id: 'R8181',
+                label: 'Component Specification 8 Contributions',
+                created_at: '2019-12-19T15:07:00.079+01:00',
+                classes: ['C6'],
+                shared: 1,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'P5103',
+                label: 'order',
+                created_at: '2019-12-17T12:44:59.59+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'L8133',
+                label: '8',
+                datatype: 'xsd:string',
+                created_at: '2019-12-19T15:07:00.841+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'literal'
+            },
+            created_at: '2019-12-19T15:07:00.857+01:00',
+            created_by: '00000000-0000-0000-0000-000000000000'
+        },
+        {
+            id: 'S12390',
+            subject: {
+                id: 'R8181',
+                label: 'Component Specification 8 Contributions',
+                created_at: '2019-12-19T15:07:00.079+01:00',
+                classes: ['C6'],
+                shared: 1,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'P4006',
+                label: 'measure',
+                created_at: '2021-11-16T12:51:00.55217Z',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'R8179',
+                label: '8 Contributions',
+                created_at: '2019-12-19T15:06:59.122+01:00',
+                classes: ['C5', 'C2'],
+                shared: 1,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            created_at: '2019-12-19T15:07:00.125+01:00',
+            created_by: '00000000-0000-0000-0000-000000000000'
+        }
+    ],
+    pageable: { sort: { sorted: true, unsorted: false, empty: false }, pageNumber: 0, pageSize: 2000, offset: 0, paged: true, unpaged: false },
+    totalPages: 1,
+    totalElements: 2,
+    last: true,
+    first: true,
+    sort: { sorted: true, unsorted: false, empty: false },
+    size: 2000,
+    number: 0,
+    numberOfElements: 2,
+    empty: false
+};
+
+export const statementsR8177 = {
+    content: [
+        {
+            id: 'S12391',
+            subject: {
+                id: 'R8177',
+                label: 'Component Specification 2 Contributions',
+                created_at: '2019-12-19T15:06:58.872+01:00',
+                classes: ['C6'],
+                shared: 1,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'P5103',
+                label: 'order',
+                created_at: '2019-12-17T12:44:59.59+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'L8129',
+                label: '2',
+                datatype: 'xsd:string',
+                created_at: '2019-12-19T15:07:00.197+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'literal'
+            },
+            created_at: '2019-12-19T15:07:00.214+01:00',
+            created_by: '00000000-0000-0000-0000-000000000000'
+        },
+        {
+            id: 'S12380',
+            subject: {
+                id: 'R8177',
+                label: 'Component Specification 2 Contributions',
+                created_at: '2019-12-19T15:06:58.872+01:00',
+                classes: ['C6'],
+                shared: 1,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'P4006',
+                label: 'measure',
+                created_at: '2021-11-16T12:51:31.561861Z',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'R8168',
+                label: '2 Contributions',
+                created_at: '2019-12-19T15:06:57.701+01:00',
+                classes: ['C5', 'C2'],
+                shared: 1,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            created_at: '2019-12-19T15:06:58.91+01:00',
+            created_by: '00000000-0000-0000-0000-000000000000'
+        }
+    ],
+    pageable: { sort: { sorted: true, unsorted: false, empty: false }, pageNumber: 0, pageSize: 2000, offset: 0, paged: true, unpaged: false },
+    totalPages: 1,
+    totalElements: 2,
+    last: true,
+    first: true,
+    sort: { sorted: true, unsorted: false, empty: false },
+    size: 2000,
+    number: 0,
+    numberOfElements: 2,
+    empty: false
+};
+
+export const statementsR8172 = {
+    content: [
+        {
+            id: 'S12389',
+            subject: {
+                id: 'R8172',
+                label: 'Component Specification 3 Contributions',
+                created_at: '2019-12-19T15:06:58.257+01:00',
+                classes: ['C6'],
+                shared: 1,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'P4006',
+                label: 'measure',
+                created_at: '2021-11-16T12:52:00.771988Z',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'R8180',
+                label: '3 Contributions',
+                created_at: '2019-12-19T15:06:59.997+01:00',
+                classes: ['C5', 'C2'],
+                shared: 1,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            created_at: '2019-12-19T15:07:00.014+01:00',
+            created_by: '00000000-0000-0000-0000-000000000000'
+        },
+        {
+            id: 'S12375',
+            subject: {
+                id: 'R8172',
+                label: 'Component Specification 3 Contributions',
+                created_at: '2019-12-19T15:06:58.257+01:00',
+                classes: ['C6'],
+                shared: 1,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'P5103',
+                label: 'order',
+                created_at: '2019-12-17T12:44:59.59+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'L8120',
+                label: '3',
+                datatype: 'xsd:string',
+                created_at: '2019-12-19T15:06:58.306+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'literal'
+            },
+            created_at: '2019-12-19T15:06:58.321+01:00',
+            created_by: '00000000-0000-0000-0000-000000000000'
+        }
+    ],
+    pageable: { sort: { sorted: true, unsorted: false, empty: false }, pageNumber: 0, pageSize: 2000, offset: 0, paged: true, unpaged: false },
+    totalPages: 1,
+    totalElements: 2,
+    last: true,
+    first: true,
+    sort: { sorted: true, unsorted: false, empty: false },
+    size: 2000,
+    number: 0,
+    numberOfElements: 2,
+    empty: false
+};
+
+export const statementsR8173 = {
+    content: [
+        {
+            id: 'S12408',
+            subject: {
+                id: 'R8173',
+                label: 'Component Specification System',
+                created_at: '2019-12-19T15:06:58.365+01:00',
+                classes: ['C6'],
+                shared: 1,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'P4004',
+                label: 'dimension',
+                created_at: '2021-11-16T12:52:28.478249Z',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'R8171',
+                label: 'System',
+                created_at: '2019-12-19T15:06:58.121+01:00',
+                classes: ['C1', 'C2'],
+                shared: 1,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            created_at: '2019-12-19T15:07:01.661+01:00',
+            created_by: '00000000-0000-0000-0000-000000000000'
+        },
+        {
+            id: 'S12376',
+            subject: {
+                id: 'R8173',
+                label: 'Component Specification System',
+                created_at: '2019-12-19T15:06:58.365+01:00',
+                classes: ['C6'],
+                shared: 1,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'P5103',
+                label: 'order',
+                created_at: '2019-12-17T12:44:59.59+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'L8121',
+                label: '1',
+                datatype: 'xsd:string',
+                created_at: '2019-12-19T15:06:58.415+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'literal'
+            },
+            created_at: '2019-12-19T15:06:58.44+01:00',
+            created_by: '00000000-0000-0000-0000-000000000000'
+        }
+    ],
+    pageable: { sort: { sorted: true, unsorted: false, empty: false }, pageNumber: 0, pageSize: 2000, offset: 0, paged: true, unpaged: false },
+    totalPages: 1,
+    totalElements: 2,
+    last: true,
+    first: true,
+    sort: { sorted: true, unsorted: false, empty: false },
+    size: 2000,
+    number: 0,
+    numberOfElements: 2,
+    empty: false
+};
+
+export const statementsR8178 = {
+    content: [
+        {
+            id: 'S12404',
+            subject: {
+                id: 'R8178',
+                label: 'Component Specification 6 Contributions',
+                created_at: '2019-12-19T15:06:59.019+01:00',
+                classes: ['C6'],
+                shared: 1,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'P4006',
+                label: 'measure',
+                created_at: '2021-11-16T12:52:58.585466Z',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'R8169',
+                label: '6 Contributions',
+                created_at: '2019-12-19T15:06:57.854+01:00',
+                classes: ['C5', 'C2'],
+                shared: 1,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            created_at: '2019-12-19T15:07:01.267+01:00',
+            created_by: '00000000-0000-0000-0000-000000000000'
+        },
+        {
+            id: 'S12399',
+            subject: {
+                id: 'R8178',
+                label: 'Component Specification 6 Contributions',
+                created_at: '2019-12-19T15:06:59.019+01:00',
+                classes: ['C6'],
+                shared: 1,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'P5103',
+                label: 'order',
+                created_at: '2019-12-17T12:44:59.59+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'L8134',
+                label: '6',
+                datatype: 'xsd:string',
+                created_at: '2019-12-19T15:07:00.911+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'literal'
+            },
+            created_at: '2019-12-19T15:07:00.926+01:00',
+            created_by: '00000000-0000-0000-0000-000000000000'
+        }
+    ],
+    pageable: { sort: { sorted: true, unsorted: false, empty: false }, pageNumber: 0, pageSize: 2000, offset: 0, paged: true, unpaged: false },
+    totalPages: 1,
+    totalElements: 2,
+    last: true,
+    first: true,
+    sort: { sorted: true, unsorted: false, empty: false },
+    size: 2000,
+    number: 0,
+    numberOfElements: 2,
+    empty: false
+};
+
+export const statementsR8175 = {
+    content: [
+        {
+            id: 'S12386',
+            subject: {
+                id: 'R8175',
+                label: 'Component Specification 5 Contributions',
+                created_at: '2019-12-19T15:06:58.575+01:00',
+                classes: ['C6'],
+                shared: 1,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'P5103',
+                label: 'order',
+                created_at: '2019-12-17T12:44:59.59+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'L8126',
+                label: '5',
+                datatype: 'xsd:string',
+                created_at: '2019-12-19T15:06:59.589+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'literal'
+            },
+            created_at: '2019-12-19T15:06:59.606+01:00',
+            created_by: '00000000-0000-0000-0000-000000000000'
+        },
+        {
+            id: 'S12378',
+            subject: {
+                id: 'R8175',
+                label: 'Component Specification 5 Contributions',
+                created_at: '2019-12-19T15:06:58.575+01:00',
+                classes: ['C6'],
+                shared: 1,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'P4006',
+                label: 'measure',
+                created_at: '2021-11-16T12:53:28.371993Z',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'R8167',
+                label: '5 Contributions',
+                created_at: '2019-12-19T15:06:57.467+01:00',
+                classes: ['C5', 'C2'],
+                shared: 1,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            created_at: '2019-12-19T15:06:58.653+01:00',
+            created_by: '00000000-0000-0000-0000-000000000000'
+        }
+    ],
+    pageable: { sort: { sorted: true, unsorted: false, empty: false }, pageNumber: 0, pageSize: 2000, offset: 0, paged: true, unpaged: false },
+    totalPages: 1,
+    totalElements: 2,
+    last: true,
+    first: true,
+    sort: { sorted: true, unsorted: false, empty: false },
+    size: 2000,
+    number: 0,
+    numberOfElements: 2,
+    empty: false
+};
+
+export const statementsR8166 = {
+    content: [
+        {
+            id: 'S12407',
+            subject: {
+                id: 'R8166',
+                label: 'Observation #1',
+                created_at: '2019-12-19T15:06:57.402+01:00',
+                classes: ['C0'],
+                shared: 0,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'P7032',
+                label: 'R8180',
+                created_at: '2019-12-19T15:07:01.448+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'L8137',
+                label: '0.1714 sec',
+                datatype: 'xsd:string',
+                created_at: '2019-12-19T15:07:01.6+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'literal'
+            },
+            created_at: '2019-12-19T15:07:01.615+01:00',
+            created_by: '00000000-0000-0000-0000-000000000000'
+        },
+        {
+            id: 'S12402',
+            subject: {
+                id: 'R8166',
+                label: 'Observation #1',
+                created_at: '2019-12-19T15:06:57.402+01:00',
+                classes: ['C0'],
+                shared: 0,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'P2005',
+                label: 'dataset',
+                created_at: '2021-11-16T14:05:16.952145Z',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'R8184',
+                label: 'DILS2018 technical evaluation of ORKG comparison service',
+                created_at: '2019-12-19T15:07:00.643+01:00',
+                classes: ['QBDataset'],
+                shared: 3,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            created_at: '2019-12-19T15:07:01.186+01:00',
+            created_by: '00000000-0000-0000-0000-000000000000'
+        },
+        {
+            id: 'S12395',
+            subject: {
+                id: 'R8166',
+                label: 'Observation #1',
+                created_at: '2019-12-19T15:06:57.402+01:00',
+                classes: ['C0'],
+                shared: 0,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'P7031',
+                label: 'R8183',
+                created_at: '2019-12-19T15:07:00.548+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'L8131',
+                label: '1772.8 sec',
+                datatype: 'xsd:string',
+                created_at: '2019-12-19T15:07:00.568+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'literal'
+            },
+            created_at: '2019-12-19T15:07:00.582+01:00',
+            created_by: '00000000-0000-0000-0000-000000000000'
+        },
+        {
+            id: 'S12385',
+            subject: {
+                id: 'R8166',
+                label: 'Observation #1',
+                created_at: '2019-12-19T15:06:57.402+01:00',
+                classes: ['C0'],
+                shared: 0,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'P7029',
+                label: 'R8176',
+                created_at: '2019-12-19T15:06:58.78+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'L8125',
+                label: '0.763 sec',
+                datatype: 'xsd:string',
+                created_at: '2019-12-19T15:06:59.5+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'literal'
+            },
+            created_at: '2019-12-19T15:06:59.538+01:00',
+            created_by: '00000000-0000-0000-0000-000000000000'
+        },
+        {
+            id: 'S12383',
+            subject: {
+                id: 'R8166',
+                label: 'Observation #1',
+                created_at: '2019-12-19T15:06:57.402+01:00',
+                classes: ['C0'],
+                shared: 0,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'P7028',
+                label: 'R8171',
+                created_at: '2019-12-19T15:06:58.174+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'L8124',
+                label: 'Baseline',
+                datatype: 'xsd:string',
+                created_at: '2019-12-19T15:06:59.333+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'literal'
+            },
+            created_at: '2019-12-19T15:06:59.349+01:00',
+            created_by: '00000000-0000-0000-0000-000000000000'
+        },
+        {
+            id: 'S12382',
+            subject: {
+                id: 'R8166',
+                label: 'Observation #1',
+                created_at: '2019-12-19T15:06:57.402+01:00',
+                classes: ['C0'],
+                shared: 0,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'P7030',
+                label: 'R8179',
+                created_at: '2019-12-19T15:06:59.187+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'L8123',
+                label: '14421 sec',
+                datatype: 'xsd:string',
+                created_at: '2019-12-19T15:06:59.219+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'literal'
+            },
+            created_at: '2019-12-19T15:06:59.24+01:00',
+            created_by: '00000000-0000-0000-0000-000000000000'
+        },
+        {
+            id: 'S12373',
+            subject: {
+                id: 'R8166',
+                label: 'Observation #1',
+                created_at: '2019-12-19T15:06:57.402+01:00',
+                classes: ['C0'],
+                shared: 0,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'P7027',
+                label: 'R8169',
+                created_at: '2019-12-19T15:06:57.927+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'L8118',
+                label: '112.74 sec',
+                datatype: 'xsd:string',
+                created_at: '2019-12-19T15:06:57.956+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'literal'
+            },
+            created_at: '2019-12-19T15:06:57.971+01:00',
+            created_by: '00000000-0000-0000-0000-000000000000'
+        },
+        {
+            id: 'S12372',
+            subject: {
+                id: 'R8166',
+                label: 'Observation #1',
+                created_at: '2019-12-19T15:06:57.402+01:00',
+                classes: ['C0'],
+                shared: 0,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'P7026',
+                label: 'R8168',
+                created_at: '2019-12-19T15:06:57.75+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'L8117',
+                label: '0.00026 sec',
+                datatype: 'xsd:string',
+                created_at: '2019-12-19T15:06:57.776+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'literal'
+            },
+            created_at: '2019-12-19T15:06:57.79+01:00',
+            created_by: '00000000-0000-0000-0000-000000000000'
+        },
+        {
+            id: 'S12371',
+            subject: {
+                id: 'R8166',
+                label: 'Observation #1',
+                created_at: '2019-12-19T15:06:57.402+01:00',
+                classes: ['C0'],
+                shared: 0,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'P7025',
+                label: 'R8167',
+                created_at: '2019-12-19T15:06:57.548+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'L8116',
+                label: '4.99 sec',
+                datatype: 'xsd:string',
+                created_at: '2019-12-19T15:06:57.573+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'literal'
+            },
+            created_at: '2019-12-19T15:06:57.593+01:00',
+            created_by: '00000000-0000-0000-0000-000000000000'
+        }
+    ],
+    pageable: { sort: { sorted: true, unsorted: false, empty: false }, pageNumber: 0, pageSize: 2000, offset: 0, paged: true, unpaged: false },
+    totalPages: 1,
+    totalElements: 9,
+    last: true,
+    first: true,
+    sort: { sorted: true, unsorted: false, empty: false },
+    size: 2000,
+    number: 0,
+    numberOfElements: 9,
+    empty: false
+};
+
+export const statementsR8170 = {
+    content: [
+        {
+            id: 'S12412',
+            subject: {
+                id: 'R8170',
+                label: 'Observation #2',
+                created_at: '2019-12-19T15:06:58.023+01:00',
+                classes: ['C0'],
+                shared: 0,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'P7026',
+                label: 'R8168',
+                created_at: '2019-12-19T15:06:57.75+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'L8139',
+                label: '0.0035 sec',
+                datatype: 'xsd:string',
+                created_at: '2019-12-19T15:07:01.982+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'literal'
+            },
+            created_at: '2019-12-19T15:07:01.999+01:00',
+            created_by: '00000000-0000-0000-0000-000000000000'
+        },
+        {
+            id: 'S12406',
+            subject: {
+                id: 'R8170',
+                label: 'Observation #2',
+                created_at: '2019-12-19T15:06:58.023+01:00',
+                classes: ['C0'],
+                shared: 0,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'P7032',
+                label: 'R8180',
+                created_at: '2019-12-19T15:07:01.448+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'L8136',
+                label: '0.0013 sec',
+                datatype: 'xsd:string',
+                created_at: '2019-12-19T15:07:01.482+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'literal'
+            },
+            created_at: '2019-12-19T15:07:01.496+01:00',
+            created_by: '00000000-0000-0000-0000-000000000000'
+        },
+        {
+            id: 'S12400',
+            subject: {
+                id: 'R8170',
+                label: 'Observation #2',
+                created_at: '2019-12-19T15:06:58.023+01:00',
+                classes: ['C0'],
+                shared: 0,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'P7031',
+                label: 'R8183',
+                created_at: '2019-12-19T15:07:00.548+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'L8135',
+                label: '0.0189 sec',
+                datatype: 'xsd:string',
+                created_at: '2019-12-19T15:07:01.042+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'literal'
+            },
+            created_at: '2019-12-19T15:07:01.059+01:00',
+            created_by: '00000000-0000-0000-0000-000000000000'
+        },
+        {
+            id: 'S12397',
+            subject: {
+                id: 'R8170',
+                label: 'Observation #2',
+                created_at: '2019-12-19T15:06:58.023+01:00',
+                classes: ['C0'],
+                shared: 0,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'P7027',
+                label: 'R8169',
+                created_at: '2019-12-19T15:06:57.927+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'L8132',
+                label: '0.0206 sec',
+                datatype: 'xsd:string',
+                created_at: '2019-12-19T15:07:00.739+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'literal'
+            },
+            created_at: '2019-12-19T15:07:00.761+01:00',
+            created_by: '00000000-0000-0000-0000-000000000000'
+        },
+        {
+            id: 'S12396',
+            subject: {
+                id: 'R8170',
+                label: 'Observation #2',
+                created_at: '2019-12-19T15:06:58.023+01:00',
+                classes: ['C0'],
+                shared: 0,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'P2005',
+                label: 'dataset',
+                created_at: '2021-11-16T12:55:00.06714Z',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'R8184',
+                label: 'DILS2018 technical evaluation of ORKG comparison service',
+                created_at: '2019-12-19T15:07:00.643+01:00',
+                classes: ['QBDataset'],
+                shared: 3,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            created_at: '2019-12-19T15:07:00.657+01:00',
+            created_by: '00000000-0000-0000-0000-000000000000'
+        },
+        {
+            id: 'S12388',
+            subject: {
+                id: 'R8170',
+                label: 'Observation #2',
+                created_at: '2019-12-19T15:06:58.023+01:00',
+                classes: ['C0'],
+                shared: 0,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'P7030',
+                label: 'R8179',
+                created_at: '2019-12-19T15:06:59.187+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'L8128',
+                label: '0.0204 sec',
+                datatype: 'xsd:string',
+                created_at: '2019-12-19T15:06:59.881+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'literal'
+            },
+            created_at: '2019-12-19T15:06:59.896+01:00',
+            created_by: '00000000-0000-0000-0000-000000000000'
+        },
+        {
+            id: 'S12387',
+            subject: {
+                id: 'R8170',
+                label: 'Observation #2',
+                created_at: '2019-12-19T15:06:58.023+01:00',
+                classes: ['C0'],
+                shared: 0,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'P7025',
+                label: 'R8167',
+                created_at: '2019-12-19T15:06:57.548+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'L8127',
+                label: '0.02 sec',
+                datatype: 'xsd:string',
+                created_at: '2019-12-19T15:06:59.74+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'literal'
+            },
+            created_at: '2019-12-19T15:06:59.757+01:00',
+            created_by: '00000000-0000-0000-0000-000000000000'
+        },
+        {
+            id: 'S12379',
+            subject: {
+                id: 'R8170',
+                label: 'Observation #2',
+                created_at: '2019-12-19T15:06:58.023+01:00',
+                classes: ['C0'],
+                shared: 0,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'P7029',
+                label: 'R8176',
+                created_at: '2019-12-19T15:06:58.78+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'L8122',
+                label: '0.01158 sec',
+                datatype: 'xsd:string',
+                created_at: '2019-12-19T15:06:58.815+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'literal'
+            },
+            created_at: '2019-12-19T15:06:58.831+01:00',
+            created_by: '00000000-0000-0000-0000-000000000000'
+        },
+        {
+            id: 'S12374',
+            subject: {
+                id: 'R8170',
+                label: 'Observation #2',
+                created_at: '2019-12-19T15:06:58.023+01:00',
+                classes: ['C0'],
+                shared: 0,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'P7028',
+                label: 'R8171',
+                created_at: '2019-12-19T15:06:58.174+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'L8119',
+                label: 'ORKG',
+                datatype: 'xsd:string',
+                created_at: '2019-12-19T15:06:58.201+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'literal'
+            },
+            created_at: '2019-12-19T15:06:58.216+01:00',
+            created_by: '00000000-0000-0000-0000-000000000000'
+        }
+    ],
+    pageable: { sort: { sorted: true, unsorted: false, empty: false }, pageNumber: 0, pageSize: 2000, offset: 0, paged: true, unpaged: false },
+    totalPages: 1,
+    totalElements: 9,
+    last: true,
+    first: true,
+    sort: { sorted: true, unsorted: false, empty: false },
+    size: 2000,
+    number: 0,
+    numberOfElements: 9,
+    empty: false
+};
+
+export const statementsR8184Object = {
+    content: [
+        {
+            id: 'S12435',
+            subject: {
+                id: 'R8195',
+                label: 'DILS2018 technical evaluation',
+                created_at: '2019-12-19T15:07:02.453+01:00',
+                classes: [],
+                shared: 1,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'P1',
+                label: 'yields',
+                created_at: '2021-11-16T13:08:46.448006Z',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'R8184',
+                label: 'DILS2018 technical evaluation of ORKG comparison service',
+                created_at: '2019-12-19T15:07:00.643+01:00',
+                classes: ['QBDataset'],
+                shared: 3,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            created_at: '2019-12-19T15:07:02.48+01:00',
+            created_by: '00000000-0000-0000-0000-000000000000'
+        },
+        {
+            id: 'S12402',
+            subject: {
+                id: 'R8166',
+                label: 'Observation #1',
+                created_at: '2019-12-19T15:06:57.402+01:00',
+                classes: ['C0'],
+                shared: 0,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'P2005',
+                label: 'dataset',
+                created_at: '2021-11-16T13:08:46.460086Z',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'R8184',
+                label: 'DILS2018 technical evaluation of ORKG comparison service',
+                created_at: '2019-12-19T15:07:00.643+01:00',
+                classes: ['QBDataset'],
+                shared: 3,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            created_at: '2019-12-19T15:07:01.186+01:00',
+            created_by: '00000000-0000-0000-0000-000000000000'
+        },
+        {
+            id: 'S12396',
+            subject: {
+                id: 'R8170',
+                label: 'Observation #2',
+                created_at: '2019-12-19T15:06:58.023+01:00',
+                classes: ['C0'],
+                shared: 0,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'P2005',
+                label: 'dataset',
+                created_at: '2021-11-16T13:08:46.460086Z',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'R8184',
+                label: 'DILS2018 technical evaluation of ORKG comparison service',
+                created_at: '2019-12-19T15:07:00.643+01:00',
+                classes: ['QBDataset'],
+                shared: 3,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            created_at: '2019-12-19T15:07:00.657+01:00',
+            created_by: '00000000-0000-0000-0000-000000000000'
+        }
+    ],
+    pageable: { sort: { sorted: true, unsorted: false, empty: false }, pageNumber: 0, pageSize: 2000, offset: 0, paged: true, unpaged: false },
+    totalPages: 1,
+    totalElements: 3,
+    last: true,
+    first: true,
+    sort: { sorted: true, unsorted: false, empty: false },
+    size: 2000,
+    number: 0,
+    numberOfElements: 3,
+    empty: false
+};
+
+// End of Resources of QBDataset

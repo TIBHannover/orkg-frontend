@@ -514,3 +514,206 @@ export const statementBrowser1P7V = {
         selectedContributionId: ''
     }
 };
+
+export const statementBrowser1QBDataset = {
+    statementBrowser: {
+        selectedResource: 'R8195',
+        selectedProperty: '',
+        level: 0,
+        isFetchingStatements: false,
+        openExistingResourcesInDialog: false,
+        propertiesAsLinks: true,
+        resourcesAsLinks: true,
+        isTemplatesModalOpen: false,
+        isHelpModalOpen: false,
+        helpCenterArticleId: null,
+        initOnLocationChange: true,
+        keyToKeepStateOnLocationChange: null,
+        isPreferencesOpen: false,
+        preferences: {
+            showClasses: false,
+            showStatementInfo: true,
+            showValueInfo: true,
+            showLiteralDataTypes: true
+        },
+        resources: {
+            byId: {
+                R8195: {
+                    label: 'DILS2018 technical evaluation',
+                    existingResourceId: 'R8195',
+                    shared: 1,
+                    propertyIds: ['8bd2d009-b720-9efd-711e-f594330a2235'],
+                    classes: [],
+                    _class: 'resource',
+                    isFetching: false,
+                    isFetched: true,
+                    fetchedDepth: 1
+                },
+                R8184: {
+                    valueId: 'e4030c32-4e15-ae2e-c6f9-687591cf617e',
+                    resourceId: 'R8184',
+                    existingResourceId: 'R8184',
+                    propertyId: '8bd2d009-b720-9efd-711e-f594330a2235',
+                    isExistingValue: true,
+                    existingStatement: true,
+                    statementId: 'S12435',
+                    statementCreatedBy: '00000000-0000-0000-0000-000000000000',
+                    statementCreatedAt: '2019-12-19T15:07:02.48+01:00',
+                    isFetched: true,
+                    fetchedDepth: 1,
+                    id: 'R8184',
+                    label: 'DILS2018 technical evaluation of ORKG comparison service',
+                    created_at: '2019-12-19T15:07:00.643+01:00',
+                    classes: ['QBDataset'],
+                    shared: 3,
+                    created_by: '00000000-0000-0000-0000-000000000000',
+                    _class: 'resource',
+                    observatory_id: '00000000-0000-0000-0000-000000000000',
+                    extraction_method: 'UNKNOWN',
+                    organization_id: '00000000-0000-0000-0000-000000000000',
+                    propertyIds: ['1c2fd390-8b25-2767-ee62-89c6dc376bf9'],
+                    isFetching: false
+                },
+                R8174: {
+                    valueId: 'ad23400c-f0ae-6fb8-aeb4-897f044307d0',
+                    resourceId: 'R8174',
+                    existingResourceId: 'R8174',
+                    propertyId: '1c2fd390-8b25-2767-ee62-89c6dc376bf9',
+                    isExistingValue: true,
+                    existingStatement: true,
+                    statementId: 'S12405',
+                    statementCreatedBy: '00000000-0000-0000-0000-000000000000',
+                    statementCreatedAt: '2019-12-19T15:07:01.31+01:00',
+                    isFetched: false,
+                    fetchedDepth: 0,
+                    id: 'R8174',
+                    label: 'Data Structure Definition ESUC',
+                    created_at: '2019-12-19T15:06:58.502+01:00',
+                    classes: ['C8'],
+                    shared: 1,
+                    created_by: '00000000-0000-0000-0000-000000000000',
+                    _class: 'resource',
+                    observatory_id: '00000000-0000-0000-0000-000000000000',
+                    extraction_method: 'UNKNOWN',
+                    organization_id: '00000000-0000-0000-0000-000000000000',
+                    propertyIds: []
+                }
+            },
+            allIds: ['R8195', 'R8184', 'R8174']
+        },
+        properties: {
+            byId: {
+                '8bd2d009-b720-9efd-711e-f594330a2235': {
+                    propertyId: '8bd2d009-b720-9efd-711e-f594330a2235',
+                    resourceId: 'R8195',
+                    existingPredicateId: 'P1',
+                    isExistingProperty: true,
+                    id: 'P1',
+                    label: 'yields',
+                    created_at: '2021-11-16T12:04:15.727651Z',
+                    created_by: '00000000-0000-0000-0000-000000000000',
+                    _class: 'predicate',
+                    description: null,
+                    valueIds: ['e4030c32-4e15-ae2e-c6f9-687591cf617e'],
+                    isEditing: false,
+                    isSaving: false,
+                    isAnimated: false
+                },
+                '1c2fd390-8b25-2767-ee62-89c6dc376bf9': {
+                    propertyId: '1c2fd390-8b25-2767-ee62-89c6dc376bf9',
+                    resourceId: 'R8184',
+                    existingPredicateId: 'P4007',
+                    isExistingProperty: true,
+                    id: 'P4007',
+                    label: 'structure',
+                    created_at: '2021-11-16T12:04:16.033993Z',
+                    created_by: '00000000-0000-0000-0000-000000000000',
+                    _class: 'predicate',
+                    description: null,
+                    valueIds: ['ad23400c-f0ae-6fb8-aeb4-897f044307d0'],
+                    isEditing: false,
+                    isSaving: false,
+                    isAnimated: false
+                }
+            },
+            allIds: ['8bd2d009-b720-9efd-711e-f594330a2235', '1c2fd390-8b25-2767-ee62-89c6dc376bf9']
+        },
+        values: {
+            byId: {
+                'e4030c32-4e15-ae2e-c6f9-687591cf617e': {
+                    valueId: 'e4030c32-4e15-ae2e-c6f9-687591cf617e',
+                    resourceId: 'R8184',
+                    existingResourceId: 'R8184',
+                    propertyId: '8bd2d009-b720-9efd-711e-f594330a2235',
+                    isExistingValue: true,
+                    existingStatement: true,
+                    statementId: 'S12435',
+                    statementCreatedBy: '00000000-0000-0000-0000-000000000000',
+                    statementCreatedAt: '2019-12-19T15:07:02.48+01:00',
+                    isFetched: false,
+                    fetchedDepth: 0,
+                    id: 'R8184',
+                    label: 'DILS2018 technical evaluation of ORKG comparison service',
+                    created_at: '2019-12-19T15:07:00.643+01:00',
+                    classes: ['QBDataset'],
+                    shared: 3,
+                    created_by: '00000000-0000-0000-0000-000000000000',
+                    _class: 'resource',
+                    observatory_id: '00000000-0000-0000-0000-000000000000',
+                    extraction_method: 'UNKNOWN',
+                    organization_id: '00000000-0000-0000-0000-000000000000',
+                    isEditing: false,
+                    isSaving: false
+                },
+                'ad23400c-f0ae-6fb8-aeb4-897f044307d0': {
+                    valueId: 'ad23400c-f0ae-6fb8-aeb4-897f044307d0',
+                    resourceId: 'R8174',
+                    existingResourceId: 'R8174',
+                    propertyId: '1c2fd390-8b25-2767-ee62-89c6dc376bf9',
+                    isExistingValue: true,
+                    existingStatement: true,
+                    statementId: 'S12405',
+                    statementCreatedBy: '00000000-0000-0000-0000-000000000000',
+                    statementCreatedAt: '2019-12-19T15:07:01.31+01:00',
+                    isFetched: false,
+                    fetchedDepth: 0,
+                    id: 'R8174',
+                    label: 'Data Structure Definition ESUC',
+                    created_at: '2019-12-19T15:06:58.502+01:00',
+                    classes: ['C8'],
+                    shared: 1,
+                    created_by: '00000000-0000-0000-0000-000000000000',
+                    _class: 'resource',
+                    observatory_id: '00000000-0000-0000-0000-000000000000',
+                    extraction_method: 'UNKNOWN',
+                    organization_id: '00000000-0000-0000-0000-000000000000',
+                    isEditing: false,
+                    isSaving: false
+                }
+            },
+            allIds: ['e4030c32-4e15-ae2e-c6f9-687591cf617e', 'ad23400c-f0ae-6fb8-aeb4-897f044307d0']
+        },
+        resourceHistory: {
+            byId: {
+                R8195: {
+                    id: 'R8195',
+                    label: 'DILS2018 technical evaluation'
+                }
+            },
+            allIds: ['R8195']
+        },
+        templates: {},
+        classes: {
+            QBDataset: {
+                isFetching: false,
+                templateIds: []
+            },
+            C8: {
+                isFetching: false,
+                templateIds: []
+            }
+        },
+        contributions: {},
+        selectedContributionId: ''
+    }
+};
