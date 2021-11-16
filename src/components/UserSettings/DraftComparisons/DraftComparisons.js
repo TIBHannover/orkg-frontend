@@ -85,7 +85,7 @@ const DraftComparisons = () => {
                 <h2 className="h5">View draft comparisons</h2>
                 <Alert color="info" className="mt-3" fade={false}>
                     Comparisons can be saved as draft if you do not want to publish it yet. If you want to save a comparison as draft, first make a
-                    comparison. Click <em>More...</em> in the right top of the page, finally click on <em>Save as draft</em>
+                    comparison. Click <em>Actions...</em> in the right top of the page, finally click on <em>Save as draft</em>
                 </Alert>
             </div>
 
