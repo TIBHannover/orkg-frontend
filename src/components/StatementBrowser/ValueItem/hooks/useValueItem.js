@@ -82,7 +82,7 @@ const useValueItem = ({ valueId, propertyId }) => {
             );
         };
         const existingResourceId = resource ? resource.existingResourceId : false;
-        if (existingResourceId && !resource.isFetched && !resource.isFetching && value?._class !== ENTITIES.RESOURCE) {
+        if (existingResourceId && !resource.isFetched && !resource.isFetching && value?._class === ENTITIES.RESOURCE) {
             loadResource();
         }
     }, [dispatch, resource, value?._class]);
