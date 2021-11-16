@@ -9,7 +9,14 @@ import { createGlobalStyle } from 'styled-components';
 const SortableList = SortableContainer(({ items, handleManualSort }) => (
     <Container className="position-relative">
         {items.map((section, index) => (
-            <EditSection key={section.id} index={index} section={section} atIndex={index + 1} handleManualSort={handleManualSort} />
+            <EditSection
+                collection="sections"
+                key={section.id}
+                index={index}
+                section={section}
+                atIndex={index + 1}
+                handleManualSort={handleManualSort}
+            />
         ))}
     </Container>
 ));

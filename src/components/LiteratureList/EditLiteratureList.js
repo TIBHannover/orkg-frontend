@@ -8,7 +8,7 @@ import SortableSectionsList from 'components/LiteratureList/SortableSectionsList
 import React from 'react';
 import { Container } from 'reactstrap';
 
-const EditList = () => (
+const EditLiteratureList = () => (
     <main>
         <header>
             <Container>
@@ -32,4 +32,4 @@ const EditList = () => (
     </main>
 );
 
-export default EditList;
+export default EditLiteratureList;

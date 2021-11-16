@@ -14,7 +14,7 @@ import { Link, useParams } from 'react-router-dom';
 import { Alert, Button, Container, ListGroup, ListGroupItem } from 'reactstrap';
 import { historyModalToggled } from 'slices/literatureListSlice';
 
-const ViewList = () => {
+const ViewLiteratureList = () => {
     const { id } = useParams();
     const literatureList = useSelector(state => state.literatureList.literatureList);
     const authors = useSelector(state => state.literatureList.authorResources);
@@ -101,4 +101,4 @@ const ViewList = () => {
     );
 };
 
-export default ViewList;
+export default ViewLiteratureList;

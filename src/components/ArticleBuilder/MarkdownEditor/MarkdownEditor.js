@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import { faBold, faCode, faImage, faItalic, faLink, faList, faListOl, faQuoteLeft, faTable, faUnderline } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
@@ -41,6 +40,11 @@ const ItemReference = ({ entity: { reference } }) => (
         </span>
     </div>
 );
+
+ItemReference.propTypes = {
+    entity: PropTypes.object.isRequired
+};
+
 const ItemResource = ({ entity: { resource } }) => (
     <div role="button" onMouseDown={e => e.preventDefault()} className="px-2 py-1">
         {resource.label}
@@ -49,6 +53,11 @@ const ItemResource = ({ entity: { resource } }) => (
         </span>
     </div>
 );
+
+ItemResource.propTypes = {
+    entity: PropTypes.object.isRequired
+};
+
 const Loading = () => <div>Loading</div>;
 
 const MarkdownEditor = ({ label, handleUpdate, references = null, literalId = null }) => {
@@ -277,7 +286,10 @@ const MarkdownEditor = ({ label, handleUpdate, references = null, literalId = nu
 };
 
 MarkdownEditor.propTypes = {
-    markdown: PropTypes.object.isRequired
+    label: PropTypes.string.isRequired,
+    handleUpdate: PropTypes.func.isRequired,
+    references: PropTypes.object,
+    literalId: PropTypes.string
 };
 
 export default MarkdownEditor;

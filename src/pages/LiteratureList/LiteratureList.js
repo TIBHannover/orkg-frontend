@@ -2,11 +2,11 @@ import { faCheckCircle, faEllipsisV, faHistory, faPen, faSpinner, faTimes, faUpl
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import Breadcrumbs from 'components/Breadcrumbs/Breadcrumbs';
-import EditList from 'components/LiteratureList/EditList';
+import EditList from 'components/LiteratureList/EditLiteratureList';
 import HistoryModal from 'components/LiteratureList/HistoryModal';
 import useLiteratureList from 'components/LiteratureList/hooks/useLiteratureList';
 import PublishModal from 'components/LiteratureList/PublishModal';
-import ViewList from 'components/LiteratureList/ViewList';
+import ViewLiteratureList from 'components/LiteratureList/ViewLiteratureList';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import LoadingArticle from 'components/ArticleBuilder/LoadingArticle';
 import LoadingOverlay from 'components/ArticleBuilder/LoadingOverlay';
@@ -175,7 +175,7 @@ const LiteratureList = () => {
             </TitleBar>
             <LoadingOverlay isLoading={isLoadingSortSection} />
 
-            {!isLoading && !isEditing && <ViewList />}
+            {!isLoading && !isEditing && <ViewLiteratureList />}
             {!isLoading && isEditing && <EditList />}
             {isLoading && <LoadingArticle />}
 

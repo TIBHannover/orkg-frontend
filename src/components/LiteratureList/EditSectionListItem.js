@@ -6,7 +6,6 @@ import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { SortableElement, sortableHandle } from 'react-sortable-hoc';
-import { toast } from 'react-toastify';
 import { Button, ListGroupItem } from 'reactstrap';
 import Confirm from 'reactstrap-confirm';
 import { deleteListEntry, listEntryUpdated, updateListEntryDescription } from 'slices/literatureListSlice';
@@ -32,7 +31,7 @@ const Toolbar = styled.div`
         width: 100%;
     }
 `;
-// className={isHovering ? 'hover' : ''}
+
 const SortableHandle = sortableHandle(() => <Icon icon={faBars} className="text-white sortable-handle" />);
 
 const EditSectionListItem = ({ entry, sectionId, statementId }) => {
@@ -51,7 +50,6 @@ const EditSectionListItem = ({ entry, sectionId, statementId }) => {
 
         if (confirm) {
             dispatch(deleteListEntry({ statementId, sectionId }));
-            toast.success('The entry has been deleted successfully');
         }
     };
 

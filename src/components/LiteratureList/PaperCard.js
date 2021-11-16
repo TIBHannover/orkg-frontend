@@ -112,7 +112,6 @@ const PaperCard = props => {
 
 PaperCard.propTypes = {
     paper: PropTypes.shape({
-        id: PropTypes.string.isRequired,
         paper: PropTypes.object,
         authors: PropTypes.array,
         month: PropTypes.object,
@@ -137,7 +136,7 @@ PaperCard.propTypes = {
     showAddToComparison: PropTypes.bool.isRequired,
     showBadge: PropTypes.bool.isRequired,
     onSelect: PropTypes.func,
-    description: PropTypes.string
+    description: PropTypes.object
 };
 
 PaperCard.defaultProps = {

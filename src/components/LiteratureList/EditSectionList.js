@@ -12,17 +12,16 @@ import { sortListEntries } from 'slices/literatureListSlice';
 
 const SortableList = SortableContainer(({ items, section }) => (
     <ListGroup>
-        {items.map((item, index) => {
-            return (
-                <EditSectionListItem
-                    key={`item${item.statementId}`}
-                    entry={item}
-                    index={index}
-                    statementId={item.statementId}
-                    sectionId={section.id}
-                />
-            );
-        })}
+        {items.map((item, index) => (
+            <EditSectionListItem
+                key={`item${item.statementId}`}
+                collection={section.id}
+                entry={item}
+                index={index}
+                statementId={item.statementId}
+                sectionId={section.id}
+            />
+        ))}
     </ListGroup>
 ));
 

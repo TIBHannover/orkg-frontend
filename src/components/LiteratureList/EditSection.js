@@ -12,8 +12,8 @@ import { Input } from 'reactstrap';
 import Confirm from 'reactstrap-confirm';
 import { deleteSection, updateSectionHeadingLevel, updateSectionMarkdown, updateSectionTitle } from 'slices/literatureListSlice';
 
-const EditSection = props => {
-    const { type, content, title: titleProp, id, heading } = props.section;
+const EditSection = ({ section, handleManualSort, atIndex }) => {
+    const { type, content, title: titleProp, id, heading } = section;
     const [title, setTitle] = useState(titleProp);
     const dispatch = useDispatch();
 
@@ -57,7 +57,7 @@ const EditSection = props => {
 
     return (
         <section>
-            <SortableSection handleDelete={handleDelete} handleSort={direction => props.handleManualSort({ id, direction })}>
+            <SortableSection handleDelete={handleDelete} handleSort={direction => handleManualSort({ id, direction })}>
                 {type !== CLASSES.LIST_SECTION && (
                     <div className="d-flex align-items-center  border-bottom pb-1 mb-3">
                         <Input
@@ -88,9 +88,9 @@ const EditSection = props => {
                     </div>
                 )}
                 {type === CLASSES.TEXT_SECTION && <MarkdownEditor label={content.text} handleUpdate={handleUpdateMarkdown} />}
-                {type === CLASSES.LIST_SECTION && <EditSectionList section={props.section} />}
+                {type === CLASSES.LIST_SECTION && <EditSectionList section={section} index={atIndex - 1} />}
             </SortableSection>
-            <AddSection index={props.atIndex} />
+            <AddSection index={atIndex} />
         </section>
     );
 };

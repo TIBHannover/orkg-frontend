@@ -4,7 +4,9 @@ import { LOCATION_CHANGE } from 'connected-react-router';
 import { CLASSES, PREDICATES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import dotProp from 'dot-prop-immutable';
+import { cloneDeep } from 'lodash';
 import { match } from 'path-to-regexp';
+import { toast } from 'react-toastify';
 import { createLiteral, updateLiteral } from 'services/backend/literals';
 import { createResource, updateResource } from 'services/backend/resources';
 import {
@@ -128,8 +130,7 @@ export const literatureListSlice = createSlice({
         listEntryDeleted: (state, { payload }) => {
             const { statementId, sectionId } = payload;
             const sectionIndex = state.sections.findIndex(section => section.id === sectionId);
-            //const entryIndex = state.sections[sectionIndex].entries.findIndex(section => section.statementId === statementId);
-            return state.sections[sectionIndex].entries.filter(entry => entry.statementId !== statementId);
+            state.sections[sectionIndex].entries = state.sections[sectionIndex].entries.filter(entry => entry.statementId !== statementId);
         },
         listEntryUpdated: (state, { payload }) => {
             state.papers[payload.paper.id] = { ...state.papers[payload.paper.id], ...payload };
@@ -243,16 +244,21 @@ export const updateSectionMarkdown = ({ id, markdown }) => async dispatch => {
 };
 
 export const deleteSection = id => async dispatch => {
-    dispatch(setIsLoading(true));
-    dispatch(sectionDeleted(id));
-    const sectionObjectStatement = await getStatementsByObject({ id });
-    const sectionSubjectStatement = await getStatementsBySubject({ id });
-    const sectionObjectStatementIds = sectionObjectStatement.map(stmt => stmt.id);
-    const sectionSubjectStatementIds = sectionSubjectStatement.map(stmt => stmt.id);
-    await deleteStatementsByIds([...sectionObjectStatementIds, ...sectionSubjectStatementIds]);
-    //the resource isn't deleted, because deleting resources can only be done with the is_curation_allowed flag
-    //await deleteResource(id);
-    dispatch(setIsLoading(false));
+    try {
+        dispatch(setIsLoading(true));
+        const sectionObjectStatement = await getStatementsByObject({ id });
+        const sectionSubjectStatement = await getStatementsBySubject({ id });
+        const sectionObjectStatementIds = sectionObjectStatement.map(stmt => stmt.id);
+        const sectionSubjectStatementIds = sectionSubjectStatement.map(stmt => stmt.id);
+        await deleteStatementsByIds([...sectionObjectStatementIds, ...sectionSubjectStatementIds]);
+        //the resource isn't deleted, because deleting resources can only be done with the is_curation_allowed flag
+        //await deleteResource(id);
+        dispatch(sectionDeleted(id));
+        dispatch(setIsLoading(false));
+        toast.success('Section successfully deleted');
+    } catch (e) {
+        toast.error('Section not deleted, reload the page and try again');
+    }
 };
 
 export const createSection = ({ listId, afterIndex, sectionType }) => async (dispatch, getState) => {
@@ -343,13 +349,18 @@ export const addListEntry = ({ paperData, sectionId }) => async dispatch => {
 };
 
 export const deleteListEntry = ({ statementId, sectionId }) => async dispatch => {
-    deleteStatementById(statementId);
-    dispatch(
-        listEntryDeleted({
-            statementId,
-            sectionId
-        })
-    );
+    try {
+        await deleteStatementById(statementId);
+        dispatch(
+            listEntryDeleted({
+                statementId,
+                sectionId
+            })
+        );
+        toast.success('The entry has been deleted successfully');
+    } catch (e) {
+        toast.error('The entry is not deleted. Reload the page and try again');
+    }
 };
 
 export const updateListEntryDescription = ({ description, entryId, descriptionLiteralId, sectionId }) => async dispatch => {
@@ -375,7 +386,15 @@ export const sortListEntries = ({ sectionId, entries, oldIndex, newIndex }) => a
     dispatch(setIsLoading(true));
     dispatch(isLoadingSortSectionSet(true));
 
-    const entriesNewOrder = arrayMove(entries, oldIndex, newIndex);
+    const entriesNewOrder = cloneDeep(arrayMove(entries, oldIndex, newIndex));
+    const sectionSubjectStatement = await getStatementsBySubjectAndPredicate({ subjectId: sectionId, predicateId: PREDICATES.HAS_ENTRY });
+    const sectionSubjectStatementIds = sectionSubjectStatement.map(stmt => stmt.id);
+    await deleteStatementsByIds(sectionSubjectStatementIds);
+
+    for (const [index, entry] of entriesNewOrder.entries()) {
+        const { id } = await createResourceStatement(sectionId, PREDICATES.HAS_ENTRY, entry.entry.id);
+        entriesNewOrder[index].statementId = id;
+    }
 
     dispatch(
         listEntriesSorted({
@@ -383,14 +402,6 @@ export const sortListEntries = ({ sectionId, entries, oldIndex, newIndex }) => a
             sectionId
         })
     );
-
-    const sectionSubjectStatement = await getStatementsBySubjectAndPredicate({ subjectId: sectionId, predicateId: PREDICATES.HAS_ENTRY });
-    const sectionSubjectStatementIds = sectionSubjectStatement.map(stmt => stmt.id);
-    await deleteStatementsByIds(sectionSubjectStatementIds);
-
-    for (const entry of entriesNewOrder) {
-        await createResourceStatement(sectionId, PREDICATES.HAS_ENTRY, entry.entry.id);
-    }
 
     dispatch(setIsLoading(false));
     dispatch(isLoadingSortSectionSet(false));
