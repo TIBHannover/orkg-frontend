@@ -3,6 +3,20 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [V0.55](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.54.1...V0.55) - 2021-11-16
+
+### Changes
+
+- Comparison: rename 'more' to 'actions' button header [`#724`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/724)
+- fix(Comparison): loading indicator prevent overflowing [`#723`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/723)
+- fix: top contributors [`#574`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/574)
+- fix(Contribution editor): Bibtex reader does not catch the url entry [`#711`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/711)
+- Style(ContributionEditor): Make dropdown box of types visible [`#716`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/716)
+- fix(Contribution Editor): Select datatypes dropdown in the popup [`#717`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/717)
+- fix(Comparison): Applied filters are not visible at the first time applied [`#719`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/719)
+- fix: Bibtex are saved in "has doi" statement [`#721`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/721)
+
+---
 ## [V0.54.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.54...V0.54.1) - 2021-11-10
 
 ### Changes
