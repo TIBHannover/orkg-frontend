@@ -1,4 +1,4 @@
-import { faLightbulb, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import AddEntryModal from 'components/LiteratureList/AddEntryModal';
 import EditSectionListItem from 'components/LiteratureList/EditSectionListItem';
@@ -6,11 +6,11 @@ import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { SortableElement } from 'react-sortable-hoc';
-import { Button, ListGroup } from 'reactstrap';
+import { Alert, Button, ListGroup } from 'reactstrap';
 import { SortableContainer } from 'react-sortable-hoc';
 import { sortListEntries } from 'actions/literatureList';
 
-const SortableList = SortableContainer(({ items, papers, section, handleManualSort }) => (
+const SortableList = SortableContainer(({ items, section }) => (
     <ListGroup>
         {items.map((item, index) => {
             return (
@@ -41,27 +41,30 @@ const EditSectionList = ({ section }) => {
 
     return (
         <>
-            <div className="mb-3 mt-2" style={{ pointerEvents: isSorting ? 'none' : 'all' }}>
-                <SortableList
-                    items={section.entries}
-                    papers={papers}
-                    section={section}
-                    onSortEnd={handleSortEnd}
-                    updateBeforeSortStart={() => setIsSorting(true)}
-                    lockAxis="y"
-                    useDragHandle
-                    helperClass="sortableHelper"
-                />
-            </div>
+            {section.entries.length === 0 && (
+                <Alert color="info" className="mt-2" fade={false}>
+                    No entries added yet
+                </Alert>
+            )}
+            {section.entries.length > 0 && (
+                <div className="mb-3 mt-2" style={{ pointerEvents: isSorting ? 'none' : 'all' }}>
+                    <SortableList
+                        items={section.entries}
+                        papers={papers}
+                        section={section}
+                        onSortEnd={handleSortEnd}
+                        updateBeforeSortStart={() => setIsSorting(true)}
+                        lockAxis="y"
+                        useDragHandle
+                        helperClass="sortableHelper"
+                    />
+                </div>
+            )}
             <Button color="secondary" size="sm" className="mb-2" onClick={() => setIsOpenAddEntryModal(true)}>
                 <Icon icon={faPlus} className="mr-2" />
                 Add entries
             </Button>
             <AddEntryModal sectionId={section.id} />
-            <Button color="light" size="sm" className="mb-2 ml-2">
-                <Icon icon={faLightbulb} className="mr-2" />
-                Related papers
-            </Button>
             {isOpenAddEntryModal && <AddEntryModal isOpen={isOpenAddEntryModal} setIsOpen={setIsOpenAddEntryModal} sectionId={section.id} />}
         </>
     );

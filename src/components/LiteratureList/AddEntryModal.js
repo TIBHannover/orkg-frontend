@@ -4,6 +4,7 @@ import { addListEntry } from 'actions/literatureList';
 import Cite from 'citation-js';
 import CreatePaperModal from 'components/CreatePaperModal/CreatePaperModal';
 import useLiteratureList from 'components/LiteratureList/hooks/useLiteratureList';
+import Tooltip from 'components/Utils/Tooltip';
 import { MISC } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
@@ -128,7 +129,11 @@ const AddEntryModal = ({ sectionId, isOpen, setIsOpen }) => {
                 <ModalHeader toggle={v => setIsOpen(!v)}>Add entries</ModalHeader>
                 <ModalBody>
                     <FormGroup>
-                        <Label for="paper-value">Enter DOI or BibTeX</Label>
+                        <Label for="paper-value">
+                            <Tooltip message="Enter a single or multiple DOIs (separated by a white space, like: 'DOI_1 DOI_2'). Or enter one or multiple BibTeX entries">
+                                Enter DOI or BibTeX
+                            </Tooltip>
+                        </Label>
                         <Textarea id="paper-value" value={value} minRows="1" className="form-control" onChange={e => setValue(e.target.value)} />
                     </FormGroup>
                 </ModalBody>

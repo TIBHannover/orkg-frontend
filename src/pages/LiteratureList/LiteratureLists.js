@@ -1,4 +1,4 @@
-import { faEyeSlash, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import ListPage from 'components/ListPage/ListPage';
 import ListCard from 'components/LiteratureList/ListCard';
