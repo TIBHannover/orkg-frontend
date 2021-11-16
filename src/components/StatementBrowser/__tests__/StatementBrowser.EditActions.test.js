@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, waitFor } from 'testUtils';
+import { render, screen, fireEvent, waitFor, waitForElementToBeRemoved } from 'testUtils';
 import StatementBrowser from '../StatementBrowser';
 import { ENTITIES } from 'constants/graphSettings';
 import selectEvent from 'react-select-event';
@@ -156,6 +156,7 @@ describe('ValueItem', () => {
         await clickOnEditValueButton(screen, VALUE_IDS['Resource']);
         fireEvent.change(screen.getByPlaceholderText(/enter a value/i), { target: { value: 'resource label 1' } });
         fireEvent.click(screen.getByRole('button', { name: 'Done' }));
+        await waitForElementToBeRemoved(() => screen.queryByText(/Loading/i));
         await waitFor(() => expect(screen.getByRole('button', { name: 'resource label 1' })).toBeInTheDocument());
     });
 });
