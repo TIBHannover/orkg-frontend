@@ -759,10 +759,11 @@ export const parseCiteResult = paper => {
         paperPublicationMonth = '',
         paperPublicationYear = '',
         doi = '',
-        publishedIn = '';
+        publishedIn = '',
+        url = '';
 
     try {
-        const { title, subtitle, author, issued, DOI, 'container-title': containerTitle } = paper.data[0];
+        const { title, subtitle, author, issued, DOI, URL, 'container-title': containerTitle } = paper.data[0];
 
         paperTitle = title;
         if (subtitle && subtitle.length > 0) {
@@ -791,6 +792,7 @@ export const parseCiteResult = paper => {
             paperPublicationYear = year;
         }
         doi = DOI ? DOI : '';
+        url = URL ? URL : '';
         if (containerTitle && isString(containerTitle)) {
             publishedIn = unescape(containerTitle);
         }
@@ -804,7 +806,8 @@ export const parseCiteResult = paper => {
         paperPublicationMonth,
         paperPublicationYear,
         doi,
-        publishedIn
+        publishedIn,
+        url
     };
 };
 

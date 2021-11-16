@@ -2,15 +2,16 @@ import { useState } from 'react';
 import { DropdownMenu, DropdownItem, FormGroup, Label, Input, UncontrolledButtonDropdown, DropdownToggle, Button } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
+import { MISC } from 'constants/graphSettings';
 import Tippy from '@tippyjs/react';
 import { stringifySort } from 'utils';
 import PropTypes from 'prop-types';
 
-const ContributorsDropdownFilter = ({ sort, isLoading, includeSubFields, setSort, setIncludeSubFields }) => {
+const ContributorsDropdownFilter = ({ sort, isLoading, includeSubFields, setSort, setIncludeSubFields, researchFieldId }) => {
     const [tippy, setTippy] = useState({});
     return (
         <>
-            {sort === 'top' && (
+            {researchFieldId === MISC.RESEARCH_FIELD_MAIN && (
                 <UncontrolledButtonDropdown>
                     <DropdownToggle caret className="pl-3 pr-3" size="sm" color="light">
                         {stringifySort(sort)}
@@ -25,7 +26,7 @@ const ContributorsDropdownFilter = ({ sort, isLoading, includeSubFields, setSort
                     </DropdownMenu>
                 </UncontrolledButtonDropdown>
             )}
-            {sort !== 'top' && (
+            {researchFieldId !== MISC.RESEARCH_FIELD_MAIN && (
                 <Tippy
                     interactive={true}
                     trigger="click"
@@ -85,6 +86,7 @@ ContributorsDropdownFilter.propTypes = {
     isLoading: PropTypes.bool.isRequired,
     includeSubFields: PropTypes.bool.isRequired,
     setSort: PropTypes.func.isRequired,
+    researchFieldId: PropTypes.string,
     setIncludeSubFields: PropTypes.func.isRequired
 };
 

@@ -3,6 +3,13 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [V0.54.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.54...V0.54.1) - 2021-11-10
+
+### Changes
+
+- fix(ContributionEditor): infinite loop when adding a paper [`#722`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/722)
+
+---
 ## [V0.54](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.53...V0.54) - 2021-11-08
 
 ### Changes

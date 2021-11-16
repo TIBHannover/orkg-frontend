@@ -672,12 +672,12 @@ function useComparison({ id }) {
      * Update comparison if:
      *  1/ Contribution list changed
      *  2/ Comparison type changed
-     *  2/ Comparison id changed
+     *  3/ Comparison id changed and is not undefined
      */
     useEffect(() => {
         if (
             contributionsList.length > 0 &&
-            (prevComparisonId !== comparisonId ||
+            ((prevComparisonId !== comparisonId && comparisonId) ||
                 prevComparisonType !== comparisonType ||
                 !contributionsList.every(id => contributions.map(c => c.id).includes(id)))
         ) {

@@ -242,7 +242,7 @@ const TableCellValue = forwardRef(({ value, index, setDisableCreate, propertyId 
                                 placement="top"
                             >
                                 <span>
-                                    <InputGroup size="sm" style={{ width: 295 }}>
+                                    <InputGroup size="sm" style={{ minWidth: 295, zIndex: 100 }}>
                                         <InputField
                                             inputValue={draftLabel}
                                             setInputValue={setDraftLabel}
@@ -261,6 +261,7 @@ const TableCellValue = forwardRef(({ value, index, setDisableCreate, propertyId 
                                             disableBorderRadiusRight={false}
                                             valueType={draftDataType}
                                             setValueType={setDraftDataType}
+                                            menuPortalTarget={document.body} // use a portal to ensure the menu isn't blocked by other elements
                                         />
                                     </InputGroup>
                                 </span>
