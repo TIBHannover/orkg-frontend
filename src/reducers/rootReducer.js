@@ -7,9 +7,9 @@ import pdfTextAnnotation from 'reducers/pdfTextAnnotation';
 import viewPaper from 'reducers/viewPaper';
 import pdfAnnotation from 'reducers/pdfAnnotation';
 import addTemplate from 'reducers/addTemplate';
-import contributionEditor from 'reducers/contributionEditor';
 import smartReview from './smartReview';
 import literatureList from './literatureList';
+import contributionEditor from 'slices/contributionEditorSlice';
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default history =>

@@ -3,7 +3,7 @@ import { FILTER_TYPES } from 'constants/comparisonFilterTypes';
 import { CLASSES, MISC, PREDICATES, ENTITIES } from 'constants/graphSettings';
 import { PREDICATE_TYPE_ID, RESOURCE_TYPE_ID } from 'constants/misc';
 import ROUTES from 'constants/routes';
-import { find, flatten, flattenDepth, isEqual, isString, last, uniq, sortBy, uniqBy, isEmpty } from 'lodash';
+import { find, flatten, flattenDepth, isEqual, isString, last, uniq, sortBy, uniqBy, isEmpty, cloneDeep } from 'lodash';
 import { unescape } from 'he';
 import { reverse } from 'named-urls';
 import queryString from 'query-string';
@@ -687,10 +687,11 @@ export const parseCiteResult = paper => {
         paperPublicationMonth = '',
         paperPublicationYear = '',
         doi = '',
-        publishedIn = '';
+        publishedIn = '',
+        url = '';
 
     try {
-        const { title, subtitle, author, issued, DOI, 'container-title': containerTitle } = paper.data[0];
+        const { title, subtitle, author, issued, DOI, URL, 'container-title': containerTitle } = paper.data[0];
 
         paperTitle = title;
         if (subtitle && subtitle.length > 0) {
@@ -719,6 +720,7 @@ export const parseCiteResult = paper => {
             paperPublicationYear = year;
         }
         doi = DOI ? DOI : '';
+        url = URL ? URL : '';
         if (containerTitle && isString(containerTitle)) {
             publishedIn = unescape(containerTitle);
         }
@@ -732,7 +734,8 @@ export const parseCiteResult = paper => {
         paperPublicationMonth,
         paperPublicationYear,
         doi,
-        publishedIn
+        publishedIn,
+        url
     };
 };
 
@@ -824,7 +827,7 @@ export async function saveAuthors({ prevAuthors, newAuthors, resourceId }) {
     deleteStatementsByIds(statementsIds);
 
     // Add all authors from the state
-    const authors = newAuthors;
+    const authors = cloneDeep(newAuthors);
     for (const [i, author] of newAuthors.entries()) {
         // create the author
         if (author.orcid) {

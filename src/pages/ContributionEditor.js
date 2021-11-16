@@ -1,6 +1,6 @@
 import { faPlusCircle, faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { loadContributions, removeContributions } from 'actions/contributionEditor';
+import { contributionsRemoved, loadContributions } from 'slices/contributionEditorSlice';
 import CreateProperty from 'components/ContributionEditor/CreateProperty';
 import EditorTable from 'components/ContributionEditor/EditorTable';
 import useContributionEditor from 'components/ContributionEditor/hooks/useContributionEditor';
@@ -60,7 +60,7 @@ const ContributionEditor = () => {
         // check if contributions are removed
         const contributionIdsToRemove = Object.keys(contributions).filter(id => !contributionIds.includes(id));
         if (contributionIdsToRemove.length) {
-            dispatch(removeContributions(contributionIdsToRemove));
+            dispatch(contributionsRemoved(contributionIdsToRemove));
         }
     }, [contributionIds, contributions, dispatch, hasFailed, isLoading]);
 

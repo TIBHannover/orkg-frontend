@@ -257,11 +257,12 @@ function useComparison({ id }) {
      * @return {Array} list of properties extended and sorted
      */
     const extendAndSortProperties = useCallback(
-        comparisonData => {
+        (comparisonData, _comparisonType) => {
             // if there are properties in the query string
             if (predicatesList.length > 0) {
                 // Create an extended version of propertyIds (ADD the IDs of similar properties)
-                const extendedPropertyIds = extendPropertyIds(predicatesList, comparisonData.data);
+                // Only use this on the 'merge' method because the if it's used in 'path' method, it will show properties that are not activated
+                const extendedPropertyIds = _comparisonType === 'merge' ? extendPropertyIds(predicatesList, comparisonData.data) : predicatesList;
                 // sort properties based on query string (is not presented in query string, sort at the bottom)
                 // TODO: sort by label when is not active
                 comparisonData.properties.sort((a, b) => {
@@ -406,7 +407,7 @@ function useComparison({ id }) {
                     }
                 });
 
-                comparisonData.properties = extendAndSortProperties(comparisonData);
+                comparisonData.properties = extendAndSortProperties(comparisonData, comparisonType);
 
                 setContributions(comparisonData.contributions);
                 setProperties(comparisonData.properties);
@@ -482,7 +483,7 @@ function useComparison({ id }) {
             }
             newData[property].splice(cIndex, 1);
         }
-        newProperties = extendAndSortProperties({ data: newData, properties: newProperties });
+        newProperties = extendAndSortProperties({ data: newData, properties: newProperties }, comparisonType);
         setContributionsList(activatedContributionsToList(newContributions));
         setContributions(newContributions);
         setData(newData);
@@ -671,12 +672,12 @@ function useComparison({ id }) {
      * Update comparison if:
      *  1/ Contribution list changed
      *  2/ Comparison type changed
-     *  2/ Comparison id changed
+     *  3/ Comparison id changed and is not undefined
      */
     useEffect(() => {
         if (
             contributionsList.length > 0 &&
-            (prevComparisonId !== comparisonId ||
+            ((prevComparisonId !== comparisonId && comparisonId) ||
                 prevComparisonType !== comparisonType ||
                 !contributionsList.every(id => contributions.map(c => c.id).includes(id)))
         ) {

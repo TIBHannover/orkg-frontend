@@ -82,12 +82,14 @@ const AnnotationTooltipNew = props => {
         }
         const valueType = value ?? type.value;
 
-        // replace double white spaces that could occur when copying text from PDFs
-        if (isString(content.text)) {
-            content.text = content.text.replace(/\s+/g, ' ').trim();
-        }
-
-        handleAnnotate({ content, position, type: valueType });
+        handleAnnotate({
+            content: {
+                ...content,
+                text: isString(content.text) ? content.text.replace(/\s+/g, ' ').trim() : content.text // replace double white spaces that could occur when copying text from PDFs
+            },
+            position,
+            type: valueType
+        });
         hideTipAndSelection();
     };
 

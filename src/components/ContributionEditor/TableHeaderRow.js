@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { memo, useState } from 'react';
 import Confirm from 'reactstrap-confirm';
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteProperty, updateProperty } from 'actions/contributionEditor';
+import { deleteProperty, updateProperty } from 'slices/contributionEditorSlice';
 import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
 import { upperFirst } from 'lodash';
 import { Button } from 'reactstrap';

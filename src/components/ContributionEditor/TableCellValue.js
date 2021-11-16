@@ -1,4 +1,4 @@
-import { deleteStatement, updateLiteral, updateResource } from 'actions/contributionEditor';
+import { deleteStatement, updateLiteral, updateResource } from 'slices/contributionEditorSlice';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
 import { ItemInnerSeparator } from 'components/Comparison/TableCell';
 import TableCellButtons from 'components/ContributionEditor/TableCellButtons';
@@ -41,7 +41,7 @@ const TableCellValue = forwardRef(({ value, index, setDisableCreate, propertyId 
     const [suggestionType, setSuggestionType] = useState(null);
 
     useClickAway(refContainer, () => {
-        if (value._class === ENTITIES.LITERAL && (draftDataType !== value.datatype || draftLabel !== value.label) && draftLabel !== '') {
+        if (isEditing && value._class === ENTITIES.LITERAL && (draftDataType !== value.datatype || draftLabel !== value.label) && draftLabel !== '') {
             onSubmit();
         } else {
             handleStopEdit();
@@ -113,7 +113,7 @@ const TableCellValue = forwardRef(({ value, index, setDisableCreate, propertyId 
         setFormFeedback(null);
         setIsValid(true);
         if (draftDataType === 'xsd:boolean') {
-            setDraftLabel(v => Boolean(v).toString());
+            setDraftLabel(v => Boolean(v === 'true').toString());
         }
     }, [draftDataType]);
 
@@ -214,7 +214,7 @@ const TableCellValue = forwardRef(({ value, index, setDisableCreate, propertyId 
                                 placement="top"
                             >
                                 <span>
-                                    <InputGroup size="sm" style={{ width: 295 }}>
+                                    <InputGroup size="sm" style={{ minWidth: 295, zIndex: 100 }}>
                                         <InputField
                                             inputValue={draftLabel}
                                             setInputValue={setDraftLabel}
@@ -233,6 +233,7 @@ const TableCellValue = forwardRef(({ value, index, setDisableCreate, propertyId 
                                             disableBorderRadiusRight={false}
                                             valueType={draftDataType}
                                             setValueType={setDraftDataType}
+                                            menuPortalTarget={document.body} // use a portal to ensure the menu isn't blocked by other elements
                                         />
                                     </InputGroup>
                                 </span>

@@ -1,5 +1,5 @@
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import { createLiteralValue, createResourceValue } from 'actions/contributionEditor';
+import { createLiteral, createResource } from 'slices/contributionEditorSlice';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
 import StatementOptionButton from 'components/StatementBrowser/StatementOptionButton/StatementOptionButton';
 import DatatypeSelector from 'components/StatementBrowser/DatatypeSelector/DatatypeSelector';
@@ -63,7 +63,7 @@ const TableCellValueCreate = ({ isVisible, contributionId, propertyId, isEmptyCe
     const acceptSuggestion = () => {
         confirmConversion.current.hide();
         dispatch(
-            createLiteralValue({
+            createLiteral({
                 contributionId,
                 propertyId,
                 label: value,
@@ -77,7 +77,7 @@ const TableCellValueCreate = ({ isVisible, contributionId, propertyId, isEmptyCe
     const rejectSuggestion = () => {
         if (entityType === 'object') {
             dispatch(
-                createResourceValue({
+                createResource({
                     contributionId,
                     propertyId,
                     resourceId: selectedObject.selected.id ?? null,
@@ -88,7 +88,7 @@ const TableCellValueCreate = ({ isVisible, contributionId, propertyId, isEmptyCe
             );
         } else {
             dispatch(
-                createLiteralValue({
+                createLiteral({
                     contributionId,
                     propertyId,
                     label: value,
@@ -115,7 +115,7 @@ const TableCellValueCreate = ({ isVisible, contributionId, propertyId, isEmptyCe
             } else {
                 if (entityType === 'object') {
                     dispatch(
-                        createResourceValue({
+                        createResource({
                             contributionId,
                             propertyId,
                             resourceId: selected.id ?? null,
@@ -127,7 +127,7 @@ const TableCellValueCreate = ({ isVisible, contributionId, propertyId, isEmptyCe
                     closeCreate();
                 } else {
                     dispatch(
-                        createLiteralValue({
+                        createLiteral({
                             contributionId,
                             propertyId,
                             label: value,
@@ -145,7 +145,7 @@ const TableCellValueCreate = ({ isVisible, contributionId, propertyId, isEmptyCe
         setIsValid(true);
         setEntityType(getConfigByType(inputDataType)._class);
         if (inputDataType === 'xsd:boolean') {
-            setValue(v => Boolean(v).toString());
+            setValue(v => Boolean(v === 'true').toString());
         }
     }, [inputDataType]);
 
@@ -181,7 +181,7 @@ const TableCellValueCreate = ({ isVisible, contributionId, propertyId, isEmptyCe
                 </div>
             )}
             {isCreating && (
-                <div ref={refContainer} style={{ height: 35 }}>
+                <div ref={refContainer} style={{ minHeight: 35 }}>
                     <Tippy
                         onCreate={instance => (confirmConversion.current = instance)}
                         content={
@@ -196,7 +196,7 @@ const TableCellValueCreate = ({ isVisible, contributionId, propertyId, isEmptyCe
                         placement="top"
                     >
                         <span>
-                            <InputGroup size="sm" style={{ width: 295 }}>
+                            <InputGroup size="sm" style={{ minWidth: 295, zIndex: 100 }}>
                                 {entityType === 'object' ? (
                                     <Autocomplete
                                         optionsClass={propertyId === PREDICATES.HAS_RESEARCH_PROBLEM ? CLASSES.PROBLEM : undefined}
@@ -233,6 +233,7 @@ const TableCellValueCreate = ({ isVisible, contributionId, propertyId, isEmptyCe
                                         disableBorderRadiusLeft={true}
                                         disableBorderRadiusRight={false}
                                         valueType={inputDataType}
+                                        menuPortalTarget={document.body} // use a portal to ensure the menu isn't blocked by other elements
                                         setValueType={setInputDataType}
                                     />
                                 )}

@@ -37,7 +37,7 @@ function useCardData({ id, initResearchField = null, initAuthors = [] }) {
 
     return {
         researchField,
-        authors,
+        authors: authors.reverse(),
         isLoading
     };
 }
