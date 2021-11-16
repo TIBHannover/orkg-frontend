@@ -1,6 +1,5 @@
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { addListEntry } from 'actions/literatureList';
 import Cite from 'citation-js';
 import CreatePaperModal from 'components/CreatePaperModal/CreatePaperModal';
 import useLiteratureList from 'components/LiteratureList/hooks/useLiteratureList';
@@ -14,6 +13,7 @@ import { toast } from 'react-toastify';
 import { Button, FormGroup, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import { getPaperByDOI } from 'services/backend/misc';
 import { saveFullPaper } from 'services/backend/papers';
+import { addListEntry } from 'slices/literatureListSlice';
 import { parseCiteResult } from 'utils';
 
 const AddEntryModal = ({ sectionId, isOpen, setIsOpen }) => {

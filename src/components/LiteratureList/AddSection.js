@@ -5,8 +5,8 @@ import { Button, ButtonGroup } from 'reactstrap';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
-import { createSection } from 'actions/literatureList';
 import { useClickAway } from 'react-use';
+import { createSection } from 'slices/literatureListSlice';
 
 const InvisibleByDefault = styled.div`
     button {

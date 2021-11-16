@@ -1,6 +1,5 @@
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { updateTitle } from 'actions/literatureList';
 import AuthorBadges from 'components/Badges/AuthorBadges/AuthorBadges';
 import EditAuthorsModal from 'components/LiteratureList/EditAuthorsModal';
 import EditResearchField from 'components/LiteratureList/EditResearchField';
@@ -8,6 +7,7 @@ import { EditableTitle, SectionStyled } from 'components/ArticleBuilder/styled';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button } from 'reactstrap';
+import { updateTitle } from 'slices/literatureListSlice';
 
 const EditTitle = () => {
     const { id, title: titleStore } = useSelector(state => state.literatureList.literatureList);

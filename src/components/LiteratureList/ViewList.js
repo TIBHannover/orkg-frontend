@@ -1,5 +1,4 @@
 import Tippy from '@tippyjs/react';
-import { toggleHistoryModal as toggleHistoryModalAction } from 'actions/literatureList';
 import { SectionStyled } from 'components/ArticleBuilder/styled';
 import AuthorBadges from 'components/Badges/AuthorBadges/AuthorBadges';
 import ResearchFieldBadge from 'components/Badges/ResearchFieldBadge/ResearchFieldBadge';
@@ -13,6 +12,7 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
 import { Alert, Button, Container, ListGroup, ListGroupItem } from 'reactstrap';
+import { historyModalToggled } from 'slices/literatureListSlice';
 
 const ViewList = () => {
     const { id } = useParams();
@@ -26,7 +26,7 @@ const ViewList = () => {
     const dispatch = useDispatch();
     const latestVersionId = versions?.[0]?.id;
     const newVersionAvailable = isPublished && latestVersionId !== id;
-    const toggleHistoryModal = () => dispatch(toggleHistoryModalAction());
+    const toggleHistoryModal = () => dispatch(historyModalToggled());
 
     return (
         <Container className="print-only p-0 position-relative">
@@ -69,7 +69,7 @@ const ViewList = () => {
                                 <section key={section.id} className="mt-3">
                                     <ListGroup>
                                         {section.entries.map(entry => (
-                                            <ListGroupItem className="p-2">
+                                            <ListGroupItem key={entry.statementId} className="p-2">
                                                 <PaperCard
                                                     description={entry.description}
                                                     paper={papers[entry.paperId]}

@@ -1,9 +1,9 @@
-import { updateAuthors } from 'actions/literatureList';
 import AuthorsInput from 'components/Utils/AuthorsInput';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import { authorsUpdated } from 'slices/literatureListSlice';
 import { saveAuthors } from 'utils';
 
 const EditAuthorsModal = props => {
@@ -27,7 +27,7 @@ const EditAuthorsModal = props => {
 
     const handleSave = async () => {
         const _authors = await saveAuthors({ prevAuthors: authorResources, newAuthors: authors, resourceId: list.id });
-        dispatch(updateAuthors(_authors));
+        dispatch(authorsUpdated(_authors));
         toggle();
     };
 

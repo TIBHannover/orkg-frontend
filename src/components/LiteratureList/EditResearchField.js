@@ -1,11 +1,11 @@
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
-import { setResearchField } from 'actions/literatureList';
 import ResearchFieldSelectorModal from 'components/ResearchFieldSelector/ResearchFieldSelectorModal';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button } from 'reactstrap';
+import { updateResearchField } from 'slices/literatureListSlice';
 
 const EditResearchField = () => {
     const researchField = useSelector(state => state.literatureList.researchField);
@@ -15,7 +15,7 @@ const EditResearchField = () => {
 
     const handleSelectField = researchField => {
         dispatch(
-            setResearchField({
+            updateResearchField({
                 researchField,
                 statementId: researchField?.statementId,
                 listId: list.id

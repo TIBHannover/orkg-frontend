@@ -1,6 +1,5 @@
 import { faBars, faPen, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { deleteListEntry, updateListEntry, updateListEntryDescription } from 'actions/literatureList';
 import PaperCard from 'components/LiteratureList/PaperCard';
 import EditPaperDialog from 'components/ViewPaper/EditDialog/EditPaperDialog';
 import PropTypes from 'prop-types';
@@ -10,6 +9,7 @@ import { SortableElement, sortableHandle } from 'react-sortable-hoc';
 import { toast } from 'react-toastify';
 import { Button, ListGroupItem } from 'reactstrap';
 import Confirm from 'reactstrap-confirm';
+import { deleteListEntry, listEntryUpdated, updateListEntryDescription } from 'slices/literatureListSlice';
 import styled from 'styled-components';
 
 const Toolbar = styled.div`
@@ -56,7 +56,7 @@ const EditSectionListItem = ({ entry, sectionId, statementId }) => {
     };
 
     const handleUpdatePaper = async data => {
-        dispatch(updateListEntry(data));
+        dispatch(listEntryUpdated(data));
         dispatch(updateListEntryDescription({ description, entryId: entry.entry.id, descriptionLiteralId: entry.description?.id, sectionId }));
         setIsOpenEditModal(false);
     };

@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { SortableElement } from 'react-sortable-hoc';
 import { Alert, Button, ListGroup } from 'reactstrap';
 import { SortableContainer } from 'react-sortable-hoc';
-import { sortListEntries } from 'actions/literatureList';
+import { sortListEntries } from 'slices/literatureListSlice';
 
 const SortableList = SortableContainer(({ items, section }) => (
     <ListGroup>
@@ -64,7 +64,7 @@ const EditSectionList = ({ section }) => {
                 <Icon icon={faPlus} className="mr-2" />
                 Add entries
             </Button>
-            <AddEntryModal sectionId={section.id} />
+
             {isOpenAddEntryModal && <AddEntryModal isOpen={isOpenAddEntryModal} setIsOpen={setIsOpenAddEntryModal} sectionId={section.id} />}
         </>
     );

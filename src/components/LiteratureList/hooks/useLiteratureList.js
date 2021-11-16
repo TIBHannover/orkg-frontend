@@ -1,4 +1,3 @@
-import { load as loadAction, setVersions } from 'actions/literatureList';
 import { CLASSES, MISC, PREDICATES } from 'constants/graphSettings';
 import { countBy, orderBy } from 'lodash';
 import { useCallback, useState } from 'react';
@@ -15,6 +14,7 @@ import {
     getStatementsBySubjects
 } from 'services/backend/statements';
 import { createResourceData, getResourceData } from 'services/similarity';
+import { listLoaded, versionsSet } from 'slices/literatureListSlice';
 
 const useLiteratureList = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -207,7 +207,7 @@ const useLiteratureList = () => {
             const literatureList = await getListById(id);
 
             if (literatureList) {
-                dispatch(loadAction(literatureList));
+                dispatch(listLoaded(literatureList));
             }
             setIsLoading(false);
         },
@@ -274,7 +274,7 @@ const useLiteratureList = () => {
             });
 
             const versions = await getVersions(listId);
-            dispatch(setVersions(versions));
+            dispatch(versionsSet(versions));
 
             toast.success('List published successfully');
             return versionResource.id;

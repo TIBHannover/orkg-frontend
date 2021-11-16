@@ -1,4 +1,3 @@
-import { deleteSection, updateSectionHeadingLevel, updateSectionMarkdown, updateSectionTitle } from 'actions/literatureList';
 import MarkdownEditor from 'components/ArticleBuilder/MarkdownEditor/MarkdownEditor';
 import SortableSection from 'components/ArticleBuilder/SortableSection/SortableSection';
 import { EditableTitle } from 'components/ArticleBuilder/styled';
@@ -11,6 +10,7 @@ import { useDispatch } from 'react-redux';
 import { SortableElement } from 'react-sortable-hoc';
 import { Input } from 'reactstrap';
 import Confirm from 'reactstrap-confirm';
+import { deleteSection, updateSectionHeadingLevel, updateSectionMarkdown, updateSectionTitle } from 'slices/literatureListSlice';
 
 const EditSection = props => {
     const { type, content, title: titleProp, id, heading } = props.section;

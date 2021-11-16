@@ -1,7 +1,6 @@
 import { faCheckCircle, faEllipsisV, faHistory, faPen, faSpinner, faTimes, faUpload } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
-import { setIsEditing, toggleHistoryModal as toggleHistoryModalAction } from 'actions/literatureList';
 import Breadcrumbs from 'components/Breadcrumbs/Breadcrumbs';
 import EditList from 'components/LiteratureList/EditList';
 import HistoryModal from 'components/LiteratureList/HistoryModal';
@@ -22,6 +21,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { NavLink, useHistory, useParams } from 'react-router-dom';
 import { Button, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledButtonDropdown } from 'reactstrap';
 import Confirm from 'reactstrap-confirm';
+import { historyModalToggled, setIsEditing } from 'slices/literatureListSlice';
 
 const LiteratureList = () => {
     const [isOpenPublishModal, setIsOpenPublishModal] = useState(false);
@@ -39,7 +39,7 @@ const LiteratureList = () => {
     const versionNumber = versions.length ? versions.length - versions.findIndex(version => version.id === id) : null;
     const dispatch = useDispatch();
     const history = useHistory();
-    const toggleHistoryModal = () => dispatch(toggleHistoryModalAction());
+    const toggleHistoryModal = () => dispatch(historyModalToggled());
     const { load, isLoading, isNotFound, getVersions } = useLiteratureList();
 
     useEffect(() => {

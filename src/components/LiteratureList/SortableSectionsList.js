@@ -1,9 +1,9 @@
-import { moveSection } from 'actions/literatureList';
 import EditSection from 'components/LiteratureList/EditSection';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { SortableContainer } from 'react-sortable-hoc';
 import { Container } from 'reactstrap';
+import { moveSection } from 'slices/literatureListSlice';
 import { createGlobalStyle } from 'styled-components';
 
 const SortableList = SortableContainer(({ items, handleManualSort }) => (
