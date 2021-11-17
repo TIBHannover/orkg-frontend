@@ -100,7 +100,7 @@ export const getStatementsBySubject = ({ id, page = 0, items: size = 9999, sortB
  */
 export const getStatementsBundleBySubject = ({ id, maxLevel = 10, blacklist = [] }) => {
     const params = queryString.stringify(
-        { maxLevel, blacklist: blacklist.join(',') },
+        { maxLevel, blacklist: blacklist?.join(',') },
         {
             skipNull: true,
             skipEmptyString: true
