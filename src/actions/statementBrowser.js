@@ -113,7 +113,8 @@ export const initializeWithoutContribution = data => dispatch => {
         fetchStatementsForResource({
             existingResourceId: resourceId,
             resourceId: resourceId,
-            rootNodeType: rootNodeType
+            rootNodeType: rootNodeType,
+            depth: 3
         })
     );
 };
