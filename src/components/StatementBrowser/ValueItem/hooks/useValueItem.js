@@ -11,6 +11,7 @@ const useValueItem = ({ valueId, propertyId }) => {
     const property = useSelector(state => state.statementBrowser.properties.byId[propertyId]);
     const openExistingResourcesInDialog = useSelector(state => state.statementBrowser.openExistingResourcesInDialog);
     const resource = useSelector(state => state.statementBrowser.resources.byId[value.resourceId]);
+    const resourcesAsLinks = useSelector(state => state.statementBrowser.resourcesAsLinks);
 
     const [modal, setModal] = useState(false);
     const [dialogResourceId, setDialogResourceId] = useState(null);
@@ -82,10 +83,10 @@ const useValueItem = ({ valueId, propertyId }) => {
             );
         };
         const existingResourceId = resource ? resource.existingResourceId : false;
-        if (existingResourceId && !resource.isFetched && !resource.isFetching && value?._class === ENTITIES.RESOURCE) {
+        if (existingResourceId && !resource.isFetched && !resource.isFetching && value?._class === ENTITIES.RESOURCE && !resourcesAsLinks) {
             loadResource();
         }
-    }, [dispatch, resource, value?._class]);
+    }, [dispatch, resource, resourcesAsLinks, value?._class]);
 
     const formattedLabel = useMemo(() => {
         if (value.classes) {
