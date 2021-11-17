@@ -1,5 +1,6 @@
-import { render, screen, fireEvent, waitFor, waitForElementToBeRemoved } from 'testUtils';
+import { render, screen, fireEvent } from 'testUtils';
 import AddProperty from '../AddProperty';
+import selectEvent from 'react-select-event';
 import { statementBrowserStrictTemplate } from '../__mocks__/StatementBrowserDataAddProperty';
 
 jest.mock('react-flip-move', () => ({ children }) => children);
@@ -62,9 +63,7 @@ describe('Add property', () => {
         const input = screen.getByRole('textbox');
         fireEvent.mouseDown(input);
         fireEvent.change(input, { target: { value: 'property label 1' } });
-        expect(screen.queryByText(/Loading/i)).toBeInTheDocument();
-        await waitForElementToBeRemoved(() => screen.queryByText(/Loading.../i));
-        fireEvent.click(screen.getAllByText('property label 1')[1]);
+        await selectEvent.select(screen.getByRole('textbox'), 'property label 1');
         expect(screen.getByRole('button', { name: 'Add property' })).toBeInTheDocument();
     });
 
@@ -81,10 +80,7 @@ describe('Add property', () => {
         const input = screen.getByRole('textbox');
         fireEvent.mouseDown(input);
         fireEvent.change(input, { target: { value: 'test property' } });
-        expect(screen.queryByText(/Loading/i)).toBeInTheDocument();
-        await waitForElementToBeRemoved(() => screen.queryByText(/Loading.../i));
-        await waitFor(() => screen.getAllByText(/Create "test property"/i));
-        fireEvent.click(screen.getAllByText(/Create "test property"/i)[1]);
+        await selectEvent.create(screen.getByRole('textbox'), 'test property');
         expect(screen.queryByText(/Create new property/i)).toBeInTheDocument();
     });
 });
