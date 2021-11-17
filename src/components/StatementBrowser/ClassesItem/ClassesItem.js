@@ -61,23 +61,31 @@ const ClassesItem = props => {
     const shared = resource?.shared ?? 0;
 
     useEffect(() => {
-        const findClasses = () => {
+        let isMounted = true;
+        const findClasses = async () => {
             setIsLoading(true);
             const classesCalls = resource.classes?.map(c => getClassById(c)) ?? [];
-            Promise.all(classesCalls)
-                .then(classes => {
-                    setIsLoading(false);
-                    setClasses(classes ?? []);
+            await Promise.all(classesCalls)
+                .then(res_classes => {
+                    if (isMounted) {
+                        setIsLoading(false);
+                        setClasses(res_classes ?? []);
+                    }
                 })
                 .catch(err => {
-                    setClasses([]);
-                    setIsLoading(false);
-                    console.error(err);
+                    if (isMounted) {
+                        setClasses([]);
+                        setIsLoading(false);
+                        console.error(err);
+                    }
                 });
         };
         if (preferences['showClasses'] && resource?._class === ENTITIES.RESOURCE) {
             findClasses();
         }
+        return () => {
+            isMounted = false;
+        };
     }, [preferences, resource?._class, resource.classes]);
 
     const handleChangeClasses = async (selected, action) => {
