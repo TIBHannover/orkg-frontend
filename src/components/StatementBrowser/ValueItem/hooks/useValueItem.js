@@ -44,7 +44,7 @@ const useValueItem = ({ valueId, propertyId }) => {
         const existingResourceId = resource.existingResourceId;
 
         if (existingResourceId) {
-            dispatch(
+            await dispatch(
                 fetchStatementsForResource({
                     resourceId: existingResourceId,
                     rootNodeType: resource._class,

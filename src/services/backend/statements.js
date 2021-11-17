@@ -207,8 +207,8 @@ export const getStatementsByPredicateAndLiteral = ({ predicateId, literal, subje
  * @param {String} templateId Template Id
  */
 export const getTemplateById = templateId => {
-    if (templateId) {
-        return getStatementsBundleBySubject({ id: templateId, maxLevel: 2, blacklist: [CLASSES.RESEARCH_FIELD] }).then(response => {
+    return getStatementsBundleBySubject({ id: templateId, maxLevel: 2, blacklist: [CLASSES.RESEARCH_FIELD] })
+        .then(response => {
             const label = filterStatementsBySubjectId(response.statements, templateId)?.[0]?.subject.label ?? '';
             const statements = filterStatementsBySubjectId(response.statements, templateId);
             const templatePredicate = filterObjectOfStatementsByPredicateAndClass(
@@ -293,9 +293,10 @@ export const getTemplateById = templateId => {
                     label: statement.label
                 }))
             };
+        })
+        .catch(() => {
+            return Promise.reject(new Error('Template not found'));
         });
-    }
-    return Promise.resolve(null);
 };
 
 /**
@@ -361,6 +362,11 @@ export const getTemplatesByClass = classID => {
         objectId: classID,
         predicateId: PREDICATES.TEMPLATE_OF_CLASS
     }).then(statements =>
-        Promise.all(statements.filter(statement => statement.subject.classes?.includes(CLASSES.TEMPLATE)).map(st => st.subject.id))
+        Promise.all(
+            statements
+                .filter(statement => statement.subject.classes?.includes(CLASSES.TEMPLATE))
+                .map(st => st.subject.id)
+                .filter(c => c)
+        )
     );
 };

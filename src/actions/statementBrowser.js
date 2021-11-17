@@ -1164,7 +1164,7 @@ export function addStatements(statements, resourceId, depth) {
         );
 
         return Promise.all(
-            resourceStatements.map(statement => {
+            resourceStatements.map(async statement => {
                 // Check whether there already exist a property for this, then combine
                 let propertyId = getPropertyIdByByResourceAndPredicateId(getState(), resourceId, statement.predicate.id);
                 if (!propertyId) {

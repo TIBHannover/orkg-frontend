@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from 'testUtils';
+import { render, screen, fireEvent, waitFor } from 'testUtils';
 import AddProperty from '../AddProperty';
 import selectEvent from 'react-select-event';
 import { statementBrowserStrictTemplate } from '../__mocks__/StatementBrowserDataAddProperty';
@@ -81,6 +81,6 @@ describe('Add property', () => {
         fireEvent.mouseDown(input);
         fireEvent.change(input, { target: { value: 'test property' } });
         await selectEvent.create(screen.getByRole('textbox'), 'test property');
-        expect(screen.queryByText(/Create new property/i)).toBeInTheDocument();
+        await waitFor(() => expect(screen.queryByText(/Create new property/i)).toBeInTheDocument());
     });
 });
