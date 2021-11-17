@@ -207,96 +207,80 @@ export const getStatementsByPredicateAndLiteral = ({ predicateId, literal, subje
  * @param {String} templateId Template Id
  */
 export const getTemplateById = templateId => {
-    return getStatementsBundleBySubject({ id: templateId, maxLevel: 2, blacklist: [CLASSES.RESEARCH_FIELD] })
-        .then(response => {
-            const label = filterStatementsBySubjectId(response.statements, templateId)?.[0]?.subject.label ?? '';
-            const statements = filterStatementsBySubjectId(response.statements, templateId);
-            const templatePredicate = filterObjectOfStatementsByPredicateAndClass(
-                response.statements,
-                PREDICATES.TEMPLATE_OF_PREDICATE,
-                true,
-                null,
-                templateId
-            );
+    return getStatementsBundleBySubject({ id: templateId, maxLevel: 2, blacklist: [CLASSES.RESEARCH_FIELD] }).then(response => {
+        const label = filterStatementsBySubjectId(response.statements, templateId)?.[0]?.subject.label ?? '';
+        const statements = filterStatementsBySubjectId(response.statements, templateId);
+        const templatePredicate = filterObjectOfStatementsByPredicateAndClass(
+            response.statements,
+            PREDICATES.TEMPLATE_OF_PREDICATE,
+            true,
+            null,
+            templateId
+        );
 
-            const templateClass = filterObjectOfStatementsByPredicateAndClass(
-                response.statements,
-                PREDICATES.TEMPLATE_OF_CLASS,
-                true,
-                null,
-                templateId
-            );
-            const templateFormatLabel = filterObjectOfStatementsByPredicateAndClass(
-                response.statements,
-                PREDICATES.TEMPLATE_LABEL_FORMAT,
-                true,
-                null,
-                templateId
-            );
+        const templateClass = filterObjectOfStatementsByPredicateAndClass(response.statements, PREDICATES.TEMPLATE_OF_CLASS, true, null, templateId);
+        const templateFormatLabel = filterObjectOfStatementsByPredicateAndClass(
+            response.statements,
+            PREDICATES.TEMPLATE_LABEL_FORMAT,
+            true,
+            null,
+            templateId
+        );
 
-            const templateIsStrict = filterObjectOfStatementsByPredicateAndClass(
-                response.statements,
-                PREDICATES.TEMPLATE_STRICT,
-                true,
-                null,
-                templateId
-            );
-            const templateComponents = filterObjectOfStatementsByPredicateAndClass(
-                response.statements,
-                PREDICATES.TEMPLATE_COMPONENT,
-                false,
-                null,
-                templateId
-            );
+        const templateIsStrict = filterObjectOfStatementsByPredicateAndClass(response.statements, PREDICATES.TEMPLATE_STRICT, true, null, templateId);
+        const templateComponents = filterObjectOfStatementsByPredicateAndClass(
+            response.statements,
+            PREDICATES.TEMPLATE_COMPONENT,
+            false,
+            null,
+            templateId
+        );
 
-            const researchFields = filterObjectOfStatementsByPredicateAndClass(
-                response.statements,
-                PREDICATES.TEMPLATE_OF_RESEARCH_FIELD,
-                false,
-                null,
-                templateId
-            );
+        const researchFields = filterObjectOfStatementsByPredicateAndClass(
+            response.statements,
+            PREDICATES.TEMPLATE_OF_RESEARCH_FIELD,
+            false,
+            null,
+            templateId
+        );
 
-            const researchProblems = filterObjectOfStatementsByPredicateAndClass(
-                response.statements,
-                PREDICATES.TEMPLATE_OF_RESEARCH_PROBLEM,
-                false,
-                null,
-                templateId
-            );
+        const researchProblems = filterObjectOfStatementsByPredicateAndClass(
+            response.statements,
+            PREDICATES.TEMPLATE_OF_RESEARCH_PROBLEM,
+            false,
+            null,
+            templateId
+        );
 
-            const components = templateComponents.map(component =>
-                getTemplateComponentData(component, filterStatementsBySubjectId(response.statements, component.id))
-            );
+        const components = templateComponents.map(component =>
+            getTemplateComponentData(component, filterStatementsBySubjectId(response.statements, component.id))
+        );
 
-            return {
-                id: templateId,
-                label: label,
-                statements: statements.map(s => s.id),
-                predicate: templatePredicate,
-                labelFormat: templateFormatLabel ? templateFormatLabel.label : '',
-                hasLabelFormat: templateFormatLabel ? true : false,
-                isStrict: templateIsStrict ? true : false,
-                components: components?.length > 0 ? components.sort((c1, c2) => sortMethod(c1.order, c2.order)) : [],
-                class: templateClass
-                    ? {
-                          id: templateClass.id,
-                          label: templateClass.label
-                      }
-                    : {},
-                researchFields: researchFields.map(statement => ({
-                    id: statement.id,
-                    label: statement.label
-                })),
-                researchProblems: researchProblems.map(statement => ({
-                    id: statement.id,
-                    label: statement.label
-                }))
-            };
-        })
-        .catch(() => {
-            return Promise.reject(new Error('Template not found'));
-        });
+        return {
+            id: templateId,
+            label: label,
+            statements: statements.map(s => s.id),
+            predicate: templatePredicate,
+            labelFormat: templateFormatLabel ? templateFormatLabel.label : '',
+            hasLabelFormat: templateFormatLabel ? true : false,
+            isStrict: templateIsStrict ? true : false,
+            components: components?.length > 0 ? components.sort((c1, c2) => sortMethod(c1.order, c2.order)) : [],
+            class: templateClass
+                ? {
+                      id: templateClass.id,
+                      label: templateClass.label
+                  }
+                : {},
+            researchFields: researchFields.map(statement => ({
+                id: statement.id,
+                label: statement.label
+            })),
+            researchProblems: researchProblems.map(statement => ({
+                id: statement.id,
+                label: statement.label
+            }))
+        };
+    });
 };
 
 /**
@@ -361,12 +345,12 @@ export const getTemplatesByClass = classID => {
     return getStatementsByObjectAndPredicate({
         objectId: classID,
         predicateId: PREDICATES.TEMPLATE_OF_CLASS
-    }).then(statements =>
-        Promise.all(
+    })
+        .then(statements =>
             statements
                 .filter(statement => statement.subject.classes?.includes(CLASSES.TEMPLATE))
                 .map(st => st.subject.id)
                 .filter(c => c)
         )
-    );
+        .catch(() => []);
 };
