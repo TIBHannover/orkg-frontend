@@ -39,7 +39,6 @@ describe('AddProperty', () => {
         await waitForElementToBeRemoved(() => screen.queryByText(/Loading.../i));
         fireEvent.click(screen.getAllByText('property label 1')[1]);
         expect(screen.getByRole('button', { name: 'Add property' })).toBeInTheDocument();
-        await waitForElementToBeRemoved(() => screen.queryByText(/Loading/i));
         await waitFor(() => expect(screen.getByRole('link', { name: 'Property label 1' })).toBeInTheDocument());
     });
 
