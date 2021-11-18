@@ -230,7 +230,7 @@ describe('ValueItem', () => {
         expect(screen.queryByText(/Date/i)).toBeNull();
     });
 });
-/*
+
 describe('ValueItem', () => {
     it('should not show datatype selector on resource edit', async () => {
         setup();
@@ -244,9 +244,8 @@ describe('ValueItem', () => {
         setup();
         await clickOnEditValueButton(screen, VALUE_IDS['Date']);
         await selectEvent.select(screen.getByText('Date'), ['Date']);
-        expect(screen.getAllByText(/Resource/i)).toHaveLength(1);
+        await waitFor(() => expect(screen.queryAllByText(/Resource/i)).toHaveLength(1));
         expect(screen.getAllByText('Text')).toHaveLength(2);
         expect(screen.getAllByText('Date')).toHaveLength(2);
     });
 });
-*/
