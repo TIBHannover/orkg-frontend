@@ -1029,20 +1029,19 @@ function shouldFetchTemplatesOfClass(state, classID) {
  * @param {String} classID - Class ID
  */
 export function fetchTemplatesOfClassIfNeeded(classID) {
-    return (dispatch, getState) => {
+    return async (dispatch, getState) => {
         if (shouldFetchTemplatesOfClass(getState(), classID)) {
             dispatch({
                 type: type.IS_FETCHING_TEMPLATES_OF_CLASS,
                 classID
             });
-            return getTemplatesByClass(classID).then(async templateIds => {
-                dispatch({
-                    type: type.DONE_FETCHING_TEMPLATES_OF_CLASS,
-                    classID
-                });
-
-                return await Promise.all(templateIds.map(templateId => dispatch(fetchTemplateIfNeeded(templateId))));
+            const templateIds = await getTemplatesByClass(classID);
+            dispatch({
+                type: type.DONE_FETCHING_TEMPLATES_OF_CLASS,
+                classID
             });
+            const templates = await Promise.all(templateIds.map(templateId => dispatch(fetchTemplateIfNeeded(templateId))));
+            return templates;
         } else {
             // Let the calling code know there's nothing to wait for.
             return Promise.resolve();
