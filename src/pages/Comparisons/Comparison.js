@@ -74,6 +74,7 @@ function Comparison(props) {
         researchField,
         setMetaData,
         setComparisonType,
+        setPredicatesList,
         toggleProperty,
         onSortPropertiesEnd,
         toggleTranspose,
@@ -165,6 +166,7 @@ function Comparison(props) {
     const handleChangeType = type => {
         setUrlNeedsToUpdate(true);
         setResponseHash(null);
+        setPredicatesList([]);
         setComparisonType(type);
         setDropdownMethodOpen(false);
     };

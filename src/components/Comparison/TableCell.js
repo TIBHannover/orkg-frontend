@@ -129,7 +129,7 @@ class TableCell extends Component {
                                             </Tippy>
                                         </span>
                                     ) : (
-                                        <span key={`value-${date.label}`}>
+                                        <span key={`value-${date.label}-${index}`}>
                                             {index > 0 && <ItemInnerSeparator />}
                                             <Tippy
                                                 content={this.PathTooltipContent(date)}

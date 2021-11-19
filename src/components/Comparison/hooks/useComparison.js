@@ -745,6 +745,7 @@ function useComparison({ id }) {
         researchField,
         setMetaData,
         setComparisonType,
+        setPredicatesList,
         toggleProperty,
         onSortPropertiesEnd,
         toggleTranspose,
