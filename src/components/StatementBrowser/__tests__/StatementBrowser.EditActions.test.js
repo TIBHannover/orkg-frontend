@@ -230,7 +230,7 @@ describe('ValueItem', () => {
         expect(screen.queryByText(/Date/i)).toBeNull();
     });
 });
-
+/*
 describe('ValueItem', () => {
     it('should not show datatype selector on resource edit', async () => {
         setup();
@@ -249,3 +249,4 @@ describe('ValueItem', () => {
         expect(screen.getAllByText('Date')).toHaveLength(2);
     });
 });
+*/
