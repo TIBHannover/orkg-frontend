@@ -599,6 +599,27 @@ export const extendPropertyIds = (propertyIds, data) => {
 };
 
 /**
+ * Make sure the the predicateList fits with the comparison approach
+ * Merge approach -> the predicateList is a list of predicate ids
+ * Path approach -> the predicateList is a list of paths
+ * This assumes that there's  no Predicate ID that contains "/"
+ * @param {Array} predicatesList properties ids from the query string
+ * @param {String} _comparisonType Comparison type
+ * @return {Boolean} the list of values
+ */
+export const isPredicatesListCorrect = (propertyIds, _comparisonType) => {
+    if (propertyIds.length === 0) {
+        return true;
+    }
+    if (_comparisonType === 'merge') {
+        return propertyIds.every(element => !element.includes('/'));
+    } else if (_comparisonType === 'path') {
+        return propertyIds.some(element => element.includes('/') || !element.match(/^P([0-9])+$/));
+    }
+    return true;
+};
+
+/**
  * Get Similar properties labels by Label
  * (similar properties)
  * @param {String} propertyLabel property label

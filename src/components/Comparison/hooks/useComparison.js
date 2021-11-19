@@ -13,7 +13,8 @@ import {
     get_error_message,
     applyRule,
     getRuleByProperty,
-    getComparisonData
+    getComparisonData,
+    isPredicatesListCorrect
 } from 'utils';
 import { useParams, useLocation, useHistory } from 'react-router-dom';
 import { PREDICATES, CLASSES, MISC } from 'constants/graphSettings';
@@ -262,7 +263,12 @@ function useComparison({ id }) {
             if (predicatesList.length > 0) {
                 // Create an extended version of propertyIds (ADD the IDs of similar properties)
                 // Only use this on the 'merge' method because the if it's used in 'path' method, it will show properties that are not activated
-                const extendedPropertyIds = _comparisonType === 'merge' ? extendPropertyIds(predicatesList, comparisonData.data) : predicatesList;
+                let extendedPropertyIds = predicatesList;
+                if (!isPredicatesListCorrect(predicatesList, _comparisonType) || _comparisonType === 'merge') {
+                    extendedPropertyIds = extendPropertyIds(predicatesList, comparisonData.data);
+                } else {
+                    extendedPropertyIds = predicatesList;
+                }
                 // sort properties based on query string (is not presented in query string, sort at the bottom)
                 // TODO: sort by label when is not active
                 comparisonData.properties.sort((a, b) => {
