@@ -876,21 +876,21 @@ function shouldFetchTemplate(state, templateID) {
  * @return {Promise} Promise object represents the template
  */
 export function fetchTemplateIfNeeded(templateID) {
-    return (dispatch, getState) => {
+    return async (dispatch, getState) => {
         if (shouldFetchTemplate(getState(), templateID)) {
             dispatch({
                 type: type.IS_FETCHING_TEMPLATE_DATA,
                 templateID
             });
-            return getTemplateById(templateID).then(template => {
-                // Add template to the global state
-                dispatch({
-                    type: type.DONE_FETCHING_TEMPLATE_DATA,
-                    templateID
-                });
-                dispatch({ type: type.CREATE_TEMPLATE, payload: template });
-                return template;
+            const template = await getTemplateById(templateID);
+
+            // Add template to the global state
+            dispatch({
+                type: type.DONE_FETCHING_TEMPLATE_DATA,
+                templateID
             });
+            dispatch({ type: type.CREATE_TEMPLATE, payload: template });
+            return template;
         } else {
             // Let the calling code know there's nothing to wait for.
             const template = getState().statementBrowser.templates[templateID];
