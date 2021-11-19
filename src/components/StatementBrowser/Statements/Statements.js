@@ -8,6 +8,7 @@ import PropertySuggestions from 'components/StatementBrowser/PropertySuggestions
 import SBEditorHelpModal from 'components/StatementBrowser/SBEditorHelpModal/SBEditorHelpModal';
 import NoData from 'components/StatementBrowser/NoData/NoData';
 import { StyledLevelBox, StyledStatementItem } from 'components/StatementBrowser/styled';
+import SameAsStatements from 'components/ExternalDescription/SameAsStatements';
 import { RESOURCE_TYPE_ID } from 'constants/misc';
 import { isArray } from 'lodash';
 import { useCookies } from 'react-cookie';
@@ -181,6 +182,8 @@ const Statements = props => {
 
             <SBEditorHelpModal isOpen={helpModalOpen} toggle={() => setHelpModalOpen(v => !v)} />
             {elements}
+
+            {props.showExternalDescriptions && <SameAsStatements />}
         </>
     );
 };
@@ -196,6 +199,7 @@ Statements.propTypes = {
     propertiesAsLinks: PropTypes.bool,
     resourcesAsLinks: PropTypes.bool,
     initOnLocationChange: PropTypes.bool.isRequired,
+    showExternalDescriptions: PropTypes.bool.isRequired,
     keyToKeepStateOnLocationChange: PropTypes.string
 };
 
@@ -209,6 +213,7 @@ Statements.defaultProps = {
     propertiesAsLinks: false,
     resourcesAsLinks: false,
     initOnLocationChange: true,
+    showExternalDescriptions: true,
     keyToKeepStateOnLocationChange: null,
     rootNodeType: RESOURCE_TYPE_ID
 };

@@ -3,7 +3,6 @@ import { Modal, ModalHeader, ModalBody, Button } from 'reactstrap';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Statements from 'components/StatementBrowser/StatementBrowser';
-import SameAsStatements from 'pages/SameAsStatements';
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { updateSettings } from 'actions/statementBrowser';
@@ -80,8 +79,6 @@ class StatementBrowserDialog extends Component {
                         openExistingResourcesInDialog={false}
                         newStore={this.props.newStore}
                     />
-
-                    <SameAsStatements />
                 </ModalBody>
             </Modal>
         );
