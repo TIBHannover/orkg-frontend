@@ -1040,7 +1040,7 @@ export function fetchTemplatesOfClassIfNeeded(classID) {
                 type: type.DONE_FETCHING_TEMPLATES_OF_CLASS,
                 classID
             });
-            const templates = await Promise.all(templateIds.map(templateId => dispatch(fetchTemplateIfNeeded(templateId))));
+            const templates = await Promise.all(templateIds.map(templateId => dispatch(fetchTemplateIfNeeded(templateId)))).catch(e => []);
             return templates;
         } else {
             // Let the calling code know there's nothing to wait for.

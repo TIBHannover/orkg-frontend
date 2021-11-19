@@ -207,7 +207,10 @@ export const getStatementsByPredicateAndLiteral = ({ predicateId, literal, subje
  * @param {String} templateId Template Id
  */
 export const getTemplateById = async templateId => {
-    const response = await getStatementsBundleBySubject({ id: templateId, maxLevel: 2, blacklist: [CLASSES.RESEARCH_FIELD] });
+    const response = await getStatementsBundleBySubject({ id: templateId, maxLevel: 2, blacklist: [CLASSES.RESEARCH_FIELD] }).catch(() => null);
+    if (!response) {
+        return Promise.reject(new Error('Template not found'));
+    }
     const label = filterStatementsBySubjectId(response.statements, templateId)?.[0]?.subject.label ?? '';
     const statements = filterStatementsBySubjectId(response.statements, templateId);
     const templatePredicate = filterObjectOfStatementsByPredicateAndClass(
