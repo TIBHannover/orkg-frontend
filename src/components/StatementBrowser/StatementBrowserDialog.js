@@ -78,6 +78,7 @@ class StatementBrowserDialog extends Component {
                         initialSubjectLabel={this.props.label}
                         openExistingResourcesInDialog={false}
                         newStore={this.props.newStore}
+                        showExternalDescriptions={this.props.showExternalDescriptions}
                     />
                 </ModalBody>
             </Modal>
@@ -94,6 +95,7 @@ StatementBrowserDialog.propTypes = {
     enableEdit: PropTypes.bool.isRequired,
     syncBackend: PropTypes.bool.isRequired,
     openExistingResourcesInDialog: PropTypes.bool.isRequired,
+    showExternalDescriptions: PropTypes.bool.isRequired,
     updateSettings: PropTypes.func.isRequired,
     type: PropTypes.string
 };
@@ -102,7 +104,8 @@ StatementBrowserDialog.defaultProps = {
     newStore: true,
     enableEdit: false,
     syncBackend: false,
-    type: RESOURCE_TYPE_ID
+    type: RESOURCE_TYPE_ID,
+    showExternalDescriptions: true
 };
 
 const mapStateToProps = state => {
