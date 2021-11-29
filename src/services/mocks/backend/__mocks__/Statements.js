@@ -5817,3 +5817,2888 @@ export const statementsR8184Object = {
 };
 
 // End of Resources of QBDataset
+
+// Statements template box.
+
+export const statementsR68106 = {
+    root: 'R68106',
+    statements: [
+        {
+            id: 'S324439',
+            subject: {
+                id: 'R68107',
+                label: 'Climate response',
+                created_at: '2020-12-11T15:31:28.72808+01:00',
+                classes: ['C12001'],
+                shared: 1,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '20fb01da-9e04-4724-b71d-0436aa56ab98',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'P7004',
+                label: 'has unit',
+                created_at: '2019-12-18T15:04:34.397+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'L238288',
+                label: '°C',
+                datatype: 'xsd:string',
+                created_at: '2020-12-11T15:32:58.885771+01:00',
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'literal'
+            },
+            created_at: '2020-12-11T15:32:58.951304+01:00',
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+        },
+        {
+            id: 'S324438',
+            subject: {
+                id: 'R68107',
+                label: 'Climate response',
+                created_at: '2020-12-11T15:31:28.72808+01:00',
+                classes: ['C12001'],
+                shared: 1,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '20fb01da-9e04-4724-b71d-0436aa56ab98',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'P32123',
+                label: 'Has TCR result',
+                created_at: '2020-11-17T17:45:17.662487+01:00',
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'L238287',
+                label: '1.46',
+                datatype: 'xsd:decimal',
+                created_at: '2020-12-11T15:32:52.972118+01:00',
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'literal'
+            },
+            created_at: '2020-12-11T15:32:53.010793+01:00',
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+        },
+        {
+            id: 'S324437',
+            subject: {
+                id: 'R68108',
+                label: 'Climate sensitivity',
+                created_at: '2020-12-11T15:31:30.264035+01:00',
+                classes: ['C12000'],
+                shared: 1,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '20fb01da-9e04-4724-b71d-0436aa56ab98',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'P7004',
+                label: 'has unit',
+                created_at: '2019-12-18T15:04:34.397+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'L238286',
+                label: '°C',
+                datatype: 'xsd:string',
+                created_at: '2020-12-11T15:32:45.509062+01:00',
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'literal'
+            },
+            created_at: '2020-12-11T15:32:45.553403+01:00',
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+        },
+        {
+            id: 'S324436',
+            subject: {
+                id: 'R68108',
+                label: 'Climate sensitivity',
+                created_at: '2020-12-11T15:31:30.264035+01:00',
+                classes: ['C12000'],
+                shared: 1,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '20fb01da-9e04-4724-b71d-0436aa56ab98',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'P32124',
+                label: 'Has ECS result',
+                created_at: '2020-11-18T15:55:34.16892+01:00',
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'L238285',
+                label: '2.69',
+                datatype: 'xsd:decimal',
+                created_at: '2020-12-11T15:32:44.519092+01:00',
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'literal'
+            },
+            created_at: '2020-12-11T15:32:44.561477+01:00',
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+        },
+        {
+            id: 'S324435',
+            subject: {
+                id: 'R68108',
+                label: 'Climate sensitivity',
+                created_at: '2020-12-11T15:31:30.264035+01:00',
+                classes: ['C12000'],
+                shared: 1,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '20fb01da-9e04-4724-b71d-0436aa56ab98',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'HAS_EVALUATION',
+                label: 'Has evaluation',
+                created_at: '2021-11-29T15:37:34.658972Z',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'L238284',
+                label: '    equlibrium climate sensitivity',
+                datatype: 'xsd:string',
+                created_at: '2020-12-11T15:32:29.885137+01:00',
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'literal'
+            },
+            created_at: '2020-12-11T15:32:29.926244+01:00',
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+        },
+        {
+            id: 'S324434',
+            subject: {
+                id: 'R68107',
+                label: 'Climate response',
+                created_at: '2020-12-11T15:31:28.72808+01:00',
+                classes: ['C12001'],
+                shared: 1,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '20fb01da-9e04-4724-b71d-0436aa56ab98',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'HAS_EVALUATION',
+                label: 'Has evaluation',
+                created_at: '2021-11-29T15:37:34.658972Z',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'L238283',
+                label: 'transient climate response',
+                datatype: 'xsd:string',
+                created_at: '2020-12-11T15:32:17.321972+01:00',
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'literal'
+            },
+            created_at: '2020-12-11T15:32:17.367936+01:00',
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+        },
+        {
+            id: 'S324433',
+            subject: {
+                id: 'R68106',
+                label: 'NorESM2-LM',
+                created_at: '2020-12-11T15:29:56.39382+01:00',
+                classes: ['Contribution'],
+                shared: 3,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '20fb01da-9e04-4724-b71d-0436aa56ab98',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'P32',
+                label: 'has research problem',
+                created_at: '2021-11-29T15:37:34.676597Z',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: 'The addressed research problem'
+            },
+            object: {
+                id: 'R56000',
+                label: 'Projected change of global and annual mean surface air temperature',
+                created_at: '2020-11-18T17:42:36.707574+01:00',
+                classes: ['Problem'],
+                shared: 54,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            created_at: '2020-12-11T15:31:57.464953+01:00',
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+        },
+        {
+            id: 'S324431',
+            subject: {
+                id: 'R68108',
+                label: 'Climate sensitivity',
+                created_at: '2020-12-11T15:31:30.264035+01:00',
+                classes: ['C12000'],
+                shared: 1,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '20fb01da-9e04-4724-b71d-0436aa56ab98',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'P25059',
+                label: 'Data used',
+                created_at: '2020-07-17T17:36:30.931738+02:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: 'instance of a class fabio:Dataset. https://sparontologies.github.io/fabio/current/fabio.html#d4e2865'
+            },
+            object: {
+                id: 'L238282',
+                label: 'NorESM2-LM',
+                datatype: 'xsd:string',
+                created_at: '2020-12-11T15:31:43.373313+01:00',
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'literal'
+            },
+            created_at: '2020-12-11T15:31:43.4166+01:00',
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+        },
+        {
+            id: 'S324430',
+            subject: {
+                id: 'R68107',
+                label: 'Climate response',
+                created_at: '2020-12-11T15:31:28.72808+01:00',
+                classes: ['C12001'],
+                shared: 1,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '20fb01da-9e04-4724-b71d-0436aa56ab98',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'P25059',
+                label: 'Data used',
+                created_at: '2020-07-17T17:36:30.931738+02:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: 'instance of a class fabio:Dataset. https://sparontologies.github.io/fabio/current/fabio.html#d4e2865'
+            },
+            object: {
+                id: 'L238281',
+                label: 'NorESM2-LM',
+                datatype: 'xsd:string',
+                created_at: '2020-12-11T15:31:34.596066+01:00',
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'literal'
+            },
+            created_at: '2020-12-11T15:31:34.640499+01:00',
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+        },
+        {
+            id: 'S324429',
+            subject: {
+                id: 'R68106',
+                label: 'NorESM2-LM',
+                created_at: '2020-12-11T15:29:56.39382+01:00',
+                classes: ['Contribution'],
+                shared: 3,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '20fb01da-9e04-4724-b71d-0436aa56ab98',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'P32121',
+                label: 'Global and annual mean surface air temperature',
+                created_at: '2020-11-16T11:36:49.793804+01:00',
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'R68108',
+                label: 'Climate sensitivity',
+                created_at: '2020-12-11T15:31:30.264035+01:00',
+                classes: ['C12000'],
+                shared: 1,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '20fb01da-9e04-4724-b71d-0436aa56ab98',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            created_at: '2020-12-11T15:31:30.334889+01:00',
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+        },
+        {
+            id: 'S324428',
+            subject: {
+                id: 'R68106',
+                label: 'NorESM2-LM',
+                created_at: '2020-12-11T15:29:56.39382+01:00',
+                classes: ['Contribution'],
+                shared: 3,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '20fb01da-9e04-4724-b71d-0436aa56ab98',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'P32121',
+                label: 'Global and annual mean surface air temperature',
+                created_at: '2020-11-16T11:36:49.793804+01:00',
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'R68107',
+                label: 'Climate response',
+                created_at: '2020-12-11T15:31:28.72808+01:00',
+                classes: ['C12001'],
+                shared: 1,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '20fb01da-9e04-4724-b71d-0436aa56ab98',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            created_at: '2020-12-11T15:31:28.810017+01:00',
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+        }
+    ]
+};
+
+export const templateOfClassC12000 = {
+    content: [
+        {
+            id: 'S181876',
+            subject: {
+                id: 'R54009',
+                label: 'Climate sensitivity',
+                created_at: '2020-11-12T17:42:36.385004+01:00',
+                classes: ['ContributionTemplate'],
+                shared: 0,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateOfClass',
+                label: 'Template of class',
+                created_at: '2020-03-10T13:47:00.32+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'C12000',
+                label: 'R54009',
+                uri: null,
+                created_at: '2020-11-12T17:42:36.744606+01:00',
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'class',
+                description: null
+            },
+            created_at: '2020-11-18T15:56:20.329002+01:00',
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+        }
+    ],
+    pageable: { sort: { sorted: true, unsorted: false, empty: false }, pageNumber: 0, pageSize: 2000, offset: 0, paged: true, unpaged: false },
+    totalPages: 1,
+    totalElements: 1,
+    last: true,
+    first: true,
+    sort: { sorted: true, unsorted: false, empty: false },
+    size: 2000,
+    number: 0,
+    numberOfElements: 1,
+    empty: false
+};
+
+export const templateOfClassC12001 = {
+    content: [
+        {
+            id: 'S178953',
+            subject: {
+                id: 'R54875',
+                label: 'Climate response',
+                created_at: '2020-11-16T11:57:23.701742+01:00',
+                classes: ['ContributionTemplate'],
+                shared: 0,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateOfClass',
+                label: 'Template of class',
+                created_at: '2020-03-10T13:47:00.32+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'C12001',
+                label: 'R54875',
+                uri: null,
+                created_at: '2020-11-16T11:57:23.81483+01:00',
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'class',
+                description: null
+            },
+            created_at: '2020-11-17T17:45:52.998708+01:00',
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+        }
+    ],
+    pageable: { sort: { sorted: true, unsorted: false, empty: false }, pageNumber: 0, pageSize: 2000, offset: 0, paged: true, unpaged: false },
+    totalPages: 1,
+    totalElements: 1,
+    last: true,
+    first: true,
+    sort: { sorted: true, unsorted: false, empty: false },
+    size: 2000,
+    number: 0,
+    numberOfElements: 1,
+    empty: false
+};
+
+export const statementsR54875 = {
+    root: 'R54875',
+    statements: [
+        {
+            id: 'S178987',
+            subject: {
+                id: 'R55266',
+                label: 'Component for template R54875',
+                created_at: '2020-11-17T17:45:53.8324+01:00',
+                classes: [],
+                shared: 1,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateComponentValue',
+                label: 'Template component value',
+                created_at: '2020-03-10T13:48:19.775+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'String',
+                label: 'String',
+                uri: null,
+                created_at: '2020-05-19T14:20:35.172106+02:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'class',
+                description: null
+            },
+            created_at: '2020-11-17T17:45:54.067746+01:00',
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+        },
+        {
+            id: 'S178986',
+            subject: {
+                id: 'R55266',
+                label: 'Component for template R54875',
+                created_at: '2020-11-17T17:45:53.8324+01:00',
+                classes: [],
+                shared: 1,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateComponentValidationRule',
+                label: 'Template Component Validation Rule',
+                created_at: '2020-05-19T14:20:36.236688+02:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'L110831',
+                label: 'pattern#^°C$',
+                datatype: 'xsd:string',
+                created_at: '2020-11-17T17:45:54.016512+01:00',
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'literal'
+            },
+            created_at: '2020-11-17T17:45:54.067169+01:00',
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+        },
+        {
+            id: 'S178985',
+            subject: {
+                id: 'R55266',
+                label: 'Component for template R54875',
+                created_at: '2020-11-17T17:45:53.8324+01:00',
+                classes: [],
+                shared: 1,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateComponentOrder',
+                label: 'TemplateComponentOrder',
+                created_at: '2020-05-19T14:20:36.459531+02:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'L110830',
+                label: '3',
+                datatype: 'xsd:string',
+                created_at: '2020-11-17T17:45:53.96877+01:00',
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'literal'
+            },
+            created_at: '2020-11-17T17:45:54.020416+01:00',
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+        },
+        {
+            id: 'S178984',
+            subject: {
+                id: 'R55266',
+                label: 'Component for template R54875',
+                created_at: '2020-11-17T17:45:53.8324+01:00',
+                classes: [],
+                shared: 1,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateComponentOccurrenceMax',
+                label: 'TemplateComponentOccurrenceMax',
+                created_at: '2020-05-19T14:20:36.589812+02:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'L110829',
+                label: '1',
+                datatype: 'xsd:string',
+                created_at: '2020-11-17T17:45:53.920124+01:00',
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'literal'
+            },
+            created_at: '2020-11-17T17:45:53.97323+01:00',
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+        },
+        {
+            id: 'S178983',
+            subject: {
+                id: 'R55266',
+                label: 'Component for template R54875',
+                created_at: '2020-11-17T17:45:53.8324+01:00',
+                classes: [],
+                shared: 1,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateComponentOccurrenceMin',
+                label: 'TemplateComponentOccurrenceMin',
+                created_at: '2020-05-19T14:20:36.52552+02:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'L110828',
+                label: '0',
+                datatype: 'xsd:string',
+                created_at: '2020-11-17T17:45:53.874684+01:00',
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'literal'
+            },
+            created_at: '2020-11-17T17:45:53.923926+01:00',
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+        },
+        {
+            id: 'S178982',
+            subject: {
+                id: 'R55266',
+                label: 'Component for template R54875',
+                created_at: '2020-11-17T17:45:53.8324+01:00',
+                classes: [],
+                shared: 1,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateComponentValue',
+                label: 'Template component value',
+                created_at: '2020-03-10T13:48:19.775+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'String',
+                label: 'String',
+                uri: null,
+                created_at: '2020-05-19T14:20:35.172106+02:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'class',
+                description: null
+            },
+            created_at: '2020-11-17T17:45:53.878+01:00',
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+        },
+        {
+            id: 'S178981',
+            subject: {
+                id: 'R55266',
+                label: 'Component for template R54875',
+                created_at: '2020-11-17T17:45:53.8324+01:00',
+                classes: [],
+                shared: 1,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateComponentProperty',
+                label: 'Template component property',
+                created_at: '2020-03-10T13:48:09.148+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'P7004',
+                label: 'has unit',
+                created_at: '2019-12-18T15:04:34.397+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            created_at: '2020-11-17T17:45:53.876124+01:00',
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+        },
+        {
+            id: 'S178980',
+            subject: {
+                id: 'R54875',
+                label: 'Climate response',
+                created_at: '2020-11-16T11:57:23.701742+01:00',
+                classes: ['ContributionTemplate'],
+                shared: 0,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateComponent',
+                label: 'Template component',
+                created_at: '2020-03-10T13:47:56.848+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'R55266',
+                label: 'Component for template R54875',
+                created_at: '2020-11-17T17:45:53.8324+01:00',
+                classes: [],
+                shared: 1,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            created_at: '2020-11-17T17:45:53.875949+01:00',
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+        },
+        {
+            id: 'S178979',
+            subject: {
+                id: 'R55265',
+                label: 'Component for template R54875',
+                created_at: '2020-11-17T17:45:53.620275+01:00',
+                classes: [],
+                shared: 1,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateComponentValue',
+                label: 'Template component value',
+                created_at: '2020-03-10T13:48:19.775+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'Number',
+                label: 'Number',
+                uri: null,
+                created_at: '2020-05-19T14:20:35.235199+02:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'class',
+                description: null
+            },
+            created_at: '2020-11-17T17:45:53.833403+01:00',
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+        },
+        {
+            id: 'S178978',
+            subject: {
+                id: 'R55265',
+                label: 'Component for template R54875',
+                created_at: '2020-11-17T17:45:53.620275+01:00',
+                classes: [],
+                shared: 1,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateComponentOrder',
+                label: 'TemplateComponentOrder',
+                created_at: '2020-05-19T14:20:36.459531+02:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'L110827',
+                label: '2',
+                datatype: 'xsd:string',
+                created_at: '2020-11-17T17:45:53.785587+01:00',
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'literal'
+            },
+            created_at: '2020-11-17T17:45:53.832934+01:00',
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+        },
+        {
+            id: 'S178977',
+            subject: {
+                id: 'R55265',
+                label: 'Component for template R54875',
+                created_at: '2020-11-17T17:45:53.620275+01:00',
+                classes: [],
+                shared: 1,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateComponentOccurrenceMax',
+                label: 'TemplateComponentOccurrenceMax',
+                created_at: '2020-05-19T14:20:36.589812+02:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'L110826',
+                label: '1',
+                datatype: 'xsd:string',
+                created_at: '2020-11-17T17:45:53.710967+01:00',
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'literal'
+            },
+            created_at: '2020-11-17T17:45:53.757831+01:00',
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+        },
+        {
+            id: 'S178976',
+            subject: {
+                id: 'R55265',
+                label: 'Component for template R54875',
+                created_at: '2020-11-17T17:45:53.620275+01:00',
+                classes: [],
+                shared: 1,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateComponentOccurrenceMin',
+                label: 'TemplateComponentOccurrenceMin',
+                created_at: '2020-05-19T14:20:36.52552+02:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'L110825',
+                label: '1',
+                datatype: 'xsd:string',
+                created_at: '2020-11-17T17:45:53.669864+01:00',
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'literal'
+            },
+            created_at: '2020-11-17T17:45:53.714449+01:00',
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+        },
+        {
+            id: 'S178975',
+            subject: {
+                id: 'R55265',
+                label: 'Component for template R54875',
+                created_at: '2020-11-17T17:45:53.620275+01:00',
+                classes: [],
+                shared: 1,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateComponentProperty',
+                label: 'Template component property',
+                created_at: '2020-03-10T13:48:09.148+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'P32123',
+                label: 'Has TCR result',
+                created_at: '2020-11-17T17:45:17.662487+01:00',
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'predicate',
+                description: null
+            },
+            created_at: '2020-11-17T17:45:53.673517+01:00',
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+        },
+        {
+            id: 'S178974',
+            subject: {
+                id: 'R54875',
+                label: 'Climate response',
+                created_at: '2020-11-16T11:57:23.701742+01:00',
+                classes: ['ContributionTemplate'],
+                shared: 0,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateComponent',
+                label: 'Template component',
+                created_at: '2020-03-10T13:47:56.848+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'R55265',
+                label: 'Component for template R54875',
+                created_at: '2020-11-17T17:45:53.620275+01:00',
+                classes: [],
+                shared: 1,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            created_at: '2020-11-17T17:45:53.673243+01:00',
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+        },
+        {
+            id: 'S178973',
+            subject: {
+                id: 'R55265',
+                label: 'Component for template R54875',
+                created_at: '2020-11-17T17:45:53.620275+01:00',
+                classes: [],
+                shared: 1,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateComponentValue',
+                label: 'Template component value',
+                created_at: '2020-03-10T13:48:19.775+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'Number',
+                label: 'Number',
+                uri: null,
+                created_at: '2020-05-19T14:20:35.235199+02:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'class',
+                description: null
+            },
+            created_at: '2020-11-17T17:45:53.673118+01:00',
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+        },
+        {
+            id: 'S178972',
+            subject: {
+                id: 'R55264',
+                label: 'Component for template R54875',
+                created_at: '2020-11-17T17:45:53.376418+01:00',
+                classes: [],
+                shared: 1,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateComponentValue',
+                label: 'Template component value',
+                created_at: '2020-03-10T13:48:19.775+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'String',
+                label: 'String',
+                uri: null,
+                created_at: '2020-05-19T14:20:35.172106+02:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'class',
+                description: null
+            },
+            created_at: '2020-11-17T17:45:53.623223+01:00',
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+        },
+        {
+            id: 'S178971',
+            subject: {
+                id: 'R55264',
+                label: 'Component for template R54875',
+                created_at: '2020-11-17T17:45:53.376418+01:00',
+                classes: [],
+                shared: 1,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateComponentValidationRule',
+                label: 'Template Component Validation Rule',
+                created_at: '2020-05-19T14:20:36.236688+02:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'L110824',
+                label: 'pattern#^transient climate response$',
+                datatype: 'xsd:string',
+                created_at: '2020-11-17T17:45:53.572942+01:00',
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'literal'
+            },
+            created_at: '2020-11-17T17:45:53.622118+01:00',
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+        },
+        {
+            id: 'S178970',
+            subject: {
+                id: 'R55264',
+                label: 'Component for template R54875',
+                created_at: '2020-11-17T17:45:53.376418+01:00',
+                classes: [],
+                shared: 1,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateComponentOrder',
+                label: 'TemplateComponentOrder',
+                created_at: '2020-05-19T14:20:36.459531+02:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'L110823',
+                label: '1',
+                datatype: 'xsd:string',
+                created_at: '2020-11-17T17:45:53.526139+01:00',
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'literal'
+            },
+            created_at: '2020-11-17T17:45:53.575828+01:00',
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+        },
+        {
+            id: 'S178969',
+            subject: {
+                id: 'R55264',
+                label: 'Component for template R54875',
+                created_at: '2020-11-17T17:45:53.376418+01:00',
+                classes: [],
+                shared: 1,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateComponentOccurrenceMax',
+                label: 'TemplateComponentOccurrenceMax',
+                created_at: '2020-05-19T14:20:36.589812+02:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'L110822',
+                label: '1',
+                datatype: 'xsd:string',
+                created_at: '2020-11-17T17:45:53.481069+01:00',
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'literal'
+            },
+            created_at: '2020-11-17T17:45:53.529691+01:00',
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+        },
+        {
+            id: 'S178968',
+            subject: {
+                id: 'R55264',
+                label: 'Component for template R54875',
+                created_at: '2020-11-17T17:45:53.376418+01:00',
+                classes: [],
+                shared: 1,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateComponentOccurrenceMin',
+                label: 'TemplateComponentOccurrenceMin',
+                created_at: '2020-05-19T14:20:36.52552+02:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'L110821',
+                label: '1',
+                datatype: 'xsd:string',
+                created_at: '2020-11-17T17:45:53.434035+01:00',
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'literal'
+            },
+            created_at: '2020-11-17T17:45:53.483938+01:00',
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+        },
+        {
+            id: 'S178967',
+            subject: {
+                id: 'R55264',
+                label: 'Component for template R54875',
+                created_at: '2020-11-17T17:45:53.376418+01:00',
+                classes: [],
+                shared: 1,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateComponentValue',
+                label: 'Template component value',
+                created_at: '2020-03-10T13:48:19.775+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'String',
+                label: 'String',
+                uri: null,
+                created_at: '2020-05-19T14:20:35.172106+02:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'class',
+                description: null
+            },
+            created_at: '2020-11-17T17:45:53.437559+01:00',
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+        },
+        {
+            id: 'S178966',
+            subject: {
+                id: 'R55264',
+                label: 'Component for template R54875',
+                created_at: '2020-11-17T17:45:53.376418+01:00',
+                classes: [],
+                shared: 1,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateComponentProperty',
+                label: 'Template component property',
+                created_at: '2020-03-10T13:48:09.148+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'HAS_EVALUATION',
+                label: 'Has evaluation',
+                created_at: '2021-11-29T15:45:44.256083Z',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            created_at: '2020-11-17T17:45:53.437438+01:00',
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+        },
+        {
+            id: 'S178965',
+            subject: {
+                id: 'R54875',
+                label: 'Climate response',
+                created_at: '2020-11-16T11:57:23.701742+01:00',
+                classes: ['ContributionTemplate'],
+                shared: 0,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateComponent',
+                label: 'Template component',
+                created_at: '2020-03-10T13:47:56.848+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'R55264',
+                label: 'Component for template R54875',
+                created_at: '2020-11-17T17:45:53.376418+01:00',
+                classes: [],
+                shared: 1,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            created_at: '2020-11-17T17:45:53.432822+01:00',
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+        },
+        {
+            id: 'S178964',
+            subject: {
+                id: 'R55263',
+                label: 'Component for template R54875',
+                created_at: '2020-11-17T17:45:53.174517+01:00',
+                classes: [],
+                shared: 1,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateComponentValue',
+                label: 'Template component value',
+                created_at: '2020-03-10T13:48:19.775+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'String',
+                label: 'String',
+                uri: null,
+                created_at: '2020-05-19T14:20:35.172106+02:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'class',
+                description: null
+            },
+            created_at: '2020-11-17T17:45:53.378019+01:00',
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+        },
+        {
+            id: 'S178963',
+            subject: {
+                id: 'R55263',
+                label: 'Component for template R54875',
+                created_at: '2020-11-17T17:45:53.174517+01:00',
+                classes: [],
+                shared: 1,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateComponentOrder',
+                label: 'TemplateComponentOrder',
+                created_at: '2020-05-19T14:20:36.459531+02:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'L110820',
+                label: '0',
+                datatype: 'xsd:string',
+                created_at: '2020-11-17T17:45:53.330796+01:00',
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'literal'
+            },
+            created_at: '2020-11-17T17:45:53.373335+01:00',
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+        },
+        {
+            id: 'S178962',
+            subject: {
+                id: 'R55263',
+                label: 'Component for template R54875',
+                created_at: '2020-11-17T17:45:53.174517+01:00',
+                classes: [],
+                shared: 1,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateComponentOccurrenceMax',
+                label: 'TemplateComponentOccurrenceMax',
+                created_at: '2020-05-19T14:20:36.589812+02:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'L110819',
+                label: '1',
+                datatype: 'xsd:string',
+                created_at: '2020-11-17T17:45:53.278374+01:00',
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'literal'
+            },
+            created_at: '2020-11-17T17:45:53.330868+01:00',
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+        },
+        {
+            id: 'S178961',
+            subject: {
+                id: 'R55263',
+                label: 'Component for template R54875',
+                created_at: '2020-11-17T17:45:53.174517+01:00',
+                classes: [],
+                shared: 1,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateComponentOccurrenceMin',
+                label: 'TemplateComponentOccurrenceMin',
+                created_at: '2020-05-19T14:20:36.52552+02:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'L110818',
+                label: '1',
+                datatype: 'xsd:string',
+                created_at: '2020-11-17T17:45:53.220595+01:00',
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'literal'
+            },
+            created_at: '2020-11-17T17:45:53.282412+01:00',
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+        },
+        {
+            id: 'S178960',
+            subject: {
+                id: 'R55263',
+                label: 'Component for template R54875',
+                created_at: '2020-11-17T17:45:53.174517+01:00',
+                classes: [],
+                shared: 1,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateComponentProperty',
+                label: 'Template component property',
+                created_at: '2020-03-10T13:48:09.148+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'P25059',
+                label: 'Data used',
+                created_at: '2020-07-17T17:36:30.931738+02:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            created_at: '2020-11-17T17:45:53.223859+01:00',
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+        },
+        {
+            id: 'S178959',
+            subject: {
+                id: 'R55263',
+                label: 'Component for template R54875',
+                created_at: '2020-11-17T17:45:53.174517+01:00',
+                classes: [],
+                shared: 1,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateComponentValue',
+                label: 'Template component value',
+                created_at: '2020-03-10T13:48:19.775+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'String',
+                label: 'String',
+                uri: null,
+                created_at: '2020-05-19T14:20:35.172106+02:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'class',
+                description: null
+            },
+            created_at: '2020-11-17T17:45:53.22383+01:00',
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+        },
+        {
+            id: 'S178958',
+            subject: {
+                id: 'R54875',
+                label: 'Climate response',
+                created_at: '2020-11-16T11:57:23.701742+01:00',
+                classes: ['ContributionTemplate'],
+                shared: 0,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateComponent',
+                label: 'Template component',
+                created_at: '2020-03-10T13:47:56.848+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'R55263',
+                label: 'Component for template R54875',
+                created_at: '2020-11-17T17:45:53.174517+01:00',
+                classes: [],
+                shared: 1,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            created_at: '2020-11-17T17:45:53.223799+01:00',
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+        },
+        {
+            id: 'S178957',
+            subject: {
+                id: 'R54875',
+                label: 'Climate response',
+                created_at: '2020-11-16T11:57:23.701742+01:00',
+                classes: ['ContributionTemplate'],
+                shared: 0,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateOfResearchProblem',
+                label: 'Template of research problem',
+                created_at: '2020-03-10T13:47:42.791+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'R8065',
+                label: 'climate change',
+                created_at: '2019-12-18T15:19:20.405+01:00',
+                classes: ['Problem'],
+                shared: 4,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            created_at: '2020-11-17T17:45:53.193409+01:00',
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+        },
+        {
+            id: 'S178956',
+            subject: {
+                id: 'R54875',
+                label: 'Climate response',
+                created_at: '2020-11-16T11:57:23.701742+01:00',
+                classes: ['ContributionTemplate'],
+                shared: 0,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateOfPredicate',
+                label: 'Template of predicate',
+                created_at: '2020-03-10T13:46:47.042+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'P32121',
+                label: 'Global and annual mean surface air temperature',
+                created_at: '2020-11-16T11:36:49.793804+01:00',
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'predicate',
+                description: null
+            },
+            created_at: '2020-11-17T17:45:53.177787+01:00',
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+        },
+        {
+            id: 'S178955',
+            subject: {
+                id: 'R54875',
+                label: 'Climate response',
+                created_at: '2020-11-16T11:57:23.701742+01:00',
+                classes: ['ContributionTemplate'],
+                shared: 0,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateOfResearchField',
+                label: 'Template of research field',
+                created_at: '2020-03-10T13:46:12.733+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'R169',
+                label: 'Climate',
+                created_at: '2019-01-06T15:04:07.692Z',
+                classes: ['ResearchField'],
+                shared: 32,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            created_at: '2020-11-17T17:45:53.177302+01:00',
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+        },
+        {
+            id: 'S178954',
+            subject: {
+                id: 'R54875',
+                label: 'Climate response',
+                created_at: '2020-11-16T11:57:23.701742+01:00',
+                classes: ['ContributionTemplate'],
+                shared: 0,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateOfResearchField',
+                label: 'Template of research field',
+                created_at: '2020-03-10T13:46:12.733+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'R167',
+                label: 'Oceanography and Atmospheric Sciences and Meteorology',
+                created_at: '2019-01-06T15:04:07.692Z',
+                classes: ['ResearchField'],
+                shared: 6,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            created_at: '2020-11-17T17:45:53.176793+01:00',
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+        },
+        {
+            id: 'S178953',
+            subject: {
+                id: 'R54875',
+                label: 'Climate response',
+                created_at: '2020-11-16T11:57:23.701742+01:00',
+                classes: ['ContributionTemplate'],
+                shared: 0,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateOfClass',
+                label: 'Template of class',
+                created_at: '2020-03-10T13:47:00.32+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'C12001',
+                label: 'R54875',
+                uri: null,
+                created_at: '2020-11-16T11:57:23.81483+01:00',
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'class',
+                description: null
+            },
+            created_at: '2020-11-17T17:45:52.998708+01:00',
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+        },
+        {
+            id: 'S165',
+            subject: {
+                id: 'R167',
+                label: 'Oceanography and Atmospheric Sciences and Meteorology',
+                created_at: '2019-01-06T15:04:07.692Z',
+                classes: ['ResearchField'],
+                shared: 6,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'P36',
+                label: 'has subfield',
+                created_at: '2021-11-29T15:45:44.615957Z',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'R169',
+                label: 'Climate',
+                created_at: '2019-01-06T15:04:07.692Z',
+                classes: ['ResearchField'],
+                shared: 32,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            created_at: '2019-01-06T15:04:07.692Z',
+            created_by: '00000000-0000-0000-0000-000000000000'
+        }
+    ]
+};
+
+export const statementsR54009 = {
+    root: 'R54009',
+    statements: [
+        {
+            id: 'S181908',
+            subject: {
+                id: 'R55344',
+                label: 'Component for template R54009',
+                created_at: '2020-11-18T15:56:20.936017+01:00',
+                classes: [],
+                shared: 1,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateComponentValue',
+                label: 'Template component value',
+                created_at: '2020-03-10T13:48:19.775+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'String',
+                label: 'String',
+                uri: null,
+                created_at: '2020-05-19T14:20:35.172106+02:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'class',
+                description: null
+            },
+            created_at: '2020-11-18T15:56:21.111243+01:00',
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+        },
+        {
+            id: 'S181907',
+            subject: {
+                id: 'R55344',
+                label: 'Component for template R54009',
+                created_at: '2020-11-18T15:56:20.936017+01:00',
+                classes: [],
+                shared: 1,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateComponentOrder',
+                label: 'TemplateComponentOrder',
+                created_at: '2020-05-19T14:20:36.459531+02:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'L111724',
+                label: '3',
+                datatype: 'xsd:string',
+                created_at: '2020-11-18T15:56:21.061546+01:00',
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'literal'
+            },
+            created_at: '2020-11-18T15:56:21.110312+01:00',
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+        },
+        {
+            id: 'S181906',
+            subject: {
+                id: 'R55344',
+                label: 'Component for template R54009',
+                created_at: '2020-11-18T15:56:20.936017+01:00',
+                classes: [],
+                shared: 1,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateComponentOccurrenceMax',
+                label: 'TemplateComponentOccurrenceMax',
+                created_at: '2020-05-19T14:20:36.589812+02:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'L111723',
+                label: '1',
+                datatype: 'xsd:string',
+                created_at: '2020-11-18T15:56:21.025253+01:00',
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'literal'
+            },
+            created_at: '2020-11-18T15:56:21.065897+01:00',
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+        },
+        {
+            id: 'S181905',
+            subject: {
+                id: 'R55344',
+                label: 'Component for template R54009',
+                created_at: '2020-11-18T15:56:20.936017+01:00',
+                classes: [],
+                shared: 1,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateComponentOccurrenceMin',
+                label: 'TemplateComponentOccurrenceMin',
+                created_at: '2020-05-19T14:20:36.52552+02:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'L111722',
+                label: '0',
+                datatype: 'xsd:string',
+                created_at: '2020-11-18T15:56:20.982605+01:00',
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'literal'
+            },
+            created_at: '2020-11-18T15:56:21.029255+01:00',
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+        },
+        {
+            id: 'S181904',
+            subject: {
+                id: 'R55344',
+                label: 'Component for template R54009',
+                created_at: '2020-11-18T15:56:20.936017+01:00',
+                classes: [],
+                shared: 1,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateComponentProperty',
+                label: 'Template component property',
+                created_at: '2020-03-10T13:48:09.148+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'P7004',
+                label: 'has unit',
+                created_at: '2019-12-18T15:04:34.397+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            created_at: '2020-11-18T15:56:20.983949+01:00',
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+        },
+        {
+            id: 'S181903',
+            subject: {
+                id: 'R54009',
+                label: 'Climate sensitivity',
+                created_at: '2020-11-12T17:42:36.385004+01:00',
+                classes: ['ContributionTemplate'],
+                shared: 0,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateComponent',
+                label: 'Template component',
+                created_at: '2020-03-10T13:47:56.848+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'R55344',
+                label: 'Component for template R54009',
+                created_at: '2020-11-18T15:56:20.936017+01:00',
+                classes: [],
+                shared: 1,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            created_at: '2020-11-18T15:56:20.983821+01:00',
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+        },
+        {
+            id: 'S181902',
+            subject: {
+                id: 'R55344',
+                label: 'Component for template R54009',
+                created_at: '2020-11-18T15:56:20.936017+01:00',
+                classes: [],
+                shared: 1,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateComponentValue',
+                label: 'Template component value',
+                created_at: '2020-03-10T13:48:19.775+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'String',
+                label: 'String',
+                uri: null,
+                created_at: '2020-05-19T14:20:35.172106+02:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'class',
+                description: null
+            },
+            created_at: '2020-11-18T15:56:20.98367+01:00',
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+        },
+        {
+            id: 'S181901',
+            subject: {
+                id: 'R55343',
+                label: 'Component for template R54009',
+                created_at: '2020-11-18T15:56:20.785476+01:00',
+                classes: [],
+                shared: 1,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateComponentValue',
+                label: 'Template component value',
+                created_at: '2020-03-10T13:48:19.775+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'Number',
+                label: 'Number',
+                uri: null,
+                created_at: '2020-05-19T14:20:35.235199+02:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'class',
+                description: null
+            },
+            created_at: '2020-11-18T15:56:20.939185+01:00',
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+        },
+        {
+            id: 'S181900',
+            subject: {
+                id: 'R55343',
+                label: 'Component for template R54009',
+                created_at: '2020-11-18T15:56:20.785476+01:00',
+                classes: [],
+                shared: 1,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateComponentOrder',
+                label: 'TemplateComponentOrder',
+                created_at: '2020-05-19T14:20:36.459531+02:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'L111721',
+                label: '2',
+                datatype: 'xsd:string',
+                created_at: '2020-11-18T15:56:20.897553+01:00',
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'literal'
+            },
+            created_at: '2020-11-18T15:56:20.938715+01:00',
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+        },
+        {
+            id: 'S181899',
+            subject: {
+                id: 'R55343',
+                label: 'Component for template R54009',
+                created_at: '2020-11-18T15:56:20.785476+01:00',
+                classes: [],
+                shared: 1,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateComponentOccurrenceMax',
+                label: 'TemplateComponentOccurrenceMax',
+                created_at: '2020-05-19T14:20:36.589812+02:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'L111720',
+                label: '1',
+                datatype: 'xsd:string',
+                created_at: '2020-11-18T15:56:20.861789+01:00',
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'literal'
+            },
+            created_at: '2020-11-18T15:56:20.901076+01:00',
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+        },
+        {
+            id: 'S181898',
+            subject: {
+                id: 'R55343',
+                label: 'Component for template R54009',
+                created_at: '2020-11-18T15:56:20.785476+01:00',
+                classes: [],
+                shared: 1,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateComponentOccurrenceMin',
+                label: 'TemplateComponentOccurrenceMin',
+                created_at: '2020-05-19T14:20:36.52552+02:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'L111719',
+                label: '0',
+                datatype: 'xsd:string',
+                created_at: '2020-11-18T15:56:20.824441+01:00',
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'literal'
+            },
+            created_at: '2020-11-18T15:56:20.863385+01:00',
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+        },
+        {
+            id: 'S181897',
+            subject: {
+                id: 'R55343',
+                label: 'Component for template R54009',
+                created_at: '2020-11-18T15:56:20.785476+01:00',
+                classes: [],
+                shared: 1,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateComponentValue',
+                label: 'Template component value',
+                created_at: '2020-03-10T13:48:19.775+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'Number',
+                label: 'Number',
+                uri: null,
+                created_at: '2020-05-19T14:20:35.235199+02:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'class',
+                description: null
+            },
+            created_at: '2020-11-18T15:56:20.827646+01:00',
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+        },
+        {
+            id: 'S181896',
+            subject: {
+                id: 'R55343',
+                label: 'Component for template R54009',
+                created_at: '2020-11-18T15:56:20.785476+01:00',
+                classes: [],
+                shared: 1,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateComponentProperty',
+                label: 'Template component property',
+                created_at: '2020-03-10T13:48:09.148+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'P32124',
+                label: 'Has ECS result',
+                created_at: '2020-11-18T15:55:34.16892+01:00',
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'predicate',
+                description: null
+            },
+            created_at: '2020-11-18T15:56:20.827555+01:00',
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+        },
+        {
+            id: 'S181895',
+            subject: {
+                id: 'R54009',
+                label: 'Climate sensitivity',
+                created_at: '2020-11-12T17:42:36.385004+01:00',
+                classes: ['ContributionTemplate'],
+                shared: 0,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateComponent',
+                label: 'Template component',
+                created_at: '2020-03-10T13:47:56.848+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'R55343',
+                label: 'Component for template R54009',
+                created_at: '2020-11-18T15:56:20.785476+01:00',
+                classes: [],
+                shared: 1,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            created_at: '2020-11-18T15:56:20.827284+01:00',
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+        },
+        {
+            id: 'S181894',
+            subject: {
+                id: 'R55342',
+                label: 'Component for template R54009',
+                created_at: '2020-11-18T15:56:20.624672+01:00',
+                classes: [],
+                shared: 1,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateComponentValue',
+                label: 'Template component value',
+                created_at: '2020-03-10T13:48:19.775+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'String',
+                label: 'String',
+                uri: null,
+                created_at: '2020-05-19T14:20:35.172106+02:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'class',
+                description: null
+            },
+            created_at: '2020-11-18T15:56:20.784461+01:00',
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+        },
+        {
+            id: 'S181893',
+            subject: {
+                id: 'R55342',
+                label: 'Component for template R54009',
+                created_at: '2020-11-18T15:56:20.624672+01:00',
+                classes: [],
+                shared: 1,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateComponentOrder',
+                label: 'TemplateComponentOrder',
+                created_at: '2020-05-19T14:20:36.459531+02:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'L111718',
+                label: '1',
+                datatype: 'xsd:string',
+                created_at: '2020-11-18T15:56:20.745479+01:00',
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'literal'
+            },
+            created_at: '2020-11-18T15:56:20.783632+01:00',
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+        },
+        {
+            id: 'S181892',
+            subject: {
+                id: 'R55342',
+                label: 'Component for template R54009',
+                created_at: '2020-11-18T15:56:20.624672+01:00',
+                classes: [],
+                shared: 1,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateComponentOccurrenceMax',
+                label: 'TemplateComponentOccurrenceMax',
+                created_at: '2020-05-19T14:20:36.589812+02:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'L111717',
+                label: '1',
+                datatype: 'xsd:string',
+                created_at: '2020-11-18T15:56:20.708158+01:00',
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'literal'
+            },
+            created_at: '2020-11-18T15:56:20.747225+01:00',
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+        },
+        {
+            id: 'S181891',
+            subject: {
+                id: 'R55342',
+                label: 'Component for template R54009',
+                created_at: '2020-11-18T15:56:20.624672+01:00',
+                classes: [],
+                shared: 1,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateComponentOccurrenceMin',
+                label: 'TemplateComponentOccurrenceMin',
+                created_at: '2020-05-19T14:20:36.52552+02:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'L111716',
+                label: '1',
+                datatype: 'xsd:string',
+                created_at: '2020-11-18T15:56:20.668325+01:00',
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'literal'
+            },
+            created_at: '2020-11-18T15:56:20.711605+01:00',
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+        },
+        {
+            id: 'S181890',
+            subject: {
+                id: 'R54009',
+                label: 'Climate sensitivity',
+                created_at: '2020-11-12T17:42:36.385004+01:00',
+                classes: ['ContributionTemplate'],
+                shared: 0,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateComponent',
+                label: 'Template component',
+                created_at: '2020-03-10T13:47:56.848+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'R55342',
+                label: 'Component for template R54009',
+                created_at: '2020-11-18T15:56:20.624672+01:00',
+                classes: [],
+                shared: 1,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            created_at: '2020-11-18T15:56:20.667243+01:00',
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+        },
+        {
+            id: 'S181889',
+            subject: {
+                id: 'R55342',
+                label: 'Component for template R54009',
+                created_at: '2020-11-18T15:56:20.624672+01:00',
+                classes: [],
+                shared: 1,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateComponentProperty',
+                label: 'Template component property',
+                created_at: '2020-03-10T13:48:09.148+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'HAS_EVALUATION',
+                label: 'Has evaluation',
+                created_at: '2021-11-29T15:46:29.899487Z',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            created_at: '2020-11-18T15:56:20.667217+01:00',
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+        },
+        {
+            id: 'S181888',
+            subject: {
+                id: 'R55342',
+                label: 'Component for template R54009',
+                created_at: '2020-11-18T15:56:20.624672+01:00',
+                classes: [],
+                shared: 1,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateComponentValue',
+                label: 'Template component value',
+                created_at: '2020-03-10T13:48:19.775+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'String',
+                label: 'String',
+                uri: null,
+                created_at: '2020-05-19T14:20:35.172106+02:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'class',
+                description: null
+            },
+            created_at: '2020-11-18T15:56:20.667176+01:00',
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+        },
+        {
+            id: 'S181887',
+            subject: {
+                id: 'R55341',
+                label: 'Component for template R54009',
+                created_at: '2020-11-18T15:56:20.466716+01:00',
+                classes: [],
+                shared: 1,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateComponentValue',
+                label: 'Template component value',
+                created_at: '2020-03-10T13:48:19.775+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'String',
+                label: 'String',
+                uri: null,
+                created_at: '2020-05-19T14:20:35.172106+02:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'class',
+                description: null
+            },
+            created_at: '2020-11-18T15:56:20.627977+01:00',
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+        },
+        {
+            id: 'S181886',
+            subject: {
+                id: 'R55341',
+                label: 'Component for template R54009',
+                created_at: '2020-11-18T15:56:20.466716+01:00',
+                classes: [],
+                shared: 1,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateComponentOrder',
+                label: 'TemplateComponentOrder',
+                created_at: '2020-05-19T14:20:36.459531+02:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'L111715',
+                label: '0',
+                datatype: 'xsd:string',
+                created_at: '2020-11-18T15:56:20.588654+01:00',
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'literal'
+            },
+            created_at: '2020-11-18T15:56:20.627692+01:00',
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+        },
+        {
+            id: 'S181885',
+            subject: {
+                id: 'R55341',
+                label: 'Component for template R54009',
+                created_at: '2020-11-18T15:56:20.466716+01:00',
+                classes: [],
+                shared: 1,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateComponentOccurrenceMax',
+                label: 'TemplateComponentOccurrenceMax',
+                created_at: '2020-05-19T14:20:36.589812+02:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'L111714',
+                label: '1',
+                datatype: 'xsd:string',
+                created_at: '2020-11-18T15:56:20.552732+01:00',
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'literal'
+            },
+            created_at: '2020-11-18T15:56:20.592001+01:00',
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+        },
+        {
+            id: 'S181884',
+            subject: {
+                id: 'R55341',
+                label: 'Component for template R54009',
+                created_at: '2020-11-18T15:56:20.466716+01:00',
+                classes: [],
+                shared: 1,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateComponentOccurrenceMin',
+                label: 'TemplateComponentOccurrenceMin',
+                created_at: '2020-05-19T14:20:36.52552+02:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'L111713',
+                label: '1',
+                datatype: 'xsd:string',
+                created_at: '2020-11-18T15:56:20.513657+01:00',
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'literal'
+            },
+            created_at: '2020-11-18T15:56:20.556671+01:00',
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+        },
+        {
+            id: 'S181883',
+            subject: {
+                id: 'R55341',
+                label: 'Component for template R54009',
+                created_at: '2020-11-18T15:56:20.466716+01:00',
+                classes: [],
+                shared: 1,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateComponentValue',
+                label: 'Template component value',
+                created_at: '2020-03-10T13:48:19.775+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'String',
+                label: 'String',
+                uri: null,
+                created_at: '2020-05-19T14:20:35.172106+02:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'class',
+                description: null
+            },
+            created_at: '2020-11-18T15:56:20.509813+01:00',
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+        },
+        {
+            id: 'S181882',
+            subject: {
+                id: 'R55341',
+                label: 'Component for template R54009',
+                created_at: '2020-11-18T15:56:20.466716+01:00',
+                classes: [],
+                shared: 1,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateComponentProperty',
+                label: 'Template component property',
+                created_at: '2020-03-10T13:48:09.148+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'P25059',
+                label: 'Data used',
+                created_at: '2020-07-17T17:36:30.931738+02:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            created_at: '2020-11-18T15:56:20.509086+01:00',
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+        },
+        {
+            id: 'S181881',
+            subject: {
+                id: 'R54009',
+                label: 'Climate sensitivity',
+                created_at: '2020-11-12T17:42:36.385004+01:00',
+                classes: ['ContributionTemplate'],
+                shared: 0,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateComponent',
+                label: 'Template component',
+                created_at: '2020-03-10T13:47:56.848+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'R55341',
+                label: 'Component for template R54009',
+                created_at: '2020-11-18T15:56:20.466716+01:00',
+                classes: [],
+                shared: 1,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            created_at: '2020-11-18T15:56:20.508506+01:00',
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+        },
+        {
+            id: 'S181880',
+            subject: {
+                id: 'R54009',
+                label: 'Climate sensitivity',
+                created_at: '2020-11-12T17:42:36.385004+01:00',
+                classes: ['ContributionTemplate'],
+                shared: 0,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateOfResearchProblem',
+                label: 'Template of research problem',
+                created_at: '2020-03-10T13:47:42.791+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'R8065',
+                label: 'climate change',
+                created_at: '2019-12-18T15:19:20.405+01:00',
+                classes: ['Problem'],
+                shared: 4,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            created_at: '2020-11-18T15:56:20.451885+01:00',
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+        },
+        {
+            id: 'S181879',
+            subject: {
+                id: 'R54009',
+                label: 'Climate sensitivity',
+                created_at: '2020-11-12T17:42:36.385004+01:00',
+                classes: ['ContributionTemplate'],
+                shared: 0,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateOfPredicate',
+                label: 'Template of predicate',
+                created_at: '2020-03-10T13:46:47.042+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'P32121',
+                label: 'Global and annual mean surface air temperature',
+                created_at: '2020-11-16T11:36:49.793804+01:00',
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'predicate',
+                description: null
+            },
+            created_at: '2020-11-18T15:56:20.451704+01:00',
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+        },
+        {
+            id: 'S181878',
+            subject: {
+                id: 'R54009',
+                label: 'Climate sensitivity',
+                created_at: '2020-11-12T17:42:36.385004+01:00',
+                classes: ['ContributionTemplate'],
+                shared: 0,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateOfResearchField',
+                label: 'Template of research field',
+                created_at: '2020-03-10T13:46:12.733+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'R169',
+                label: 'Climate',
+                created_at: '2019-01-06T15:04:07.692Z',
+                classes: ['ResearchField'],
+                shared: 32,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            created_at: '2020-11-18T15:56:20.44801+01:00',
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+        },
+        {
+            id: 'S181877',
+            subject: {
+                id: 'R54009',
+                label: 'Climate sensitivity',
+                created_at: '2020-11-12T17:42:36.385004+01:00',
+                classes: ['ContributionTemplate'],
+                shared: 0,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateOfResearchField',
+                label: 'Template of research field',
+                created_at: '2020-03-10T13:46:12.733+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'R167',
+                label: 'Oceanography and Atmospheric Sciences and Meteorology',
+                created_at: '2019-01-06T15:04:07.692Z',
+                classes: ['ResearchField'],
+                shared: 6,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            created_at: '2020-11-18T15:56:20.441669+01:00',
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+        },
+        {
+            id: 'S181876',
+            subject: {
+                id: 'R54009',
+                label: 'Climate sensitivity',
+                created_at: '2020-11-12T17:42:36.385004+01:00',
+                classes: ['ContributionTemplate'],
+                shared: 0,
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'TemplateOfClass',
+                label: 'Template of class',
+                created_at: '2020-03-10T13:47:00.32+01:00',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'C12000',
+                label: 'R54009',
+                uri: null,
+                created_at: '2020-11-12T17:42:36.744606+01:00',
+                created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+                _class: 'class',
+                description: null
+            },
+            created_at: '2020-11-18T15:56:20.329002+01:00',
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+        },
+        {
+            id: 'S165',
+            subject: {
+                id: 'R167',
+                label: 'Oceanography and Atmospheric Sciences and Meteorology',
+                created_at: '2019-01-06T15:04:07.692Z',
+                classes: ['ResearchField'],
+                shared: 6,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            predicate: {
+                id: 'P36',
+                label: 'has subfield',
+                created_at: '2021-11-29T15:46:30.128458Z',
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'predicate',
+                description: null
+            },
+            object: {
+                id: 'R169',
+                label: 'Climate',
+                created_at: '2019-01-06T15:04:07.692Z',
+                classes: ['ResearchField'],
+                shared: 32,
+                created_by: '00000000-0000-0000-0000-000000000000',
+                _class: 'resource',
+                observatory_id: '00000000-0000-0000-0000-000000000000',
+                extraction_method: 'UNKNOWN',
+                organization_id: '00000000-0000-0000-0000-000000000000'
+            },
+            created_at: '2019-01-06T15:04:07.692Z',
+            created_by: '00000000-0000-0000-0000-000000000000'
+        }
+    ]
+};

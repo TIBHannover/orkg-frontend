@@ -24,7 +24,12 @@ import {
     statementsR8175,
     statementsR8166,
     statementsR8170,
-    statementsR8184Object
+    statementsR8184Object,
+    statementsR68106,
+    templateOfClassC12000,
+    templateOfClassC12001,
+    statementsR54875,
+    statementsR54009
 } from 'services/mocks/backend/__mocks__/Statements';
 import faker from 'faker';
 
@@ -40,7 +45,10 @@ const statements = [
             R35087: statementsR35087,
             R35077: statementsR35077,
             R44415: statementsR44415,
-            R40006: statementsR0TemplateR40006
+            R40006: statementsR0TemplateR40006,
+            R68106: statementsR68106,
+            R54875: statementsR54875,
+            R54009: statementsR54009
         };
         if (MAPPING[id]) {
             return res(ctx.json(MAPPING[id]));
@@ -130,7 +138,9 @@ const statements = [
             C2005: templateOfClassC2005,
             C2003: templateOfClassC2003,
             C4000: templateOfClassC4000,
-            C5001: templateOfClassC5001
+            C5001: templateOfClassC5001,
+            C12000: templateOfClassC12000,
+            C12001: templateOfClassC12001
         };
         if (MAPPING[id]) {
             return res(ctx.json(MAPPING[id]));
