@@ -50,6 +50,7 @@ const TemplateButton = props => {
                 syncBackend: props.syncBackend
             })
         ).then(() => {
+            toast.success('Template added successfully');
             ref.current?.removeAttribute('disabled');
             setIsSaving(false);
         });
