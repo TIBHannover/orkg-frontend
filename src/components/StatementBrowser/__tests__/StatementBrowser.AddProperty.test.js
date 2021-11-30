@@ -65,7 +65,7 @@ describe('AddProperty', () => {
         await waitForElementToBeRemoved(() => screen.queryByText(/Loading.../i));
         fireEvent.click(screen.getAllByText('property 1')[1]);
         expect(screen.getByRole('button', { name: 'Add property' })).toBeInTheDocument();
-        await waitFor(() => expect(screen.getByText(/The property Property 1 exists already!/i)).toBeInTheDocument());
+        await waitFor(() => expect(screen.getByText(/The property Property 1 exists already/i)).toBeInTheDocument());
         await waitFor(() => expect(screen.getAllByText('Property 1')).toHaveLength(1));
     });
 });

@@ -531,7 +531,7 @@ export function createProperty(data) {
                 });
                 if (isExistingProperty) {
                     // Property exists already
-                    toast.info(`The property ${data.label} exists already!`);
+                    toast.info(`The property ${data.label} exists already`);
                     return null;
                 }
             }

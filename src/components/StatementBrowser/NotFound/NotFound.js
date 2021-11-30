@@ -10,8 +10,8 @@ const NotFound = () => {
                 The entity you are looking for was not found.
                 <br />
                 <span style={{ fontSize: '0.875rem' }}>
-                    We failed to load the requested entity, It could be that the resource was deleted by another user between the time that I found
-                    the resource and the present!
+                    We failed to load the requested entity. It could be that the resource was deleted by another user while you were loading this
+                    page.
                 </span>
                 <br />
             </div>

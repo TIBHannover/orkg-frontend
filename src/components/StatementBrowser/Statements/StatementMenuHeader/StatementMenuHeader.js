@@ -28,11 +28,11 @@ export default function StatementMenuHeader(props) {
                         <Button
                             className="p-0"
                             outline
-                            color="secondary-darker"
+                            color="secondary"
                             size="sm"
                             onClick={() => dispatch(setIsTemplateModalOpen({ isOpen: true }))}
                         >
-                            <Tippy content="Select a template to use it in your data">
+                            <Tippy content="Select a template to use in your data">
                                 <div className="px-3 py-1">
                                     <Icon className="mr-1" icon={faPuzzlePiece} /> Templates
                                 </div>
@@ -41,12 +41,12 @@ export default function StatementMenuHeader(props) {
                         </Button>
                     )}
                     {props.enableEdit && (
-                        <Button outline color="secondary-darker" size="sm" onClick={() => dispatch(setIsHelpModalOpen({ isOpen: true }))}>
+                        <Button outline color="secondary" size="sm" onClick={() => dispatch(setIsHelpModalOpen({ isOpen: true }))}>
                             <Icon className="mr-1" icon={faQuestionCircle} /> Help
                         </Button>
                     )}
 
-                    <Button className="p-0" outline color={!props.enableEdit ? 'link' : 'secondary-darker'} size="sm" onClick={() => null}>
+                    <Button className="p-0" outline color={!props.enableEdit ? 'link' : 'secondary'} size="sm" onClick={() => null}>
                         <Tippy
                             onCreate={instance => (preferencesTippy.current = instance)}
                             onShow={() => dispatch(setIsPreferencesOpen(true))}

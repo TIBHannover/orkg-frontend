@@ -35,6 +35,7 @@ const InfoTippy = props => {
                     </ul>
                 </div>
             }
+            trigger="click"
         >
             <ActionButtonView action={e => e.stopPropagation()} title="Show information about this statement" icon={faInfo} />
         </Tippy>
