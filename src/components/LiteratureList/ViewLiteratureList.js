@@ -32,7 +32,7 @@ const ViewLiteratureList = () => {
         <Container className="print-only p-0 position-relative">
             {!isPublished && (
                 <Alert color="warning" fade={false} className="box">
-                    Warning: you are viewing an unpublished version of this article. The content can be changed by anyone.{' '}
+                    Warning: you are viewing an unpublished version of this list. The content can be changed by anyone.{' '}
                     <Button color="link" className="p-0" onClick={toggleHistoryModal}>
                         View publish history
                     </Button>
@@ -40,7 +40,7 @@ const ViewLiteratureList = () => {
             )}
             {newVersionAvailable && (
                 <Alert color="warning" fade={false} className="box">
-                    Warning: a newer version of this article is available.{' '}
+                    Warning: a newer version of this list is available.{' '}
                     <Link to={reverse(ROUTES.LITERATURE_LIST, { id: latestVersionId })}>View latest version</Link>
                 </Alert>
             )}
