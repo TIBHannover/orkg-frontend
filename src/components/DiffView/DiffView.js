@@ -3,7 +3,6 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { ContainerAnimated } from 'components/Comparison/styled';
 import DiffTitle from 'components/DiffView/DiffTitle';
 import useDiff from 'components/DiffView/useDiff';
-import useLoad from 'components/SmartReview/hooks/useLoad';
 import { reverse } from 'named-urls';
 import React, { useEffect, useState } from 'react';
 import ContentLoader from 'react-content-loader';

@@ -21,162 +21,168 @@ const useLiteratureList = () => {
     const [isNotFound, setIsNotFound] = useState(false);
     const dispatch = useDispatch();
 
-    const getListById = useCallback(async id => {
-        // can be the ID of either a "published list" or a "head list"
-        let listResource = await getResource(id).catch(e => {});
-        let isPublished = false;
-        if (!listResource) {
-            notFound();
-            return;
-        }
+    const getPaperDataFromStatements = useCallback(
+        ({ paperResource, statements }) => ({
+            paper: paperResource,
+            authors: getObjectsByPredicateAndSubject(statements, PREDICATES.HAS_AUTHOR, paperResource.id).reverse(),
+            month: getObjectsByPredicateAndSubject(statements, PREDICATES.HAS_PUBLICATION_MONTH, paperResource.id)?.[0],
+            year: getObjectsByPredicateAndSubject(statements, PREDICATES.HAS_PUBLICATION_YEAR, paperResource.id)?.[0],
+            doi: getObjectsByPredicateAndSubject(statements, PREDICATES.HAS_DOI, paperResource.id),
+            publishedIn: getObjectsByPredicateAndSubject(statements, PREDICATES.HAS_VENUE, paperResource.id),
+            url: getObjectsByPredicateAndSubject(statements, PREDICATES.URL, paperResource.id),
+            contributions: getObjectsByPredicateAndSubject(statements, PREDICATES.HAS_CONTRIBUTION, paperResource.id)
+        }),
+        []
+    );
 
-        let statements = [];
-        const paramId = id;
-
-        // for published lists
-        if (listResource.classes.includes(CLASSES.LITERATURE_LIST_PUBLISHED)) {
-            const resourceData = await getResourceData(id).catch(e => {});
-            if (!resourceData) {
-                console.log('no resource data found');
+    const getListById = useCallback(
+        async id => {
+            // can be the ID of either a "published list" or a "head list"
+            let listResource = await getResource(id).catch(e => {});
+            let isPublished = false;
+            if (!listResource) {
                 notFound();
                 return;
             }
-            const { data } = resourceData;
-            statements = data.statements;
-            id = data.rootResource;
-            listResource = statements.find(statement => statement.subject.id === id).subject;
-            isPublished = true;
-        } else if (listResource.classes.includes(CLASSES.LITERATURE_LIST)) {
-            ({ statements } = await getStatementsBundleBySubject({
-                id,
-                blacklist: [CLASSES.RESEARCH_FIELD],
-                maxLevel: 5
-            }));
-        } else {
-            console.log('no literature list classes found');
-            notFound();
-            return;
-        }
 
-        // get all versions for this list
-        const versions = await getVersions(listResource.id);
+            let statements = [];
+            const paramId = id;
 
-        // get the research field
-        let researchField = null;
-        const researchFieldStatement = statements.find(
-            statement => statement.subject.id === id && statement.predicate.id === PREDICATES.HAS_RESEARCH_FIELD
-        );
-        if (researchFieldStatement) {
-            researchField = {
-                id: researchFieldStatement.object.id,
-                label: researchFieldStatement.object.label,
-                statementId: researchFieldStatement.id
-            };
-        }
-
-        const authorResources = getObjectsByPredicateAndSubject(statements, PREDICATES.HAS_AUTHOR, id);
-        const sectionResources = getObjectsByPredicateAndSubject(statements, PREDICATES.HAS_SECTION, id);
-
-        for (const [index, section] of sectionResources.entries()) {
-            const sectionStatements = getStatementsBySubjectId(statements, section.id);
-            sectionResources[index].statements = sectionStatements;
-        }
-
-        // add the orcid and statement id to the author statements
-        for (const [index, author] of authorResources.entries()) {
-            // orcid
-            const orcidStatements = getStatementsBySubjectId(statements, author.id);
-            if (orcidStatements.length) {
-                const orcidStatement = orcidStatements.find(statement => statement.predicate.id === PREDICATES.HAS_ORCID);
-                const orcid = orcidStatement ? orcidStatement.object.label : '';
-                authorResources[index].orcid = orcid;
+            // for published lists
+            if (listResource.classes.includes(CLASSES.LITERATURE_LIST_PUBLISHED)) {
+                const resourceData = await getResourceData(id).catch(e => {});
+                if (!resourceData) {
+                    console.log('no resource data found');
+                    notFound();
+                    return;
+                }
+                const { data } = resourceData;
+                statements = data.statements;
+                id = data.rootResource;
+                listResource = statements.find(statement => statement.subject.id === id).subject;
+                isPublished = true;
+            } else if (listResource.classes.includes(CLASSES.LITERATURE_LIST)) {
+                ({ statements } = await getStatementsBundleBySubject({
+                    id,
+                    blacklist: [CLASSES.RESEARCH_FIELD],
+                    maxLevel: 5
+                }));
+            } else {
+                console.log('no literature list classes found');
+                notFound();
+                return;
             }
 
-            // statementId
-            const statementId = getStatementsByObjectId(statements, author.id)[0]?.id;
-            authorResources[index].statementId = statementId;
-        }
+            // get all versions for this list
+            const versions = await getVersions(listResource.id);
 
-        const sections = [];
-        const papers = {};
-        for (const [index, section] of sectionResources.entries()) {
-            const sectionStatements = getStatementsBySubjectId(statements, section.id);
-            sectionResources[index].statements = sectionStatements;
-            const type = section.classes.length > 1 ? section.classes.find(_class => _class !== CLASSES.SECTION) : section.classes[0];
-
-            const sectionData = {
-                id: section.id,
-                title: section.label,
-                type
-            };
-
-            if ([CLASSES.LIST_SECTION].includes(type)) {
-                sectionData.entries = section.statements
-                    .filter(statement => statement.predicate.id === PREDICATES.HAS_ENTRY)
-                    .map(statement => {
-                        const entry = statement.object;
-                        const entryId = entry.id;
-                        const entryStatements = getStatementsBySubjectId(statements, entryId);
-                        const paper = entryStatements.find(statement => statement.predicate.id === PREDICATES.HAS_PAPER)?.object;
-                        const description = entryStatements.find(statement => statement.predicate.id === PREDICATES.DESCRIPTION)?.object;
-                        const paperId = paper?.id;
-                        const data = getPaperDataFromStatements({ paperResource: paper, statements });
-                        papers[paperId] = data;
-
-                        return {
-                            entry,
-                            paperId,
-                            statementId: statement.id,
-                            description
-                        };
-                    })
-                    .reverse();
-            } else if ([CLASSES.TEXT_SECTION].includes(type)) {
-                const contentStatement = section.statements.find(statement => statement.predicate.id === PREDICATES.HAS_CONTENT);
-                sectionData.content = {
-                    id: contentStatement?.object?.id,
-                    text: contentStatement?.object?.label
-                };
-
-                const headingStatement = section.statements.find(statement => statement.predicate.id === PREDICATES.HAS_HEADING_LEVEL);
-                sectionData.heading = {
-                    id: headingStatement?.object?.id,
-                    level: headingStatement?.object?.label
+            // get the research field
+            let researchField = null;
+            const researchFieldStatement = statements.find(
+                statement => statement.subject.id === id && statement.predicate.id === PREDICATES.HAS_RESEARCH_FIELD
+            );
+            if (researchFieldStatement) {
+                researchField = {
+                    id: researchFieldStatement.object.id,
+                    label: researchFieldStatement.object.label,
+                    statementId: researchFieldStatement.id
                 };
             }
 
-            sections.push(sectionData);
-        }
+            const authorResources = getObjectsByPredicateAndSubject(statements, PREDICATES.HAS_AUTHOR, id);
+            const sectionResources = getObjectsByPredicateAndSubject(statements, PREDICATES.HAS_SECTION, id);
 
-        const contributors = getAllContributors(statements);
+            for (const [index, section] of sectionResources.entries()) {
+                const sectionStatements = getStatementsBySubjectId(statements, section.id);
+                sectionResources[index].statements = sectionStatements;
+            }
 
-        return {
-            id: paramId,
-            literatureList: {
-                id: listResource.id,
-                title: listResource.label
-            },
-            authorResources: authorResources.reverse(),
-            sections: sections.reverse(),
-            isPublished,
-            versions,
-            researchField,
-            statements,
-            contributors,
-            papers
-        };
-    }, []);
+            // add the orcid and statement id to the author statements
+            for (const [index, author] of authorResources.entries()) {
+                // orcid
+                const orcidStatements = getStatementsBySubjectId(statements, author.id);
+                if (orcidStatements.length) {
+                    const orcidStatement = orcidStatements.find(statement => statement.predicate.id === PREDICATES.HAS_ORCID);
+                    const orcid = orcidStatement ? orcidStatement.object.label : '';
+                    authorResources[index].orcid = orcid;
+                }
 
-    const getPaperDataFromStatements = ({ paperResource, statements }) => ({
-        paper: paperResource,
-        authors: getObjectsByPredicateAndSubject(statements, PREDICATES.HAS_AUTHOR, paperResource.id).reverse(),
-        month: getObjectsByPredicateAndSubject(statements, PREDICATES.HAS_PUBLICATION_MONTH, paperResource.id)?.[0],
-        year: getObjectsByPredicateAndSubject(statements, PREDICATES.HAS_PUBLICATION_YEAR, paperResource.id)?.[0],
-        doi: getObjectsByPredicateAndSubject(statements, PREDICATES.HAS_DOI, paperResource.id),
-        publishedIn: getObjectsByPredicateAndSubject(statements, PREDICATES.HAS_VENUE, paperResource.id),
-        url: getObjectsByPredicateAndSubject(statements, PREDICATES.URL, paperResource.id),
-        contributions: getObjectsByPredicateAndSubject(statements, PREDICATES.HAS_CONTRIBUTION, paperResource.id)
-    });
+                // statementId
+                const statementId = getStatementsByObjectId(statements, author.id)[0]?.id;
+                authorResources[index].statementId = statementId;
+            }
+
+            const sections = [];
+            const papers = {};
+            for (const [index, section] of sectionResources.entries()) {
+                const sectionStatements = getStatementsBySubjectId(statements, section.id);
+                sectionResources[index].statements = sectionStatements;
+                const type = section.classes.length > 1 ? section.classes.find(_class => _class !== CLASSES.SECTION) : section.classes[0];
+
+                const sectionData = {
+                    id: section.id,
+                    title: section.label,
+                    type
+                };
+
+                if ([CLASSES.LIST_SECTION].includes(type)) {
+                    sectionData.entries = section.statements
+                        .filter(statement => statement.predicate.id === PREDICATES.HAS_ENTRY)
+                        .map(statement => {
+                            const entry = statement.object;
+                            const entryId = entry.id;
+                            const entryStatements = getStatementsBySubjectId(statements, entryId);
+                            const paper = entryStatements.find(statement => statement.predicate.id === PREDICATES.HAS_PAPER)?.object;
+                            const description = entryStatements.find(statement => statement.predicate.id === PREDICATES.DESCRIPTION)?.object;
+                            const paperId = paper?.id;
+                            const data = getPaperDataFromStatements({ paperResource: paper, statements });
+                            papers[paperId] = data;
+
+                            return {
+                                entry,
+                                paperId,
+                                statementId: statement.id,
+                                description
+                            };
+                        })
+                        .reverse();
+                } else if ([CLASSES.TEXT_SECTION].includes(type)) {
+                    const contentStatement = section.statements.find(statement => statement.predicate.id === PREDICATES.HAS_CONTENT);
+                    sectionData.content = {
+                        id: contentStatement?.object?.id,
+                        text: contentStatement?.object?.label
+                    };
+
+                    const headingStatement = section.statements.find(statement => statement.predicate.id === PREDICATES.HAS_HEADING_LEVEL);
+                    sectionData.heading = {
+                        id: headingStatement?.object?.id,
+                        level: headingStatement?.object?.label
+                    };
+                }
+
+                sections.push(sectionData);
+            }
+
+            const contributors = getAllContributors(statements);
+
+            return {
+                id: paramId,
+                literatureList: {
+                    id: listResource.id,
+                    title: listResource.label
+                },
+                authorResources: authorResources.reverse(),
+                sections: sections.reverse(),
+                isPublished,
+                versions,
+                researchField,
+                statements,
+                contributors,
+                papers
+            };
+        },
+        [getPaperDataFromStatements]
+    );
 
     const getPaperData = async paperId => {
         const statements = await getStatementsBySubject({ id: paperId });
