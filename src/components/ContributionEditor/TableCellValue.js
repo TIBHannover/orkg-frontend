@@ -6,6 +6,8 @@ import TableCellValueResource from 'components/ContributionEditor/TableCellValue
 import DatatypeSelector from 'components/StatementBrowser/DatatypeSelector/DatatypeSelector';
 import InputField from 'components/StatementBrowser/InputField/InputField';
 import ValuePlugins from 'components/ValuePlugins/ValuePlugins';
+import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
+import a from 'indefinite';
 import { CLASSES, ENTITIES, PREDICATES, MISC } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
 import { forwardRef, memo, useState, useRef, useEffect } from 'react';
@@ -13,7 +15,7 @@ import { useDispatch } from 'react-redux';
 import env from '@beam-australia/react-env';
 import Tippy from '@tippyjs/react';
 import Joi from 'joi';
-import ConfirmConversionTooltip from 'components/StatementBrowser/ConfirmConversionTooltip/ConfirmConversionTooltip';
+import ConfirmationTooltip from 'components/StatementBrowser/ConfirmationTooltip/ConfirmationTooltip';
 import { InputGroup, FormFeedback } from 'reactstrap';
 import { getConfigByType, getSuggestionByTypeAndValue } from 'constants/DataTypes';
 import styled from 'styled-components';
@@ -33,12 +35,18 @@ const TableCellValue = forwardRef(({ value, index, setDisableCreate, propertyId 
     const [isValid, setIsValid] = useState(true);
     const [draftLabel, setDraftLabel] = useState(value.label);
     const [draftDataType, setDraftDataType] = useState(
-        value._class === ENTITIES.LITERAL ? value.datatype ?? MISC.DEFAULT_LITERAL_DATATYPE : 'object'
+        value._class === ENTITIES.LITERAL ? value.datatype ?? MISC.DEFAULT_LITERAL_DATATYPE : ENTITIES.RESOURCE
     );
 
     const refContainer = useRef(null);
     const confirmConversion = useRef(null);
     const [suggestionType, setSuggestionType] = useState(null);
+
+    const confirmButtonRef = useRef(null);
+
+    const onShown = () => {
+        confirmButtonRef.current.focus();
+    };
 
     useClickAway(refContainer, () => {
         if (isEditing && value._class === ENTITIES.LITERAL && (draftDataType !== value.datatype || draftLabel !== value.label) && draftLabel !== '') {
@@ -201,12 +209,32 @@ const TableCellValue = forwardRef(({ value, index, setDisableCreate, propertyId 
                         )}
                         {value._class === 'literal' && (
                             <Tippy
+                                onShown={onShown}
                                 onCreate={instance => (confirmConversion.current = instance)}
                                 content={
-                                    <ConfirmConversionTooltip
-                                        rejectSuggestion={rejectSuggestion}
-                                        acceptSuggestion={acceptSuggestion}
-                                        suggestionType={suggestionType}
+                                    <ConfirmationTooltip
+                                        message={
+                                            <p className="mb-2">
+                                                The value you entered looks like {a(suggestionType?.name || '', { articleOnly: true })}{' '}
+                                                <b>{suggestionType?.name}</b>. Do you want to convert it?
+                                            </p>
+                                        }
+                                        closeTippy={() => confirmConversion.current.hide()}
+                                        ref={confirmButtonRef}
+                                        buttons={[
+                                            {
+                                                title: 'Convert',
+                                                color: 'success',
+                                                icon: faCheck,
+                                                action: acceptSuggestion
+                                            },
+                                            {
+                                                title: 'Keep',
+                                                color: 'secondary',
+                                                icon: faTimes,
+                                                action: rejectSuggestion
+                                            }
+                                        ]}
                                     />
                                 }
                                 interactive={true}

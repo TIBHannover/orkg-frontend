@@ -1,16 +1,18 @@
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { createLiteral, createResource } from 'slices/contributionEditorSlice';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
-import StatementOptionButton from 'components/StatementBrowser/StatementOptionButton/StatementOptionButton';
-import DatatypeSelector from 'components/StatementBrowser/DatatypeSelector/DatatypeSelector';
+import StatementActionButton from 'components/StatementBrowser/StatementActionButton/StatementActionButton';
 import { CLASSES, ENTITIES, PREDICATES, MISC } from 'constants/graphSettings';
+import DatatypeSelector from 'components/StatementBrowser/DatatypeSelector/DatatypeSelector';
 import InputField from 'components/StatementBrowser/InputField/InputField';
 import PropTypes from 'prop-types';
 import { memo, useRef, useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useClickAway } from 'react-use';
 import Tippy from '@tippyjs/react';
-import ConfirmConversionTooltip from 'components/StatementBrowser/ConfirmConversionTooltip/ConfirmConversionTooltip';
+import ConfirmationTooltip from 'components/StatementBrowser/ConfirmationTooltip/ConfirmationTooltip';
+import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
+import a from 'indefinite';
 import { InputGroup, FormFeedback } from 'reactstrap';
 import { getConfigByType, getSuggestionByTypeAndValue } from 'constants/DataTypes';
 import styled from 'styled-components';
@@ -29,10 +31,10 @@ const TableCellValueCreate = ({ isVisible, contributionId, propertyId, isEmptyCe
     const [isCreating, setIsCreating] = useState(false);
     const [formFeedback, setFormFeedback] = useState(null);
     const [inputDataType, setInputDataType] = useState(
-        getConfigByType(propertyId === PREDICATES.HAS_RESEARCH_PROBLEM ? 'object' : MISC.DEFAULT_LITERAL_DATATYPE).type
+        getConfigByType(propertyId === PREDICATES.HAS_RESEARCH_PROBLEM ? ENTITIES.RESOURCE : MISC.DEFAULT_LITERAL_DATATYPE).type
     );
     const [entityType, setEntityType] = useState(
-        getConfigByType(propertyId === PREDICATES.HAS_RESEARCH_PROBLEM ? 'object' : MISC.DEFAULT_LITERAL_DATATYPE)._class
+        getConfigByType(propertyId === PREDICATES.HAS_RESEARCH_PROBLEM ? ENTITIES.RESOURCE : MISC.DEFAULT_LITERAL_DATATYPE)._class
     );
     const [isValid, setIsValid] = useState(true);
     const refContainer = useRef(null);
@@ -40,6 +42,12 @@ const TableCellValueCreate = ({ isVisible, contributionId, propertyId, isEmptyCe
     const [suggestionType, setSuggestionType] = useState(null);
     const [selectedObject, setSelectedObject] = useState(null);
     const dispatch = useDispatch();
+
+    const confirmButtonRef = useRef(null);
+
+    const onShown = () => {
+        confirmButtonRef.current.focus();
+    };
 
     useClickAway(refContainer, () => {
         //setIsCreating(false);
@@ -75,7 +83,7 @@ const TableCellValueCreate = ({ isVisible, contributionId, propertyId, isEmptyCe
     };
 
     const rejectSuggestion = () => {
-        if (entityType === 'object') {
+        if (entityType === ENTITIES.RESOURCE) {
             dispatch(
                 createResource({
                     contributionId,
@@ -113,7 +121,7 @@ const TableCellValueCreate = ({ isVisible, contributionId, propertyId, isEmptyCe
                 setSuggestionType(suggestions[0]);
                 confirmConversion.current.show();
             } else {
-                if (entityType === 'object') {
+                if (entityType === ENTITIES.RESOURCE) {
                     dispatch(
                         createResource({
                             contributionId,
@@ -166,8 +174,8 @@ const TableCellValueCreate = ({ isVisible, contributionId, propertyId, isEmptyCe
     const closeCreate = () => {
         setSelectedObject(null);
         setIsCreating(false);
-        setEntityType(getConfigByType(propertyId === PREDICATES.HAS_RESEARCH_PROBLEM ? 'object' : MISC.DEFAULT_LITERAL_DATATYPE)._class);
-        setInputDataType(getConfigByType(propertyId === PREDICATES.HAS_RESEARCH_PROBLEM ? 'object' : MISC.DEFAULT_LITERAL_DATATYPE).type);
+        setEntityType(getConfigByType(propertyId === PREDICATES.HAS_RESEARCH_PROBLEM ? ENTITIES.RESOURCE : MISC.DEFAULT_LITERAL_DATATYPE)._class);
+        setInputDataType(getConfigByType(propertyId === PREDICATES.HAS_RESEARCH_PROBLEM ? ENTITIES.RESOURCE : MISC.DEFAULT_LITERAL_DATATYPE).type);
         setValue('');
     };
 
@@ -176,19 +184,39 @@ const TableCellValueCreate = ({ isVisible, contributionId, propertyId, isEmptyCe
             {!isCreating && isVisible && (
                 <div className={isEmptyCell ? 'h-100' : ''} role="button" tabIndex="0" onDoubleClick={() => setIsCreating(true)}>
                     <CreateButtonContainer className="create-button">
-                        <StatementOptionButton title="Add value" icon={faPlus} action={() => setIsCreating(true)} />
+                        <StatementActionButton title="Add value" icon={faPlus} action={() => setIsCreating(true)} />
                     </CreateButtonContainer>
                 </div>
             )}
             {isCreating && (
                 <div ref={refContainer} style={{ minHeight: 35 }}>
                     <Tippy
+                        onShown={onShown}
                         onCreate={instance => (confirmConversion.current = instance)}
                         content={
-                            <ConfirmConversionTooltip
-                                rejectSuggestion={rejectSuggestion}
-                                acceptSuggestion={acceptSuggestion}
-                                suggestionType={suggestionType}
+                            <ConfirmationTooltip
+                                message={
+                                    <p className="mb-2">
+                                        The value you entered looks like {a(suggestionType?.name || '', { articleOnly: true })}{' '}
+                                        <b>{suggestionType?.name}</b>. Do you want to convert it?
+                                    </p>
+                                }
+                                closeTippy={() => confirmConversion.current.hide()}
+                                ref={confirmButtonRef}
+                                buttons={[
+                                    {
+                                        title: 'Convert',
+                                        color: 'success',
+                                        icon: faCheck,
+                                        action: acceptSuggestion
+                                    },
+                                    {
+                                        title: 'Keep',
+                                        color: 'secondary',
+                                        icon: faTimes,
+                                        action: rejectSuggestion
+                                    }
+                                ]}
                             />
                         }
                         interactive={true}
@@ -197,7 +225,7 @@ const TableCellValueCreate = ({ isVisible, contributionId, propertyId, isEmptyCe
                     >
                         <span>
                             <InputGroup size="sm" style={{ minWidth: 295, zIndex: 100 }}>
-                                {entityType === 'object' ? (
+                                {entityType === ENTITIES.RESOURCE ? (
                                     <Autocomplete
                                         optionsClass={propertyId === PREDICATES.HAS_RESEARCH_PROBLEM ? CLASSES.PROBLEM : undefined}
                                         entityType={ENTITIES.RESOURCE}

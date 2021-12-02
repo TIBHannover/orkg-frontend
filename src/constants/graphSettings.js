@@ -83,6 +83,7 @@ export const CLASSES = {
     TEMPLATE: 'ContributionTemplate',
     PREDICATE: 'Predicates',
     CLASS: 'Classes',
+    RESOURCE: 'Resources',
     QB_DATASET_CLASS: 'QBDataset',
     LOCATION: 'DCLocation',
     SENTENCE: 'Sentence',
@@ -106,7 +107,13 @@ export const CLASSES = {
     COMPARISON_RELATED_FIGURE: 'ComparisonRelatedFigure',
     ONTOLOGY_SECTION: 'OntologySection',
     LITERATURE_LIST: 'LiteratureList',
-    LITERATURE_LIST_PUBLISHED: 'LiteratureListPublished'
+    LITERATURE_LIST_PUBLISHED: 'LiteratureListPublished',
+    DATE: 'Date',
+    STRING: 'String',
+    DECIMAL: 'Number',
+    INTEGER: 'Integer',
+    BOOLEAN: 'Boolean',
+    URI: 'URI'
 };
 
 export const MISC = {

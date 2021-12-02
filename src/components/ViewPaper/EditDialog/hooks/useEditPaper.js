@@ -1,6 +1,6 @@
 import { CLASSES, PREDICATES } from 'constants/graphSettings';
 import REGEX from 'constants/regex';
-import { isEqual } from 'lodash';
+import { isEqual, cloneDeep } from 'lodash';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
@@ -185,7 +185,7 @@ const useEditPaper = () => {
         deleteStatementsByIds(statementsIds);
 
         // Add all authors from the state
-        const authorsUpdated = [...authors];
+        const authorsUpdated = cloneDeep([...authors]);
         for (const [i, author] of authorsUpdated.entries()) {
             // create the author
             if (author.orcid) {

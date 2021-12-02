@@ -4,15 +4,16 @@ import { faArrowLeft, faLink, faArrowRight } from '@fortawesome/free-solid-svg-i
 import { goToResourceHistory } from 'actions/statementBrowser';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { reverse } from 'named-urls';
 import { truncate } from 'lodash';
-import ROUTES from 'constants/routes';
+import { getResourceLink } from 'utils';
 import Tippy from '@tippyjs/react';
 
 const Breadcrumbs = () => {
     const dispatch = useDispatch();
-    const statementBrowser = useSelector(state => state.statementBrowser);
-    const { resourceHistory, selectedResource, resources, openExistingResourcesInDialog } = statementBrowser;
+    const resourceHistory = useSelector(state => state.statementBrowser.resourceHistory);
+    const selectedResource = useSelector(state => state.statementBrowser.selectedResource);
+    const openExistingResourcesInDialog = useSelector(state => state.statementBrowser.openExistingResourcesInDialog);
+    const resources = useSelector(state => state.statementBrowser.resources);
 
     const handleOnClick = (id, historyIndex) => {
         dispatch(
@@ -36,7 +37,7 @@ const Breadcrumbs = () => {
     };
 
     return (
-        <Container>
+        <Container className="ml-1">
             <BackButton className="btn btn-link border-0 align-baseline" onClick={handleBackClick}>
                 <Icon icon={faArrowLeft} /> <div className="d-none d-md-inline">Back</div>
             </BackButton>
@@ -45,7 +46,7 @@ const Breadcrumbs = () => {
                     const item = resourceHistory.byId[history];
                     const existingResourceId =
                         Object.keys(resources.byId).length !== 0 && selectedResource ? resources.byId[selectedResource].existingResourceId : null;
-
+                    const _class = Object.keys(resources.byId).length !== 0 && selectedResource ? resources.byId[selectedResource]._class : null;
                     const propertyLabel = truncate(item.propertyLabel ? item.propertyLabel : '', { length: 25 });
                     const resourceLabel = truncate(item.label ? item.label : '', { length: 30 });
 
@@ -65,7 +66,7 @@ const Breadcrumbs = () => {
                             </div>
                             {resourceHistory.allIds.length === index + 1 && !openExistingResourcesInDialog && existingResourceId && (
                                 <Tippy content="Go to resource page">
-                                    <Link target="_blank" className="ml-2 resourceLink" to={reverse(ROUTES.RESOURCE, { id: selectedResource })}>
+                                    <Link target="_blank" className="ml-2 resourceLink" to={getResourceLink(_class, selectedResource)}>
                                         <Icon icon={faLink} color="#fff" />
                                     </Link>
                                 </Tippy>

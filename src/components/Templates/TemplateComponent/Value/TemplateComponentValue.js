@@ -1,13 +1,13 @@
 import { useState, useRef } from 'react';
 import { InputGroup, FormGroup, Label, Col, Input, FormText } from 'reactstrap';
 import { ValuesStyle } from 'components/StatementBrowser/styled';
-import defaultDatatypes from 'components/Templates/helpers/defaultDatatypes';
+import DATA_TYPES from 'constants/DataTypes.js';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes.js';
 import { setComponents } from 'actions/addTemplate';
 import { connect } from 'react-redux';
-import { ENTITIES } from 'constants/graphSettings';
+import { CLASSES, ENTITIES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
 import ValidationRules from '../ValidationRules/ValidationRules';
 
@@ -62,7 +62,7 @@ function TemplateComponentValue(props) {
                         isDisabled={!props.enableEdit}
                         copyValueButton={true}
                         isClearable
-                        defaultOptions={defaultDatatypes}
+                        defaultOptions={DATA_TYPES.filter(dt => dt.classId !== CLASSES.RESOURCE).map(dt => ({ label: dt.name, id: dt.classId }))}
                         innerRef={classAutocompleteRef}
                         linkButton={props.value && props.value.id ? reverse(ROUTES.CLASS, { id: props.value.id }) : ''}
                         linkButtonTippy="Go to class page"

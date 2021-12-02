@@ -8,12 +8,12 @@ import {
     nextStep,
     previousStep,
     createContribution,
-    prefillStatements,
     createAnnotation,
     clearAnnotations,
     toggleAbstractDialog,
     setAbstractDialogView
 } from 'actions/addPaper';
+import { fillStatements } from 'actions/statementBrowser';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner, faThList, faMagic } from '@fortawesome/free-solid-svg-icons';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
@@ -26,6 +26,7 @@ import PropTypes from 'prop-types';
 import { compose } from 'redux';
 import { guid } from 'utils';
 import toArray from 'lodash/toArray';
+import { ENTITIES } from 'constants/graphSettings';
 
 const AnimationContainer = styled(CSSTransition)`
     &.fadeIn-enter {
@@ -265,7 +266,7 @@ class Abstract extends Component {
                     }
                     statements['values'].push({
                         label: range.text,
-                        type: 'object',
+                        _class: ENTITIES.RESOURCE,
                         propertyId: propertyId
                     });
                 }
@@ -273,7 +274,7 @@ class Abstract extends Component {
             });
         }
         // Add the statements to the selected contribution
-        this.props.prefillStatements({ statements, resourceId: this.props.contributions.byId[this.props.selectedContribution].resourceId });
+        this.props.fillStatements({ statements, resourceId: this.props.contributions.byId[this.props.selectedContribution].resourceId });
         this.props.toggleAbstractDialog();
     };
 
@@ -413,7 +414,7 @@ Abstract.propTypes = {
     selectedContribution: PropTypes.string.isRequired,
     contributions: PropTypes.object.isRequired,
     createContribution: PropTypes.func.isRequired,
-    prefillStatements: PropTypes.func.isRequired,
+    fillStatements: PropTypes.func.isRequired,
     createAnnotation: PropTypes.func.isRequired,
     clearAnnotations: PropTypes.func.isRequired,
     resources: PropTypes.object.isRequired,
@@ -444,7 +445,7 @@ const mapDispatchToProps = dispatch => ({
     nextStep: () => dispatch(nextStep()),
     previousStep: () => dispatch(previousStep()),
     createContribution: data => dispatch(createContribution(data)),
-    prefillStatements: data => dispatch(prefillStatements(data)),
+    fillStatements: data => dispatch(fillStatements(data)),
     createAnnotation: data => dispatch(createAnnotation(data)),
     clearAnnotations: () => dispatch(clearAnnotations()),
     toggleAbstractDialog: () => dispatch(toggleAbstractDialog()),

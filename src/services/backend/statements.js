@@ -1,8 +1,8 @@
 import { url } from 'constants/misc';
 import { submitGetRequest, submitPostRequest, submitDeleteRequest, submitPutRequest } from 'network';
 import queryString from 'query-string';
-import { getResource } from 'services/backend/resources';
 import { PREDICATES, MISC, CLASSES } from 'constants/graphSettings';
+import { filterStatementsBySubjectId, getTemplateComponentData, filterObjectOfStatementsByPredicateAndClass } from 'utils';
 import { sortMethod } from 'utils';
 
 export const statementsUrl = `${url}statements/`;
@@ -100,7 +100,7 @@ export const getStatementsBySubject = ({ id, page = 0, items: size = 9999, sortB
  */
 export const getStatementsBundleBySubject = ({ id, maxLevel = 10, blacklist = [] }) => {
     const params = queryString.stringify(
-        { maxLevel, blacklist: blacklist.join(',') },
+        { maxLevel, blacklist: blacklist?.join(',') },
         {
             skipNull: true,
             skipEmptyString: true
@@ -206,112 +206,83 @@ export const getStatementsByPredicateAndLiteral = ({ predicateId, literal, subje
  *
  * @param {String} templateId Template Id
  */
-export const getTemplateById = templateId => {
-    return getResource(templateId).then(template =>
-        getStatementsBySubject({ id: templateId }).then(templateStatements => {
-            const templatePredicate = templateStatements.find(statement => statement.predicate.id === PREDICATES.TEMPLATE_OF_PREDICATE);
-
-            const templateClass = templateStatements.find(statement => statement.predicate.id === PREDICATES.TEMPLATE_OF_CLASS);
-
-            const templateFormatLabel = templateStatements.find(statement => statement.predicate.id === PREDICATES.TEMPLATE_LABEL_FORMAT);
-
-            const templateIsStrict = templateStatements.find(statement => statement.predicate.id === PREDICATES.TEMPLATE_STRICT);
-
-            const templateComponents = templateStatements.filter(statement => statement.predicate.id === PREDICATES.TEMPLATE_COMPONENT);
-
-            const components = getStatementsBySubjects({ ids: templateComponents.map(component => component.object.id) })
-                .then(componentsStatements => {
-                    return componentsStatements.map(componentStatements => {
-                        const property = componentStatements.statements.find(
-                            statement => statement.predicate.id === PREDICATES.TEMPLATE_COMPONENT_PROPERTY
-                        );
-                        const value = componentStatements.statements.find(
-                            statement => statement.predicate.id === PREDICATES.TEMPLATE_COMPONENT_VALUE
-                        );
-
-                        const validationRules = componentStatements.statements.filter(
-                            statement => statement.predicate.id === PREDICATES.TEMPLATE_COMPONENT_VALIDATION_RULE
-                        );
-
-                        const minOccurs = componentStatements.statements.find(
-                            statement => statement.predicate.id === PREDICATES.TEMPLATE_COMPONENT_OCCURRENCE_MIN
-                        );
-
-                        const maxOccurs = componentStatements.statements.find(
-                            statement => statement.predicate.id === PREDICATES.TEMPLATE_COMPONENT_OCCURRENCE_MAX
-                        );
-
-                        const order = componentStatements.statements.find(
-                            statement => statement.predicate.id === PREDICATES.TEMPLATE_COMPONENT_ORDER
-                        );
-
-                        return {
-                            id: componentStatements.id,
-                            property: property
-                                ? {
-                                      id: property.object.id,
-                                      label: property.object.label
-                                  }
-                                : {},
-                            value: value
-                                ? {
-                                      id: value.object.id,
-                                      label: value.object.label
-                                  }
-                                : null,
-                            minOccurs: minOccurs ? minOccurs.object.label : 0,
-                            maxOccurs: maxOccurs ? maxOccurs.object.label : null,
-                            order: order ? order.object.label : null,
-                            validationRules:
-                                validationRules && Object.keys(validationRules).length > 0
-                                    ? validationRules.reduce((obj, item) => {
-                                          const rule = item.object.label.split(/#(.+)/)[0];
-                                          const value = item.object.label.split(/#(.+)/)[1];
-                                          return Object.assign(obj, { [rule]: value });
-                                      }, {})
-                                    : {}
-                        };
-                    });
-                })
-                .catch(() => {
-                    return Promise.resolve([]);
-                });
-
-            return Promise.all([components]).then(templateComponents => ({
-                id: templateId,
-                label: template.label,
-                statements: templateStatements.map(s => s.id),
-                predicate: templatePredicate
-                    ? {
-                          id: templatePredicate.object.id,
-                          label: templatePredicate.object.label
-                      }
-                    : null,
-                labelFormat: templateFormatLabel ? templateFormatLabel.object.label : '',
-                hasLabelFormat: templateFormatLabel ? true : false,
-                isStrict: templateIsStrict ? true : false,
-                components: templateComponents?.length > 0 ? templateComponents[0].sort((c1, c2) => sortMethod(c1.order, c2.order)) : [],
-                class: templateClass
-                    ? {
-                          id: templateClass.object.id,
-                          label: templateClass.object.label
-                      }
-                    : {},
-                researchFields: templateStatements
-                    .filter(statement => statement.predicate.id === PREDICATES.TEMPLATE_OF_RESEARCH_FIELD)
-                    .map(statement => ({
-                        id: statement.object.id,
-                        label: statement.object.label
-                    })),
-                researchProblems: templateStatements
-                    .filter(statement => statement.predicate.id === PREDICATES.TEMPLATE_OF_RESEARCH_PROBLEM)
-                    .map(statement => ({
-                        id: statement.object.id,
-                        label: statement.object.label
-                    }))
-            }));
-        })
+export const getTemplateById = async templateId => {
+    const response = await getStatementsBundleBySubject({ id: templateId, maxLevel: 2, blacklist: [CLASSES.RESEARCH_FIELD] }).catch(() => null);
+    if (!response) {
+        return Promise.reject(new Error('Template not found'));
+    }
+    const label = filterStatementsBySubjectId(response.statements, templateId)?.[0]?.subject.label ?? '';
+    const statements = filterStatementsBySubjectId(response.statements, templateId);
+    const templatePredicate = filterObjectOfStatementsByPredicateAndClass(
+        response.statements,
+        PREDICATES.TEMPLATE_OF_PREDICATE,
+        true,
+        null,
+        templateId
     );
+
+    const templateClass = filterObjectOfStatementsByPredicateAndClass(response.statements, PREDICATES.TEMPLATE_OF_CLASS, true, null, templateId);
+    const templateFormatLabel = filterObjectOfStatementsByPredicateAndClass(
+        response.statements,
+        PREDICATES.TEMPLATE_LABEL_FORMAT,
+        true,
+        null,
+        templateId
+    );
+
+    const templateIsStrict = filterObjectOfStatementsByPredicateAndClass(response.statements, PREDICATES.TEMPLATE_STRICT, true, null, templateId);
+    const templateComponents = filterObjectOfStatementsByPredicateAndClass(
+        response.statements,
+        PREDICATES.TEMPLATE_COMPONENT,
+        false,
+        null,
+        templateId
+    );
+
+    const researchFields = filterObjectOfStatementsByPredicateAndClass(
+        response.statements,
+        PREDICATES.TEMPLATE_OF_RESEARCH_FIELD,
+        false,
+        null,
+        templateId
+    );
+
+    const researchProblems = filterObjectOfStatementsByPredicateAndClass(
+        response.statements,
+        PREDICATES.TEMPLATE_OF_RESEARCH_PROBLEM,
+        false,
+        null,
+        templateId
+    );
+
+    const components = templateComponents.map(component =>
+        getTemplateComponentData(component, filterStatementsBySubjectId(response.statements, component.id))
+    );
+
+    return {
+        id: templateId,
+        label: label,
+        statements: statements.map(s => s.id),
+        predicate: templatePredicate,
+        labelFormat: templateFormatLabel ? templateFormatLabel.label : '',
+        hasLabelFormat: templateFormatLabel ? true : false,
+        isStrict: templateIsStrict ? true : false,
+        components: components?.length > 0 ? components.sort((c1, c2) => sortMethod(c1.order, c2.order)) : [],
+        class: templateClass
+            ? {
+                  id: templateClass.id,
+                  label: templateClass.label
+              }
+            : {},
+        researchFields: researchFields.map(statement => ({
+            id: statement.id,
+            label: statement.label
+        })),
+        researchProblems: researchProblems.map(statement => ({
+            id: statement.id,
+            label: statement.label
+        }))
+    };
 };
 
 /**
@@ -376,7 +347,12 @@ export const getTemplatesByClass = classID => {
     return getStatementsByObjectAndPredicate({
         objectId: classID,
         predicateId: PREDICATES.TEMPLATE_OF_CLASS
-    }).then(statements =>
-        Promise.all(statements.filter(statement => statement.subject.classes?.includes(CLASSES.TEMPLATE)).map(st => st.subject.id))
-    );
+    })
+        .then(statements =>
+            statements
+                .filter(statement => statement.subject.classes?.includes(CLASSES.TEMPLATE))
+                .map(st => st.subject.id)
+                .filter(c => c)
+        )
+        .catch(() => []);
 };

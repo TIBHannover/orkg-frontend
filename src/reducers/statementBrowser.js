@@ -1,8 +1,17 @@
 import * as type from '../actions/types';
 import dotProp from 'dot-prop-immutable';
-import { MISC } from 'constants/graphSettings';
+import { ENTITIES, MISC } from 'constants/graphSettings';
 import { match } from 'path-to-regexp';
+import { last } from 'lodash';
 import ROUTES from 'constants/routes';
+import { Cookies } from 'react-cookie';
+
+const cookies = new Cookies();
+
+const getPreferenceFromCookies = p => {
+    const cookieName = `preferences.${p}`;
+    return cookies.get(cookieName) ? cookies.get(cookieName) === 'true' : undefined;
+};
 
 const initialState = {
     selectedResource: '',
@@ -12,8 +21,18 @@ const initialState = {
     openExistingResourcesInDialog: false,
     propertiesAsLinks: false, // if false the link appears in black font color and opens in a new window
     resourcesAsLinks: false,
+    isTemplatesModalOpen: false,
+    isHelpModalOpen: false,
+    helpCenterArticleId: null,
     initOnLocationChange: true,
     keyToKeepStateOnLocationChange: null,
+    isPreferencesOpen: false,
+    preferences: {
+        showClasses: getPreferenceFromCookies('showClasses') ?? false,
+        showStatementInfo: getPreferenceFromCookies('showStatementInfo') ?? true,
+        showValueInfo: getPreferenceFromCookies('showValueInfo') ?? true,
+        showLiteralDataTypes: getPreferenceFromCookies('showLiteralDataTypes') ?? true
+    },
     resources: {
         byId: {},
         allIds: []
@@ -40,6 +59,38 @@ const initialState = {
 // eslint-disable-next-line import/no-anonymous-default-export
 export default (state = initialState, action) => {
     switch (action.type) {
+        case type.SET_IS_HELP_MODAL_OPEN: {
+            const { payload } = action;
+            const newState = dotProp.set(state, `isHelpModalOpen`, payload.isOpen);
+            return dotProp.set(newState, `helpCenterArticleId`, payload.articleId);
+        }
+
+        case type.SET_IS_TEMPLATES_MODAL_OPEN: {
+            const { payload } = action;
+            return dotProp.set(state, `isTemplatesModalOpen`, payload.isOpen);
+        }
+
+        case type.SET_IS_PREFERENCES_OPEN: {
+            const { payload } = action;
+            return dotProp.set(state, `isPreferencesOpen`, payload);
+        }
+
+        case type.UPDATE_PREFERENCES: {
+            const { payload } = action;
+
+            return {
+                ...state,
+                preferences: {
+                    showClasses: typeof payload.showClasses === 'boolean' ? payload.showClasses : state.preferences.showClasses,
+                    showStatementInfo:
+                        typeof payload.showStatementInfo === 'boolean' ? payload.showStatementInfo : state.preferences.showStatementInfo,
+                    showValueInfo: typeof payload.showValueInfo === 'boolean' ? payload.showValueInfo : state.preferences.showValueInfo,
+                    showLiteralDataTypes:
+                        typeof payload.showLiteralDataTypes === 'boolean' ? payload.showLiteralDataTypes : state.preferences.showLiteralDataTypes
+                }
+            };
+        }
+
         case type.CREATE_RESOURCE: {
             const { payload } = action;
 
@@ -50,7 +101,8 @@ export default (state = initialState, action) => {
                     existingResourceId: payload.existingResourceId ? payload.existingResourceId : null,
                     shared: payload.shared ? payload.shared : 1,
                     propertyIds: [],
-                    classes: payload.classes ? payload.classes : []
+                    classes: payload.classes ? payload.classes : [],
+                    _class: payload._class ? payload._class : ENTITIES.RESOURCE
                 }
             }));
 
@@ -113,29 +165,25 @@ export default (state = initialState, action) => {
         case type.CREATE_PROPERTY: {
             const { payload } = action;
             let newState;
-            if (
-                dotProp.get(state, `resources.byId.${payload.resourceId}`) &&
-                dotProp.get(state, `resources.byId.${payload.resourceId}.propertyIds`)
-            ) {
-                newState = dotProp.set(state, `resources.byId.${payload.resourceId}.propertyIds`, propertyIds => [
-                    ...propertyIds,
-                    payload.propertyId
-                ]);
+            if (dotProp.get(state, `resources.byId.${payload.resourceId}`)) {
+                newState = dotProp.set(
+                    dotProp.get(state, `resources.byId.${payload.resourceId}.propertyIds`)
+                        ? state
+                        : dotProp.set(state, `resources.byId.${payload.resourceId}.propertyIds`, []),
+                    `resources.byId.${payload.resourceId}.propertyIds`,
+                    propertyIds => [...propertyIds, payload.propertyId]
+                );
+
                 newState = dotProp.set(newState, 'properties.byId', ids => ({
                     ...ids,
                     [payload.propertyId]: {
-                        label: payload.label ? payload.label : '',
+                        ...payload,
                         existingPredicateId: payload.existingPredicateId ? payload.existingPredicateId : null,
                         valueIds: [],
                         isExistingProperty: payload.isExistingProperty ? payload.isExistingProperty : false,
                         isEditing: false,
                         isSaving: false,
-                        isTemplate: payload.isTemplate,
-                        isAnimated: payload.isAnimated !== undefined ? payload.isAnimated : false,
-                        range: payload.range ? payload.range : null,
-                        validationRules: payload.validationRules ? payload.validationRules : {},
-                        minOccurs: payload.minOccurs ? payload.minOccurs : 0,
-                        maxOccurs: payload.maxOccurs ? payload.maxOccurs : null
+                        isAnimated: payload.isAnimated !== undefined ? payload.isAnimated : false
                     }
                 }));
                 newState = dotProp.set(newState, 'properties.allIds', ids => [...ids, payload.propertyId]);
@@ -192,6 +240,12 @@ export default (state = initialState, action) => {
             return newState;
         }
 
+        case type.IS_DELETING_PROPERTY: {
+            const { payload } = action;
+            const newState = dotProp.set(state, `properties.byId.${payload.id}.isDeleting`, v => true);
+            return newState;
+        }
+
         case type.DONE_ANIMATION: {
             const { payload } = action;
             const newState = dotProp.set(state, `properties.byId.${payload.id}.isAnimated`, v => true);
@@ -204,6 +258,12 @@ export default (state = initialState, action) => {
             return newState;
         }
 
+        case type.DONE_DELETING_PROPERTY: {
+            const { payload } = action;
+            const newState = dotProp.set(state, `properties.byId.${payload.id}.isDeleting`, v => false);
+            return newState;
+        }
+
         case type.CREATE_VALUE: {
             const { payload } = action;
             let newState;
@@ -213,14 +273,11 @@ export default (state = initialState, action) => {
                 newState = dotProp.set(newState, 'values.byId', ids => ({
                     ...ids,
                     [payload.valueId]: {
-                        type: payload.type,
-                        classes: payload.classes ? payload.classes : [],
-                        label: payload.label ? payload.label : '',
+                        ...payload,
                         resourceId: payload.resourceId ? payload.resourceId : null,
                         isExistingValue: payload.isExistingValue ? payload.isExistingValue : false,
                         existingStatement: payload.existingStatement ? payload.existingStatement : false,
                         statementId: payload.statementId,
-                        ...(payload.type === 'literal' && { datatype: payload.datatype ?? MISC.DEFAULT_LITERAL_DATATYPE }),
                         isEditing: false,
                         isSaving: false,
                         shared: payload.shared ? payload.shared : 1
@@ -233,18 +290,15 @@ export default (state = initialState, action) => {
                 // add a new resource when a object value is created
 
                 //only create a new object when the id doesn't exist yet (for sharing changes on existing resources)
-                if ((payload.type === 'object' || payload.type === 'template') && !state.resources.byId[payload.resourceId]) {
+                if (payload.__class !== ENTITIES.LITERAL && !state.resources.byId[payload.resourceId]) {
                     newState = dotProp.set(newState, 'resources.allIds', ids => [...ids, payload.resourceId]);
 
                     newState = dotProp.set(newState, 'resources.byId', ids => ({
                         ...ids,
                         [payload.resourceId]: {
+                            ...payload,
                             existingResourceId: payload.existingResourceId && payload.isExistingValue ? payload.existingResourceId : null,
-                            id: payload.resourceId,
-                            label: payload.label,
-                            shared: payload.shared ? payload.shared : 1,
-                            propertyIds: [],
-                            classes: payload.classes ? payload.classes : []
+                            propertyIds: []
                         }
                     }));
                 }
@@ -315,6 +369,30 @@ export default (state = initialState, action) => {
             return newState;
         }
 
+        case type.IS_ADDING_VALUE: {
+            const { payload } = action;
+            const newState = dotProp.set(state, `properties.byId.${payload.id}.isAddingValue`, v => true);
+            return newState;
+        }
+
+        case type.DONE_ADDING_VALUE: {
+            const { payload } = action;
+            const newState = dotProp.set(state, `properties.byId.${payload.id}.isAddingValue`, v => false);
+            return newState;
+        }
+
+        case type.IS_DELETING_VALUE: {
+            const { payload } = action;
+            const newState = dotProp.set(state, `values.byId.${payload.id}.isDeleting`, v => true);
+            return newState;
+        }
+
+        case type.DONE_DELETING_VALUE: {
+            const { payload } = action;
+            const newState = dotProp.set(state, `values.byId.${payload.id}.isDeleting`, v => false);
+            return newState;
+        }
+
         case type.TOGGLE_EDIT_VALUE: {
             const { payload } = action;
             const newState = dotProp.set(state, `values.byId.${payload.id}.isEditing`, v => !v);
@@ -323,7 +401,11 @@ export default (state = initialState, action) => {
 
         case type.UPDATE_RESOURCE_CLASSES: {
             const { payload } = action;
-            const newState = dotProp.set(state, `resources.byId.${payload.resourceId}.classes`, payload.classes);
+            const valueId = dotProp.get(state, `resources.byId.${payload.resourceId}.valueId`);
+            let newState = dotProp.set(state, `resources.byId.${payload.resourceId}.classes`, payload.classes);
+            if (valueId) {
+                newState = dotProp.set(newState, `values.byId.${valueId}.classes`, payload.classes);
+            }
             return newState;
         }
 
@@ -428,6 +510,40 @@ export default (state = initialState, action) => {
             return { ...newState };
         }
 
+        case type.SET_RESOURCE_HISTORY: {
+            const { payload } = action;
+            const lastResourceId = last(state.resourceHistory.allIds);
+            let newState = dotProp.set(state, 'resourceHistory.byId', ids => ({
+                ...ids,
+                ...(lastResourceId
+                    ? {
+                          [lastResourceId]: {
+                              ...state.resourceHistory.byId[lastResourceId],
+                              propertyLabel: last(payload.filter(pt => pt._class === ENTITIES.PREDICATE))?.label
+                          }
+                      }
+                    : {})
+            }));
+            newState = dotProp.set(newState, 'resourceHistory.allIds', ids => [
+                ...payload.filter(pt => pt._class !== ENTITIES.PREDICATE).map(pt => pt.id),
+                ...ids
+            ]);
+            payload.map((pt, index) => {
+                if (pt._class !== ENTITIES.PREDICATE) {
+                    newState = dotProp.set(newState, 'resourceHistory.byId', ids => ({
+                        ...ids,
+                        [pt.id]: {
+                            id: pt.id,
+                            label: pt.label,
+                            propertyLabel: payload[index - 1]?.label
+                        }
+                    }));
+                }
+                return null;
+            });
+            return { ...newState, level: payload.length - 1 };
+        }
+
         case type.GOTO_RESOURCE_HISTORY: {
             const { payload } = action;
             const ids = state.resourceHistory.allIds.slice(0, payload.historyIndex + 1); //TODO: it looks like historyIndex can be derived, so remove it from payload
@@ -490,13 +606,6 @@ export default (state = initialState, action) => {
             };
         }
 
-        case type.CLEAR_SELECTED_PROPERTY: {
-            return {
-                ...state,
-                selectedProperty: ''
-            };
-        }
-
         case type.STATEMENT_BROWSER_LOAD_DATA: {
             const { payload } = action;
             return {
@@ -510,7 +619,7 @@ export default (state = initialState, action) => {
             };
         }
 
-        case type.SET_STATEMENT_IS_FECHTED: {
+        case type.SET_STATEMENT_IS_FETCHED: {
             const { resourceId, depth } = action;
 
             let newState = dotProp.set(state, `resources.byId.${resourceId}.isFetched`, true);
@@ -534,6 +643,20 @@ export default (state = initialState, action) => {
                 ...newState
             };
         }
+
+        case type.FAILED_FETCHING_STATEMENTS: {
+            const { resourceId } = action;
+            let newState = dotProp.set(state, `isFetchingStatements`, false);
+            if (resourceId) {
+                newState = dotProp.set(newState, `resources.byId.${resourceId}.isFetching`, false);
+                newState = dotProp.set(newState, `resources.byId.${resourceId}.isFailedFetching`, true);
+            }
+
+            return {
+                ...newState
+            };
+        }
+
         case type.STATEMENT_BROWSER_UPDATE_CONTRIBUTION_LABEL: {
             const newLabel = action.payload.label;
             const contribId = action.payload.id;
@@ -553,7 +676,13 @@ export default (state = initialState, action) => {
         }
 
         case type.RESET_STATEMENT_BROWSER: {
-            return initialState;
+            const newState = dotProp.set(initialState, `preferences`, {
+                showClasses: getPreferenceFromCookies('showClasses') ?? false,
+                showStatementInfo: getPreferenceFromCookies('showStatementInfo') ?? true,
+                showValueInfo: getPreferenceFromCookies('showValueInfo') ?? true,
+                showLiteralDataTypes: getPreferenceFromCookies('showLiteralDataTypes') ?? false
+            });
+            return newState;
         }
 
         case '@@router/LOCATION_CHANGE': {
@@ -577,6 +706,12 @@ export default (state = initialState, action) => {
                 };
             } else {
                 newState = initialState;
+                newState = dotProp.set(newState, `preferences`, {
+                    showClasses: getPreferenceFromCookies('showClasses') ?? false,
+                    showStatementInfo: getPreferenceFromCookies('showStatementInfo') ?? true,
+                    showValueInfo: getPreferenceFromCookies('showValueInfo') ?? true,
+                    showLiteralDataTypes: getPreferenceFromCookies('showLiteralDataTypes') ?? false
+                });
             }
             return { ...newState };
         }
