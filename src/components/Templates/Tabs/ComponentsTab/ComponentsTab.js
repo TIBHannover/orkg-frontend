@@ -5,7 +5,7 @@ import ConfirmClass from 'components/ConfirmationModal/ConfirmationModal';
 import { setComponents, setIsStrictTemplate } from 'actions/addTemplate';
 import { createPredicate } from 'services/backend/predicates';
 import TemplateComponent from 'components/Templates/TemplateComponent/TemplateComponent';
-import AddPropertyTemplate from 'components/StatementBrowser/AddProperty/AddPropertyTemplate';
+import AddPropertyView from 'components/StatementBrowser/AddProperty/AddPropertyView';
 import update from 'immutability-helper';
 import PropTypes from 'prop-types';
 import useConfirmPropertyModal from 'components/StatementBrowser/AddProperty/hooks/useConfirmPropertyModal';
@@ -150,19 +150,11 @@ function ComponentsTab(props) {
                 {props.components && props.components.length === 0 && <i>No properties specified.</i>}
                 {props.editMode && (
                     <>
-                        <AddPropertyTemplate
-                            inTemplate={false}
-                            isDisabled={false}
+                        <AddPropertyView
                             showAddProperty={showAddProperty}
                             handlePropertySelect={handleSelectNewProperty}
                             toggleConfirmNewProperty={toggleConfirmNewProperty}
-                            handleHideAddProperty={() => {
-                                setShowAddProperty(false);
-                            }}
-                            handleShowAddProperty={() => {
-                                setShowAddProperty(true);
-                            }}
-                            newProperties={[]}
+                            setShowAddProperty={setShowAddProperty}
                         />
                     </>
                 )}

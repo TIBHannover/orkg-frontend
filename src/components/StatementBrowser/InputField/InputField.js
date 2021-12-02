@@ -2,23 +2,24 @@ import { Input } from 'reactstrap';
 import PropTypes from 'prop-types';
 import { getConfigByType } from 'constants/DataTypes';
 import Textarea from 'react-textarea-autosize';
+import { CLASSES, ENTITIES } from 'constants/graphSettings';
 
 export default function InputField(props) {
     let inputFormType = 'text';
 
     if (props.valueClass?.id) {
         switch (props.valueClass.id) {
-            case 'Date':
+            case CLASSES.DATE:
                 inputFormType = 'date';
                 break;
-            case 'Boolean':
+            case CLASSES.BOOLEAN:
                 inputFormType = 'boolean';
                 break;
             default:
                 inputFormType = 'text';
                 break;
         }
-    } else if (props.inputDataType !== 'object') {
+    } else if (props.inputDataType !== ENTITIES.RESOURCE) {
         const config = getConfigByType(props.inputDataType);
         inputFormType = config.inputFormType;
     }
@@ -31,7 +32,11 @@ export default function InputField(props) {
                 value={props.inputValue}
                 onChange={(e, value) => props.setInputValue(e ? e.target.value : value)}
                 onKeyDown={props.onKeyDown}
-                ref={props.literalInputRef}
+                ref={tag => {
+                    if (props.literalInputRef) {
+                        props.literalInputRef.current = tag;
+                    }
+                }}
                 onBlur={props.onBlur}
                 className="form-control"
                 autoFocus

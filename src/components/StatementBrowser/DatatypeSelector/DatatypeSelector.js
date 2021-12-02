@@ -86,6 +86,7 @@ const DatatypeSelector = props => {
                 getOptionLabel={({ name }) => name}
                 isClearable={false}
                 menuPortalTarget={props.menuPortalTarget}
+                inputId="datatypeSelector"
             />
         </>
     );

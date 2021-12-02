@@ -5,8 +5,9 @@ import { history } from './store';
 const setup = () => {
     render(<App history={history} />);
 };
-
-test('renders without crashing', () => {
-    setup();
-    expect(screen.getByText(/The Open Research Knowledge Graph aims to describe research papers/i)).toBeInTheDocument();
+describe('App', () => {
+    it('renders without crashing', () => {
+        setup();
+        expect(screen.getByText(/The Open Research Knowledge Graph aims to describe research papers/i)).toBeInTheDocument();
+    });
 });

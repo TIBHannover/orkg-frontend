@@ -96,6 +96,35 @@ function Autocomplete(props) {
         }
     }, [props.inputValue]);
 
+    // reset the value input if the selected value is null
+    useEffect(() => {
+        if (props.value === null) {
+            setInputValue('');
+        }
+    }, [props.value]);
+
+    // Support home and end keys for text Input
+    const handleKeyDown = evt => {
+        if (evt.key === 'Home') {
+            evt.preventDefault();
+            if (evt.shiftKey) {
+                evt.target.selectionStart = 0;
+            } else {
+                evt.target.setSelectionRange(0, 0);
+            }
+        }
+        if (evt.key === 'End') {
+            evt.preventDefault();
+            const len = evt.target.value.length;
+            if (evt.shiftKey) {
+                evt.target.selectionEnd = len;
+            } else {
+                evt.target.setSelectionRange(len, len);
+            }
+        }
+        props.onKeyDown?.(evt);
+    };
+
     /**
      * Lookup in ORKG backend
      *
@@ -677,11 +706,10 @@ function Autocomplete(props) {
                     aria-label={props.placeholder}
                     autoFocus={props.autoFocus}
                     cacheOptions={false}
-                    cache={false}
                     defaultOptions={props.defaultOptions ?? true}
                     openMenuOnFocus={props.openMenuOnFocus}
                     onBlur={props.onBlur}
-                    onKeyDown={props.onKeyDown}
+                    onKeyDown={handleKeyDown}
                     selectRef={props.innerRef}
                     createOptionPosition="first"
                     menuPortalTarget={props.menuPortalTarget}
@@ -761,7 +789,8 @@ Autocomplete.propTypes = {
     inputId: PropTypes.string,
     onChangeInputValue: PropTypes.func,
     inputValue: PropTypes.string,
-    menuPortalTarget: PropTypes.object
+    menuPortalTarget: PropTypes.object,
+    cacheOptions: PropTypes.bool
 };
 
 Autocomplete.defaultProps = {
@@ -779,6 +808,7 @@ Autocomplete.defaultProps = {
     inputId: null,
     inputValue: null,
     menuPortalTarget: null,
-    allowCreateDuplicate: false
+    allowCreateDuplicate: false,
+    cacheOptions: false
 };
 export default withTheme(Autocomplete);

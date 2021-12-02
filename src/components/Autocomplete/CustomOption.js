@@ -1,5 +1,6 @@
+import { useState } from 'react';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
+import { faInfoCircle, faTags, faArrowRight, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import Tippy from '@tippyjs/react';
 import { components } from 'react-select';
 import styled from 'styled-components';
@@ -7,6 +8,7 @@ import { truncate } from 'lodash';
 import { truncStringPortion } from 'utils';
 import { PREDICATES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
+import { getStatementsBySubject } from 'services/backend/statements';
 
 const StyledSelectOption = styled.div`
     display: flex;
@@ -48,6 +50,25 @@ export default function CustomOption(props) {
     const { onClick, ...newInnerProps } = innerProps;
     const truncatedDescription = truncate(props.data.description ? props.data.description : '', { length: MAXIMUM_DESCRIPTION_LENGTH });
     const truncatedURI = truncStringPortion(props.data.uri ? props.data.uri : '', 15, 50, 3);
+    const [statements, setStatements] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
+    const [isLoaded, setIsLoaded] = useState(false);
+
+    const onTrigger = () => {
+        if (!isLoaded && props.data.id) {
+            setIsLoading(true);
+            getStatementsBySubject({ id: props.data.id })
+                .then(result => {
+                    setStatements(result);
+                    setIsLoading(false);
+                    setIsLoaded(true);
+                })
+                .catch(() => {
+                    setIsLoading(false);
+                    setIsLoaded(true);
+                });
+        }
+    };
 
     return (
         <components.Option {...propsWithoutInnerProps} innerProps={newInnerProps}>
@@ -70,10 +91,47 @@ export default function CustomOption(props) {
                             </i>
                         </div>
                     )}
+                    <div>
+                        {props.data.shared > 0 && (
+                            <span>
+                                <small>
+                                    <Icon
+                                        icon={faArrowRight}
+                                        color={!propsWithoutInnerProps.isFocused && !propsWithoutInnerProps.isSelected ? '#dbdde5' : '#80869b'}
+                                    />
+                                </small>{' '}
+                                <i>
+                                    <small
+                                        className={!propsWithoutInnerProps.isFocused && !propsWithoutInnerProps.isSelected ? 'text-muted' : undefined}
+                                    >
+                                        {` Referred: ${props.data.shared} time${props.data.shared > 1 ? 's' : ''}`}
+                                    </small>
+                                </i>
+                            </span>
+                        )}
+                        {props.data.classes?.length > 0 && (
+                            <span>
+                                <small>
+                                    {' '}
+                                    <Icon
+                                        icon={faTags}
+                                        color={!propsWithoutInnerProps.isFocused && !propsWithoutInnerProps.isSelected ? '#dbdde5' : '#80869b'}
+                                    />{' '}
+                                    {' Instance of: '}
+                                </small>
+                                <i>
+                                    <small
+                                        className={!propsWithoutInnerProps.isFocused && !propsWithoutInnerProps.isSelected ? 'text-muted' : undefined}
+                                    >
+                                        {props.data.classes.join(', ')}
+                                    </small>
+                                </i>
+                            </span>
+                        )}
+                    </div>
                 </StyledLabel>
                 <span>
-                    {((truncatedDescription && props.data.description.length > MAXIMUM_DESCRIPTION_LENGTH) ||
-                        (props.data.tooltipData && props.data.tooltipData.length > 0)) && (
+                    {props.data.tooltipData && props.data.tooltipData.length > 0 && (
                         <div className="info mr-1">
                             <Tippy
                                 interactive={true}
@@ -111,9 +169,65 @@ export default function CustomOption(props) {
                             </Tippy>
                         </div>
                     )}
+                    {!props.data.tooltipData && !props.data.__isNew__ && (
+                        <div className="info mr-1">
+                            <Tippy
+                                appendTo={document.body}
+                                onTrigger={onTrigger}
+                                interactive={true}
+                                key="c"
+                                content={
+                                    <div className="text-left">
+                                        {!isLoading ? (
+                                            <>
+                                                {statements?.length > 0 && (
+                                                    <>
+                                                        Statements:
+                                                        <ul className="px-3 mb-0">
+                                                            {statements.slice(0, 5).map(s => (
+                                                                <li key={s.id}>
+                                                                    {s.predicate.label}:{' '}
+                                                                    {truncate(s.object.label ? s.object.label : '', {
+                                                                        length: MAXIMUM_DESCRIPTION_LENGTH
+                                                                    })}
+                                                                </li>
+                                                            ))}
+                                                        </ul>
+                                                        {statements?.length > 5 && <div className="px-2">+ {statements?.length - 5} more</div>}
+                                                    </>
+                                                )}
+                                                {statements?.length === 0 && (
+                                                    <small>
+                                                        <i>No information for this option</i>
+                                                    </small>
+                                                )}
+                                            </>
+                                        ) : (
+                                            <>
+                                                <Icon icon={faSpinner} spin /> Preview of statements
+                                            </>
+                                        )}
+                                    </div>
+                                }
+                            >
+                                <span>
+                                    <Icon
+                                        icon={faInfoCircle}
+                                        color={!propsWithoutInnerProps.isFocused && !propsWithoutInnerProps.isSelected ? '#dbdde5' : '#80869b'}
+                                    />
+                                </span>
+                            </Tippy>
+                        </div>
+                    )}
+
                     {props.data.id && (
                         <div onClick={onClick} className="badge" onKeyDown={e => (e.keyCode === 13 ? onClick : undefined)} role="button" tabIndex={0}>
                             {props.data.id}
+                        </div>
+                    )}
+                    {props.data.external && props.data.source && (
+                        <div onClick={onClick} className="badge" onKeyDown={e => (e.keyCode === 13 ? onClick : undefined)} role="button" tabIndex={0}>
+                            {props.data.source}
                         </div>
                     )}
                 </span>

@@ -4,7 +4,6 @@ import assign from 'lodash/assign';
 import { asyncLocalStorage } from 'utils';
 
 const initialState = {
-    researchProblems: {},
     comparison: {
         byId: {},
         allIds: []
@@ -27,7 +26,8 @@ const initialState = {
     researchField: {},
     verified: false,
     publishedIn: {},
-    url: {}
+    url: {},
+    isAddingContribution: false
 };
 
 // eslint-disable-next-line import/no-anonymous-default-export
@@ -42,17 +42,57 @@ export default (state = initialState, action) => {
             };
         }
 
-        case type.SET_RESEARCH_PROBLEMS: {
+        case type.IS_ADDING_CONTRIBUTION: {
+            return dotProp.set(state, 'isAddingContribution', true);
+        }
+
+        case type.DONE_ADDING_CONTRIBUTION: {
+            return dotProp.set(state, 'isAddingContribution', false);
+        }
+
+        case type.SET_PAPER_CONTRIBUTIONS: {
             const { payload } = action;
+            return dotProp.set(state, 'contributions', payload);
+        }
 
-            const newState = dotProp.set(state, 'researchProblems', ids => ({
-                ...ids,
-                [payload.resourceId]: payload.researchProblems
-            }));
+        case type.IS_DELETING_CONTRIBUTION: {
+            const { payload } = action;
+            const contributionIndex = dotProp
+                .get(state, 'contributions')
+                .map(c => c.id)
+                .indexOf(payload.id);
+            const newState = dotProp.set(state, `contributions.${contributionIndex}.isDeleting`, true);
+            return newState;
+        }
 
-            return {
-                ...newState
-            };
+        case type.DONE_DELETING_CONTRIBUTION: {
+            const { payload } = action;
+            const contributionIndex = dotProp
+                .get(state, 'contributions')
+                .map(c => c.id)
+                .indexOf(payload.id);
+            const newState = dotProp.set(state, `contributions.${contributionIndex}.isDeleting`, false);
+            return newState;
+        }
+
+        case type.IS_SAVING_CONTRIBUTION: {
+            const { payload } = action;
+            const contributionIndex = dotProp
+                .get(state, 'contributions')
+                .map(c => c.id)
+                .indexOf(payload.id);
+            const newState = dotProp.set(state, `contributions.${contributionIndex}.isSaving`, true);
+            return newState;
+        }
+
+        case type.DONE_SAVING_CONTRIBUTION: {
+            const { payload } = action;
+            const contributionIndex = dotProp
+                .get(state, 'contributions')
+                .map(c => c.id)
+                .indexOf(payload.id);
+            const newState = dotProp.set(state, `contributions.${contributionIndex}.isSaving`, false);
+            return newState;
         }
 
         case type.SET_PAPER_AUTHORS: {
@@ -68,12 +108,6 @@ export default (state = initialState, action) => {
             return {
                 ...newState
             };
-        }
-
-        case type.UPDATE_RESEARCH_PROBLEMS: {
-            const { payload } = action;
-
-            return dotProp.set(state, `researchProblems.${payload.contributionId}`, payload.problemsArray);
         }
 
         case type.LOAD_COMPARISON_FROM_LOCAL_STORAGE: {

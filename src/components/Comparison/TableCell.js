@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import StatementBrowserDialog from '../StatementBrowser/StatementBrowserDialog';
 import ValuePlugins from '../ValuePlugins/ValuePlugins';
-import { PREDICATE_TYPE_ID, RESOURCE_TYPE_ID } from 'constants/misc';
 import Tippy from '@tippyjs/react';
+import { ENTITIES } from 'constants/graphSettings';
 
 export const Item = styled.div`
     padding-right: 10px;
@@ -38,19 +38,23 @@ class TableCell extends Component {
         super(props);
 
         this.state = {
+            // isEqualPaths is used as a workaround for this issue: https://gitlab.com/TIBHannover/orkg/orkg-similarity/-/issues/36
+            isEqualPaths: this.props.data?.length > 0 ? this.props.data[0].pathLabels?.length === this.props.data[0].path?.length : true,
             modal: false,
             dialogResourceId: null,
             dialogResourceLabel: null,
-            dialogResourceType: RESOURCE_TYPE_ID
+            dialogResourceType: ENTITIES.RESOURCE,
+            path: []
         };
     }
 
-    openStatementBrowser = (id, label, type = null) => {
+    openStatementBrowser = (id, label, type = null, path = []) => {
         this.setState(
             {
                 dialogResourceId: id,
                 dialogResourceLabel: label,
-                dialogResourceType: type ? type : RESOURCE_TYPE_ID
+                dialogResourceType: type ? type : ENTITIES.RESOURCE,
+                path: path
             },
             () => {
                 this.setState({ modal: true });
@@ -64,19 +68,58 @@ class TableCell extends Component {
         }));
     };
 
-    PathTooltipContent = data => {
+    PathTooltipContent = (data, cellDataValue) => {
         return (
             <div className="fullPath">
                 Path of this value :{' '}
                 {data.pathLabels?.map((path, index) => {
-                    const resourceType = index % 2 === 0 ? RESOURCE_TYPE_ID : PREDICATE_TYPE_ID;
+                    const resourceType = this.state.isEqualPaths
+                        ? index % 2 === 0
+                            ? ENTITIES.RESOURCE
+                            : ENTITIES.PREDICATE
+                        : index % 2 !== 0
+                        ? ENTITIES.RESOURCE
+                        : ENTITIES.PREDICATE;
                     return (
                         <span key={index}>
                             <span
-                                className="btn-link"
-                                onClick={() => this.openStatementBrowser(data.path[index], path, resourceType)}
-                                style={{ cursor: 'pointer' }}
-                                onKeyDown={e => (e.keyCode === 13 ? this.openStatementBrowser(data.path[index], path, resourceType) : undefined)}
+                                className={resourceType !== ENTITIES.PREDICATE ? 'btn-link' : ''}
+                                onClick={() =>
+                                    resourceType !== ENTITIES.PREDICATE
+                                        ? this.openStatementBrowser(
+                                              data.path[this.state.isEqualPaths ? index : index + 1],
+                                              path,
+                                              resourceType,
+                                              resourceType === ENTITIES.RESOURCE
+                                                  ? data.pathLabels.slice(0, this.state.isEqualPaths ? index : index + 1).map((l, i) => ({
+                                                        id: cellDataValue.path[i],
+                                                        label: l,
+                                                        _class: i % 2 === 0 ? ENTITIES.RESOURCE : ENTITIES.PREDICATE
+                                                    }))
+                                                  : []
+                                          )
+                                        : null
+                                }
+                                style={{ cursor: resourceType !== ENTITIES.PREDICATE ? 'pointer' : 'default' }}
+                                onKeyDown={e =>
+                                    e.keyCode === 13
+                                        ? () =>
+                                              resourceType !== ENTITIES.PREDICATE
+                                                  ? this.openStatementBrowser(
+                                                        data.path[this.state.isEqualPaths ? index : index + 1],
+                                                        path,
+                                                        resourceType,
+                                                        resourceType === ENTITIES.RESOURCE
+                                                            ? data.pathLabels.slice(0, this.state.isEqualPaths ? index : index + 1).map((l, i) => ({
+                                                                  id: cellDataValue.path[i],
+                                                                  label: l,
+                                                                  _class: i % 2 === 0 ? ENTITIES.RESOURCE : ENTITIES.PREDICATE
+                                                              }))
+                                                            : []
+                                                    )
+                                                  : null
+                                        : undefined
+                                }
                                 role="button"
                                 tabIndex={0}
                             >
@@ -89,6 +132,26 @@ class TableCell extends Component {
             </div>
         );
     };
+
+    onClickHandle = (date, index) => {
+        this.openStatementBrowser(
+            date.resourceId,
+            date.label,
+            null,
+            date.pathLabels.map((l, i) => ({
+                id: this.props.data[index].path[i],
+                label: l,
+                _class: this.state.isEqualPaths
+                    ? i % 2 === 0
+                        ? ENTITIES.RESOURCE
+                        : ENTITIES.PREDICATE
+                    : i % 2 !== 0
+                    ? ENTITIES.RESOURCE
+                    : ENTITIES.PREDICATE
+            }))
+        );
+    };
+
     render() {
         let cellPadding = 10;
         if (this.props.viewDensity === 'normal') {
@@ -105,22 +168,20 @@ class TableCell extends Component {
                             this.props.data.map((date, index) => {
                                 return (
                                     Object.keys(date).length > 0 &&
-                                    (date.type === 'resource' ? (
+                                    (date.type === ENTITIES.RESOURCE ? (
                                         <span key={`value-${date.resourceId}`}>
                                             {index > 0 && <ItemInnerSeparator />}
                                             <Tippy
-                                                content={this.PathTooltipContent(date)}
+                                                content={this.PathTooltipContent(date, this.props.data[index])}
                                                 arrow={true}
                                                 disabled={date.pathLabels?.length <= 1}
                                                 interactive={true}
                                             >
                                                 <div
                                                     className="btn-link"
-                                                    onClick={() => this.openStatementBrowser(date.resourceId, date.label)}
+                                                    onClick={() => this.onClickHandle(date, index)}
                                                     style={{ cursor: 'pointer' }}
-                                                    onKeyDown={e =>
-                                                        e.keyCode === 13 ? this.openStatementBrowser(date.resourceId, date.label) : undefined
-                                                    }
+                                                    onKeyDown={e => (e.keyCode === 13 ? this.onClickHandle(date, index) : undefined)}
                                                     role="button"
                                                     tabIndex={0}
                                                 >
@@ -132,7 +193,7 @@ class TableCell extends Component {
                                         <span key={`value-${date.label}-${index}`}>
                                             {index > 0 && <ItemInnerSeparator />}
                                             <Tippy
-                                                content={this.PathTooltipContent(date)}
+                                                content={this.PathTooltipContent(date, this.props.data[index])}
                                                 arrow={true}
                                                 disabled={date.pathLabels?.length <= 1}
                                                 interactive={true}
@@ -157,6 +218,7 @@ class TableCell extends Component {
                         id={this.state.dialogResourceId}
                         label={this.state.dialogResourceLabel}
                         type={this.state.dialogResourceType}
+                        initialPath={this.state.path}
                     />
                 )}
             </>

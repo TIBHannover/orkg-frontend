@@ -119,25 +119,26 @@ export const ValueItemStyle = styled(ListGroupItem)`
     }
 
     .valueOptions {
-        visibility: hidden;
         display: inline-block !important;
-        transition: visibility 0.2s, opacity 0.2s;
+        transition: opacity 0.2s;
         opacity: 0;
+        // "visibility: hidden" behaves like a combination of "opacity: 0" and "pointer-events: none".
+        pointer-events: none;
 
         &.disableHover {
-            visibility: visible;
             opacity: 1;
+            pointer-events: auto;
         }
     }
 
     &:hover .valueOptions {
-        visibility: visible;
         opacity: 1;
+        pointer-events: auto;
     }
 
     &:focus-within .valueOptions {
-        visibility: visible;
         opacity: 1;
+        pointer-events: auto;
     }
 
     &.editingLabel {
@@ -156,6 +157,7 @@ export const ValueItemStyle = styled(ListGroupItem)`
         margin-right: 4px;
         text-decoration: underline;
         cursor: pointer;
+        line-height: 1.8;
     }
 
     .literalLabel {
@@ -163,6 +165,26 @@ export const ValueItemStyle = styled(ListGroupItem)`
         margin-right: 4px;
         text-decoration: none;
         cursor: text;
+        line-height: 1.8;
+    }
+
+    .typeCircle {
+        width: 18px;
+        height: 18px;
+        line-height: 18px;
+        text-align: center;
+        color: white;
+        display: inline-block;
+        border: 1px ${props => props.theme.secondaryDarker} solid;
+        margin-right: 3px;
+        border-radius: 100%;
+        font-size: 9px;
+        font-weight: bold;
+        background: ${props => props.theme.secondary};
+    }
+
+    &:hover .typeCircle {
+        background: ${props => props.theme.primary};
     }
 `;
 
@@ -240,18 +262,29 @@ export const AddPropertyFormStyle = styled.div`
     }
 `;
 
-export const StatementsGroupStyle = styled(ListGroupItem)`
+export const StatementsGroupStyle = styled.div`
     position: relative;
     padding: 0 !important;
     border-top: 1px solid rgba(0, 0, 0, 0.125) !important;
 
-    :last-of-type {
+    &:last-of-type {
         border-bottom-left-radius: 4px;
         border-bottom-right-radius: 4px;
     }
+
+    &.inTemplate:last-of-type {
+        border-bottom-left-radius: ${props => (!props.enableEdit ? '4px' : '0')};
+        border-bottom-right-radius: ${props => (!props.enableEdit ? '4px' : '0')};
+    }
+
     &.inTemplate:first-of-type {
         border-top: 0;
     }
+
+    &.inTemplate {
+        border-top-width: 0 !important;
+    }
+
     &.noTemplate {
         border-radius: 4px !important;
         margin-top: 0.75rem;
@@ -295,28 +328,32 @@ export const PropertyStyle = styled.div`
     }
 
     & .propertyOptions {
-        visibility: hidden;
         opacity: 0;
-        transition: visibility 0.2s, opacity 0.2s;
+        // "visibility: hidden" behaves like a combination of "opacity: 0" and "pointer-events: none".
+        pointer-events: none;
+        transition: opacity 0.2s;
 
         &.disableHover {
-            visibility: visible;
             opacity: 1;
+            pointer-events: auto;
         }
     }
     &:focus {
         outline: 0;
     }
     &:hover .propertyOptions {
-        visibility: visible;
         opacity: 1;
+        pointer-events: auto;
         span {
             color: ${props => props.theme.dark};
         }
+        span:hover {
+            color: #fff;
+        }
     }
     &:focus-within .propertyOption {
-        visibility: visible;
         opacity: 1;
+        pointer-events: auto;
         span {
             color: ${props => props.theme.dark};
         }

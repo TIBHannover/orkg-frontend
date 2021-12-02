@@ -23,12 +23,12 @@ const setup = (initialState = {}) => {
 };
 
 describe('table', () => {
-    test('should not crash when no contribution data is provided', () => {
+    it('should not crash when no contribution data is provided', () => {
         setup();
         expect(screen.getByRole('table')).toBeInTheDocument();
     });
 
-    test('should render when contribution data is provided', () => {
+    it('should render when contribution data is provided', () => {
         setup(contribution);
 
         expect(screen.getByRole('table')).toBeInTheDocument();
@@ -41,7 +41,7 @@ describe('table', () => {
 });
 
 describe('literals', () => {
-    test('should update table when literal is updated', async () => {
+    it('should update table when literal is updated', async () => {
         setup(contributionLiteralOnly);
 
         const cell = screen.getByRole('cell', { name: /test literal/i, hidden: true });
@@ -56,7 +56,7 @@ describe('literals', () => {
         expect(screen.getByRole('cell', { name: /updated literal/i, hidden: true })).toBeInTheDocument();
     });
 
-    test('should update table when literal is created', async () => {
+    it('should update table when literal is created', async () => {
         setup(contributionLiteralOnly);
 
         const cell = screen.getByRole('cell', { name: /test literal/i, hidden: true });
@@ -70,7 +70,7 @@ describe('literals', () => {
         expect(screen.getByRole('cell', { name: /new literal/i, hidden: true })).toBeInTheDocument();
     });
 
-    test('should update table when literal is removed', async () => {
+    it('should update table when literal is removed', async () => {
         setup(contributionLiteralOnly);
 
         // click delete button next to literal

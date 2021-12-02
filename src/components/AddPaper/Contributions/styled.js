@@ -8,7 +8,7 @@ export const StyledHorizontalContribution = styled.div`
     border-color: ${props => props.theme.lightDarker};
     border-style: solid;
     border-top-left-radius: 0;
-    padding: 25px 30px;
+    padding: 10px 30px 25px;
 `;
 
 export const StyledHorizontalContributionsList = styled.ul`

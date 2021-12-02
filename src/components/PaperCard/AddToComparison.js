@@ -29,7 +29,7 @@ Option.propTypes = {
     children: PropTypes.string.isRequired
 };
 
-const AddToComparison = ({ contributionId, paper }) => {
+const AddToComparison = ({ contributionId, paper, showLabel }) => {
     const dispatch = useDispatch();
     const inputCheckboxRef = useRef();
     const comparison = useSelector(state => state.viewPaper.comparison);
@@ -144,6 +144,7 @@ const AddToComparison = ({ contributionId, paper }) => {
                     }
                     checked={!!isSelected}
                     type="checkbox"
+                    label={showLabel ? 'Add to comparison' : ''}
                     innerRef={inputCheckboxRef}
                     id={`add2CPid${paper.id}cid${contributionId ?? ''}`}
                 />
@@ -154,7 +155,12 @@ const AddToComparison = ({ contributionId, paper }) => {
 
 AddToComparison.propTypes = {
     contributionId: PropTypes.string,
-    paper: PropTypes.object.isRequired
+    paper: PropTypes.object.isRequired,
+    showLabel: PropTypes.bool.isRequired
+};
+
+AddToComparison.defaultProps = {
+    showLabel: false
 };
 
 export default AddToComparison;
