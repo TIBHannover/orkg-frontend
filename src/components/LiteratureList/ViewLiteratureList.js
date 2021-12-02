@@ -7,6 +7,7 @@ import Contributors from 'components/LiteratureList/Contributors';
 import PaperCard from 'components/LiteratureList/PaperCard';
 import { CLASSES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
+import MarkdownRenderer from 'components/ArticleBuilder/MarkdownEditor/MarkdownRenderer';
 import { reverse } from 'named-urls';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -61,7 +62,7 @@ const ViewLiteratureList = () => {
                             return (
                                 <section key={section.id}>
                                     <h2 className={`h${section?.heading?.level} mt-4`}>{section.title}</h2>
-                                    {section.content.text}
+                                    <MarkdownRenderer text={section.content.text} />
                                 </section>
                             );
                         } else if (section.type === CLASSES.LIST_SECTION) {
