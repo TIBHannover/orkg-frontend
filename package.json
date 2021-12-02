@@ -122,7 +122,7 @@
         "flow": "flow",
         "lint": "eslint src/**/*.js",
         "lint:fix": "eslint src/**/*.js --fix",
-        "version": "auto-changelog && git add CHANGELOG.md",
+        "version": "auto-changelog -t keepachangelog.hbs && git add CHANGELOG.md",
         "prepare": "husky install"
     },
     "devDependencies": {
