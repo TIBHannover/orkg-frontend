@@ -39,7 +39,7 @@ export const MoveHandle = styled.div`
     z-index: 0;
     &.hover {
         background: ${props => props.theme.secondary};
-        color: ${props => props.theme.secondary};
+        color: #fff;
     }
 `;
 
