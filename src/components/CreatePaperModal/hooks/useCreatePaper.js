@@ -48,7 +48,10 @@ const useCreatePaper = () => {
         setIsLoading(false);
         toast.success('Paper successfully created');
 
-        return contributionStatement.object.id;
+        return {
+            paperId: createdPaper.id,
+            contributionId: contributionStatement.object.id
+        };
     };
 
     return { isLoading, createPaper };

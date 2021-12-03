@@ -210,6 +210,8 @@ export const getPaperData = (resource, paperStatements) => {
     const authors = filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_AUTHOR, false);
     const contributions = filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_CONTRIBUTION, false, CLASSES.CONTRIBUTION);
     const order = getOrder(paperStatements);
+    const publishedIn = filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_VENUE, true);
+    const url = filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.URL, true);
 
     return {
         ...resource,
@@ -222,7 +224,9 @@ export const getPaperData = (resource, paperStatements) => {
         authors: authors ? authors.sort((a, b) => a.s_created_at.localeCompare(b.s_created_at)) : [],
         contributions: contributions ? contributions.sort((a, b) => a.label.localeCompare(b.label)) : [], // sort contributions ascending, so contribution 1, is actually the first one
         order,
-        created_by: resource.created_by !== MISC.UNKNOWN_ID ? resource.created_by : null
+        created_by: resource.created_by !== MISC.UNKNOWN_ID ? resource.created_by : null,
+        publishedIn,
+        url
     };
 };
 
@@ -907,7 +911,7 @@ export function truncStringPortion(str, firstCharCount = str.length, endCharCoun
 }
 
 // TODO: refactor the authors dialog and create a hook to put this function
-export async function saveAuthors({ prevAuthors, newAuthors, paperId }) {
+export async function saveAuthors({ prevAuthors, newAuthors, resourceId }) {
     if (isEqual(prevAuthors, newAuthors)) {
         return prevAuthors;
     }
@@ -935,7 +939,7 @@ export async function saveAuthors({ prevAuthors, newAuthors, paperId }) {
             if (responseJson.length > 0) {
                 // Author resource exists
                 const authorResource = responseJson[0];
-                const authorStatement = await createResourceStatement(paperId, PREDICATES.HAS_AUTHOR, authorResource.subject.id);
+                const authorStatement = await createResourceStatement(resourceId, PREDICATES.HAS_AUTHOR, authorResource.subject.id);
                 authors[i].statementId = authorStatement.id;
                 authors[i].id = authorResource.subject.id;
                 authors[i].class = authorResource.subject._class;
@@ -946,7 +950,7 @@ export async function saveAuthors({ prevAuthors, newAuthors, paperId }) {
                 const authorResource = await createResource(author.label, [CLASSES.AUTHOR]);
                 const createLiteral = await createLiteralApi(author.orcid);
                 await createLiteralStatement(authorResource.id, PREDICATES.HAS_ORCID, createLiteral.id);
-                const authorStatement = await createResourceStatement(paperId, PREDICATES.HAS_AUTHOR, authorResource.id);
+                const authorStatement = await createResourceStatement(resourceId, PREDICATES.HAS_AUTHOR, authorResource.id);
                 authors[i].statementId = authorStatement.id;
                 authors[i].id = authorResource.id;
                 authors[i].class = authorResource._class;
@@ -955,7 +959,7 @@ export async function saveAuthors({ prevAuthors, newAuthors, paperId }) {
         } else {
             // Author resource exists
             if (author.label !== author.id) {
-                const authorStatement = await createResourceStatement(paperId, PREDICATES.HAS_AUTHOR, author.id);
+                const authorStatement = await createResourceStatement(resourceId, PREDICATES.HAS_AUTHOR, author.id);
                 authors[i].statementId = authorStatement.id;
                 authors[i].id = author.id;
                 authors[i].class = author._class;
@@ -964,7 +968,7 @@ export async function saveAuthors({ prevAuthors, newAuthors, paperId }) {
                 // Author resource doesn't exist
                 const newLiteral = await createLiteralApi(author.label);
                 // Create literal of author
-                const authorStatement = await createLiteralStatement(paperId, PREDICATES.HAS_AUTHOR, newLiteral.id);
+                const authorStatement = await createLiteralStatement(resourceId, PREDICATES.HAS_AUTHOR, newLiteral.id);
                 authors[i].statementId = authorStatement.id;
                 authors[i].id = newLiteral.id;
                 authors[i].class = authorStatement.object._class;

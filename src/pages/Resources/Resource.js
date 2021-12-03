@@ -81,6 +81,16 @@ const DEDICATED_PAGE_LINKS = {
         label: 'SmartReview',
         route: ROUTES.SMART_REVIEW,
         routeParams: 'id'
+    },
+    [CLASSES.LITERATURE_LIST]: {
+        label: 'Literature list',
+        route: ROUTES.LITERATURE_LIST,
+        routeParams: 'id'
+    },
+    [CLASSES.LITERATURE_LIST_PUBLISHED]: {
+        label: 'Literature list',
+        route: ROUTES.LITERATURE_LIST,
+        routeParams: 'id'
     }
 };
 function Resource(props) {

@@ -10,6 +10,7 @@ import Gravatar from 'react-gravatar';
 import Tippy from '@tippyjs/react';
 import PropTypes from 'prop-types';
 import { MISC } from 'constants/graphSettings';
+import hideOnEsc from 'components/Tippy/hideOnEsc';
 
 const StyledGravatar = styled(Gravatar)`
     border: 2px solid ${props => props.theme.lightDarker};
@@ -68,6 +69,7 @@ const UserAvatar = ({ userId, size, appendToTooltip, showDisplayName, linkTarget
                     placement="bottom"
                     content={`${contributor?.display_name}${appendToTooltip}`}
                     disabled={showDisplayName || !userId || !contributor || isLoadingContributor}
+                    plugins={[hideOnEsc]}
                 >
                     <StyledUserAvatar tabIndex="0">
                         <Link to={reverse(ROUTES.USER_PROFILE, { userId: userId })} target={linkTarget}>
