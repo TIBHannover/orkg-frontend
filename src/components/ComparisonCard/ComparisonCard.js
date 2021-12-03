@@ -21,7 +21,7 @@ const ComparisonCardStyled = styled.li`
 
 const ComparisonCard = props => {
     return (
-        <ComparisonCardStyled rounded={props.rounded} className="list-group-item d-flex pr-3 pl-3">
+        <ComparisonCardStyled style={{ flexWrap: 'wrap' }} rounded={props.rounded} className="list-group-item d-flex pr-3 pl-3">
             <div className="col-md-9 d-flex p-0">
                 <div className="d-flex flex-column">
                     <div>

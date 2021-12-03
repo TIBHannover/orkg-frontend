@@ -28,6 +28,7 @@ const PaperCard = props => {
             className={`${props.isListGroupItem ? 'list-group-item' : ''}  d-flex pr-3 ${showActionButtons ? ' pl-2  ' : ' pl-3  '} ${
                 props.selected ? 'selected' : ''
             }`}
+            style={{ flexWrap: 'wrap' }}
         >
             <div className="col-md-9 d-flex p-0">
                 {showActionButtons && (
