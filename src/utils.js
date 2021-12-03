@@ -1141,61 +1141,24 @@ export const applyRule = ({ filterControlData, type, propertyId, value }) => {
  * @param {String} resourceId Resource ID
  * @result {String} Link of the resource
  */
-export const getResourceLink = (classId, resourceId) => {
-    let link = '';
-
-    switch (classId) {
-        case CLASSES.PAPER: {
-            link = reverse(ROUTES.VIEW_PAPER, { resourceId: resourceId });
-            break;
-        }
-        case CLASSES.PROBLEM: {
-            link = reverse(ROUTES.RESEARCH_PROBLEM, { researchProblemId: resourceId });
-            break;
-        }
-        case CLASSES.AUTHOR: {
-            link = reverse(ROUTES.AUTHOR_PAGE, { authorId: resourceId });
-            break;
-        }
-        case CLASSES.COMPARISON: {
-            link = reverse(ROUTES.COMPARISON, { comparisonId: resourceId });
-            break;
-        }
-        case CLASSES.VENUE: {
-            link = reverse(ROUTES.VENUE_PAGE, { venueId: resourceId });
-            break;
-        }
-        case CLASSES.TEMPLATE: {
-            link = reverse(ROUTES.TEMPLATE, { id: resourceId });
-            break;
-        }
-        case CLASSES.VISUALIZATION: {
-            link = reverse(ROUTES.VISUALIZATION, { id: resourceId });
-            break;
-        }
-        case CLASSES.CONTRIBUTION: {
-            link = reverse(ROUTES.CONTRIBUTION, { id: resourceId });
-            break;
-        }
-        case ENTITIES.RESOURCE: {
-            link = reverse(ROUTES.RESOURCE, { id: resourceId });
-            break;
-        }
-        case ENTITIES.PREDICATE: {
-            link = reverse(ROUTES.PROPERTY, { id: resourceId });
-            break;
-        }
-        case ENTITIES.CLASS: {
-            link = reverse(ROUTES.CLASS, { id: resourceId });
-            break;
-        }
-        default: {
-            link = reverse(ROUTES.RESOURCE, { id: resourceId });
-            break;
-        }
-    }
-
-    return link;
+export const getResourceLink = (classId, id) => {
+    const links = {
+        [CLASSES.PAPER]: [ROUTES.RESOURCE, 'resourceId'],
+        [CLASSES.PROBLEM]: [ROUTES.RESEARCH_PROBLEM, 'researchProblemId'],
+        [CLASSES.AUTHOR]: [ROUTES.AUTHOR_PAGE, 'authorId'],
+        [CLASSES.COMPARISON]: [ROUTES.COMPARISON, 'comparisonId'],
+        [CLASSES.VENUE]: [ROUTES.VENUE_PAGE, 'venueId'],
+        [CLASSES.TEMPLATE]: [ROUTES.TEMPLATE, 'id'],
+        [CLASSES.VISUALIZATION]: [ROUTES.VISUALIZATION, 'id'],
+        [CLASSES.CONTRIBUTION]: [ROUTES.CONTRIBUTION, 'id'],
+        [CLASSES.SMART_REVIEW_PUBLISHED]: [ROUTES.SMART_REVIEW, 'id'],
+        [ENTITIES.RESOURCE]: [ROUTES.RESOURCE, 'id'],
+        [ENTITIES.PREDICATE]: [ROUTES.PROPERTY, 'id'],
+        [ENTITIES.CLASS]: [ROUTES.CLASS, 'id'],
+        default: [ROUTES.RESOURCE, 'id']
+    };
+    const [route, idParam] = links[classId] || links['default'];
+    return reverse(route, { [idParam]: id });
 };
 
 /**
