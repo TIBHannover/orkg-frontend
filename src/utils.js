@@ -210,6 +210,8 @@ export const getPaperData = (resource, paperStatements) => {
     const authors = filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_AUTHOR, false);
     const contributions = filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_CONTRIBUTION, false, CLASSES.CONTRIBUTION);
     const order = getOrder(paperStatements);
+    const publishedIn = filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_VENUE, true);
+    const url = filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.URL, true);
 
     return {
         ...resource,
@@ -222,7 +224,9 @@ export const getPaperData = (resource, paperStatements) => {
         authors: authors ? authors.sort((a, b) => a.s_created_at.localeCompare(b.s_created_at)) : [],
         contributions: contributions ? contributions.sort((a, b) => a.label.localeCompare(b.label)) : [], // sort contributions ascending, so contribution 1, is actually the first one
         order,
-        created_by: resource.created_by !== MISC.UNKNOWN_ID ? resource.created_by : null
+        created_by: resource.created_by !== MISC.UNKNOWN_ID ? resource.created_by : null,
+        publishedIn,
+        url
     };
 };
 

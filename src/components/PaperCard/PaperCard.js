@@ -24,7 +24,11 @@ const PaperCard = props => {
     const showActionButtons = props.showAddToComparison || props.selectable;
 
     return (
-        <PaperCardStyled className={`list-group-item d-flex pr-3 ${showActionButtons ? ' pl-2  ' : ' pl-3  '} ${props.selected ? 'selected' : ''}`}>
+        <PaperCardStyled
+            className={`${props.isListGroupItem ? 'list-group-item' : ''}  d-flex pr-3 ${showActionButtons ? ' pl-2  ' : ' pl-3  '} ${
+                props.selected ? 'selected' : ''
+            }`}
+        >
             <div className="col-md-9 d-flex p-0">
                 {showActionButtons && (
                     <div className="d-flex flex-column flex-shrink-0" style={{ width: '25px' }}>
@@ -87,6 +91,11 @@ const PaperCard = props => {
                                 : ''}{' '}
                             {props.paper.publicationYear?.label ?? null}
                         </small>
+                        {props.description?.label && (
+                            <p className="mb-0 mt-1 w-100 pt-0" style={{ lineHeight: 1.2, whiteSpace: 'pre-line' }}>
+                                <small className="text-muted">{props.description?.label}</small>
+                            </p>
+                        )}
                     </div>
                 </div>
             </div>
@@ -94,10 +103,10 @@ const PaperCard = props => {
             <div className="col-md-3 d-flex align-items-end flex-column p-0">
                 <div className="flex-grow-1 mb-1">
                     <div className="d-none d-md-flex align-items-end justify-content-end">
-                        <RelativeBreadcrumbs researchField={props.paper.researchField} />
+                        {props.showBreadcrumbs && <RelativeBreadcrumbs researchField={props.paper.researchField} />}
                     </div>
                 </div>
-                <UserAvatar userId={props.paper.created_by} />
+                {props.showCreator && <UserAvatar userId={props.paper.created_by} />}
             </div>
         </PaperCardStyled>
     );
@@ -127,18 +136,24 @@ PaperCard.propTypes = {
     selectable: PropTypes.bool,
     selected: PropTypes.bool,
     showBreadcrumbs: PropTypes.bool.isRequired,
+    showCreator: PropTypes.bool.isRequired,
     showAddToComparison: PropTypes.bool.isRequired,
     showBadge: PropTypes.bool.isRequired,
-    onSelect: PropTypes.func
+    onSelect: PropTypes.func,
+    isListGroupItem: PropTypes.bool.isRequired,
+    description: PropTypes.object
 };
 
 PaperCard.defaultProps = {
     selectable: false,
     selected: false,
     showBreadcrumbs: true,
+    showCreator: true,
     showAddToComparison: true,
     showBadge: false,
-    onChange: () => {}
+    isListGroupItem: true,
+    onChange: () => {},
+    description: null
 };
 
 export default PaperCard;

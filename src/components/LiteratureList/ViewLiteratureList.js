@@ -4,7 +4,7 @@ import AuthorBadges from 'components/Badges/AuthorBadges/AuthorBadges';
 import ResearchFieldBadge from 'components/Badges/ResearchFieldBadge/ResearchFieldBadge';
 import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
 import Contributors from 'components/LiteratureList/Contributors';
-import PaperCard from 'components/LiteratureList/PaperCard';
+import PaperCard from 'components/PaperCard/PaperCard';
 import { CLASSES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import MarkdownRenderer from 'components/ArticleBuilder/MarkdownEditor/MarkdownRenderer';
@@ -72,9 +72,11 @@ const ViewLiteratureList = () => {
                                         {section.entries.map(entry => (
                                             <ListGroupItem key={entry.statementId} className="p-2">
                                                 <PaperCard
+                                                    isListGroupItem={false}
+                                                    showBreadcrumbs={false}
+                                                    showCreator={false}
                                                     description={entry.description}
-                                                    paper={papers[entry.paperId]}
-                                                    contributions={papers[entry.paperId].contributions}
+                                                    paper={{ ...papers[entry.paperId], title: papers[entry.paperId].label }}
                                                     showAddToComparison
                                                 />
                                             </ListGroupItem>

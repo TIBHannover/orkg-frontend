@@ -1,6 +1,6 @@
 import { faBars, faPen, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import PaperCard from 'components/LiteratureList/PaperCard';
+import PaperCard from 'components/PaperCard/PaperCard';
 import EditPaperDialog from 'components/ViewPaper/EditDialog/EditPaperDialog';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
@@ -93,11 +93,26 @@ const EditSectionListItem = ({ entry, sectionId, statementId }) => {
                         </Button>
                     </Toolbar>
                 )}
-                <PaperCard paper={paper} contributions={paper.contributions} description={entry.description} showAddToComparison />
+                <PaperCard
+                    isListGroupItem={false}
+                    showBreadcrumbs={false}
+                    showCreator={false}
+                    paper={{
+                        ...paper,
+                        title: paper.label
+                    }}
+                    description={entry.description}
+                    showAddToComparison
+                />
             </div>
             {isOpenEditModal && (
                 <EditPaperDialog
-                    paperData={paper}
+                    paperData={{
+                        ...paper,
+                        paper: { label: paper.label, id: paper.id },
+                        month: paper.publicationMonth,
+                        year: paper.publicationYear
+                    }}
                     afterUpdate={handleUpdatePaper}
                     toggle={v => setIsOpenEditModal(!v)}
                     isOpen
