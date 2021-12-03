@@ -10,7 +10,7 @@ const ListStatements = props => {
     const { property, idToLabel, values } = props;
 
     return (
-        <StatementsGroupStyle className="border-top">
+        <StatementsGroupStyle className="list-group-item border-top">
             <div className="row no-gutters">
                 <PropertyStyle className="col-4" tabIndex="0">
                     <div>

@@ -1,7 +1,7 @@
 import Tippy from '@tippyjs/react';
 import { updateSectionType } from 'actions/smartReview';
 import useOntology from 'components/PdfTextAnnotation/hooks/useOntology';
-import { SectionTypeContainerStyled, SectionTypeStyled } from 'components/SmartReview/styled';
+import { SectionTypeContainerStyled, SectionTypeStyled } from 'components/ArticleBuilder/styled';
 import { CLASSES } from 'constants/graphSettings';
 import { sortBy, upperFirst } from 'lodash';
 import PropTypes from 'prop-types';

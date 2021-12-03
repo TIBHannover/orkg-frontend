@@ -59,7 +59,10 @@ export const PREDICATES = {
     WEBSITE: 'website',
     LINKED_IN_ID: 'linkedInID',
     RESEARCH_GATE_ID: 'researchGateID',
-    GOOGLE_SCHOLAR_ID: 'googleScholarID'
+    GOOGLE_SCHOLAR_ID: 'googleScholarID',
+    HAS_LIST: 'HasList',
+    HAS_ENTRY: 'HasEntry',
+    HAS_HEADING_LEVEL: 'HasHeadingLevel'
 };
 
 export const CLASSES = {
@@ -80,6 +83,7 @@ export const CLASSES = {
     TEMPLATE: 'ContributionTemplate',
     PREDICATE: 'Predicates',
     CLASS: 'Classes',
+    RESOURCE: 'Resources',
     QB_DATASET_CLASS: 'QBDataset',
     LOCATION: 'DCLocation',
     SENTENCE: 'Sentence',
@@ -96,10 +100,20 @@ export const CLASSES = {
     PROPERTY_SECTION: 'PropertySection',
     COMPARISON_SECTION: 'ComparisonSection',
     VISUALIZATION_SECTION: 'VisualizationSection',
+    LIST_SECTION: 'ListSection',
+    TEXT_SECTION: 'TextSection',
     VISUALIZATION: 'Visualization',
     COMPARISON_RELATED_RESOURCE: 'ComparisonRelatedResource',
     COMPARISON_RELATED_FIGURE: 'ComparisonRelatedFigure',
-    ONTOLOGY_SECTION: 'OntologySection'
+    ONTOLOGY_SECTION: 'OntologySection',
+    LITERATURE_LIST: 'LiteratureList',
+    LITERATURE_LIST_PUBLISHED: 'LiteratureListPublished',
+    DATE: 'Date',
+    STRING: 'String',
+    DECIMAL: 'Number',
+    INTEGER: 'Integer',
+    BOOLEAN: 'Boolean',
+    URI: 'URI'
 };
 
 export const MISC = {

@@ -305,7 +305,7 @@ const ComparisonTable = props => {
             </div>
             {rows.length === 0 && (
                 <Alert className="mt-3" color="info">
-                    This contributions have no data to compare on!
+                    These contributions have no data to compare on!
                 </Alert>
             )}
         </ReactTableWrapper>

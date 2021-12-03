@@ -1,41 +1,36 @@
-import { useState, useEffect } from 'react';
-import { ListGroup, Button } from 'reactstrap';
-import StatementItem from 'components/StatementBrowser/StatementItem/StatementItem';
+import { useEffect } from 'react';
+import { ListGroup } from 'reactstrap';
 import AddProperty from 'components/StatementBrowser/AddProperty/AddProperty';
 import Breadcrumbs from 'components/StatementBrowser/Breadcrumbs/Breadcrumbs';
-import Template from 'components/StatementBrowser/Template/Template';
 import PropertySuggestions from 'components/StatementBrowser/PropertySuggestions/PropertySuggestions';
-import SBEditorHelpModal from 'components/StatementBrowser/SBEditorHelpModal/SBEditorHelpModal';
+import StatementItemWrapper from 'components/StatementBrowser/StatementItem/StatementItemWrapper';
 import NoData from 'components/StatementBrowser/NoData/NoData';
+import NotFound from 'components/StatementBrowser/NotFound/NotFound';
 import { StyledLevelBox, StyledStatementItem } from 'components/StatementBrowser/styled';
 import SameAsStatements from 'components/ExternalDescription/SameAsStatements';
-import { RESOURCE_TYPE_ID } from 'constants/misc';
 import { isArray } from 'lodash';
-import { useCookies } from 'react-cookie';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faSpinner, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
+import FlipMove from 'react-flip-move';
 import {
-    canAddProperty as canAddPropertyFunction,
     getSuggestedProperties,
     initializeWithoutContribution,
     initializeWithResource,
-    updateSettings
+    updateSettings,
+    setInitialPath
 } from 'actions/statementBrowser';
+import { ENTITIES } from 'constants/graphSettings';
+import ClassesItem from 'components/StatementBrowser/ClassesItem/ClassesItem';
+import StatementMenuHeader from './StatementMenuHeader/StatementMenuHeader';
 
 const Statements = props => {
     const selectedResource = useSelector(state => state.statementBrowser.selectedResource);
-    const values = useSelector(state => state.statementBrowser.values);
-    const properties = useSelector(state => state.statementBrowser.properties);
     const level = useSelector(state => state.statementBrowser.level);
-
-    const canAddProperty = useSelector(state => canAddPropertyFunction(state, selectedResource));
     const suggestedProperties = useSelector(state => getSuggestedProperties(state, selectedResource));
     const resource = useSelector(state => selectedResource && state.statementBrowser.resources.byId[selectedResource]);
     const dispatch = useDispatch();
-    const [cookies] = useCookies(['showedValueHelp']);
-    const [helpModalOpen, setHelpModalOpen] = useState(false);
 
     useEffect(() => {
         if (props.initialSubjectId) {
@@ -64,6 +59,8 @@ const Statements = props => {
                     keyToKeepStateOnLocationChange: props.keyToKeepStateOnLocationChange
                 })
             );
+
+            dispatch(setInitialPath(props.initialPath));
         } else {
             dispatch(
                 updateSettings({
@@ -82,7 +79,8 @@ const Statements = props => {
         props.openExistingResourcesInDialog,
         props.propertiesAsLinks,
         props.resourcesAsLinks,
-        props.rootNodeType
+        props.rootNodeType,
+        props.initialPath
     ]);
 
     const statements = () => {
@@ -90,63 +88,45 @@ const Statements = props => {
         let shared = 1;
         if (resource && selectedResource) {
             propertyIds = resource && isArray(resource.propertyIds) ? resource.propertyIds : [];
-            shared = resource ? resource.shared : 0;
+            shared = resource?.shared ?? 0;
         }
 
         return (
             <div>
-                {/*props.selectedResource && props.resources.byId[props.selectedResource].classes.length > 0 && (
-                    <div className="text-muted mb-2">Classes: {props.resources.byId[props.selectedResource].classes.join(',')}</div>
-                )*/}
-                <ListGroup className="listGroupEnlarge">
+                <ClassesItem enableEdit={props.enableEdit} syncBackend={props.syncBackend} />
+                <ListGroup tag="div" className="listGroupEnlarge">
                     {selectedResource && !resource.isFetching ? (
-                        propertyIds.length > 0 ? (
-                            propertyIds.map((propertyId, index) => {
-                                const property = properties.byId[propertyId];
-                                if (!property.isTemplate) {
-                                    return (
-                                        <StatementItem
-                                            key={`statement-p${propertyId}r${selectedResource}`}
-                                            id={propertyId}
-                                            property={property}
-                                            predicateLabel={property.label}
-                                            enableEdit={shared <= 1 ? props.enableEdit : false}
-                                            syncBackend={props.syncBackend}
-                                            isAnimated={property.isAnimated}
-                                            resourceId={selectedResource}
-                                            isLastItem={propertyIds.length === index + 1}
-                                            showValueHelp={cookies && !cookies.showedValueHelp && index === 0 ? true : false}
-                                        />
-                                    );
-                                } else {
-                                    return property.valueIds.map(valueId => {
-                                        const value = values.byId[valueId];
+                        <>
+                            <FlipMove>
+                                {propertyIds.length > 0 &&
+                                    propertyIds.map((propertyId, index) => {
                                         return (
-                                            <Template
-                                                key={`template-v${valueId}`}
-                                                id={valueId}
-                                                value={value}
-                                                propertyId={propertyId}
-                                                selectedResource={selectedResource}
+                                            <StatementItemWrapper
+                                                key={`statement-p${propertyId}r${selectedResource}`}
                                                 enableEdit={props.enableEdit}
-                                                syncBackend={props.syncBackend}
                                                 openExistingResourcesInDialog={props.openExistingResourcesInDialog}
-                                                isAnimated={property.isAnimated}
+                                                isLastItem={propertyIds.length === index + 1}
+                                                isFirstItem={index === 0}
+                                                resourceId={selectedResource}
+                                                propertyId={propertyId}
+                                                shared={shared}
+                                                syncBackend={props.syncBackend}
+                                                renderTemplateBox={props.renderTemplateBox}
                                             />
                                         );
-                                    });
-                                }
-                            })
-                        ) : (
-                            <NoData enableEdit={props.enableEdit} templatesFound={props.templatesFound} />
-                        )
+                                    })}
+                            </FlipMove>
+
+                            {!resource.isFailedFetching && propertyIds.length === 0 && <NoData enableEdit={props.enableEdit} />}
+                            {resource.isFailedFetching && propertyIds.length === 0 && <NotFound />}
+                        </>
                     ) : (
                         <StyledStatementItem>
                             <Icon icon={faSpinner} spin /> Loading
                         </StyledStatementItem>
                     )}
 
-                    {shared <= 1 && props.enableEdit && <AddProperty isDisabled={!canAddProperty} syncBackend={props.syncBackend} />}
+                    {shared <= 1 && props.enableEdit && <AddProperty resourceId={selectedResource} syncBackend={props.syncBackend} />}
                     {shared <= 1 && props.enableEdit && suggestedProperties.length > 0 && <PropertySuggestions />}
                 </ListGroup>
             </div>
@@ -168,54 +148,55 @@ const Statements = props => {
 
     return (
         <>
-            {props.enableEdit && (
-                <div className="clearfix mb-3">
-                    <span className="ml-3 float-right">
-                        <Button outline color="secondary" size="sm" onClick={() => setHelpModalOpen(v => !v)}>
-                            <Icon className="mr-1" icon={faQuestionCircle} /> Help
-                        </Button>
-                    </span>
-                </div>
-            )}
+            {resource && <StatementMenuHeader enableEdit={props.enableEdit} syncBackend={props.syncBackend} resource={resource} />}
 
-            {level !== 0 && <Breadcrumbs />}
+            <>
+                {level !== 0 && <Breadcrumbs />}
+                {elements}
 
-            <SBEditorHelpModal isOpen={helpModalOpen} toggle={() => setHelpModalOpen(v => !v)} />
-            {elements}
-
-            {props.showExternalDescriptions && <SameAsStatements />}
+                {props.showExternalDescriptions && <SameAsStatements />}
+            </>
         </>
     );
 };
+
 Statements.propTypes = {
     rootNodeType: PropTypes.string.isRequired,
     enableEdit: PropTypes.bool.isRequired,
     openExistingResourcesInDialog: PropTypes.bool,
     initialSubjectId: PropTypes.string,
     initialSubjectLabel: PropTypes.string,
+    initialPath: PropTypes.arrayOf(
+        PropTypes.shape({
+            id: PropTypes.string.isRequired,
+            label: PropTypes.string.isRequired
+        })
+    ),
     syncBackend: PropTypes.bool.isRequired,
     newStore: PropTypes.bool,
-    templatesFound: PropTypes.bool,
     propertiesAsLinks: PropTypes.bool,
     resourcesAsLinks: PropTypes.bool,
     initOnLocationChange: PropTypes.bool.isRequired,
     showExternalDescriptions: PropTypes.bool.isRequired,
-    keyToKeepStateOnLocationChange: PropTypes.string
+    keyToKeepStateOnLocationChange: PropTypes.string,
+    renderTemplateBox: PropTypes.bool
 };
 
 Statements.defaultProps = {
+    enableEdit: false,
     openExistingResourcesInDialog: false,
     initialSubjectId: null,
     initialSubjectLabel: null,
     syncBackend: false,
     newStore: false,
-    templatesFound: false,
     propertiesAsLinks: false,
     resourcesAsLinks: false,
     initOnLocationChange: true,
     showExternalDescriptions: true,
     keyToKeepStateOnLocationChange: null,
-    rootNodeType: RESOURCE_TYPE_ID
+    rootNodeType: ENTITIES.RESOURCE,
+    renderTemplateBox: false,
+    initialPath: []
 };
 
 export default Statements;

@@ -15,8 +15,7 @@ import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes.js';
 import { useLocation } from 'react-router-dom';
-import { CLASS_TYPE_ID } from 'constants/misc';
-import { CLASSES, PREDICATES } from 'constants/graphSettings';
+import { CLASSES, PREDICATES, ENTITIES } from 'constants/graphSettings';
 import TitleBar from 'components/TitleBar/TitleBar';
 
 function ClassDetails(props) {
@@ -159,7 +158,7 @@ function ClassDetails(props) {
                         </div>
                         <div className="clearfix">
                             <StatementBrowser
-                                rootNodeType={CLASS_TYPE_ID}
+                                rootNodeType={ENTITIES.CLASS}
                                 enableEdit={editMode}
                                 syncBackend={editMode}
                                 openExistingResourcesInDialog={false}

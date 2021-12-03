@@ -9,9 +9,9 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPen, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { EditModeHeader, Title } from 'pages/ViewPaper';
 import PropTypes from 'prop-types';
-import { PREDICATE_TYPE_ID } from 'constants/misc';
 import { useLocation } from 'react-router-dom';
 import PropertyStatements from 'components/PropertyStatements/PropertyStatements';
+import { ENTITIES } from 'constants/graphSettings';
 import TitleBar from 'components/TitleBar/TitleBar';
 
 function Property(props) {
@@ -92,7 +92,7 @@ function Property(props) {
                             <h3 className="h5">Statements</h3>
                             <div className="clearfix">
                                 <StatementBrowser
-                                    rootNodeType={PREDICATE_TYPE_ID}
+                                    rootNodeType={ENTITIES.PREDICATE}
                                     enableEdit={editMode}
                                     syncBackend={editMode}
                                     openExistingResourcesInDialog={false}

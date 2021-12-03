@@ -18,7 +18,7 @@ import AddSection from 'components/SmartReview/AddSection';
 import AuthorsSection from 'components/SmartReview/AuthorsSection';
 import HistoryModal from 'components/SmartReview/HistoryModal';
 import useLoad from 'components/SmartReview/hooks/useLoad';
-import LoadingArticle from 'components/SmartReview/LoadingArticle';
+import LoadingArticle from 'components/ArticleBuilder/LoadingArticle';
 import PublishModal from 'components/SmartReview/PublishModal';
 import Sections from 'components/SmartReview/Sections';
 import Title from 'components/SmartReview/Title';
@@ -40,7 +40,7 @@ import ReferencesModal from 'components/SmartReview/References/ReferencesModal';
 import ReferencesSection from 'components/SmartReview/References/ReferencesSection';
 import ShouldPublishModal from 'components/SmartReview/ShouldPublishModal';
 import { usePrevious } from 'react-use';
-import LoadingOverlay from 'components/SmartReview/LoadingOverlay';
+import LoadingOverlay from 'components/ArticleBuilder/LoadingOverlay';
 import TitleBar from 'components/TitleBar/TitleBar';
 import { Helmet } from 'react-helmet';
 
@@ -70,6 +70,7 @@ const SmartReview = () => {
     const [isOpenShouldPublishModal, setIsOpenShouldPublishModal] = useState(false);
     const [isOpenReferencesModal, setIsOpenReferencesModal] = useState(false);
     const isLoadingInline = useSelector(state => state.smartReview.isLoading);
+    const isLoadingSortSection = useSelector(state => state.smartReview.isLoadingSortSection);
     const isEditing = useSelector(state => state.smartReview.isEditing);
     const isPublished = useSelector(state => state.smartReview.isPublished);
     const paper = useSelector(state => state.smartReview.paper);
@@ -274,7 +275,7 @@ const SmartReview = () => {
             >
                 SmartReview
             </TitleBar>
-            <LoadingOverlay />
+            <LoadingOverlay isLoading={isLoadingSortSection} />
 
             {!isLoading && isEditing && (
                 <main

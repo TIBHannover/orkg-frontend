@@ -3,6 +3,21 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [V0.56](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.55.1...V0.56) - 2021-12-02
+
+### Changes
+
+- feat(StatementBrowser): Optimisation and enhancement of templates, autocomplete and user interaction [`#624`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/624)
+- docs: add contributing file [`#729`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/729)
+
+---
+## [V0.55.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.55...V0.55.1) - 2021-11-19
+
+### Changes
+
+- fix(Comparison): Contribution data doesn't show in case no properties are selected [`#725`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/725)
+
+---
 ## [V0.55](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.54.1...V0.55) - 2021-11-16
 
 ### Changes

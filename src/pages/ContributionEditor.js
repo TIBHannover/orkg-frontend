@@ -81,7 +81,7 @@ const ContributionEditor = () => {
         setIsOpenCreateContribution(false);
     };
 
-    const handleCreatePaper = contributionId => {
+    const handleCreatePaper = ({ contributionId }) => {
         handleAddContributions([contributionId]);
         setIsOpenCreatePaper(false);
     };

@@ -1,6 +1,7 @@
 import { submitGetRequest } from 'network';
+import env from '@beam-australia/react-env';
 
-const ORCIDLink = 'https://pub.orcid.org/v2.0/';
+const url = env('ORCID_API_URL');
 
 const getFullName = name => {
     let fullName = name['family-name'] && name['family-name'].value ? name['family-name'].value : '';
@@ -9,5 +10,5 @@ const getFullName = name => {
 };
 
 export const getPersonFullNameByORCID = orcid => {
-    return submitGetRequest(`${ORCIDLink}${orcid}/person`, { Accept: 'application/orcid+json' }).then(response => getFullName(response.name));
+    return submitGetRequest(`${url}${orcid}/person`, { Accept: 'application/orcid+json' }).then(response => getFullName(response.name));
 };
