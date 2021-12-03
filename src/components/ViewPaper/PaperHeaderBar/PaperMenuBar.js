@@ -8,10 +8,19 @@ import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
 import ROUTES from 'constants/routes.js';
 import { reverse } from 'named-urls';
+import { connect } from 'react-redux';
+import { openAuthDialog } from 'actions/auth';
+import Publish from 'components/ViewPaper/Publish/Publish';
 
 function PaperMenuBar(props) {
     const [menuOpen, setMenuOpen] = useState(false);
     const [isOpenPWCModal, setIsOpenPWCModal] = useState(false);
+    const [showPublishDialog, setShowPublishDialog] = useState(false);
+    const [dataCiteDoi, setDataCiteDoi] = useState('');
+
+    const setPaperMetaData = dataCiteDoi => {
+        setDataCiteDoi(dataCiteDoi);
+    };
 
     return (
         <>
@@ -23,7 +32,6 @@ function PaperMenuBar(props) {
             <Button className="flex-shrink-0" color="secondary" size="sm" style={{ marginRight: 2 }} onClick={() => props.toggle('showGraphModal')}>
                 <Icon icon={faProjectDiagram} style={{ margin: '2px 4px 0 0' }} /> Graph view
             </Button>
-
             {!props.editMode && (
                 <RequireAuthentication
                     component={Button}
@@ -58,13 +66,42 @@ function PaperMenuBar(props) {
                     <DropdownItem tag={NavLink} exact to={reverse(ROUTES.RESOURCE, { id: props.id })}>
                         View resource
                     </DropdownItem>
+                    <DropdownItem
+                        onClick={e => {
+                            if (!props.user) {
+                                props.openAuthDialog({ action: 'signin', signInRequired: true });
+                            } else {
+                                setShowPublishDialog(v => !v);
+                            }
+                        }}
+                    >
+                        Publish
+                    </DropdownItem>
                 </DropdownMenu>
             </ButtonDropdown>
 
             <PapersWithCodeModal isOpen={isOpenPWCModal} toggle={() => setIsOpenPWCModal(v => !v)} label={props.label} />
+            {console.log(props.paperLink)}
+            <Publish
+                showDialog={showPublishDialog}
+                toggle={() => setShowPublishDialog(v => !v)}
+                paperId={props.id}
+                label={props.label}
+                dataCiteDoi={props.dataCiteDoi ? props.dataCiteDoi : dataCiteDoi ? dataCiteDoi : ''}
+                paperLink={props.paperLink}
+                setPaperMetaData={setPaperMetaData}
+            />
         </>
     );
 }
+
+const mapStateToProps = state => ({
+    user: state.auth.user
+});
+
+const mapDispatchToProps = dispatch => ({
+    openAuthDialog: payload => dispatch(openAuthDialog(payload))
+});
 
 PaperMenuBar.propTypes = {
     editMode: PropTypes.bool.isRequired,
@@ -72,7 +109,13 @@ PaperMenuBar.propTypes = {
     paperLink: PropTypes.string,
     id: PropTypes.string,
     label: PropTypes.string,
-    toggle: PropTypes.func.isRequired
+    toggle: PropTypes.func.isRequired,
+    openAuthDialog: PropTypes.func.isRequired,
+    user: PropTypes.oneOfType([PropTypes.object, PropTypes.number]),
+    dataCiteDoi: PropTypes.string
 };
 
-export default PaperMenuBar;
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(PaperMenuBar);

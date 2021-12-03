@@ -187,7 +187,7 @@ export const getPaperData_ViewPaper = (paperResource, paperStatements) => {
         contributions: contributions.sort((a, b) => a.label.localeCompare(b.label)), // sort contributions ascending, so contribution 1, is actually the first one
         publicationMonth: filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_PUBLICATION_MONTH, true),
         publicationYear: filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_PUBLICATION_YEAR, true),
-        doi: filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_DOI, true),
+        doi: filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_DOI, false),
         researchField: filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_RESEARCH_FIELD, true, CLASSES.RESEARCH_FIELD),
         publishedIn: filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_VENUE, true),
         url: filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.URL, true)

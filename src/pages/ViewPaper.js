@@ -42,9 +42,16 @@ const ViewPaper = () => {
     const paperLink = useSelector(state =>
         state.viewPaper.url
             ? state.viewPaper.url.label
-            : state.viewPaper.doi && state.viewPaper.doi.label.startsWith('10.')
-            ? 'https://doi.org/' + state.viewPaper.doi.label
-            : ''
+            : state.viewPaper.doi && state.viewPaper.doi[0].label.startsWith('10.')
+            ? 'https://doi.org/' + state.viewPaper.doi.map(doi => doi.label.startsWith('10.') && doi.label)[0] //state.viewPaper.doi[0].label
+            : '9'
+    );
+    const dataCiteDoi = useSelector(
+        state =>
+            state.viewPaper.doi &&
+            state.viewPaper.doi.length &&
+            state.viewPaper.doi.length > 0 &&
+            state.viewPaper.doi.map(doi => doi.label.startsWith(env('DATACITE_DOI_PREFIX')) && doi.label)[0]
     );
 
     const {
@@ -99,6 +106,7 @@ const ViewPaper = () => {
                                     toggle={toggle}
                                     id={resourceId}
                                     label={viewPaper.paperResource?.label}
+                                    dataCiteDoi={dataCiteDoi}
                                 />
                             }
                         >

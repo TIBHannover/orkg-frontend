@@ -11,6 +11,8 @@ import Provenance from './Provenance';
 import Timeline from './Timeline';
 import env from '@beam-australia/react-env';
 import PWCProvenanceBox from 'components/Benchmarks/PWCProvenanceBox/PWCProvenanceBox';
+import { getStatementsBySubject } from 'services/backend/statements';
+import { getPaperData_ViewPaper } from 'utils';
 
 const ProvenanceBox = () => {
     const paperResource = useSelector(state => state.viewPaper.paperResource);
@@ -20,6 +22,7 @@ const ProvenanceBox = () => {
     const [organizationInfo, setOrganizationInfo] = useState(null);
     const [createdBy, setCreatedBy] = useState(null);
     const [contributors, setContributors] = useState([]);
+    const [doi, setDoi] = useState('');
 
     useEffect(() => {
         const loadContributors = () => {
@@ -66,9 +69,24 @@ const ProvenanceBox = () => {
             }
         };
 
+        const loadDataCiteDoi = () => {
+            getStatementsBySubject({ id: paperResource.id })
+                .then(response => {
+                    const dois = getPaperData_ViewPaper(paperResource.id, response).doi;
+                    const dataCiteDoi = dois.filter(d => d.label.startsWith(env('DATACITE_DOI_PREFIX')));
+                    if (dataCiteDoi) {
+                        setDoi(dataCiteDoi[0].label);
+                    } else {
+                        setDoi('');
+                    }
+                })
+                .catch(e => setDoi(null));
+        };
+
         loadContributors();
         loadProvenance();
         loadCreator();
+        loadDataCiteDoi();
     }, [paperResource.created_by, paperResource.id, paperResource.observatory_id, paperResource.organization_id]);
 
     const [activeTab, setActiveTab] = useState(1);
@@ -117,6 +135,7 @@ const ProvenanceBox = () => {
                                 createdBy={createdBy}
                                 isLoadingProvenance={isLoadingProvenance}
                                 isLoadingContributors={isLoadingContributors}
+                                dataCiteDoi={doi}
                             />
                         </AnimationContainer>
                     ) : (

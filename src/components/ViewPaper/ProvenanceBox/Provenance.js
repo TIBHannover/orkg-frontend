@@ -14,7 +14,16 @@ import ROUTES from 'constants/routes.js';
 import { Button } from 'reactstrap';
 import { MISC } from 'constants/graphSettings';
 
-const Provenance = ({ observatoryInfo, organizationInfo, paperResource, contributors, createdBy, isLoadingProvenance, isLoadingContributors }) => {
+const Provenance = ({
+    observatoryInfo,
+    organizationInfo,
+    paperResource,
+    contributors,
+    createdBy,
+    isLoadingProvenance,
+    isLoadingContributors,
+    dataCiteDoi
+}) => {
     const [showAssignObservatory, setShowAssignObservatory] = useState(false);
     const user = useSelector(state => state.auth.user);
     const dispatch = useDispatch();
@@ -116,6 +125,14 @@ const Provenance = ({ observatoryInfo, organizationInfo, paperResource, contribu
                     {!isLoadingContributors && contributors?.length === 0 && 'No contributors'}
                     {isLoadingContributors && 'Loading ...'}
                 </StyledItemProvenanceBox>
+                {dataCiteDoi && (
+                    <StyledItemProvenanceBox>
+                        <div className="mb-1">
+                            <b>DOI</b>
+                        </div>
+                        {dataCiteDoi}
+                    </StyledItemProvenanceBox>
+                )}
             </ul>
             {!!user && user.isCurationAllowed && (
                 <div className="text-center">
@@ -145,7 +162,8 @@ Provenance.propTypes = {
     paperResource: PropTypes.object,
     createdBy: PropTypes.object,
     isLoadingProvenance: PropTypes.bool,
-    isLoadingContributors: PropTypes.bool
+    isLoadingContributors: PropTypes.bool,
+    dataCiteDoi: PropTypes.string
 };
 
 export default Provenance;

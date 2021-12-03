@@ -15,6 +15,7 @@ import { Badge, Button } from 'reactstrap';
 import EditPaperDialog from './EditDialog/EditPaperDialog';
 import { reverseWithSlug } from 'utils';
 import { getAltMetrics } from 'services/altmetric/index';
+import env from '@beam-australia/react-env';
 
 const PaperHeader = props => {
     const [isOpenEditModal, setIsOpenEditModal] = useState(false);
@@ -117,6 +118,7 @@ const PaperHeader = props => {
                         </small>
                     </div>
                 )}
+
                 {viewPaper.doi && viewPaper.doi.label?.startsWith('10.') && (
                     <div className="flex-shrink-0">
                         <small>
@@ -127,6 +129,24 @@ const PaperHeader = props => {
                         </small>
                     </div>
                 )}
+
+                {viewPaper.doi &&
+                    viewPaper.doi.length &&
+                    viewPaper.doi.length > 0 &&
+                    viewPaper.doi.map(
+                        doi =>
+                            !doi.label.startsWith(env('DATACITE_DOI_PREFIX')) && (
+                                <div className="flex-shrink-0">
+                                    <small>
+                                        DOI:
+                                        {console.log(doi.label)}
+                                        <a href={`https://doi.org/${doi.label}`} target="_blank" rel="noopener noreferrer">
+                                            {doi.label}
+                                        </a>
+                                    </small>
+                                </div>
+                            )
+                    )}
             </div>
             <div className="d-flex">
                 <div className="flex-grow-1">

@@ -22,7 +22,7 @@ import {
     getStatementsByPredicateAndLiteral,
     getStatementsBySubjectAndPredicate
 } from 'services/backend/statements';
-import { generateDOIForComparison, createObject } from 'services/backend/misc';
+import { generateDOIForORKGArtefact, createObject } from 'services/backend/misc';
 import { createLiteral } from 'services/backend/literals';
 import { createResource } from 'services/backend/resources';
 import { getComparison, createResourceData } from 'services/similarity/index';
@@ -267,7 +267,7 @@ function Publish(props) {
             });
             comparisonCreatorsORCID = await Promise.all(comparisonCreatorsORCID);
             if (title && title.trim() !== '' && description && description.trim() !== '') {
-                generateDOIForComparison(
+                generateDOIForORKGArtefact(
                     comparisonId,
                     title,
                     subject ? subject.label : '',
