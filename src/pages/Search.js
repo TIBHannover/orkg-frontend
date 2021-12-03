@@ -82,6 +82,11 @@ class Search extends Component {
                 label: 'SmartReview',
                 labelPlural: 'SmartReviews',
                 id: CLASSES.SMART_REVIEW_PUBLISHED
+            },
+            {
+                label: 'Literature List',
+                labelPlural: 'Literature Lists',
+                id: CLASSES.LITERATURE_LIST_PUBLISHED
             }
         ];
 
