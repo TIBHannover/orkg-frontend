@@ -3,7 +3,7 @@ import { CLASSES, PREDICATES } from 'constants/graphSettings';
 import { filterObjectOfStatementsByPredicateAndClass } from 'utils';
 import { getStatementsBySubjectAndPredicate, getStatementsBySubject } from 'services/backend/statements';
 
-function useSmartReviewResearchField({ smartReviewId, initResearchField = null, initAuthors = [] }) {
+function useCardData({ id, initResearchField = null, initAuthors = [] }) {
     const [researchField, setResearchField] = useState(initResearchField);
     const [authors, setAuthors] = useState(initAuthors);
     const [isLoading, setIsLoading] = useState(false);
@@ -11,7 +11,7 @@ function useSmartReviewResearchField({ smartReviewId, initResearchField = null, 
     const loadSubject = useCallback(() => {
         setIsLoading(true);
         getStatementsBySubjectAndPredicate({
-            subjectId: smartReviewId,
+            subjectId: id,
             predicateId: PREDICATES.HAS_PAPER
         })
             .then(paper => {
@@ -27,13 +27,13 @@ function useSmartReviewResearchField({ smartReviewId, initResearchField = null, 
             .catch(() => {
                 setIsLoading(false);
             });
-    }, [smartReviewId]);
+    }, [id]);
 
     useEffect(() => {
         if (!initResearchField && !!!initAuthors?.length) {
             loadSubject();
         }
-    }, [initAuthors.length, initResearchField, loadSubject, smartReviewId]);
+    }, [initAuthors.length, initResearchField, loadSubject, id]);
 
     return {
         researchField,
@@ -41,4 +41,4 @@ function useSmartReviewResearchField({ smartReviewId, initResearchField = null, 
         isLoading
     };
 }
-export default useSmartReviewResearchField;
+export default useCardData;

@@ -1,7 +1,7 @@
 import Tippy from '@tippyjs/react';
 import { updateTitle } from 'actions/smartReview';
 import ResearchField from 'components/SmartReview/ResearchField';
-import { EditableTitle, SectionStyled, SectionTypeStyled } from 'components/SmartReview/styled';
+import { EditableTitle, SectionStyled, SectionTypeStyled } from 'components/ArticleBuilder/styled';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 

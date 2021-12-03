@@ -6,7 +6,7 @@ import ReactTextareaAutocomplete from '@webscopeio/react-textarea-autocomplete';
 import '@webscopeio/react-textarea-autocomplete/style.css';
 import { updateSectionMarkdown } from 'actions/smartReview';
 import MarkdownRenderer from 'components/SmartReview/MarkdownRenderer';
-import { MarkdownPlaceholder } from 'components/SmartReview/styled';
+import { MarkdownPlaceholder } from 'components/ArticleBuilder/styled';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';

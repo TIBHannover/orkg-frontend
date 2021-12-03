@@ -12,7 +12,7 @@ import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Button, CustomInput, ListGroup, Modal, ModalBody, ModalHeader } from 'reactstrap';
 
-const EditPaperDialog = ({ paperData, isOpen, toggle, afterUpdate, showPaperLink }) => {
+const EditPaperDialog = ({ paperData, isOpen, toggle, afterUpdate, showPaperLink, additionalFields = {} }) => {
     const [openItem, setOpenItem] = useState('title');
     const [title, setTitle] = useState('');
     const [month, setMonth] = useState(0);
@@ -133,7 +133,8 @@ const EditPaperDialog = ({ paperData, isOpen, toggle, afterUpdate, showPaperLink
             type: 'text',
             value: url,
             onChange: e => setUrl(e.target.value)
-        }
+        },
+        ...additionalFields
     };
 
     const toggleItem = item => setOpenItem(openItem !== item ? item : null);
@@ -232,7 +233,8 @@ EditPaperDialog.propTypes = {
         isVerified: PropTypes.bool
     }),
     afterUpdate: PropTypes.func,
-    showPaperLink: PropTypes.bool
+    showPaperLink: PropTypes.bool,
+    additionalFields: PropTypes.object
 };
 
 EditPaperDialog.defaultProps = {

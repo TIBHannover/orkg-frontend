@@ -1,6 +1,6 @@
 import Tippy from '@tippyjs/react';
 import ListReferences from 'components/SmartReview/References/ListReferences';
-import { SectionStyled, SectionTypeStyled } from 'components/SmartReview/styled';
+import { SectionStyled, SectionTypeStyled } from 'components/ArticleBuilder/styled';
 import React from 'react';
 
 const ReferencesSection = () => {
