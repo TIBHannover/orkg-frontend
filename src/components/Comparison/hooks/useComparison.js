@@ -20,7 +20,7 @@ import { useParams, useLocation, useHistory } from 'react-router-dom';
 import { PREDICATES, CLASSES, MISC } from 'constants/graphSettings';
 import { reverse } from 'named-urls';
 import { flatten, groupBy, intersection, findIndex, cloneDeep, isEmpty, uniq, without } from 'lodash';
-import arrayMove from 'array-move';
+import { arrayMoveImmutable } from 'array-move';
 import ROUTES from 'constants/routes.js';
 import queryString from 'query-string';
 import { usePrevious } from 'react-use';
@@ -460,7 +460,7 @@ function useComparison({ id }) {
      * Update the order of properties
      */
     const onSortPropertiesEnd = ({ oldIndex, newIndex }) => {
-        const newProperties = arrayMove(properties, oldIndex, newIndex);
+        const newProperties = arrayMoveImmutable(properties, oldIndex, newIndex);
         setProperties(newProperties);
         setPredicatesList(activatedPropertiesToList(newProperties));
         setUrlNeedsToUpdate(true);

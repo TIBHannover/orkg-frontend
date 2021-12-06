@@ -8,7 +8,7 @@ import styled, { withTheme } from 'styled-components';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
 import { CLASSES, ENTITIES } from 'constants/graphSettings';
 import { getPersonFullNameByORCID } from 'services/ORCID/index';
-import arrayMove from 'array-move';
+import { arrayMoveImmutable } from 'array-move';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 
@@ -246,7 +246,7 @@ class AuthorsInput extends Component {
     };
 
     onSortEnd = ({ oldIndex, newIndex }) => {
-        this.props.handler(arrayMove(this.props.value, oldIndex, newIndex));
+        this.props.handler(arrayMoveImmutable(this.props.value, oldIndex, newIndex));
     };
 
     render() {
