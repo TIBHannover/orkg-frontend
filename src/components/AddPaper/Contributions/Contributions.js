@@ -17,7 +17,7 @@ import {
     toggleAbstractDialog
 } from 'actions/addPaper';
 import Abstract from 'components/AddPaper/Abstract/Abstract';
-import Confirm from 'reactstrap-confirm';
+import Confirm from 'components/Confirmation/Confirmation';
 import Contribution from './Contribution';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -98,8 +98,7 @@ const Contributions = () => {
     const toggleDeleteContribution = async id => {
         const result = await Confirm({
             title: 'Are you sure?',
-            message: 'Are you sure you want to delete this contribution?',
-            cancelColor: 'light'
+            message: 'Are you sure you want to delete this contribution?'
         });
 
         if (result) {

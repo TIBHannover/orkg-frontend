@@ -33,7 +33,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { NavLink, useHistory } from 'react-router-dom';
 import { Button, Container, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledButtonDropdown } from 'reactstrap';
-import Confirm from 'reactstrap-confirm';
+import Confirm from 'components/Confirmation/Confirmation';
 import { createGlobalStyle } from 'styled-components';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import ReferencesModal from 'components/SmartReview/References/ReferencesModal';
@@ -110,8 +110,7 @@ const SmartReview = () => {
             const isConfirmed = await Confirm({
                 title: 'This is a published article',
                 message: `The article you are viewing is published, which means it cannot be modified. To make changes, fetch the live article data and try this action again`,
-                cancelColor: 'light',
-                confirmText: 'Fetch live data'
+                proceedLabel: 'Fetch live data'
             });
 
             if (isConfirmed) {

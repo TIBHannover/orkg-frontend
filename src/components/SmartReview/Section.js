@@ -11,7 +11,7 @@ import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { SortableElement } from 'react-sortable-hoc';
-import Confirm from 'reactstrap-confirm';
+import Confirm from 'components/Confirmation/Confirmation';
 
 const Section = props => {
     const { type, markdown, title: titleProp } = props.section;
@@ -31,8 +31,7 @@ const Section = props => {
     const handleDelete = async () => {
         const confirm = await Confirm({
             title: 'Are you sure?',
-            message: 'Are you sure you want to delete this section?',
-            cancelColor: 'light'
+            message: 'Are you sure you want to delete this section?'
         });
 
         if (confirm) {

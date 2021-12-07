@@ -4,7 +4,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSearchMinus, faSearchPlus, faExpandArrowsAlt, faTimesCircle, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { resetPdfAnnotation } from 'actions/pdfAnnotation';
 import { useSelector, useDispatch } from 'react-redux';
-import Confirm from 'reactstrap-confirm';
+import Confirm from 'components/Confirmation/Confirmation';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import Tippy from '@tippyjs/react';
@@ -31,8 +31,7 @@ const Toolbar = props => {
     const discardPdfFile = async () => {
         const result = await Confirm({
             title: 'Are you sure?',
-            message: 'Are you sure you want to discard this PDF file?',
-            cancelColor: 'light'
+            message: 'Are you sure you want to discard this PDF file?'
         });
 
         if (result) {

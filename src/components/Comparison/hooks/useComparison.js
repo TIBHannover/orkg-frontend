@@ -24,7 +24,7 @@ import { arrayMoveImmutable } from 'array-move';
 import ROUTES from 'constants/routes.js';
 import queryString from 'query-string';
 import { usePrevious } from 'react-use';
-import Confirm from 'reactstrap-confirm';
+import Confirm from 'components/Confirmation/Confirmation';
 
 const DEFAULT_COMPARISON_METHOD = 'path';
 
@@ -627,8 +627,7 @@ function useComparison({ id }) {
         const isConfirmed = await Confirm({
             title: 'Edit contribution data',
             message: `You are about the edit the contributions displayed in the comparison. Changing this data does not only affect this comparison, but also other parts of the ORKG`,
-            cancelColor: 'light',
-            confirmText: 'Continue'
+            proceedLabel: 'Continue'
         });
 
         if (isConfirmed) {

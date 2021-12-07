@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { uniq } from 'lodash';
 import { Alert, Badge, Button, ListGroup, ListGroupItem, Modal, ModalBody, ModalHeader } from 'reactstrap';
-import Confirm from 'reactstrap-confirm';
+import Confirm from 'components/Confirmation/Confirmation';
 
 const ReferencesModal = ({ show, toggle }) => {
     const [isOpenReferenceModal, setIsOpenReferenceModal] = useState(false);
@@ -119,8 +119,7 @@ const ReferencesModal = ({ show, toggle }) => {
     const handleDelete = async statementId => {
         const isConfirmed = await Confirm({
             title: 'Are you sure?',
-            message: `Do you want to remove this reference? `,
-            cancelColor: 'light'
+            message: `Do you want to remove this reference? `
         });
 
         if (isConfirmed) {

@@ -10,7 +10,7 @@ import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { Alert, Button, ButtonGroup, ListGroup, ListGroupItem } from 'reactstrap';
-import Confirm from 'reactstrap-confirm';
+import Confirm from 'components/Confirmation/Confirmation';
 import { deleteResource, getResourcesByClass } from 'services/backend/resources';
 import { getResourceData } from 'services/similarity/index';
 
@@ -57,8 +57,7 @@ const DraftComparisons = () => {
     const handleDelete = async id => {
         const isConfirmed = await Confirm({
             title: 'Are you sure?',
-            message: `Are you sure to delete this draft comparison? If the comparison is published already, the comparison remains available`,
-            cancelColor: 'light'
+            message: `Are you sure to delete this draft comparison? If the comparison is published already, the comparison remains available`
         });
 
         if (isConfirmed) {

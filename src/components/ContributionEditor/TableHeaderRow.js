@@ -3,7 +3,7 @@ import TableCellButtons from 'components/ContributionEditor/TableCellButtons';
 import { Properties, PropertiesInner } from 'components/Comparison/styled';
 import PropTypes from 'prop-types';
 import { memo, useState } from 'react';
-import Confirm from 'reactstrap-confirm';
+import Confirm from 'components/Confirmation/Confirmation';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteProperty, updateProperty } from 'slices/contributionEditorSlice';
 import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
@@ -41,8 +41,7 @@ const TableHeaderRow = ({ property }) => {
                     The property <strong>{property.label}</strong> and its corresponding values will be deleted for <strong>all contributions</strong>{' '}
                     currently in the editor
                 </span>
-            ),
-            cancelColor: 'light'
+            )
         });
 
         if (result) {

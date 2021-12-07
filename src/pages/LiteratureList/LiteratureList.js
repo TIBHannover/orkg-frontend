@@ -20,7 +20,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { NavLink, useHistory, useParams } from 'react-router-dom';
 import { Button, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledButtonDropdown } from 'reactstrap';
-import Confirm from 'reactstrap-confirm';
+import Confirm from 'components/Confirmation/Confirmation';
 import { historyModalToggled, setIsEditing } from 'slices/literatureListSlice';
 
 const LiteratureList = () => {
@@ -59,8 +59,7 @@ const LiteratureList = () => {
             const isConfirmed = await Confirm({
                 title: 'This is a published list',
                 message: `The list you are viewing is published, which means it cannot be modified. To make changes, fetch the live data and try this action again`,
-                cancelColor: 'light',
-                confirmText: 'Fetch live data'
+                proceedLabel: 'Fetch live data'
             });
 
             if (isConfirmed) {
