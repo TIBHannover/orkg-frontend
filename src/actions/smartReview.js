@@ -1,5 +1,5 @@
 import * as type from 'actions/types';
-import { arrayMoveImmutable } from 'array-move';
+import arrayMove from 'array-move';
 import { CLASSES, PREDICATES } from 'constants/graphSettings';
 import { createLiteral, updateLiteral } from 'services/backend/literals';
 import { createResource, updateResource, updateResourceClasses } from 'services/backend/resources';
@@ -203,7 +203,7 @@ export const deleteSection = id => async dispatch => {
 };
 
 export const moveSection = ({ contributionId, sections, oldIndex, newIndex }) => async dispatch => {
-    const sectionsNewOrder = arrayMoveImmutable(sections, oldIndex, newIndex);
+    const sectionsNewOrder = arrayMove(sections, oldIndex, newIndex);
 
     dispatch(sortSections({ contributionId, sections: sectionsNewOrder }));
 };

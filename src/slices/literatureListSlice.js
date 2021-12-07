@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { arrayMoveImmutable } from 'array-move';
+import arrayMove from 'array-move';
 import { LOCATION_CHANGE } from 'connected-react-router';
 import { CLASSES, PREDICATES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
@@ -329,7 +329,7 @@ export const sortSections = ({ listId, sections }) => async dispatch => {
 };
 
 export const moveSection = ({ listId, sections, oldIndex, newIndex }) => async dispatch => {
-    const sectionsNewOrder = arrayMoveImmutable(sections, oldIndex, newIndex);
+    const sectionsNewOrder = arrayMove(sections, oldIndex, newIndex);
     dispatch(sortSections({ listId, sections: sectionsNewOrder }));
 };
 
@@ -386,7 +386,7 @@ export const sortListEntries = ({ sectionId, entries, oldIndex, newIndex }) => a
     dispatch(setIsLoading(true));
     dispatch(isLoadingSortSectionSet(true));
 
-    const entriesNewOrder = cloneDeep(arrayMoveImmutable(entries, oldIndex, newIndex));
+    const entriesNewOrder = cloneDeep(arrayMove(entries, oldIndex, newIndex));
     const sectionSubjectStatement = await getStatementsBySubjectAndPredicate({ subjectId: sectionId, predicateId: PREDICATES.HAS_ENTRY });
     const sectionSubjectStatementIds = sectionSubjectStatement.map(stmt => stmt.id);
     await deleteStatementsByIds(sectionSubjectStatementIds);

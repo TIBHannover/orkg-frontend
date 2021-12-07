@@ -1,7 +1,7 @@
 import { faMinusCircle, faPlusCircle, faSort } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { saveEntities, saveShowProperties } from 'actions/smartReview';
-import { arrayMoveImmutable } from 'array-move';
+import arrayMove from 'array-move';
 import capitalize from 'capitalize';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
 import { ENTITIES, PREDICATES } from 'constants/graphSettings';
@@ -130,7 +130,7 @@ const SelectEntitiesModal = ({ toggle, section, type }) => {
     });
 
     const handleSort = ({ oldIndex, newIndex }) => {
-        setSelectedEntities(_entities => arrayMoveImmutable(_entities, oldIndex, newIndex));
+        setSelectedEntities(_entities => arrayMove(_entities, oldIndex, newIndex));
     };
 
     const handleSave = () => {
