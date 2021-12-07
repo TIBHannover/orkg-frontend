@@ -15,6 +15,7 @@ import { getPredicate } from 'services/backend/predicates';
 import { getResource } from 'services/backend/resources';
 import { getStatementsBySubject } from 'services/backend/statements';
 import styled from 'styled-components';
+import { toast } from 'react-toastify';
 
 const DragHandle = styled.div`
     cursor: move;
@@ -107,7 +108,7 @@ const SelectEntitiesModal = ({ toggle, section, type }) => {
                         <Autocomplete
                             entityType={addEntityType}
                             placeholder={`Enter a ${addEntityType === ENTITIES.PREDICATE ? 'property' : 'resource'}`}
-                            onItemSelected={handleSelectEntity}
+                            onItemSelected={item => handleSelectEntity(item.id)}
                             onBlur={() => setAddEntityType(null)}
                             openMenuOnFocus={true}
                             cssClasses="form-control-sm"
@@ -153,10 +154,14 @@ const SelectEntitiesModal = ({ toggle, section, type }) => {
     };
 
     const handleSelectEntity = async id => {
-        const entity = addEntityType === ENTITIES.RESOURCE ? await getResource(id) : await getPredicate(id);
-        const entityStatements = await getStatementsBySubject({ id });
-        setSelectedEntities(_entities => [..._entities, { ...entity, statements: entityStatements }]);
-        setAddEntityType(null);
+        try {
+            const entity = addEntityType === ENTITIES.RESOURCE ? await getResource(id) : await getPredicate(id);
+            const entityStatements = await getStatementsBySubject({ id });
+            setSelectedEntities(_entities => [..._entities, { ...entity, statements: entityStatements }]);
+            setAddEntityType(null);
+        } catch (e) {
+            toast.error('An error occurred, please reload the page and try again');
+        }
     };
 
     const handleRemoveEntity = entityId => {
