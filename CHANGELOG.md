@@ -3,6 +3,14 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [V0.57.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.57...V0.57.1) - 2021-12-07
+
+### Changes
+
+- fix(SmartReview): fix issue with adding resources/properties in the ontology table [`#733`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/733)
+- fix(Search): paper links do not show correctly [`#732`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/732)
+
+---
 ## [V0.57](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.56...V0.57) - 2021-12-03
 
 ### Changes
