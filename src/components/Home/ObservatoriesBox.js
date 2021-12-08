@@ -11,7 +11,7 @@ const ObservatoriesBox = ({ researchFieldId }) => {
     const [observatories, isLoading] = useResearchFieldObservatories({ researchFieldId });
 
     return (
-        <div className="box rounded-lg" style={{ overflow: 'hidden' }}>
+        <div className="box rounded-3" style={{ overflow: 'hidden' }}>
             <h2
                 className="h5"
                 style={{

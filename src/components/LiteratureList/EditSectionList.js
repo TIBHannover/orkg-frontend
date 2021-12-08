@@ -60,7 +60,7 @@ const EditSectionList = ({ section }) => {
                 </div>
             )}
             <Button color="secondary" size="sm" className="mb-2" onClick={() => setIsOpenAddEntryModal(true)}>
-                <Icon icon={faPlus} className="mr-2" />
+                <Icon icon={faPlus} className="me-2" />
                 Add entries
             </Button>
 

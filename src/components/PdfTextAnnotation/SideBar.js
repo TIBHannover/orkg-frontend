@@ -66,14 +66,14 @@ const SideBar = ({ pdfViewer }) => {
                     <Button id="caret" color="primary" onClick={toggleSaveModal}>
                         Save
                     </Button>
-                    <DropdownToggle caret color="primary" className="pl-1 pr-2" />
+                    <DropdownToggle caret color="primary" className="ps-1 pe-2" />
                     <DropdownMenu>
                         <DropdownItem onClick={() => setHelpIsOpen(true)}>
-                            <Icon icon={faQuestionCircle} className="mr-2 text-secondary" />
+                            <Icon icon={faQuestionCircle} className="me-2 text-secondary" />
                             Start help tour
                         </DropdownItem>
                         <DropdownItem onClick={handleDiscardChanges}>
-                            <Icon icon={faTrash} className="mr-2 text-secondary" />
+                            <Icon icon={faTrash} className="me-2 text-secondary" />
                             Discard changes
                         </DropdownItem>
                     </DropdownMenu>

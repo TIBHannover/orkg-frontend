@@ -94,7 +94,7 @@ const LiteratureList = () => {
                         {isEditing && (
                             <div color="light-darker" className="btn btn-light-darker btn-sm px-2" style={{ cursor: 'default' }}>
                                 {isLoadingInline ? (
-                                    <Icon icon={faSpinner} spin className="mr-2 text-secondary" />
+                                    <Icon icon={faSpinner} spin className="me-2 text-secondary" />
                                 ) : (
                                     <Tippy content="All changes are saved">
                                         <span>

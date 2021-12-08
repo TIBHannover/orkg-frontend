@@ -1,4 +1,4 @@
-import { FormGroup, Label, FormText, Input, CustomInput, Table } from 'reactstrap';
+import { FormGroup, Label, FormText, Input, Table } from 'reactstrap';
 import { setHasLabelFormat, setLabelFormat } from 'actions/addTemplate';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -16,15 +16,17 @@ function Format(props) {
         <div className="p-4">
             <FormGroup>
                 <div>
-                    <CustomInput
+                    <Input
                         onChange={handleSwitchHasLabelFormat}
                         checked={props.hasLabelFormat}
                         id="switchHasLabelFormat"
                         type="switch"
                         name="customSwitch"
-                        label="Show formatted text instead of resource label"
                         disabled={!props.editMode}
-                    />
+                    />{' '}
+                    <Label for="switchHasLabelFormat" className="mb-0">
+                        Show formatted text instead of resource label
+                    </Label>
                 </div>
                 {props.hasLabelFormat && props.components && props.components.length > 0 && (
                     <div className="mt-3">

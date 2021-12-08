@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button, FormGroup, Modal, ModalHeader, ModalBody, Label, Input, ListGroupItem, Alert, InputGroup, InputGroupAddon } from 'reactstrap';
+import { Button, FormGroup, Modal, ModalHeader, ModalBody, Label, Input, ListGroupItem, Alert, InputGroup } from 'reactstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import ResearchFieldSelectorModal from 'components/ResearchFieldSelector/ResearchFieldSelectorModal';
 import { setIsTemplateModalOpen } from 'actions/statementBrowser';
@@ -117,11 +117,10 @@ const TemplatesModal = props => {
                                         wrapper={children => (
                                             <>
                                                 {children}
-                                                <InputGroupAddon addonType="append">
-                                                    <Button color="secondary" onClick={() => setIsOpenResearchFieldModal(true)}>
-                                                        Choose
-                                                    </Button>
-                                                </InputGroupAddon>
+
+                                                <Button color="secondary" onClick={() => setIsOpenResearchFieldModal(true)}>
+                                                    Choose
+                                                </Button>
 
                                                 {isOpenResearchFieldModal && (
                                                     <ResearchFieldSelectorModal

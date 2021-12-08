@@ -99,7 +99,7 @@ class ExportCitation extends Component {
                                         toast.success(`${style.styleLabel} Citation Copied`);
                                     }}
                                 >
-                                    <Button color="primary" className="pl-3 pr-3 float-right" size="sm">
+                                    <Button color="primary" className="ps-3 pe-3 float-end" size="sm">
                                         <Icon icon={faClipboard} /> Copy to clipboard
                                     </Button>
                                 </CopyToClipboard>

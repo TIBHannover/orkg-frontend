@@ -89,7 +89,7 @@ const SelectEntitiesModal = ({ toggle, section, type }) => {
                 <SortableHandle />
                 {capitalize(entity.label)}
             </div>
-            <Button color="link" className="p-0 ml-2" onClick={() => handleRemoveEntity(entity.id)}>
+            <Button color="link" className="p-0 ms-2" onClick={() => handleRemoveEntity(entity.id)}>
                 <Icon icon={faMinusCircle} />
             </Button>
         </ListGroupItemStyled>
@@ -98,7 +98,7 @@ const SelectEntitiesModal = ({ toggle, section, type }) => {
     const SortableList = SortableContainer(({ items }) => {
         return (
             <ListGroup>
-                <ListGroupItemStyled className="font-weight-bold pl-2 py-2 bg-light">Selected {type}</ListGroupItemStyled>
+                <ListGroupItemStyled className="font-weight-bold ps-2 py-2 bg-light">Selected {type}</ListGroupItemStyled>
                 {items.map((value, index) => (
                     <SortableItem key={`item-${index}`} index={index} value={value} />
                 ))}
@@ -118,7 +118,7 @@ const SelectEntitiesModal = ({ toggle, section, type }) => {
                                 Add property
                             </Button>
                             {type === 'entities' && (
-                                <Button color="secondary" size="sm" className="ml-2" onClick={() => setAddEntityType(ENTITIES.RESOURCE)}>
+                                <Button color="secondary" size="sm" className="ms-2" onClick={() => setAddEntityType(ENTITIES.RESOURCE)}>
                                     Add resource
                                 </Button>
                             )}
@@ -177,9 +177,9 @@ const SelectEntitiesModal = ({ toggle, section, type }) => {
                         comparison?.properties?.filter(entity => selectedEntities.filter(item => item.id === entity.id).length === 0) ?? [];
                     return (
                         <ListGroup className="mt-3" key={index}>
-                            <ListGroupItemStyled className="bg-light pl-2 py-2 d-flex justify-content-between align-items-center">
+                            <ListGroupItemStyled className="bg-light ps-2 py-2 d-flex justify-content-between align-items-center">
                                 <div>
-                                    <span className="font-weight-bold mr-2">Comparison</span> {comparison.title}
+                                    <span className="font-weight-bold me-2">Comparison</span> {comparison.title}
                                 </div>
                                 {entities.length > 0 && (
                                     <Button color="secondary" size="sm" className="flex-shrink-0" onClick={() => handleAddAllEntities(entities)}>
@@ -189,7 +189,7 @@ const SelectEntitiesModal = ({ toggle, section, type }) => {
                             </ListGroupItemStyled>
                             {entities.map(suggestion => (
                                 <ListGroupItem key={suggestion.id} className="py-2">
-                                    <Button color="link" className="p-0 mr-2" onClick={() => handleSelectEntity(suggestion.id)}>
+                                    <Button color="link" className="p-0 me-2" onClick={() => handleSelectEntity(suggestion.id)}>
                                         <Icon icon={faPlusCircle} />
                                     </Button>
                                     {capitalize(suggestion.label)}
@@ -206,7 +206,7 @@ const SelectEntitiesModal = ({ toggle, section, type }) => {
                             .filter(property => selectedEntities.filter(item => item.id === property.id).length === 0)
                             .map(suggestion => (
                                 <ListGroupItem key={suggestion.id} className="py-2">
-                                    <Button color="link" className="p-0 mr-2" onClick={() => handleSelectEntity(suggestion.id)}>
+                                    <Button color="link" className="p-0 me-2" onClick={() => handleSelectEntity(suggestion.id)}>
                                         <Icon icon={faPlusCircle} />
                                     </Button>
                                     {capitalize(suggestion.label)}

@@ -45,7 +45,7 @@ const LoadingOverlay = ({ isLoading = false }) => {
         <AnimationContainer in={isLoading} unmountOnExit classNames="fade-in" timeout={800}>
             <div>
                 <Overlay className="text-secondary">
-                    <Icon icon={faSpinner} className="mr-2" spin />
+                    <Icon icon={faSpinner} className="me-2" spin />
                     Loading...
                 </Overlay>
             </div>

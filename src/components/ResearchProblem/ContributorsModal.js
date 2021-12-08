@@ -15,17 +15,17 @@ const ContributorsModal = ({ researchProblemId, openModal, setOpenModal }) => {
     return (
         <Modal isOpen={openModal} toggle={() => setOpenModal(v => !v)} size="lg">
             <ModalHeader toggle={() => setOpenModal(v => !v)}>
-                <Icon icon={faAward} className="text-primary mr-2" />
+                <Icon icon={faAward} className="text-primary me-2" />
                 Top 30 Contributors
             </ModalHeader>
             <ModalBody>
-                <div className="pl-3 pr-3">
+                <div className="ps-3 pe-3">
                     {!isLoading &&
                         contributors.map((contributor, index) => {
                             return (
                                 <div className="pt-2 pb-2" key={`rp${index}`}>
                                     <div className="d-flex">
-                                        <div className="pl-4 pr-4 pt-2">{index + 1}.</div>
+                                        <div className="ps-4 pe-4 pt-2">{index + 1}.</div>
                                         <div>
                                             <ContributorCard
                                                 contributor={{

@@ -4,6 +4,7 @@
  * 
  */
 // Theme variables
+$min-contrast-ratio: 2.7;
 $primary: #e86161;
 $primary-darker: darken($primary, 20%);
 $secondary: #80869b;
@@ -16,12 +17,25 @@ $body-bg: $light;
 $body-color: #4f4f4f;
 $border-width: 1px;
 $border-radius: 6px;
+$red: #dc3545;
+$yellow: #ffc107;
+$green: #198754;
+$cyan: #0dcaf0;
+
 $theme-colors: (
-    primary-darker: $primary-darker,
-    secondary-darker: $secondary-darker,
-    light-darker: $light-darker,
-    light-lighter: $light-lighter,
-    body: $body-color
+    'primary': $primary,
+    'secondary': $secondary,
+    'success': $green,
+    'info': $cyan,
+    'warning': $yellow,
+    'danger': $red,
+    'light': $light,
+    'dark': $dark,
+    'primary-darker': $primary-darker,
+    'secondary-darker': $secondary-darker,
+    'light-darker': $light-darker,
+    'light-lighter': $light-lighter,
+    'body': $body-color
 );
 
 // Forms

@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { CustomInput } from 'reactstrap';
+import { Input } from 'reactstrap';
 import Tippy from '@tippyjs/react';
 import { summarizeText } from 'services/annotation/index';
 import { createGlobalStyle } from 'styled-components';
@@ -293,7 +293,7 @@ const SmartSentenceDetection = ({ pdfViewer }) => {
             </Tippy>
 
             {!isLoading ? (
-                <CustomInput
+                <Input
                     type="switch"
                     id="enableSentenceDetection"
                     onChange={e => setShowHighlights(e.target.checked)}

@@ -57,9 +57,9 @@ const Footer = () => (
                 <Row>
                     <FooterCol md={3}>
                         <h2 className="h5">ORKG</h2>
-                        <hr className="mr-5" />
+                        <hr className="me-5" />
                         <Row>
-                            <div className="float-left ml-3">
+                            <div className="float-start col-md-3">
                                 <Link to={ROUTES.HOME}>
                                     <Logo style={{ height: '80px' }} />
                                 </Link>
@@ -71,7 +71,7 @@ const Footer = () => (
                     </FooterCol>
                     <FooterCol md={3}>
                         <h2 className="h5">About</h2>
-                        <hr className="mr-5" />
+                        <hr className="me-5" />
                         <ul className="p-0" style={{ listStyle: 'none' }}>
                             <li>
                                 <Link to={reverse(ROUTES.ABOUT, {})}>About us</Link>
@@ -97,7 +97,7 @@ const Footer = () => (
                     </FooterCol>
                     <FooterCol md={3}>
                         <h2 className="h5">Technical</h2>
-                        <hr className="mr-5" />
+                        <hr className="me-5" />
                         <ul className="p-0" style={{ listStyle: 'none' }}>
                             <li>
                                 <Link to={ROUTES.DATA}>Data Access</Link>
@@ -120,12 +120,12 @@ const Footer = () => (
                     </FooterCol>
                     <FooterCol md={3}>
                         <h2 className="h5">More</h2>
-                        <hr className="mr-5" />
+                        <hr className="me-5" />
                         <ul className="p-0" style={{ listStyle: 'none' }}>
                             <li>
                                 <TwitterLink href="https://twitter.com/orkg_org" target="_blank" rel="noopener noreferrer">
                                     Follow us
-                                    <Icon className="ml-2" icon={faTwitter} />
+                                    <Icon className="ms-2" icon={faTwitter} />
                                 </TwitterLink>
                             </li>
                             <li>
@@ -137,12 +137,12 @@ const Footer = () => (
                                 </a>
                             </li>
                             <li>
-                                <i className="mr-3">Version</i> <Badge color="info">GIT_VERSION</Badge>
+                                <i className="me-3">Version</i> <Badge color="info">GIT_VERSION</Badge>
                             </li>
                         </ul>
                     </FooterCol>
                 </Row>
-                <hr style={{ width: '70%' }} />
+                <hr style={{ width: '70%', margin: '1rem auto' }} />
                 <Row className="mt-4">
                     <PartnerLogoCol md={4} style={{}}>
                         <a href="https://www.tib.eu/en/" target="_blank" rel="noopener noreferrer">
@@ -150,7 +150,7 @@ const Footer = () => (
                         </a>
                     </PartnerLogoCol>
                     <Col md={8}>
-                        <Row noGutters>
+                        <Row className="g-0">
                             <Col md={4} style={{ textAlign: 'center' }}>
                                 <a href="https://www.uni-hannover.de/en/" target="_blank" rel="noopener noreferrer">
                                     <img src={LUH_LOGO} alt="Logo Leibniz University Hannover" style={{ borderWidth: 0, height: '45px' }} />
@@ -173,7 +173,7 @@ const Footer = () => (
                         </Row>
                     </Col>
                 </Row>
-                <hr style={{ width: '50%' }} />
+                <hr style={{ width: '50%', margin: '1rem auto' }} />
                 <Row>
                     <PartnerLogoCol md={{ size: 3, order: 1, offset: 3 }} style={{ textAlign: 'center' }}>
                         <img

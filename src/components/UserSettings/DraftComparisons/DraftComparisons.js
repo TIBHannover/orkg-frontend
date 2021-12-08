@@ -96,7 +96,7 @@ const DraftComparisons = () => {
                                 <Link to={reverse(ROUTES.COMPARISON) + draftComparison.url}>{draftComparison.label}</Link> <br />
                                 <small>
                                     <Icon icon={faCalendar} /> {moment(draftComparison.created_at).format('DD MMMM YYYY')}{' '}
-                                    <Icon icon={faClock} className="ml-2 mr-1" />
+                                    <Icon icon={faClock} className="ms-2 me-1" />
                                     {moment(draftComparison.created_at).format('H:mm')}
                                 </small>
                             </div>

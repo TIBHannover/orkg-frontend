@@ -32,21 +32,21 @@ function ContributorCard(props) {
                             {props.contributor?.counts && props.contributor.counts.papers !== null && props.contributor.counts.papers !== undefined && (
                                 <>
                                     <ul class="list-group list-group-horizontal-md mt-2 d-flex">
-                                        <li className="list-group-item p-0 pl-1 pr-2">
+                                        <li className="list-group-item p-0 ps-1 pe-2">
                                             {props.contributor.counts.papers} paper{props.contributor.counts.papers > 1 ? 's' : ''}
                                         </li>
-                                        <li className="list-group-item p-0  pl-1 pr-2">
+                                        <li className="list-group-item p-0  ps-1 pe-2">
                                             {props.contributor.counts.contributions} contribution
                                             {props.contributor.counts.contributions > 1 ? 's' : ''}
                                         </li>
-                                        <li className="list-group-item p-0  pl-1 pr-2">
+                                        <li className="list-group-item p-0  ps-1 pe-2">
                                             {props.contributor.counts.comparisons} comparison{props.contributor.counts.comparisons > 1 ? 's' : ''}
                                         </li>
-                                        <li className="list-group-item p-0  pl-1 pr-2 ">
+                                        <li className="list-group-item p-0  ps-1 pe-2 ">
                                             {props.contributor.counts.visualizations} visualization
                                             {props.contributor.counts.visualizations > 1 ? 's' : ''}
                                         </li>
-                                        <li className="list-group-item p-0  pl-1 pr-2">
+                                        <li className="list-group-item p-0  ps-1 pe-2">
                                             {props.contributor.counts.problems} research problem{props.contributor.counts.problems > 1 ? 's' : ''}
                                         </li>
                                     </ul>

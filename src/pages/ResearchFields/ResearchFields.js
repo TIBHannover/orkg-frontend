@@ -64,7 +64,7 @@ const ResearchFields = () => {
                 Research fields taxonomy
             </TitleBar>
             <Container className="p-0">
-                <div className="box rounded-lg p-4">
+                <div className="box rounded-3 p-4">
                     <div className="d-flex">
                         <div>
                             <p>
@@ -108,7 +108,7 @@ const ResearchFields = () => {
                                                 })}
                                                 color="light"
                                                 size="sm"
-                                                className="flex-shrink-0 ml-2"
+                                                className="flex-shrink-0 ms-2"
                                             >
                                                 Visit field page
                                             </Button>

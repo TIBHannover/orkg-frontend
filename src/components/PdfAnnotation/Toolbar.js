@@ -45,12 +45,12 @@ const Toolbar = props => {
 
     return (
         <ToolbarStyled>
-            <h1 className="h5 mb-0 ml-2" style={{ color: '#fff', height: 'auto' }}>
+            <h1 className="h5 mb-0 ms-2" style={{ color: '#fff', height: 'auto' }}>
                 {/* Set the height to overwrite styles from the PDF  */}
                 Survey table extractor
             </h1>
             <Tippy content="Open help popup">
-                <span className="ml-3">
+                <span className="ms-3">
                     <Button
                         color="link"
                         outline
@@ -65,22 +65,22 @@ const Toolbar = props => {
             </Tippy>
             {/*
             <Button color="secondary-darker" size="sm">
-                <Icon icon={faICursor} className="mr-2" />
+                <Icon icon={faICursor} className="me-2" />
                 Text select
             </Button>
             <Button
                 active={this.props.selectedTool === 'tableSelect'}
                 color="secondary-darker"
                 size="sm"
-                className="ml-2"
+                className="ms-2"
                 onClick={() => this.selectTool('tableSelect')}
             >
-                <Icon icon={faVectorSquare} className="mr-2" />
+                <Icon icon={faVectorSquare} className="me-2" />
                 Table select
             </Button>
             */}
-            <div className="ml-auto">
-                <ButtonGroup className="mr-2">
+            <div className="ms-auto">
+                <ButtonGroup className="me-2">
                     <Button
                         color="secondary-darker"
                         disabled={!pdf}
@@ -104,8 +104,8 @@ const Toolbar = props => {
                     </Button>
                 </ButtonGroup>
                 {pdf && (
-                    <Button className="mr-2" color="secondary-darker" disabled={!pdf} size="sm" onClick={discardPdfFile}>
-                        <Icon icon={faTimesCircle} className="mr-1" /> Discard PDF
+                    <Button className="me-2" color="secondary-darker" disabled={!pdf} size="sm" onClick={discardPdfFile}>
+                        <Icon icon={faTimesCircle} className="me-1" /> Discard PDF
                     </Button>
                 )}
             </div>

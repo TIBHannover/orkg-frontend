@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { InputGroup, InputGroupAddon, FormFeedback } from 'reactstrap';
+import { InputGroup, FormFeedback } from 'reactstrap';
 import { toggleEditValue } from 'actions/statementBrowser';
 import { StyledButton } from 'components/StatementBrowser/styled';
 import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
@@ -183,66 +183,65 @@ const ValueForm = props => {
                         }}
                     />
                 )}
-                <InputGroupAddon addonType="append">
-                    <StyledButton
-                        outline
-                        onClick={() => {
-                            if (!editMode) {
-                                props.setShowAddValue?.(false);
-                            } else {
-                                dispatch(toggleEditValue({ id: props.id }));
-                            }
-                            setIsValid(true);
-                            setFormFeedback(null);
-                        }}
-                    >
-                        Cancel
-                    </StyledButton>
-                    <StyledButton outline disabled={!inputValue?.toString() || disabledCreate} onClick={() => onSubmit()}>
-                        {disabledCreate ? (
-                            <Tippy hideOnClick={false} content="Please use the existing research problem that has this label." arrow={true}>
-                                <span>Create</span>
-                            </Tippy>
-                        ) : (
-                            <Tippy
-                                onShown={onShown}
-                                onCreate={instance => (confirmConversion.current = instance)}
-                                content={
-                                    <ConfirmationTooltip
-                                        message={
-                                            <p className="mb-2">
-                                                The value you entered looks like {a(suggestionType?.name || '', { articleOnly: true })}{' '}
-                                                <b>{suggestionType?.name}</b>. Do you want to convert it?
-                                            </p>
+
+                <StyledButton
+                    outline
+                    onClick={() => {
+                        if (!editMode) {
+                            props.setShowAddValue?.(false);
+                        } else {
+                            dispatch(toggleEditValue({ id: props.id }));
+                        }
+                        setIsValid(true);
+                        setFormFeedback(null);
+                    }}
+                >
+                    Cancel
+                </StyledButton>
+                <StyledButton outline disabled={!inputValue?.toString() || disabledCreate} onClick={() => onSubmit()}>
+                    {disabledCreate ? (
+                        <Tippy hideOnClick={false} content="Please use the existing research problem that has this label." arrow={true}>
+                            <span>Create</span>
+                        </Tippy>
+                    ) : (
+                        <Tippy
+                            onShown={onShown}
+                            onCreate={instance => (confirmConversion.current = instance)}
+                            content={
+                                <ConfirmationTooltip
+                                    message={
+                                        <p className="mb-2">
+                                            The value you entered looks like {a(suggestionType?.name || '', { articleOnly: true })}{' '}
+                                            <b>{suggestionType?.name}</b>. Do you want to convert it?
+                                        </p>
+                                    }
+                                    closeTippy={() => confirmConversion.current.hide()}
+                                    ref={confirmButtonRef}
+                                    buttons={[
+                                        {
+                                            title: 'Convert',
+                                            color: 'success',
+                                            icon: faCheck,
+                                            action: acceptSuggestion
+                                        },
+                                        {
+                                            title: 'Keep',
+                                            color: 'secondary',
+                                            icon: faTimes,
+                                            action: rejectSuggestion
                                         }
-                                        closeTippy={() => confirmConversion.current.hide()}
-                                        ref={confirmButtonRef}
-                                        buttons={[
-                                            {
-                                                title: 'Convert',
-                                                color: 'success',
-                                                icon: faCheck,
-                                                action: acceptSuggestion
-                                            },
-                                            {
-                                                title: 'Keep',
-                                                color: 'secondary',
-                                                icon: faTimes,
-                                                action: rejectSuggestion
-                                            }
-                                        ]}
-                                    />
-                                }
-                                interactive={true}
-                                appendTo={document.body}
-                                trigger="manual"
-                                placement="top"
-                            >
-                                <span tabIndex="0">{editMode ? 'Done' : 'Create'}</span>
-                            </Tippy>
-                        )}
-                    </StyledButton>
-                </InputGroupAddon>
+                                    ]}
+                                />
+                            }
+                            interactive={true}
+                            appendTo={document.body}
+                            trigger="manual"
+                            placement="top"
+                        >
+                            <span tabIndex="0">{editMode ? 'Done' : 'Create'}</span>
+                        </Tippy>
+                    )}
+                </StyledButton>
             </InputGroup>
             {!isValid && <FormFeedback className="d-block">{formFeedback}</FormFeedback>}
         </div>

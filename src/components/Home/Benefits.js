@@ -44,7 +44,7 @@ const CarouselIndicatorsStyled = styled(CarouselIndicators)`
         margin: 0;
     }
 
-    background: ${props => props.theme.lightLighter};
+    background: ${props => props.theme.secondary};
 `;
 
 const ITEMS = [
@@ -141,7 +141,7 @@ export default function Benefits() {
 
     return (
         <>
-            <div className="d-flex align-items-center pt-3 pl-3 pr-3 pb-0">
+            <div className="d-flex align-items-center pt-3 ps-3 pe-3 pb-0">
                 <div className="flex-grow-1">
                     <h2 className="h6 mb-1 mt-0">{!!user ? 'Start contributing!' : 'Join ORKG!'}</h2>
                 </div>

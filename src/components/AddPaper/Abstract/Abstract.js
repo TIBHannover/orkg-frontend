@@ -364,35 +364,35 @@ class Abstract extends Component {
                 <ModalFooter>
                     {this.props.abstractDialogView === 'input' ? (
                         <>
-                            <Button color="primary" className="float-right" onClick={this.handleChangeAbstract}>
+                            <Button color="primary" className="float-end" onClick={this.handleChangeAbstract}>
                                 Annotate Abstract
                             </Button>
                         </>
                     ) : this.props.abstractDialogView === 'list' ? (
                         <>
-                            <Button color="secondary" outline className="float-left" onClick={() => this.handleChangeView('annotator')}>
+                            <Button color="secondary" outline className="float-start" onClick={() => this.handleChangeView('annotator')}>
                                 <Icon icon={faMagic} /> Annotator
                             </Button>
 
-                            <Button color="primary" className="float-right" onClick={this.handleInsertData}>
+                            <Button color="primary" className="float-end" onClick={this.handleInsertData}>
                                 Insert Data
                             </Button>
 
-                            <Button color="light" className="float-right mr-2" onClick={this.handleChangeAbstract}>
+                            <Button color="light" className="float-end me-2" onClick={this.handleChangeAbstract}>
                                 Change abstract
                             </Button>
                         </>
                     ) : (
                         <>
-                            <Button color="secondary" outline className="float-left" onClick={() => this.handleChangeView('list')}>
+                            <Button color="secondary" outline className="float-start" onClick={() => this.handleChangeView('list')}>
                                 <Icon icon={faThList} /> List of annotations
                             </Button>
 
-                            <Button color="primary" className="float-right" onClick={this.handleInsertData}>
+                            <Button color="primary" className="float-end" onClick={this.handleInsertData}>
                                 Insert Data
                             </Button>
 
-                            <Button color="light" className="float-right mr-2" onClick={this.handleChangeAbstract}>
+                            <Button color="light" className="float-end me-2" onClick={this.handleChangeAbstract}>
                                 Change abstract
                             </Button>
                         </>

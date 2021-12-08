@@ -11,7 +11,7 @@ const ListStatements = props => {
 
     return (
         <StatementsGroupStyle className="list-group-item border-top">
-            <div className="row no-gutters">
+            <div className="row gx-0">
                 <PropertyStyle className="col-4" tabIndex="0">
                     <div>
                         <span className="propertyLabel">

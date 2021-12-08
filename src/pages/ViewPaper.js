@@ -137,12 +137,12 @@ const ViewPaper = () => {
                     {editMode && (
                         <EditModeHeader className="box rounded-top">
                             <Title>
-                                Edit mode <span className="pl-2">Every change you make is automatically saved</span>
+                                Edit mode <span className="ps-2">Every change you make is automatically saved</span>
                             </Title>
                         </EditModeHeader>
                     )}
                     <Container
-                        className={`box pt-md-4 pb-md-4 pl-md-5 pr-md-5 pt-sm-2 pb-sm-2 pl-sm-2 pr-sm-2 clearfix position-relative 
+                        className={`box pt-md-4 pb-md-4 ps-md-5 pe-md-5 pt-sm-2 pb-sm-2 ps-sm-2 pe-sm-2 clearfix position-relative 
                                 ${editMode ? 'rounded-bottom' : 'rounded'}`}
                     >
                         {!isLoading && <ShareLinkMarker typeOfLink="paper" title={viewPaper.paperResource.label} />}

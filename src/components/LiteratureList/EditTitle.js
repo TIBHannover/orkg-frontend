@@ -45,7 +45,7 @@ const EditTitle = () => {
             <EditResearchField />
             <AuthorBadges authors={authorResources} />
 
-            <Button size="sm" color="secondary" className="ml-2" onClick={() => setShowModal(true)} aria-label="Edit article authors">
+            <Button size="sm" color="secondary" className="ms-2" onClick={() => setShowModal(true)} aria-label="Edit article authors">
                 <Icon icon={faPen} /> Edit
             </Button>
 

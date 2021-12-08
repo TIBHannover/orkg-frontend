@@ -31,7 +31,7 @@ const SmartReviewNew = () => {
     return (
         <>
             <TitleBar>Create SmartReview</TitleBar>
-            <Container className="box rounded pt-4 pb-4 pl-5 pr-5">
+            <Container className="box rounded pt-4 pb-4 ps-5 pe-5">
                 <p>
                     SmartReviews are dynamic, community maintained scholarly articles and are especially suitable for survey papers. Before creating
                     an article, make sure you understand the following points:
@@ -57,7 +57,7 @@ const SmartReviewNew = () => {
 
                     <Input type="text" id="articleTitle" value={title} onChange={e => setTitle(e.target.value)} />
                 </FormGroup>
-                <div className="text-right">
+                <div className="text-end">
                     <Button color="primary" onClick={handleCreate} disabled={isLoading}>
                         {!isLoading ? (
                             'Create'

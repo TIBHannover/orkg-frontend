@@ -116,7 +116,7 @@ const AnnotationCategory = props => {
                             </Tippy>
                         )}
 
-                        <div className="float-right">
+                        <div className="float-end">
                             <Tippy content="Edit annotation text">
                                 <span>
                                     <Button className="p-0 text-body" color="link" onClick={e => handleEditClick(e, annotation.id)}>

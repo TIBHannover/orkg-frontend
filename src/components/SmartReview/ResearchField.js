@@ -30,7 +30,7 @@ const ResearchField = () => {
                     <Button
                         size="sm"
                         color="light"
-                        className="mr-2 mb-2"
+                        className="me-2 mb-2"
                         onClick={() => setIsOpenResearchFieldModal(true)}
                         aria-label={`Selected research field: ${researchField?.label ?? 'none'}`}
                     >

@@ -26,7 +26,7 @@ class Changelog extends Component {
         return (
             <div>
                 <TitleBar>Changelog</TitleBar>
-                <Container className="box rounded pt-4 pb-4 pl-5 pr-5">
+                <Container className="box rounded pt-4 pb-4 ps-5 pe-5">
                     <div
                         dangerouslySetInnerHTML={{
                             __html: this.state.changelogText

@@ -74,7 +74,7 @@ const ListReferences = () => {
 
     return (
         <>
-            {!error && <ListReferencesStyled dangerouslySetInnerHTML={{ __html: bibliography }} style={{ fontSize: '90%' }} className="pl-3" />}
+            {!error && <ListReferencesStyled dangerouslySetInnerHTML={{ __html: bibliography }} style={{ fontSize: '90%' }} className="ps-3" />}
             {error && isEditing && <Alert color="danger">BibTeX parsing error, please check the BibTeX entries</Alert>}
         </>
     );

@@ -16,7 +16,7 @@ const PapersWithCodeModal = ({ isOpen, toggle, label }) => {
                     target="_blank"
                     rel="noopener noreferrer"
                 >
-                    paperswithcode <Icon icon={faExternalLinkAlt} className="mr-1" />
+                    paperswithcode <Icon icon={faExternalLinkAlt} className="me-1" />
                 </a>{' '}
                 website to suggest changes.
             </ModalBody>

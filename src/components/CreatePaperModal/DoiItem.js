@@ -6,7 +6,7 @@ import ListItem from 'components/ViewPaper/EditDialog/ListItem';
 import PropTypes from 'prop-types';
 import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { Button, Input, InputGroup, InputGroupAddon } from 'reactstrap';
+import { Button, Input, InputGroup } from 'reactstrap';
 import { getPaperByDOI } from 'services/backend/misc';
 import { getStatementsBySubject } from 'services/backend/statements';
 import { truncate } from 'lodash';
@@ -91,11 +91,9 @@ const DoiItem = ({ toggleItem, isExpanded, value, onChange, onPopulateMetadata, 
         <ListItem toggleItem={toggleItem} label="Paper DOI or BibTeX" open={isExpanded} value={truncate(value ? value : '', { length: 60 })}>
             <InputGroup>
                 <Input value={value} onChange={e => onChange(e.target.value)} disabled={isLoading} valid={isValid} invalid={isValid === false} />
-                <InputGroupAddon addonType="append">
-                    <Button color="secondary" onClick={handleLookup} disabled={isLoading}>
-                        {!isLoading ? 'Lookup' : <Icon icon={faSpinner} spin />}
-                    </Button>
-                </InputGroupAddon>
+                <Button color="secondary" onClick={handleLookup} disabled={isLoading}>
+                    {!isLoading ? 'Lookup' : <Icon icon={faSpinner} spin />}
+                </Button>
             </InputGroup>
             {/* TODO: improve modal to allow linking to the 'add contribution' modal */}
             {existingPaper && <ExistingDoiModal existingPaper={existingPaper} />}

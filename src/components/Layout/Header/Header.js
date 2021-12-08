@@ -355,17 +355,19 @@ class Header extends Component {
                         style={{ display: 'flex', width: '100%', transition: 'width 1s ease-in-out' }}
                         className={!this.state.isHomePageStyle ? 'p-0 container' : 'container-sm'}
                     >
-                        <StyledLink to={ROUTES.HOME} className="mr-4 p-0" onClick={this.closeMenu}>
-                            {!this.state.isHomePageStyle && <Logo />}
-                            {this.state.isHomePageStyle && <LogoWhite />}
-                        </StyledLink>
+                        <div>
+                            <StyledLink to={ROUTES.HOME} className="me-4 p-0" onClick={this.closeMenu}>
+                                {!this.state.isHomePageStyle && <Logo />}
+                                {this.state.isHomePageStyle && <LogoWhite />}
+                            </StyledLink>
 
-                        <NavbarToggler onClick={this.toggle} />
+                            <NavbarToggler onClick={this.toggle} />
+                        </div>
 
                         <Collapse isOpen={this.state.isOpen} navbar>
-                            <Nav className="mr-auto flex-shrink-0" navbar>
+                            <Nav className="me-auto flex-shrink-0" navbar>
                                 {/* view menu */}
-                                <ButtonDropdown nav inNavbar>
+                                <ButtonDropdown nav>
                                     <DropdownToggle nav className="ml-2">
                                         View <FontAwesomeIcon style={{ marginTop: '4px' }} icon={faChevronDown} pull="right" />
                                     </DropdownToggle>
@@ -427,8 +429,8 @@ class Header extends Component {
                                 </ButtonDropdown>
 
                                 {/* tools menu */}
-                                <ButtonDropdown nav inNavbar>
-                                    <DropdownToggle nav className="ml-2">
+                                <ButtonDropdown nav>
+                                    <DropdownToggle nav className="ms-2">
                                         Tools <FontAwesomeIcon style={{ marginTop: '4px' }} icon={faChevronDown} pull="right" />
                                     </DropdownToggle>
                                     <DropdownMenu>
@@ -473,8 +475,8 @@ class Header extends Component {
                                 </ButtonDropdown>
 
                                 {/* about menu */}
-                                <ButtonDropdown isOpen={this.state.isOpenAboutMenu} toggle={this.toggleAboutMenu} nav inNavbar>
-                                    <DropdownToggle nav className="ml-2" onClick={this.toggleAboutMenu}>
+                                <ButtonDropdown isOpen={this.state.isOpenAboutMenu} toggle={this.toggleAboutMenu} nav>
+                                    <DropdownToggle nav className="ms-2" onClick={this.toggleAboutMenu}>
                                         About <FontAwesomeIcon style={{ marginTop: '4px' }} icon={faChevronDown} pull="right" />
                                     </DropdownToggle>
                                     <DropdownMenu>
@@ -504,12 +506,12 @@ class Header extends Component {
                             <AddNew isHomePageStyle={this.state.isHomePageStyle} onAdd={this.closeMenu} />
 
                             {!!this.props.user && (
-                                <div className="ml-2">
+                                <div className="ms-2">
                                     <StyledGravatar className="rounded-circle" email={email} size={40} id="TooltipExample" />
                                     <StyledAuthTooltip
                                         fade={false}
                                         trigger="click"
-                                        innerClassName="pr-3 pl-3 pt-3 pb-3 clearfix"
+                                        innerClassName="pe-3 ps-3 pt-3 pb-3 clearfix"
                                         placement="bottom-end"
                                         isOpen={this.state.userTooltipOpen}
                                         target="TooltipExample"
@@ -531,8 +533,8 @@ class Header extends Component {
                                                     />
                                                 </Link>
                                             </div>
-                                            <div className="col-9 text-left">
-                                                <span className="ml-1">
+                                            <div className="col-9 text-start">
+                                                <span className="ms-1">
                                                     {greeting} {this.props.user.displayName}
                                                 </span>
                                                 <ButtonGroup className="mt-2" size="sm">
@@ -567,12 +569,12 @@ class Header extends Component {
                                 <div className="mx-2 flex-shrink-0">
                                     <Button
                                         color="secondary"
-                                        className="pl-4 pr-4 sign-in"
+                                        className="ps-4 pe-4 sign-in"
                                         outline
                                         onClick={() => this.props.openAuthDialog({ action: 'signin' })}
                                     >
                                         {' '}
-                                        <FontAwesomeIcon className="mr-1" icon={faUser} /> Sign in
+                                        <FontAwesomeIcon className="me-1" icon={faUser} /> Sign in
                                     </Button>
                                 </div>
                             )}

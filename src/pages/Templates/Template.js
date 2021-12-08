@@ -174,7 +174,7 @@ class Template extends Component {
                             <Title>{this.props.match.params.id ? 'Edit mode' : 'Create template'}</Title>
                         </EditModeHeader>
                     )}
-                    <div className={`box clearfix pt-4 pb-4 pl-5 pr-5 ${this.props.editMode ? 'rounded-bottom' : 'rounded'}`}>
+                    <div className={`box clearfix pt-4 pb-4 ps-5 pe-5 ${this.props.editMode ? 'rounded-bottom' : 'rounded'}`}>
                         <div className="mb-2">
                             {!this.props.editMode ? (
                                 <h3 className="pb-2 mb-3" style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>

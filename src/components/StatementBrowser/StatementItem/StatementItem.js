@@ -36,7 +36,7 @@ const StatementItem = forwardRef((props, ref) => {
 
     return (
         <StatementsGroupStyle ref={ref} className={`${props.inTemplate ? 'inTemplate' : 'noTemplate'} list-group-item`}>
-            <div className="row no-gutters">
+            <div className="row gx-0">
                 <PropertyStyle className={`col-4 ${property.isEditing ? 'editingLabel' : ''}`} tabIndex="0">
                     {!property.isEditing ? (
                         <div>

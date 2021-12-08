@@ -53,7 +53,7 @@ const Template = props => {
                 ))}
                 {props.enableEdit && (
                     <AddPropertyWrapper className="mb-3">
-                        <div className="row no-gutters">
+                        <div className="row gx-0">
                             <div className="col-4 propertyHolder" />
                         </div>
                         <AddProperty syncBackend={props.syncBackend} inTemplate={true} resourceId={props.value.resourceId} />

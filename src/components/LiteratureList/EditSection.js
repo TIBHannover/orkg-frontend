@@ -61,7 +61,7 @@ const EditSection = ({ section, handleManualSort, atIndex }) => {
                     <div className="d-flex align-items-center  border-bottom pb-1 mb-3">
                         <Input
                             aria-label="Select heading level"
-                            className="mr-2"
+                            className="me-2"
                             type="select"
                             style={{ width: 70 }}
                             value={heading?.level}

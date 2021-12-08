@@ -47,7 +47,7 @@ const TableHeaderColumn = ({ contribution, paper }) => {
                     <span>
                         <Button
                             color="link"
-                            className="text-secondary-darker p-0 text-left"
+                            className="text-secondary-darker p-0 text-start"
                             onClick={env('PWC_USER_ID') !== contribution.created_by ? handleEditPaper : undefined}
                         >
                             {paper.label || <em>No title</em>}

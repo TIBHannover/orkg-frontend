@@ -143,9 +143,9 @@ const RelativeBreadcrumbs = ({ researchField }) => {
                                                         : reverseWithSlug(ROUTES.RESEARCH_FIELD, { researchFieldId: field.id, slug: field.label })
                                                 }
                                             >
-                                                {index === 0 ? <Icon className="mr-1" icon={faHome} /> : field.label}
+                                                {index === 0 ? <Icon className="me-1" icon={faHome} /> : field.label}
                                             </Link>
-                                            {index !== parentResearchFields.length - 1 && <Icon className="mr-1 ml-1" icon={faAngleDoubleRight} />}
+                                            {index !== parentResearchFields.length - 1 && <Icon className="me-1 ms-1" icon={faAngleDoubleRight} />}
                                         </span>
                                     ))}
                                 </small>
@@ -156,7 +156,7 @@ const RelativeBreadcrumbs = ({ researchField }) => {
                     }
                 >
                     <Link to={reverseWithSlug(ROUTES.RESEARCH_FIELD, { researchFieldId: researchField.id, slug: researchField.label })}>
-                        <Icon size="sm" icon={faEllipsisH} className="ml-2 mr-1" />
+                        <Icon size="sm" icon={faEllipsisH} className="ms-2 me-1" />
                     </Link>
                 </Tippy>
             </li>

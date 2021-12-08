@@ -78,7 +78,7 @@ const Results = props => {
                                             <div>
                                                 <small>
                                                     <i className="text-muted">
-                                                        <Icon size="sm" icon={faCalendar} className="mr-1" />{' '}
+                                                        <Icon size="sm" icon={faCalendar} className="me-1" />{' '}
                                                         {moment(item.created_at).format('DD MMMM YYYY - H:mm')}
                                                     </i>
                                                 </small>
@@ -89,14 +89,14 @@ const Results = props => {
                             })}
                         </ListGroup>
                         {!props.loading && props.hasNextPage && (
-                            <StyledLoadMoreButton className="text-right action">
+                            <StyledLoadMoreButton className="text-end action">
                                 <Button color="link" size="sm" onClick={props.loadMore}>
                                     + Load more
                                 </Button>
                             </StyledLoadMoreButton>
                         )}
                         {props.loading && props.hasNextPage && (
-                            <StyledLoadMoreButton className="text-right action">
+                            <StyledLoadMoreButton className="text-end action">
                                 <Button color="link" size="sm" onClick={props.loadMore}>
                                     Loading...
                                 </Button>

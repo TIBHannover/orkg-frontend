@@ -19,12 +19,12 @@ const AuthorBadges = ({ authors }) => {
                 typeof="foaf:Person"
                 aria-label={`Visit the author page of ${author.label}`}
             >
-                <Badge color="light" className="mr-2 mb-2" key={index}>
+                <Badge color="light" className="me-2 mb-2" key={index}>
                     <Icon icon={faUser} className="text-primary" /> {author.label}
                 </Badge>
             </Link>
         ) : (
-            <Badge color="light" className="mr-2 mb-2" key={index} typeof="foaf:Person">
+            <Badge color="light" className="me-2 mb-2" key={index} typeof="foaf:Person">
                 <Icon icon={faUser} className="text-secondary" aria-label="Author name" /> {author.label}
             </Badge>
         )

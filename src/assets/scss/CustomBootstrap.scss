@@ -3,10 +3,18 @@
 
 //CSS overrides (not everything can be changed using theme variables)
 
+/* Bootstrap 5 tweak: do not underline links unless hovered over */
+a:not([class*='btn']) {
+    text-decoration: none;
+}
+a:not([class*='btn']):hover {
+    text-decoration: underline;
+}
+
 .dropdown-item {
     outline: 0 !important; // bootstrap menus are accessible by keyboard, the background changes (so no outline needed)
 }
-.badge-light {
+.bg-light {
     color: #5c6873; // it is not possible using theme variables to set the text color
 }
 

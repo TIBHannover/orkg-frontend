@@ -100,7 +100,7 @@ const ValueItem = props => {
                                                 </Link>
                                             ) : (
                                                 <Button
-                                                    className="p-0 text-left objectLabel"
+                                                    className="p-0 text-start objectLabel"
                                                     color="link"
                                                     onClick={() => {
                                                         cookies.set('showedValueHelp', true, { path: env('PUBLIC_URL'), maxAge: 604800 });
@@ -150,7 +150,7 @@ const ValueItem = props => {
                                             </ValuePlugins>
                                             {preferences['showLiteralDataTypes'] && (
                                                 <small>
-                                                    <Badge color="light" className="ml-2" title={value.datatype}>
+                                                    <Badge color="light" className="ms-2" title={value.datatype}>
                                                         {DATA_TYPES.find(dt => dt.type === value.datatype)?.name ?? value.datatype}
                                                     </Badge>
                                                 </small>

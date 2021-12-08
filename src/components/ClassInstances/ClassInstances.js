@@ -90,7 +90,7 @@ const ClassInstances = props => {
                         <Label for="searchInputField">Search</Label>
                         <Input
                             id="searchInputField"
-                            className="ml-2"
+                            className="ms-2"
                             value={searchQuery}
                             onChange={e => setSearchQuery(e.target.value)}
                             placeholder="Enter a label"

@@ -193,7 +193,7 @@ function Resource(props) {
 
     return (
         <>
-            {isLoading && <Container className="box rounded pt-4 pb-4 pl-5 pr-5 mt-5 clearfix">Loading ...</Container>}
+            {isLoading && <Container className="box rounded pt-4 pb-4 ps-5 pe-5 mt-5 clearfix">Loading ...</Container>}
             {!isLoading && error && <>{error.statusCode === 404 ? <NotFound /> : <InternalServerError />}</>}
             {!isLoading && !error && (
                 <>
@@ -208,7 +208,7 @@ function Resource(props) {
                                     tag={Link}
                                     to={ROUTES.ADD_RESOURCE}
                                 >
-                                    <Icon icon={faPlus} className="mr-1" /> Create resource
+                                    <Icon icon={faPlus} className="me-1" /> Create resource
                                 </RequireAuthentication>
                                 {dedicatedLink && (
                                     <Button
@@ -221,14 +221,14 @@ function Resource(props) {
                                         })}
                                         style={{ marginRight: 2 }}
                                     >
-                                        <Icon icon={faExternalLinkAlt} className="mr-1" /> {dedicatedLink.label} view
+                                        <Icon icon={faExternalLinkAlt} className="me-1" /> {dedicatedLink.label} view
                                     </Button>
                                 )}
                                 {canEdit ? (
                                     !editMode ? (
                                         <RequireAuthentication
                                             component={Button}
-                                            className="float-right"
+                                            className="float-end"
                                             color="secondary"
                                             size="sm"
                                             onClick={() => (env('PWC_USER_ID') === createdBy ? setIsOpenPWCModal(true) : setEditMode(v => !v))}
@@ -282,11 +282,11 @@ function Resource(props) {
                     {editMode && canEdit && (
                         <EditModeHeader className="box rounded-top">
                             <Title>
-                                Edit mode <span className="pl-2">Every change you make is automatically saved</span>
+                                Edit mode <span className="ps-2">Every change you make is automatically saved</span>
                             </Title>
                         </EditModeHeader>
                     )}
-                    <Container className={`box clearfix pt-4 pb-4 pl-5 pr-5 ${editMode ? 'rounded-bottom' : 'rounded'}`}>
+                    <Container className={`box clearfix pt-4 pb-4 ps-5 pe-5 ${editMode ? 'rounded-bottom' : 'rounded'}`}>
                         <div className="mb-2">
                             {!editMode || !canEdit ? (
                                 <div className="pb-2 mb-3">

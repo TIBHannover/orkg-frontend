@@ -46,7 +46,7 @@ function TemplateEditorHeaderBar(props) {
                     {props.editMode || props.isSaving ? (
                         <ButtonGroup size="sm">
                             <Button
-                                className="float-left"
+                                className="float-start"
                                 disabled={props.isSaving}
                                 style={{ marginLeft: 1 }}
                                 color="secondary"
@@ -58,7 +58,7 @@ function TemplateEditorHeaderBar(props) {
                             </Button>
                         </ButtonGroup>
                     ) : (
-                        <Button className="float-right" color="secondary" size="sm" onClick={() => props.setEditMode(true)}>
+                        <Button className="float-end" color="secondary" size="sm" onClick={() => props.setEditMode(true)}>
                             <Icon icon={faPen} /> Edit
                         </Button>
                     )}

@@ -116,7 +116,7 @@ const SortableItem = sortableElement(({ author, index, authorIndex, editAuthor, 
 ));
 
 const DragHandle = sortableHandle(() => (
-    <StyledDragHandle className="ml-2 mr-2">
+    <StyledDragHandle className="ms-2 me-2">
         <Icon icon={faSort} />
     </StyledDragHandle>
 ));
@@ -288,7 +288,7 @@ class AuthorsInput extends Component {
                             this.toggle('showAuthorForm');
                         }}
                     >
-                        <Icon icon={faPlus} className="mr-2" /> Add {this.props.itemLabel}
+                        <Icon icon={faPlus} className="me-2" /> Add {this.props.itemLabel}
                     </AddAuthor>
                 </div>
                 <Modal onOpened={() => this.inputRef.current.focus()} isOpen={this.state.showAuthorForm} toggle={() => this.toggle('showAuthorForm')}>

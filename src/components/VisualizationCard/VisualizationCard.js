@@ -28,7 +28,7 @@ const VisualizationCard = props => {
     });
 
     return (
-        <VisualizationCardStyled style={{ flexWrap: 'wrap' }} className={`list-group-item d-flex pr-3 pl-3 `}>
+        <VisualizationCardStyled style={{ flexWrap: 'wrap' }} className={`list-group-item d-flex pe-3 ps-3 `}>
             <div className="col-md-9 d-flex p-0">
                 <div className="d-flex flex-column flex-grow-1">
                     <div>
@@ -42,7 +42,7 @@ const VisualizationCard = props => {
                             {props.visualization.label ? props.visualization.label : <em>No title</em>}
                         </Link>
                         {props.showBadge && (
-                            <div className="d-inline-block ml-2">
+                            <div className="d-inline-block ms-2">
                                 <CardBadge color="primary">Visualization</CardBadge>
                             </div>
                         )}
@@ -56,7 +56,7 @@ const VisualizationCard = props => {
                             )}
                             {props.visualization.created_at && (
                                 <>
-                                    <Icon size="sm" icon={faCalendar} className="ml-2 mr-1" />{' '}
+                                    <Icon size="sm" icon={faCalendar} className="ms-2 me-1" />{' '}
                                     {moment(props.visualization.created_at).format('DD-MM-YYYY')}
                                 </>
                             )}

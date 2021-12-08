@@ -27,13 +27,13 @@ const SmartReviewCard = ({ versions, showBadge }) => {
     });
 
     return (
-        <SmartReviewCardStyled style={{ flexWrap: 'wrap' }} className="list-group-item d-flex pr-3 pl-3">
+        <SmartReviewCardStyled style={{ flexWrap: 'wrap' }} className="list-group-item d-flex pe-3 ps-3">
             <div className="col-md-9 d-flex p-0">
                 <div className="d-flex flex-column flex-grow-1">
                     <div>
                         <Link to={reverse(ROUTES.SMART_REVIEW, { id: versions[0]?.id })}>{versions[0]?.label}</Link>
                         {showBadge && (
-                            <div className="d-inline-block ml-2">
+                            <div className="d-inline-block ms-2">
                                 <CardBadge color="primary">SmartReview</CardBadge>
                             </div>
                         )}
@@ -44,7 +44,7 @@ const SmartReviewCard = ({ versions, showBadge }) => {
                             {isLoadingMetaData && 'Loading...'}
                             {versions[0].created_at && (
                                 <>
-                                    <Icon size="sm" icon={faCalendar} className="ml-2 mr-1" /> {moment(versions[0].created_at).format('DD-MM-YYYY')}
+                                    <Icon size="sm" icon={faCalendar} className="ms-2 me-1" /> {moment(versions[0].created_at).format('DD-MM-YYYY')}
                                 </>
                             )}
                         </small>

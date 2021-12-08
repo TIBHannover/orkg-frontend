@@ -56,7 +56,7 @@ export default function TemplateHeader(props) {
     return (
         <div>
             <TemplateHeaderStyle className="d-flex">
-                <div className="flex-grow-1 mr-4">
+                <div className="flex-grow-1 me-4">
                     {!props.value.isEditing ? (
                         <>
                             {props.value.label}{' '}

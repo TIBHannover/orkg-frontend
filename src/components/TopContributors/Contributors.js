@@ -50,7 +50,7 @@ const Contributors = ({ researchFieldId }) => {
                                         {contributor.profile.display_name}
                                         <br />
                                         {contributor?.counts && contributor.counts.total !== null && (
-                                            <ul className="p-0 pl-3 mb-0 mt-2">
+                                            <ul className="p-0 ps-3 mb-0 mt-2">
                                                 <li>
                                                     {contributor.counts.papers} paper{contributor.counts.papers > 1 ? 's' : ''}
                                                 </li>
@@ -72,7 +72,7 @@ const Contributors = ({ researchFieldId }) => {
                                         {contributor?.counts && contributor.counts.total !== null && (
                                             <>
                                                 <hr className="mb-1 mt-1" style={{ background: '#fff' }} />
-                                                <ul className="p-0 pl-3 mb-0 mt-2">
+                                                <ul className="p-0 ps-3 mb-0 mt-2">
                                                     <li>
                                                         <i>
                                                             <b>{contributor.counts.total} </b>total contributions

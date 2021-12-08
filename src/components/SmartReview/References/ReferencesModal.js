@@ -152,14 +152,14 @@ const ReferencesModal = ({ show, toggle }) => {
                 <ListGroup>
                     {referencesSorted.map(reference => {
                         return (
-                            <ListGroupItem key={reference.literal.id} className="d-flex align-items-start pr-2">
+                            <ListGroupItem key={reference.literal.id} className="d-flex align-items-start pe-2">
                                 <div className="flex-grow-1">
                                     <Badge color="light">@{reference.parsedReference['citation-label']}</Badge>{' '}
                                     {reference.parsedReference.author?.[0]?.family} {reference.parsedReference.author?.length > 1 && 'et al.'}{' '}
                                     <em>{reference.parsedReference.title}</em>
                                 </div>
                                 <div className="d-flex flex-shrink-0">
-                                    <Button color="link" className="mr-1 px-1 py-0 text-secondary" onClick={() => handleEdit(reference)}>
+                                    <Button color="link" className="me-1 px-1 py-0 text-secondary" onClick={() => handleEdit(reference)}>
                                         <Icon icon={faPen} />
                                     </Button>
                                     <Button

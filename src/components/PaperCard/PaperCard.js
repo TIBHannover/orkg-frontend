@@ -1,4 +1,4 @@
-import { CustomInput } from 'reactstrap';
+import { Input } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import styled from 'styled-components';
@@ -25,7 +25,7 @@ const PaperCard = props => {
 
     return (
         <PaperCardStyled
-            className={`${props.isListGroupItem ? 'list-group-item' : ''}  d-flex pr-3 ${showActionButtons ? ' pl-2  ' : ' pl-3  '} ${
+            className={`${props.isListGroupItem ? 'list-group-item' : ''}  d-flex pe-3 ${showActionButtons ? ' ps-2  ' : ' ps-3  '} ${
                 props.selected ? 'selected' : ''
             }`}
             style={{ flexWrap: 'wrap' }}
@@ -35,7 +35,7 @@ const PaperCard = props => {
                     <div className="d-flex flex-column flex-shrink-0" style={{ width: '25px' }}>
                         {props.selectable && (
                             <div>
-                                <CustomInput type="checkbox" id={props.paper.id + 'input'} onChange={props.onSelect} checked={props.selected} />
+                                <Input type="checkbox" id={props.paper.id + 'input'} onChange={props.onSelect} checked={props.selected} />
                             </div>
                         )}
                         {!props.selectable && props.showAddToComparison && !!props.paper.contributions?.length && (
@@ -52,13 +52,13 @@ const PaperCard = props => {
                         </Link>
                         {props.contribution && <span className="text-muted"> - {props.contribution.title}</span>}
                         {props.showBadge && (
-                            <div className="d-inline-block ml-2">
+                            <div className="d-inline-block ms-2">
                                 <CardBadge color="primary">Paper</CardBadge>
                             </div>
                         )}
                     </div>
                     <div>
-                        <div className="d-inline-block d-md-none mt-1 mr-1">
+                        <div className="d-inline-block d-md-none mt-1 me-1">
                             {props.showBreadcrumbs && <RelativeBreadcrumbs researchField={props.paper.researchField} />}
                         </div>
                     </div>
@@ -85,7 +85,7 @@ const PaperCard = props => {
                         <small>
                             <Authors authors={props.paper.authors} />
                             {(props.paper.publicationMonth || props.paper.publicationYear) && (
-                                <Icon size="sm" icon={faCalendar} className="ml-2 mr-1" />
+                                <Icon size="sm" icon={faCalendar} className="ms-2 me-1" />
                             )}
                             {props.paper.publicationMonth && props.paper.publicationMonth.label > 0
                                 ? moment(props.paper.publicationMonth.label, 'M').format('MMMM')

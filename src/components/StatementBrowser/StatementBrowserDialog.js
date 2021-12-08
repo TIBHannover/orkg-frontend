@@ -59,13 +59,13 @@ class StatementBrowserDialog extends Component {
                         <Link
                             style={{ right: 45, position: 'absolute', top: 12 }}
                             title={`Go to ${this.props.type} page`}
-                            className="ml-2"
+                            className="ms-2"
                             to={reverse(route, { id: this.props.id })}
                             target="_blank"
                             rel="noopener noreferrer"
                         >
                             <Button color="link" className="p-0">
-                                Open {this.props.type} <Icon icon={faExternalLinkAlt} className="mr-1" />
+                                Open {this.props.type} <Icon icon={faExternalLinkAlt} className="me-1" />
                             </Button>
                         </Link>
                     )}

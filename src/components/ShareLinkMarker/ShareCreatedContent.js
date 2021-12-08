@@ -11,12 +11,12 @@ const ShareCreatedContent = ({ typeOfLink, title }) => {
             <Tippy placement="bottom" singleton={source} delay={500} />
             <div className="mb-3 mt-2">Share: </div>
             <Tippy singleton={target} content={`Share this ${typeOfLink ? typeOfLink : 'page'} on Facebook`}>
-                <a href={getFacebookSharerLink()} target="_blank" className="text-secondary  mr-2" rel="noopener noreferrer">
+                <a href={getFacebookSharerLink()} target="_blank" className="text-secondary  me-2" rel="noopener noreferrer">
                     <Icon icon={faFacebook} size="lg" />
                 </a>
             </Tippy>
             <Tippy singleton={target} content={`Share this  ${typeOfLink ? typeOfLink : 'page'} on Twitter`}>
-                <a href={getTwitterSharerLink(title)} target="_blank" className="text-secondary  mr-2" rel="noopener noreferrer">
+                <a href={getTwitterSharerLink(title)} target="_blank" className="text-secondary  me-2" rel="noopener noreferrer">
                     <Icon icon={faTwitter} size="lg" />
                 </a>
             </Tippy>
