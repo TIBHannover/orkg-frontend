@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import { Container } from 'reactstrap';
 import changelogPath from './CHANGELOG.md';
-import marked from 'marked';
+import { marked } from 'marked';
 import TitleBar from 'components/TitleBar/TitleBar';
 
 class Changelog extends Component {
