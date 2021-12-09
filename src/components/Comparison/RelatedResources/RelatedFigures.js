@@ -83,9 +83,9 @@ const RelatedFigures = props => {
         return (
             <>
                 <h3 className="mt-5 h5">Related figures</h3>{' '}
-                <CardColumns>
+                <CardColumns className="d-flex row">
                     {figures.map((figure, index) => (
-                        <span key={`figure${figure.figureId}`} ref={scrollTo} id={figure.figureId}>
+                        <div className="col-sm-3" key={`figure${figure.figureId}`} ref={scrollTo} id={figure.figureId}>
                             <CardStyled onClick={() => openLightBox(index)}>
                                 <CardImg
                                     id={figure.figureId}
@@ -96,7 +96,7 @@ const RelatedFigures = props => {
                                     className={location.hash === '#' + figure.figureId ? 'blink-figure' : ''}
                                 />
                             </CardStyled>
-                        </span>
+                        </div>
                     ))}
                 </CardColumns>
                 {isOpen && (
