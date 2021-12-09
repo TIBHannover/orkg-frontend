@@ -1,7 +1,6 @@
 import { render, screen, waitFor } from 'testUtils';
 import StatementBrowser from '../StatementBrowser';
 import { ENTITIES } from 'constants/graphSettings';
-import { ToastContainer } from 'react-toastify';
 
 jest.mock('react-flip-move', () => ({ children }) => children);
 jest.mock('components/UserAvatar/UserAvatar', () => () => null);
@@ -18,12 +17,7 @@ const setup = (
         syncBackend: true
     }
 ) => {
-    render(
-        <>
-            <StatementBrowser {...props} /> <ToastContainer position="top-right" autoClose={5000} hideProgressBar className="toast-container" />
-        </>,
-        { initialState }
-    );
+    render(<StatementBrowser {...props} />, { initialState });
 };
 
 describe('StatementBrowser with Template Box', () => {

@@ -3,7 +3,6 @@ import StatementBrowser from '../StatementBrowser';
 import { ENTITIES } from 'constants/graphSettings';
 import selectEvent from 'react-select-event';
 import { statementBrowser1P7V } from '../ValueItem/__mocks__/StatementBrowserDataValueItem';
-import { ToastContainer } from 'react-toastify';
 
 jest.mock('react-flip-move', () => ({ children }) => children);
 jest.mock('components/UserAvatar/UserAvatar', () => () => null);
@@ -19,12 +18,7 @@ const setup = (
         syncBackend: false
     }
 ) => {
-    render(
-        <>
-            <StatementBrowser {...props} /> <ToastContainer position="top-right" autoClose={5000} hideProgressBar className="toast-container" />
-        </>,
-        { initialState }
-    );
+    render(<StatementBrowser {...props} />, { initialState });
 };
 
 const clickOnEditValueButton = async (screen, valueId) => {

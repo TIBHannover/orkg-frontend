@@ -2,7 +2,6 @@ import { render, screen, fireEvent, waitFor, waitForElementToBeRemoved } from 't
 import StatementBrowser from '../StatementBrowser';
 import { ENTITIES } from 'constants/graphSettings';
 import selectEvent from 'react-select-event';
-import { ToastContainer } from 'react-toastify';
 
 jest.mock('react-flip-move', () => ({ children }) => children);
 jest.mock('components/UserAvatar/UserAvatar', () => () => null);
@@ -17,12 +16,7 @@ const setup = (
         enableEdit: true
     }
 ) => {
-    render(
-        <>
-            <StatementBrowser {...props} /> <ToastContainer position="top-right" autoClose={5000} hideProgressBar className="toast-container" />
-        </>,
-        { initialState }
-    );
+    render(<StatementBrowser {...props} />, { initialState });
 };
 
 // syncBackend = false
