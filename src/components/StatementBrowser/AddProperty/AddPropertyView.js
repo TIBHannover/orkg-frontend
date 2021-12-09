@@ -47,7 +47,9 @@ const AddPropertyView = props => {
                 ) : (
                     <AddPropertyFormStyle>
                         <InputGroup size="sm">
-                            <Icon className="icon" icon={faPlus} />
+                            <span class="input-group-text">
+                                <Icon className="icon" icon={faPlus} />
+                            </span>
 
                             <AutoComplete
                                 entityType={ENTITIES.PREDICATE}
