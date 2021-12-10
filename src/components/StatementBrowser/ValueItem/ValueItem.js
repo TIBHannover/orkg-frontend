@@ -56,7 +56,11 @@ const ValueItem = props => {
                     <div>
                         {!value.isSaving && (
                             <Tippy
-                                disabled={!preferences['showValueInfo'] || (!value.id && !value.classes?.length)}
+                                disabled={
+                                    !preferences['showValueInfo'] ||
+                                    (!value.id && !value.classes?.length) ||
+                                    value?.classes?.includes(CLASSES.PROBLEM)
+                                }
                                 delay={[500, 0]}
                                 interactive={true}
                                 content={
@@ -93,6 +97,7 @@ const ValueItem = props => {
                                                         researchProblemId: existingResourceId,
                                                         slug: resource.label
                                                     })}
+                                                    target="_blank"
                                                 >
                                                     <DescriptionTooltip id={existingResourceId} typeId={CLASSES.PROBLEM}>
                                                         {resource.label}
