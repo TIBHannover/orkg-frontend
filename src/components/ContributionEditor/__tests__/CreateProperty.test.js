@@ -17,7 +17,7 @@ describe('ContributionEditor CreateProperty', () => {
         const button = screen.getByRole('button', { name: /add property/i });
         fireEvent.click(button);
 
-        await waitFor(() => expect(screen.getByRole('textbox')).toBeInTheDocument());
+        await waitFor(() => expect(screen.getByRole('combobox')).toBeInTheDocument());
     });
 
     it('should hide the property autocomplete on blur', async () => {
@@ -25,9 +25,9 @@ describe('ContributionEditor CreateProperty', () => {
         const button = screen.getByRole('button', { name: /add property/i });
         fireEvent.click(button);
 
-        await waitFor(() => screen.getByRole('textbox'));
-        fireEvent.blur(screen.getByRole('textbox'));
+        await waitFor(() => screen.getByRole('combobox'));
+        fireEvent.blur(screen.getByRole('combobox'));
 
-        expect(screen.queryByRole('textbox')).not.toBeInTheDocument();
+        expect(screen.queryByRole('combobox')).not.toBeInTheDocument();
     });
 });

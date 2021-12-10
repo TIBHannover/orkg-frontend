@@ -35,7 +35,7 @@ describe('Add property', () => {
         expect(addButton).toBeInTheDocument();
         fireEvent.click(addButton);
         expect(screen.getByLabelText(/Select or type to enter a property/i)).toBeInTheDocument();
-        expect(screen.getByRole('textbox')).toBeInTheDocument();
+        expect(screen.getByRole('combobox')).toBeInTheDocument();
         expect(screen.getByRole('button', { name: 'Cancel' })).toBeInTheDocument();
     });
 
@@ -60,10 +60,10 @@ describe('Add property', () => {
         setup({}, config);
         const addButton = screen.getByRole('button', { name: 'Add property' });
         fireEvent.click(addButton);
-        const input = screen.getByRole('textbox');
+        const input = screen.getByRole('combobox');
         fireEvent.mouseDown(input);
         fireEvent.change(input, { target: { value: 'property label 1' } });
-        await selectEvent.select(screen.getByRole('textbox'), 'property label 1');
+        await selectEvent.select(screen.getByRole('combobox'), 'property label 1');
         expect(screen.getByRole('button', { name: 'Add property' })).toBeInTheDocument();
     });
 
@@ -75,12 +75,10 @@ describe('Add property', () => {
             syncBackend: false
         };
         setup({}, config);
-        const addButton = screen.getByRole('button', { name: 'Add property' });
-        fireEvent.click(addButton);
-        const input = screen.getByRole('textbox');
-        fireEvent.mouseDown(input);
-        fireEvent.change(input, { target: { value: 'test property' } });
-        await selectEvent.create(screen.getByRole('textbox'), 'test property');
-        await waitFor(() => expect(screen.queryByText(/Create new property/i)).toBeInTheDocument());
+        fireEvent.click(screen.getByRole('button', { name: 'Add property' }));
+        //Warning: You seem to have overlapping act() calls, this is not supported. Be sure to await previous act() calls before making a new one.
+        selectEvent.create(screen.getByRole('combobox'), 'test property');
+        await waitFor(() => expect(screen.getByText(/Often there are existing properties that you can use as well/i)).toBeInTheDocument());
     });
+    /*  */
 });

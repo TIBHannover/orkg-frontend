@@ -47,7 +47,7 @@ const AddPropertyView = props => {
                 ) : (
                     <AddPropertyFormStyle>
                         <InputGroup size="sm">
-                            <span class="input-group-text">
+                            <span className="input-group-text">
                                 <Icon className="icon" icon={faPlus} />
                             </span>
 
