@@ -100,7 +100,7 @@ const EntityRecognition = () => {
     }, [getExistingStatement, nerResults, propertyLabelMapping]);
 
     return (
-        <ListGroup className="ml-3">
+        <ListGroup>
             {Object.keys(displayedEntities).map(key => (
                 <Fragment key={key}>
                     {displayedEntities[key].length > 0 && (

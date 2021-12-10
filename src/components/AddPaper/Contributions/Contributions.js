@@ -164,7 +164,7 @@ const Contributions = () => {
                 </div>
             </div>
             <Row noGutters className="mt-2">
-                <Col md="9">
+                <Col lg="9">
                     <StyledHorizontalContributionsList id="contributionsList">
                         {contributions.allIds.map((contributionId, index) => {
                             const contribution = contributions.byId[contributionId];
@@ -198,7 +198,7 @@ const Contributions = () => {
             </Row>
 
             <Row noGutters>
-                <TransitionGroup className="col-md-9" exit={false}>
+                <TransitionGroup className="col-lg-9 mb-2" exit={false}>
                     <AnimationContainer classNames="fadeIn" timeout={{ enter: 700, exit: 0 }} key={selectedContribution}>
                         <div>
                             <Contribution id={selectedContribution} />
@@ -206,7 +206,7 @@ const Contributions = () => {
                     </AnimationContainer>
                 </TransitionGroup>
 
-                <Col md="3">
+                <Col lg="3" className="pl-lg-3">
                     <EntityRecognition />
                 </Col>
             </Row>
