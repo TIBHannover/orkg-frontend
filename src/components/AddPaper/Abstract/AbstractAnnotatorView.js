@@ -121,7 +121,7 @@ class AbstractAnnotatorView extends Component {
                                                 width: '100%',
                                                 background: getTrackBackground({
                                                     values: this.props.certaintyThreshold,
-                                                    colors: [this.props.theme.primary, this.props.theme.lightDarker],
+                                                    colors: [this.props.theme.smart, this.props.theme.lightDarker],
                                                     min: 0,
                                                     max: 1
                                                 })
@@ -154,7 +154,7 @@ class AbstractAnnotatorView extends Component {
                                         hideDefaultIcon={true}
                                         message="Here you can adjust the certainty value, that means at which level you accept the confidence ratio of automatic annotations. Only the shown annotations will be used to create the contribution data in the next step."
                                     >
-                                        <Icon style={{ cursor: 'pointer' }} className="text-primary" icon={faQuestionCircle} />
+                                        <Icon style={{ cursor: 'pointer' }} className="text-smart" icon={faQuestionCircle} />
                                     </Tooltip>
                                 </div>
                             </div>

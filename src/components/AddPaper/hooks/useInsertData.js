@@ -1,4 +1,4 @@
-import { fillStatements } from 'actions/statementBrowser';
+import { fillStatements, goToResourceHistory } from 'actions/statementBrowser';
 import { ENTITIES } from 'constants/graphSettings';
 import { useDispatch, useSelector } from 'react-redux';
 import { guid } from 'utils';
@@ -74,6 +74,13 @@ const useInsertData = () => {
         }
 
         dispatch(fillStatements({ statements: insertStatements, resourceId: contributions.byId[selectedContribution].resourceId }));
+        // open the root contribution resource, that's where the statements are added
+        dispatch(
+            goToResourceHistory({
+                id: contributions.byId[selectedContribution].resourceId,
+                historyIndex: 0
+            })
+        );
     };
 
     return { handleInsertData, getExistingStatement };
