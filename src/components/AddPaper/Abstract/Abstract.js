@@ -374,12 +374,12 @@ class Abstract extends Component {
                                 <Icon icon={faMagic} /> Annotator
                             </Button>
 
-                            <Button color="primary" className="float-right" onClick={this.handleInsertData}>
-                                Insert Data
-                            </Button>
-
                             <Button color="light" className="float-right mr-2" onClick={this.handleChangeAbstract}>
                                 Change abstract
+                            </Button>
+
+                            <Button color="smart" className="float-right" onClick={this.handleInsertData}>
+                                Insert Data
                             </Button>
                         </>
                     ) : (
@@ -388,12 +388,12 @@ class Abstract extends Component {
                                 <Icon icon={faThList} /> List of annotations
                             </Button>
 
-                            <Button color="primary" className="float-right" onClick={this.handleInsertData}>
-                                Insert Data
-                            </Button>
-
                             <Button color="light" className="float-right mr-2" onClick={this.handleChangeAbstract}>
                                 Change abstract
+                            </Button>
+
+                            <Button color="smart" className="float-right" onClick={this.handleInsertData}>
+                                Insert Data
                             </Button>
                         </>
                     )}

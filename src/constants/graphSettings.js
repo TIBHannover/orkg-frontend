@@ -62,7 +62,9 @@ export const PREDICATES = {
     GOOGLE_SCHOLAR_ID: 'googleScholarID',
     HAS_LIST: 'HasList',
     HAS_ENTRY: 'HasEntry',
-    HAS_HEADING_LEVEL: 'HasHeadingLevel'
+    HAS_HEADING_LEVEL: 'HasHeadingLevel',
+    HAS_METHOD: 'HasMethod',
+    HAS_LANGUAGE: 'HasLanguage'
 };
 
 export const CLASSES = {

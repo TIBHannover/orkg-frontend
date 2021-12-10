@@ -25,6 +25,7 @@ import { faMagic, faPlus } from '@fortawesome/free-solid-svg-icons';
 import styled from 'styled-components';
 import Tippy from '@tippyjs/react';
 import { updateSettings } from 'actions/statementBrowser';
+import EntityRecognition from 'components/AddPaper/EntityRecognition/EntityRecognition';
 
 const AnimationContainer = styled(CSSTransition)`
     transition: 0.3s background-color, 0.3s border-color;
@@ -157,12 +158,12 @@ const Contributions = () => {
                     </Tooltip>
                 </h2>
                 <div className="flex-shrink-0 ml-auto">
-                    <Button onClick={() => dispatch(toggleAbstractDialog())} outline size="sm" color="secondary">
+                    <Button onClick={() => dispatch(toggleAbstractDialog())} outline size="sm" color="smart">
                         <Icon icon={faMagic} /> Abstract annotator
                     </Button>
                 </div>
             </div>
-            <Row noGutters={true} className="mt-2">
+            <Row noGutters className="mt-2">
                 <Col md="9">
                     <StyledHorizontalContributionsList id="contributionsList">
                         {contributions.allIds.map((contributionId, index) => {
@@ -194,7 +195,9 @@ const Contributions = () => {
                         </li>
                     </StyledHorizontalContributionsList>
                 </Col>
+            </Row>
 
+            <Row noGutters>
                 <TransitionGroup className="col-md-9" exit={false}>
                     <AnimationContainer classNames="fadeIn" timeout={{ enter: 700, exit: 0 }} key={selectedContribution}>
                         <div>
@@ -202,6 +205,10 @@ const Contributions = () => {
                         </div>
                     </AnimationContainer>
                 </TransitionGroup>
+
+                <Col md="3">
+                    <EntityRecognition />
+                </Col>
             </Row>
 
             <hr className="mt-5 mb-3" />

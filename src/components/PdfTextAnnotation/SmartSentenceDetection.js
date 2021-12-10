@@ -18,7 +18,7 @@ const PROCESSING_SECONDS_PER_PAGE = 10;
 const Container = styled.div`
     // for showing a loading progress estimator background
     &:before {
-        background: #a8acbd;
+        background: ${props => props.theme.smartDarker};
         top: 0;
         left: 0;
         content: '';
@@ -30,8 +30,9 @@ const Container = styled.div`
         transition: width ${props => props.estimatedLoadingTime}s;
         visibility: ${props => (props.isLoading ? 'visible' : 'hidden')};
     }
+    color: #fff;
     border-radius: 4px;
-    background: #b6bacb;
+    background: ${props => props.theme.smart};
     padding: 10px 10px;
     display: flex;
     justify-content: space-between;
