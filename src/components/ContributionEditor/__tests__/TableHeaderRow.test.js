@@ -24,13 +24,13 @@ describe('TableHeaderRow', () => {
     it('should show autocomplete on property edit', () => {
         setup();
         fireEvent.click(screen.getByRole('button', { name: /edit/i, hidden: true }));
-        expect(screen.getByRole('textbox', { name: /enter a property/i })).toBeInTheDocument();
+        expect(screen.getByRole('combobox', { name: /enter a property/i })).toBeInTheDocument();
     });
 
     it('should hide autocomplete on blur input', () => {
         setup();
         fireEvent.click(screen.getByRole('button', { name: /edit/i, hidden: true }));
-        fireEvent.blur(screen.getByRole('textbox', { name: /enter a property/i }));
+        fireEvent.blur(screen.getByRole('combobox', { name: /enter a property/i }));
         expect(screen.getByRole('button', { name: /property label/i })).toBeInTheDocument();
     });
 });
