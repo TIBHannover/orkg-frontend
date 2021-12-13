@@ -129,6 +129,7 @@
         "@beam-australia/react-env": "^3.1.1",
         "@testing-library/jest-dom": "^5.16.1",
         "@testing-library/react": "^12.1.2",
+        "@testing-library/user-event": "^13.5.0",
         "auto-changelog": "^2.3.0",
         "eslint-config-prettier": "^8.3.0",
         "eslint-plugin-jsx-a11y": "^6.5.1",
