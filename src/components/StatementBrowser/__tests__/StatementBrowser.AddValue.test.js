@@ -44,8 +44,8 @@ describe('AddValue', () => {
         expect(screen.getByRole('button', { name: 'Cancel' })).toBeInTheDocument();
         const createButton = screen.getByRole('button', { name: 'Create' });
         expect(createButton).toBeInTheDocument();
-        expect(createButton).toHaveAttribute('disabled');
-        const inputs = screen.getAllByRole('textbox');
+        expect(createButton).toBeDisabled();
+        const inputs = screen.getAllByRole('combobox');
         expect(inputs).toHaveLength(2);
         inputs.forEach((item, index) => {
             if (index === 0) {
@@ -129,7 +129,7 @@ describe('AddValue', () => {
         setup();
         await clickOnAddButton(screen);
         fireEvent.change(screen.getByLabelText(/Enter a resource/i), { target: { value: 'resource label 1' } });
-        await selectEvent.select(screen.getByRole('textbox', { name: /Enter a resource/i }), 'resource label 1');
+        await selectEvent.select(screen.getByRole('combobox', { name: /Enter a resource/i }), 'resource label 1');
         await waitForElementToBeRemoved(() => screen.queryByText(/Loading/i));
         await waitFor(() => expect(screen.getByRole('button', { name: 'resource label 1' })).toBeInTheDocument());
         const addButton = screen.getByRole('button', { name: 'Add value' });
@@ -191,7 +191,7 @@ describe('AddValue', () => {
         setup();
         await clickOnAddButton(screen);
         await selectEvent.select(screen.getByText('Resource'), ['Boolean']);
-        fireEvent.change(screen.getByRole('combobox'), { target: { value: 'false' } });
+        fireEvent.change(screen.getAllByRole('combobox')[1], { target: { value: 'false' } });
         fireEvent.click(screen.getByRole('button', { name: 'Create' }));
         await waitFor(() => expect(screen.getByLabelText('Cross mark')).toBeInTheDocument());
         await waitFor(() => expect(screen.getByText('Boolean')).toHaveAttribute('title', 'xsd:boolean'));
@@ -203,7 +203,7 @@ describe('AddValue', () => {
         setup();
         await clickOnAddButton(screen);
         await selectEvent.select(screen.getByText('Resource'), ['Boolean']);
-        fireEvent.change(screen.getByRole('combobox'), { target: { value: 'true' } });
+        fireEvent.change(screen.getAllByRole('combobox')[1], { target: { value: 'true' } });
         fireEvent.click(screen.getByRole('button', { name: 'Create' }));
         await waitFor(() => expect(screen.getByLabelText('Check mark')).toBeInTheDocument());
         await waitFor(() => expect(screen.getByText('Boolean')).toHaveAttribute('title', 'xsd:boolean'));
