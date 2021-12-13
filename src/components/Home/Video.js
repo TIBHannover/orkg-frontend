@@ -27,7 +27,7 @@ const Video = () => {
             <Modal isOpen={isOpen} toggle={() => setIsOpen(v => !v)} size="lg">
                 <ModalHeader toggle={() => setIsOpen(v => !v)}>ORKG introduction video</ModalHeader>
                 <ModalBody>
-                    <div class="embed-responsive embed-responsive-16by9">
+                    <div className="embed-responsive embed-responsive-16by9">
                         <iframe
                             title="Explanation and introduction video of the ORKG"
                             scrolling="no"
@@ -35,7 +35,7 @@ const Video = () => {
                             src="//av.tib.eu/player/16120"
                             allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
                             allowFullScreen={true}
-                            class="embed-responsive-item"
+                            className="embed-responsive-item"
                         />
                     </div>
                 </ModalBody>

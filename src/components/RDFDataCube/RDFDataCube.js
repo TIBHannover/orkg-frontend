@@ -466,7 +466,7 @@ const RDFDataCube = props => {
 
                                 <div className="row">
                                     <InputGroup>
-                                        <span class="input-group-text">Go to page:</span>
+                                        <span className="input-group-text">Go to page:</span>
 
                                         <Input
                                             type="number"

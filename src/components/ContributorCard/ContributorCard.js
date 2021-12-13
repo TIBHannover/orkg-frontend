@@ -31,7 +31,7 @@ function ContributorCard(props) {
                             <br />
                             {props.contributor?.counts && props.contributor.counts.papers !== null && props.contributor.counts.papers !== undefined && (
                                 <>
-                                    <ul class="list-group list-group-horizontal-md mt-2 d-flex">
+                                    <ul className="list-group list-group-horizontal-md mt-2 d-flex">
                                         <li className="list-group-item p-0 ps-1 pe-2">
                                             {props.contributor.counts.papers} paper{props.contributor.counts.papers > 1 ? 's' : ''}
                                         </li>
