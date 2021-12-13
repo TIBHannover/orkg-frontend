@@ -159,7 +159,7 @@ describe('ValueItem', () => {
     it('should show select form when editing a Boolean', async () => {
         setup();
         await clickOnEditValueButton(screen, VALUE_IDS['Boolean']);
-        expect(screen.getByRole('combobox')).toBeInTheDocument();
+        expect(screen.getAllByRole('combobox')).toHaveLength(2);
         expect(screen.getByRole('option', { name: 'False' })).toBeInTheDocument();
         expect(screen.getByRole('option', { name: 'False' }).selected).toBe(true);
     });
@@ -169,7 +169,7 @@ describe('ValueItem', () => {
     it('should change value of boolean after editing a Boolean', async () => {
         setup();
         await clickOnEditValueButton(screen, VALUE_IDS['Boolean']);
-        fireEvent.change(screen.getByRole('combobox'), { target: { value: 'true' } });
+        fireEvent.change(screen.getAllByRole('combobox')[1], { target: { value: 'true' } });
         fireEvent.click(screen.getByRole('button', { name: 'Done' }));
         await waitFor(() => expect(screen.getByLabelText('Check mark')).toBeInTheDocument());
         await waitFor(() => expect(screen.getByText('Boolean')).toHaveAttribute('title', 'xsd:boolean'));

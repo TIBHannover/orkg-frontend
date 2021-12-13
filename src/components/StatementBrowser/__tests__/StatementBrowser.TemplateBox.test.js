@@ -43,7 +43,7 @@ describe('StatementBrowser with Template Box ', () => {
         const addDataUsedValueButtons = screen.getAllByTestId('add-value-P25059-false');
         addDataUsedValueButtons.forEach((item, index) => {
             expect(item).toBeInTheDocument();
-            expect(item).toHaveAttribute('disabled');
+            expect(item).toBeDisabled();
         });
     });
 });
