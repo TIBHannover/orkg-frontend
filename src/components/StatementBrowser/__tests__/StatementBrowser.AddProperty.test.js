@@ -35,7 +35,6 @@ describe('AddProperty', () => {
     it('should show toast when creating an existing property', async () => {
         setup({});
         // Add the first property ('Property 1')
-        await waitFor(() => expect(screen.queryByText(/Add property/i)).toBeInTheDocument());
         const addButton = screen.getByRole('button', { name: 'Add property' });
         userEvent.click(addButton);
         userEvent.type(screen.getByRole('combobox'), 'property 1');
