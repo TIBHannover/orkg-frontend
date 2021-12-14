@@ -57,6 +57,7 @@ describe('AddProperty', () => {
 describe('AddProperty no syncBackend', () => {
     it('should show newly created property', async () => {
         setup({});
+        await waitFor(() => expect(screen.queryByText(/Add property/i)).toBeInTheDocument());
         const addButton = screen.getByRole('button', { name: 'Add property' });
         userEvent.click(addButton);
         selectEvent.create(screen.getByRole('combobox', { id: 'addProperty' }), 'test property', { waitForElement: false });
