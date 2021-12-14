@@ -1,4 +1,3 @@
 {
-    "testTimeout": 20000,
     "setupFilesAfterEnv": ["./src/setupTests.js"]
 }
