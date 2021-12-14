@@ -73,7 +73,7 @@
         "react-meta-tags": "^1.0.1",
         "react-native-listener": "^1.1.0",
         "react-papaparse": "^3.18.1",
-        "react-pdf-highlighter": "git+https://github.com/aoelen/react-pdf-highlighter-dist.git",
+        "react-pdf-highlighter": "aoelen/react-pdf-highlighter-dist",
         "react-range": "^1.8.11",
         "react-redux": "^7.2.6",
         "react-router": "^5.2.0",
