@@ -93,7 +93,7 @@ const StyledTopBar = styled.div`
         .nav-item {
             border-top: 1px solid ${props => props.theme.light};
         }
-        .btn {
+        .btn:not(.search-icon) {
             width: 100%;
         }
         .btn-group {
@@ -347,241 +347,233 @@ class Header extends Component {
                     className={navbarClasses}
                     expand="md"
                     fixed="top"
+                    container={!this.state.isHomePageStyle ? true : 'sm'}
                     id="main-navbar"
+                    style={{ display: 'flex', width: '100%', transition: 'width 1s ease-in-out' }}
                 >
                     <GlobalStyle scrollbarWidth={scrollbarWidth(true)} cookieInfoDismissed={cookieInfoDismissed} />
 
-                    <div
-                        style={{ display: 'flex', width: '100%', transition: 'width 1s ease-in-out' }}
-                        className={!this.state.isHomePageStyle ? 'p-0 container' : 'container-sm'}
-                    >
-                        <div>
-                            <StyledLink to={ROUTES.HOME} className="me-4 p-0" onClick={this.closeMenu}>
-                                {!this.state.isHomePageStyle && <Logo />}
-                                {this.state.isHomePageStyle && <LogoWhite />}
-                            </StyledLink>
+                    <StyledLink to={ROUTES.HOME} className="me-4 p-0" onClick={this.closeMenu}>
+                        {!this.state.isHomePageStyle && <Logo />}
+                        {this.state.isHomePageStyle && <LogoWhite />}
+                    </StyledLink>
 
-                            <NavbarToggler onClick={this.toggle} />
-                        </div>
+                    <NavbarToggler onClick={this.toggle} />
 
-                        <Collapse isOpen={this.state.isOpen} navbar>
-                            <Nav className="me-auto flex-shrink-0" navbar>
-                                {/* view menu */}
-                                <ButtonDropdown nav>
-                                    <DropdownToggle nav className="ml-2">
-                                        View <FontAwesomeIcon style={{ marginTop: '4px' }} icon={faChevronDown} pull="right" />
-                                    </DropdownToggle>
-                                    <DropdownMenu>
-                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.COMPARISONS} onClick={this.closeMenu}>
-                                            Comparisons
-                                        </DropdownItem>
-                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.PAPERS} onClick={this.closeMenu}>
-                                            Papers
-                                        </DropdownItem>
-                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.VISUALIZATIONS} onClick={this.closeMenu}>
-                                            Visualizations
-                                        </DropdownItem>
-                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.SMART_REVIEWS} onClick={this.closeMenu}>
-                                            SmartReviews{' '}
-                                            <small>
-                                                <Badge color="info">Beta</Badge>
-                                            </small>
-                                        </DropdownItem>
-                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.LITERATURE_LISTS} onClick={this.closeMenu}>
-                                            Literature list{' '}
-                                            <small>
-                                                <Badge color="info">Beta</Badge>
-                                            </small>
-                                        </DropdownItem>
-                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.BENCHMARKS} onClick={this.closeMenu}>
-                                            Benchmarks
-                                        </DropdownItem>
-                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.RESEARCH_FIELDS} onClick={this.closeMenu}>
-                                            Research fields
-                                        </DropdownItem>
-                                        <DropdownItem divider />
-                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.OBSERVATORIES} onClick={this.closeMenu}>
-                                            Observatories{' '}
-                                            <small>
-                                                <Badge color="info">Beta</Badge>
-                                            </small>
-                                        </DropdownItem>
-                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.ORGANIZATIONS} onClick={this.closeMenu}>
-                                            Organizations{' '}
-                                            <small>
-                                                <Badge color="info">Beta</Badge>
-                                            </small>
-                                        </DropdownItem>
-                                        <DropdownItem divider />
+                    <Collapse isOpen={this.state.isOpen} navbar>
+                        <Nav className="me-auto flex-shrink-0" navbar>
+                            {/* view menu */}
+                            <ButtonDropdown nav>
+                                <DropdownToggle nav className="ms-2">
+                                    View <FontAwesomeIcon style={{ marginTop: '4px' }} icon={faChevronDown} pull="right" />
+                                </DropdownToggle>
+                                <DropdownMenu>
+                                    <DropdownItem tag={RouterNavLink} exact to={ROUTES.COMPARISONS} onClick={this.closeMenu}>
+                                        Comparisons
+                                    </DropdownItem>
+                                    <DropdownItem tag={RouterNavLink} exact to={ROUTES.PAPERS} onClick={this.closeMenu}>
+                                        Papers
+                                    </DropdownItem>
+                                    <DropdownItem tag={RouterNavLink} exact to={ROUTES.VISUALIZATIONS} onClick={this.closeMenu}>
+                                        Visualizations
+                                    </DropdownItem>
+                                    <DropdownItem tag={RouterNavLink} exact to={ROUTES.SMART_REVIEWS} onClick={this.closeMenu}>
+                                        SmartReviews{' '}
+                                        <small>
+                                            <Badge color="info">Beta</Badge>
+                                        </small>
+                                    </DropdownItem>
+                                    <DropdownItem tag={RouterNavLink} exact to={ROUTES.LITERATURE_LISTS} onClick={this.closeMenu}>
+                                        Literature list{' '}
+                                        <small>
+                                            <Badge color="info">Beta</Badge>
+                                        </small>
+                                    </DropdownItem>
+                                    <DropdownItem tag={RouterNavLink} exact to={ROUTES.BENCHMARKS} onClick={this.closeMenu}>
+                                        Benchmarks
+                                    </DropdownItem>
+                                    <DropdownItem tag={RouterNavLink} exact to={ROUTES.RESEARCH_FIELDS} onClick={this.closeMenu}>
+                                        Research fields
+                                    </DropdownItem>
+                                    <DropdownItem divider />
+                                    <DropdownItem tag={RouterNavLink} exact to={ROUTES.OBSERVATORIES} onClick={this.closeMenu}>
+                                        Observatories{' '}
+                                        <small>
+                                            <Badge color="info">Beta</Badge>
+                                        </small>
+                                    </DropdownItem>
+                                    <DropdownItem tag={RouterNavLink} exact to={ROUTES.ORGANIZATIONS} onClick={this.closeMenu}>
+                                        Organizations{' '}
+                                        <small>
+                                            <Badge color="info">Beta</Badge>
+                                        </small>
+                                    </DropdownItem>
+                                    <DropdownItem divider />
 
-                                        <DropdownItem header>Advanced views</DropdownItem>
+                                    <DropdownItem header>Advanced views</DropdownItem>
 
-                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.RESOURCES} onClick={this.closeMenu}>
-                                            Resources
-                                        </DropdownItem>
-                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.PROPERTIES} onClick={this.closeMenu}>
-                                            Properties
-                                        </DropdownItem>
-                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.CLASSES} onClick={this.closeMenu}>
-                                            Classes
-                                        </DropdownItem>
-                                    </DropdownMenu>
-                                </ButtonDropdown>
+                                    <DropdownItem tag={RouterNavLink} exact to={ROUTES.RESOURCES} onClick={this.closeMenu}>
+                                        Resources
+                                    </DropdownItem>
+                                    <DropdownItem tag={RouterNavLink} exact to={ROUTES.PROPERTIES} onClick={this.closeMenu}>
+                                        Properties
+                                    </DropdownItem>
+                                    <DropdownItem tag={RouterNavLink} exact to={ROUTES.CLASSES} onClick={this.closeMenu}>
+                                        Classes
+                                    </DropdownItem>
+                                </DropdownMenu>
+                            </ButtonDropdown>
 
-                                {/* tools menu */}
-                                <ButtonDropdown nav>
-                                    <DropdownToggle nav className="ms-2">
-                                        Tools <FontAwesomeIcon style={{ marginTop: '4px' }} icon={faChevronDown} pull="right" />
-                                    </DropdownToggle>
-                                    <DropdownMenu>
-                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.TOOLS} onClick={this.closeMenu}>
-                                            Tools overview
-                                        </DropdownItem>
-                                        <DropdownItem divider />
-                                        <DropdownItem header>Data entry</DropdownItem>
-                                        <DropdownItem
-                                            tag={RouterNavLink}
-                                            exact
-                                            to={ROUTES.CONTRIBUTION_EDITOR}
-                                            onClick={e => this.requireAuthentication(e, ROUTES.CONTRIBUTION_EDITOR)}
-                                        >
-                                            Contribution editor
-                                        </DropdownItem>
-                                        <DropdownItem
-                                            tag={RouterNavLink}
-                                            exact
-                                            to={ROUTES.CSV_IMPORT}
-                                            onClick={e => this.requireAuthentication(e, ROUTES.CSV_IMPORT)}
-                                        >
-                                            CSV import
-                                        </DropdownItem>
-                                        <DropdownItem
-                                            tag={RouterNavLink}
-                                            exact
-                                            to={ROUTES.PDF_ANNOTATION}
-                                            onClick={e => this.requireAuthentication(e, ROUTES.PDF_ANNOTATION)}
-                                        >
-                                            Survey table import
-                                        </DropdownItem>
-                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.TEMPLATES} onClick={this.closeMenu}>
-                                            Templates
-                                        </DropdownItem>
-                                        <DropdownItem divider />
-                                        <DropdownItem header>Data export</DropdownItem>
-                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.DATA} onClick={this.closeMenu}>
-                                            Data Access
-                                        </DropdownItem>
-                                    </DropdownMenu>
-                                </ButtonDropdown>
-
-                                {/* about menu */}
-                                <ButtonDropdown isOpen={this.state.isOpenAboutMenu} toggle={this.toggleAboutMenu} nav>
-                                    <DropdownToggle nav className="ms-2" onClick={this.toggleAboutMenu}>
-                                        About <FontAwesomeIcon style={{ marginTop: '4px' }} icon={faChevronDown} pull="right" />
-                                    </DropdownToggle>
-                                    <DropdownMenu>
-                                        <AboutMenu closeMenu={this.closeMenu} />
-                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.HELP_CENTER} onClick={this.closeMenu}>
-                                            Help center
-                                        </DropdownItem>
-                                        <DropdownItem
-                                            tag="a"
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            href="https://gitlab.com/TIBHannover/orkg/orkg-frontend/"
-                                            onClick={this.closeMenu}
-                                        >
-                                            GitLab <Icon size="sm" icon={faExternalLinkAlt} />
-                                        </DropdownItem>
-                                        <DropdownItem divider />
-                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.STATS} onClick={this.closeMenu}>
-                                            Statistics
-                                        </DropdownItem>
-                                    </DropdownMenu>
-                                </ButtonDropdown>
-                            </Nav>
-
-                            <SearchForm placeholder="Search..." onSearch={this.closeMenu} />
-
-                            <AddNew isHomePageStyle={this.state.isHomePageStyle} onAdd={this.closeMenu} />
-
-                            {!!this.props.user && (
-                                <div className="ms-2">
-                                    <StyledGravatar className="rounded-circle" email={email} size={40} id="TooltipExample" />
-                                    <StyledAuthTooltip
-                                        fade={false}
-                                        trigger="click"
-                                        innerClassName="pe-3 ps-3 pt-3 pb-3 clearfix"
-                                        placement="bottom-end"
-                                        isOpen={this.state.userTooltipOpen}
-                                        target="TooltipExample"
-                                        toggle={this.toggleUserTooltip}
-                                        innerRef={this.userPopup}
+                            {/* tools menu */}
+                            <ButtonDropdown nav>
+                                <DropdownToggle nav className="ms-2">
+                                    Tools <FontAwesomeIcon style={{ marginTop: '4px' }} icon={faChevronDown} pull="right" />
+                                </DropdownToggle>
+                                <DropdownMenu>
+                                    <DropdownItem tag={RouterNavLink} exact to={ROUTES.TOOLS} onClick={this.closeMenu}>
+                                        Tools overview
+                                    </DropdownItem>
+                                    <DropdownItem divider />
+                                    <DropdownItem header>Data entry</DropdownItem>
+                                    <DropdownItem
+                                        tag={RouterNavLink}
+                                        exact
+                                        to={ROUTES.CONTRIBUTION_EDITOR}
+                                        onClick={e => this.requireAuthentication(e, ROUTES.CONTRIBUTION_EDITOR)}
                                     >
-                                        <Row>
-                                            <div className="col-3 text-center">
-                                                <Link
+                                        Contribution editor
+                                    </DropdownItem>
+                                    <DropdownItem
+                                        tag={RouterNavLink}
+                                        exact
+                                        to={ROUTES.CSV_IMPORT}
+                                        onClick={e => this.requireAuthentication(e, ROUTES.CSV_IMPORT)}
+                                    >
+                                        CSV import
+                                    </DropdownItem>
+                                    <DropdownItem
+                                        tag={RouterNavLink}
+                                        exact
+                                        to={ROUTES.PDF_ANNOTATION}
+                                        onClick={e => this.requireAuthentication(e, ROUTES.PDF_ANNOTATION)}
+                                    >
+                                        Survey table import
+                                    </DropdownItem>
+                                    <DropdownItem tag={RouterNavLink} exact to={ROUTES.TEMPLATES} onClick={this.closeMenu}>
+                                        Templates
+                                    </DropdownItem>
+                                    <DropdownItem divider />
+                                    <DropdownItem header>Data export</DropdownItem>
+                                    <DropdownItem tag={RouterNavLink} exact to={ROUTES.DATA} onClick={this.closeMenu}>
+                                        Data Access
+                                    </DropdownItem>
+                                </DropdownMenu>
+                            </ButtonDropdown>
+
+                            {/* about menu */}
+                            <ButtonDropdown isOpen={this.state.isOpenAboutMenu} toggle={this.toggleAboutMenu} nav>
+                                <DropdownToggle nav className="ms-2" onClick={this.toggleAboutMenu}>
+                                    About <FontAwesomeIcon style={{ marginTop: '4px' }} icon={faChevronDown} pull="right" />
+                                </DropdownToggle>
+                                <DropdownMenu>
+                                    <AboutMenu closeMenu={this.closeMenu} />
+                                    <DropdownItem tag={RouterNavLink} exact to={ROUTES.HELP_CENTER} onClick={this.closeMenu}>
+                                        Help center
+                                    </DropdownItem>
+                                    <DropdownItem
+                                        tag="a"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        href="https://gitlab.com/TIBHannover/orkg/orkg-frontend/"
+                                        onClick={this.closeMenu}
+                                    >
+                                        GitLab <Icon size="sm" icon={faExternalLinkAlt} />
+                                    </DropdownItem>
+                                    <DropdownItem divider />
+                                    <DropdownItem tag={RouterNavLink} exact to={ROUTES.STATS} onClick={this.closeMenu}>
+                                        Statistics
+                                    </DropdownItem>
+                                </DropdownMenu>
+                            </ButtonDropdown>
+                        </Nav>
+
+                        <SearchForm placeholder="Search..." onSearch={this.closeMenu} />
+
+                        <AddNew isHomePageStyle={this.state.isHomePageStyle} onAdd={this.closeMenu} />
+
+                        {!!this.props.user && (
+                            <div className="ms-2">
+                                <StyledGravatar className="rounded-circle" email={email} size={40} id="TooltipExample" />
+                                <StyledAuthTooltip
+                                    fade={false}
+                                    trigger="click"
+                                    innerClassName="pe-3 ps-3 pt-3 pb-3 clearfix"
+                                    placement="bottom-end"
+                                    isOpen={this.state.userTooltipOpen}
+                                    target="TooltipExample"
+                                    toggle={this.toggleUserTooltip}
+                                    innerRef={this.userPopup}
+                                >
+                                    <Row>
+                                        <div className="col-3 text-center">
+                                            <Link onClick={this.toggleUserTooltip} to={reverse(ROUTES.USER_PROFILE, { userId: this.props.user.id })}>
+                                                <StyledGravatar
+                                                    className="rounded-circle"
+                                                    style={{ border: '3px solid #fff' }}
+                                                    email={email}
+                                                    size={76}
+                                                    id="TooltipExample"
+                                                />
+                                            </Link>
+                                        </div>
+                                        <div className="col-9 text-start">
+                                            <span className="ms-1">
+                                                {greeting} {this.props.user.displayName}
+                                            </span>
+                                            <ButtonGroup className="mt-2" size="sm">
+                                                <Button
+                                                    color="secondary"
                                                     onClick={this.toggleUserTooltip}
+                                                    tag={Link}
                                                     to={reverse(ROUTES.USER_PROFILE, { userId: this.props.user.id })}
                                                 >
-                                                    <StyledGravatar
-                                                        className="rounded-circle"
-                                                        style={{ border: '3px solid #fff' }}
-                                                        email={email}
-                                                        size={76}
-                                                        id="TooltipExample"
-                                                    />
-                                                </Link>
-                                            </div>
-                                            <div className="col-9 text-start">
-                                                <span className="ms-1">
-                                                    {greeting} {this.props.user.displayName}
-                                                </span>
-                                                <ButtonGroup className="mt-2" size="sm">
-                                                    <Button
-                                                        color="secondary"
-                                                        onClick={this.toggleUserTooltip}
-                                                        tag={Link}
-                                                        to={reverse(ROUTES.USER_PROFILE, { userId: this.props.user.id })}
-                                                    >
-                                                        Profile
-                                                    </Button>
-                                                    <Button
-                                                        color="secondary"
-                                                        className="text-nowrap"
-                                                        onClick={this.toggleUserTooltip}
-                                                        tag={Link}
-                                                        to={reverse(ROUTES.USER_SETTINGS)}
-                                                    >
-                                                        My account
-                                                    </Button>
-                                                    <Button onClick={this.handleSignOut} className="text-nowrap">
-                                                        Sign out
-                                                    </Button>
-                                                </ButtonGroup>
-                                            </div>
-                                        </Row>
-                                    </StyledAuthTooltip>
-                                </div>
-                            )}
+                                                    Profile
+                                                </Button>
+                                                <Button
+                                                    color="secondary"
+                                                    className="text-nowrap"
+                                                    onClick={this.toggleUserTooltip}
+                                                    tag={Link}
+                                                    to={reverse(ROUTES.USER_SETTINGS)}
+                                                >
+                                                    My account
+                                                </Button>
+                                                <Button onClick={this.handleSignOut} className="text-nowrap">
+                                                    Sign out
+                                                </Button>
+                                            </ButtonGroup>
+                                        </div>
+                                    </Row>
+                                </StyledAuthTooltip>
+                            </div>
+                        )}
 
-                            {!this.props.user && (
-                                <div className="mx-2 flex-shrink-0">
-                                    <Button
-                                        color="secondary"
-                                        className="ps-4 pe-4 sign-in"
-                                        outline
-                                        onClick={() => this.props.openAuthDialog({ action: 'signin' })}
-                                    >
-                                        {' '}
-                                        <FontAwesomeIcon className="me-1" icon={faUser} /> Sign in
-                                    </Button>
-                                </div>
-                            )}
-                        </Collapse>
+                        {!this.props.user && (
+                            <div className="mx-2 flex-shrink-0">
+                                <Button
+                                    color="secondary"
+                                    className="ps-4 pe-4 sign-in"
+                                    outline
+                                    onClick={() => this.props.openAuthDialog({ action: 'signin' })}
+                                >
+                                    {' '}
+                                    <FontAwesomeIcon className="me-1" icon={faUser} /> Sign in
+                                </Button>
+                            </div>
+                        )}
+                    </Collapse>
 
-                        <Authentication />
-                    </div>
+                    <Authentication />
                 </Navbar>
 
                 {this.props.location.pathname === ROUTES.HOME && <Jumbotron />}
