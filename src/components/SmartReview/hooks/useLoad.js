@@ -267,10 +267,6 @@ const useLoad = () => {
         return statements.filter(statement => statement.subject.id === subjectId);
     };
 
-    const getStatementsByObjectId = (statements, objectId) => {
-        return statements.filter(statement => statement.object.id === objectId);
-    };
-
     const getStatementsByPredicateAndSubject = (statements, predicateId, subjectId) => {
         return statements.filter(statement => statement.subject.id === subjectId && statement.predicate.id === predicateId);
     };
