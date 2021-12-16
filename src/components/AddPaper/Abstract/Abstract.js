@@ -157,14 +157,31 @@ class Abstract extends Component {
             } catch {
                 DOI = false;
             }
-            if (!this.props.title || !DOI) {
+            if (!this.props.title && !DOI) {
                 this.props.setAbstractDialogView('input');
                 return;
             }
             this.setState({
                 isAbstractLoading: true
             });
-            return submitGetRequest(semanticScholarUrl + DOI)
+            let lookupId = DOI;
+            if (this.props.title && !lookupId) {
+                let paperSearchResult = null;
+                try {
+                    paperSearchResult = await submitGetRequest(
+                        `${semanticScholarUrl}graph/v1/paper/search?query=${encodeURIComponent(this.props.title)}&limit=1`
+                    );
+                } catch (e) {}
+                if (paperSearchResult?.data?.length === 0) {
+                    this.setState({
+                        isAbstractLoading: false
+                    });
+                    this.props.setAbstractDialogView('input');
+                    return;
+                }
+                lookupId = paperSearchResult.data[0].paperId;
+            }
+            return submitGetRequest(`${semanticScholarUrl}v1/paper/${lookupId}`)
                 .then((data, reject) => {
                     if (!data.abstract) {
                         return reject;

@@ -31,8 +31,7 @@ class AbstractInputView extends Component {
                     <Alert color="light">We couldn't fetch the abstract of the paper, please enter it manually or skip this step.</Alert>
                 )}
                 <Alert color="info">
-                    The abstract annotator automatically extracts concepts from paper abstracts. This is an <em>experimental feature</em>, which can
-                    produce incorrect results.
+                    The provided abstract is not stored and is only used for processing. So you do not have to worry about potential copyright issues
                 </Alert>
                 <Label for="paperAbstract">
                     <Tooltip message="Enter the paper abstract to get automatically generated concepts for you paper.">

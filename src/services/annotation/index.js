@@ -40,13 +40,17 @@ export const getNerResults = async ({ title = '', abstract = '' }) => {
     const propertyMapping = {
         RESEARCH_PROBLEM: PREDICATES.HAS_RESEARCH_PROBLEM,
         METHOD: PREDICATES.HAS_METHOD,
-        LANGUAGE: PREDICATES.HAS_LANGUAGE
+        LANGUAGE: PREDICATES.HAS_LANGUAGE,
+        RESOURCE: PREDICATES.HAS_RESOURCE,
+        TOOL: PREDICATES.HAS_TOOL,
+        SOLUTION: PREDICATES.HAS_SOLUTION,
+        DATASET: PREDICATES.HAS_DATASET
     };
 
     // dummy data
-    // TOOD: capitalize the first letter of each resource
+    // TODO: capitalize the first letter of each resource
     const entities = {
-        RESEARCH_PROBLEM: ['Statistical machine translation', 'POS', 'GermanEnglish translation task', 'non-existing resource'],
+        RESEARCH_PROBLEM: ['Statistical machine translation', 'POS', 'GermanEnglish translation task'],
         LANGUAGE: ['Filipino'],
         METHOD: ['Probabilistic Approaches']
     };

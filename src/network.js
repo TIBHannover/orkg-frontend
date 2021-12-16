@@ -1,7 +1,7 @@
 import { Cookies } from 'react-cookie';
 import env from '@beam-australia/react-env';
 
-export const semanticScholarUrl = env('SEMANTICSCHOLAR_URL');
+export const semanticScholarUrl = env('SEMANTIC_SCHOLAR_URL');
 
 export const submitGetRequest = (url, headers, send_token = false) => {
     if (!url) {

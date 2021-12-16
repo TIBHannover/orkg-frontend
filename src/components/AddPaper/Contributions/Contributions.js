@@ -21,11 +21,12 @@ import Confirm from 'reactstrap-confirm';
 import Contribution from './Contribution';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faMagic, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faMagic, faPlus, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import styled from 'styled-components';
 import Tippy from '@tippyjs/react';
 import { updateSettings } from 'actions/statementBrowser';
 import EntityRecognition from 'components/AddPaper/EntityRecognition/EntityRecognition';
+import useDetermineResearchField from 'components/AddPaper/EntityRecognition/useDetermineResearchField';
 
 const AnimationContainer = styled(CSSTransition)`
     transition: 0.3s background-color, 0.3s border-color;
@@ -51,9 +52,11 @@ const Contributions = () => {
         url,
         selectedResearchField,
         contributions,
-        selectedContribution
+        selectedContribution,
+        abstract
     } = useSelector(state => state.addPaper);
     const { resources, properties, values } = useSelector(state => state.statementBrowser);
+    const { isComputerScienceField } = useDetermineResearchField();
 
     const dispatch = useDispatch();
 
@@ -129,6 +132,8 @@ const Contributions = () => {
         dispatch(openTour(step));
     };
 
+    const showAbstractWarning = isComputerScienceField && !abstract;
+
     return (
         <div>
             <div className="d-flex align-items-center mt-4 mb-4">
@@ -158,9 +163,20 @@ const Contributions = () => {
                     </Tooltip>
                 </h2>
                 <div className="flex-shrink-0 ml-auto">
-                    <Button onClick={() => dispatch(toggleAbstractDialog())} outline size="sm" color="smart">
-                        <Icon icon={faMagic} /> Abstract annotator
-                    </Button>
+                    <Tippy
+                        hideOnClick
+                        showOnCreate
+                        disabled={!showAbstractWarning}
+                        placement="right"
+                        content="We were unable to fetch the abstract of the paper. Click the button to manually add it, this improves the smart recommendations"
+                    >
+                        <span>
+                            <Button onClick={() => dispatch(toggleAbstractDialog())} outline size="sm" color="smart">
+                                {!showAbstractWarning ? <Icon icon={faMagic} /> : <Icon icon={faExclamationTriangle} className="text-warning" />}{' '}
+                                Abstract annotator
+                            </Button>
+                        </span>
+                    </Tippy>
                 </div>
             </div>
             <Row noGutters className="mt-2">
@@ -207,7 +223,7 @@ const Contributions = () => {
                 </TransitionGroup>
 
                 <Col lg="3" className="pl-lg-3">
-                    <EntityRecognition />
+                    {isComputerScienceField && !showAbstractWarning && <EntityRecognition />}
                 </Col>
             </Row>
 

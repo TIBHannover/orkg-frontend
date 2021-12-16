@@ -64,7 +64,10 @@ export const PREDICATES = {
     HAS_ENTRY: 'HasEntry',
     HAS_HEADING_LEVEL: 'HasHeadingLevel',
     HAS_METHOD: 'HasMethod',
-    HAS_LANGUAGE: 'HasLanguage'
+    HAS_LANGUAGE: 'HasLanguage',
+    HAS_RESOURCE: 'HasResource',
+    HAS_TOOL: 'HasTool',
+    HAS_SOLUTION: 'HasSolution'
 };
 
 export const CLASSES = {
@@ -120,6 +123,7 @@ export const CLASSES = {
 
 export const MISC = {
     RESEARCH_FIELD_MAIN: 'R11',
+    RESEARCH_FIELD_COMPUTER_SCIENCE: 'R132',
     DEFAULT_LITERAL_DATATYPE: 'xsd:string',
     UNKNOWN_ID: '00000000-0000-0000-0000-000000000000'
 };

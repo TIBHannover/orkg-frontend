@@ -1,11 +1,13 @@
 import { faAngleDoubleLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import useInsertData from 'components/AddPaper/hooks/useInsertData';
+import { MISC, PREDICATES } from 'constants/graphSettings';
 import React, { Fragment, useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { ListGroup, ListGroupItem } from 'reactstrap';
 import { getNerResults } from 'services/annotation';
+import { getStatementsBySubject } from 'services/backend/statements';
 import styled from 'styled-components';
 
 const AnimationContainer = styled(CSSTransition)`
@@ -52,12 +54,15 @@ const EntityRecognition = () => {
     const [nerResults, setNerResults] = useState({});
     const { getExistingStatement, handleInsertData } = useInsertData();
 
-    // TODO: add all predicates
     const propertyLabelMapping = useMemo(
         () => ({
-            P32: 'Has research problem',
-            HasLanguage: 'Has language',
-            HasMethod: 'Has method'
+            [PREDICATES.HAS_RESEARCH_PROBLEM]: 'Has research problem',
+            [PREDICATES.HAS_LANGUAGE]: 'Has language',
+            [PREDICATES.HAS_METHOD]: 'Has method',
+            [PREDICATES.HAS_RESOURCE]: 'Has resource',
+            [PREDICATES.HAS_TOOL]: 'Has tool',
+            [PREDICATES.HAS_SOLUTION]: 'Has solution',
+            [PREDICATES.HAS_DATASET]: 'Has dataset'
         }),
         []
     );
@@ -137,7 +142,5 @@ const EntityRecognition = () => {
         </ListGroup>
     );
 };
-
-EntityRecognition.propTypes = {};
 
 export default EntityRecognition;
