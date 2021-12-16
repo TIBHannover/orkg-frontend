@@ -9,6 +9,7 @@ import { toast } from 'react-toastify';
 import { Button, Input, InputGroup, InputGroupAddon } from 'reactstrap';
 import { getPaperByDOI } from 'services/backend/misc';
 import { getStatementsBySubject } from 'services/backend/statements';
+import { truncate } from 'lodash';
 import { getPaperData, parseCiteResult } from 'utils';
 
 const DoiItem = ({ toggleItem, isExpanded, value, onChange, onPopulateMetadata, lookupOnMount }) => {
@@ -57,7 +58,8 @@ const DoiItem = ({ toggleItem, isExpanded, value, onChange, onPopulateMetadata, 
                     month: parseResult.paperPublicationMonth,
                     year: parseResult.paperPublicationYear,
                     doi: parseResult.doi,
-                    publishedIn: parseResult.publishedIn
+                    publishedIn: parseResult.publishedIn,
+                    url: parseResult.url
                 });
 
                 setIsValid(true);
@@ -86,7 +88,7 @@ const DoiItem = ({ toggleItem, isExpanded, value, onChange, onPopulateMetadata, 
     }, [handleLookup, shouldPerformLookup]);
 
     return (
-        <ListItem toggleItem={toggleItem} label="Paper DOI or BibTeX" open={isExpanded} value={value}>
+        <ListItem toggleItem={toggleItem} label="Paper DOI or BibTeX" open={isExpanded} value={truncate(value ? value : '', { length: 60 })}>
             <InputGroup>
                 <Input value={value} onChange={e => onChange(e.target.value)} disabled={isLoading} valid={isValid} invalid={isValid === false} />
                 <InputGroupAddon addonType="append">

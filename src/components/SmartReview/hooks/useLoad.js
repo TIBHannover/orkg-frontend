@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux';
 import { getResource } from 'services/backend/resources';
 import { getStatementsBundleBySubject, getStatementsByObjectAndPredicate, getStatementsBySubjects } from 'services/backend/statements';
 import { getResourceData } from 'services/similarity';
-import { countBy, orderBy, sortBy } from 'lodash';
+import { countBy, orderBy } from 'lodash';
 import Cite from 'citation-js';
 
 const useLoad = () => {
@@ -120,16 +120,17 @@ const useLoad = () => {
                     label: link?.label
                 };
             } else if (type === CLASSES.ONTOLOGY_SECTION) {
-                // sortBy probably not needed once https://gitlab.com/TIBHannover/orkg/orkg-backend/-/merge_requests/199/diffs is merged
                 const properties =
-                    sortBy(section.statements.filter(statement => statement.predicate.id === PREDICATES.SHOW_PROPERTY), 'id').map(
-                        statement => statement.object
-                    ) ?? [];
+                    section.statements
+                        .filter(statement => statement.predicate.id === PREDICATES.SHOW_PROPERTY)
+                        .map(statement => statement.object)
+                        .reverse() ?? [];
 
                 const entities =
-                    sortBy(section.statements.filter(statement => statement.predicate.id === PREDICATES.HAS_ENTITY), 'id').map(
-                        statement => statement.object
-                    ) ?? [];
+                    section.statements
+                        .filter(statement => statement.predicate.id === PREDICATES.HAS_ENTITY)
+                        .map(statement => statement.object)
+                        .reverse() ?? [];
 
                 const entityStatements = entities.flatMap(entity => ({
                     ...entity,

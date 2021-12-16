@@ -1,6 +1,6 @@
 import Tippy from '@tippyjs/react';
 import ListReferences from 'components/SmartReview/References/ListReferences';
-import { SectionStyled, SectionTypeStyled } from 'components/SmartReview/styled';
+import { SectionStyled, SectionTypeStyled } from 'components/ArticleBuilder/styled';
 import React from 'react';
 
 const ReferencesSection = () => {
@@ -12,7 +12,7 @@ const ReferencesSection = () => {
                 </Tippy>
             </SectionTypeStyled>
 
-            <h2 id="section-acknowledgements" className="h4 border-bottom pb-1 mb-3">
+            <h2 id="section-references" className="h4 border-bottom pb-1 mb-3">
                 <Tippy content="This section is automatically generated, it is not possible to change it">
                     <span>References</span>
                 </Tippy>

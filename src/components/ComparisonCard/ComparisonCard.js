@@ -16,7 +16,7 @@ import UserAvatar from 'components/UserAvatar/UserAvatar';
 import RelativeBreadcrumbs from 'components/RelativeBreadcrumbs/RelativeBreadcrumbs';
 import { truncate } from 'lodash';
 
-const ComparisonCardStyled = styled.div`
+const ComparisonCardStyled = styled.li`
     &:last-child {
         border-bottom-right-radius: ${props => (props.rounded === 'true' ? '0 !important' : '')};
     }
@@ -30,8 +30,9 @@ const ComparisonCard = props => {
     });
     return (
         <ComparisonCardStyled
+            style={{ flexWrap: 'wrap' }}
             rounded={props.rounded}
-            className={`list-group-item list-group-item-action d-flex pr-3 ${props.showCurationFlags ? ' pl-2  ' : ' pl-4  '}`}
+            className={`list-group-item d-flex pr-3 ${props.showCurationFlags ? ' pl-2  ' : ' pl-4  '}`}
         >
             <div className="col-md-9 d-flex p-0">
                 {props.showCurationFlags && (

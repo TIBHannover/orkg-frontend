@@ -10,6 +10,7 @@ import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
 import useAuthorWorks from 'components/Author/hooks/useAuthorWorks';
 import PropTypes from 'prop-types';
 import { useCallback } from 'react';
+import TitleBar from 'components/TitleBar/TitleBar';
 
 const AuthorWorks = ({ authorId }) => {
     const { isNextPageLoading, hasNextPage, works, page, totalElements, isLastPageReached, handleLoadMore } = useAuthorWorks({
@@ -71,14 +72,16 @@ const AuthorWorks = ({ authorId }) => {
     return (
         <>
             <div>
-                <Container className="d-flex align-items-center mt-4 mb-4">
-                    <div className="d-flex flex-grow-1">
-                        <h1 className="h5">Works</h1>
-                        <div className="text-muted ml-3 mt-0">
-                            {totalElements === 0 && isNextPageLoading ? <Icon icon={faSpinner} spin /> : totalElements} works
+                <TitleBar
+                    titleSize="h5"
+                    titleAddition={
+                        <div className="text-muted">
+                            {totalElements === 0 && isNextPageLoading ? <Icon icon={faSpinner} spin /> : totalElements} items
                         </div>
-                    </div>
-                </Container>
+                    }
+                >
+                    Works
+                </TitleBar>
                 <Container className="p-0">
                     {works.length > 0 && <ListGroup>{works.filter(r => r).map(resource => renderItem(resource))}</ListGroup>}
                     {totalElements === 0 && !isNextPageLoading && (

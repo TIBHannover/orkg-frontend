@@ -18,7 +18,7 @@ const COLUMN_AMOUNT = 3;
 
 const ComparisonLoadingComponent = () => {
     return (
-        <div>
+        <div style={{ overflowX: 'auto' }}>
             <div className="clearfix" />
             <table className="mb-0 mt-3 table" style={{ maxWidth: 1044 }}>
                 <tbody className="table-borderless">

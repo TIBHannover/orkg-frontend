@@ -57,17 +57,12 @@ const EditorTable = ({ scrollContainerBody }) => {
             <ScrollSyncPane group="one">
                 {/* paddingBottom for the 'add value' bottom, which is positioned partially below the table */}
                 <div ref={scrollContainerBody} style={{ overflow: 'auto', paddingBottom: 15 }}>
-                    <div {...getTableBodyProps()} className="comparisonBody" style={{ width: '100%' }}>
+                    <div {...getTableBodyProps()} className="comparisonBody" style={{ ...getTableProps().style }}>
                         <FlipMove duration={700} enterAnimation="accordionVertical" leaveAnimation="accordionVertical">
                             {rows.map(row => {
                                 prepareRow(row);
                                 return (
-                                    <div
-                                        {...row.getRowProps()}
-                                        key={row.values.property.staticRowId}
-                                        className="tr d-flex"
-                                        style={{ zIndex: 100 - row.index }}
-                                    >
+                                    <div {...row.getRowProps()} className="tr d-flex" style={{ zIndex: 100 - row.index }}>
                                         {row.cells.map(cell => (
                                             <div {...cell.getCellProps()} className="td">
                                                 {cell.render('Cell')}

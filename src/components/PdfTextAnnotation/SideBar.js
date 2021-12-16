@@ -11,6 +11,7 @@ import SmartSentenceDetection from './SmartSentenceDetection';
 import { discardChanges } from 'actions/pdfTextAnnotation';
 import { useDispatch, useSelector } from 'react-redux';
 import Help from './Help';
+import PropTypes from 'prop-types';
 
 const SideBarStyled = styled.div`
     height: calc(100vh - 73px);
@@ -30,12 +31,12 @@ const HeartsAreRed = styled.div`
     }
 `;
 
-const SideBar = () => {
+const SideBar = ({ pdfViewer }) => {
     const { recommendedClasses, nonRecommendedClasses } = useOntology();
     const [saveModalIsOpen, setSaveModalIsOpen] = useState(false);
     const [saveDropdownIsOpen, setSaveDropdownIsOpen] = useState(false);
     const [helpIsOpen, setHelpIsOpen] = useState(false);
-    const pdfViewer = useSelector(state => state.pdfTextAnnotation.pdfViewer);
+    const isLoadedPdfViewer = useSelector(state => state.pdfTextAnnotation.isLoadedPdfViewer);
     const dispatch = useDispatch();
 
     const toggleSaveModal = () => {
@@ -50,11 +51,11 @@ const SideBar = () => {
 
     // ensure the help tour is opened automatically only the first time the pdfViewer is initialized
     useEffect(() => {
-        if (!pdfViewer) {
+        if (!isLoadedPdfViewer) {
             return;
         }
         setHelpIsOpen(true);
-    }, [pdfViewer]);
+    }, [isLoadedPdfViewer]);
 
     return (
         <SideBarStyled>
@@ -81,7 +82,7 @@ const SideBar = () => {
 
             <Completion />
 
-            <SmartSentenceDetection />
+            <SmartSentenceDetection pdfViewer={pdfViewer} />
 
             <div id="annotation-categories">
                 {recommendedClasses.map(annotationClass => (
@@ -104,6 +105,10 @@ const SideBar = () => {
             <Save isOpen={saveModalIsOpen} toggle={toggleSaveModal} />
         </SideBarStyled>
     );
+};
+
+SideBar.propTypes = {
+    pdfViewer: PropTypes.object
 };
 
 export default SideBar;

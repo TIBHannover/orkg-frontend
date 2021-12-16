@@ -35,20 +35,19 @@ const CreatePaperModal = ({ isOpen, toggle, onCreatePaper, initialValue }) => {
     }, [initialValue]);
 
     const handleCreate = async () => {
-        const contributionId = await createPaper({
+        const ids = await createPaper({
             title,
             month,
             year,
             authors,
-            doi,
+            doi: REGEX.DOI.test(doi) ? doi : null,
             publishedIn,
             researchField,
             url,
             setOpenItem
         });
-
-        if (contributionId) {
-            onCreatePaper(contributionId);
+        if (ids) {
+            onCreatePaper(ids);
         }
     };
 
@@ -105,8 +104,9 @@ const CreatePaperModal = ({ isOpen, toggle, onCreatePaper, initialValue }) => {
             setYear(paper.year || year);
             setDoi(paper.doi || doi);
             setPublishedIn(paper.publishedIn || publishedIn);
+            setUrl(paper.url || url);
         },
-        [authors, doi, month, publishedIn, title, year]
+        [authors, doi, month, publishedIn, title, url, year]
     );
 
     const toggleItem = item => setOpenItem(openItem !== item ? item : null);

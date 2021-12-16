@@ -16,12 +16,12 @@ const setup = className => {
 };
 
 describe('resource value', () => {
-    test('should render a resource as button', () => {
+    it('should render a resource as button', () => {
         const { label } = setup('resource');
         expect(screen.getByRole('button', { name: label })).toBeInTheDocument();
     });
 
-    test('should show autocomplete when clicking edit', () => {
+    it('should show autocomplete when clicking edit', () => {
         const { label, setDisableCreate } = setup('resource');
 
         fireEvent.click(screen.getByRole('button', { name: /edit/i, hidden: true }));
@@ -34,18 +34,18 @@ describe('resource value', () => {
 });
 
 describe('literal value', () => {
-    test('should render a literal as text', () => {
+    it('should render a literal as text', () => {
         const { label } = setup('literal');
 
         expect(screen.getByText(label)).toBeInTheDocument();
         expect(screen.queryByRole('button', { name: label })).not.toBeInTheDocument();
     });
 
-    test('should show input when clicking edit', () => {
+    it('should show input when clicking edit', () => {
         const { label, setDisableCreate } = setup('literal');
 
         fireEvent.click(screen.getByRole('button', { name: /edit/i, hidden: true }));
-        const input = screen.getByPlaceholderText(/enter a literal/i);
+        const input = screen.getByPlaceholderText(/enter a value/i);
 
         expect(input).toBeInTheDocument();
         expect(input.value).toBe(label);

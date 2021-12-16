@@ -3,6 +3,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import comparisonPublishImg from 'assets/img/AddComparison/comparison-publish-preview.png';
 import contributionEditorPreview from 'assets/img/AddComparison/contribution-editor-preview.png';
 import csvImportPreview from 'assets/img/AddComparison/csv-import-preview.png';
+import TitleBar from 'components/TitleBar/TitleBar';
 import ROUTES from 'constants/routes';
 import { Link } from 'react-router-dom';
 import { Button, Col, Container, Row } from 'reactstrap';
@@ -12,9 +13,7 @@ const AddComparison = () => {
 
     return (
         <div>
-            <Container>
-                <h1 className="h4 mt-4 mb-4">Add comparison</h1>
-            </Container>
+            <TitleBar>Add comparison</TitleBar>
             <Container className="box rounded py-4 px-5">
                 <Row>
                     <Col md="4">

@@ -22,7 +22,7 @@ const ReferencesModal = ({ show, toggle }) => {
 
     useEffect(() => {
         setReferencesSorted(
-            references.sort((a, b) => a?.parsedReference?.author?.[0]?.family?.localeCompare(b?.parsedReference?.author?.[0]?.family))
+            [...references].sort((a, b) => a?.parsedReference?.author?.[0]?.family?.localeCompare(b?.parsedReference?.author?.[0]?.family))
         );
     }, [references]);
 
@@ -60,7 +60,7 @@ const ReferencesModal = ({ show, toggle }) => {
     const updateReference = useCallback(
         ({ bibtex, literalId }) => {
             setIsParsingBibtex(true);
-            console.log('updateReference');
+
             parseBibtex({ bibtex, checkForDuplicate: false })
                 .then(parsedReference => {
                     if (parsedReference) {
@@ -83,7 +83,7 @@ const ReferencesModal = ({ show, toggle }) => {
     const createReference = useCallback(
         bibtex => {
             setIsParsingBibtex(true);
-            console.log('createReference');
+
             parseBibtex({ bibtex, checkForDuplicate: true })
                 .then(parsedReference => {
                     if (!parsedReference) {
@@ -153,7 +153,7 @@ const ReferencesModal = ({ show, toggle }) => {
                 <ListGroup>
                     {referencesSorted.map(reference => {
                         return (
-                            <ListGroupItem key={reference.literal.id} action className="d-flex align-items-start pr-2">
+                            <ListGroupItem key={reference.literal.id} className="d-flex align-items-start pr-2">
                                 <div className="flex-grow-1">
                                     <Badge color="light">@{reference.parsedReference['citation-label']}</Badge>{' '}
                                     {reference.parsedReference.author?.[0]?.family} {reference.parsedReference.author?.length > 1 && 'et al.'}{' '}

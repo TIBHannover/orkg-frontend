@@ -117,9 +117,9 @@ const FeaturedComparisons = ({ researchFieldId }) => {
                                         <ComparisonCard
                                             comparison={comparison}
                                             key={`pc${comparison.id}`}
+                                            showHistory={false}
                                             showBadge={false}
                                             showCurationFlags={false}
-                                            showHistory={false}
                                         />
                                     )
                                 );

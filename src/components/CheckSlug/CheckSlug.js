@@ -7,7 +7,7 @@ import { slugify } from 'utils';
 /**
  * Component to check if query param slug is valid, and makes a redirect if not
  */
-const SlugRedirect = ({ label = '', route }) => {
+const CheckSlug = ({ label = '', route }) => {
     const params = useParams();
     const prevLabel = usePrevious(label);
 
@@ -19,7 +19,7 @@ const SlugRedirect = ({ label = '', route }) => {
     return null;
 };
 
-SlugRedirect.propTypes = {
+CheckSlug.propTypes = {
     /** Original label of the resource */
     label: PropTypes.string,
 
@@ -27,4 +27,4 @@ SlugRedirect.propTypes = {
     route: PropTypes.string.isRequired
 };
 
-export default SlugRedirect;
+export default CheckSlug;

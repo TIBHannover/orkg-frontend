@@ -10,6 +10,7 @@ import { useState } from 'react';
 import { Button, Input, InputGroup, InputGroupAddon } from 'reactstrap';
 import { createResource } from 'services/backend/resources';
 import { range } from 'utils';
+import Textarea from 'react-textarea-autosize';
 
 const EditItem = props => {
     const [isOpenResearchFieldModal, setIsOpenResearchFieldModal] = useState(false);
@@ -21,6 +22,9 @@ const EditItem = props => {
 
     if (props.type === 'text') {
         input = <Input value={props.value ? props.value : ''} onChange={props.onChange} />;
+        stringValue = truncate(props.value ? props.value : '', { length: 60 });
+    } else if (props.type === 'textarea') {
+        input = <Textarea value={props.value ? props.value : ''} onChange={props.onChange} className="form-control" maxLength="3900" minRows="3" />;
         stringValue = truncate(props.value ? props.value : '', { length: 60 });
     } else if (props.type === 'month') {
         input = (

@@ -9,7 +9,7 @@ import MarkUnlisted from 'components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlis
 import RelativeBreadcrumbs from 'components/RelativeBreadcrumbs/RelativeBreadcrumbs';
 import useMarkFeaturedUnlisted from 'components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
 import Authors from 'components/PaperCard/Authors';
-import useSmartReviewResearchField from './hooks/useSmartReviewResearchField';
+import useCardData from './hooks/useCardData';
 import PropTypes from 'prop-types';
 import { CardBadge } from 'components/styled';
 import moment from 'moment';
@@ -23,20 +23,20 @@ const SmartReviewCardStyled = styled.div`
 `;
 
 const SmartReviewCard = ({ versions, showCurationFlags, showBadge }) => {
+    const { researchField, authors, isLoading: isLoadingMetaData } = useCardData({
+        id: versions[0]?.id,
+        initResearchField: versions[0]?.researchField,
+        initAuthors: versions[0]?.authors
+    });
+
     const { isFeatured, isUnlisted, handleChangeStatus } = useMarkFeaturedUnlisted({
         resourceId: versions[0]?.id,
         unlisted: versions[0]?.unlisted,
         featured: versions[0]?.featured
     });
 
-    const { researchField, authors, isLoading: isLoadingMetaData } = useSmartReviewResearchField({
-        smartReviewId: versions[0]?.id,
-        initResearchField: versions[0]?.researchField,
-        initAuthors: versions[0]?.authors
-    });
-
     return (
-        <SmartReviewCardStyled className={`list-group-item list-group-item-action d-flex pr-3 ${showCurationFlags ? ' pl-2  ' : ' pl-4  '}`}>
+        <SmartReviewCardStyled style={{ flexWrap: 'wrap' }} className={`list-group-item d-flex pr-3 ${showCurationFlags ? ' pl-2  ' : ' pl-4  '}`}>
             <div className="col-md-9 d-flex p-0">
                 {showCurationFlags && (
                     <div className="d-flex flex-column flex-shrink-0" style={{ width: '25px' }}>

@@ -1,225 +1,79 @@
-import { useEffect, useState } from 'react';
-import { createValue } from 'actions/statementBrowser';
-import { prefillStatements } from 'actions/addPaper';
-import { createResourceStatement, createLiteralStatement } from 'services/backend/statements';
-import { createLiteral } from 'services/backend/literals';
-import { createPredicate } from 'services/backend/predicates';
-import { createResource } from 'services/backend/resources';
-import AddValueTemplate from './AddValueTemplate';
-import { useDispatch, useSelector } from 'react-redux';
-import { guid } from 'utils';
-import { isLiteral, getValueClass } from './helpers/utils';
+import { useState } from 'react';
+import useAddValue from './hooks/useAddValue';
+import { ENTITIES } from 'constants/graphSettings';
+import { useSelector } from 'react-redux';
+import ValueForm from 'components/StatementBrowser/ValueForm/ValueForm';
+import { ValueItemStyle } from 'components/StatementBrowser/styled';
+import StatementActionButton from 'components/StatementBrowser/StatementActionButton/StatementActionButton';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { faPlus, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
 import PropTypes from 'prop-types';
-import { MISC } from 'constants/graphSettings';
 
 const AddValue = props => {
-    const dispatch = useDispatch();
-    const selectedProperty = useSelector(state => state.statementBrowser.selectedProperty);
-    const selectedResource = useSelector(state => (props.resourceId ? props.resourceId : state.statementBrowser.selectedResource));
-    const predicate = useSelector(state => state.statementBrowser.properties.byId[props.propertyId ? props.propertyId : selectedProperty]);
-    const newResources = useSelector(state => {
-        const newResourcesList = [];
-
-        for (const key in state.statementBrowser.resources.byId) {
-            const resource = state.statementBrowser.resources.byId[key];
-
-            if (!resource.existingResourceId && resource.label && resource.id) {
-                newResourcesList.push({
-                    id: resource.id,
-                    label: resource.label,
-                    ...(resource.shared ? { shared: resource.shared } : {}),
-                    ...(resource.classes ? { classes: resource.classes } : {})
-                });
-            }
-        }
-        return newResourcesList;
+    const { modal, property, setModal, isBlankNode, entityType, dialogResourceId, dialogResourceLabel, createBlankNode } = useAddValue({
+        resourceId: props.resourceId,
+        propertyId: props.propertyId,
+        syncBackend: props.syncBackend
     });
 
-    const getIsLiteralField = () => {
-        let result = isLiteral(props.components);
-        if (predicate && predicate.range) {
-            result = ['Date', 'Number', 'String'].includes(predicate.range.id) ? true : false;
-        }
-        return result;
-    };
+    const [showAddValue, setShowAddValue] = useState(false);
+    const isAddingValue = useSelector(state => state.statementBrowser.properties.byId[props.propertyId].isAddingValue ?? false);
 
-    const [valueClass, setValueClass] = useState(
-        getValueClass(props.components) ? getValueClass(props.components) : predicate?.range ? predicate.range : null
-    );
-    const [isLiteralField, setIsLiteralField] = useState(getIsLiteralField());
-
-    useEffect(() => {
-        setValueClass(getValueClass(props.components) ? getValueClass(props.components) : predicate?.range ? predicate.range : null);
-        setIsLiteralField(getIsLiteralField());
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [JSON.stringify(props.components)]);
-
-    /**
-     * Create statements for a resource starting from an array of statements
-     *
-     * @param {Array} data array of statement
-     * @return {Object} object of statements to use as an entry for prefillStatements action
-     */
-    const generateStatementsFromExternalData = data => {
-        const statements = { properties: [], values: [] };
-        const createdProperties = {};
-        for (const statement of data) {
-            const _propertyID = guid();
-            if (!createdProperties[statement.predicate.id]) {
-                createdProperties[statement.predicate.id] = _propertyID;
-                statements['properties'].push({
-                    propertyId: createdProperties[statement.predicate.id],
-                    existingPredicateId: statement.predicate.id,
-                    label: statement.predicate.label
-                });
-            }
-            statements['values'].push({
-                type: 'literal',
-                propertyId: createdProperties[statement.predicate.id],
-                label: statement.value.label
-            });
-        }
-        return statements;
-    };
-
-    const handleValueSelect = async (valueType, { id, value, shared, classes, external, statements }) => {
-        if (props.syncBackend) {
-            if (external) {
-                // create the object
-                const newObject = await createResource(value, valueClass ? [valueClass.id] : []);
-                const newStatement = await createResourceStatement(selectedResource, predicate.existingPredicateId, newObject.id);
-                dispatch(
-                    createValue({
-                        label: value,
-                        type: valueType,
-                        propertyId: props.propertyId ? props.propertyId : selectedProperty,
-                        existingResourceId: newObject.id,
-                        isExistingValue: true,
-                        statementId: newStatement.id,
-                        shared: newObject.shared,
-                        classes: valueClass ? [valueClass.id] : []
-                    })
-                );
-                //create statements
-                dispatch(
-                    prefillStatements({
-                        statements: generateStatementsFromExternalData(statements),
-                        resourceId: newObject.id,
-                        syncBackend: props.syncBackend
-                    })
-                );
-            } else {
-                const newStatement = await createResourceStatement(selectedResource, predicate.existingPredicateId, id);
-                dispatch(
-                    createValue({
-                        label: value,
-                        type: valueType,
-                        propertyId: props.propertyId ? props.propertyId : selectedProperty,
-                        classes: classes,
-                        existingResourceId: id,
-                        isExistingValue: true,
-                        statementId: newStatement.id,
-                        shared: shared
-                    })
-                );
-            }
-        } else {
-            if (external) {
-                const newObject = await handleAddValue(valueType, value, null);
-                // create statements
-                dispatch(
-                    prefillStatements({
-                        statements: generateStatementsFromExternalData(statements),
-                        resourceId: newObject,
-                        syncBackend: props.syncBackend
-                    })
-                );
-            } else {
-                dispatch(
-                    createValue({
-                        label: value,
-                        type: valueType,
-                        propertyId: props.propertyId ? props.propertyId : selectedProperty,
-                        classes: classes,
-                        existingResourceId: id,
-                        isExistingValue: true,
-                        shared: shared
-                    })
-                );
-            }
-        }
-    };
-
-    const handleAddValue = async (valueType, inputValue, datatype = MISC.DEFAULT_LITERAL_DATATYPE) => {
-        let newObject = null;
-        let newStatement = null;
-        const valueId = guid();
-        const existingResourceId = guid();
-        if (props.syncBackend) {
-            switch (valueType) {
-                case 'object':
-                    newObject = await createResource(inputValue, valueClass ? [valueClass.id] : []);
-                    newStatement = await createResourceStatement(selectedResource, predicate.existingPredicateId, newObject.id);
-                    break;
-                case 'property':
-                    newObject = await createPredicate(inputValue);
-                    newStatement = await createResourceStatement(selectedResource, predicate.existingPredicateId, newObject.id);
-                    break;
-                default:
-                    newObject = await createLiteral(inputValue, datatype);
-                    newStatement = await createLiteralStatement(selectedResource, predicate.existingPredicateId, newObject.id);
-            }
-            dispatch(
-                createValue({
-                    label: inputValue,
-                    type: valueType,
-                    ...(valueType === 'literal' && { datatype: datatype }),
-                    propertyId: props.propertyId ? props.propertyId : selectedProperty,
-                    existingResourceId: newObject.id,
-                    isExistingValue: true,
-                    statementId: newStatement.id,
-                    shared: newObject.shared,
-                    classes: valueClass ? [valueClass.id] : []
-                })
-            );
-        } else {
-            dispatch(
-                createValue({
-                    valueId,
-                    label: inputValue,
-                    type: valueType,
-                    ...(valueType === 'literal' && { datatype: datatype }),
-                    propertyId: props.propertyId ? props.propertyId : selectedProperty,
-                    existingResourceId,
-                    isExistingValue: false,
-                    classes: valueClass ? [valueClass.id] : [],
-                    shared: 1
-                })
-            );
-        }
-        return newObject ? newObject.id : existingResourceId;
-    };
+    const [templateIsLoading] = useState(false); // to show loading indicator of the template if the value class has a template
 
     return (
-        <AddValueTemplate
-            predicate={predicate}
-            propertyId={props.propertyId}
-            handleValueSelect={(valueType, inputValue) => handleValueSelect(valueType, inputValue)}
-            newResources={newResources}
-            handleAddValue={handleAddValue}
-            components={props.components}
-            isDisabled={props.isDisabled}
-            isLiteral={isLiteralField}
-            valueClass={valueClass}
-        />
+        <>
+            {modal && (
+                <StatementBrowserDialog
+                    show={modal}
+                    toggleModal={() => setModal(prev => !prev)}
+                    id={dialogResourceId}
+                    label={dialogResourceLabel}
+                    newStore={false}
+                    enableEdit={true}
+                />
+            )}
+            <ValueItemStyle className={showAddValue ? 'editingLabel' : ''}>
+                {!showAddValue ? (
+                    !templateIsLoading && !isAddingValue ? ( //Show loading indicator if the template is still loading
+                        <StatementActionButton
+                            isDisabled={props.isDisabled}
+                            title={!props.isDisabled ? 'Add value' : 'This property reached the maximum number of values set by template'}
+                            icon={faPlus}
+                            action={() => {
+                                if (isBlankNode && entityType !== ENTITIES.LITERAL) {
+                                    createBlankNode(entityType);
+                                } else {
+                                    setShowAddValue(true);
+                                }
+                            }}
+                            testId={`add-value-${property.existingPredicateId}-${Boolean(isBlankNode)}`}
+                        />
+                    ) : (
+                        <span>
+                            <Icon icon={faSpinner} spin />
+                        </span>
+                    )
+                ) : (
+                    <ValueForm
+                        setShowAddValue={setShowAddValue}
+                        showAddValue={showAddValue}
+                        propertyId={props.propertyId}
+                        resourceId={props.resourceId}
+                        syncBackend={props.syncBackend}
+                    />
+                )}
+            </ValueItemStyle>
+        </>
     );
 };
 
 AddValue.propTypes = {
+    id: PropTypes.string,
     propertyId: PropTypes.string,
     resourceId: PropTypes.string,
     syncBackend: PropTypes.bool.isRequired,
-    components: PropTypes.array.isRequired,
     isDisabled: PropTypes.bool.isRequired
 };
 

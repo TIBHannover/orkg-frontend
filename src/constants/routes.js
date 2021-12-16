@@ -1,6 +1,6 @@
 const routes = {
     HOME: '/',
-    USER_SETTINGS: '/settings',
+    USER_SETTINGS: '/settings/:tab?',
     USER_PROFILE: '/u/:userId',
     RESOURCES: '/resources',
     RESOURCE: '/resource/:id',
@@ -36,9 +36,6 @@ const routes = {
     RESEARCH_FIELDS: '/fields',
     VENUE_PAGE: '/venue/:venueId',
     AUTHOR_PAGE: '/author/:authorId',
-    LICENSE: '/license',
-    DATA_PROTECTION: '/data-protection',
-    TERMS_OF_USE: '/terms-of-use',
     SEARCH: '/search/:searchTerm?',
     STATS: '/stats',
     DATA: '/data',
@@ -48,7 +45,7 @@ const routes = {
     PDF_ANNOTATION: '/pdf-annotation',
     CSV_IMPORT: '/csv-import',
     BENCHMARKS: '/benchmarks',
-    BENCHMARK: '/benchmark/:resourceId',
+    BENCHMARK: '/benchmark/:datasetId/problem/:problemId',
     SMART_REVIEW: '/smart-review/:id',
     SMART_REVIEWS: '/smart-reviews',
     USER_UNPUBLISHED_REVIEWS: '/user-unpublished-reviews',
@@ -62,7 +59,17 @@ const routes = {
     PREDICATE: '/predicate/:id',
     TPDL: '/tpdl',
     EXPORT_DATA: '/export-data',
+    PAGE: '/page/:url',
+    ABOUT: '/about/:id?/:slug?',
+    HELP_CENTER: '/help-center',
+    HELP_CENTER_CATEGORY: '/help-center/category/:id',
+    HELP_CENTER_ARTICLE: '/help-center/article/:id/:slug',
+    HELP_CENTER_SEARCH: '/help-center/search/:searchQuery',
     CURATION_CALL: '/open-call-curation-grant',
-    WEBINAR_MAY_11: '/webinar-may-11'
+    WEBINAR_MAY_11: '/webinar-may-11',
+    LITERATURE_LISTS: '/literature-lists',
+    LITERATURE_LIST: '/literature-list/:id',
+    LITERATURE_LIST_NEW: '/literature-list/new',
+    LITERATURE_LIST_DIFF: '/literature-list/diff/:oldId-:newId'
 };
 export default routes;

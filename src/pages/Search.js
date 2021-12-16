@@ -5,19 +5,19 @@ import { reverse } from 'named-urls';
 import dotProp from 'dot-prop-immutable';
 import PropTypes from 'prop-types';
 import ContentLoader from 'react-content-loader';
-import { getClassById } from 'services/backend/classes';
+import { getClassById, getClasses } from 'services/backend/classes';
 import { getResources, getResourcesByClass } from 'services/backend/resources';
 import { getPredicates } from 'services/backend/predicates';
 import ROUTES from 'constants/routes';
-import { PREDICATE_TYPE_ID, RESOURCE_TYPE_ID } from 'constants/misc';
 import Results from 'components/Search/Results';
 import Filters from 'components/Search/Filters';
 import { getArrayParamFromQueryString } from 'utils';
 import { unionBy } from 'lodash';
 import { toast } from 'react-toastify';
-import { CLASSES } from 'constants/graphSettings';
+import { CLASSES, ENTITIES } from 'constants/graphSettings';
 import { getPaperByDOI } from 'services/backend/misc';
 import REGEX from 'constants/regex';
+import TitleBar from 'components/TitleBar/TitleBar';
 
 class Search extends Component {
     constructor(props) {
@@ -46,7 +46,12 @@ class Search extends Component {
             {
                 label: 'Property',
                 labelPlural: 'Properties',
-                id: PREDICATE_TYPE_ID
+                id: ENTITIES.PREDICATE
+            },
+            {
+                label: 'Class',
+                labelPlural: 'Classes',
+                id: ENTITIES.CLASS
             },
             {
                 label: 'Research Problem',
@@ -56,7 +61,7 @@ class Search extends Component {
             {
                 label: 'Resource',
                 labelPlural: 'Resources',
-                id: RESOURCE_TYPE_ID
+                id: ENTITIES.RESOURCE
             },
             {
                 label: 'Template',
@@ -77,6 +82,11 @@ class Search extends Component {
                 label: 'SmartReview',
                 labelPlural: 'SmartReviews',
                 id: CLASSES.SMART_REVIEW_PUBLISHED
+            },
+            {
+                label: 'Literature List',
+                labelPlural: 'Literature Lists',
+                id: CLASSES.LITERATURE_LIST_PUBLISHED
             }
         ];
 
@@ -171,18 +181,18 @@ class Search extends Component {
         let results = [];
 
         try {
-            if (filterType === PREDICATE_TYPE_ID) {
+            if (filterType === ENTITIES.PREDICATE) {
                 results = await getPredicates({
-                    page: this.state.currentPage[PREDICATE_TYPE_ID] || 0,
+                    page: this.state.currentPage[ENTITIES.PREDICATE] || 0,
                     items: this.itemsPerFilter,
                     sortBy: 'id',
                     desc: true,
                     q: searchQuery,
                     returnContent: true
                 });
-            } else if (filterType === RESOURCE_TYPE_ID) {
+            } else if (filterType === ENTITIES.RESOURCE) {
                 results = await getResources({
-                    page: this.state.currentPage[RESOURCE_TYPE_ID] || 0,
+                    page: this.state.currentPage[ENTITIES.RESOURCE] || 0,
                     items: this.itemsPerFilter,
                     sortBy: 'id',
                     desc: true,
@@ -191,6 +201,15 @@ class Search extends Component {
                         .map(df => df.id)
                         .concat(this.ignoredClasses)
                         .join(','),
+                    returnContent: true
+                });
+            } else if (filterType === ENTITIES.CLASS) {
+                results = await getClasses({
+                    page: this.state.currentPage[ENTITIES.CLASS] || 0,
+                    items: this.itemsPerFilter,
+                    sortBy: 'id',
+                    desc: true,
+                    q: searchQuery,
                     returnContent: true
                 });
             } else {
@@ -274,10 +293,8 @@ class Search extends Component {
         const allFilters = unionBy(this.defaultsFilters, this.state.selectedFilters, 'id');
         return (
             <div>
+                <TitleBar>Search results</TitleBar>
                 <Container>
-                    <h1 className="h4 mt-4 mb-4">Search results</h1>
-                </Container>
-                <Container className="mt-4">
                     <Row>
                         <Col className="col-sm-4 px-0">
                             <div className="box rounded mr-4 p-4 h-100">
@@ -292,7 +309,7 @@ class Search extends Component {
                             </div>
                         </Col>
                         <Col className="col-sm-8 px-0">
-                            <div className="box rounded p-4 h-100">
+                            <div className="box rounded p-4">
                                 {this.isLoading() &&
                                     Object.keys(this.state.results).every(v => this.state.results[v] && this.state.results[v].length === 0) && (
                                         <ContentLoader

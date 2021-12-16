@@ -5,9 +5,23 @@ import ContentLoader from 'react-content-loader';
 import PropTypes from 'prop-types';
 import { useCallback, useEffect, useState } from 'react';
 import { usePrevious } from 'react-use';
-import { ButtonGroup, Container, ListGroup } from 'reactstrap';
+import { Container, ListGroup } from 'reactstrap';
+import TitleBar from 'components/TitleBar/TitleBar';
+import { upperFirst } from 'lodash';
 
-const ListPage = ({ label, resourceClass, renderListItem, buttons, fetchItems, boxShadow, pageSize = 25 }) => {
+const ListPage = ({
+    label,
+    resourceClass,
+    renderListItem,
+    buttons = null,
+    fetchItems,
+    boxShadow = true,
+    pageSize = 25,
+    disableSearch = false,
+    hideTitleBar = false,
+    reset = false,
+    setReset = () => {}
+}) => {
     const [results, setResults] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [hasNextPage, setHasNextPage] = useState(false);
@@ -16,13 +30,12 @@ const ListPage = ({ label, resourceClass, renderListItem, buttons, fetchItems, b
     const [totalElements, setTotalElements] = useState(0);
     const prevPage = usePrevious(page);
 
-    const loadMore = useCallback(async () => {
-        if (page === prevPage) {
-            return;
-        }
+    useEffect(() => {
+        document.title = `${upperFirst(label)} list - ORKG`;
+    });
 
+    const load = useCallback(async () => {
         startLoading();
-
         try {
             const { items, last: _last, totalElements: _totalElements } = await fetchItems({ resourceClass, page, pageSize });
 
@@ -39,7 +52,29 @@ const ListPage = ({ label, resourceClass, renderListItem, buttons, fetchItems, b
             console.log(e);
             errorOccurred();
         }
-    }, [fetchItems, page, prevPage, resourceClass, pageSize]);
+    }, [fetchItems, page, pageSize, resourceClass]);
+
+    // load more data if "page" changes
+    const loadMore = useCallback(() => {
+        if (page === prevPage) {
+            return;
+        }
+        load();
+    }, [page, prevPage, load]);
+
+    useEffect(() => {
+        if (!reset) {
+            return;
+        }
+        setResults([]);
+        setIsLoading(false);
+        setHasNextPage(false);
+        setPage(0);
+        setIsLastPageReached(false);
+        setTotalElements(0);
+        setReset(false);
+        load();
+    }, [load, reset, setReset]);
 
     useEffect(() => {
         loadMore();
@@ -79,17 +114,22 @@ const ListPage = ({ label, resourceClass, renderListItem, buttons, fetchItems, b
 
     return (
         <>
-            <Container className="d-flex align-items-center">
-                <div className="d-flex flex-grow-1 mt-4 mb-4">
-                    <h1 className="h4 m-0">View {label}</h1>
-                    <div className="text-muted ml-3 mt-1">
-                        {totalElements === 0 && isLoading ? <Icon icon={faSpinner} spin /> : totalElements} {label}
-                    </div>
-                </div>
-                <ButtonGroup>
-                    {buttons} <HeaderSearchButton placeholder={`Search ${label}...`} type={resourceClass} />
-                </ButtonGroup>
-            </Container>
+            {!hideTitleBar && (
+                <TitleBar
+                    titleAddition={
+                        <div className="text-muted mt-1">
+                            {totalElements === 0 && isLoading ? <Icon icon={faSpinner} spin /> : totalElements} items
+                        </div>
+                    }
+                    buttonGroup={
+                        <>
+                            {buttons} {!disableSearch && <HeaderSearchButton placeholder={`Search ${label}...`} type={resourceClass} />}
+                        </>
+                    }
+                >
+                    View {label}
+                </TitleBar>
+            )}
             <Container className="p-0">
                 {results.length > 0 && (
                     <ListGroup flush className="box rounded" style={{ overflow: 'hidden' }}>
@@ -97,16 +137,22 @@ const ListPage = ({ label, resourceClass, renderListItem, buttons, fetchItems, b
                         {!isLoading && hasNextPage && (
                             <div
                                 style={{ cursor: 'pointer' }}
-                                className="list-group-item list-group-item-action text-center mt-2"
+                                className="list-group-item list-group-item-action text-center"
                                 onClick={loadNextPage}
                                 onKeyDown={handleKeyDown}
                                 role="button"
                                 tabIndex={0}
                             >
-                                Load more
+                                Load more...
                             </div>
                         )}
                         {!hasNextPage && isLastPageReached && page !== 0 && <div className="text-center my-3">You have reached the last page</div>}
+
+                        {isLoading && page !== 0 && (
+                            <div className="list-group-item text-center" aria-live="polite" aria-busy="true">
+                                <Icon icon={faSpinner} spin /> Loading
+                            </div>
+                        )}
                     </ListGroup>
                 )}
                 {results.length === 0 && !isLoading && (
@@ -115,29 +161,22 @@ const ListPage = ({ label, resourceClass, renderListItem, buttons, fetchItems, b
                     </div>
                 )}
 
-                {isLoading && (
+                {isLoading && page === 0 && (
                     <div className={`text-center ${page === 0 ? 'p-5 container rounded' : ''} ${boxShadow ? 'box' : ''}`}>
-                        {page !== 0 && (
-                            <>
-                                <Icon icon={faSpinner} spin /> Loading
-                            </>
-                        )}
-                        {page === 0 && (
-                            <div className="text-left">
-                                <ContentLoader
-                                    speed={2}
-                                    width={400}
-                                    height={50}
-                                    viewBox="0 0 400 50"
-                                    style={{ width: '100% !important' }}
-                                    backgroundColor="#f3f3f3"
-                                    foregroundColor="#ecebeb"
-                                >
-                                    <rect x="0" y="0" rx="3" ry="3" width="400" height="20" />
-                                    <rect x="0" y="25" rx="3" ry="3" width="300" height="20" />
-                                </ContentLoader>
-                            </div>
-                        )}
+                        <div className="text-left">
+                            <ContentLoader
+                                speed={2}
+                                width={400}
+                                height={50}
+                                viewBox="0 0 400 50"
+                                style={{ width: '100% !important' }}
+                                backgroundColor="#f3f3f3"
+                                foregroundColor="#ecebeb"
+                            >
+                                <rect x="0" y="0" rx="3" ry="3" width="400" height="20" />
+                                <rect x="0" y="25" rx="3" ry="3" width="300" height="20" />
+                            </ContentLoader>
+                        </div>
                     </div>
                 )}
             </Container>
@@ -152,13 +191,11 @@ ListPage.propTypes = {
     fetchItems: PropTypes.func.isRequired,
     pageSize: PropTypes.number,
     boxShadow: PropTypes.bool,
-    buttons: PropTypes.node
-};
-
-ListPage.defaultProps = {
-    boxShadow: true,
-    hideEmptyList: false,
-    buttons: null
+    buttons: PropTypes.node,
+    disableSearch: PropTypes.bool,
+    reset: PropTypes.bool,
+    setReset: PropTypes.func,
+    hideTitleBar: PropTypes.bool
 };
 
 export default ListPage;

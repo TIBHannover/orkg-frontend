@@ -8,7 +8,7 @@ import Video from './Video';
 const JumbotronStyled = styled.div`
     color: hsla(0, 0%, 100%, 0.6);
 
-    .marketingtext {
+    .marketing-text {
         font-size: larger;
     }
 
@@ -72,19 +72,11 @@ export default class Jumbotron extends Component {
                                 </div>
                             </div>
                         </HeaderStyled>
-                        <div className="col-md-8 mx-auto mb-3 marketingtext">
+                        <div className="col-md-9 mx-auto mb-3 marketing-text">
                             <p className="mr-n2 ml-n2">
                                 The Open Research Knowledge Graph (ORKG) aims to describe research papers in a structured manner. With the ORKG,
-                                papers are easier to find and compare.{' '}
+                                papers are easier to find and compare. <Video />{' '}
                             </p>
-                        </div>
-
-                        <div style={{ position: 'relative' }}>
-                            <div className="mt-2 mb-4 text-shadow-dark text-center">
-                                <div className="flex-shrink-0 justify-content-center d-flex align-items-center">
-                                    <Video />
-                                </div>
-                            </div>
                         </div>
                     </Container>
                 </JumbotronStyled>

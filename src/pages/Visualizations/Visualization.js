@@ -15,7 +15,7 @@ import NotFound from 'pages/NotFound';
 export default function Visualization(props) {
     const visualizationId = props.match.params.id;
     const [error, setError] = useState(false);
-    const [comparisonId, setComparisonIdId] = useState(null);
+    const [comparisonId, setComparisonId] = useState(null);
 
     useEffect(() => {
         getStatementsByObjectAndPredicate({
@@ -28,7 +28,7 @@ export default function Visualization(props) {
                 setError(true);
                 return;
             }
-            setComparisonIdId(comparison.id);
+            setComparisonId(comparison.id);
         });
     }, [visualizationId]);
 

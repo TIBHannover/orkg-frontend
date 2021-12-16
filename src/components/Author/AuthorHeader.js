@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ButtonGroup, Button, Container, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
-import { SubTitle, SubtitleSeparator } from 'components/styled';
+import { Button, Container, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import useAuthor from './hooks/useAuthor';
 import NotFound from 'pages/NotFound';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -8,6 +7,7 @@ import { faOrcid, faLinkedin, faGoogle, faResearchgate } from '@fortawesome/free
 import { faExternalLinkAlt, faEllipsisV, faGlobe, faSpinner, faPen } from '@fortawesome/free-solid-svg-icons';
 import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
+import TitleBar from 'components/TitleBar/TitleBar';
 import styled from 'styled-components';
 import { NavLink } from 'react-router-dom';
 import ROUTES from 'constants/routes.js';
@@ -53,41 +53,34 @@ const AuthorHeader = ({ authorId }) => {
             {!isLoading && isFailedLoading && <NotFound />}
             {!isLoading && author && (
                 <>
-                    <Container className="d-flex align-items-center mt-4 mb-4">
-                        <h1 className="h4 flex-shrink-0 mb-0">Author</h1>
-                        <>
-                            <SubtitleSeparator />
-                            <SubTitle className="h5 mb-0"> {author.label}</SubTitle>
-                        </>
-                        <ButtonGroup className="flex-shrink-0" style={{ marginLeft: 'auto' }}>
-                            <RequireAuthentication
-                                component={Button}
-                                size="sm"
-                                color="secondary"
-                                className="float-right"
-                                onClick={() => setEditMode(v => !v)}
-                            >
-                                <Icon icon={faPen} /> Edit
-                            </RequireAuthentication>
-                            <ButtonDropdown
-                                className="flex-shrink-0"
-                                style={{ marginLeft: 'auto' }}
-                                isOpen={menuOpen}
-                                toggle={() => setMenuOpen(v => !v)}
-                                nav
-                                inNavbar
-                            >
-                                <DropdownToggle size="sm" color="secondary" className="px-3 rounded-right" style={{ marginLeft: 2 }}>
-                                    <Icon icon={faEllipsisV} />
-                                </DropdownToggle>
-                                <DropdownMenu right>
-                                    <DropdownItem tag={NavLink} exact to={reverse(ROUTES.RESOURCE, { id: author.id })}>
-                                        View resource
-                                    </DropdownItem>
-                                </DropdownMenu>
-                            </ButtonDropdown>
-                        </ButtonGroup>
-                    </Container>
+                    <TitleBar
+                        buttonGroup={
+                            <>
+                                <RequireAuthentication
+                                    component={Button}
+                                    size="sm"
+                                    color="secondary"
+                                    className="float-right"
+                                    onClick={() => setEditMode(v => !v)}
+                                >
+                                    <Icon icon={faPen} /> Edit
+                                </RequireAuthentication>
+                                <ButtonDropdown isOpen={menuOpen} toggle={() => setMenuOpen(v => !v)} nav inNavbar>
+                                    <DropdownToggle size="sm" color="secondary" className="px-3 rounded-right" style={{ marginLeft: 2 }}>
+                                        <Icon icon={faEllipsisV} />
+                                    </DropdownToggle>
+                                    <DropdownMenu right>
+                                        <DropdownItem tag={NavLink} exact to={reverse(ROUTES.RESOURCE, { id: authorId })}>
+                                            View resource
+                                        </DropdownItem>
+                                    </DropdownMenu>
+                                </ButtonDropdown>
+                            </>
+                        }
+                    >
+                        Author: {author.label}
+                    </TitleBar>
+
                     {editMode && (
                         <StatementBrowserDialog
                             show={editMode}

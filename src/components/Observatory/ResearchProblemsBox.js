@@ -14,7 +14,7 @@ import capitalize from 'capitalize';
 const ResearchProblemsBox = ({ observatoryId, organizationsList }) => {
     const user = useSelector(state => state.auth.user);
     const [openModal, setOpenModal] = useState(false);
-    const [showAddResearchProblemDialog, setShowAddResearchProblemDialog] = useState(null);
+    const [showAddResearchProblemDialog, setShowAddResearchProblemDialog] = useState(false);
     const [isLoadingProblems, setIsLoadingProblems] = useState(null);
     const [problemsList, setProblemsList] = useState([]);
 

@@ -101,6 +101,7 @@ export const getResearchProblemsByResearchFieldId = ({
     return submitGetRequest(`${fieldsUrl}${encodeURIComponent(id)}/${subfields ? 'subfields/' : ''}research-problems?${params}`);
 };
 
+//This endpoint is not used anymore!
 export const getContributorsByResearchFieldId = ({ id, page = 0, items = 9999, subfields = true }) => {
     const params = queryString.stringify(
         { page: page, size: items },

@@ -6,7 +6,7 @@ import ReactTextareaAutocomplete from '@webscopeio/react-textarea-autocomplete';
 import '@webscopeio/react-textarea-autocomplete/style.css';
 import { updateSectionMarkdown } from 'actions/smartReview';
 import MarkdownRenderer from 'components/SmartReview/MarkdownRenderer';
-import { MarkdownPlaceholder } from 'components/SmartReview/styled';
+import { MarkdownPlaceholder } from 'components/ArticleBuilder/styled';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -38,7 +38,7 @@ const ItemReference = ({ entity: { reference } }) => (
     <div role="button" onMouseDown={e => e.preventDefault()} className="px-2 py-1">
         {reference.id}{' '}
         <span className="font-italic ml-2" style={{ opacity: 0.7 }}>
-            {reference?.author?.[0]?.family ?? ''} {reference.author.length > 0 ? 'et al.' : ''} {reference?.issued?.['date-parts']?.[0] ?? ''}
+            {reference?.author?.[0]?.family ?? ''} {reference?.author?.length > 0 ? 'et al.' : ''} {reference?.issued?.['date-parts']?.[0] ?? ''}
         </span>
     </div>
 );

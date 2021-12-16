@@ -10,7 +10,7 @@ import ContributorsDropdownFilter from './ContributorsDropdownFilter';
 const ContributorsModal = ({ researchFieldId, openModal, setOpenModal, initialSort = 'top', initialIncludeSubFields = true }) => {
     const { contributors, sort, includeSubFields, isLoading, setSort, setIncludeSubFields } = useContributors({
         researchFieldId,
-        pageSize: 30,
+        pageSize: 50,
         initialSort,
         initialIncludeSubFields
     });
@@ -18,13 +18,14 @@ const ContributorsModal = ({ researchFieldId, openModal, setOpenModal, initialSo
     return (
         <Modal isOpen={openModal} toggle={() => setOpenModal(v => !v)} size="lg">
             <ModalHeader toggle={() => setOpenModal(v => !v)}>
-                <Icon icon={faAward} className="text-primary" /> {sort === 'top' ? 'Top 30 ' : ''}Contributors
+                <Icon icon={faAward} className="text-primary" /> Top Contributors
                 <div style={{ display: 'inline-block', marginLeft: '20px' }}>
                     <ContributorsDropdownFilter
                         sort={sort}
                         isLoading={isLoading}
                         includeSubFields={includeSubFields}
                         setSort={setSort}
+                        researchFieldId={researchFieldId}
                         setIncludeSubFields={setIncludeSubFields}
                     />
                 </div>
@@ -36,14 +37,12 @@ const ContributorsModal = ({ researchFieldId, openModal, setOpenModal, initialSo
                             return (
                                 <div className="pt-2 pb-2" key={`rp${index}`}>
                                     <div className="d-flex">
-                                        {sort === 'top' && <div className="pl-4 pr-4 pt-2">{index + 1}.</div>}
+                                        <div className="pl-4 pr-4 pt-2 align-self-center">{index + 1}.</div>
                                         <div>
                                             <ContributorCard
                                                 contributor={{
                                                     ...contributor.profile,
-                                                    subTitle: contributor?.counts?.total
-                                                        ? `${contributor.counts.total} contribution${contributor.counts.total > 1 ? 's' : ''}`
-                                                        : ''
+                                                    counts: contributor?.counts
                                                 }}
                                             />
                                         </div>

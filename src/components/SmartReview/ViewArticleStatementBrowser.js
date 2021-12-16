@@ -1,6 +1,6 @@
 import { PropertyStyle, StatementsGroupStyle, ValueItemStyle, ValuesStyle } from 'components/StatementBrowser/styled';
 import ROUTES from 'constants/routes';
-import { orderBy } from 'lodash';
+import { cloneDeep, orderBy } from 'lodash';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
@@ -17,7 +17,7 @@ const ViewArticleStatementBrowser = ({ id }) => {
     const statements = useSelector(state => state.smartReview.statements);
 
     useEffect(() => {
-        const statementsForSubject = statements.filter(statement => statement.subject.id === id);
+        const statementsForSubject = cloneDeep(statements.filter(statement => statement.subject.id === id));
 
         let properties = {};
         for (const statement of statementsForSubject) {
@@ -45,7 +45,7 @@ const ViewArticleStatementBrowser = ({ id }) => {
             {Object.keys(properties).map(propertyId => {
                 const property = properties[propertyId];
                 return (
-                    <StatementsGroupStyle className="noTemplate" key={propertyId}>
+                    <StatementsGroupStyle className="noTemplate list-group-item" key={propertyId}>
                         <div className="row no-gutters">
                             <PropertyStyle className="col-4" tabIndex="0">
                                 <div>

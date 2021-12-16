@@ -1,232 +1,172 @@
-import { useState } from 'react';
-import {
-    selectResource,
-    fetchStatementsForResource,
-    deleteValue,
-    updateValueLabel,
-    createResource,
-    doneSavingValue,
-    isSavingValue,
-    changeValue
-} from 'actions/statementBrowser';
 import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
-import RDFDataCube from 'components/RDFDataCube/RDFDataCube';
-import { updateStatement, deleteStatementById } from 'services/backend/statements';
-import { createResource as createResourceAPICall, updateResource } from 'services/backend/resources';
-import { updateLiteral } from 'services/backend/literals';
-import { toast } from 'react-toastify';
-import { guid } from 'utils';
-import ValueItemTemplate from './ValueItemTemplate';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { Fragment } from 'react';
+import useValueItem from './hooks/useValueItem';
 import PropTypes from 'prop-types';
-import { PREDICATES } from 'constants/graphSettings';
+import { CLASSES, ENTITIES } from 'constants/graphSettings';
+import DATA_TYPES from 'constants/DataTypes';
+import { Button, Badge } from 'reactstrap';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
+import { ValueItemStyle } from 'components/StatementBrowser/styled';
+import ValuePlugins from 'components/ValuePlugins/ValuePlugins';
+import { Link } from 'react-router-dom';
+import { getResourceLink } from 'utils';
+import capitalize from 'capitalize';
+import Tippy from '@tippyjs/react';
+import { reverseWithSlug } from 'utils';
+import ROUTES from 'constants/routes';
+import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
+import ValueItemOptions from './ValueItemOptions/ValueItemOptions';
+import ValueForm from 'components/StatementBrowser/ValueForm/ValueForm';
+import { Cookies } from 'react-cookie';
+import env from '@beam-australia/react-env';
 
-export default function ValueItem(props) {
-    const dispatch = useDispatch();
+const cookies = new Cookies();
 
-    const value = useSelector(state => state.statementBrowser.values.byId[props.id]);
-    const property = useSelector(state => state.statementBrowser.properties.byId[props.propertyId]);
-    const openExistingResourcesInDialog = useSelector(state => state.statementBrowser.openExistingResourcesInDialog);
-    const resource = useSelector(state => state.statementBrowser.resources.byId[props.value.resourceId]);
+const ValueItem = props => {
+    const {
+        resource,
+        value,
+        modal,
+        setModal,
+        dialogResourceId,
+        dialogResourceLabel,
+        openExistingResourcesInDialog,
+        handleExistingResourceClick,
+        handleResourceClick,
+        formattedLabel
+    } = useValueItem({ valueId: props.id, propertyId: props.propertyId, syncBackend: props.syncBackend, contextStyle: props.contextStyle });
 
-    const [modal, setModal] = useState(false);
-    const [modalDataset, setModalDataset] = useState(false);
-    const [dialogResourceId, setDialogResourceId] = useState(null);
-    const [dialogResourceLabel, setDialogResourceLabel] = useState(null);
-
-    const commitChangeLabel = async draftLabel => {
-        // Check if the user changed the label
-        if (draftLabel !== props.value.label) {
-            dispatch(
-                updateValueLabel({
-                    label: draftLabel,
-                    valueId: props.id
-                })
-            );
-            if (props.syncBackend) {
-                dispatch(isSavingValue({ id: props.id })); // To show the saving message instead of the value label
-                if (props.value.resourceId) {
-                    if (props.value.type === 'literal') {
-                        await updateLiteral(props.value.resourceId, draftLabel);
-                        toast.success('Literal label updated successfully');
-                    } else {
-                        await updateResource(props.value.resourceId, draftLabel);
-                        toast.success('Resource label updated successfully');
-                    }
-                }
-                dispatch(doneSavingValue({ id: props.id }));
-            }
-        }
-    };
-
-    const handleChangeResource = async (selectedOption, a) => {
-        // Check if the user changed the value
-        if (props.value.label !== selectedOption.label || props.value.resourceId !== selectedOption.id) {
-            dispatch(isSavingValue({ id: props.id })); // To show the saving message instead of the value label
-            if (a.action === 'select-option') {
-                changeValueInStatementBrowser({ ...selectedOption, isExistingValue: true });
-            } else if (a.action === 'create-option') {
-                let newResource = null;
-                if (props.syncBackend) {
-                    newResource = await createResourceAPICall(selectedOption.label);
-                    newResource['isExistingValue'] = true;
-                } else {
-                    newResource = { id: guid(), isExistingValue: false, label: selectedOption.label, type: 'object', classes: [], shared: 1 };
-                }
-                await changeValueInStatementBrowser(newResource);
-            }
-            dispatch(doneSavingValue({ id: props.id }));
-        }
-    };
-
-    const changeValueInStatementBrowser = async newResource => {
-        if (props.syncBackend && props.value.statementId) {
-            await updateStatement(props.value.statementId, { object_id: newResource.id });
-            dispatch(
-                changeValue({
-                    valueId: props.id,
-                    ...{
-                        classes: newResource.classes,
-                        label: newResource.label,
-                        resourceId: newResource.id,
-                        existingResourceId: newResource.id,
-                        isExistingValue: newResource.isExistingValue,
-                        existingStatement: true,
-                        statementId: props.value.statementId,
-                        shared: newResource.shared
-                    }
-                })
-            );
-            toast.success('Value updated successfully');
-        } else {
-            dispatch(
-                changeValue({
-                    valueId: props.id,
-                    ...{
-                        classes: newResource.classes,
-                        label: newResource.label,
-                        resourceId: newResource.id,
-                        existingResourceId: newResource.isExistingValue ? newResource.id : null,
-                        isExistingValue: newResource.isExistingValue,
-                        existingStatement: false,
-                        statementId: null,
-                        shared: newResource.shared
-                    }
-                })
-            );
-        }
-    };
-
-    const handleDeleteValue = async () => {
-        if (props.syncBackend) {
-            await deleteStatementById(props.value.statementId);
-            toast.success('Statement deleted successfully');
-        }
-        dispatch(
-            deleteValue({
-                id: props.id,
-                propertyId: props.propertyId
-            })
-        );
-    };
-
-    const handleResourceClick = async e => {
-        const existingResourceId = resource.existingResourceId;
-
-        if (existingResourceId) {
-            dispatch(
-                fetchStatementsForResource({
-                    resourceId: props.value.resourceId,
-                    existingResourceId,
-                    depth: 3
-                })
-            );
-        }
-
-        dispatch(
-            selectResource({
-                increaseLevel: true,
-                resourceId: props.value.resourceId,
-                label: props.value.label,
-                propertyLabel: property?.label
-            })
-        );
-    };
-
-    const handleDatasetResourceClick = ressource => {
-        dispatch(
-            createResource({
-                label: ressource.rlabel ? ressource.rlabel : ressource.label,
-                existingResourceId: ressource.id,
-                resourceId: ressource.id
-            })
-        );
-
-        dispatch(
-            selectResource({
-                increaseLevel: true,
-                resourceId: ressource.id,
-                label: ressource.rlabel ? ressource.rlabel : ressource.label,
-                propertyLabel: property?.label
-            })
-        );
-
-        dispatch(
-            fetchStatementsForResource({
-                resourceId: ressource.id,
-                existingResourceId: ressource.id
-            })
-        );
-    };
-
-    const handleExistingResourceClick = async () => {
-        const existingResourceId = resource.existingResourceId ? resource.existingResourceId : props.value.resourceId;
-
-        // Load template of this class
-        //show the statement browser
-        setDialogResourceId(existingResourceId);
-        setDialogResourceLabel(resource.label);
-        setModal(true);
-    };
-
-    const handleDatasetClick = () => {
-        const existingResourceId = resource.existingResourceId;
-
-        setModalDataset(true);
-        setDialogResourceId(existingResourceId);
-        setDialogResourceLabel(resource.label);
-    };
-
+    const resourcesAsLinks = useSelector(state => state.statementBrowser.resourcesAsLinks);
+    const preferences = useSelector(state => state.statementBrowser.preferences);
     const existingResourceId = resource ? resource.existingResourceId : false;
     let handleOnClick = null;
 
-    if (
-        (props.value.type === 'object' || props.value.type === 'template') &&
-        (existingResourceId || props.contextStyle !== 'StatementBrowser') &&
-        openExistingResourcesInDialog
-    ) {
+    if (value._class !== ENTITIES.LITERAL && (existingResourceId || props.contextStyle !== 'StatementBrowser') && openExistingResourcesInDialog) {
         handleOnClick = handleExistingResourceClick;
-    } else if (props.value.type === 'object' || props.value.type === 'template') {
+    } else if (value._class !== ENTITIES.LITERAL) {
         handleOnClick = handleResourceClick;
     }
 
     return (
         <>
-            <ValueItemTemplate
-                isProperty={[PREDICATES.TEMPLATE_COMPONENT_PROPERTY, PREDICATES.TEMPLATE_OF_PREDICATE].includes(property?.existingPredicateId)}
-                id={props.id}
-                value={value}
-                resource={resource}
-                predicate={property}
-                handleOnClick={handleOnClick}
-                handleChangeResource={handleChangeResource}
-                commitChangeLabel={commitChangeLabel}
-                handleDatasetClick={handleDatasetClick}
-                enableEdit={props.enableEdit}
-                handleDeleteValue={handleDeleteValue}
-                showHelp={props.showHelp}
-                components={props.components}
-            />
+            <ValueItemStyle>
+                {!value.isEditing ? (
+                    <div>
+                        {!value.isSaving && (
+                            <Tippy
+                                disabled={!preferences['showValueInfo'] || (!value.id && !value.classes?.length)}
+                                delay={[500, 0]}
+                                interactive={true}
+                                content={
+                                    <div className="p-1">
+                                        <ul className="p-0 mb-0" style={{ listStyle: 'none' }}>
+                                            {value.id && (
+                                                <li className="mb-1">
+                                                    {capitalize(value._class)} id: {value.id}
+                                                </li>
+                                            )}
+                                            {value.classes?.length > 0 && (
+                                                <li className="mb-1">
+                                                    Instance of:{' '}
+                                                    {value.classes.map((c, index) => (
+                                                        <Fragment key={index}>
+                                                            <Link to={getResourceLink(ENTITIES.CLASS, c)} target="_blank">
+                                                                {c}
+                                                            </Link>
+                                                            {index + 1 < value.classes.length && ','}
+                                                        </Fragment>
+                                                    ))}
+                                                </li>
+                                            )}
+                                        </ul>
+                                    </div>
+                                }
+                            >
+                                <span tabIndex="0">
+                                    {resource && !resource.isFetching && value._class !== ENTITIES.LITERAL && !resourcesAsLinks && (
+                                        <>
+                                            {!props.enableEdit && resource?.classes?.includes(CLASSES.PROBLEM) ? (
+                                                <Link
+                                                    to={reverseWithSlug(ROUTES.RESEARCH_PROBLEM, {
+                                                        researchProblemId: existingResourceId,
+                                                        slug: resource.label
+                                                    })}
+                                                >
+                                                    <DescriptionTooltip id={existingResourceId} typeId={CLASSES.PROBLEM}>
+                                                        {resource.label}
+                                                    </DescriptionTooltip>
+                                                </Link>
+                                            ) : (
+                                                <Button
+                                                    className="p-0 text-left objectLabel"
+                                                    color="link"
+                                                    onClick={() => {
+                                                        cookies.set('showedValueHelp', true, { path: env('PUBLIC_URL'), maxAge: 604800 });
+                                                        handleOnClick();
+                                                    }}
+                                                    style={{ userSelect: 'text' }}
+                                                >
+                                                    {value._class === ENTITIES.CLASS && <div className="typeCircle">C</div>}
+                                                    {value._class === ENTITIES.PREDICATE && <div className="typeCircle">P</div>}
+                                                    {props.showHelp && value._class === ENTITIES.RESOURCE ? (
+                                                        <span style={{ position: 'relative' }}>
+                                                            <span className="pulsate-css" />
+                                                            <ValuePlugins type="resource">
+                                                                {formattedLabel !== '' ? formattedLabel.toString() : <i>No label</i>}
+                                                            </ValuePlugins>
+                                                        </span>
+                                                    ) : (
+                                                        <ValuePlugins type="resource">
+                                                            {formattedLabel !== '' ? formattedLabel.toString() : <i>No label</i>}
+                                                        </ValuePlugins>
+                                                    )}
+                                                    {resource && resource.existingResourceId && openExistingResourcesInDialog && (
+                                                        <span>
+                                                            {' '}
+                                                            <Icon icon={faExternalLinkAlt} />
+                                                        </span>
+                                                    )}
+                                                </Button>
+                                            )}
+                                        </>
+                                    )}
+
+                                    {resource && value._class !== ENTITIES.LITERAL && resourcesAsLinks && (
+                                        <Link className="objectLabel" to={getResourceLink(value._class, value.resourceId)}>
+                                            {value._class === ENTITIES.CLASS && <div className="typeCircle">C</div>}
+                                            {value._class === ENTITIES.PREDICATE && <div className="typeCircle">P</div>}
+                                            {value.label || <i>No label</i>}
+                                        </Link>
+                                    )}
+
+                                    {resource && resource.isFetching && value._class === ENTITIES.RESOURCE && 'Loading...'}
+
+                                    {value._class === ENTITIES.LITERAL && (
+                                        <div className="literalLabel">
+                                            <ValuePlugins type={ENTITIES.LITERAL}>
+                                                {value.label !== '' ? value.label.toString() : <i>No label</i>}
+                                            </ValuePlugins>
+                                            {preferences['showLiteralDataTypes'] && (
+                                                <small>
+                                                    <Badge color="light" className="ml-2" title={value.datatype}>
+                                                        {DATA_TYPES.find(dt => dt.type === value.datatype)?.name ?? value.datatype}
+                                                    </Badge>
+                                                </small>
+                                            )}
+                                        </div>
+                                    )}
+                                </span>
+                            </Tippy>
+                        )}
+                        {value.isSaving && 'Saving...'}
+                        <ValueItemOptions id={props.id} enableEdit={props.enableEdit} syncBackend={props.syncBackend} handleOnClick={handleOnClick} />
+                    </div>
+                ) : (
+                    <ValueForm id={props.id} syncBackend={props.syncBackend} />
+                )}
+            </ValueItemStyle>
 
             {modal ? (
                 <StatementBrowserDialog
@@ -240,32 +180,22 @@ export default function ValueItem(props) {
             ) : (
                 ''
             )}
-
-            {modalDataset && (
-                <RDFDataCube
-                    show={modalDataset}
-                    handleResourceClick={handleDatasetResourceClick}
-                    toggleModal={() => setModalDataset(prev => !prev)}
-                    resourceId={dialogResourceId}
-                    resourceLabel={dialogResourceLabel}
-                />
-            )}
         </>
     );
-}
+};
 
 ValueItem.propTypes = {
-    value: PropTypes.object.isRequired,
     id: PropTypes.string.isRequired,
     propertyId: PropTypes.string.isRequired,
     enableEdit: PropTypes.bool.isRequired,
     syncBackend: PropTypes.bool.isRequired,
     contextStyle: PropTypes.string.isRequired,
-    showHelp: PropTypes.bool,
-    components: PropTypes.array.isRequired
+    showHelp: PropTypes.bool
 };
 
 ValueItem.defaultProps = {
     contextStyle: 'StatementBrowser',
     showHelp: false
 };
+
+export default ValueItem;

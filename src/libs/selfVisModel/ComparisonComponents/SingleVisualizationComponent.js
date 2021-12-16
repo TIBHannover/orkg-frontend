@@ -7,12 +7,12 @@ import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
 import MarkFeaturedUnlistedContainer from 'components/Comparison/MarkFeaturedUnlistedContainer';
 import moment from 'moment';
 import Tippy from '@tippyjs/react';
-import { RESOURCE_TYPE_ID } from 'constants/misc';
 import ROUTES from 'constants/routes.js';
 import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
+import { ENTITIES } from 'constants/graphSettings';
 
 const VisualizationCard = styled.div`
     margin: 0 2px;
@@ -91,7 +91,7 @@ const SingleVisualizationComponent = props => {
                     <DescriptionHeader>
                         {props.input.label.length > 0 ? 'Title: ' + props.input.label : 'No Title'}
                         <Tippy content="Go to resource page">
-                            <Link className="ml-2 resourceLink" to={reverse(ROUTES.RESOURCE, { id: props.input.id })}>
+                            <Link target="_blank" className="ml-2 resourceLink" to={reverse(ROUTES.RESOURCE, { id: props.input.id })}>
                                 <Icon icon={faLink} color="#fff" />
                             </Link>
                         </Tippy>
@@ -139,7 +139,7 @@ const SingleVisualizationComponent = props => {
                                 <div className="mb-2">
                                     <i>Created by: </i>
                                     {props.input.authors.map(author => {
-                                        if (author && author.class === RESOURCE_TYPE_ID) {
+                                        if (author && author.class === ENTITIES.RESOURCE) {
                                             return (
                                                 <Link
                                                     className="d-inline-block mr-2 mb-2"
