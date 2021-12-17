@@ -11,7 +11,7 @@ const Wrapper = styled.aside`
     height: 100%;
 
     // when the screen is too small, hide the outline, the responsiveness can be improved in the future
-    @media only screen and (max-width: 1550px) {
+    @media only screen and (max-width: 1750px) {
         display: none;
     }
 `;
