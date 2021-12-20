@@ -342,7 +342,6 @@ function Resource(props) {
                                 syncBackend={editMode}
                                 openExistingResourcesInDialog={false}
                                 initialSubjectId={resourceId}
-                                initialSubjectLabel={resource.label}
                                 newStore={true}
                                 propertiesAsLinks={true}
                                 resourcesAsLinks={true}
