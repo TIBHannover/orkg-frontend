@@ -50,7 +50,7 @@ class SameAsStatements extends Component {
     render() {
         if (this.state.externalResources.length > 0) {
             return (
-                <div className="mt-5 mb-2">
+                <div className="mt-4 mb-2">
                     {this.state.externalResources.map((resourceUrl, index) => {
                         if (resourceUrl.match(this.expressionDbPedia)) {
                             return (

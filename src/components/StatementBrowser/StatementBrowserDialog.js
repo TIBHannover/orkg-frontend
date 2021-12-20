@@ -3,7 +3,6 @@ import { Modal, ModalHeader, ModalBody, Button } from 'reactstrap';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Statements from 'components/StatementBrowser/StatementBrowser';
-import SameAsStatements from 'pages/SameAsStatements';
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { updateSettings } from 'actions/statementBrowser';
@@ -80,9 +79,8 @@ class StatementBrowserDialog extends Component {
                         initialPath={this.props.initialPath}
                         openExistingResourcesInDialog={false}
                         newStore={this.props.newStore}
+                        showExternalDescriptions={this.props.showExternalDescriptions}
                     />
-
-                    <SameAsStatements />
                 </ModalBody>
             </Modal>
         );
@@ -98,6 +96,7 @@ StatementBrowserDialog.propTypes = {
     enableEdit: PropTypes.bool.isRequired,
     syncBackend: PropTypes.bool.isRequired,
     openExistingResourcesInDialog: PropTypes.bool.isRequired,
+    showExternalDescriptions: PropTypes.bool.isRequired,
     updateSettings: PropTypes.func.isRequired,
     type: PropTypes.string,
     initialPath: PropTypes.arrayOf(
@@ -113,7 +112,8 @@ StatementBrowserDialog.defaultProps = {
     enableEdit: false,
     syncBackend: false,
     type: ENTITIES.RESOURCE,
-    initialPath: []
+    initialPath: [],
+    showExternalDescriptions: true
 };
 
 const mapStateToProps = state => {

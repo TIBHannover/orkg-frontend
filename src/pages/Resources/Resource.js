@@ -5,7 +5,6 @@ import { getStatementsBySubjectAndPredicate } from 'services/backend/statements'
 import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
 import { EditModeHeader, Title } from 'pages/ViewPaper';
 import InternalServerError from 'pages/InternalServerError';
-import SameAsStatements from '../SameAsStatements';
 import EditableHeader from 'components/EditableHeader';
 import ObjectStatements from 'components/ObjectStatements/ObjectStatements';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
@@ -346,8 +345,6 @@ function Resource(props) {
                                 propertiesAsLinks={true}
                                 resourcesAsLinks={true}
                             />
-
-                            <SameAsStatements />
                         </div>
                         <ObjectStatements resourceId={props.match.params.id} setHasObjectStatement={setHasObjectStatement} />
                     </Container>
