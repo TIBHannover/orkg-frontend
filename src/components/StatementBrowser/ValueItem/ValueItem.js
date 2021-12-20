@@ -100,7 +100,7 @@ const ValueItem = props => {
                                                     target="_blank"
                                                 >
                                                     <DescriptionTooltip id={existingResourceId} typeId={CLASSES.PROBLEM}>
-                                                        {resource.label}
+                                                        {resource.label} <Icon icon={faExternalLinkAlt} />
                                                     </DescriptionTooltip>
                                                 </Link>
                                             ) : (
