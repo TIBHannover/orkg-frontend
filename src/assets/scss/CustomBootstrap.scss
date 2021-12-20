@@ -7,7 +7,7 @@
 a:not([class*='btn']) {
     text-decoration: none;
 }
-a:not([class*='btn']):hover {
+a:not([class*='btn']):not([class*='dropdown-item']):not([class*='nav-link']):hover {
     text-decoration: underline;
 }
 

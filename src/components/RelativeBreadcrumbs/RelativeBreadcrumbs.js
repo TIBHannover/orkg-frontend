@@ -163,7 +163,10 @@ const RelativeBreadcrumbs = ({ researchField }) => {
 
             <li>
                 <Tippy content={researchField.label} disabled={researchField.label?.length <= 18}>
-                    <Link to={reverseWithSlug(ROUTES.RESEARCH_FIELD, { researchFieldId: researchField.id, slug: researchField.label })}>
+                    <Link
+                        className="text-decoration-none"
+                        to={reverseWithSlug(ROUTES.RESEARCH_FIELD, { researchFieldId: researchField.id, slug: researchField.label })}
+                    >
                         <div className="truncate">{researchField.label}</div>
                     </Link>
                 </Tippy>

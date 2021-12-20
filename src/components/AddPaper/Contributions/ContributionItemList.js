@@ -143,6 +143,7 @@ class ContributionItemList extends Component {
         );
 
         const listClasses = classNames({
+            'text-decoration-none': true,
             'contribution-item': true,
             'active-contribution': this.props.isSelected
         });
