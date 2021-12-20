@@ -1200,7 +1200,10 @@ export function addStatements(statements, resourceId, depth) {
                     );
                 }
                 return addStatement.then(() => {
-                    if (filterStatementsBySubjectId(statements, statement.object.id)?.length) {
+                    // check if statement.object.id is not already loaded (propertyIds.length===0)
+                    const resource = getState().statementBrowser.resources.byId[statement.object.id];
+                    //resource.propertyIds?.length === 0
+                    if (filterStatementsBySubjectId(statements, statement.object.id)?.length && resource?.propertyIds?.length === 0) {
                         // Add required properties and add statements
                         return dispatch(createRequiredPropertiesInResource(statement.object.id))
                             .then(() => dispatch(addStatements(statements, statement.object.id, depth - 1)))
