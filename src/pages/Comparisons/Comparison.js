@@ -295,7 +295,7 @@ function Comparison(props) {
                                 </Tippy>
                             )}
                             <Dropdown group isOpen={dropdownOpen} toggle={() => setDropdownOpen(v => !v)}>
-                                <DropdownToggle color="secondary" size="sm" className="rounded-right">
+                                <DropdownToggle color="secondary" size="sm" className="rounded-end">
                                     <span className="me-2">Actions</span> <Icon icon={faEllipsisV} />
                                 </DropdownToggle>
                                 <DropdownMenu right style={{ zIndex: '1031' }}>

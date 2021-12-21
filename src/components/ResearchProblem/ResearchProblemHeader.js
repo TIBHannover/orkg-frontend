@@ -116,7 +116,7 @@ const ResearchProblemHeader = ({ id }) => {
                                     <Icon icon={faPen} /> Edit
                                 </RequireAuthentication>
                                 <ButtonDropdown isOpen={menuOpen} toggle={() => setMenuOpen(v => !v)} nav inNavbar>
-                                    <DropdownToggle size="sm" color="secondary" className="px-3 rounded-right">
+                                    <DropdownToggle size="sm" color="secondary" className="px-3 rounded-end">
                                         <Icon icon={faEllipsisV} />
                                     </DropdownToggle>
                                     <DropdownMenu right>

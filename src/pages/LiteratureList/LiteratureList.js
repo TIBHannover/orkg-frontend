@@ -158,7 +158,7 @@ const LiteratureList = () => {
                             </>
                         )}
                         <UncontrolledButtonDropdown>
-                            <DropdownToggle size="sm" color="secondary" className="px-3 rounded-right">
+                            <DropdownToggle size="sm" color="secondary" className="px-3 rounded-end">
                                 <Icon icon={faEllipsisV} />
                             </DropdownToggle>
                             <DropdownMenu right>
