@@ -149,8 +149,6 @@ class Template extends Component {
                                             menuOpen: !prevState.menuOpen
                                         }))
                                     }
-                                    nav
-                                    inNavbar
                                 >
                                     <DropdownToggle size="sm" color="secondary" className="px-3 rounded-end" style={{ marginLeft: 2 }}>
                                         <Icon icon={faEllipsisV} />
