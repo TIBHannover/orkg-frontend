@@ -44,7 +44,14 @@ const CarouselIndicatorsStyled = styled(CarouselIndicators)`
         margin: 0;
     }
 
-    background: ${props => props.theme.secondary};
+    background: ${props => props.theme.lightLighter};
+    [data-bs-target] {
+        width: 10px;
+        height: 10px;
+        border-radius: 100%;
+        background: ${props => props.theme.primary};
+        background-clip: padding-box;
+    }
 `;
 
 const ITEMS = [
