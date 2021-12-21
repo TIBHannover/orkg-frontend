@@ -27,15 +27,6 @@ const BreadcrumbStyled = styled.ul`
 
     & > li {
         float: left;
-        .fullPath {
-            text-align: left;
-            a {
-                color: #fff;
-                &:hover {
-                    color: ${props => props.theme.primary};
-                }
-            }
-        }
         & > a {
             color: ${props => props.theme.secondary};
             display: block;
@@ -103,6 +94,16 @@ const BreadcrumbStyled = styled.ul`
     }
 `;
 
+const TippyContentStyled = styled.div`
+    text-align: left;
+    a {
+        color: #fff;
+        &:hover {
+            color: ${props => props.theme.primary};
+        }
+    }
+`;
+
 const RelativeBreadcrumbs = ({ researchField }) => {
     const [parentResearchFields, setParentResearchFields] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
@@ -128,10 +129,11 @@ const RelativeBreadcrumbs = ({ researchField }) => {
         <BreadcrumbStyled>
             <li>
                 <Tippy
+                    appendTo={document.body}
                     onTrigger={onTrigger}
                     interactive={true}
                     content={
-                        <div className="fullPath">
+                        <TippyContentStyled>
                             {!isLoading ? (
                                 <small>
                                     {parentResearchFields.map((field, index) => (
@@ -152,7 +154,7 @@ const RelativeBreadcrumbs = ({ researchField }) => {
                             ) : (
                                 <Icon icon={faSpinner} spin />
                             )}
-                        </div>
+                        </TippyContentStyled>
                     }
                 >
                     <Link to={reverseWithSlug(ROUTES.RESEARCH_FIELD, { researchFieldId: researchField.id, slug: researchField.label })}>
