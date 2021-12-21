@@ -25,9 +25,9 @@ const PaperCard = props => {
 
     return (
         <PaperCardStyled
-            className={`${props.isListGroupItem ? 'list-group-item' : ''}  d-flex pe-3 ${showActionButtons ? ' ps-2  ' : ' ps-3  '} ${
+            className={`${props.isListGroupItem ? 'list-group-item' : ''}  d-flex pe-4 ${showActionButtons ? ' ps-3  ' : ' ps-4  '} ${
                 props.selected ? 'selected' : ''
-            }`}
+            } py-3`}
             style={{ flexWrap: 'wrap' }}
         >
             <div className="col-md-9 d-flex p-0">
@@ -46,7 +46,7 @@ const PaperCard = props => {
                     </div>
                 )}
                 <div className="d-flex flex-column flex-grow-1">
-                    <div>
+                    <div className="mb-2">
                         <Link to={reverse(ROUTES.VIEW_PAPER, { resourceId: props.paper.id, contributionId: props.contribution?.id ?? undefined })}>
                             {props.paper.title ? props.paper.title : <em>No title</em>}
                         </Link>
@@ -81,7 +81,7 @@ const PaperCard = props => {
                             </ContentLoader>
                         </div>
                     )}
-                    <div>
+                    <div className="mb-1">
                         <small>
                             <Authors authors={props.paper.authors} />
                             {(props.paper.publicationMonth || props.paper.publicationYear) && (

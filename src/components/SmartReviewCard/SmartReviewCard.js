@@ -27,10 +27,10 @@ const SmartReviewCard = ({ versions, showBadge }) => {
     });
 
     return (
-        <SmartReviewCardStyled style={{ flexWrap: 'wrap' }} className="list-group-item d-flex pe-3 ps-3">
+        <SmartReviewCardStyled style={{ flexWrap: 'wrap' }} className="list-group-item d-flex px-4 py-3">
             <div className="col-md-9 d-flex p-0">
                 <div className="d-flex flex-column flex-grow-1">
-                    <div>
+                    <div className="mb-2">
                         <Link to={reverse(ROUTES.SMART_REVIEW, { id: versions[0]?.id })}>{versions[0]?.label}</Link>
                         {showBadge && (
                             <div className="d-inline-block ms-2">
@@ -38,7 +38,7 @@ const SmartReviewCard = ({ versions, showBadge }) => {
                             </div>
                         )}
                     </div>
-                    <div>
+                    <div className="mb-1">
                         <small>
                             {!isLoadingMetaData && <Authors authors={authors} />}
                             {isLoadingMetaData && 'Loading...'}

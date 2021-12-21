@@ -21,10 +21,10 @@ const ComparisonCardStyled = styled.li`
 
 const ComparisonCard = props => {
     return (
-        <ComparisonCardStyled style={{ flexWrap: 'wrap' }} rounded={props.rounded} className="list-group-item d-flex pe-3 ps-3">
+        <ComparisonCardStyled style={{ flexWrap: 'wrap' }} rounded={props.rounded} className="list-group-item d-flex px-4 py-3">
             <div className="col-md-9 d-flex p-0">
                 <div className="d-flex flex-column">
-                    <div>
+                    <div className="mb-2">
                         <Link to={reverse(ROUTES.COMPARISON, { comparisonId: props.comparison.id })}>
                             {props.comparison.label ? props.comparison.label : <em>No title</em>}
                         </Link>
@@ -38,7 +38,7 @@ const ComparisonCard = props => {
                         {props.showBreadcrumbs && <RelativeBreadcrumbs researchField={props.comparison.researchField} />}
                     </div>
 
-                    <div>
+                    <div className="mb-1">
                         <small>
                             <Icon size="sm" icon={faFile} className="me-1" /> {props.comparison.contributions?.length} Contributions
                             <Icon size="sm" icon={faChartBar} className="ms-2 me-1" /> {props.comparison.visualizations?.length} Visualizations

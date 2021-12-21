@@ -28,10 +28,10 @@ const VisualizationCard = props => {
     });
 
     return (
-        <VisualizationCardStyled style={{ flexWrap: 'wrap' }} className={`list-group-item d-flex pe-3 ps-3 `}>
+        <VisualizationCardStyled style={{ flexWrap: 'wrap' }} className={`list-group-item d-flex px-4 py-3 `}>
             <div className="col-md-9 d-flex p-0">
                 <div className="d-flex flex-column flex-grow-1">
-                    <div>
+                    <div className="mb-2">
                         <Link
                             to={
                                 props.visualization.comparisonId
@@ -47,7 +47,7 @@ const VisualizationCard = props => {
                             </div>
                         )}
                     </div>
-                    <div>
+                    <div className="mb-1">
                         <small>
                             {props.visualization.authors && props.visualization.authors.length > 0 && (
                                 <>
