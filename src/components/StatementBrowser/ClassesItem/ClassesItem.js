@@ -1,5 +1,5 @@
 import { useState, Fragment, useRef, useEffect } from 'react';
-import { Button, InputGroup, InputGroupAddon } from 'reactstrap';
+import { Button, InputGroup } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPen, faTags, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import StatementActionButton from 'components/StatementBrowser/StatementActionButton/StatementActionButton';
@@ -127,7 +127,7 @@ const ClassesItem = props => {
             <div>
                 {selectedResource && resource._class === ENTITIES.RESOURCE && (
                     <ClassesStyle className="text-muted mb-2 d-flex align-items-center clearfix">
-                        <Icon icon={faTags} className="mr-1" />
+                        <Icon icon={faTags} className="me-1" />
                         <span className="text-secondary-darker"> Instance of: </span>
                         {!editMode && !isLoading && (
                             <div className="mx-1" style={{ padding: '3.5px 0' }}>
@@ -148,7 +148,7 @@ const ClassesItem = props => {
                             </div>
                         )}
                         {props.enableEdit && editMode && (
-                            <div className="flex-grow-1 ml-1 ">
+                            <div className="flex-grow-1 ms-1 ">
                                 <InputGroup size="sm">
                                     <AutoComplete
                                         entityType={ENTITIES.CLASS}
@@ -171,11 +171,9 @@ const ClassesItem = props => {
                                         inputId="classes-autocomplete"
                                     />
 
-                                    <InputGroupAddon addonType="append">
-                                        <Button onClick={() => setEditMode(false)} disabled={isSaving}>
-                                            {!isSaving ? 'Done' : <Icon icon={faSpinner} spin={true} />}
-                                        </Button>
-                                    </InputGroupAddon>
+                                    <Button onClick={() => setEditMode(false)} disabled={isSaving}>
+                                        {!isSaving ? 'Done' : <Icon icon={faSpinner} spin={true} />}
+                                    </Button>
                                 </InputGroup>
                             </div>
                         )}

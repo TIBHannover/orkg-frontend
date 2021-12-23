@@ -7,7 +7,7 @@ import { truncate } from 'lodash';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import { useState } from 'react';
-import { Button, Input, InputGroup, InputGroupAddon } from 'reactstrap';
+import { Button, Input, InputGroup } from 'reactstrap';
 import { createResource } from 'services/backend/resources';
 import { range } from 'utils';
 import Textarea from 'react-textarea-autosize';
@@ -110,11 +110,10 @@ const EditItem = props => {
                     onChangeInputValue={e => setInputValue(e)}
                     inputValue={inputValue}
                 />
-                <InputGroupAddon addonType="append">
-                    <Button color="secondary" onClick={() => setIsOpenResearchFieldModal(true)}>
-                        Choose
-                    </Button>
-                </InputGroupAddon>
+
+                <Button color="secondary" onClick={() => setIsOpenResearchFieldModal(true)}>
+                    Choose
+                </Button>
 
                 {isOpenResearchFieldModal && (
                     <ResearchFieldSelectorModal isOpen toggle={v => setIsOpenResearchFieldModal(v => !v)} onSelectField={handleSelectField} />

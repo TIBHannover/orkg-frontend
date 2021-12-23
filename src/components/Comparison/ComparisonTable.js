@@ -262,7 +262,7 @@ const ComparisonTable = props => {
             <div
                 id="comparisonTable"
                 {...getTableProps()}
-                className="table sticky mb-0"
+                className="table sticky mb-0 p-0"
                 style={{ height: 'max-content', fontSize: smallerFontSize ? '0.95rem' : '1rem' }}
             >
                 <ScrollSyncPane group="one">
@@ -274,7 +274,7 @@ const ComparisonTable = props => {
                         {headerGroups.map(headerGroup => (
                             <div className="header" {...headerGroup.getHeaderGroupProps()}>
                                 {headerGroup.headers.map(column => (
-                                    <div {...column.getHeaderProps()} className="th">
+                                    <div {...column.getHeaderProps()} className="th p-0">
                                         {column.render('Header')}
                                     </div>
                                 ))}
@@ -288,10 +288,10 @@ const ComparisonTable = props => {
                             {rows.map((row, i) => {
                                 prepareRow(row);
                                 return (
-                                    <div {...row.getRowProps()} className="tr">
+                                    <div {...row.getRowProps()} className="tr p-0">
                                         {row.cells.map(cell => {
                                             return (
-                                                <div {...cell.getCellProps()} className="td">
+                                                <div {...cell.getCellProps()} className="td p-0">
                                                     {cell.render('Cell')}
                                                 </div>
                                             );

@@ -26,7 +26,7 @@ const PARSER_OPTIONS = {
 
 const CsvImport = () => {
     const [data, setData] = useState([]);
-    const [fileName, setFileName] = useState(null);
+    const [, setFileName] = useState(null);
     const [error, setError] = useState(null);
     const [isOpenConfirmModal, setIsOpenConfirmModal] = useState(false);
     const [isFinished, setIsFinished] = useState(false);
@@ -52,7 +52,7 @@ const CsvImport = () => {
         <>
             CSV import
             <Tippy content="Open help popup">
-                <span className="ml-3">
+                <span className="ms-3">
                     <Button
                         color="link"
                         outline
@@ -80,18 +80,16 @@ const CsvImport = () => {
                 </Alert>
                 <Form>
                     <FormGroup>
-                        <Label htmlFor="select-csv-file">Select CSV file</Label>
+                        <Label for="select-csv-file">Select CSV file</Label>
                         <div className="custom-file">
                             <CsvReader
+                                inputId="select-csv-file"
                                 cssClass="csv-reader-input"
-                                cssInputClass="custom-file-input "
+                                cssInputClass="form-control"
                                 onFileLoaded={handleOnFileLoaded}
                                 parserOptions={PARSER_OPTIONS}
                                 inputStyle={{ marginLeft: '5px' }}
                             />
-                            <label className="custom-file-label" htmlFor="exampleCustomFileBrowser">
-                                {fileName ?? 'Select a file'}
-                            </label>
                         </div>
                     </FormGroup>
                 </Form>

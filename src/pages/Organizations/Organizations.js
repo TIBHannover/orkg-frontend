@@ -70,7 +70,7 @@ class Organizations extends Component {
                 >
                     View all organizations
                 </TitleBar>
-                <Container className="box rounded pt-4 pb-4 pl-5 pr-5 clearfix">
+                <Container className="box rounded pt-4 pb-4 ps-5 pe-5 clearfix">
                     {this.state.organizations.length > 0 && (
                         <div className="mt-3 row justify-content-center">
                             {this.state.organizations.map(organization => {

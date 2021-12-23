@@ -11,14 +11,14 @@ describe('TableCellValueCreate', () => {
 
         expect(screen.queryByRole('button', { name: /add value/i, hidden: true })).not.toBeInTheDocument();
         expect(screen.queryByPlaceholderText(/enter a value/i)).not.toBeInTheDocument();
-        expect(screen.queryByRole('textbox', { name: /enter a resource/i })).not.toBeInTheDocument();
+        expect(screen.queryByRole('combobox', { name: /enter a resource/i })).not.toBeInTheDocument();
     });
 
     it('should render add button when visible is true', () => {
         setup();
         expect(screen.getByRole('button', { name: /add value/i, hidden: true })).toBeInTheDocument();
         expect(screen.queryByPlaceholderText(/enter a value/i)).not.toBeInTheDocument();
-        expect(screen.queryByRole('textbox', { name: /enter a resource/i })).not.toBeInTheDocument();
+        expect(screen.queryByRole('combobox', { name: /enter a resource/i })).not.toBeInTheDocument();
     });
 
     it('should show literal input when add button is clicked', () => {
@@ -31,7 +31,7 @@ describe('TableCellValueCreate', () => {
         setup();
         fireEvent.click(screen.getByRole('button', { name: /add value/i, hidden: true }));
         await selectEvent.select(screen.getByText(/text/i), ['Resource'], { container: document.body });
-        expect(screen.getByRole('textbox', { name: /enter a resource/i })).toBeInTheDocument();
+        expect(screen.getByRole('combobox', { name: /enter a resource/i })).toBeInTheDocument();
     });
 
     it('should switch to literal input when literal type is selected', async () => {
@@ -39,7 +39,7 @@ describe('TableCellValueCreate', () => {
         fireEvent.click(screen.getByRole('button', { name: /add value/i, hidden: true }));
         // use wait for to prevent "Can't perform a React state update on an unmounted component. This is a no-op" warning
         await selectEvent.select(screen.getByText(/text/i), ['Resource'], { container: document.body });
-        expect(screen.getByRole('textbox', { name: /enter a resource/i })).toBeInTheDocument();
+        expect(screen.getByRole('combobox', { name: /enter a resource/i })).toBeInTheDocument();
         await selectEvent.select(screen.getByText('Resource'), ['Text'], { container: document.body });
         expect(screen.getByPlaceholderText(/enter a value/i)).toBeInTheDocument();
     });

@@ -163,7 +163,7 @@ const ListPage = ({
 
                 {isLoading && page === 0 && (
                     <div className={`text-center ${page === 0 ? 'p-5 container rounded' : ''} ${boxShadow ? 'box' : ''}`}>
-                        <div className="text-left">
+                        <div className="text-start">
                             <ContentLoader
                                 speed={2}
                                 width={400}

@@ -13,7 +13,6 @@ import {
     DropdownItem,
     DropdownMenu,
     DropdownToggle,
-    InputGroupAddon,
     InputGroup
 } from 'reactstrap';
 import { selectResource, fetchStatementsForResource, createResource } from 'actions/statementBrowser';
@@ -376,9 +375,9 @@ const RDFDataCube = props => {
                     <>
                         {!isDataCubeLoading && !isDataCubeFailedLoading && (
                             <>
-                                <Dropdown className="float-right mb-2" isOpen={dropdownOpen} toggle={toggleDropdown}>
+                                <Dropdown className="float-end mb-2" isOpen={dropdownOpen} toggle={toggleDropdown}>
                                     <DropdownToggle color="secondary" size="sm">
-                                        <span className="mr-2">Options</span> <Icon icon={faEllipsisV} />
+                                        <span className="me-2">Options</span> <Icon icon={faEllipsisV} />
                                     </DropdownToggle>
                                     <DropdownMenu>
                                         <DropdownItem header>Export</DropdownItem>
@@ -414,9 +413,9 @@ const RDFDataCube = props => {
                                                             <span>
                                                                 {column.isSorted ? (
                                                                     column.isSortedDesc ? (
-                                                                        <Icon icon={faSortUp} className="ml-1" />
+                                                                        <Icon icon={faSortUp} className="ms-1" />
                                                                     ) : (
-                                                                        <Icon icon={faSortDown} className="ml-1" />
+                                                                        <Icon icon={faSortDown} className="ms-1" />
                                                                     )
                                                                 ) : (
                                                                     ''
@@ -444,7 +443,7 @@ const RDFDataCube = props => {
                                     </tbody>
                                 </Table>
 
-                                <Pagination aria-label="Page navigation" className="float-left">
+                                <Pagination aria-label="Page navigation" className="float-start">
                                     <PaginationItem title="First page" onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
                                         <PaginationLink first />
                                     </PaginationItem>
@@ -465,9 +464,10 @@ const RDFDataCube = props => {
                                     </PaginationItem>
                                 </Pagination>
 
-                                <div className=" d-flex">
-                                    <InputGroup className="col-2">
-                                        <InputGroupAddon addonType="prepend">Go to page:</InputGroupAddon>
+                                <div className="row">
+                                    <InputGroup>
+                                        <span className="input-group-text">Go to page:</span>
+
                                         <Input
                                             type="number"
                                             defaultValue={pageIndex + 1}
@@ -475,24 +475,23 @@ const RDFDataCube = props => {
                                                 const page = e.target.value ? Number(e.target.value) - 1 : 0;
                                                 gotoPage(page);
                                             }}
-                                            style={{ width: '100px' }}
                                         />
+                                        <Input
+                                            className="d-inline-block"
+                                            type="select"
+                                            name="selectMulti"
+                                            value={pageSize}
+                                            onChange={e => {
+                                                setPageSize(Number(e.target.value));
+                                            }}
+                                        >
+                                            {[10, 20, 30, 40, 50].map(pageSize => (
+                                                <option key={pageSize} value={pageSize}>
+                                                    Show {pageSize}
+                                                </option>
+                                            ))}
+                                        </Input>
                                     </InputGroup>
-                                    <Input
-                                        className="d-inline-block col-1"
-                                        type="select"
-                                        name="selectMulti"
-                                        value={pageSize}
-                                        onChange={e => {
-                                            setPageSize(Number(e.target.value));
-                                        }}
-                                    >
-                                        {[10, 20, 30, 40, 50].map(pageSize => (
-                                            <option key={pageSize} value={pageSize}>
-                                                Show {pageSize}
-                                            </option>
-                                        ))}
-                                    </Input>
                                 </div>
                             </>
                         )}

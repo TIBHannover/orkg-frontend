@@ -12,7 +12,7 @@ const ProblemsDropdownFilter = ({ sort, isLoading, includeSubFields, setSort, se
         <>
             {sort === 'top' && (
                 <UncontrolledButtonDropdown>
-                    <DropdownToggle caret className="pl-3 pr-3" size="sm" color="light">
+                    <DropdownToggle caret className="ps-3 pe-3" size="sm" color="light">
                         {stringifySort(sort)}
                     </DropdownToggle>
                     <DropdownMenu>
@@ -70,7 +70,7 @@ const ProblemsDropdownFilter = ({ sort, isLoading, includeSubFields, setSort, se
                     }
                 >
                     <span>
-                        <Button color="light" className="flex-shrink-0 pl-3 pr-3" style={{ marginLeft: 'auto' }} size="sm">
+                        <Button color="light" className="flex-shrink-0 ps-3 pe-3" style={{ marginLeft: 'auto' }} size="sm">
                             {stringifySort(sort)} <Icon icon={faChevronDown} />
                         </Button>
                     </span>

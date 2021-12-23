@@ -41,7 +41,7 @@ const LiteratureListNew = () => {
     return (
         <>
             <TitleBar>Create literature list</TitleBar>
-            <Container className="box rounded pt-4 pb-4 pl-5 pr-5">
+            <Container className="box rounded pt-4 pb-4 ps-5 pe-5">
                 <p>
                     Literature lists provide a way to organize and describe state-of-the-art literature for a specific research domain. From
                     literature lists, it is possible to create ORKG comparisons.
@@ -62,7 +62,7 @@ const LiteratureListNew = () => {
 
                     <Input type="text" id="articleTitle" value={title} onChange={e => setTitle(e.target.value)} />
                 </FormGroup>
-                <div className="text-right">
+                <div className="text-end">
                     <Button color="primary" onClick={handleCreate} disabled={isLoading}>
                         {!isLoading ? (
                             'Create'

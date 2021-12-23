@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { Row, Col, FormGroup, CustomInput } from 'reactstrap';
+import { Row, Col, FormGroup, Input, Label } from 'reactstrap';
 import { connect } from 'react-redux';
 import ConfirmClass from 'components/ConfirmationModal/ConfirmationModal';
 import { setComponents, setIsStrictTemplate } from 'actions/addTemplate';
@@ -160,15 +160,17 @@ function ComponentsTab(props) {
                 )}
                 <FormGroup className="mt-3">
                     <div>
-                        <CustomInput
+                        <Input
                             onChange={handleSwitchIsStrictTemplate}
                             checked={props.isStrictTemplate}
                             id="switchIsStrictTemplate"
                             type="switch"
                             name="customSwitch"
-                            label="This template is strict (users cannot add additional properties themselves)"
                             disabled={!props.editMode}
-                        />
+                        />{' '}
+                        <Label for="switchIsStrictTemplate" className="mb-0">
+                            This template is strict (users cannot add additional properties themselves)
+                        </Label>
                     </div>
                 </FormGroup>
             </div>

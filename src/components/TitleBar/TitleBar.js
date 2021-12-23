@@ -65,7 +65,7 @@ const TitleBar = ({ buttonGroup = null, titleAddition = null, children = '', wra
 
     return (
         <ContainerStyled className={`d-flex mt-4 mb-4 align-items-center ${wrap ? 'flex-wrap' : ''}`}>
-            <h1 className={`${titleSize} m-0 mr-3  ${!wrap ? 'flex-shrink-0' : ''}`}>{children}</h1> {titleAddition}
+            <h1 className={`${titleSize} m-0 me-3  ${!wrap ? 'flex-shrink-0' : ''}`}>{children}</h1> {titleAddition}
             {buttonGroup && (
                 <MenuButton
                     aria-label="Open action menu"

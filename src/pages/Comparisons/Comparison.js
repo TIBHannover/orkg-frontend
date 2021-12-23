@@ -252,11 +252,11 @@ function Comparison(props) {
                         <>
                             <Dropdown group isOpen={dropdownDensityOpen} toggle={() => setDropdownDensityOpen(v => !v)} style={{ marginRight: 2 }}>
                                 <DropdownToggle color="secondary" size="sm">
-                                    <Icon icon={faWindowMaximize} className="mr-1" /> View
+                                    <Icon icon={faWindowMaximize} className="me-1" /> View
                                 </DropdownToggle>
                                 <DropdownMenu>
                                     <DropdownItem onClick={handleFullWidth}>
-                                        <span className="mr-2">{fullWidth ? 'Reduced width' : 'Full width'}</span>
+                                        <span className="me-2">{fullWidth ? 'Reduced width' : 'Full width'}</span>
                                     </DropdownItem>
                                     <DropdownItem onClick={() => toggleTranspose(v => !v)}>Transpose table</DropdownItem>
                                     <DropdownItem divider />
@@ -282,7 +282,7 @@ function Comparison(props) {
                                     }}
                                     style={{ marginRight: 2 }}
                                 >
-                                    <Icon icon={faChartBar} className="mr-1" /> Visualize
+                                    <Icon icon={faChartBar} className="me-1" /> Visualize
                                 </Button>
                             ) : (
                                 <Tippy
@@ -290,13 +290,13 @@ function Comparison(props) {
                                     content="Cannot use self-visualization-service for unpublished comparison. You must publish the comparison first to use this functionality."
                                 >
                                     <span style={{ marginRight: 2 }} className="btn btn-secondary btn-sm disabled">
-                                        <Icon icon={faChartBar} className="mr-1" /> Visualize
+                                        <Icon icon={faChartBar} className="me-1" /> Visualize
                                     </span>
                                 </Tippy>
                             )}
                             <Dropdown group isOpen={dropdownOpen} toggle={() => setDropdownOpen(v => !v)}>
-                                <DropdownToggle color="secondary" size="sm" className="rounded-right">
-                                    <span className="mr-2">Actions</span> <Icon icon={faEllipsisV} />
+                                <DropdownToggle color="secondary" size="sm" className="rounded-end">
+                                    <span className="me-2">Actions</span> <Icon icon={faEllipsisV} />
                                 </DropdownToggle>
                                 <DropdownMenu right style={{ zIndex: '1031' }}>
                                     <DropdownItem header>Customize</DropdownItem>
@@ -442,7 +442,7 @@ function Comparison(props) {
                                         <>
                                             <DropdownItem divider />
                                             <DropdownItem onClick={() => setShowComparisonVersions(v => !v)}>
-                                                <Icon icon={faHistory} /> <span className="mr-2">History</span>
+                                                <Icon icon={faHistory} /> <span className="me-2">History</span>
                                             </DropdownItem>
                                         </>
                                     )}
@@ -476,7 +476,7 @@ function Comparison(props) {
                 <NewerVersionWarning versions={versions} comparisonId={metaData?.id || metaData?.hasPreviousVersion?.id} />
             )}
 
-            <ContainerAnimated className="box rounded pt-4 pb-4 pl-5 pr-5 clearfix position-relative" style={containerStyle}>
+            <ContainerAnimated className="box rounded pt-4 pb-4 ps-5 pe-5 clearfix position-relative" style={containerStyle}>
                 <ShareLinkMarker typeOfLink="comparison" title={metaData?.title} />
                 {!isLoadingMetaData && (isFailedLoadingComparisonResult || isFailedLoadingMetaData) && (
                     <div>
@@ -540,7 +540,7 @@ function Comparison(props) {
                             {areAllRulesEmpty(filterControlData) && (
                                 <div className="mt-3 d-flex" style={{ flexDirection: 'column' }}>
                                     <h6 className="text-secondary">
-                                        <Icon className="mr-1" size="sm" icon={faFilter} />
+                                        <Icon className="me-1" size="sm" icon={faFilter} />
                                         <b>Applied Filters:</b>
                                     </h6>
                                     <div className="d-flex flex-wrap">{displayRules()}</div>

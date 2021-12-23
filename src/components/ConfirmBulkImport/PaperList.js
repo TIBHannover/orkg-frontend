@@ -47,7 +47,7 @@ const PaperList = props => {
 
     return (
         <>
-            <div className="w-100 text-right">
+            <div className="w-100 text-end">
                 {showContributions.length === 0 ? (
                     <Button size="sm" color="secondary" className="mb-2" onClick={handleExpandAll}>
                         <Icon icon={faArrowsAltV} /> Expand all data
@@ -79,14 +79,14 @@ const PaperList = props => {
                                         'No title'
                                     )}
                                 </span>
-                                <div className="flex-shrink-1 text-muted pl-3" style={{ fontSize: '140%', opacity: 0.7 }}>
+                                <div className="flex-shrink-1 text-muted ps-3" style={{ fontSize: '140%', opacity: 0.7 }}>
                                     #{i + 1}
                                 </div>
                             </div>
                             <small>
                                 <Icon size="sm" icon={faUser} />{' '}
-                                {paper.authors.length > 0 ? paper.authors.map(a => a.label).join(' • ') : <i className="ml-1">No authors provided</i>}
-                                {(paper.publicationMonth || paper.publicationYear) && <Icon size="sm" icon={faCalendar} className="ml-2 mr-1" />}
+                                {paper.authors.length > 0 ? paper.authors.map(a => a.label).join(' • ') : <i className="ms-1">No authors provided</i>}
+                                {(paper.publicationMonth || paper.publicationYear) && <Icon size="sm" icon={faCalendar} className="ms-2 me-1" />}
                                 {paper.publicationMonth && paper.publicationMonth > 0 ? moment(paper.publicationMonth, 'M').format('MMMM') : ''}{' '}
                                 {paper.publicationYear}
                             </small>

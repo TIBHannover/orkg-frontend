@@ -15,7 +15,7 @@ class NotFound extends Component {
         return (
             <div>
                 <TitleBar>An error has occurred</TitleBar>
-                <Container className="box rounded pt-4 pb-4 pl-5 pr-5">
+                <Container className="box rounded pt-4 pb-4 ps-5 pe-5">
                     <div className="container">
                         <div className="row justify-content-center">
                             <div className="col-md-12 text-center">
@@ -23,7 +23,7 @@ class NotFound extends Component {
                                 <Icon icon={faBug} className="text-primary mt-3 mb-3" style={{ fontSize: 25 }} />
                                 <div className="mb-4 lead">The page you are looking for was not found.</div>
                                 <Link to={ROUTES.HOME}>
-                                    <Button color="primary" className="mr-3">
+                                    <Button color="primary" className="me-3">
                                         Back to home
                                     </Button>
                                 </Link>

@@ -86,7 +86,7 @@ class SignIn extends Component {
     render() {
         return (
             <>
-                <Form className="pl-3 pr-3 pt-2" onSubmit={this.signIn}>
+                <Form className="ps-3 pe-3 pt-2" onSubmit={this.signIn}>
                     {this.state.errors && <Alert color="danger">{this.state.errors}</Alert>}
 
                     {this.props.signInRequired && <Alert color="info">You need to be signed in to use this functionality</Alert>}

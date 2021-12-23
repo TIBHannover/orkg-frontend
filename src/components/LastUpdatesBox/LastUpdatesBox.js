@@ -17,14 +17,14 @@ const LastUpdatesBox = ({ researchFieldId }) => {
     const [openModal, setOpenModal] = useState(false);
 
     return (
-        <div className="box rounded-lg p-3 flex-grow-1 d-flex flex-column">
+        <div className="box rounded-3 p-3 flex-grow-1 d-flex flex-column">
             <h5>Last updates</h5>
             <div className="mt-3 flex-grow-1">
                 <div>
                     {!isLoading &&
                         activities?.length > 0 &&
                         activities.slice(0, 3).map(activity => (
-                            <StyledActivity key={`log${activity.id}`} className="pl-3 pb-3">
+                            <StyledActivity key={`log${activity.id}`} className="ps-3 pb-3">
                                 <div className="time">{moment(activity.created_at).fromNow()}</div>
                                 <div className="action">
                                     {activity.profile?.id ? (

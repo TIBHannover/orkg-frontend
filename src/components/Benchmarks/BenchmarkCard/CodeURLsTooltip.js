@@ -23,7 +23,7 @@ const CodeURLsTooltip = ({ urls, title, id }) => {
     if (urls?.length === 1) {
         return (
             <a href={urls[0] ?? '-'} rel="noreferrer" target="_blank">
-                <Icon icon={getCodeIconByURL(urls[0])} color="primary" className="icon ml-2 mr-2" />
+                <Icon icon={getCodeIconByURL(urls[0])} color="primary" className="icon ms-2 me-2" />
             </a>
         );
     }
@@ -48,7 +48,7 @@ const CodeURLsTooltip = ({ urls, title, id }) => {
                                 <tr key={index}>
                                     <td>
                                         <a href={url ?? '-'} rel="noreferrer" target="_blank" className="text-dark">
-                                            <Icon icon={getCodeIconByURL(url)} className="icon ml-2 mr-2" /> {url}
+                                            <Icon icon={getCodeIconByURL(url)} className="icon ms-2 me-2" /> {url}
                                         </a>
                                     </td>
                                 </tr>
@@ -59,7 +59,7 @@ const CodeURLsTooltip = ({ urls, title, id }) => {
             </Modal>
 
             <Button className="p-0" color="link" onClick={() => setShowModal(v => !v)}>
-                <Icon icon={faGithub} color="#e86161" className="icon ml-2 mr-2" />
+                <Icon icon={faGithub} color="#e86161" className="icon ms-2 me-2" />
             </Button>
         </>
     );

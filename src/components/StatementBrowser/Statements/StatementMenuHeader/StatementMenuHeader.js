@@ -21,7 +21,7 @@ export default function StatementMenuHeader(props) {
 
     return (
         <>
-            <div className="mb-2 text-right">
+            <div className="mb-2 text-end">
                 <ButtonGroup>
                     {/* We have custom templates for predicates and classes*/}
                     {props.enableEdit && props.resource._class === ENTITIES.RESOURCE && (
@@ -34,7 +34,7 @@ export default function StatementMenuHeader(props) {
                         >
                             <Tippy content="Select a template to use in your data">
                                 <div className="px-3 py-1">
-                                    <Icon className="mr-1" icon={faPuzzlePiece} /> Templates
+                                    <Icon className="me-1" icon={faPuzzlePiece} /> Templates
                                 </div>
                             </Tippy>
                             {isTemplatesModalOpen && <TemplatesModal syncBackend={props.syncBackend} />}
@@ -42,7 +42,7 @@ export default function StatementMenuHeader(props) {
                     )}
                     {props.enableEdit && (
                         <Button outline color="secondary" size="sm" onClick={() => dispatch(setIsHelpModalOpen({ isOpen: true }))}>
-                            <Icon className="mr-1" icon={faQuestionCircle} /> Help
+                            <Icon className="me-1" icon={faQuestionCircle} /> Help
                         </Button>
                     )}
 
@@ -57,7 +57,7 @@ export default function StatementMenuHeader(props) {
                             appendTo={document.body}
                         >
                             <div className={`${props.enableEdit ? 'px-3' : 'text-muted'} py-1`}>
-                                <Icon fixedWidth={true} className="mr-1" icon={!isPreferencesOpen ? faSlidersH : faTimes} /> Preferences
+                                <Icon fixedWidth={true} className="me-1" icon={!isPreferencesOpen ? faSlidersH : faTimes} /> Preferences
                             </div>
                         </Tippy>
                     </Button>

@@ -60,13 +60,13 @@ const AuthorHeader = ({ authorId }) => {
                                     component={Button}
                                     size="sm"
                                     color="secondary"
-                                    className="float-right"
+                                    className="float-end"
                                     onClick={() => setEditMode(v => !v)}
                                 >
                                     <Icon icon={faPen} /> Edit
                                 </RequireAuthentication>
-                                <ButtonDropdown isOpen={menuOpen} toggle={() => setMenuOpen(v => !v)} nav inNavbar>
-                                    <DropdownToggle size="sm" color="secondary" className="px-3 rounded-right" style={{ marginLeft: 2 }}>
+                                <ButtonDropdown isOpen={menuOpen} toggle={() => setMenuOpen(v => !v)}>
+                                    <DropdownToggle size="sm" color="secondary" className="px-3 rounded-end" style={{ marginLeft: 2 }}>
                                         <Icon icon={faEllipsisV} />
                                     </DropdownToggle>
                                     <DropdownMenu right>
@@ -107,7 +107,7 @@ const AuthorHeader = ({ authorId }) => {
                                     </AuthorMetaInfo>
                                 )}
                                 {author.website && (
-                                    <AuthorMetaInfo className="pl-3">
+                                    <AuthorMetaInfo className="ps-3">
                                         <div className="key">
                                             Website <Icon icon={faGlobe} />
                                         </div>
@@ -119,7 +119,7 @@ const AuthorHeader = ({ authorId }) => {
                                     </AuthorMetaInfo>
                                 )}
                                 {author.googleScholar && (
-                                    <AuthorMetaInfo className="pl-3">
+                                    <AuthorMetaInfo className="ps-3">
                                         <div className="key">
                                             Google Scholar <Icon icon={faGoogle} />
                                         </div>
@@ -135,7 +135,7 @@ const AuthorHeader = ({ authorId }) => {
                                     </AuthorMetaInfo>
                                 )}
                                 {author.researchGate && (
-                                    <AuthorMetaInfo className="pl-3">
+                                    <AuthorMetaInfo className="ps-3">
                                         <div className="key">
                                             ResearchGate <Icon icon={faResearchgate} />
                                         </div>
@@ -151,7 +151,7 @@ const AuthorHeader = ({ authorId }) => {
                                     </AuthorMetaInfo>
                                 )}
                                 {author.linkedIn && (
-                                    <AuthorMetaInfo className="pl-3">
+                                    <AuthorMetaInfo className="ps-3">
                                         <div className="key">
                                             Linkedin <Icon icon={faLinkedin} />
                                         </div>

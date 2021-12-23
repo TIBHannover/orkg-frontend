@@ -36,10 +36,10 @@ const PropertySuggestions = () => {
                         <DescriptionTooltip id={c.property.id} typeId={ENTITIES.PREDICATE}>
                             <div className="d-flex">
                                 <div className="flex-grow-1">
-                                    <Icon icon={faPlus} className="mr-1 text-muted" /> {c.property.label}
+                                    <Icon icon={faPlus} className="me-1 text-muted" /> {c.property.label}
                                 </div>
-                                <small className="float-right">
-                                    <Badge pill className="ml-2">
+                                <small className="float-end">
+                                    <Badge pill className="ms-2">
                                         {c.value?.label ?? ''}
                                     </Badge>
                                 </small>

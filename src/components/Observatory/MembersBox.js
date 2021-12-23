@@ -26,7 +26,7 @@ const MembersBox = ({ observatoryId, organizationsList }) => {
     }, [observatoryId]);
 
     return (
-        <div className="box rounded-lg p-4 flex-grow-1 d-flex flex-column">
+        <div className="box rounded-3 p-4 flex-grow-1 d-flex flex-column">
             <h5>Members</h5>
             <div className="flex-grow-1">
                 {!isLoadingMembers ? (

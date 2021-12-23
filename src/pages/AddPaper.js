@@ -196,7 +196,7 @@ class AddPaper extends Component {
                             style={{ marginLeft: 'auto' }}
                             onClick={() => this.toggle('showGraphModal')}
                         >
-                            <Icon icon={faProjectDiagram} className="mr-1" /> View graph
+                            <Icon icon={faProjectDiagram} className="me-1" /> View graph
                         </Button>
                     }
                     wrap={false}
@@ -204,7 +204,7 @@ class AddPaper extends Component {
                     Add paper
                 </TitleBar>
 
-                <Container className="box rounded pt-4 pb-4 pl-md-5 pr-md-5 clearfix ">
+                <Container className="box rounded pt-4 pb-4 ps-md-5 pe-md-5 clearfix ">
                     <ProgressBar currentStep={currentStep} />
 
                     <hr />

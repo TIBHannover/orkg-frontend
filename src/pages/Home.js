@@ -42,9 +42,9 @@ export default function Home() {
                 />
             </Helmet>
             <HomeAlerts />
-            <Row>
+            <Row style={{ position: 'relative', zIndex: 99 }}>
                 <Col md="12">
-                    <div className="box rounded-lg p-3">
+                    <div className="box rounded-3 p-3">
                         <ResearchFieldCards
                             selectedResearchField={selectedResearchField}
                             handleFieldSelect={handleFieldSelect}
@@ -54,7 +54,7 @@ export default function Home() {
                     </div>
                 </Col>
             </Row>
-            {selectedResearchField.id !== MISC.RESEARCH_FIELD_MAIN && <div className="h4 mt-4 mb-2 pl-3">{selectedResearchField.label}</div>}
+            {selectedResearchField.id !== MISC.RESEARCH_FIELD_MAIN && <div className="h4 mt-4 mb-2 ps-3">{selectedResearchField.label}</div>}
             <Row>
                 <Col md="8">
                     <div className="mt-3 mt-md-0 d-flex flex-column">
