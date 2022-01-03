@@ -35,8 +35,8 @@ function Benchmarks() {
                 View all benchmarks
             </TitleBar>
             <Container className="box rounded p-4 clearfix">
-                <div className="d-flex">
-                    <div>
+                <div className="row">
+                    <div className="col-md-9">
                         <p>
                             <i>Benchmarks</i> organize the state-of-the-art empirical research within research fields and are powered in part by
                             automated information extraction within a human-in-the-loop curation model.{' '}
