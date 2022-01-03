@@ -7,6 +7,7 @@ import ContributorsModal from './ContributorsModal';
 import ContentLoader from 'react-content-loader';
 import PropTypes from 'prop-types';
 import { Button } from 'reactstrap';
+import pluralize from 'pluralize';
 
 const ContributorsBox = ({ researchFieldId }) => {
     const { contributors, isLoading } = useContributors({ researchFieldId, pageSize: 5, initialSort: 'top' });
@@ -25,7 +26,7 @@ const ContributorsBox = ({ researchFieldId }) => {
                                 <ContributorCard
                                     contributor={{
                                         ...contributor.profile,
-                                        subTitle: `${contributor.counts.total} contribution${contributor.counts.total > 1 ? 's' : ''}`
+                                        subTitle: `${pluralize('contribution', contributor.counts.total, true)}`
                                     }}
                                 />
                                 {contributors.slice(0, 4).length - 1 !== index && <hr className="mb-0 mt-1" />}
