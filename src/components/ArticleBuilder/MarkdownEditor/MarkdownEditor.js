@@ -147,7 +147,7 @@ const MarkdownEditor = ({ label, handleUpdate, references = null, literalId = nu
             dataProvider: findResources,
             component: ItemResource,
             allowWhitespace: true,
-            output: item => `[${item.resource.label}](https://www.orkg.org/orkg/resource/${item.resource.id})`
+            output: item => `[${item.resource.label}](${process.env.REACT_APP_URL}resource/${item.resource.id})`
         },
         '[@': {
             dataProvider: token =>

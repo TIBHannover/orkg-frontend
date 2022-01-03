@@ -30,7 +30,7 @@ const ViewLiteratureList = () => {
     const toggleHistoryModal = () => dispatch(historyModalToggled());
 
     return (
-        <Container className="print-only p-0 position-relative">
+        <Container className="embed-only p-0 position-relative">
             {!isPublished && (
                 <Alert color="warning" fade={false} className="box">
                     Warning: you are viewing an unpublished version of this list. The content can be changed by anyone.{' '}
@@ -70,7 +70,7 @@ const ViewLiteratureList = () => {
                                 <section key={section.id} className="mt-3">
                                     <ListGroup>
                                         {section.entries.map(entry => (
-                                            <ListGroupItem key={entry.statementId} className="p-2">
+                                            <ListGroupItem key={entry.statementId} className="p-0">
                                                 <PaperCard
                                                     isListGroupItem={false}
                                                     showBreadcrumbs={false}

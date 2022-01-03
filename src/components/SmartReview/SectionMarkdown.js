@@ -146,7 +146,7 @@ const SectionMarkdown = props => {
             dataProvider: findResources,
             component: ItemResource,
             allowWhitespace: true,
-            output: item => `[${item.resource.label}](https://www.orkg.org/orkg/resource/${item.resource.id})`
+            output: item => `[${item.resource.label}](${process.env.REACT_APP_URL}resource/${item.resource.id})`
         },
         '[@': {
             dataProvider: token =>
@@ -160,7 +160,6 @@ const SectionMarkdown = props => {
 
     const handleKeyPress = e => {
         if (e.key === 'Enter') {
-            console.log('set entering things');
             setEditMode(true);
         }
     };
