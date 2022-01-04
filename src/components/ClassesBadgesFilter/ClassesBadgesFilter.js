@@ -16,7 +16,7 @@ const ClassesBadgesFilter = props => {
     const Control = useCallback(({ ...innerProps }) => {
         return (
             <components.Control {...innerProps}>
-                <div className="pl-2">Types ({innerProps.getValue()?.length} selected)</div>
+                <div className="ps-2">Types ({innerProps.getValue()?.length} selected)</div>
                 {innerProps.children}
             </components.Control>
         );
@@ -27,7 +27,7 @@ const ClassesBadgesFilter = props => {
             <div>
                 <components.Option {...innerProps}>
                     <div className="d-flex">
-                        <input className="d-inline-block mr-2" type="checkbox" checked={innerProps.isSelected} onChange={() => null} />{' '}
+                        <input className="d-inline-block me-2" type="checkbox" checked={innerProps.isSelected} onChange={() => null} />{' '}
                         <label className="m-0">{innerProps.value}</label>{' '}
                     </div>
                 </components.Option>
@@ -83,7 +83,7 @@ const ClassesBadgesFilter = props => {
     };
 
     return (
-        <div className="mr-1" style={{ width: '180px' }}>
+        <div className="me-1" style={{ width: '180px' }}>
             <Select
                 value={props.classesFilter}
                 onChange={handleSelect}

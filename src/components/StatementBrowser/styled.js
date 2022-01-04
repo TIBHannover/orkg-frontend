@@ -248,18 +248,6 @@ export const AddPropertyFormStyle = styled.div`
         outline: 0;
         box-shadow: none;
     }
-
-    .input-group-prepend {
-        background-color: ${props => props.theme.lightLighter};
-        cursor: default;
-        display: flex;
-        border: 1px solid rgba(0, 0, 0, 0.125);
-        border-bottom-left-radius: 4px;
-        border-top-left-radius: 4px;
-        width: 28px;
-        align-items: center;
-        justify-content: center;
-    }
 `;
 
 export const StatementsGroupStyle = styled.div`

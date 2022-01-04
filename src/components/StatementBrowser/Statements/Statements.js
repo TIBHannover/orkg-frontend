@@ -7,6 +7,7 @@ import StatementItemWrapper from 'components/StatementBrowser/StatementItem/Stat
 import NoData from 'components/StatementBrowser/NoData/NoData';
 import NotFound from 'components/StatementBrowser/NotFound/NotFound';
 import { StyledLevelBox, StyledStatementItem } from 'components/StatementBrowser/styled';
+import SameAsStatements from 'components/ExternalDescription/SameAsStatements';
 import { isArray } from 'lodash';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
@@ -152,6 +153,8 @@ const Statements = props => {
             <>
                 {level !== 0 && <Breadcrumbs />}
                 {elements}
+
+                {props.showExternalDescriptions && <SameAsStatements />}
             </>
         </>
     );
@@ -174,6 +177,7 @@ Statements.propTypes = {
     propertiesAsLinks: PropTypes.bool,
     resourcesAsLinks: PropTypes.bool,
     initOnLocationChange: PropTypes.bool.isRequired,
+    showExternalDescriptions: PropTypes.bool.isRequired,
     keyToKeepStateOnLocationChange: PropTypes.string,
     renderTemplateBox: PropTypes.bool
 };
@@ -188,6 +192,7 @@ Statements.defaultProps = {
     propertiesAsLinks: false,
     resourcesAsLinks: false,
     initOnLocationChange: true,
+    showExternalDescriptions: true,
     keyToKeepStateOnLocationChange: null,
     rootNodeType: ENTITIES.RESOURCE,
     renderTemplateBox: false,

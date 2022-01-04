@@ -36,7 +36,10 @@ const SmartReviewCard = ({ versions, showCurationFlags, showBadge }) => {
     });
 
     return (
-        <SmartReviewCardStyled style={{ flexWrap: 'wrap' }} className={`list-group-item d-flex pr-3 ${showCurationFlags ? ' pl-2  ' : ' pl-4  '}`}>
+        <SmartReviewCardStyled
+            style={{ flexWrap: 'wrap' }}
+            className={`list-group-item d-flex py-3 pe-4 ${showCurationFlags ? ' ps-2  ' : ' ps-4  '}`}
+        >
             <div className="col-md-9 d-flex p-0">
                 {showCurationFlags && (
                     <div className="d-flex flex-column flex-shrink-0" style={{ width: '25px' }}>
@@ -49,21 +52,21 @@ const SmartReviewCard = ({ versions, showCurationFlags, showBadge }) => {
                     </div>
                 )}
                 <div className="d-flex flex-column flex-grow-1">
-                    <div>
+                    <div className="mb-2">
                         <Link to={reverse(ROUTES.SMART_REVIEW, { id: versions[0]?.id })}>{versions[0]?.label}</Link>
                         {showBadge && (
-                            <div className="d-inline-block ml-2">
+                            <div className="d-inline-block ms-2">
                                 <CardBadge color="primary">SmartReview</CardBadge>
                             </div>
                         )}
                     </div>
-                    <div>
+                    <div className="mb-1">
                         <small>
                             {!isLoadingMetaData && <Authors authors={authors} />}
                             {isLoadingMetaData && 'Loading...'}
                             {versions[0].created_at && (
                                 <>
-                                    <Icon size="sm" icon={faCalendar} className="ml-2 mr-1" /> {moment(versions[0].created_at).format('DD-MM-YYYY')}
+                                    <Icon size="sm" icon={faCalendar} className="ms-2 me-1" /> {moment(versions[0].created_at).format('DD-MM-YYYY')}
                                 </>
                             )}
                         </small>

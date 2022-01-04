@@ -176,7 +176,7 @@ const Templates = () => {
             >
                 View all templates
             </TitleBar>
-            <Container className="box rounded pt-4 pb-2 pl-5 pr-5 clearfix">
+            <Container className="box rounded pt-4 pb-2 ps-5 pe-5 clearfix">
                 <Alert color="info" fade={false}>
                     Templates allows to specify the structure of content types, and they can be used when describing research contributions. Further
                     information about templates can be also found in the{' '}
@@ -190,7 +190,7 @@ const Templates = () => {
                     .
                 </Alert>
                 <Form className="mb-3">
-                    <Row form>
+                    <Row>
                         <Col md={6}>
                             <FormGroup>
                                 <Label for="exampleEmail">Filter by research field</Label>
@@ -226,7 +226,7 @@ const Templates = () => {
                             </FormGroup>
                         </Col>
                     </Row>
-                    <Row form>
+                    <Row>
                         <Col md={6}>
                             <FormGroup>
                                 <Label for="filterLabel">Filter by Label</Label>

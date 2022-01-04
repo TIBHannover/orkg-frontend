@@ -56,7 +56,7 @@ class EditableHeader extends Component {
                                     <small>No label</small>
                                 </i>
                             )}
-                            <Button className="float-right" size="sm" color="secondary" onClick={this.handleEditClick}>
+                            <Button className="float-end" size="sm" color="secondary" onClick={this.handleEditClick}>
                                 <Icon icon={faPen} /> Edit
                             </Button>
                         </h3>
@@ -65,7 +65,7 @@ class EditableHeader extends Component {
                 {this.state.editorState === 'edit' && (
                     <div className="clearfix">
                         <Input value={this.state.value} onChange={this.handleChange} />
-                        <div className="float-right">
+                        <div className="float-end">
                             <Button color="link" onClick={this.handleSubmitClick}>
                                 <Icon icon={faCheck} /> Save
                             </Button>

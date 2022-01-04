@@ -150,7 +150,7 @@ class Observatories extends Component {
                         .
                     </p>
                     {this.state.observatories && Object.keys(this.state.observatories).length > 0 && (
-                        <Row noGutters={true}>
+                        <Row className="g-0">
                             <Col md={3} sm={12}>
                                 <StyledResearchFieldList>
                                     {Object.keys(this.state.observatories)

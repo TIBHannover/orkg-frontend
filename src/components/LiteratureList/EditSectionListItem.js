@@ -7,7 +7,7 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { SortableElement, sortableHandle } from 'react-sortable-hoc';
 import { Button, ListGroupItem } from 'reactstrap';
-import Confirm from 'reactstrap-confirm';
+import Confirm from 'components/Confirmation/Confirmation';
 import { deleteListEntry, listEntryUpdated, updateListEntryDescription } from 'slices/literatureListSlice';
 import styled from 'styled-components';
 
@@ -44,8 +44,7 @@ const EditSectionListItem = ({ entry, sectionId, statementId }) => {
     const handleDelete = async () => {
         const confirm = await Confirm({
             title: 'Are you sure?',
-            message: 'Do you want to remove this item from the list?',
-            cancelColor: 'light'
+            message: 'Do you want to remove this item from the list?'
         });
 
         if (confirm) {

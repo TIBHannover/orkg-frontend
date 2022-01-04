@@ -91,7 +91,7 @@ const SingleVisualizationComponent = props => {
                     <DescriptionHeader>
                         {props.input.label.length > 0 ? 'Title: ' + props.input.label : 'No Title'}
                         <Tippy content="Go to resource page">
-                            <Link target="_blank" className="ml-2 resourceLink" to={reverse(ROUTES.RESOURCE, { id: props.input.id })}>
+                            <Link target="_blank" className="ms-2 resourceLink" to={reverse(ROUTES.RESOURCE, { id: props.input.id })}>
                                 <Icon icon={faLink} color="#fff" />
                             </Link>
                         </Tippy>
@@ -130,7 +130,7 @@ const SingleVisualizationComponent = props => {
                             />
                             <div className="mt-2 mb-2">
                                 <i>Created on: </i>
-                                <span className="badge badge-light mr-2">
+                                <span className="badge bg-light me-2">
                                     <Icon icon={faCalendar} className="text-primary" />{' '}
                                     {props.input.created_at ? moment(props.input.created_at).format('dddd, MMMM Do YYYY') : ''}
                                 </span>
@@ -142,7 +142,7 @@ const SingleVisualizationComponent = props => {
                                         if (author && author.class === ENTITIES.RESOURCE) {
                                             return (
                                                 <Link
-                                                    className="d-inline-block mr-2 mb-2"
+                                                    className="d-inline-block me-2 mb-2"
                                                     to={reverse(ROUTES.AUTHOR_PAGE, { authorId: author.id })}
                                                     key={`author${author.id}`}
                                                 >
@@ -153,7 +153,7 @@ const SingleVisualizationComponent = props => {
                                             );
                                         } else {
                                             return (
-                                                <Badge key={`author${author.id}`} color="light" className="mr-2 mb-2">
+                                                <Badge key={`author${author.id}`} color="light" className="me-2 mb-2">
                                                     <Icon icon={faUser} /> {author.label}
                                                 </Badge>
                                             );

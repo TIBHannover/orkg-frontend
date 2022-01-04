@@ -72,7 +72,7 @@ const DiffView = ({ type, diffRoute, getData }) => {
             <TitleBar
                 buttonGroup={
                     <Button size="sm" color="secondary" onClick={() => setFullWidth(v => !v)}>
-                        <Icon icon={faArrowsAltH} className="mr-1" /> Full width
+                        <Icon icon={faArrowsAltH} className="me-1" /> Full width
                     </Button>
                 }
             >

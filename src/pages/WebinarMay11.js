@@ -10,7 +10,7 @@ export default function WebinarMay11() {
             <Container>
                 <h1 className="h4 mt-4 mb-4">Webinar</h1>
             </Container>
-            <Container className="box rounded pt-4 pb-4 pl-5 pr-5">
+            <Container className="box rounded pt-4 pb-4 ps-5 pe-5">
                 <h2>Webinar: Open Research Knowledge Graph</h2>
 
                 <div className="d-flex align-items-center flex-column my-3">

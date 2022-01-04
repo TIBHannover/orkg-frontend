@@ -35,7 +35,7 @@ const MarkdownSection = styled.div`
 const ItemReference = ({ entity: { reference } }) => (
     <div role="button" onMouseDown={e => e.preventDefault()} className="px-2 py-1">
         {reference.id}{' '}
-        <span className="font-italic ml-2" style={{ opacity: 0.7 }}>
+        <span className="font-italic ms-2" style={{ opacity: 0.7 }}>
             {reference?.author?.[0]?.family ?? ''} {reference.author.length > 0 ? 'et al.' : ''} {reference?.issued?.['date-parts']?.[0] ?? ''}
         </span>
     </div>
@@ -48,7 +48,7 @@ ItemReference.propTypes = {
 const ItemResource = ({ entity: { resource } }) => (
     <div role="button" onMouseDown={e => e.preventDefault()} className="px-2 py-1">
         {resource.label}
-        <span className="font-italic ml-2" style={{ opacity: 0.7 }}>
+        <span className="font-italic ms-2" style={{ opacity: 0.7 }}>
             {resource.id}
         </span>
     </div>
@@ -188,7 +188,7 @@ const MarkdownEditor = ({ label, handleUpdate, references = null, literalId = nu
             {editMode && (
                 <MarkdownSection>
                     <Toolbar>
-                        <ButtonGroup className="mr-1" size="sm">
+                        <ButtonGroup className="me-1" size="sm">
                             <Tippy content="Add bold text">
                                 <div role="button" tabIndex="0" className="btn btn-dark" onMouseDown={e => wrapText(e, '**', '**')}>
                                     <Icon icon={faBold} />
@@ -205,7 +205,7 @@ const MarkdownEditor = ({ label, handleUpdate, references = null, literalId = nu
                                 </div>
                             </Tippy>
                         </ButtonGroup>
-                        <ButtonGroup className="mr-1" size="sm">
+                        <ButtonGroup className="me-1" size="sm">
                             <Tippy content="Add a bullet list">
                                 <div role="button" tabIndex="0" className="btn btn-dark" onMouseDown={e => wrapText(e, '* ')}>
                                     <Icon icon={faList} />

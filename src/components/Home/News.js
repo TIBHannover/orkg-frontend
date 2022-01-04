@@ -55,7 +55,7 @@ export default function News() {
 
     return (
         <>
-            <div className="d-flex align-items-center pt-3 pl-3 pr-3 pb-0">
+            <div className="d-flex align-items-center pt-3 ps-3 pe-3 pb-0">
                 <div className="flex-grow-1">
                     <h2 className="h6 mb-1 mt-0">Latest news</h2>
                 </div>

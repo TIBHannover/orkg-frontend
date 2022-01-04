@@ -60,7 +60,7 @@ const Papers = ({ observatoryId }) => {
                 )}
                 {isLoadingPapers && (
                     <div className="text-center mt-4 mb-4 p-5 container box rounded">
-                        <div className="text-left">
+                        <div className="text-start">
                             <ContentLoader
                                 speed={2}
                                 width={400}

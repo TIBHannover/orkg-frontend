@@ -111,7 +111,7 @@ const IntegratedList = ({ id, boxShadow }) => {
                     }
                 >
                     <span>
-                        <Button color="secondary" className="flex-shrink-0 pl-3 pr-3 ml-auto" size="sm">
+                        <Button color="secondary" className="flex-shrink-0 ps-3 pe-3 ms-auto" size="sm">
                             {stringifySort(sort)} <Icon icon={faChevronDown} />
                         </Button>
                     </span>

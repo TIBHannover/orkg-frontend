@@ -187,7 +187,7 @@ const UserProfile = props => {
                     </Row>
                 )}
                 {isLoadingUserData && (
-                    <div className="mt-4 ml-3">
+                    <div className="mt-4 ms-3">
                         <ContentLoader
                             speed={2}
                             width={500}
@@ -217,15 +217,15 @@ const UserProfile = props => {
             <ComparisonPopup />
             {/*
             TODO: support for activity feed
-            <Container className="box mt-4 pt-4 pb-3 pl-5 pr-5">
+            <Container className="box mt-4 pt-4 pb-3 ps-5 pe-5">
             <h5 className="mb-4">Activity feed</h5>
-            <StyledActivity className="pl-3 pb-3">
+            <StyledActivity className="ps-3 pb-3">
                 <div className={'time'}>16 JULY 2019</div>
                 <div>
                     John Doe updated resource <Link to={'/'}>IoT research directions</Link>
                 </div>
             </StyledActivity>
-            <StyledActivity className="pl-3 pb-3">
+            <StyledActivity className="ps-3 pb-3">
                 <div className={'time'}>10 JULY 2019</div>
                 <div>
                     John Doe updated resource <Link to={'/'}>IoT research directions</Link>
@@ -234,7 +234,7 @@ const UserProfile = props => {
                     John Doe commented on predicate <Link to={'/'}>Has Problem</Link>
                 </div>
             </StyledActivity>
-            <StyledActivity className="pl-3 pb-3">
+            <StyledActivity className="ps-3 pb-3">
                 <div className={'time'}>5 JULY 2019</div>
                 <div>John Doe joined ORKG, welcome!</div>
             </StyledActivity>

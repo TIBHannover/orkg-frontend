@@ -129,10 +129,8 @@ class VenuePage extends Component {
                                             menuOpen: !prevState.menuOpen
                                         }))
                                     }
-                                    nav
-                                    inNavbar
                                 >
-                                    <DropdownToggle size="sm" color="secondary" className="px-3 rounded-right" style={{ marginLeft: 2 }}>
+                                    <DropdownToggle size="sm" color="secondary" className="px-3 rounded-end" style={{ marginLeft: 2 }}>
                                         <Icon icon={faEllipsisV} />
                                     </DropdownToggle>
                                     <DropdownMenu right>
@@ -149,7 +147,7 @@ class VenuePage extends Component {
                             <Card>
                                 <CardHeader>
                                     {/* TODO: Show the total number of papers when number of items is provided with the paginated result
-                                        <div className="float-right"><b>{this.state.papers.length}</b> Papers</div>
+                                        <div className="float-end"><b>{this.state.papers.length}</b> Papers</div>
                                     */}
                                     <h3 className="h4 mt-4 mb-4">{this.state.venue && this.state.venue.label}</h3>
                                 </CardHeader>
@@ -177,7 +175,7 @@ class VenuePage extends Component {
                                     <br />
                                     <br />
                                     <Link to={ROUTES.ADD_PAPER.GENERAL_DATA}>
-                                        <Button size="sm" color="primary " className="mr-3">
+                                        <Button size="sm" color="primary " className="me-3">
                                             Share paper
                                         </Button>
                                     </Link>

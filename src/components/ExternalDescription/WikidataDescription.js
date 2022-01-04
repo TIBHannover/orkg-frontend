@@ -84,7 +84,7 @@ class WikidataDescription extends Component {
 
         return (
             <div>
-                <h2 className="h5 mt-2 float-left">Description from Wikidata</h2>
+                <h2 className="h5 mt-2 float-start">Description from Wikidata</h2>
                 <a href={this.props.externalResource} target="_blank" rel="noopener noreferrer">
                     <img alt="Wikidata logo" src={WIKIDATA_LOGO} style={{ height: 40, float: 'right' }} />
                 </a>

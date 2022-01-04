@@ -139,7 +139,7 @@ const CreatePaperModal = ({ isOpen, toggle, onCreatePaper, initialValue }) => {
                 </ListGroup>
             </ModalBody>
             <ModalFooter className="d-flex">
-                <Button disabled={isLoading} color="primary" className="float-right" onClick={handleCreate}>
+                <Button disabled={isLoading} color="primary" className="float-end" onClick={handleCreate}>
                     {!isLoading ? 'Create' : 'Loading...'}
                 </Button>
             </ModalFooter>

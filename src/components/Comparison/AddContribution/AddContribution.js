@@ -247,7 +247,7 @@ export default function AddContribution(props) {
                                 {paperResult.map((paper, index) => {
                                     return (
                                         <StyledListGroupItem key={`result-${index}`} className="pt-2 pb-2">
-                                            <Label check className="pr-2 pl-2">
+                                            <Label check className="pe-2 ps-2">
                                                 <Input type="checkbox" onChange={e => togglePaper(paper, e)} /> {paper.label}{' '}
                                                 <Tippy content="Open paper in new window">
                                                     <span>
@@ -262,7 +262,7 @@ export default function AddContribution(props) {
                                                 </Tippy>
                                                 {props.allowCreate && (
                                                     <Tippy content="Create new contribution for this paper">
-                                                        <span className="ml-2">
+                                                        <span className="ms-2">
                                                             <Button
                                                                 color="link"
                                                                 className="p-0"
@@ -280,12 +280,12 @@ export default function AddContribution(props) {
                                                     {paper.contributions.map(contribution => {
                                                         return (
                                                             <li key={`ccb${contribution.id}`}>
-                                                                <Label check className="pr-1 pl-1">
-                                                                    <Input
-                                                                        type="checkbox"
-                                                                        checked={selectedContributions.includes(contribution.id)}
-                                                                        onChange={() => toggleContribution(contribution.id)}
-                                                                    />{' '}
+                                                                <Input
+                                                                    type="checkbox"
+                                                                    checked={selectedContributions.includes(contribution.id)}
+                                                                    onChange={() => toggleContribution(contribution.id)}
+                                                                />{' '}
+                                                                <Label check className="pe-1 ps-1 mb-0">
                                                                     {contribution.label}
                                                                 </Label>
                                                             </li>
@@ -300,7 +300,7 @@ export default function AddContribution(props) {
                         </>
                     )}
                     {!isNextPageLoading && hasNextPage && (
-                        <StyledLoadMoreButton className="text-right action">
+                        <StyledLoadMoreButton className="text-end action">
                             <div
                                 className="btn btn-link btn-sm"
                                 onClick={() => loadMoreResults(searchPaper, currentPage + 1)}
@@ -313,7 +313,7 @@ export default function AddContribution(props) {
                         </StyledLoadMoreButton>
                     )}
                     {isNextPageLoading && hasNextPage && (
-                        <StyledLoadMoreButton className="text-right action">
+                        <StyledLoadMoreButton className="text-end action">
                             <span className="btn btn-link btn-sm">Loading...</span>
                         </StyledLoadMoreButton>
                     )}
@@ -330,7 +330,7 @@ export default function AddContribution(props) {
                 <Button
                     disabled={selectedContributions.length === 0}
                     color="primary"
-                    className="float-right"
+                    className="float-end"
                     onClick={() => {
                         props.onAddContributions(selectedContributions);
                         setSelectedContributions([]);

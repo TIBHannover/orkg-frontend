@@ -73,7 +73,7 @@ function TemplateComponentValue(props) {
                 </InputGroup>
                 <div className="mt-2">
                     <FormGroup row>
-                        <Label className="text-right text-muted" for="cardinalityValueInput" sm={3}>
+                        <Label className="text-end text-muted" for="cardinalityValueInput" sm={3}>
                             <small>Cardinality</small>
                         </Label>
                         <Col sm={9}>
@@ -91,7 +91,7 @@ function TemplateComponentValue(props) {
                     <>
                         <div className="mt-2">
                             <FormGroup row>
-                                <Label className="text-right text-muted" for="minOccursValueInput" sm={3}>
+                                <Label className="text-end text-muted" for="minOccursValueInput" sm={3}>
                                     <small>Minimum Occurence</small>
                                 </Label>
                                 <Col sm={9}>
@@ -110,7 +110,7 @@ function TemplateComponentValue(props) {
                                 </Col>
                             </FormGroup>
                             <FormGroup row>
-                                <Label className="text-right text-muted" for="maxOccursValueInput" sm={3}>
+                                <Label className="text-end text-muted" for="maxOccursValueInput" sm={3}>
                                     <small>Maximum Occurence</small>
                                 </Label>
                                 <Col sm={9}>

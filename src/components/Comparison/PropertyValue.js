@@ -74,14 +74,14 @@ const PropertyValue = ({ id, label, property, similar, filterControlData, update
         <>
             {!group && (
                 <>
-                    <Button onClick={handleOpenStatementBrowser} color="link" className="text-left text-light m-0 p-0 text-break">
+                    <Button onClick={handleOpenStatementBrowser} color="link" className="text-start text-light m-0 p-0 text-break">
                         <DescriptionTooltip
                             id={property?.id}
                             typeId={ENTITIES.PREDICATE}
                             extraContent={similar && similar.length ? `This property is merged with : ${similar.join(', ')}` : ''}
                         >
-                            <div className={grouped ? 'ml-2' : ''}>
-                                {grouped && <Icon icon={faLevelUpAlt} rotation={90} className="mr-2" />}
+                            <div className={grouped ? 'ms-2' : ''}>
+                                {grouped && <Icon icon={faLevelUpAlt} rotation={90} className="me-2" />}
                                 {upperFirst(label)}
                                 {similar && similar.length > 0 && '*'}
                             </div>

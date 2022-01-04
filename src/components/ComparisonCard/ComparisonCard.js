@@ -32,7 +32,7 @@ const ComparisonCard = props => {
         <ComparisonCardStyled
             style={{ flexWrap: 'wrap' }}
             rounded={props.rounded}
-            className={`list-group-item d-flex pr-3 ${props.showCurationFlags ? ' pl-2  ' : ' pl-4  '}`}
+            className={`list-group-item d-flex py-3 pe-3 ${props.showCurationFlags ? ' ps-2  ' : ' ps-4  '}`}
         >
             <div className="col-md-9 d-flex p-0">
                 {props.showCurationFlags && (
@@ -46,33 +46,33 @@ const ComparisonCard = props => {
                     </div>
                 )}
                 <div className="d-flex flex-column">
-                    <div>
+                    <div className="mb-2">
                         <Link to={reverse(ROUTES.COMPARISON, { comparisonId: props.comparison.id })}>
                             {props.comparison.label ? props.comparison.label : <em>No title</em>}
                         </Link>
                         {props.showBadge && (
-                            <div className="d-inline-block ml-2">
+                            <div className="d-inline-block ms-2">
                                 <CardBadge color="primary">Comparison</CardBadge>
                             </div>
                         )}
                     </div>
-                    <div className="d-inline-block d-md-none mt-1 mr-1">
+                    <div className="d-inline-block d-md-none mt-1 me-1">
                         {props.showBreadcrumbs && <RelativeBreadcrumbs researchField={props.comparison.researchField} />}
                     </div>
 
-                    <div>
+                    <div className="mb-1">
                         <small>
-                            <Icon size="sm" icon={faFile} className="mr-1" /> {props.comparison.contributions?.length} Contributions
-                            <Icon size="sm" icon={faChartBar} className="ml-2 mr-1" /> {props.comparison.visualizations?.length} Visualizations
+                            <Icon size="sm" icon={faFile} className="me-1" /> {props.comparison.contributions?.length} Contributions
+                            <Icon size="sm" icon={faChartBar} className="ms-2 me-1" /> {props.comparison.visualizations?.length} Visualizations
                             {(props.comparison.resources?.length > 0 || props.comparison.figures?.length > 0) && (
                                 <>
-                                    <Icon size="sm" icon={faPaperclip} className="ml-2 mr-1" />{' '}
+                                    <Icon size="sm" icon={faPaperclip} className="ms-2 me-1" />{' '}
                                     {props.comparison.resources.length + props.comparison.resources.length} attachments
                                 </>
                             )}
                             {props.comparison.created_at && (
                                 <>
-                                    <Icon size="sm" icon={faCalendar} className="ml-2 mr-1" />{' '}
+                                    <Icon size="sm" icon={faCalendar} className="ms-2 me-1" />{' '}
                                     {moment(props.comparison.created_at).format('DD-MM-YYYY')}
                                 </>
                             )}

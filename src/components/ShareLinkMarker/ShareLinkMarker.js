@@ -30,7 +30,7 @@ export const ShareSideBox = styled.div`
 const ShareLinkMarker = ({ typeOfLink, title }) => {
     const [source, target] = useSingleton();
     return (
-        <ShareSideBox className="pt-2 pl-2 pr-2 pb-2">
+        <ShareSideBox className="pt-2 ps-2 pe-2 pb-2">
             <Tippy placement="left" singleton={source} delay={500} />
             <div className="text-muted mb-1">
                 <small>Share</small>

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Modal, ModalHeader, ModalBody, Input, InputGroup, InputGroupAddon, Button, Alert } from 'reactstrap';
+import { Modal, ModalHeader, ModalBody, Input, InputGroup, Button, Alert } from 'reactstrap';
 import PropTypes from 'prop-types';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes.js';
@@ -68,18 +68,16 @@ function Share(props) {
 
                 <InputGroup>
                     <Input value={!shortLinkIsLoading ? props.shortLink : 'Loading share link...'} disabled />
-                    <InputGroupAddon addonType="append">
-                        <CopyToClipboard
-                            text={!shortLinkIsLoading ? props.shortLink : 'Loading share link...'}
-                            onCopy={() => {
-                                toast.success('Share link copied!');
-                            }}
-                        >
-                            <Button color="primary" className="pl-3 pr-3" style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}>
-                                <Icon icon={faClipboard} />
-                            </Button>
-                        </CopyToClipboard>
-                    </InputGroupAddon>
+                    <CopyToClipboard
+                        text={!shortLinkIsLoading ? props.shortLink : 'Loading share link...'}
+                        onCopy={() => {
+                            toast.success('Share link copied!');
+                        }}
+                    >
+                        <Button color="primary" className="ps-3 pe-3" style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}>
+                            <Icon icon={faClipboard} />
+                        </Button>
+                    </CopyToClipboard>
                 </InputGroup>
 
                 {!shortLinkIsLoading && (

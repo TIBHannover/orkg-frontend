@@ -22,7 +22,7 @@ const StyledShortRecord = styled.div`
 class ShortRecord extends Component {
     render() {
         return (
-            <StyledShortRecord className="list-group-item">
+            <StyledShortRecord className="list-group-item px-4 py-3">
                 <Row>
                     <Col sm={12}>
                         <Link to={this.props.href}>{this.props.header ? this.props.header : <i>No label</i>}</Link>

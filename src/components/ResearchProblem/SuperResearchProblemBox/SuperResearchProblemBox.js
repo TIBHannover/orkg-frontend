@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 
 const SuperResearchProblemBox = ({ isLoading, superProblems }) => {
     return (
-        <div className="box rounded-lg p-3 flex-grow-1 d-flex flex-column">
+        <div className="box rounded-3 p-3 flex-grow-1 d-flex flex-column">
             <h5>Super-problems</h5>
             <div>
                 <small className="text-muted">
@@ -13,9 +13,9 @@ const SuperResearchProblemBox = ({ isLoading, superProblems }) => {
                 </small>
             </div>
             {!isLoading ? (
-                <div className="mb-4 mt-4 pl-3 pr-3">
+                <div className="mb-4 mt-4 ps-3 pe-3">
                     {superProblems.length > 0 ? (
-                        <ul className="pl-1">
+                        <ul className="ps-1">
                             {superProblems.map(superProblem => {
                                 return (
                                     <li key={`suprp${superProblem.id}`}>

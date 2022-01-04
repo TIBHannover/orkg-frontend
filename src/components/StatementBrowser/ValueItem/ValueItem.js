@@ -56,7 +56,11 @@ const ValueItem = props => {
                     <div>
                         {!value.isSaving && (
                             <Tippy
-                                disabled={!preferences['showValueInfo'] || (!value.id && !value.classes?.length)}
+                                disabled={
+                                    !preferences['showValueInfo'] ||
+                                    (!value.id && !value.classes?.length) ||
+                                    value?.classes?.includes(CLASSES.PROBLEM)
+                                }
                                 delay={[500, 0]}
                                 interactive={true}
                                 content={
@@ -93,14 +97,15 @@ const ValueItem = props => {
                                                         researchProblemId: existingResourceId,
                                                         slug: resource.label
                                                     })}
+                                                    target="_blank"
                                                 >
                                                     <DescriptionTooltip id={existingResourceId} typeId={CLASSES.PROBLEM}>
-                                                        {resource.label}
+                                                        {resource.label} <Icon icon={faExternalLinkAlt} />
                                                     </DescriptionTooltip>
                                                 </Link>
                                             ) : (
                                                 <Button
-                                                    className="p-0 text-left objectLabel"
+                                                    className="p-0 text-start objectLabel"
                                                     color="link"
                                                     onClick={() => {
                                                         cookies.set('showedValueHelp', true, { path: env('PUBLIC_URL'), maxAge: 604800 });
@@ -150,7 +155,7 @@ const ValueItem = props => {
                                             </ValuePlugins>
                                             {preferences['showLiteralDataTypes'] && (
                                                 <small>
-                                                    <Badge color="light" className="ml-2" title={value.datatype}>
+                                                    <Badge color="light" className="ms-2" title={value.datatype}>
                                                         {DATA_TYPES.find(dt => dt.type === value.datatype)?.name ?? value.datatype}
                                                     </Badge>
                                                 </small>

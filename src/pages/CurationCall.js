@@ -10,7 +10,7 @@ export default function CurationCall() {
             <Container>
                 <h1 className="h4 mt-4 mb-4">ORKG Curation Grant Competition</h1>
             </Container>
-            <Container className="box rounded pt-4 pb-4 pl-5 pr-5">
+            <Container className="box rounded pt-4 pb-4 ps-5 pe-5">
                 <Alert color="info" className="mt-2">
                     <strong>Webinar:</strong> Open Research Knowledge Graph. <Link to={ROUTES.WEBINAR_MAY_11}>Watch the recording</Link>
                 </Alert>

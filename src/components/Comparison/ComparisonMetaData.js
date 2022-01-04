@@ -17,7 +17,7 @@ function ComparisonMetaData(props) {
                     )}
                     <div>
                         {props.metaData.createdAt ? (
-                            <span className="badge badge-light mr-2">
+                            <span className="badge bg-light me-2">
                                 <Icon icon={faCalendar} className="text-primary" />{' '}
                                 {props.metaData.createdAt ? moment(props.metaData.createdAt).format('MMMM') : ''}{' '}
                                 {props.metaData.createdAt ? moment(props.metaData.createdAt).format('YYYY') : ''}

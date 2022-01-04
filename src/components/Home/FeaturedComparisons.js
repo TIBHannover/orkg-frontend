@@ -33,10 +33,10 @@ const FeaturedComparisons = ({ researchFieldId }) => {
 
     return (
         <div className="pt-2 pb-3">
-            <div className="mr-2 d-flex justify-content-end mb-2">
+            <div className="me-2 d-flex justify-content-end mb-2">
                 {researchFieldId === MISC.RESEARCH_FIELD_MAIN && (
                     <UncontrolledButtonDropdown>
-                        <DropdownToggle caret className="pl-3 pr-3" size="sm" color="light">
+                        <DropdownToggle caret className="ps-3 pe-3" size="sm" color="light">
                             {stringifySort(sort)}
                         </DropdownToggle>
                         <DropdownMenu>
@@ -81,17 +81,18 @@ const FeaturedComparisons = ({ researchFieldId }) => {
                                 </FormGroup>
                                 {researchFieldId !== MISC.RESEARCH_FIELD_MAIN && (
                                     <FormGroup check>
-                                        <Label check>
-                                            <Input
-                                                onChange={e => {
-                                                    tippy.hide();
-                                                    setIncludeSubFields(e.target.checked);
-                                                }}
-                                                checked={includeSubFields}
-                                                type="checkbox"
-                                                style={{ marginTop: '0.1rem' }}
-                                                disabled={isLoading}
-                                            />
+                                        <Input
+                                            onChange={e => {
+                                                tippy.hide();
+                                                setIncludeSubFields(e.target.checked);
+                                            }}
+                                            checked={includeSubFields}
+                                            type="checkbox"
+                                            id="includeSubFieldsComparisons"
+                                            style={{ marginTop: '0.1rem' }}
+                                            disabled={isLoading}
+                                        />
+                                        <Label check for="includeSubFieldsComparisons" className="mb-0">
                                             Include subfields
                                         </Label>
                                     </FormGroup>
@@ -100,7 +101,7 @@ const FeaturedComparisons = ({ researchFieldId }) => {
                         }
                     >
                         <span>
-                            <Button color="light" className="flex-shrink-0 pl-3 pr-3" style={{ marginLeft: 'auto' }} size="sm">
+                            <Button color="light" className="flex-shrink-0 ps-3 pe-3" style={{ marginLeft: 'auto' }} size="sm">
                                 {stringifySort(sort)} <Icon icon={faChevronDown} />
                             </Button>
                         </span>
@@ -138,7 +139,7 @@ const FeaturedComparisons = ({ researchFieldId }) => {
                                 }
                                 color="primary"
                                 size="sm"
-                                className="flex-shrink-0 mr-2"
+                                className="flex-shrink-0 me-2"
                             >
                                 View more
                             </Button>
@@ -152,7 +153,7 @@ const FeaturedComparisons = ({ researchFieldId }) => {
                     </div>
                 ))}
             {isLoading && (
-                <div className="p-3 text-left">
+                <div className="p-3 text-start">
                     <ContentLoader
                         speed={2}
                         width={400}

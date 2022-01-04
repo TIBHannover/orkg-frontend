@@ -22,7 +22,7 @@ const DraftLiteratureLists = () => {
     const renderListItem = list => (
         <ShortRecord key={list.id} header={list.label} href={reverse(ROUTES.LITERATURE_LIST, { id: list.id })}>
             <div className="time">
-                <Icon size="sm" icon={faCalendar} className="mr-1" /> {list.created_at ? moment(list.created_at).format('DD MMMM YYYY') : ''}
+                <Icon size="sm" icon={faCalendar} className="me-1" /> {list.created_at ? moment(list.created_at).format('DD MMMM YYYY') : ''}
             </div>
         </ShortRecord>
     );

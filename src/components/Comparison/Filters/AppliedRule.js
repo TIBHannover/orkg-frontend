@@ -23,12 +23,12 @@ const AppliedRule = props => {
     const { propertyName, type, value, removeRule } = data;
 
     return (
-        <Badge color="light" className="mr-2 mt-2 text-left" style={{ whiteSpace: 'normal' }}>
+        <Badge color="light" className="me-2 mt-2 text-start" style={{ whiteSpace: 'normal' }}>
             <span className="font-weight-bolder">{propertyName}</span>&nbsp;
             <span className="font-italic">{stringifyType(type)}</span>
             &nbsp;
             {value.toString()}
-            <DeleteButton color="link" className="ml-2">
+            <DeleteButton color="link" className="ms-2">
                 <Icon icon={faTimes} onClick={removeRule} />
             </DeleteButton>
         </Badge>

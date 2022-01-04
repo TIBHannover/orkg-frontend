@@ -84,7 +84,7 @@ const ResearchProblemHeader = ({ id }) => {
                         </ContentLoader>
                     </div>
                     <div className="text-center mt-4 mb-4 p-5 container box rounded">
-                        <div className="text-left">
+                        <div className="text-start">
                             <ContentLoader
                                 speed={2}
                                 width={400}
@@ -111,7 +111,7 @@ const ResearchProblemHeader = ({ id }) => {
                                 <SubTitle>{researchProblemData.label}</SubTitle>
                                 <>
                                     <FeaturedMark size="sm" featured={isFeatured} handleChangeStatus={handleChangeStatus} />{' '}
-                                    <div className="d-inline-block ml-1">
+                                    <div className="d-inline-block ms-1">
                                         <MarkUnlisted size="sm" resourceId={id} unlisted={isUnlisted} handleChangeStatus={handleChangeStatus} />
                                     </div>
                                 </>
@@ -123,14 +123,14 @@ const ResearchProblemHeader = ({ id }) => {
                                     component={Button}
                                     size="sm"
                                     color="secondary"
-                                    className="float-right"
+                                    className="float-end"
                                     onClick={() => setEditMode(v => !v)}
                                     style={{ marginRight: 2 }}
                                 >
                                     <Icon icon={faPen} /> Edit
                                 </RequireAuthentication>
-                                <ButtonDropdown isOpen={menuOpen} toggle={() => setMenuOpen(v => !v)} nav inNavbar>
-                                    <DropdownToggle size="sm" color="secondary" className="px-3 rounded-right">
+                                <ButtonDropdown isOpen={menuOpen} toggle={() => setMenuOpen(v => !v)}>
+                                    <DropdownToggle size="sm" color="secondary" className="px-3 rounded-end">
                                         <Icon icon={faEllipsisV} />
                                     </DropdownToggle>
                                     <DropdownMenu right>
@@ -182,7 +182,7 @@ const ResearchProblemHeader = ({ id }) => {
                                                         slug: subfield.label
                                                     })}
                                                 >
-                                                    <Badge color="light" className="mr-2 mb-2">
+                                                    <Badge color="light" className="me-2 mb-2">
                                                         {subfield.label}
                                                     </Badge>
                                                 </Link>
@@ -197,7 +197,7 @@ const ResearchProblemHeader = ({ id }) => {
                                                             slug: subfield.label
                                                         })}
                                                     >
-                                                        <Badge color="light" className="mr-2 mb-2">
+                                                        <Badge color="light" className="me-2 mb-2">
                                                             {subfield.label}
                                                         </Badge>
                                                     </Link>

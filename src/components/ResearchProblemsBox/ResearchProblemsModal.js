@@ -41,7 +41,7 @@ const ResearchProblemsModal = ({ researchFieldId, openModal, setOpenModal }) => 
                 </div>
             </ModalHeader>
             <ModalBody>
-                <div className="pl-3 pr-3">
+                <div className="ps-3 pe-3">
                     {problems.map((rp, index) => (
                         <div className="pt-2 pb-2" key={`rp${rp.id}`}>
                             <div className="d-flex">

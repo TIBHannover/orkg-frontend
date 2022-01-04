@@ -69,12 +69,12 @@ const PaperHeader = props => {
                 <h2 className="h4 mt-4 mb-3 flex-grow-1">
                     {viewPaper.paperResource.label ? viewPaper.paperResource.label : <em>No title</em>}{' '}
                     <MarkFeatured size="xs" featured={isFeatured} handleChangeStatus={handleChangeStatus} />
-                    <div className="d-inline-block ml-1">
+                    <div className="d-inline-block ms-1">
                         <MarkUnlisted size="xs" unlisted={isUnlisted} handleChangeStatus={handleChangeStatus} />
                     </div>
                 </h2>
                 {altMetrics && (
-                    <div className="flex-shrink-0 mr-2">
+                    <div className="flex-shrink-0 me-2">
                         <small>
                             <a href={altMetrics.details_url} target="_blank" rel="noopener noreferrer">
                                 <img src={altMetrics.images.small} height="60px" alt="Alt metrics icon" />
@@ -87,7 +87,7 @@ const PaperHeader = props => {
             <div className="clearfix" />
 
             {(viewPaper.publicationMonth || viewPaper.publicationYear) && (
-                <span className="badge badge-light mr-2">
+                <span className="badge bg-light me-2">
                     <Icon icon={faCalendar} className="text-primary" />{' '}
                     {viewPaper.publicationMonth ? moment(viewPaper.publicationMonth.label, 'M').format('MMMM') : ''}{' '}
                     {viewPaper.publicationYear ? viewPaper.publicationYear.label : ''}
@@ -136,7 +136,7 @@ const PaperHeader = props => {
                 </div>
                 {isCurationAllowed && viewPaper.verified && (
                     <div className="mt-3 justify-content-end">
-                        <Icon icon={faCheckCircle} className="mt-1 mr-1 text-success" />
+                        <Icon icon={faCheckCircle} className="mt-1 me-1 text-success" />
                         Verified
                     </div>
                 )}

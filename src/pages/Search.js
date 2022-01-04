@@ -297,7 +297,7 @@ class Search extends Component {
                 <Container>
                     <Row>
                         <Col className="col-sm-4 px-0">
-                            <div className="box rounded mr-4 p-4 h-100">
+                            <div className="box rounded me-4 p-4 h-100">
                                 <Filters
                                     loading={this.isLoading()}
                                     value={this.state.value || ''}

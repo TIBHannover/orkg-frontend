@@ -9,7 +9,7 @@ const DiffTitle = ({ data }) => (
         <span className="d-flex align-items-center">
             {data.headerText}
             {data.creator && (
-                <span className="ml-2">
+                <span className="ms-2">
                     <UserAvatar userId={data.creator} />
                 </span>
             )}

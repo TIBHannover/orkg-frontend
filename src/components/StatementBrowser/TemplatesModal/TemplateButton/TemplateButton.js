@@ -118,7 +118,7 @@ const TemplateButton = props => {
                     }}
                     size="sm"
                     color={props.addMode ? 'light' : 'danger'}
-                    className="mr-2 mb-2 position-relative px-3 rounded-pill border-0"
+                    className="me-2 mb-2 position-relative px-3 rounded-pill border-0"
                 >
                     <IconWrapper addMode={props.addMode}>
                         {!isSaving && props.addMode && <Icon size="sm" icon={faPlus} />}

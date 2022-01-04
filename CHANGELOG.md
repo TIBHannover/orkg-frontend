@@ -3,6 +3,17 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [V0.57.2](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.57.1...V0.57.2) - 2021-12-20
+
+### Changes
+
+- fix: Same as abstract not displayed [`#726`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/726)
+- fix(StatementBrowser): Double tooltip on research problem resources [`#735`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/735)
+- fix(Resource): Updating the label [`#737`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/737)
+- fix(StatementBrowser): Infinit loop on fetch statements for resource [`#738`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/738)
+- fix(SmartReview): allow deletion of duplicate authors [`#736`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/736)
+
+---
 ## [V0.57.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.57...V0.57.1) - 2021-12-07
 
 ### Changes

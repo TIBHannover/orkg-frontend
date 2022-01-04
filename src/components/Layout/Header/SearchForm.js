@@ -6,7 +6,7 @@ import ROUTES from 'constants/routes.js';
 import { reverse } from 'named-urls';
 import { useLocation } from 'react-router';
 import { useRouteMatch, useHistory } from 'react-router-dom';
-import { Form, Input, Button, InputGroup, InputGroupAddon } from 'reactstrap';
+import { Form, Input, Button, InputGroup } from 'reactstrap';
 import { isString } from 'lodash';
 import { getArrayParamFromQueryString } from 'utils';
 
@@ -58,11 +58,9 @@ const SearchForm = ({ placeholder, onSearch = null }) => {
                     aria-describedby="button-main-search"
                 />
 
-                <InputGroupAddon addonType="append">
-                    <Button id="button-main-search" className="pl-2 pr-2 search-icon" type="submit">
-                        <Icon icon={faSearch} />
-                    </Button>
-                </InputGroupAddon>
+                <Button id="button-main-search" className="ps-2 pe-2 search-icon" type="submit">
+                    <Icon icon={faSearch} />
+                </Button>
             </InputGroup>
         </Form>
     );

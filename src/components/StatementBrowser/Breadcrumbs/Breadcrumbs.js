@@ -37,7 +37,7 @@ const Breadcrumbs = () => {
     };
 
     return (
-        <Container className="ml-1">
+        <Container className="ms-1">
             <BackButton className="btn btn-link border-0 align-baseline" onClick={handleBackClick}>
                 <Icon icon={faArrowLeft} /> <div className="d-none d-md-inline">Back</div>
             </BackButton>
@@ -66,7 +66,7 @@ const Breadcrumbs = () => {
                             </div>
                             {resourceHistory.allIds.length === index + 1 && !openExistingResourcesInDialog && existingResourceId && (
                                 <Tippy content="Go to resource page">
-                                    <Link target="_blank" className="ml-2 resourceLink" to={getResourceLink(_class, selectedResource)}>
+                                    <Link target="_blank" className="ms-2 resourceLink" to={getResourceLink(_class, selectedResource)}>
                                         <Icon icon={faLink} color="#fff" />
                                     </Link>
                                 </Tippy>

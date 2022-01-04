@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect, useMemo } from 'react';
-import { InputGroup, InputGroupAddon, Button } from 'reactstrap';
+import { InputGroup, Button } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faClipboard, faLink, faAtom } from '@fortawesome/free-solid-svg-icons';
 import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
@@ -656,7 +656,7 @@ function Autocomplete(props) {
                 <ConditionalWrapper condition={props.inputGroup} wrapper={children => <InputGroup size="sm">{children}</InputGroup>}>
                     {children}
                     {props.copyValueButton && props.value && props.value.id && (
-                        <InputGroupAddon addonType="append">
+                        <>
                             <Button disabled={!props.value || !props.value.label} onClick={handleCopyClick} outline>
                                 <Tippy content="Copy the label to clipboard">
                                     <span>
@@ -673,7 +673,7 @@ function Autocomplete(props) {
                                     </Tippy>
                                 </Link>
                             )}
-                        </InputGroupAddon>
+                        </>
                     )}
                 </ConditionalWrapper>
             )}

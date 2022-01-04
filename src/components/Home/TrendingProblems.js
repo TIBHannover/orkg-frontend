@@ -73,11 +73,11 @@ const TrendingProblems = props => {
 
     return (
         <div>
-            <div className="box rounded-lg mt-4">
+            <div className="box rounded-3 mt-4">
                 <h2 className="h5 p-3 mb-0">
                     <Tippy content="A list of research problems addressed by papers recently added to ORKG.">
                         <span>
-                            <Icon icon={faFire} className="text-primary mr-2" />
+                            <Icon icon={faFire} className="text-primary me-2" />
                             Trending research problems
                         </span>
                     </Tippy>

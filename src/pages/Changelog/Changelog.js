@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import { Container } from 'reactstrap';
 import changelogPath from './CHANGELOG.md';
-import marked from 'marked';
+import { marked } from 'marked';
 import TitleBar from 'components/TitleBar/TitleBar';
 
 class Changelog extends Component {
@@ -26,7 +26,7 @@ class Changelog extends Component {
         return (
             <div>
                 <TitleBar>Changelog</TitleBar>
-                <Container className="box rounded pt-4 pb-4 pl-5 pr-5">
+                <Container className="box rounded pt-4 pb-4 ps-5 pe-5">
                     <div
                         dangerouslySetInnerHTML={{
                             __html: this.state.changelogText

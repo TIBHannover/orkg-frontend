@@ -12,7 +12,7 @@ const MarkFeaturedUnlistedContainer = props => {
     return (
         <>
             <MarkFeatured size={props.size} featured={isFeatured} handleChangeStatus={handleChangeStatus} />
-            <div className="d-inline-block ml-1">
+            <div className="d-inline-block ms-1">
                 <MarkUnlisted size={props.size} unlisted={isUnlisted} handleChangeStatus={handleChangeStatus} />
             </div>
         </>

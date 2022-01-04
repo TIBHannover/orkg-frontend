@@ -48,7 +48,7 @@ export const OptionButtonStyled = styled.span`
 /* Tippy doesn't work when reference element is disabled, so adding span around the button       fixes it  */
 const ActionButtonView = forwardRef((props, ref) => {
     return (
-        <OptionButtonStyled ref={ref} tabIndex="0" className="mr-2">
+        <OptionButtonStyled ref={ref} tabIndex="0" className="me-2">
             <Button
                 className="p-0"
                 wrappersize={props.size}

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { CLASSES } from 'constants/graphSettings';
-import Confirm from 'reactstrap-confirm';
+import Confirm from 'components/Confirmation/Confirmation';
 import { getStatementsBySubjectAndPredicate } from 'services/backend/statements';
 import { updateResourceClasses } from 'services/backend/resources';
 import { toast } from 'react-toastify';
@@ -16,8 +16,7 @@ function useDeletePapers({ paperIds, redirect = false, finishLoadingCallback = (
         const confirm = await Confirm({
             title: 'Are you sure?',
             message: `Are you sure you want to remove ${paperIds.length} paper${paperIds.length !== 1 ? 's' : ''} 
-            from the ORKG? Deleting papers is bad practice so we encourage you to use this operation with caution!`,
-            cancelColor: 'light'
+            from the ORKG? Deleting papers is bad practice so we encourage you to use this operation with caution!`
         });
 
         if (confirm) {

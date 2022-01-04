@@ -181,7 +181,7 @@ function Benchmark() {
                         </ContentLoader>
                     </div>
                     <div className="text-center mt-4 mb-4 p-5 container box rounded">
-                        <div className="text-left">
+                        <div className="text-start">
                             <ContentLoader
                                 speed={2}
                                 width={400}
@@ -216,13 +216,13 @@ function Benchmark() {
                                     component={Button}
                                     size="sm"
                                     color="secondary"
-                                    className="float-right"
+                                    className="float-end"
                                     onClick={() => setEditMode(v => !v)}
                                 >
                                     <Icon icon={faPen} /> Edit
                                 </RequireAuthentication>
-                                <ButtonDropdown isOpen={menuOpen} toggle={() => setMenuOpen(v => !v)} nav inNavbar>
-                                    <DropdownToggle size="sm" color="secondary" className="px-3 rounded-right" style={{ marginLeft: 2 }}>
+                                <ButtonDropdown isOpen={menuOpen} toggle={() => setMenuOpen(v => !v)}>
+                                    <DropdownToggle size="sm" color="secondary" className="px-3 rounded-end" style={{ marginLeft: 2 }}>
                                         <Icon icon={faEllipsisV} />
                                     </DropdownToggle>
                                     <DropdownMenu right>
@@ -279,7 +279,7 @@ function Benchmark() {
                         </div>
                         <ButtonGroup size="sm">
                             <Button disabled>Research problem</Button>
-                            <UncontrolledButtonDropdown className="flex-shrink-0 mr-2">
+                            <UncontrolledButtonDropdown className="flex-shrink-0 me-2">
                                 <DropdownToggle caret size="sm" color="secondary">
                                     {problemData.label}
                                 </DropdownToggle>
@@ -299,7 +299,7 @@ function Benchmark() {
                         {metrics?.length > 0 && (
                             <ButtonGroup size="sm">
                                 <Button disabled>Metric</Button>
-                                <UncontrolledButtonDropdown className="flex-shrink-0 ml-auto">
+                                <UncontrolledButtonDropdown className="flex-shrink-0 ms-auto">
                                     <DropdownToggle caret size="sm" color="secondary">
                                         {selectedMetric}
                                     </DropdownToggle>
@@ -383,10 +383,10 @@ function Benchmark() {
                                                     <div className="d-flex" {...column.getHeaderProps(column.getSortByToggleProps())}>
                                                         {column.render('Header')}
                                                         {/* Add a sort direction indicator */}
-                                                        <div className="ml-1">
+                                                        <div className="ms-1">
                                                             {column.isSorted ? (
                                                                 column.isSortedDesc ? (
-                                                                    <Icon icon={faSortUp} className="ml-1" />
+                                                                    <Icon icon={faSortUp} className="ms-1" />
                                                                 ) : (
                                                                     <Icon icon={faSortDown} />
                                                                 )

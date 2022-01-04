@@ -69,7 +69,7 @@ function ContributionComparisons(props) {
                     </ListGroup>
                 )}
                 {!isLoadingComparisons && hasNextPage && (
-                    <StyledLoadMoreButton className="text-right action">
+                    <StyledLoadMoreButton className="text-end action">
                         <Button
                             color="link"
                             size="sm"
@@ -81,7 +81,7 @@ function ContributionComparisons(props) {
                     </StyledLoadMoreButton>
                 )}
                 {isLoadingComparisons && (
-                    <StyledLoadMoreButton className="text-right action">
+                    <StyledLoadMoreButton className="text-end action">
                         <Button color="link" size="sm" className="btn btn-link btn-sm" disabled>
                             <Icon icon={faSpinner} spin /> Loading...
                         </Button>
