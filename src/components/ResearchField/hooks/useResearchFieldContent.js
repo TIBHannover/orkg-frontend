@@ -154,7 +154,7 @@ function useResearchFieldContent({
     };
 
     return {
-        items,
+        items: items.map(i => ({ ...i, id: i.thingId })),
         isLoading,
         hasNextPage,
         isLastPageReached,

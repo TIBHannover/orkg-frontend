@@ -1,40 +1,23 @@
 import { useState } from 'react';
-import FeaturedComparisons from './FeaturedComparisons';
-import FeaturedPapers from './FeaturedPapers';
-import { TransitionGroup, CSSTransition } from 'react-transition-group';
+import FeaturedItems from './FeaturedItems';
 import styled from 'styled-components';
+import { CLASSES } from 'constants/graphSettings';
 import Tippy from '@tippyjs/react';
 import PropTypes from 'prop-types';
+import { ResponsiveTabs } from './styled';
+import Tabs from 'react-responsive-tabs';
 
-const AnimationContainer = styled(CSSTransition)`
-    &.fadeIn-enter {
-        opacity: 0;
-    }
-
-    &.fadeIn-enter.fadeIn-enter-active {
-        opacity: 1;
-        transition: 1s opacity;
-    }
-`;
-
-const FeaturedTabs = styled.div`
-    .tab {
-        margin-bottom: 0;
-        padding: 15px;
-        color: #bebbac;
-        cursor: pointer;
-        border-bottom: 2px solid ${props => props.theme.lightDarker};
-        -webkit-transition: border 500ms ease-out;
-        -moz-transition: border 500ms ease-out;
-        -o-transition: border 500ms ease-out;
-        transition: border 500ms ease-out;
-        &.active,
-        &:hover {
-            border-bottom: 2px solid #e86161;
-            color: #646464;
-        }
-    }
-`;
+const DEFAULT_CLASSES_FILTER = [
+    {
+        id: CLASSES.COMPARISON,
+        label: 'Comparisons',
+        tippyContent: 'Comparisons in ORKG provide an overview of state-of-the-art literature for a particular topic.'
+    },
+    { id: CLASSES.SMART_REVIEW, label: 'SmartReviews', tippyContent: false },
+    { id: CLASSES.LITERATURE_LIST, label: 'Literature lists', tippyContent: false },
+    { id: CLASSES.VISUALIZATION, label: 'Visualizations', tippyContent: false },
+    { id: CLASSES.PAPER, label: 'Papers', tippyContent: false }
+];
 
 const SidebarStyledBox = styled.div`
     flex-grow: 1;
@@ -44,43 +27,34 @@ const SidebarStyledBox = styled.div`
 `;
 
 const FeaturedItemsBox = ({ researchFieldId }) => {
-    const [activeTab, setActiveState] = useState(2);
-
-    return (
-        <SidebarStyledBox className="box rounded-3 mt-3">
-            <FeaturedTabs className="clearfix d-flex">
-                <Tippy content="Comparisons in ORKG provide an overview of state-of-the-art literature for a particular topic.">
+    const [activeTab, setActiveState] = useState(0);
+    const getTabs = () => {
+        return DEFAULT_CLASSES_FILTER.map((featuredClass, index) => ({
+            title: (
+                <Tippy content={featuredClass.tippyContent} disabled={!featuredClass.tippyContent ? true : false}>
                     <div
                         role="button"
                         tabIndex="0"
-                        onKeyDown={e => e.keyCode === 13 && setActiveState(2)}
-                        className={`h6 col-md-6 text-center tab ${activeTab === 2 ? 'active' : ''}`}
-                        onClick={() => setActiveState(2)}
+                        onKeyDown={e => e.keyCode === 13 && setActiveState(index)}
+                        className={`h6 mb-0 flex-grow-1 text-center tab ${activeTab === index ? 'active' : ''}`}
+                        onClick={() => setActiveState(index)}
                     >
-                        Comparisons
+                        {featuredClass.label}
                     </div>
                 </Tippy>
-                <div
-                    role="button"
-                    tabIndex="0"
-                    onKeyDown={e => e.keyCode === 13 && setActiveState(1)}
-                    className={`h6 col-md-6 text-center tab ${activeTab === 1 ? 'active' : ''}`}
-                    onClick={() => setActiveState(1)}
-                >
-                    Papers
-                </div>
-            </FeaturedTabs>
-            <TransitionGroup exit={false}>
-                {activeTab === 1 ? (
-                    <AnimationContainer key={1} classNames="fadeIn" timeout={{ enter: 700, exit: 0 }}>
-                        <FeaturedPapers researchFieldId={researchFieldId} />
-                    </AnimationContainer>
-                ) : (
-                    <AnimationContainer key={2} classNames="fadeIn" timeout={{ enter: 700, exit: 0 }}>
-                        <FeaturedComparisons researchFieldId={researchFieldId} />
-                    </AnimationContainer>
-                )}
-            </TransitionGroup>
+            ),
+            getContent: () => <FeaturedItems researchFieldId={researchFieldId} label={featuredClass.label} classID={featuredClass.id} />,
+            key: featuredClass.id,
+            tabClassName: 'tab h6',
+            panelClassName: 'panel'
+        }));
+    };
+
+    return (
+        <SidebarStyledBox className="box rounded-3 mt-3">
+            <ResponsiveTabs>
+                <Tabs items={getTabs()} />
+            </ResponsiveTabs>
         </SidebarStyledBox>
     );
 };

@@ -49,7 +49,7 @@ const IntegratedList = ({ id, boxShadow }) => {
         <>
             <Container className="d-flex align-items-center mt-4 mb-4">
                 <div className="d-flex flex-grow-1">
-                    <h1 className="h5 flex-shrink-0 mb-0">Content</h1>
+                    <h1 className="h5 flex-shrink-0 mb-0 me-2">Content</h1>
                     <>
                         <SubtitleSeparator />
                         <SubTitle className="mb-0">
