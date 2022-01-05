@@ -3,7 +3,6 @@ import { Button, Container, ListGroup, FormGroup, Label, Input } from 'reactstra
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner, faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import useResearchFieldContent from 'components/ResearchField/hooks/useResearchFieldContent';
-import ClassesBadgesFilter from 'components/ClassesBadgesFilter/ClassesBadgesFilter';
 import CardFactory from 'components/CardFactory/CardFactory';
 import { SubTitle, SubtitleSeparator } from 'components/styled';
 import { CLASSES } from 'constants/graphSettings';
@@ -12,12 +11,14 @@ import { useSelector } from 'react-redux';
 import ContentLoader from 'react-content-loader';
 import { stringifySort } from 'utils';
 import PropTypes from 'prop-types';
+import { toast } from 'react-toastify';
 
 const DEFAULT_CLASSES_FILTER = [
     { id: CLASSES.PAPER, label: 'Paper' },
     { id: CLASSES.COMPARISON, label: 'Comparison' },
     { id: CLASSES.VISUALIZATION, label: 'Visualization' },
-    { id: CLASSES.SMART_REVIEW, label: 'SmartReview' }
+    { id: CLASSES.SMART_REVIEW_PUBLISHED, label: 'SmartReview' },
+    { id: CLASSES.LITERATURE_LIST_PUBLISHED, label: 'Literature list' }
 ];
 
 const IntegratedList = ({ id, boxShadow }) => {
@@ -45,26 +46,50 @@ const IntegratedList = ({ id, boxShadow }) => {
     const [tippy, setTippy] = useState({});
     const isCurationAllowed = useSelector(state => state.auth.user?.isCurationAllowed);
 
+    const handleSelect = classFilter => {
+        if (classesFilter.map(i => i.id).includes(classFilter.id) && classesFilter.length === 1) {
+            toast.dismiss();
+            toast.info('At least one type should be selected');
+        } else {
+            setClassesFilter(prev =>
+                prev.map(i => i.id).includes(classFilter.id) ? prev.filter(item => item.id !== classFilter.id) : [...prev, classFilter]
+            );
+        }
+    };
+
     return (
         <>
             <Container className="d-flex align-items-center mt-4 mb-4">
-                <div className="d-flex flex-grow-1">
-                    <h1 className="h5 flex-shrink-0 mb-0 me-2">Content</h1>
+                <div className="d-flex flex-grow-1 align-items-center">
+                    <h1 className="h5 mb-0 me-2 ">Content</h1>
                     <>
                         <SubtitleSeparator />
-                        <SubTitle className="mb-0">
-                            <small className="text-muted mb-0 text-small">
+                        <SubTitle>
+                            <small className="text-muted text-small mt-1">
                                 {totalElements === 0 && isLoading ? <Icon icon={faSpinner} spin /> : <>{`${totalElements} items`}</>}
                             </small>
                         </SubTitle>
                     </>
                 </div>
-                <ClassesBadgesFilter
-                    initialClassFilterOptions={DEFAULT_CLASSES_FILTER}
-                    setClassesFilter={setClassesFilter}
-                    classesFilter={classesFilter}
-                    disabled={isLoading}
-                />
+                <div
+                    className="d-flex me-2 rounded"
+                    style={{ fontSize: '0.875rem', padding: '0.25rem 1.25rem', color: '#646464', backgroundColor: '#dcdee6' }}
+                >
+                    <div className="me-1"> Filters:</div>
+                    {DEFAULT_CLASSES_FILTER.map(({ id, label }) => (
+                        <FormGroup check key={id} className="mb-0">
+                            <Label check className="mb-0 ms-2" style={{ fontSize: '0.875rem' }}>
+                                <Input
+                                    onChange={() => handleSelect({ id, label })}
+                                    checked={classesFilter.map(i => i.id).includes(id)}
+                                    type="checkbox"
+                                    disabled={isLoading}
+                                />
+                                {label}
+                            </Label>
+                        </FormGroup>
+                    ))}
+                </div>
                 <Tippy
                     interactive={true}
                     trigger="click"
