@@ -40,7 +40,7 @@ const SidebarStyledBox = styled.div`
 
 const FeaturedItemsBox = ({ researchFieldId, researchFieldLabel }) => {
     const getTabs = () => {
-        return DEFAULT_CLASSES_FILTER.map((featuredClass, index) => ({
+        return DEFAULT_CLASSES_FILTER.map(featuredClass => ({
             title: (
                 <Tippy content={featuredClass.tippyContent} disabled={!featuredClass.tippyContent ? true : false}>
                     <div className="text-center">{featuredClass.label}</div>
