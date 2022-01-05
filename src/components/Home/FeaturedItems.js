@@ -11,7 +11,7 @@ import ContentLoader from 'react-content-loader';
 import CardFactory from 'components/CardFactory/CardFactory';
 import useResearchFieldContent from 'components/ResearchField/hooks/useResearchFieldContent';
 import { stringifySort } from 'utils';
-import { reverse } from 'named-urls';
+import { reverseWithSlug } from 'utils';
 import Tippy from '@tippyjs/react';
 
 const ListGroupStyled = styled(ListGroup)`
@@ -22,12 +22,12 @@ const ListGroupStyled = styled(ListGroup)`
     }
 `;
 
-const FeaturedItems = ({ researchFieldId, classID, label }) => {
+const FeaturedItems = ({ researchFieldId, researchFieldLabel, featuredClass }) => {
     const { items, sort, includeSubFields, isLoading, setSort, setIncludeSubFields } = useResearchFieldContent({
         researchFieldId: researchFieldId,
         initialSort: 'combined',
-        initialClassFilterOptions: [{ id: classID, label: label }],
-        initClassesFilter: [{ id: classID, label: label }],
+        initialClassFilterOptions: [{ id: featuredClass.id, label: featuredClass.label }],
+        initClassesFilter: [{ id: featuredClass.id, label: featuredClass.label }],
         initialIncludeSubFields: true
     });
     const [tippy, setTippy] = useState({});
@@ -43,7 +43,7 @@ const FeaturedItems = ({ researchFieldId, classID, label }) => {
                     content={
                         <div className="p-2">
                             <FormGroup>
-                                <Label for={`sort${label}`}>Sort</Label>
+                                <Label for={`sort${featuredClass.label}`}>Sort</Label>
                                 <Input
                                     value={sort}
                                     onChange={e => {
@@ -53,7 +53,7 @@ const FeaturedItems = ({ researchFieldId, classID, label }) => {
                                     bsSize="sm"
                                     type="select"
                                     name="sort"
-                                    id={`sort${label}`}
+                                    id={`sort${featuredClass.label}`}
                                     disabled={isLoading}
                                 >
                                     <option value="combined">Top recent</option>
@@ -70,11 +70,11 @@ const FeaturedItems = ({ researchFieldId, classID, label }) => {
                                         }}
                                         checked={includeSubFields}
                                         type="checkbox"
-                                        id={`includeSubFields${label}`}
+                                        id={`includeSubFields${featuredClass.label}`}
                                         style={{ marginTop: '0.1rem' }}
                                         disabled={isLoading}
                                     />
-                                    <Label check for={`includeSubFields${label}`} className="mb-0">
+                                    <Label check for={`includeSubFields${featuredClass.label}`} className="mb-0">
                                         Include subfields
                                     </Label>
                                 </FormGroup>
@@ -111,8 +111,11 @@ const FeaturedItems = ({ researchFieldId, classID, label }) => {
                                 tag={Link}
                                 to={
                                     researchFieldId !== MISC.RESEARCH_FIELD_MAIN
-                                        ? reverse(ROUTES.RESEARCH_FIELD, { researchFieldId: researchFieldId })
-                                        : ROUTES.PAPERS
+                                        ? `${reverseWithSlug(ROUTES.RESEARCH_FIELD, {
+                                              researchFieldId: researchFieldId,
+                                              slug: researchFieldLabel
+                                          })}?sort=${sort}&includeSubFields=${includeSubFields}&classesFilter=${featuredClass.id}`
+                                        : featuredClass.link
                                 }
                                 color="primary"
                                 size="sm"
@@ -124,7 +127,9 @@ const FeaturedItems = ({ researchFieldId, classID, label }) => {
                     </>
                 ) : (
                     <div className="text-center mt-4 mb-4">
-                        {sort === 'featured' ? `No featured ${label} found` : `There are no ${label} for this research field, yet.`}
+                        {sort === 'featured'
+                            ? `No featured ${featuredClass.label.toLowerCase()} found`
+                            : `There are no ${featuredClass.label.toLowerCase()} for this research field, yet.`}
                     </div>
                 ))}
             {isLoading && (
@@ -149,8 +154,12 @@ const FeaturedItems = ({ researchFieldId, classID, label }) => {
 
 FeaturedItems.propTypes = {
     researchFieldId: PropTypes.string.isRequired,
-    classID: PropTypes.string.isRequired,
-    label: PropTypes.string.isRequired
+    researchFieldLabel: PropTypes.string,
+    featuredClass: PropTypes.shape({
+        id: PropTypes.string.isRequired,
+        label: PropTypes.string,
+        link: PropTypes.string
+    }).isRequired
 };
 
 export default FeaturedItems;

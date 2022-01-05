@@ -1,10 +1,7 @@
-import { CLASSES } from 'constants/graphSettings';
 import { find } from 'lodash';
 import { useCallback, useEffect, useState } from 'react';
 import { getContentByResearchFieldIdAndClasses } from 'services/backend/researchFields';
-import { getResourcesByClass } from 'services/backend/resources';
 import { getStatementsBySubjects } from 'services/backend/statements';
-import { MISC } from 'constants/graphSettings';
 import { getDataBasedOnType, groupVersionsOfComparisons, mergeAlternate } from 'utils';
 import { flatten } from 'lodash';
 
@@ -64,28 +61,17 @@ function useResearchFieldContent({
                     };
                 });
             } else {
-                if (researchFieldId === MISC.RESEARCH_FIELD_MAIN) {
-                    contentService = getResourcesByClass({
-                        id: sort === 'featured' ? CLASSES.FEATURED_COMPARISON_HOME_PAGE : CLASSES.COMPARISON,
-                        sortBy: 'created_at',
-                        desc: true,
-                        items: pageSize,
-                        featured: sort === 'featured' ? true : null,
-                        unlisted: sort === 'unlisted' ? true : false
-                    });
-                } else {
-                    contentService = getContentByResearchFieldIdAndClasses({
-                        id: researchFieldId,
-                        page: page,
-                        items: pageSize,
-                        sortBy: 'created_at',
-                        desc: true,
-                        subfields: includeSubFields,
-                        featured: sort === 'featured' ? true : null,
-                        unlisted: sort === 'unlisted' ? true : false,
-                        classes: classesFilter.map(c => c.id)
-                    });
-                }
+                contentService = getContentByResearchFieldIdAndClasses({
+                    id: researchFieldId,
+                    page: page,
+                    items: pageSize,
+                    sortBy: 'created_at',
+                    desc: true,
+                    subfields: includeSubFields,
+                    featured: sort === 'featured' ? true : null,
+                    unlisted: sort === 'unlisted' ? true : false,
+                    classes: classesFilter.map(c => c.id)
+                });
             }
 
             contentService
@@ -106,7 +92,7 @@ function useResearchFieldContent({
                                     ...flatten([...prevResources.map(c => c.versions), ...prevResources]),
                                     ...dataObjects
                                 ]);
-                                return flatten([...prevResources, newItems.filter(t => !prevResources.map(p => p.id).includes(t.id))]);
+                                return flatten([...prevResources, newItems.filter(t => t && !prevResources.map(p => p.id).includes(t.id))]);
                             });
 
                             setIsLoading(false);
