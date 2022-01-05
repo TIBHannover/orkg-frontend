@@ -12,6 +12,8 @@ import ContentLoader from 'react-content-loader';
 import { stringifySort } from 'utils';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
+import { useLocation } from 'react-router';
+import queryString from 'query-string';
 
 const DEFAULT_CLASSES_FILTER = [
     { id: CLASSES.PAPER, label: 'Paper' },
@@ -22,6 +24,9 @@ const DEFAULT_CLASSES_FILTER = [
 ];
 
 const IntegratedList = ({ id, boxShadow }) => {
+    const location = useLocation();
+    const params = queryString.parse(location.search);
+
     const {
         items,
         sort,
@@ -38,10 +43,10 @@ const IntegratedList = ({ id, boxShadow }) => {
         setIncludeSubFields
     } = useResearchFieldContent({
         researchFieldId: id,
-        initialSort: 'combined',
+        initialSort: params.sort ?? 'combined',
         initialClassFilterOptions: DEFAULT_CLASSES_FILTER,
-        initClassesFilter: DEFAULT_CLASSES_FILTER,
-        initialIncludeSubFields: true
+        initClassesFilter: params.classesFilter ? DEFAULT_CLASSES_FILTER.filter(i => params.classesFilter === i.id) : DEFAULT_CLASSES_FILTER,
+        initialIncludeSubFields: params.classesFilter ? Boolean(params.includeSubFields === 'true') : true
     });
     const [tippy, setTippy] = useState({});
     const isCurationAllowed = useSelector(state => state.auth.user?.isCurationAllowed);
