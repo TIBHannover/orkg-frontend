@@ -3,9 +3,6 @@ import useResearchFieldProblems from 'components/ResearchProblemsBox/hooks/useRe
 import ResearchProblemCard from 'components/ResearchProblemsBox/ResearchProblemCard';
 import ProblemsDropdownFilter from './ProblemsDropdownFilter';
 import { Modal, ModalBody, ModalHeader } from 'reactstrap';
-import ROUTES from 'constants/routes.js';
-import { Link } from 'react-router-dom';
-import { reverseWithSlug } from 'utils';
 import PropTypes from 'prop-types';
 
 const ResearchProblemsModal = ({ researchFieldId, openModal, setOpenModal }) => {
