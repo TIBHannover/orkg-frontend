@@ -3,7 +3,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import ListPage from 'components/ListPage/ListPage';
 import ListCard from 'components/LiteratureList/ListCard';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
-import { CLASSES, PREDICATES } from 'constants/graphSettings';
+import { CLASSES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import { groupBy } from 'lodash';
 import { reverse } from 'named-urls';

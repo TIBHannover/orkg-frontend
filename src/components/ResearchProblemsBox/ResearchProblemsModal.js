@@ -1,5 +1,6 @@
 import ContentLoader from 'react-content-loader';
 import useResearchFieldProblems from 'components/ResearchProblemsBox/hooks/useResearchFieldProblems';
+import ResearchProblemCard from 'components/ResearchProblemsBox/ResearchProblemCard';
 import ProblemsDropdownFilter from './ProblemsDropdownFilter';
 import { Modal, ModalBody, ModalHeader } from 'reactstrap';
 import ROUTES from 'constants/routes.js';
@@ -21,7 +22,7 @@ const ResearchProblemsModal = ({ researchFieldId, openModal, setOpenModal }) => 
         handleLoadMore
     } = useResearchFieldProblems({
         researchFieldId,
-        pageSize: 10,
+        pageSize: 25,
         initialSort: 'combined',
         initialIncludeSubFields: true
     });
@@ -44,15 +45,7 @@ const ResearchProblemsModal = ({ researchFieldId, openModal, setOpenModal }) => 
                 <div className="ps-3 pe-3">
                     {problems.map((rp, index) => (
                         <div className="pt-2 pb-2" key={`rp${rp.id}`}>
-                            <div className="d-flex">
-                                <div>
-                                    <Link to={reverseWithSlug(ROUTES.RESEARCH_PROBLEM, { researchProblemId: rp.id, slug: rp.label })}>
-                                        {rp.label}{' '}
-                                    </Link>
-                                    <br />
-                                    {/* {rp.papers} paper */}
-                                </div>
-                            </div>
+                            <ResearchProblemCard problem={rp} />
                             {problems.length - 1 !== index && <hr className="mb-0 mt-3" />}
                         </div>
                     ))}
