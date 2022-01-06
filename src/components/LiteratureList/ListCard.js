@@ -7,6 +7,9 @@ import ROUTES from 'constants/routes.js';
 import RelativeBreadcrumbs from 'components/RelativeBreadcrumbs/RelativeBreadcrumbs';
 import Authors from 'components/PaperCard/Authors';
 import useCardData from 'components/SmartReviewCard/hooks/useCardData';
+import MarkFeatured from 'components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
+import MarkUnlisted from 'components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
+import useMarkFeaturedUnlisted from 'components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
 import PropTypes from 'prop-types';
 import { CardBadge } from 'components/styled';
 import moment from 'moment';
@@ -19,16 +22,32 @@ const CardStyled = styled.div`
     }
 `;
 
-const ListCard = ({ versions, showBadge }) => {
+const ListCard = ({ versions, showBadge, showCurationFlags }) => {
     const { researchField, authors, isLoading: isLoadingMetaData } = useCardData({
         id: versions[0]?.id,
         initResearchField: versions[0]?.researchField,
         initAuthors: versions[0]?.authors
     });
 
+    const { isFeatured, isUnlisted, handleChangeStatus } = useMarkFeaturedUnlisted({
+        resourceId: versions[0]?.id,
+        unlisted: versions[0]?.unlisted,
+        featured: versions[0]?.featured
+    });
+
     return (
-        <CardStyled style={{ flexWrap: 'wrap' }} className="list-group-item list-group-item-action d-flex px-4 py-3">
+        <CardStyled style={{ flexWrap: 'wrap' }} className={`list-group-item d-flex py-3 pe-4 ${showCurationFlags ? ' ps-3  ' : ' ps-4  '}`}>
             <div className="col-md-9 d-flex p-0">
+                {showCurationFlags && (
+                    <div className="d-flex flex-column flex-shrink-0" style={{ width: '25px' }}>
+                        <div>
+                            <MarkFeatured size="sm" featured={isFeatured} handleChangeStatus={handleChangeStatus} />
+                        </div>
+                        <div>
+                            <MarkUnlisted size="sm" unlisted={isUnlisted} handleChangeStatus={handleChangeStatus} />
+                        </div>
+                    </div>
+                )}
                 <div className="d-flex flex-column flex-grow-1">
                     <div className="mb-2">
                         <Link to={reverse(ROUTES.LITERATURE_LIST, { id: versions[0]?.id })}>{versions[0]?.label}</Link>
@@ -79,11 +98,13 @@ const ListCard = ({ versions, showBadge }) => {
 
 ListCard.propTypes = {
     versions: PropTypes.array.isRequired,
-    showBadge: PropTypes.bool.isRequired
+    showBadge: PropTypes.bool.isRequired,
+    showCurationFlags: PropTypes.bool.isRequired
 };
 
 ListCard.defaultProps = {
-    showBadge: false
+    showBadge: false,
+    showCurationFlags: true
 };
 
 export default ListCard;

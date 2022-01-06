@@ -93,6 +93,7 @@ const EditSectionListItem = ({ entry, sectionId, statementId }) => {
                     </Toolbar>
                 )}
                 <PaperCard
+                    showCurationFlags={false}
                     isListGroupItem={false}
                     showBreadcrumbs={false}
                     showCreator={false}

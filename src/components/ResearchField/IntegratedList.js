@@ -179,11 +179,11 @@ const IntegratedList = ({ id, boxShadow }) => {
                     </div>
                 )}
                 {isLoading && (
-                    <div className={`text-center mt-4 mb-4 ${page === 0 ? 'p-5 container box rounded' : ''}`}>
+                    <div className={`mt-4 mb-4 ${page === 0 ? 'p-5 container box rounded' : ''}`}>
                         {page !== 0 && (
-                            <>
+                            <div className="text-center">
                                 <Icon icon={faSpinner} spin /> Loading
-                            </>
+                            </div>
                         )}
                         {page === 0 && (
                             <div className="text-left">

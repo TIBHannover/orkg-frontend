@@ -37,7 +37,7 @@ const VisualizationCard = props => {
     });
 
     return (
-        <VisualizationCardStyled className={`list-group-item d-flex pe-3 ${props.showCurationFlags ? ' ps-2  ' : ' ps-4  '}`}>
+        <VisualizationCardStyled className={`list-group-item d-flex py-3 pe-4 ${props.showCurationFlags ? ' ps-3  ' : ' ps-4  '}`}>
             <div className="col-md-9 d-flex p-0">
                 {props.showCurationFlags && (
                     <div className="d-flex flex-column flex-shrink-0" style={{ width: '25px' }}>

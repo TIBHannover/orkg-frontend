@@ -32,7 +32,7 @@ const ComparisonCard = props => {
         <ComparisonCardStyled
             style={{ flexWrap: 'wrap' }}
             rounded={props.rounded}
-            className={`list-group-item d-flex py-3 pe-3 ${props.showCurationFlags ? ' ps-2  ' : ' ps-4  '}`}
+            className={`list-group-item d-flex py-3 pe-4 ${props.showCurationFlags ? ' ps-3  ' : ' ps-4  '}`}
         >
             <div className="col-md-9 d-flex p-0">
                 {props.showCurationFlags && (
