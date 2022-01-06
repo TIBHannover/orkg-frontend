@@ -40,6 +40,8 @@ import { disableBodyScroll, enableBodyScroll, clearAllBodyScrollLocks } from 'bo
 import ExistingDoiModal from './ExistingDoiModal';
 import { parseCiteResult } from 'utils';
 import env from '@beam-australia/react-env';
+import AutocompletePaperTitle from 'components/AutocompletePaperTitle/AutocompletePaperTitle';
+import Confirm from 'components/Confirmation/Confirmation';
 
 const Container = styled(CSSTransition)`
     &.fadeIn-enter {
@@ -301,6 +303,32 @@ const GeneralData = () => {
         dispatch(openTour(step));
     };
 
+    const handleTitleOptionClick = async paper => {
+        if (authors.length > 0 || publicationMonth || publicationYear || url || publishedIn) {
+            const confirm = await Confirm({
+                title: 'Overwrite data?',
+                message: 'Do you want to overwrite the data you entered with the selected paper data?'
+            });
+
+            if (confirm) {
+                updateData(paper);
+            }
+        } else {
+            updateData(paper);
+        }
+    };
+
+    const updateData = paper =>
+        dispatch(
+            updateGeneralData({
+                title: paper.label,
+                authors: paper?.authors?.length > 0 ? paper.authors.map(author => ({ label: author.name })) : [],
+                publicationYear: paper.year || '',
+                publishedIn: paper.venue || '',
+                doi: paper.externalIds?.DOI || ''
+            })
+        );
+
     return (
         <div>
             <div className="row mt-4">
@@ -462,7 +490,17 @@ const GeneralData = () => {
                                 <Label for="paperTitle">
                                     <Tooltip message="The main title of the paper">Paper title</Tooltip>
                                 </Label>
-                                <Input type="text" name="title" id="paperTitle" value={title} onChange={handleInputChange} />
+                                <AutocompletePaperTitle
+                                    value={title}
+                                    onChange={value =>
+                                        dispatch(
+                                            updateGeneralData({
+                                                title: value
+                                            })
+                                        )
+                                    }
+                                    onOptionClick={handleTitleOptionClick}
+                                />
                                 <FormFeedback />
                             </FormGroup>
                             <Row>

@@ -1,5 +1,7 @@
+import Confirm from 'components/Confirmation/Confirmation';
 import DoiItem from 'components/CreatePaperModal/DoiItem';
 import useCreatePaper from 'components/CreatePaperModal/hooks/useCreatePaper';
+import TitleItem from 'components/CreatePaperModal/TitleItem';
 import EditItem from 'components/ViewPaper/EditDialog/EditItem';
 import REGEX from 'constants/regex';
 import PropTypes from 'prop-types';
@@ -52,12 +54,6 @@ const CreatePaperModal = ({ isOpen, toggle, onCreatePaper, initialValue }) => {
     };
 
     const FIELDS = {
-        title: {
-            label: 'Title *',
-            type: 'text',
-            value: title,
-            onChange: e => setTitle(e.target.value)
-        },
         researchField: {
             label: 'Research Field *',
             type: 'researchField',
@@ -111,6 +107,24 @@ const CreatePaperModal = ({ isOpen, toggle, onCreatePaper, initialValue }) => {
 
     const toggleItem = item => setOpenItem(openItem !== item ? item : null);
 
+    const handleTitleClick = async paper => {
+        if (authors.length > 0 || month || year || url || publishedIn) {
+            const confirm = await Confirm({
+                title: 'Overwrite data?',
+                message: 'Do you want to overwrite the data you entered with the selected paper data?'
+            });
+
+            if (!confirm) {
+                return;
+            }
+        }
+        setTitle(paper.label || title);
+        setAuthors(paper?.authors?.length > 0 ? paper.authors.map(author => ({ label: author.name })) : []);
+        setYear(paper.year || '');
+        setDoi(paper.externalIds?.DOI || '');
+        setPublishedIn(paper.venue || '');
+    };
+
     return (
         <Modal isOpen={isOpen} toggle={toggle} size="lg">
             <ModalHeader toggle={toggle}>Create new paper</ModalHeader>
@@ -123,6 +137,13 @@ const CreatePaperModal = ({ isOpen, toggle, onCreatePaper, initialValue }) => {
                         value={doi}
                         onChange={value => setDoi(value)}
                         lookupOnMount={lookupOnMount}
+                    />
+                    <TitleItem
+                        toggleItem={() => toggleItem('title')}
+                        isExpanded={openItem === 'title'}
+                        value={title}
+                        onChange={setTitle}
+                        onOptionClick={handleTitleClick}
                     />
                     {Object.entries(FIELDS).map(([itemName, item], index) => (
                         <EditItem

@@ -728,6 +728,7 @@ function Autocomplete(props) {
                     isDisabled={props.isDisabled}
                     isMulti={props.isMulti}
                     inputId={props.inputId}
+                    classNamePrefix="react-select"
                     isValidNewOption={(inputValue, selectValue, selectOptions) => {
                         if (props.handleCreateExistingLabel) {
                             // to disable the create button

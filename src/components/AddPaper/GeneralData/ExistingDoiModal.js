@@ -15,7 +15,10 @@ const ExistingDoiModal = props => {
                     The paper <i>`{props.existingPaper.doi?.label || props.existingPaper.title}`</i> exists already in the ORKG. Please view the paper
                     and contribute to improve the content. In case you want you can continue to create a new paper.
                 </Alert>
-                <strong>Existing paper:</strong> <PaperCard paper={props.existingPaper} showAddToComparison={false} />
+                <strong>Existing paper:</strong>
+                <div className="list-group">
+                    <PaperCard paper={props.existingPaper} showAddToComparison={false} />
+                </div>
             </ModalBody>
             <ModalFooter>
                 <Button
