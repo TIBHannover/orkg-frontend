@@ -252,6 +252,27 @@ export const getSmartReviewData = (resource, statements) => {
 };
 
 /**
+ * Parse literature list statements and return a literature list object
+ * @param {Object} resource Literature List resource
+ * @param {Array} statements Literature List  Statements
+ */
+export const getLiteratureListData = (resource, statements) => {
+    const description = filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.DESCRIPTION, true);
+    const listId = filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.HAS_LIST, true)?.id;
+    const researchField = filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.HAS_RESEARCH_FIELD, true, CLASSES.RESEARCH_FIELD);
+    const authors = filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.HAS_AUTHOR, false);
+    return {
+        ...resource,
+        id: resource.id,
+        label: resource.label ? resource.label : 'No Title',
+        description: description?.label ?? '',
+        researchField,
+        authors,
+        listId
+    };
+};
+
+/**
  * Parse author statements and return an author object
  * @param {Object} resource Author resource
  * @param {Array} statements Author Statements
@@ -1345,8 +1366,11 @@ export const getDataBasedOnType = (resource, statements) => {
     if (resource?.classes?.includes(CLASSES.VISUALIZATION)) {
         return getVisualizationData(resource, statements);
     }
-    if (resource?.classes?.includes(CLASSES.SMART_REVIEW)) {
+    if (resource?.classes?.includes(CLASSES.SMART_REVIEW) || resource?.classes?.includes(CLASSES.SMART_REVIEW_PUBLISHED)) {
         return getSmartReviewData(resource, statements);
+    }
+    if (resource?.classes?.includes(CLASSES.LITERATURE_LIST) || resource?.classes?.includes(CLASSES.LITERATURE_LIST_PUBLISHED)) {
+        return getLiteratureListData(resource, statements);
     } else {
         return undefined;
     }
