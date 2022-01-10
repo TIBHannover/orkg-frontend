@@ -7,7 +7,7 @@ import { InputGroup } from 'reactstrap';
 const TitleItem = ({ toggleItem, isExpanded, value, onChange, onOptionClick }) => {
     return (
         <ListItem toggleItem={toggleItem} label="Title *" open={isExpanded} value={truncate(value ? value : '', { length: 60 })}>
-            <InputGroup className="w-100 d-block">
+            <InputGroup>
                 <AutocompletePaperTitle value={value} onChange={onChange} onOptionClick={onOptionClick} />
             </InputGroup>
         </ListItem>
