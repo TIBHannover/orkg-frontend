@@ -28,7 +28,7 @@ const useViewPaper = ({ paperId }) => {
                     authorsArray.push({ ...author, orcid: '' });
                 }
             }
-            authorsArray = authorsArray ? authorsArray.sort((a, b) => a.s_created_at.localeCompare(b.s_created_at)) : [];
+            authorsArray = authorsArray.length ? authorsArray.sort((a, b) => a.s_created_at.localeCompare(b.s_created_at)) : [];
             dispatch(
                 setPaperAuthors({
                     authors: authorsArray
