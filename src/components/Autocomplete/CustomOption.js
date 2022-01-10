@@ -9,6 +9,7 @@ import { truncStringPortion } from 'utils';
 import { PREDICATES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
 import { getStatementsBySubject } from 'services/backend/statements';
+import pluralize from 'pluralize';
 
 const StyledSelectOption = styled.div`
     display: flex;
@@ -104,7 +105,7 @@ export default function CustomOption(props) {
                                     <small
                                         className={!propsWithoutInnerProps.isFocused && !propsWithoutInnerProps.isSelected ? 'text-muted' : undefined}
                                     >
-                                        {` Referred: ${props.data.shared} time${props.data.shared > 1 ? 's' : ''}`}
+                                        {` Referred: ${pluralize('time', props.data.shared, true)}`}
                                     </small>
                                 </i>
                             </span>

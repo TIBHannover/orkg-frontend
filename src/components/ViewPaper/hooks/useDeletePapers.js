@@ -7,6 +7,7 @@ import { toast } from 'react-toastify';
 import { PREDICATES } from 'constants/graphSettings';
 import { useHistory } from 'react-router-dom';
 import ROUTES from 'constants/routes.js';
+import pluralize from 'pluralize';
 
 function useDeletePapers({ paperIds, redirect = false, finishLoadingCallback = () => {} }) {
     const history = useHistory();
@@ -15,8 +16,11 @@ function useDeletePapers({ paperIds, redirect = false, finishLoadingCallback = (
     const deletePapers = async () => {
         const confirm = await Confirm({
             title: 'Are you sure?',
-            message: `Are you sure you want to remove ${paperIds.length} paper${paperIds.length !== 1 ? 's' : ''} 
-            from the ORKG? Deleting papers is bad practice so we encourage you to use this operation with caution!`
+            message: `Are you sure you want to remove ${pluralize(
+                'paper',
+                paperIds.length,
+                true
+            )} from the ORKG? Deleting papers is bad practice so we encourage you to use this operation with caution!`
         });
 
         if (confirm) {
@@ -40,7 +44,7 @@ function useDeletePapers({ paperIds, redirect = false, finishLoadingCallback = (
             setIsLoading(false);
             finishLoadingCallback();
 
-            toast.success(`Successfully deleted ${paperIds.length} paper${paperIds.length !== 1 ? 's' : ''}`);
+            toast.success(`Successfully deleted ${pluralize('paper', paperIds.length, true)}`);
 
             if (redirect) {
                 history.push(ROUTES.HOME);
