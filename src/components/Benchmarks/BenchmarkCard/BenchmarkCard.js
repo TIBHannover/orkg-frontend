@@ -30,7 +30,7 @@ const BenchmarkCardStyled = styled.div`
 
 function BenchmarkCard(props) {
     return (
-        <BenchmarkCardStyled className="col-3 mb-4">
+        <BenchmarkCardStyled className="col-md-3 mb-4">
             <Link
                 to={reverseWithSlug(ROUTES.RESEARCH_PROBLEM, {
                     researchProblemId: props.benchmark.research_problem.id,
