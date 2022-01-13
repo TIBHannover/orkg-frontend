@@ -84,7 +84,7 @@ const IntegratedList = ({ id, slug, boxShadow }) => {
                     className="d-flex me-2 rounded"
                     style={{ fontSize: '0.875rem', padding: '0.25rem 1.25rem', color: '#646464', backgroundColor: '#dcdee6' }}
                 >
-                    <div className="me-1"> Filters:</div>
+                    <div className="me-1"> Show:</div>
                     {DEFAULT_CLASSES_FILTER.map(({ id, label }) => (
                         <FormGroup check key={id} className="mb-0">
                             <Label check className="mb-0 ms-2" style={{ fontSize: '0.875rem' }}>
