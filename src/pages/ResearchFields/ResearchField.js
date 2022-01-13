@@ -10,7 +10,7 @@ import { useParams } from 'react-router-dom';
 import ResearchProblemsBox from 'components/ResearchProblemsBox/ResearchProblemsBox';
 
 const ResearchField = () => {
-    const { researchFieldId } = useParams();
+    const { researchFieldId, slug } = useParams();
 
     const [observatories, isLoadingObservatories] = useResearchFieldObservatories({ researchFieldId });
 
@@ -37,7 +37,7 @@ const ResearchField = () => {
                 </Row>
             </Container>
 
-            <IntegratedList id={researchFieldId} boxShadow />
+            <IntegratedList slug={slug} id={researchFieldId} boxShadow />
             <ComparisonPopup />
         </>
     );

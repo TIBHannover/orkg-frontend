@@ -23,7 +23,7 @@ const DEFAULT_CLASSES_FILTER = [
     { id: CLASSES.LITERATURE_LIST_PUBLISHED, label: 'Literature list' }
 ];
 
-const IntegratedList = ({ id, boxShadow }) => {
+const IntegratedList = ({ id, slug, boxShadow }) => {
     const location = useLocation();
     const params = queryString.parse(location.search);
 
@@ -43,10 +43,14 @@ const IntegratedList = ({ id, boxShadow }) => {
         setIncludeSubFields
     } = useResearchFieldContent({
         researchFieldId: id,
+        slug: slug,
         initialSort: params.sort ?? 'combined',
         initialClassFilterOptions: DEFAULT_CLASSES_FILTER,
-        initClassesFilter: params.classesFilter ? DEFAULT_CLASSES_FILTER.filter(i => params.classesFilter === i.id) : DEFAULT_CLASSES_FILTER,
-        initialIncludeSubFields: params.classesFilter ? Boolean(params.includeSubFields === 'true') : true
+        initClassesFilter: params.classesFilter
+            ? DEFAULT_CLASSES_FILTER.filter(i => params.classesFilter.split(',').includes(i.id))
+            : DEFAULT_CLASSES_FILTER,
+        initialIncludeSubFields: params.classesFilter ? Boolean(params.includeSubFields === 'true') : true,
+        updateURL: true
     });
     const [tippy, setTippy] = useState({});
     const isCurationAllowed = useSelector(state => state.auth.user?.isCurationAllowed);
@@ -210,6 +214,7 @@ const IntegratedList = ({ id, boxShadow }) => {
 
 IntegratedList.propTypes = {
     id: PropTypes.string.isRequired,
+    slug: PropTypes.string,
     boxShadow: PropTypes.bool
 };
 
