@@ -44,6 +44,7 @@
         "node-html-parser": "^5.1.0",
         "olap-cube": "^1.0.0",
         "path-to-regexp": "^6.2.0",
+        "pluralize": "^8.0.0",
         "prop-types": "^15.7.2",
         "query-string": "^7.0.1",
         "randomcolor": "^0.6.2",

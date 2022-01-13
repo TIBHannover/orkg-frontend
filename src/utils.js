@@ -339,6 +339,8 @@ export const getComparisonData = (resource, comparisonStatements) => {
         false,
         CLASSES.VISUALIZATION
     );
+
+    const video = filterObjectOfStatementsByPredicateAndClass(comparisonStatements, PREDICATES.HAS_VIDEO, true);
     const authors = filterObjectOfStatementsByPredicateAndClass(comparisonStatements, PREDICATES.HAS_AUTHOR, false);
     const properties = filterObjectOfStatementsByPredicateAndClass(comparisonStatements, PREDICATES.HAS_PROPERTY, false);
 
@@ -359,7 +361,8 @@ export const getComparisonData = (resource, comparisonStatements) => {
         visualizations,
         figures,
         resources,
-        properties
+        properties,
+        video
     };
 };
 
