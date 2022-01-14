@@ -48,7 +48,9 @@ function Benchmarks() {
                             </a>
                         </div>
                     </div>
-                    <PWCProvenanceBox />
+                    <div className="col-md-3">
+                        <PWCProvenanceBox />
+                    </div>
                 </div>
                 <hr />
                 <Row className="mt-3 flex-grow-1 justify-content-center">
