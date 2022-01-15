@@ -38,7 +38,7 @@
         "jspdf": "^2.4.0",
         "lodash": "^4.17.21",
         "make-latex": "^0.1.0",
-        "marked": "^4.0.7",
+        "marked": "^4.0.10",
         "moment": "^2.29.1",
         "named-urls": "^2.0.0",
         "node-html-parser": "^5.1.0",
