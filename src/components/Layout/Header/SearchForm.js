@@ -8,7 +8,7 @@ import { useLocation } from 'react-router';
 import { useRouteMatch, useHistory } from 'react-router-dom';
 import { Form, Input, Button, InputGroup } from 'reactstrap';
 import { isString } from 'lodash';
-import { getArrayParamFromQueryString } from 'utils';
+import { getArrayParamFromQueryString, getParamFromQueryString } from 'utils';
 
 const SearchForm = ({ placeholder, onSearch = null }) => {
     const PROPERTY_PATTERN = /^#P([0-9])+$/;
@@ -40,7 +40,11 @@ const SearchForm = ({ placeholder, onSearch = null }) => {
             route = reverse(value.match(RESOURCE_PATTERN) ? ROUTES.RESOURCE : ROUTES.PROPERTY, { id });
         } else if (isString(value) && value) {
             const types = getArrayParamFromQueryString(location.search, 'types');
-            route = `${reverse(ROUTES.SEARCH, { searchTerm: encodeURIComponent(value) })}${types?.length > 0 ? `?types=${types.join(',')}` : ''}`;
+            const byMe = getParamFromQueryString(location.search, 'byMe', true);
+            route = `${reverse(ROUTES.SEARCH, { searchTerm: encodeURIComponent(value) })}?types=${`${
+                types?.length > 0 ? types.join(',') : ''
+            }`}&byMe=${byMe}
+                    `;
         }
         onSearch && onSearch();
 
