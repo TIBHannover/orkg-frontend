@@ -5,16 +5,13 @@ import PropTypes from 'prop-types';
 import ROUTES from 'constants/routes.js';
 import { reverse } from 'named-urls';
 import { useLocation } from 'react-router';
+import REGEX from 'constants/regex';
 import { useRouteMatch, useHistory } from 'react-router-dom';
 import { Form, Input, Button, InputGroup } from 'reactstrap';
 import { isString } from 'lodash';
-import { getArrayParamFromQueryString, getParamFromQueryString } from 'utils';
+import { getArrayParamFromQueryString, getParamFromQueryString, getLinkByEntityType, getEntityTypeByID } from 'utils';
 
 const SearchForm = ({ placeholder, onSearch = null }) => {
-    const PROPERTY_PATTERN = /^#P([0-9])+$/;
-    const RESOURCE_PATTERN = /^#R([0-9])+$/;
-    const MINIMUM_LENGTH_PATTERN = 3;
-
     const [value, setValue] = useState('');
     const match = useRouteMatch(ROUTES.SEARCH);
     const urlSearchQuery = match?.params?.searchTerm;
@@ -34,10 +31,10 @@ const SearchForm = ({ placeholder, onSearch = null }) => {
         e.preventDefault();
 
         let route = '';
-        if (isString(value) && value.length >= MINIMUM_LENGTH_PATTERN && (value.match(RESOURCE_PATTERN) || value.match(PROPERTY_PATTERN))) {
+        if (isString(value) && value.length >= REGEX.MINIMUM_LENGTH_PATTERN && getEntityTypeByID(value)) {
             const id = value.substring(1);
             setValue('');
-            route = reverse(value.match(RESOURCE_PATTERN) ? ROUTES.RESOURCE : ROUTES.PROPERTY, { id });
+            route = history.push(getLinkByEntityType(getEntityTypeByID(value), id));
         } else if (isString(value) && value) {
             const types = getArrayParamFromQueryString(location.search, 'types');
             const byMe = getParamFromQueryString(location.search, 'byMe', true);

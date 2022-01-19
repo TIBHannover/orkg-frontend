@@ -2,19 +2,14 @@ import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router';
 import { useParams, useHistory } from 'react-router-dom';
 import DEFAULT_FILTERS from 'constants/searchDefaultFilters';
+import REGEX from 'constants/regex';
 import { getClassById } from 'services/backend/classes';
-import { getArrayParamFromQueryString, getParamFromQueryString } from 'utils';
+import { getArrayParamFromQueryString, getParamFromQueryString, getLinkByEntityType, getEntityTypeByID } from 'utils';
 import { useSelector } from 'react-redux';
 import { isString } from 'lodash';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes';
 import dotProp from 'dot-prop-immutable';
-
-const PROPERTY_PATTERN = /^#P([0-9])+$/;
-
-const RESOURCE_PATTERN = /^#R([0-9])+$/;
-
-const MINIMUM_LENGTH_PATTERN = 3;
 
 export const useFilters = () => {
     const { searchTerm } = useParams();
@@ -52,9 +47,9 @@ export const useFilters = () => {
         e.preventDefault();
 
         const query = decodeURIComponent(value);
-        if (isString(query) && value.length >= MINIMUM_LENGTH_PATTERN && (value.match(RESOURCE_PATTERN) || value.match(PROPERTY_PATTERN))) {
+        if (isString(query) && value.length >= REGEX.MINIMUM_LENGTH_PATTERN && getEntityTypeByID(value)) {
             const id = value.substring(1);
-            history.push(reverse(value.match(RESOURCE_PATTERN) ? ROUTES.RESOURCE : ROUTES.PROPERTY, { id }));
+            history.push(getLinkByEntityType(getEntityTypeByID(value), id));
         } else {
             const _selectedFilters = byMe
                 ? selectedFilters
