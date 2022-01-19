@@ -22,12 +22,12 @@ export default function Search() {
             <TitleBar>Search results</TitleBar>
             <Container>
                 <Row>
-                    <Col className="col-sm-4 px-0">
-                        <div className="box rounded me-4 p-4 h-100">
+                    <Col md="4">
+                        <div className="box rounded p-4 h-100">
                             <Filters />
                         </div>
                     </Col>
-                    <Col className="col-sm-8 px-0">
+                    <Col md="8" className="mt-sm-2 mt-md-0">
                         <div className="box rounded p-4">
                             {isLoading() && Object.keys(results).every(v => results[v] && results[v].length === 0) && (
                                 <ContentLoader
