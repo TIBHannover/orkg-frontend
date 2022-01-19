@@ -118,7 +118,11 @@ export const useSearch = () => {
             const _selectedFilters = getArrayParamFromQueryString(decodeURIComponent(location.search), 'types');
             if (!_selectedFilters || _selectedFilters.length === 0) {
                 setIsLoadingFilterClasses(false);
-                for (const filter of DEFAULT_FILTERS) {
+                const _classes = getParamFromQueryString(location.search, 'byMe', true)
+                    ? DEFAULT_FILTERS.filter(df => df.isByMeActive)
+                    : DEFAULT_FILTERS;
+                setSelectedFilters(_classes);
+                for (const filter of _classes) {
                     loadMoreResults(filter.id);
                 }
             } else {
