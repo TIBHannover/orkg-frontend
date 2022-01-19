@@ -6,6 +6,7 @@ import DEFAULT_FILTERS from 'constants/searchDefaultFilters';
 import { ENTITIES } from 'constants/graphSettings';
 import useFilters from 'components/Search/hooks/useFilters';
 import Tippy from '@tippyjs/react';
+import UserAvatar from 'components/UserAvatar/UserAvatar';
 
 const Filters = () => {
     const { user, value, selectedFilters, byMe, isLoadingFilterClasses, setValue, setByMe, toggleFilter, submitSearch } = useFilters();
@@ -28,7 +29,9 @@ const Filters = () => {
                     <FormGroup check className="mb-0">
                         <Input type="checkbox" id="byMe" onChange={e => setByMe(e.target.checked)} checked={byMe} />
                         <Label check for="byMe" className="mb-0">
-                            <span>Content created by me</span>
+                            <span>
+                                Content created by <UserAvatar userId={user.id} showDisplayName={true} />
+                            </span>
                         </Label>
                     </FormGroup>
                 </>
