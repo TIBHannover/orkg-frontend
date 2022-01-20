@@ -48,7 +48,7 @@ const Filters = () => {
 
             {DEFAULT_FILTERS.map(filter => (
                 <FormGroup key={`filter-${filter.id}`} check className="mb-0">
-                    <Tippy disabled={!(createdBy && !filter.isCreatedByActive)} content="This filter is not available for content created by you.">
+                    <Tippy disabled={!(createdBy && !filter.isCreatedByActive)} content="This filter is not available for content created by a user.">
                         <span>
                             <Input
                                 disabled={createdBy && !filter.isCreatedByActive}
