@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useLocation } from 'react-router';
 import { useParams, useHistory } from 'react-router-dom';
 import DEFAULT_FILTERS from 'constants/searchDefaultFilters';
@@ -26,6 +26,7 @@ export const useFilters = () => {
     const toggleFilter = filterClass => {
         // if current filters are empty and filters should be applied, don't do anything
         if (!selectedFilters.length && !filterClass) {
+            submitSearch(value);
             return;
         }
         let _selectedFilters = [];
@@ -43,34 +44,44 @@ export const useFilters = () => {
         setSelectedFilters(_selectedFilters);
     };
 
-    const submitSearch = e => {
-        e.preventDefault();
-
-        const query = decodeURIComponent(value);
-        if (isString(query) && value.length >= REGEX.MINIMUM_LENGTH_PATTERN && getEntityTypeByID(value)) {
-            const id = value.substring(1);
-            history.push(getLinkByEntityType(getEntityTypeByID(value), id));
-        } else {
-            const _selectedFilters = createdBy
-                ? selectedFilters
-                      .filter(
-                          classObj =>
-                              !DEFAULT_FILTERS.filter(df => !df.isCreatedByActive)
-                                  .map(df => df.id)
-                                  .includes(classObj.id)
-                      )
-                      .map(sf => sf.id)
-                      .join(',')
-                : selectedFilters.map(sf => sf.id).join(',');
-            history.push(
-                reverse(ROUTES.SEARCH, { searchTerm: encodeURIComponent(value) }) + '?types=' + _selectedFilters + '&createdBy=' + (createdBy ?? '')
-            );
-        }
-    };
+    const submitSearch = useCallback(
+        query => {
+            const _query = decodeURIComponent(query);
+            if (isString(_query) && _query.length >= REGEX.MINIMUM_LENGTH_PATTERN && getEntityTypeByID(_query)) {
+                const id = _query.substring(1);
+                history.push(getLinkByEntityType(getEntityTypeByID(_query), id));
+            } else {
+                const _selectedFilters = createdBy
+                    ? selectedFilters
+                          .filter(
+                              classObj =>
+                                  !DEFAULT_FILTERS.filter(df => !df.isCreatedByActive)
+                                      .map(df => df.id)
+                                      .includes(classObj.id)
+                          )
+                          .map(sf => sf.id)
+                          .join(',')
+                    : selectedFilters.map(sf => sf.id).join(',');
+                history.push(
+                    reverse(ROUTES.SEARCH, { searchTerm: encodeURIComponent(_query) }) +
+                        '?types=' +
+                        _selectedFilters +
+                        '&createdBy=' +
+                        (createdBy ?? '')
+                );
+            }
+        },
+        [createdBy, history, selectedFilters]
+    );
 
     useEffect(() => {
         setValue(searchTerm ?? '');
     }, [searchTerm]);
+
+    useEffect(() => {
+        submitSearch(value);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [selectedFilters, submitSearch]);
 
     useEffect(() => {
         setIsLoadingFilterClasses(true);

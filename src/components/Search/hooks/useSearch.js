@@ -98,7 +98,7 @@ export const useSearch = () => {
         }
 
         if (resultsResponse.length > 0) {
-            setResults(prev => ({ ...prev, [filterType]: [...(prev[filterType] || []), ...resultsResponse] }));
+            setResults(prev => ({ ...prev, [filterType]: [...(page > 0 ? prev[filterType] : []), ...resultsResponse] }));
             setIsNextPageLoading(prev => ({ ...prev, [filterType]: false }));
             setHasNextPage(prev => ({ ...prev, [filterType]: resultsResponse.length < itemsPerFilter ? false : true }));
             setCurrentPage(prev => ({ ...prev, [filterType]: page + 1 }));

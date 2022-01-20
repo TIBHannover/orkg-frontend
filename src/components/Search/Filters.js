@@ -22,6 +22,9 @@ const Filters = () => {
                     id="searchQuery"
                     name="value"
                 />
+                <Button onClick={() => submitSearch(value)} color="secondary" className="ps-2 pe-2">
+                    <FontAwesomeIcon icon={faSearch} />
+                </Button>
             </InputGroup>
             {((!!user && user.id) || createdBy) && (
                 <>
@@ -88,12 +91,6 @@ const Filters = () => {
                 isLoading={isLoadingFilterClasses}
                 inputId="other-filters"
             />
-            <br />
-            <div className="text-center">
-                <Button onClick={submitSearch} color="secondary" className="ps-3 pe-3">
-                    <FontAwesomeIcon icon={faSearch} /> Search
-                </Button>
-            </div>
         </FormGroup>
     );
 };
