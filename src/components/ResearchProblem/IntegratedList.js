@@ -61,8 +61,8 @@ const IntegratedList = ({ id, slug, boxShadow }) => {
 
     return (
         <>
-            <Container className="d-flex align-items-center mt-4 mb-4">
-                <div className="d-flex flex-grow-1 align-items-center">
+            <Container className="d-md-flex align-items-center mt-4 mb-4">
+                <div className="d-flex flex-md-grow-1  align-items-center">
                     <h1 className="h5 mb-0 me-2">Content</h1>
                     <>
                         <SubtitleSeparator />
@@ -74,7 +74,7 @@ const IntegratedList = ({ id, slug, boxShadow }) => {
                     </>
                 </div>
                 <div
-                    className="d-flex me-2 rounded"
+                    className="d-md-flex mt-sm-2  me-md-2 "
                     style={{ fontSize: '0.875rem', padding: '0.25rem 1.25rem', color: '#646464', backgroundColor: '#dcdee6' }}
                 >
                     <div className="me-1"> Show:</div>
@@ -92,7 +92,7 @@ const IntegratedList = ({ id, slug, boxShadow }) => {
                         </FormGroup>
                     ))}
                 </div>
-                <div>
+                <div className="mt-sm-2">
                     <div className="mb-0">
                         <Input
                             value={sort}
