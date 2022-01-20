@@ -9,7 +9,7 @@ import Tippy from '@tippyjs/react';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
 
 const Filters = () => {
-    const { user, value, selectedFilters, byMe, isLoadingFilterClasses, setValue, setByMe, toggleFilter, submitSearch } = useFilters();
+    const { user, value, selectedFilters, createdBy, isLoadingFilterClasses, setValue, setCreatedBy, toggleFilter, submitSearch } = useFilters();
 
     return (
         <FormGroup>
@@ -23,14 +23,19 @@ const Filters = () => {
                     name="value"
                 />
             </InputGroup>
-            {!!user && user.id && (
+            {((!!user && user.id) || createdBy) && (
                 <>
                     <hr className="mt-3 mb-3" />
                     <FormGroup check className="mb-0">
-                        <Input type="checkbox" id="byMe" onChange={e => setByMe(e.target.checked)} checked={byMe} />
-                        <Label check for="byMe" className="mb-0">
+                        <Input
+                            type="checkbox"
+                            id="createdBy"
+                            onChange={e => setCreatedBy(createdBy ? null : user.id)}
+                            checked={createdBy ? true : false}
+                        />
+                        <Label check for="createdBy" className="mb-0">
                             <span>
-                                Content created by <UserAvatar userId={user.id} showDisplayName={true} />
+                                Content created by <UserAvatar userId={createdBy ? createdBy : user.id} showDisplayName={true} />
                             </span>
                         </Label>
                     </FormGroup>
@@ -43,14 +48,14 @@ const Filters = () => {
 
             {DEFAULT_FILTERS.map(filter => (
                 <FormGroup key={`filter-${filter.id}`} check className="mb-0">
-                    <Tippy disabled={!(byMe && !filter.isByMeActive)} content="This filter is not available for content created by you.">
+                    <Tippy disabled={!(createdBy && !filter.isCreatedByActive)} content="This filter is not available for content created by you.">
                         <span>
                             <Input
-                                disabled={byMe && !filter.isByMeActive}
+                                disabled={createdBy && !filter.isCreatedByActive}
                                 type="checkbox"
                                 id={'filter' + filter.id}
                                 onChange={() => toggleFilter(filter)}
-                                checked={selectedFilters.map(sf => sf.id).includes(filter.id) && (filter.isByMeActive || !byMe)}
+                                checked={selectedFilters.map(sf => sf.id).includes(filter.id) && (filter.isCreatedByActive || !createdBy)}
                             />
                             <Label check for={'filter' + filter.id} className="mb-0">
                                 <span>{filter.label}</span>

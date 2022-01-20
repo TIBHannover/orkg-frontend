@@ -37,10 +37,10 @@ const SearchForm = ({ placeholder, onSearch = null }) => {
             route = history.push(getLinkByEntityType(getEntityTypeByID(value), id));
         } else if (isString(value) && value) {
             const types = getArrayParamFromQueryString(location.search, 'types');
-            const byMe = getParamFromQueryString(location.search, 'byMe', true);
+            const createdBy = getParamFromQueryString(location.search, 'createdBy');
             route = `${reverse(ROUTES.SEARCH, { searchTerm: encodeURIComponent(value) })}?types=${`${
                 types?.length > 0 ? types.join(',') : ''
-            }`}&byMe=${byMe}
+            }`}&createdBy=${createdBy ?? ''}
                     `;
         }
         onSearch && onSearch();

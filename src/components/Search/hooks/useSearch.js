@@ -7,7 +7,6 @@ import { getClassById, getClasses } from 'services/backend/classes';
 import { getResources, getResourcesByClass } from 'services/backend/resources';
 import { getPredicates } from 'services/backend/predicates';
 import { getPaperByDOI } from 'services/backend/misc';
-import { useSelector } from 'react-redux';
 import DEFAULT_FILTERS from 'constants/searchDefaultFilters';
 import REGEX from 'constants/regex';
 import { toast } from 'react-toastify';
@@ -19,8 +18,6 @@ const itemsPerFilter = 10;
 export const useSearch = () => {
     const { searchTerm } = useParams();
     const location = useLocation();
-
-    const user = useSelector(state => state.auth.user);
 
     const [results, setResults] = useState({});
     const [selectedFilters, setSelectedFilters] = useState([]);
@@ -85,7 +82,7 @@ export const useSearch = () => {
                     q: searchQuery,
                     id: filterType,
                     returnContent: true,
-                    creator: getParamFromQueryString(location.search, 'byMe', true) ? user?.id : undefined
+                    creator: getParamFromQueryString(location.search, 'createdBy') ?? undefined
                 });
             }
 
@@ -118,8 +115,8 @@ export const useSearch = () => {
             const _selectedFilters = getArrayParamFromQueryString(decodeURIComponent(location.search), 'types');
             if (!_selectedFilters || _selectedFilters.length === 0) {
                 setIsLoadingFilterClasses(false);
-                const _classes = getParamFromQueryString(location.search, 'byMe', true)
-                    ? DEFAULT_FILTERS.filter(df => df.isByMeActive)
+                const _classes = getParamFromQueryString(location.search, 'createdBy')
+                    ? DEFAULT_FILTERS.filter(df => df.isCreatedByActive)
                     : DEFAULT_FILTERS;
                 setSelectedFilters(_classes);
                 for (const filter of _classes) {

@@ -20,7 +20,7 @@ export const useFilters = () => {
     const selectedFiltersStrings = getArrayParamFromQueryString(decodeURIComponent(location.search), 'types').map(filter => ({ id: filter }));
     const [selectedFilters, setSelectedFilters] = useState(selectedFiltersStrings ? selectedFiltersStrings : DEFAULT_FILTERS);
     const [value, setValue] = useState(searchTerm ?? '');
-    const [byMe, setByMe] = useState(getParamFromQueryString(location.search, 'byMe', true));
+    const [createdBy, setCreatedBy] = useState(getParamFromQueryString(location.search, 'createdBy'));
     const [isLoadingFilterClasses, setIsLoadingFilterClasses] = useState(true);
 
     const toggleFilter = filterClass => {
@@ -51,18 +51,20 @@ export const useFilters = () => {
             const id = value.substring(1);
             history.push(getLinkByEntityType(getEntityTypeByID(value), id));
         } else {
-            const _selectedFilters = byMe
+            const _selectedFilters = createdBy
                 ? selectedFilters
                       .filter(
                           classObj =>
-                              !DEFAULT_FILTERS.filter(df => !df.isByMeActive)
+                              !DEFAULT_FILTERS.filter(df => !df.isCreatedByActive)
                                   .map(df => df.id)
                                   .includes(classObj.id)
                       )
                       .map(sf => sf.id)
                       .join(',')
                 : selectedFilters.map(sf => sf.id).join(',');
-            history.push(reverse(ROUTES.SEARCH, { searchTerm: encodeURIComponent(value) }) + '?types=' + _selectedFilters + '&byMe=' + byMe);
+            history.push(
+                reverse(ROUTES.SEARCH, { searchTerm: encodeURIComponent(value) }) + '?types=' + _selectedFilters + '&createdBy=' + (createdBy ?? '')
+            );
         }
     };
 
@@ -95,9 +97,9 @@ export const useFilters = () => {
         value,
         selectedFilters,
         isLoadingFilterClasses,
-        byMe,
+        createdBy,
         setValue,
-        setByMe,
+        setCreatedBy,
         toggleFilter,
         submitSearch
     };

@@ -5,73 +5,73 @@ const DEFAULT_FILTERS = [
         label: 'Author',
         labelPlural: 'Authors',
         id: CLASSES.AUTHOR,
-        isByMeActive: true
+        isCreatedByActive: true
     },
     {
         label: 'Comparison',
         labelPlural: 'Comparisons',
         id: CLASSES.COMPARISON,
-        isByMeActive: true
+        isCreatedByActive: true
     },
     {
         label: 'Paper',
         labelPlural: 'Papers',
         id: CLASSES.PAPER,
-        isByMeActive: true
+        isCreatedByActive: true
     },
     {
         label: 'Research Problem',
         labelPlural: 'Research Problems',
         id: CLASSES.PROBLEM,
-        isByMeActive: true
+        isCreatedByActive: true
     },
     {
         label: 'Template',
         labelPlural: 'Templates',
         id: CLASSES.TEMPLATE,
-        isByMeActive: true
+        isCreatedByActive: true
     },
     {
         label: 'Venue',
         labelPlural: 'Venues',
         id: CLASSES.VENUE,
-        isByMeActive: true
+        isCreatedByActive: true
     },
     {
         label: 'Visualization',
         labelPlural: 'Visualizations',
         id: CLASSES.VISUALIZATION,
-        isByMeActive: true
+        isCreatedByActive: true
     },
     {
         label: 'SmartReview',
         labelPlural: 'SmartReviews',
         id: CLASSES.SMART_REVIEW_PUBLISHED,
-        isByMeActive: true
+        isCreatedByActive: true
     },
     {
         label: 'Literature List',
         labelPlural: 'Literature Lists',
         id: CLASSES.LITERATURE_LIST_PUBLISHED,
-        isByMeActive: true
+        isCreatedByActive: true
     },
     {
         label: 'Resource',
         labelPlural: 'Resources',
         id: ENTITIES.RESOURCE,
-        isByMeActive: false
+        isCreatedByActive: false
     },
     {
         label: 'Property',
         labelPlural: 'Properties',
         id: ENTITIES.PREDICATE,
-        isByMeActive: false
+        isCreatedByActive: false
     },
     {
         label: 'Class',
         labelPlural: 'Classes',
         id: ENTITIES.CLASS,
-        isByMeActive: false
+        isCreatedByActive: false
     }
 ];
 
