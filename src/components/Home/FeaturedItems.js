@@ -1,18 +1,13 @@
-import { useState } from 'react';
 import { FormGroup, Label, Input, ListGroup, Button } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import ROUTES from 'constants/routes.js';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { MISC } from 'constants/graphSettings';
 import ContentLoader from 'react-content-loader';
 import CardFactory from 'components/CardFactory/CardFactory';
 import useResearchFieldContent from 'components/ResearchField/hooks/useResearchFieldContent';
-import { stringifySort } from 'utils';
 import { reverseWithSlug } from 'utils';
-import Tippy from '@tippyjs/react';
 
 const ListGroupStyled = styled(ListGroup)`
     &&& .list-group-item {
@@ -30,64 +25,40 @@ const FeaturedItems = ({ researchFieldId, researchFieldLabel, featuredClass }) =
         initClassesFilter: [{ id: featuredClass.id, label: featuredClass.label }],
         initialIncludeSubFields: true
     });
-    const [tippy, setTippy] = useState({});
 
     return (
         <div className="pt-2 pb-3">
             <div className="d-flex justify-content-end mb-2 me-2">
-                <Tippy
-                    interactive={true}
-                    trigger="click"
-                    placement="bottom-end"
-                    onCreate={instance => setTippy(instance)}
-                    content={
-                        <div className="p-2">
-                            <FormGroup>
-                                <Label for={`sort${featuredClass.label}`}>Sort</Label>
-                                <Input
-                                    value={sort}
-                                    onChange={e => {
-                                        tippy.hide();
-                                        setSort(e.target.value);
-                                    }}
-                                    bsSize="sm"
-                                    type="select"
-                                    name="sort"
-                                    id={`sort${featuredClass.label}`}
-                                    disabled={isLoading}
-                                >
-                                    <option value="combined">Top recent</option>
-                                    <option value="newest">Recently added</option>
-                                    <option value="featured">Featured</option>
-                                </Input>
-                            </FormGroup>
-                            {researchFieldId !== MISC.RESEARCH_FIELD_MAIN && (
-                                <FormGroup check>
-                                    <Input
-                                        onChange={e => {
-                                            tippy.hide();
-                                            setIncludeSubFields(e.target.checked);
-                                        }}
-                                        checked={includeSubFields}
-                                        type="checkbox"
-                                        id={`includeSubFields${featuredClass.label}`}
-                                        style={{ marginTop: '0.1rem' }}
-                                        disabled={isLoading}
-                                    />
-                                    <Label check for={`includeSubFields${featuredClass.label}`} className="mb-0">
-                                        Include subfields
-                                    </Label>
-                                </FormGroup>
-                            )}
-                        </div>
-                    }
-                >
-                    <span>
-                        <Button color="light" className="flex-shrink-0 ps-3 pe-3" style={{ marginLeft: 'auto' }} size="sm">
-                            {stringifySort(sort)} <Icon icon={faChevronDown} />
-                        </Button>
-                    </span>
-                </Tippy>
+                <div className="d-flex me-2 rounded" style={{ fontSize: '0.875rem', padding: '0.25rem 1.25rem' }}>
+                    <FormGroup check className="mb-0">
+                        <Label check className="mb-0">
+                            <Input
+                                onChange={e => setIncludeSubFields(e.target.checked)}
+                                checked={includeSubFields}
+                                type="checkbox"
+                                disabled={isLoading}
+                            />
+                            Include subfields
+                        </Label>
+                    </FormGroup>
+                </div>
+                <div>
+                    <div className="mb-0">
+                        <Input
+                            value={sort}
+                            onChange={e => setSort(e.target.value)}
+                            bsSize="sm"
+                            type="select"
+                            name="sort"
+                            id={`sort${featuredClass.label}`}
+                            disabled={isLoading}
+                        >
+                            <option value="combined">Top recent</option>
+                            <option value="newest">Recently added</option>
+                            <option value="featured">Featured</option>
+                        </Input>
+                    </div>
+                </div>
             </div>
             {!isLoading &&
                 (items.length > 0 ? (

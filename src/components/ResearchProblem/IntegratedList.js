@@ -1,15 +1,12 @@
-import { useState } from 'react';
-import { Button, Container, ListGroup, FormGroup, Label, Input } from 'reactstrap';
+import { Container, ListGroup, FormGroup, Label, Input } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faSpinner, faChevronDown } from '@fortawesome/free-solid-svg-icons';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import useResearchProblemContent from 'components/ResearchProblem/hooks/useResearchProblemContent';
 import CardFactory from 'components/CardFactory/CardFactory';
 import { SubTitle, SubtitleSeparator } from 'components/styled';
 import { CLASSES } from 'constants/graphSettings';
-import Tippy from '@tippyjs/react';
 import { useSelector } from 'react-redux';
 import ContentLoader from 'react-content-loader';
-import { stringifySort } from 'utils';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import { useLocation } from 'react-router';
@@ -49,7 +46,6 @@ const IntegratedList = ({ id, slug, boxShadow }) => {
             : DEFAULT_CLASSES_FILTER,
         updateURL: true
     });
-    const [tippy, setTippy] = useState({});
     const isCurationAllowed = useSelector(state => state.auth.user?.isCurationAllowed);
 
     const handleSelect = classFilter => {
@@ -96,42 +92,24 @@ const IntegratedList = ({ id, slug, boxShadow }) => {
                         </FormGroup>
                     ))}
                 </div>
-                <Tippy
-                    interactive={true}
-                    trigger="click"
-                    placement="bottom-end"
-                    onCreate={instance => setTippy(instance)}
-                    content={
-                        <div className="p-2">
-                            <FormGroup>
-                                <Label for="sortComparisons">Sort</Label>
-                                <Input
-                                    value={sort}
-                                    onChange={e => {
-                                        tippy.hide();
-                                        setSort(e.target.value);
-                                    }}
-                                    bsSize="sm"
-                                    type="select"
-                                    name="sort"
-                                    id="sortComparisons"
-                                    disabled={isLoading}
-                                >
-                                    <option value="combined">Top recent</option>
-                                    <option value="newest">Recently added</option>
-                                    <option value="featured">Featured</option>
-                                    {isCurationAllowed && <option value="unlisted">Unlisted</option>}
-                                </Input>
-                            </FormGroup>
-                        </div>
-                    }
-                >
-                    <span>
-                        <Button color="secondary" className="flex-shrink-0 ps-3 pe-3 ms-auto" size="sm">
-                            {stringifySort(sort)} <Icon icon={faChevronDown} />
-                        </Button>
-                    </span>
-                </Tippy>
+                <div>
+                    <div className="mb-0">
+                        <Input
+                            value={sort}
+                            onChange={e => setSort(e.target.value)}
+                            bsSize="sm"
+                            type="select"
+                            name="sort"
+                            id="sortComparisons"
+                            disabled={isLoading}
+                        >
+                            <option value="combined">Top recent</option>
+                            <option value="newest">Recently added</option>
+                            <option value="featured">Featured</option>
+                            {isCurationAllowed && <option value="unlisted">Unlisted</option>}
+                        </Input>
+                    </div>
+                </div>
             </Container>
             <Container className="p-0">
                 {items.length > 0 && (
