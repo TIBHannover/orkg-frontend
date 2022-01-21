@@ -29,19 +29,21 @@ const FeaturedItems = ({ researchFieldId, researchFieldLabel, featuredClass }) =
     return (
         <div className="pt-2 pb-3">
             <div className="d-flex justify-content-end mb-2 me-2">
-                <div className="d-flex me-2 rounded" style={{ fontSize: '0.875rem', padding: '0.25rem 1.25rem' }}>
-                    <FormGroup check className="mb-0">
-                        <Label check className="mb-0">
-                            <Input
-                                onChange={e => setIncludeSubFields(e.target.checked)}
-                                checked={includeSubFields}
-                                type="checkbox"
-                                disabled={isLoading}
-                            />
-                            Include subfields
-                        </Label>
-                    </FormGroup>
-                </div>
+                {researchFieldId !== MISC.RESEARCH_FIELD_MAIN && (
+                    <div className="d-flex me-2 rounded" style={{ fontSize: '0.875rem', padding: '0.25rem 1.25rem' }}>
+                        <FormGroup check className="mb-0">
+                            <Label check className="mb-0">
+                                <Input
+                                    onChange={e => setIncludeSubFields(e.target.checked)}
+                                    checked={includeSubFields}
+                                    type="checkbox"
+                                    disabled={isLoading}
+                                />
+                                Include subfields
+                            </Label>
+                        </FormGroup>
+                    </div>
+                )}
                 <div>
                     <div className="mb-0">
                         <Input
