@@ -158,7 +158,7 @@ class AddObservatory extends Component {
                                                 <Tooltip message="Permalink field allows to identify the observatory page on ORKG in an easy-to-read form. Only underscores ( _ ), numbers, and letters are allowed." />
                                             </Label>
                                             <InputGroup>
-                                                {this.state.publicObservatoryRoute}
+                                                <span className="input-group-text">{this.state.publicObservatoryRoute}</span>
                                                 <Input
                                                     onChange={this.handleChange}
                                                     type="text"
