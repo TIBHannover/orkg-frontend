@@ -163,7 +163,7 @@ const LiteratureList = () => {
                             <DropdownToggle size="sm" color="secondary" className="px-3 rounded-end">
                                 <Icon icon={faEllipsisV} />
                             </DropdownToggle>
-                            <DropdownMenu right>
+                            <DropdownMenu end>
                                 <DropdownItem onClick={() => setIsOpenExportBibtexModal(true)}>Export as BibTeX</DropdownItem>
                                 <DropdownItem tag={NavLink} exact to={reverse(ROUTES.RESOURCE, { id })}>
                                     View resource

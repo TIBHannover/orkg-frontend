@@ -17,23 +17,46 @@ const bibtexOptions = {
 
 const ExportBibtexModal = ({ isOpen, toggle }) => {
     const [bibtex, setBibtex] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
     const papers = useSelector(state => state.literatureList.papers);
 
+    const getCite = paper => {
+        return new Cite({
+            type: 'article',
+            id: paper.paper.id,
+            title: paper.label,
+            author: paper.authors.length > 0 ? paper.authors.map(author => ({ name: author.label })) : null,
+            year: paper.publicationYear?.label
+        });
+    };
+
     useEffect(() => {
-        const parse = async () => {
+        const parse = () => {
+            setIsLoading(true);
             const bibtexPromises =
                 Object.keys(papers).length > 0
-                    ? Object.keys(papers).map(async paperId => {
+                    ? Object.keys(papers).map(paperId => {
                           const paper = papers[paperId];
-                          return new Cite({
-                              id: paper.paper.id,
-                              title: paper.label,
-                              author: paper.authors.length > 0 ? paper.authors.map(author => ({ name: author.label })) : null,
-                              issued: { 'date-parts': [[paper.publicationYear?.label]] }
-                          });
+
+                          if (paper?.doi?.label) {
+                              return new Cite.async(paper.doi.label).catch(() => {
+                                  return getCite(paper);
+                              });
+                          }
+
+                          return getCite(paper);
                       })
                     : [];
-            setBibtex((await Promise.all(bibtexPromises)).map(_bibtex => _bibtex.options(bibtexOptions).get()).join(''));
+            Promise.all(bibtexPromises)
+                .then(citations => {
+                    const bibtex = citations.map(citation => citation.options(bibtexOptions).get()).join('\n');
+                    setBibtex(bibtex);
+                    setIsLoading(false);
+                })
+                .catch(error => {
+                    console.error(error);
+                    setIsLoading(false);
+                });
         };
         parse();
     }, [papers]);
@@ -42,15 +65,15 @@ const ExportBibtexModal = ({ isOpen, toggle }) => {
         <Modal size="lg" isOpen={isOpen} toggle={toggle}>
             <ModalHeader toggle={toggle}>BibTeX export</ModalHeader>
             <ModalBody>
-                <Input type="textarea" value={bibtex || 'No papers added'} rows="15" disabled />
+                <Input type="textarea" value={!isLoading ? bibtex || 'No papers added' : 'Loading...'} rows="15" disabled />
                 <CopyToClipboard
                     id="copyToClipboardLatex"
-                    text={bibtex}
+                    text={isLoading ? 'Loading...' : bibtex}
                     onCopy={() => {
                         toast.success('Copied to clipboard');
                     }}
                 >
-                    <Button color="primary" className="mt-2 float-end" size="sm">
+                    <Button disabled={isLoading} color="primary" className="mt-2 float-end" size="sm">
                         <Icon icon={faClipboard} /> Copy to clipboard
                     </Button>
                 </CopyToClipboard>
