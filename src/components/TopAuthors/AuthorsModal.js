@@ -5,6 +5,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faAward } from '@fortawesome/free-solid-svg-icons';
 import AuthorCard from 'components/AuthorCard/AuthorCard';
 import PropTypes from 'prop-types';
+import pluralize from 'pluralize';
 
 const ContributorsModal = ({ researchProblemId, openModal, setOpenModal }) => {
     const { authors, isLoading } = useResearchProblemAuthors({
@@ -26,7 +27,7 @@ const ContributorsModal = ({ researchProblemId, openModal, setOpenModal }) => {
                                     <div className="d-flex">
                                         <div className="ps-4 pe-4 pt-2">{index + 1}.</div>
                                         <div>
-                                            <AuthorCard author={author.author} subTitle={`${author.papers} paper${author.papers > 1 ? 's' : ''}`} />
+                                            <AuthorCard author={author.author} subTitle={pluralize('paper', author.papers, true)} />
                                         </div>
                                     </div>
                                     {authors.length - 1 !== index && <hr className="mb-0 mt-3" />}

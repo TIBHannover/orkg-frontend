@@ -5,6 +5,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faAward } from '@fortawesome/free-solid-svg-icons';
 import ContributorCard from 'components/ContributorCard/ContributorCard';
 import PropTypes from 'prop-types';
+import pluralize from 'pluralize';
 
 const ContributorsModal = ({ researchProblemId, openModal, setOpenModal }) => {
     const { contributors, isLoading, isLoadingFailed } = useResearchProblemContributors({
@@ -31,7 +32,7 @@ const ContributorsModal = ({ researchProblemId, openModal, setOpenModal }) => {
                                                 contributor={{
                                                     ...contributor.user,
                                                     subTitle: contributor.contributions
-                                                        ? `${contributor.contributions} contribution${contributor.contributions > 1 ? 's' : ''}`
+                                                        ? pluralize('contribution', contributor.contributions, true)
                                                         : ''
                                                 }}
                                             />

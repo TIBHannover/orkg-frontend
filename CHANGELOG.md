@@ -3,6 +3,29 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [V0.59](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.58...V0.59) - 2022-01-17
+
+### Changes
+
+- fix: issue with running ORKG in Safari (update citation-js) [`#753`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/753)
+- fix: Some issues in textbox width of autocomplete [`#752`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/752)
+- style: PWC box spacing issue [`#750`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/750)
+- feat(MarkdownEditor): support for video embedding [`#747`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/747)
+
+---
+## [V0.58](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.57.2...V0.58) - 2022-01-10
+
+### Changes
+
+- Comparison: support embedding videos [`#749`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/749)
+- fix(PaperView): Reversed order of authors [`#742`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/742)
+- style: Responsive benchmarks page [`#741`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/741)
+- fix: Plural words with zero items [`#745`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/745)
+- fix(AbstractAnnotator): text wrapping issue [`#743`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/743)
+- docs: add Architecture section [`#740`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/740)
+- internal: Update dependencies [`#731`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/731)
+
+---
 ## [V0.57.2](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.57.1...V0.57.2) - 2021-12-20
 
 ### Changes
