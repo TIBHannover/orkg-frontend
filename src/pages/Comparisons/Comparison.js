@@ -246,7 +246,7 @@ function Comparison(props) {
             </Helmet>
             <TitleBar
                 buttonGroup={
-                    contributionsList.length > 1 &&
+                    (contributionsList.length > 1 || (areAllRulesEmpty(filterControlData) && contributionsList.length > 0)) &&
                     !isLoadingComparisonResult &&
                     !isFailedLoadingComparisonResult && (
                         <>
@@ -547,7 +547,7 @@ function Comparison(props) {
                                 </div>
                             )}
                             {!isLoadingComparisonResult ? (
-                                contributionsList.length > 1 ? (
+                                contributionsList.length > 1 || (areAllRulesEmpty(filterControlData) && contributionsList.length > 0) ? (
                                     <div className="mt-1">
                                         {integrateData({
                                             metaData,
