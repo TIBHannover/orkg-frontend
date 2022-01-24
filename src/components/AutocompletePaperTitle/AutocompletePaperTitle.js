@@ -11,6 +11,7 @@ import { getPaperData } from 'utils';
 import ExistingDoiModal from 'components/AddPaper/GeneralData/ExistingDoiModal';
 
 const PAGE_SIZE = 10;
+const MIN_INPUT_LENGTH = 3;
 
 function AutocompletePaperTitle({ value, onChange, onOptionClick, performExistingPaperLookup = true }) {
     const [menuIsOpen, setMenuIsOpen] = useState(false);
@@ -25,7 +26,7 @@ function AutocompletePaperTitle({ value, onChange, onOptionClick, performExistin
             }
         };
 
-        if (titleQuery.length < 3) {
+        if (titleQuery.length < MIN_INPUT_LENGTH) {
             return emptyList;
         }
 
@@ -82,6 +83,8 @@ function AutocompletePaperTitle({ value, onChange, onOptionClick, performExistin
         }
     };
 
+    const noOptionsMessage = input => (input.length >= MIN_INPUT_LENGTH ? 'No options' : 'Search by title input must be at least 3 characters');
+
     const customStyles = {
         control: (provided, state) => ({
             ...provided,
@@ -116,7 +119,7 @@ function AutocompletePaperTitle({ value, onChange, onOptionClick, performExistin
                     onInputChange={handleInputChange}
                     classNamePrefix="react-select"
                     loadOptionsOnMenuOpen={false}
-                    noOptionsMessage={() => null}
+                    noOptionsMessage={noOptionsMessage}
                     placeholder=""
                     styles={customStyles}
                     menuIsOpen={menuIsOpen}
@@ -124,7 +127,12 @@ function AutocompletePaperTitle({ value, onChange, onOptionClick, performExistin
                     blurInputOnSelect={false}
                     onMenuOpen={() => setMenuIsOpen(true)}
                     onMenuClose={() => setMenuIsOpen(false)}
-                    components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null, Option: PaperOption, Menu }}
+                    components={{
+                        DropdownIndicator: () => null,
+                        IndicatorSeparator: () => null,
+                        Option: PaperOption,
+                        Menu
+                    }}
                 />
             </StyledAutoCompleteInputFormControl>
             {existingPaper && <ExistingDoiModal existingPaper={existingPaper} />}
