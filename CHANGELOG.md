@@ -3,6 +3,16 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [V0.60](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.59...V0.60) - 2022-01-24
+
+### Changes
+
+- feat: lookup paper metadata by title via Semantic Scholar [`#746`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/746)
+- fix: videos, replace bootstrap classes [`#759`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/759)
+- feat(Comparison): support showing single result when filtering [`#720`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/720)
+- feat(LiteratureList): support BibTeX export [`#748`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/748)
+
+---
 ## [V0.59](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.58...V0.59) - 2022-01-17
 
 ### Changes
