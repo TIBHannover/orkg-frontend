@@ -246,7 +246,7 @@ function Comparison(props) {
             </Helmet>
             <TitleBar
                 buttonGroup={
-                    contributionsList.length > 1 &&
+                    (contributionsList.length > 1 || (areAllRulesEmpty(filterControlData) && contributionsList.length > 0)) &&
                     !isLoadingComparisonResult &&
                     !isFailedLoadingComparisonResult && (
                         <>
