@@ -6,7 +6,7 @@ function HelpVideoModal(props) {
         <Modal size="lg" unmountOnClose={false} isOpen={props.showDialog} toggle={props.toggle}>
             <ModalHeader toggle={props.toggle}>Comparison visualization instruction video</ModalHeader>
             <ModalBody>
-                <div className="embed-responsive embed-responsive-16by9">
+                <div className="ratio ratio-16x9">
                     <iframe
                         title="Video explaining how to make a comparison visualization"
                         scrolling="no"
@@ -14,7 +14,6 @@ function HelpVideoModal(props) {
                         src="//av.tib.eu/player/52057"
                         allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
                         allowFullScreen={true}
-                        className="embed-responsive-item"
                     />
                 </div>
             </ModalBody>
