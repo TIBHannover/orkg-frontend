@@ -122,6 +122,7 @@ const CreatePaperModal = ({ isOpen, toggle, onCreatePaper, initialValue }) => {
         setAuthors(paper?.authors?.length > 0 ? paper.authors.map(author => ({ label: author.name })) : []);
         setYear(paper.year || '');
         setDoi(paper.externalIds?.DOI || '');
+        setUrl(paper.externalIds?.ArXiv ? `https://arxiv.org/abs/${paper.externalIds?.ArXiv}` : '');
         setPublishedIn(paper.venue || '');
     };
 

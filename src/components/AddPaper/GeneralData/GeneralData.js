@@ -325,7 +325,9 @@ const GeneralData = () => {
                 authors: paper?.authors?.length > 0 ? paper.authors.map(author => ({ label: author.name })) : [],
                 publicationYear: paper.year || '',
                 publishedIn: paper.venue || '',
-                doi: paper.externalIds?.DOI || ''
+                doi: paper.externalIds?.DOI || '',
+                entry: paper.externalIds?.DOI || '',
+                url: paper.externalIds?.ArXiv ? `https://arxiv.org/abs/${paper.externalIds?.ArXiv}` : ''
             })
         );
 
