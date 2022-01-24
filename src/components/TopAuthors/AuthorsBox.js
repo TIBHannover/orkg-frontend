@@ -7,6 +7,7 @@ import AuthorsModal from './AuthorsModal';
 import ContentLoader from 'react-content-loader';
 import PropTypes from 'prop-types';
 import { Button } from 'reactstrap';
+import pluralize from 'pluralize';
 
 const AuthorsBox = ({ researchProblemId }) => {
     const { authors, isLoading } = useResearchProblemAuthors({ researchProblemId, pageSize: 4 });
@@ -22,7 +23,7 @@ const AuthorsBox = ({ researchProblemId }) => {
                     <div className="mt-2">
                         {authors.slice(0, 3).map((author, index) => (
                             <div className="pt-1 ps-2 pe-2" key={`rp${index}`}>
-                                <AuthorCard author={author.author} subTitle={`${author.papers} paper${author.papers > 1 ? 's' : ''}`} />
+                                <AuthorCard author={author.author} subTitle={pluralize('paper', author.papers, true)} />
                                 {authors.slice(0, 3).length - 1 !== index && <hr className="mb-0 mt-1" />}
                             </div>
                         ))}

@@ -2,6 +2,8 @@ import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import AuthorBadges from 'components/Badges/AuthorBadges/AuthorBadges';
 import ValuePlugins from 'components/ValuePlugins/ValuePlugins';
+import { ENTITIES } from 'constants/graphSettings';
+import Video from 'components/ValuePlugins/Video/Video';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 
@@ -31,7 +33,7 @@ function ComparisonMetaData(props) {
                     {props.metaData.doi && (
                         <div>
                             {props.metaData.doi && (
-                                <div style={{ marginBottom: '20px', lineHeight: 1.5 }}>
+                                <div className="mb-1" style={{ lineHeight: 1.5 }}>
                                     <small>
                                         DOI:{' '}
                                         <i>
@@ -41,6 +43,14 @@ function ComparisonMetaData(props) {
                                 </div>
                             )}
                         </div>
+                    )}
+                    {props.metaData.video && (
+                        <small className="d-flex mb-1">
+                            <div className="me-2">Video: </div>
+                            <Video options={{ inModal: true }} type={ENTITIES.LITERAL}>
+                                {props.metaData.video.label}
+                            </Video>
+                        </small>
                     )}
                 </>
             ) : (

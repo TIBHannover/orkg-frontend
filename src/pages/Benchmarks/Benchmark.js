@@ -275,44 +275,46 @@ function Benchmark() {
                 <div>
                     <Container className="d-flex align-items-center mt-4 mb-4">
                         <div className="d-flex flex-grow-1">
-                            <h1 className="h5 flex-shrink-0 mb-0">Performance trend</h1>
+                            <h1 className="h5 mb-0">Performance trend</h1>
                         </div>
-                        <ButtonGroup size="sm">
-                            <Button disabled>Research problem</Button>
-                            <UncontrolledButtonDropdown className="flex-shrink-0 me-2">
-                                <DropdownToggle caret size="sm" color="secondary">
-                                    {problemData.label}
-                                </DropdownToggle>
-                                <DropdownMenu>
-                                    {datasetProblems.map((rp, index) => (
-                                        <DropdownItem
-                                            key={index}
-                                            disabled={isLoading}
-                                            onClick={() => history.push(reverse(ROUTES.BENCHMARK, { datasetId: datasetId, problemId: rp.id }))}
-                                        >
-                                            {rp.label}
-                                        </DropdownItem>
-                                    ))}
-                                </DropdownMenu>
-                            </UncontrolledButtonDropdown>
-                        </ButtonGroup>
-                        {metrics?.length > 0 && (
+                        <div>
                             <ButtonGroup size="sm">
-                                <Button disabled>Metric</Button>
-                                <UncontrolledButtonDropdown className="flex-shrink-0 ms-auto">
+                                <Button disabled>Research problem</Button>
+                                <UncontrolledButtonDropdown className="flex-shrink-0 me-2">
                                     <DropdownToggle caret size="sm" color="secondary">
-                                        {selectedMetric}
+                                        {problemData.label}
                                     </DropdownToggle>
                                     <DropdownMenu>
-                                        {metrics.map((m, index) => (
-                                            <DropdownItem key={index} disabled={isLoading} onClick={() => setSelectedMetric(m)}>
-                                                {m}
+                                        {datasetProblems.map((rp, index) => (
+                                            <DropdownItem
+                                                key={index}
+                                                disabled={isLoading}
+                                                onClick={() => history.push(reverse(ROUTES.BENCHMARK, { datasetId: datasetId, problemId: rp.id }))}
+                                            >
+                                                {rp.label}
                                             </DropdownItem>
                                         ))}
                                     </DropdownMenu>
                                 </UncontrolledButtonDropdown>
                             </ButtonGroup>
-                        )}
+                            {metrics?.length > 0 && (
+                                <ButtonGroup size="sm" className="mt-md-0 mt-sm-1">
+                                    <Button disabled>Metric</Button>
+                                    <UncontrolledButtonDropdown className="flex-shrink-0 ms-auto">
+                                        <DropdownToggle caret size="sm" color="secondary">
+                                            {selectedMetric}
+                                        </DropdownToggle>
+                                        <DropdownMenu>
+                                            {metrics.map((m, index) => (
+                                                <DropdownItem key={index} disabled={isLoading} onClick={() => setSelectedMetric(m)}>
+                                                    {m}
+                                                </DropdownItem>
+                                            ))}
+                                        </DropdownMenu>
+                                    </UncontrolledButtonDropdown>
+                                </ButtonGroup>
+                            )}
+                        </div>
                     </Container>
 
                     <Container className="p-0">

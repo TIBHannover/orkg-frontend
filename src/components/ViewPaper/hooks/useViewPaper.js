@@ -18,7 +18,7 @@ const useViewPaper = ({ paperId }) => {
 
     const setAuthorsORCID = useCallback(
         (paperStatements, pId) => {
-            const authorsArray = [];
+            let authorsArray = [];
             const paperAuthors = filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_AUTHOR, false, null, pId);
             for (const author of paperAuthors) {
                 const orcid = paperStatements.find(s => s.subject.id === author.id && s.predicate.id === PREDICATES.HAS_ORCID);
@@ -28,6 +28,7 @@ const useViewPaper = ({ paperId }) => {
                     authorsArray.push({ ...author, orcid: '' });
                 }
             }
+            authorsArray = authorsArray.length ? authorsArray.sort((a, b) => a.s_created_at.localeCompare(b.s_created_at)) : [];
             dispatch(
                 setPaperAuthors({
                     authors: authorsArray

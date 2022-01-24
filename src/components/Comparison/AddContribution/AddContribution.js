@@ -16,6 +16,7 @@ import PropTypes from 'prop-types';
 import { debounce } from 'lodash';
 import { PREDICATES, CLASSES } from 'constants/graphSettings';
 import Tippy from '@tippyjs/react';
+import pluralize from 'pluralize';
 
 const StyledLoadMoreButton = styled.div`
     padding-top: 0;
@@ -337,7 +338,7 @@ export default function AddContribution(props) {
                         props.toggle();
                     }}
                 >
-                    Add contribution{selectedContributions.length > 1 && 's'}
+                    Add {pluralize('contribution', selectedContributions.length, false)}
                     {selectedContributions.length > 0 && ` (${selectedContributions.length})`}
                 </Button>
             </ModalFooter>

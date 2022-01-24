@@ -19,6 +19,7 @@ class AnnotationTooltip extends Component {
             <span>
                 <Tippy
                     placement="top"
+                    appendTo={document.body}
                     followCursor={true}
                     plugins={[followCursor]}
                     arrow={true}
