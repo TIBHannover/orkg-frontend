@@ -135,7 +135,7 @@ const FeaturedComparisons = () => {
             >
                 Featured paper comparisons
             </TitleBar>
-            <Container className="box rounded pt-4 pb-4 pl-5 pr-5">
+            <Container className="box rounded pt-4 pb-4 ps-5 pe-5">
                 <Alert color="info" fade={false}>
                     With the paper data inside the ORKG, you can build powerful paper comparisons. On this page, we list the featured comparisons that
                     are created using the comparison functionality. The featured comparisons below are organized by category.
@@ -152,7 +152,7 @@ const FeaturedComparisons = () => {
                             <Fragment key={category.id}>
                                 <Header id={id} ref={scrollTo} className="h4 mt-4 mb-3">
                                     {category.label}
-                                    <a href={`#${id}`} className="ml-2 invisible" onClick={e => handleClick(e, id)}>
+                                    <a href={`#${id}`} className="ms-2 invisible" onClick={e => handleClick(e, id)}>
                                         <Icon icon={faLink} />
                                     </a>
                                 </Header>

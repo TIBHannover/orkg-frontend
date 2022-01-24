@@ -82,12 +82,14 @@ const AnnotationTooltipNew = props => {
         }
         const valueType = value ?? type.value;
 
-        // replace double white spaces that could occur when copying text from PDFs
-        if (isString(content.text)) {
-            content.text = content.text.replace(/\s+/g, ' ').trim();
-        }
-
-        handleAnnotate({ content, position, type: valueType });
+        handleAnnotate({
+            content: {
+                ...content,
+                text: isString(content.text) ? content.text.replace(/\s+/g, ' ').trim() : content.text // replace double white spaces that could occur when copying text from PDFs
+            },
+            position,
+            type: valueType
+        });
         hideTipAndSelection();
     };
 
@@ -128,7 +130,7 @@ const AnnotationTooltipNew = props => {
                         suggestedClasses.map(suggestion => (
                             <Button
                                 active={type && type.value === suggestion.iri}
-                                className="rounded-pill mr-2 mb-1"
+                                className="rounded-pill me-2 mb-1"
                                 style={{ paddingTop: 2, paddingBottom: 2 }}
                                 size="sm"
                                 color="secondary"

@@ -27,7 +27,7 @@ class ForgotPassword extends Component {
     render() {
         return (
             <>
-                <Form className="pl-3 pr-3 pt-2">
+                <Form className="ps-3 pe-3 pt-2">
                     <Alert color="info">If you forgot your password, you can reset it via your email address</Alert>
                     <FormGroup>
                         <Label for="Email">Email address</Label>

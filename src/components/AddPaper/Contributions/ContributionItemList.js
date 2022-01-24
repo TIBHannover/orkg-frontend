@@ -1,7 +1,7 @@
 import { createRef, Component } from 'react';
 import { Input } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faTrash, faPen } from '@fortawesome/free-solid-svg-icons';
+import { faTrash, faPen, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
 import ROUTES from 'constants/routes';
 import Tippy from '@tippyjs/react';
@@ -96,34 +96,42 @@ class ContributionItemList extends Component {
                 {this.props.enableEdit && !this.state.isEditing && (
                     <>
                         {this.props.canDelete && this.props.isSelected && (
-                            <span className="float-right mr-1">
+                            <span className="float-end me-1">
                                 <Tippy content="Delete contribution">
                                     <span>
                                         <ActionButton
                                             color="link"
+                                            disabled={this.props.contribution.isSaving || this.props.contribution.isDeleting}
                                             onClick={e => {
                                                 e.stopPropagation();
                                                 this.props.toggleDeleteContribution(this.props.contribution.id);
                                             }}
                                         >
-                                            <Icon icon={faTrash} />
+                                            <Icon
+                                                icon={!this.props.contribution.isDeleting ? faTrash : faSpinner}
+                                                spin={this.props.contribution.isDeleting}
+                                            />
                                         </ActionButton>
                                     </span>
                                 </Tippy>
                             </span>
                         )}
                         {this.props.isSelected && (
-                            <span className="float-right mr-1 ml-1">
+                            <span className="float-end me-1 ms-1">
                                 <Tippy content="Edit the contribution label">
                                     <span>
                                         <ActionButton
                                             color="link"
+                                            disabled={this.props.contribution.isSaving || this.props.contribution.isDeleting}
                                             onClick={e => {
                                                 e.stopPropagation();
                                                 this.toggleEditLabelContribution(this.props.contribution.id, e);
                                             }}
                                         >
-                                            <Icon icon={faPen} />
+                                            <Icon
+                                                icon={!this.props.contribution.isSaving ? faPen : faSpinner}
+                                                spin={this.props.contribution.isSaving}
+                                            />
                                         </ActionButton>
                                     </span>
                                 </Tippy>
@@ -135,6 +143,7 @@ class ContributionItemList extends Component {
         );
 
         const listClasses = classNames({
+            'text-decoration-none': true,
             'contribution-item': true,
             'active-contribution': this.props.isSelected
         });

@@ -12,6 +12,7 @@ import Tippy from '@tippyjs/react';
 import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
+import pluralize from 'pluralize';
 
 const Contributors = ({ researchFieldId }) => {
     const { contributors, sort, includeSubFields, isLoading, setSort, setIncludeSubFields } = useContributors({
@@ -46,15 +47,31 @@ const Contributors = ({ researchFieldId }) => {
                                 offset={[0, 20]}
                                 placement="bottom"
                                 content={
-                                    <>
+                                    <div className="p-2">
                                         {contributor.profile.display_name}
                                         <br />
                                         {contributor?.counts && contributor.counts.total !== null && (
-                                            <i>
-                                                {contributor.counts.total} contribution{contributor.counts.total > 1 ? 's' : ''}
-                                            </i>
+                                            <ul className="p-0 ps-3 mb-0 mt-2">
+                                                <li>{pluralize('paper', contributor.counts.paper, true)}</li>
+                                                <li>{pluralize('contribution', contributor.counts.contributions, true)}</li>
+                                                <li>{pluralize('comparison', contributor.counts.comparisons, true)}</li>
+                                                <li>{pluralize('visualization', contributor.counts.visualizations, true)}</li>
+                                                <li>{pluralize('research problem', contributor.counts.problems, true)}</li>
+                                            </ul>
                                         )}
-                                    </>
+                                        {contributor?.counts && contributor.counts.total !== null && (
+                                            <>
+                                                <hr className="mb-1 mt-1" style={{ background: '#fff' }} />
+                                                <ul className="p-0 ps-3 mb-0 mt-2">
+                                                    <li>
+                                                        <i>
+                                                            <b>{contributor.counts.total} </b>total contributions
+                                                        </i>
+                                                    </li>
+                                                </ul>
+                                            </>
+                                        )}
+                                    </div>
                                 }
                             >
                                 <Link to={reverse(ROUTES.USER_PROFILE, { userId: contributor.profile.id })}>

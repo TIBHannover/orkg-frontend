@@ -41,7 +41,7 @@ class AbstractInputView extends Component {
                 </Label>
                 <Textarea
                     id="paperAbstract"
-                    className={`form-control pl-2 pr-2 ${!this.props.validation ? 'is-invalid' : ''}`}
+                    className={`form-control ps-2 pe-2 ${!this.props.validation ? 'is-invalid' : ''}`}
                     minRows={8}
                     value={this.props.abstract}
                     onChange={this.handleChange}

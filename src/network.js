@@ -1,8 +1,4 @@
 import { Cookies } from 'react-cookie';
-import env from '@beam-australia/react-env';
-
-export const crossrefUrl = env('CROSSREF_URL');
-export const semanticScholarUrl = env('SEMANTICSCHOLAR_URL');
 
 export const submitGetRequest = (url, headers, send_token = false) => {
     if (!url) {
@@ -110,9 +106,13 @@ export const submitPutRequest = (url, headers, data, jsonStringify = true) => {
                 if (!response.ok) {
                     const json = response.json();
                     if (json.then) {
-                        json.then(reject);
+                        return json.then(reject);
                     } else {
-                        reject(new Error(`Error response. (${response.status}) ${response.statusText}`));
+                        return reject({
+                            error: new Error(`Error response. (${response.status}) ${response.statusText}`),
+                            statusCode: response.status,
+                            statusText: response.statusText
+                        });
                     }
                 } else {
                     if (response.status === 204) {

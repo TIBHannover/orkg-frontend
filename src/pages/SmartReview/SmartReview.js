@@ -18,7 +18,7 @@ import AddSection from 'components/SmartReview/AddSection';
 import AuthorsSection from 'components/SmartReview/AuthorsSection';
 import HistoryModal from 'components/SmartReview/HistoryModal';
 import useLoad from 'components/SmartReview/hooks/useLoad';
-import LoadingArticle from 'components/SmartReview/LoadingArticle';
+import LoadingArticle from 'components/ArticleBuilder/LoadingArticle';
 import PublishModal from 'components/SmartReview/PublishModal';
 import Sections from 'components/SmartReview/Sections';
 import Title from 'components/SmartReview/Title';
@@ -33,15 +33,16 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { NavLink, useHistory } from 'react-router-dom';
 import { Button, Container, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledButtonDropdown } from 'reactstrap';
-import Confirm from 'reactstrap-confirm';
+import Confirm from 'components/Confirmation/Confirmation';
 import { createGlobalStyle } from 'styled-components';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import ReferencesModal from 'components/SmartReview/References/ReferencesModal';
 import ReferencesSection from 'components/SmartReview/References/ReferencesSection';
 import ShouldPublishModal from 'components/SmartReview/ShouldPublishModal';
 import { usePrevious } from 'react-use';
-import LoadingOverlay from 'components/SmartReview/LoadingOverlay';
+import LoadingOverlay from 'components/ArticleBuilder/LoadingOverlay';
 import TitleBar from 'components/TitleBar/TitleBar';
+import { Helmet } from 'react-helmet';
 
 const GlobalStyle = createGlobalStyle`
     // ensure printing only prints the contents and no other elements
@@ -69,6 +70,7 @@ const SmartReview = () => {
     const [isOpenShouldPublishModal, setIsOpenShouldPublishModal] = useState(false);
     const [isOpenReferencesModal, setIsOpenReferencesModal] = useState(false);
     const isLoadingInline = useSelector(state => state.smartReview.isLoading);
+    const isLoadingSortSection = useSelector(state => state.smartReview.isLoadingSortSection);
     const isEditing = useSelector(state => state.smartReview.isEditing);
     const isPublished = useSelector(state => state.smartReview.isPublished);
     const paper = useSelector(state => state.smartReview.paper);
@@ -83,6 +85,7 @@ const SmartReview = () => {
     const version = versions.find(version => version.id === id);
     const versionNumber = versions.length ? versions.length - versions.findIndex(version => version.id === id) : null;
     const publicationDate = version ? moment(version.date).format('DD MMMM YYYY') : null;
+    const authors = useSelector(state => state.smartReview.authorResources);
 
     useEffect(() => {
         load(id);
@@ -107,8 +110,7 @@ const SmartReview = () => {
             const isConfirmed = await Confirm({
                 title: 'This is a published article',
                 message: `The article you are viewing is published, which means it cannot be modified. To make changes, fetch the live article data and try this action again`,
-                cancelColor: 'light',
-                confirmText: 'Fetch live data'
+                proceedLabel: 'Fetch live data'
             });
 
             if (isConfirmed) {
@@ -125,10 +127,34 @@ const SmartReview = () => {
         return <NotFound />;
     }
 
+    const ldJson = {
+        mainEntity: {
+            headline: `${paper?.title ?? ''} - SmartReview - ORKG`,
+            description: version?.description,
+            author: authors?.map(author => ({
+                name: author?.label,
+                ...(author?.orcid ? { url: `http://orcid.org/${author.orcid}` } : {}),
+                '@type': 'Person'
+            })),
+            datePublished: publicationDate,
+            about: researchField?.label,
+            '@type': 'ScholarlyArticle'
+        },
+        '@context': 'https://schema.org',
+        '@type': 'WebPage'
+    };
+
     return (
         <div>
             {researchField && <Breadcrumbs researchFieldId={researchField.id} />}
             <GlobalStyle />
+            <Helmet>
+                <title>{`${paper?.title ?? 'Unpublished'} - SmartReview - ORKG`}</title>
+                <meta property="og:title" content={`${paper?.title ?? 'Unpublished'} - SmartReview - ORKG`} />
+                <meta property="og:type" content="article" />
+                <meta property="og:description" content={version?.description} />
+                <script type="application/ld+json">{JSON.stringify(ldJson)}</script>
+            </Helmet>
             <TitleBar
                 titleAddition={
                     publicationDate && (
@@ -146,7 +172,7 @@ const SmartReview = () => {
                         {isEditing && (
                             <div color="light-darker" className="btn btn-light-darker btn-sm px-2" style={{ cursor: 'default' }}>
                                 {isLoadingInline ? (
-                                    <Icon icon={faSpinner} spin className="mr-2 text-secondary" />
+                                    <Icon icon={faSpinner} spin className="me-2 text-secondary" />
                                 ) : (
                                     <Tippy content="All changes are saved">
                                         <span>
@@ -234,7 +260,7 @@ const SmartReview = () => {
                             </>
                         )}
                         <UncontrolledButtonDropdown>
-                            <DropdownToggle size="sm" color="secondary" className="px-3 rounded-right">
+                            <DropdownToggle size="sm" color="secondary" className="px-3 rounded-end">
                                 <Icon icon={faEllipsisV} />
                             </DropdownToggle>
                             <DropdownMenu right>
@@ -248,7 +274,7 @@ const SmartReview = () => {
             >
                 SmartReview
             </TitleBar>
-            <LoadingOverlay />
+            <LoadingOverlay isLoading={isLoadingSortSection} />
 
             {!isLoading && isEditing && (
                 <main

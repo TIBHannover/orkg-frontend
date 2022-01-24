@@ -179,7 +179,7 @@ const OrdinalFilterRule = props => {
                             invalid={minInvalid}
                             onChange={handleMinChange}
                         />
-                        <FormFeedback className={minInvalid ? 'd-block text-right' : 'd-none'}>{invalidText}</FormFeedback>
+                        <FormFeedback className={minInvalid ? 'd-block text-end' : 'd-none'}>{invalidText}</FormFeedback>
                     </Col>
                 </FormGroup>
 
@@ -197,7 +197,7 @@ const OrdinalFilterRule = props => {
                             onChange={handleMaxChange}
                         />
 
-                        <FormFeedback className={maxInvalid ? 'd-block text-right' : 'd-none'}>{invalidText}</FormFeedback>
+                        <FormFeedback className={maxInvalid ? 'd-block text-end' : 'd-none'}>{invalidText}</FormFeedback>
                     </Col>
                 </FormGroup>
 
@@ -224,7 +224,7 @@ const OrdinalFilterRule = props => {
                             value={nEqValue}
                         />
                     </Col>
-                    <FormFeedback className={nEqInvalid ? 'd-block text-right' : 'd-none'}>{invalidText}</FormFeedback>
+                    <FormFeedback className={nEqInvalid ? 'd-block text-end' : 'd-none'}>{invalidText}</FormFeedback>
                 </FormGroup>
             </ModalBody>
             <FilterModalFooter handleApply={handleApply} handleCancel={toggleFilterDialog} handleReset={handleReset} />

@@ -47,7 +47,7 @@ const FeaturedItemsBox = ({ researchFieldId }) => {
     const [activeTab, setActiveState] = useState(2);
 
     return (
-        <SidebarStyledBox className="box rounded-lg mt-3">
+        <SidebarStyledBox className="box rounded-3 mt-3">
             <FeaturedTabs className="clearfix d-flex">
                 <Tippy content="Comparisons in ORKG provide an overview of state-of-the-art literature for a particular topic.">
                     <div

@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react';
-import { Button, Input, Modal, ModalBody, ModalHeader, Nav, NavItem, NavLink } from 'reactstrap';
+import { Button, Input, Modal, ModalBody, ModalHeader, Nav, NavItem, NavLink, Label, FormGroup } from 'reactstrap';
 import { getStatementsBySubject } from 'services/backend/statements';
 import { createShortLink, getComparison } from 'services/similarity/index';
 import Cite from 'citation-js';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
-import { CustomInput } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import MakeLatex from 'make-latex';
 import PropTypes from 'prop-types';
@@ -320,28 +319,33 @@ function ExportToLatex(props) {
                             <Textarea type="textarea" value={!latexTableLoading ? latexTable : 'Loading...'} disabled rows="15" />
                         </p>
 
-                        <div className="float-left mt-1">
-                            <Tooltip message="Since contribution titles can be long, it is sometimes better to replace the title by a reference like: Paper [1], Paper [2]...">
-                                <CustomInput
-                                    className="float-left"
+                        <div className="float-start mt-1">
+                            <FormGroup check>
+                                <Tooltip message="Since contribution titles can be long, it is sometimes better to replace the title by a reference like: Paper [1], Paper [2]...">
+                                    <Input
+                                        className="float-start"
+                                        type="checkbox"
+                                        id="replaceTitles"
+                                        onChange={() => setReplaceTitles(v => !v)}
+                                        checked={replaceTitles}
+                                    />{' '}
+                                    <Label check for="replaceTitles" className="mb-0">
+                                        Replace contribution titles by reference.
+                                    </Label>
+                                </Tooltip>
+                            </FormGroup>
+                            <FormGroup check>
+                                <Input
+                                    className="float-start"
                                     type="checkbox"
-                                    id="replaceTitles"
-                                    label="Replace contribution titles by reference "
-                                    onChange={() => setReplaceTitles(v => !v)}
-                                    checked={replaceTitles}
-                                />
-                                {'. '}
-                            </Tooltip>
-                            <br />
-                            <CustomInput
-                                className="float-left"
-                                type="checkbox"
-                                id="includeFootnote"
-                                label="Include a persistent link to this page as a footnote "
-                                onChange={() => setIncludeFootnote(v => !v)}
-                                checked={includeFootnote}
-                            />
-                            {'. '}
+                                    id="includeFootnote"
+                                    onChange={() => setIncludeFootnote(v => !v)}
+                                    checked={includeFootnote}
+                                />{' '}
+                                <Label check for="includeFootnote" className="mb-0">
+                                    Include a persistent link to this page as a footnote.
+                                </Label>
+                            </FormGroup>
                         </div>
 
                         <CopyToClipboard
@@ -352,7 +356,7 @@ function ExportToLatex(props) {
                                 toast.success(`Latex copied!`);
                             }}
                         >
-                            <Button color="primary" className="pl-3 pr-3 float-right" size="sm">
+                            <Button color="primary" className="ps-3 pe-3 float-end" size="sm">
                                 <Icon icon={faClipboard} /> Copy to clipboard
                             </Button>
                         </CopyToClipboard>
@@ -371,7 +375,7 @@ function ExportToLatex(props) {
                                 toast.success(`Bibtex copied!`);
                             }}
                         >
-                            <Button color="primary" className="pl-3 pr-3 float-right" size="sm">
+                            <Button color="primary" className="ps-3 pe-3 float-end" size="sm">
                                 <Icon icon={faClipboard} /> Copy to clipboard
                             </Button>
                         </CopyToClipboard>

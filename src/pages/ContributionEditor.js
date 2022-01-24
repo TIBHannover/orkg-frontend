@@ -1,6 +1,6 @@
 import { faPlusCircle, faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { loadContributions, removeContributions } from 'actions/contributionEditor';
+import { contributionsRemoved, loadContributions } from 'slices/contributionEditorSlice';
 import CreateProperty from 'components/ContributionEditor/CreateProperty';
 import EditorTable from 'components/ContributionEditor/EditorTable';
 import useContributionEditor from 'components/ContributionEditor/hooks/useContributionEditor';
@@ -60,7 +60,7 @@ const ContributionEditor = () => {
         // check if contributions are removed
         const contributionIdsToRemove = Object.keys(contributions).filter(id => !contributionIds.includes(id));
         if (contributionIdsToRemove.length) {
-            dispatch(removeContributions(contributionIdsToRemove));
+            dispatch(contributionsRemoved(contributionIdsToRemove));
         }
     }, [contributionIds, contributions, dispatch, hasFailed, isLoading]);
 
@@ -81,13 +81,13 @@ const ContributionEditor = () => {
         setIsOpenCreateContribution(false);
     };
 
-    const handleCreatePaper = contributionId => {
+    const handleCreatePaper = ({ contributionId }) => {
         handleAddContributions([contributionId]);
         setIsOpenCreatePaper(false);
     };
 
     const contributionAmount = contributionIds.length;
-    const containerStyle = contributionAmount > 3 ? { maxWidth: 'calc(100% - 20px)' } : undefined;
+    const containerStyle = contributionAmount > 2 ? { maxWidth: 'calc(100% - 20px)' } : undefined;
 
     // if is loading and there are no contributions in the store, it means it is loading for the first time
     const isLoadingInit = Object.keys(contributions).length === 0 && isLoading;
@@ -129,7 +129,7 @@ const ContributionEditor = () => {
                         contributions cannot be edited. <br />
                         Meanwhile, you can visit{' '}
                         <a href="https://paperswithcode.com/" target="_blank" rel="noopener noreferrer">
-                            paperswithcode <Icon icon={faExternalLinkAlt} className="mr-1" />
+                            paperswithcode <Icon icon={faExternalLinkAlt} className="me-1" />
                         </a>{' '}
                         website to suggest changes.
                     </Alert>

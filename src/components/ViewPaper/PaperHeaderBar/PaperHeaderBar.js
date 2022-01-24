@@ -40,7 +40,7 @@ function PaperHeaderBar(props) {
                     <div className="title flex-grow-1 text-truncate">
                         {props.editMode ? (
                             <>
-                                Edit mode <span className="pl-2">Every change you make is automatically saved</span>
+                                Edit mode <span className="ps-2">Every change you make is automatically saved</span>
                             </>
                         ) : (
                             props.paperTitle

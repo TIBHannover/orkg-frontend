@@ -29,8 +29,8 @@ const ResearchField = () => {
                         <LastUpdatesBox researchFieldId={researchFieldId} />
                     </Col>
                     <Col md="4" className="mt-3 mt-md-0">
-                        <div className="box rounded-lg flex-grow-1" style={{ overflow: 'hidden' }}>
-                            <h5 className="pr-3 pl-3 pt-3 pb-2 m-0">Observatories</h5>
+                        <div className="box rounded-3 flex-grow-1" style={{ overflow: 'hidden' }}>
+                            <h5 className="pe-3 ps-3 pt-3 pb-2 m-0">Observatories</h5>
                             <hr className="mb-3 mt-0" />
                             <ObservatoriesCarousel observatories={observatories} isLoading={isLoadingObservatories} />
                         </div>

@@ -1,18 +1,5 @@
 import { useState, useEffect } from 'react';
-import {
-    Modal,
-    ModalHeader,
-    ModalBody,
-    ModalFooter,
-    Input,
-    Button,
-    Label,
-    FormGroup,
-    Alert,
-    CustomInput,
-    InputGroupAddon,
-    InputGroup
-} from 'reactstrap';
+import { Modal, ModalHeader, ModalBody, ModalFooter, Input, Button, Label, FormGroup, Alert, InputGroup } from 'reactstrap';
 import { toast } from 'react-toastify';
 import ROUTES from 'constants/routes.js';
 import PropTypes from 'prop-types';
@@ -46,7 +33,7 @@ import { slugify } from 'utils';
 import { PREDICATES, CLASSES, ENTITIES, MISC } from 'constants/graphSettings';
 import env from '@beam-australia/react-env';
 
-const StyledCustomInput = styled(CustomInput)`
+const StyledCustomInput = styled(Input)`
     margin-right: 0;
 `;
 
@@ -102,7 +89,7 @@ function Publish(props) {
     useEffect(() => {
         setTitle(props.metaData && props.metaData.title ? props.metaData.title : '');
         setDescription(props.metaData && props.metaData.description ? props.metaData.description : '');
-        setReferences(props.metaData?.references && props.metaData.references.length > 0 ? props.metaData.references : ['']);
+        setReferences(props.metaData?.references?.length > 0 ? props.metaData.references.map(r => r.label) : ['']);
         setSubject(props.metaData && props.metaData.subject ? props.metaData.subject : undefined);
         setComparisonCreators(props.authors ? props.authors : []);
     }, [props.metaData, props.authors]);
@@ -360,19 +347,17 @@ function Publish(props) {
                                 value={`${props.publicURL}${reverse(ROUTES.COMPARISON, { comparisonId: props.comparisonId })}`}
                                 disabled
                             />
-                            <InputGroupAddon addonType="append">
-                                <CopyToClipboard
-                                    text={`${props.publicURL}${reverse(ROUTES.COMPARISON, { comparisonId: props.comparisonId })}`}
-                                    onCopy={() => {
-                                        toast.dismiss();
-                                        toast.success(`Comparison link copied!`);
-                                    }}
-                                >
-                                    <Button color="primary" className="pl-3 pr-3" style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}>
-                                        <Icon icon={faClipboard} />
-                                    </Button>
-                                </CopyToClipboard>
-                            </InputGroupAddon>
+                            <CopyToClipboard
+                                text={`${props.publicURL}${reverse(ROUTES.COMPARISON, { comparisonId: props.comparisonId })}`}
+                                onCopy={() => {
+                                    toast.dismiss();
+                                    toast.success(`Comparison link copied!`);
+                                }}
+                            >
+                                <Button color="primary" className="ps-3 pe-3" style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}>
+                                    <Icon icon={faClipboard} />
+                                </Button>
+                            </CopyToClipboard>
                         </InputGroup>
                     </FormGroup>
                 )}
@@ -381,19 +366,17 @@ function Publish(props) {
                         <Label for="doi_link">DOI</Label>
                         <InputGroup>
                             <Input id="doi_link" value={`https://doi.org/${props.doi}`} disabled />
-                            <InputGroupAddon addonType="append">
-                                <CopyToClipboard
-                                    text={`https://doi.org/${props.doi}`}
-                                    onCopy={() => {
-                                        toast.dismiss();
-                                        toast.success(`DOI link copied!`);
-                                    }}
-                                >
-                                    <Button color="primary" className="pl-3 pr-3" style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}>
-                                        <Icon icon={faClipboard} />
-                                    </Button>
-                                </CopyToClipboard>
-                            </InputGroupAddon>
+                            <CopyToClipboard
+                                text={`https://doi.org/${props.doi}`}
+                                onCopy={() => {
+                                    toast.dismiss();
+                                    toast.success(`DOI link copied!`);
+                                }}
+                            >
+                                <Button color="primary" className="ps-3 pe-3" style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}>
+                                    <Icon icon={faClipboard} />
+                                </Button>
+                            </CopyToClipboard>
                         </InputGroup>
                     </FormGroup>
                 )}
@@ -413,8 +396,10 @@ function Publish(props) {
                                     type="switch"
                                     name="customSwitch"
                                     inline
-                                    label="Assign a DOI to the comparison"
-                                />
+                                />{' '}
+                                <Label for="switchAssignDoi" className="mb-0">
+                                    Assign a DOI to the comparison
+                                </Label>
                             </Tooltip>
                         </div>
                     </FormGroup>
@@ -472,12 +457,12 @@ function Publish(props) {
                                                 onChange={e => handleReferenceChange(e, i)}
                                             />
                                             {!Boolean(props.comparisonId) && (
-                                                <InputGroupAddon addonType="append">
+                                                <>
                                                     {references.length !== 1 && (
                                                         <Button
                                                             color="light"
                                                             onClick={() => handleRemoveReferenceClick(i)}
-                                                            className="pl-3 pr-3"
+                                                            className="ps-3 pe-3"
                                                             style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
                                                         >
                                                             <Icon icon={faTrash} />
@@ -487,14 +472,14 @@ function Publish(props) {
                                                         <Button
                                                             color="secondary"
                                                             onClick={() => setReferences([...references, ''])}
-                                                            className="pl-3 pr-3"
+                                                            className="ps-3 pe-3"
                                                             outline
                                                             style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
                                                         >
                                                             <Icon icon={faPlus} />
                                                         </Button>
                                                     )}
-                                                </InputGroupAddon>
+                                                </>
                                             )}
                                         </InputGroup>
                                     );
@@ -557,7 +542,10 @@ function Publish(props) {
                                             name="customSwitch"
                                             inline
                                             label="Assign a DOI to the comparison"
-                                        />
+                                        />{' '}
+                                        <Label for="switchAssignDoi" className="mb-0">
+                                            Assign a DOI to the comparison
+                                        </Label>
                                     </Tooltip>
                                 </div>
                             </FormGroup>

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Input } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
@@ -339,7 +338,7 @@ export const createValueSelectors = ref => {
                                             <Button
                                                 size="sm"
                                                 color="primary"
-                                                className="px-2 ml-2"
+                                                className="px-2 ms-2"
                                                 //style={{ marginLeft: '5px', padding: '3px', height: ' 32px', minWidth: '82px' }}
                                                 onClick={() => {
                                                     addYAxisInterval(ref, id);
@@ -395,7 +394,7 @@ const createIntervalSelectors = (ref, id, possibleValueCandidates) => {
     if (yAxisIntervals && yAxisIntervals.length > 0) {
         return yAxisIntervals.map((interval, interval_id) => {
             return (
-                <div key={'IntervalKey_' + interval_id} className="ml-4 mt-1">
+                <div key={'IntervalKey_' + interval_id} className="ms-4 mt-1">
                     <DeleteButton
                         color="link"
                         onClick={() => {

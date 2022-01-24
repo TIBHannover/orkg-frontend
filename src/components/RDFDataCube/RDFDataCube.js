@@ -13,13 +13,14 @@ import {
     DropdownItem,
     DropdownMenu,
     DropdownToggle,
-    InputGroupAddon,
     InputGroup
 } from 'reactstrap';
+import { selectResource, fetchStatementsForResource, createResource } from 'actions/statementBrowser';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner, faEllipsisV, faSortUp, faSortDown } from '@fortawesome/free-solid-svg-icons';
 import { getStatementsBySubject, getStatementsByObject } from 'services/backend/statements';
 import { getClasses } from 'services/backend/classes';
+import { useDispatch, useSelector } from 'react-redux';
 import { useTable, usePagination, useSortBy, useFilters } from 'react-table';
 import { sortMethod } from 'utils';
 import CUBE from 'olap-cube';
@@ -53,6 +54,36 @@ const RDFDataCube = props => {
     const [dimensions, setDimensions] = useState({});
     const [measures, setMeasures] = useState({});
     const [attributes, setAttributes] = useState({});
+    const value = useSelector(state => state.statementBrowser.values.byId[props.id]);
+    const resource = useSelector(state => state.statementBrowser.resources.byId[value.resourceId]);
+    const property = useSelector(state => state.statementBrowser.properties.byId[resource.propertyId]);
+    const existingResourceId = resource.existingResourceId;
+    const dispatch = useDispatch();
+
+    const handleResourceClick = r => {
+        dispatch(
+            createResource({
+                label: r.rlabel ? r.rlabel : r.label,
+                existingResourceId: r.id,
+                resourceId: r.id
+            })
+        );
+
+        dispatch(
+            selectResource({
+                increaseLevel: true,
+                resourceId: r.id,
+                label: r.rlabel ? r.rlabel : r.label,
+                propertyLabel: property?.label
+            })
+        );
+
+        dispatch(
+            fetchStatementsForResource({
+                resourceId: r.id
+            })
+        );
+    };
 
     useEffect(() => {
         loadDataCube();
@@ -60,13 +91,13 @@ const RDFDataCube = props => {
     }, []);
 
     const data = useMemo(() => {
-        const label2Resource = resource => {
-            if ((typeof resource === 'string' || resource instanceof String) && resource in resources) {
-                return resources[resource];
-            } else if (typeof resource === 'object' && resource !== null) {
-                return resource;
+        const label2Resource = r => {
+            if ((typeof r === 'string' || r instanceof String) && r in resources) {
+                return resources[r];
+            } else if (typeof r === 'object' && r !== null) {
+                return r;
             } else {
-                return { id: resource, label: resource, rlabel: resource };
+                return { id: r, label: r, rlabel: r };
             }
         };
         return !isDataCubeLoading && !isDataCubeFailedLoading
@@ -83,9 +114,9 @@ const RDFDataCube = props => {
     }, []);
 
     const columns = useMemo(() => {
-        const handleCellClick = resource => {
-            if (resource.type !== 'literal') {
-                props.handleResourceClick(resource);
+        const handleCellClick = r => {
+            if (r.type !== 'literal') {
+                handleResourceClick(r);
                 props.toggleModal();
             }
         };
@@ -98,14 +129,14 @@ const RDFDataCube = props => {
                       accessor: h,
                       sortType: columnsSortMethod,
                       filter: 'text',
-                      Cell: props => (
+                      Cell: innerProps => (
                           <span
-                              onKeyDown={e => (e.keyCode === 13 ? handleCellClick(props.value) : undefined)}
+                              onKeyDown={e => (e.keyCode === 13 ? handleCellClick(innerProps.value) : undefined)}
                               role="button"
                               tabIndex={0}
-                              onClick={() => handleCellClick(props.value)}
+                              onClick={() => handleCellClick(innerProps.value)}
                           >
-                              {props.value.label}
+                              {innerProps.value.label}
                           </span>
                       )
                   };
@@ -188,13 +219,13 @@ const RDFDataCube = props => {
     const loadDataCube = async () => {
         setIsDataCubeLoading(true);
         let resources = {};
-        if (props.resourceId) {
+        if (existingResourceId) {
             // Get all the classes
             let classes = await getClasses({ q: 'qb:', returnContent: true });
             // Convert to an object { class_label: class_ID }
             classes = Object.assign({}, ...classes.map(item => ({ [item.label]: item.id })));
             // Get Data Structure Definition (DSD)
-            const dsd = await getStatementsBySubject({ id: props.resourceId }).then(
+            const dsd = await getStatementsBySubject({ id: existingResourceId }).then(
                 s_dataset => s_dataset.find(s => s.object.classes && s.object.classes.includes(classes['qb:DataStructureDefinition'])).object
             );
             // Get Component Specification
@@ -231,7 +262,7 @@ const RDFDataCube = props => {
                     // Observations (fetch statements of the dataset resource by object)
                     const allDim = Object.assign({}, sDimensions, sMeasures, sAttributes);
                     getStatementsByObject({
-                        id: props.resourceId,
+                        id: existingResourceId,
                         items: 9999,
                         sortBy: 'created_at',
                         desc: true
@@ -338,15 +369,15 @@ const RDFDataCube = props => {
 
     return (
         <Modal isOpen={props.show} toggle={props.toggleModal} size="lg" style={{ maxWidth: '90%' }}>
-            <ModalHeader toggle={props.toggleModal}>View dataset: {props.resourceLabel}</ModalHeader>
+            <ModalHeader toggle={props.toggleModal}>View dataset: {value.label}</ModalHeader>
             <ModalBody>
                 {!isDataCubeLoading && !isDataCubeFailedLoading && (
                     <>
                         {!isDataCubeLoading && !isDataCubeFailedLoading && (
                             <>
-                                <Dropdown className="float-right mb-2" isOpen={dropdownOpen} toggle={toggleDropdown}>
+                                <Dropdown className="float-end mb-2" isOpen={dropdownOpen} toggle={toggleDropdown}>
                                     <DropdownToggle color="secondary" size="sm">
-                                        <span className="mr-2">Options</span> <Icon icon={faEllipsisV} />
+                                        <span className="me-2">Options</span> <Icon icon={faEllipsisV} />
                                     </DropdownToggle>
                                     <DropdownMenu>
                                         <DropdownItem header>Export</DropdownItem>
@@ -356,7 +387,7 @@ const RDFDataCube = props => {
                                                     return { label: { ...measures, ...dimensions, ...attributes }[h].label, key: h + '.label' };
                                                 })}
                                                 data={rows.map(r => r.values)}
-                                                filename={props.resourceLabel + '.csv'}
+                                                filename={value.label + '.csv'}
                                                 className="dropdown-item"
                                                 target="_blank"
                                                 onClick={exportAsCsv}
@@ -382,9 +413,9 @@ const RDFDataCube = props => {
                                                             <span>
                                                                 {column.isSorted ? (
                                                                     column.isSortedDesc ? (
-                                                                        <Icon icon={faSortUp} className="ml-1" />
+                                                                        <Icon icon={faSortUp} className="ms-1" />
                                                                     ) : (
-                                                                        <Icon icon={faSortDown} className="ml-1" />
+                                                                        <Icon icon={faSortDown} className="ms-1" />
                                                                     )
                                                                 ) : (
                                                                     ''
@@ -412,7 +443,7 @@ const RDFDataCube = props => {
                                     </tbody>
                                 </Table>
 
-                                <Pagination aria-label="Page navigation" className="float-left">
+                                <Pagination aria-label="Page navigation" className="float-start">
                                     <PaginationItem title="First page" onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
                                         <PaginationLink first />
                                     </PaginationItem>
@@ -433,9 +464,10 @@ const RDFDataCube = props => {
                                     </PaginationItem>
                                 </Pagination>
 
-                                <div className=" d-flex">
-                                    <InputGroup className="col-2">
-                                        <InputGroupAddon addonType="prepend">Go to page:</InputGroupAddon>
+                                <div className="row">
+                                    <InputGroup>
+                                        <span className="input-group-text">Go to page:</span>
+
                                         <Input
                                             type="number"
                                             defaultValue={pageIndex + 1}
@@ -443,24 +475,23 @@ const RDFDataCube = props => {
                                                 const page = e.target.value ? Number(e.target.value) - 1 : 0;
                                                 gotoPage(page);
                                             }}
-                                            style={{ width: '100px' }}
                                         />
+                                        <Input
+                                            className="d-inline-block"
+                                            type="select"
+                                            name="selectMulti"
+                                            value={pageSize}
+                                            onChange={e => {
+                                                setPageSize(Number(e.target.value));
+                                            }}
+                                        >
+                                            {[10, 20, 30, 40, 50].map(pageSize => (
+                                                <option key={pageSize} value={pageSize}>
+                                                    Show {pageSize}
+                                                </option>
+                                            ))}
+                                        </Input>
                                     </InputGroup>
-                                    <Input
-                                        className="d-inline-block col-1"
-                                        type="select"
-                                        name="selectMulti"
-                                        value={pageSize}
-                                        onChange={e => {
-                                            setPageSize(Number(e.target.value));
-                                        }}
-                                    >
-                                        {[10, 20, 30, 40, 50].map(pageSize => (
-                                            <option key={pageSize} value={pageSize}>
-                                                Show {pageSize}
-                                            </option>
-                                        ))}
-                                    </Input>
                                 </div>
                             </>
                         )}
@@ -486,12 +517,9 @@ const RDFDataCube = props => {
 };
 
 RDFDataCube.propTypes = {
-    resourceLabel: PropTypes.string.isRequired,
-    resourceId: PropTypes.string.isRequired,
-    value: PropTypes.object,
+    id: PropTypes.string.isRequired,
     show: PropTypes.bool.isRequired,
-    toggleModal: PropTypes.func.isRequired,
-    handleResourceClick: PropTypes.func.isRequired
+    toggleModal: PropTypes.func.isRequired
 };
 
 export default RDFDataCube;

@@ -1,9 +1,8 @@
-import { Input, InputGroup, InputGroupAddon, Button, Form, Label } from 'reactstrap';
+import { Input, InputGroup, Button, Form, Label, FormGroup } from 'reactstrap';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
 import { withRouter } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
-import { CustomInput } from 'reactstrap';
 import { ENTITIES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes.js';
 import { reverse } from 'named-urls';
@@ -41,25 +40,27 @@ const Filters = props => {
                     name="value"
                 />
 
-                <InputGroupAddon addonType="append">
-                    <Button type="submit" color="secondary" className="pl-2 pr-2">
-                        <FontAwesomeIcon icon={faSearch} />
-                    </Button>
-                </InputGroupAddon>
+                <Button type="submit" color="secondary" className="ps-2 pe-2">
+                    <FontAwesomeIcon icon={faSearch} />
+                </Button>
             </InputGroup>
             <hr className="mt-4 mb-3" />
 
             <Label>Filter by type</Label>
 
             {props.defaultsFilters.map(filter => (
-                <CustomInput
-                    type="checkbox"
-                    id={'filter' + filter.id}
-                    key={`filter-${filter.id}`}
-                    label={<span>{filter.label}</span>}
-                    onChange={() => props.toggleFilter(filter)}
-                    checked={props.selectedFilters.map(sf => sf.id).includes(filter.id)}
-                />
+                <FormGroup check className="mb-0">
+                    <Input
+                        type="checkbox"
+                        id={'filter' + filter.id}
+                        key={`filter-${filter.id}`}
+                        onChange={() => props.toggleFilter(filter)}
+                        checked={props.selectedFilters.map(sf => sf.id).includes(filter.id)}
+                    />
+                    <Label check for={'filter' + filter.id} className="mb-0">
+                        <span>{filter.label}</span>
+                    </Label>
+                </FormGroup>
             ))}
             <br />
             <Label for="other-filters">Other filters</Label>

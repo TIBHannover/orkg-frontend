@@ -181,7 +181,7 @@ function Benchmark() {
                         </ContentLoader>
                     </div>
                     <div className="text-center mt-4 mb-4 p-5 container box rounded">
-                        <div className="text-left">
+                        <div className="text-start">
                             <ContentLoader
                                 speed={2}
                                 width={400}
@@ -216,13 +216,13 @@ function Benchmark() {
                                     component={Button}
                                     size="sm"
                                     color="secondary"
-                                    className="float-right"
+                                    className="float-end"
                                     onClick={() => setEditMode(v => !v)}
                                 >
                                     <Icon icon={faPen} /> Edit
                                 </RequireAuthentication>
-                                <ButtonDropdown isOpen={menuOpen} toggle={() => setMenuOpen(v => !v)} nav inNavbar>
-                                    <DropdownToggle size="sm" color="secondary" className="px-3 rounded-right" style={{ marginLeft: 2 }}>
+                                <ButtonDropdown isOpen={menuOpen} toggle={() => setMenuOpen(v => !v)}>
+                                    <DropdownToggle size="sm" color="secondary" className="px-3 rounded-end" style={{ marginLeft: 2 }}>
                                         <Icon icon={faEllipsisV} />
                                     </DropdownToggle>
                                     <DropdownMenu right>
@@ -275,44 +275,46 @@ function Benchmark() {
                 <div>
                     <Container className="d-flex align-items-center mt-4 mb-4">
                         <div className="d-flex flex-grow-1">
-                            <h1 className="h5 flex-shrink-0 mb-0">Performance trend</h1>
+                            <h1 className="h5 mb-0">Performance trend</h1>
                         </div>
-                        <ButtonGroup size="sm">
-                            <Button disabled>Research problem</Button>
-                            <UncontrolledButtonDropdown className="flex-shrink-0 mr-2">
-                                <DropdownToggle caret size="sm" color="secondary">
-                                    {problemData.label}
-                                </DropdownToggle>
-                                <DropdownMenu>
-                                    {datasetProblems.map((rp, index) => (
-                                        <DropdownItem
-                                            key={index}
-                                            disabled={isLoading}
-                                            onClick={() => history.push(reverse(ROUTES.BENCHMARK, { datasetId: datasetId, problemId: rp.id }))}
-                                        >
-                                            {rp.label}
-                                        </DropdownItem>
-                                    ))}
-                                </DropdownMenu>
-                            </UncontrolledButtonDropdown>
-                        </ButtonGroup>
-                        {metrics?.length > 0 && (
+                        <div>
                             <ButtonGroup size="sm">
-                                <Button disabled>Metric</Button>
-                                <UncontrolledButtonDropdown className="flex-shrink-0 ml-auto">
+                                <Button disabled>Research problem</Button>
+                                <UncontrolledButtonDropdown className="flex-shrink-0 me-2">
                                     <DropdownToggle caret size="sm" color="secondary">
-                                        {selectedMetric}
+                                        {problemData.label}
                                     </DropdownToggle>
                                     <DropdownMenu>
-                                        {metrics.map((m, index) => (
-                                            <DropdownItem key={index} disabled={isLoading} onClick={() => setSelectedMetric(m)}>
-                                                {m}
+                                        {datasetProblems.map((rp, index) => (
+                                            <DropdownItem
+                                                key={index}
+                                                disabled={isLoading}
+                                                onClick={() => history.push(reverse(ROUTES.BENCHMARK, { datasetId: datasetId, problemId: rp.id }))}
+                                            >
+                                                {rp.label}
                                             </DropdownItem>
                                         ))}
                                     </DropdownMenu>
                                 </UncontrolledButtonDropdown>
                             </ButtonGroup>
-                        )}
+                            {metrics?.length > 0 && (
+                                <ButtonGroup size="sm" className="mt-md-0 mt-sm-1">
+                                    <Button disabled>Metric</Button>
+                                    <UncontrolledButtonDropdown className="flex-shrink-0 ms-auto">
+                                        <DropdownToggle caret size="sm" color="secondary">
+                                            {selectedMetric}
+                                        </DropdownToggle>
+                                        <DropdownMenu>
+                                            {metrics.map((m, index) => (
+                                                <DropdownItem key={index} disabled={isLoading} onClick={() => setSelectedMetric(m)}>
+                                                    {m}
+                                                </DropdownItem>
+                                            ))}
+                                        </DropdownMenu>
+                                    </UncontrolledButtonDropdown>
+                                </ButtonGroup>
+                            )}
+                        </div>
                     </Container>
 
                     <Container className="p-0">
@@ -383,10 +385,10 @@ function Benchmark() {
                                                     <div className="d-flex" {...column.getHeaderProps(column.getSortByToggleProps())}>
                                                         {column.render('Header')}
                                                         {/* Add a sort direction indicator */}
-                                                        <div className="ml-1">
+                                                        <div className="ms-1">
                                                             {column.isSorted ? (
                                                                 column.isSortedDesc ? (
-                                                                    <Icon icon={faSortUp} className="ml-1" />
+                                                                    <Icon icon={faSortUp} className="ms-1" />
                                                                 ) : (
                                                                     <Icon icon={faSortDown} />
                                                                 )

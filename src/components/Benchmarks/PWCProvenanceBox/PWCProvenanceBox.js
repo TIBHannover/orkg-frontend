@@ -20,7 +20,7 @@ export default function PWCProvenanceBox() {
             <a href="https://paperswithcode.com/" target="_blank" rel="noopener noreferrer" className="text-center">
                 <PWCProvenanceBoxStyled>
                     <small>Data originally imported from</small>
-                    <img className="p-2" src={PWC_LOGO} alt="papers with code logo" style={{ maxWidth: 200, maxHeight: 60 }} />
+                    <img className="py-2 w-100" src={PWC_LOGO} alt="papers with code logo" style={{ maxWidth: 200, maxHeight: 60 }} />
                 </PWCProvenanceBoxStyled>
             </a>
         </div>

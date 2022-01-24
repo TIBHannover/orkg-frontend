@@ -3,9 +3,9 @@ import TableCellButtons from 'components/ContributionEditor/TableCellButtons';
 import { Properties, PropertiesInner } from 'components/Comparison/styled';
 import PropTypes from 'prop-types';
 import { memo, useState } from 'react';
-import Confirm from 'reactstrap-confirm';
+import Confirm from 'components/Confirmation/Confirmation';
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteProperty, updateProperty } from 'actions/contributionEditor';
+import { deleteProperty, updateProperty } from 'slices/contributionEditorSlice';
 import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
 import { upperFirst } from 'lodash';
 import { Button } from 'reactstrap';
@@ -41,8 +41,7 @@ const TableHeaderRow = ({ property }) => {
                     The property <strong>{property.label}</strong> and its corresponding values will be deleted for <strong>all contributions</strong>{' '}
                     currently in the editor
                 </span>
-            ),
-            cancelColor: 'light'
+            )
         });
 
         if (result) {
@@ -80,7 +79,7 @@ const TableHeaderRow = ({ property }) => {
             <Properties className="columnProperty" onDoubleClick={handleStartEdit}>
                 <PropertiesInner cellPadding={10}>
                     <div className="position-relative">
-                        <Button onClick={() => setIsOpenStatementBrowser(true)} color="link" className="text-light m-0 p-0 text-left">
+                        <Button onClick={() => setIsOpenStatementBrowser(true)} color="link" className="text-light m-0 p-0 text-start">
                             {upperFirst(property.label)}
                         </Button>
                         {pwcStatementIds.length === 0 && (

@@ -39,7 +39,7 @@ const ResearchProblemsBox = ({ observatoryId, organizationsList }) => {
     };
 
     return (
-        <div className="box rounded-lg p-4 flex-grow-1">
+        <div className="box rounded-3 p-4 flex-grow-1">
             <h5>Research Problems</h5>
             {!!user && user.isCurationAllowed && (
                 <Button outline size="sm" style={{ float: 'right', marginTop: '-33px' }} onClick={() => setShowAddResearchProblemDialog(v => !v)}>

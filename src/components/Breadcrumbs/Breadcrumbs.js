@@ -115,17 +115,17 @@ function Breadcrumbs(props) {
                             parentResearchFields.map((field, index) => (
                                 <span key={field.id}>
                                     {index !== parentResearchFields.length - 1 || !props.disableLastField
-                                        ? renderLink(field, index === 0 ? <Icon className="mr-1" icon={faHome} /> : field.label, index)
+                                        ? renderLink(field, index === 0 ? <Icon className="me-1" icon={faHome} /> : field.label, index)
                                         : field.label}
                                     {index !== parentResearchFields.length - 1 && (
                                         <Dropdown tag="span" isOpen={isOpen[index]} toggle={() => handleClickArrow(index)}>
                                             <DropdownToggle
                                                 style={{ cursor: 'pointer', width: '15px', display: 'inline-block' }}
                                                 tag="span"
-                                                className="flex-1 ml-2 mr-2"
+                                                className="flex-1 ms-2 me-2"
                                             >
                                                 <Icon
-                                                    className={isOpen[index] ? 'mr-1' : ''}
+                                                    className={isOpen[index] ? 'me-1' : ''}
                                                     icon={isOpen[index] ? faAngleDoubleDown : faAngleDoubleRight}
                                                 />
                                             </DropdownToggle>
@@ -143,7 +143,7 @@ function Breadcrumbs(props) {
                                                             )}
                                                     </>
                                                 ) : (
-                                                    <Icon className="ml-3" icon={faSpinner} spin />
+                                                    <Icon className="ms-3" icon={faSpinner} spin />
                                                 )}
                                             </DropdownMenu>
                                         </Dropdown>

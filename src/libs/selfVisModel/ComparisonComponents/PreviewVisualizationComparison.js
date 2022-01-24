@@ -21,11 +21,7 @@ function PreviewVisualizationComparison(props) {
             const visDataCalls = getStatementsBySubjects({ ids: props.visualizations.map(v => v.id) }).then(visualizationsStatements => {
                 const visualizations = visualizationsStatements.map(visualizationStatements => {
                     const resourceSubject = find(props.visualizations, { id: visualizationStatements.id });
-                    return getVisualizationData(
-                        visualizationStatements.id,
-                        visualizationStatements && resourceSubject.label ? resourceSubject.label : 'No Title',
-                        visualizationStatements.statements
-                    );
+                    return getVisualizationData(resourceSubject, visualizationStatements.statements);
                 });
                 return visualizations;
             });

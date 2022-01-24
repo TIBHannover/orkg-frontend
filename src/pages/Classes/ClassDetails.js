@@ -15,8 +15,7 @@ import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes.js';
 import { useLocation } from 'react-router-dom';
-import { CLASS_TYPE_ID } from 'constants/misc';
-import { CLASSES, PREDICATES } from 'constants/graphSettings';
+import { CLASSES, PREDICATES, ENTITIES } from 'constants/graphSettings';
 import TitleBar from 'components/TitleBar/TitleBar';
 
 function ClassDetails(props) {
@@ -68,7 +67,7 @@ function ClassDetails(props) {
 
     return (
         <>
-            {isLoading && <Container className="box rounded pt-4 pb-4 pl-5 pr-5 mt-5 clearfix">Loading ...</Container>}
+            {isLoading && <Container className="box rounded pt-4 pb-4 ps-5 pe-5 mt-5 clearfix">Loading ...</Container>}
             {!isLoading && error && <>{error.statusCode === 404 ? <NotFound /> : <InternalServerError />}</>}
             {!isLoading && !error && (
                 <>
@@ -79,7 +78,7 @@ function ClassDetails(props) {
                                 <RequireAuthentication
                                     component={Link}
                                     to={`${ROUTES.ADD_RESOURCE}?classes=${props.match.params.id}`}
-                                    className="float-right btn btn-secondary flex-shrink-0 btn-sm"
+                                    className="float-end btn btn-secondary flex-shrink-0 btn-sm"
                                     style={{ marginRight: 2 }}
                                 >
                                     <Icon icon={faPlus} /> Add resource
@@ -97,7 +96,7 @@ function ClassDetails(props) {
                             </i>
                         )}
                     </TitleBar>
-                    <Container className="box rounded pt-4 pb-4 pl-5 pr-5">
+                    <Container className="box rounded pt-4 pb-4 ps-5 pe-5">
                         <Table bordered>
                             <tbody>
                                 <tr>
@@ -159,7 +158,7 @@ function ClassDetails(props) {
                         </div>
                         <div className="clearfix">
                             <StatementBrowser
-                                rootNodeType={CLASS_TYPE_ID}
+                                rootNodeType={ENTITIES.CLASS}
                                 enableEdit={editMode}
                                 syncBackend={editMode}
                                 openExistingResourcesInDialog={false}

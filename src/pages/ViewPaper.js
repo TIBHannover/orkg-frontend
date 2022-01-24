@@ -1,8 +1,8 @@
-import { Container, Alert, UncontrolledAlert } from 'reactstrap';
+import { Container, UncontrolledAlert } from 'reactstrap';
 import NotFound from 'pages/NotFound';
 import ContentLoader from 'react-content-loader';
 import { useParams, useLocation } from 'react-router-dom';
-import Contributions from 'components/ViewPaper/Contributions';
+import Contributions from 'components/ViewPaper/Contributions/Contributions';
 import useViewPaper from 'components/ViewPaper/hooks/useViewPaper';
 import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
 import PaperHeader from 'components/ViewPaper/PaperHeader';
@@ -16,6 +16,8 @@ import env from '@beam-australia/react-env';
 import PaperHeaderBar from 'components/ViewPaper/PaperHeaderBar/PaperHeaderBar';
 import PaperMenuBar from 'components/ViewPaper/PaperHeaderBar/PaperMenuBar';
 import styled from 'styled-components';
+import { Helmet } from 'react-helmet';
+import moment from 'moment';
 import TitleBar from 'components/TitleBar/TitleBar';
 
 export const EditModeHeader = styled(Container)`
@@ -36,7 +38,7 @@ export const Title = styled.div`
 `;
 
 const ViewPaper = () => {
-    const { resourceId, contributionId } = useParams();
+    const { resourceId } = useParams();
     const location = useLocation();
     const viewPaper = useSelector(state => state.viewPaper);
     const paperLink = useSelector(state =>
@@ -52,24 +54,43 @@ const ViewPaper = () => {
         isLoadingFailed,
         showHeaderBar,
         editMode,
+        showGraphModal,
         toggle,
         handleShowHeaderBar,
-        isLoadingContributionFailed,
-        selectedContribution,
-        contributions,
-        handleChangeContributionLabel,
         setEditMode,
-        handleCreateContribution,
-        toggleDeleteContribution,
-        setShowGraphModal,
-        showGraphModal
+        setShowGraphModal
     } = useViewPaper({
-        paperId: resourceId,
-        contributionId
+        paperId: resourceId
     });
 
     let comingFromWizard = queryString.parse(location.search);
     comingFromWizard = comingFromWizard ? comingFromWizard.comingFromWizard === 'true' : false;
+
+    const getSEODescription = () => {
+        return `Published: ${viewPaper.publicationMonth ? moment(viewPaper.publicationMonth.label, 'M').format('MMMM') : ''} ${
+            viewPaper.publicationYear ? viewPaper.publicationYear.label : ''
+        } • Research field: ${viewPaper?.researchField?.label} • Authors: ${viewPaper?.authors?.map(author => author.label).join(', ')}`;
+    };
+
+    const ldJson = {
+        mainEntity: {
+            headline: viewPaper.paperResource?.label,
+            description: getSEODescription(),
+            ...(viewPaper?.doi?.label ? { sameAs: `https://doi.org/${viewPaper.doi.label}` } : {}),
+            author: viewPaper?.authors?.map(author => ({
+                name: author.label,
+                ...(author.orcid ? { url: `http://orcid.org/${author.orcid}` } : {}),
+                '@type': 'Person'
+            })),
+            datePublished: `${viewPaper?.publicationMonth ? moment(viewPaper?.publicationMonth?.label, 'M').format('MMMM') : ''} ${
+                viewPaper?.publicationYear ? viewPaper?.publicationYear?.label : ''
+            }`,
+            about: viewPaper?.researchField?.label,
+            '@type': 'ScholarlyArticle'
+        },
+        '@context': 'https://schema.org',
+        '@type': 'WebPage'
+    };
 
     return (
         <div>
@@ -86,8 +107,15 @@ const ViewPaper = () => {
                             paperTitle={viewPaper.paperResource.label}
                         />
                     )}
-
                     <Breadcrumbs researchFieldId={viewPaper.researchField ? viewPaper.researchField.id : null} />
+
+                    <Helmet>
+                        <title>{`${viewPaper.paperResource?.label ?? 'Paper'} - ORKG`}</title>
+                        <meta property="og:title" content={`${viewPaper.paperResource?.label} - ORKG`} />
+                        <meta property="og:type" content="article" />
+                        <meta property="og:description" content={getSEODescription()} />
+                        <script type="application/ld+json">{JSON.stringify(ldJson)}</script>
+                    </Helmet>
 
                     <VisibilitySensor onChange={handleShowHeaderBar}>
                         <TitleBar
@@ -109,15 +137,15 @@ const ViewPaper = () => {
                     {editMode && (
                         <EditModeHeader className="box rounded-top">
                             <Title>
-                                Edit mode <span className="pl-2">Every change you make is automatically saved</span>
+                                Edit mode <span className="ps-2">Every change you make is automatically saved</span>
                             </Title>
                         </EditModeHeader>
                     )}
                     <Container
-                        className={`box pt-md-4 pb-md-4 pl-md-5 pr-md-5 pt-sm-2 pb-sm-2 pl-sm-2 pr-sm-2 clearfix position-relative 
+                        className={`box pt-md-4 pb-md-4 ps-md-5 pe-md-5 pt-sm-2 pb-sm-2 ps-sm-2 pe-sm-2 clearfix position-relative 
                                 ${editMode ? 'rounded-bottom' : 'rounded'}`}
                     >
-                        <ShareLinkMarker typeOfLink="paper" title={viewPaper.paperResource.label} />
+                        {!isLoading && <ShareLinkMarker typeOfLink="paper" title={viewPaper.paperResource.label} />}
 
                         {isLoading && (
                             <ContentLoader
@@ -150,29 +178,13 @@ const ViewPaper = () => {
                                 <PaperHeader editMode={editMode} />
                             </>
                         )}
-                        {!isLoadingFailed && !isLoadingContributionFailed && (
+                        {!isLoading && (
                             <>
                                 <hr className="mt-3" />
 
-                                <Contributions
-                                    selectedContribution={selectedContribution}
-                                    contributions={contributions}
-                                    paperId={resourceId}
-                                    paperTitle={viewPaper.paperResource.label}
-                                    enableEdit={editMode}
-                                    toggleEditMode={() => setEditMode(v => !v)}
-                                    handleChangeContributionLabel={handleChangeContributionLabel}
-                                    handleCreateContribution={handleCreateContribution}
-                                    toggleDeleteContribution={toggleDeleteContribution}
-                                />
+                                <Contributions enableEdit={editMode} toggleEditMode={() => setEditMode(v => !v)} />
 
                                 <ComparisonPopup />
-                            </>
-                        )}
-                        {!isLoadingFailed && isLoadingContributionFailed && (
-                            <>
-                                <hr className="mt-4 mb-5" />
-                                <Alert color="danger">Failed to load contributions.</Alert>
                             </>
                         )}
                     </Container>

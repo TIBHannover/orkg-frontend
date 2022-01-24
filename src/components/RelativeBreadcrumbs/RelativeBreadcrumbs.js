@@ -6,7 +6,6 @@ import ROUTES from 'constants/routes.js';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faEllipsisH, faSpinner, faHome, faAngleDoubleRight } from '@fortawesome/free-solid-svg-icons';
 import { getParentResearchFields } from 'services/backend/statements';
-import { truncate } from 'lodash';
 import PropTypes from 'prop-types';
 import Tippy from '@tippyjs/react';
 import { reverseWithSlug } from 'utils';
@@ -18,17 +17,16 @@ const BreadcrumbStyled = styled.ul`
     font-size: small;
     padding: 0;
 
+    & .truncate {
+        width: 120px;
+        white-space: nowrap;
+        overflow: hidden !important;
+        text-overflow: ellipsis;
+        text-align: left;
+    }
+
     & > li {
         float: left;
-        .fullPath {
-            text-align: left;
-            a {
-                color: #fff;
-                &:hover {
-                    color: ${props => props.theme.primary};
-                }
-            }
-        }
         & > a {
             color: ${props => props.theme.secondary};
             display: block;
@@ -96,6 +94,16 @@ const BreadcrumbStyled = styled.ul`
     }
 `;
 
+const TippyContentStyled = styled.div`
+    text-align: left;
+    a {
+        color: #fff;
+        &:hover {
+            color: ${props => props.theme.primary};
+        }
+    }
+`;
+
 const RelativeBreadcrumbs = ({ researchField }) => {
     const [parentResearchFields, setParentResearchFields] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
@@ -121,10 +129,11 @@ const RelativeBreadcrumbs = ({ researchField }) => {
         <BreadcrumbStyled>
             <li>
                 <Tippy
+                    appendTo={document.body}
                     onTrigger={onTrigger}
                     interactive={true}
                     content={
-                        <div className="fullPath">
+                        <TippyContentStyled>
                             {!isLoading ? (
                                 <small>
                                     {parentResearchFields.map((field, index) => (
@@ -136,28 +145,31 @@ const RelativeBreadcrumbs = ({ researchField }) => {
                                                         : reverseWithSlug(ROUTES.RESEARCH_FIELD, { researchFieldId: field.id, slug: field.label })
                                                 }
                                             >
-                                                {index === 0 ? <Icon className="mr-1" icon={faHome} /> : field.label}
+                                                {index === 0 ? <Icon className="me-1" icon={faHome} /> : field.label}
                                             </Link>
-                                            {index !== parentResearchFields.length - 1 && <Icon className="mr-1 ml-1" icon={faAngleDoubleRight} />}
+                                            {index !== parentResearchFields.length - 1 && <Icon className="me-1 ms-1" icon={faAngleDoubleRight} />}
                                         </span>
                                     ))}
                                 </small>
                             ) : (
                                 <Icon icon={faSpinner} spin />
                             )}
-                        </div>
+                        </TippyContentStyled>
                     }
                 >
                     <Link to={reverseWithSlug(ROUTES.RESEARCH_FIELD, { researchFieldId: researchField.id, slug: researchField.label })}>
-                        <Icon size="sm" icon={faEllipsisH} className="ml-2 mr-1" />
+                        <Icon size="sm" icon={faEllipsisH} className="ms-2 me-1" />
                     </Link>
                 </Tippy>
             </li>
 
             <li>
-                <Tippy content={researchField.label} disabled={researchField.label?.length <= 15}>
-                    <Link to={reverseWithSlug(ROUTES.RESEARCH_FIELD, { researchFieldId: researchField.id, slug: researchField.label })}>
-                        {truncate(researchField.label, { length: 15 })}
+                <Tippy content={researchField.label} disabled={researchField.label?.length <= 18}>
+                    <Link
+                        className="text-decoration-none"
+                        to={reverseWithSlug(ROUTES.RESEARCH_FIELD, { researchFieldId: researchField.id, slug: researchField.label })}
+                    >
+                        <div className="truncate">{researchField.label}</div>
                     </Link>
                 </Tippy>
             </li>
@@ -169,8 +181,7 @@ RelativeBreadcrumbs.propTypes = {
     researchField: PropTypes.shape({
         id: PropTypes.string.isRequired,
         label: PropTypes.string
-    }),
-    maximumLabelLength: PropTypes.number
+    })
 };
 
 export default RelativeBreadcrumbs;

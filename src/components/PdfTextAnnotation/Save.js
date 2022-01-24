@@ -1,19 +1,6 @@
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
-import {
-    Modal,
-    ModalBody,
-    ModalHeader,
-    Alert,
-    Input,
-    ModalFooter,
-    Button,
-    FormGroup,
-    Label,
-    ButtonGroup,
-    InputGroupAddon,
-    InputGroup
-} from 'reactstrap';
+import { Modal, ModalBody, ModalHeader, Alert, Input, ModalFooter, Button, FormGroup, Label, ButtonGroup, InputGroup } from 'reactstrap';
 import { createLiteralStatement } from 'services/backend/statements';
 import { saveFullPaper } from 'services/backend/papers';
 import { createLiteral } from 'services/backend/literals';
@@ -176,18 +163,17 @@ const Save = props => {
                                         <Label for="exampleUrl">Paper DOI</Label>
                                         <InputGroup id="doiInputGroup">
                                             <Input type="url" name="url" value={doi} onChange={e => setDoi(e.target.value)} />
-                                            <InputGroupAddon addonType="append">
-                                                <Button
-                                                    outline
-                                                    color="primary"
-                                                    style={{ minWidth: 130 }}
-                                                    onClick={fetchDoi}
-                                                    disabled={doiIsFetching}
-                                                    data-test="lookupDoi"
-                                                >
-                                                    {!doiIsFetching ? 'Lookup' : <Icon icon={faSpinner} spin />}
-                                                </Button>
-                                            </InputGroupAddon>
+
+                                            <Button
+                                                outline
+                                                color="primary"
+                                                style={{ minWidth: 130 }}
+                                                onClick={fetchDoi}
+                                                disabled={doiIsFetching}
+                                                data-test="lookupDoi"
+                                            >
+                                                {!doiIsFetching ? 'Lookup' : <Icon icon={faSpinner} spin />}
+                                            </Button>
                                         </InputGroup>
                                     </FormGroup>
                                     {paperData.paperTitle && (

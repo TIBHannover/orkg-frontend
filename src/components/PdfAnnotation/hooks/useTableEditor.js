@@ -1,7 +1,6 @@
 import { updateTableData } from 'actions/pdfAnnotation';
 import { useSelector, useDispatch } from 'react-redux';
-import { toast } from 'react-toastify';
-import { isString } from 'lodash';
+import { cloneDeep } from 'lodash';
 
 function useTableEditor(tableId, tableRef) {
     const dispatch = useDispatch();
@@ -35,12 +34,13 @@ function useTableEditor(tableId, tableRef) {
             for (let i = 0; i < colAmount; i++) {
                 const col = selectionStart.col + i;
                 const tableUpdates = [];
-                let newValue = tableData[selectionStart.row][col];
+                const _tableData = cloneDeep(tableData);
+                let newValue = _tableData[selectionStart.row][col];
                 const rowAmount = selectionEnd.row - selectionStart.row;
 
                 for (let i = 1; i <= rowAmount; i++) {
                     tableUpdates.push([selectionStart.row + i, col, null, '']);
-                    newValue += ' ' + tableData[selectionStart.row + i][col];
+                    newValue += ' ' + _tableData[selectionStart.row + i][col];
                 }
 
                 tableUpdates.push([selectionStart.row, col, null, newValue]);
@@ -53,7 +53,9 @@ function useTableEditor(tableId, tableRef) {
         }
     };
 
-    const splitIntoSeveralColumns = (key, selection) => {
+    // disabled function for now, 'tableInstance.alter' cannot be used correctly in combination with redux
+    // the logic to add an extra column should be written as part of 'tableUpdates' which is dispatched to redux
+    /*const splitIntoSeveralColumns = (key, selection) => {
         const separator = prompt('By which character should the values be splitted?', ',');
 
         if (selection.length === 0 || !separator) {
@@ -73,7 +75,7 @@ function useTableEditor(tableId, tableRef) {
             toast.error('Error, splitting by value is only possible when a single column is selected');
             return;
         }
-
+        
         for (const [rowIndex, row] of tableData.entries()) {
             const value = row[selectedCol];
 
@@ -117,9 +119,9 @@ function useTableEditor(tableId, tableRef) {
         }, 100);
 
         toast.success('Columns successfully splitted');
-    };
+    };*/
 
-    return { mergeCellValues, splitIntoSeveralColumns, removeEmptyRows, renderTable };
+    return { mergeCellValues, removeEmptyRows, renderTable };
 }
 
 export default useTableEditor;

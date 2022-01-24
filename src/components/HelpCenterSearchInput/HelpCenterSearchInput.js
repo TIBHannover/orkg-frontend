@@ -2,7 +2,7 @@ import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import { useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
-import { Button, Input, InputGroup, InputGroupAddon } from 'reactstrap';
+import { Button, Input, InputGroup } from 'reactstrap';
 
 const HelpCenterSearchInput = () => {
     const history = useHistory();
@@ -28,9 +28,7 @@ const HelpCenterSearchInput = () => {
                 onKeyDown={handleKeyDown}
             />
 
-            <InputGroupAddon addonType="append">
-                <Button onClick={handleSearch}>Search</Button>
-            </InputGroupAddon>
+            <Button onClick={handleSearch}>Search</Button>
         </InputGroup>
     );
 };

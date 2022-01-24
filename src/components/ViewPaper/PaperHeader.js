@@ -1,18 +1,19 @@
-import { faBars, faCalendar, faCheckCircle, faPen, faTrash, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faCalendar, faCheckCircle, faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { loadPaper } from 'actions/viewPaper';
+import AuthorBadges from 'components/Badges/AuthorBadges/AuthorBadges';
+import ResearchFieldBadge from 'components/Badges/ResearchFieldBadge/ResearchFieldBadge';
 import useDeletePapers from 'components/ViewPaper/hooks/useDeletePapers';
-import { CLASSES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import moment from 'moment';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { Badge, Button } from 'reactstrap';
+import { Button } from 'reactstrap';
+import { getAltMetrics } from 'services/altmetric/index';
 import EditPaperDialog from './EditDialog/EditPaperDialog';
-import { reverseWithSlug } from 'utils';
 
 const PaperHeader = props => {
     const [isOpenEditModal, setIsOpenEditModal] = useState(false);
@@ -20,9 +21,21 @@ const PaperHeader = props => {
     const isCurationAllowed = useSelector(state => state.auth.user?.isCurationAllowed);
     const userId = useSelector(state => state.auth.user?.id);
     const [deletePapers] = useDeletePapers({ paperIds: [viewPaper.paperResource.id], redirect: true });
+    const [altMetrics, setAltMetrics] = useState(null);
     const dispatch = useDispatch();
     const userCreatedThisPaper = viewPaper.paperResource.created_by && userId && viewPaper.paperResource.created_by === userId; // make sure a user is signed in (not null)
     const showDeleteButton = props.editMode && (isCurationAllowed || userCreatedThisPaper);
+
+    useEffect(() => {
+        if (!viewPaper.doi?.label) {
+            return;
+        }
+        const loadAltMetrics = async () => {
+            const altMetrics = await getAltMetrics(viewPaper.doi?.label);
+            setAltMetrics(altMetrics);
+        };
+        loadAltMetrics();
+    }, [viewPaper.doi?.label]);
 
     const handleUpdatePaper = data => {
         // TODO: the viewPaper store should be refactored to directly support the updated data that is passed
@@ -46,39 +59,28 @@ const PaperHeader = props => {
         <>
             <div className="d-flex align-items-start">
                 <h2 className="h4 mt-4 mb-3 flex-grow-1">{viewPaper.paperResource.label ? viewPaper.paperResource.label : <em>No title</em>}</h2>
+                {altMetrics && (
+                    <div className="flex-shrink-0 me-2">
+                        <small>
+                            <a href={altMetrics.details_url} target="_blank" rel="noopener noreferrer">
+                                <img src={altMetrics.images.small} height="60px" alt="Alt metrics icon" />
+                            </a>
+                        </small>
+                    </div>
+                )}
             </div>
 
             <div className="clearfix" />
 
             {(viewPaper.publicationMonth || viewPaper.publicationYear) && (
-                <span className="badge badge-light mr-2">
+                <span className="badge bg-light me-2">
                     <Icon icon={faCalendar} className="text-primary" />{' '}
                     {viewPaper.publicationMonth ? moment(viewPaper.publicationMonth.label, 'M').format('MMMM') : ''}{' '}
                     {viewPaper.publicationYear ? viewPaper.publicationYear.label : ''}
                 </span>
             )}
-            {viewPaper.researchField && viewPaper.researchField.id && (
-                <Link
-                    to={reverseWithSlug(ROUTES.RESEARCH_FIELD, { researchFieldId: viewPaper.researchField.id, slug: viewPaper.researchField.label })}
-                >
-                    <span className="badge badge-light mr-2 mb-2">
-                        <Icon icon={faBars} className="text-primary" /> {viewPaper.researchField.label}
-                    </span>
-                </Link>
-            )}
-            {viewPaper.authors.map((author, index) =>
-                author.classes && author.classes.includes(CLASSES.AUTHOR) ? (
-                    <Link key={index} to={reverse(ROUTES.AUTHOR_PAGE, { authorId: author.id })}>
-                        <Badge color="light" className="mr-2 mb-2" key={index}>
-                            <Icon icon={faUser} className="text-primary" /> {author.label}
-                        </Badge>
-                    </Link>
-                ) : (
-                    <Badge color="light" className="mr-2 mb-2" key={index}>
-                        <Icon icon={faUser} className="text-secondary" /> {author.label}
-                    </Badge>
-                )
-            )}
+            <ResearchFieldBadge researchField={viewPaper.researchField} />
+            <AuthorBadges authors={viewPaper.authors} />
             <br />
             <div className="d-flex justify-content-end align-items-center">
                 {viewPaper.publishedIn && viewPaper.publishedIn.id && (
@@ -120,7 +122,7 @@ const PaperHeader = props => {
                 </div>
                 {isCurationAllowed && viewPaper.verified && (
                     <div className="mt-3 justify-content-end">
-                        <Icon icon={faCheckCircle} className="mt-1 mr-1 text-success" />
+                        <Icon icon={faCheckCircle} className="mt-1 me-1 text-success" />
                         Verified
                     </div>
                 )}

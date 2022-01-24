@@ -2,16 +2,16 @@ import { useState, useEffect } from 'react';
 import { Badge } from 'reactstrap';
 import { Chart } from 'react-google-charts';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faCalendar, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faCalendar, faUser, faLink } from '@fortawesome/free-solid-svg-icons';
 import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
 import moment from 'moment';
 import Tippy from '@tippyjs/react';
-import { RESOURCE_TYPE_ID } from 'constants/misc';
 import ROUTES from 'constants/routes.js';
 import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
+import { ENTITIES } from 'constants/graphSettings';
 
 const VisualizationCard = styled.div`
     margin: 0 2px;
@@ -26,6 +26,11 @@ const DescriptionHeader = styled.div`
     background: ${props => props.theme.primary};
     padding: 5px;
     text-overflow: ellipsis;
+    &::selection,
+    &::-moz-selection {
+        color: ${props => props.theme.secondary};
+        background: ${props => props.theme.light} !important;
+    }
 `;
 
 const SingleVisualizationComponent = props => {
@@ -82,7 +87,14 @@ const SingleVisualizationComponent = props => {
                         // height: windowHeight + 100 + 'px'
                     }}
                 >
-                    <DescriptionHeader>{props.input.label.length > 0 ? 'Title: ' + props.input.label : 'No Title'}</DescriptionHeader>
+                    <DescriptionHeader>
+                        {props.input.label.length > 0 ? 'Title: ' + props.input.label : 'No Title'}
+                        <Tippy content="Go to resource page">
+                            <Link target="_blank" className="ms-2 resourceLink" to={reverse(ROUTES.RESOURCE, { id: props.input.id })}>
+                                <Icon icon={faLink} color="#fff" />
+                            </Link>
+                        </Tippy>
+                    </DescriptionHeader>
                     {isHovering && (
                         <Chart
                             chartType={visMethod}
@@ -111,7 +123,7 @@ const SingleVisualizationComponent = props => {
                             <b>Meta Information:</b> <br />
                             <div className="mb-2">
                                 <i>Created on: </i>
-                                <span className="badge badge-light mr-2">
+                                <span className="badge bg-light me-2">
                                     <Icon icon={faCalendar} className="text-primary" />{' '}
                                     {props.input.created_at ? moment(props.input.created_at).format('dddd, MMMM Do YYYY') : ''}
                                 </span>
@@ -120,10 +132,10 @@ const SingleVisualizationComponent = props => {
                                 <div className="mb-2">
                                     <i>Created by: </i>
                                     {props.input.authors.map(author => {
-                                        if (author && author.class === RESOURCE_TYPE_ID) {
+                                        if (author && author.class === ENTITIES.RESOURCE) {
                                             return (
                                                 <Link
-                                                    className="d-inline-block mr-2 mb-2"
+                                                    className="d-inline-block me-2 mb-2"
                                                     to={reverse(ROUTES.AUTHOR_PAGE, { authorId: author.id })}
                                                     key={`author${author.id}`}
                                                 >
@@ -134,7 +146,7 @@ const SingleVisualizationComponent = props => {
                                             );
                                         } else {
                                             return (
-                                                <Badge key={`author${author.id}`} color="light" className="mr-2 mb-2">
+                                                <Badge key={`author${author.id}`} color="light" className="me-2 mb-2">
                                                     <Icon icon={faUser} /> {author.label}
                                                 </Badge>
                                             );

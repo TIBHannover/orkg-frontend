@@ -62,37 +62,41 @@ export const createObservatory = (observatory_name, organization_id, description
 };
 
 export const getObservatoryAndOrganizationInformation = (observatoryId, organizationId) => {
-    return getObservatoryById(observatoryId).then(obsResponse => {
-        if (organizationId !== MISC.UNKNOWN_ID) {
-            return getOrganization(organizationId)
-                .then(orgResponse => {
-                    return {
-                        id: observatoryId,
-                        name: obsResponse.name,
-                        display_id: obsResponse.display_id,
-                        organization: {
-                            id: organizationId,
-                            name: orgResponse.name,
-                            logo: orgResponse.logo,
-                            display_id: orgResponse.display_id
-                        }
-                    };
-                })
-                .catch(() => {
-                    return {
-                        id: observatoryId,
-                        name: obsResponse.name,
-                        display_id: obsResponse.display_id,
-                        organization: null
-                    };
-                });
-        } else {
-            return {
-                id: observatoryId,
-                name: obsResponse.name,
-                display_id: obsResponse.display_id,
-                organization: null
-            };
-        }
-    });
+    return getObservatoryById(observatoryId)
+        .then(obsResponse => {
+            if (organizationId !== MISC.UNKNOWN_ID) {
+                return getOrganization(organizationId)
+                    .then(orgResponse => {
+                        return {
+                            id: observatoryId,
+                            name: obsResponse.name,
+                            display_id: obsResponse.display_id,
+                            organization: {
+                                id: organizationId,
+                                name: orgResponse.name,
+                                logo: orgResponse.logo,
+                                display_id: orgResponse.display_id
+                            }
+                        };
+                    })
+                    .catch(() => {
+                        return {
+                            id: observatoryId,
+                            name: obsResponse.name,
+                            display_id: obsResponse.display_id,
+                            organization: null
+                        };
+                    });
+            } else {
+                return {
+                    id: observatoryId,
+                    name: obsResponse.name,
+                    display_id: obsResponse.display_id,
+                    organization: null
+                };
+            }
+        })
+        .catch(() => {
+            return null;
+        });
 };

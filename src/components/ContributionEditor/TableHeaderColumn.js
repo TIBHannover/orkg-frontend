@@ -1,7 +1,7 @@
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
-import { updatePaper } from 'actions/contributionEditor';
+import { paperUpdated } from 'slices/contributionEditorSlice';
 import useContributionEditor from 'components/ContributionEditor/hooks/useContributionEditor';
 import { Contribution, Delete, ItemHeader, ItemHeaderInner } from 'components/Comparison/styled';
 import EditPaperDialog from 'components/ViewPaper/EditDialog/EditPaperDialog';
@@ -33,7 +33,7 @@ const TableHeaderColumn = ({ contribution, paper }) => {
         setData(newData);
         setIsOpenEditModal(false);
         dispatch(
-            updatePaper({
+            paperUpdated({
                 id: paper.id,
                 title: newData.paper?.label
             })
@@ -47,7 +47,7 @@ const TableHeaderColumn = ({ contribution, paper }) => {
                     <span>
                         <Button
                             color="link"
-                            className="text-secondary-darker p-0 text-left"
+                            className="text-secondary-darker p-0 text-start text-decoration-none"
                             onClick={env('PWC_USER_ID') !== contribution.created_by ? handleEditPaper : undefined}
                         >
                             {paper.label || <em>No title</em>}

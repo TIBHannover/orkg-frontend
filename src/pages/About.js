@@ -9,7 +9,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import { Link } from 'react-router-dom';
 import { Container, Nav, Navbar, NavItem, Alert } from 'reactstrap';
-import { getAboutPage, getAboutPages } from 'services/cms';
+import { getAboutPage, getAboutPagesMenu, getAboutPages } from 'services/cms';
 import { reverseWithSlug } from 'utils';
 
 const About = () => {
@@ -44,7 +44,10 @@ const About = () => {
         const getMenu = async () => {
             setIsLoadingMenu(true);
             try {
-                const _pages = await getAboutPages();
+                let _pages = await getAboutPagesMenu();
+                if (_pages?.length === 0) {
+                    _pages = await getAboutPages();
+                }
                 setMenuItems(_pages);
             } catch (e) {
                 console.log(e);
@@ -71,7 +74,7 @@ const About = () => {
 
             <TitleBar>About</TitleBar>
 
-            <Container className="box rounded pt-4 pb-4 pl-5 pr-5">
+            <Container className="box rounded pt-4 pb-4 ps-5 pe-5">
                 {!isLoadingMenu && menuItems.length > 0 && (
                     <>
                         <Navbar color="white" expand="md" className="mb-3 p-0">
