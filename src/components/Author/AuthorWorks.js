@@ -2,7 +2,7 @@ import { Container, ListGroupItem, ListGroup } from 'reactstrap';
 import PaperCard from 'components/PaperCard/PaperCard';
 import ComparisonCard from 'components/ComparisonCard/ComparisonCard';
 import VisualizationCard from 'components/VisualizationCard/VisualizationCard';
-import SmartReviewCard from 'components/SmartReviewCard/SmartReviewCard';
+import ReviewCard from 'components/ReviewCard/ReviewCard';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner, faAngleDoubleDown } from '@fortawesome/free-solid-svg-icons';
 import { CLASSES } from 'constants/graphSettings';
@@ -64,7 +64,7 @@ const AuthorWorks = ({ authorId }) => {
             );
         }
         if (item?.classes?.includes(CLASSES.SMART_REVIEW)) {
-            return <SmartReviewCard versions={[item]} showBadge={true} showCurationFlags={false} showAddToComparison={false} key={`c${item.id}`} />;
+            return <ReviewCard versions={[item]} showBadge={true} showCurationFlags={false} showAddToComparison={false} key={`c${item.id}`} />;
         }
         return null;
     }, []);

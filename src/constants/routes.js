@@ -46,11 +46,10 @@ const routes = {
     CSV_IMPORT: '/csv-import',
     BENCHMARKS: '/benchmarks',
     BENCHMARK: '/benchmark/:datasetId/problem/:problemId',
-    SMART_REVIEW: '/smart-review/:id',
-    SMART_REVIEWS: '/smart-reviews',
-    USER_UNPUBLISHED_REVIEWS: '/user-unpublished-reviews',
-    SMART_REVIEW_NEW: '/smart-review/new',
-    SMART_REVIEW_DIFF: '/smart-review/diff/:oldId-:newId',
+    REVIEW: '/review/:id',
+    REVIEWS: '/reviews',
+    REVIEW_NEW: '/review/new',
+    REVIEW_DIFF: '/review/diff/:oldId-:newId',
     TOOLS: '/tools',
     CONTRIBUTION_EDITOR: '/contribution-editor',
     ADD_COMPARISON: '/add-comparison',
@@ -72,4 +71,16 @@ const routes = {
     LITERATURE_LIST_NEW: '/literature-list/new',
     LITERATURE_LIST_DIFF: '/literature-list/diff/:oldId-:newId'
 };
-export default routes;
+/**
+ * Legacy routes are used to redirect old URLs to new ones
+ */
+const legacyRoutes = {
+    SMART_REVIEW: '/smart-review/:id',
+    SMART_REVIEWS: '/smart-reviews',
+    USER_UNPUBLISHED_REVIEWS: '/user-unpublished-reviews',
+    SMART_REVIEW_NEW: '/smart-review/new',
+    SMART_REVIEW_DIFF: '/smart-review/diff/:oldId-:newId'
+};
+const allRoutes = { ...routes, ...legacyRoutes };
+
+export default allRoutes;

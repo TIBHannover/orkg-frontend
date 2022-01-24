@@ -7,7 +7,7 @@ import pdfTextAnnotation from 'reducers/pdfTextAnnotation';
 import viewPaper from 'reducers/viewPaper';
 import pdfAnnotation from 'reducers/pdfAnnotation';
 import addTemplate from 'reducers/addTemplate';
-import smartReview from './smartReview';
+import review from 'reducers/review';
 import literatureList from 'slices/literatureListSlice';
 import contributionEditor from 'slices/contributionEditorSlice';
 
@@ -22,7 +22,7 @@ export default history =>
         auth,
         addTemplate,
         pdfTextAnnotation,
-        smartReview,
+        review,
         contributionEditor,
         literatureList
     });

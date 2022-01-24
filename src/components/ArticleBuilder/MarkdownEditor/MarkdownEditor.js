@@ -17,7 +17,7 @@ import Tippy from '@tippyjs/react';
 import ReactTextareaAutocomplete from '@webscopeio/react-textarea-autocomplete';
 import '@webscopeio/react-textarea-autocomplete/style.css';
 import MarkdownRenderer from 'components/ArticleBuilder/MarkdownEditor/MarkdownRenderer';
-import MarkdownRendererReferences from 'components/SmartReview/MarkdownRenderer';
+import MarkdownRendererReferences from 'components/Review/MarkdownRenderer';
 import { MarkdownPlaceholder } from 'components/ArticleBuilder/styled';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';

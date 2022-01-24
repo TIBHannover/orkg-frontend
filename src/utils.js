@@ -231,11 +231,11 @@ export const getPaperData = (resource, paperStatements) => {
 };
 
 /**
- * Parse smart review statements and return a smart review object
- * @param {Object} resource Smart Review resource
- * @param {Array} statements Smart Review Statements
+ * Parse review statements and return a review object
+ * @param {Object} resource Review resource
+ * @param {Array} statements Review Statements
  */
-export const getSmartReviewData = (resource, statements) => {
+export const getReviewData = (resource, statements) => {
     const description = filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.DESCRIPTION, true);
     const paperId = filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.HAS_PAPER, true)?.id;
     const researchField = filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.HAS_RESEARCH_FIELD, true, CLASSES.RESEARCH_FIELD);
@@ -1158,7 +1158,7 @@ export const getResourceLink = (classId, id) => {
         [CLASSES.TEMPLATE]: [ROUTES.TEMPLATE, 'id'],
         [CLASSES.VISUALIZATION]: [ROUTES.VISUALIZATION, 'id'],
         [CLASSES.CONTRIBUTION]: [ROUTES.CONTRIBUTION, 'id'],
-        [CLASSES.SMART_REVIEW_PUBLISHED]: [ROUTES.SMART_REVIEW, 'id'],
+        [CLASSES.SMART_REVIEW_PUBLISHED]: [ROUTES.REVIEW, 'id'],
         [CLASSES.LITERATURE_LIST_PUBLISHED]: [ROUTES.LITERATURE_LIST, 'id'],
         [ENTITIES.RESOURCE]: [ROUTES.RESOURCE, 'id'],
         [ENTITIES.PREDICATE]: [ROUTES.PROPERTY, 'id'],
@@ -1331,7 +1331,7 @@ export const getDataBasedOnType = (resource, statements) => {
         return getVisualizationData(resource, statements);
     }
     if (resource?.classes?.includes(CLASSES.SMART_REVIEW)) {
-        return getSmartReviewData(resource, statements);
+        return getReviewData(resource, statements);
     } else {
         return undefined;
     }
