@@ -1,7 +1,6 @@
 import useDiff from 'components/DiffView/useDiff';
 import DiffView from 'components/DiffView/DiffView';
 import ROUTES from 'constants/routes';
-import React from 'react';
 import { getResource } from 'services/backend/resources';
 import { getStatementsBySubject } from 'services/backend/statements';
 import { getComparisonData } from 'utils';

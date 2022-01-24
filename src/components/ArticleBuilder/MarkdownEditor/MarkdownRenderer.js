@@ -1,7 +1,6 @@
 import showdownVideoPlugin from 'components/ArticleBuilder/MarkdownEditor/showdownVideoPlugin';
 import { sanitize } from 'dompurify';
 import PropTypes from 'prop-types';
-import React from 'react';
 import * as Showdown from 'showdown';
 import footnotes from 'showdown-footnotes';
 import styled from 'styled-components';

@@ -9,7 +9,6 @@ import { CLASSES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import MarkdownRenderer from 'components/ArticleBuilder/MarkdownEditor/MarkdownRenderer';
 import { reverse } from 'named-urls';
-import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
 import { Alert, Button, Container, ListGroup, ListGroupItem } from 'reactstrap';
