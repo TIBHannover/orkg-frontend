@@ -9,7 +9,7 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { SortableElement } from 'react-sortable-hoc';
 import { Input } from 'reactstrap';
-import Confirm from 'reactstrap-confirm';
+import Confirm from 'components/Confirmation/Confirmation';
 import { deleteSection, updateSectionHeadingLevel, updateSectionMarkdown, updateSectionTitle } from 'slices/literatureListSlice';
 
 const EditSection = ({ section, handleManualSort, atIndex }) => {
@@ -29,8 +29,7 @@ const EditSection = ({ section, handleManualSort, atIndex }) => {
     const handleDelete = async () => {
         const confirm = await Confirm({
             title: 'Are you sure?',
-            message: 'Are you sure you want to delete this section?',
-            cancelColor: 'light'
+            message: 'Are you sure you want to delete this section?'
         });
 
         if (confirm) {
@@ -62,7 +61,7 @@ const EditSection = ({ section, handleManualSort, atIndex }) => {
                     <div className="d-flex align-items-center  border-bottom pb-1 mb-3">
                         <Input
                             aria-label="Select heading level"
-                            className="mr-2"
+                            className="me-2"
                             type="select"
                             style={{ width: 70 }}
                             value={heading?.level}

@@ -44,7 +44,7 @@ const TemplateDetailsTooltip = ({ addMode, template, isTemplateLoading, source }
                         <div className="flex-grow-1">{template.label}</div>
                         <div>
                             <Tippy content="Go to template page">
-                                <Link target="_blank" className="ml-2" to={reverse(ROUTES.TEMPLATE, { id: template.id })}>
+                                <Link target="_blank" className="ms-2" to={reverse(ROUTES.TEMPLATE, { id: template.id })}>
                                     <Icon icon={faLink} />
                                 </Link>
                             </Tippy>
@@ -121,7 +121,7 @@ const TemplateDetailsTooltip = ({ addMode, template, isTemplateLoading, source }
                                 {template.predicate && template.predicate?.id !== PREDICATES.HAS_CONTRIBUTION ? 'With' : addMode ? 'Add' : 'Remove'}{' '}
                                 properties {!addMode ? '(with no values)' : ''}:{' '}
                             </b>
-                            <ul className={`pl-3 ${template?.components?.length > 7 && 'mb-0'}`}>
+                            <ul className={`ps-3 ${template?.components?.length > 7 && 'mb-0'}`}>
                                 {template.components &&
                                     template.components.length > 0 &&
                                     template.components.slice(0, 10).map(component => {
@@ -129,7 +129,7 @@ const TemplateDetailsTooltip = ({ addMode, template, isTemplateLoading, source }
                                     })}
                             </ul>
                             {template.components && template.components.length > 7 && (
-                                <Link target="_blank" className="ml-2 mb-2 d-block" to={reverse(ROUTES.TEMPLATE, { id: template.id })}>
+                                <Link target="_blank" className="ms-2 mb-2 d-block" to={reverse(ROUTES.TEMPLATE, { id: template.id })}>
                                     + {template.components?.length - 5} more
                                 </Link>
                             )}

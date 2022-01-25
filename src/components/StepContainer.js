@@ -73,7 +73,7 @@ const StepContainer = props => {
                 <TitleStyled className={titleClasses}>{title}</TitleStyled>
             </Container>
             {active && (
-                <Container className="box rounded pt-4 pb-4 pl-5 pr-5 position-relative" style={{ zIndex: 1 }}>
+                <Container className="box rounded pt-4 pb-4 ps-5 pe-5 position-relative" style={{ zIndex: 1 }}>
                     {children}
                 </Container>
             )}

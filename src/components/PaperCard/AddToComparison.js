@@ -1,6 +1,6 @@
 import { useRef, useEffect } from 'react';
 import Tippy from '@tippyjs/react';
-import { CustomInput } from 'reactstrap';
+import { Input, Label, FormGroup } from 'reactstrap';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import Select, { components } from 'react-select';
@@ -18,7 +18,7 @@ const Option = ({ children, data, ...props }) => {
     );
 };
 
-const CustomInputStyled = styled(CustomInput)`
+const CustomInputStyled = styled(Input)`
     &.custom-control {
         z-index: 0;
     }
@@ -136,18 +136,24 @@ const AddToComparison = ({ contributionId, paper, showLabel }) => {
             }
         >
             <span>
-                <CustomInputStyled
-                    onChange={() =>
-                        !contributionId && paper.contributions?.length > 1
-                            ? toggleAllCompare()
-                            : toggleCompare(contributionId || paper.contributions?.[0].id)
-                    }
-                    checked={!!isSelected}
-                    type="checkbox"
-                    label={showLabel ? 'Add to comparison' : ''}
-                    innerRef={inputCheckboxRef}
-                    id={`add2CPid${paper.id}cid${contributionId ?? ''}`}
-                />
+                <FormGroup check>
+                    <CustomInputStyled
+                        onChange={() =>
+                            !contributionId && paper.contributions?.length > 1
+                                ? toggleAllCompare()
+                                : toggleCompare(contributionId || paper.contributions?.[0].id)
+                        }
+                        checked={!!isSelected}
+                        type="checkbox"
+                        innerRef={inputCheckboxRef}
+                        id={`add2CPid${paper.id}cid${contributionId ?? ''}`}
+                    />
+                    {showLabel && (
+                        <Label check for={`add2CPid${paper.id}cid${contributionId ?? ''}`} className="mb-0">
+                            {showLabel ? 'Add to comparison' : ''}
+                        </Label>
+                    )}
+                </FormGroup>
             </span>
         </Tippy>
     );

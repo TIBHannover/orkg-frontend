@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 
 const AuthorsBox = ({ isLoading, researchFields }) => {
     return (
-        <div className="box rounded-lg p-3 flex-grow-1 d-flex flex-column">
+        <div className="box rounded-3 p-3 flex-grow-1 d-flex flex-column">
             <h5>Research fields</h5>
             <div>
                 <small className="text-muted">
@@ -14,9 +14,9 @@ const AuthorsBox = ({ isLoading, researchFields }) => {
                 </small>
             </div>
             {!isLoading ? (
-                <div className="mb-4 mt-4 pl-3 pr-3">
+                <div className="mb-4 mt-4 ps-3 pe-3">
                     {researchFields.length > 0 ? (
-                        <ul className="pl-1">
+                        <ul className="ps-1">
                             {researchFields.map(researchField => {
                                 return (
                                     <li key={`rf${researchField.field.id}`}>
@@ -28,7 +28,7 @@ const AuthorsBox = ({ isLoading, researchFields }) => {
                                         >
                                             {researchField.field.label}
                                             <small>
-                                                <Badge className="ml-1" color="info" pill>
+                                                <Badge className="ms-1" color="info" pill>
                                                     {researchField.freq}
                                                 </Badge>
                                             </small>

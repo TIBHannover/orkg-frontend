@@ -9,17 +9,17 @@ const ResearchProblemsBox = ({ id }) => {
     const { researchProblems } = useResearchFieldProblems();
 
     return (
-        <div className="box rounded-lg p-3 flex-grow-1 d-flex flex-column">
+        <div className="box rounded-3 p-3 flex-grow-1 d-flex flex-column">
             <h5>Research problems</h5>
             <div className="flex-grow-1">
                 {researchProblems && researchProblems.length > 0 && (
-                    <ul className="pl-3 pt-2">
+                    <ul className="ps-3 pt-2">
                         {researchProblems.slice(0, 5).map(rp => (
                             <li key={`rp${rp.id}`}>
                                 <Link to={reverseWithSlug(ROUTES.RESEARCH_PROBLEM, { researchProblemId: rp.id, slug: rp.label })}>
                                     {rp.researchProblem}{' '}
                                     <small>
-                                        <Badge className="ml-1" color="info" pill>
+                                        <Badge className="ms-1" color="info" pill>
                                             {rp.papersCount}
                                         </Badge>
                                     </small>

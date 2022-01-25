@@ -22,7 +22,7 @@ const DraftSmartReviews = () => {
     const renderListItem = article => (
         <ShortRecord key={article.id} header={article.label} href={reverse(ROUTES.SMART_REVIEW, { id: article.id })}>
             <div className="time">
-                <Icon size="sm" icon={faCalendar} className="mr-1" /> {article.created_at ? moment(article.created_at).format('DD MMMM YYYY') : ''}
+                <Icon size="sm" icon={faCalendar} className="me-1" /> {article.created_at ? moment(article.created_at).format('DD MMMM YYYY') : ''}
             </div>
         </ShortRecord>
     );

@@ -75,7 +75,7 @@ const ConfirmationTooltip = forwardRef((props, ref) => {
                         key={i}
                         color={button.color}
                     >
-                        <Icon icon={button.icon} className="mr-1" />
+                        <Icon icon={button.icon} className="me-1" />
                         {button.title}
                     </Button>
                 ))}

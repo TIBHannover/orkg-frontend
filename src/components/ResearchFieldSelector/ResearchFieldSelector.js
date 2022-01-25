@@ -239,7 +239,7 @@ const ResearchFieldSelector = ({ selectedResearchField, researchFields, updateRe
                 size="sm"
                 color="link"
                 disabled={!find(researchFields, f => f.isExpanded)}
-                className="float-right pr-0"
+                className="float-end pe-0"
                 onClick={() => {
                     const fields = cloneDeep(researchFields);
                     updateResearchField({

@@ -20,11 +20,13 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { NavLink, useHistory, useParams } from 'react-router-dom';
 import { Button, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledButtonDropdown } from 'reactstrap';
-import Confirm from 'reactstrap-confirm';
+import Confirm from 'components/Confirmation/Confirmation';
 import { historyModalToggled, setIsEditing } from 'slices/literatureListSlice';
+import ExportBibtexModal from 'components/LiteratureList/ExportBibtexModal/ExportBibtexModal';
 
 const LiteratureList = () => {
     const [isOpenPublishModal, setIsOpenPublishModal] = useState(false);
+    const [isOpenExportBibtexModal, setIsOpenExportBibtexModal] = useState(false);
     const { id } = useParams();
     const isPublished = useSelector(state => state.literatureList.isPublished);
     const list = useSelector(state => state.literatureList.literatureList);
@@ -59,8 +61,7 @@ const LiteratureList = () => {
             const isConfirmed = await Confirm({
                 title: 'This is a published list',
                 message: `The list you are viewing is published, which means it cannot be modified. To make changes, fetch the live data and try this action again`,
-                cancelColor: 'light',
-                confirmText: 'Fetch live data'
+                proceedLabel: 'Fetch live data'
             });
 
             if (isConfirmed) {
@@ -95,7 +96,7 @@ const LiteratureList = () => {
                         {isEditing && (
                             <div color="light-darker" className="btn btn-light-darker btn-sm px-2" style={{ cursor: 'default' }}>
                                 {isLoadingInline ? (
-                                    <Icon icon={faSpinner} spin className="mr-2 text-secondary" />
+                                    <Icon icon={faSpinner} spin className="me-2 text-secondary" />
                                 ) : (
                                     <Tippy content="All changes are saved">
                                         <span>
@@ -159,10 +160,11 @@ const LiteratureList = () => {
                             </>
                         )}
                         <UncontrolledButtonDropdown>
-                            <DropdownToggle size="sm" color="secondary" className="px-3 rounded-right">
+                            <DropdownToggle size="sm" color="secondary" className="px-3 rounded-end">
                                 <Icon icon={faEllipsisV} />
                             </DropdownToggle>
-                            <DropdownMenu right>
+                            <DropdownMenu end>
+                                <DropdownItem onClick={() => setIsOpenExportBibtexModal(true)}>Export as BibTeX</DropdownItem>
                                 <DropdownItem tag={NavLink} exact to={reverse(ROUTES.RESOURCE, { id })}>
                                     View resource
                                 </DropdownItem>
@@ -183,6 +185,7 @@ const LiteratureList = () => {
                 <PublishModal toggle={() => setIsOpenPublishModal(v => !v)} id={id} getVersions={getVersions} listId={list.id} show />
             )}
             {isOpenHistoryModal && <HistoryModal toggle={toggleHistoryModal} id={id} show />}
+            {isOpenExportBibtexModal && <ExportBibtexModal toggle={() => setIsOpenExportBibtexModal(v => !v)} isOpen />}
         </div>
     );
 };

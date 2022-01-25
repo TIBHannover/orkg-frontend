@@ -24,14 +24,14 @@ const ViewVisualizationModal = ({ isOpen, toggle, data, onEditVisualization }) =
                 <div className="d-flex">
                     <h5>{data.label ?? 'No Title'}</h5>
                     <Tippy content="Go to resource page">
-                        <Link target="_blank" className="ml-2 resourceLink" to={reverse(ROUTES.RESOURCE, { id: data.id })}>
+                        <Link target="_blank" className="ms-2 resourceLink" to={reverse(ROUTES.RESOURCE, { id: data.id })}>
                             <Icon icon={faLink} className="text-primary" />
                         </Link>
                     </Tippy>
                 </div>
                 {data.description ?? 'No Description'}
                 <div className="mt-2">
-                    <Badge color="light" className="mr-2">
+                    <Badge color="light" className="me-2">
                         <Icon icon={faCalendar} className="text-primary" /> {data.created_at ? moment(data.created_at).format('DD MMMM YYYY') : ''}
                     </Badge>
                     {data.authors &&
@@ -40,7 +40,7 @@ const ViewVisualizationModal = ({ isOpen, toggle, data, onEditVisualization }) =
                             if (author && author.class === ENTITIES.RESOURCE) {
                                 return (
                                     <Link
-                                        className="d-inline-block mr-2 mb-2"
+                                        className="d-inline-block me-2 mb-2"
                                         to={reverse(ROUTES.AUTHOR_PAGE, { authorId: author.id })}
                                         key={`author${author.id}`}
                                     >
@@ -51,7 +51,7 @@ const ViewVisualizationModal = ({ isOpen, toggle, data, onEditVisualization }) =
                                 );
                             } else {
                                 return (
-                                    <Badge key={`author${author.id}`} color="light" className="mr-2 mb-2">
+                                    <Badge key={`author${author.id}`} color="light" className="me-2 mb-2">
                                         <Icon icon={faUser} /> {author.label}
                                     </Badge>
                                 );

@@ -1,10 +1,10 @@
 import { render as rtlRender } from '@testing-library/react';
 import { ConnectedRouter } from 'connected-react-router';
-import React from 'react';
 import { Provider } from 'react-redux';
 import configureStore, { history } from 'store';
 import theme from 'assets/scss/ThemeVariables';
 import { ThemeProvider } from 'styled-components';
+import { ToastContainer } from 'react-toastify';
 
 // wrap the components with the required providers
 // redux part based on: https://redux.js.org/recipes/writing-tests#connected-components
@@ -15,6 +15,7 @@ const render = (ui, { initialState, store = configureStore(initialState), ...ren
                 <ConnectedRouter history={history} noInitialPop>
                     {children}
                 </ConnectedRouter>
+                <ToastContainer position="top-right" autoClose={5000} hideProgressBar className="toast-container" icon={false} theme="colored" />
             </ThemeProvider>
         </Provider>
     );

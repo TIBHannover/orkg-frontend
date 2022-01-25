@@ -143,7 +143,7 @@ const AddEntryModal = ({ sectionId, isOpen, setIsOpen }) => {
                             Manual entry
                         </Button>
                     </div>
-                    <Button color="primary" className="float-right" onClick={handleAdd}>
+                    <Button color="primary" className="float-end" onClick={handleAdd}>
                         {!isLoading ? 'Add entries' : <Icon icon={faSpinner} spin />}
                     </Button>
                 </ModalFooter>

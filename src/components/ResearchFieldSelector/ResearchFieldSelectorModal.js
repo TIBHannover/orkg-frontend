@@ -36,7 +36,7 @@ const ResearchFieldSelectorModal = ({ isOpen, toggle, onSelectField }) => {
                 />
             </ModalBody>
             <ModalFooter className="d-flex">
-                <Button color="primary" className="float-right" onClick={handleSelect} disabled={!selectedResearchField}>
+                <Button color="primary" className="float-end" onClick={handleSelect} disabled={!selectedResearchField}>
                     Select
                 </Button>
             </ModalFooter>

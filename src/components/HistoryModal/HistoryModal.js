@@ -97,7 +97,7 @@ const HistoryModal = ({ id, show, toggle, title, versions = [], routeDiff }) => 
                                             components={{ Option }}
                                             blurInputOnSelect
                                             openMenuOnFocus
-                                            className="flex-grow-1 mr-1 focus-primary"
+                                            className="flex-grow-1 me-1 focus-primary"
                                             classNamePrefix="react-select"
                                             placeholder="Select version"
                                         />
@@ -108,7 +108,7 @@ const HistoryModal = ({ id, show, toggle, title, versions = [], routeDiff }) => 
                                             components={{ Option }}
                                             blurInputOnSelect
                                             openMenuOnFocus
-                                            className="flex-grow-1 mr-1"
+                                            className="flex-grow-1 me-1"
                                             classNamePrefix="react-select"
                                             placeholder="Select version"
                                         />
@@ -128,11 +128,11 @@ const HistoryModal = ({ id, show, toggle, title, versions = [], routeDiff }) => 
                         </div>
                         <div className="p-4">
                             {versions.map((version, i) => (
-                                <Activity key={version.id} className="pl-3 pb-3">
+                                <Activity key={version.id} className="ps-3 pb-3">
                                     <Time className={id === version.id ? 'selected' : ''}>
                                         {version.created_at ? moment(version.created_at).format('DD MMMM YYYY - H:mm') : ''}{' '}
                                         {id === version.id && <>(This version)</>}
-                                        <span className="ml-2">
+                                        <span className="ms-2">
                                             <UserAvatar userId={version.created_by} />
                                         </span>
                                     </Time>

@@ -1,6 +1,6 @@
 import { Component } from 'react';
 import { Redirect } from 'react-router-dom';
-import { Container, Button, Form, FormGroup, Input, Label, InputGroup, InputGroupAddon } from 'reactstrap';
+import { Container, Button, Form, FormGroup, Input, Label, InputGroup } from 'reactstrap';
 import { toast } from 'react-toastify';
 import { createOrganization } from 'services/backend/organizations';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -120,9 +120,9 @@ class AddOrganization extends Component {
         return (
             <>
                 <TitleBar>Create new organization</TitleBar>
-                <Container className="box rounded pt-4 pb-4 pl-5 pr-5">
+                <Container className="box rounded pt-4 pb-4 ps-5 pe-5">
                     {!!this.props.user && this.props.user.isCurationAllowed && (
-                        <Form className="pl-3 pr-3 pt-2">
+                        <Form className="ps-3 pe-3 pt-2">
                             <FormGroup>
                                 <Label for="organizationName">Name</Label>
                                 <Input
@@ -143,7 +143,7 @@ class AddOrganization extends Component {
                                         <Tooltip message="Permalink field allows to identify the organization page on ORKG in an easy-to-read form. Only underscores ( _ ), numbers, and letters are allowed." />
                                     </Label>
                                     <InputGroup>
-                                        <InputGroupAddon addonType="prepend">{this.publicOrganizationRoute}</InputGroupAddon>
+                                        {this.publicOrganizationRoute}
                                         <Input
                                             onChange={this.handleChange}
                                             type="text"
@@ -181,7 +181,7 @@ class AddOrganization extends Component {
                                 <Input type="file" id="organizationLogo" onChange={this.handlePreview} />
                             </FormGroup>
                             <hr />
-                            <div className="text-right">
+                            <div className="text-end">
                                 <Button color="primary" onClick={this.createNewOrganization} className="mb-2" disabled={loading}>
                                     {!loading ? 'Create organization' : <span>Loading</span>}
                                 </Button>
@@ -192,7 +192,7 @@ class AddOrganization extends Component {
                     {(!!!this.props.user || !this.props.user.isCurationAllowed) && (
                         <>
                             <Button color="link" className="p-0 mb-2 mt-2 clearfix" onClick={() => this.props.openAuthDialog({ action: 'signin' })}>
-                                <Icon className="mr-1" icon={faUser} /> Signin to create organization
+                                <Icon className="me-1" icon={faUser} /> Signin to create organization
                             </Button>
                         </>
                     )}

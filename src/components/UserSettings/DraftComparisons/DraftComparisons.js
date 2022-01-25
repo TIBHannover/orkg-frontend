@@ -10,7 +10,7 @@ import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { Alert, Button, ButtonGroup, ListGroup, ListGroupItem } from 'reactstrap';
-import Confirm from 'reactstrap-confirm';
+import Confirm from 'components/Confirmation/Confirmation';
 import { deleteResource, getResourcesByClass } from 'services/backend/resources';
 import { getResourceData } from 'services/similarity/index';
 
@@ -57,8 +57,7 @@ const DraftComparisons = () => {
     const handleDelete = async id => {
         const isConfirmed = await Confirm({
             title: 'Are you sure?',
-            message: `Are you sure to delete this draft comparison? If the comparison is published already, the comparison remains available`,
-            cancelColor: 'light'
+            message: `Are you sure to delete this draft comparison? If the comparison is published already, the comparison remains available`
         });
 
         if (isConfirmed) {
@@ -97,7 +96,7 @@ const DraftComparisons = () => {
                                 <Link to={reverse(ROUTES.COMPARISON) + draftComparison.url}>{draftComparison.label}</Link> <br />
                                 <small>
                                     <Icon icon={faCalendar} /> {moment(draftComparison.created_at).format('DD MMMM YYYY')}{' '}
-                                    <Icon icon={faClock} className="ml-2 mr-1" />
+                                    <Icon icon={faClock} className="ms-2 me-1" />
                                     {moment(draftComparison.created_at).format('H:mm')}
                                 </small>
                             </div>

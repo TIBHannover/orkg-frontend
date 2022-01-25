@@ -1,6 +1,6 @@
 import { createRef, useState, useEffect } from 'react';
 import { ListGroup, ListGroupItem } from 'reactstrap';
-import Confirm from 'reactstrap-confirm';
+import Confirm from 'components/Confirmation/Confirmation';
 import { setTableData } from 'actions/pdfAnnotation';
 import { toast } from 'react-toastify';
 import { readString } from 'react-papaparse';
@@ -260,8 +260,7 @@ function useExtractionModal(props) {
 
         const confirm = await Confirm({
             title: 'Are you sure?',
-            message: confirmationModal(papers),
-            cancelColor: 'light'
+            message: confirmationModal(papers)
         });
 
         if (confirm) {

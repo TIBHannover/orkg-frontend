@@ -32,14 +32,14 @@ class SearchAutoComplete extends Component {
         activeTargetButton: false,
         loadingIndicatorForBlackOps: false,
         updateFlip: false,
-        locateClass: 'mr-1 align-self-center locateDisabled',
+        locateClass: 'me-1 align-self-center locateDisabled',
         locateTitle: 'Nothing to locate'
     };
 
     componentDidUpdate = (prevProps, prevState) => {
         if (prevState.activeTargetButton !== this.state.activeTargetButton) {
             this.setState({
-                locateClass: this.state.activeTargetButton ? 'mr-1 align-self-center locateActive' : 'mr-1 align-self-center locateDisabled',
+                locateClass: this.state.activeTargetButton ? 'me-1 align-self-center locateActive' : 'me-1 align-self-center locateDisabled',
                 locateTitle: this.state.activeTargetButton ? this.locateTitleActive : this.locateTitleDisabled
             });
         }
@@ -217,10 +217,10 @@ class SearchAutoComplete extends Component {
                         croppedText = '...';
                     }
                     const finalItemLabel = item.label.substring(0, 20) + croppedText;
-                    let expandIconClassNames = 'mr-1 align-self-center inSearchExpandIcon';
+                    let expandIconClassNames = 'me-1 align-self-center inSearchExpandIcon';
                     const expandIconDisabled = item.visible === item.nodeId.length;
                     if (expandIconDisabled) {
-                        expandIconClassNames = 'mr-1 align-self-center inSearchExpandIconDisabled';
+                        expandIconClassNames = 'me-1 align-self-center inSearchExpandIconDisabled';
                     }
 
                     // helper function
@@ -398,7 +398,7 @@ class SearchAutoComplete extends Component {
                 }}
                 key="loadFullGraph"
             >
-                <Icon id="fullExploreSpinIcon" icon={faSpinner} className="mr-1 align-self-center hidden" spin />
+                <Icon id="fullExploreSpinIcon" icon={faSpinner} className="me-1 align-self-center hidden" spin />
                 Load full graph and try again
             </DropdownItem>
         );
@@ -412,7 +412,7 @@ class SearchAutoComplete extends Component {
 
     render() {
         return (
-            <div className="ml-2" style={{ paddingTop: '5px', display: 'flex', position: 'relative', left: '-20px' }}>
+            <div className="ms-2" style={{ paddingTop: '5px', display: 'flex', position: 'relative', left: '-20px' }}>
                 <Input
                     bsSize="sm"
                     type="text"

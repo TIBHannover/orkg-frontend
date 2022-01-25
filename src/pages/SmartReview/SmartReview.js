@@ -33,7 +33,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { NavLink, useHistory } from 'react-router-dom';
 import { Button, Container, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledButtonDropdown } from 'reactstrap';
-import Confirm from 'reactstrap-confirm';
+import Confirm from 'components/Confirmation/Confirmation';
 import { createGlobalStyle } from 'styled-components';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import ReferencesModal from 'components/SmartReview/References/ReferencesModal';
@@ -110,8 +110,7 @@ const SmartReview = () => {
             const isConfirmed = await Confirm({
                 title: 'This is a published article',
                 message: `The article you are viewing is published, which means it cannot be modified. To make changes, fetch the live article data and try this action again`,
-                cancelColor: 'light',
-                confirmText: 'Fetch live data'
+                proceedLabel: 'Fetch live data'
             });
 
             if (isConfirmed) {
@@ -173,7 +172,7 @@ const SmartReview = () => {
                         {isEditing && (
                             <div color="light-darker" className="btn btn-light-darker btn-sm px-2" style={{ cursor: 'default' }}>
                                 {isLoadingInline ? (
-                                    <Icon icon={faSpinner} spin className="mr-2 text-secondary" />
+                                    <Icon icon={faSpinner} spin className="me-2 text-secondary" />
                                 ) : (
                                     <Tippy content="All changes are saved">
                                         <span>
@@ -261,7 +260,7 @@ const SmartReview = () => {
                             </>
                         )}
                         <UncontrolledButtonDropdown>
-                            <DropdownToggle size="sm" color="secondary" className="px-3 rounded-right">
+                            <DropdownToggle size="sm" color="secondary" className="px-3 rounded-end">
                                 <Icon icon={faEllipsisV} />
                             </DropdownToggle>
                             <DropdownMenu right>

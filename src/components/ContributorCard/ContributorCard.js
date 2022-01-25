@@ -4,6 +4,7 @@ import { reverse } from 'named-urls';
 import Gravatar from 'react-gravatar';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
+import pluralize from 'pluralize';
 
 const StyledGravatar = styled(Gravatar)`
     border: 3px solid ${props => props.theme.dark};
@@ -31,23 +32,19 @@ function ContributorCard(props) {
                             <br />
                             {props.contributor?.counts && props.contributor.counts.papers !== null && props.contributor.counts.papers !== undefined && (
                                 <>
-                                    <ul class="list-group list-group-horizontal-md mt-2 d-flex">
-                                        <li className="list-group-item p-0 pl-1 pr-2">
-                                            {props.contributor.counts.papers} paper{props.contributor.counts.papers > 1 ? 's' : ''}
+                                    <ul className="list-group list-group-horizontal-md mt-2 d-flex">
+                                        <li className="list-group-item p-0 ps-1 pe-2">{pluralize('paper', props.contributor.counts.papers, true)}</li>
+                                        <li className="list-group-item p-0  ps-1 pe-2">
+                                            {pluralize('contribution', props.contributor.counts.contributions, true)}
                                         </li>
-                                        <li className="list-group-item p-0  pl-1 pr-2">
-                                            {props.contributor.counts.contributions} contribution
-                                            {props.contributor.counts.contributions > 1 ? 's' : ''}
+                                        <li className="list-group-item p-0  ps-1 pe-2">
+                                            {pluralize('comparison', props.contributor.counts.comparisons, true)}
                                         </li>
-                                        <li className="list-group-item p-0  pl-1 pr-2">
-                                            {props.contributor.counts.comparisons} comparison{props.contributor.counts.comparisons > 1 ? 's' : ''}
+                                        <li className="list-group-item p-0  ps-1 pe-2 ">
+                                            {pluralize('visualization', props.contributor.counts.visualizations, true)}
                                         </li>
-                                        <li className="list-group-item p-0  pl-1 pr-2 ">
-                                            {props.contributor.counts.visualizations} visualization
-                                            {props.contributor.counts.visualizations > 1 ? 's' : ''}
-                                        </li>
-                                        <li className="list-group-item p-0  pl-1 pr-2">
-                                            {props.contributor.counts.problems} research problem{props.contributor.counts.problems > 1 ? 's' : ''}
+                                        <li className="list-group-item p-0  ps-1 pe-2">
+                                            {pluralize('research problem', props.contributor.counts.problems, true)}
                                         </li>
                                     </ul>
 
@@ -63,7 +60,7 @@ function ContributorCard(props) {
                                 (props.contributor.counts.papers === null || props.contributor.counts.papers === undefined) &&
                                 props.contributor.counts.total !== null && (
                                     <>
-                                        <i>{props.contributor.counts.total} contributions</i>
+                                        <i>{pluralize('contribution', props.contributor.counts.total, true)}</i>
                                     </>
                                 )}
                         </>

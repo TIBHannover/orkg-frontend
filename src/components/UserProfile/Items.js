@@ -180,7 +180,7 @@ const Items = props => {
             {isLoading && loadingIndicator}
 
             {resources.length === 0 && !isLoading && (
-                <div className="box rounded-lg p-5 text-center mt-4 mb-4">
+                <div className="box rounded-3 p-5 text-center mt-4 mb-4">
                     This user hasn't added any {props.filterLabel} to ORKG yet.
                     <br />
                 </div>
@@ -189,7 +189,7 @@ const Items = props => {
             {selectedItems.length > 0 && (
                 <>
                     {props.filterClass === CLASSES.PAPER && (
-                        <Button size="sm" color="secondary" className="mt-2 mr-2" onClick={comparePapers}>
+                        <Button size="sm" color="secondary" className="mt-2 me-2" onClick={comparePapers}>
                             Compare selected {props.filterLabel} ({selectedItems.length})
                         </Button>
                     )}

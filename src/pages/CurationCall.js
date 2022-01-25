@@ -10,7 +10,7 @@ export default function CurationCall() {
             <Container>
                 <h1 className="h4 mt-4 mb-4">ORKG Curation Grant Competition</h1>
             </Container>
-            <Container className="box rounded pt-4 pb-4 pl-5 pr-5">
+            <Container className="box rounded pt-4 pb-4 ps-5 pe-5">
                 <Alert color="info" className="mt-2">
                     <strong>Webinar:</strong> Open Research Knowledge Graph. <Link to={ROUTES.WEBINAR_MAY_11}>Watch the recording</Link>
                 </Alert>
@@ -58,7 +58,7 @@ export default function CurationCall() {
 
                 <Row className="my-3">
                     <Col md={6} className="mx-auto">
-                        <div className="embed-responsive embed-responsive-16by9">
+                        <div className="ratio ratio-16x9">
                             <iframe
                                 title="Overview on the Open Research Knowledge Graph"
                                 scrolling="no"
@@ -66,7 +66,6 @@ export default function CurationCall() {
                                 src="//av.tib.eu/player/52261"
                                 allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
                                 allowFullScreen={true}
-                                className="embed-responsive-item"
                             />
                         </div>
                     </Col>
@@ -155,7 +154,7 @@ export default function CurationCall() {
                 <h3 className="mt-4 mb-3">ORKG how-to videos</h3>
                 <Row className="my-3">
                     <Col md={6}>
-                        <div className="embed-responsive embed-responsive-16by9">
+                        <div className="ratio ratio-16x9">
                             <iframe
                                 title="How to make an ORKG comparison"
                                 scrolling="no"
@@ -163,12 +162,11 @@ export default function CurationCall() {
                                 src="//av.tib.eu/player/51996"
                                 allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
                                 allowFullScreen={true}
-                                className="embed-responsive-item"
                             />
                         </div>
                     </Col>
                     <Col md={6} className="mt-3 mt-md-0">
-                        <div className="embed-responsive embed-responsive-16by9">
+                        <div className="ratio ratio-16x9">
                             <iframe
                                 title="Video explaining how to make a comparison visualization"
                                 scrolling="no"
@@ -176,7 +174,6 @@ export default function CurationCall() {
                                 src="//av.tib.eu/player/52057"
                                 allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
                                 allowFullScreen={true}
-                                className="embed-responsive-item"
                             />
                         </div>
                     </Col>

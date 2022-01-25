@@ -1,4 +1,4 @@
-import { Modal, ModalHeader, ModalBody, ListGroup, ListGroupItem, Badge, CustomInput } from 'reactstrap';
+import { Modal, ModalHeader, ModalBody, ListGroup, ListGroupItem, Badge, Input, Label, FormGroup } from 'reactstrap';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -35,14 +35,12 @@ function SelectProperties(props) {
     const SortableItem = SortableElement(({ value: property }) => (
         <ListGroupItemStyled>
             {property.active ? <SortableHandle /> : <DragHandlePlaceholder />}
-            <CustomInput
-                type="checkbox"
-                id={`checkbox-${property.id}`}
-                label={capitalize(property.label)}
-                className="flex-grow-1"
-                onChange={() => props.toggleProperty(property.id)}
-                checked={property.active}
-            />
+            <FormGroup check className="flex-grow-1">
+                <Input type="checkbox" id={`checkbox-${property.id}`} onChange={() => props.toggleProperty(property.id)} checked={property.active} />{' '}
+                <Label check for={`checkbox-${property.id}`} className="mb-0">
+                    {capitalize(property.label)}
+                </Label>
+            </FormGroup>
             <Tooltip message="Amount of contributions" hideDefaultIcon>
                 <Badge color="light">{property.contributionAmount}</Badge>
             </Tooltip>

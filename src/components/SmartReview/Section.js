@@ -1,22 +1,23 @@
-import { deleteSection, updateSectionTitle } from 'actions/smartReview';
+import { deleteSection, updateSectionMarkdown, updateSectionTitle } from 'actions/smartReview';
 import AddSection from 'components/SmartReview/AddSection';
 import SectionOntology from 'components/SmartReview/DataTable/SectionOntology';
 import SectionContentLink from 'components/SmartReview/SectionContentLink';
-import SectionMarkdown from 'components/SmartReview/SectionMarkdown';
 import SectionType from 'components/SmartReview/SectionType';
 import { EditableTitle } from 'components/ArticleBuilder/styled';
 import SortableSection from 'components/ArticleBuilder/SortableSection/SortableSection';
 import { CLASSES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { SortableElement } from 'react-sortable-hoc';
-import Confirm from 'reactstrap-confirm';
+import Confirm from 'components/Confirmation/Confirmation';
+import MarkdownEditor from 'components/ArticleBuilder/MarkdownEditor/MarkdownEditor';
 
 const Section = props => {
     const { type, markdown, title: titleProp } = props.section;
     const sectionId = titleProp.id;
     const [title, setTitle] = useState(titleProp.label);
+    const references = useSelector(state => state.smartReview.references);
     const dispatch = useDispatch();
 
     const handleBlurTitle = e => {
@@ -28,11 +29,19 @@ const Section = props => {
         );
     };
 
+    const handleUpdateMarkdown = value => {
+        dispatch(
+            updateSectionMarkdown({
+                id: markdown.id,
+                markdown: value
+            })
+        );
+    };
+
     const handleDelete = async () => {
         const confirm = await Confirm({
             title: 'Are you sure?',
-            message: 'Are you sure you want to delete this section?',
-            cancelColor: 'light'
+            message: 'Are you sure you want to delete this section?'
         });
 
         if (confirm) {
@@ -75,7 +84,9 @@ const Section = props => {
 
                 {isOntologySection && <SectionOntology section={props.section} type={sectionType} isEditable />}
 
-                {!isContentLinkSection && !isOntologySection && markdown && <SectionMarkdown markdown={markdown} />}
+                {!isContentLinkSection && !isOntologySection && markdown && (
+                    <MarkdownEditor label={markdown.label} handleUpdate={handleUpdateMarkdown} references={references} literalId={markdown.id} />
+                )}
             </SortableSection>
             <AddSection index={props.atIndex} />
         </section>

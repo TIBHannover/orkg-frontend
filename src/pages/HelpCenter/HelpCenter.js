@@ -41,7 +41,7 @@ const HelpCenter = () => {
         <div>
             <TitleBar>Help center</TitleBar>
 
-            <Container className="box rounded pt-4 pb-4 pl-5 pr-5">
+            <Container className="box rounded pt-4 pb-4 ps-5 pe-5">
                 <HelpCenterSearchInput />
 
                 {hasFailed && <Alert color="danger">Help categories are not loaded because an error occurred</Alert>}
@@ -83,7 +83,7 @@ const HelpCenter = () => {
                                     {category.title}
                                 </Link>
                             </h3>
-                            <ul className="pl-3 mb-0">
+                            <ul className="ps-3 mb-0">
                                 {category.help_articles &&
                                     category.help_articles.slice(0, 5).map(article => (
                                         <li key={article.id}>

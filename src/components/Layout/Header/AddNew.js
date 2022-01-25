@@ -109,7 +109,7 @@ const AddNew = ({ isHomePageStyle, onAdd = null }) => {
                             <ImgContainer>
                                 <img src={ContributionEditor} width="90%" alt="Contribution editor preview" />
                             </ImgContainer>
-                            <TextContainer className="pl-2 pr-2">
+                            <TextContainer className="ps-2 pe-2">
                                 <Header>Comparison</Header>
                                 <p className="m-0">
                                     Create an overview of state-of-the-art literature for a particular topic by adding multiple contributions
@@ -126,7 +126,7 @@ const AddNew = ({ isHomePageStyle, onAdd = null }) => {
                             <ImgContainer>
                                 <img src={AddPaperWizard} width="90%" alt="Add paper wizard preview" />
                             </ImgContainer>
-                            <TextContainer className="pl-2 pr-2">
+                            <TextContainer className="ps-2 pe-2">
                                 <Header>Paper</Header>
                                 <p className="m-0">The add paper wizard guides you to the process of generating structured data for your paper.</p>
                             </TextContainer>
@@ -136,7 +136,7 @@ const AddNew = ({ isHomePageStyle, onAdd = null }) => {
             >
                 <div className="mx-2 mb-2 mb-md-0">
                     <Button color={!isHomePageStyle ? 'primary' : 'light'}>
-                        <FontAwesomeIcon className="mr-1" icon={faPlus} />
+                        <FontAwesomeIcon className="me-1" icon={faPlus} />
                         <span className="label">Add new</span>
                     </Button>
                 </div>

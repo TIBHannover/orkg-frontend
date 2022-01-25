@@ -51,10 +51,10 @@ function ProvenanceBox(props) {
     }
 
     return (
-        <div className="container box rounded-lg mt-4">
+        <div className="container box rounded-3 mt-4">
             <Row>
                 <div className="col-8 d-flex align-items-center ">
-                    <div className="pt-4 pb-4 pl-4 pr-4">
+                    <div className="pt-4 pb-4 ps-4 pe-4">
                         {props.provenance && (
                             <>
                                 <p>

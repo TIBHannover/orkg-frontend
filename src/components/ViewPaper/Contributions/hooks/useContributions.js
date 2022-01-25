@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { updateContributionLabel } from 'actions/statementBrowser';
 import { toast } from 'react-toastify';
-import Confirm from 'reactstrap-confirm';
+import Confirm from 'components/Confirmation/Confirmation';
 import { PREDICATES, CLASSES } from 'constants/graphSettings';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes.js';
@@ -147,8 +147,7 @@ const useContributions = ({ paperId, contributionId }) => {
     const toggleDeleteContribution = async contributionId => {
         const result = await Confirm({
             title: 'Are you sure?',
-            message: 'Are you sure you want to delete this contribution?',
-            cancelColor: 'light'
+            message: 'Are you sure you want to delete this contribution?'
         });
 
         if (result) {

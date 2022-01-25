@@ -67,7 +67,7 @@ function ClassDetails(props) {
 
     return (
         <>
-            {isLoading && <Container className="box rounded pt-4 pb-4 pl-5 pr-5 mt-5 clearfix">Loading ...</Container>}
+            {isLoading && <Container className="box rounded pt-4 pb-4 ps-5 pe-5 mt-5 clearfix">Loading ...</Container>}
             {!isLoading && error && <>{error.statusCode === 404 ? <NotFound /> : <InternalServerError />}</>}
             {!isLoading && !error && (
                 <>
@@ -78,7 +78,7 @@ function ClassDetails(props) {
                                 <RequireAuthentication
                                     component={Link}
                                     to={`${ROUTES.ADD_RESOURCE}?classes=${props.match.params.id}`}
-                                    className="float-right btn btn-secondary flex-shrink-0 btn-sm"
+                                    className="float-end btn btn-secondary flex-shrink-0 btn-sm"
                                     style={{ marginRight: 2 }}
                                 >
                                     <Icon icon={faPlus} /> Add resource
@@ -96,7 +96,7 @@ function ClassDetails(props) {
                             </i>
                         )}
                     </TitleBar>
-                    <Container className="box rounded pt-4 pb-4 pl-5 pr-5">
+                    <Container className="box rounded pt-4 pb-4 ps-5 pe-5">
                         <Table bordered>
                             <tbody>
                                 <tr>

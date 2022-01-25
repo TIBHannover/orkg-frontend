@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, ModalHeader, ModalBody, ModalFooter, Button, Row } from 'reactstrap';
+import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
 import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
 import CellEditor from 'libs/selfVisModel/RenderingComponents/CellEditor';
 import CellSelector from 'libs/selfVisModel/RenderingComponents/CellSelector';
@@ -14,8 +14,9 @@ import PropTypes from 'prop-types';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 
-const TabButtons = styled(Row)`
+const TabButtons = styled.div`
     border-bottom: 2px solid ${props => props.theme.lightDarker};
+    display: flex;
 `;
 
 const TabButton = styled.div`
@@ -134,12 +135,12 @@ function AddVisualizationModal(props) {
                         outline
                         color="secondary"
                         size="sm"
-                        className="ml-3"
+                        className="ms-3"
                         onClick={() => {
                             setShowVideoModal(!showVideoModal);
                         }}
                     >
-                        How to use <Icon className="ml-1" icon={faQuestionCircle} />
+                        How to use <Icon className="ms-1" icon={faQuestionCircle} />
                     </Button>
                 </ModalHeader>
                 <ModalBody id="selfVisServiceModalBody">
@@ -184,7 +185,7 @@ function AddVisualizationModal(props) {
                     {/*
                     <Button
                         color="primary"
-                        className="mr-2"
+                        className="me-2"
                         onClick={() => {
                             const mmr = new SelfVisDataModel(); // this is a singleton
                             mmr.debug();
@@ -199,12 +200,12 @@ function AddVisualizationModal(props) {
                     )}
                     <div className="d-flex justify-content-end">
                         {processStep > 0 && (
-                            <Button color="light" className="mr-2" onClick={() => setProcessStep(processStep - 1)}>
+                            <Button color="light" className="me-2" onClick={() => setProcessStep(processStep - 1)}>
                                 Previous
                             </Button>
                         )}
                         {processStep <= 1 && (
-                            <Button color="primary" className="mr-2" onClick={() => setProcessStep(processStep + 1)}>
+                            <Button color="primary" className="me-2" onClick={() => setProcessStep(processStep + 1)}>
                                 Next
                             </Button>
                         )}
@@ -214,7 +215,7 @@ function AddVisualizationModal(props) {
                                     <RequireAuthentication
                                         component={Button}
                                         color="primary"
-                                        className="mr-2"
+                                        className="me-2"
                                         onClick={() => {
                                             setShowPublishVisualizationDialog(!showPublishVisualizationDialog);
                                         }}

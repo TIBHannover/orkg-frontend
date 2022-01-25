@@ -27,24 +27,24 @@ const ListCard = ({ versions, showBadge }) => {
     });
 
     return (
-        <CardStyled style={{ flexWrap: 'wrap' }} className="list-group-item list-group-item-action d-flex pr-3 pl-3">
+        <CardStyled style={{ flexWrap: 'wrap' }} className="list-group-item list-group-item-action d-flex px-4 py-3">
             <div className="col-md-9 d-flex p-0">
                 <div className="d-flex flex-column flex-grow-1">
-                    <div>
+                    <div className="mb-2">
                         <Link to={reverse(ROUTES.LITERATURE_LIST, { id: versions[0]?.id })}>{versions[0]?.label}</Link>
                         {showBadge && (
-                            <div className="d-inline-block ml-2">
+                            <div className="d-inline-block ms-2">
                                 <CardBadge color="primary">Literature list</CardBadge>
                             </div>
                         )}
                     </div>
-                    <div>
+                    <div className="mb-1">
                         <small>
                             {!isLoadingMetaData && <Authors authors={authors} />}
                             {isLoadingMetaData && 'Loading...'}
                             {versions[0].created_at && (
                                 <>
-                                    <Icon size="sm" icon={faCalendar} className="ml-2 mr-1" /> {moment(versions[0].created_at).format('DD-MM-YYYY')}
+                                    <Icon size="sm" icon={faCalendar} className="ms-1 me-1" /> {moment(versions[0].created_at).format('DD-MM-YYYY')}
                                 </>
                             )}
                         </small>

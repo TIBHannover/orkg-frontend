@@ -1,4 +1,4 @@
-import { InputGroupAddon, Button, InputGroup } from 'reactstrap';
+import { Button, InputGroup } from 'reactstrap';
 import { AddPropertyStyle, AddPropertyContentStyle, AddPropertyFormStyle, StyledButton } from 'components/StatementBrowser/styled';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPlus, faSpinner } from '@fortawesome/free-solid-svg-icons';
@@ -47,9 +47,10 @@ const AddPropertyView = props => {
                 ) : (
                     <AddPropertyFormStyle>
                         <InputGroup size="sm">
-                            <InputGroupAddon addonType="prepend">
+                            <span className="input-group-text">
                                 <Icon className="icon" icon={faPlus} />
-                            </InputGroupAddon>
+                            </span>
+
                             <AutoComplete
                                 entityType={ENTITIES.PREDICATE}
                                 cssClasses="form-control-sm"
@@ -69,11 +70,10 @@ const AddPropertyView = props => {
                                 inputGroup={false}
                                 inputId="addProperty"
                             />
-                            <InputGroupAddon addonType="append">
-                                <StyledButton outline onClick={() => props.setShowAddProperty(false)}>
-                                    Cancel
-                                </StyledButton>
-                            </InputGroupAddon>
+
+                            <StyledButton outline onClick={() => props.setShowAddProperty(false)}>
+                                Cancel
+                            </StyledButton>
                         </InputGroup>
                     </AddPropertyFormStyle>
                 )}

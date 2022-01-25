@@ -1,7 +1,6 @@
 import HistoryModalComponent from 'components/HistoryModal/HistoryModal';
 import ROUTES from 'constants/routes';
 import PropTypes from 'prop-types';
-import React from 'react';
 import { useSelector } from 'react-redux';
 import { reverse } from 'named-urls';
 

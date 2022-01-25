@@ -45,7 +45,7 @@ const Papers = ({ id, boxShadow }) => {
                             <br />
                             <br />
                             <Link to={ROUTES.ADD_PAPER.GENERAL_DATA}>
-                                <Button size="sm" color="primary " className="mr-3">
+                                <Button size="sm" color="primary " className="me-3">
                                     Add paper
                                 </Button>
                             </Link>

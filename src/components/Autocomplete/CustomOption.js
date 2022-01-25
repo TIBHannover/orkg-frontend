@@ -9,6 +9,7 @@ import { truncStringPortion } from 'utils';
 import { PREDICATES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
 import { getStatementsBySubject } from 'services/backend/statements';
+import pluralize from 'pluralize';
 
 const StyledSelectOption = styled.div`
     display: flex;
@@ -104,7 +105,7 @@ export default function CustomOption(props) {
                                     <small
                                         className={!propsWithoutInnerProps.isFocused && !propsWithoutInnerProps.isSelected ? 'text-muted' : undefined}
                                     >
-                                        {` Referred: ${props.data.shared} time${props.data.shared > 1 ? 's' : ''}`}
+                                        {` Referred: ${pluralize('time', props.data.shared, true)}`}
                                     </small>
                                 </i>
                             </span>
@@ -132,12 +133,12 @@ export default function CustomOption(props) {
                 </StyledLabel>
                 <span>
                     {props.data.tooltipData && props.data.tooltipData.length > 0 && (
-                        <div className="info mr-1">
+                        <div className="info me-1">
                             <Tippy
                                 interactive={true}
                                 key="c"
                                 content={
-                                    <div className="text-left">
+                                    <div className="text-start">
                                         {props.data.tooltipData &&
                                             props.data.tooltipData.length > 0 &&
                                             props.data.tooltipData.map((info, index) => (
@@ -170,14 +171,14 @@ export default function CustomOption(props) {
                         </div>
                     )}
                     {!props.data.tooltipData && !props.data.__isNew__ && (
-                        <div className="info mr-1">
+                        <div className="info me-1">
                             <Tippy
                                 appendTo={document.body}
                                 onTrigger={onTrigger}
                                 interactive={true}
                                 key="c"
                                 content={
-                                    <div className="text-left">
+                                    <div className="text-start">
                                         {!isLoading ? (
                                             <>
                                                 {statements?.length > 0 && (

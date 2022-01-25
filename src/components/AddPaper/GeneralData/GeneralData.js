@@ -7,7 +7,6 @@ import {
     Label,
     Input,
     InputGroup,
-    InputGroupAddon,
     Button,
     ButtonGroup,
     FormFeedback,
@@ -41,6 +40,8 @@ import { disableBodyScroll, enableBodyScroll, clearAllBodyScrollLocks } from 'bo
 import ExistingDoiModal from './ExistingDoiModal';
 import { parseCiteResult } from 'utils';
 import env from '@beam-australia/react-env';
+import AutocompletePaperTitle from 'components/AutocompletePaperTitle/AutocompletePaperTitle';
+import Confirm from 'components/Confirmation/Confirmation';
 
 const Container = styled(CSSTransition)`
     &.fadeIn-enter {
@@ -302,6 +303,34 @@ const GeneralData = () => {
         dispatch(openTour(step));
     };
 
+    const handleTitleOptionClick = async paper => {
+        if (authors.length > 0 || publicationMonth || publicationYear || url || publishedIn) {
+            const confirm = await Confirm({
+                title: 'Overwrite data?',
+                message: 'Do you want to overwrite the data you entered with the selected paper data?'
+            });
+
+            if (confirm) {
+                updateData(paper);
+            }
+        } else {
+            updateData(paper);
+        }
+    };
+
+    const updateData = paper =>
+        dispatch(
+            updateGeneralData({
+                title: paper.label,
+                authors: paper?.authors?.length > 0 ? paper.authors.map(author => ({ label: author.name })) : [],
+                publicationYear: paper.year || '',
+                publishedIn: paper.venue || '',
+                doi: paper.externalIds?.DOI || '',
+                entry: paper.externalIds?.DOI || '',
+                url: paper.externalIds?.ArXiv ? `https://arxiv.org/abs/${paper.externalIds?.ArXiv}` : ''
+            })
+        );
+
     return (
         <div>
             <div className="row mt-4">
@@ -384,19 +413,17 @@ const GeneralData = () => {
                                         />
                                         <FormFeedback className="order-1">{validation}</FormFeedback>
                                         {/* Need to set order-1 here to fix Bootstrap bug of missing rounded borders */}
-                                        <InputGroupAddon addonType="append">
-                                            <Button
-                                                outline
-                                                color="primary"
-                                                innerRef={refLookup}
-                                                style={{ minWidth: 130 }}
-                                                onClick={() => handleLookupClick(entry)}
-                                                disabled={isFetching}
-                                                data-test="lookupDoi"
-                                            >
-                                                {!isFetching ? 'Lookup' : <FontAwesomeIcon icon={faSpinner} spin />}
-                                            </Button>
-                                        </InputGroupAddon>
+                                        <Button
+                                            outline
+                                            color="primary"
+                                            innerRef={refLookup}
+                                            style={{ minWidth: 130 }}
+                                            onClick={() => handleLookupClick(entry)}
+                                            disabled={isFetching}
+                                            data-test="lookupDoi"
+                                        >
+                                            {!isFetching ? 'Lookup' : <FontAwesomeIcon icon={faSpinner} spin />}
+                                        </Button>
                                     </InputGroup>
                                 </FormGroup>
                             </Form>
@@ -408,7 +435,7 @@ const GeneralData = () => {
                                             <div className="mt-5">
                                                 <h3 className="h4 mb-3">
                                                     Lookup result
-                                                    <Button className="pull-right ml-1" outline size="sm" onClick={() => setDataEntry('manually')}>
+                                                    <Button className="pull-right ms-1" outline size="sm" onClick={() => setDataEntry('manually')}>
                                                         Edit
                                                     </Button>
                                                 </h3>
@@ -465,11 +492,21 @@ const GeneralData = () => {
                                 <Label for="paperTitle">
                                     <Tooltip message="The main title of the paper">Paper title</Tooltip>
                                 </Label>
-                                <Input type="text" name="title" id="paperTitle" value={title} onChange={handleInputChange} />
+                                <AutocompletePaperTitle
+                                    value={title}
+                                    onChange={value =>
+                                        dispatch(
+                                            updateGeneralData({
+                                                title: value
+                                            })
+                                        )
+                                    }
+                                    onOptionClick={handleTitleOptionClick}
+                                />
                                 <FormFeedback />
                             </FormGroup>
-                            <Row form>
-                                <Col md={6} className="pr-3">
+                            <Row>
+                                <Col md={6} className="pe-3">
                                     <FormGroup>
                                         <Label for="paperAuthors">
                                             <Tooltip message="The author or authors of the paper. Enter both the first and last name">
@@ -479,14 +516,14 @@ const GeneralData = () => {
                                         <AuthorsInput handler={handleAuthorsChange} value={authors} />
                                     </FormGroup>
                                 </Col>
-                                <Col md={6} className="pl-md-3">
+                                <Col md={6} className="ps-md-3">
                                     <FormGroup>
                                         <Label for="paperCreationDate">
                                             <Tooltip message="The publication date of the paper, in the form of month and year">
                                                 Publication date
                                             </Tooltip>
                                         </Label>
-                                        <Row form>
+                                        <Row>
                                             <Col md={6}>
                                                 <Input
                                                     type="select"
@@ -549,13 +586,13 @@ const GeneralData = () => {
             </TransitionGroup>
             <hr className="mt-5 mb-3" />
             {errors && errors.length > 0 && (
-                <ul className="float-left mb-4 text-danger">
+                <ul className="float-start mb-4 text-danger">
                     {errors.map((e, index) => {
                         return <li key={index}>{e}</li>;
                     })}
                 </ul>
             )}
-            <Button color="primary" className="float-right mb-4" onClick={handleNextClick} data-test="nextStep">
+            <Button color="primary" className="float-end mb-4" onClick={handleNextClick} data-test="nextStep">
                 Next step
             </Button>
 

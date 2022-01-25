@@ -196,7 +196,7 @@ const Contributions = props => {
                                                     {/* TODO: use constants for URL */}
                                                     <span
                                                         style={{ margin: '7px 5px 0 0', fontSize: '95%' }}
-                                                        className="float-right btn btn-link p-0 border-0 align-baseline"
+                                                        className="float-end btn btn-link p-0 border-0 align-baseline"
                                                     >
                                                         Compare these contributions
                                                     </span>

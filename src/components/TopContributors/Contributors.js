@@ -12,6 +12,7 @@ import Tippy from '@tippyjs/react';
 import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
+import pluralize from 'pluralize';
 
 const Contributors = ({ researchFieldId }) => {
     const { contributors, sort, includeSubFields, isLoading, setSort, setIncludeSubFields } = useContributors({
@@ -50,29 +51,18 @@ const Contributors = ({ researchFieldId }) => {
                                         {contributor.profile.display_name}
                                         <br />
                                         {contributor?.counts && contributor.counts.total !== null && (
-                                            <ul className="p-0 pl-3 mb-0 mt-2">
-                                                <li>
-                                                    {contributor.counts.papers} paper{contributor.counts.papers > 1 ? 's' : ''}
-                                                </li>
-                                                <li>
-                                                    {contributor.counts.contributions} contribution{contributor.counts.contributions > 1 ? 's' : ''}
-                                                </li>
-                                                <li>
-                                                    {contributor.counts.comparisons} comparison{contributor.counts.comparisons > 1 ? 's' : ''}
-                                                </li>
-                                                <li>
-                                                    {contributor.counts.visualizations} visualization
-                                                    {contributor.counts.visualizations > 1 ? 's' : ''}
-                                                </li>
-                                                <li>
-                                                    {contributor.counts.problems} research problem{contributor.counts.problems > 1 ? 's' : ''}
-                                                </li>
+                                            <ul className="p-0 ps-3 mb-0 mt-2">
+                                                <li>{pluralize('paper', contributor.counts.paper, true)}</li>
+                                                <li>{pluralize('contribution', contributor.counts.contributions, true)}</li>
+                                                <li>{pluralize('comparison', contributor.counts.comparisons, true)}</li>
+                                                <li>{pluralize('visualization', contributor.counts.visualizations, true)}</li>
+                                                <li>{pluralize('research problem', contributor.counts.problems, true)}</li>
                                             </ul>
                                         )}
                                         {contributor?.counts && contributor.counts.total !== null && (
                                             <>
                                                 <hr className="mb-1 mt-1" style={{ background: '#fff' }} />
-                                                <ul className="p-0 pl-3 mb-0 mt-2">
+                                                <ul className="p-0 ps-3 mb-0 mt-2">
                                                     <li>
                                                         <i>
                                                             <b>{contributor.counts.total} </b>total contributions

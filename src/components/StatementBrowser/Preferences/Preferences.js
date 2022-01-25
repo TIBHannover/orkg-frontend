@@ -1,4 +1,4 @@
-import { CustomInput, Button } from 'reactstrap';
+import { Input, Button, Label } from 'reactstrap';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 import { updatePreferences, setIsHelpModalOpen } from 'actions/statementBrowser';
@@ -34,7 +34,7 @@ export default function Preferences({ closeTippy }) {
                 Preferences
                 <Button
                     color="link"
-                    className="p-0 float-right"
+                    className="p-0 float-end"
                     onClick={() => {
                         closeTippy();
                         dispatch(setIsHelpModalOpen({ isOpen: true, articleId: HELP_CENTER_ARTICLES.PREFERENCES }));
@@ -44,44 +44,46 @@ export default function Preferences({ closeTippy }) {
                 </Button>
             </h5>
             <div className="mb-2">
-                <CustomInput
-                    type="switch"
-                    id="showClasses"
-                    name="showClasses"
-                    label="Show classes of resources"
-                    onChange={settingsInputSwitched}
-                    checked={preferences['showClasses']}
-                />
+                <Input type="switch" id="showClasses" name="showClasses" onChange={settingsInputSwitched} checked={preferences['showClasses']} />{' '}
+                <Label for="showClasses" className="mb-0">
+                    Show classes of resources
+                </Label>
             </div>
             <div className="mb-2">
-                <CustomInput
+                <Input
                     type="switch"
                     id="showStatementInfo"
                     name="showStatementInfo"
-                    label="Show information about the statement"
                     onChange={settingsInputSwitched}
                     checked={preferences['showStatementInfo']}
-                />
+                />{' '}
+                <Label for="showStatementInfo" className="mb-0">
+                    Show information about the statement
+                </Label>
             </div>
             <div className="mb-2">
-                <CustomInput
+                <Input
                     type="switch"
                     id="showValueInfo"
                     name="showValueInfo"
-                    label="Show information tooltip of values"
                     onChange={settingsInputSwitched}
                     checked={preferences['showValueInfo']}
-                />
+                />{' '}
+                <Label for="showValueInfo" className="mb-0">
+                    Show information tooltip of values
+                </Label>
             </div>
             <div className="mb-2">
-                <CustomInput
+                <Input
                     type="switch"
                     id="showLiteralDataTypes"
                     name="showLiteralDataTypes"
-                    label="Show data type of literals"
                     onChange={settingsInputSwitched}
                     checked={preferences['showLiteralDataTypes']}
-                />
+                />{' '}
+                <Label for="showLiteralDataTypes" className="mb-0">
+                    Show data type of literals
+                </Label>
             </div>
         </PreferencesStyle>
     );
