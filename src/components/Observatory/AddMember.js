@@ -1,76 +1,53 @@
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter, FormGroup, Input, InputGroup, InputGroupText } from 'reactstrap';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
-import { getContributors } from 'services/backend/contributors';
 import { useState, useEffect } from 'react';
 import { updateUserObservatory } from 'services/backend/users';
 import Select from 'react-select';
-import { MISC } from 'constants/graphSettings';
 
 function AddMember(props) {
-    const [contributors, setContributors] = useState([]);
-    const [selectedContributors, setSelectedContributors] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
+    const [selectedOrganization, setSelectedOrganization] = useState('');
+    const [text, setText] = useState('');
 
-    useEffect(() => {
-        const loadContributors = async () => {
-            await getContributors()
-                .then(contributors => {
-                    setContributors(contributors);
-                })
-                .catch(error => {
-                    console.log(error);
-                });
-        };
-        loadContributors();
-    }, []);
+    useEffect(() => {}, []);
 
-    const handleSubmit = async e => {
+    const handleSubmit = () => {
         setIsLoading(true);
-        if (selectedContributors && selectedContributors.length > 0) {
-            //retrieve the recently selected members
-            const newSelectedContributors = selectedContributors.filter(o1 => !props.members.find(o2 => o1.id === o2.id));
-            //retrieve the members which have been unselected from the list
-            const deleted = props.members.filter(o1 => !selectedContributors.find(o2 => o1.id === o2.id));
-
-            newSelectedContributors.map(c => {
-                c.observatory_id = props.id;
-                c.organization_id = props.organizationId;
-            });
-
-            deleted.map(c => {
-                c.observatory_id = MISC.UNKNOWN_ID;
-                c.organization_id = MISC.UNKNOWN_ID;
-            });
-            updateObservatory(newSelectedContributors.concat(deleted), selectedContributors);
-        } else if (props.members && props.members.length > 0) {
-            const deleted = props.members;
-            deleted.map(c => {
-                c.observatory_id = MISC.UNKNOWN_ID;
-                c.organization_id = MISC.UNKNOWN_ID;
-            });
-            updateObservatory(deleted, []);
-        } else {
-            toast.error('Please select observatory members');
+        if (selectedOrganization && text.length > 0) {
+            updateObservatory(text);
             setIsLoading(false);
+        } else {
+            setIsLoading(false);
+            toast.error('Organization or user email is missing');
         }
     };
 
-    const updateObservatory = async (data, updatedMembers) => {
-        await updateUserObservatory(data)
+    const updateObservatory = async user => {
+        await updateUserObservatory(user, props.id, selectedOrganization.id)
             .then(response => {
-                toast.success(response.status);
-                props.updateObservatoryMembers(updatedMembers);
-                setIsLoading(false);
-                props.toggle();
+                if (response.status) {
+                    toast.success('Member added successfully');
+                    props.updateObservatoryMembers();
+                    setIsLoading(false);
+                    props.toggle();
+                } else {
+                    toast.error('error adding member to an observatory');
+                    setIsLoading(false);
+                }
             })
             .catch(error => {
+                toast.error(`error adding member to an observatory`);
                 setIsLoading(false);
             });
     };
 
-    const handleCreatorsChange = selected => {
-        setSelectedContributors(selected);
+    const handleCreatorChange = e => {
+        setText(e);
+    };
+
+    const handleOrganizationChange = selected => {
+        setSelectedOrganization(selected);
     };
 
     return (
@@ -79,14 +56,22 @@ function AddMember(props) {
                 <ModalHeader toggle={props.toggle}>Add a member</ModalHeader>
                 <ModalBody>
                     <>
+                        Organization:
                         <Select
-                            options={contributors}
-                            onChange={handleCreatorsChange}
+                            options={props.organizationsList}
+                            onChange={handleOrganizationChange}
                             getOptionValue={({ id }) => id}
-                            getOptionLabel={({ display_name }) => display_name}
-                            isMulti
-                            defaultValue={props.members}
+                            getOptionLabel={({ name }) => name}
                         />
+                        <br />
+                        <div>
+                            <FormGroup>
+                                <InputGroup>
+                                    <InputGroupText>Email</InputGroupText>
+                                    <Input id="search_content" onChange={e => handleCreatorChange(e.target.value)} value={text} />
+                                </InputGroup>
+                            </FormGroup>
+                        </div>
                     </>
                 </ModalBody>
                 <ModalFooter>
@@ -105,7 +90,7 @@ AddMember.propTypes = {
     showDialog: PropTypes.bool.isRequired,
     toggle: PropTypes.func.isRequired,
     id: PropTypes.string,
-    organizationId: PropTypes.string,
+    organizationsList: PropTypes.object,
     members: PropTypes.array,
     updateObservatoryMembers: PropTypes.func
 };

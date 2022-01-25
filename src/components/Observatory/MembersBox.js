@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Button, Modal, ModalBody, ModalHeader } from 'reactstrap';
 import { getUsersByObservatoryId } from 'services/backend/observatories';
+import { deleteUserFromObservatoryById } from 'services/backend/users';
 import ContributorCard from 'components/ContributorCard/ContributorCard';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
@@ -14,33 +15,40 @@ const MembersBox = ({ observatoryId, organizationsList }) => {
     const [isLoadingMembers, setIsLoadingMembers] = useState(null);
     const [openModal, setOpenModal] = useState(false);
     const [showAddMemberDialog, setShowAddMemberDialog] = useState(false);
+    const [userData, setUserData] = useState('');
 
     useEffect(() => {
-        const loadMembers = () => {
-            setIsLoadingMembers(true);
-            getUsersByObservatoryId(observatoryId)
-                .then(contributors => {
-                    setMembers(contributors);
-                    setIsLoadingMembers(false);
-                })
-                .catch(error => {
-                    setIsLoadingMembers(false);
-                });
-        };
+        setUserData(user);
+        loadMembers.current();
+    }, [observatoryId, user]);
 
-        loadMembers();
-    }, [observatoryId]);
+    const loadMembers = useRef(() => {
+        setIsLoadingMembers(true);
+        getUsersByObservatoryId(observatoryId)
+            .then(contributors => {
+                setMembers(contributors);
+                setIsLoadingMembers(false);
+            })
+            .catch(error => {
+                setIsLoadingMembers(false);
+            });
+    });
 
-    const updateObservatoryMembers = members => {
-        setMembers(members);
+    const updateObservatoryMembers = () => {
+        loadMembers.current();
+    };
+
+    const deleteObservatoryMember = async id => {
+        await deleteUserFromObservatoryById(id).catch(() => {});
+        loadMembers.current();
     };
 
     return (
-        <div className="box rounded-3 p-4 flex-grow-1 d-flex flex-column">
+        <div className="box rounded-3 p-4 flex-grow-1">
             <h5>Members</h5>
             {!!user && user.isCurationAllowed && (
                 <Button outline size="sm" style={{ float: 'right', marginTop: '-33px' }} onClick={() => setShowAddMemberDialog(v => !v)}>
-                    <Icon icon={faPlus} /> Edit
+                    <Icon icon={faPlus} /> Add
                 </Button>
             )}
             <div className="flex-grow-1">
@@ -54,7 +62,9 @@ const MembersBox = ({ observatoryId, organizationsList }) => {
                                             <ContributorCard
                                                 contributor={{
                                                     ...user,
-                                                    subTitle: organizationsList.find(o => o.id.includes(user.organization_id))?.name
+                                                    subTitle: organizationsList.find(o => o.id.includes(user.organization_id))?.name,
+                                                    deleteOption:
+                                                        !!userData && userData.isCurationAllowed ? { status: true, deleteObservatoryMember } : false
                                                 }}
                                             />
                                             {members.slice(0, 4).length - 1 !== index && <hr style={{ width: '90%', margin: '10px auto' }} />}
@@ -78,7 +88,11 @@ const MembersBox = ({ observatoryId, organizationsList }) => {
                                                                         contributor={{
                                                                             ...user,
                                                                             subTitle: organizationsList.find(o => o.id.includes(user.organization_id))
-                                                                                ?.name
+                                                                                ?.name,
+                                                                            deleteOption:
+                                                                                !!userData && userData.isCurationAllowed
+                                                                                    ? { status: true, deleteObservatoryMember }
+                                                                                    : false
                                                                         }}
                                                                     />
                                                                     {members.length - 1 !== index && (
@@ -106,7 +120,7 @@ const MembersBox = ({ observatoryId, organizationsList }) => {
                     showDialog={showAddMemberDialog}
                     toggle={() => setShowAddMemberDialog(v => !v)}
                     id={observatoryId}
-                    organizationId={organizationsList.length > 0 ? organizationsList[0]['id'] : ''}
+                    organizationsList={organizationsList}
                     members={members}
                     updateObservatoryMembers={updateObservatoryMembers}
                 />

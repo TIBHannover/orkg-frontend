@@ -5,6 +5,9 @@ import Gravatar from 'react-gravatar';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import pluralize from 'pluralize';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { Button } from 'reactstrap';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 
 const StyledGravatar = styled(Gravatar)`
     border: 3px solid ${props => props.theme.dark};
@@ -25,6 +28,16 @@ function ContributorCard(props) {
                     {props.contributor.subTitle && (
                         <div>
                             <small className="text-muted">{props.contributor.subTitle}</small>
+                            {props.contributor.deleteOption && props.contributor.deleteOption.status && (
+                                <Button
+                                    color="secondry"
+                                    size="sm"
+                                    style={{ padding: '0px' }}
+                                    onClick={() => props.contributor.deleteOption.deleteObservatoryMember(props.contributor.id)}
+                                >
+                                    <Icon icon={faTrash} style={{ color: '#e86161' }} />
+                                </Button>
+                            )}
                         </div>
                     )}
                     {props.contributor.counts && (
