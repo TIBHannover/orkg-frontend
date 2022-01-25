@@ -1,5 +1,4 @@
 import UserAvatar from 'components/UserAvatar/UserAvatar';
-import React from 'react';
 import { useSelector } from 'react-redux';
 
 const Contributors = () => {

@@ -2,7 +2,6 @@ import { faBars } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import ROUTES from 'constants/routes';
 import PropTypes from 'prop-types';
-import React from 'react';
 import { Link } from 'react-router-dom';
 import { Badge } from 'reactstrap';
 import { reverseWithSlug } from 'utils';

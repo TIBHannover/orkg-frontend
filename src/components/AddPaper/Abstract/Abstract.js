@@ -1,6 +1,7 @@
 import { Component } from 'react';
 import { Button, Modal, ModalBody, ModalHeader, ModalFooter } from 'reactstrap';
-import { semanticScholarUrl, submitGetRequest } from 'network';
+import { submitGetRequest } from 'network';
+import { semanticScholarUrl } from 'services/semanticScholar';
 import { getAnnotations } from 'services/annotation/index';
 import { connect } from 'react-redux';
 import {
@@ -164,7 +165,7 @@ class Abstract extends Component {
             this.setState({
                 isAbstractLoading: true
             });
-            return submitGetRequest(semanticScholarUrl + DOI)
+            return submitGetRequest(semanticScholarUrl + 'v1/paper/' + DOI)
                 .then((data, reject) => {
                     if (!data.abstract) {
                         return reject;

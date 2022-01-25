@@ -23,6 +23,7 @@ import { Button, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledButtonD
 import Confirm from 'components/Confirmation/Confirmation';
 import { historyModalToggled, setIsEditing } from 'slices/literatureListSlice';
 import { createGlobalStyle } from 'styled-components';
+import ExportBibtexModal from 'components/LiteratureList/ExportBibtexModal/ExportBibtexModal';
 import EmbedModal from 'components/LiteratureList/EmbedModal/EmbedModal';
 
 const GlobalEmbedStyle = createGlobalStyle`
@@ -52,6 +53,7 @@ const GlobalEmbedStyle = createGlobalStyle`
 const LiteratureList = () => {
     const [isOpenPublishModal, setIsOpenPublishModal] = useState(false);
     const [isOpenEmbedModal, setIsOpenEmbedModal] = useState(false);
+    const [isOpenExportBibtexModal, setIsOpenExportBibtexModal] = useState(false);
     const { id, embed } = useParams();
     const isPublished = useSelector(state => state.literatureList.isPublished);
     const list = useSelector(state => state.literatureList.literatureList);
@@ -200,7 +202,8 @@ const LiteratureList = () => {
                             <DropdownToggle size="sm" color="secondary" className="px-3 rounded-end">
                                 <Icon icon={faEllipsisV} />
                             </DropdownToggle>
-                            <DropdownMenu right>
+                            <DropdownMenu end>
+                                <DropdownItem onClick={() => setIsOpenExportBibtexModal(true)}>Export as BibTeX</DropdownItem>
                                 <DropdownItem tag={NavLink} exact to={reverse(ROUTES.RESOURCE, { id })}>
                                     View resource
                                 </DropdownItem>
@@ -221,9 +224,12 @@ const LiteratureList = () => {
                 <PublishModal toggle={() => setIsOpenPublishModal(v => !v)} id={id} getVersions={getVersions} listId={list.id} show />
             )}
             {isOpenHistoryModal && <HistoryModal toggle={toggleHistoryModal} id={id} show />}
+
             {isOpenEmbedModal && <EmbedModal toggle={() => setIsOpenEmbedModal(v => !v)} isOpen={isOpenEmbedModal} id={id} />}
 
             {isEmbedded && <GlobalEmbedStyle />}
+
+            {isOpenExportBibtexModal && <ExportBibtexModal toggle={() => setIsOpenExportBibtexModal(v => !v)} isOpen />}
         </div>
     );
 };
