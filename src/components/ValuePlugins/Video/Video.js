@@ -4,6 +4,7 @@ import { renderToString } from 'react-dom/server';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faVideo } from '@fortawesome/free-solid-svg-icons';
 import { Modal, ModalHeader, ModalBody } from 'reactstrap';
+import { ENTITIES } from 'constants/graphSettings';
 import REGEX from 'constants/regex';
 import styled from 'styled-components';
 
@@ -105,7 +106,7 @@ class Video extends Component {
 
 Video.propTypes = {
     children: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,
-    type: PropTypes.oneOf(['resource', 'literal']),
+    type: PropTypes.oneOf([ENTITIES.RESOURCE, ENTITIES.LITERAL]),
     options: PropTypes.object.isRequired
 };
 

@@ -61,8 +61,8 @@ function TemplateComponent(props) {
     preview(drop(ref));
 
     return (
-        <StatementsGroupStyle className="noTemplate" style={{ opacity }}>
-            <div ref={ref} className="row no-gutters">
+        <StatementsGroupStyle className="noTemplate list-group-item" style={{ opacity }}>
+            <div ref={ref} className="row gx-0">
                 <TemplateComponentProperty
                     handleDeleteTemplateComponent={props.handleDeleteTemplateComponent}
                     id={props.id}

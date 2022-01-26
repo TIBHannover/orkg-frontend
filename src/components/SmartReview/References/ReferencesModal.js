@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { uniq } from 'lodash';
 import { Alert, Badge, Button, ListGroup, ListGroupItem, Modal, ModalBody, ModalHeader } from 'reactstrap';
-import Confirm from 'reactstrap-confirm';
+import Confirm from 'components/Confirmation/Confirmation';
 
 const ReferencesModal = ({ show, toggle }) => {
     const [isOpenReferenceModal, setIsOpenReferenceModal] = useState(false);
@@ -22,7 +22,7 @@ const ReferencesModal = ({ show, toggle }) => {
 
     useEffect(() => {
         setReferencesSorted(
-            references.sort((a, b) => a?.parsedReference?.author?.[0]?.family?.localeCompare(b?.parsedReference?.author?.[0]?.family))
+            [...references].sort((a, b) => a?.parsedReference?.author?.[0]?.family?.localeCompare(b?.parsedReference?.author?.[0]?.family))
         );
     }, [references]);
 
@@ -119,8 +119,7 @@ const ReferencesModal = ({ show, toggle }) => {
     const handleDelete = async statementId => {
         const isConfirmed = await Confirm({
             title: 'Are you sure?',
-            message: `Do you want to remove this reference? `,
-            cancelColor: 'light'
+            message: `Do you want to remove this reference? `
         });
 
         if (isConfirmed) {
@@ -153,14 +152,14 @@ const ReferencesModal = ({ show, toggle }) => {
                 <ListGroup>
                     {referencesSorted.map(reference => {
                         return (
-                            <ListGroupItem key={reference.literal.id} action className="d-flex align-items-start pr-2">
+                            <ListGroupItem key={reference.literal.id} className="d-flex align-items-start pe-2">
                                 <div className="flex-grow-1">
                                     <Badge color="light">@{reference.parsedReference['citation-label']}</Badge>{' '}
                                     {reference.parsedReference.author?.[0]?.family} {reference.parsedReference.author?.length > 1 && 'et al.'}{' '}
                                     <em>{reference.parsedReference.title}</em>
                                 </div>
                                 <div className="d-flex flex-shrink-0">
-                                    <Button color="link" className="mr-1 px-1 py-0 text-secondary" onClick={() => handleEdit(reference)}>
+                                    <Button color="link" className="me-1 px-1 py-0 text-secondary" onClick={() => handleEdit(reference)}>
                                         <Icon icon={faPen} />
                                     </Button>
                                     <Button

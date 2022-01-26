@@ -15,7 +15,7 @@ import PropTypes from 'prop-types';
 
 const SortButton = forwardRef((props, ref) => {
     return (
-        <Button innerRef={ref} color="secondary" className="pl-3 pr-3" size="sm">
+        <Button innerRef={ref} color="secondary" className="ps-3 pe-3" size="sm">
             {stringifySort(props.sort)} <Icon icon={faChevronDown} />
         </Button>
     );
@@ -136,7 +136,7 @@ const Comparisons = ({ id, boxShadow }) => {
                             <br />
                             <br />
                             <Link to={ROUTES.ADD_COMPARISON}>
-                                <Button size="sm" color="primary " className="mr-3">
+                                <Button size="sm" color="primary " className="me-3">
                                     Add comparison
                                 </Button>
                             </Link>
@@ -151,7 +151,7 @@ const Comparisons = ({ id, boxShadow }) => {
                             </>
                         )}
                         {page === 0 && (
-                            <div className="text-left">
+                            <div className="text-start">
                                 <ContentLoader
                                     speed={2}
                                     width={400}

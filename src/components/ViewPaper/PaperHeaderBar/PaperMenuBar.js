@@ -25,7 +25,13 @@ function PaperMenuBar(props) {
     return (
         <>
             {props.paperLink && (
-                <a href={props.paperLink} className="btn btn-secondary flex-shrink-0 btn-sm" target="_blank" rel="noopener noreferrer">
+                <a
+                    href={props.paperLink}
+                    className="btn btn-secondary flex-shrink-0 btn-sm"
+                    style={{ marginRight: 2 }}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
                     <Icon icon={faFile} style={{ margin: '2px 4px 0 0' }} /> View paper
                 </a>
             )}
@@ -59,7 +65,7 @@ function PaperMenuBar(props) {
             )}
 
             <ButtonDropdown isOpen={menuOpen} toggle={() => setMenuOpen(v => !v)}>
-                <DropdownToggle size="sm" color="secondary" className="px-3 rounded-right">
+                <DropdownToggle size="sm" color="secondary" className="px-3 rounded-end">
                     <Icon icon={faEllipsisV} />
                 </DropdownToggle>
                 <DropdownMenu right>

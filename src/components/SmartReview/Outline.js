@@ -11,7 +11,7 @@ const Wrapper = styled.aside`
     height: 100%;
 
     // when the screen is too small, hide the outline, the responsiveness can be improved in the future
-    @media only screen and (max-width: 1550px) {
+    @media only screen and (max-width: 1750px) {
         display: none;
     }
 `;
@@ -26,6 +26,8 @@ const Box = styled.div`
     border-radius: ${props => (props.editMode ? '6px' : '6px 0 0 6px')};
     margin-top: ${props => (props.editMode ? '0px' : '150px')};
     padding: 10px;
+    max-height: calc(100vh - 190px);
+    overflow-y: auto;
 
     a:focus {
         color: ${props => props.theme.secondary} !important;

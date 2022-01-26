@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect, useMemo } from 'react';
-import { InputGroup, InputGroupAddon, Button } from 'reactstrap';
+import { InputGroup, Button } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faClipboard, faLink, faAtom } from '@fortawesome/free-solid-svg-icons';
 import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
@@ -95,6 +95,35 @@ function Autocomplete(props) {
             setInputValue(props.inputValue);
         }
     }, [props.inputValue]);
+
+    // reset the value input if the selected value is null
+    useEffect(() => {
+        if (props.value === null) {
+            setInputValue('');
+        }
+    }, [props.value]);
+
+    // Support home and end keys for text Input
+    const handleKeyDown = evt => {
+        if (evt.key === 'Home') {
+            evt.preventDefault();
+            if (evt.shiftKey) {
+                evt.target.selectionStart = 0;
+            } else {
+                evt.target.setSelectionRange(0, 0);
+            }
+        }
+        if (evt.key === 'End') {
+            evt.preventDefault();
+            const len = evt.target.value.length;
+            if (evt.shiftKey) {
+                evt.target.selectionEnd = len;
+            } else {
+                evt.target.setSelectionRange(len, len);
+            }
+        }
+        props.onKeyDown?.(evt);
+    };
 
     /**
      * Lookup in ORKG backend
@@ -598,19 +627,6 @@ function Autocomplete(props) {
             whiteSpace: 'normal',
             padding: 0
         }),
-        input: provided => ({
-            ...provided, // custom style to fix when the input field doesn't get the full width
-            display: 'flex',
-            visibility: 'visible',
-            flex: '1',
-            '& > div': {
-                flex: '1',
-                display: 'flex !important'
-            },
-            '& input': {
-                flex: '1'
-            }
-        }),
         multiValueRemove: provided => ({
             ...provided,
             cursor: 'pointer'
@@ -627,7 +643,7 @@ function Autocomplete(props) {
                 <ConditionalWrapper condition={props.inputGroup} wrapper={children => <InputGroup size="sm">{children}</InputGroup>}>
                     {children}
                     {props.copyValueButton && props.value && props.value.id && (
-                        <InputGroupAddon addonType="append">
+                        <>
                             <Button disabled={!props.value || !props.value.label} onClick={handleCopyClick} outline>
                                 <Tippy content="Copy the label to clipboard">
                                     <span>
@@ -644,7 +660,7 @@ function Autocomplete(props) {
                                     </Tippy>
                                 </Link>
                             )}
-                        </InputGroupAddon>
+                        </>
                     )}
                 </ConditionalWrapper>
             )}
@@ -677,11 +693,10 @@ function Autocomplete(props) {
                     aria-label={props.placeholder}
                     autoFocus={props.autoFocus}
                     cacheOptions={false}
-                    cache={false}
                     defaultOptions={props.defaultOptions ?? true}
                     openMenuOnFocus={props.openMenuOnFocus}
                     onBlur={props.onBlur}
-                    onKeyDown={props.onKeyDown}
+                    onKeyDown={handleKeyDown}
                     selectRef={props.innerRef}
                     createOptionPosition="first"
                     menuPortalTarget={props.menuPortalTarget}
@@ -700,13 +715,16 @@ function Autocomplete(props) {
                     isDisabled={props.isDisabled}
                     isMulti={props.isMulti}
                     inputId={props.inputId}
+                    classNamePrefix="react-select"
                     isValidNewOption={(inputValue, selectValue, selectOptions) => {
                         if (props.handleCreateExistingLabel) {
                             // to disable the create button
                             props.handleCreateExistingLabel(inputValue, selectOptions);
                         }
-                        if (!props.allowCreate) {
+                        if (!props.allowCreate && !props.allowCreateDuplicate) {
                             return false;
+                        } else if (inputValue && props.allowCreateDuplicate) {
+                            return true;
                         } else {
                             return !(
                                 !inputValue ||
@@ -730,6 +748,7 @@ Autocomplete.propTypes = {
     onItemSelected: PropTypes.func,
     onChange: PropTypes.func,
     allowCreate: PropTypes.bool,
+    allowCreateDuplicate: PropTypes.bool,
     defaultOptions: PropTypes.array,
     additionalData: PropTypes.array,
     onNewItemSelected: PropTypes.func,
@@ -758,7 +777,8 @@ Autocomplete.propTypes = {
     inputId: PropTypes.string,
     onChangeInputValue: PropTypes.func,
     inputValue: PropTypes.string,
-    menuPortalTarget: PropTypes.object
+    menuPortalTarget: PropTypes.object,
+    cacheOptions: PropTypes.bool
 };
 
 Autocomplete.defaultProps = {
@@ -775,6 +795,8 @@ Autocomplete.defaultProps = {
     inputGroup: true,
     inputId: null,
     inputValue: null,
-    menuPortalTarget: null
+    menuPortalTarget: null,
+    allowCreateDuplicate: false,
+    cacheOptions: false
 };
 export default withTheme(Autocomplete);

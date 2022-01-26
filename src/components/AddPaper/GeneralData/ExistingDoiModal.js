@@ -8,17 +8,28 @@ const ExistingDoiModal = props => {
     const toggle = () => setShow(!show);
 
     return (
-        <Modal size="lg" isOpen={show} toggle={toggle}>
-            <ModalHeader toggle={toggle}>Warning: DOI already in ORKG</ModalHeader>
+        <Modal size="lg" isOpen={show}>
+            <ModalHeader toggle={toggle}>Warning: Paper already in ORKG</ModalHeader>
             <ModalBody>
                 <Alert color="info">
-                    The DOI <i>`{props.existingPaper.doi?.label}`</i> is already linked in ORKG. Please view the paper and contribute to improve the
-                    content. In case you want you can continue to create a new paper for this DOI.
+                    The paper <i>`{props.existingPaper.doi?.label || props.existingPaper.title}`</i> exists already in the ORKG. Please view the paper
+                    and contribute to improve the content. In case you want you can continue to create a new paper.
                 </Alert>
-                <strong>Existing paper:</strong> <PaperCard paper={props.existingPaper} showAddToComparison={false} />
+                <strong>Existing paper:</strong>
+                <div className="list-group">
+                    <PaperCard paper={props.existingPaper} showAddToComparison={false} />
+                </div>
             </ModalBody>
             <ModalFooter>
-                <Button color="primary" onClick={toggle}>
+                <Button
+                    color="primary"
+                    onClick={() => {
+                        toggle();
+                        if (props.onContinue) {
+                            props.onContinue();
+                        }
+                    }}
+                >
                     Continue
                 </Button>
             </ModalFooter>
@@ -27,7 +38,8 @@ const ExistingDoiModal = props => {
 };
 
 ExistingDoiModal.propTypes = {
-    existingPaper: PropTypes.object.isRequired
+    existingPaper: PropTypes.object.isRequired,
+    onContinue: PropTypes.func
 };
 
 export default ExistingDoiModal;

@@ -152,14 +152,14 @@ class ContributionsHelpTour extends Component {
                         <iframe
                             width="100%"
                             height="480"
-                            src="https://www.youtube.com/embed/BhI-gngCl0k?rel=0"
+                            src="https://www.youtube.com/embed/dPBz9uAbHqo?rel=0"
                             frameborder="0"
                             allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
                             allowfullscreen="true"
                             title="ORKG - How to add contribution data"
                         />
                         <hr />
-                        <a href="https://www.orkg.org/orkg/paper/R1020" target="_blank" rel="noopener noreferrer">
+                        <a href="https://www.orkg.org/orkg/paper/R8186" target="_blank" rel="noopener noreferrer">
                             View paper that has been used in this example <Icon size="sm" icon={faExternalLinkAlt} />
                         </a>
                     </ModalBody>

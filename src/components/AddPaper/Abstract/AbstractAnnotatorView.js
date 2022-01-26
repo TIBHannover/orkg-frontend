@@ -19,7 +19,7 @@ class AbstractAnnotatorView extends Component {
         const rangeArray = toArray(this.props.ranges).filter(r => r.certainty >= this.props.certaintyThreshold);
         const rangesClasses = [...new Set(rangeArray.map(r => r.class.label))];
         return (
-            <div className="pl-2 pr-2">
+            <div className="ps-2 pe-2">
                 {this.props.abstract && !this.props.isAnnotationLoading && !this.props.isAnnotationFailedLoading && (
                     <div>
                         {rangesClasses.length > 0 && (
@@ -45,10 +45,10 @@ class AbstractAnnotatorView extends Component {
                 {!this.props.isAbstractLoading && !this.props.isAnnotationLoading && (
                     <div>
                         <div id="annotationBadges">
-                            <Tooltip className="mr-2" message="Annotation labels are the properties that will be used in the contribution data.">
+                            <Tooltip className="me-2" message="Annotation labels are the properties that will be used in the contribution data.">
                                 Annotation labels
                             </Tooltip>
-                            <span className="mr-1 ml-1" />
+                            <span className="me-1 ms-1" />
                             {rangesClasses.length > 0 &&
                                 rangesClasses.map(c => {
                                     const aconcept = c
@@ -61,7 +61,8 @@ class AbstractAnnotatorView extends Component {
                                             <Tippy key={`c${c}`} content={aconcept[0].description}>
                                                 <span>
                                                     <Badge
-                                                        className="mr-2"
+                                                        color={null}
+                                                        className="me-2"
                                                         style={{
                                                             cursor: 'pointer',
                                                             marginBottom: '4px',
@@ -80,7 +81,8 @@ class AbstractAnnotatorView extends Component {
                                     } else {
                                         return (
                                             <Badge
-                                                className="mr-2"
+                                                color={null}
+                                                className="me-2"
                                                 key={`c${c}`}
                                                 style={{ marginBottom: '4px', color: '#333', background: this.props.getClassColor(c) }}
                                             >
@@ -104,7 +106,7 @@ class AbstractAnnotatorView extends Component {
                     !this.props.isAnnotationLoading &&
                     !this.props.isAnnotationFailedLoading &&
                     toArray(this.props.ranges).length > 0 && (
-                        <div className="col-3 float-right">
+                        <div className="col-3 float-end">
                             <div className="mt-4">
                                 <Range
                                     step={0.025}
@@ -148,7 +150,7 @@ class AbstractAnnotatorView extends Component {
                                     )}
                                 />
                                 <div className="mt-2 text-center">
-                                    <span className="mr-2">Certainty {this.props.certaintyThreshold[0].toFixed(2)}</span>
+                                    <span className="me-2">Certainty {this.props.certaintyThreshold[0].toFixed(2)}</span>
                                     <Tooltip
                                         trigger="click"
                                         hideDefaultIcon={true}

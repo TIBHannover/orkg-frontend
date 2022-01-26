@@ -45,7 +45,6 @@ import Contribution from 'pages/Contribution';
 import CsvImport from 'pages/CsvImport';
 import SmartReview from 'pages/SmartReview/SmartReview';
 import SmartReviews from 'pages/SmartReview/SmartReviews';
-import UserUnpublishedArticles from 'pages/SmartReview/UserUnpublishedArticles';
 import SmartReviewNew from 'pages/SmartReview/SmartReviewNew';
 import SmartReviewDiff from 'pages/SmartReview/SmartReviewDiff';
 import Tools from 'pages/Tools';
@@ -63,6 +62,10 @@ import HelpCenterArticle from 'pages/HelpCenter/HelpCenterArticle';
 import HelpCenterSearch from 'pages/HelpCenter/HelpCenterSearch';
 import WebinarMay11 from 'pages/WebinarMay11';
 import CurationCall from 'pages/CurationCall';
+import LiteratureLists from 'pages/LiteratureList/LiteratureLists';
+import LiteratureListNew from 'pages/LiteratureList/LiteratureListNew';
+import LiteratureList from 'pages/LiteratureList/LiteratureList';
+import LiteratureListDiff from 'pages/LiteratureList/LiteratureListDiff';
 
 // use lazy loading of pages that contain large dependencies
 // run "npm run analyze" to ensure the listed dependencies are not loaded elsewhere and thus end up in the bundle
@@ -332,10 +335,6 @@ const routes = [
         component: SmartReviews
     },
     {
-        path: ROUTES.USER_UNPUBLISHED_REVIEWS,
-        component: requireAuthentication(UserUnpublishedArticles)
-    },
-    {
         path: ROUTES.CONTRIBUTION_EDITOR,
         component: requireAuthentication(ContributionEditor)
     },
@@ -367,6 +366,22 @@ const routes = [
         path: ROUTES.HELP_CENTER_SEARCH,
         component: HelpCenterSearch
     },
+    {
+        path: ROUTES.LITERATURE_LISTS,
+        component: LiteratureLists
+    },
+    {
+        path: ROUTES.LITERATURE_LIST_NEW,
+        component: LiteratureListNew
+    },
+    {
+        path: ROUTES.LITERATURE_LIST_DIFF,
+        component: LiteratureListDiff
+    },
+    {
+        path: ROUTES.LITERATURE_LIST,
+        component: LiteratureList
+    },
     // redirect legacy route
     {
         path: ROUTES.CURATION_CALL,
@@ -379,6 +394,10 @@ const routes = [
     {
         path: ROUTES.WEBINAR_MAY_11,
         component: WebinarMay11
+    },
+    {
+        path: ROUTES.USER_UNPUBLISHED_REVIEWS,
+        component: () => <Redirect to={{ pathname: reverse(ROUTES.USER_SETTINGS, { tab: 'draft-smart-reviews' }), state: { status: 301 } }} />
     },
     /* Don't add routes below this line */
     {

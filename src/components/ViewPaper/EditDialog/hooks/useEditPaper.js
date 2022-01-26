@@ -1,6 +1,6 @@
 import { CLASSES, PREDICATES } from 'constants/graphSettings';
 import REGEX from 'constants/regex';
-import { isEqual } from 'lodash';
+import { isEqual, cloneDeep } from 'lodash';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
@@ -134,15 +134,21 @@ const useEditPaper = () => {
             [PREDICATES.URL]: 'url'
         };
 
-        for (const { predicate: property, object } of paperStatements) {
+        for (const { predicate: property, object, id: statementId } of paperStatements) {
             if (property.id in propertyIdToKey) {
-                data[propertyIdToKey[property.id]] = object;
+                data[propertyIdToKey[property.id]] = {
+                    ...object,
+                    statementId: property.id === PREDICATES.HAS_RESEARCH_FIELD || property.id === PREDICATES.HAS_VENUE ? statementId : undefined
+                };
             }
             if (property.id === PREDICATES.HAS_AUTHOR) {
-                data.authors.push(object);
+                data.authors.push({
+                    ...object,
+                    statementId
+                });
             }
         }
-
+        data.authors.reverse();
         return data;
     };
 
@@ -179,7 +185,7 @@ const useEditPaper = () => {
         deleteStatementsByIds(statementsIds);
 
         // Add all authors from the state
-        const authorsUpdated = [...authors];
+        const authorsUpdated = cloneDeep([...authors]);
         for (const [i, author] of authorsUpdated.entries()) {
             // create the author
             if (author.orcid) {

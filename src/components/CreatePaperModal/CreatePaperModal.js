@@ -1,5 +1,7 @@
+import Confirm from 'components/Confirmation/Confirmation';
 import DoiItem from 'components/CreatePaperModal/DoiItem';
 import useCreatePaper from 'components/CreatePaperModal/hooks/useCreatePaper';
+import TitleItem from 'components/CreatePaperModal/TitleItem';
 import EditItem from 'components/ViewPaper/EditDialog/EditItem';
 import REGEX from 'constants/regex';
 import PropTypes from 'prop-types';
@@ -35,30 +37,23 @@ const CreatePaperModal = ({ isOpen, toggle, onCreatePaper, initialValue }) => {
     }, [initialValue]);
 
     const handleCreate = async () => {
-        const contributionId = await createPaper({
+        const ids = await createPaper({
             title,
             month,
             year,
             authors,
-            doi,
+            doi: REGEX.DOI.test(doi) ? doi : null,
             publishedIn,
             researchField,
             url,
             setOpenItem
         });
-
-        if (contributionId) {
-            onCreatePaper(contributionId);
+        if (ids) {
+            onCreatePaper(ids);
         }
     };
 
     const FIELDS = {
-        title: {
-            label: 'Title *',
-            type: 'text',
-            value: title,
-            onChange: e => setTitle(e.target.value)
-        },
         researchField: {
             label: 'Research Field *',
             type: 'researchField',
@@ -105,11 +100,31 @@ const CreatePaperModal = ({ isOpen, toggle, onCreatePaper, initialValue }) => {
             setYear(paper.year || year);
             setDoi(paper.doi || doi);
             setPublishedIn(paper.publishedIn || publishedIn);
+            setUrl(paper.url || url);
         },
-        [authors, doi, month, publishedIn, title, year]
+        [authors, doi, month, publishedIn, title, url, year]
     );
 
     const toggleItem = item => setOpenItem(openItem !== item ? item : null);
+
+    const handleTitleClick = async paper => {
+        if (authors.length > 0 || month || year || url || publishedIn) {
+            const confirm = await Confirm({
+                title: 'Overwrite data?',
+                message: 'Do you want to overwrite the data you entered with the selected paper data?'
+            });
+
+            if (!confirm) {
+                return;
+            }
+        }
+        setTitle(paper.label || title);
+        setAuthors(paper?.authors?.length > 0 ? paper.authors.map(author => ({ label: author.name })) : []);
+        setYear(paper.year || '');
+        setDoi(paper.externalIds?.DOI || '');
+        setUrl(paper.externalIds?.ArXiv ? `https://arxiv.org/abs/${paper.externalIds?.ArXiv}` : '');
+        setPublishedIn(paper.venue || '');
+    };
 
     return (
         <Modal isOpen={isOpen} toggle={toggle} size="lg">
@@ -123,6 +138,13 @@ const CreatePaperModal = ({ isOpen, toggle, onCreatePaper, initialValue }) => {
                         value={doi}
                         onChange={value => setDoi(value)}
                         lookupOnMount={lookupOnMount}
+                    />
+                    <TitleItem
+                        toggleItem={() => toggleItem('title')}
+                        isExpanded={openItem === 'title'}
+                        value={title}
+                        onChange={setTitle}
+                        onOptionClick={handleTitleClick}
                     />
                     {Object.entries(FIELDS).map(([itemName, item], index) => (
                         <EditItem
@@ -139,7 +161,7 @@ const CreatePaperModal = ({ isOpen, toggle, onCreatePaper, initialValue }) => {
                 </ListGroup>
             </ModalBody>
             <ModalFooter className="d-flex">
-                <Button disabled={isLoading} color="primary" className="float-right" onClick={handleCreate}>
+                <Button disabled={isLoading} color="primary" className="float-end" onClick={handleCreate}>
                     {!isLoading ? 'Create' : 'Loading...'}
                 </Button>
             </ModalFooter>

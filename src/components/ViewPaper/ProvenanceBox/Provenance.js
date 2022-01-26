@@ -96,7 +96,7 @@ const Provenance = ({
                             to={reverse(ROUTES.USER_PROFILE, {
                                 userId: createdBy.id
                             })}
-                            className="ml-2"
+                            className="ms-2"
                         >
                             {createdBy.display_name}
                         </Link>

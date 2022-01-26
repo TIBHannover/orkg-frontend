@@ -31,7 +31,7 @@ const Unauthorized = () => {
     return (
         <>
             <TitleBar>Authentication required</TitleBar>
-            <Container className="box rounded pt-4 pb-4 pl-5 pr-5">
+            <Container className="box rounded pt-4 pb-4 ps-5 pe-5">
                 <div className="container">
                     <div className="row justify-content-center">
                         <div className="col-md-12 text-center">
@@ -41,13 +41,13 @@ const Unauthorized = () => {
                             ) : (
                                 <>
                                     <h2 className="mb-4 h4">You need to sign in to continue</h2>
-                                    <Button color="primary" className="mr-3" onClick={handleSignIn}>
+                                    <Button color="primary" className="me-3" onClick={handleSignIn}>
                                         Sign in
                                     </Button>
                                 </>
                             )}
                             <Link to={ROUTES.HOME}>
-                                <Button color="primary" outline className="mr-3">
+                                <Button color="primary" outline className="me-3">
                                     Go to home
                                 </Button>
                             </Link>

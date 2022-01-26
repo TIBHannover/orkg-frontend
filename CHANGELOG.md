@@ -3,6 +3,161 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [V0.61](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.60...V0.61) - 2022-01-26
+
+### Changes
+
+- fix(Comparison): view a resource within a context [`#761`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/761)
+- feat(Visualization): view visualization modal [`#739`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/739)
+
+---
+## [V0.60](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.59...V0.60) - 2022-01-24
+
+### Changes
+
+- feat: lookup paper metadata by title via Semantic Scholar [`#746`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/746)
+- fix: videos, replace bootstrap classes [`#759`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/759)
+- feat(Comparison): support showing single result when filtering [`#720`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/720)
+- feat(LiteratureList): support BibTeX export [`#748`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/748)
+
+---
+## [V0.59](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.58...V0.59) - 2022-01-17
+
+### Changes
+
+- fix: issue with running ORKG in Safari (update citation-js) [`#753`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/753)
+- fix: Some issues in textbox width of autocomplete [`#752`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/752)
+- style: PWC box spacing issue [`#750`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/750)
+- feat(MarkdownEditor): support for video embedding [`#747`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/747)
+
+---
+## [V0.58](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.57.2...V0.58) - 2022-01-10
+
+### Changes
+
+- Comparison: support embedding videos [`#749`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/749)
+- fix(PaperView): Reversed order of authors [`#742`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/742)
+- style: Responsive benchmarks page [`#741`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/741)
+- fix: Plural words with zero items [`#745`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/745)
+- fix(AbstractAnnotator): text wrapping issue [`#743`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/743)
+- docs: add Architecture section [`#740`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/740)
+- internal: Update dependencies [`#731`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/731)
+
+---
+## [V0.57.2](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.57.1...V0.57.2) - 2021-12-20
+
+### Changes
+
+- fix: Same as abstract not displayed [`#726`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/726)
+- fix(StatementBrowser): Double tooltip on research problem resources [`#735`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/735)
+- fix(Resource): Updating the label [`#737`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/737)
+- fix(StatementBrowser): Infinit loop on fetch statements for resource [`#738`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/738)
+- fix(SmartReview): allow deletion of duplicate authors [`#736`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/736)
+
+---
+## [V0.57.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.57...V0.57.1) - 2021-12-07
+
+### Changes
+
+- fix(SmartReview): fix issue with adding resources/properties in the ontology table [`#733`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/733)
+- fix(Search): paper links do not show correctly [`#732`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/732)
+
+---
+## [V0.57](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.56...V0.57) - 2021-12-03
+
+### Changes
+
+- fix(Search): link to SmartReview directly, refactor switch statement [`#730`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/730)
+- feat: literature list [`#712`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/712)
+
+---
+## [V0.56](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.55.1...V0.56) - 2021-12-02
+
+### Changes
+
+- feat(StatementBrowser): Optimisation and enhancement of templates, autocomplete and user interaction [`#624`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/624)
+- docs: add contributing file [`#729`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/729)
+
+---
+## [V0.55.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.55...V0.55.1) - 2021-11-19
+
+### Changes
+
+- fix(Comparison): Contribution data doesn't show in case no properties are selected [`#725`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/725)
+
+---
+## [V0.55](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.54.1...V0.55) - 2021-11-16
+
+### Changes
+
+- Comparison: rename 'more' to 'actions' button header [`#724`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/724)
+- fix(Comparison): loading indicator prevent overflowing [`#723`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/723)
+- fix: top contributors [`#574`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/574)
+- fix(Contribution editor): Bibtex reader does not catch the url entry [`#711`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/711)
+- Style(ContributionEditor): Make dropdown box of types visible [`#716`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/716)
+- fix(Contribution Editor): Select datatypes dropdown in the popup [`#717`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/717)
+- fix(Comparison): Applied filters are not visible at the first time applied [`#719`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/719)
+- fix: Bibtex are saved in "has doi" statement [`#721`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/721)
+
+---
+## [V0.54.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.54...V0.54.1) - 2021-11-10
+
+### Changes
+
+- fix(ContributionEditor): infinite loop when adding a paper [`#722`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/722)
+
+---
+## [V0.54](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.53...V0.54) - 2021-11-08
+
+### Changes
+
+- fix(ContributionEditor): Saving the boolean value [`#718`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/718)
+- fix(Comparison): Publishing a new version of a comparison doesn't show the labels of existing references [`#710`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/710)
+- fix(SmartReview): fix author order list page, fix invalid formatted reference [`#714`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/714)
+- fix(SmartReview): scrollbars for overflowing outline items [`#713`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/713)
+- feature: support for draft comparisons, consolidate draft entity design [`#707`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/707)
+- refactor: transition to Redux Toolkit, starting with the contribution editor [`#706`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/706)
+
+---
+## [V0.53](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.52.1...V0.53) - 2021-11-02
+
+### Changes
+
+- fix(Comparison): Disable extend property ids when using exact match approach [`#708`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/708)
+- feat(DataAccess): add link to visual SPARQL editor [`#709`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/709)
+
+---
+## [V0.52.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.52...V0.52.1) - 2021-10-21
+
+### Changes
+
+- fix(ContributionEditor): reset datatype on close, support for creating duplicate resources [`#705`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/705)
+
+---
+## [V0.52](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.51...V0.52) - 2021-10-18
+
+### Changes
+
+- fix(AddPaper): Check the existence of paper after lookup [`#703`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/703)
+- fix: Unpublished comparisons have `undefined` in their title [`#702`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/702)
+- ux: Open a new window for "Go to resource page" link [`#704`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/704)
+- feat(Contributions editor): Add the new selector of datatype [`#666`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/666)
+- fix(EditPaperDialog): preserve author order, prevent duplicate statements [`#701`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/701)
+- feat(Comparison): Show a header row in case of shared path of properties [`#700`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/700)
+- ux(TemplateEditor): Show the property id and the description in a tooltip [`#699`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/699)
+- enhancement(SEO): use schema.org JSON-LD to describe ScholarlyArticle [`#695`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/695)
+- fix: Inconsistent behavior between search fields on search results page [`#694`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/694)
+- fix: URLs as Literals in Comparison Editor [`#677`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/677)
+- feat(Header): list about pages in submenu [`#697`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/697)
+- fix(EditPaperDialog): prevent duplication of fields and venues [`#689`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/689)
+- ux: Remove visual feedback on list item hover [`#690`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/690)
+- fix: add margin for view paper button [`#698`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/698)
+- fix: adjust the regular expression of Link value plugin [`#691`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/691)
+- fix: Latex formulas wrapping [`#692`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/692)
+- fix(AddPaper): Dismiss the modal of "DOI already in ORKG" only by using the buttons [`#696`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/696)
+- feat(Homepage): support for news article cards [`#687`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/687)
+
+---
 ## [V0.51](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.50.1...V0.51) - 2021-10-07
 
 ### Changes

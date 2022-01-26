@@ -9,7 +9,7 @@ class Link extends Component {
     constructor(props) {
         super(props);
         // eslint-disable-next-line no-useless-escape
-        const expression = /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/gi;
+        const expression = /(https?:\/\/(?:www\.?|(?!www))[a-zA-Z0-9-][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/gi;
         this.supportedValues = new RegExp(expression);
     }
 
@@ -45,7 +45,7 @@ class Link extends Component {
 }
 
 Link.propTypes = {
-    children: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,
+    children: PropTypes.oneOfType([PropTypes.string, PropTypes.object, PropTypes.arrayOf(PropTypes.node), PropTypes.node]).isRequired,
     type: PropTypes.oneOf(['resource', 'literal'])
 };
 

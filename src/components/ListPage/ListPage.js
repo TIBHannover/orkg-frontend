@@ -18,6 +18,7 @@ const ListPage = ({
     boxShadow = true,
     pageSize = 25,
     disableSearch = false,
+    hideTitleBar = false,
     reset = false,
     setReset = () => {}
 }) => {
@@ -113,18 +114,22 @@ const ListPage = ({
 
     return (
         <>
-            <TitleBar
-                titleAddition={
-                    <div className="text-muted mt-1">{totalElements === 0 && isLoading ? <Icon icon={faSpinner} spin /> : totalElements} items</div>
-                }
-                buttonGroup={
-                    <>
-                        {buttons} {!disableSearch && <HeaderSearchButton placeholder={`Search ${label}...`} type={resourceClass} />}
-                    </>
-                }
-            >
-                View {label}
-            </TitleBar>
+            {!hideTitleBar && (
+                <TitleBar
+                    titleAddition={
+                        <div className="text-muted mt-1">
+                            {totalElements === 0 && isLoading ? <Icon icon={faSpinner} spin /> : totalElements} items
+                        </div>
+                    }
+                    buttonGroup={
+                        <>
+                            {buttons} {!disableSearch && <HeaderSearchButton placeholder={`Search ${label}...`} type={resourceClass} />}
+                        </>
+                    }
+                >
+                    View {label}
+                </TitleBar>
+            )}
             <Container className="p-0">
                 {results.length > 0 && (
                     <ListGroup flush className="box rounded" style={{ overflow: 'hidden' }}>
@@ -158,7 +163,7 @@ const ListPage = ({
 
                 {isLoading && page === 0 && (
                     <div className={`text-center ${page === 0 ? 'p-5 container rounded' : ''} ${boxShadow ? 'box' : ''}`}>
-                        <div className="text-left">
+                        <div className="text-start">
                             <ContentLoader
                                 speed={2}
                                 width={400}
@@ -189,7 +194,8 @@ ListPage.propTypes = {
     buttons: PropTypes.node,
     disableSearch: PropTypes.bool,
     reset: PropTypes.bool,
-    setReset: PropTypes.func
+    setReset: PropTypes.func,
+    hideTitleBar: PropTypes.bool
 };
 
 export default ListPage;

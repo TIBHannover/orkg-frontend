@@ -70,8 +70,8 @@ function BenchmarksCarousel(props) {
             <StyledSlider {...settings}>
                 {benchmarks.map((benchmark, index) => {
                     const marginClasses = classNames({
-                        'ml-0': index === 0,
-                        'mr-0': index === benchmarks.length
+                        'ms-0': index === 0,
+                        'me-0': index === benchmarks.length
                     });
                     return (
                         <BenchmarkCarouselCardStyled key={benchmark.id} className={marginClasses}>

@@ -11,6 +11,10 @@ export const getPaperByDOI = doi => {
     return submitGetRequest(`${url}widgets/?doi=${doi}`);
 };
 
+export const getPaperByTitle = title => {
+    return submitGetRequest(`${url}widgets/?title=${title}`);
+};
+
 export const generateDOIForORKGArtefact = (resource_id, title, subject, related_resources, description, authors, url, type, resourceType) => {
     return submitPostRequest(
         doisUrl,
@@ -39,7 +43,14 @@ export const getEntities = (entityType, params) => {
     }
 };
 
-export const getEntity = (entityType, id) => {
+/**
+ * Get entity by ID
+ *
+ * @param {String} entityType - Entity Type
+ * @param {String} id - Entity ID
+ * @return {Promise} Promise object
+ */
+export const getEntity = (entityType = ENTITIES.RESOURCE, id) => {
     switch (entityType) {
         case ENTITIES.RESOURCE:
             return getResource(id);

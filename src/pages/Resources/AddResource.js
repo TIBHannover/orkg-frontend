@@ -117,7 +117,7 @@ const AddResource = () => {
     return (
         <>
             <TitleBar>Create resource</TitleBar>
-            <Container className="box rounded pt-4 pb-4 pl-5 pr-5">
+            <Container className="box rounded pt-4 pb-4 ps-5 pe-5">
                 <div className="pt-2">
                     <FormGroup>
                         <Label for="ResourceLabel">Resource label or DOI</Label>

@@ -37,7 +37,7 @@ export default function Visualization(props) {
     } else if (comparisonId) {
         return <Redirect to={reverse(ROUTES.COMPARISON, { comparisonId: comparisonId }) + '#Vis' + visualizationId} />;
     } else {
-        return <Container className="box rounded pt-4 pb-4 pl-5 pr-5 mt-5 clearfix">Loading ...</Container>;
+        return <Container className="box rounded pt-4 pb-4 ps-5 pe-5 mt-5 clearfix">Loading ...</Container>;
     }
 }
 

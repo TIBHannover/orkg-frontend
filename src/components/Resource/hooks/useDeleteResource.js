@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import Confirm from 'reactstrap-confirm';
+import Confirm from 'components/Confirmation/Confirmation';
 import { deleteResource as deleteResourceNetwork } from 'services/backend/resources';
 import { toast } from 'react-toastify';
 import { useHistory } from 'react-router-dom';
@@ -12,8 +12,7 @@ function useDeleteResource({ resourceId, redirect = false }) {
     const deleteResource = async () => {
         const confirm = await Confirm({
             title: 'Are you sure?',
-            message: `Are you sure you want to delete this resource?`,
-            cancelColor: 'light'
+            message: `Are you sure you want to delete this resource?`
         });
 
         if (confirm) {

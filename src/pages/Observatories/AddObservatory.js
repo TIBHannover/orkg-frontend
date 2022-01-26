@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import { Container, Button, FormGroup, Input, Label, InputGroup, InputGroupAddon } from 'reactstrap';
+import { Container, Button, FormGroup, Input, Label, InputGroup } from 'reactstrap';
 import { getOrganization } from 'services/backend/organizations';
 import { createObservatory } from 'services/backend/observatories';
 import NotFound from 'pages/NotFound';
@@ -127,7 +127,7 @@ class AddObservatory extends Component {
 
         return (
             <>
-                {this.state.isLoadingOrganization && <Container className="box rounded pt-4 pb-4 pl-5 pr-5 mt-5 clearfix">Loading ...</Container>}
+                {this.state.isLoadingOrganization && <Container className="box rounded pt-4 pb-4 ps-5 pe-5 mt-5 clearfix">Loading ...</Container>}
                 {!this.state.isLoadingOrganization && this.state.errorLoadingOrganization && (
                     <>{this.state.errorLoadingOrganization.statusCode === 404 ? <NotFound /> : <InternalServerError />}</>
                 )}
@@ -137,9 +137,9 @@ class AddObservatory extends Component {
                             <h3 className="h4 my-4 flex-grow-1">Create an observatory in {this.state.organizationName}</h3>
                         </Container>
 
-                        <Container className="box rounded pt-4 pb-4 pl-5 pr-5">
+                        <Container className="box rounded pt-4 pb-4 ps-5 pe-5">
                             {this.props.user && this.props.user.isCurationAllowed && (
-                                <div className="pl-3 pr-3 pt-2">
+                                <div className="ps-3 pe-3 pt-2">
                                     <FormGroup>
                                         <Label for="ObservatoryName">Name</Label>
                                         <Input
@@ -158,7 +158,7 @@ class AddObservatory extends Component {
                                                 <Tooltip message="Permalink field allows to identify the observatory page on ORKG in an easy-to-read form. Only underscores ( _ ), numbers, and letters are allowed." />
                                             </Label>
                                             <InputGroup>
-                                                <InputGroupAddon addonType="prepend">{this.state.publicObservatoryRoute}</InputGroupAddon>
+                                                {this.state.publicObservatoryRoute}
                                                 <Input
                                                     onChange={this.handleChange}
                                                     type="text"
@@ -217,7 +217,7 @@ class AddObservatory extends Component {
                                         className="p-0 mb-2 mt-2 clearfix"
                                         onClick={() => this.props.openAuthDialog({ action: 'signin' })}
                                     >
-                                        <Icon className="mr-1" icon={faUser} /> Sign in to create an observatory
+                                        <Icon className="me-1" icon={faUser} /> Sign in to create an observatory
                                     </Button>
                                 </>
                             )}

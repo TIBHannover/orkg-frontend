@@ -51,13 +51,13 @@ const Comparisons = ({ observatoryId }) => {
                     {comparisonsList.length > 0 ? (
                         <RelatedResourcesCard figureStatements={comparisonsList} />
                     ) : (
-                        <Container className="box rounded-lg p-4 mt-4">
+                        <Container className="box rounded-3 p-4 mt-4">
                             <div className="text-center mt-4 mb-4">No Figures</div>
                         </Container>
                     )}
                 </div>
             ) : (
-                <Container className="box rounded-lg p-4 mt-4">
+                <Container className="box rounded-3 p-4 mt-4">
                     <div className="text-center mt-4 mb-4">Loading figures ...</div>
                 </Container>
             )}
@@ -82,7 +82,7 @@ const Comparisons = ({ observatoryId }) => {
                 )}
                 {isLoadingComparisons && (
                     <div className="text-center mt-4 mb-4 p-5 container box rounded">
-                        <div className="text-left">
+                        <div className="text-start">
                             <ContentLoader
                                 speed={2}
                                 width={400}

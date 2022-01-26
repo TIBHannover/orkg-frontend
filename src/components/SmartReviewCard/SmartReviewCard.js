@@ -6,7 +6,7 @@ import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 import ROUTES from 'constants/routes.js';
 import RelativeBreadcrumbs from 'components/RelativeBreadcrumbs/RelativeBreadcrumbs';
 import Authors from 'components/PaperCard/Authors';
-import useSmartReviewResearchField from './hooks/useSmartReviewResearchField';
+import useCardData from './hooks/useCardData';
 import PropTypes from 'prop-types';
 import { CardBadge } from 'components/styled';
 import moment from 'moment';
@@ -20,31 +20,31 @@ const SmartReviewCardStyled = styled.div`
 `;
 
 const SmartReviewCard = ({ versions, showBadge }) => {
-    const { researchField, authors, isLoading: isLoadingMetaData } = useSmartReviewResearchField({
-        smartReviewId: versions[0]?.id,
+    const { researchField, authors, isLoading: isLoadingMetaData } = useCardData({
+        id: versions[0]?.id,
         initResearchField: versions[0]?.researchField,
         initAuthors: versions[0]?.authors
     });
 
     return (
-        <SmartReviewCardStyled className="list-group-item list-group-item-action d-flex pr-3 pl-3">
+        <SmartReviewCardStyled style={{ flexWrap: 'wrap' }} className="list-group-item d-flex px-4 py-3">
             <div className="col-md-9 d-flex p-0">
                 <div className="d-flex flex-column flex-grow-1">
-                    <div>
+                    <div className="mb-2">
                         <Link to={reverse(ROUTES.SMART_REVIEW, { id: versions[0]?.id })}>{versions[0]?.label}</Link>
                         {showBadge && (
-                            <div className="d-inline-block ml-2">
+                            <div className="d-inline-block ms-2">
                                 <CardBadge color="primary">SmartReview</CardBadge>
                             </div>
                         )}
                     </div>
-                    <div>
+                    <div className="mb-1">
                         <small>
                             {!isLoadingMetaData && <Authors authors={authors} />}
                             {isLoadingMetaData && 'Loading...'}
                             {versions[0].created_at && (
                                 <>
-                                    <Icon size="sm" icon={faCalendar} className="ml-2 mr-1" /> {moment(versions[0].created_at).format('DD-MM-YYYY')}
+                                    <Icon size="sm" icon={faCalendar} className="ms-2 me-1" /> {moment(versions[0].created_at).format('DD-MM-YYYY')}
                                 </>
                             )}
                         </small>

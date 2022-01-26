@@ -147,20 +147,20 @@ class ComparisonPopup extends Component {
                 <Navbar className="p-0">
                     <Container>
                         {!this.state.showComparisonBox ? (
-                            <ComparisonBoxButton color="primary" className="ml-auto" onClick={this.toggleComparisonBox}>
-                                <Badge color="primary-darker" className="pl-2 pr-2">
+                            <ComparisonBoxButton color="primary" className="ms-auto" onClick={this.toggleComparisonBox}>
+                                <Badge color="primary-darker" className="ps-2 pe-2">
                                     {contributionAmount}
                                 </Badge>{' '}
                                 Compare contributions <Icon icon={faChevronUp} />
                             </ComparisonBoxButton>
                         ) : (
-                            <ComparisonBox className="ml-auto">
+                            <ComparisonBox className="ms-auto">
                                 <Header onClick={this.toggleComparisonBox}>
-                                    <Badge color="primary-darker" className="pl-2 pr-2 mr-1">
+                                    <Badge color="primary-darker" className="ps-2 pe-2 me-1">
                                         {contributionAmount}
                                     </Badge>{' '}
                                     Compare contributions
-                                    <div className="float-right">
+                                    <div className="float-end">
                                         <Tippy trigger="mouseenter" content="Remove all contributions from comparison" zIndex={9999}>
                                             <Tippy
                                                 onShow={this.onShow}
@@ -186,7 +186,7 @@ class ComparisonPopup extends Component {
                                                                 color="danger"
                                                                 style={{ paddingTop: 2, paddingBottom: 2 }}
                                                             >
-                                                                <Icon icon={faCheck} className="mr-1" />
+                                                                <Icon icon={faCheck} className="me-1" />
                                                                 Remove
                                                             </Button>
                                                             <Button
@@ -198,14 +198,14 @@ class ComparisonPopup extends Component {
                                                                 style={{ paddingTop: 2, paddingBottom: 2 }}
                                                             >
                                                                 {' '}
-                                                                <Icon icon={faTimes} className="mr-1" /> Cancel
+                                                                <Icon icon={faTimes} className="me-1" /> Cancel
                                                             </Button>
                                                         </ButtonGroup>
                                                     </div>
                                                 }
                                             >
                                                 <span>
-                                                    <Icon className="ml-2 mr-2" size="sm" onClick={e => e.stopPropagation()} icon={faTrash} />
+                                                    <Icon className="ms-2 me-2" size="sm" onClick={e => e.stopPropagation()} icon={faTrash} />
                                                 </span>
                                             </Tippy>
                                         </Tippy>
@@ -216,7 +216,7 @@ class ComparisonPopup extends Component {
                                     {allIds.map(contributionId => (
                                         <ContributionItem key={contributionId}>
                                             <div className="d-flex">
-                                                <div className="pr-3">
+                                                <div className="pe-3">
                                                     <Icon icon={faFile} />
                                                 </div>
                                                 <div className="flex-grow-1 text-break">

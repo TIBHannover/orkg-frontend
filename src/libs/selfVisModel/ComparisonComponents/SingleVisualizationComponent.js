@@ -6,12 +6,13 @@ import { faCalendar, faUser, faLink } from '@fortawesome/free-solid-svg-icons';
 import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
 import moment from 'moment';
 import Tippy from '@tippyjs/react';
-import { RESOURCE_TYPE_ID } from 'constants/misc';
 import ROUTES from 'constants/routes.js';
 import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
+import { ENTITIES } from 'constants/graphSettings';
+import ViewVisualizationModal from 'components/ViewVisualizationModal/ViewVisualizationModal';
 
 const VisualizationCard = styled.div`
     margin: 0 2px;
@@ -43,6 +44,7 @@ const SingleVisualizationComponent = props => {
     const width = getAvailableWidth();
 
     const [isHovering, setIsHovering] = useState(false);
+    const [isOpenViewModal, setIsOpenViewModal] = useState(false);
     const [renderingData, setRenderingData] = useState(undefined);
     const [windowHeight, setWindowHeight] = useState(0.5 * window.innerHeight);
     const [windowWidth, setWindowWidth] = useState(0.8 * width);
@@ -69,128 +71,139 @@ const SingleVisualizationComponent = props => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.input.reconstructionModel.orkgOrigin]);
 
+    const handleEditVisualization = () => {
+        selfVisModel.applyReconstructionModel(props.input.reconstructionModel);
+        props.expandVisualization(true);
+    };
     return (
-        <Tippy
-            onShow={handleMouseEnter}
-            onHide={handleMouseLeave}
-            interactive={true}
-            placement="bottom"
-            theme="visualizationPreview"
-            maxWidth={windowWidth}
-            content={
-                <div
-                    index={props.itemIndex}
-                    style={{
-                        overflow: 'hidden',
-                        borderRadius: '4px',
-                        width: windowWidth + 'px'
-                        // height: windowHeight + 100 + 'px'
-                    }}
-                >
-                    <DescriptionHeader>
-                        {props.input.label.length > 0 ? 'Title: ' + props.input.label : 'No Title'}
-                        <Tippy content="Go to resource page">
-                            <Link className="ml-2 resourceLink" to={reverse(ROUTES.RESOURCE, { id: props.input.id })}>
-                                <Icon icon={faLink} color="#fff" />
-                            </Link>
-                        </Tippy>
-                    </DescriptionHeader>
-                    {isHovering && (
-                        <Chart
-                            chartType={visMethod}
-                            data={renderingData}
-                            width={windowWidth - 20 + 'px'}
-                            height={windowHeight - 50 + 'px'}
-                            options={{
-                                showRowNumber: true,
-                                width: '100%',
-                                hAxis: {
-                                    title: visMethod === 'BarChart' ? customizationState.yAxisLabel : customizationState.xAxisLabel
-                                },
-                                vAxis: {
-                                    title: visMethod === 'BarChart' ? customizationState.xAxisLabel : customizationState.yAxisLabel
-                                }
-                            }}
-                        />
-                    )}
-                    <hr className="m-1" />
+        <>
+            <Tippy
+                onShow={handleMouseEnter}
+                onHide={handleMouseLeave}
+                interactive={true}
+                placement="bottom"
+                theme="visualizationPreview"
+                maxWidth={windowWidth}
+                content={
+                    <div
+                        index={props.itemIndex}
+                        style={{
+                            overflow: 'hidden',
+                            borderRadius: '4px',
+                            width: windowWidth + 'px'
+                            // height: windowHeight + 100 + 'px'
+                        }}
+                    >
+                        <DescriptionHeader>
+                            {props.input.label.length > 0 ? 'Title: ' + props.input.label : 'No Title'}
+                            <Tippy content="Go to resource page">
+                                <Link target="_blank" className="ms-2 resourceLink" to={reverse(ROUTES.RESOURCE, { id: props.input.id })}>
+                                    <Icon icon={faLink} color="#fff" />
+                                </Link>
+                            </Tippy>
+                        </DescriptionHeader>
+                        {isHovering && (
+                            <Chart
+                                chartType={visMethod}
+                                data={renderingData}
+                                width={windowWidth - 20 + 'px'}
+                                height={windowHeight - 50 + 'px'}
+                                options={{
+                                    showRowNumber: true,
+                                    width: '100%',
+                                    hAxis: {
+                                        title: visMethod === 'BarChart' ? customizationState.yAxisLabel : customizationState.xAxisLabel
+                                    },
+                                    vAxis: {
+                                        title: visMethod === 'BarChart' ? customizationState.xAxisLabel : customizationState.yAxisLabel
+                                    }
+                                }}
+                            />
+                        )}
+                        <hr className="m-1" />
 
-                    <div className="d-flex">
-                        <div className="col-6 p-2 mb-2" style={{ borderRight: '2px solid #ddd' }}>
-                            <b>Description:</b> <br /> <span>{props.input.description ? props.input.description : 'No Description'}</span>{' '}
-                        </div>
-                        <div className="col-6 p-2 mb-2">
-                            <b>Meta Information:</b> <br />
-                            <div className="mb-2">
-                                <i>Created on: </i>
-                                <span className="badge badge-light mr-2">
-                                    <Icon icon={faCalendar} className="text-primary" />{' '}
-                                    {props.input.created_at ? moment(props.input.created_at).format('dddd, MMMM Do YYYY') : ''}
-                                </span>
+                        <div className="d-flex">
+                            <div className="col-6 p-2 mb-2" style={{ borderRight: '2px solid #ddd' }}>
+                                <b>Description:</b> <br /> <span>{props.input.description ? props.input.description : 'No Description'}</span>{' '}
                             </div>
-                            {props.input.authors && props.input.authors.length > 0 && (
+                            <div className="col-6 p-2 mb-2">
+                                <b>Meta Information:</b> <br />
                                 <div className="mb-2">
-                                    <i>Created by: </i>
-                                    {props.input.authors.map(author => {
-                                        if (author && author.class === RESOURCE_TYPE_ID) {
-                                            return (
-                                                <Link
-                                                    className="d-inline-block mr-2 mb-2"
-                                                    to={reverse(ROUTES.AUTHOR_PAGE, { authorId: author.id })}
-                                                    key={`author${author.id}`}
-                                                >
-                                                    <Badge color="light">
-                                                        <Icon icon={faUser} className="text-primary" /> {author.label}
-                                                    </Badge>
-                                                </Link>
-                                            );
-                                        } else {
-                                            return (
-                                                <Badge key={`author${author.id}`} color="light" className="mr-2 mb-2">
-                                                    <Icon icon={faUser} /> {author.label}
-                                                </Badge>
-                                            );
-                                        }
-                                    })}
+                                    <i>Created on: </i>
+                                    <span className="badge badge-light me-2">
+                                        <Icon icon={faCalendar} className="text-primary" />{' '}
+                                        {props.input.created_at ? moment(props.input.created_at).format('dddd, MMMM Do YYYY') : ''}
+                                    </span>
                                 </div>
-                            )}
+                                {props.input.authors && props.input.authors.length > 0 && (
+                                    <div className="mb-2">
+                                        <i>Created by: </i>
+                                        {props.input.authors.map(author => {
+                                            if (author && author.class === ENTITIES.RESOURCE) {
+                                                return (
+                                                    <Link
+                                                        className="d-inline-block me-2 mb-2"
+                                                        to={reverse(ROUTES.AUTHOR_PAGE, { authorId: author.id })}
+                                                        key={`author${author.id}`}
+                                                    >
+                                                        <Badge color="light">
+                                                            <Icon icon={faUser} className="text-primary" /> {author.label}
+                                                        </Badge>
+                                                    </Link>
+                                                );
+                                            } else {
+                                                return (
+                                                    <Badge key={`author${author.id}`} color="light" className="me-2 mb-2">
+                                                        <Icon icon={faUser} /> {author.label}
+                                                    </Badge>
+                                                );
+                                            }
+                                        })}
+                                    </div>
+                                )}
+                            </div>
                         </div>
+                        {!isHovering && <div style={{ width: windowWidth - 20 + 'px', height: windowHeight - 50 + 'px' }} />}
                     </div>
-                    {!isHovering && <div style={{ width: windowWidth - 20 + 'px', height: windowHeight - 50 + 'px' }} />}
-                </div>
-            }
-        >
-            <VisualizationCard
-                onClick={() => {
-                    selfVisModel.applyReconstructionModel(props.input.reconstructionModel);
-                    props.expandVisualization(true);
-                }}
-                isHovered={isHovering}
-                id={`#Vis${props.input.reconstructionModel.orkgOrigin}`}
+                }
             >
-                <div style={{ padding: '5px', pointerEvents: 'none', minWidth: '200px', minHeight: '100px' }}>
-                    {renderingData && (
-                        <Chart
-                            chartType={visMethod}
-                            data={renderingData}
-                            width="200px"
-                            height="100px"
-                            options={{
-                                width: '100%',
-                                chartArea: { height: '50%' },
-                                showRowNumber: true,
-                                hAxis: {
-                                    title: visMethod === 'BarChart' ? customizationState.yAxisLabel : customizationState.xAxisLabel
-                                },
-                                vAxis: {
-                                    title: visMethod === 'BarChart' ? customizationState.xAxisLabel : customizationState.yAxisLabel
-                                }
-                            }}
-                        />
-                    )}
-                </div>
-            </VisualizationCard>
-        </Tippy>
+                <VisualizationCard
+                    onClick={() => setIsOpenViewModal(true)}
+                    isHovered={isHovering}
+                    id={`#Vis${props.input.reconstructionModel.orkgOrigin}`}
+                >
+                    <div style={{ padding: '5px', pointerEvents: 'none', minWidth: '200px', minHeight: '100px' }}>
+                        {renderingData && (
+                            <Chart
+                                chartType={visMethod}
+                                data={renderingData}
+                                width="200px"
+                                height="100px"
+                                options={{
+                                    width: '100%',
+                                    chartArea: { height: '50%' },
+                                    showRowNumber: true,
+                                    hAxis: {
+                                        title: visMethod === 'BarChart' ? customizationState.yAxisLabel : customizationState.xAxisLabel
+                                    },
+                                    vAxis: {
+                                        title: visMethod === 'BarChart' ? customizationState.xAxisLabel : customizationState.yAxisLabel
+                                    }
+                                }}
+                            />
+                        )}
+                    </div>
+                </VisualizationCard>
+            </Tippy>
+            {isOpenViewModal && (
+                <ViewVisualizationModal
+                    isOpen={isOpenViewModal}
+                    toggle={() => setIsOpenViewModal(v => !v)}
+                    data={props.input}
+                    onEditVisualization={handleEditVisualization}
+                />
+            )}
+        </>
     );
 };
 

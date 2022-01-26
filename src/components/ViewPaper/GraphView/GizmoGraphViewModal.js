@@ -14,7 +14,7 @@ import flattenDeep from 'lodash/flattenDeep';
 // moving GraphVis here in order to maintain the layouts and status related stuff;
 import GraphVis from 'libs/gizmo/GraphVis';
 import SearchAutoComplete from './SearchAutoComplete';
-import { PREDICATES, CLASSES } from 'constants/graphSettings';
+import { PREDICATES, CLASSES, ENTITIES } from 'constants/graphSettings';
 
 class GraphView extends Component {
     constructor(props) {
@@ -315,20 +315,6 @@ class GraphView extends Component {
                     nodes.push({ id: contribution.resourceId, label: contribution.label, title: contribution.label });
                     edges.push({ from: 'title', to: contribution.resourceId, label: 'has contribution' });
 
-                    //research problems
-                    for (const problem of contribution.researchProblems) {
-                        nodes.push({
-                            id: contribution.resourceId + problem.label,
-                            label: problem.label,
-                            title: problem.label
-                        });
-                        edges.push({
-                            from: contribution.resourceId,
-                            to: contribution.resourceId + problem.label,
-                            label: 'has research problem'
-                        });
-                    }
-
                     //contribution statements
                     const statements = this.addPaperStatementsToGraph(contribution.resourceId, [], []);
                     nodes.push(...statements.nodes);
@@ -369,7 +355,7 @@ class GraphView extends Component {
                         //add the node and relation
                         nodes.push({ id: id, label: value.label, title: value.label });
                         edges.push({ from: resourceId, to: id, label: property.label });
-                        if (value.type === 'object') {
+                        if (value._class === ENTITIES.RESOURCE) {
                             this.addPaperStatementsToGraph(id, nodes, edges);
                         }
                     }
@@ -460,9 +446,9 @@ class GraphView extends Component {
                         <div style={{ width: '100%', display: 'flex' }}>
                             {' '}
                             {this.props.paperId && (
-                                <Form inline className="ml-4">
-                                    <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
-                                        <Label for="depth" className="mb-0 mr-2">
+                                <Form inline className="ms-4">
+                                    <FormGroup className="mb-2 me-sm-2 mb-sm-0">
+                                        <Label for="depth" className="mb-0 me-2">
                                             Depth
                                         </Label>
                                         <Input
@@ -497,12 +483,12 @@ class GraphView extends Component {
                                 >
                                     {!this.state.exploringFullGraph ? (
                                         <>
-                                            <Icon icon={faExpandArrowsAlt} className="mr-1 align-self-center" />
+                                            <Icon icon={faExpandArrowsAlt} className="me-1 align-self-center" />
                                             Expand all nodes{' '}
                                         </>
                                     ) : (
                                         <>
-                                            <Icon icon={faSpinner} spin className="mr-1 align-self-center" /> Expanding graph
+                                            <Icon icon={faSpinner} spin className="me-1 align-self-center" /> Expanding graph
                                         </>
                                     )}
                                 </Button>
@@ -513,7 +499,7 @@ class GraphView extends Component {
                                     style={{ margin: '0 10px', flexGrow: '1', display: 'flex', alignSelf: 'center', width: '130px' }}
                                     onClick={this.centerGraph}
                                 >
-                                    <Icon icon={faHome} className="mr-1 align-self-center" /> Center graph
+                                    <Icon icon={faHome} className="me-1 align-self-center" /> Center graph
                                 </Button>
                                 <Dropdown
                                     color="secondary"
@@ -530,7 +516,7 @@ class GraphView extends Component {
                                         <Icon
                                             icon={this.state.layout === 'force' ? faProjectDiagram : faSitemap}
                                             rotation={this.state.layout === 'treeH' ? 270 : undefined}
-                                            className="mr-1"
+                                            className="me-1"
                                             style={{ width: '40px' }}
                                         />
                                     </DropdownToggle>
@@ -543,7 +529,7 @@ class GraphView extends Component {
                                                 this.setState({ layout: 'force' });
                                             }}
                                         >
-                                            <Icon icon={faProjectDiagram} className="mr-1" style={{ width: '40px' }} />
+                                            <Icon icon={faProjectDiagram} className="me-1" style={{ width: '40px' }} />
                                             Force directed
                                         </DropdownItem>
                                         <DropdownItem
@@ -556,7 +542,7 @@ class GraphView extends Component {
                                                 this.setState({ layout: 'treeH' });
                                             }}
                                         >
-                                            <Icon icon={faSitemap} rotation={270} className="mr-1" style={{ width: '40px' }} />
+                                            <Icon icon={faSitemap} rotation={270} className="me-1" style={{ width: '40px' }} />
                                             Horizontal tree
                                         </DropdownItem>
                                         <DropdownItem
@@ -569,7 +555,7 @@ class GraphView extends Component {
                                                 this.setState({ layout: 'treeV' });
                                             }}
                                         >
-                                            <Icon icon={faSitemap} className="mr-1" style={{ width: '40px' }} />
+                                            <Icon icon={faSitemap} className="me-1" style={{ width: '40px' }} />
                                             Vertical tree
                                         </DropdownItem>
                                     </DropdownMenu>

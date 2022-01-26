@@ -1,13 +1,11 @@
-import { Badge } from 'reactstrap';
+import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faCalendar, faUser } from '@fortawesome/free-solid-svg-icons';
+import AuthorBadges from 'components/Badges/AuthorBadges/AuthorBadges';
 import ValuePlugins from 'components/ValuePlugins/ValuePlugins';
-import ROUTES from 'constants/routes.js';
-import { Link } from 'react-router-dom';
-import { reverse } from 'named-urls';
-import PropTypes from 'prop-types';
+import { ENTITIES } from 'constants/graphSettings';
+import Video from 'components/ValuePlugins/Video/Video';
 import moment from 'moment';
-import { CLASSES } from 'constants/graphSettings';
+import PropTypes from 'prop-types';
 
 function ComparisonMetaData(props) {
     return (
@@ -21,7 +19,7 @@ function ComparisonMetaData(props) {
                     )}
                     <div>
                         {props.metaData.createdAt ? (
-                            <span className="badge badge-light mr-2">
+                            <span className="badge bg-light me-2">
                                 <Icon icon={faCalendar} className="text-primary" />{' '}
                                 {props.metaData.createdAt ? moment(props.metaData.createdAt).format('MMMM') : ''}{' '}
                                 {props.metaData.createdAt ? moment(props.metaData.createdAt).format('YYYY') : ''}
@@ -30,28 +28,12 @@ function ComparisonMetaData(props) {
                             ''
                         )}
 
-                        {props.metaData.authors && props.metaData.authors.length > 0 && (
-                            <>
-                                {props.metaData.authors.map((author, index) =>
-                                    author?.classes?.includes(CLASSES.AUTHOR) ? (
-                                        <Link className="p-0" to={reverse(ROUTES.AUTHOR_PAGE, { authorId: author.id })} key={index}>
-                                            <Badge color="light" className="mr-2 mb-2">
-                                                <Icon icon={faUser} className="text-primary" /> {author.label}
-                                            </Badge>
-                                        </Link>
-                                    ) : (
-                                        <Badge color="light" className="mr-2 mb-2" key={index}>
-                                            <Icon icon={faUser} className="text-secondary" /> {author.label}
-                                        </Badge>
-                                    )
-                                )}
-                            </>
-                        )}
+                        {props.metaData.authors && props.metaData.authors.length > 0 && <AuthorBadges authors={props.metaData.authors} />}
                     </div>
                     {props.metaData.doi && (
                         <div>
                             {props.metaData.doi && (
-                                <div style={{ marginBottom: '20px', lineHeight: 1.5 }}>
+                                <div className="mb-1" style={{ lineHeight: 1.5 }}>
                                     <small>
                                         DOI:{' '}
                                         <i>
@@ -61,6 +43,14 @@ function ComparisonMetaData(props) {
                                 </div>
                             )}
                         </div>
+                    )}
+                    {props.metaData.video && (
+                        <small className="d-flex mb-1">
+                            <div className="me-2">Video: </div>
+                            <Video options={{ inModal: true }} type={ENTITIES.LITERAL}>
+                                {props.metaData.video.label}
+                            </Video>
+                        </small>
                     )}
                 </>
             ) : (

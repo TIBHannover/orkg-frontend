@@ -10,11 +10,11 @@ export default function WebinarMay11() {
             <Container>
                 <h1 className="h4 mt-4 mb-4">Webinar</h1>
             </Container>
-            <Container className="box rounded pt-4 pb-4 pl-5 pr-5">
+            <Container className="box rounded pt-4 pb-4 ps-5 pe-5">
                 <h2>Webinar: Open Research Knowledge Graph</h2>
 
                 <div className="d-flex align-items-center flex-column my-3">
-                    <div className="embed-responsive embed-responsive-16by9" style={{ maxWidth: 750 }}>
+                    <div className="ratio ratio-16x9" style={{ maxWidth: 750 }}>
                         <iframe
                             width="750"
                             height="315"
@@ -22,7 +22,6 @@ export default function WebinarMay11() {
                             title="YouTube video player"
                             frameborder="0"
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                            className="embed-responsive-item"
                             allowFullScreen
                         />
                     </div>

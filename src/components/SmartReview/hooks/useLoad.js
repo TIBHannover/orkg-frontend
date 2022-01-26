@@ -78,27 +78,26 @@ const useLoad = () => {
             };
         }
 
-        const authorResources = getObjectsByPredicateAndSubject(paperStatements, PREDICATES.HAS_AUTHOR, id);
+        const authorStatements = getStatementsByPredicateAndSubject(paperStatements, PREDICATES.HAS_AUTHOR, id);
         const sectionResources = getObjectsByPredicateAndSubject(paperStatements, PREDICATES.HAS_SECTION, contributionResource.id);
-
         for (const [index, section] of sectionResources.entries()) {
             const sectionStatements = getStatementsBySubjectId(paperStatements, section.id);
             sectionResources[index].statements = sectionStatements;
         }
-
+        const authorResources = [];
         // add the orcid and statement id to the author statements
-        for (const [index, author] of authorResources.entries()) {
-            // orcid
+        for (const author of authorStatements) {
             const orcidStatements = getStatementsBySubjectId(paperStatements, author.id);
+            let orcid = null;
             if (orcidStatements.length) {
                 const orcidStatement = orcidStatements.find(statement => statement.predicate.id === PREDICATES.HAS_ORCID);
-                const orcid = orcidStatement ? orcidStatement.object.label : '';
-                authorResources[index].orcid = orcid;
+                orcid = orcidStatement ? orcidStatement.object.label : '';
             }
-
-            // statementId
-            const statementId = getStatementsByObjectId(paperStatements, author.id)[0]?.id;
-            authorResources[index].statementId = statementId;
+            authorResources.push({
+                ...author.object,
+                statementId: author.id,
+                orcid: orcid || undefined
+            });
         }
 
         const sections = [];
@@ -268,8 +267,8 @@ const useLoad = () => {
         return statements.filter(statement => statement.subject.id === subjectId);
     };
 
-    const getStatementsByObjectId = (statements, objectId) => {
-        return statements.filter(statement => statement.object.id === objectId);
+    const getStatementsByPredicateAndSubject = (statements, predicateId, subjectId) => {
+        return statements.filter(statement => statement.subject.id === subjectId && statement.predicate.id === predicateId);
     };
 
     return { load, isLoading, isNotFound, getArticleById, getVersions };
