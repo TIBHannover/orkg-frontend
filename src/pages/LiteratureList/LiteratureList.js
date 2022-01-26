@@ -1,4 +1,4 @@
-import { faCheckCircle, faEllipsisV, faHistory, faPen, faSpinner, faTimes, faUpload } from '@fortawesome/free-solid-svg-icons';
+import { faCheckCircle, faCode, faEllipsisV, faHistory, faPen, faSpinner, faTimes, faUpload } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import Breadcrumbs from 'components/Breadcrumbs/Breadcrumbs';
@@ -22,12 +22,39 @@ import { NavLink, useHistory, useParams } from 'react-router-dom';
 import { Button, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledButtonDropdown } from 'reactstrap';
 import Confirm from 'components/Confirmation/Confirmation';
 import { historyModalToggled, setIsEditing } from 'slices/literatureListSlice';
+import { createGlobalStyle } from 'styled-components';
 import ExportBibtexModal from 'components/LiteratureList/ExportBibtexModal/ExportBibtexModal';
+import EmbedModal from 'components/LiteratureList/EmbedModal/EmbedModal';
+
+const GlobalEmbedStyle = createGlobalStyle`
+    // hide all other UI components when a list is embedded
+    nav,
+    footer,
+    .woot--bubble-holder,
+    .container:not(.embed-only), #alertCookie {
+        display: none !important;
+    }
+    .container.embed-only {
+        margin: 0;
+        padding: 0;
+        max-width: 100%;
+        position: absolute!important;
+        top: 0;
+    }
+    body {
+        background-color: #fff !important;
+        background-image: none!important;
+    }
+    .box {
+        border-radius: 0!important;
+    }
+`;
 
 const LiteratureList = () => {
     const [isOpenPublishModal, setIsOpenPublishModal] = useState(false);
+    const [isOpenEmbedModal, setIsOpenEmbedModal] = useState(false);
     const [isOpenExportBibtexModal, setIsOpenExportBibtexModal] = useState(false);
-    const { id } = useParams();
+    const { id, embed } = useParams();
     const isPublished = useSelector(state => state.literatureList.isPublished);
     const list = useSelector(state => state.literatureList.literatureList);
     const isEditing = useSelector(state => state.literatureList.isEditing);
@@ -76,6 +103,8 @@ const LiteratureList = () => {
         return <NotFound />;
     }
 
+    const isEmbedded = embed === 'embed';
+
     return (
         <div>
             {researchField && <Breadcrumbs researchFieldId={researchField.id} />}
@@ -114,6 +143,16 @@ const LiteratureList = () => {
 
                         {!isEditing ? (
                             <>
+                                <Button
+                                    className="flex-shrink-0"
+                                    color="secondary"
+                                    size="sm"
+                                    style={{ marginRight: 2 }}
+                                    onClick={() => setIsOpenEmbedModal(true)}
+                                    aria-label="Embed literature list"
+                                >
+                                    <Icon icon={faCode} /> Embed
+                                </Button>
                                 <Button
                                     className="flex-shrink-0"
                                     color="secondary"
@@ -177,7 +216,7 @@ const LiteratureList = () => {
             </TitleBar>
             <LoadingOverlay isLoading={isLoadingSortSection} />
 
-            {!isLoading && !isEditing && <ViewLiteratureList />}
+            {!isLoading && !isEditing && <ViewLiteratureList isEmbedded={isEmbedded} />}
             {!isLoading && isEditing && <EditList />}
             {isLoading && <LoadingArticle />}
 
@@ -185,6 +224,11 @@ const LiteratureList = () => {
                 <PublishModal toggle={() => setIsOpenPublishModal(v => !v)} id={id} getVersions={getVersions} listId={list.id} show />
             )}
             {isOpenHistoryModal && <HistoryModal toggle={toggleHistoryModal} id={id} show />}
+
+            {isOpenEmbedModal && <EmbedModal toggle={() => setIsOpenEmbedModal(v => !v)} isOpen={isOpenEmbedModal} id={id} />}
+
+            {isEmbedded && <GlobalEmbedStyle />}
+
             {isOpenExportBibtexModal && <ExportBibtexModal toggle={() => setIsOpenExportBibtexModal(v => !v)} isOpen />}
         </div>
     );
