@@ -59,7 +59,10 @@ function useResearchFieldContent({
                     classes: classesFilter.map(c => c.id)
                 });
                 contentService = Promise.all([noFeaturedContentService, featuredContentService]).then(([noFeaturedContent, featuredContent]) => {
-                    const combinedComparisons = mergeAlternate(noFeaturedContent.content, featuredContent.content);
+                    const combinedComparisons = mergeAlternate(
+                        noFeaturedContent.content.map(i => ({ ...i, id: i.thingId })),
+                        featuredContent.content.map(i => ({ ...i, id: i.thingId }))
+                    );
                     return {
                         content: combinedComparisons,
                         totalElements: page === 0 ? noFeaturedContent.totalElements + featuredContent.totalElements : total,
@@ -77,19 +80,19 @@ function useResearchFieldContent({
                     featured: sort === 'featured' ? true : null,
                     unlisted: sort === 'unlisted' ? true : false,
                     classes: classesFilter.map(c => c.id)
-                });
+                }).map(response => response.content.map(i => ({ ...i, id: i.thingId })));
             }
 
             contentService
                 .then(result => {
                     // Fetch the data of each content
                     getStatementsBySubjects({
-                        ids: result.content.map(p => p.thingId)
+                        ids: result.content.map(p => p.id)
                     })
                         .then(contentsStatements => {
                             const dataObjects = contentsStatements.map(statements => {
                                 const resourceSubject = find(result.content, {
-                                    thingId: statements.id
+                                    id: statements.id
                                 });
                                 return getDataBasedOnType(resourceSubject, statements.statements);
                             });
@@ -158,7 +161,7 @@ function useResearchFieldContent({
     };
 
     return {
-        items: items.map(i => ({ ...i, id: i.thingId })),
+        items: items,
         isLoading,
         hasNextPage,
         isLastPageReached,
