@@ -12,12 +12,13 @@ import MarkFeatured from 'components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatu
 import MarkUnlisted from 'components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
 import useMarkFeaturedUnlisted from 'components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
 import { reverse } from 'named-urls';
+import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
 import { Alert, Button, Container, ListGroup, ListGroupItem } from 'reactstrap';
 import { historyModalToggled } from 'slices/literatureListSlice';
 
-const ViewLiteratureList = () => {
+const ViewLiteratureList = ({ isEmbedded }) => {
     const { id } = useParams();
     const literatureList = useSelector(state => state.literatureList.literatureList);
     const listResource = useSelector(state => state.literatureList.listResource);
@@ -39,7 +40,7 @@ const ViewLiteratureList = () => {
     });
 
     return (
-        <Container className="print-only p-0 position-relative">
+        <Container className="embed-only p-0 position-relative">
             {!isPublished && (
                 <Alert color="warning" fade={false} className="box">
                     Warning: you are viewing an unpublished version of this list. The content can be changed by anyone.{' '}
@@ -87,15 +88,16 @@ const ViewLiteratureList = () => {
                                 <section key={section.id} className="mt-3">
                                     <ListGroup>
                                         {section.entries.map(entry => (
-                                            <ListGroupItem key={entry.statementId} className="p-2">
+                                            <ListGroupItem key={entry.statementId} className="p-0">
                                                 <PaperCard
                                                     showCurationFlags={false}
+                                                    linkTarget={isEmbedded ? '_blank' : undefined}
                                                     isListGroupItem={false}
                                                     showBreadcrumbs={false}
                                                     showCreator={false}
                                                     description={entry.description}
                                                     paper={{ ...papers[entry.paperId], title: papers[entry.paperId].label }}
-                                                    showAddToComparison
+                                                    showAddToComparison={!isEmbedded}
                                                 />
                                             </ListGroupItem>
                                         ))}
@@ -112,7 +114,7 @@ const ViewLiteratureList = () => {
                                 <span>Contributors</span>
                             </Tippy>
                         </h2>
-                        <Contributors />
+                        <Contributors isEmbedded={isEmbedded} />
                     </section>
                 </SectionStyled>
             </main>
@@ -120,6 +122,10 @@ const ViewLiteratureList = () => {
             <ComparisonPopup />
         </Container>
     );
+};
+
+ViewLiteratureList.propTypes = {
+    isEmbedded: PropTypes.bool.isRequired
 };
 
 export default ViewLiteratureList;

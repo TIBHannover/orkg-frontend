@@ -1,7 +1,8 @@
 import UserAvatar from 'components/UserAvatar/UserAvatar';
+import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 
-const Contributors = () => {
+const Contributors = ({ isEmbedded = false }) => {
     const contributors = useSelector(state => state.literatureList.contributors);
 
     return (
@@ -10,6 +11,7 @@ const Contributors = () => {
                 contributors.map(({ id, percentage }) => (
                     <div className="me-1" key={id}>
                         <UserAvatar
+                            linkTarget={isEmbedded ? '_blank' : undefined}
                             userId={id}
                             size={40}
                             appendToTooltip={
@@ -20,6 +22,10 @@ const Contributors = () => {
                 ))}
         </div>
     );
+};
+
+Contributors.propTypes = {
+    isEmbedded: PropTypes.bool.isRequired
 };
 
 export default Contributors;

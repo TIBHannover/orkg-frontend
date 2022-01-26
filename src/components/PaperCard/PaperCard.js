@@ -65,7 +65,10 @@ const PaperCard = props => {
                 )}
                 <div className="d-flex flex-column flex-grow-1">
                     <div className="mb-2">
-                        <Link to={reverse(ROUTES.VIEW_PAPER, { resourceId: props.paper.id, contributionId: props.contribution?.id ?? undefined })}>
+                        <Link
+                            target={props.linkTarget ? props.linkTarget : undefined}
+                            to={reverse(ROUTES.VIEW_PAPER, { resourceId: props.paper.id, contributionId: props.contribution?.id ?? undefined })}
+                        >
                             {props.paper.title ? props.paper.title : <em>No title</em>}
                         </Link>
                         {props.contribution && <span className="text-muted"> - {props.contribution.title}</span>}
@@ -161,11 +164,13 @@ PaperCard.propTypes = {
     showCurationFlags: PropTypes.bool.isRequired,
     onSelect: PropTypes.func,
     isListGroupItem: PropTypes.bool.isRequired,
-    description: PropTypes.object
+    description: PropTypes.object,
+    linkTarget: PropTypes.string
 };
 
 PaperCard.defaultProps = {
     selectable: false,
+    linkTarget: '_self',
     selected: false,
     showBreadcrumbs: true,
     showCreator: true,

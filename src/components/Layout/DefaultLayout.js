@@ -127,7 +127,7 @@ export default function DefaultLayout(props) {
                     <Footer />
                 </StyledFooter>
             )}
-            <StyledAlertCookie color="info" isOpen={visible} className="d-flex justify-content-center align-items-center">
+            <StyledAlertCookie id="alertCookie" color="info" isOpen={visible} className="d-flex justify-content-center align-items-center">
                 This website uses cookies to ensure you get the best experience on our website. By using this site, you agree to this use.
                 <a href="https://projects.tib.eu/orkg/data-protection/" target="_blank" rel="noopener noreferrer" className="mx-2">
                     More Info
