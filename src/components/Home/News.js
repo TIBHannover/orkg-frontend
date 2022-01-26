@@ -15,6 +15,21 @@ const CarouselContainer = styled.div`
     }
 `;
 
+const CarouselIndicatorsStyled = styled(CarouselIndicators)`
+    && {
+        margin: 0;
+    }
+
+    background: ${props => props.theme.lightLighter};
+    [data-bs-target] {
+        width: 10px;
+        height: 10px;
+        border-radius: 100%;
+        background: ${props => props.theme.primary};
+        background-clip: padding-box;
+    }
+`;
+
 const converter = new Showdown.Converter();
 converter.setFlavor('github');
 
@@ -84,7 +99,7 @@ export default function News() {
                                 </Card>
                             </CarouselItem>
                         ))}
-                        <CarouselIndicators className="bg-light-lighter m-0" items={items} activeIndex={activeIndex} onClickHandler={goToIndex} />
+                        <CarouselIndicatorsStyled items={items} activeIndex={activeIndex} onClickHandler={goToIndex} />
                     </Carousel>
                 )}
             </CarouselContainer>
