@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Modal, ModalBody, Alert, ModalHeader, Button, Input, FormGroup, Label, Row, Col } from 'reactstrap';
 import { useSelector } from 'react-redux';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faClipboard } from '@fortawesome/free-solid-svg-icons';
+import { reverse } from 'named-urls';
 import { toast } from 'react-toastify';
+import env from '@beam-australia/react-env';
+import ROUTES from 'constants/routes';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import Tippy from '@tippyjs/react';
 
@@ -13,7 +16,10 @@ function EmbedModal({ isOpen, toggle, id }) {
     const list = useSelector(state => state.literatureList.literatureList);
     const isPublished = useSelector(state => state.literatureList.isPublished);
     const title = `ORKG literature list - ${list?.title}`;
-    const src = `${process.env.REACT_APP_URL}literature-list/${id}/embed`;
+    const src = `${env('URL')}${reverse(ROUTES.LITERATURE_LIST, {
+        id,
+        embed: 'embed'
+    }).replace('/', '', 1)}`;
 
     const code = `<iframe src="${src}"  width="${width}" height="480px" title="${title}"/>`;
 
