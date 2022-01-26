@@ -9,12 +9,13 @@ import { CLASSES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import MarkdownRenderer from 'components/ArticleBuilder/MarkdownEditor/MarkdownRenderer';
 import { reverse } from 'named-urls';
+import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
 import { Alert, Button, Container, ListGroup, ListGroupItem } from 'reactstrap';
 import { historyModalToggled } from 'slices/literatureListSlice';
 
-const ViewLiteratureList = () => {
+const ViewLiteratureList = ({ isEmbedded }) => {
     const { id } = useParams();
     const literatureList = useSelector(state => state.literatureList.literatureList);
     const authors = useSelector(state => state.literatureList.authorResources);
@@ -71,12 +72,13 @@ const ViewLiteratureList = () => {
                                         {section.entries.map(entry => (
                                             <ListGroupItem key={entry.statementId} className="p-0">
                                                 <PaperCard
+                                                    linkTarget={isEmbedded ? '_blank' : undefined}
                                                     isListGroupItem={false}
                                                     showBreadcrumbs={false}
                                                     showCreator={false}
                                                     description={entry.description}
                                                     paper={{ ...papers[entry.paperId], title: papers[entry.paperId].label }}
-                                                    showAddToComparison
+                                                    showAddToComparison={!isEmbedded}
                                                 />
                                             </ListGroupItem>
                                         ))}
@@ -93,7 +95,7 @@ const ViewLiteratureList = () => {
                                 <span>Contributors</span>
                             </Tippy>
                         </h2>
-                        <Contributors />
+                        <Contributors isEmbedded={isEmbedded} />
                     </section>
                 </SectionStyled>
             </main>
@@ -101,6 +103,10 @@ const ViewLiteratureList = () => {
             <ComparisonPopup />
         </Container>
     );
+};
+
+ViewLiteratureList.propTypes = {
+    isEmbedded: PropTypes.bool.isRequired
 };
 
 export default ViewLiteratureList;

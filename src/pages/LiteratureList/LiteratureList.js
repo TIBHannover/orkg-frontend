@@ -31,7 +31,7 @@ const GlobalEmbedStyle = createGlobalStyle`
     nav,
     footer,
     .woot--bubble-holder,
-    .container:not(.embed-only) {
+    .container:not(.embed-only), #alertCookie {
         display: none !important;
     }
     .container.embed-only {
@@ -216,7 +216,7 @@ const LiteratureList = () => {
             </TitleBar>
             <LoadingOverlay isLoading={isLoadingSortSection} />
 
-            {!isLoading && !isEditing && <ViewLiteratureList />}
+            {!isLoading && !isEditing && <ViewLiteratureList isEmbedded={isEmbedded} />}
             {!isLoading && isEditing && <EditList />}
             {isLoading && <LoadingArticle />}
 
