@@ -16,7 +16,7 @@ const PWCProvenanceBoxStyled = styled.div`
 
 export default function PWCProvenanceBox() {
     return (
-        <div className="col-md-3">
+        <div>
             <a href="https://paperswithcode.com/" target="_blank" rel="noopener noreferrer" className="text-center">
                 <PWCProvenanceBoxStyled>
                     <small>Data originally imported from</small>

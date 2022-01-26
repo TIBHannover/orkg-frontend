@@ -12,7 +12,6 @@ import MarkFeatured from 'components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatu
 import MarkUnlisted from 'components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
 import useMarkFeaturedUnlisted from 'components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
 import { reverse } from 'named-urls';
-import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
 import { Alert, Button, Container, ListGroup, ListGroupItem } from 'reactstrap';

@@ -5,7 +5,6 @@ import AddSection from 'components/LiteratureList/AddSection';
 import Contributors from 'components/LiteratureList/Contributors';
 import EditTitle from 'components/LiteratureList/EditTitle';
 import SortableSectionsList from 'components/LiteratureList/SortableSectionsList';
-import React from 'react';
 import { Container } from 'reactstrap';
 
 const EditLiteratureList = () => (

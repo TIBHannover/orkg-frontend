@@ -42,13 +42,16 @@ function Benchmarks() {
                             automated information extraction within a human-in-the-loop curation model.{' '}
                         </p>
                         <div>
-                            Further information about benchmarks can be also found in the{' '}
+                            Add your benchmark dataset and its evaluations to the ORKG by following the steps found in the{' '}
                             <a href="https://www.orkg.org/orkg/help-center/article/21/Benchmarks" target="_blank" rel="noopener noreferrer">
                                 ORKG help center
                             </a>
+                            .
                         </div>
                     </div>
-                    <PWCProvenanceBox />
+                    <div className="col-md-3">
+                        <PWCProvenanceBox />
+                    </div>
                 </div>
                 <hr />
                 <Row className="mt-3 flex-grow-1 justify-content-center">

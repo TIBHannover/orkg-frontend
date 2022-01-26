@@ -4,7 +4,6 @@ import PdfSentenceAnnotation from 'assets/img/tools/pdf-sentence-annotation.png'
 import SurveyImporter from 'assets/img/tools/survey-importer.png';
 import ContributionEditor from 'assets/img/tools/contribution-editor.png';
 import ROUTES from 'constants/routes.js';
-import React from 'react';
 import { Link } from 'react-router-dom';
 import { Container } from 'reactstrap';
 import styled from 'styled-components';

@@ -1,6 +1,5 @@
 import { render as rtlRender } from '@testing-library/react';
 import { ConnectedRouter } from 'connected-react-router';
-import React from 'react';
 import { Provider } from 'react-redux';
 import configureStore, { history } from 'store';
 import theme from 'assets/scss/ThemeVariables';

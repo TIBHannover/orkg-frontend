@@ -5,7 +5,6 @@ import useLoad from 'components/SmartReview/hooks/useLoad';
 import ROUTES from 'constants/routes';
 import moment from 'moment';
 import { reverse } from 'named-urls';
-import React from 'react';
 
 const SmartReviewDiff = () => {
     const { smartReviewToPlainText } = useDiff();

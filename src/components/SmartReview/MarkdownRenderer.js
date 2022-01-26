@@ -8,6 +8,7 @@ import footnotes from 'showdown-footnotes';
 import styled from 'styled-components';
 import REGEX from 'constants/regex';
 import Cite from 'citation-js';
+import showdownVideoPlugin from 'components/ArticleBuilder/MarkdownEditor/showdownVideoPlugin';
 
 const MarkdownContainer = styled.p`
     blockquote {
@@ -101,12 +102,12 @@ const MarkdownRenderer = ({ text, id }) => {
 
     const converter = new Showdown.Converter({
         openLinksInNewWindow: true,
-        extensions: [footnotes, inlineReferences],
+        extensions: [footnotes, inlineReferences, showdownVideoPlugin],
         underline: true
     });
     converter.setFlavor('github');
 
-    return <MarkdownContainer dangerouslySetInnerHTML={{ __html: sanitize(converter.makeHtml(text), { ADD_ATTR: ['target'] }) }} />;
+    return <MarkdownContainer dangerouslySetInnerHTML={{ __html: converter.makeHtml(sanitize(text, { ADD_ATTR: ['target'] })) }} />;
 };
 
 MarkdownRenderer.propTypes = {

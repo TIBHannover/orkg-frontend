@@ -1,4 +1,17 @@
-import { faBold, faCode, faImage, faItalic, faLink, faList, faListOl, faQuoteLeft, faTable, faUnderline } from '@fortawesome/free-solid-svg-icons';
+import {
+    faBold,
+    faCode,
+    faImage,
+    faItalic,
+    faLink,
+    faList,
+    faListOl,
+    faQuoteLeft,
+    faTable,
+    faUnderline,
+    faVideo,
+    faExternalLinkAlt
+} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import ReactTextareaAutocomplete from '@webscopeio/react-textarea-autocomplete';
@@ -19,6 +32,7 @@ const Toolbar = styled.div`
     top: 85px;
     margin-bottom: 3px;
     margin-top: -40px;
+    z-index: 100;
 `;
 
 const MarkdownSection = styled.div`
@@ -36,7 +50,7 @@ const ItemReference = ({ entity: { reference } }) => (
     <div role="button" onMouseDown={e => e.preventDefault()} className="px-2 py-1">
         {reference.id}{' '}
         <span className="font-italic ms-2" style={{ opacity: 0.7 }}>
-            {reference?.author?.[0]?.family ?? ''} {reference.author.length > 0 ? 'et al.' : ''} {reference?.issued?.['date-parts']?.[0] ?? ''}
+            {reference?.author?.[0]?.family ?? ''} {reference?.author?.length > 0 ? 'et al.' : ''} {reference?.issued?.['date-parts']?.[0] ?? ''}
         </span>
     </div>
 );
@@ -206,24 +220,24 @@ const MarkdownEditor = ({ label, handleUpdate, references = null, literalId = nu
                             </Tippy>
                         </ButtonGroup>
                         <ButtonGroup className="me-1" size="sm">
-                            <Tippy content="Add a bullet list">
+                            <Tippy content="Add bullet list">
                                 <div role="button" tabIndex="0" className="btn btn-dark" onMouseDown={e => wrapText(e, '* ')}>
                                     <Icon icon={faList} />
                                 </div>
                             </Tippy>
-                            <Tippy content="Add a numbered list">
+                            <Tippy content="Add numbered list">
                                 <div role="button" tabIndex="0" className="btn btn-dark" onMouseDown={e => wrapText(e, '1. ')}>
                                     <Icon icon={faListOl} />
                                 </div>
                             </Tippy>
                         </ButtonGroup>
-                        <ButtonGroup size="sm">
-                            <Tippy content="Add a link">
+                        <ButtonGroup className="me-1" size="sm">
+                            <Tippy content="Add link">
                                 <div role="button" tabIndex="0" className="btn btn-dark" onMouseDown={e => wrapText(e, '[', '](url)')}>
                                     <Icon icon={faLink} />
                                 </div>
                             </Tippy>
-                            <Tippy content="Add an image">
+                            <Tippy content="Add image">
                                 <div
                                     role="button"
                                     tabIndex="0"
@@ -233,12 +247,32 @@ const MarkdownEditor = ({ label, handleUpdate, references = null, literalId = nu
                                     <Icon icon={faImage} />
                                 </div>
                             </Tippy>
+                            <Tippy content="Add video">
+                                <div
+                                    role="button"
+                                    tabIndex="0"
+                                    className="btn btn-dark"
+                                    onMouseDown={e => wrapText(e, '![', '](https://av.tib.eu/media/16120 =500x300)')}
+                                >
+                                    <Icon icon={faVideo} />
+                                </div>
+                            </Tippy>
+                        </ButtonGroup>
+                        <ButtonGroup size="sm">
                             {references && (
-                                <Tippy content="Add a citation">
-                                    <div role="button" tabIndex="0" className="btn btn-dark" onMouseDown={e => wrapText(e, '[@', ']')}>
-                                        <Icon icon={faQuoteLeft} />
-                                    </div>
-                                </Tippy>
+                                <>
+                                    <Tippy content="Add citation">
+                                        <div role="button" tabIndex="0" className="btn btn-dark" onMouseDown={e => wrapText(e, '[@', ']')}>
+                                            <Icon icon={faQuoteLeft} />
+                                        </div>
+                                    </Tippy>
+
+                                    <Tippy content="Add ORKG resource">
+                                        <div role="button" tabIndex="0" className="btn btn-dark" onMouseDown={e => wrapText(e, '[!', ']')}>
+                                            <Icon icon={faExternalLinkAlt} />
+                                        </div>
+                                    </Tippy>
+                                </>
                             )}
                             <Tippy content="Add table">
                                 <div

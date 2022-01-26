@@ -1,6 +1,6 @@
+import showdownVideoPlugin from 'components/ArticleBuilder/MarkdownEditor/showdownVideoPlugin';
 import { sanitize } from 'dompurify';
 import PropTypes from 'prop-types';
-import React from 'react';
 import * as Showdown from 'showdown';
 import footnotes from 'showdown-footnotes';
 import styled from 'styled-components';
@@ -27,12 +27,12 @@ const MarkdownContainer = styled.p`
 const MarkdownRenderer = ({ text = null }) => {
     const converter = new Showdown.Converter({
         openLinksInNewWindow: true,
-        extensions: [footnotes],
+        extensions: [footnotes, showdownVideoPlugin],
         underline: true
     });
     converter.setFlavor('github');
 
-    return <MarkdownContainer dangerouslySetInnerHTML={{ __html: sanitize(converter.makeHtml(text), { ADD_ATTR: ['target'] }) }} />;
+    return <MarkdownContainer dangerouslySetInnerHTML={{ __html: converter.makeHtml(sanitize(text, { ADD_ATTR: ['target'] })) }} />;
 };
 
 MarkdownRenderer.propTypes = {
