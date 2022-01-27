@@ -74,7 +74,7 @@ const IntegratedList = ({ id, slug, boxShadow }) => {
                     </>
                 </div>
                 <div
-                    className="d-md-flex mt-sm-2  me-md-2 "
+                    className="d-md-flex mt-sm-2  me-md-2 rounded"
                     style={{ fontSize: '0.875rem', padding: '0.25rem 1.25rem', color: '#646464', backgroundColor: '#dcdee6' }}
                 >
                     <div className="me-1"> Show:</div>
