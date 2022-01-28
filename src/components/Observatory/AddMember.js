@@ -56,7 +56,7 @@ function AddMember(props) {
                 <ModalHeader toggle={props.toggle}>Add a member</ModalHeader>
                 <ModalBody>
                     <>
-                        Organization:
+                        Organization
                         <Select
                             options={props.organizationsList}
                             onChange={handleOrganizationChange}
@@ -65,6 +65,7 @@ function AddMember(props) {
                         />
                         <br />
                         <div>
+                            Search member
                             <FormGroup>
                                 <InputGroup>
                                     <InputGroupText>Email</InputGroupText>
