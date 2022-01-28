@@ -630,6 +630,10 @@ function Autocomplete(props) {
         multiValueRemove: provided => ({
             ...provided,
             cursor: 'pointer'
+        }),
+        input: provided => ({
+            ...provided,
+            visibility: 'visible'
         })
     };
 
