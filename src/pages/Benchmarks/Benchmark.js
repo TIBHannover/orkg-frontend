@@ -376,53 +376,65 @@ function Benchmark() {
                     </TitleBar>
                     <Container className="p-0">
                         <Card>
-                            <Table {...getTableProps()}>
-                                <thead>
-                                    {headerGroups.map(headerGroup => (
-                                        <tr {...headerGroup.getHeaderGroupProps()}>
-                                            {headerGroup.headers.map(column => (
-                                                <th key={column.getHeaderProps(column.getSortByToggleProps()).key}>
-                                                    <div className="d-flex" {...column.getHeaderProps(column.getSortByToggleProps())}>
-                                                        {column.render('Header')}
-                                                        {/* Add a sort direction indicator */}
-                                                        <div className="ms-1">
-                                                            {column.isSorted ? (
-                                                                column.isSortedDesc ? (
-                                                                    <Icon icon={faSortUp} className="ms-1" />
+                            {rows?.length > 0 && (
+                                <Table {...getTableProps()}>
+                                    <thead>
+                                        {headerGroups.map(headerGroup => (
+                                            <tr {...headerGroup.getHeaderGroupProps()}>
+                                                {headerGroup.headers.map(column => (
+                                                    <th key={column.getHeaderProps(column.getSortByToggleProps()).key}>
+                                                        <div className="d-flex" {...column.getHeaderProps(column.getSortByToggleProps())}>
+                                                            {column.render('Header')}
+                                                            {/* Add a sort direction indicator */}
+                                                            <div className="ms-1">
+                                                                {column.isSorted ? (
+                                                                    column.isSortedDesc ? (
+                                                                        <Icon icon={faSortUp} className="ms-1" />
+                                                                    ) : (
+                                                                        <Icon icon={faSortDown} />
+                                                                    )
                                                                 ) : (
-                                                                    <Icon icon={faSortDown} />
-                                                                )
-                                                            ) : (
-                                                                ''
-                                                            )}
+                                                                    ''
+                                                                )}
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                </th>
-                                            ))}
-                                        </tr>
-                                    ))}
-                                </thead>
-                                <tbody {...getTableBodyProps()}>
-                                    {rows?.length > 0 &&
-                                        rows.map((row, i) => {
-                                            prepareRow(row);
-                                            return (
-                                                <tr {...row.getRowProps()}>
-                                                    {row.cells.map(cell => {
-                                                        return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>;
-                                                    })}
-                                                </tr>
-                                            );
-                                        })}
-                                    {!rows?.length && (
-                                        <tr>
-                                            <td>
-                                                No papers that addresses {problemData.label} on {resourceData.label} yet!
-                                            </td>
-                                        </tr>
-                                    )}
-                                </tbody>
-                            </Table>
+                                                    </th>
+                                                ))}
+                                            </tr>
+                                        ))}
+                                    </thead>
+                                    <tbody {...getTableBodyProps()}>
+                                        {rows?.length > 0 &&
+                                            rows.map((row, i) => {
+                                                prepareRow(row);
+                                                return (
+                                                    <tr {...row.getRowProps()}>
+                                                        {row.cells.map(cell => {
+                                                            return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>;
+                                                        })}
+                                                    </tr>
+                                                );
+                                            })}
+                                    </tbody>
+                                </Table>
+                            )}
+
+                            {!rows?.length && (
+                                <div className="p-4">
+                                    No papers that addresses {problemData.label} on {resourceData.label} yet!
+                                    <div className="pt-3">
+                                        Add your benchmark dataset and its evaluations to the ORKG by following the steps found in the{' '}
+                                        <a
+                                            href="https://www.orkg.org/orkg/help-center/article/21/Benchmarks"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                        >
+                                            ORKG help center
+                                        </a>
+                                        .
+                                    </div>
+                                </div>
+                            )}
                         </Card>
                     </Container>
                 </div>
