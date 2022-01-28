@@ -2,15 +2,13 @@ import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import { getAllOrganizations } from 'services/backend/organizations';
-import { useSelector } from 'react-redux';
 import { useState, useEffect } from 'react';
 import { updateObservatoryOrganization } from 'services/backend/observatories';
 import Select from 'react-select';
 
 function AddOrganization(props) {
-    const user = useSelector(state => state.auth.user);
     const [organizations, setOrganizations] = useState([]);
-    const [selectedOrganizations, setSelectedOrganizations] = useState([]);
+    const [selectedOrganization, setSelectedOrganization] = useState('');
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
@@ -28,16 +26,16 @@ function AddOrganization(props) {
 
     const handleSubmit = async e => {
         setIsLoading(true);
-        if (selectedOrganizations.length > 0) {
-            const newSelectedOrganizations = selectedOrganizations.filter(o1 => !props.organizations.find(o2 => o1.id === o2.id));
-            await updateObservatoryOrganization(props.id, newSelectedOrganizations)
+        if (selectedOrganization) {
+            await updateObservatoryOrganization(props.id, selectedOrganization.id)
                 .then(_ => {
                     toast.success('Organization added successfully');
                     setIsLoading(false);
-                    props.updateObservatoryOrganizations(selectedOrganizations);
+                    props.updateObservatoryOrganizations(selectedOrganization);
                     props.toggle();
                 })
                 .catch(error => {
+                    toast.error('Organization cannot be added');
                     setIsLoading(false);
                 });
         } else {
@@ -47,7 +45,7 @@ function AddOrganization(props) {
     };
 
     const handleCreatorsChange = selected => {
-        setSelectedOrganizations(selected);
+        setSelectedOrganization(selected);
     };
 
     return (
@@ -61,8 +59,6 @@ function AddOrganization(props) {
                             onChange={handleCreatorsChange}
                             getOptionValue={({ id }) => id}
                             getOptionLabel={({ name }) => name}
-                            isMulti
-                            defaultValue={props.organizations}
                         />
                     </>
                 </ModalBody>

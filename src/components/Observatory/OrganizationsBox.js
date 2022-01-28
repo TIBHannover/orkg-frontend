@@ -18,8 +18,10 @@ const OrganizationsBox = ({ isLoadingOrganizations, organizationsList, observato
         setOrganizations(organizationsList);
     }, [organizationsList]);
 
-    const updateObservatoryOrganizations = organizations => {
-        setOrganizations(organizations);
+    const updateObservatoryOrganizations = organization => {
+        const organizationsList = [...organizations];
+        organizationsList.push(organization);
+        setOrganizations(organizationsList);
     };
 
     return (
