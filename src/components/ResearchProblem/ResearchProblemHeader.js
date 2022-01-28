@@ -108,7 +108,7 @@ const ResearchProblemHeader = ({ id }) => {
                         titleAddition={
                             <>
                                 <SubtitleSeparator />
-                                <SubTitle>{researchProblemData.label}</SubTitle>
+                                <SubTitle>Research problem</SubTitle>
                                 <>
                                     <FeaturedMark size="sm" featured={isFeatured} handleChangeStatus={handleChangeStatus} />{' '}
                                     <div className="d-inline-block ms-1">
@@ -143,7 +143,7 @@ const ResearchProblemHeader = ({ id }) => {
                         }
                         wrap={false}
                     >
-                        Research problem
+                        {researchProblemData.label}
                     </TitleBar>
                     {editMode && (
                         <StatementBrowserDialog
