@@ -80,7 +80,7 @@ function useResearchFieldContent({
                     featured: sort === 'featured' ? true : null,
                     unlisted: sort === 'unlisted' ? true : false,
                     classes: classesFilter.map(c => c.id)
-                }).map(response => response.content.map(i => ({ ...i, id: i.thingId })));
+                }).then(response => ({ ...response, content: response.content?.map(i => ({ ...i, id: i.thingId })) }));
             }
 
             contentService
