@@ -3,13 +3,14 @@ import { submitPutRequest, submitDeleteRequest, submitPostRequest, submitGetRequ
 import { getStatementsBySubjectAndPredicate } from 'services/backend/statements';
 import { PREDICATES } from 'constants/graphSettings';
 import { indexContribution } from 'services/similarity';
+import { toast } from 'react-toastify';
 
 export const papersUrl = `${url}papers/`;
 
 // Save full paper and index contributions in the similarity service
 export const saveFullPaper = (data, mergeIfExists = false) => {
     return submitPostRequest(`${papersUrl}?mergeIfExists=${mergeIfExists}`, { 'Content-Type': 'application/json' }, data).then(paper => {
-        indexContributionsByPaperId(paper.id);
+        Promise.all(indexContributionsByPaperId(paper.id)).catch(() => toast.error('Error while indexing contributions'));
         return paper;
     });
 };
