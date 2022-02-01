@@ -15,6 +15,7 @@ const DEFAULT_CLASSES_FILTER = [
         tippyContent: 'Comparisons in ORKG provide an overview of state-of-the-art literature for a particular topic.',
         link: reverse(ROUTES.COMPARISONS)
     },
+    /*
     {
         id: CLASSES.SMART_REVIEW_PUBLISHED,
         label: 'SmartReviews',
@@ -26,7 +27,7 @@ const DEFAULT_CLASSES_FILTER = [
         label: 'Literature lists',
         tippyContent: 'Literature lists provide a way to organize and describe state-of-the-art literature for a specific research domain.',
         link: reverse(ROUTES.LITERATURE_LISTS)
-    },
+    },*/
     { id: CLASSES.VISUALIZATION, label: 'Visualizations', tippyContent: false, link: reverse(ROUTES.VISUALIZATIONS) },
     { id: CLASSES.PAPER, label: 'Papers', tippyContent: false, link: reverse(ROUTES.PAPERS) }
 ];

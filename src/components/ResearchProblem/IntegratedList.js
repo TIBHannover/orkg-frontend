@@ -15,9 +15,11 @@ import queryString from 'query-string';
 const DEFAULT_CLASSES_FILTER = [
     { id: CLASSES.PAPER, label: 'Paper' },
     { id: CLASSES.COMPARISON, label: 'Comparison' },
-    { id: CLASSES.VISUALIZATION, label: 'Visualization' },
+    { id: CLASSES.VISUALIZATION, label: 'Visualization' }
+    /*
     { id: CLASSES.SMART_REVIEW_PUBLISHED, label: 'SmartReview' },
     { id: CLASSES.LITERATURE_LIST_PUBLISHED, label: 'Literature list' }
+    */
 ];
 
 const IntegratedList = ({ id, slug, boxShadow }) => {
