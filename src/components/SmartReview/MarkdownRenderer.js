@@ -21,6 +21,9 @@ const MarkdownContainer = styled.p`
         border: 1px solid #c4c4c4;
         padding: 3px 5px;
     }
+    img {
+        max-width: 100%;
+    }
 `;
 
 /**
