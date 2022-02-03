@@ -12,7 +12,7 @@ const TableEditor = props => {
     const dispatch = useDispatch();
     const tableData = useSelector(state => state.pdfAnnotation.tableData[props.id]);
     const cachedLabels = useSelector(state => state.pdfAnnotation.cachedLabels);
-    const { removeEmptyRows, mergeCellValues, splitIntoSeveralColumns, renderTable } = useTableEditor(props.id, props.setRef);
+    const { removeEmptyRows, mergeCellValues, renderTable } = useTableEditor(props.id, props.setRef);
 
     const renderer = function(instance, td, row, col, prop, value, cellProperties) {
         // I tried it with a nice RendererComponent, but after a lot of trying this just isn't supported well in Hansontable
@@ -66,10 +66,10 @@ const TableEditor = props => {
                         name: 'Merge cell values',
                         callback: mergeCellValues
                     },
-                    {
+                    /*{
                         name: 'Split into several columns',
                         callback: splitIntoSeveralColumns
-                    },
+                    },*/
                     {
                         name: 'Remove empty rows',
                         callback: removeEmptyRows

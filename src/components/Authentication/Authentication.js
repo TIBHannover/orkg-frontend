@@ -54,7 +54,7 @@ class Authentication extends Component {
                             <>
                                 Not a member?
                                 <Button
-                                    className="p-0 my-0 ml-2"
+                                    className="p-0 my-0 ms-2"
                                     color="link"
                                     onClick={() => {
                                         this.props.openAuthDialog({ action: 'signup' });
@@ -68,7 +68,7 @@ class Authentication extends Component {
                             <>
                                 Already a member?
                                 <Button
-                                    className="p-0 my-0 ml-2"
+                                    className="p-0 my-0 ms-2"
                                     color="link"
                                     onClick={() => {
                                         this.props.openAuthDialog({ action: 'signin' });
@@ -83,7 +83,7 @@ class Authentication extends Component {
                             <div>
                                 Remember you password again ?
                                 <b
-                                    className="ml-2"
+                                    className="ms-2"
                                     style={{
                                         cursor: 'pointer',
                                         color: 'inherit',

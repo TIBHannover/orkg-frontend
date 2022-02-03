@@ -10,9 +10,9 @@ import { useEffect, useState } from 'react';
 import LoadingOverlay from 'react-loading-overlay';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { Button, CustomInput, ListGroup, Modal, ModalBody, ModalHeader } from 'reactstrap';
+import { Button, Input, ListGroup, Modal, ModalBody, ModalHeader, FormGroup, Label } from 'reactstrap';
 
-const EditPaperDialog = ({ paperData, isOpen, toggle, afterUpdate, showPaperLink }) => {
+const EditPaperDialog = ({ paperData, isOpen, toggle, afterUpdate, showPaperLink, additionalFields = {} }) => {
     const [openItem, setOpenItem] = useState('title');
     const [title, setTitle] = useState('');
     const [month, setMonth] = useState(0);
@@ -88,7 +88,11 @@ const EditPaperDialog = ({ paperData, isOpen, toggle, afterUpdate, showPaperLink
             label: 'Research Field',
             type: 'researchField',
             value: researchField,
-            onChange: setResearchField
+            onChange: value =>
+                setResearchField({
+                    ...value,
+                    statementId: researchField?.statementId ?? ''
+                })
         },
         month: {
             label: 'Publication month',
@@ -129,7 +133,8 @@ const EditPaperDialog = ({ paperData, isOpen, toggle, afterUpdate, showPaperLink
             type: 'text',
             value: url,
             onChange: e => setUrl(e.target.value)
-        }
+        },
+        ...additionalFields
     };
 
     const toggleItem = item => setOpenItem(openItem !== item ? item : null);
@@ -160,13 +165,13 @@ const EditPaperDialog = ({ paperData, isOpen, toggle, afterUpdate, showPaperLink
                     {showPaperLink && (
                         <Link
                             style={{ right: 45, position: 'absolute', top: 12 }}
-                            className="ml-2"
+                            className="ms-2"
                             to={reverse(ROUTES.VIEW_PAPER, { resourceId: paperData?.paper?.id })}
                             target="_blank"
                             rel="noopener noreferrer"
                         >
                             <Button color="link" className="p-0">
-                                Open paper <Icon icon={faExternalLinkAlt} className="mr-1" />
+                                Open paper <Icon icon={faExternalLinkAlt} className="me-1" />
                             </Button>
                         </Link>
                     )}
@@ -188,19 +193,22 @@ const EditPaperDialog = ({ paperData, isOpen, toggle, afterUpdate, showPaperLink
                     </ListGroup>
                     <div className="d-flex" style={{ justifyContent: 'flex-end' }}>
                         {!!user && user.isCurationAllowed && (
-                            <Tippy content="Mark this meta-data as verified">
-                                <span>
-                                    <CustomInput
-                                        className="mt-2 mr-2 pt-2"
-                                        type="checkbox"
-                                        id="replaceTitles"
-                                        label="Verified"
-                                        name="verified"
-                                        onChange={e => setIsVerified(e.target.checked)}
-                                        checked={isVerified}
-                                    />
-                                </span>
-                            </Tippy>
+                            <FormGroup check className="mt-2 me-2 pt-2">
+                                <Tippy content="Mark this meta-data as verified">
+                                    <span>
+                                        <Input
+                                            type="checkbox"
+                                            id="replaceTitles"
+                                            name="verified"
+                                            onChange={e => setIsVerified(e.target.checked)}
+                                            checked={isVerified}
+                                        />{' '}
+                                        <Label check for="replaceTitles" className="mb-0">
+                                            Verified
+                                        </Label>{' '}
+                                    </span>
+                                </Tippy>
+                            </FormGroup>
                         )}
 
                         <Button disabled={isLoading} color="primary" className=" mt-2 mb-2" onClick={handleSave}>
@@ -228,7 +236,8 @@ EditPaperDialog.propTypes = {
         isVerified: PropTypes.bool
     }),
     afterUpdate: PropTypes.func,
-    showPaperLink: PropTypes.bool
+    showPaperLink: PropTypes.bool,
+    additionalFields: PropTypes.object
 };
 
 EditPaperDialog.defaultProps = {

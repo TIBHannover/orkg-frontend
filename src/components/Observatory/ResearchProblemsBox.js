@@ -14,7 +14,7 @@ import capitalize from 'capitalize';
 const ResearchProblemsBox = ({ observatoryId, organizationsList }) => {
     const user = useSelector(state => state.auth.user);
     const [openModal, setOpenModal] = useState(false);
-    const [showAddResearchProblemDialog, setShowAddResearchProblemDialog] = useState(null);
+    const [showAddResearchProblemDialog, setShowAddResearchProblemDialog] = useState(false);
     const [isLoadingProblems, setIsLoadingProblems] = useState(null);
     const [problemsList, setProblemsList] = useState([]);
 
@@ -39,7 +39,7 @@ const ResearchProblemsBox = ({ observatoryId, organizationsList }) => {
     };
 
     return (
-        <div className="box rounded-lg p-4 flex-grow-1">
+        <div className="box rounded-3 p-4 flex-grow-1">
             <h5>Research Problems</h5>
             {!!user && user.isCurationAllowed && (
                 <Button outline size="sm" style={{ float: 'right', marginTop: '-33px' }} onClick={() => setShowAddResearchProblemDialog(v => !v)}>

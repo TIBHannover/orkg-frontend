@@ -11,6 +11,7 @@ import { faPen, faEllipsisV, faSortUp, faSortDown } from '@fortawesome/free-soli
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import { NavLink } from 'react-router-dom';
 import ContentLoader from 'react-content-loader';
+import { reverseWithSlug } from 'utils';
 import { SubTitle, SubtitleSeparator } from 'components/styled';
 import useBenchmarkDatasetResource from 'components/Benchmarks/hooks/useBenchmarkDatasetResource';
 import useBenchmarkDatasetPapers from 'components/Benchmarks/hooks/useBenchmarkDatasetPapers';
@@ -19,6 +20,7 @@ import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowser
 import { useParams } from 'react-router-dom';
 import { usePrevious } from 'react-use';
 import { useTable, useSortBy } from 'react-table';
+import TitleBar from 'components/TitleBar/TitleBar';
 
 function getTicksAxisH(data) {
     const dateRange = data.slice(1).map(function(value, index) {
@@ -53,26 +55,28 @@ function getTicksAxisH(data) {
 }
 
 function Benchmark() {
-    const [resourceData, isLoading, isFailedLoading, loadResourceData] = useBenchmarkDatasetResource();
+    const { datasetId, problemId } = useParams();
+    const [resourceData, problemData, isLoading, isFailedLoading, loadResourceData] = useBenchmarkDatasetResource({ datasetId, problemId });
     const [menuOpen, setMenuOpen] = useState(false);
     const [editMode, setEditMode] = useState(false);
     const prevEditMode = usePrevious({ editMode });
-    const { resourceId } = useParams();
     const history = useHistory();
     const {
         isLoading: isLoadingPapers,
         isFailedLoadingPapers,
         benchmarkDatasetPapers,
+        datasetProblems,
         metrics,
         selectedMetric,
         setSelectedMetric
     } = useBenchmarkDatasetPapers({
-        datasetId: resourceId
+        datasetId,
+        problemId
     });
 
     useEffect(() => {
         if (!editMode && prevEditMode && prevEditMode.editMode !== editMode) {
-            loadResourceData(resourceId);
+            loadResourceData(datasetId);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [editMode]);
@@ -177,7 +181,7 @@ function Benchmark() {
                         </ContentLoader>
                     </div>
                     <div className="text-center mt-4 mb-4 p-5 container box rounded">
-                        <div className="text-left">
+                        <div className="text-start">
                             <ContentLoader
                                 speed={2}
                                 width={400}
@@ -197,128 +201,179 @@ function Benchmark() {
             {!isLoading && isFailedLoading && <div className="text-center mt-4 mb-4">Failed loading the resource</div>}
             {!isLoading && !isFailedLoading && (
                 <>
-                    <Container className="d-flex align-items-center mt-4 mb-4">
-                        <h1 className="h5 flex-shrink-0 mb-0">Benchmark</h1>
-                        <>
-                            <SubtitleSeparator />
-                            <SubTitle className="h5 mb-0"> {resourceData.label}</SubTitle>
-                        </>
-                        {editMode && (
-                            <StatementBrowserDialog
-                                show={editMode}
-                                toggleModal={() => setEditMode(v => !v)}
-                                id={resourceId}
-                                label={resourceData.label}
-                                enableEdit={true}
-                                syncBackend={true}
-                            />
-                        )}
-                        <ButtonGroup className="flex-shrink-0" style={{ marginLeft: 'auto' }}>
-                            <RequireAuthentication
-                                component={Button}
-                                size="sm"
-                                color="secondary"
-                                className="float-right"
-                                onClick={() => setEditMode(v => !v)}
-                            >
-                                <Icon icon={faPen} /> Edit
-                            </RequireAuthentication>
-                            <ButtonDropdown isOpen={menuOpen} toggle={() => setMenuOpen(v => !v)} nav inNavbar>
-                                <DropdownToggle size="sm" color="secondary" className="px-3 rounded-right" style={{ marginLeft: 2 }}>
-                                    <Icon icon={faEllipsisV} />
-                                </DropdownToggle>
-                                <DropdownMenu right>
-                                    <DropdownItem tag={NavLink} exact to={reverse(ROUTES.RESOURCE, { id: resourceId })}>
-                                        View resource
-                                    </DropdownItem>
-                                </DropdownMenu>
-                            </ButtonDropdown>
-                        </ButtonGroup>
-                    </Container>
+                    <TitleBar
+                        titleAddition={
+                            <>
+                                <SubtitleSeparator />
+                                <SubTitle>
+                                    {problemData.label} on {resourceData.label}
+                                </SubTitle>
+                            </>
+                        }
+                        buttonGroup={
+                            <>
+                                <RequireAuthentication
+                                    component={Button}
+                                    size="sm"
+                                    color="secondary"
+                                    className="float-end"
+                                    onClick={() => setEditMode(v => !v)}
+                                >
+                                    <Icon icon={faPen} /> Edit
+                                </RequireAuthentication>
+                                <ButtonDropdown isOpen={menuOpen} toggle={() => setMenuOpen(v => !v)}>
+                                    <DropdownToggle size="sm" color="secondary" className="px-3 rounded-end" style={{ marginLeft: 2 }}>
+                                        <Icon icon={faEllipsisV} />
+                                    </DropdownToggle>
+                                    <DropdownMenu right>
+                                        <DropdownItem tag={NavLink} exact to={reverse(ROUTES.RESOURCE, { id: datasetId })}>
+                                            View resource
+                                        </DropdownItem>
+                                    </DropdownMenu>
+                                </ButtonDropdown>
+                            </>
+                        }
+                    >
+                        Benchmark
+                    </TitleBar>
+
+                    {editMode && (
+                        <StatementBrowserDialog
+                            show={editMode}
+                            toggleModal={() => setEditMode(v => !v)}
+                            id={datasetId}
+                            label={resourceData.label}
+                            enableEdit={true}
+                            syncBackend={true}
+                        />
+                    )}
+
                     <Container className="p-0">
                         <Card>
                             <CardBody>
-                                <>
-                                    {resourceData.description && <p className="m-0">{resourceData.description}</p>}
-                                    {!resourceData.description && <p className="m-0">{resourceData.label}</p>}
-                                </>
+                                <div>
+                                    <i>Research problem:</i>{' '}
+                                    <Link
+                                        to={reverseWithSlug(ROUTES.RESEARCH_PROBLEM, { researchProblemId: problemData.id, slug: problemData.label })}
+                                        style={{ textDecoration: 'none', flex: 1 }}
+                                    >
+                                        {problemData.label}
+                                    </Link>
+                                </div>
+                                <div>
+                                    <i>Dataset:</i> {resourceData.label}
+                                </div>
+
+                                <>{resourceData.description && <p className="m-0">{resourceData.description}</p>}</>
                                 {resourceData.url && <div className="mb-4">{resourceData.url}</div>}
                             </CardBody>
                         </Card>
                     </Container>
                 </>
             )}
-            {!isLoadingPapers && !isFailedLoadingPapers && (
+            {!isLoading && !isFailedLoading && !isLoadingPapers && !isFailedLoadingPapers && (
                 <div>
                     <Container className="d-flex align-items-center mt-4 mb-4">
                         <div className="d-flex flex-grow-1">
-                            <h1 className="h5 flex-shrink-0 mb-0">Performance trend</h1>
+                            <h1 className="h5 mb-0">Performance trend</h1>
                         </div>
-                        <UncontrolledButtonDropdown className="flex-shrink-0 ml-auto">
-                            <DropdownToggle caret size="sm" color="secondary">
-                                Metric: {selectedMetric}
-                            </DropdownToggle>
-                            <DropdownMenu>
-                                {metrics.map((m, index) => (
-                                    <DropdownItem key={index} disabled={isLoading} onClick={() => setSelectedMetric(m)}>
-                                        {m}
-                                    </DropdownItem>
-                                ))}
-                            </DropdownMenu>
-                        </UncontrolledButtonDropdown>
+                        <div>
+                            <ButtonGroup size="sm">
+                                <Button disabled>Research problem</Button>
+                                <UncontrolledButtonDropdown className="flex-shrink-0 me-2">
+                                    <DropdownToggle caret size="sm" color="secondary">
+                                        {problemData.label}
+                                    </DropdownToggle>
+                                    <DropdownMenu>
+                                        {datasetProblems.map((rp, index) => (
+                                            <DropdownItem
+                                                key={index}
+                                                disabled={isLoading}
+                                                onClick={() => history.push(reverse(ROUTES.BENCHMARK, { datasetId: datasetId, problemId: rp.id }))}
+                                            >
+                                                {rp.label}
+                                            </DropdownItem>
+                                        ))}
+                                    </DropdownMenu>
+                                </UncontrolledButtonDropdown>
+                            </ButtonGroup>
+                            {metrics?.length > 0 && (
+                                <ButtonGroup size="sm" className="mt-md-0 mt-sm-1">
+                                    <Button disabled>Metric</Button>
+                                    <UncontrolledButtonDropdown className="flex-shrink-0 ms-auto">
+                                        <DropdownToggle caret size="sm" color="secondary">
+                                            {selectedMetric}
+                                        </DropdownToggle>
+                                        <DropdownMenu>
+                                            {metrics.map((m, index) => (
+                                                <DropdownItem key={index} disabled={isLoading} onClick={() => setSelectedMetric(m)}>
+                                                    {m}
+                                                </DropdownItem>
+                                            ))}
+                                        </DropdownMenu>
+                                    </UncontrolledButtonDropdown>
+                                </ButtonGroup>
+                            )}
+                        </div>
                     </Container>
+
                     <Container className="p-0">
                         <Card>
                             <CardBody>
-                                <Chart
-                                    width="100%"
-                                    height={300}
-                                    chartType="ScatterChart"
-                                    loader={<div>Loading Chart</div>}
-                                    data={dataChart}
-                                    options={{
-                                        hAxis: { title: 'Year', format: 'MMM yyyy', ticks: getTicksAxisH(dataChart) },
-                                        vAxis: { title: selectedMetric },
-                                        legend: true,
-                                        tooltip: { isHtml: true },
-                                        pointSize: 7,
-                                        trendlines: {
-                                            0: { labelInLegend: 'Linear trendline', tooltip: false, type: 'linear', visibleInLegend: true }
-                                        }
-                                    }}
-                                    chartEvents={[
-                                        {
-                                            eventName: 'select',
-                                            callback: ({ chartWrapper }) => {
-                                                const chart = chartWrapper.getChart();
-                                                const selection = chart.getSelection();
-                                                if (selection.length === 1) {
-                                                    const [selectedItem] = selection;
-                                                    const { row } = selectedItem;
-                                                    history.push(
-                                                        reverse(ROUTES.VIEW_PAPER, {
-                                                            resourceId: benchmarkDatasetPapers[selectedMetric][row].paper_id
-                                                        })
-                                                    );
+                                {dataChart?.length > 1 && (
+                                    <Chart
+                                        width="100%"
+                                        height={300}
+                                        chartType="ScatterChart"
+                                        loader={<div>Loading Chart</div>}
+                                        data={dataChart}
+                                        options={{
+                                            hAxis: { title: 'Year', format: 'MMM yyyy', ticks: getTicksAxisH(dataChart) },
+                                            vAxis: { title: selectedMetric },
+                                            legend: true,
+                                            tooltip: { isHtml: true },
+                                            pointSize: 7,
+                                            trendlines: {
+                                                0: { labelInLegend: 'Linear trendline', tooltip: false, type: 'linear', visibleInLegend: true }
+                                            }
+                                        }}
+                                        chartEvents={[
+                                            {
+                                                eventName: 'select',
+                                                callback: ({ chartWrapper }) => {
+                                                    const chart = chartWrapper.getChart();
+                                                    const selection = chart.getSelection();
+                                                    if (selection.length === 1) {
+                                                        const [selectedItem] = selection;
+                                                        const { row } = selectedItem;
+                                                        history.push(
+                                                            reverse(ROUTES.VIEW_PAPER, {
+                                                                resourceId: benchmarkDatasetPapers[selectedMetric][row].paper_id
+                                                            })
+                                                        );
+                                                    }
                                                 }
                                             }
-                                        }
-                                    ]}
-                                />
+                                        ]}
+                                    />
+                                )}
+                                {dataChart?.length <= 1 && 'No data to plot!'}
                             </CardBody>
                         </Card>
                     </Container>
-                    <Container className="d-flex align-items-center mt-4 mb-4">
-                        <div className="d-flex flex-grow-1">
-                            <h1 className="h5 flex-shrink-0 mb-0">Papers</h1>
+                    <TitleBar
+                        titleSize="h5"
+                        titleAddition={
                             <>
                                 <SubtitleSeparator />
                                 <SubTitle className="mb-0">
                                     <small className="text-muted mb-0 text-small">Data imported from paperswithcode.com</small>
                                 </SubTitle>
                             </>
-                        </div>
-                    </Container>
+                        }
+                    >
+                        Papers
+                    </TitleBar>
                     <Container className="p-0">
                         <Card>
                             <Table {...getTableProps()}>
@@ -330,10 +385,10 @@ function Benchmark() {
                                                     <div className="d-flex" {...column.getHeaderProps(column.getSortByToggleProps())}>
                                                         {column.render('Header')}
                                                         {/* Add a sort direction indicator */}
-                                                        <div className="ml-1">
+                                                        <div className="ms-1">
                                                             {column.isSorted ? (
                                                                 column.isSortedDesc ? (
-                                                                    <Icon icon={faSortUp} className="ml-1" />
+                                                                    <Icon icon={faSortUp} className="ms-1" />
                                                                 ) : (
                                                                     <Icon icon={faSortDown} />
                                                                 )
@@ -348,16 +403,24 @@ function Benchmark() {
                                     ))}
                                 </thead>
                                 <tbody {...getTableBodyProps()}>
-                                    {rows.map((row, i) => {
-                                        prepareRow(row);
-                                        return (
-                                            <tr {...row.getRowProps()}>
-                                                {row.cells.map(cell => {
-                                                    return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>;
-                                                })}
-                                            </tr>
-                                        );
-                                    })}
+                                    {rows?.length > 0 &&
+                                        rows.map((row, i) => {
+                                            prepareRow(row);
+                                            return (
+                                                <tr {...row.getRowProps()}>
+                                                    {row.cells.map(cell => {
+                                                        return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>;
+                                                    })}
+                                                </tr>
+                                            );
+                                        })}
+                                    {!rows?.length && (
+                                        <tr>
+                                            <td>
+                                                No papers that addresses {problemData.label} on {resourceData.label} yet!
+                                            </td>
+                                        </tr>
+                                    )}
                                 </tbody>
                             </Table>
                         </Card>

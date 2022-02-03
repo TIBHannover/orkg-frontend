@@ -1,7 +1,7 @@
 import Tippy from '@tippyjs/react';
 import { updateSectionType } from 'actions/smartReview';
 import useOntology from 'components/PdfTextAnnotation/hooks/useOntology';
-import { SectionTypeContainerStyled, SectionTypeStyled } from 'components/SmartReview/styled';
+import { SectionTypeContainerStyled, SectionTypeStyled } from 'components/ArticleBuilder/styled';
 import { CLASSES } from 'constants/graphSettings';
 import { sortBy, upperFirst } from 'lodash';
 import PropTypes from 'prop-types';
@@ -108,7 +108,7 @@ const SectionType = props => {
             )}
 
             {!isDisabled && !editMode && (
-                <SectionTypeStyled className="focus-primary" onClick={() => setEditMode(true)}>
+                <SectionTypeStyled className="focus-primary" onClick={() => setEditMode(true)} aria-label={`Section type: ${typeValue.label}`}>
                     {typeValue.label}
                 </SectionTypeStyled>
             )}
@@ -125,6 +125,7 @@ const SectionType = props => {
                         blurInputOnSelect
                         autoFocus
                         openMenuOnFocus
+                        aria-label="Select the section type"
                     />
                 </SectionTypeContainerStyled>
             )}

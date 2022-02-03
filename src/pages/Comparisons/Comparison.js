@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Alert, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Button, ButtonGroup, Badge } from 'reactstrap';
+import { Alert, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Button, Badge } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faEllipsisV, faLightbulb, faHistory, faWindowMaximize, faChartBar, faExternalLinkAlt, faFilter } from '@fortawesome/free-solid-svg-icons';
 import ComparisonLoadingComponent from 'components/Comparison/ComparisonLoadingComponent';
@@ -25,6 +25,7 @@ import { ContainerAnimated, ComparisonTypeButton } from 'components/Comparison/s
 import useComparison from 'components/Comparison/hooks/useComparison';
 import ShareLinkMarker from 'components/ShareLinkMarker/ShareLinkMarker';
 import { getResource } from 'services/backend/resources';
+import moment from 'moment';
 import ROUTES from 'constants/routes.js';
 import { useHistory, Link, useParams } from 'react-router-dom';
 import { openAuthDialog } from 'actions/auth';
@@ -42,7 +43,10 @@ import PreviewVisualizationComparison from 'libs/selfVisModel/ComparisonComponen
 import { NavLink } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import env from '@beam-australia/react-env';
+import { Helmet } from 'react-helmet';
 import AppliedRule from 'components/Comparison/Filters/AppliedRule';
+import TitleBar from 'components/TitleBar/TitleBar';
+import SaveDraft from 'components/Comparison/SaveDraft/SaveDraft';
 
 function Comparison(props) {
     const {
@@ -70,6 +74,7 @@ function Comparison(props) {
         researchField,
         setMetaData,
         setComparisonType,
+        setPredicatesList,
         toggleProperty,
         onSortPropertiesEnd,
         toggleTranspose,
@@ -84,7 +89,8 @@ function Comparison(props) {
         loadCreatedBy,
         loadProvenanceInfos,
         loadVisualizations,
-        handleEditContributions
+        handleEditContributions,
+        fetchLiveData
     } = useComparison({});
 
     const params = useParams();
@@ -95,6 +101,12 @@ function Comparison(props) {
             loadVersions(params.comparisonId);
         }
     }, [params.comparisonId, loadVersions]);
+
+    useEffect(() => {
+        if (metaData?.title) {
+            document.title = `${metaData.title} - Comparison - ORKG`;
+        }
+    }, [metaData]);
 
     /** adding some additional state for meta data **/
 
@@ -113,6 +125,7 @@ function Comparison(props) {
     const [showLatexDialog, setShowLatexDialog] = useState(false);
     const [showShareDialog, setShowShareDialog] = useState(false);
     const [showPublishDialog, setShowPublishDialog] = useState(false);
+    const [showSaveDraftDialog, setShowSaveDraftDialog] = useState(false);
     const [showAddContribution, setShowAddContribution] = useState(false);
     const [showComparisonVersions, setShowComparisonVersions] = useState(false);
     const [showExportCitationsDialog, setShowExportCitationsDialog] = useState(false);
@@ -153,6 +166,7 @@ function Comparison(props) {
     const handleChangeType = type => {
         setUrlNeedsToUpdate(true);
         setResponseHash(null);
+        setPredicatesList([]);
         setComparisonType(type);
         setDropdownMethodOpen(false);
     };
@@ -198,33 +212,51 @@ function Comparison(props) {
             ));
     };
 
+    const isPublished = metaData?.id || responseHash ? true : false;
+    const publishedMessage = "Published comparisons cannot be edited, click 'Fetch live data' to reload the live comparison data";
+
+    const ldJson = {
+        mainEntity: {
+            headline: metaData?.title,
+            description: metaData?.description,
+            ...(metaData?.doi ? { sameAs: `https://doi.org/${metaData.doi}` } : {}),
+            author: metaData.authors?.map(author => ({
+                name: author.label,
+                ...(author.orcid ? { url: `http://orcid.org/${author.orcid}` } : {}),
+                '@type': 'Person'
+            })),
+            datePublished: metaData.createdAt ? moment(metaData.createdAt).format('DD MMMM YYYY') : '',
+            about: researchField?.label,
+            '@type': 'ScholarlyArticle'
+        },
+        '@context': 'https://schema.org',
+        '@type': 'WebPage'
+    };
+
     return (
         <div>
             <Breadcrumbs researchFieldId={metaData?.subject ? metaData?.subject.id : researchField ? researchField.id : null} />
-            <ContainerAnimated className="d-flex align-items-center">
-                <h1 className="h4 mt-4 mb-4 flex-grow-1">
-                    Contribution comparison{' '}
-                    {!isFailedLoadingMetaData && contributionsList.length > 1 && (
-                        <Tippy content="The amount of compared contributions">
-                            <span>
-                                <Badge color="secondary" pill style={{ fontSize: '65%' }}>
-                                    {contributionsList.length}
-                                </Badge>
-                            </span>
-                        </Tippy>
-                    )}
-                </h1>
 
-                {contributionsList.length > 1 && !isLoadingComparisonResult && !isFailedLoadingComparisonResult && (
-                    <div style={{ marginLeft: 'auto' }} className="flex-shrink-0 mt-4">
-                        <ButtonGroup className="float-right mb-4 ml-1">
-                            <Dropdown group isOpen={dropdownDensityOpen} toggle={() => setDropdownDensityOpen(v => !v)} style={{ marginRight: 3 }}>
+            <Helmet>
+                <title>{`${metaData?.title ?? 'Unpublished'} - Comparison - ORKG`}</title>
+                <meta property="og:title" content={`${metaData?.title ?? 'Unpublished'} - Comparison - ORKG`} />
+                <meta property="og:type" content="article" />
+                <meta property="og:description" content={metaData?.description} />
+                <script type="application/ld+json">{JSON.stringify(ldJson)}</script>
+            </Helmet>
+            <TitleBar
+                buttonGroup={
+                    (contributionsList.length > 1 || (areAllRulesEmpty(filterControlData) && contributionsList.length > 0)) &&
+                    !isLoadingComparisonResult &&
+                    !isFailedLoadingComparisonResult && (
+                        <>
+                            <Dropdown group isOpen={dropdownDensityOpen} toggle={() => setDropdownDensityOpen(v => !v)} style={{ marginRight: 2 }}>
                                 <DropdownToggle color="secondary" size="sm">
-                                    <Icon icon={faWindowMaximize} className="mr-1" /> View
+                                    <Icon icon={faWindowMaximize} className="me-1" /> View
                                 </DropdownToggle>
                                 <DropdownMenu>
                                     <DropdownItem onClick={handleFullWidth}>
-                                        <span className="mr-2">{fullWidth ? 'Reduced width' : 'Full width'}</span>
+                                        <span className="me-2">{fullWidth ? 'Reduced width' : 'Full width'}</span>
                                     </DropdownItem>
                                     <DropdownItem onClick={() => toggleTranspose(v => !v)}>Transpose table</DropdownItem>
                                     <DropdownItem divider />
@@ -248,55 +280,90 @@ function Comparison(props) {
                                         setUseReconstructedData(false);
                                         setShowVisualizationModal(!showVisualizationModal);
                                     }}
-                                    style={{ marginRight: 3 }}
+                                    style={{ marginRight: 2 }}
                                 >
-                                    <Icon icon={faChartBar} className="mr-1" /> Visualize
+                                    <Icon icon={faChartBar} className="me-1" /> Visualize
                                 </Button>
                             ) : (
                                 <Tippy
                                     hideOnClick={false}
                                     content="Cannot use self-visualization-service for unpublished comparison. You must publish the comparison first to use this functionality."
                                 >
-                                    <span style={{ marginRight: 3 }} className="btn btn-secondary btn-sm disabled">
-                                        <Icon icon={faChartBar} className="mr-1" /> Visualize
+                                    <span style={{ marginRight: 2 }} className="btn btn-secondary btn-sm disabled">
+                                        <Icon icon={faChartBar} className="me-1" /> Visualize
                                     </span>
                                 </Tippy>
                             )}
                             <Dropdown group isOpen={dropdownOpen} toggle={() => setDropdownOpen(v => !v)}>
-                                <DropdownToggle color="secondary" size="sm" className="rounded-right">
-                                    <span className="mr-2">More</span> <Icon icon={faEllipsisV} />
+                                <DropdownToggle color="secondary" size="sm" className="rounded-end">
+                                    <span className="me-2">Actions</span> <Icon icon={faEllipsisV} />
                                 </DropdownToggle>
                                 <DropdownMenu right style={{ zIndex: '1031' }}>
                                     <DropdownItem header>Customize</DropdownItem>
-                                    <DropdownItem onClick={() => setShowAddContribution(v => !v)}>Add contribution</DropdownItem>
-                                    <DropdownItem onClick={() => setShowPropertiesDialog(v => !v)}>Select properties</DropdownItem>
-                                    <Dropdown isOpen={dropdownMethodOpen} toggle={() => setDropdownMethodOpen(v => !v)} direction="left">
-                                        <DropdownToggle tag="div" className="dropdown-item" style={{ cursor: 'pointer' }}>
-                                            Comparison method
-                                        </DropdownToggle>
-                                        <DropdownMenu>
-                                            <div className="d-flex px-2">
-                                                <ComparisonTypeButton
-                                                    color="link"
-                                                    className="p-0 m-1"
-                                                    onClick={() => handleChangeType('merge')}
-                                                    active={comparisonType !== 'path'}
+                                    <Tippy disabled={isPublished} content="The comparison uses live data already">
+                                        <span>
+                                            <DropdownItem onClick={fetchLiveData} disabled={!isPublished}>
+                                                Fetch live data
+                                            </DropdownItem>
+                                        </span>
+                                    </Tippy>
+                                    <Tippy disabled={!isPublished} content={publishedMessage}>
+                                        <span>
+                                            <DropdownItem onClick={() => setShowAddContribution(v => !v)} disabled={isPublished}>
+                                                Add contribution
+                                            </DropdownItem>
+                                        </span>
+                                    </Tippy>
+                                    <Tippy disabled={!isPublished} content={publishedMessage}>
+                                        <span>
+                                            <DropdownItem onClick={() => setShowPropertiesDialog(v => !v)} disabled={isPublished}>
+                                                Select properties
+                                            </DropdownItem>
+                                        </span>
+                                    </Tippy>
+                                    <Tippy disabled={!isPublished} content={publishedMessage}>
+                                        <span>
+                                            <Dropdown isOpen={dropdownMethodOpen} toggle={() => setDropdownMethodOpen(v => !v)} direction="left">
+                                                <DropdownToggle
+                                                    tag="div"
+                                                    className={`dropdown-item ${isPublished ? 'disabled' : ''}`}
+                                                    style={{ cursor: 'pointer' }}
+                                                    disabled={isPublished}
                                                 >
-                                                    <img src={IntelligentMerge} alt="Intelligent merge example" />
-                                                </ComparisonTypeButton>
+                                                    Comparison method
+                                                </DropdownToggle>
+                                                <DropdownMenu>
+                                                    <div className="d-flex px-2">
+                                                        <ComparisonTypeButton
+                                                            color="link"
+                                                            className="p-0 m-1"
+                                                            onClick={() => handleChangeType('merge')}
+                                                            active={comparisonType !== 'path'}
+                                                        >
+                                                            <img src={IntelligentMerge} alt="Intelligent merge example" />
+                                                        </ComparisonTypeButton>
 
-                                                <ComparisonTypeButton
-                                                    color="link"
-                                                    className="p-0 m-1"
-                                                    onClick={() => handleChangeType('path')}
-                                                    active={comparisonType === 'path'}
-                                                >
-                                                    <img src={ExactMatch} alt="Exact match example" />
-                                                </ComparisonTypeButton>
-                                            </div>
-                                        </DropdownMenu>
-                                    </Dropdown>
-                                    <DropdownItem onClick={handleEditContributions}>Edit contributions</DropdownItem>
+                                                        <ComparisonTypeButton
+                                                            color="link"
+                                                            className="p-0 m-1"
+                                                            onClick={() => handleChangeType('path')}
+                                                            active={comparisonType === 'path'}
+                                                        >
+                                                            <img src={ExactMatch} alt="Exact match example" />
+                                                        </ComparisonTypeButton>
+                                                    </div>
+                                                </DropdownMenu>
+                                            </Dropdown>
+                                        </span>
+                                    </Tippy>
+
+                                    <Tippy disabled={!isPublished} content={publishedMessage}>
+                                        <span>
+                                            <DropdownItem onClick={handleEditContributions} disabled={isPublished}>
+                                                Edit contributions
+                                            </DropdownItem>
+                                        </span>
+                                    </Tippy>
 
                                     <DropdownItem divider />
                                     <DropdownItem header>Export</DropdownItem>
@@ -360,11 +427,22 @@ function Comparison(props) {
                                     >
                                         Publish
                                     </DropdownItem>
+                                    <DropdownItem
+                                        onClick={() => {
+                                            if (!props.user) {
+                                                props.openAuthDialog({ action: 'signin', signInRequired: true });
+                                            } else {
+                                                setShowSaveDraftDialog(true);
+                                            }
+                                        }}
+                                    >
+                                        Save as draft
+                                    </DropdownItem>
                                     {!isLoadingVersions && versions?.length > 1 && (
                                         <>
                                             <DropdownItem divider />
                                             <DropdownItem onClick={() => setShowComparisonVersions(v => !v)}>
-                                                <Icon icon={faHistory} /> <span className="mr-2">History</span>
+                                                <Icon icon={faHistory} /> <span className="me-2">History</span>
                                             </DropdownItem>
                                         </>
                                     )}
@@ -378,16 +456,27 @@ function Comparison(props) {
                                     )}
                                 </DropdownMenu>
                             </Dropdown>
-                        </ButtonGroup>
-                    </div>
+                        </>
+                    )
+                }
+            >
+                Comparison{' '}
+                {!isFailedLoadingMetaData && contributionsList.length > 1 && (
+                    <Tippy content="The amount of compared contributions">
+                        <span>
+                            <Badge color="secondary" pill style={{ fontSize: '65%' }}>
+                                {contributionsList.length}
+                            </Badge>
+                        </span>
+                    </Tippy>
                 )}
-            </ContainerAnimated>
+            </TitleBar>
 
             {!isLoadingVersions && hasNextVersion && (
                 <NewerVersionWarning versions={versions} comparisonId={metaData?.id || metaData?.hasPreviousVersion?.id} />
             )}
 
-            <ContainerAnimated className="box rounded pt-4 pb-4 pl-5 pr-5 clearfix position-relative" style={containerStyle}>
+            <ContainerAnimated className="box rounded pt-4 pb-4 ps-5 pe-5 clearfix position-relative" style={containerStyle}>
                 <ShareLinkMarker typeOfLink="comparison" title={metaData?.title} />
                 {!isLoadingMetaData && (isFailedLoadingComparisonResult || isFailedLoadingMetaData) && (
                     <div>
@@ -451,14 +540,14 @@ function Comparison(props) {
                             {areAllRulesEmpty(filterControlData) && (
                                 <div className="mt-3 d-flex" style={{ flexDirection: 'column' }}>
                                     <h6 className="text-secondary">
-                                        <Icon className="mr-1" size="sm" icon={faFilter} />
+                                        <Icon className="me-1" size="sm" icon={faFilter} />
                                         <b>Applied Filters:</b>
                                     </h6>
                                     <div className="d-flex flex-wrap">{displayRules()}</div>
                                 </div>
                             )}
                             {!isLoadingComparisonResult ? (
-                                contributionsList.length > 1 ? (
+                                contributionsList.length > 1 || (areAllRulesEmpty(filterControlData) && contributionsList.length > 0) ? (
                                     <div className="mt-1">
                                         {integrateData({
                                             metaData,
@@ -576,6 +665,10 @@ function Comparison(props) {
                 data={data}
                 nextVersions={!isLoadingVersions && hasNextVersion ? versions : []}
             />
+
+            {showSaveDraftDialog && (
+                <SaveDraft isOpen={showSaveDraftDialog} toggle={() => setShowSaveDraftDialog(v => !v)} comparisonUrl={comparisonURLConfig} />
+            )}
 
             <AddContribution onAddContributions={addContributions} showDialog={showAddContribution} toggle={() => setShowAddContribution(v => !v)} />
 

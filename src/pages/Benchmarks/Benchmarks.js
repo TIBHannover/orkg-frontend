@@ -7,6 +7,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { Row, Container } from 'reactstrap';
 import { SearchStyled, InputStyled, SearchButtonStyled } from 'components/styled';
 import PWCProvenanceBox from 'components/Benchmarks/PWCProvenanceBox/PWCProvenanceBox';
+import TitleBar from 'components/TitleBar/TitleBar';
 
 function Benchmarks() {
     const { benchmarks, isLoadingBenchmarks } = useBenchmarks();
@@ -14,38 +15,43 @@ function Benchmarks() {
 
     return (
         <>
-            <Container className="d-flex align-items-center">
-                <div className="d-flex flex-grow-1 mt-4 mb-4">
-                    <h1 className="h4 m-0">View all benchmarks</h1>
-                    <div className="text-muted ml-3 mt-1">
+            <TitleBar
+                titleAddition={
+                    <div className="text-muted mt-1">
                         {benchmarks.length === 0 && isLoadingBenchmarks ? <Icon icon={faSpinner} spin /> : benchmarks.length} benchmarks{' '}
                         {!!filter &&
                             `(${benchmarks.filter(b => b.research_problem.label.toLowerCase().includes(filter.toLowerCase())).length} filtered)`}
                     </div>
-                </div>
-
-                <SearchStyled className="btn btn-secondary btn-sm active">
-                    <InputStyled type="text" placeholder="Search benchmarks..." value={filter} onChange={e => setFilter(e.target.value)} />
-                    <SearchButtonStyled size="sm" className="px-3" color="link">
-                        <Icon icon={faSearch} />
-                    </SearchButtonStyled>
-                </SearchStyled>
-            </Container>
+                }
+                buttonGroup={
+                    <SearchStyled className="btn btn-secondary btn-sm active">
+                        <InputStyled type="text" placeholder="Search benchmarks..." value={filter} onChange={e => setFilter(e.target.value)} />
+                        <SearchButtonStyled size="sm" className="px-3" color="link">
+                            <Icon icon={faSearch} />
+                        </SearchButtonStyled>
+                    </SearchStyled>
+                }
+            >
+                View all benchmarks
+            </TitleBar>
             <Container className="box rounded p-4 clearfix">
-                <div className="d-flex">
-                    <div>
+                <div className="row">
+                    <div className="col-md-9">
                         <p>
                             <i>Benchmarks</i> organize the state-of-the-art empirical research within research fields and are powered in part by
                             automated information extraction within a human-in-the-loop curation model.{' '}
                         </p>
                         <div>
-                            Further information about benchmarks can be also found in the{' '}
-                            <a href="https://gitlab.com/TIBHannover/orkg/orkg-frontend/-/wikis/Benchmarks" target="_blank" rel="noopener noreferrer">
-                                ORKG wiki
+                            Add your benchmark dataset and its evaluations to the ORKG by following the steps found in the{' '}
+                            <a href="https://www.orkg.org/orkg/help-center/article/21/Benchmarks" target="_blank" rel="noopener noreferrer">
+                                ORKG help center
                             </a>
+                            .
                         </div>
                     </div>
-                    <PWCProvenanceBox />
+                    <div className="col-md-3">
+                        <PWCProvenanceBox />
+                    </div>
                 </div>
                 <hr />
                 <Row className="mt-3 flex-grow-1 justify-content-center">

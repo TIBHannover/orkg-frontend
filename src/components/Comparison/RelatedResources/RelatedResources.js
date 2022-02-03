@@ -51,27 +51,31 @@ class RelatedResources extends Component {
             this.state.relatedResources.length > 0 && (
                 <>
                     <h3 className="mt-5 h5">Related resources</h3>
-                    <CardColumns>
+                    <CardColumns className="d-flex row">
                         {this.state.relatedResources.map((resource, index) => {
                             const isLink = new RegExp(this.urlRegex).test(resource.url);
 
                             return (
-                                <Card key={`rr${index}`}>
-                                    {resource.image && <CardImg top width="100%" src={resource.image ? resource.image : ''} alt="Card image cap" />}
-                                    <CardBody>
-                                        {resource.title && <CardTitle>{resource.title}</CardTitle>}
-                                        {resource.description && <CardText>{resource.description}</CardText>}
-                                        {isLink ? (
-                                            <a href={resource.url} target="_blank" rel="noopener noreferrer">
-                                                <Button size="sm" color="secondary">
-                                                    Visit resource
-                                                </Button>
-                                            </a>
-                                        ) : (
-                                            resource.url
+                                <div className="col-sm-3" key={`rr${index}`}>
+                                    <Card>
+                                        {resource.image && (
+                                            <CardImg top width="100%" src={resource.image ? resource.image : ''} alt="Card image cap" />
                                         )}
-                                    </CardBody>
-                                </Card>
+                                        <CardBody>
+                                            {resource.title && <CardTitle>{resource.title}</CardTitle>}
+                                            {resource.description && <CardText>{resource.description}</CardText>}
+                                            {isLink ? (
+                                                <a href={resource.url} target="_blank" rel="noopener noreferrer">
+                                                    <Button size="sm" color="secondary">
+                                                        Visit resource
+                                                    </Button>
+                                                </a>
+                                            ) : (
+                                                resource.url
+                                            )}
+                                        </CardBody>
+                                    </Card>
+                                </div>
                             );
                         })}
                     </CardColumns>

@@ -47,7 +47,7 @@ export default function Contribution(props) {
     } else if (paperId) {
         return <Redirect to={reverse(ROUTES.SMART_REVIEW, { id: paperId })} />;
     } else {
-        return <Container className="box rounded pt-4 pb-4 pl-5 pr-5 mt-5 clearfix">Loading ...</Container>;
+        return <Container className="box rounded pt-4 pb-4 ps-5 pe-5 mt-5 clearfix">Loading ...</Container>;
     }
 }
 

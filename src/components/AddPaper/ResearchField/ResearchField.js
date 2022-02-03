@@ -49,17 +49,17 @@ const ResearchField = () => {
                     Selected research field: <b>{researchFieldLabel}</b>
                 </div>
             ) : (
-                <p className={`text-danger mt-2 pl-2 ${!showError ? ' d-none' : ''}`} style={{ borderLeft: '4px red solid' }}>
+                <p className={`text-danger mt-2 ps-2 ${!showError ? ' d-none' : ''}`} style={{ borderLeft: '4px red solid' }}>
                     Please select the research field
                 </p>
             )}
 
             <hr className="mt-5 mb-3" />
 
-            <Button color="primary" className="float-right mb-4" onClick={handleNextClick}>
+            <Button color="primary" className="float-end mb-4" onClick={handleNextClick}>
                 Next step
             </Button>
-            <Button color="light" className="float-right mb-4 mr-2" onClick={() => dispatch(previousStep())}>
+            <Button color="light" className="float-end mb-4 me-2" onClick={() => dispatch(previousStep())}>
                 Previous step
             </Button>
         </div>

@@ -40,13 +40,13 @@ const EditorTable = ({ scrollContainerBody }) => {
     );
 
     return (
-        <div role="table" id="comparisonTable" {...getTableProps()} className="table sticky mb-0" style={{ height: 'max-content' }}>
+        <div role="table" id="comparisonTable" {...getTableProps()} className="table sticky mb-0 p-0" style={{ height: 'max-content' }}>
             <ScrollSyncPane group="one">
                 <div style={{ overflow: 'auto', top: '71px', position: 'sticky', zIndex: '3' }} className="disable-scrollbars">
                     {headerGroups.map(headerGroup => (
                         <div className="header" {...headerGroup.getHeaderGroupProps()}>
                             {headerGroup.headers.map(column => (
-                                <div {...column.getHeaderProps()} className="th">
+                                <div {...column.getHeaderProps()} className="th p-0">
                                     {column.render('Header')}
                                 </div>
                             ))}
@@ -57,19 +57,14 @@ const EditorTable = ({ scrollContainerBody }) => {
             <ScrollSyncPane group="one">
                 {/* paddingBottom for the 'add value' bottom, which is positioned partially below the table */}
                 <div ref={scrollContainerBody} style={{ overflow: 'auto', paddingBottom: 15 }}>
-                    <div {...getTableBodyProps()} className="comparisonBody" style={{ width: '100%' }}>
-                        <FlipMove duration={700} enterAnimation="accordionVertical" leaveAnimation="accordionVertical">
+                    <div {...getTableBodyProps()} className="comparisonBody" style={{ ...getTableProps().style }}>
+                        <FlipMove duration={700} enterAnimation="accordionVertical" leaveAnimation="accordionVertical" className="p-0">
                             {rows.map(row => {
                                 prepareRow(row);
                                 return (
-                                    <div
-                                        {...row.getRowProps()}
-                                        key={row.values.property.staticRowId}
-                                        className="tr d-flex"
-                                        style={{ zIndex: 100 - row.index }}
-                                    >
+                                    <div {...row.getRowProps()} className="tr d-flex p-0" style={{ zIndex: 100 - row.index }}>
                                         {row.cells.map(cell => (
-                                            <div {...cell.getCellProps()} className="td">
+                                            <div {...cell.getCellProps()} className="td p-0">
                                                 {cell.render('Cell')}
                                             </div>
                                         ))}

@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
-import { Button, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader, CustomInput } from 'reactstrap';
+import { Alert, Button, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import { createLiteralStatement, createResourceStatement, getStatementsBundleBySubject } from 'services/backend/statements';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
@@ -97,6 +97,10 @@ const PublishModal = ({ id, show, toggle, getVersions, paperId }) => {
         <Modal isOpen={show} toggle={toggle}>
             <ModalHeader toggle={toggle}>Publish article</ModalHeader>
             <ModalBody>
+                <Alert color="info">
+                    Once an article is published, the current state is saved and will be persistent over time. The update message is used to identify
+                    why a version is published
+                </Alert>
                 {!publishedId ? (
                     <>
                         <FormGroup>
@@ -112,17 +116,18 @@ const PublishModal = ({ id, show, toggle, getVersions, paperId }) => {
                         <FormGroup>
                             <div>
                                 <Tooltip message="Assign a DOI to the published version of this article">
-                                    <CustomInput
-                                        onChange={e => {
-                                            setShouldAssignDoi(e.target.checked);
-                                        }}
-                                        checked={shouldAssignDoi}
-                                        id="switchAssignDoi"
-                                        type="switch"
-                                        inline
-                                        label="Assign DOI to publication"
-                                        className="m-0"
-                                    />
+                                    <Label check>
+                                        <Input
+                                            type="checkbox"
+                                            onChange={e => {
+                                                setShouldAssignDoi(e.target.checked);
+                                            }}
+                                            checked={shouldAssignDoi}
+                                            id="switchAssignDoi"
+                                            inline
+                                        />{' '}
+                                        Assign DOI to publication
+                                    </Label>
                                 </Tooltip>
                             </div>
                         </FormGroup>

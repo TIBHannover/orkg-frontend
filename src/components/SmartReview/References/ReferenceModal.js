@@ -26,6 +26,7 @@ const ReferenceModal = ({ show, toggle, onSave, reference = null }) => {
                     className="form-control"
                     onChange={e => setBibtex(e.target.value)}
                     placeholder="Paste your BibTeX here..."
+                    aria-label="Enter a valid bibtex entry in this field"
                     style={{ fontFamily: 'monospace', fontSize: '90%' }}
                     minRows="6"
                 />

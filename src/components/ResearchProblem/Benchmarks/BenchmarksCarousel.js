@@ -70,14 +70,14 @@ function BenchmarksCarousel(props) {
             <StyledSlider {...settings}>
                 {benchmarks.map((benchmark, index) => {
                     const marginClasses = classNames({
-                        'ml-0': index === 0,
-                        'mr-0': index === benchmarks.length
+                        'ms-0': index === 0,
+                        'me-0': index === benchmarks.length
                     });
                     return (
                         <BenchmarkCarouselCardStyled key={benchmark.id} className={marginClasses}>
                             <Card className="flex-grow-1">
                                 <Link
-                                    to={reverse(ROUTES.BENCHMARK, { resourceId: benchmark.id })}
+                                    to={reverse(ROUTES.BENCHMARK, { datasetId: benchmark.id, problemId: props.problemId })}
                                     className="d-flex"
                                     style={{ textDecoration: 'none', flex: 1 }}
                                 >
@@ -101,6 +101,7 @@ function BenchmarksCarousel(props) {
 }
 
 BenchmarksCarousel.propTypes = {
+    problemId: PropTypes.string.isRequired,
     benchmarks: PropTypes.array.isRequired
 };
 

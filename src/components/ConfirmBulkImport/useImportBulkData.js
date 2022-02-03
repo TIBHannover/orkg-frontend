@@ -7,6 +7,8 @@ import { createResource, getResourcesByClass, getResources } from 'services/back
 import { getResource } from 'services/backend/resources';
 import { getPredicate, getPredicates, createPredicate } from 'services/backend/predicates';
 import { saveFullPaper } from 'services/backend/papers';
+import Cite from 'citation-js';
+import { parseCiteResult } from 'utils';
 import { toast } from 'react-toastify';
 
 const PREDEFINED_COLUMNS = [
@@ -16,7 +18,8 @@ const PREDEFINED_COLUMNS = [
     'paper:publication_year',
     'paper:doi',
     'paper:url',
-    'paper:research_field'
+    'paper:research_field',
+    'paper:published_in'
 ];
 
 const useImportBulkData = ({ data, onFinish }) => {
@@ -54,14 +57,32 @@ const useImportBulkData = ({ data, onFinish }) => {
                 rowObject[headerItem].push(row[index]);
             }
 
-            const title = getFirstValue(rowObject, 'paper:title');
+            let title = getFirstValue(rowObject, 'paper:title');
             let authors = getFirstValue(rowObject, 'paper:authors', []);
             authors = authors.length ? authors.split(';').map(name => ({ label: name })) : [];
-            const publicationMonth = getFirstValue(rowObject, 'paper:publication_month');
-            const publicationYear = getFirstValue(rowObject, 'paper:publication_year');
+            let publicationMonth = getFirstValue(rowObject, 'paper:publication_month');
+            let publicationYear = getFirstValue(rowObject, 'paper:publication_year');
             const doi = getFirstValue(rowObject, 'paper:doi');
             const url = getFirstValue(rowObject, 'paper:url');
             let researchField = getFirstValue(rowObject, 'paper:research_field', MISC.RESEARCH_FIELD_MAIN);
+            let publishedIn = getFirstValue(rowObject, 'paper:published_in');
+            let paperMetadata = null;
+            if (doi) {
+                try {
+                    paperMetadata = await Cite.async(doi);
+                } catch (error) {
+                    paperMetadata = null;
+                }
+
+                if (paperMetadata) {
+                    paperMetadata = parseCiteResult(paperMetadata);
+                    title = paperMetadata.paperTitle;
+                    authors = paperMetadata.paperAuthors.map(author => ({ label: author.label }));
+                    publicationMonth = paperMetadata.paperPublicationMonth;
+                    publicationYear = paperMetadata.paperPublicationYear;
+                    publishedIn = paperMetadata.publishedIn;
+                }
+            }
 
             rowObject = omit(rowObject, PREDEFINED_COLUMNS);
 
@@ -192,7 +213,7 @@ const useImportBulkData = ({ data, onFinish }) => {
                 publicationYear,
                 researchField,
                 url,
-                publishedIn: null,
+                publishedIn,
                 contributions: [
                     {
                         name: 'Contribution',

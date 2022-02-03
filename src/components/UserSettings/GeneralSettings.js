@@ -116,10 +116,10 @@ class GeneralSettings extends Component {
                 <FormGroup>
                     <Label for="Email">Avatar picture</Label>
                     <Alert color="info" className="d-flex align-items-center">
-                        <StyledGravatar className="rounded-circle mr-3" email={this.state.email} size={40} />
+                        <StyledGravatar className="rounded-circle me-3" email={this.state.email} size={40} />
                         <p className="m-0">
                             We use Gravatar, a service that associates an avatar image with your primary email address.
-                            <a className="ml-1" href="https://en.gravatar.com/" target="_blank" rel="noopener noreferrer">
+                            <a className="ms-1" href="https://en.gravatar.com/" target="_blank" rel="noopener noreferrer">
                                 Change your avatar image at gravatar.com <Icon size="sm" icon={faExternalLinkAlt} />
                             </a>
                         </p>

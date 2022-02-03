@@ -1,7 +1,7 @@
 import { createRef } from 'react';
 import NativeListener from 'react-native-listener';
 import { BaseEditorComponent } from '@handsontable/react';
-import { InputGroup, DropdownMenu, InputGroupButtonDropdown, Input } from 'reactstrap';
+import { InputGroup, DropdownMenu, Dropdown, Input } from 'reactstrap';
 import { StyledDropdownItem, StyledDropdownToggle } from 'components/StatementBrowser/styled';
 import { connect } from 'react-redux';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -280,11 +280,7 @@ class EditorComponent extends BaseEditorComponent {
                             />
                         )}
                         {this.state.type === 'resource' && !this.state.valueClass && (
-                            <InputGroupButtonDropdown
-                                addonType="append"
-                                isOpen={this.state.dropdownValueTypeOpen}
-                                toggle={() => this.toggle('dropdownValueTypeOpen')}
-                            >
+                            <Dropdown isOpen={this.state.dropdownValueTypeOpen} toggle={() => this.toggle('dropdownValueTypeOpen')}>
                                 <StyledDropdownToggle disableBorderRadiusLeft={true}>
                                     <small>{this.state.valueType.charAt(0).toUpperCase() + this.state.valueType.slice(1) + ' '}</small>
                                     <Icon size="xs" icon={faBars} />
@@ -301,7 +297,7 @@ class EditorComponent extends BaseEditorComponent {
                                         </Tippy>
                                     </StyledDropdownItem>
                                 </DropdownMenu>
-                            </InputGroupButtonDropdown>
+                            </Dropdown>
                         )}
                     </InputGroup>
                 </div>

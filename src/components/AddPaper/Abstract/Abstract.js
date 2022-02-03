@@ -1,6 +1,7 @@
 import { Component } from 'react';
 import { Button, Modal, ModalBody, ModalHeader, ModalFooter } from 'reactstrap';
-import { semanticScholarUrl, submitGetRequest } from 'network';
+import { submitGetRequest } from 'network';
+import { semanticScholarUrl } from 'services/semanticScholar';
 import { getAnnotations } from 'services/annotation/index';
 import { connect } from 'react-redux';
 import {
@@ -8,12 +9,12 @@ import {
     nextStep,
     previousStep,
     createContribution,
-    prefillStatements,
     createAnnotation,
     clearAnnotations,
     toggleAbstractDialog,
     setAbstractDialogView
 } from 'actions/addPaper';
+import { fillStatements } from 'actions/statementBrowser';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner, faThList, faMagic } from '@fortawesome/free-solid-svg-icons';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
@@ -26,6 +27,7 @@ import PropTypes from 'prop-types';
 import { compose } from 'redux';
 import { guid } from 'utils';
 import toArray from 'lodash/toArray';
+import { ENTITIES } from 'constants/graphSettings';
 
 const AnimationContainer = styled(CSSTransition)`
     &.fadeIn-enter {
@@ -163,7 +165,7 @@ class Abstract extends Component {
             this.setState({
                 isAbstractLoading: true
             });
-            return submitGetRequest(semanticScholarUrl + DOI)
+            return submitGetRequest(semanticScholarUrl + 'v1/paper/' + DOI)
                 .then((data, reject) => {
                     if (!data.abstract) {
                         return reject;
@@ -265,7 +267,7 @@ class Abstract extends Component {
                     }
                     statements['values'].push({
                         label: range.text,
-                        type: 'object',
+                        _class: ENTITIES.RESOURCE,
                         propertyId: propertyId
                     });
                 }
@@ -273,7 +275,7 @@ class Abstract extends Component {
             });
         }
         // Add the statements to the selected contribution
-        this.props.prefillStatements({ statements, resourceId: this.props.contributions.byId[this.props.selectedContribution].resourceId });
+        this.props.fillStatements({ statements, resourceId: this.props.contributions.byId[this.props.selectedContribution].resourceId });
         this.props.toggleAbstractDialog();
     };
 
@@ -363,35 +365,35 @@ class Abstract extends Component {
                 <ModalFooter>
                     {this.props.abstractDialogView === 'input' ? (
                         <>
-                            <Button color="primary" className="float-right" onClick={this.handleChangeAbstract}>
+                            <Button color="primary" className="float-end" onClick={this.handleChangeAbstract}>
                                 Annotate Abstract
                             </Button>
                         </>
                     ) : this.props.abstractDialogView === 'list' ? (
                         <>
-                            <Button color="secondary" outline className="float-left" onClick={() => this.handleChangeView('annotator')}>
+                            <Button color="secondary" outline className="float-start" onClick={() => this.handleChangeView('annotator')}>
                                 <Icon icon={faMagic} /> Annotator
                             </Button>
 
-                            <Button color="primary" className="float-right" onClick={this.handleInsertData}>
+                            <Button color="primary" className="float-end" onClick={this.handleInsertData}>
                                 Insert Data
                             </Button>
 
-                            <Button color="light" className="float-right mr-2" onClick={this.handleChangeAbstract}>
+                            <Button color="light" className="float-end me-2" onClick={this.handleChangeAbstract}>
                                 Change abstract
                             </Button>
                         </>
                     ) : (
                         <>
-                            <Button color="secondary" outline className="float-left" onClick={() => this.handleChangeView('list')}>
+                            <Button color="secondary" outline className="float-start" onClick={() => this.handleChangeView('list')}>
                                 <Icon icon={faThList} /> List of annotations
                             </Button>
 
-                            <Button color="primary" className="float-right" onClick={this.handleInsertData}>
+                            <Button color="primary" className="float-end" onClick={this.handleInsertData}>
                                 Insert Data
                             </Button>
 
-                            <Button color="light" className="float-right mr-2" onClick={this.handleChangeAbstract}>
+                            <Button color="light" className="float-end me-2" onClick={this.handleChangeAbstract}>
                                 Change abstract
                             </Button>
                         </>
@@ -413,7 +415,7 @@ Abstract.propTypes = {
     selectedContribution: PropTypes.string.isRequired,
     contributions: PropTypes.object.isRequired,
     createContribution: PropTypes.func.isRequired,
-    prefillStatements: PropTypes.func.isRequired,
+    fillStatements: PropTypes.func.isRequired,
     createAnnotation: PropTypes.func.isRequired,
     clearAnnotations: PropTypes.func.isRequired,
     resources: PropTypes.object.isRequired,
@@ -444,7 +446,7 @@ const mapDispatchToProps = dispatch => ({
     nextStep: () => dispatch(nextStep()),
     previousStep: () => dispatch(previousStep()),
     createContribution: data => dispatch(createContribution(data)),
-    prefillStatements: data => dispatch(prefillStatements(data)),
+    fillStatements: data => dispatch(fillStatements(data)),
     createAnnotation: data => dispatch(createAnnotation(data)),
     clearAnnotations: () => dispatch(clearAnnotations()),
     toggleAbstractDialog: () => dispatch(toggleAbstractDialog()),

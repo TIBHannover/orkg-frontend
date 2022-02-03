@@ -1,6 +1,6 @@
 import { faPlusCircle, faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { loadContributions, removeContributions } from 'actions/contributionEditor';
+import { contributionsRemoved, loadContributions } from 'slices/contributionEditorSlice';
 import CreateProperty from 'components/ContributionEditor/CreateProperty';
 import EditorTable from 'components/ContributionEditor/EditorTable';
 import useContributionEditor from 'components/ContributionEditor/hooks/useContributionEditor';
@@ -17,7 +17,8 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import env from '@beam-australia/react-env';
-import { Alert, Button, ButtonGroup, Container } from 'reactstrap';
+import { Alert, Button, Container } from 'reactstrap';
+import TitleBar from 'components/TitleBar/TitleBar';
 
 const ContributionEditor = () => {
     const [isOpenAddContribution, setIsOpenAddContribution] = useState(false);
@@ -59,7 +60,7 @@ const ContributionEditor = () => {
         // check if contributions are removed
         const contributionIdsToRemove = Object.keys(contributions).filter(id => !contributionIds.includes(id));
         if (contributionIdsToRemove.length) {
-            dispatch(removeContributions(contributionIdsToRemove));
+            dispatch(contributionsRemoved(contributionIdsToRemove));
         }
     }, [contributionIds, contributions, dispatch, hasFailed, isLoading]);
 
@@ -80,42 +81,42 @@ const ContributionEditor = () => {
         setIsOpenCreateContribution(false);
     };
 
-    const handleCreatePaper = contributionId => {
+    const handleCreatePaper = ({ contributionId }) => {
         handleAddContributions([contributionId]);
         setIsOpenCreatePaper(false);
     };
 
     const contributionAmount = contributionIds.length;
-    const containerStyle = contributionAmount > 3 ? { maxWidth: 'calc(100% - 20px)' } : undefined;
+    const containerStyle = contributionAmount > 2 ? { maxWidth: 'calc(100% - 20px)' } : undefined;
 
     // if is loading and there are no contributions in the store, it means it is loading for the first time
     const isLoadingInit = Object.keys(contributions).length === 0 && isLoading;
 
     return (
         <>
-            <Container className="d-flex align-items-center">
-                <div className="d-flex mt-4 mb-4 align-items-center flex-grow-1">
-                    <h1 className="h4 m-0">Contribution editor</h1>
-                </div>
-                <ButtonGroup>
-                    <Button
-                        tag={Link}
-                        to={`${reverse(routes.COMPARISON)}?contributions=${contributionIds.join(',')}${
-                            hasPreviousVersion ? `&hasPreviousVersion=${hasPreviousVersion}` : ''
-                        }`}
-                        color="secondary"
-                        size="sm"
-                        style={{ marginRight: 2 }}
-                        disabled={contributionAmount < 2}
-                    >
-                        View comparison
-                    </Button>
-
-                    <Button color="secondary" size="sm" onClick={() => setIsOpenAddContribution(true)}>
-                        <Icon icon={faPlusCircle} /> Add contribution
-                    </Button>
-                </ButtonGroup>
-            </Container>
+            <TitleBar
+                buttonGroup={
+                    <>
+                        <Button
+                            tag={Link}
+                            to={`${reverse(routes.COMPARISON)}?contributions=${contributionIds.join(',')}${
+                                hasPreviousVersion ? `&hasPreviousVersion=${hasPreviousVersion}` : ''
+                            }`}
+                            color="secondary"
+                            size="sm"
+                            style={{ marginRight: 2 }}
+                            disabled={contributionAmount < 2}
+                        >
+                            View comparison
+                        </Button>
+                        <Button color="secondary" size="sm" onClick={() => setIsOpenAddContribution(true)}>
+                            <Icon icon={faPlusCircle} /> Add contribution
+                        </Button>
+                    </>
+                }
+            >
+                Contribution editor
+            </TitleBar>
             <Container className="box rounded p-4" style={containerStyle}>
                 {!hasFailed && contributionAmount === 0 && (
                     <Alert color="info">
@@ -128,7 +129,7 @@ const ContributionEditor = () => {
                         contributions cannot be edited. <br />
                         Meanwhile, you can visit{' '}
                         <a href="https://paperswithcode.com/" target="_blank" rel="noopener noreferrer">
-                            paperswithcode <Icon icon={faExternalLinkAlt} className="mr-1" />
+                            paperswithcode <Icon icon={faExternalLinkAlt} className="me-1" />
                         </a>{' '}
                         website to suggest changes.
                     </Alert>

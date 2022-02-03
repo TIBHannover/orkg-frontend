@@ -22,7 +22,7 @@ const OntologyItem = ({ id, label, type, isEditable, sectionId }) => {
     };
     return (
         <>
-            <Button color="link" className="p-0 text-wrap text-left" style={{ maxWidth: '100%' }} onClick={() => setIsModalOpen(true)}>
+            <Button color="link" className="p-0 text-wrap text-start" style={{ maxWidth: '100%' }} onClick={() => setIsModalOpen(true)}>
                 {label}
             </Button>
             {isModelOpen && (

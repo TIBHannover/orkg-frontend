@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button, Form, FormGroup, Input, Label, Alert, FormFeedback, CustomInput } from 'reactstrap';
+import { Button, Form, FormGroup, Input, Label, Alert, FormFeedback } from 'reactstrap';
 import { toggleAuthDialog, updateAuth } from 'actions/auth';
 import { Link } from 'react-router-dom';
 import { registerWithEmailAndPassword, signInWithEmailAndPassword, getUserInformation } from 'services/backend/users';
@@ -7,10 +7,12 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { useDispatch } from 'react-redux';
 import { get_error_message, checkCookie } from 'utils';
+import ROUTES_CMS from 'constants/routesCms';
 import ROUTES from 'constants/routes';
 import { Cookies } from 'react-cookie';
 import env from '@beam-australia/react-env';
 import InfoSheet from 'assets/pdf/infosheet-data-protection.pdf';
+import { reverse } from 'named-urls';
 
 const cookies = new Cookies();
 
@@ -89,7 +91,7 @@ export default function SignUp() {
 
     return (
         <>
-            <Form className="pl-3 pr-3 pt-2" onSubmit={signUp}>
+            <Form className="ps-3 pe-3 pt-2" onSubmit={signUp}>
                 {Boolean(get_error_message(errors)) && <Alert color="danger">{get_error_message(errors)}</Alert>}
                 <FormGroup>
                     <Label for="name">Display name</Label>
@@ -145,43 +147,38 @@ export default function SignUp() {
                         <FormFeedback>{get_error_message(errors, 'matching_password')}</FormFeedback>
                     )}
                 </FormGroup>
-                <FormGroup className="mb-0" style={{ fontSize: '90%' }}>
-                    <CustomInput
+                <FormGroup check className="mb-0" style={{ fontSize: '90%' }}>
+                    <Input
                         type="checkbox"
                         id="termsConditionIsChecked"
                         onChange={e => setTermsConditionIsChecked(e.target.checked)}
                         checked={termsConditionIsChecked}
-                        label={
-                            <>
-                                I accept the{' '}
-                                <Link to={ROUTES.TERMS_OF_USE} target="_blank">
-                                    Special Conditions ORKG
-                                </Link>
-                            </>
-                        }
-                    />
+                    />{' '}
+                    <Label check for="termsConditionIsChecked" className="mb-0">
+                        I accept the{' '}
+                        <Link to={reverse(ROUTES.PAGE, { url: ROUTES_CMS.TERMS_OF_USE })} target="_blank">
+                            Special Conditions ORKG
+                        </Link>
+                    </Label>
                 </FormGroup>
-                <FormGroup style={{ fontSize: '90%' }}>
-                    <CustomInput
+                <FormGroup check style={{ fontSize: '90%' }}>
+                    <Input
                         type="checkbox"
                         id="dataProtectionIsChecked"
                         onChange={e => setDataProtectionIsChecked(e.target.checked)}
                         checked={dataProtectionIsChecked}
-                        label={
-                            <>
-                                I agree to the processing of my personal data provided here by Technische Informationsbibliothek (TIB). In accordance
-                                with the{' '}
-                                <Link to={ROUTES.DATA_PROTECTION} target="_blank">
-                                    data protection declaration
-                                </Link>{' '}
-                                as well as the{' '}
-                                <a href={InfoSheet} target="_blank" rel="noopener noreferrer">
-                                    info sheet data protection
-                                </a>
-                                , the data is processed exclusively by TIB in order to provide services of our platform.
-                            </>
-                        }
-                    />
+                    />{' '}
+                    <Label check for="dataProtectionIsChecked" className="mb-0">
+                        I agree to the processing of my personal data provided here by Technische Informationsbibliothek (TIB). In accordance with the{' '}
+                        <Link to={reverse(ROUTES.PAGE, { url: ROUTES_CMS.DATA_PROTECTION })} target="_blank">
+                            data protection declaration
+                        </Link>{' '}
+                        as well as the{' '}
+                        <a href={InfoSheet} target="_blank" rel="noopener noreferrer">
+                            info sheet data protection
+                        </a>
+                        , the data is processed exclusively by TIB in order to provide services of our platform.
+                    </Label>
                 </FormGroup>
                 <Button
                     type="submit"

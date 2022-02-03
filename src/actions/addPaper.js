@@ -1,21 +1,17 @@
 import * as type from './types.js';
-import { guid } from '../utils';
+import { guid } from 'utils';
 import { mergeWith, isArray, uniqBy } from 'lodash';
 import {
     createResource,
     selectResource,
-    createProperty,
-    createValue,
     loadStatementBrowserData,
-    updateContributionLabel as updateContributionLabelInSB
+    updateContributionLabel as updateContributionLabelInSB,
+    fetchTemplatesOfClassIfNeeded
 } from './statementBrowser';
-import { createResource as createResourceApi } from 'services/backend/resources';
-import { createResourceStatement, createLiteralStatement } from 'services/backend/statements';
+import { fillStatements } from './statementBrowser';
 import { saveFullPaper } from 'services/backend/papers';
-import { createLiteral } from 'services/backend/literals';
-import { createPredicate } from 'services/backend/predicates';
 import { toast } from 'react-toastify';
-import { PREDICATES, MISC } from 'constants/graphSettings';
+import { CLASSES } from 'constants/graphSettings';
 
 export const updateGeneralData = data => dispatch => {
     dispatch({
@@ -124,7 +120,7 @@ export const clearAnnotations = () => dispatch => {
     });
 };
 
-export const createContribution = ({ selectAfterCreation = false, prefillStatements: performPrefill = false, statements = null }) => (
+export const createContribution = ({ selectAfterCreation = false, fillStatements: performPrefill = false, statements = null }) => (
     dispatch,
     getState
 ) => {
@@ -144,7 +140,8 @@ export const createContribution = ({ selectAfterCreation = false, prefillStateme
     dispatch(
         createResource({
             resourceId: newResourceId,
-            label: newContributionLabel
+            label: newContributionLabel,
+            classes: [CLASSES.CONTRIBUTION]
         })
     );
 
@@ -166,97 +163,14 @@ export const createContribution = ({ selectAfterCreation = false, prefillStateme
         });*/
     }
 
+    // Dispatch loading template of classes
+    dispatch(fetchTemplatesOfClassIfNeeded(CLASSES.CONTRIBUTION));
+
     if (performPrefill && statements) {
         dispatch(
-            prefillStatements({
+            fillStatements({
                 statements,
                 resourceId: newResourceId
-            })
-        );
-    }
-};
-
-/**
- * prefill the statements of a resource
- * (e.g : new store to show resource in dialog)
- * @param {Object} statements - Statement
- * @param {Array} statements.properties - The properties
- * @param {Array} statements.values - The values
- * @param {string} resourceId - The target resource ID
- * @param {boolean} syncBackend - Sync the prefill with the backend
- */
-export const prefillStatements = ({ statements, resourceId, syncBackend = false }) => async (dispatch, getState) => {
-    // properties
-    for (const property of statements.properties) {
-        dispatch(
-            createProperty({
-                propertyId: property.propertyId ? property.propertyId : guid(),
-                existingPredicateId: property.existingPredicateId,
-                resourceId: resourceId,
-                label: property.label,
-                range: property.range ? property.range : null,
-                isTemplate: property.isTemplate ? property.isTemplate : false,
-                validationRules: property.validationRules ? property.validationRules : {},
-                minOccurs: property.minOccurs ? property.minOccurs : 0,
-                maxOccurs: property.maxOccurs ? property.maxOccurs : null,
-                isAnimated: property.isAnimated !== undefined ? property.isAnimated : false,
-                canDuplicate: property.canDuplicate ? true : false
-            })
-        );
-    }
-
-    // values
-    for (const value of statements.values) {
-        /**
-         * The resource ID of the value
-         * @type {string}
-         */
-        let newObject = null;
-        /**
-         * The statement of the value
-         * @type {string}
-         */
-        let newStatement = null;
-        /**
-         * The value ID in the statement browser
-         * @type {string}
-         */
-        const valueId = guid();
-
-        if (syncBackend) {
-            const predicate = getState().statementBrowser.properties.byId[value.propertyId];
-            if (value.existingResourceId) {
-                // The value exist in the database
-                newStatement = await createResourceStatement(resourceId, predicate.existingPredicateId, value.existingResourceId);
-            } else {
-                // The value doesn't exist in the database
-                switch (value.type) {
-                    case 'object':
-                        newObject = await createResourceApi(value.label, value.classes ? value.classes : []);
-                        newStatement = await createResourceStatement(resourceId, predicate.existingPredicateId, newObject.id);
-                        break;
-                    case 'property':
-                        newObject = await createPredicate(value.label);
-                        newStatement = await createResourceStatement(resourceId, predicate.existingPredicateId, newObject.id);
-                        break;
-                    default:
-                        newObject = await createLiteral(value.label, value.datatype);
-                        newStatement = await createLiteralStatement(resourceId, predicate.existingPredicateId, newObject.id);
-                }
-            }
-        }
-
-        dispatch(
-            createValue({
-                valueId: value.valueId ? value.valueId : valueId,
-                label: value.label,
-                type: value.type ? value.type : 'object',
-                ...(value.type === 'literal' && { datatype: value.datatype ?? MISC.DEFAULT_LITERAL_DATATYPE }),
-                propertyId: value.propertyId,
-                existingResourceId: syncBackend && newObject ? newObject.id : value.existingResourceId ? value.existingResourceId : null,
-                isExistingValue: syncBackend ? true : value.isExistingValue ? value.isExistingValue : false,
-                classes: value.classes ? value.classes : [],
-                statementId: newStatement ? newStatement.id : null
             })
         );
     }
@@ -319,14 +233,7 @@ export const updateContributionLabel = data => dispatch => {
     dispatch(updateContributionLabelInSB({ id: data.resourceId, label: data.label }));
 };
 
-export const updateResearchProblems = data => dispatch => {
-    dispatch({
-        type: type.UPDATE_RESEARCH_PROBLEMS,
-        payload: data
-    });
-};
-
-// The function to customize merging objects (to handle using the same existing predicate twice in the same ressource)
+// The function to customize merging objects (to handle using the same existing predicate twice in the same resource)
 function customizer(objValue, srcValue) {
     if (isArray(objValue)) {
         return objValue.concat(srcValue);
@@ -349,7 +256,7 @@ export const getResourceObject = (data, resourceId, newProperties) => {
                     ? property.existingPredicateId
                     : newProperties.find(p => p[property.label])[property.label]]: property.valueIds.map(valueId => {
                     const value = data.values.byId[valueId];
-                    if (value.type === 'literal' && !value.isExistingValue) {
+                    if (value._class === 'literal' && !value.isExistingValue) {
                         return {
                             text: value.label,
                             datatype: value.datatype
@@ -380,14 +287,11 @@ export const getResourceObject = (data, resourceId, newProperties) => {
 // Middleware function to transform frontend data to backend format
 export const saveAddPaper = data => {
     return async dispatch => {
-        const researchProblemPredicate = PREDICATES.HAS_RESEARCH_PROBLEM;
         // Get new properties (ensure that  no duplicate labels are in the new properties)
         let newProperties = data.properties.allIds.filter(propertyId => !data.properties.byId[propertyId].existingPredicateId);
         newProperties = newProperties.map(propertyId => ({ id: propertyId, label: data.properties.byId[propertyId].label }));
         newProperties = uniqBy(newProperties, 'label');
         newProperties = newProperties.map(property => ({ [property.label]: `_${property.id}` }));
-        // list of new reaserch problems
-        const newResearchProblem = [];
         const paperObj = {
             // Set new predicates label and temp ID
             predicates: newProperties,
@@ -408,23 +312,13 @@ export const saveAddPaper = data => {
                 // Set the contributions data
                 contributions: data.contributions.allIds.map(c => {
                     const contribution = data.contributions.byId[c];
-                    const researhProblem = {
-                        [researchProblemPredicate]: contribution.researchProblems.map(rp => {
-                            if (rp.hasOwnProperty('existingResourceId') && rp.existingResourceId) {
-                                return { '@id': rp.existingResourceId };
-                            } else {
-                                if (newResearchProblem.includes(rp.id)) {
-                                    return { '@id': `_${rp.id}` };
-                                } else {
-                                    newResearchProblem.push(rp.id);
-                                    return { label: rp.label, '@temp': `_${rp.id}` };
-                                }
-                            }
-                        })
-                    };
                     return {
                         name: contribution.label,
-                        values: Object.assign({}, researhProblem, getResourceObject(data, contribution.resourceId, newProperties))
+                        classes:
+                            data.resources.byId[contribution.resourceId].classes && data.resources.byId[contribution.resourceId].classes.length > 0
+                                ? data.resources.byId[contribution.resourceId].classes
+                                : null,
+                        values: Object.assign({}, getResourceObject(data, contribution.resourceId, newProperties))
                     };
                 })
             }

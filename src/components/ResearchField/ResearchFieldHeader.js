@@ -1,17 +1,5 @@
 import { useState, useEffect } from 'react';
-import {
-    Container,
-    Button,
-    ButtonGroup,
-    ButtonDropdown,
-    DropdownToggle,
-    DropdownMenu,
-    DropdownItem,
-    Card,
-    CardBody,
-    CardTitle,
-    Badge
-} from 'reactstrap';
+import { Container, Button, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Card, CardBody, CardTitle, Badge } from 'reactstrap';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
 import { SubTitle, SubtitleSeparator } from 'components/styled';
@@ -32,6 +20,7 @@ import CheckSlug from 'components/CheckSlug/CheckSlug';
 import CheckClasses from 'components/CheckClasses/CheckClasses';
 import { reverseWithSlug } from 'utils';
 import { CLASSES } from 'constants/graphSettings';
+import TitleBar from 'components/TitleBar/TitleBar';
 
 const ResearchFieldHeader = ({ id }) => {
     const [menuOpen, setMenuOpen] = useState(false);
@@ -69,7 +58,7 @@ const ResearchFieldHeader = ({ id }) => {
                         </ContentLoader>
                     </div>
                     <div className="text-center mt-4 mb-4 p-5 container box rounded">
-                        <div className="text-left">
+                        <div className="text-start">
                             <ContentLoader
                                 speed={2}
                                 width={400}
@@ -88,46 +77,54 @@ const ResearchFieldHeader = ({ id }) => {
             )}
             {!isLoading && !isFailedLoading && (
                 <>
-                    <Container className="d-flex align-items-center mt-4 mb-4">
-                        <h1 className="h5 flex-shrink-0 mb-0">Research field</h1>
-                        <>
-                            <SubtitleSeparator />
-                            <SubTitle className="h5 mb-0"> {researchFieldData.label}</SubTitle>
-                        </>
-                        {editMode && (
-                            <StatementBrowserDialog
-                                show={editMode}
-                                toggleModal={() => setEditMode(v => !v)}
-                                id={id}
-                                label={researchFieldData.label}
-                                enableEdit={true}
-                                syncBackend={true}
-                            />
-                        )}
-                        <ButtonGroup className="flex-shrink-0" style={{ marginLeft: 'auto' }}>
-                            {isCurationAllowed && (
-                                <RequireAuthentication
-                                    component={Button}
-                                    size="sm"
-                                    color="secondary"
-                                    className="float-right"
-                                    onClick={() => setEditMode(v => !v)}
-                                >
-                                    <Icon icon={faPen} /> Edit
-                                </RequireAuthentication>
-                            )}
-                            <ButtonDropdown isOpen={menuOpen} toggle={() => setMenuOpen(v => !v)} nav inNavbar>
-                                <DropdownToggle size="sm" color="secondary" className="px-3 rounded-right" style={{ marginLeft: 2 }}>
-                                    <Icon icon={faEllipsisV} />
-                                </DropdownToggle>
-                                <DropdownMenu right>
-                                    <DropdownItem tag={NavLink} exact to={reverse(ROUTES.RESOURCE, { id })}>
-                                        View resource
-                                    </DropdownItem>
-                                </DropdownMenu>
-                            </ButtonDropdown>
-                        </ButtonGroup>
-                    </Container>
+                    {editMode && (
+                        <StatementBrowserDialog
+                            show={editMode}
+                            toggleModal={() => setEditMode(v => !v)}
+                            id={id}
+                            label={researchFieldData.label}
+                            enableEdit={true}
+                            syncBackend={true}
+                        />
+                    )}
+                    <TitleBar
+                        titleAddition={
+                            <>
+                                <SubtitleSeparator />
+                                <SubTitle>{researchFieldData.label}</SubTitle>
+                            </>
+                        }
+                        buttonGroup={
+                            <>
+                                {isCurationAllowed && (
+                                    <RequireAuthentication
+                                        component={Button}
+                                        size="sm"
+                                        color="secondary"
+                                        className="float-end"
+                                        onClick={() => setEditMode(v => !v)}
+                                        style={{ marginRight: 2 }}
+                                    >
+                                        <Icon icon={faPen} /> Edit
+                                    </RequireAuthentication>
+                                )}
+                                <ButtonDropdown isOpen={menuOpen} toggle={() => setMenuOpen(v => !v)}>
+                                    <DropdownToggle size="sm" color="secondary" className="px-3 rounded-end">
+                                        <Icon icon={faEllipsisV} />
+                                    </DropdownToggle>
+                                    <DropdownMenu right>
+                                        <DropdownItem tag={NavLink} exact to={reverse(ROUTES.RESOURCE, { id })}>
+                                            View resource
+                                        </DropdownItem>
+                                    </DropdownMenu>
+                                </ButtonDropdown>
+                            </>
+                        }
+                        wrap={false}
+                    >
+                        Research field
+                    </TitleBar>
+
                     <Container className="p-0">
                         <Card>
                             {(researchFieldData.description || researchFieldData.sameAs) && (
@@ -161,7 +158,7 @@ const ResearchFieldHeader = ({ id }) => {
                                                         slug: subfield.label
                                                     })}
                                                 >
-                                                    <Badge color="light" className="mr-2 mb-2">
+                                                    <Badge color="light" className="me-2 mb-2">
                                                         {subfield.label}
                                                     </Badge>
                                                 </Link>
@@ -176,7 +173,7 @@ const ResearchFieldHeader = ({ id }) => {
                                                             slug: subfield.label
                                                         })}
                                                     >
-                                                        <Badge color="light" className="mr-2 mb-2">
+                                                        <Badge color="light" className="me-2 mb-2">
                                                             {subfield.label}
                                                         </Badge>
                                                     </Link>

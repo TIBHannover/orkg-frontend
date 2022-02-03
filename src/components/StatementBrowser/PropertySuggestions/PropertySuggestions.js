@@ -1,60 +1,55 @@
 import { ListGroup, ListGroupItem, Badge } from 'reactstrap';
-import StatementOptionButton from 'components/StatementBrowser/StatementOptionButton/StatementOptionButton';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
 import { getSuggestedProperties, createProperty } from 'actions/statementBrowser';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
+import { useSelector, useDispatch } from 'react-redux';
+import { ENTITIES } from 'constants/graphSettings';
 
-function PropertySuggestions(props) {
+const PropertySuggestions = () => {
+    const dispatch = useDispatch();
+    const selectedResource = useSelector(state => state.statementBrowser.selectedResource);
+    const suggestedProperties = useSelector(state => getSuggestedProperties(state, selectedResource));
+
     return (
         <>
             <p className="text-muted mt-4">Suggested properties</p>
             <ListGroup>
-                {props.suggestedProperties.map((c, index) => (
-                    <ListGroupItem key={`suggested-property-${index}`}>
-                        <StatementOptionButton
-                            className="mr-2"
-                            title="Add property"
-                            icon={faPlus}
-                            action={() => {
-                                props.createProperty({
-                                    resourceId: props.selectedResource,
+                {suggestedProperties.map((c, index) => (
+                    <ListGroupItem
+                        action
+                        onClick={() => {
+                            dispatch(
+                                createProperty({
+                                    resourceId: selectedResource,
                                     existingPredicateId: c.property.id,
                                     label: c.property.label,
                                     isTemplate: false,
                                     createAndSelect: true
-                                });
-                            }}
-                        />
-                        {c.property.label}
-                        <Badge pill className="ml-2">
-                            {c.value?.label ?? ''}
-                        </Badge>
+                                })
+                            );
+                        }}
+                        key={`suggested-property-${index}`}
+                        className="py-2 px-3"
+                        style={{ cursor: 'pointer' }}
+                    >
+                        <DescriptionTooltip id={c.property.id} typeId={ENTITIES.PREDICATE}>
+                            <div className="d-flex">
+                                <div className="flex-grow-1">
+                                    <Icon icon={faPlus} className="me-1 text-muted" /> {c.property.label}
+                                </div>
+                                <small className="float-end">
+                                    <Badge pill className="ms-2">
+                                        {c.value?.label ?? ''}
+                                    </Badge>
+                                </small>
+                            </div>
+                        </DescriptionTooltip>
                     </ListGroupItem>
                 ))}
             </ListGroup>
         </>
     );
-}
-
-PropertySuggestions.propTypes = {
-    createProperty: PropTypes.func.isRequired,
-    suggestedProperties: PropTypes.array.isRequired,
-    selectedResource: PropTypes.string.isRequired
 };
 
-const mapStateToProps = state => {
-    return {
-        selectedResource: state.statementBrowser.selectedResource,
-        suggestedProperties: getSuggestedProperties(state, state.statementBrowser.selectedResource)
-    };
-};
-
-const mapDispatchToProps = dispatch => ({
-    createProperty: data => dispatch(createProperty(data))
-});
-
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(PropertySuggestions);
+export default PropertySuggestions;

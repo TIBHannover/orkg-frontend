@@ -1,33 +1,24 @@
-import { faArrowDown, faArrowUp, faBars, faTimes } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { deleteSection, updateSectionTitle } from 'actions/smartReview';
+import { deleteSection, updateSectionMarkdown, updateSectionTitle } from 'actions/smartReview';
 import AddSection from 'components/SmartReview/AddSection';
-import SectionContentLink from 'components/SmartReview/SectionContentLink';
 import SectionOntology from 'components/SmartReview/DataTable/SectionOntology';
-import SectionMarkdown from 'components/SmartReview/SectionMarkdown';
+import SectionContentLink from 'components/SmartReview/SectionContentLink';
 import SectionType from 'components/SmartReview/SectionType';
-import { DeleteButton, MoveHandle, MoveButton, SectionStyled, EditableTitle } from 'components/SmartReview/styled';
+import { EditableTitle } from 'components/ArticleBuilder/styled';
+import SortableSection from 'components/ArticleBuilder/SortableSection/SortableSection';
 import { CLASSES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { SortableElement, sortableHandle } from 'react-sortable-hoc';
-import Confirm from 'reactstrap-confirm';
-import Tippy from '@tippyjs/react';
-import { Button } from 'reactstrap';
+import { useDispatch, useSelector } from 'react-redux';
+import { SortableElement } from 'react-sortable-hoc';
+import Confirm from 'components/Confirmation/Confirmation';
+import MarkdownEditor from 'components/ArticleBuilder/MarkdownEditor/MarkdownEditor';
 
 const Section = props => {
-    const [isHovering, setIsHovering] = useState(false);
     const { type, markdown, title: titleProp } = props.section;
     const sectionId = titleProp.id;
     const [title, setTitle] = useState(titleProp.label);
+    const references = useSelector(state => state.smartReview.references);
     const dispatch = useDispatch();
-
-    const SortableHandle = sortableHandle(() => (
-        <MoveHandle className={isHovering ? 'hover' : ''}>
-            <Icon icon={faBars} />
-        </MoveHandle>
-    ));
 
     const handleBlurTitle = e => {
         dispatch(
@@ -38,11 +29,19 @@ const Section = props => {
         );
     };
 
+    const handleUpdateMarkdown = value => {
+        dispatch(
+            updateSectionMarkdown({
+                id: markdown.id,
+                markdown: value
+            })
+        );
+    };
+
     const handleDelete = async () => {
         const confirm = await Confirm({
             title: 'Are you sure?',
-            message: 'Are you sure you want to delete this section?',
-            cancelColor: 'light'
+            message: 'Are you sure you want to delete this section?'
         });
 
         if (confirm) {
@@ -68,37 +67,7 @@ const Section = props => {
 
     return (
         <section>
-            <SectionStyled className="box rounded" onMouseEnter={() => setIsHovering(true)} onMouseLeave={() => setIsHovering(false)}>
-                <DeleteButton className={isHovering ? 'hover' : ''} color="primary" onClick={handleDelete}>
-                    <Icon icon={faTimes} />
-                </DeleteButton>
-                <SortableHandle />
-                <MoveButton className={isHovering ? 'hover up' : 'up'}>
-                    <Tippy content="Move up">
-                        <span>
-                            <Button
-                                className="p-0 w-100"
-                                color="secondary"
-                                onClick={() => props.handleManualSort({ id: sectionId, direction: 'up' })}
-                            >
-                                <Icon icon={faArrowUp} />
-                            </Button>
-                        </span>
-                    </Tippy>
-                </MoveButton>
-                <MoveButton className={isHovering ? 'hover down' : 'down'}>
-                    <Tippy content="Move down">
-                        <span>
-                            <Button
-                                className="p-0 w-100"
-                                color="secondary"
-                                onClick={() => props.handleManualSort({ id: sectionId, direction: 'down' })}
-                            >
-                                <Icon icon={faArrowDown} />
-                            </Button>
-                        </span>
-                    </Tippy>
-                </MoveButton>
+            <SortableSection handleDelete={handleDelete} handleSort={direction => props.handleManualSort({ id: sectionId, direction })}>
                 <SectionType type={type.id} sectionId={sectionId} isDisabled={isContentLinkSection || isOntologySection} />
                 <h2 id={`section-${sectionId}`} className="h4 border-bottom pb-1 mb-3" placeholder="trd">
                     <EditableTitle
@@ -115,8 +84,10 @@ const Section = props => {
 
                 {isOntologySection && <SectionOntology section={props.section} type={sectionType} isEditable />}
 
-                {!isContentLinkSection && !isOntologySection && markdown && <SectionMarkdown markdown={markdown} />}
-            </SectionStyled>
+                {!isContentLinkSection && !isOntologySection && markdown && (
+                    <MarkdownEditor label={markdown.label} handleUpdate={handleUpdateMarkdown} references={references} literalId={markdown.id} />
+                )}
+            </SortableSection>
             <AddSection index={props.atIndex} />
         </section>
     );

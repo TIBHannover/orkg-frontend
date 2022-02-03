@@ -34,7 +34,7 @@ const AnnotationTooltipExisting = props => {
 
     return (
         <Container onClick={e => e.stopPropagation()}>
-            <span className="pr-3">{label}</span>
+            <span className="pe-3">{label}</span>
             <IconWrapper>
                 <DeleteIcon icon={faTrash} onClick={() => props.deleteAnnotation(props.id)} />
             </IconWrapper>

@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { CustomInput } from 'reactstrap';
+import { Input } from 'reactstrap';
 import Tippy from '@tippyjs/react';
 import { summarizeText } from 'services/annotation/index';
 import { createGlobalStyle } from 'styled-components';
@@ -10,6 +10,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { setShowHighlights as setShowHighlightsAction, setSummaryFetched as setSummaryFetchedAction } from 'actions/pdfTextAnnotation';
 import { toast } from 'react-toastify';
 import { isString } from 'lodash';
+import PropTypes from 'prop-types';
 
 const ANNOTATION_RATIO = 0.08;
 const PROCESSING_SECONDS_PER_PAGE = 10;
@@ -51,12 +52,11 @@ const GlobalStyle = createGlobalStyle`
     }
 `;
 
-const SmartSentenceDetection = props => {
+const SmartSentenceDetection = ({ pdfViewer }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [fetchFailed, setFetchFailed] = useState(false);
     const showHighlights = useSelector(state => state.pdfTextAnnotation.showHighlights);
     const summaryFetched = useSelector(state => state.pdfTextAnnotation.summaryFetched);
-    const pdfViewer = useSelector(state => state.pdfTextAnnotation.pdfViewer);
     const pdf = useSelector(state => state.pdfTextAnnotation.pdf);
     const dispatch = useDispatch();
     const setShowHighlights = useCallback(show => dispatch(setShowHighlightsAction(show)), [dispatch]);
@@ -293,7 +293,7 @@ const SmartSentenceDetection = props => {
             </Tippy>
 
             {!isLoading ? (
-                <CustomInput
+                <Input
                     type="switch"
                     id="enableSentenceDetection"
                     onChange={e => setShowHighlights(e.target.checked)}
@@ -307,6 +307,10 @@ const SmartSentenceDetection = props => {
             <GlobalStyle showHighlights={showHighlights} />
         </Container>
     );
+};
+
+SmartSentenceDetection.propTypes = {
+    pdfViewer: PropTypes.object
 };
 
 export default SmartSentenceDetection;

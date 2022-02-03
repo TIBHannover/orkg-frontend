@@ -1,4 +1,4 @@
-import { createProperty } from 'actions/contributionEditor';
+import { createProperty } from 'slices/contributionEditorSlice';
 import TableCell from 'components/ContributionEditor/TableCell';
 import TableHeaderColumn from 'components/ContributionEditor/TableHeaderColumn';
 import TableHeaderColumnFirst from 'components/ContributionEditor/TableHeaderColumnFirst';

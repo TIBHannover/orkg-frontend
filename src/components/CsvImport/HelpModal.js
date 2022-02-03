@@ -53,7 +53,8 @@ const HelpModal = props => {
                     <li>
                         <strong>paper:title</strong>
                         <br />
-                        Title of the paper
+                        Title of the paper. If the DOI of the paper is provided, we fetch its title, authors, publication month and year
+                        automatically.
                     </li>
                 </ul>
 
@@ -77,6 +78,12 @@ const HelpModal = props => {
                         <strong>paper:publication_year</strong>
                         <br />
                         Numeric value of the publication year (e.g., 2020)
+                    </li>
+
+                    <li>
+                        <strong>paper:published_in</strong>
+                        <br />
+                        The conference or journal name.
                     </li>
 
                     <li>

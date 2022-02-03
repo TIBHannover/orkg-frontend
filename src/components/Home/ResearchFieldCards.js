@@ -132,7 +132,7 @@ const ResearchFieldCards = ({ selectedResearchField, handleFieldSelect, research
                             })}
                             color="light"
                             size="sm"
-                            className="flex-shrink-0 mr-2"
+                            className="flex-shrink-0 me-2"
                         >
                             Visit field page
                         </Button>

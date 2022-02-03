@@ -1,24 +1,22 @@
-import { faBars } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import { toggleHistoryModal as toggleHistoryModalAction } from 'actions/smartReview';
+import AuthorBadges from 'components/Badges/AuthorBadges/AuthorBadges';
+import ResearchFieldBadge from 'components/Badges/ResearchFieldBadge/ResearchFieldBadge';
 import Acknowledgements from 'components/SmartReview/Acknowledgements';
-import AuthorsList from 'components/SmartReview/AuthorsList';
 import SectionDataTable from 'components/SmartReview/DataTable/SectionOntology';
 import MarkdownRenderer from 'components/SmartReview/MarkdownRenderer';
 import Outline from 'components/SmartReview/Outline';
 import ListReferences from 'components/SmartReview/References/ListReferences';
 import SectionVisualization from 'components/SmartReview/SectionVisualization';
-import { SectionStyled } from 'components/SmartReview/styled';
+import { SectionStyled } from 'components/ArticleBuilder/styled';
 import ViewArticleStatementBrowser from 'components/SmartReview/ViewArticleStatementBrowser';
 import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
 import { CLASSES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
-import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
-import { Alert, Badge, Button, Container } from 'reactstrap';
+import { Alert, Button, Container } from 'reactstrap';
 import SectionComparison from './SectionComparison';
 
 const ViewArticle = () => {
@@ -60,14 +58,8 @@ const ViewArticle = () => {
                                     {paper.title}
                                 </h1>
                                 <div className="my-3">
-                                    {researchField && (
-                                        <Link to={reverse(ROUTES.RESEARCH_FIELD, { researchFieldId: researchField.id })} target="_blank">
-                                            <Badge color="light" className="mr-2 mb-2">
-                                                <Icon icon={faBars} className="text-primary" /> {researchField.label}
-                                            </Badge>
-                                        </Link>
-                                    )}
-                                    <AuthorsList authors={authors} />{' '}
+                                    <ResearchFieldBadge researchField={researchField} />
+                                    <AuthorBadges authors={authors} />{' '}
                                 </div>
                             </header>
                             {sections.map(section => {

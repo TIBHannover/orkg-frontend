@@ -11,6 +11,7 @@ import Tippy from '@tippyjs/react';
 import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
+import pluralize from 'pluralize';
 
 const Contributors = ({ researchProblemId }) => {
     const { contributors, isLoading, isLoadingFailed } = useResearchProblemContributors({
@@ -37,11 +38,7 @@ const Contributors = ({ researchProblemId }) => {
                                     <>
                                         {contributor.user.display_name}
                                         <br />
-                                        {contributor.contributions !== null && (
-                                            <i>
-                                                {contributor.contributions} contribution{contributor.contributions > 1 ? 's' : ''}
-                                            </i>
-                                        )}
+                                        {contributor.contributions !== null && <i>{pluralize('contribution', contributor.contributions, true)}</i>}
                                     </>
                                 }
                             >

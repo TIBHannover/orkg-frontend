@@ -29,10 +29,10 @@ const Provenance = ({ observatoryInfo, organizationInfo, paperResource, contribu
                                 <div className="mb-1">
                                     <b>Belongs to observatory</b>
                                 </div>
-                                {observatoryInfo.id && (
+                                {observatoryInfo.display_id && (
                                     <Link
                                         to={reverse(ROUTES.OBSERVATORY, {
-                                            id: observatoryInfo.id
+                                            id: observatoryInfo.display_id
                                         })}
                                     >
                                         {observatoryInfo.name}
@@ -50,7 +50,7 @@ const Provenance = ({ observatoryInfo, organizationInfo, paperResource, contribu
                                 )}
                                 <Link
                                     to={reverse(ROUTES.ORGANIZATION, {
-                                        id: organizationInfo.id
+                                        id: organizationInfo.display_id
                                     })}
                                 >
                                     <img
@@ -87,7 +87,7 @@ const Provenance = ({ observatoryInfo, organizationInfo, paperResource, contribu
                             to={reverse(ROUTES.USER_PROFILE, {
                                 userId: createdBy.id
                             })}
-                            className="ml-2"
+                            className="ms-2"
                         >
                             {createdBy.display_name}
                         </Link>

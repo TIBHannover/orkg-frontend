@@ -5,6 +5,7 @@ import { useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes';
+import TitleBar from 'components/TitleBar/TitleBar';
 
 const AddProperty = () => {
     const [label, setLabel] = useState('');
@@ -37,11 +38,9 @@ const AddProperty = () => {
 
     return (
         <>
-            <Container className="d-flex align-items-center">
-                <h1 className="h4 mt-4 mb-4">Create property</h1>
-            </Container>
-            <Container className="box rounded pt-4 pb-4 pl-5 pr-5">
-                <div className="pl-3 pr-3 pt-2">
+            <TitleBar>Create property</TitleBar>
+            <Container className="box rounded pt-4 pb-4 ps-5 pe-5">
+                <div className="pt-2">
                     <FormGroup>
                         <Label for="propertyLabel">Property Label</Label>
                         <Input

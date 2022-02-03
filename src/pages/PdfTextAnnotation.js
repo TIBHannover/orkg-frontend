@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { PdfLoader, PdfHighlighter, Popup, AreaHighlight } from 'react-pdf-highlighter';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
@@ -7,7 +7,7 @@ import Sidebar from 'components/PdfTextAnnotation/SideBar';
 import AnnotationTooltipNew from 'components/PdfTextAnnotation/AnnotationTooltipNew';
 import AnnotationTooltipExisting from 'components/PdfTextAnnotation/AnnotationTooltipExisting';
 import { useDispatch, useSelector } from 'react-redux';
-import { createAnnotation, setPdfViewer as setPdfViewerAction } from 'actions/pdfTextAnnotation';
+import { createAnnotation, setIsLoadedPdfViewer } from 'actions/pdfTextAnnotation';
 import Highlight from 'components/PdfTextAnnotation/Highlight';
 import useDeleteAnnotation from 'components/PdfTextAnnotation/hooks/useDeleteAnnotation';
 import DragUpload from 'components/PdfTextAnnotation/DragUpload';
@@ -26,15 +26,13 @@ const Main = styled.div`
 `;
 
 const PdfTextAnnotation = () => {
+    const [pdfViewer, setPdfViewer] = useState(null); // TODO: the state contains data that might be changed by the browser, change this mechanism
     const annotations = useSelector(state => state.pdfTextAnnotation.annotations);
-    const encodedPdf = useSelector(state => state.pdfTextAnnotation.encodedPdf);
-    const pdfViewer = useSelector(state => state.pdfTextAnnotation.pdfViewer);
+    const pdf = useSelector(state => state.pdfTextAnnotation.pdf);
     const zoom = useSelector(state => state.pdfTextAnnotation.zoom);
     const { deleteAnnotation } = useDeleteAnnotation();
     const dispatch = useDispatch();
     const PdfHighlighterRef = useRef();
-
-    const setPdfViewer = _pdfViewer => dispatch(setPdfViewerAction(_pdfViewer));
 
     const handleAnnotate = ({ content, position, type }) => {
         dispatch(createAnnotation({ content, position, type }));
@@ -103,11 +101,11 @@ const PdfTextAnnotation = () => {
     return (
         <Wrapper>
             <Sidebar pdfViewer={pdfViewer} />
-            {encodedPdf && <ZoomBar />}
+            {pdf && <ZoomBar />}
 
             <Main>
-                {encodedPdf ? (
-                    <PdfLoader url={encodedPdf} beforeLoad={<Icon icon={faSpinner} />}>
+                {pdf ? (
+                    <PdfLoader url={pdf} beforeLoad={<Icon icon={faSpinner} />}>
                         {pdfDocument => (
                             <PdfHighlighter
                                 pdfDocument={pdfDocument}
@@ -117,6 +115,7 @@ const PdfTextAnnotation = () => {
                                 ref={PdfHighlighterRef}
                                 onDocumentReady={_pdfViewer => {
                                     setPdfViewer(_pdfViewer);
+                                    dispatch(setIsLoadedPdfViewer(true));
                                 }}
                                 onSelectionFinished={handleSelectionFinished}
                                 zoom={zoom}

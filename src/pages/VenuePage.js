@@ -14,6 +14,7 @@ import PropTypes from 'prop-types';
 import { PREDICATES } from 'constants/graphSettings';
 import { NavLink } from 'react-router-dom';
 import { reverse } from 'named-urls';
+import TitleBar from 'components/TitleBar/TitleBar';
 
 class VenuePage extends Component {
     constructor(props) {
@@ -119,34 +120,34 @@ class VenuePage extends Component {
                 )}
                 {!this.state.loading && (
                     <div>
-                        <Container className="d-flex align-items-center">
-                            <h1 className="h4 mt-4 mb-4 flex-grow-1">Venue</h1>
-
-                            <ButtonDropdown
-                                isOpen={this.state.menuOpen}
-                                toggle={() =>
-                                    this.setState(prevState => ({
-                                        menuOpen: !prevState.menuOpen
-                                    }))
-                                }
-                                nav
-                                inNavbar
-                            >
-                                <DropdownToggle size="sm" color="secondary" className="px-3 rounded-right" style={{ marginLeft: 2 }}>
-                                    <Icon icon={faEllipsisV} />
-                                </DropdownToggle>
-                                <DropdownMenu right>
-                                    <DropdownItem tag={NavLink} exact to={reverse(ROUTES.RESOURCE, { id: this.props.match.params.venueId })}>
-                                        View resource
-                                    </DropdownItem>
-                                </DropdownMenu>
-                            </ButtonDropdown>
-                        </Container>
+                        <TitleBar
+                            buttonGroup={
+                                <ButtonDropdown
+                                    isOpen={this.state.menuOpen}
+                                    toggle={() =>
+                                        this.setState(prevState => ({
+                                            menuOpen: !prevState.menuOpen
+                                        }))
+                                    }
+                                >
+                                    <DropdownToggle size="sm" color="secondary" className="px-3 rounded-end" style={{ marginLeft: 2 }}>
+                                        <Icon icon={faEllipsisV} />
+                                    </DropdownToggle>
+                                    <DropdownMenu right>
+                                        <DropdownItem tag={NavLink} exact to={reverse(ROUTES.RESOURCE, { id: this.props.match.params.venueId })}>
+                                            View resource
+                                        </DropdownItem>
+                                    </DropdownMenu>
+                                </ButtonDropdown>
+                            }
+                        >
+                            Venue
+                        </TitleBar>
                         <Container className="p-0">
                             <Card>
                                 <CardHeader>
                                     {/* TODO: Show the total number of papers when number of items is provided with the paginated result
-                                        <div className="float-right"><b>{this.state.papers.length}</b> Papers</div>
+                                        <div className="float-end"><b>{this.state.papers.length}</b> Papers</div>
                                     */}
                                     <h3 className="h4 mt-4 mb-4">{this.state.venue && this.state.venue.label}</h3>
                                 </CardHeader>
@@ -174,7 +175,7 @@ class VenuePage extends Component {
                                     <br />
                                     <br />
                                     <Link to={ROUTES.ADD_PAPER.GENERAL_DATA}>
-                                        <Button size="sm" color="primary " className="mr-3">
+                                        <Button size="sm" color="primary " className="me-3">
                                             Share paper
                                         </Button>
                                     </Link>

@@ -21,12 +21,16 @@ export const ShareSideBox = styled.div`
     box-shadow: 8px 0px 8px 0px rgba(0, 0, 0, 0.03);
     align-items: center;
     justify-content: center;
+
+    @media (max-width: 650px) {
+        display: none;
+    }
 `;
 
 const ShareLinkMarker = ({ typeOfLink, title }) => {
     const [source, target] = useSingleton();
     return (
-        <ShareSideBox className="pt-2 pl-2 pr-2 pb-2">
+        <ShareSideBox className="pt-2 ps-2 pe-2 pb-2">
             <Tippy placement="left" singleton={source} delay={500} />
             <div className="text-muted mb-1">
                 <small>Share</small>

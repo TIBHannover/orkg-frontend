@@ -1,7 +1,9 @@
 import * as type from './types.js';
 import { createResource, fetchStatementsForResource, selectResource } from './statementBrowser';
 
-export const selectContribution = ({ contributionId: id, contributionIsLoaded, contributionLabel }) => dispatch => {
+export const selectContribution = ({ contributionId: id, contributionLabel }) => (dispatch, getState) => {
+    const contributionIsLoaded = !!getState().statementBrowser.resources.byId[id];
+
     if (!contributionIsLoaded) {
         //let resourceId = guid(); //use this as ID in the future, when changing the data is possible
 
@@ -32,8 +34,6 @@ export const selectContribution = ({ contributionId: id, contributionIsLoaded, c
         dispatch(
             fetchStatementsForResource({
                 resourceId: id,
-                existingResourceId: id,
-                isContribution: true,
                 depth: 3 // load depth 3 the first time
             })
         );
@@ -82,6 +82,53 @@ export const loadPaper = payload => dispatch => {
     });
 };
 
+export const isAddingContribution = () => dispatch => {
+    dispatch({
+        type: type.IS_ADDING_CONTRIBUTION
+    });
+};
+
+export const doneAddingContribution = () => dispatch => {
+    dispatch({
+        type: type.DONE_ADDING_CONTRIBUTION
+    });
+};
+
+export const isDeletingContribution = data => dispatch => {
+    dispatch({
+        type: type.IS_DELETING_CONTRIBUTION,
+        payload: data
+    });
+};
+
+export const doneDeletingContribution = data => dispatch => {
+    dispatch({
+        type: type.DONE_DELETING_CONTRIBUTION,
+        payload: data
+    });
+};
+
+export const isSavingContribution = data => dispatch => {
+    dispatch({
+        type: type.IS_SAVING_CONTRIBUTION,
+        payload: data
+    });
+};
+
+export const doneSavingContribution = data => dispatch => {
+    dispatch({
+        type: type.DONE_SAVING_CONTRIBUTION,
+        payload: data
+    });
+};
+
+export const setPaperContributions = payload => dispatch => {
+    dispatch({
+        type: type.SET_PAPER_CONTRIBUTIONS,
+        payload
+    });
+};
+
 export const setPaperAuthors = payload => dispatch => {
     dispatch({
         type: type.SET_PAPER_AUTHORS,
@@ -122,12 +169,5 @@ export const loadComparisonFromLocalStorage = cookie => dispatch => {
             allIds: cookie.allIds,
             byId: cookie.byId
         }
-    });
-};
-
-export const updateResearchProblems = data => dispatch => {
-    dispatch({
-        type: type.UPDATE_RESEARCH_PROBLEMS,
-        payload: data
     });
 };

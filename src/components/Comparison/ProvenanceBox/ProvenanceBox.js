@@ -51,10 +51,10 @@ function ProvenanceBox(props) {
     }
 
     return (
-        <div className="container box rounded-lg mt-4">
+        <div className="container box rounded-3 mt-4">
             <Row>
                 <div className="col-8 d-flex align-items-center ">
-                    <div className="pt-4 pb-4 pl-4 pr-4">
+                    <div className="pt-4 pb-4 ps-4 pe-4">
                         {props.provenance && (
                             <>
                                 <p>
@@ -66,7 +66,7 @@ function ProvenanceBox(props) {
                                     )}
                                 </p>
                                 <h4 className="mb-3">
-                                    <Link to={reverse(ROUTES.OBSERVATORY, { id: props.provenance.id })}>{props.provenance.name}</Link>
+                                    <Link to={reverse(ROUTES.OBSERVATORY, { id: props.provenance.display_id })}>{props.provenance.name}</Link>
                                 </h4>
                             </>
                         )}
@@ -90,7 +90,10 @@ function ProvenanceBox(props) {
                         <div className={!props.provenance.organization.logo ? 'm-4' : ''}>
                             {props.provenance.organization.logo && (
                                 <StyledOrganizationCard className="card h-100 border-0">
-                                    <Link className="logoContainer" to={reverse(ROUTES.ORGANIZATION, { id: props.provenance.organization.id })}>
+                                    <Link
+                                        className="logoContainer"
+                                        to={reverse(ROUTES.ORGANIZATION, { id: props.provenance.organization.display_id })}
+                                    >
                                         <img
                                             className="mx-auto p-2"
                                             src={props.provenance.organization.logo}
@@ -103,7 +106,7 @@ function ProvenanceBox(props) {
                                 <Card className="h-100">
                                     <CardBody className="d-flex">
                                         <CardTitle className="align-self-center text-center flex-grow-1">
-                                            <Link to={reverse(ROUTES.ORGANIZATION, { id: props.provenance.organization.id })}>
+                                            <Link to={reverse(ROUTES.ORGANIZATION, { id: props.provenance.organization.display_id })}>
                                                 {props.provenance.organization.name}
                                             </Link>
                                         </CardTitle>

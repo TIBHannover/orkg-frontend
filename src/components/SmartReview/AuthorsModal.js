@@ -26,7 +26,7 @@ const AuthorsModal = props => {
     };
 
     const handleSave = async () => {
-        const _authors = await saveAuthors({ prevAuthors: authorResources, newAuthors: authors, paperId: paper.id });
+        const _authors = await saveAuthors({ prevAuthors: authorResources, newAuthors: authors, resourceId: paper.id });
         dispatch(updateAuthors(_authors));
         toggle();
     };

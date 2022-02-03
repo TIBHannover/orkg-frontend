@@ -280,7 +280,9 @@ export const saveEntities = ({ sectionId, entities }) => async dispatch => {
     await deleteStatementsByIds(entityStatementIds);
 
     // create new statements, import to use await to ensure statements are created in the correct order
-    entities.map(async entity => await createResourceStatement(sectionId, PREDICATES.HAS_ENTITY, entity.id));
+    for (const entity of entities) {
+        await createResourceStatement(sectionId, PREDICATES.HAS_ENTITY, entity.id);
+    }
 
     dispatch({
         type: type.ARTICLE_WRITER_UPDATE_DATA_TABLE,
@@ -302,7 +304,9 @@ export const saveShowProperties = ({ sectionId, properties }) => async dispatch 
     await deleteStatementsByIds(propertyStatementIds);
 
     // create new statements
-    properties.map(async property => await createResourceStatement(sectionId, PREDICATES.SHOW_PROPERTY, property.id));
+    for (const property of properties) {
+        await createResourceStatement(sectionId, PREDICATES.SHOW_PROPERTY, property.id);
+    }
 
     dispatch({
         type: type.ARTICLE_WRITER_UPDATE_DATA_TABLE,

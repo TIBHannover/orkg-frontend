@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { getTopContributors } from 'services/backend/stats';
 import { orderBy } from 'lodash';
-import { getContributorsByResearchFieldId } from 'services/backend/researchFields';
 import { MISC } from 'constants/graphSettings';
 
 function useContributors({ researchFieldId, pageSize = 30, initialSort = 'top', initialIncludeSubFields = true }) {
@@ -17,23 +16,16 @@ function useContributors({ researchFieldId, pageSize = 30, initialSort = 'top', 
     const loadData = useCallback(
         page => {
             setIsLoading(true);
-            let contributorsCall;
-            if (sort === 'top') {
-                contributorsCall = getTopContributors({
-                    researchFieldId: researchFieldId === MISC.RESEARCH_FIELD_MAIN ? null : researchFieldId,
-                    page: page,
-                    items: pageSize,
-                    sortBy: 'contributions',
-                    desc: true
-                });
-            } else {
-                contributorsCall = getContributorsByResearchFieldId({
-                    id: researchFieldId,
-                    page: page,
-                    items: pageSize,
-                    subfields: includeSubFields
-                });
-            }
+
+            const contributorsCall = getTopContributors({
+                researchFieldId: researchFieldId === MISC.RESEARCH_FIELD_MAIN ? null : researchFieldId,
+                page,
+                size: pageSize,
+                sortBy: 'contributions',
+                desc: true,
+                days: sort === 'top' ? 30 : null,
+                subfields: includeSubFields
+            });
 
             contributorsCall
                 .then(result => {
@@ -50,7 +42,7 @@ function useContributors({ researchFieldId, pageSize = 30, initialSort = 'top', 
                     setIsLastPageReached(page > 1 ? true : false);
                 });
         },
-        [includeSubFields, researchFieldId, sort, pageSize]
+        [researchFieldId, pageSize, sort, includeSubFields]
     );
 
     useEffect(() => {
@@ -59,7 +51,7 @@ function useContributors({ researchFieldId, pageSize = 30, initialSort = 'top', 
         setIsLastPageReached(false);
         setPage(0);
         setTotalElements(0);
-    }, [researchFieldId, sort, includeSubFields]);
+    }, [researchFieldId, includeSubFields, sort]);
 
     useEffect(() => {
         loadData(0);

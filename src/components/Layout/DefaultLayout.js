@@ -28,6 +28,18 @@ const StyledFooter = styled.div`
     flex-shrink: 0;
 `;
 
+const ToastContainerStyled = styled.div`
+    // REACT-TOASTIFY
+    .toast-container {
+        pointer-events: auto;
+        .Toastify__toast {
+            border-radius: 11px;
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+    }
+`;
+
 const StyledAlertCookie = styled(Alert)`
     &&& {
         position: fixed;
@@ -58,7 +70,7 @@ const StyledAlertCookie = styled(Alert)`
     }
 `;
 
-function CloseToastButton({ closeToast }) {
+const CloseToastButton = ({ closeToast }) => {
     return (
         <span
             onClick={e => {
@@ -77,7 +89,8 @@ function CloseToastButton({ closeToast }) {
             <Icon icon={faTimes} />
         </span>
     );
-}
+};
+
 CloseToastButton.propTypes = {
     closeToast: PropTypes.func
 };
@@ -95,14 +108,18 @@ export default function DefaultLayout(props) {
 
     return (
         <StyledBody className="body">
-            <ToastContainer
-                position="top-right"
-                autoClose={5000}
-                hideProgressBar
-                transition={Slide}
-                className="toast-container"
-                closeButton={<CloseToastButton />}
-            />
+            <ToastContainerStyled>
+                <ToastContainer
+                    position="top-right"
+                    autoClose={5000}
+                    hideProgressBar
+                    transition={Slide}
+                    className="toast-container"
+                    icon={false}
+                    theme="colored"
+                    closeButton={<CloseToastButton />}
+                />
+            </ToastContainerStyled>
             <Header />
             <StyledAppContent>{props.children}</StyledAppContent>
             {showFooter && (
@@ -110,7 +127,7 @@ export default function DefaultLayout(props) {
                     <Footer />
                 </StyledFooter>
             )}
-            <StyledAlertCookie color="info" isOpen={visible} className="d-flex justify-content-center align-items-center">
+            <StyledAlertCookie id="alertCookie" color="info" isOpen={visible} className="d-flex justify-content-center align-items-center">
                 This website uses cookies to ensure you get the best experience on our website. By using this site, you agree to this use.
                 <a href="https://projects.tib.eu/orkg/data-protection/" target="_blank" rel="noopener noreferrer" className="mx-2">
                     More Info

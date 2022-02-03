@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 
 const OrganizationsBox = ({ isLoadingOrganizations, organizationsList }) => {
     return (
-        <div className="box rounded-lg p-4 flex-grow-1">
+        <div className="box rounded-3 p-4 flex-grow-1">
             <h5>Organizations</h5>
             {!isLoadingOrganizations ? (
                 <div className="mb-4 mt-4">
@@ -24,7 +24,7 @@ const OrganizationsBox = ({ isLoadingOrganizations, organizationsList }) => {
                                                 paddingBottom: '11px'
                                             }}
                                         >
-                                            <Link to={reverse(ROUTES.ORGANIZATION, { id: organization.id })}>
+                                            <Link to={reverse(ROUTES.ORGANIZATION, { id: organization.display_id })}>
                                                 <img
                                                     style={{ marginTop: 12 }}
                                                     height="50"
@@ -44,7 +44,7 @@ const OrganizationsBox = ({ isLoadingOrganizations, organizationsList }) => {
                                                 textAlign: 'center'
                                             }}
                                         >
-                                            <Link to={reverse(ROUTES.ORGANIZATION, { id: organization.id })}>{organization.name}</Link>
+                                            <Link to={reverse(ROUTES.ORGANIZATION, { id: organization.display_id })}>{organization.name}</Link>
                                         </div>
                                     );
                                 }

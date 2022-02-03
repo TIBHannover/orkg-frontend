@@ -4,6 +4,7 @@
  * 
  */
 // Theme variables
+$min-contrast-ratio: 2.7;
 $primary: #e86161;
 $primary-darker: darken($primary, 20%);
 $secondary: #80869b;
@@ -16,9 +17,25 @@ $body-bg: $light;
 $body-color: #4f4f4f;
 $border-width: 1px;
 $border-radius: 6px;
+$red: #dc3545;
+$yellow: #ffc107;
+$green: #198754;
+$cyan: #17a2b8;
+
 $theme-colors: (
-    primary-darker: $primary-darker,
-    secondary-darker: $secondary-darker
+    'primary': $primary,
+    'secondary': $secondary,
+    'success': $green,
+    'info': $cyan,
+    'warning': $yellow,
+    'danger': $red,
+    'light': $light,
+    'dark': $dark,
+    'primary-darker': $primary-darker,
+    'secondary-darker': $secondary-darker,
+    'light-darker': $light-darker,
+    'light-lighter': $light-lighter,
+    'body': $body-color
 );
 
 // Forms
@@ -54,3 +71,13 @@ $badge-padding-x: 0.8rem;
 
 // List group
 $list-group-border-color: rgba(0, 0, 0, 0.125);
+
+// Breakpoints (no changed made, copied to make them available to styled-components)
+$grid-breakpoints: (
+    xs: 0,
+    sm: 576px,
+    md: 768px,
+    lg: 992px,
+    xl: 1200px,
+    xxl: 1400px
+);

@@ -178,7 +178,6 @@ export default (state = initialState, action) => {
                         [payload.id]: {
                             id: payload.id,
                             label: payload.label,
-                            researchProblems: [],
                             resourceId: payload.resourceId
                         }
                     },
@@ -279,12 +278,6 @@ export default (state = initialState, action) => {
             const { payload } = action;
 
             return dotProp.set(state, `contributions.byId.${payload.contributionId}.label`, payload.label);
-        }
-
-        case type.UPDATE_RESEARCH_PROBLEMS: {
-            const { payload } = action;
-
-            return dotProp.set(state, `contributions.byId.${payload.contributionId}.researchProblems`, payload.problemsArray);
         }
 
         case type.SAVE_ADD_PAPER: {

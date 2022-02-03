@@ -1,6 +1,6 @@
 import { useRef, useEffect } from 'react';
 import Tippy from '@tippyjs/react';
-import { CustomInput } from 'reactstrap';
+import { Input, Label, FormGroup } from 'reactstrap';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import Select, { components } from 'react-select';
@@ -18,7 +18,7 @@ const Option = ({ children, data, ...props }) => {
     );
 };
 
-const CustomInputStyled = styled(CustomInput)`
+const CustomInputStyled = styled(Input)`
     &.custom-control {
         z-index: 0;
     }
@@ -29,7 +29,7 @@ Option.propTypes = {
     children: PropTypes.string.isRequired
 };
 
-const AddToComparison = ({ contributionId, paper }) => {
+const AddToComparison = ({ contributionId, paper, showLabel }) => {
     const dispatch = useDispatch();
     const inputCheckboxRef = useRef();
     const comparison = useSelector(state => state.viewPaper.comparison);
@@ -98,7 +98,7 @@ const AddToComparison = ({ contributionId, paper }) => {
     return (
         <Tippy
             theme={!contributionId && paper.contributions?.length > 1 ? 'visualizationPreview' : undefined}
-            placement="bottom"
+            placement="bottom-start"
             interactiveDebounce={75}
             interactive={!contributionId && paper.contributions?.length > 1 ? true : false}
             content={
@@ -136,17 +136,24 @@ const AddToComparison = ({ contributionId, paper }) => {
             }
         >
             <span>
-                <CustomInputStyled
-                    onChange={() =>
-                        !contributionId && paper.contributions?.length > 1
-                            ? toggleAllCompare()
-                            : toggleCompare(contributionId || paper.contributions?.[0].id)
-                    }
-                    checked={!!isSelected}
-                    type="checkbox"
-                    innerRef={inputCheckboxRef}
-                    id={`add2CPid${paper.id}cid${contributionId ?? ''}`}
-                />
+                <FormGroup check>
+                    <CustomInputStyled
+                        onChange={() =>
+                            !contributionId && paper.contributions?.length > 1
+                                ? toggleAllCompare()
+                                : toggleCompare(contributionId || paper.contributions?.[0].id)
+                        }
+                        checked={!!isSelected}
+                        type="checkbox"
+                        innerRef={inputCheckboxRef}
+                        id={`add2CPid${paper.id}cid${contributionId ?? ''}`}
+                    />
+                    {showLabel && (
+                        <Label check for={`add2CPid${paper.id}cid${contributionId ?? ''}`} className="mb-0">
+                            {showLabel ? 'Add to comparison' : ''}
+                        </Label>
+                    )}
+                </FormGroup>
             </span>
         </Tippy>
     );
@@ -154,7 +161,12 @@ const AddToComparison = ({ contributionId, paper }) => {
 
 AddToComparison.propTypes = {
     contributionId: PropTypes.string,
-    paper: PropTypes.object.isRequired
+    paper: PropTypes.object.isRequired,
+    showLabel: PropTypes.bool.isRequired
+};
+
+AddToComparison.defaultProps = {
+    showLabel: false
 };
 
 export default AddToComparison;

@@ -44,10 +44,10 @@ const Observatories = ({ organizationsId }) => {
                     <ListGroup className="box">
                         {observatories.map((observatory, index) => {
                             return (
-                                <div key={`c${index}`} className="list-group-item list-group-item-action pr-2 p-3">
+                                <div key={`c${index}`} className="list-group-item list-group-item-action pe-2 p-3">
                                     <div>
                                         <div>
-                                            <Link to={reverse(ROUTES.OBSERVATORY, { id: observatory.id })}>{observatory.name}</Link>
+                                            <Link to={reverse(ROUTES.OBSERVATORY, { id: observatory.display_id })}>{observatory.name}</Link>
                                         </div>
                                         <Dotdotdot clamp={3}>
                                             <small className="text-muted">{observatory.description}</small>
@@ -65,7 +65,7 @@ const Observatories = ({ organizationsId }) => {
                 )}
                 {isLoadingObservatories && (
                     <div className={`text-center mt-4 mb-4 p-5 container box rounded'`}>
-                        <div className="text-left">
+                        <div className="text-start">
                             <ContentLoader
                                 speed={2}
                                 width={400}

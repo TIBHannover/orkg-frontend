@@ -23,7 +23,7 @@ Authors.propTypes = {
             id: PropTypes.string.isRequired,
             label: PropTypes.string.isRequired
         })
-    ).isRequired,
+    ),
     maxAuthors: PropTypes.number
 };
 

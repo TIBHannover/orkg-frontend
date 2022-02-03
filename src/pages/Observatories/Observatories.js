@@ -11,6 +11,7 @@ import styled from 'styled-components';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { groupBy } from 'lodash';
+import TitleBar from 'components/TitleBar/TitleBar';
 
 const TabPaneStyled = styled(TabPane)`
     border-top: 0;
@@ -131,9 +132,7 @@ class Observatories extends Component {
     render() {
         return (
             <>
-                <Container>
-                    <h1 className="h4 mt-4 mb-4">View all observatories</h1>
-                </Container>
+                <TitleBar>View all observatories</TitleBar>
                 <Container className="box rounded p-4 clearfix">
                     <p>
                         <i>Observatories</i> organize research contributions in a particular research field and are curated by research organizations
@@ -141,13 +140,17 @@ class Observatories extends Component {
                     </p>
                     <p>
                         Further information about observatories can be also found in the{' '}
-                        <a href="https://gitlab.com/TIBHannover/orkg/orkg-frontend/-/wikis/Observatories" target="_blank" rel="noopener noreferrer">
-                            ORKG wiki
+                        <a
+                            href="https://www.orkg.org/orkg/help-center/article/8/Observatories_for_specific_research_fields"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            ORKG help center
                         </a>
                         .
                     </p>
                     {this.state.observatories && Object.keys(this.state.observatories).length > 0 && (
-                        <Row noGutters={true}>
+                        <Row className="g-0">
                             <Col md={3} sm={12}>
                                 <StyledResearchFieldList>
                                     {Object.keys(this.state.observatories)

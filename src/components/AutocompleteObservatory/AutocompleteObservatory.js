@@ -74,7 +74,7 @@ function AutocompleteObservatory(props) {
     const CustomOptionOrganization = innerProps => (
         <components.Option {...innerProps}>
             <div className="d-flex">
-                <LogoContainer className="mr-2">
+                <LogoContainer className="me-2">
                     <img alt={innerProps.data.name} src={innerProps.data.logo} />
                 </LogoContainer>
 
