@@ -63,7 +63,8 @@ export const PREDICATES = {
     HAS_LIST: 'HasList',
     HAS_ENTRY: 'HasEntry',
     HAS_HEADING_LEVEL: 'HasHeadingLevel',
-    HAS_VIDEO: 'HasVideo'
+    HAS_VIDEO: 'HasVideo',
+    ISANONYMIZE: 'IsAnonymized'
 };
 
 export const CLASSES = {

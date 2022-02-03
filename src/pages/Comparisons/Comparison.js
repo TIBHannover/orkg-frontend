@@ -615,7 +615,12 @@ function Comparison(props) {
             </ContainerAnimated>
 
             {metaData.id && (
-                <ProvenanceBox creator={createdBy} provenance={provenance} changeObservatory={getObservatoryInfo} resourceId={metaData.id} />
+                <ProvenanceBox
+                    creator={metaData?.anonymized ? '' : createdBy}
+                    provenance={provenance}
+                    changeObservatory={getObservatoryInfo}
+                    resourceId={metaData.id}
+                />
             )}
             <SelectProperties
                 properties={properties}
@@ -664,6 +669,7 @@ function Comparison(props) {
                 loadProvenanceInfos={loadProvenanceInfos}
                 data={data}
                 nextVersions={!isLoadingVersions && hasNextVersion ? versions : []}
+                anonymized={metaData?.anonymized}
             />
 
             {showSaveDraftDialog && (
