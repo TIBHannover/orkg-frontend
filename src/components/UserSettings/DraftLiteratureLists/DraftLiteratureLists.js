@@ -12,15 +12,15 @@ import { Alert } from 'reactstrap';
 import { getResourcesByClass } from 'services/backend/resources';
 import { getStatementsByObjectAndPredicate } from 'services/backend/statements';
 
-const DraftLiteratureLists = () => {
+const DraftLists = () => {
     const user = useSelector(state => state.auth.user);
 
     useEffect(() => {
-        document.title = 'Draft literature lists - ORKG';
+        document.title = 'Draft lists - ORKG';
     });
 
     const renderListItem = list => (
-        <ShortRecord key={list.id} header={list.label} href={reverse(ROUTES.LITERATURE_LIST, { id: list.id })}>
+        <ShortRecord key={list.id} header={list.label} href={reverse(ROUTES.LIST, { id: list.id })}>
             <div className="time">
                 <Icon size="sm" icon={faCalendar} className="me-1" /> {list.created_at ? moment(list.created_at).format('DD MMMM YYYY') : ''}
             </div>
@@ -69,15 +69,15 @@ const DraftLiteratureLists = () => {
     return (
         <div>
             <div className="box rounded pt-4 pb-3 px-4 mb-3">
-                <h2 className="h5">View draft literature lists</h2>
+                <h2 className="h5">View draft lists</h2>
                 <Alert color="info" className="mt-3" fade={false}>
-                    When you start working on a literature list, by default it is a draft version. Those versions are listed on this page. As soon as
-                    you publish a literature list, it becomes publicly listed
+                    When you start working on a list, by default it is a draft version. Those versions are listed on this page. As soon as you publish
+                    a list, it becomes publicly listed
                 </Alert>
             </div>
 
             <ListPage
-                label="draft literature"
+                label="draft list"
                 resourceClass={CLASSES.LITERATURE_LIST}
                 renderListItem={renderListItem}
                 fetchItems={fetchItems}
@@ -89,6 +89,6 @@ const DraftLiteratureLists = () => {
     );
 };
 
-DraftLiteratureLists.propTypes = {};
+DraftLists.propTypes = {};
 
-export default DraftLiteratureLists;
+export default DraftLists;

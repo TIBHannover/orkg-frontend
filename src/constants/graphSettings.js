@@ -114,7 +114,8 @@ export const CLASSES = {
     DECIMAL: 'Number',
     INTEGER: 'Integer',
     BOOLEAN: 'Boolean',
-    URI: 'URI'
+    URI: 'URI',
+    SOFTWARE: 'Software'
 };
 
 export const MISC = {

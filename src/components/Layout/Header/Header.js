@@ -42,6 +42,7 @@ import { toast } from 'react-toastify';
 import HomeBannerBg from 'assets/img/graph-background.svg';
 import { scrollbarWidth } from '@xobotyi/scrollbar-width';
 import AboutMenu from 'components/Layout/Header/AboutMenu';
+import ContentTypesMenu from 'components/Layout/Header/ContentTypesMenu';
 
 const cookies = new Cookies();
 
@@ -184,6 +185,7 @@ class Header extends Component {
         this.state = {
             isOpen: false,
             isOpenAboutMenu: false,
+            isOpenViewMenu: false,
             userTooltipOpen: false,
             redirectLogout: false,
             isHomePageStyle: this.props.location.pathname === ROUTES.HOME ? true : false
@@ -292,10 +294,17 @@ class Header extends Component {
         });
     };
 
+    toggleViewMenu = () => {
+        this.setState({
+            isOpenViewMenu: !this.state.isOpenViewMenu
+        });
+    };
+
     closeMenu = () => {
         this.setState({
             isOpen: false,
-            isOpenAboutMenu: false
+            isOpenAboutMenu: false,
+            isOpenViewMenu: false
         });
     };
 
@@ -363,7 +372,7 @@ class Header extends Component {
                     <Collapse isOpen={this.state.isOpen} navbar>
                         <Nav className="me-auto flex-shrink-0" navbar>
                             {/* view menu */}
-                            <ButtonDropdown nav>
+                            <ButtonDropdown nav isOpen={this.state.isOpenViewMenu} toggle={this.toggleViewMenu}>
                                 <DropdownToggle nav className="ms-2">
                                     View <FontAwesomeIcon style={{ marginTop: '4px' }} icon={faChevronDown} pull="right" />
                                 </DropdownToggle>
@@ -383,8 +392,8 @@ class Header extends Component {
                                             <Badge color="info">Beta</Badge>
                                         </small>
                                     </DropdownItem>
-                                    <DropdownItem tag={RouterNavLink} exact to={ROUTES.LITERATURE_LISTS} onClick={this.closeMenu}>
-                                        Literature list{' '}
+                                    <DropdownItem tag={RouterNavLink} exact to={ROUTES.LISTS} onClick={this.closeMenu}>
+                                        Lists{' '}
                                         <small>
                                             <Badge color="info">Beta</Badge>
                                         </small>
@@ -395,6 +404,9 @@ class Header extends Component {
                                     <DropdownItem tag={RouterNavLink} exact to={ROUTES.RESEARCH_FIELDS} onClick={this.closeMenu}>
                                         Research fields
                                     </DropdownItem>
+
+                                    <ContentTypesMenu closeMenu={this.closeMenu} />
+
                                     <DropdownItem divider />
                                     <DropdownItem tag={RouterNavLink} exact to={ROUTES.OBSERVATORIES} onClick={this.closeMenu}>
                                         Observatories{' '}

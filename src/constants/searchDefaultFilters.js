@@ -50,8 +50,8 @@ const DEFAULT_FILTERS = [
         isCreatedByActive: true
     },
     {
-        label: 'Literature List',
-        labelPlural: 'Literature Lists',
+        label: 'List',
+        labelPlural: 'Lists',
         id: CLASSES.LITERATURE_LIST_PUBLISHED,
         isCreatedByActive: true
     },

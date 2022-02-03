@@ -8,7 +8,7 @@ import viewPaper from 'reducers/viewPaper';
 import pdfAnnotation from 'reducers/pdfAnnotation';
 import addTemplate from 'reducers/addTemplate';
 import review from 'reducers/review';
-import literatureList from 'slices/literatureListSlice';
+import list from 'slices/listSlice';
 import contributionEditor from 'slices/contributionEditorSlice';
 
 // eslint-disable-next-line import/no-anonymous-default-export
@@ -24,5 +24,5 @@ export default history =>
         pdfTextAnnotation,
         review,
         contributionEditor,
-        literatureList
+        list
     });

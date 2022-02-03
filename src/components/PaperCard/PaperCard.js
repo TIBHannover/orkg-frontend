@@ -16,6 +16,7 @@ import ContentLoader from 'react-content-loader';
 import Authors from './Authors';
 import PropTypes from 'prop-types';
 import moment from 'moment';
+import pluralize from 'pluralize';
 
 const PaperCardStyled = styled.div`
     &.selected {
@@ -67,11 +68,19 @@ const PaperCard = props => {
                     <div className="mb-2">
                         <Link
                             target={props.linkTarget ? props.linkTarget : undefined}
-                            to={reverse(ROUTES.VIEW_PAPER, { resourceId: props.paper.id, contributionId: props.contribution?.id ?? undefined })}
+                            to={
+                                props.route ||
+                                reverse(ROUTES.VIEW_PAPER, { resourceId: props.paper.id, contributionId: props.contribution?.id ?? undefined })
+                            }
                         >
                             {props.paper.title ? props.paper.title : <em>No title</em>}
                         </Link>
                         {props.contribution && <span className="text-muted"> - {props.contribution.title}</span>}
+                        {props.variant === 'list' && props.paper.contributions?.length > 0 && (
+                            <div className="d-inline-block ms-2">
+                                <CardBadge color="primary">{pluralize('contribution', props.paper.contributions?.length, true)}</CardBadge>
+                            </div>
+                        )}
                         {props.showBadge && (
                             <div className="d-inline-block ms-2">
                                 <CardBadge color="primary">Paper</CardBadge>
@@ -165,7 +174,9 @@ PaperCard.propTypes = {
     onSelect: PropTypes.func,
     isListGroupItem: PropTypes.bool.isRequired,
     description: PropTypes.object,
-    linkTarget: PropTypes.string
+    linkTarget: PropTypes.string,
+    variant: PropTypes.string,
+    route: PropTypes.string
 };
 
 PaperCard.defaultProps = {
@@ -179,7 +190,9 @@ PaperCard.defaultProps = {
     showCurationFlags: true,
     isListGroupItem: true,
     onChange: () => {},
-    description: null
+    description: null,
+    variant: 'default',
+    route: null
 };
 
 export default PaperCard;

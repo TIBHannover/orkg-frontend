@@ -253,11 +253,11 @@ export const getReviewData = (resource, statements) => {
 };
 
 /**
- * Parse literature list statements and return a literature list object
- * @param {Object} resource Literature List resource
- * @param {Array} statements Literature List  Statements
+ * Parse list statements and return a list object
+ * @param {Object} resource List resource
+ * @param {Array} statements List  Statements
  */
-export const getLiteratureListData = (resource, statements) => {
+export const getListData = (resource, statements) => {
     const description = filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.DESCRIPTION, true);
     const listId = filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.HAS_LIST, true)?.id;
     const researchField = filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.HAS_RESEARCH_FIELD, true, CLASSES.RESEARCH_FIELD);
@@ -1197,7 +1197,7 @@ export const getResourceLink = (classId, id) => {
         [CLASSES.VISUALIZATION]: [ROUTES.VISUALIZATION, 'id'],
         [CLASSES.CONTRIBUTION]: [ROUTES.CONTRIBUTION, 'id'],
         [CLASSES.SMART_REVIEW_PUBLISHED]: [ROUTES.REVIEW, 'id'],
-        [CLASSES.LITERATURE_LIST_PUBLISHED]: [ROUTES.LITERATURE_LIST, 'id'],
+        [CLASSES.LITERATURE_LIST_PUBLISHED]: [ROUTES.LIST, 'id'],
         [ENTITIES.RESOURCE]: [ROUTES.RESOURCE, 'id'],
         [ENTITIES.PREDICATE]: [ROUTES.PROPERTY, 'id'],
         [ENTITIES.CLASS]: [ROUTES.CLASS, 'id'],
@@ -1393,7 +1393,7 @@ export const getDataBasedOnType = (resource, statements) => {
         return getReviewData(resource, statements);
     }
     if (resource?.classes?.includes(CLASSES.LITERATURE_LIST) || resource?.classes?.includes(CLASSES.LITERATURE_LIST_PUBLISHED)) {
-        return getLiteratureListData(resource, statements);
+        return getListData(resource, statements);
     } else {
         return undefined;
     }
