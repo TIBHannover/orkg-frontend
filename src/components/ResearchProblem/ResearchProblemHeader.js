@@ -158,7 +158,7 @@ const ResearchProblemHeader = ({ id }) => {
                                 <>
                                     <hr className="m-0" />
                                     <CardBody>
-                                        <CardTitle tag="h5">Subfields</CardTitle>
+                                        <CardTitle tag="h5">Subproblems</CardTitle>
                                         <div>
                                             {researchProblemData.subProblems.slice(0, 9).map(subfield => (
                                                 <Link

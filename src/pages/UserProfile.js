@@ -136,8 +136,10 @@ const UserProfile = props => {
                         setUserData(userData);
                         setIsLoadingUserData(false);
                     }
+                    document.title = `${userData.display_name} - ORKG`;
                 })
                 .catch(e => {
+                    document.title = `User profile - ORKG`;
                     setNotFound(true);
                 });
         };
