@@ -15,11 +15,11 @@ export const getPaperByTitle = title => {
     return submitGetRequest(`${url}widgets/?title=${title}`);
 };
 
-export const generateDOIForComparison = (comparison_id, title, subject, description, related_resources, authors, url) => {
+export const generateDoi = ({ type, resourceType, resource_id, title, subject, description, related_resources = [], authors = [], url }) => {
     return submitPostRequest(
         doisUrl,
         { 'Content-Type': 'application/json' },
-        { comparison_id, title, subject, description, related_resources, authors, url }
+        { type, resourceType, resource_id, title, subject, description, related_resources, authors, url }
     );
 };
 
