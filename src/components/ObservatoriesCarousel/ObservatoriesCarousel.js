@@ -1,10 +1,11 @@
 import { useState } from 'react';
-import { Carousel, CarouselItem, CarouselIndicators, Card, CardBody, CardFooter, CardTitle, CardSubtitle } from 'reactstrap';
+import { Carousel, CarouselItem, Card, CardBody, CardFooter, CardTitle, CardSubtitle } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import ROUTES from 'constants/routes';
 import Dotdotdot from 'react-dotdotdot';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faFile, faCubes } from '@fortawesome/free-solid-svg-icons';
+import { CarouselIndicatorsStyled } from 'components/styled';
 import Tippy from '@tippyjs/react';
 import styled from 'styled-components';
 import Gravatar from 'react-gravatar';
@@ -37,21 +38,6 @@ const ObservatoryCardStyled = styled.div`
         .observatoryName {
             text-decoration: underline;
         }
-    }
-`;
-
-const CarouselIndicatorsStyled = styled(CarouselIndicators)`
-    && {
-        margin: 0;
-    }
-
-    background: ${props => props.theme.lightLighter};
-    [data-bs-target] {
-        width: 10px;
-        height: 10px;
-        border-radius: 100%;
-        background: ${props => props.theme.primary};
-        background-clip: padding-box;
     }
 `;
 
