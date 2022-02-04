@@ -109,15 +109,15 @@ const FeaturedItems = ({ researchFieldId, researchFieldLabel, featuredClass }) =
                 <div className="p-3 text-start">
                     <ContentLoader
                         speed={2}
-                        width={400}
+                        width={100}
                         height={50}
-                        viewBox="0 0 400 50"
+                        viewBox="0 0 100 50"
                         style={{ width: '100% !important' }}
                         backgroundColor="#f3f3f3"
                         foregroundColor="#ecebeb"
                     >
-                        <rect x="0" y="0" rx="3" ry="3" width="400" height="20" />
-                        <rect x="0" y="25" rx="3" ry="3" width="300" height="20" />
+                        <rect x="0" y="0" rx="3" ry="3" width="100" height="20" />
+                        <rect x="0" y="25" rx="3" ry="3" width="80" height="20" />
                     </ContentLoader>
                 </div>
             )}

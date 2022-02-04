@@ -19,6 +19,7 @@ export const ResponsiveTabs = styled.div`
 
     .RRT__tab {
         flex: 1;
+        margin: 0 0.2px;
         margin-bottom: 0;
         padding: 15px;
         color: #bebbac;
