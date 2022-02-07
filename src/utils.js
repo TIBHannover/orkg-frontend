@@ -1,6 +1,7 @@
 import capitalize from 'capitalize';
 import { FILTER_TYPES } from 'constants/comparisonFilterTypes';
 import { CLASSES, MISC, PREDICATES, ENTITIES } from 'constants/graphSettings';
+import REGEX from 'constants/regex';
 import ROUTES from 'constants/routes';
 import { find, flatten, flattenDepth, isEqual, isString, last, uniq, sortBy, uniqBy, isEmpty, cloneDeep } from 'lodash';
 import { unescape } from 'he';
@@ -1183,6 +1184,25 @@ export const getLinkByEntityType = (_class, id) => {
         [ENTITIES.PREDICATE]: ROUTES.PROPERTY
     };
     return links[_class] ? reverse(links[_class], { id }) : '';
+};
+
+/**
+ * Get Entity Type based on ID
+ * (Only works for IDs with the default pattern (#Rxxx, #Cxxx, #Pxxx)
+ * @param {String} id Entity ID
+ * @result {String} Entity type or false if no pattern matched
+ */
+export const getEntityTypeByID = value => {
+    if (value.match(REGEX.RESOURCE_PATTERN)) {
+        return ENTITIES.RESOURCE;
+    }
+    if (value.match(REGEX.PROPERTY_PATTERN)) {
+        return ENTITIES.PREDICATE;
+    }
+    if (value.match(REGEX.CLASS_PATTERN)) {
+        return ENTITIES.CLASS;
+    }
+    return false;
 };
 
 /**

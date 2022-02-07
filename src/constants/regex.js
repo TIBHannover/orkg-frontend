@@ -8,6 +8,10 @@ const regex = {
     YOUTUBE_URL: /^(https?:)?\/\/(www.)?youtube\.com\/watch\?v=/,
     DAILYMOTION_URL: /^(https?:)?\/\/(www.)?dailymotion\.com\/video\//,
     VIMEO_URL: /^(https?:)?\/\/(www.)?vimeo\.com\//,
-    IMAGE_URL: /^(https):(\/\/[^"']*\.(?:png|jpg|jpeg|gif|svg))/i
+    IMAGE_URL: /^(https):(\/\/[^"']*\.(?:png|jpg|jpeg|gif|svg))/i,
+    PROPERTY_PATTERN: /^#P([0-9])+$/,
+    RESOURCE_PATTERN: /^#R([0-9])+$/,
+    CLASS_PATTERN: /^#C([0-9])+$/,
+    MINIMUM_LENGTH_PATTERN: 3
 };
 export default regex;

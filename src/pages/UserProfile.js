@@ -4,6 +4,7 @@ import { getContributorInformationById } from 'services/backend/contributors';
 import Items from 'components/UserProfile/Items';
 import { getObservatoryById } from 'services/backend/observatories';
 import { getOrganization } from 'services/backend/organizations';
+import HeaderSearchButton from 'components/HeaderSearchButton/HeaderSearchButton';
 import NotFound from 'pages/NotFound';
 import ContentLoader from 'react-content-loader';
 import { useSelector } from 'react-redux';
@@ -154,6 +155,12 @@ const UserProfile = props => {
     return (
         <>
             <Container>
+                <Row className="justify-content-end">
+                    <div className="col-md-3 d-flex justify-content-end mb-3">
+                        <HeaderSearchButton placeholder="Search in this user content..." type={null} userId={userId} />
+                    </div>
+                </Row>
+
                 {!isLoadingUserData && (
                     <Row>
                         <div className="col-md-2 text-center d-flex align-items-center justify-content-center mb-3 mb-md-0">
