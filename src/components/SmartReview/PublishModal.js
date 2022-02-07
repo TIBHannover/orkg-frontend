@@ -73,7 +73,7 @@ const PublishModal = ({ id, show, toggle, getVersions, paperId }) => {
                 try {
                     const doiResponse = await generateDoi({
                         type: 'Review',
-                        resourceType: 'Preprint',
+                        resource_type: 'Preprint',
                         resource_id: versionResource.id,
                         title,
                         subject: researchField ? researchField.label : '',

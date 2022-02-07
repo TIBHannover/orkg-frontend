@@ -256,7 +256,7 @@ function Publish(props) {
             if (title && title.trim() !== '' && description && description.trim() !== '') {
                 generateDoi({
                     type: 'Comparison',
-                    resourceType: 'Dataset',
+                    resource_type: 'Dataset',
                     resource_id: comparisonId,
                     title,
                     subject: subject ? subject.label : '',
