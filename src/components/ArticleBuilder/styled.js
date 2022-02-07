@@ -4,7 +4,9 @@ import styled from 'styled-components';
 export const EditableTitle = styled(Input)`
     width: 100%;
     border: 0;
-    background: inherit;
+    background: inherit !important;
+    font-size: inherit;
+    padding: 0 5px;
     border-radius: ${props => props.theme.borderRadius};
     color: inherit;
     resize: none;
