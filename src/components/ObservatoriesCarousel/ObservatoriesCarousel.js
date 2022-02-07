@@ -99,7 +99,7 @@ function ObservatoriesCarousel(props) {
                                         </CardSubtitle>
                                     </CardBody>
                                 </Link>
-                                <div className="mt-3 mb-3 ps-2 pr-2">
+                                <div className="mt-3 mb-3 ps-2 pe-2">
                                     <Link
                                         className="text-center d-flex"
                                         to={reverse(ROUTES.OBSERVATORY, { id: observatory.display_id })}
@@ -148,7 +148,7 @@ function ObservatoriesCarousel(props) {
                         <CarouselIndicatorsStyled items={props.observatories} activeIndex={activeIndex} onClickHandler={goToIndex} />
                     </Carousel>
                 ) : (
-                    <div className="pt-4 pb-4 ps-4 pr-4">
+                    <div className="pt-4 pb-4 ps-4 pe-4">
                         No observatories yet!
                         <br />
                         <small className="text-muted">
@@ -164,7 +164,7 @@ function ObservatoriesCarousel(props) {
                     </div>
                 )
             ) : (
-                <div style={{ height: '130px' }} className="pt-4 pb-1 ps-4 pr-4">
+                <div style={{ height: '130px' }} className="pt-4 pb-1 ps-4 pe-4">
                     <ContentLoader
                         width={300}
                         height={50}

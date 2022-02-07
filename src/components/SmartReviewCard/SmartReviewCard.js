@@ -4,7 +4,10 @@ import styled from 'styled-components';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 import ROUTES from 'constants/routes.js';
+import MarkFeatured from 'components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
+import MarkUnlisted from 'components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
 import RelativeBreadcrumbs from 'components/RelativeBreadcrumbs/RelativeBreadcrumbs';
+import useMarkFeaturedUnlisted from 'components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
 import Authors from 'components/PaperCard/Authors';
 import useCardData from './hooks/useCardData';
 import PropTypes from 'prop-types';
@@ -19,16 +22,35 @@ const SmartReviewCardStyled = styled.div`
     }
 `;
 
-const SmartReviewCard = ({ versions, showBadge }) => {
+const SmartReviewCard = ({ versions, showCurationFlags, showBadge }) => {
     const { researchField, authors, isLoading: isLoadingMetaData } = useCardData({
         id: versions[0]?.id,
         initResearchField: versions[0]?.researchField,
         initAuthors: versions[0]?.authors
     });
 
+    const { isFeatured, isUnlisted, handleChangeStatus } = useMarkFeaturedUnlisted({
+        resourceId: versions[0]?.id,
+        unlisted: versions[0]?.unlisted,
+        featured: versions[0]?.featured
+    });
+
     return (
-        <SmartReviewCardStyled style={{ flexWrap: 'wrap' }} className="list-group-item d-flex px-4 py-3">
+        <SmartReviewCardStyled
+            style={{ flexWrap: 'wrap' }}
+            className={`list-group-item d-flex py-3 pe-4 ${showCurationFlags ? ' ps-3  ' : ' ps-4  '}`}
+        >
             <div className="col-md-9 d-flex p-0">
+                {showCurationFlags && (
+                    <div className="d-flex flex-column flex-shrink-0" style={{ width: '25px' }}>
+                        <div>
+                            <MarkFeatured size="sm" featured={isFeatured} handleChangeStatus={handleChangeStatus} />
+                        </div>
+                        <div>
+                            <MarkUnlisted size="sm" unlisted={isUnlisted} handleChangeStatus={handleChangeStatus} />
+                        </div>
+                    </div>
+                )}
                 <div className="d-flex flex-column flex-grow-1">
                     <div className="mb-2">
                         <Link to={reverse(ROUTES.SMART_REVIEW, { id: versions[0]?.id })}>{versions[0]?.label}</Link>
@@ -79,11 +101,13 @@ const SmartReviewCard = ({ versions, showBadge }) => {
 
 SmartReviewCard.propTypes = {
     versions: PropTypes.array.isRequired,
-    showBadge: PropTypes.bool.isRequired
+    showBadge: PropTypes.bool.isRequired,
+    showCurationFlags: PropTypes.bool.isRequired
 };
 
 SmartReviewCard.defaultProps = {
-    showBadge: false
+    showBadge: false,
+    showCurationFlags: true
 };
 
 export default SmartReviewCard;

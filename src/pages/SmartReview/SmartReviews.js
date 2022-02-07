@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import ListPage from 'components/ListPage/ListPage';
@@ -5,16 +6,20 @@ import RequireAuthentication from 'components/RequireAuthentication/RequireAuthe
 import { CLASSES } from 'constants/graphSettings';
 import SmartReviewCard from 'components/SmartReviewCard/SmartReviewCard';
 import ROUTES from 'constants/routes';
+import { getSmartReviewData } from 'utils';
 import { useSelector } from 'react-redux';
 import { groupBy } from 'lodash';
 import { Link } from 'react-router-dom';
-import { getSmartReviewData } from 'utils';
 import { getResourcesByClass } from 'services/backend/resources';
 import { getStatementsBySubjects } from 'services/backend/statements';
 import { reverse } from 'named-urls';
 
 const SmartReviews = () => {
     const user = useSelector(state => state.auth.user);
+
+    useEffect(() => {
+        document.title = 'SmartReviews - ORKG';
+    });
 
     const renderListItem = versions => <SmartReviewCard key={versions[0]?.id} versions={versions} showBadge={false} />;
 

@@ -40,15 +40,20 @@ const Comparisons = () => {
     };
 
     const buttons = (
-        <RequireAuthentication
-            component={Link}
-            color="secondary"
-            size="sm"
-            className="btn btn-secondary btn-sm flex-shrink-0"
-            to={ROUTES.ADD_COMPARISON}
-        >
-            <Icon icon={faPlus} /> Create comparison
-        </RequireAuthentication>
+        <>
+            <RequireAuthentication
+                component={Link}
+                color="secondary"
+                size="sm"
+                className="btn btn-secondary btn-sm flex-shrink-0"
+                to={ROUTES.ADD_COMPARISON}
+            >
+                <Icon icon={faPlus} /> Create comparison
+            </RequireAuthentication>
+            <Link style={{ marginLeft: '1px' }} className="btn btn-secondary btn-sm flex-shrink-0" to={ROUTES.FEATURED_COMPARISONS}>
+                Featured comparisons
+            </Link>
+        </>
     );
 
     return (

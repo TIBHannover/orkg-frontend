@@ -11,6 +11,9 @@ import SectionVisualization from 'components/SmartReview/SectionVisualization';
 import { SectionStyled } from 'components/ArticleBuilder/styled';
 import ViewArticleStatementBrowser from 'components/SmartReview/ViewArticleStatementBrowser';
 import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
+import MarkFeatured from 'components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
+import MarkUnlisted from 'components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
+import useMarkFeaturedUnlisted from 'components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
 import { CLASSES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
@@ -22,6 +25,7 @@ import SectionComparison from './SectionComparison';
 const ViewArticle = () => {
     const { id } = useParams();
     const paper = useSelector(state => state.smartReview.paper);
+    const articleResource = useSelector(state => state.smartReview.articleResource);
     const authors = useSelector(state => state.smartReview.authorResources);
     const sections = useSelector(state => state.smartReview.sections);
     const isPublished = useSelector(state => state.smartReview.isPublished);
@@ -31,6 +35,12 @@ const ViewArticle = () => {
     const latestVersionId = versions?.[0]?.id;
     const newVersionAvailable = isPublished && latestVersionId !== id;
     const toggleHistoryModal = () => dispatch(toggleHistoryModalAction());
+
+    const { isFeatured, isUnlisted, handleChangeStatus } = useMarkFeaturedUnlisted({
+        resourceId: id,
+        unlisted: articleResource?.unlisted,
+        featured: articleResource?.featured
+    });
 
     return (
         <>
@@ -54,9 +64,19 @@ const ViewArticle = () => {
                     <article>
                         <SectionStyled className="box rounded">
                             <header>
-                                <h1 className="mb-2 mt-4" style={{ whiteSpace: 'pre-line' }} typeof="doco:Title" property="c4o:hasContent">
-                                    {paper.title}
-                                </h1>
+                                <div className="d-flex mb-2 mt-4">
+                                    <h1 style={{ whiteSpace: 'pre-line' }} typeof="doco:Title" property="c4o:hasContent">
+                                        {paper.title}{' '}
+                                    </h1>
+                                    {isPublished && (
+                                        <h2 className="h4 ms-2 mt-2">
+                                            <MarkFeatured size="xs" featured={isFeatured} handleChangeStatus={handleChangeStatus} />
+                                            <div className="d-inline-block ms-1">
+                                                <MarkUnlisted size="xs" unlisted={isUnlisted} handleChangeStatus={handleChangeStatus} />
+                                            </div>
+                                        </h2>
+                                    )}
+                                </div>
                                 <div className="my-3">
                                     <ResearchFieldBadge researchField={researchField} />
                                     <AuthorBadges authors={authors} />{' '}

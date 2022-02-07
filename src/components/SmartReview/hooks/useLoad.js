@@ -16,6 +16,7 @@ const useLoad = () => {
     const getArticleById = useCallback(async id => {
         let paperResource = await getResource(id).catch(e => {});
         let isPublished = false;
+        let articleResource = null;
         if (!paperResource) {
             notFound();
             return;
@@ -37,6 +38,7 @@ const useLoad = () => {
             } = resourceData;
             paperStatements = statements;
             id = rootResource;
+            articleResource = paperResource;
             paperResource = statements.find(statement => statement.subject.id === id).subject;
             isPublished = true;
         } else {
@@ -170,6 +172,7 @@ const useLoad = () => {
 
         return {
             articleId: paramId,
+            articleResource: articleResource ?? null,
             paper: {
                 id: paperResource.id,
                 title: paperResource.label

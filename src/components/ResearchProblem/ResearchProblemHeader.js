@@ -26,6 +26,9 @@ import useResearchProblemResearchFields from 'components/ResearchProblem/hooks/u
 import AuthorsBox from 'components/TopAuthors/AuthorsBox';
 import ResearchFieldsBox from './ResearchFieldBox/ResearchFieldsBox';
 import SuperResearchProblemBox from './SuperResearchProblemBox/SuperResearchProblemBox';
+import FeaturedMark from 'components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
+import MarkUnlisted from 'components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
+import useMarkFeaturedUnlisted from 'components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
 import { NavLink } from 'react-router-dom';
 import ContentLoader from 'react-content-loader';
 import ROUTES from 'constants/routes.js';
@@ -46,6 +49,11 @@ const ResearchProblemHeader = ({ id }) => {
     const { researchProblemData, superProblems, isLoading, isFailedLoading, loadResearchProblemData } = useResearchProblem({ id });
     const [researchFields, isLoadingResearchFields] = useResearchProblemResearchFields({ researchProblemId: id });
     const prevEditMode = usePrevious({ editMode });
+    const { isFeatured, isUnlisted, handleChangeStatus } = useMarkFeaturedUnlisted({
+        resourceId: id,
+        unlisted: researchProblemData?.unlisted,
+        featured: researchProblemData?.featured
+    });
 
     useEffect(() => {
         if (!editMode && prevEditMode && prevEditMode.editMode !== editMode) {
@@ -100,7 +108,13 @@ const ResearchProblemHeader = ({ id }) => {
                         titleAddition={
                             <>
                                 <SubtitleSeparator />
-                                <SubTitle>{researchProblemData.label}</SubTitle>
+                                <SubTitle>Research problem</SubTitle>
+                                <>
+                                    <FeaturedMark size="sm" featured={isFeatured} handleChangeStatus={handleChangeStatus} />{' '}
+                                    <div className="d-inline-block ms-1">
+                                        <MarkUnlisted size="sm" resourceId={id} unlisted={isUnlisted} handleChangeStatus={handleChangeStatus} />
+                                    </div>
+                                </>
                             </>
                         }
                         buttonGroup={
@@ -129,7 +143,7 @@ const ResearchProblemHeader = ({ id }) => {
                         }
                         wrap={false}
                     >
-                        Research problem
+                        {researchProblemData.label}
                     </TitleBar>
                     {editMode && (
                         <StatementBrowserDialog
