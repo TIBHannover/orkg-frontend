@@ -237,6 +237,7 @@ const TableCellValue = forwardRef(({ value, index, setDisableCreate, propertyId 
                                         ]}
                                     />
                                 }
+                                appendTo={document.body}
                                 interactive={true}
                                 trigger="manual"
                                 placement="top"

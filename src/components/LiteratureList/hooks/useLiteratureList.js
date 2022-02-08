@@ -27,6 +27,7 @@ const useLiteratureList = () => {
         // can be the ID of either a "published list" or a "head list"
         let listResource = await getResource(id).catch(e => {});
         let isPublished = false;
+        let listPublishedResource = null;
         if (!listResource) {
             notFound();
             return;
@@ -46,6 +47,7 @@ const useLiteratureList = () => {
             const { data } = resourceData;
             statements = data.statements;
             id = data.rootResource;
+            listPublishedResource = listResource;
             listResource = statements.find(statement => statement.subject.id === id).subject;
             isPublished = true;
         } else if (listResource.classes.includes(CLASSES.LITERATURE_LIST)) {
@@ -156,6 +158,7 @@ const useLiteratureList = () => {
 
         return {
             id: paramId,
+            listResource: listPublishedResource ?? null,
             literatureList: {
                 id: listResource.id,
                 title: listResource.label

@@ -5,7 +5,6 @@ import useLoad from 'components/Review/hooks/useLoad';
 import ROUTES from 'constants/routes';
 import moment from 'moment';
 import { reverse } from 'named-urls';
-import React from 'react';
 
 const ReviewDiff = () => {
     const { reviewToPlainText } = useDiff();

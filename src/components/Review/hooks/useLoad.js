@@ -16,6 +16,7 @@ const useLoad = () => {
     const getArticleById = useCallback(async id => {
         let paperResource = await getResource(id).catch(e => {});
         let isPublished = false;
+        let articleResource = null;
         if (!paperResource) {
             notFound();
             return;
@@ -37,6 +38,7 @@ const useLoad = () => {
             } = resourceData;
             paperStatements = statements;
             id = rootResource;
+            articleResource = paperResource;
             paperResource = statements.find(statement => statement.subject.id === id).subject;
             isPublished = true;
         } else {
@@ -60,7 +62,7 @@ const useLoad = () => {
         const contributionResource = contributionResources.find(statement => statement.classes.includes(CLASSES.CONTRIBUTION_SMART_REVIEW));
 
         if (!contributionResource) {
-            console.log('no contribution with class "CONTRIBUTION_SMART_REVIEW" found');
+            console.log('no contribution with class "CONTRIBUTION_REVIEW" found');
             notFound();
             return;
         }
@@ -170,6 +172,7 @@ const useLoad = () => {
 
         return {
             articleId: paramId,
+            articleResource: articleResource ?? null,
             paper: {
                 id: paperResource.id,
                 title: paperResource.label

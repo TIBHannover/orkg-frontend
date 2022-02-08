@@ -1,4 +1,4 @@
-import { Button } from 'reactstrap';
+import { Button, CarouselIndicators } from 'reactstrap';
 import styled from 'styled-components';
 import Gravatar from 'react-gravatar';
 
@@ -150,5 +150,20 @@ export const CardBadgeFilter = styled.div`
 export const CmsPage = styled.div`
     img {
         max-width: 100%;
+    }
+`;
+
+export const CarouselIndicatorsStyled = styled(CarouselIndicators)`
+    && {
+        margin: 0;
+    }
+
+    background: ${props => props.theme.lightLighter};
+    [data-bs-target] {
+        width: 10px;
+        height: 10px;
+        border-radius: 100%;
+        background: ${props => props.theme.primary};
+        background-clip: padding-box;
     }
 `;

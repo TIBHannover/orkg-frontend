@@ -88,11 +88,13 @@ export const getResourcesByClass = async ({
     creator = null,
     exact = false,
     verified = null,
-    returnContent = false
+    returnContent = false,
+    featured = null,
+    unlisted = null
 }) => {
     const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
     const params = queryString.stringify(
-        { page, size, sort, desc, creator, exact, ...(q ? { q } : {}), verified },
+        { page, size, sort, desc, creator, exact, ...(q ? { q } : {}), verified, featured, unlisted },
         {
             skipNull: true,
             skipEmptyString: true
@@ -103,4 +105,20 @@ export const getResourcesByClass = async ({
         returnContent ? res.content : res
     );
     return resources;
+};
+
+export const markAsFeatured = id => {
+    return submitPutRequest(`${resourcesUrl}${id}/metadata/featured`, { 'Content-Type': 'application/json' });
+};
+
+export const removeFeaturedFlag = id => {
+    return submitDeleteRequest(`${resourcesUrl}${id}/metadata/featured`, { 'Content-Type': 'application/json' });
+};
+
+export const markAsUnlisted = id => {
+    return submitPutRequest(`${resourcesUrl}${id}/metadata/unlisted`, { 'Content-Type': 'application/json' });
+};
+
+export const removeUnlistedFlag = id => {
+    return submitDeleteRequest(`${resourcesUrl}${id}/metadata/unlisted`, { 'Content-Type': 'application/json' });
 };

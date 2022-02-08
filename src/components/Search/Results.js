@@ -40,7 +40,7 @@ const StyledListGroupItem = styled(ListGroupItem)`
 const Results = props => {
     return (
         <div>
-            {props.loading && (
+            {props.loading && props.currentPage === 0 && (
                 <ContentLoader
                     height="100%"
                     width="100%"
@@ -116,7 +116,8 @@ Results.propTypes = {
     items: PropTypes.array.isRequired,
     loadMore: PropTypes.func.isRequired,
     hasNextPage: PropTypes.bool.isRequired,
-    showNoResultsMessage: PropTypes.bool.isRequired
+    showNoResultsMessage: PropTypes.bool.isRequired,
+    currentPage: PropTypes.number.isRequired
 };
 
 export default withRouter(Results);

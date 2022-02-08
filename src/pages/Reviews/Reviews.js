@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import ListPage from 'components/ListPage/ListPage';
@@ -15,6 +16,10 @@ import { reverse } from 'named-urls';
 
 const Reviews = () => {
     const user = useSelector(state => state.auth.user);
+
+    useEffect(() => {
+        document.title = 'Reviews - ORKG';
+    });
 
     const renderListItem = versions => <ReviewCard key={versions[0]?.id} versions={versions} showBadge={false} />;
 

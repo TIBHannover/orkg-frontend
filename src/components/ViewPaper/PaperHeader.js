@@ -4,6 +4,9 @@ import { loadPaper } from 'actions/viewPaper';
 import AuthorBadges from 'components/Badges/AuthorBadges/AuthorBadges';
 import ResearchFieldBadge from 'components/Badges/ResearchFieldBadge/ResearchFieldBadge';
 import useDeletePapers from 'components/ViewPaper/hooks/useDeletePapers';
+import MarkFeatured from 'components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
+import MarkUnlisted from 'components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
+import useMarkFeaturedUnlisted from 'components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
 import ROUTES from 'constants/routes';
 import moment from 'moment';
 import { reverse } from 'named-urls';
@@ -25,6 +28,11 @@ const PaperHeader = props => {
     const dispatch = useDispatch();
     const userCreatedThisPaper = viewPaper.paperResource.created_by && userId && viewPaper.paperResource.created_by === userId; // make sure a user is signed in (not null)
     const showDeleteButton = props.editMode && (isCurationAllowed || userCreatedThisPaper);
+    const { isFeatured, isUnlisted, handleChangeStatus } = useMarkFeaturedUnlisted({
+        resourceId: viewPaper.paperResource.id,
+        unlisted: viewPaper.paperResource.unlisted,
+        featured: viewPaper.paperResource.featured
+    });
 
     useEffect(() => {
         if (!viewPaper.doi?.label) {
@@ -58,7 +66,13 @@ const PaperHeader = props => {
     return (
         <>
             <div className="d-flex align-items-start">
-                <h2 className="h4 mt-4 mb-3 flex-grow-1">{viewPaper.paperResource.label ? viewPaper.paperResource.label : <em>No title</em>}</h2>
+                <h2 className="h4 mt-4 mb-3 flex-grow-1">
+                    {viewPaper.paperResource.label ? viewPaper.paperResource.label : <em>No title</em>}{' '}
+                    <MarkFeatured size="xs" featured={isFeatured} handleChangeStatus={handleChangeStatus} />
+                    <div className="d-inline-block ms-1">
+                        <MarkUnlisted size="xs" unlisted={isUnlisted} handleChangeStatus={handleChangeStatus} />
+                    </div>
+                </h2>
                 {altMetrics && (
                     <div className="flex-shrink-0 me-2">
                         <small>

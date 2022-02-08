@@ -91,7 +91,7 @@ const ResearchFieldHeader = ({ id }) => {
                         titleAddition={
                             <>
                                 <SubtitleSeparator />
-                                <SubTitle>{researchFieldData.label}</SubTitle>
+                                <SubTitle>Research field</SubTitle>
                             </>
                         }
                         buttonGroup={
@@ -122,7 +122,7 @@ const ResearchFieldHeader = ({ id }) => {
                         }
                         wrap={false}
                     >
-                        Research field
+                        {researchFieldData.label}
                     </TitleBar>
 
                     <Container className="p-0">

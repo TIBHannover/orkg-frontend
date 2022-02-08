@@ -3,6 +3,42 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [V0.62](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.61...V0.62) - 2022-02-07
+
+### Changes
+
+- feat: Content curation features and show combined list of all content in research field/problem pages [`#632`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/632)
+- feat(Search): Add filter for content created by a user [`#754`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/754)
+- fix(SmartReview): Title doesn't remove line breaks from the label [`#772`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/772)
+- fix: Catch error if indexing contributions fail [`#767`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/767)
+- seo(UserProfile): set document title [`#760`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/760)
+- fix(LatestNews): Carousel indicators are not correctly displayed [`#762`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/762)
+- doc: Display a link to the help center to add Benchmark [`#763`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/763)
+- fix(SmartReview): set images in Markdown editor to max-width 100% [`#771`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/771)
+- fix(ContributionEditor): literal conversion tooltip not visible [`#765`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/765)
+- fix(Template): Property range field doesn't show the class name [`#766`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/766)
+- chore: Replace contact page link with helpdesk email in 503 page [`#768`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/768)
+- feat(LiteratureList): make list embeddable [`#744`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/744)
+
+---
+## [V0.61](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.60...V0.61) - 2022-01-26
+
+### Changes
+
+- fix(Comparison): view a resource within a context [`#761`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/761)
+- feat(Visualization): view visualization modal [`#739`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/739)
+
+---
+## [V0.60](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.59...V0.60) - 2022-01-24
+
+### Changes
+
+- feat: lookup paper metadata by title via Semantic Scholar [`#746`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/746)
+- fix: videos, replace bootstrap classes [`#759`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/759)
+- feat(Comparison): support showing single result when filtering [`#720`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/720)
+- feat(LiteratureList): support BibTeX export [`#748`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/748)
+
+---
 ## [V0.59](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.58...V0.59) - 2022-01-17
 
 ### Changes

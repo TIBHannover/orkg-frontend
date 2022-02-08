@@ -2,6 +2,8 @@ import App from './App';
 import { render, screen } from 'testUtils';
 import { history } from './store';
 
+jest.mock('react-responsive-tabs', () => ({ children }) => null);
+
 const setup = () => {
     render(<App history={history} />);
 };

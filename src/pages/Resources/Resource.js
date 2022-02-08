@@ -24,6 +24,9 @@ import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
 import env from '@beam-australia/react-env';
 import { getVisualization } from 'services/similarity';
 import GDCVisualizationRenderer from 'libs/selfVisModel/RenderingComponents/GDCVisualizationRenderer';
+import MarkFeatured from 'components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
+import MarkUnlisted from 'components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
+import useMarkFeaturedUnlisted from 'components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
 import { reverseWithSlug } from 'utils';
 import PapersWithCodeModal from 'components/PapersWithCodeModal/PapersWithCodeModal';
 import TitleBar from 'components/TitleBar/TitleBar';
@@ -112,6 +115,11 @@ function Resource(props) {
     const [canEdit, setCanEdit] = useState(false);
     const [createdBy, setCreatedBy] = useState(null);
     const [isOpenPWCModal, setIsOpenPWCModal] = useState(false);
+    const { isFeatured, isUnlisted, handleChangeStatus } = useMarkFeaturedUnlisted({
+        resourceId: props.match.params.id,
+        unlisted: resource.unlisted,
+        featured: resource.featured
+    });
 
     useEffect(() => {
         const findResource = async () => {
@@ -294,7 +302,11 @@ function Resource(props) {
                                             <i>
                                                 <small>No label</small>
                                             </i>
-                                        )}
+                                        )}{' '}
+                                        <MarkFeatured size="xs" featured={isFeatured} handleChangeStatus={handleChangeStatus} />
+                                        <div className="d-inline-block ms-1">
+                                            <MarkUnlisted size="xs" unlisted={isUnlisted} handleChangeStatus={handleChangeStatus} />
+                                        </div>
                                     </h3>
                                 </div>
                             ) : (

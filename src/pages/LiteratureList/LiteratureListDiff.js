@@ -5,7 +5,6 @@ import useLiteratureList from 'components/LiteratureList/hooks/useLiteratureList
 import ROUTES from 'constants/routes';
 import moment from 'moment';
 import { reverse } from 'named-urls';
-import React from 'react';
 
 const LiteratureListDiff = () => {
     const { literatureListToPlainText } = useDiff();

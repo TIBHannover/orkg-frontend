@@ -5,6 +5,7 @@ import ROUTES from 'constants/routes';
 
 const initialState = {
     articleId: null,
+    articleResource: null,
     paper: {},
     authorResources: [],
     contributionId: 0,
@@ -27,6 +28,7 @@ const review = (state = initialState, action) => {
         case type.ARTICLE_WRITER_LOAD: {
             const {
                 articleId,
+                articleResource,
                 paper,
                 authorResources,
                 sections,
@@ -42,6 +44,7 @@ const review = (state = initialState, action) => {
             return {
                 ...state,
                 articleId,
+                articleResource,
                 contributionId,
                 paper,
                 authorResources,

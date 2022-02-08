@@ -16,6 +16,7 @@ import RelatedResources from 'components/Comparison/RelatedResources/RelatedReso
 import RelatedFigures from 'components/Comparison/RelatedResources/RelatedFigures';
 import ExportCitation from 'components/Comparison/Export/ExportCitation';
 import ComparisonMetaData from 'components/Comparison/ComparisonMetaData';
+import MarkFeaturedUnlistedContainer from 'components/Comparison/MarkFeaturedUnlistedContainer';
 import Share from 'components/Comparison/Share.js';
 import HistoryModal from 'components/Comparison/HistoryModal/HistoryModal';
 import useComparisonVersions from 'components/Comparison/hooks/useComparisonVersions';
@@ -246,7 +247,7 @@ function Comparison(props) {
             </Helmet>
             <TitleBar
                 buttonGroup={
-                    contributionsList.length > 1 &&
+                    (contributionsList.length > 1 || (areAllRulesEmpty(filterControlData) && contributionsList.length > 0)) &&
                     !isLoadingComparisonResult &&
                     !isFailedLoadingComparisonResult && (
                         <>
@@ -514,7 +515,17 @@ function Comparison(props) {
                     {!isFailedLoadingMetaData && !isFailedLoadingComparisonResult && (
                         <div className="p-0 d-flex align-items-start">
                             <div className="flex-grow-1">
-                                <h2 className="h4 mb-4 mt-4">{metaData.title ? metaData.title : 'Compare'}</h2>
+                                <h2 className="h4 mb-4 mt-4">
+                                    {metaData.title ? metaData.title : 'Compare'}{' '}
+                                    {metaData.id && (
+                                        <MarkFeaturedUnlistedContainer
+                                            size="xs"
+                                            id={metaData?.id}
+                                            featured={metaData?.featured}
+                                            unlisted={metaData?.unlisted}
+                                        />
+                                    )}
+                                </h2>
 
                                 {!isFailedLoadingMetaData && <ComparisonMetaData metaData={metaData} />}
                             </div>
@@ -547,7 +558,7 @@ function Comparison(props) {
                                 </div>
                             )}
                             {!isLoadingComparisonResult ? (
-                                contributionsList.length > 1 ? (
+                                contributionsList.length > 1 || (areAllRulesEmpty(filterControlData) && contributionsList.length > 0) ? (
                                     <div className="mt-1">
                                         {integrateData({
                                             metaData,
