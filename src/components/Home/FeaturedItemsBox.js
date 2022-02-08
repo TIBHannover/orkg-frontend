@@ -18,8 +18,8 @@ const DEFAULT_CLASSES_FILTER = [
     /*
     {
         id: CLASSES.SMART_REVIEW_PUBLISHED,
-        label: 'SmartReviews',
-        tippyContent: 'SmartReviews are dynamic, community maintained scholarly articles and are especially suitable for survey papers.',
+        label: 'Reviews',
+        tippyContent: 'Reviews are dynamic, community maintained scholarly articles and are especially suitable for survey papers.',
         link: reverse(ROUTES.SMART_REVIEWS)
     },
     {

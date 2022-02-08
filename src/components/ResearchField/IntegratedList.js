@@ -17,7 +17,7 @@ const DEFAULT_CLASSES_FILTER = [
     { id: CLASSES.COMPARISON, label: 'Comparison' },
     { id: CLASSES.VISUALIZATION, label: 'Visualization' }
     /*
-    { id: CLASSES.SMART_REVIEW_PUBLISHED, label: 'SmartReview' },
+    { id: CLASSES.SMART_REVIEW_PUBLISHED, label: 'Review' },
     { id: CLASSES.LITERATURE_LIST_PUBLISHED, label: 'Literature list' }
     */
 ];

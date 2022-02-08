@@ -44,8 +44,8 @@ const DEFAULT_FILTERS = [
         isCreatedByActive: true
     },
     {
-        label: 'SmartReview',
-        labelPlural: 'SmartReviews',
+        label: 'Review',
+        labelPlural: 'Reviews',
         id: CLASSES.SMART_REVIEW_PUBLISHED,
         isCreatedByActive: true
     },

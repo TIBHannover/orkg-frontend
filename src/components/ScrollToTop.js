@@ -9,7 +9,7 @@ but preserves scroll position when previous page is visited */
 class ScrollToTop extends Component {
     componentDidUpdate(prevProps) {
         if (this.props.location !== prevProps.location) {
-            const excludePages = [ROUTES.VIEW_PAPER, ROUTES.FEATURED_COMPARISONS, ROUTES.SMART_REVIEW, ROUTES.RESEARCH_FIELD];
+            const excludePages = [ROUTES.VIEW_PAPER, ROUTES.FEATURED_COMPARISONS, ROUTES.REVIEW, ROUTES.LITERATURE_LIST, ROUTES.RESEARCH_FIELD];
             let preventScrollTop = false;
 
             for (const page of excludePages) {

@@ -1,7 +1,7 @@
 import ComparisonCard from 'components/ComparisonCard/ComparisonCard';
 import PaperCard from 'components/PaperCard/PaperCard';
 import VisualizationCard from 'components/VisualizationCard/VisualizationCard';
-import SmartReviewCard from 'components/SmartReviewCard/SmartReviewCard';
+import ReviewCard from 'components/ReviewCard/ReviewCard';
 import ListCard from 'components/LiteratureList/ListCard';
 import PropTypes from 'prop-types';
 import { useCallback } from 'react';
@@ -56,7 +56,7 @@ const CardFactory = ({ item, showBadge, showCurationFlags, showAddToComparison }
         );
     }
     if (findClass(CLASSES.SMART_REVIEW) || findClass(CLASSES.SMART_REVIEW_PUBLISHED)) {
-        return <SmartReviewCard versions={[item]} showBadge={showBadge} showCurationFlags={showCurationFlags} />;
+        return <ReviewCard versions={[item]} showBadge={showBadge} showCurationFlags={showCurationFlags} />;
     }
     if (findClass(CLASSES.LITERATURE_LIST) || findClass(CLASSES.LITERATURE_LIST_PUBLISHED)) {
         return <ListCard versions={[item]} showBadge={showBadge} showCurationFlags={showCurationFlags} />;

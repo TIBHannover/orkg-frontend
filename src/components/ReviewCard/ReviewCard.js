@@ -4,25 +4,25 @@ import styled from 'styled-components';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 import ROUTES from 'constants/routes.js';
-import RelativeBreadcrumbs from 'components/RelativeBreadcrumbs/RelativeBreadcrumbs';
-import Authors from 'components/PaperCard/Authors';
-import useCardData from 'components/ReviewCard/hooks/useCardData';
 import MarkFeatured from 'components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
 import MarkUnlisted from 'components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
+import RelativeBreadcrumbs from 'components/RelativeBreadcrumbs/RelativeBreadcrumbs';
 import useMarkFeaturedUnlisted from 'components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
+import Authors from 'components/PaperCard/Authors';
+import useCardData from './hooks/useCardData';
 import PropTypes from 'prop-types';
 import { CardBadge } from 'components/styled';
 import moment from 'moment';
 import Tippy from '@tippyjs/react';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
 
-const CardStyled = styled.div`
+const ReviewCardStyled = styled.div`
     &:last-child {
         border-bottom-right-radius: ${props => (props.rounded === 'true' ? '0 !important' : '')};
     }
 `;
 
-const ListCard = ({ versions, showBadge, showCurationFlags }) => {
+const ReviewCard = ({ versions, showCurationFlags, showBadge }) => {
     const { researchField, authors, isLoading: isLoadingMetaData } = useCardData({
         id: versions[0]?.id,
         initResearchField: versions[0]?.researchField,
@@ -36,7 +36,7 @@ const ListCard = ({ versions, showBadge, showCurationFlags }) => {
     });
 
     return (
-        <CardStyled style={{ flexWrap: 'wrap' }} className={`list-group-item d-flex py-3 pe-4 ${showCurationFlags ? ' ps-3  ' : ' ps-4  '}`}>
+        <ReviewCardStyled style={{ flexWrap: 'wrap' }} className={`list-group-item d-flex py-3 pe-4 ${showCurationFlags ? ' ps-3  ' : ' ps-4  '}`}>
             <div className="col-md-9 d-flex p-0">
                 {showCurationFlags && (
                     <div className="d-flex flex-column flex-shrink-0" style={{ width: '25px' }}>
@@ -50,10 +50,10 @@ const ListCard = ({ versions, showBadge, showCurationFlags }) => {
                 )}
                 <div className="d-flex flex-column flex-grow-1">
                     <div className="mb-2">
-                        <Link to={reverse(ROUTES.LITERATURE_LIST, { id: versions[0]?.id })}>{versions[0]?.label}</Link>
+                        <Link to={reverse(ROUTES.REVIEW, { id: versions[0]?.id })}>{versions[0]?.label}</Link>
                         {showBadge && (
                             <div className="d-inline-block ms-2">
-                                <CardBadge color="primary">Literature list</CardBadge>
+                                <CardBadge color="primary">Review</CardBadge>
                             </div>
                         )}
                     </div>
@@ -63,7 +63,7 @@ const ListCard = ({ versions, showBadge, showCurationFlags }) => {
                             {isLoadingMetaData && 'Loading...'}
                             {versions[0].created_at && (
                                 <>
-                                    <Icon size="sm" icon={faCalendar} className="ms-1 me-1" /> {moment(versions[0].created_at).format('DD-MM-YYYY')}
+                                    <Icon size="sm" icon={faCalendar} className="ms-2 me-1" /> {moment(versions[0].created_at).format('DD-MM-YYYY')}
                                 </>
                             )}
                         </small>
@@ -74,7 +74,7 @@ const ListCard = ({ versions, showBadge, showCurationFlags }) => {
                             {versions.map((version, index) => (
                                 <span key={version.id}>
                                     <Tippy content={version.description}>
-                                        <Link to={reverse(ROUTES.LITERATURE_LIST, { id: version.id })}>Version {versions.length - index}</Link>
+                                        <Link to={reverse(ROUTES.REVIEW, { id: version.id })}>Version {versions.length - index}</Link>
                                     </Tippy>{' '}
                                     {index < versions.length - 1 && ' • '}
                                 </span>
@@ -92,19 +92,19 @@ const ListCard = ({ versions, showBadge, showCurationFlags }) => {
                 </div>
                 <UserAvatar userId={versions[0]?.created_by} />
             </div>
-        </CardStyled>
+        </ReviewCardStyled>
     );
 };
 
-ListCard.propTypes = {
+ReviewCard.propTypes = {
     versions: PropTypes.array.isRequired,
     showBadge: PropTypes.bool.isRequired,
     showCurationFlags: PropTypes.bool.isRequired
 };
 
-ListCard.defaultProps = {
+ReviewCard.defaultProps = {
     showBadge: false,
     showCurationFlags: true
 };
 
-export default ListCard;
+export default ReviewCard;
