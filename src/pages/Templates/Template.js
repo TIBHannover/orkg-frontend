@@ -153,7 +153,7 @@ class Template extends Component {
                                     <DropdownToggle size="sm" color="secondary" className="px-3 rounded-end" style={{ marginLeft: 2 }}>
                                         <Icon icon={faEllipsisV} />
                                     </DropdownToggle>
-                                    <DropdownMenu right>
+                                    <DropdownMenu end>
                                         <DropdownItem tag={RouterNavLink} exact to={reverse(ROUTES.RESOURCE, { id: this.props.match.params.id })}>
                                             View resource
                                         </DropdownItem>

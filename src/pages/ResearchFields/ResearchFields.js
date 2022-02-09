@@ -53,7 +53,7 @@ const ResearchFields = () => {
                         <DropdownToggle size="sm" color="secondary" className="px-3 rounded-end" style={{ marginLeft: 2 }}>
                             <Icon icon={faEllipsisV} />
                         </DropdownToggle>
-                        <DropdownMenu right>
+                        <DropdownMenu end>
                             <DropdownItem tag={NavLink} exact to={reverse(ROUTES.RESOURCE, { id: MISC.RESEARCH_FIELD_MAIN })}>
                                 View resource
                             </DropdownItem>

@@ -133,7 +133,7 @@ class VenuePage extends Component {
                                     <DropdownToggle size="sm" color="secondary" className="px-3 rounded-end" style={{ marginLeft: 2 }}>
                                         <Icon icon={faEllipsisV} />
                                     </DropdownToggle>
-                                    <DropdownMenu right>
+                                    <DropdownMenu end>
                                         <DropdownItem tag={NavLink} exact to={reverse(ROUTES.RESOURCE, { id: this.props.match.params.venueId })}>
                                             View resource
                                         </DropdownItem>
