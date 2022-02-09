@@ -28,21 +28,36 @@ const ObservatoryBox = ({ provenance }) => {
     if (!provenance || !provenance.organization) {
         return null;
     }
+    console.log(provenance);
 
     return (
         <ObservatoryBoxStyled>
-            <Link to={reverse(ROUTES.OBSERVATORY, { id: provenance.id })} className="text-center">
-                {provenance.organization.logo && (
-                    <img
-                        className="p-2"
-                        src={provenance.organization.logo}
-                        alt={`${provenance.organization.name} logo`}
-                        style={{ maxWidth: 200, maxHeight: 60 }}
-                    />
-                )}
+            {provenance.id && (
+                <Link to={reverse(ROUTES.OBSERVATORY, { id: provenance.id })} className="text-center">
+                    {provenance.organization.logo && (
+                        <img
+                            className="p-2"
+                            src={provenance.organization.logo}
+                            alt={`${provenance.organization.name} logo`}
+                            style={{ maxWidth: 200, maxHeight: 60 }}
+                        />
+                    )}
 
-                {provenance && <div>{provenance.name}</div>}
-            </Link>
+                    {provenance && <div>{provenance.name}</div>}
+                </Link>
+            )}
+            {!provenance.id && provenance.organization.id && (
+                <Link to={reverse(ROUTES.ORGANIZATION, { id: provenance.organization.display_id })} className="text-center">
+                    {provenance.organization.logo && (
+                        <img
+                            className="p-2"
+                            src={provenance.organization.logo}
+                            alt={`${provenance.organization.name} logo`}
+                            style={{ maxWidth: 200, maxHeight: 60 }}
+                        />
+                    )}
+                </Link>
+            )}
         </ObservatoryBoxStyled>
     );
 };

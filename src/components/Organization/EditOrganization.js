@@ -1,8 +1,9 @@
 import { Component } from 'react';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Input, Label, FormGroup } from 'reactstrap';
-import { updateOrganizationName, updateOrganizationUrl, updateOrganizationLogo } from 'services/backend/organizations';
+import { updateOrganizationName, updateOrganizationUrl, updateOrganizationLogo, updateOrganizationType } from 'services/backend/organizations';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
+import Select from 'react-select';
 
 class EditOrganization extends Component {
     constructor(props) {
@@ -17,7 +18,10 @@ class EditOrganization extends Component {
             previewSrc: '',
             isLoadingName: false,
             isLoadingUrl: false,
-            isLoadingLogo: false
+            isLoadingLogo: false,
+            isLoadingType: false,
+            type: '',
+            options: [{ value: 'general', label: 'General' }, { value: 'conference', label: 'Conference' }, { value: 'journal', label: 'Journal' }]
         };
     }
 
@@ -32,6 +36,10 @@ class EditOrganization extends Component {
 
         if (prevProps.previewSrc !== this.props.previewSrc) {
             this.setState({ previewSrc: this.props.previewSrc });
+        }
+
+        if (prevProps.type !== this.props.type) {
+            this.setState({ type: this.props.type });
         }
     };
 
@@ -63,10 +71,12 @@ class EditOrganization extends Component {
         const image = this.state.previewSrc;
         const url = this.state.url;
         const id = this.props.id;
+        const type = this.props.type;
 
         let isUpdatedLabel = false;
         let isUpdatedImage = false;
         let isUpdatedUrl = false;
+        let isUpdatedType = false;
 
         toast.dismiss();
         const URL_REGEX = /[-a-zA-Z0-9@:%_+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_+.~#?&//=]*)?/gi;
@@ -87,6 +97,11 @@ class EditOrganization extends Component {
             return false;
         }
 
+        if (type !== this.props.type && type.length === 0) {
+            toast.error(`Please enter an organization type`);
+            return false;
+        }
+
         if (value !== this.props.label && value.length !== 0) {
             await this.updateOrganizationName(id, value);
             isUpdatedLabel = true;
@@ -102,12 +117,18 @@ class EditOrganization extends Component {
             isUpdatedImage = true;
         }
 
-        if (isUpdatedLabel || isUpdatedUrl || isUpdatedImage) {
+        if (type !== this.props.type && type.length !== 0) {
+            await this.updateOrganizationType(id, type);
+            isUpdatedType = true;
+        }
+
+        if (isUpdatedLabel || isUpdatedUrl || isUpdatedImage || isUpdatedType) {
             toast.success(`Organization updated successfully`);
             this.props.updateOrganizationMetadata(
                 value,
                 url,
-                image !== this.props.previewSrc && image.length !== 0 ? image[0] : this.props.previewSrc
+                image !== this.props.previewSrc && image.length !== 0 ? image[0] : this.props.previewSrc,
+                type
             );
             this.props.toggle();
         } else {
@@ -151,6 +172,18 @@ class EditOrganization extends Component {
         }
     };
 
+    updateOrganizationType = async (id, type) => {
+        this.setState({ isLoadingType: true });
+        try {
+            await updateOrganizationType(id, type);
+            this.setState({ isLoadingType: false });
+        } catch (error) {
+            this.setState({ isLoadingType: false });
+            console.error(error);
+            toast.error(`Error updating an organization ${error.message}`);
+        }
+    };
+
     render() {
         const isLoading = this.state.isLoadingName || this.state.isLoadingUrl || this.state.isLoadingLogo;
 
@@ -186,6 +219,21 @@ class EditOrganization extends Component {
                                 />
                             </FormGroup>
                             <FormGroup>
+                                <Label for="organizationType">Type</Label>
+                                <Select
+                                    onChange={e => {
+                                        this.setState({ type: e.value });
+                                    }}
+                                    className="basic-single"
+                                    classNamePrefix="select"
+                                    isClearable={true}
+                                    isSearchable={true}
+                                    name="organizationType"
+                                    options={this.state.options}
+                                    defaultValue={this.state.type}
+                                />
+                            </FormGroup>
+                            <FormGroup>
                                 <Label>Logo</Label>
                                 <div>
                                     <img src={this.state.previewSrc} style={{ width: '20%', height: '20%' }} alt="Organization logo" />
@@ -214,7 +262,8 @@ EditOrganization.propTypes = {
     id: PropTypes.string,
     url: PropTypes.string,
     previewSrc: PropTypes.string,
-    updateOrganizationMetadata: PropTypes.func.isRequired
+    updateOrganizationMetadata: PropTypes.func.isRequired,
+    type: PropTypes.string.isRequired
 };
 
 export default EditOrganization;

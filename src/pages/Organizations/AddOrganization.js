@@ -1,6 +1,6 @@
 import { Component } from 'react';
 import { Redirect } from 'react-router-dom';
-import { Container, Button, Form, FormGroup, Input, Label, InputGroup } from 'reactstrap';
+import { Container, Button, Form, FormGroup, Input, Label, InputGroup, InputGroupText } from 'reactstrap';
 import { toast } from 'react-toastify';
 import { createOrganization } from 'services/backend/organizations';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -15,6 +15,7 @@ import slugify from 'slugify';
 import ROUTES from 'constants/routes';
 import Tooltip from 'components/Utils/Tooltip';
 import TitleBar from 'components/TitleBar/TitleBar';
+import Select from 'react-select';
 
 class AddOrganization extends Component {
     constructor(props) {
@@ -27,7 +28,9 @@ class AddOrganization extends Component {
             display_id: '',
             permalink: '',
             logo: '',
-            editorState: 'edit'
+            editorState: 'edit',
+            options: [{ value: 'general', label: 'General' }, { value: 'conference', label: 'Conference' }, { value: 'journal', label: 'Journal' }],
+            organizationType: ''
         };
 
         this.publicOrganizationRoute = `${getPublicUrl()}${reverse(ROUTES.ORGANIZATION, { id: ' ' })}`;
@@ -39,7 +42,7 @@ class AddOrganization extends Component {
 
     createNewOrganization = async () => {
         this.setState({ editorState: 'loading' });
-        const { name, logo, website, permalink } = this.state;
+        const { name, logo, website, permalink, organizationType } = this.state;
 
         if (!name || name.length === 0) {
             toast.error(`Please enter an organization name`);
@@ -62,8 +65,14 @@ class AddOrganization extends Component {
             return;
         }
 
+        if (organizationType.length === 0) {
+            toast.error(`Please select an organization type`);
+            this.setState({ editorState: 'edit' });
+            return;
+        }
+
         try {
-            const responseJson = await createOrganization(name, logo[0], this.props.user.id, website, permalink);
+            const responseJson = await createOrganization(name, logo[0], this.props.user.id, website, permalink, organizationType);
             this.navigateToOrganization(responseJson.display_id);
         } catch (error) {
             this.setState({ editorState: 'edit' });
@@ -143,7 +152,7 @@ class AddOrganization extends Component {
                                         <Tooltip message="Permalink field allows to identify the organization page on ORKG in an easy-to-read form. Only underscores ( _ ), numbers, and letters are allowed." />
                                     </Label>
                                     <InputGroup>
-                                        {this.publicOrganizationRoute}
+                                        <InputGroupText>{this.publicOrganizationRoute}</InputGroupText>
                                         <Input
                                             onChange={this.handleChange}
                                             type="text"
@@ -156,7 +165,6 @@ class AddOrganization extends Component {
                                     </InputGroup>
                                 </div>
                             </FormGroup>
-
                             <FormGroup>
                                 <Label for="organizationWebsite">Website</Label>
                                 <Input
@@ -169,7 +177,20 @@ class AddOrganization extends Component {
                                     placeholder="https://www.example.com"
                                 />
                             </FormGroup>
-
+                            <FormGroup>
+                                <Label for="organizationType">Type</Label>
+                                <Select
+                                    onChange={e => {
+                                        this.setState({ organizationType: e.value });
+                                    }}
+                                    className="basic-single"
+                                    classNamePrefix="select"
+                                    isClearable={true}
+                                    isSearchable={true}
+                                    name="organizationType"
+                                    options={this.state.options}
+                                />
+                            </FormGroup>
                             <FormGroup>
                                 <Label for="organizationLogo">Logo</Label>
                                 <br />

@@ -32,6 +32,8 @@ import UserAvatar from 'components/UserAvatar/UserAvatar';
 import { slugify } from 'utils';
 import { PREDICATES, CLASSES, ENTITIES, MISC } from 'constants/graphSettings';
 import env from '@beam-australia/react-env';
+import Select from 'react-select';
+import { getOrganizationsByType } from 'services/backend/organizations';
 
 const StyledCustomInput = styled(Input)`
     margin-right: 0;
@@ -81,6 +83,9 @@ function Publish(props) {
     const [subject, setSubject] = useState(props.metaData && props.metaData.subject ? props.metaData.subject : undefined);
     const [comparisonCreators, setComparisonCreators] = useState(props.authors ?? []);
     const [anonymizeCreators, setAnonymizeCreators] = useState(false);
+    const [conferencesList, setConferencesList] = useState('');
+    const [conference, setConference] = useState('');
+
     const handleCreatorsChange = creators => {
         creators = creators ? creators : [];
         setComparisonCreators(creators);
@@ -92,6 +97,14 @@ function Publish(props) {
         setReferences(props.metaData?.references?.length > 0 ? props.metaData.references.map(r => r.label) : ['']);
         setSubject(props.metaData && props.metaData.subject ? props.metaData.subject : undefined);
         setComparisonCreators(props.authors ? props.authors : []);
+
+        const getConferencesList = () => {
+            getOrganizationsByType('conference').then(response => {
+                setConferencesList(response);
+                //console.log(response);
+            });
+        };
+        getConferencesList();
     }, [props.metaData, props.authors]);
 
     // TODO: improve code by using reduce function and unify code with paper edit dialog
@@ -168,6 +181,12 @@ function Publish(props) {
                     } else {
                         response_hash = props.responseHash;
                     }
+                    const observatoryId = '';
+                    let organizationId = '';
+                    if (conference) {
+                        console.log(conference);
+                        organizationId = conference;
+                    }
                     const comparison_obj = {
                         predicates: [],
                         resource: {
@@ -210,7 +229,9 @@ function Publish(props) {
                                         }
                                     ]
                                 })
-                            }
+                            },
+                            observatoryId: '00000000-0000-0000-0000-000000000000',
+                            organizationId: organizationId
                         }
                     };
                     const createdComparison = await createObject(comparison_obj);
@@ -509,6 +530,21 @@ function Publish(props) {
                                 openMenuOnFocus={false}
                                 allowCreate={false}
                                 inputId="research-field"
+                            />
+                        </FormGroup>
+                        <FormGroup>
+                            <Label for="conference">
+                                <Tooltip message="Select a conference">Conference</Tooltip>
+                            </Label>
+                            <Select
+                                options={conferencesList}
+                                onChange={e => {
+                                    setConference(e.id);
+                                }}
+                                getOptionValue={({ id }) => id}
+                                isSearchable={true}
+                                getOptionLabel={({ name }) => name}
+                                isClearable={true}
                             />
                         </FormGroup>
                         {!props.comparisonId && (

@@ -53,6 +53,7 @@ const OrganizationDetails = () => {
     const [logo, setLogo] = useState(null);
     const [createdBy, setCreatedBy] = useState(null);
     const [showEditDialog, setShowEditDialog] = useState(false);
+    const [type, setType] = useState(null);
     const { id } = useParams();
     const user = useSelector(state => state.auth.user);
 
@@ -68,6 +69,7 @@ const OrganizationDetails = () => {
                     setLogo(responseJson.logo);
                     setIsLoading(false);
                     setCreatedBy(responseJson.created_by);
+                    setType(responseJson.type);
                 })
                 .catch(error => {
                     setIsLoading(false);
@@ -77,10 +79,11 @@ const OrganizationDetails = () => {
         findOrg();
     }, [id]);
 
-    const updateOrganizationMetadata = (label, url, logo) => {
+    const updateOrganizationMetadata = (label, url, logo, type) => {
         setLabel(label);
         setURL(url);
         setLogo(logo);
+        setType(type);
     };
 
     return (
@@ -159,6 +162,7 @@ const OrganizationDetails = () => {
                 url={url}
                 previewSrc={logo}
                 updateOrganizationMetadata={updateOrganizationMetadata}
+                type={type}
             />
         </>
     );
