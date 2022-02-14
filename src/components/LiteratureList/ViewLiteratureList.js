@@ -60,7 +60,7 @@ const ViewLiteratureList = ({ isEmbedded }) => {
                     <header className="border-bottom">
                         <div className="d-flex mb-2 mt-4">
                             <h1 style={{ whiteSpace: 'pre-line' }}>{literatureList.title}</h1>
-                            {isPublished && (
+                            {isPublished && !isEmbedded && (
                                 <h2 className="h4 ms-2 mt-2">
                                     <MarkFeatured size="xs" featured={isFeatured} handleChangeStatus={handleChangeStatus} />
                                     <div className="d-inline-block ms-1">
