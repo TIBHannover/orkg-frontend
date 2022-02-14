@@ -43,8 +43,8 @@ class SignIn extends Component {
             .then(token => {
                 userToken = token.access_token;
                 cookies.set('token', token.access_token, { path: env('PUBLIC_URL'), maxAge: token.expires_in });
-                token_expires_in = new Date(Date.now() + token.expires_in * 1000);
-                cookies.set('token_expires_in', token_expires_in.toUTCString(), { path: env('PUBLIC_URL'), maxAge: token.expires_in });
+                token_expires_in = new Date(Date.now() + token.expires_in * 1000).toUTCString();
+                cookies.set('token_expires_in', token_expires_in, { path: env('PUBLIC_URL'), maxAge: token.expires_in });
                 //window.location.reload();
                 return getUserInformation();
             })
