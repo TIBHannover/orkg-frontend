@@ -83,8 +83,8 @@ function AutocompletePaperTitle({ value, onChange, onOptionClick, performExistin
         }
     };
 
-    const noOptionsMessage = input => (input.length >= MIN_INPUT_LENGTH ? 'No options' : 'Search by title input must be at least 3 characters');
-
+    const noOptionsMessage = input =>
+        input?.inputValue?.length >= MIN_INPUT_LENGTH ? 'No options' : 'Search by title input must be at least 3 characters';
     const customStyles = {
         control: (provided, state) => ({
             ...provided,
