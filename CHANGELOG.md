@@ -3,6 +3,22 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [V0.62.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.62...V0.62.1) - 2022-02-15
+
+### Changes
+
+- ux(EditModeHeader): animate show and hide [`#781`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/781)
+- fix(Auth): fix non-serializable tokenExpire [`#779`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/779)
+- fix(Autocomplete): String exact match for instances of a class [`#775`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/775)
+- fix(CombinedList): Sort comparison versions correctly [`#780`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/780)
+- fix(LiteratureList): hide curation buttons [`#778`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/778)
+- fix: no options in paper title input field [`#776`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/776)
+- fix: Contributor tooltip doesn't show the number of papers [`#774`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/774)
+- fix(StatementBrowser): Toast message of updating a label [`#773`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/773)
+- ui(Comparison): move position 'add contribution' button [`#777`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/777)
+- refactor(Reviews): rename SmartReviews to reviews [`#758`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/758)
+
+---
 ## [V0.62](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.61...V0.62) - 2022-02-07
 
 ### Changes
