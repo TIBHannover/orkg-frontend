@@ -16,6 +16,11 @@ import ROUTES from 'constants/routes';
 import Tooltip from 'components/Utils/Tooltip';
 import TitleBar from 'components/TitleBar/TitleBar';
 import Select from 'react-select';
+import styled from 'styled-components';
+
+const StyledCustomInput = styled(Input)`
+    margin-right: 0;
+`;
 
 class AddOrganization extends Component {
     constructor(props) {
@@ -30,7 +35,9 @@ class AddOrganization extends Component {
             logo: '',
             editorState: 'edit',
             options: [{ value: 'general', label: 'General' }, { value: 'conference', label: 'Conference' }, { value: 'journal', label: 'Journal' }],
-            organizationType: ''
+            organizationType: '',
+            date: '',
+            isDoubleBlind: false
         };
 
         this.publicOrganizationRoute = `${getPublicUrl()}${reverse(ROUTES.ORGANIZATION, { id: ' ' })}`;
@@ -42,7 +49,9 @@ class AddOrganization extends Component {
 
     createNewOrganization = async () => {
         this.setState({ editorState: 'loading' });
-        const { name, logo, website, permalink, organizationType } = this.state;
+        const { name, logo, website, permalink, organizationType, date, isDoubleBlind } = this.state;
+        const metadata = { date: null, is_double_blind: false };
+        console.log(isDoubleBlind);
 
         if (!name || name.length === 0) {
             toast.error(`Please enter an organization name`);
@@ -71,8 +80,20 @@ class AddOrganization extends Component {
             return;
         }
 
+        if (organizationType === 'conference') {
+            if (date.length === 0) {
+                toast.error(`Please select conference date`);
+                this.setState({ editorState: 'edit' });
+                return;
+            } else {
+                metadata.date = date;
+                //console.log(isDoubledBlind);
+                metadata.is_double_blind = isDoubleBlind;
+            }
+        }
+
         try {
-            const responseJson = await createOrganization(name, logo[0], this.props.user.id, website, permalink, organizationType);
+            const responseJson = await createOrganization(name, logo[0], this.props.user.id, website, permalink, organizationType, metadata);
             this.navigateToOrganization(responseJson.display_id);
         } catch (error) {
             this.setState({ editorState: 'edit' });
@@ -181,7 +202,7 @@ class AddOrganization extends Component {
                                 <Label for="organizationType">Type</Label>
                                 <Select
                                     onChange={e => {
-                                        this.setState({ organizationType: e.value });
+                                        this.setState({ organizationType: e ? e.value : '' });
                                     }}
                                     className="basic-single"
                                     classNamePrefix="select"
@@ -191,6 +212,39 @@ class AddOrganization extends Component {
                                     options={this.state.options}
                                 />
                             </FormGroup>
+                            {this.state.organizationType === 'conference' && (
+                                <>
+                                    <FormGroup>
+                                        <Label for="conferenceDate">Conference date</Label>
+                                        <Input
+                                            onChange={this.handleChange}
+                                            type="date"
+                                            name="date"
+                                            id="conferenceDate"
+                                            value={this.state.date}
+                                            placeholder="yyyy-mm-dd"
+                                        />
+                                    </FormGroup>
+                                    <FormGroup>
+                                        <div>
+                                            <StyledCustomInput
+                                                onChange={e => {
+                                                    console.log(e.target.checked);
+                                                    this.setState({ isDoubleBlind: e.target.checked });
+                                                }}
+                                                checked={this.state.isDoubleBlind}
+                                                id="doubleBlind"
+                                                type="switch"
+                                                name="customSwitch"
+                                                label="Double blind"
+                                            />{' '}
+                                            <Label for="doubleBlind" className="mb-0">
+                                                Double blind
+                                            </Label>
+                                        </div>
+                                    </FormGroup>
+                                </>
+                            )}
                             <FormGroup>
                                 <Label for="organizationLogo">Logo</Label>
                                 <br />
