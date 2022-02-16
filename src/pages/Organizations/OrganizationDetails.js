@@ -54,6 +54,7 @@ const OrganizationDetails = () => {
     const [createdBy, setCreatedBy] = useState(null);
     const [showEditDialog, setShowEditDialog] = useState(false);
     const [type, setType] = useState(null);
+    const [metadata, setMetadata] = useState(null);
     const { id } = useParams();
     const user = useSelector(state => state.auth.user);
 
@@ -70,6 +71,7 @@ const OrganizationDetails = () => {
                     setIsLoading(false);
                     setCreatedBy(responseJson.created_by);
                     setType(responseJson.type);
+                    setMetadata(responseJson.metadata);
                 })
                 .catch(error => {
                     setIsLoading(false);
@@ -144,6 +146,13 @@ const OrganizationDetails = () => {
                                         </Col>
                                     )}
                                 </Row>
+                                {type === 'conference' && metadata && (
+                                    <>
+                                        {/* {console.log(metadata)} */}
+                                        <b>Conference date</b>: {metadata.date ? metadata.date : ''} <br />
+                                        <b>Review Process</b>: {metadata.is_double_blind ? 'Double-blind' : 'Single-blind'}
+                                    </>
+                                )}
                             </StyledOrganizationHeader>
                             <hr className="m-0" />
                             <CardBody>
