@@ -82,7 +82,7 @@ function Publish(props) {
     );
     const [subject, setSubject] = useState(props.metaData && props.metaData.subject ? props.metaData.subject : undefined);
     const [comparisonCreators, setComparisonCreators] = useState(props.authors ?? []);
-    const [anonymizeCreators, setAnonymizeCreators] = useState(false);
+    //const [anonymizeCreators, setAnonymizeCreators] = useState(false);
     const [conferencesList, setConferencesList] = useState('');
     const [conference, setConference] = useState('');
 
@@ -181,11 +181,10 @@ function Publish(props) {
                     } else {
                         response_hash = props.responseHash;
                     }
-                    const observatoryId = '';
                     let organizationId = '';
                     if (conference) {
                         console.log(conference);
-                        organizationId = conference;
+                        organizationId = conference.id;
                     }
                     const comparison_obj = {
                         predicates: [],
@@ -235,15 +234,15 @@ function Publish(props) {
                         }
                     };
                     const createdComparison = await createObject(comparison_obj);
-                    if (!anonymizeCreators) {
-                        await saveCreators(comparisonCreators, createdComparison.id);
-                    }
+                    //if (!anonymizeCreators) {
+                    await saveCreators(comparisonCreators, createdComparison.id);
+                    //}
                     await createResourceData({
                         resourceId: createdComparison.id,
                         data: { url: `${props.comparisonURLConfig}&response_hash=${response_hash}` }
                     });
-                    if (anonymizeCreators) {
-                        const anonymizeLiteral = await createLiteral(anonymizeCreators);
+                    if (conference && conference.metadata.is_double_blind) {
+                        const anonymizeLiteral = await createLiteral(true);
                         await createLiteralStatement(createdComparison.id, PREDICATES.ISANONYMIZE, anonymizeLiteral.id);
                     }
                     //await createResourceStatement(createdComparison.id, PREDICATES.HAS_AUTHOR, );
@@ -539,7 +538,8 @@ function Publish(props) {
                             <Select
                                 options={conferencesList}
                                 onChange={e => {
-                                    setConference(e.id);
+                                    console.log(e);
+                                    setConference(e);
                                 }}
                                 getOptionValue={({ id }) => id}
                                 isSearchable={true}
@@ -547,57 +547,31 @@ function Publish(props) {
                                 isClearable={true}
                             />
                         </FormGroup>
-                        {!props.comparisonId && (
-                            <FormGroup>
-                                <div>
-                                    <Tooltip message="By selecting this option creators will not be allowed to add their names">
-                                        <StyledCustomInput
-                                            onChange={e => {
-                                                setAnonymizeCreators(e.target.checked);
-                                            }}
-                                            checked={anonymizeCreators}
-                                            id="switchAnonymizeCreators"
-                                            type="switch"
-                                            name="customSwitch"
-                                            inline
-                                            label="Anonymize creators"
-                                        />{' '}
-                                        <Label for="switchAnonymizeCreators" className="mb-0">
-                                            Anonymize Creators
-                                        </Label>
-                                    </Tooltip>
-                                </div>
-                            </FormGroup>
-                        )}
-                        {!anonymizeCreators && (
-                            <FormGroup>
-                                <Label for="Creator">
-                                    <Tooltip message="The creator or creators of the comparison. Enter both the first and last name">
-                                        Creators
-                                    </Tooltip>
-                                </Label>
-                                {!props.doi && (!props.comparisonId || props.authors.length === 0) && (
-                                    <AuthorsInput
-                                        disabled={Boolean(comparisonCreators.length > 0)}
-                                        itemLabel="creator"
-                                        handler={handleCreatorsChange}
-                                        value={comparisonCreators}
-                                    />
-                                )}
-                                {!props.doi &&
-                                    props.comparisonId &&
-                                    props.authors.length !== 0 &&
-                                    props.authors.map((creator, index) => (
-                                        <AuthorTag key={`creator${index}`}>
-                                            <div className="name">
-                                                {creator.label}
-                                                {creator.orcid && <Icon style={{ margin: '4px' }} icon={faOrcid} />}
-                                            </div>
-                                        </AuthorTag>
-                                    ))}
-                            </FormGroup>
-                        )}
-                        {!props.comparisonId && !anonymizeCreators && (
+                        <FormGroup>
+                            <Label for="Creator">
+                                <Tooltip message="The creator or creators of the comparison. Enter both the first and last name">Creators</Tooltip>
+                            </Label>
+                            {!props.doi && (!props.comparisonId || props.authors.length === 0) && (
+                                <AuthorsInput
+                                    disabled={Boolean(comparisonCreators.length > 0)}
+                                    itemLabel="creator"
+                                    handler={handleCreatorsChange}
+                                    value={comparisonCreators}
+                                />
+                            )}
+                            {!props.doi &&
+                                props.comparisonId &&
+                                props.authors.length !== 0 &&
+                                props.authors.map((creator, index) => (
+                                    <AuthorTag key={`creator${index}`}>
+                                        <div className="name">
+                                            {creator.label}
+                                            {creator.orcid && <Icon style={{ margin: '4px' }} icon={faOrcid} />}
+                                        </div>
+                                    </AuthorTag>
+                                ))}
+                        </FormGroup>
+                        {!props.comparisonId && (!conference || !conference.metadata.is_double_blind) && (
                             <FormGroup>
                                 <div>
                                     <Tooltip message="A DOI will be assigned to published comparison and it cannot be changed in future.">

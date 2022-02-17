@@ -516,7 +516,7 @@ function Comparison(props) {
                             <div className="flex-grow-1">
                                 <h2 className="h4 mb-4 mt-4">{metaData.title ? metaData.title : 'Compare'}</h2>
 
-                                {!isFailedLoadingMetaData && <ComparisonMetaData metaData={metaData} />}
+                                {!isFailedLoadingMetaData && provenance && <ComparisonMetaData metaData={metaData} provenance={provenance} />}
                             </div>
 
                             {metaData.id && provenance && <ObservatoryBox provenance={provenance} />}
@@ -651,6 +651,7 @@ function Comparison(props) {
                     showDialog={showComparisonVersions}
                 />
             )}
+            {console.log(metaData?.anonymized)}
             <Publish
                 showDialog={showPublishDialog}
                 toggle={() => setShowPublishDialog(v => !v)}
