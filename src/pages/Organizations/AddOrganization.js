@@ -51,7 +51,6 @@ class AddOrganization extends Component {
         this.setState({ editorState: 'loading' });
         const { name, logo, website, permalink, organizationType, date, isDoubleBlind } = this.state;
         const metadata = { date: null, is_double_blind: false };
-        console.log(isDoubleBlind);
 
         if (!name || name.length === 0) {
             toast.error(`Please enter an organization name`);
@@ -87,7 +86,6 @@ class AddOrganization extends Component {
                 return;
             } else {
                 metadata.date = date;
-                //console.log(isDoubledBlind);
                 metadata.is_double_blind = isDoubleBlind;
             }
         }
@@ -229,7 +227,6 @@ class AddOrganization extends Component {
                                         <div>
                                             <StyledCustomInput
                                                 onChange={e => {
-                                                    console.log(e.target.checked);
                                                     this.setState({ isDoubleBlind: e.target.checked });
                                                 }}
                                                 checked={this.state.isDoubleBlind}

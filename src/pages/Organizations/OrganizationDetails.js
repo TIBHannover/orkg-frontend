@@ -148,7 +148,6 @@ const OrganizationDetails = () => {
                                 </Row>
                                 {type === 'conference' && metadata && (
                                     <>
-                                        {/* {console.log(metadata)} */}
                                         <b>Conference date</b>: {metadata.date ? metadata.date : ''} <br />
                                         <b>Review Process</b>: {metadata.is_double_blind ? 'Double-blind' : 'Single-blind'}
                                     </>
