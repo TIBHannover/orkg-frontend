@@ -651,7 +651,6 @@ function Comparison(props) {
                     showDialog={showComparisonVersions}
                 />
             )}
-            {console.log(metaData?.anonymized)}
             <Publish
                 showDialog={showPublishDialog}
                 toggle={() => setShowPublishDialog(v => !v)}

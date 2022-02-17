@@ -250,7 +250,6 @@ function useComparison({ id }) {
         } else if (organization_id && organization_id !== MISC.UNKNOWN_ID && observatory_id && observatory_id === MISC.UNKNOWN_ID) {
             getOrganization(organization_id)
                 .then(organization => {
-                    console.log(organization);
                     setProvenance({ organization: organization });
                 })
                 .catch(() => {

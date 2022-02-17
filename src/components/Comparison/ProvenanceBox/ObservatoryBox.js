@@ -28,7 +28,6 @@ const ObservatoryBox = ({ provenance }) => {
     if (!provenance || !provenance.organization) {
         return null;
     }
-    console.log(provenance);
 
     return (
         <ObservatoryBoxStyled>

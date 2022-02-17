@@ -82,7 +82,6 @@ function Publish(props) {
     );
     const [subject, setSubject] = useState(props.metaData && props.metaData.subject ? props.metaData.subject : undefined);
     const [comparisonCreators, setComparisonCreators] = useState(props.authors ?? []);
-    //const [anonymizeCreators, setAnonymizeCreators] = useState(false);
     const [conferencesList, setConferencesList] = useState('');
     const [conference, setConference] = useState('');
 
@@ -101,7 +100,6 @@ function Publish(props) {
         const getConferencesList = () => {
             getOrganizationsByType('conference').then(response => {
                 setConferencesList(response);
-                //console.log(response);
             });
         };
         getConferencesList();
@@ -183,7 +181,6 @@ function Publish(props) {
                     }
                     let organizationId = '';
                     if (conference) {
-                        console.log(conference);
                         organizationId = conference.id;
                     }
                     const comparison_obj = {
@@ -234,9 +231,7 @@ function Publish(props) {
                         }
                     };
                     const createdComparison = await createObject(comparison_obj);
-                    //if (!anonymizeCreators) {
                     await saveCreators(comparisonCreators, createdComparison.id);
-                    //}
                     await createResourceData({
                         resourceId: createdComparison.id,
                         data: { url: `${props.comparisonURLConfig}&response_hash=${response_hash}` }
@@ -245,7 +240,6 @@ function Publish(props) {
                         const anonymizeLiteral = await createLiteral(true);
                         await createLiteralStatement(createdComparison.id, PREDICATES.ISANONYMIZE, anonymizeLiteral.id);
                     }
-                    //await createResourceStatement(createdComparison.id, PREDICATES.HAS_AUTHOR, );
                     toast.success('Comparison saved successfully');
                     // Assign a DOI
                     if (assignDOI) {
@@ -538,7 +532,6 @@ function Publish(props) {
                             <Select
                                 options={conferencesList}
                                 onChange={e => {
-                                    console.log(e);
                                     setConference(e);
                                 }}
                                 getOptionValue={({ id }) => id}
