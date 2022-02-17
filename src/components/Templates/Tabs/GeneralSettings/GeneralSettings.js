@@ -99,8 +99,8 @@ const GeneralSettings = () => {
                 {editMode && <FormText>Specify the class of this template. If not specified, a class is generated automatically.</FormText>}
             </FormGroup>
             <>
-                <fieldset className="scheduler-border">
-                    <legend className="scheduler-border">Template use cases</legend>
+                <fieldset className="scheduler-border p-3">
+                    <legend className="mt-3">Template use cases</legend>
                     <p>
                         <small className="text-muted">
                             These fields are optional, the property is used to link the contribution resource to the template instance. The research
