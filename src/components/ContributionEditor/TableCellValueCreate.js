@@ -219,6 +219,7 @@ const TableCellValueCreate = ({ isVisible, contributionId, propertyId, isEmptyCe
                                 ]}
                             />
                         }
+                        appendTo={document.body}
                         interactive={true}
                         trigger="manual"
                         placement="top"

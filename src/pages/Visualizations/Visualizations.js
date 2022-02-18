@@ -1,9 +1,9 @@
+import { getStatementsBySubjects } from 'services/backend/statements';
 import ListPage from 'components/ListPage/ListPage';
 import VisualizationCard from 'components/VisualizationCard/VisualizationCard';
 import { CLASSES } from 'constants/graphSettings';
 import { find } from 'lodash';
 import { getResourcesByClass } from 'services/backend/resources';
-import { getStatementsBySubjects } from 'services/backend/statements';
 import { getVisualizationData } from 'utils';
 
 const Visualizations = () => {

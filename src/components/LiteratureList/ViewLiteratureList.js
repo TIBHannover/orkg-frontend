@@ -8,6 +8,9 @@ import PaperCard from 'components/PaperCard/PaperCard';
 import { CLASSES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import MarkdownRenderer from 'components/ArticleBuilder/MarkdownEditor/MarkdownRenderer';
+import MarkFeatured from 'components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
+import MarkUnlisted from 'components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
+import useMarkFeaturedUnlisted from 'components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
@@ -18,6 +21,7 @@ import { historyModalToggled } from 'slices/literatureListSlice';
 const ViewLiteratureList = ({ isEmbedded }) => {
     const { id } = useParams();
     const literatureList = useSelector(state => state.literatureList.literatureList);
+    const listResource = useSelector(state => state.literatureList.listResource);
     const authors = useSelector(state => state.literatureList.authorResources);
     const sections = useSelector(state => state.literatureList.sections);
     const isPublished = useSelector(state => state.literatureList.isPublished);
@@ -28,6 +32,12 @@ const ViewLiteratureList = ({ isEmbedded }) => {
     const latestVersionId = versions?.[0]?.id;
     const newVersionAvailable = isPublished && latestVersionId !== id;
     const toggleHistoryModal = () => dispatch(historyModalToggled());
+
+    const { isFeatured, isUnlisted, handleChangeStatus } = useMarkFeaturedUnlisted({
+        resourceId: id,
+        unlisted: listResource?.unlisted,
+        featured: listResource?.featured
+    });
 
     return (
         <Container className="embed-only p-0 position-relative">
@@ -48,9 +58,17 @@ const ViewLiteratureList = ({ isEmbedded }) => {
             <main>
                 <SectionStyled className="box rounded">
                     <header className="border-bottom">
-                        <h1 className="mb-2 mt-4" style={{ whiteSpace: 'pre-line' }}>
-                            {literatureList.title}
-                        </h1>
+                        <div className="d-flex mb-2 mt-4">
+                            <h1 style={{ whiteSpace: 'pre-line' }}>{literatureList.title}</h1>
+                            {isPublished && !isEmbedded && (
+                                <h2 className="h4 ms-2 mt-2">
+                                    <MarkFeatured size="xs" featured={isFeatured} handleChangeStatus={handleChangeStatus} />
+                                    <div className="d-inline-block ms-1">
+                                        <MarkUnlisted size="xs" unlisted={isUnlisted} handleChangeStatus={handleChangeStatus} />
+                                    </div>
+                                </h2>
+                            )}
+                        </div>
                         <div className="my-3">
                             <ResearchFieldBadge researchField={researchField} />
                             <AuthorBadges authors={authors} />{' '}
@@ -72,6 +90,7 @@ const ViewLiteratureList = ({ isEmbedded }) => {
                                         {section.entries.map(entry => (
                                             <ListGroupItem key={entry.statementId} className="p-0">
                                                 <PaperCard
+                                                    showCurationFlags={false}
                                                     linkTarget={isEmbedded ? '_blank' : undefined}
                                                     isListGroupItem={false}
                                                     showBreadcrumbs={false}

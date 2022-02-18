@@ -91,7 +91,7 @@ const DraftComparisons = () => {
             {(draftComparisons.length > 0 || isLoading) && (
                 <ListGroup className="mb-3 box">
                     {draftComparisons.map(draftComparison => (
-                        <ListGroupItem key={draftComparison.id} className="d-flex justify-content-between align-items-center py-2">
+                        <ListGroupItem key={draftComparison.id} className="d-flex justify-content-between align-items-center px-4 py-3">
                             <div>
                                 <Link to={reverse(ROUTES.COMPARISON) + draftComparison.url}>{draftComparison.label}</Link> <br />
                                 <small>

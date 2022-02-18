@@ -1,7 +1,7 @@
 import TitleBar from 'components/TitleBar/TitleBar';
 import DraftComparisons from 'components/UserSettings/DraftComparisons/DraftComparisons';
 import DraftLiteratureLists from 'components/UserSettings/DraftLiteratureLists/DraftLiteratureLists';
-import DraftSmartReviews from 'components/UserSettings/DraftSmartReviews/DraftSmartReviews';
+import DraftReviews from 'components/UserSettings/DraftReviews/DraftReviews';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import { useEffect, useState } from 'react';
@@ -24,7 +24,7 @@ export const StyledSettingsMenu = styled.div`
         border-radius: ${props => props.theme.borderRadius};
         cursor: pointer;
         width: 100%;
-        text-decoration: none;
+        text-decoration: none !important;
         color: inherit;
 
         &.active,
@@ -42,7 +42,7 @@ const TABS = {
     GENERAL: 'general',
     PASSWORD: 'password',
     DRAFT_COMPARISONS: 'draft-comparisons',
-    DRAFT_SMART_REVIEWS: 'draft-smart-reviews',
+    DRAFT_REVIEWS: 'draft-reviews',
     DRAFT_LITERATURE_LISTS: 'draft-literature-lists'
 };
 
@@ -82,10 +82,10 @@ const UserSettings = () => {
                                     Draft comparisons
                                 </Link>
                                 <Link
-                                    to={reverse(ROUTES.USER_SETTINGS, { tab: TABS.DRAFT_SMART_REVIEWS })}
-                                    className={activeTab === TABS.DRAFT_SMART_REVIEWS ? 'active' : ''}
+                                    to={reverse(ROUTES.USER_SETTINGS, { tab: TABS.DRAFT_REVIEWS })}
+                                    className={activeTab === TABS.DRAFT_REVIEWS ? 'active' : ''}
                                 >
-                                    Draft SmartReviews
+                                    Draft reviews
                                 </Link>
                                 <Link
                                     to={reverse(ROUTES.USER_SETTINGS, { tab: TABS.DRAFT_LITERATURE_LISTS })}
@@ -110,7 +110,7 @@ const UserSettings = () => {
 
                         {activeTab === TABS.DRAFT_COMPARISONS && <DraftComparisons />}
 
-                        {activeTab === TABS.DRAFT_SMART_REVIEWS && <DraftSmartReviews />}
+                        {activeTab === TABS.DRAFT_REVIEWS && <DraftReviews />}
 
                         {activeTab === TABS.DRAFT_LITERATURE_LISTS && <DraftLiteratureLists />}
                     </div>

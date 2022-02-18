@@ -1,6 +1,6 @@
 import { Component } from 'react';
 import { Redirect } from 'react-router-dom';
-import { Container, Button, Form, FormGroup, Input, Label, InputGroup, InputGroupText } from 'reactstrap';
+import { Container, Button, Form, FormGroup, Input, Label, InputGroup } from 'reactstrap';
 import { toast } from 'react-toastify';
 import { createOrganization } from 'services/backend/organizations';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -171,7 +171,7 @@ class AddOrganization extends Component {
                                         <Tooltip message="Permalink field allows to identify the organization page on ORKG in an easy-to-read form. Only underscores ( _ ), numbers, and letters are allowed." />
                                     </Label>
                                     <InputGroup>
-                                        <InputGroupText>{this.publicOrganizationRoute}</InputGroupText>
+                                        <span className="input-group-text">{this.publicOrganizationRoute}</span>
                                         <Input
                                             onChange={this.handleChange}
                                             type="text"

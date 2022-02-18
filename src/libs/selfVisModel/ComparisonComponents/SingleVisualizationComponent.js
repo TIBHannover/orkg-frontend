@@ -4,6 +4,7 @@ import { Chart } from 'react-google-charts';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faCalendar, faUser, faLink } from '@fortawesome/free-solid-svg-icons';
 import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
+import MarkFeaturedUnlistedContainer from 'components/Comparison/MarkFeaturedUnlistedContainer';
 import moment from 'moment';
 import Tippy from '@tippyjs/react';
 import ROUTES from 'constants/routes.js';
@@ -127,43 +128,59 @@ const SingleVisualizationComponent = props => {
                                 <b>Description:</b> <br /> <span>{props.input.description ? props.input.description : 'No Description'}</span>{' '}
                             </div>
                             <div className="col-6 p-2 mb-2">
-                                <b>Meta Information:</b> <br />
-                                <div className="mb-2">
+                                <b>Meta Information:</b>{' '}
+                                <MarkFeaturedUnlistedContainer
+                                    size="1x"
+                                    id={props.input.id}
+                                    featured={props.input?.featured}
+                                    unlisted={props.input?.unlisted}
+                                />
+                                <div className="mt-2 mb-2">
                                     <i>Created on: </i>
-                                    <span className="badge badge-light me-2">
+                                    <span className="badge bg-light me-2">
                                         <Icon icon={faCalendar} className="text-primary" />{' '}
                                         {props.input.created_at ? moment(props.input.created_at).format('dddd, MMMM Do YYYY') : ''}
                                     </span>
                                 </div>
-                                {props.input.authors && props.input.authors.length > 0 && (
+                                <div className="col-6 p-2 mb-2">
+                                    <b>Meta Information:</b> <br />
                                     <div className="mb-2">
-                                        <i>Created by: </i>
-                                        {props.input.authors.map(author => {
-                                            if (author && author.class === ENTITIES.RESOURCE) {
-                                                return (
-                                                    <Link
-                                                        className="d-inline-block me-2 mb-2"
-                                                        to={reverse(ROUTES.AUTHOR_PAGE, { authorId: author.id })}
-                                                        key={`author${author.id}`}
-                                                    >
-                                                        <Badge color="light">
-                                                            <Icon icon={faUser} className="text-primary" /> {author.label}
-                                                        </Badge>
-                                                    </Link>
-                                                );
-                                            } else {
-                                                return (
-                                                    <Badge key={`author${author.id}`} color="light" className="me-2 mb-2">
-                                                        <Icon icon={faUser} /> {author.label}
-                                                    </Badge>
-                                                );
-                                            }
-                                        })}
+                                        <i>Created on: </i>
+                                        <span className="badge badge-light me-2">
+                                            <Icon icon={faCalendar} className="text-primary" />{' '}
+                                            {props.input.created_at ? moment(props.input.created_at).format('dddd, MMMM Do YYYY') : ''}
+                                        </span>
                                     </div>
-                                )}
+                                    {props.input.authors && props.input.authors.length > 0 && (
+                                        <div className="mb-2">
+                                            <i>Created by: </i>
+                                            {props.input.authors.map(author => {
+                                                if (author && author.class === ENTITIES.RESOURCE) {
+                                                    return (
+                                                        <Link
+                                                            className="d-inline-block me-2 mb-2"
+                                                            to={reverse(ROUTES.AUTHOR_PAGE, { authorId: author.id })}
+                                                            key={`author${author.id}`}
+                                                        >
+                                                            <Badge color="light">
+                                                                <Icon icon={faUser} className="text-primary" /> {author.label}
+                                                            </Badge>
+                                                        </Link>
+                                                    );
+                                                } else {
+                                                    return (
+                                                        <Badge key={`author${author.id}`} color="light" className="me-2 mb-2">
+                                                            <Icon icon={faUser} /> {author.label}
+                                                        </Badge>
+                                                    );
+                                                }
+                                            })}
+                                        </div>
+                                    )}
+                                </div>
                             </div>
+                            {!isHovering && <div style={{ width: windowWidth - 20 + 'px', height: windowHeight - 50 + 'px' }} />}
                         </div>
-                        {!isHovering && <div style={{ width: windowWidth - 20 + 'px', height: windowHeight - 50 + 'px' }} />}
                     </div>
                 }
             >

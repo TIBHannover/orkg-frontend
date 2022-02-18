@@ -139,7 +139,7 @@ function Autocomplete(props) {
         }
         let responseJson;
         if (props.optionsClass) {
-            responseJson = await getResourcesByClass({ id: props.optionsClass, q: value.trim(), page: page, items: PAGE_SIZE });
+            responseJson = await getResourcesByClass({ id: props.optionsClass, q: value.trim(), page: page, items: PAGE_SIZE, exact });
         } else {
             const isURI = new RegExp(REGEX.URL).test(value.trim());
             if (props.entityType === ENTITIES.CLASS && isURI) {
@@ -630,6 +630,10 @@ function Autocomplete(props) {
         multiValueRemove: provided => ({
             ...provided,
             cursor: 'pointer'
+        }),
+        input: provided => ({
+            ...provided,
+            visibility: 'visible'
         })
     };
 

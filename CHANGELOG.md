@@ -3,6 +3,40 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [V0.62.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.62...V0.62.1) - 2022-02-15
+
+### Changes
+
+- ux(EditModeHeader): animate show and hide [`#781`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/781)
+- fix(Auth): fix non-serializable tokenExpire [`#779`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/779)
+- fix(Autocomplete): String exact match for instances of a class [`#775`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/775)
+- fix(CombinedList): Sort comparison versions correctly [`#780`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/780)
+- fix(LiteratureList): hide curation buttons [`#778`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/778)
+- fix: no options in paper title input field [`#776`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/776)
+- fix: Contributor tooltip doesn't show the number of papers [`#774`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/774)
+- fix(StatementBrowser): Toast message of updating a label [`#773`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/773)
+- ui(Comparison): move position 'add contribution' button [`#777`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/777)
+- refactor(Reviews): rename SmartReviews to reviews [`#758`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/758)
+
+---
+## [V0.62](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.61...V0.62) - 2022-02-07
+
+### Changes
+
+- feat: Content curation features and show combined list of all content in research field/problem pages [`#632`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/632)
+- feat(Search): Add filter for content created by a user [`#754`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/754)
+- fix(SmartReview): Title doesn't remove line breaks from the label [`#772`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/772)
+- fix: Catch error if indexing contributions fail [`#767`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/767)
+- seo(UserProfile): set document title [`#760`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/760)
+- fix(LatestNews): Carousel indicators are not correctly displayed [`#762`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/762)
+- doc: Display a link to the help center to add Benchmark [`#763`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/763)
+- fix(SmartReview): set images in Markdown editor to max-width 100% [`#771`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/771)
+- fix(ContributionEditor): literal conversion tooltip not visible [`#765`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/765)
+- fix(Template): Property range field doesn't show the class name [`#766`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/766)
+- chore: Replace contact page link with helpdesk email in 503 page [`#768`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/768)
+- feat(LiteratureList): make list embeddable [`#744`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/744)
+
+---
 ## [V0.61](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.60...V0.61) - 2022-01-26
 
 ### Changes

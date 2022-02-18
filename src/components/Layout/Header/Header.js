@@ -377,8 +377,8 @@ class Header extends Component {
                                     <DropdownItem tag={RouterNavLink} exact to={ROUTES.VISUALIZATIONS} onClick={this.closeMenu}>
                                         Visualizations
                                     </DropdownItem>
-                                    <DropdownItem tag={RouterNavLink} exact to={ROUTES.SMART_REVIEWS} onClick={this.closeMenu}>
-                                        SmartReviews{' '}
+                                    <DropdownItem tag={RouterNavLink} exact to={ROUTES.REVIEWS} onClick={this.closeMenu}>
+                                        Reviews{' '}
                                         <small>
                                             <Badge color="info">Beta</Badge>
                                         </small>

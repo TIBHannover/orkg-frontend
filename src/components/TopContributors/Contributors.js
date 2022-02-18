@@ -52,7 +52,7 @@ const Contributors = ({ researchFieldId }) => {
                                         <br />
                                         {contributor?.counts && contributor.counts.total !== null && (
                                             <ul className="p-0 ps-3 mb-0 mt-2">
-                                                <li>{pluralize('paper', contributor.counts.paper, true)}</li>
+                                                <li>{pluralize('paper', contributor.counts.papers, true)}</li>
                                                 <li>{pluralize('contribution', contributor.counts.contributions, true)}</li>
                                                 <li>{pluralize('comparison', contributor.counts.comparisons, true)}</li>
                                                 <li>{pluralize('visualization', contributor.counts.visualizations, true)}</li>
