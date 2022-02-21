@@ -3,7 +3,6 @@ import { Container, Button, Alert } from 'reactstrap';
 import { getResource } from 'services/backend/resources';
 import { getStatementsBySubjectAndPredicate } from 'services/backend/statements';
 import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
-import { EditModeHeader, Title } from 'pages/ViewPaper';
 import InternalServerError from 'pages/InternalServerError';
 import EditableHeader from 'components/EditableHeader';
 import ObjectStatements from 'components/ObjectStatements/ObjectStatements';
@@ -30,6 +29,7 @@ import useMarkFeaturedUnlisted from 'components/MarkFeaturedUnlisted/hooks/useMa
 import { reverseWithSlug } from 'utils';
 import PapersWithCodeModal from 'components/PapersWithCodeModal/PapersWithCodeModal';
 import TitleBar from 'components/TitleBar/TitleBar';
+import EditModeHeader from 'components/EditModeHeader/EditModeHeader';
 
 const DEDICATED_PAGE_LINKS = {
     [CLASSES.PAPER]: {
@@ -286,13 +286,7 @@ function Resource(props) {
                             This resource should not be edited because it has a published DOI, please make sure that you know what are you doing!
                         </Alert>
                     )}
-                    {editMode && canEdit && (
-                        <EditModeHeader className="box rounded-top">
-                            <Title>
-                                Edit mode <span className="ps-2">Every change you make is automatically saved</span>
-                            </Title>
-                        </EditModeHeader>
-                    )}
+                    <EditModeHeader isVisible={editMode && canEdit} />
                     <Container className={`box clearfix pt-4 pb-4 ps-5 pe-5 ${editMode ? 'rounded-bottom' : 'rounded'}`}>
                         <div className="mb-2">
                             {!editMode || !canEdit ? (

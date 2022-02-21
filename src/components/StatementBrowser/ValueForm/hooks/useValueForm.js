@@ -66,7 +66,7 @@ const useValueForm = ({ valueId, resourceId, propertyId, syncBackend }) => {
                             : updateResource(value.resourceId, draftLabel);
                     apiCall
                         .then(() => {
-                            toast.success(`${value._class === ENTITIES.LITERAL ? 'Resource' : 'Literal'} label updated successfully`);
+                            toast.success(`${value._class === ENTITIES.LITERAL ? 'Literal' : 'Resource'} label updated successfully`);
                             dispatch(doneSavingValue({ id: valueId }));
                         })
                         .catch(() => {

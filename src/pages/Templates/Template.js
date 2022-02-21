@@ -14,7 +14,6 @@ import { faPen, faSpinner, faQuestionCircle, faEllipsisV, faSave } from '@fortaw
 import { getParamFromQueryString } from 'utils';
 import styled, { withTheme } from 'styled-components';
 import VisibilitySensor from 'react-visibility-sensor';
-import { EditModeHeader, Title } from 'pages/ViewPaper';
 import Tippy from '@tippyjs/react';
 import { getClassById } from 'services/backend/classes';
 import classnames from 'classnames';
@@ -25,6 +24,7 @@ import PropTypes from 'prop-types';
 import { reverse } from 'named-urls';
 import { NavLink as RouterNavLink } from 'react-router-dom';
 import TitleBar from 'components/TitleBar/TitleBar';
+import { EditModeContainer, Title } from 'components/EditModeHeader/EditModeHeader';
 
 const TabPaneStyled = styled(TabPane)`
     border: 1px solid #ced4da;
@@ -168,9 +168,9 @@ class Template extends Component {
                 <StyledContainer className="p-0">
                     {this.state.showHeaderBar && <TemplateEditorHeaderBar id={this.props.match.params.id} />}
                     {(this.props.editMode || this.props.isSaving) && (
-                        <EditModeHeader className="box rounded-top">
+                        <EditModeContainer className="box rounded-top">
                             <Title>{this.props.match.params.id ? 'Edit mode' : 'Create template'}</Title>
-                        </EditModeHeader>
+                        </EditModeContainer>
                     )}
                     <div className={`box clearfix pt-4 pb-4 ps-5 pe-5 ${this.props.editMode ? 'rounded-bottom' : 'rounded'}`}>
                         <div className="mb-2">

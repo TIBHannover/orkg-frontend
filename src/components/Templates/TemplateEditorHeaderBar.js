@@ -5,8 +5,8 @@ import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPen, faSpinner, faSave } from '@fortawesome/free-solid-svg-icons';
-import { Title } from 'pages/ViewPaper';
 import { CSSTransition } from 'react-transition-group';
+import { Title } from 'components/EditModeHeader/EditModeHeader';
 
 const PaperHeaderBarContainer = styled.div`
     position: fixed;
