@@ -36,7 +36,7 @@ const ResearchField = () => {
             <h2 className="h4 mt-4 mb-4">Select the research field</h2>
             <p className="text-muted">Select a research field by using the search field or select a field form the list</p>
 
-            <div style={{ maxWidth: 800 }}>
+            <div>
                 <ResearchFieldSelector
                     selectedResearchField={selectedResearchField}
                     researchFields={researchFields}

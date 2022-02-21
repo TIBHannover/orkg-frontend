@@ -91,6 +91,7 @@ const ResearchFields = () => {
                                 researchFields={researchFields}
                                 researchFieldStats={researchFieldStats}
                                 updateResearchField={handleUpdate}
+                                showPreviouslySelected={false}
                             />
                         </Col>
 
