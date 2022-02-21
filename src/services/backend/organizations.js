@@ -12,7 +12,6 @@ export const getOrganization = id => {
 };
 
 export const createOrganization = (organization_name, organization_logo, created_by, url, display_id, type, metadata) => {
-    console.log(metadata);
     return submitPostRequest(
         organizationsUrl,
         { 'Content-Type': 'application/json' },

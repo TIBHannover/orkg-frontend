@@ -226,7 +226,7 @@ function Publish(props) {
                                     ]
                                 })
                             },
-                            observatoryId: '00000000-0000-0000-0000-000000000000',
+                            observatoryId: MISC.UNKNOWN_ID,
                             organizationId: organizationId
                         }
                     };

@@ -15,12 +15,7 @@ import slugify from 'slugify';
 import ROUTES from 'constants/routes';
 import Tooltip from 'components/Utils/Tooltip';
 import TitleBar from 'components/TitleBar/TitleBar';
-import Select from 'react-select';
-import styled from 'styled-components';
-
-const StyledCustomInput = styled(Input)`
-    margin-right: 0;
-`;
+import { MISC } from 'constants/graphSettings';
 
 class AddOrganization extends Component {
     constructor(props) {
@@ -34,8 +29,12 @@ class AddOrganization extends Component {
             permalink: '',
             logo: '',
             editorState: 'edit',
-            options: [{ value: 'general', label: 'General' }, { value: 'conference', label: 'Conference' }, { value: 'journal', label: 'Journal' }],
-            organizationType: '',
+            options: [
+                { id: 'conference', label: MISC.CONFERENCE, requireDate: true },
+                { id: 'general', label: MISC.GENERAL, requireDate: false },
+                { id: 'journal', label: MISC.JOURNAL, requireDate: false }
+            ],
+            organizationType: { id: 'general', label: MISC.GENERAL, requireDate: false },
             date: '',
             isDoubleBlind: false
         };
@@ -50,7 +49,6 @@ class AddOrganization extends Component {
     createNewOrganization = async () => {
         this.setState({ editorState: 'loading' });
         const { name, logo, website, permalink, organizationType, date, isDoubleBlind } = this.state;
-        const metadata = { date: null, is_double_blind: false };
 
         if (!name || name.length === 0) {
             toast.error(`Please enter an organization name`);
@@ -79,19 +77,17 @@ class AddOrganization extends Component {
             return;
         }
 
-        if (organizationType === 'conference') {
-            if (date.length === 0) {
-                toast.error(`Please select conference date`);
-                this.setState({ editorState: 'edit' });
-                return;
-            } else {
-                metadata.date = date;
-                metadata.is_double_blind = isDoubleBlind;
-            }
+        if (organizationType.requireDate && date.length === 0) {
+            toast.error(`Please select conference date`);
+            this.setState({ editorState: 'edit' });
+            return;
         }
 
         try {
-            const responseJson = await createOrganization(name, logo[0], this.props.user.id, website, permalink, organizationType, metadata);
+            const responseJson = await createOrganization(name, logo[0], this.props.user.id, website, permalink, organizationType, {
+                date,
+                is_double_blind: isDoubleBlind
+            });
             this.navigateToOrganization(responseJson.display_id);
         } catch (error) {
             this.setState({ editorState: 'edit' });
@@ -198,19 +194,22 @@ class AddOrganization extends Component {
                             </FormGroup>
                             <FormGroup>
                                 <Label for="organizationType">Type</Label>
-                                <Select
+                                <Input
                                     onChange={e => {
-                                        this.setState({ organizationType: e ? e.value : '' });
+                                        this.setState({ organizationType: e ? JSON.parse(e.target.value) : '' });
                                     }}
-                                    className="basic-single"
-                                    classNamePrefix="select"
-                                    isClearable={true}
-                                    isSearchable={true}
+                                    value={JSON.stringify(this.state.organizationType)}
                                     name="organizationType"
-                                    options={this.state.options}
-                                />
+                                    type="select"
+                                >
+                                    {this.state.options.map(option => (
+                                        <option key={option.id} value={JSON.stringify(option)}>
+                                            {option.label}
+                                        </option>
+                                    ))}
+                                </Input>
                             </FormGroup>
-                            {this.state.organizationType === 'conference' && (
+                            {this.state.organizationType.requireDate && (
                                 <>
                                     <FormGroup>
                                         <Label for="conferenceDate">Conference date</Label>
@@ -224,21 +223,18 @@ class AddOrganization extends Component {
                                         />
                                     </FormGroup>
                                     <FormGroup>
-                                        <div>
-                                            <StyledCustomInput
-                                                onChange={e => {
-                                                    this.setState({ isDoubleBlind: e.target.checked });
-                                                }}
-                                                checked={this.state.isDoubleBlind}
-                                                id="doubleBlind"
-                                                type="switch"
-                                                name="customSwitch"
-                                                label="Double blind"
-                                            />{' '}
-                                            <Label for="doubleBlind" className="mb-0">
-                                                Double blind
-                                            </Label>
-                                        </div>
+                                        <Label for="doubleBlind" className="mb-0">
+                                            Double blind
+                                            <Tooltip message="By default the conference is selected as single blind." />
+                                        </Label>{' '}
+                                        <Input
+                                            onChange={this.handleChange}
+                                            type="checkbox"
+                                            name="date"
+                                            id="doubleBlind"
+                                            value={this.state.date}
+                                            placeholder="yyyy-mm-dd"
+                                        />
                                     </FormGroup>
                                 </>
                             )}
