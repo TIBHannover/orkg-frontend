@@ -15,7 +15,7 @@ import slugify from 'slugify';
 import ROUTES from 'constants/routes';
 import Tooltip from 'components/Utils/Tooltip';
 import TitleBar from 'components/TitleBar/TitleBar';
-import { MISC } from 'constants/graphSettings';
+import { ORGANIZATIONS_TYPES, ORGANIZATIONS_MISC } from 'constants/organizationsTypes';
 
 class AddOrganization extends Component {
     constructor(props) {
@@ -29,12 +29,7 @@ class AddOrganization extends Component {
             permalink: '',
             logo: '',
             editorState: 'edit',
-            options: [
-                { id: 'conference', label: MISC.CONFERENCE, requireDate: true },
-                { id: 'general', label: MISC.GENERAL, requireDate: false },
-                { id: 'journal', label: MISC.JOURNAL, requireDate: false }
-            ],
-            organizationType: { id: 'general', label: MISC.GENERAL, requireDate: false },
+            organizationType: ORGANIZATIONS_TYPES.find(t => ORGANIZATIONS_MISC.GENERAL === t.id)?.id,
             date: '',
             isDoubleBlind: false
         };
@@ -77,7 +72,7 @@ class AddOrganization extends Component {
             return;
         }
 
-        if (organizationType.requireDate && date.length === 0) {
+        if (ORGANIZATIONS_TYPES.find(t => t.id === organizationType)?.requireDate && date.length === 0) {
             toast.error(`Please select conference date`);
             this.setState({ editorState: 'edit' });
             return;
@@ -196,20 +191,20 @@ class AddOrganization extends Component {
                                 <Label for="organizationType">Type</Label>
                                 <Input
                                     onChange={e => {
-                                        this.setState({ organizationType: e ? JSON.parse(e.target.value) : '' });
+                                        this.setState({ organizationType: ORGANIZATIONS_TYPES.find(t => t.id === e.target.value)?.id });
                                     }}
-                                    value={JSON.stringify(this.state.organizationType)}
+                                    value={this.state.organizationType}
                                     name="organizationType"
                                     type="select"
                                 >
-                                    {this.state.options.map(option => (
-                                        <option key={option.id} value={JSON.stringify(option)}>
+                                    {ORGANIZATIONS_TYPES.map(option => (
+                                        <option key={option.id} value={option.id}>
                                             {option.label}
                                         </option>
                                     ))}
                                 </Input>
                             </FormGroup>
-                            {this.state.organizationType.requireDate && (
+                            {ORGANIZATIONS_TYPES.find(t => t.id === this.state.organizationType)?.requireDate && (
                                 <>
                                     <FormGroup>
                                         <Label for="conferenceDate">Conference date</Label>

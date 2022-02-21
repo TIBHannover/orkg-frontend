@@ -121,10 +121,7 @@ export const CLASSES = {
 export const MISC = {
     RESEARCH_FIELD_MAIN: 'R11',
     DEFAULT_LITERAL_DATATYPE: 'xsd:string',
-    UNKNOWN_ID: '00000000-0000-0000-0000-000000000000',
-    GENERAL: 'General',
-    CONFERENCE: 'Conference',
-    JOURNAL: 'Journal'
+    UNKNOWN_ID: '00000000-0000-0000-0000-000000000000'
 };
 
 /* entities usually are returned by the backend (in _class) to specify the type of node  */
