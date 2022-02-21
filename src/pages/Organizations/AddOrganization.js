@@ -217,11 +217,7 @@ class AddOrganization extends Component {
                                             placeholder="yyyy-mm-dd"
                                         />
                                     </FormGroup>
-                                    <FormGroup>
-                                        <Label for="doubleBlind" className="mb-0">
-                                            Double blind
-                                            <Tooltip message="By default the conference is selected as single blind." />
-                                        </Label>{' '}
+                                    <FormGroup check>
                                         <Input
                                             onChange={this.handleChange}
                                             type="checkbox"
@@ -230,6 +226,10 @@ class AddOrganization extends Component {
                                             value={this.state.date}
                                             placeholder="yyyy-mm-dd"
                                         />
+                                        <Label for="doubleBlind" check>
+                                            Double blind
+                                            <Tooltip message="By default the conference is considered single-blind." />
+                                        </Label>
                                     </FormGroup>
                                 </>
                             )}
