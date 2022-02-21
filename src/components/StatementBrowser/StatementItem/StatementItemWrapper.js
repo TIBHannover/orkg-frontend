@@ -21,7 +21,7 @@ const StatementItemWrapper = forwardRef((props, ref) => {
             <StatementItem
                 key={`statement-p${props.propertyId}r${props.resourceId}`}
                 id={props.propertyId}
-                enableEdit={props.shared <= 1 ? props.enableEdit : false}
+                enableEdit={props.enableEdit}
                 syncBackend={props.syncBackend}
                 resourceId={props.resourceId}
                 showValueHelp={cookies && !cookies.showedValueHelp && props.isFirstItem ? true : false}
@@ -60,7 +60,6 @@ StatementItemWrapper.propTypes = {
     showValueHelp: PropTypes.bool,
     isFirstItem: PropTypes.bool,
     resourceId: PropTypes.string,
-    shared: PropTypes.number,
     openExistingResourcesInDialog: PropTypes.bool
 };
 

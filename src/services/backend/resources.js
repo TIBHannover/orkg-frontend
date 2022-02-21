@@ -8,8 +8,12 @@ import { url } from 'constants/misc';
 
 export const resourcesUrl = `${url}resources/`;
 
-export const updateResource = (id, label) => {
-    return submitPutRequest(`${resourcesUrl}${id}`, { 'Content-Type': 'application/json' }, { label: label });
+export const updateResource = (id, label, classes = null) => {
+    return submitPutRequest(
+        `${resourcesUrl}${id}`,
+        { 'Content-Type': 'application/json' },
+        { label: label, ...(classes ? { classes: classes } : null) }
+    );
 };
 
 export const updateResourceClasses = (id, classes = null) => {

@@ -585,14 +585,8 @@ export function canAddValue(state, resourceId, propertyId) {
             } else {
                 return true;
             }
-        } else {
-            if (property.maxOccurs && property.valueIds.length >= parseInt(property.maxOccurs)) {
-                // rules on the contribution level
-                return false;
-            } else {
-                return true;
-            }
         }
+        return true;
     } else {
         return true;
     }
@@ -616,14 +610,8 @@ export function canDeleteProperty(state, resourceId, propertyId) {
             } else {
                 return true;
             }
-        } else {
-            if (property.minOccurs >= 1) {
-                // rules on the contribution level
-                return false;
-            } else {
-                return true;
-            }
         }
+        return true;
     } else {
         return true;
     }
@@ -1252,6 +1240,12 @@ export const fetchStatementsForResource = ({ resourceId, rootNodeType = ENTITIES
                     let allClasses = mapEntitiesClasses[rootNodeType];
                     // set the resource classes (initialize doesn't set the classes)
                     dispatch(updateResourceClasses({ resourceId, classes: allClasses, syncBackend: false }));
+                    // update shared counter
+                    dispatch({
+                        type: type.UPDATE_RESOURCE_SHARED,
+                        resourceId: resourceId,
+                        shared: root.shared ?? 1
+                    });
                     // fetch the statements
                     return getStatementsBundleBySubject({ id: resourceId, maxLevel: depth }).then(response => {
                         // 1 - collect all classes Ids
@@ -1386,4 +1380,16 @@ export function generatedFormattedLabel(resource, labelFormat) {
             return resource.label;
         }
     };
+}
+
+/**
+ * Get Subject ID of a value
+ * @param {Object} state Current state of the Store
+ * @param {String} valueId Value ID
+ * @return {String} subject id
+ */
+export function getSubjectIdByValue(state, valueId) {
+    const value = state.statementBrowser.values.byId[valueId];
+    const predicate = state.statementBrowser.properties.byId[value.propertyId];
+    return predicate?.resourceId;
 }

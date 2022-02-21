@@ -1,19 +1,25 @@
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
-import { paperUpdated } from 'slices/contributionEditorSlice';
+import { paperUpdated, contributionUpdated, fetchTemplatesOfClassIfNeeded } from 'slices/contributionEditorSlice';
 import useContributionEditor from 'components/ContributionEditor/hooks/useContributionEditor';
 import { Contribution, Delete, ItemHeader, ItemHeaderInner } from 'components/Comparison/styled';
 import EditPaperDialog from 'components/ViewPaper/EditDialog/EditPaperDialog';
+import EditResourceDialog from 'components/EditResourceDialog/EditResourceDialog';
 import useEditPaper from 'components/ViewPaper/EditDialog/hooks/useEditPaper';
 import PropTypes from 'prop-types';
+import ROUTES from 'constants/routes.js';
+import { Link } from 'react-router-dom';
+import { reverse } from 'named-urls';
 import env from '@beam-australia/react-env';
-import { memo, useState } from 'react';
+import { toast } from 'react-toastify';
+import { memo, useState, Fragment } from 'react';
 import { useDispatch } from 'react-redux';
 import { Button } from 'reactstrap';
 
 const TableHeaderColumn = ({ contribution, paper }) => {
     const [isOpenEditModal, setIsOpenEditModal] = useState(false);
+    const [isOpenContributionModal, setIsOpenContributionModal] = useState(false);
     const [data, setData] = useState(null);
     const { handleRemoveContribution } = useContributionEditor();
     const { loadPaperData } = useEditPaper();
@@ -35,9 +41,18 @@ const TableHeaderColumn = ({ contribution, paper }) => {
         dispatch(
             paperUpdated({
                 id: paper.id,
-                title: newData.paper?.label
+                title: newData.paper?.label,
+                researchField: newData.researchField
             })
         );
+    };
+
+    const handleUpdateContribution = newContribution => {
+        setIsOpenEditModal(false);
+        dispatch(contributionUpdated(newContribution));
+        // Fetch templates of the classes
+        newContribution?.classes?.filter(c => c).map(classID => dispatch(fetchTemplatesOfClassIfNeeded(classID)));
+        toast.success('Contribution updated successfully');
     };
 
     return (
@@ -54,7 +69,28 @@ const TableHeaderColumn = ({ contribution, paper }) => {
                         </Button>
                     </span>
                 </Tippy>
-                <Contribution className="contribution-editor">{contribution.label}</Contribution>
+                <Contribution className="contribution-editor" onClick={() => setIsOpenContributionModal(true)}>
+                    <Tippy
+                        interactive={true}
+                        appendTo={document.body}
+                        content={
+                            <>
+                                Instance of:{' '}
+                                {contribution.classes?.map((c, index) => (
+                                    <Fragment key={c}>
+                                        <Link target="_blank" to={reverse(ROUTES.CLASS, { id: c })}>
+                                            {c}
+                                        </Link>
+                                        {index + 1 !== contribution.classes.length && ', '}
+                                    </Fragment>
+                                ))}
+                                {contribution.classes?.length === 0 && <i className="text-secondary">No classes</i>}
+                            </>
+                        }
+                    >
+                        <span>{contribution.label}</span>
+                    </Tippy>
+                </Contribution>
 
                 <Delete className="contribution-editor" onClick={() => handleRemoveContribution(contribution.id)}>
                     <Tippy content="Remove contribution from contribution editor">
@@ -64,6 +100,16 @@ const TableHeaderColumn = ({ contribution, paper }) => {
                     </Tippy>
                 </Delete>
             </ItemHeaderInner>
+
+            {isOpenContributionModal && (
+                <EditResourceDialog
+                    resource={contribution}
+                    afterUpdate={handleUpdateContribution}
+                    toggle={v => setIsOpenContributionModal(!v)}
+                    isOpen
+                    showResourceLink
+                />
+            )}
 
             {isOpenEditModal && (
                 <EditPaperDialog paperData={data} afterUpdate={handleUpdatePaper} toggle={v => setIsOpenEditModal(!v)} isOpen showPaperLink />
