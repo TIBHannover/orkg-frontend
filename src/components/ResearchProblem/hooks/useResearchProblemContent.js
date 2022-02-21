@@ -89,10 +89,13 @@ function useResearchProblemContent({
                                 return getDataBasedOnType(resourceSubject, statements.statements);
                             });
                             setItems(prevResources => {
-                                const newItems = groupVersionsOfComparisons([
+                                let newItems = groupVersionsOfComparisons([
                                     ...flatten([...prevResources.map(c => c.versions), ...prevResources]),
                                     ...dataObjects
                                 ]);
+                                if (sort === 'combined') {
+                                    newItems = mergeAlternate(newItems.filter(i => i.featured), newItems.filter(i => !i.featured));
+                                }
                                 return flatten([...prevResources, newItems.filter(t => t && !prevResources.map(p => p.id).includes(t.id))]);
                             });
 
