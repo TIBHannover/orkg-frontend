@@ -5,7 +5,7 @@ const PageContentLoader = () => (
         speed={2}
         width="100%"
         height={220}
-        viewBox="0 0 100% 50"
+        viewBox="0 0 1000 200"
         style={{ width: '100% !important' }}
         backgroundColor="#f3f3f3"
         foregroundColor="#ecebeb"
