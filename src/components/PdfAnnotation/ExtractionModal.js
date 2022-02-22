@@ -10,7 +10,6 @@ import useExtractionModal from './hooks/useExtractionModal';
 import ROUTES from 'constants/routes.js';
 import { reverse } from 'named-urls';
 import useTableEditor from './hooks/useTableEditor';
-import HelpModal from 'components/PdfAnnotation/HelpModal';
 
 const ExtractionModal = props => {
     const [
@@ -24,7 +23,6 @@ const ExtractionModal = props => {
         importError,
         clearImportError
     ] = useExtractionModal(props);
-    const [helpModalOpen, setHelpModalOpen] = useState(false);
 
     const [extractReferencesModalOpen, setExtractReferencesModalOpen] = useState(false);
     const toggleExtractReferencesModal = () => {
@@ -34,18 +32,18 @@ const ExtractionModal = props => {
 
     const comparisonUrl = importedData ? reverse(ROUTES.COMPARISON) + '?contributions=' + importedData.map(entry => entry.contributionId) : null;
 
-    const toggleHelpModal = () => {
-        setHelpModalOpen(!helpModalOpen);
-    };
-
     return (
         <>
             <Modal isOpen={props.isOpen} toggle={props.toggle} style={{ maxWidth: '95%' }}>
                 <ModalHeader toggle={props.toggle}>
                     Table extraction{' '}
-                    <Button color="link" outline size="sm" style={{ fontSize: 18, lineHeight: 1 }} className="p-0" onClick={toggleHelpModal}>
-                        <Icon icon={faQuestionCircle} />
-                    </Button>
+                    <a
+                        href="https://www.orkg.org/orkg/help-center/article/7/Extracting_and_importing_tables_from_survey_articles"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        <Icon icon={faQuestionCircle} style={{ fontSize: 18, lineHeight: 1 }} className="p-0" />
+                    </a>
                 </ModalHeader>
 
                 {loading && (
@@ -116,8 +114,6 @@ const ExtractionModal = props => {
                 toggle={toggleExtractReferencesModal}
                 id={props.id}
             />
-
-            <HelpModal isOpen={helpModalOpen} toggle={toggleHelpModal} />
         </>
     );
 };
