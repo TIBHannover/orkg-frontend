@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Modal, ModalHeader, ModalBody, ModalFooter, Input, Button, Label, FormGroup, Alert, InputGroupAddon, InputGroup } from 'reactstrap';
+import { Modal, ModalHeader, ModalBody, ModalFooter, Input, Button, Label, FormGroup, Alert, InputGroup } from 'reactstrap';
 import { toast } from 'react-toastify';
 import ROUTES from 'constants/routes.js';
 import PropTypes from 'prop-types';
@@ -11,13 +11,14 @@ import Autocomplete from 'components/Autocomplete/Autocomplete';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faClipboard } from '@fortawesome/free-regular-svg-icons';
 import { reverse } from 'named-urls';
-import { useHistory } from 'react-router-dom';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import styled from 'styled-components';
 import { PREDICATES, CLASSES, ENTITIES } from 'constants/graphSettings';
 import { getContributorsByResourceId } from 'services/backend/resources';
 import env from '@beam-australia/react-env';
 import { getPublicUrl } from 'utils';
+import { getStatementsBySubject, getStatementsBySubjects } from 'services/backend/statements';
+import { filterObjectOfStatementsByPredicateAndClass } from 'utils';
 
 const AuthorTag = styled.div`
     background-color: #e9ecef;
@@ -53,31 +54,30 @@ const AuthorTag = styled.div`
 
 function Publish(props) {
     const [isLoading, setIsLoading] = useState(false);
-    const history = useHistory();
-    const [assignDOI, setAssignDOI] = useState(false);
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
-    const [references, setReferences] = useState(['']);
     const [subject, setSubject] = useState('');
-    const [paperCreators, setPaperCreators] = useState([]);
-    const [isLoadingContributors, setIsLoadingContributors] = useState(true);
+    //const [isLoadingContributors, setIsLoadingContributors] = useState(true);
     const [contributors, setContributors] = useState([]);
+    const [globalDepth, setGlobalDepth] = useState(1);
 
-    const handleCreatorsChange = creators => {
-        creators = creators ? creators : [];
-        setPaperCreators(creators);
-    };
+    //const handleCreatorsChange = creators => {
+    //creators = creators ? creators : [];
+    //setPaperCreators(creators);
+    //};
 
     useEffect(() => {
         const loadContributors = () => {
-            setIsLoadingContributors(true);
+            //setIsLoadingContributors(true);
+            console.log(props.paperId);
             getContributorsByResourceId(props.paperId)
                 .then(contributors => {
+                    console.log(contributors);
                     setContributors(contributors ? contributors.reverse() : []);
-                    setIsLoadingContributors(false);
+                    //setIsLoadingContributors(false);
                 })
                 .catch(error => {
-                    setIsLoadingContributors(false);
+                    //setIsLoadingContributors(false);
                 });
         };
         setTitle(props.label);
@@ -95,6 +95,48 @@ function Publish(props) {
         }
     };
 
+    const getResourceAndStatements = async (resourceId, list) => {
+        const statements = await getStatementsBySubject({ id: resourceId });
+        list.push(...statements);
+        if (statements.length > 0) {
+            //console.log(resourceId + '-' + statements.length);
+            //list.push(...statements);
+            for (const statement of statements) {
+                console.log(statement);
+                if (statement.object._class === 'resource') {
+                    console.log(true);
+                    await getResourceAndStatements(statement.object.id, list);
+                }
+            }
+
+            return list;
+        } else {
+            return list;
+        }
+    };
+
+    const getPaperStatements = async paperId => {
+        //console.log(paperId);
+        const statements = await getStatementsBySubject({ id: paperId });
+        //console.log(statements);
+        const result = filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.HAS_CONTRIBUTION, false, CLASSES.CONTRIBUTION);
+        //console.log(result);
+        const ids = result.map(stmt => stmt.id);
+        //console.log(ids);
+        const c = await getStatementsBySubjects({ ids: ids });
+        //console.log(c);
+        for (let i = 0; i < c.length; i++) {
+            const ct = c[i];
+            //console.log(ct);
+            // for property of each contribution
+            for (let j = 0; j < ct.statements.length; j++) {
+                //console.log(ct.statements[j]);
+                const st = await getResourceAndStatements(ct.statements[j].object.id, []);
+                console.log(st);
+            }
+        }
+    };
+
     const publishDOI = async paperId => {
         //if (props.paperId) {
         //await saveCreators([''], props.paperId);
@@ -103,6 +145,7 @@ function Publish(props) {
         // prpend orkg in the title
         // make it no editable
         // history of paper
+        getPaperStatements(paperId);
         if (title && title.trim() !== '' && description && description.trim() !== '') {
             console.log(props.paperLink.replace('https://doi.org/', ''));
             //resource_id, title, subject, related_resources, description, authors, url, type, resourceType
@@ -158,19 +201,17 @@ function Publish(props) {
                                 value={`${window.location.href}${reverse(ROUTES.VIEW_PAPER, { resourceId: props.paperId })}`}
                                 disabled
                             />
-                            <InputGroupAddon addonType="append">
-                                <CopyToClipboard
-                                    text={`${window.location.href}${reverse(ROUTES.VIEW_PAPER, { resourceId: props.paperId })}`}
-                                    onCopy={() => {
-                                        toast.dismiss();
-                                        toast.success(`Paper link copied!`);
-                                    }}
-                                >
-                                    <Button color="primary" className="pl-3 pr-3" style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}>
-                                        <Icon icon={faClipboard} />
-                                    </Button>
-                                </CopyToClipboard>
-                            </InputGroupAddon>
+                            <CopyToClipboard
+                                text={`${window.location.href}${reverse(ROUTES.VIEW_PAPER, { resourceId: props.paperId })}`}
+                                onCopy={() => {
+                                    toast.dismiss();
+                                    toast.success(`Paper link copied!`);
+                                }}
+                            >
+                                <Button color="primary" className="pl-3 pr-3" style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}>
+                                    <Icon icon={faClipboard} />
+                                </Button>
+                            </CopyToClipboard>
                         </InputGroup>
                     </FormGroup>
                 )}
@@ -179,19 +220,17 @@ function Publish(props) {
                         <Label for="doi_link">DOI</Label>
                         <InputGroup>
                             <Input id="doi_link" value={`https://doi.org/${props.dataCiteDoi}`} disabled />
-                            <InputGroupAddon addonType="append">
-                                <CopyToClipboard
-                                    text={`https://doi.org/${props.dataCiteDoi}`}
-                                    onCopy={() => {
-                                        toast.dismiss();
-                                        toast.success(`DOI link copied!`);
-                                    }}
-                                >
-                                    <Button color="primary" className="pl-3 pr-3" style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}>
-                                        <Icon icon={faClipboard} />
-                                    </Button>
-                                </CopyToClipboard>
-                            </InputGroupAddon>
+                            <CopyToClipboard
+                                text={`https://doi.org/${props.dataCiteDoi}`}
+                                onCopy={() => {
+                                    toast.dismiss();
+                                    toast.success(`DOI link copied!`);
+                                }}
+                            >
+                                <Button color="primary" className="pl-3 pr-3" style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}>
+                                    <Icon icon={faClipboard} />
+                                </Button>
+                            </CopyToClipboard>
                         </InputGroup>
                     </FormGroup>
                 )}
