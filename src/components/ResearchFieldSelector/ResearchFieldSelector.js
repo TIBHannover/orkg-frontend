@@ -238,15 +238,16 @@ const ResearchFieldSelector = ({
                     autoLoadOption={true}
                 />
             </div>
-            {isLoading && (
-                <div className="mb-2">
-                    <Icon icon={faSpinner} spin /> Loading
-                </div>
-            )}
+
             <div className="row">
                 {showPreviouslySelected && (
                     <div className={`${insideModal ? 'col-12' : 'col-md-4 order-md-2'}`}>
                         <PreviouslySelectedResearchField selectedResearchField={selectedResearchField} handleFieldSelect={handleFieldSelect} />
+                    </div>
+                )}
+                {isLoading && (
+                    <div className="mb-2">
+                        <Icon icon={faSpinner} spin /> Loading
                     </div>
                 )}
                 <div className={`${insideModal || !showPreviouslySelected ? 'col-12' : 'col-md-8 order-md-1'}`}>
