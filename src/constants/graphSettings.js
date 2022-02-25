@@ -64,7 +64,7 @@ export const PREDICATES = {
     HAS_ENTRY: 'HasEntry',
     HAS_HEADING_LEVEL: 'HasHeadingLevel',
     HAS_VIDEO: 'HasVideo',
-    ISANONYMIZE: 'IsAnonymized'
+    ISANONYMIZED: 'IsAnonymized'
 };
 
 export const CLASSES = {

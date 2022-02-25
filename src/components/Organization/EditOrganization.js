@@ -1,9 +1,17 @@
 import { Component } from 'react';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Input, Label, FormGroup } from 'reactstrap';
-import { updateOrganizationName, updateOrganizationUrl, updateOrganizationLogo, updateOrganizationType } from 'services/backend/organizations';
+import {
+    updateOrganizationName,
+    updateOrganizationUrl,
+    updateOrganizationLogo,
+    updateOrganizationType,
+    updateConferenceProcess,
+    updateConferenceDate
+} from 'services/backend/organizations';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
-import Select from 'react-select';
+import { ORGANIZATIONS_TYPES } from 'constants/organizationsTypes';
+import Tooltip from 'components/Utils/Tooltip';
 
 class EditOrganization extends Component {
     constructor(props) {
@@ -20,8 +28,11 @@ class EditOrganization extends Component {
             isLoadingUrl: false,
             isLoadingLogo: false,
             isLoadingType: false,
+            isLoadingDate: false,
+            isLoadingProcess: false,
             type: '',
-            options: [{ value: 'general', label: 'General' }, { value: 'conference', label: 'Conference' }, { value: 'journal', label: 'Journal' }]
+            date: '',
+            isDoubleBlind: false
         };
     }
 
@@ -39,7 +50,15 @@ class EditOrganization extends Component {
         }
 
         if (prevProps.type !== this.props.type) {
-            this.setState({ type: this.props.type });
+            this.setState({ type: ORGANIZATIONS_TYPES.find(t => this.props.type === t.id)?.id });
+        }
+
+        if (prevProps.date !== this.props.date) {
+            this.setState({ date: this.props.date });
+        }
+
+        if (prevProps.isDoubleBlind !== this.props.isDoubleBlind) {
+            this.setState({ isDoubleBlind: this.props.isDoubleBlind });
         }
     };
 
@@ -71,12 +90,16 @@ class EditOrganization extends Component {
         const image = this.state.previewSrc;
         const url = this.state.url;
         const id = this.props.id;
-        const type = this.props.type;
+        const type = this.state.type;
+        const date = this.state.date;
+        const isDoubleBlind = this.state.isDoubleBlind;
 
         let isUpdatedLabel = false;
         let isUpdatedImage = false;
         let isUpdatedUrl = false;
         let isUpdatedType = false;
+        let isUpdatedDate = false;
+        let isUpdatedProcess = false;
 
         toast.dismiss();
         const URL_REGEX = /[-a-zA-Z0-9@:%_+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_+.~#?&//=]*)?/gi;
@@ -102,6 +125,11 @@ class EditOrganization extends Component {
             return false;
         }
 
+        if (ORGANIZATIONS_TYPES.find(t => t.id === type)?.requireDate && date.length === 0) {
+            toast.error(`Please select conference date`);
+            return false;
+        }
+
         if (value !== this.props.label && value.length !== 0) {
             await this.updateOrganizationName(id, value);
             isUpdatedLabel = true;
@@ -122,13 +150,25 @@ class EditOrganization extends Component {
             isUpdatedType = true;
         }
 
-        if (isUpdatedLabel || isUpdatedUrl || isUpdatedImage || isUpdatedType) {
+        if (isDoubleBlind !== this.props.isDoubleBlind) {
+            await this.updateConferenceProcess(id, isDoubleBlind);
+            isUpdatedProcess = true;
+        }
+
+        if (ORGANIZATIONS_TYPES.find(t => t.id === type)?.requireDate && date !== this.props.date && date.length !== 0) {
+            await this.updateConferenceDate(id, date);
+            isUpdatedDate = true;
+        }
+
+        if (isUpdatedLabel || isUpdatedUrl || isUpdatedImage || isUpdatedType || isUpdatedDate || isUpdatedProcess) {
             toast.success(`Organization updated successfully`);
             this.props.updateOrganizationMetadata(
                 value,
                 url,
                 image !== this.props.previewSrc && image.length !== 0 ? image[0] : this.props.previewSrc,
-                type
+                type,
+                date,
+                isDoubleBlind
             );
             this.props.toggle();
         } else {
@@ -184,8 +224,38 @@ class EditOrganization extends Component {
         }
     };
 
+    updateConferenceDate = async (id, date) => {
+        this.setState({ isLoadingDate: true });
+        try {
+            await updateConferenceDate(id, date);
+            this.setState({ isLoadingDate: false });
+        } catch (error) {
+            this.setState({ isLoadingDate: false });
+            console.error(error);
+            toast.error(`Error updating an organization ${error.message}`);
+        }
+    };
+
+    updateConferenceProcess = async (id, process) => {
+        this.setState({ isLoadingProcess: true });
+        try {
+            await updateConferenceProcess(id, process);
+            this.setState({ isLoadingProcess: false });
+        } catch (error) {
+            this.setState({ isLoadingProcess: false });
+            console.error(error);
+            toast.error(`Error updating an organization ${error.message}`);
+        }
+    };
+
     render() {
-        const isLoading = this.state.isLoadingName || this.state.isLoadingUrl || this.state.isLoadingLogo;
+        const isLoading =
+            this.state.isLoadingName ||
+            this.state.isLoadingUrl ||
+            this.state.isLoadingLogo ||
+            this.state.isLoadingType ||
+            this.state.isLoadingProcess ||
+            this.state.isLoadingDate;
 
         return (
             <>
@@ -219,20 +289,50 @@ class EditOrganization extends Component {
                                 />
                             </FormGroup>
                             <FormGroup>
-                                <Label for="organizationType">Type</Label>
-                                <Select
+                                <Label for="type">Type</Label>
+                                <Input
                                     onChange={e => {
-                                        this.setState({ type: e.value });
+                                        this.setState({ type: ORGANIZATIONS_TYPES.find(t => t.id === e.target.value)?.id });
                                     }}
-                                    className="basic-single"
-                                    classNamePrefix="select"
-                                    isClearable={true}
-                                    isSearchable={true}
-                                    name="organizationType"
-                                    options={this.state.options}
-                                    defaultValue={this.state.type}
-                                />
+                                    value={this.state.type}
+                                    name="type"
+                                    type="select"
+                                >
+                                    {ORGANIZATIONS_TYPES.map(option => (
+                                        <option key={option.id} value={option.id}>
+                                            {option.label}
+                                        </option>
+                                    ))}
+                                </Input>
                             </FormGroup>
+                            {ORGANIZATIONS_TYPES.find(t => t.id === this.state.type)?.requireDate && (
+                                <>
+                                    <FormGroup>
+                                        <Label for="conferenceDate">Conference date</Label>
+                                        <Input
+                                            onChange={this.handleChange}
+                                            type="date"
+                                            name="date"
+                                            id="conferenceDate"
+                                            value={this.state.date}
+                                            placeholder="yyyy-mm-dd"
+                                        />
+                                    </FormGroup>
+                                    <FormGroup check>
+                                        <Input
+                                            onChange={e => this.setState({ isDoubleBlind: e.target.checked })}
+                                            type="checkbox"
+                                            name="isDoubleBlind"
+                                            id="doubleBlind"
+                                            checked={this.state.isDoubleBlind}
+                                        />
+                                        <Label for="doubleBlind" check>
+                                            Double blind
+                                            <Tooltip message="By default the conference is considered single-blind." />
+                                        </Label>
+                                    </FormGroup>
+                                </>
+                            )}
                             <FormGroup>
                                 <Label>Logo</Label>
                                 <div>
@@ -263,7 +363,9 @@ EditOrganization.propTypes = {
     url: PropTypes.string,
     previewSrc: PropTypes.string,
     updateOrganizationMetadata: PropTypes.func.isRequired,
-    type: PropTypes.string.isRequired
+    type: PropTypes.string.isRequired,
+    date: PropTypes.string,
+    isDoubleBlind: PropTypes.bool
 };
 
 export default EditOrganization;

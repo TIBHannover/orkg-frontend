@@ -2,7 +2,7 @@ import { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import { Container, Button, Form, FormGroup, Input, Label, InputGroup } from 'reactstrap';
 import { toast } from 'react-toastify';
-import { createOrganization } from 'services/backend/organizations';
+import { createOrganization, createConference } from 'services/backend/organizations';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { openAuthDialog } from 'actions/auth';
@@ -79,10 +79,15 @@ class AddOrganization extends Component {
         }
 
         try {
-            const responseJson = await createOrganization(name, logo[0], this.props.user.id, website, permalink, organizationType, {
-                date,
-                is_double_blind: isDoubleBlind
-            });
+            let responseJson = '';
+            if (organizationType === ORGANIZATIONS_MISC.CONFERENCE) {
+                responseJson = await createConference(name, logo[0], this.props.user.id, website, permalink, organizationType, {
+                    date,
+                    is_double_blind: isDoubleBlind
+                });
+            } else {
+                responseJson = await createOrganization(name, logo[0], this.props.user.id, website, permalink, organizationType);
+            }
             this.navigateToOrganization(responseJson.display_id);
         } catch (error) {
             this.setState({ editorState: 'edit' });
@@ -219,12 +224,11 @@ class AddOrganization extends Component {
                                     </FormGroup>
                                     <FormGroup check>
                                         <Input
-                                            onChange={this.handleChange}
+                                            onChange={e => this.setState({ isDoubleBlind: e.target.checked })}
                                             type="checkbox"
-                                            name="date"
+                                            name="isDoubleBlind"
                                             id="doubleBlind"
-                                            value={this.state.date}
-                                            placeholder="yyyy-mm-dd"
+                                            checked={this.state.isDoubleBlind}
                                         />
                                         <Label for="doubleBlind" check>
                                             Double blind

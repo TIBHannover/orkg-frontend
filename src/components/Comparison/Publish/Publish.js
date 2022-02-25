@@ -33,7 +33,7 @@ import { slugify } from 'utils';
 import { PREDICATES, CLASSES, ENTITIES, MISC } from 'constants/graphSettings';
 import env from '@beam-australia/react-env';
 import Select from 'react-select';
-import { getOrganizationsByType } from 'services/backend/organizations';
+import { getConferences } from 'services/backend/organizations';
 
 const StyledCustomInput = styled(Input)`
     margin-right: 0;
@@ -98,7 +98,7 @@ function Publish(props) {
         setComparisonCreators(props.authors ? props.authors : []);
 
         const getConferencesList = () => {
-            getOrganizationsByType('conference').then(response => {
+            getConferences().then(response => {
                 setConferencesList(response);
             });
         };
@@ -238,7 +238,7 @@ function Publish(props) {
                     });
                     if (conference && conference.metadata.is_double_blind) {
                         const anonymizeLiteral = await createLiteral(true);
-                        await createLiteralStatement(createdComparison.id, PREDICATES.ISANONYMIZE, anonymizeLiteral.id);
+                        await createLiteralStatement(createdComparison.id, PREDICATES.ISANONYMIZED, anonymizeLiteral.id);
                     }
                     toast.success('Comparison saved successfully');
                     // Assign a DOI
