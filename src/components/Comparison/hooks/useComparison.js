@@ -247,7 +247,7 @@ function useComparison({ id }) {
                 .catch(() => {
                     setProvenance(null);
                 });
-        } else if (organization_id && organization_id !== MISC.UNKNOWN_ID && observatory_id && observatory_id === MISC.UNKNOWN_ID) {
+        } else if (organization_id && organization_id !== MISC.UNKNOWN_ID) {
             getOrganization(organization_id)
                 .then(organization => {
                     setProvenance({ organization: organization });
