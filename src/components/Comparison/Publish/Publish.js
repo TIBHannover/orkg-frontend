@@ -82,8 +82,8 @@ function Publish(props) {
     );
     const [subject, setSubject] = useState(props.metaData && props.metaData.subject ? props.metaData.subject : undefined);
     const [comparisonCreators, setComparisonCreators] = useState(props.authors ?? []);
-    const [conferencesList, setConferencesList] = useState('');
-    const [conference, setConference] = useState('');
+    const [conferencesList, setConferencesList] = useState([]);
+    const [conference, setConference] = useState(null);
 
     const handleCreatorsChange = creators => {
         creators = creators ? creators : [];
@@ -96,14 +96,16 @@ function Publish(props) {
         setReferences(props.metaData?.references?.length > 0 ? props.metaData.references.map(r => r.label) : ['']);
         setSubject(props.metaData && props.metaData.subject ? props.metaData.subject : undefined);
         setComparisonCreators(props.authors ? props.authors : []);
+    }, [props.metaData, props.authors]);
 
+    useEffect(() => {
         const getConferencesList = () => {
             getConferences().then(response => {
                 setConferencesList(response);
             });
         };
         getConferencesList();
-    }, [props.metaData, props.authors]);
+    }, []);
 
     // TODO: improve code by using reduce function and unify code with paper edit dialog
     const saveCreators = async (creators, resourceId) => {
@@ -179,10 +181,6 @@ function Publish(props) {
                     } else {
                         response_hash = props.responseHash;
                     }
-                    let organizationId = '';
-                    if (conference) {
-                        organizationId = conference.id;
-                    }
                     const comparison_obj = {
                         predicates: [],
                         resource: {
@@ -227,7 +225,7 @@ function Publish(props) {
                                 })
                             },
                             observatoryId: MISC.UNKNOWN_ID,
-                            organizationId: organizationId
+                            organizationId: conference ? conference.id : MISC.UNKNOWN_ID
                         }
                     };
                     const createdComparison = await createObject(comparison_obj);
@@ -538,6 +536,7 @@ function Publish(props) {
                                 isSearchable={true}
                                 getOptionLabel={({ name }) => name}
                                 isClearable={true}
+                                classNamePrefix="react-select"
                             />
                         </FormGroup>
                         <FormGroup>
@@ -631,7 +630,7 @@ Publish.propTypes = {
     loadProvenanceInfos: PropTypes.func.isRequired,
     data: PropTypes.object.isRequired,
     nextVersions: PropTypes.array.isRequired,
-    anonymized: PropTypes.bool.isRequired
+    anonymized: PropTypes.bool
 };
 
 export default Publish;
