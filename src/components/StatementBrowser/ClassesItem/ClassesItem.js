@@ -58,7 +58,6 @@ const ClassesItem = props => {
     const [isSaving, setIsSaving] = useState(false);
     const dispatch = useDispatch();
     const preferences = useSelector(state => state.statementBrowser.preferences);
-    const shared = resource?.shared ?? 0;
 
     useEffect(() => {
         let isMounted = true;
@@ -177,7 +176,7 @@ const ClassesItem = props => {
                                 </InputGroup>
                             </div>
                         )}
-                        {shared <= 1 && props.enableEdit && !editMode && (
+                        {props.enableEdit && !editMode && (
                             <StatementActionButton title="Edit classes" icon={faPen} action={() => setEditMode(true)} />
                         )}
                     </ClassesStyle>
