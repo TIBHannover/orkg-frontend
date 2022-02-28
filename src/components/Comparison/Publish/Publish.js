@@ -238,7 +238,7 @@ function Publish(props) {
                     });
                     if (conference && conference.metadata.is_double_blind) {
                         const anonymizeLiteral = await createLiteral(true);
-                        await createLiteralStatement(createdComparison.id, PREDICATES.ISANONYMIZED, anonymizeLiteral.id);
+                        await createLiteralStatement(createdComparison.id, PREDICATES.IS_ANONYMIZED, anonymizeLiteral.id);
                     }
                     toast.success('Comparison saved successfully');
                     // Assign a DOI
