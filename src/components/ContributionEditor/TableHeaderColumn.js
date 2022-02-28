@@ -3,7 +3,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import { paperUpdated, contributionUpdated, fetchTemplatesOfClassIfNeeded } from 'slices/contributionEditorSlice';
 import useContributionEditor from 'components/ContributionEditor/hooks/useContributionEditor';
-import { Contribution, Delete, ItemHeader, ItemHeaderInner } from 'components/Comparison/styled';
+import { Contribution, Delete, ItemHeader, ItemHeaderInner, ContributionButton } from 'components/Comparison/styled';
 import EditPaperDialog from 'components/ViewPaper/EditDialog/EditPaperDialog';
 import EditResourceDialog from 'components/EditResourceDialog/EditResourceDialog';
 import useEditPaper from 'components/ViewPaper/EditDialog/hooks/useEditPaper';
@@ -69,27 +69,29 @@ const TableHeaderColumn = ({ contribution, paper }) => {
                         </Button>
                     </span>
                 </Tippy>
-                <Contribution className="contribution-editor" onClick={() => setIsOpenContributionModal(true)}>
-                    <Tippy
-                        interactive={true}
-                        appendTo={document.body}
-                        content={
-                            <>
-                                Instance of:{' '}
-                                {contribution.classes?.map((c, index) => (
-                                    <Fragment key={c}>
-                                        <Link target="_blank" to={reverse(ROUTES.CLASS, { id: c })}>
-                                            {c}
-                                        </Link>
-                                        {index + 1 !== contribution.classes.length && ', '}
-                                    </Fragment>
-                                ))}
-                                {contribution.classes?.length === 0 && <i className="text-secondary">No classes</i>}
-                            </>
-                        }
-                    >
-                        <span>{contribution.label}</span>
-                    </Tippy>
+                <Contribution className="contribution-editor">
+                    <ContributionButton color="link" onClick={() => setIsOpenContributionModal(true)}>
+                        <Tippy
+                            interactive={true}
+                            appendTo={document.body}
+                            content={
+                                <>
+                                    Instance of:{' '}
+                                    {contribution.classes?.map((c, index) => (
+                                        <Fragment key={c}>
+                                            <Link target="_blank" to={reverse(ROUTES.CLASS, { id: c })}>
+                                                {c}
+                                            </Link>
+                                            {index + 1 !== contribution.classes.length && ', '}
+                                        </Fragment>
+                                    ))}
+                                    {contribution.classes?.length === 0 && <i className="text-secondary">No classes</i>}
+                                </>
+                            }
+                        >
+                            <span>{contribution.label}</span>
+                        </Tippy>
+                    </ContributionButton>
                 </Contribution>
 
                 <Delete className="contribution-editor" onClick={() => handleRemoveContribution(contribution.id)}>
