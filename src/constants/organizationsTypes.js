@@ -1,7 +1,7 @@
 export const ORGANIZATIONS_MISC = {
-    GENERAL: 'general',
-    CONFERENCE: 'conference',
-    JOURNAL: 'journal'
+    GENERAL: 'GENERAL',
+    CONFERENCE: 'CONFERENCE',
+    JOURNAL: 'JOURNAL'
 };
 
 export const ORGANIZATIONS_TYPES = [
