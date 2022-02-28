@@ -16,6 +16,7 @@ import { toast } from 'react-toastify';
 import { memo, useState, Fragment } from 'react';
 import { useDispatch } from 'react-redux';
 import { Button } from 'reactstrap';
+import { CLASSES } from 'constants/graphSettings';
 
 const TableHeaderColumn = ({ contribution, paper }) => {
     const [isOpenEditModal, setIsOpenEditModal] = useState(false);
@@ -110,6 +111,7 @@ const TableHeaderColumn = ({ contribution, paper }) => {
                     toggle={v => setIsOpenContributionModal(!v)}
                     isOpen
                     showResourceLink
+                    fixedClasses={[CLASSES.CONTRIBUTION]}
                 />
             )}
 

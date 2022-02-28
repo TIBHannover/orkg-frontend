@@ -10,7 +10,7 @@ import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
-const EditResourceDialog = ({ resource, isOpen, toggle, afterUpdate, showResourceLink }) => {
+const EditResourceDialog = ({ resource, isOpen, toggle, afterUpdate, showResourceLink, fixedClasses }) => {
     const { classes, label, isLoading, setIsLoading, handleChangeClasses, setLabel } = useEditResource(resource);
 
     const handleSave = async () => {
@@ -51,6 +51,9 @@ const EditResourceDialog = ({ resource, isOpen, toggle, afterUpdate, showResourc
                     <AutoComplete
                         entityType={ENTITIES.CLASS}
                         onChange={(selected, action) => {
+                            if (action.removedValue && action.removedValue.isFixed) {
+                                return;
+                            }
                             handleChangeClasses(selected, action);
                         }}
                         placeholder="Specify the classes of the resource"
@@ -61,6 +64,7 @@ const EditResourceDialog = ({ resource, isOpen, toggle, afterUpdate, showResourc
                         isMulti
                         autoFocus={false}
                         ols={true}
+                        fixedOptions={fixedClasses}
                         inputId="classes-autocomplete"
                     />
                 </FormGroup>
@@ -78,6 +82,7 @@ EditResourceDialog.propTypes = {
     isOpen: PropTypes.bool.isRequired,
     toggle: PropTypes.func.isRequired,
     resource: PropTypes.object.isRequired,
+    fixedClasses: PropTypes.array,
     afterUpdate: PropTypes.func,
     showResourceLink: PropTypes.bool
 };
