@@ -72,7 +72,7 @@ const OrganizationDetails = () => {
                     setLogo(responseJson.logo);
                     setIsLoading(false);
                     setCreatedBy(responseJson.created_by);
-                    setType(responseJson.type.toLowerCase());
+                    setType(responseJson.type);
                     setDate(responseJson.metadata && responseJson.metadata.date ? responseJson.metadata.date : '');
                     setIsDoubleBlind(responseJson.metadata && responseJson.metadata.is_double_blind && responseJson.metadata.is_double_blind);
                 })
@@ -175,7 +175,7 @@ const OrganizationDetails = () => {
                 url={url}
                 previewSrc={logo}
                 updateOrganizationMetadata={updateOrganizationMetadata}
-                type={type ? type.toLowerCase() : ''}
+                type={type ? type : ''}
                 date={date ? date : ''}
                 isDoubleBlind={isDoubleBlind ? isDoubleBlind : false}
             />
