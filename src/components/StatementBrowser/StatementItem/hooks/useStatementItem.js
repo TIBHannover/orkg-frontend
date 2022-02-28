@@ -38,13 +38,13 @@ function useStatementItem({ propertyId, resourceId, syncBackend }) {
                 getResource(property.label)
                     .catch(e => {
                         console.log(e);
-                        setPredicateLabel(property.label.charAt(0).toUpperCase() + property.label.slice(1));
+                        setPredicateLabel(property.label);
                     })
                     .then(r => {
-                        setPredicateLabel(`${r.label.charAt(0).toUpperCase() + r.label.slice(1)} (${property.label})`);
+                        setPredicateLabel(`${r.label} (${property.label})`);
                     });
             } else {
-                setPredicateLabel(property.label.charAt(0).toUpperCase() + property.label.slice(1));
+                setPredicateLabel(property.label);
             }
         };
         getPredicateLabel();

@@ -7,7 +7,6 @@ import Confirm from 'components/Confirmation/Confirmation';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteProperty, updateProperty, canDeletePropertyAction } from 'slices/contributionEditorSlice';
 import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
-import { upperFirst } from 'lodash';
 import { Button } from 'reactstrap';
 import useConfirmPropertyModal from 'components/StatementBrowser/AddProperty/hooks/useConfirmPropertyModal';
 import { ENTITIES } from 'constants/graphSettings';
@@ -81,7 +80,7 @@ const TableHeaderRow = ({ property }) => {
                 <PropertiesInner cellPadding={10}>
                     <div className="position-relative">
                         <Button onClick={() => setIsOpenStatementBrowser(true)} color="link" className="text-light m-0 p-0 text-start">
-                            {upperFirst(property.label)}
+                            {property.label}
                         </Button>
                         {pwcStatementIds.length === 0 && (
                             <TableCellButtons
