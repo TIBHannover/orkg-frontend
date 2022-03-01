@@ -53,7 +53,7 @@ function AutocompleteObservatory(props) {
     };
 
     useEffect(() => {
-        if (options.length && props.observatory) {
+        if (options.length && props.observatory && props.observatory.id) {
             const selected = options.find(o => props.observatory.id === o.id);
             props.onChangeObservatory(selected ?? null);
             setOptionsOrganizations(selected.organizations);
