@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 import { isString } from 'lodash';
 
 const useDiff = () => {
-    const smartReviewToPlainText = useCallback(article => {
+    const reviewToPlainText = useCallback(article => {
         let articleText = '';
         articleText += `Title: ${article.paper.title}\n\n`;
 
@@ -106,7 +106,7 @@ const useDiff = () => {
         return numericOldId > numericNewId;
     }, []);
 
-    return { smartReviewToPlainText, comparisonToPlainText, isOldIdHigherThanNewId, literatureListToPlainText };
+    return { reviewToPlainText, comparisonToPlainText, isOldIdHigherThanNewId, literatureListToPlainText };
 };
 
 export default useDiff;

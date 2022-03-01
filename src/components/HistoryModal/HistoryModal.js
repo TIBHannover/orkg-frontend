@@ -1,6 +1,7 @@
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
+import MarkFeaturedUnlistedContainer from 'components/Comparison/MarkFeaturedUnlistedContainer';
 import moment from 'moment';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
@@ -138,6 +139,14 @@ const HistoryModal = ({ id, show, toggle, title, versions = [], routeDiff }) => 
                                     </Time>
                                     <div>
                                         Version {versions.length - i}
+                                        <div className="ms-1 d-inline-block ">
+                                            <MarkFeaturedUnlistedContainer
+                                                size="xs"
+                                                id={version?.id}
+                                                featured={version?.featured}
+                                                unlisted={version?.unlisted}
+                                            />
+                                        </div>
                                         {version.description && (
                                             <>
                                                 : <em>{version.description}</em>

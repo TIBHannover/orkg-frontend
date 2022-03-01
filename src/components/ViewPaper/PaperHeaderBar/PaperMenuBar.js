@@ -68,7 +68,7 @@ function PaperMenuBar(props) {
                 <DropdownToggle size="sm" color="secondary" className="px-3 rounded-end">
                     <Icon icon={faEllipsisV} />
                 </DropdownToggle>
-                <DropdownMenu right>
+                <DropdownMenu end>
                     <DropdownItem tag={NavLink} exact to={reverse(ROUTES.RESOURCE, { id: props.id })}>
                         View resource
                     </DropdownItem>

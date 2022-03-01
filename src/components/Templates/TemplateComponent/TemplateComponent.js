@@ -88,7 +88,7 @@ function TemplateComponent(props) {
 TemplateComponent.propTypes = {
     id: PropTypes.number.isRequired,
     property: PropTypes.object.isRequired,
-    value: PropTypes.object.isRequired,
+    value: PropTypes.object,
     minOccurs: PropTypes.string.isRequired,
     maxOccurs: PropTypes.string,
     validationRules: PropTypes.object,

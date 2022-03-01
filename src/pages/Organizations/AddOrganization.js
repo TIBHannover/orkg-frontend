@@ -143,7 +143,7 @@ class AddOrganization extends Component {
                                         <Tooltip message="Permalink field allows to identify the organization page on ORKG in an easy-to-read form. Only underscores ( _ ), numbers, and letters are allowed." />
                                     </Label>
                                     <InputGroup>
-                                        {this.publicOrganizationRoute}
+                                        <span className="input-group-text">{this.publicOrganizationRoute}</span>
                                         <Input
                                             onChange={this.handleChange}
                                             type="text"

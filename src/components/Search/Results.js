@@ -40,7 +40,7 @@ const StyledListGroupItem = styled(ListGroupItem)`
 const Results = props => {
     return (
         <div>
-            {props.loading && (
+            {props.loading && props.currentPage === 0 && (
                 <ContentLoader
                     height="100%"
                     width="100%"
@@ -72,7 +72,7 @@ const Results = props => {
                         <ListGroup>
                             {props.items.map((item, index) => {
                                 return (
-                                    <StyledListGroupItem rounded={props.hasNextPage.toString()} action key={`result-${index}`} className="pt-1 pb-1">
+                                    <StyledListGroupItem rounded={props.hasNextPage.toString()} key={`result-${index}`} className="pt-1 pb-1">
                                         <Link to={getResourceLink(props.class, item.id)}>{item.label}</Link>
                                         {item.classes && item.classes.includes(CLASSES.COMPARISON) && (
                                             <div>
@@ -116,7 +116,8 @@ Results.propTypes = {
     items: PropTypes.array.isRequired,
     loadMore: PropTypes.func.isRequired,
     hasNextPage: PropTypes.bool.isRequired,
-    showNoResultsMessage: PropTypes.bool.isRequired
+    showNoResultsMessage: PropTypes.bool.isRequired,
+    currentPage: PropTypes.number.isRequired
 };
 
 export default withRouter(Results);

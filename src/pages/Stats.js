@@ -46,7 +46,7 @@ const Stats = () => {
                     <ColoredStatsBox number={stats.contributions} label="Contributions" isLoading={isLoading} />
                     <ColoredStatsBox link={reverse(ROUTES.RESEARCH_FIELDS)} number={stats.fields} label="Research fields" isLoading={isLoading} />
                     <ColoredStatsBox link={reverse(ROUTES.TEMPLATES)} number={stats.templates} label="Templates" isLoading={isLoading} />
-                    <ColoredStatsBox link={reverse(ROUTES.SMART_REVIEWS)} number={stats.smart_reviews} label="SmartReviews" isLoading={isLoading} />
+                    <ColoredStatsBox link={reverse(ROUTES.REVIEWS)} number={stats.smart_reviews} label="Reviews" isLoading={isLoading} />
                 </Row>
                 <Row>
                     <ColoredStatsBox number={stats.users} label="Users" isLoading={isLoading} />

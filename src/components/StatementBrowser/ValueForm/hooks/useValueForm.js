@@ -10,7 +10,8 @@ import {
     isSavingValue,
     isAddingValue,
     doneAddingValue,
-    fillStatements
+    fillStatements,
+    getSubjectIdByValue
 } from 'actions/statementBrowser';
 import { createResourceStatement } from 'services/backend/statements';
 import { createResource, updateResource } from 'services/backend/resources';
@@ -29,11 +30,9 @@ const useValueForm = ({ valueId, resourceId, propertyId, syncBackend }) => {
     const editMode = Boolean(valueId);
     const value = useSelector(state => (valueId ? state.statementBrowser.values.byId[valueId] : null));
     const property = useSelector(state => state.statementBrowser.properties.byId[editMode ? value.propertyId : propertyId]);
-    const subjectId = editMode ? value.resourceId : resourceId;
-    const valueClass = useSelector(state =>
-        editMode ? value.classes?.[0] : getValueClass(getComponentsByResourceIDAndPredicateID(state, subjectId, property?.existingPredicateId))
-    );
-
+    const subjectId = useSelector(state => (editMode ? getSubjectIdByValue(state, valueId) : resourceId));
+    // refactoring: Can be replaced with the id class
+    const valueClass = useSelector(state => getValueClass(getComponentsByResourceIDAndPredicateID(state, subjectId, property?.existingPredicateId)));
     const isLiteralField = useSelector(state =>
         editMode
             ? value._class === ENTITIES.LITERAL
@@ -67,7 +66,7 @@ const useValueForm = ({ valueId, resourceId, propertyId, syncBackend }) => {
                             : updateResource(value.resourceId, draftLabel);
                     apiCall
                         .then(() => {
-                            toast.success(`${value._class === ENTITIES.LITERAL ? 'Resource' : 'Literal'} label updated successfully`);
+                            toast.success(`${value._class === ENTITIES.LITERAL ? 'Literal' : 'Resource'} label updated successfully`);
                             dispatch(doneSavingValue({ id: valueId }));
                         })
                         .catch(() => {

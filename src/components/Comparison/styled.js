@@ -227,6 +227,13 @@ export const Contribution = styled.div`
     }
 `;
 
+export const ContributionButton = styled(Button)`
+    padding: 0;
+    color: inherit !important;
+    font-size: inherit;
+    text-decoration: none;
+`;
+
 export const Delete = styled.button`
     position: absolute;
     border: 0;

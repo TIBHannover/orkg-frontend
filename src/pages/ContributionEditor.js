@@ -2,6 +2,7 @@ import { faPlusCircle, faExternalLinkAlt } from '@fortawesome/free-solid-svg-ico
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { contributionsRemoved, loadContributions } from 'slices/contributionEditorSlice';
 import CreateProperty from 'components/ContributionEditor/CreateProperty';
+import PropertySuggestions from 'components/ContributionEditor/PropertySuggestions/PropertySuggestions';
 import EditorTable from 'components/ContributionEditor/EditorTable';
 import useContributionEditor from 'components/ContributionEditor/hooks/useContributionEditor';
 import TableLoadingIndicator from 'components/ContributionEditor/TableLoadingIndicator';
@@ -143,6 +144,8 @@ const ContributionEditor = () => {
                         </TableScrollContainer>
 
                         <CreateProperty />
+
+                        <PropertySuggestions />
                     </>
                 )}
                 {hasFailed && <Alert color="danger">An error has occurred while loading the specified contributions</Alert>}

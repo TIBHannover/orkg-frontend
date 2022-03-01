@@ -17,13 +17,16 @@ import Tippy from '@tippyjs/react';
 import ReactTextareaAutocomplete from '@webscopeio/react-textarea-autocomplete';
 import '@webscopeio/react-textarea-autocomplete/style.css';
 import MarkdownRenderer from 'components/ArticleBuilder/MarkdownEditor/MarkdownRenderer';
-import MarkdownRendererReferences from 'components/SmartReview/MarkdownRenderer';
+import MarkdownRendererReferences from 'components/Review/MarkdownRenderer';
 import { MarkdownPlaceholder } from 'components/ArticleBuilder/styled';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import Textarea from 'react-textarea-autosize';
 import { toast } from 'react-toastify';
 import { ButtonGroup } from 'reactstrap';
+import env from '@beam-australia/react-env';
+import { reverse } from 'named-urls';
+import ROUTES from 'constants/routes';
 import { getResource, getResources } from 'services/backend/resources';
 import styled from 'styled-components';
 
@@ -161,7 +164,10 @@ const MarkdownEditor = ({ label, handleUpdate, references = null, literalId = nu
             dataProvider: findResources,
             component: ItemResource,
             allowWhitespace: true,
-            output: item => `[${item.resource.label}](https://www.orkg.org/orkg/resource/${item.resource.id})`
+            output: item =>
+                `[${item.resource.label}](${env('URL')}${reverse(ROUTES.RESOURCE, {
+                    id: item.resource.id
+                }).replace('/', '', 1)})`
         },
         '[@': {
             dataProvider: token =>

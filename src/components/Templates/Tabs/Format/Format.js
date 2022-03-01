@@ -61,7 +61,7 @@ function Format(props) {
                                 {props.components.map(component => (
                                     <tr key={`row${component.property.id}`}>
                                         <th scope="row">{component.property.id}</th>
-                                        <td style={{}}>{component.property.label.charAt(0).toUpperCase() + component.property.label.slice(1)}</td>
+                                        <td style={{}}>{component.property.label}</td>
                                     </tr>
                                 ))}
                             </tbody>

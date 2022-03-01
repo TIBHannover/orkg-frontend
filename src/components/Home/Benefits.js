@@ -8,7 +8,8 @@ import { ReactComponent as IconReputation } from 'assets/img/benefits/reputation
 import { ReactComponent as IconVisibility } from 'assets/img/benefits/visibility.svg';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Button, Card, CardBody, CardSubtitle, CardTitle, Carousel, CarouselIndicators, CarouselItem } from 'reactstrap';
+import { Button, Card, CardBody, CardSubtitle, CardTitle, Carousel, CarouselItem } from 'reactstrap';
+import { CarouselIndicatorsStyled } from 'components/styled';
 import styled from 'styled-components';
 
 const CarouselContainer = styled.div`
@@ -36,21 +37,6 @@ const ObservatoryCardStyled = styled.div`
         .observatoryName {
             text-decoration: underline;
         }
-    }
-`;
-
-const CarouselIndicatorsStyled = styled(CarouselIndicators)`
-    && {
-        margin: 0;
-    }
-
-    background: ${props => props.theme.lightLighter};
-    [data-bs-target] {
-        width: 10px;
-        height: 10px;
-        border-radius: 100%;
-        background: ${props => props.theme.primary};
-        background-clip: padding-box;
     }
 `;
 

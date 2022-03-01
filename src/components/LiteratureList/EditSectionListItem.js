@@ -79,7 +79,7 @@ const EditSectionListItem = ({ entry, sectionId, statementId }) => {
                 onMouseEnter={() => setIsHovering(true)}
                 onMouseLeave={() => setIsHovering(false)}
                 role="presentation"
-                className="position-relative p-2"
+                className="position-relative p-0"
             >
                 {isHovering && (
                     <Toolbar>
@@ -93,6 +93,7 @@ const EditSectionListItem = ({ entry, sectionId, statementId }) => {
                     </Toolbar>
                 )}
                 <PaperCard
+                    showCurationFlags={false}
                     isListGroupItem={false}
                     showBreadcrumbs={false}
                     showCreator={false}

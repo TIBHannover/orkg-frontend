@@ -147,7 +147,7 @@ TemplateComponentValue.propTypes = {
     components: PropTypes.array.isRequired,
     setComponents: PropTypes.func.isRequired,
     id: PropTypes.number.isRequired,
-    value: PropTypes.object.isRequired,
+    value: PropTypes.object,
     minOccurs: PropTypes.string.isRequired,
     maxOccurs: PropTypes.string,
     enableEdit: PropTypes.bool.isRequired,

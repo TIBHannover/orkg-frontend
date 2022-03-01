@@ -7,12 +7,12 @@ import RequireAuthentication from 'components/RequireAuthentication/RequireAuthe
 import NotFound from 'pages/NotFound';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPen, faTimes } from '@fortawesome/free-solid-svg-icons';
-import { EditModeHeader, Title } from 'pages/ViewPaper';
 import PropTypes from 'prop-types';
 import { useLocation } from 'react-router-dom';
 import PropertyStatements from 'components/PropertyStatements/PropertyStatements';
 import { ENTITIES } from 'constants/graphSettings';
 import TitleBar from 'components/TitleBar/TitleBar';
+import EditModeHeader from 'components/EditModeHeader/EditModeHeader';
 
 function Property(props) {
     const location = useLocation();
@@ -69,13 +69,7 @@ function Property(props) {
                         Property view
                     </TitleBar>
                     <Container className="p-0 clearfix">
-                        {editMode && (
-                            <EditModeHeader className="box rounded-top">
-                                <Title>
-                                    Edit mode <span className="ps-2">Every change you make is automatically saved</span>
-                                </Title>
-                            </EditModeHeader>
-                        )}
+                        <EditModeHeader isVisible={editMode} />
                         <div className={`box clearfix pt-4 pb-4 ps-5 pe-5 ${editMode ? 'rounded-bottom' : 'rounded'}`}>
                             <div className="mb-2">
                                 <div className="pb-2 mb-3">

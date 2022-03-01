@@ -1,6 +1,7 @@
 import capitalize from 'capitalize';
 import { FILTER_TYPES } from 'constants/comparisonFilterTypes';
 import { CLASSES, MISC, PREDICATES, ENTITIES } from 'constants/graphSettings';
+import REGEX from 'constants/regex';
 import ROUTES from 'constants/routes';
 import { find, flatten, flattenDepth, isEqual, isString, last, uniq, sortBy, uniqBy, isEmpty, cloneDeep } from 'lodash';
 import { unescape } from 'he';
@@ -231,11 +232,11 @@ export const getPaperData = (resource, paperStatements) => {
 };
 
 /**
- * Parse smart review statements and return a smart review object
- * @param {Object} resource Smart Review resource
- * @param {Array} statements Smart Review Statements
+ * Parse review statements and return a review object
+ * @param {Object} resource Review resource
+ * @param {Array} statements Review Statements
  */
-export const getSmartReviewData = (resource, statements) => {
+export const getReviewData = (resource, statements) => {
     const description = filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.DESCRIPTION, true);
     const paperId = filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.HAS_PAPER, true)?.id;
     const researchField = filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.HAS_RESEARCH_FIELD, true, CLASSES.RESEARCH_FIELD);
@@ -248,6 +249,27 @@ export const getSmartReviewData = (resource, statements) => {
         researchField,
         authors,
         paperId
+    };
+};
+
+/**
+ * Parse literature list statements and return a literature list object
+ * @param {Object} resource Literature List resource
+ * @param {Array} statements Literature List  Statements
+ */
+export const getLiteratureListData = (resource, statements) => {
+    const description = filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.DESCRIPTION, true);
+    const listId = filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.HAS_LIST, true)?.id;
+    const researchField = filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.HAS_RESEARCH_FIELD, true, CLASSES.RESEARCH_FIELD);
+    const authors = filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.HAS_AUTHOR, false);
+    return {
+        ...resource,
+        id: resource.id,
+        label: resource.label ? resource.label : 'No Title',
+        description: description?.label ?? '',
+        researchField,
+        authors,
+        listId
     };
 };
 
@@ -753,8 +775,9 @@ function convertTreeToFlat(treeStructure) {
  */
 export const groupVersionsOfComparisons = (comparisons, sortFunc = (a, b) => new Date(b.created_at) - new Date(a.created_at)) => {
     // 1- Remove duplicated and keep the ones with hasPreviousVersion
+    let result = comparisons.filter(c => c?.classes?.includes(CLASSES.COMPARISON));
     // 2- Make a tree of versions
-    let result = list_to_tree(uniqBy(sortBy(comparisons, 'hasPreviousVersion'), 'id'));
+    result = list_to_tree(uniqBy(sortBy(result, 'hasPreviousVersion'), 'id'));
     // 3- We flat the versions  inside the roots
     for (let i = 0; i < result.length; i += 1) {
         // Always the new version if the main resource
@@ -762,7 +785,7 @@ export const groupVersionsOfComparisons = (comparisons, sortFunc = (a, b) => new
         result[i] = { ...arrayVersions[0], versions: arrayVersions };
     }
     // 4- We sort the roots
-    result = result.sort(sortFunc);
+    result = [...result, ...comparisons.filter(c => !c?.classes?.includes(CLASSES.COMPARISON))].sort(sortFunc);
     return result;
 };
 
@@ -778,6 +801,21 @@ export const compareOption = (inputValue = '', option) => {
     const optionLabel = String(option.label).toLowerCase();
     const optionURI = String(option.uri).toLowerCase();
     return optionValue === candidate || optionLabel === candidate || optionURI === candidate;
+};
+
+/**
+ * Merge two arrays with alternating values
+ * @param {Array} array1 Array 2
+ * @param {Array} array2 Array 2
+ */
+export const mergeAlternate = (array1, array2) => {
+    const result = [];
+    const l = Math.min(array1.length, array2.length);
+    for (let i = 0; i < l; i++) {
+        result.push(array1[i], array2[i]);
+    }
+    result.push(...array1.slice(l), ...array2.slice(l));
+    return result;
 };
 
 // TODO: could be part of a 'parseDoi' hook when the add paper wizard is refactored to support hooks
@@ -1158,7 +1196,7 @@ export const getResourceLink = (classId, id) => {
         [CLASSES.TEMPLATE]: [ROUTES.TEMPLATE, 'id'],
         [CLASSES.VISUALIZATION]: [ROUTES.VISUALIZATION, 'id'],
         [CLASSES.CONTRIBUTION]: [ROUTES.CONTRIBUTION, 'id'],
-        [CLASSES.SMART_REVIEW_PUBLISHED]: [ROUTES.SMART_REVIEW, 'id'],
+        [CLASSES.SMART_REVIEW_PUBLISHED]: [ROUTES.REVIEW, 'id'],
         [CLASSES.LITERATURE_LIST_PUBLISHED]: [ROUTES.LITERATURE_LIST, 'id'],
         [ENTITIES.RESOURCE]: [ROUTES.RESOURCE, 'id'],
         [ENTITIES.PREDICATE]: [ROUTES.PROPERTY, 'id'],
@@ -1183,6 +1221,25 @@ export const getLinkByEntityType = (_class, id) => {
         [ENTITIES.PREDICATE]: ROUTES.PROPERTY
     };
     return links[_class] ? reverse(links[_class], { id }) : '';
+};
+
+/**
+ * Get Entity Type based on ID
+ * (Only works for IDs with the default pattern (#Rxxx, #Cxxx, #Pxxx)
+ * @param {String} id Entity ID
+ * @result {String} Entity type or false if no pattern matched
+ */
+export const getEntityTypeByID = value => {
+    if (value.match(REGEX.RESOURCE_PATTERN)) {
+        return ENTITIES.RESOURCE;
+    }
+    if (value.match(REGEX.PROPERTY_PATTERN)) {
+        return ENTITIES.PREDICATE;
+    }
+    if (value.match(REGEX.CLASS_PATTERN)) {
+        return ENTITIES.CLASS;
+    }
+    return false;
 };
 
 /**
@@ -1252,9 +1309,11 @@ export const getResourceTypeLabel = classId => {
  */
 export const stringifySort = sort => {
     const stringsSortMapping = {
-        newest: 'Newest first',
+        newest: 'Recently added',
         oldest: 'Oldest first',
         featured: 'Featured',
+        combined: 'Top recent',
+        unlisted: 'Unlisted',
         top: 'Last 30 days',
         all: 'All time'
     };
@@ -1330,8 +1389,11 @@ export const getDataBasedOnType = (resource, statements) => {
     if (resource?.classes?.includes(CLASSES.VISUALIZATION)) {
         return getVisualizationData(resource, statements);
     }
-    if (resource?.classes?.includes(CLASSES.SMART_REVIEW)) {
-        return getSmartReviewData(resource, statements);
+    if (resource?.classes?.includes(CLASSES.SMART_REVIEW) || resource?.classes?.includes(CLASSES.SMART_REVIEW_PUBLISHED)) {
+        return getReviewData(resource, statements);
+    }
+    if (resource?.classes?.includes(CLASSES.LITERATURE_LIST) || resource?.classes?.includes(CLASSES.LITERATURE_LIST_PUBLISHED)) {
+        return getLiteratureListData(resource, statements);
     } else {
         return undefined;
     }
