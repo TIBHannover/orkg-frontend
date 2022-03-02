@@ -188,7 +188,7 @@ const ResearchProblemHeader = ({ id }) => {
                                                 </Link>
                                             ))}
                                             {researchProblemData.subProblems.length > 9 &&
-                                                researchProblemData.subProblems &&
+                                                showMoreFields &&
                                                 researchProblemData.subProblems.slice(9).map(subfield => (
                                                     <Link
                                                         key={`index${subfield.id}`}
