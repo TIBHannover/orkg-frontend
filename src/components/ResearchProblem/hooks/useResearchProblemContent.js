@@ -90,7 +90,7 @@ function useResearchProblemContent({
                             });
                             setItems(prevResources => {
                                 let newItems = groupVersionsOfComparisons([
-                                    ...flatten([...prevResources.map(c => c.versions), ...prevResources]),
+                                    ...flatten([...prevResources.map(c => c.versions ?? []), ...prevResources]),
                                     ...dataObjects
                                 ]);
                                 if (sort === 'combined') {
