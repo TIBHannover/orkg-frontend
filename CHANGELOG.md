@@ -3,6 +3,16 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [V0.64](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.63...V0.64) - 2022-03-03
+
+### Changes
+
+- Review: remove reading time estimation [`#793`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/793)
+- feat(CsvImport): support data types for literals [`#794`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/794)
+- fix: Combined lists pagination [`#795`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/795)
+- internal: Rename env var for backend API [`#792`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/792)
+
+---
 ## [V0.63](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.62.1...V0.63) - 2022-03-01
 
 ### Changes
