@@ -121,7 +121,6 @@ const MembersBox = ({ observatoryId, organizationsList }) => {
                     toggle={() => setShowAddMemberDialog(v => !v)}
                     id={observatoryId}
                     organizationsList={organizationsList}
-                    members={members}
                     updateObservatoryMembers={updateObservatoryMembers}
                 />
             </div>

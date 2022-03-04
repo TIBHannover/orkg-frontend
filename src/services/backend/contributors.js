@@ -8,7 +8,3 @@ export const authenticationUrl = env('BACKEND_URL');
 export const getContributorInformationById = contributorsId => {
     return submitGetRequest(`${contributorsUrl}` + contributorsId, {}, true);
 };
-
-export const getContributors = () => {
-    return submitGetRequest(`${contributorsUrl}`);
-};

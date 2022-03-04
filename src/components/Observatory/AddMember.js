@@ -32,7 +32,7 @@ function AddMember(props) {
                     setIsLoading(false);
                     props.toggle();
                 } else {
-                    toast.error('error adding member to an observatory');
+                    toast.error('Account doesn"t exist in ORKG');
                     setIsLoading(false);
                 }
             })
@@ -62,14 +62,14 @@ function AddMember(props) {
                             onChange={handleOrganizationChange}
                             getOptionValue={({ id }) => id}
                             getOptionLabel={({ name }) => name}
+                            classNamePrefix="react-select"
                         />
                         <br />
                         <div>
-                            Search member
+                            Email
                             <FormGroup>
                                 <InputGroup>
-                                    <InputGroupText>Email</InputGroupText>
-                                    <Input id="search_content" onChange={e => handleCreatorChange(e.target.value)} value={text} />
+                                    <Input id="search_content" onChange={e => handleCreatorChange(e.target.value)} type="email" value={text} />
                                 </InputGroup>
                             </FormGroup>
                         </div>
@@ -92,7 +92,6 @@ AddMember.propTypes = {
     toggle: PropTypes.func.isRequired,
     id: PropTypes.string,
     organizationsList: PropTypes.object,
-    members: PropTypes.array,
     updateObservatoryMembers: PropTypes.func
 };
 
