@@ -240,3 +240,58 @@ body {
     background: $light !important;
     color: inherit !important;
 }
+
+// rc-tabs
+.rc-tabs-dropdown {
+    position: absolute;
+    background: #fefefe;
+    border: 1px solid $light-darker;
+    max-height: 500px;
+    overflow: auto;
+    // dropdown
+    scrollbar-width: thin;
+    scrollbar-color: $secondary $light;
+    background: /* Shadow covers */ linear-gradient(white 30%, rgba(255, 255, 255, 0)), linear-gradient(rgba(255, 255, 255, 0), white 70%) 0 100%,
+        /* Shadows */ radial-gradient(farthest-side at 50% 0, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)),
+        radial-gradient(farthest-side at 50% 100%, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)) 0 100%;
+    background-repeat: no-repeat;
+    background-color: white;
+    background-size: 100% 40px, 100% 40px, 100% 14px, 100% 14px;
+    /* Opera doesn't support this in the shorthand */
+    background-attachment: local, local, scroll, scroll;
+}
+.rc-tabs-dropdown-hidden {
+    display: none;
+}
+.rc-tabs-dropdown-menu {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.rc-tabs-dropdown-menu-item {
+    padding: 7px 15px 7px 15px;
+    cursor: pointer;
+    border: 1px solid $light;
+    button {
+        color: inherit;
+        outline: 0;
+        background: inherit;
+        border: 0;
+        padding: 0;
+        margin: 0;
+        :hover {
+            color: #fff !important;
+        }
+    }
+}
+.rc-tabs-dropdown-menu-item:hover {
+    background: $primary;
+    color: #fff;
+    a {
+        color: #fff !important;
+    }
+}
+.rc-tabs-dropdown-menu-item-disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
