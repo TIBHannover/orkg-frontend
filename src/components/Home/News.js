@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
-import { Card, CardBody, CardSubtitle, CardTitle, Carousel, CarouselIndicators, CarouselItem } from 'reactstrap';
+import { Card, CardBody, CardSubtitle, CardTitle, Carousel, CarouselItem } from 'reactstrap';
 import { getNewsCards } from 'services/cms';
+import { CarouselIndicatorsStyled } from 'components/styled';
 import styled from 'styled-components';
 import * as Showdown from 'showdown';
 
@@ -84,7 +85,7 @@ export default function News() {
                                 </Card>
                             </CarouselItem>
                         ))}
-                        <CarouselIndicators className="bg-light-lighter m-0" items={items} activeIndex={activeIndex} onClickHandler={goToIndex} />
+                        <CarouselIndicatorsStyled items={items} activeIndex={activeIndex} onClickHandler={goToIndex} />
                     </Carousel>
                 )}
             </CarouselContainer>

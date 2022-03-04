@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { lazy } from 'react';
 import { Redirect } from 'react-router-dom';
 import ResourceDetails from 'pages/Resources/Resource';
@@ -43,10 +44,10 @@ import FeaturedComparisons from 'pages/FeaturedComparisons';
 import Data from 'pages/Data';
 import Contribution from 'pages/Contribution';
 import CsvImport from 'pages/CsvImport';
-import SmartReview from 'pages/SmartReview/SmartReview';
-import SmartReviews from 'pages/SmartReview/SmartReviews';
-import SmartReviewNew from 'pages/SmartReview/SmartReviewNew';
-import SmartReviewDiff from 'pages/SmartReview/SmartReviewDiff';
+import Review from 'pages/Reviews/Review';
+import Reviews from 'pages/Reviews/Reviews';
+import ReviewNew from 'pages/Reviews/ReviewNew';
+import ReviewDiff from 'pages/Reviews/ReviewDiff';
 import Tools from 'pages/Tools';
 import AddComparison from 'pages/AddComparison';
 import requireAuthentication from 'requireAuthentication';
@@ -179,12 +180,9 @@ const routes = [
         /* TODO: Remove this route (it's temporarily backward compatibility for moving contributions ids from view args to query string) */
         path: ROUTES.COMPARISON + '*',
         exact: true,
-        // eslint-disable-next-line react/prop-types
         component: ({ match, location }) => (
             <Redirect
-                // eslint-disable-next-line react/prop-types
                 to={`${reverse(ROUTES.COMPARISON)}?contributions=${match.params[0].split('/').join(',')}${
-                    // eslint-disable-next-line react/prop-types
                     location.search ? '&' + (location.search.charAt(0) === '?' ? location.search.substr(1) : location.search) : ''
                 }`}
             />
@@ -200,7 +198,6 @@ const routes = [
         /* TODO: Remove this route (it's temporarily backward compatibility for moving predicates to properties naming */
         path: ROUTES.PREDICATE + '*',
         exact: true,
-        // eslint-disable-next-line react/prop-types
         component: ({ match }) => <Redirect to={{ pathname: reverse(ROUTES.PROPERTY, { id: match.params.id }), state: { status: 301 } }} />
     },
     {
@@ -319,20 +316,20 @@ const routes = [
         component: Benchmark
     },
     {
-        path: ROUTES.SMART_REVIEW_NEW,
-        component: requireAuthentication(SmartReviewNew)
+        path: ROUTES.REVIEW_NEW,
+        component: requireAuthentication(ReviewNew)
     },
     {
-        path: ROUTES.SMART_REVIEW_DIFF,
-        component: SmartReviewDiff
+        path: ROUTES.REVIEW_DIFF,
+        component: ReviewDiff
     },
     {
-        path: ROUTES.SMART_REVIEW,
-        component: SmartReview
+        path: ROUTES.REVIEW,
+        component: Review
     },
     {
-        path: ROUTES.SMART_REVIEWS,
-        component: SmartReviews
+        path: ROUTES.REVIEWS,
+        component: Reviews
     },
     {
         path: ROUTES.CONTRIBUTION_EDITOR,
@@ -397,12 +394,40 @@ const routes = [
     },
     {
         path: ROUTES.USER_UNPUBLISHED_REVIEWS,
-        component: () => <Redirect to={{ pathname: reverse(ROUTES.USER_SETTINGS, { tab: 'draft-smart-reviews' }), state: { status: 301 } }} />
+        component: () => <Redirect to={{ pathname: reverse(ROUTES.USER_SETTINGS, { tab: 'draft-reviews' }), state: { status: 301 } }} />
+    }
+];
+
+const legacyRoutes = [
+    {
+        path: ROUTES.SMART_REVIEW_NEW,
+        component: () => <Redirect to={{ pathname: ROUTES.REVIEW_NEW, state: { status: 301 } }} />
     },
-    /* Don't add routes below this line */
+    {
+        path: ROUTES.SMART_REVIEW_DIFF,
+        component: ({ match }) => (
+            <Redirect
+                to={{ pathname: reverse(ROUTES.REVIEW_DIFF, { oldId: match.params.oldId, newId: match.params.newId }), state: { status: 301 } }}
+            />
+        )
+    },
+    {
+        path: ROUTES.SMART_REVIEW,
+        component: ({ match }) => <Redirect to={{ pathname: reverse(ROUTES.REVIEW, { id: match.params.id }), state: { status: 301 } }} />
+    },
+    {
+        path: ROUTES.SMART_REVIEWS,
+        component: () => <Redirect to={{ pathname: ROUTES.REVIEWS, state: { status: 301 } }} />
+    }
+];
+
+const allRoutes = [
+    ...routes,
+    ...legacyRoutes,
+    // NotFound must be the last route
     {
         component: NotFound
     }
 ];
 
-export default routes;
+export default allRoutes;

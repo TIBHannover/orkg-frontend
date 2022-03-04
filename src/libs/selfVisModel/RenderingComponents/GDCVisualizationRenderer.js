@@ -21,8 +21,7 @@ const GDCVisualizationRenderer = props => {
             <Chart
                 chartType={props.model.data.visMethod}
                 data={props.model.data.googleChartsData}
-                // width={this.state.windowWidth - 20 + 'px'}
-                // height={this.state.windowHeight + 'px'}
+                height={props.height ?? undefined}
                 options={{
                     showRowNumber: true,
                     enableInteractivity: !!!props.disableInteractivity,

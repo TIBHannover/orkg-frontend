@@ -122,7 +122,25 @@ const ResearchFieldCards = ({ selectedResearchField, handleFieldSelect, research
                 <h1 className="col-md-8 h5 flex-shrink-0 mb-0">
                     <Icon icon={faStream} className="text-primary" /> Browse by research field
                 </h1>
-                <div className="col-md-4 mt-2 mt-md-0 flex-end d-flex">
+                <div className="col-md-4 mt-2 mt-md-0 flex-row-reverse d-flex">
+                    <div>
+                        <Autocomplete
+                            requestUrl={resourcesUrl}
+                            optionsClass={CLASSES.RESEARCH_FIELD}
+                            placeholder="Search for fields..."
+                            onItemSelected={selected => {
+                                // blur the field allows to focus and open the menu again
+                                rfAutocompleteRef.current && rfAutocompleteRef.current.blur();
+                                handleFieldSelect(selected);
+                            }}
+                            value={selectedResearchField.id !== MISC.RESEARCH_FIELD_MAIN ? selectedResearchField : null}
+                            allowCreate={false}
+                            autoLoadOption={true}
+                            cssClasses="form-control-sm"
+                            isDisabled={isLoading}
+                            innerRef={rfAutocompleteRef}
+                        />
+                    </div>
                     {selectedResearchField.id !== MISC.RESEARCH_FIELD_MAIN && (
                         <Button
                             tag={Link}
@@ -137,22 +155,6 @@ const ResearchFieldCards = ({ selectedResearchField, handleFieldSelect, research
                             Visit field page
                         </Button>
                     )}
-                    <Autocomplete
-                        requestUrl={resourcesUrl}
-                        optionsClass={CLASSES.RESEARCH_FIELD}
-                        placeholder="Search for fields..."
-                        onItemSelected={selected => {
-                            // blur the field allows to focus and open the menu again
-                            rfAutocompleteRef.current && rfAutocompleteRef.current.blur();
-                            handleFieldSelect(selected);
-                        }}
-                        value={selectedResearchField.id !== MISC.RESEARCH_FIELD_MAIN ? selectedResearchField : null}
-                        allowCreate={false}
-                        autoLoadOption={true}
-                        cssClasses="form-control-sm"
-                        isDisabled={isLoading}
-                        innerRef={rfAutocompleteRef}
-                    />
                 </div>
             </div>
             <hr className="mt-3 mb-1" />

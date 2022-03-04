@@ -6,14 +6,10 @@ export default function checkDataValidation(data) {
     const header = data && data[0];
     const values = data && data.slice(1).map(r => r.map(s => (s ? s.trim() : '')));
 
-    // Check if paper:title column exists
+    // Check if paper:title or paper:doi column exists
     const columns = Joi.array()
-        .has(
-            Joi.string()
-                .valid('paper:title')
-                .required()
-        )
-        .message('Missing required column <em>paper:title</em>');
+        .has(Joi.string().valid('paper:title', 'paper:doi'))
+        .message('Missing required column <em>paper:title</em> or <em>paper:doi</em>');
 
     const { error } = columns.validate(header);
 
@@ -38,7 +34,7 @@ export default function checkDataValidation(data) {
         title: Joi.when('doi', { is: Joi.valid(), then: Joi.optional(), otherwise: Joi.string().required() })
             .concat(Joi.when('doi', { is: '', then: Joi.string().required() }))
             .messages({
-                'string.empty': `Title is not allowed to be empty.`
+                'string.empty': `DOI or Title is a required column.`
             }),
         publication_month: Joi.number()
             .integer()

@@ -3,20 +3,7 @@ import { sanitize } from 'dompurify';
 import PropTypes from 'prop-types';
 import * as Showdown from 'showdown';
 import footnotes from 'showdown-footnotes';
-import styled from 'styled-components';
-
-const MarkdownContainer = styled.p`
-    blockquote {
-        color: rgba(0, 0, 0, 0.5);
-        padding-left: 1.5em;
-        border-left: 5px solid rgba(0, 0, 0, 0.1);
-    }
-    table td,
-    table th {
-        border: 1px solid #c4c4c4;
-        padding: 3px 5px;
-    }
-`;
+import { MarkdownContainer } from 'components/ArticleBuilder/MarkdownEditor/styled';
 
 /**
  *

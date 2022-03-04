@@ -1,10 +1,11 @@
 import { useState } from 'react';
-import { Carousel, CarouselItem, CarouselIndicators, Card, CardBody, CardFooter, CardTitle, CardSubtitle } from 'reactstrap';
+import { Carousel, CarouselItem, Card, CardBody, CardFooter, CardTitle, CardSubtitle } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import ROUTES from 'constants/routes';
 import Dotdotdot from 'react-dotdotdot';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faFile, faCubes } from '@fortawesome/free-solid-svg-icons';
+import { CarouselIndicatorsStyled } from 'components/styled';
 import Tippy from '@tippyjs/react';
 import styled from 'styled-components';
 import Gravatar from 'react-gravatar';
@@ -37,21 +38,6 @@ const ObservatoryCardStyled = styled.div`
         .observatoryName {
             text-decoration: underline;
         }
-    }
-`;
-
-const CarouselIndicatorsStyled = styled(CarouselIndicators)`
-    && {
-        margin: 0;
-    }
-
-    background: ${props => props.theme.lightLighter};
-    [data-bs-target] {
-        width: 10px;
-        height: 10px;
-        border-radius: 100%;
-        background: ${props => props.theme.primary};
-        background-clip: padding-box;
     }
 `;
 
@@ -113,7 +99,7 @@ function ObservatoriesCarousel(props) {
                                         </CardSubtitle>
                                     </CardBody>
                                 </Link>
-                                <div className="mt-3 mb-3 ps-2 pr-2">
+                                <div className="mt-3 mb-3 ps-2 pe-2">
                                     <Link
                                         className="text-center d-flex"
                                         to={reverse(ROUTES.OBSERVATORY, { id: observatory.display_id })}
@@ -162,7 +148,7 @@ function ObservatoriesCarousel(props) {
                         <CarouselIndicatorsStyled items={props.observatories} activeIndex={activeIndex} onClickHandler={goToIndex} />
                     </Carousel>
                 ) : (
-                    <div className="pt-4 pb-4 ps-4 pr-4">
+                    <div className="pt-4 pb-4 ps-4 pe-4">
                         No observatories yet!
                         <br />
                         <small className="text-muted">
@@ -178,7 +164,7 @@ function ObservatoriesCarousel(props) {
                     </div>
                 )
             ) : (
-                <div style={{ height: '130px' }} className="pt-4 pb-1 ps-4 pr-4">
+                <div style={{ height: '130px' }} className="pt-4 pb-1 ps-4 pe-4">
                     <ContentLoader
                         width={300}
                         height={50}

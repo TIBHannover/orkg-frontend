@@ -90,7 +90,7 @@ On the highest level, ORKG front-end is the interface that uses the ORKG backend
 The internal services are maintained in separate repositories, and each one of these services is providing an API for specific features.
 
 -   [Annotation](https://gitlab.com/TIBHannover/orkg/annotation): for abstract annotation feature.
--   [SimComp](https://gitlab.com/TIBHannover/orkg/orkg-similarity): for the similarity and comparison services features and also the persistent storage of objects related to comparison configuration and result, visualizations, url shortener, smart reviews and literature list.
+-   [SimComp](https://gitlab.com/TIBHannover/orkg/orkg-similarity): for the similarity and comparison services features and also the persistent storage of objects related to comparison configuration and result, visualizations, url shortener, reviews and literature list.
 -   [Backend API](https://gitlab.com/TIBHannover/orkg/orkg-backend): the main backend API.
 -   [GROBID](https://gitlab.com/TIBHannover/orkg/annotation/-/blob/master/docker-compose.yml#L12): used to parse pdf, mainly for Survey table extractor.
 -   [Strapi](https://gitlab.com/TIBHannover/orkg/strapi): the CMS for the help center and some other content like `Latest news`

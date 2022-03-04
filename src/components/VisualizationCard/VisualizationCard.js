@@ -2,6 +2,9 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faUser, faCalendar } from '@fortawesome/free-solid-svg-icons';
 import ROUTES from 'constants/routes.js';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
+import MarkFeatured from 'components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
+import MarkUnlisted from 'components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
+import useMarkFeaturedUnlisted from 'components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
 import useVisualizationResearchField from './hooks/useVisualizationResearchField';
 import RelativeBreadcrumbs from 'components/RelativeBreadcrumbs/RelativeBreadcrumbs';
 import { CardBadge } from 'components/styled';
@@ -23,13 +26,29 @@ const VisualizationCardStyled = styled.div`
 `;
 
 const VisualizationCard = props => {
+    const { isFeatured, isUnlisted, handleChangeStatus } = useMarkFeaturedUnlisted({
+        resourceId: props.visualization.id,
+        unlisted: props.visualization?.unlisted,
+        featured: props.visualization?.featured
+    });
+
     const { researchField } = useVisualizationResearchField({
         visualizationId: props.visualization.id
     });
 
     return (
-        <VisualizationCardStyled style={{ flexWrap: 'wrap' }} className={`list-group-item d-flex px-4 py-3 `}>
+        <VisualizationCardStyled className={`list-group-item d-flex py-3 pe-4 ${props.showCurationFlags ? ' ps-3  ' : ' ps-4  '}`}>
             <div className="col-md-9 d-flex p-0">
+                {props.showCurationFlags && (
+                    <div className="d-flex flex-column flex-shrink-0" style={{ width: '25px' }}>
+                        <div>
+                            <MarkFeatured size="sm" featured={isFeatured} handleChangeStatus={handleChangeStatus} />
+                        </div>
+                        <div>
+                            <MarkUnlisted size="sm" unlisted={isUnlisted} handleChangeStatus={handleChangeStatus} />
+                        </div>
+                    </div>
+                )}
                 <div className="d-flex flex-column flex-grow-1">
                     <div className="mb-2">
                         <Link
@@ -94,13 +113,17 @@ VisualizationCard.propTypes = {
         authors: PropTypes.array,
         created_at: PropTypes.string,
         created_by: PropTypes.string,
-        description: PropTypes.string
+        description: PropTypes.string,
+        featured: PropTypes.bool,
+        unlisted: PropTypes.bool
     }).isRequired,
-    showBadge: PropTypes.bool.isRequired
+    showBadge: PropTypes.bool.isRequired,
+    showCurationFlags: PropTypes.bool.isRequired
 };
 
 VisualizationCard.defaultProps = {
-    showBadge: false
+    showBadge: false,
+    showCurationFlags: true
 };
 
 export default VisualizationCard;

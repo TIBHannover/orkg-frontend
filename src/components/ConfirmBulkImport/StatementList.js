@@ -1,10 +1,11 @@
-import { ListGroup } from 'reactstrap';
+import { Badge, ListGroup } from 'reactstrap';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes.js';
 import Tippy from '@tippyjs/react';
 import { StatementsGroupStyle, PropertyStyle, ValuesStyle, ValueItemStyle } from 'components/StatementBrowser/styled';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { getConfigByType } from 'constants/DataTypes';
 
 const ListStatements = props => {
     const { property, idToLabel, values } = props;
@@ -33,21 +34,38 @@ const ListStatements = props => {
                             <ValueItemStyle style={{ display: 'list-item' }} key={i}>
                                 <div className="d-inline">
                                     {'@id' in value && idToLabel[value['@id']] && (
-                                        <Link
-                                            to={reverse(ROUTES.RESOURCE, {
-                                                id: value['@id']
-                                            })}
-                                            target="_blank"
-                                        >
-                                            {idToLabel[value['@id']]}
-                                        </Link>
+                                        <>
+                                            <Link
+                                                to={reverse(ROUTES.RESOURCE, {
+                                                    id: value['@id']
+                                                })}
+                                                target="_blank"
+                                            >
+                                                {idToLabel[value['@id']]}
+                                            </Link>
+                                            <Badge color="light" className="ms-2">
+                                                Resource
+                                            </Badge>
+                                        </>
                                     )}
                                     {value.label && (
                                         <Tippy content="A new resource will be created">
-                                            <span className="text-primary">{value.label}</span>
+                                            <span>
+                                                <span className="text-primary">{value.label}</span>
+                                                <Badge color="light" className="ms-2">
+                                                    Resource
+                                                </Badge>
+                                            </span>
                                         </Tippy>
                                     )}
-                                    {value.text}
+                                    {value.text && (
+                                        <>
+                                            {value.text}
+                                            <Badge color="light" className="ms-2">
+                                                {getConfigByType(value.datatype).name}
+                                            </Badge>
+                                        </>
+                                    )}
                                 </div>
                             </ValueItemStyle>
                         ))}

@@ -93,7 +93,10 @@ const Statements = props => {
 
         return (
             <div>
-                <ClassesItem enableEdit={props.enableEdit} syncBackend={props.syncBackend} />
+                <ClassesItem
+                    enableEdit={(shared <= 1 || (props.canEditSharedRootLevel && level === 0)) && props.enableEdit}
+                    syncBackend={props.syncBackend}
+                />
                 <ListGroup tag="div" className="listGroupEnlarge">
                     {selectedResource && !resource.isFetching ? (
                         <>
@@ -103,13 +106,12 @@ const Statements = props => {
                                         return (
                                             <StatementItemWrapper
                                                 key={`statement-p${propertyId}r${selectedResource}`}
-                                                enableEdit={props.enableEdit}
+                                                enableEdit={(shared <= 1 || (props.canEditSharedRootLevel && level === 0)) && props.enableEdit}
                                                 openExistingResourcesInDialog={props.openExistingResourcesInDialog}
                                                 isLastItem={propertyIds.length === index + 1}
                                                 isFirstItem={index === 0}
                                                 resourceId={selectedResource}
                                                 propertyId={propertyId}
-                                                shared={shared}
                                                 syncBackend={props.syncBackend}
                                                 renderTemplateBox={props.renderTemplateBox}
                                             />
@@ -126,8 +128,12 @@ const Statements = props => {
                         </StyledStatementItem>
                     )}
 
-                    {shared <= 1 && props.enableEdit && <AddProperty resourceId={selectedResource} syncBackend={props.syncBackend} />}
-                    {shared <= 1 && props.enableEdit && suggestedProperties.length > 0 && <PropertySuggestions />}
+                    {(shared <= 1 || (props.canEditSharedRootLevel && level === 0)) && props.enableEdit && (
+                        <AddProperty resourceId={selectedResource} syncBackend={props.syncBackend} />
+                    )}
+                    {(shared <= 1 || (props.canEditSharedRootLevel && level === 0)) && props.enableEdit && suggestedProperties.length > 0 && (
+                        <PropertySuggestions />
+                    )}
                 </ListGroup>
             </div>
         );
@@ -148,7 +154,14 @@ const Statements = props => {
 
     return (
         <>
-            {resource && <StatementMenuHeader enableEdit={props.enableEdit} syncBackend={props.syncBackend} resource={resource} />}
+            {resource && (
+                <StatementMenuHeader
+                    enableEdit={props.enableEdit}
+                    canEdit={resource?.shared <= 1 || (props.canEditSharedRootLevel && level === 0)}
+                    syncBackend={props.syncBackend}
+                    resource={resource}
+                />
+            )}
 
             <>
                 {level !== 0 && <Breadcrumbs />}
@@ -179,7 +192,8 @@ Statements.propTypes = {
     initOnLocationChange: PropTypes.bool.isRequired,
     showExternalDescriptions: PropTypes.bool.isRequired,
     keyToKeepStateOnLocationChange: PropTypes.string,
-    renderTemplateBox: PropTypes.bool
+    renderTemplateBox: PropTypes.bool,
+    canEditSharedRootLevel: PropTypes.bool.isRequired
 };
 
 Statements.defaultProps = {
@@ -196,7 +210,8 @@ Statements.defaultProps = {
     keyToKeepStateOnLocationChange: null,
     rootNodeType: ENTITIES.RESOURCE,
     renderTemplateBox: false,
-    initialPath: []
+    initialPath: [],
+    canEditSharedRootLevel: true
 };
 
 export default Statements;

@@ -1,6 +1,7 @@
-import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
+import { faPlusCircle, faPuzzlePiece } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { createProperty } from 'slices/contributionEditorSlice';
+import TemplatesModal from 'components/ContributionEditor/TemplatesModal/TemplatesModal';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
 import { ENTITIES } from 'constants/graphSettings';
 import useConfirmPropertyModal from 'components/StatementBrowser/AddProperty/hooks/useConfirmPropertyModal';
@@ -11,6 +12,7 @@ import { Button } from 'reactstrap';
 export const CreateProperty = () => {
     const [isCreating, setIsCreating] = useState(false);
     const [inputValue, setInputValue] = useState('');
+    const [isTemplatesModalOpen, setIsTemplatesModalOpen] = useState(false);
     const dispatch = useDispatch();
     const { confirmProperty } = useConfirmPropertyModal();
 
@@ -33,9 +35,17 @@ export const CreateProperty = () => {
     };
 
     return !isCreating ? (
-        <Button color="secondary" size="sm" onClick={() => setIsCreating(true)}>
-            <Icon icon={faPlusCircle} /> Add property
-        </Button>
+        <>
+            <Button color="secondary" size="sm" onClick={() => setIsCreating(true)}>
+                <Icon icon={faPlusCircle} /> Add property
+            </Button>
+            <Button color="secondary" size="sm" onClick={() => setIsTemplatesModalOpen(true)} className="ms-1">
+                <Icon className="me-1" icon={faPuzzlePiece} /> Templates
+            </Button>
+            {isTemplatesModalOpen && (
+                <TemplatesModal syncBackend={true} setIsTemplatesModalOpen={setIsTemplatesModalOpen} isTemplatesModalOpen={isTemplatesModalOpen} />
+            )}
+        </>
     ) : (
         <div style={{ maxWidth: 300 }}>
             <Autocomplete

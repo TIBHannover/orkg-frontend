@@ -7,6 +7,9 @@ import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 import ROUTES from 'constants/routes.js';
 import AddToComparison from 'components/PaperCard/AddToComparison';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
+import MarkFeatured from 'components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
+import MarkUnlisted from 'components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
+import useMarkFeaturedUnlisted from 'components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
 import RelativeBreadcrumbs from 'components/RelativeBreadcrumbs/RelativeBreadcrumbs';
 import { CardBadge } from 'components/styled';
 import ContentLoader from 'react-content-loader';
@@ -21,11 +24,16 @@ const PaperCardStyled = styled.div`
 `;
 
 const PaperCard = props => {
-    const showActionButtons = props.showAddToComparison || props.selectable;
+    const showActionButtons = props.showAddToComparison || props.selectable || props.showCurationFlags;
+    const { isFeatured, isUnlisted, handleChangeStatus } = useMarkFeaturedUnlisted({
+        resourceId: props.paper.id,
+        unlisted: props.paper?.unlisted,
+        featured: props.paper?.featured
+    });
 
     return (
         <PaperCardStyled
-            className={`${props.isListGroupItem ? 'list-group-item' : ''}  d-flex pe-4 ${showActionButtons ? ' ps-3  ' : ' ps-4  '} ${
+            className={`${props.isListGroupItem ? 'list-group-item' : ''} d-flex pe-4 ${showActionButtons ? ' ps-3  ' : ' ps-4  '} ${
                 props.selected ? 'selected' : ''
             } py-3`}
             style={{ flexWrap: 'wrap' }}
@@ -43,11 +51,24 @@ const PaperCard = props => {
                                 <AddToComparison paper={props.paper} contributionId={props.contribution?.id} />
                             </div>
                         )}
+                        {props.showCurationFlags && (
+                            <>
+                                <div>
+                                    <MarkFeatured size="sm" featured={isFeatured} handleChangeStatus={handleChangeStatus} />
+                                </div>
+                                <div>
+                                    <MarkUnlisted size="sm" unlisted={isUnlisted} handleChangeStatus={handleChangeStatus} />
+                                </div>
+                            </>
+                        )}
                     </div>
                 )}
                 <div className="d-flex flex-column flex-grow-1">
                     <div className="mb-2">
-                        <Link to={reverse(ROUTES.VIEW_PAPER, { resourceId: props.paper.id, contributionId: props.contribution?.id ?? undefined })}>
+                        <Link
+                            target={props.linkTarget ? props.linkTarget : undefined}
+                            to={reverse(ROUTES.VIEW_PAPER, { resourceId: props.paper.id, contributionId: props.contribution?.id ?? undefined })}
+                        >
                             {props.paper.title ? props.paper.title : <em>No title</em>}
                         </Link>
                         {props.contribution && <span className="text-muted"> - {props.contribution.title}</span>}
@@ -140,18 +161,22 @@ PaperCard.propTypes = {
     showCreator: PropTypes.bool.isRequired,
     showAddToComparison: PropTypes.bool.isRequired,
     showBadge: PropTypes.bool.isRequired,
+    showCurationFlags: PropTypes.bool.isRequired,
     onSelect: PropTypes.func,
     isListGroupItem: PropTypes.bool.isRequired,
-    description: PropTypes.object
+    description: PropTypes.object,
+    linkTarget: PropTypes.string
 };
 
 PaperCard.defaultProps = {
     selectable: false,
+    linkTarget: '_self',
     selected: false,
     showBreadcrumbs: true,
     showCreator: true,
     showAddToComparison: true,
     showBadge: false,
+    showCurationFlags: true,
     isListGroupItem: true,
     onChange: () => {},
     description: null

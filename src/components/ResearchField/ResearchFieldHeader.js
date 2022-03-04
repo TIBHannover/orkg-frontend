@@ -91,7 +91,7 @@ const ResearchFieldHeader = ({ id }) => {
                         titleAddition={
                             <>
                                 <SubtitleSeparator />
-                                <SubTitle>{researchFieldData.label}</SubTitle>
+                                <SubTitle>Research field</SubTitle>
                             </>
                         }
                         buttonGroup={
@@ -112,7 +112,7 @@ const ResearchFieldHeader = ({ id }) => {
                                     <DropdownToggle size="sm" color="secondary" className="px-3 rounded-end">
                                         <Icon icon={faEllipsisV} />
                                     </DropdownToggle>
-                                    <DropdownMenu right>
+                                    <DropdownMenu end>
                                         <DropdownItem tag={NavLink} exact to={reverse(ROUTES.RESOURCE, { id })}>
                                             View resource
                                         </DropdownItem>
@@ -122,7 +122,7 @@ const ResearchFieldHeader = ({ id }) => {
                         }
                         wrap={false}
                     >
-                        Research field
+                        {researchFieldData.label}
                     </TitleBar>
 
                     <Container className="p-0">

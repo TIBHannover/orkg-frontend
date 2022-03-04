@@ -8,7 +8,6 @@ import { faFilter, faLevelUpAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { getRuleByProperty, getValuesByProperty, getDataByProperty } from 'utils';
 import styled from 'styled-components';
-import { upperFirst } from 'lodash';
 import { ENTITIES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
@@ -82,7 +81,7 @@ const PropertyValue = ({ id, label, property, similar, filterControlData, update
                         >
                             <div className={grouped ? 'ms-2' : ''}>
                                 {grouped && <Icon icon={faLevelUpAlt} rotation={90} className="me-2" />}
-                                {upperFirst(label)}
+                                {label}
                                 {similar && similar.length > 0 && '*'}
                             </div>
                         </DescriptionTooltip>

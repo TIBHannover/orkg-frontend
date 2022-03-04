@@ -10,6 +10,7 @@ import { saveFullPaper } from 'services/backend/papers';
 import Cite from 'citation-js';
 import { parseCiteResult } from 'utils';
 import { toast } from 'react-toastify';
+import DATA_TYPES, { getSuggestionByValue } from 'constants/DataTypes';
 
 const PREDEFINED_COLUMNS = [
     'paper:title',
@@ -32,6 +33,32 @@ const useImportBulkData = ({ data, onFinish }) => {
     const getFirstValue = (object, key, defaultValue = '') => {
         return key in object && object[key].length && object[key][0] ? object[key][0] : defaultValue;
     };
+
+    const findDataType = literal => DATA_TYPES.find(type => literal.endsWith(`<${type.name.toLowerCase()}>`));
+
+    const removeDataTypeLiteral = ({ literal, datatype }) => literal.replace(new RegExp(`<${datatype.name.toLowerCase()}>$`), '');
+
+    const removeDataTypeHeader = useCallback(label => {
+        const datatype = findDataType(label);
+        return datatype ? removeDataTypeLiteral({ literal: label, datatype }) : label;
+    }, []);
+
+    const parseDataTypes = useCallback(({ value: literal, property }) => {
+        const datatype = findDataType(literal) || findDataType(property) || getSuggestionByValue(literal)?.[0];
+
+        return {
+            text: datatype ? removeDataTypeLiteral({ literal, datatype }) : literal,
+            datatype: datatype ? datatype.type : MISC.DEFAULT_LITERAL_DATATYPE
+        };
+    }, []);
+
+    const cleanLabelProperty = useCallback(
+        label =>
+            removeDataTypeHeader(label)
+                .replace(/^(resource:)/, '')
+                .replace(/^(orkg:)/, ''),
+        [removeDataTypeHeader]
+    );
 
     const makePaperList = useCallback(async () => {
         const _papers = [];
@@ -194,8 +221,10 @@ const useImportBulkData = ({ data, onFinish }) => {
                     }
 
                     if (!valueObject) {
+                        const { text, datatype } = parseDataTypes({ value, property });
                         valueObject = {
-                            text: value
+                            text,
+                            datatype
                         };
                     }
                     contributionStatements[propertyId].push(valueObject);
@@ -228,7 +257,7 @@ const useImportBulkData = ({ data, onFinish }) => {
         setPapers(_papers);
         setExistingPaperIds(_existingPaperIds);
         setIdToLabel(_idToLabel);
-    }, [data]);
+    }, [cleanLabelProperty, data, parseDataTypes]);
 
     const getExistingPaperId = async (title, doi) => {
         // first check if there is a paper with this DOI
@@ -251,10 +280,6 @@ const useImportBulkData = ({ data, onFinish }) => {
         });
 
         return paperResources.length ? paperResources[0].id : null;
-    };
-
-    const cleanLabelProperty = label => {
-        return label.replace(/^(resource:)/, '').replace(/^(orkg:)/, '');
     };
 
     const cleanLabel = label => {
