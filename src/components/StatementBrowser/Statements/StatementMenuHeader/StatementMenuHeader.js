@@ -17,14 +17,13 @@ export default function StatementMenuHeader(props) {
     const isTemplatesModalOpen = useSelector(state => state.statementBrowser.isTemplatesModalOpen);
     const dispatch = useDispatch();
     const preferencesTippy = useRef(null);
-    const shared = props.resource?.shared ?? 0;
 
     return (
         <>
             <div className="mb-2 text-end">
                 <ButtonGroup>
                     {/* We have custom templates for predicates and classes*/}
-                    {props.enableEdit && props.resource._class === ENTITIES.RESOURCE && (
+                    {props.canEdit && props.enableEdit && props.resource._class === ENTITIES.RESOURCE && (
                         <Button
                             className="p-0"
                             outline
@@ -40,13 +39,13 @@ export default function StatementMenuHeader(props) {
                             {isTemplatesModalOpen && <TemplatesModal syncBackend={props.syncBackend} />}
                         </Button>
                     )}
-                    {props.enableEdit && (
+                    {props.canEdit && props.enableEdit && (
                         <Button outline color="secondary" size="sm" onClick={() => dispatch(setIsHelpModalOpen({ isOpen: true }))}>
                             <Icon className="me-1" icon={faQuestionCircle} /> Help
                         </Button>
                     )}
 
-                    <Button className="p-0" outline color={!props.enableEdit ? 'link' : 'secondary'} size="sm" onClick={() => null}>
+                    <Button className="p-0" outline color={!props.enableEdit || !props.canEdit ? 'link' : 'secondary'} size="sm" onClick={() => null}>
                         <Tippy
                             onCreate={instance => (preferencesTippy.current = instance)}
                             onShow={() => dispatch(setIsPreferencesOpen(true))}
@@ -64,7 +63,7 @@ export default function StatementMenuHeader(props) {
                 </ButtonGroup>
             </div>
 
-            {shared > 1 && props.enableEdit && (
+            {!props.canEdit && props.enableEdit && (
                 <UncontrolledAlert color="info">
                     A shared resource cannot be edited directly{' '}
                     <Button
@@ -85,5 +84,6 @@ export default function StatementMenuHeader(props) {
 StatementMenuHeader.propTypes = {
     resource: PropTypes.object.isRequired,
     enableEdit: PropTypes.bool.isRequired,
+    canEdit: PropTypes.bool.isRequired,
     syncBackend: PropTypes.bool.isRequired
 };

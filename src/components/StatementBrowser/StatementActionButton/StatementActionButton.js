@@ -71,7 +71,7 @@ const StatementActionButton = props => {
         </Tippy>
     ) : (
         <>
-            <Tippy hideOnClick={false} interactive={props.interactive} trigger="mouseenter" content={props.title}>
+            <Tippy appendTo={props.appendTo} hideOnClick={false} interactive={props.interactive} trigger="mouseenter" content={props.title}>
                 {tippyChildren}
             </Tippy>
         </>

@@ -29,7 +29,7 @@ describe('AddProperty', () => {
         userEvent.type(screen.getByRole('combobox'), 'Property label 1');
         await selectEvent.select(screen.getByRole('combobox'), 'property label 1');
         expect(screen.getByRole('button', { name: 'Add property' })).toBeInTheDocument();
-        await waitFor(() => expect(screen.getByRole('link', { name: 'Property label 1' })).toBeInTheDocument());
+        await waitFor(() => expect(screen.getByRole('link', { name: 'property label 1' })).toBeInTheDocument());
     });
 
     it('should show toast when creating an existing property', async () => {
@@ -41,15 +41,15 @@ describe('AddProperty', () => {
         await selectEvent.select(screen.getByRole('combobox'), 'property 1');
         expect(screen.getByRole('button', { name: 'Add property' })).toBeInTheDocument();
         await waitForElementToBeRemoved(() => screen.queryByText(/Loading/i));
-        await waitFor(() => expect(screen.getByText('Property 1')).toBeInTheDocument());
+        await waitFor(() => expect(screen.getByText('property 1')).toBeInTheDocument());
         // Add the same property ('Property 1')
         const addButton2 = screen.getByRole('button', { name: 'Add property' });
         userEvent.click(addButton2);
         userEvent.type(screen.getByRole('combobox'), 'property 1');
         await selectEvent.select(screen.getByRole('combobox'), 'property 1');
         expect(screen.getByRole('button', { name: 'Add property' })).toBeInTheDocument();
-        await waitFor(() => expect(screen.getByText(/The property Property 1 exists already/i)).toBeInTheDocument());
-        await waitFor(() => expect(screen.getAllByText('Property 1')).toHaveLength(1));
+        await waitFor(() => expect(screen.getByText(/The property property 1 exists already/i)).toBeInTheDocument());
+        await waitFor(() => expect(screen.getAllByText('property 1')).toHaveLength(1));
     });
 });
 
@@ -64,7 +64,7 @@ describe('AddProperty no syncBackend', () => {
         const createButton = screen.getByRole('button', { name: /Create new property/i });
         userEvent.click(createButton);
         await waitForElementToBeRemoved(() => screen.queryByText(/Loading/i));
-        await waitFor(() => expect(screen.getByText('Test property')).toBeInTheDocument());
+        await waitFor(() => expect(screen.getByText('test property')).toBeInTheDocument());
     });
 });
 
@@ -102,7 +102,7 @@ describe('AddProperty syncBackend', () => {
         await waitFor(() => expect(screen.getByRole('button', { name: /Create new property/i })).toBeInTheDocument());
         const createButton = screen.getByRole('button', { name: /Create new property/i });
         userEvent.click(createButton);
-        await waitFor(() => expect(screen.getByRole('link', { name: 'Test property' })).toBeInTheDocument());
+        await waitFor(() => expect(screen.getByRole('link', { name: 'test property' })).toBeInTheDocument());
     });
 });
 

@@ -29,6 +29,9 @@ const EditItem = props => {
     } else if (props.type === 'month') {
         input = (
             <Input type="select" value={props.value} onChange={props.onChange}>
+                <option value="" key="">
+                    Month
+                </option>
                 {moment.months().map((el, index) => {
                     return (
                         <option value={index + 1} key={index + 1}>
@@ -42,6 +45,9 @@ const EditItem = props => {
     } else if (props.type === 'year') {
         input = (
             <Input type="select" value={props.value} onChange={props.onChange}>
+                <option value="" key="">
+                    Year
+                </option>
                 {range(1900, moment().year())
                     .reverse()
                     .map(year => (

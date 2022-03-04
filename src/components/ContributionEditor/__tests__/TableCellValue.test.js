@@ -25,10 +25,11 @@ describe('resource value', () => {
         const { label, setDisableCreate } = setup('resource');
 
         fireEvent.click(screen.getByRole('button', { name: /edit/i, hidden: true }));
-        const autocomplete = screen.getByRole('combobox', { name: /enter a resource/i });
 
-        expect(autocomplete).toBeInTheDocument();
-        expect(autocomplete.value).toBe(label);
+        const input = screen.getByPlaceholderText(/enter a value/i);
+
+        expect(input).toBeInTheDocument();
+        expect(input.value).toBe(label);
         expect(setDisableCreate).toBeCalled();
     });
 });

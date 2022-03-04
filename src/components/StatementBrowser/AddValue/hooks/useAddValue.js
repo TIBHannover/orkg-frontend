@@ -79,9 +79,10 @@ const useAddValue = ({ resourceId, propertyId, syncBackend }) => {
                 });
             }
             statements['values'].push({
-                type: 'literal',
+                _class: statement.value._class,
                 propertyId: createdProperties[statement.predicate.id],
-                label: statement.value.label
+                label: statement.value.label,
+                datatype: statement.value.datatype
             });
         }
         return statements;

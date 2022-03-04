@@ -3,7 +3,7 @@ import { submitGetRequest, submitPutRequest, submitPostRequest } from 'network';
 import env from '@beam-australia/react-env';
 
 export const userUrl = `${url}user/`;
-export const authenticationUrl = env('SERVER_URL');
+export const authenticationUrl = env('BACKEND_URL');
 
 export const getUserInformation = () => {
     return submitGetRequest(`${userUrl}`, {}, true);
