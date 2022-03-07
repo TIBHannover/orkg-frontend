@@ -5,9 +5,10 @@ import { deleteUserFromObservatoryById } from 'services/backend/users';
 import ContributorCard from 'components/ContributorCard/ContributorCard';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import AddMember from 'components/Observatory/AddMember';
+import { toast } from 'react-toastify';
 
 const MembersBox = ({ observatoryId, organizationsList }) => {
     const user = useSelector(state => state.auth.user);
@@ -19,28 +20,35 @@ const MembersBox = ({ observatoryId, organizationsList }) => {
 
     useEffect(() => {
         setUserData(user);
-        loadMembers.current();
+        const loadMembers = () => {
+            setIsLoadingMembers(true);
+            getUsersByObservatoryId(observatoryId)
+                .then(contributors => {
+                    setMembers(contributors);
+                    setIsLoadingMembers(false);
+                })
+                .catch(error => {
+                    setIsLoadingMembers(false);
+                });
+        };
+        loadMembers();
     }, [observatoryId, user]);
 
-    const loadMembers = useRef(() => {
-        setIsLoadingMembers(true);
-        getUsersByObservatoryId(observatoryId)
-            .then(contributors => {
-                setMembers(contributors);
-                setIsLoadingMembers(false);
-            })
-            .catch(error => {
-                setIsLoadingMembers(false);
-            });
-    });
-
-    const updateObservatoryMembers = () => {
-        loadMembers.current();
+    const updateObservatoryMembers = member => {
+        const membersList = [member, ...members];
+        setMembers(membersList);
     };
 
-    const deleteObservatoryMember = async id => {
-        await deleteUserFromObservatoryById(id).catch(() => {});
-        loadMembers.current();
+    const deleteObservatoryMember = async user => {
+        await deleteUserFromObservatoryById(user.id)
+            .then(_ => {
+                const updatedList = members.filter(t => t !== user);
+                setMembers(updatedList);
+                toast.success('Member deleted successfully');
+            })
+            .catch(() => {
+                toast.error(`error deleting a member`);
+            });
     };
 
     return (
@@ -62,10 +70,18 @@ const MembersBox = ({ observatoryId, organizationsList }) => {
                                             <ContributorCard
                                                 contributor={{
                                                     ...user,
-                                                    subTitle: organizationsList.find(o => o.id.includes(user.organization_id))?.name,
-                                                    deleteOption:
-                                                        !!userData && userData.isCurationAllowed ? { status: true, deleteObservatoryMember } : false
+                                                    subTitle: organizationsList.find(o => o.id.includes(user.organization_id))?.name
                                                 }}
+                                                options={
+                                                    userData && userData.isCurationAllowed
+                                                        ? {
+                                                              label: 'Delete this member from the observatory',
+                                                              action: () => deleteObservatoryMember(user),
+                                                              icon: faTrash,
+                                                              requireConfirmation: true
+                                                          }
+                                                        : ''
+                                                }
                                             />
                                             {members.slice(0, 4).length - 1 !== index && <hr style={{ width: '90%', margin: '10px auto' }} />}
                                         </div>
@@ -88,12 +104,18 @@ const MembersBox = ({ observatoryId, organizationsList }) => {
                                                                         contributor={{
                                                                             ...user,
                                                                             subTitle: organizationsList.find(o => o.id.includes(user.organization_id))
-                                                                                ?.name,
-                                                                            deleteOption:
-                                                                                !!userData && userData.isCurationAllowed
-                                                                                    ? { status: true, deleteObservatoryMember }
-                                                                                    : false
+                                                                                ?.name
                                                                         }}
+                                                                        options={
+                                                                            userData && userData.isCurationAllowed
+                                                                                ? {
+                                                                                      label: 'Delete this member from the observatory',
+                                                                                      action: () => deleteObservatoryMember(user),
+                                                                                      icon: faTrash,
+                                                                                      requireConfirmation: true
+                                                                                  }
+                                                                                : ''
+                                                                        }
                                                                     />
                                                                     {members.length - 1 !== index && (
                                                                         <hr style={{ width: '90%', margin: '10px auto' }} />

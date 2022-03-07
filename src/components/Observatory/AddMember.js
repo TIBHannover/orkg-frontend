@@ -1,4 +1,4 @@
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter, FormGroup, Input, InputGroup, InputGroupText } from 'reactstrap';
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter, FormGroup, Input, InputGroup } from 'reactstrap';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import { useState, useEffect } from 'react';
@@ -25,19 +25,14 @@ function AddMember(props) {
 
     const updateObservatory = async user => {
         await updateUserObservatory(user, props.id, selectedOrganization.id)
-            .then(response => {
-                if (response.status) {
-                    toast.success('Member added successfully');
-                    props.updateObservatoryMembers();
-                    setIsLoading(false);
-                    props.toggle();
-                } else {
-                    toast.error('Account doesn"t exist in ORKG');
-                    setIsLoading(false);
-                }
+            .then(member => {
+                toast.success('Member added successfully');
+                props.updateObservatoryMembers(member);
+                setIsLoading(false);
+                props.toggle();
             })
             .catch(error => {
-                toast.error(`error adding member to an observatory`);
+                toast.error(`error adding member ${error.message}`);
                 setIsLoading(false);
             });
     };
