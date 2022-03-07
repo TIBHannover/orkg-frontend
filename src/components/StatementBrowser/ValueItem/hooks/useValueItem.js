@@ -83,7 +83,13 @@ const useValueItem = ({ valueId, propertyId }) => {
             );
         };
         const existingResourceId = resource ? resource.existingResourceId : false;
-        if (existingResourceId && !resource.isFetched && !resource.isFetching && value?._class === ENTITIES.RESOURCE && !resourcesAsLinks) {
+        if (
+            existingResourceId &&
+            !resource.isFetching &&
+            value?._class === ENTITIES.RESOURCE &&
+            !resourcesAsLinks &&
+            (!resource.isFetched || resource?.fetchedDepth <= 1)
+        ) {
             loadResource();
         }
     }, [dispatch, resource, resourcesAsLinks, value?._class]);
