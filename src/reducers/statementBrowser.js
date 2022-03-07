@@ -409,6 +409,16 @@ export default (state = initialState, action) => {
             return newState;
         }
 
+        case type.UPDATE_RESOURCE_SHARED: {
+            const { resourceId, shared } = action;
+            const valueId = dotProp.get(state, `resources.byId.${resourceId}.valueId`);
+            let newState = dotProp.set(state, `resources.byId.${resourceId}.shared`, shared);
+            if (valueId) {
+                newState = dotProp.set(newState, `values.byId.${valueId}.shared`, shared);
+            }
+            return newState;
+        }
+
         case type.UPDATE_VALUE_LABEL: {
             const { payload } = action;
             let newState = dotProp.set(state, `values.byId.${payload.valueId}.label`, payload.label);

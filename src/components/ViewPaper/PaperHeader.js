@@ -50,8 +50,8 @@ const PaperHeader = props => {
         dispatch(
             loadPaper({
                 paperResource: { ...viewPaper.paperResource, label: data.paper.label },
-                publicationMonth: { ...viewPaper.publicationMonth, label: parseInt(data.month?.label) || 0, id: data.month?.id },
-                publicationYear: { ...viewPaper.publicationYear, label: parseInt(data.year?.label) || 0, id: data.year?.id },
+                publicationMonth: { ...viewPaper.publicationMonth, label: data.month?.label || null, id: data.month?.id },
+                publicationYear: { ...viewPaper.publicationYear, label: data.year?.label || null, id: data.year?.id },
                 doi: { ...viewPaper.doi, label: data.doi?.label, id: data.doi?.id },
                 authors: data.authors,
                 publishedIn: data.publishedIn,
@@ -86,11 +86,11 @@ const PaperHeader = props => {
 
             <div className="clearfix" />
 
-            {(viewPaper.publicationMonth || viewPaper.publicationYear) && (
+            {(viewPaper.publicationMonth?.label || viewPaper.publicationYear?.label) && (
                 <span className="badge bg-light me-2">
                     <Icon icon={faCalendar} className="text-primary" />{' '}
-                    {viewPaper.publicationMonth ? moment(viewPaper.publicationMonth.label, 'M').format('MMMM') : ''}{' '}
-                    {viewPaper.publicationYear ? viewPaper.publicationYear.label : ''}
+                    {viewPaper.publicationMonth?.label ? moment(viewPaper.publicationMonth.label, 'M').format('MMMM') : ''}{' '}
+                    {viewPaper.publicationYear?.label ? viewPaper.publicationYear.label : ''}
                 </span>
             )}
             <ResearchFieldBadge researchField={viewPaper.researchField} />

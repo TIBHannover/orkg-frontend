@@ -214,7 +214,7 @@ const GeneralData = () => {
     const handleMonthChange = e => {
         dispatch(
             updateGeneralData({
-                [e.target.name]: parseInt(e.target.value)
+                [e.target.name]: e.target.value
             })
         );
     };

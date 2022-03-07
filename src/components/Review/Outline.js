@@ -1,8 +1,6 @@
 import propTypes from 'prop-types';
-import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import readingTime from 'reading-time';
 import styled from 'styled-components';
 
 const Wrapper = styled.aside`
@@ -38,22 +36,18 @@ const ListItem = styled.li`
     border-top: 1px solid #c7ccda;
     padding: 5px 0;
     font-size: 95%;
+
+    &:first-child {
+        border-top: none;
+    }
 `;
 
 const Outline = ({ editMode = false }) => {
     const sections = useSelector(state => state.review.sections);
 
-    const timeEstimation = useMemo(() => {
-        const text = sections.flatMap(section => section.markdown?.label).join(' ');
-        return text ? readingTime(text)?.text : '0 min read';
-    }, [sections]);
-
     return (
         <Wrapper>
             <Box editMode={editMode}>
-                <div className="mb-2 text-muted text-uppercase" style={{ fontWeight: 700, fontSize: '80%' }}>
-                    {timeEstimation}
-                </div>
                 <ol style={{ listStyle: 'none' }} className="p-0 m-0">
                     {sections
                         .filter(section => section?.title?.label)

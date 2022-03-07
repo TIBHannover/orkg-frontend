@@ -42,6 +42,7 @@ class StatementBrowserDialog extends Component {
                 toggle={this.props.toggleModal}
                 size="lg"
                 onExit={() => {
+                    this.props.onCloseModal();
                     // return the original value of openExistingResourcesInDialog
                     this.props.updateSettings({
                         openExistingResourcesInDialog: this.state.previousOpenExistingResourcesInDialog
@@ -80,6 +81,7 @@ class StatementBrowserDialog extends Component {
                         openExistingResourcesInDialog={false}
                         newStore={this.props.newStore}
                         showExternalDescriptions={this.props.showExternalDescriptions}
+                        canEditSharedRootLevel={this.props.canEditSharedRootLevel}
                     />
                 </ModalBody>
             </Modal>
@@ -92,6 +94,7 @@ StatementBrowserDialog.propTypes = {
     id: PropTypes.string.isRequired,
     show: PropTypes.bool.isRequired,
     toggleModal: PropTypes.func.isRequired,
+    onCloseModal: PropTypes.func,
     newStore: PropTypes.bool.isRequired,
     enableEdit: PropTypes.bool.isRequired,
     syncBackend: PropTypes.bool.isRequired,
@@ -104,7 +107,8 @@ StatementBrowserDialog.propTypes = {
             id: PropTypes.string.isRequired,
             label: PropTypes.string.isRequired
         })
-    )
+    ),
+    canEditSharedRootLevel: PropTypes.bool.isRequired
 };
 
 StatementBrowserDialog.defaultProps = {
@@ -113,7 +117,9 @@ StatementBrowserDialog.defaultProps = {
     syncBackend: false,
     type: ENTITIES.RESOURCE,
     initialPath: [],
-    showExternalDescriptions: true
+    showExternalDescriptions: true,
+    canEditSharedRootLevel: true,
+    onCloseModal: () => {}
 };
 
 const mapStateToProps = state => {
