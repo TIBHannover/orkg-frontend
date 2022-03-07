@@ -71,7 +71,7 @@ const ViewArticle = () => {
                                         {paper.title}{' '}
                                     </h1>
                                     {isPublished && (
-                                        <h2 className="h4 ms-2 mt-2">
+                                        <h2 className="h4 ms-2 mt-2 d-print-none">
                                             <MarkFeatured size="xs" featured={isFeatured} handleChangeStatus={handleChangeStatus} />
                                             <div className="d-inline-block ms-1">
                                                 <MarkUnlisted size="xs" unlisted={isUnlisted} handleChangeStatus={handleChangeStatus} />
