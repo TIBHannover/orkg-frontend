@@ -20,16 +20,7 @@ const SectionComparison = ({ id, sectionId }) => {
         id
     });
 
-    const {
-        contributions,
-        properties,
-        data,
-        isLoadingComparisonResult,
-        filterControlData,
-        updateRulesOfProperty,
-        comparisonType,
-        metaData
-    } = comparisonData;
+    const { contributions, properties, data, isLoadingComparisonResult, filterControlData, updateRulesOfProperty, comparisonType } = comparisonData;
 
     useEffect(() => {
         if (Object.keys(comparisonData.data).length === 0) {
@@ -58,7 +49,7 @@ const SectionComparison = ({ id, sectionId }) => {
         }
     }, [contributions, dispatch, references, sectionId, usedReferences]);
 
-    const url = env('URL') + reverse(ROUTES.COMPARISON, { comparisonId: metaData.id }).replace('/', '', 1);
+    const url = env('URL') + reverse(ROUTES.COMPARISON, { comparisonId: id }).replace('/', '', 1);
 
     return (
         <>
