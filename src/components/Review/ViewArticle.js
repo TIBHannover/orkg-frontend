@@ -21,6 +21,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
 import { Alert, Button, Container } from 'reactstrap';
 import SectionComparison from 'components/Review/SectionComparison';
+import env from '@beam-australia/react-env';
 
 const ViewArticle = () => {
     const { id } = useParams();
@@ -35,6 +36,7 @@ const ViewArticle = () => {
     const latestVersionId = versions?.[0]?.id;
     const newVersionAvailable = isPublished && latestVersionId !== id;
     const toggleHistoryModal = () => dispatch(toggleHistoryModalAction());
+    const url = env('URL') + reverse(ROUTES.REVIEW, { id }).replace('/', '', 1);
 
     const { isFeatured, isUnlisted, handleChangeStatus } = useMarkFeaturedUnlisted({
         resourceId: id,
@@ -69,7 +71,7 @@ const ViewArticle = () => {
                                         {paper.title}{' '}
                                     </h1>
                                     {isPublished && (
-                                        <h2 className="h4 ms-2 mt-2">
+                                        <h2 className="h4 ms-2 mt-2 d-print-none">
                                             <MarkFeatured size="xs" featured={isFeatured} handleChangeStatus={handleChangeStatus} />
                                             <div className="d-inline-block ms-1">
                                                 <MarkUnlisted size="xs" unlisted={isUnlisted} handleChangeStatus={handleChangeStatus} />
@@ -78,6 +80,9 @@ const ViewArticle = () => {
                                     )}
                                 </div>
                                 <div className="my-3">
+                                    <Alert color="info" fade={false} className="d-none d-print-block">
+                                        Read the full and interactive version of this article on the ORKG website: <Link to={url}>{url}</Link>
+                                    </Alert>
                                     <ResearchFieldBadge researchField={researchField} />
                                     <AuthorBadges authors={authors} />{' '}
                                 </div>
