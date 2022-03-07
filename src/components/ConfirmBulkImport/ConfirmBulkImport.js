@@ -11,10 +11,12 @@ import PaperList from 'components/ConfirmBulkImport/PaperList';
 
 const ConfirmBulkImport = props => {
     const { data, isOpen, toggle, onFinish } = props;
-    const { papers, existingPaperIds, idToLabel, isLoading, createdContributions, makePaperList, handleImport } = useImportBulkData({
-        data,
-        onFinish
-    });
+    const { papers, existingPaperIds, idToLabel, isLoading, createdContributions, makePaperList, handleImport, validationErrors } = useImportBulkData(
+        {
+            data,
+            onFinish
+        }
+    );
 
     useEffect(() => {
         makePaperList();
@@ -38,7 +40,7 @@ const ConfirmBulkImport = props => {
                         <Alert color="info" fade={false}>
                             The following contributions will be imported, please review the content carefully
                         </Alert>
-                        <PaperList papers={papers} existingPaperIds={existingPaperIds} idToLabel={idToLabel} />
+                        <PaperList papers={papers} existingPaperIds={existingPaperIds} idToLabel={idToLabel} validationErrors={validationErrors} />
                     </>
                 )}
                 {isLoading && (

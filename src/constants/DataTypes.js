@@ -136,4 +136,6 @@ export const getSuggestionByValue = value =>
         ['desc']
     );
 
+export const checkDataTypeIsInValid = ({ value, dataType }) => !!getConfigByType(dataType).schema.validate(value)?.error;
+
 export default DATA_TYPES;
