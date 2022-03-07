@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { Badge, ListGroup } from 'reactstrap';
 
-const ListStatements = ({ property, idToLabel, values, validationErrors = {} }) => (
+const ListStatements = ({ property, idToLabel, values, validationErrors = [] }) => (
     <StatementsGroupStyle className="list-group-item" style={{ marginBottom: -1 }}>
         <div className="row gx-0">
             <PropertyStyle className="col-4" tabIndex="0">
@@ -87,7 +87,7 @@ ListStatements.propTypes = {
     property: PropTypes.string.isRequired,
     idToLabel: PropTypes.object.isRequired,
     values: PropTypes.array.isRequired,
-    validationErrors: PropTypes.object
+    validationErrors: PropTypes.array
 };
 
 export default ListStatements;
