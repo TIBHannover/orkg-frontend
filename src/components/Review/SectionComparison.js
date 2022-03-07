@@ -62,10 +62,10 @@ const SectionComparison = ({ id, sectionId }) => {
 
     return (
         <>
-            <Alert color="info" fade={false} className="show-on-print">
+            <Alert color="info" fade={false} className="d-none d-print-block">
                 Comparison available via <a href={url}>{url}</a>
             </Alert>
-            <div className="comparison-table">
+            <div className="d-print-none">
                 {id && contributions.length > 0 && (
                     <Comparison
                         data={data}

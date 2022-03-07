@@ -80,7 +80,7 @@ const ViewArticle = () => {
                                     )}
                                 </div>
                                 <div className="my-3">
-                                    <Alert color="info" fade={false} className="show-on-print">
+                                    <Alert color="info" fade={false} className="d-none d-print-block">
                                         Read the full and interactive version of this article on the ORKG website: <Link to={url}>{url}</Link>
                                     </Alert>
                                     <ResearchFieldBadge researchField={researchField} />
