@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Container, Button, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Card, CardBody, CardTitle, Badge } from 'reactstrap';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
@@ -14,7 +14,6 @@ import { useSelector } from 'react-redux';
 import ROUTES from 'constants/routes.js';
 import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
-import { usePrevious } from 'react-use';
 import PropTypes from 'prop-types';
 import CheckSlug from 'components/CheckSlug/CheckSlug';
 import CheckClasses from 'components/CheckClasses/CheckClasses';
@@ -28,13 +27,6 @@ const ResearchFieldHeader = ({ id }) => {
     const isCurationAllowed = useSelector(state => state.auth.user?.isCurationAllowed);
     const [showMoreFields, setShowMoreFields] = useState(false);
     const [researchFieldData, subResearchFields, isLoading, isFailedLoading, loadResearchFieldData] = useResearchField();
-    const prevEditMode = usePrevious({ editMode });
-    useEffect(() => {
-        if (!editMode && prevEditMode && prevEditMode.editMode !== editMode) {
-            loadResearchFieldData(id);
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [editMode]);
 
     return (
         <>
@@ -85,6 +77,7 @@ const ResearchFieldHeader = ({ id }) => {
                             label={researchFieldData.label}
                             enableEdit={true}
                             syncBackend={true}
+                            onCloseModal={() => loadResearchFieldData(id)}
                         />
                     )}
                     <TitleBar
