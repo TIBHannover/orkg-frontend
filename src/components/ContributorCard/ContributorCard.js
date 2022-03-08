@@ -27,31 +27,32 @@ function ContributorCard(props) {
                     {props.contributor.subTitle && (
                         <div>
                             <small className="text-muted">{props.contributor.subTitle}</small>
-                            {props.options && (
-                                <>
-                                    <StatementActionButton
-                                        title={props.options.label}
-                                        icon={props.options.icon}
-                                        action={props.options.action}
-                                        requireConfirmation={props.options.requireConfirmation}
-                                        confirmationButtons={[
-                                            {
-                                                title: 'Delete',
-                                                color: 'danger',
-                                                icon: faCheck,
-                                                action: props.options.action
-                                            },
-                                            {
-                                                title: 'Cancel',
-                                                color: 'secondary',
-                                                icon: faTimes
-                                            }
-                                        ]}
-                                    />
-                                </>
-                            )}
                         </div>
                     )}
+                    <small>
+                        {props.options && props.options.label && (
+                            <>
+                                <StatementActionButton
+                                    title={props.options.label}
+                                    icon={props.options.icon}
+                                    requireConfirmation={props.options.requireConfirmation}
+                                    confirmationButtons={[
+                                        {
+                                            title: 'Delete',
+                                            color: 'danger',
+                                            icon: faCheck,
+                                            action: props.options.action
+                                        },
+                                        {
+                                            title: 'Cancel',
+                                            color: 'secondary',
+                                            icon: faTimes
+                                        }
+                                    ]}
+                                />
+                            </>
+                        )}
+                    </small>
                     {props.contributor.counts && (
                         <>
                             <br />

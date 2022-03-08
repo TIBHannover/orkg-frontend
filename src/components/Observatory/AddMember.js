@@ -53,6 +53,7 @@ function AddMember(props) {
                     <>
                         Organization
                         <Select
+                            value={props.organizationsList.length === 1 ? props.organizationsList[0] : selectedOrganization}
                             options={props.organizationsList}
                             onChange={handleOrganizationChange}
                             getOptionValue={({ id }) => id}
@@ -86,7 +87,7 @@ AddMember.propTypes = {
     showDialog: PropTypes.bool.isRequired,
     toggle: PropTypes.func.isRequired,
     id: PropTypes.string,
-    organizationsList: PropTypes.object,
+    organizationsList: PropTypes.array,
     updateObservatoryMembers: PropTypes.func
 };
 

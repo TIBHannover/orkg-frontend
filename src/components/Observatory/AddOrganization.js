@@ -5,6 +5,7 @@ import { getAllOrganizations } from 'services/backend/organizations';
 import { useState, useEffect } from 'react';
 import { updateObservatoryOrganization } from 'services/backend/observatories';
 import Select from 'react-select';
+import { differenceBy } from 'lodash';
 
 function AddOrganization(props) {
     const [organizations, setOrganizations] = useState([]);
@@ -15,14 +16,14 @@ function AddOrganization(props) {
         const loadOrganizations = async () => {
             await getAllOrganizations()
                 .then(organizations => {
-                    setOrganizations(organizations);
+                    setOrganizations(differenceBy(organizations, props.organizations, 'id'));
                 })
                 .catch(error => {
                     console.log(error);
                 });
         };
         loadOrganizations();
-    }, []);
+    }, [props.organizations]);
 
     const handleSubmit = async e => {
         setIsLoading(true);
@@ -31,7 +32,7 @@ function AddOrganization(props) {
                 .then(_ => {
                     toast.success('Organization added successfully');
                     setIsLoading(false);
-                    props.updateObservatoryOrganizations(selectedOrganization);
+                    props.updateOrganizationsList(selectedOrganization, true);
                     props.toggle();
                 })
                 .catch(error => {
@@ -59,6 +60,7 @@ function AddOrganization(props) {
                             onChange={handleCreatorsChange}
                             getOptionValue={({ id }) => id}
                             getOptionLabel={({ name }) => name}
+                            classNamePrefix="react-select"
                         />
                     </>
                 </ModalBody>
@@ -79,7 +81,7 @@ AddOrganization.propTypes = {
     toggle: PropTypes.func.isRequired,
     id: PropTypes.string,
     organizations: PropTypes.array,
-    updateObservatoryOrganizations: PropTypes.func
+    updateOrganizationsList: PropTypes.func.isRequired
 };
 
 export default AddOrganization;

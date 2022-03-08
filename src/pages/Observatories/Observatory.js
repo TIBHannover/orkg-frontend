@@ -67,6 +67,16 @@ const Observatory = () => {
         setResearchField(researchField);
     };
 
+    const updateOrganizationsList = (organization, status) => {
+        let organizations = '';
+        if (status) {
+            organizations = [organization, ...organizationsList];
+        } else {
+            organizations = organizationsList.filter(t => t !== organization);
+        }
+        setOrganizationsList(organizations);
+    };
+
     return (
         <>
             {isLoading && <Container className="box rounded pt-4 pb-4 ps-5 pe-5 mt-5 clearfix">Loading ...</Container>}
@@ -112,6 +122,7 @@ const Observatory = () => {
                                     observatoryId={observatoryId}
                                     organizationsList={organizationsList}
                                     isLoadingOrganizations={isLoadingOrganizations}
+                                    updateOrganizationsList={updateOrganizationsList}
                                 />
                             </Col>
                             <Col md="4" className="d-flex">

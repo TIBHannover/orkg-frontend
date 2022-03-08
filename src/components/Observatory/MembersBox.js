@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { Button, Modal, ModalBody, ModalHeader } from 'reactstrap';
 import { getUsersByObservatoryId } from 'services/backend/observatories';
 import { deleteUserFromObservatoryById } from 'services/backend/users';
@@ -19,7 +19,6 @@ const MembersBox = ({ observatoryId, organizationsList }) => {
     const [userData, setUserData] = useState('');
 
     useEffect(() => {
-        setUserData(user);
         const loadMembers = () => {
             setIsLoadingMembers(true);
             getUsersByObservatoryId(observatoryId)
@@ -32,6 +31,7 @@ const MembersBox = ({ observatoryId, organizationsList }) => {
                 });
         };
         loadMembers();
+        setUserData(user);
     }, [observatoryId, user]);
 
     const updateObservatoryMembers = member => {
@@ -80,7 +80,7 @@ const MembersBox = ({ observatoryId, organizationsList }) => {
                                                               icon: faTrash,
                                                               requireConfirmation: true
                                                           }
-                                                        : ''
+                                                        : {}
                                                 }
                                             />
                                             {members.slice(0, 4).length - 1 !== index && <hr style={{ width: '90%', margin: '10px auto' }} />}
@@ -114,7 +114,7 @@ const MembersBox = ({ observatoryId, organizationsList }) => {
                                                                                       icon: faTrash,
                                                                                       requireConfirmation: true
                                                                                   }
-                                                                                : ''
+                                                                                : {}
                                                                         }
                                                                     />
                                                                     {members.length - 1 !== index && (

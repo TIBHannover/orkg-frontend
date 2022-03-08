@@ -30,7 +30,19 @@ export const getUsersByObservatoryId = id => {
 };
 
 export const updateObservatoryOrganization = (id, organization_id) => {
-    return submitPutRequest(`${observatoriesUrl}${encodeURIComponent(id)}/organization`, { 'Content-Type': 'application/json' }, { organization_id });
+    return submitPutRequest(
+        `${observatoriesUrl}add/${encodeURIComponent(id)}/organization`,
+        { 'Content-Type': 'application/json' },
+        { organization_id }
+    );
+};
+
+export const deleteOrganizationFromObservatory = (id, organization_id) => {
+    return submitPutRequest(
+        `${observatoriesUrl}delete/${encodeURIComponent(id)}/organization`,
+        { 'Content-Type': 'application/json' },
+        { organization_id }
+    );
 };
 
 export const getResourcesByObservatoryId = id => {
