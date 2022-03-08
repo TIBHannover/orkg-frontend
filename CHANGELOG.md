@@ -3,6 +3,19 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [V0.65](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.64...V0.65) - 2022-03-08
+
+### Changes
+
+- style: Contributions tabs [`#800`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/800)
+- refactor: replace usePrevious with onClose of StatementBrowserDialog [`#802`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/802)
+- fix(StatementBrowser): formatted labels after 3 hierarchy level [`#801`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/801)
+- fix(Templates): used templates [`#797`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/797)
+- routes: Redirect old curation call URL to new help center page [`#803`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/803)
+- feat(CsvImport): show warning if specified datatype is conflicting with cell value [`#798`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/798)
+- feat(Review): show comparison link for print view [`#799`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/799)
+
+---
 ## [V0.64](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.63...V0.64) - 2022-03-03
 
 ### Changes
