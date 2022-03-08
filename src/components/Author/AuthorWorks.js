@@ -117,7 +117,7 @@ const AuthorWorks = ({ authorId }) => {
     );
 };
 AuthorWorks.propTypes = {
-    authorId: PropTypes.object.isRequired
+    authorId: PropTypes.string.isRequired
 };
 
 export default AuthorWorks;
