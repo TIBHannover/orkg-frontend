@@ -1,5 +1,6 @@
 import { MISC } from 'constants/graphSettings';
 import { url } from 'constants/misc';
+import queryString from 'query-string';
 import { submitGetRequest, submitPostRequest, submitPutRequest } from 'network';
 import { getOrganization } from 'services/backend/organizations';
 
@@ -39,6 +40,28 @@ export const getComparisonsByObservatoryId = id => {
 
 export const getProblemsByObservatoryId = id => {
     return submitGetRequest(`${observatoriesUrl}${encodeURIComponent(id)}/problems`);
+};
+
+export const getContentByObservatoryIdAndClasses = ({
+    id,
+    page = 0,
+    items = 9999,
+    sortBy = 'created_at',
+    desc = true,
+    featured = null,
+    unlisted = null,
+    classes = []
+}) => {
+    // Sort is not supported in this endpoint
+    const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
+    const params = queryString.stringify(
+        { page: page, size: items, sort, featured, unlisted, classes: classes.join(',') },
+        {
+            skipNull: true,
+            skipEmptyString: true
+        }
+    );
+    return submitGetRequest(`${observatoriesUrl}${encodeURIComponent(id)}/class?${params}`);
 };
 
 export const getObservatoriesByResearchFieldId = id => {

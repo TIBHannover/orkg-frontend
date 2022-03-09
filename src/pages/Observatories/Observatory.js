@@ -4,10 +4,9 @@ import { getOrganization } from 'services/backend/organizations';
 import { getObservatoryById } from 'services/backend/observatories';
 import InternalServerError from 'pages/InternalServerError';
 import EditObservatory from 'components/Observatory/EditObservatory';
-import Comparisons from 'components/Observatory/Comparisons';
-import Papers from 'components/Observatory/Papers';
 import ResearchProblemsBox from 'components/Observatory/ResearchProblemsBox';
 import OrganizationsBox from 'components/Observatory/OrganizationsBox';
+import IntegratedList from 'components/Observatory/IntegratedList';
 import MembersBox from 'components/Observatory/MembersBox';
 import Breadcrumbs from 'components/Breadcrumbs/Breadcrumbs';
 import { SubTitle, SubtitleSeparator } from 'components/styled';
@@ -119,8 +118,9 @@ const Observatory = () => {
                             </Col>
                         </Row>
                     </Container>
-                    <Comparisons observatoryId={observatoryId} />
-                    <Papers observatoryId={observatoryId} />
+
+                    <IntegratedList id={observatoryId} boxShadow />
+
                     <EditObservatory
                         showDialog={showEditDialog}
                         toggle={() => setShowEditDialog(v => !v)}
