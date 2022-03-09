@@ -548,7 +548,6 @@ function Comparison(props) {
                                         />
                                     )}
                                 </h2>
-
                                 {!isFailedLoadingMetaData && provenance && <ComparisonMetaData metaData={metaData} provenance={provenance} />}
                             </div>
 
