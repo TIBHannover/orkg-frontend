@@ -59,10 +59,7 @@ function useResearchFieldContent({
                     classes: classesFilter.map(c => c.id)
                 });
                 contentService = Promise.all([noFeaturedContentService, featuredContentService]).then(([noFeaturedContent, featuredContent]) => {
-                    const combinedComparisons = mergeAlternate(
-                        noFeaturedContent.content.map(i => ({ ...i, id: i.thingId })),
-                        featuredContent.content.map(i => ({ ...i, id: i.thingId }))
-                    );
+                    const combinedComparisons = mergeAlternate(noFeaturedContent.content, featuredContent.content);
                     return {
                         content: combinedComparisons,
                         totalElements: page === 0 ? noFeaturedContent.totalElements + featuredContent.totalElements : total,
@@ -80,7 +77,7 @@ function useResearchFieldContent({
                     featured: sort === 'featured' ? true : null,
                     unlisted: sort === 'unlisted' ? true : false,
                     classes: classesFilter.map(c => c.id)
-                }).then(response => ({ ...response, content: response.content?.map(i => ({ ...i, id: i.thingId })) }));
+                }).then(response => ({ ...response, content: response.content }));
             }
 
             contentService
