@@ -5,6 +5,7 @@ import { getAllOrganizations } from 'services/backend/organizations';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Label } from 'reactstrap';
+import { ORGANIZATIONS_MISC } from 'constants/organizationsTypes';
 
 const LogoContainer = styled.div`
     overflow: hidden;
@@ -21,12 +22,12 @@ const LogoContainer = styled.div`
 function AutocompleteObservatory(props) {
     const [options, setOptions] = useState([]);
     const [optionsOrganizations, setOptionsOrganizations] = useState([]);
+    const [conferences, setConferences] = useState([]);
 
     useEffect(() => {
         const loadOptions = () => {
             const observatories = getAllObservatories();
             const organizations = getAllOrganizations();
-
             return Promise.all([observatories, organizations]).then(data => {
                 const items = [];
                 for (const observatory of data[0]) {
@@ -37,6 +38,8 @@ function AutocompleteObservatory(props) {
                     });
                 }
                 setOptions(items);
+                setConferences(data[1].filter(org => org.type === ORGANIZATIONS_MISC.CONFERENCE));
+                setOptionsOrganizations(data[1].filter(org => org.type === ORGANIZATIONS_MISC.CONFERENCE));
             });
         };
         loadOptions();
@@ -44,8 +47,8 @@ function AutocompleteObservatory(props) {
 
     const onChangeObservatory = selected => {
         props.onChangeObservatory(selected ?? null);
-        props.onChangeOrganization(selected?.organizations[0] ?? null);
-        setOptionsOrganizations(selected?.organizations ?? null);
+        props.onChangeOrganization(selected?.organizations[0] ?? conferences[0] ?? null);
+        setOptionsOrganizations(selected?.organizations ?? conferences);
     };
 
     const onChangeOrganization = selected => {
