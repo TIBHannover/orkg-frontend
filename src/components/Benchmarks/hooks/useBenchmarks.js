@@ -1,7 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { getBenchmarksByResearchFieldId } from 'services/backend/benchmarks';
-
-const RESEARCH_FIELD = 'R132';
+import { getAllBenchmarks } from 'services/backend/benchmarks';
 
 function useBenchmarks() {
     const [isLoading, setIsLoading] = useState(false);
@@ -9,7 +7,7 @@ function useBenchmarks() {
 
     const loadBenchmarks = useCallback(page => {
         setIsLoading(true);
-        getBenchmarksByResearchFieldId(RESEARCH_FIELD).then(result => {
+        getAllBenchmarks().then(result => {
             setBenchmarks(result);
             setIsLoading(false);
         });
