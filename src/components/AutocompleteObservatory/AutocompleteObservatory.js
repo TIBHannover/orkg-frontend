@@ -47,7 +47,7 @@ function AutocompleteObservatory(props) {
 
     const onChangeObservatory = selected => {
         props.onChangeObservatory(selected ?? null);
-        props.onChangeOrganization(selected?.organizations[0] ?? conferences[0] ?? null);
+        props.onChangeOrganization(selected?.organizations[0] ?? null);
         setOptionsOrganizations(selected?.organizations ?? conferences);
     };
 
