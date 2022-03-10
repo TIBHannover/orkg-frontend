@@ -169,7 +169,7 @@ export const saveTemplate = templateData => {
                 exact: true
             });
             if (templateClass && templateClass.totalElements === 1) {
-                promises.push(createResourceStatement(templateResource, PREDICATES.TEMPLATE_OF_CLASS, templateClass[0].id));
+                promises.push(createResourceStatement(templateResource, PREDICATES.TEMPLATE_OF_CLASS, templateClass.content[0].id));
             } else {
                 templateClass = await createClass(templateResource);
                 promises.push(createResourceStatement(templateResource, PREDICATES.TEMPLATE_OF_CLASS, templateClass.id));

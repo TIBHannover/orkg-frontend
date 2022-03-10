@@ -627,8 +627,13 @@ function Autocomplete(props) {
             whiteSpace: 'normal',
             padding: 0
         }),
-        multiValueRemove: provided => ({
+        multiValueLabel: (provided, state) => ({
             ...provided,
+            ...(state.data.isFixed ? { paddingRight: '6px' } : {})
+        }),
+        multiValueRemove: (provided, state) => ({
+            ...provided,
+            ...(state.data.isFixed ? { display: 'none' } : {}),
             cursor: 'pointer'
         }),
         input: provided => ({
@@ -678,7 +683,11 @@ function Autocomplete(props) {
             <StyledAutoCompleteInputFormControl className={`form-control ${props.cssClasses ? props.cssClasses : 'default'} border-0`}>
                 <Select
                     key={JSON.stringify(selectedOntologies.map(o => o.id))}
-                    value={props.value}
+                    value={
+                        !props.isMulti && !props.fixedOptions
+                            ? props.value
+                            : props.value?.map?.(v => ({ ...v, isFixed: props.fixedOptions.includes(v.id) }))
+                    }
                     loadOptions={loadOptions}
                     additional={defaultAdditional}
                     noOptionsMessage={noResults}
@@ -782,7 +791,8 @@ Autocomplete.propTypes = {
     onChangeInputValue: PropTypes.func,
     inputValue: PropTypes.string,
     menuPortalTarget: PropTypes.object,
-    cacheOptions: PropTypes.bool
+    cacheOptions: PropTypes.bool,
+    fixedOptions: PropTypes.array
 };
 
 Autocomplete.defaultProps = {
@@ -801,6 +811,7 @@ Autocomplete.defaultProps = {
     inputValue: null,
     menuPortalTarget: null,
     allowCreateDuplicate: false,
-    cacheOptions: false
+    cacheOptions: false,
+    fixedOptions: []
 };
 export default withTheme(Autocomplete);

@@ -3,6 +3,45 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [V0.65](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.64...V0.65) - 2022-03-08
+
+### Changes
+
+- style: Contributions tabs [`#800`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/800)
+- refactor: replace usePrevious with onClose of StatementBrowserDialog [`#802`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/802)
+- fix(StatementBrowser): formatted labels after 3 hierarchy level [`#801`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/801)
+- fix(Templates): used templates [`#797`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/797)
+- routes: Redirect old curation call URL to new help center page [`#803`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/803)
+- feat(CsvImport): show warning if specified datatype is conflicting with cell value [`#798`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/798)
+- feat(Review): show comparison link for print view [`#799`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/799)
+
+---
+## [V0.64](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.63...V0.64) - 2022-03-03
+
+### Changes
+
+- Review: remove reading time estimation [`#793`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/793)
+- feat(CsvImport): support data types for literals [`#794`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/794)
+- fix: Combined lists pagination [`#795`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/795)
+- internal: Rename env var for backend API [`#792`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/792)
+
+---
+## [V0.63](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.62.1...V0.63) - 2022-03-01
+
+### Changes
+
+- fix(CSVImport): title required when using DOI [`#791`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/791)
+- style: remove auto capitalization property labels [`#790`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/790)
+- feat(ContributionEditor): Support template [`#783`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/783)
+- fix(TemplateEditor): Updating a template for a class [`#782`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/782)
+- fix(CombinedLists): alternate between featured and unfeatured items [`#785`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/785)
+- style: Research field page title bar [`#786`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/786)
+- fix(EditPaperDialog): default blank value for Month and Year in paper metadata [`#787`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/787)
+- feat(AddPaper): Show previously selected for research field selection [`#784`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/784)
+- feat(Header): support for multiple about categories [`#788`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/788)
+- docs(CsvImport): link to help center instead of modal [`#789`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/789)
+
+---
 ## [V0.62.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.62...V0.62.1) - 2022-02-15
 
 ### Changes

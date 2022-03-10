@@ -33,6 +33,7 @@ const ResearchFieldSelectorModal = ({ isOpen, toggle, onSelectField }) => {
                     selectedResearchField={selectedResearchField}
                     researchFields={researchFields}
                     updateResearchField={handleUpdate}
+                    insideModal={true}
                 />
             </ModalBody>
             <ModalFooter className="d-flex">

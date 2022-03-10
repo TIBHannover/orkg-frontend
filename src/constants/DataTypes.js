@@ -129,4 +129,13 @@ export const getSuggestionByTypeAndValue = (type, value) => {
     return orderBy(suggestions, ['weight'], ['desc']);
 };
 
+export const getSuggestionByValue = value =>
+    orderBy(
+        DATA_TYPES.filter(dataType => dataType.type !== ENTITIES.RESOURCE).filter(dataType => !dataType.schema.validate(value)?.error),
+        ['weight'],
+        ['desc']
+    );
+
+export const checkDataTypeIsInValid = ({ value, dataType }) => !!getConfigByType(dataType).schema.validate(value)?.error;
+
 export default DATA_TYPES;

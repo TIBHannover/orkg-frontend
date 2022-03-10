@@ -11,6 +11,7 @@ const ContainerStyled = styled(Container)`
         flex-wrap: wrap;
     }
 `;
+
 const ButtonGroupStyled = styled(ButtonGroup)`
     margin-left: auto;
 
@@ -60,12 +61,19 @@ const MenuButton = styled(Button)`
     }
 `;
 
+const H1Styled = styled.h1`
+    max-width: 70%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+`;
+
 const TitleBar = ({ buttonGroup = null, titleAddition = null, children = '', wrap = true, titleSize = 'h4' }) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     return (
         <ContainerStyled className={`d-flex mt-4 mb-4 align-items-center ${wrap ? 'flex-wrap' : ''}`}>
-            <h1 className={`${titleSize} m-0 me-3  ${!wrap ? 'flex-shrink-0' : ''}`}>{children}</h1> {titleAddition}
+            <H1Styled className={`${titleSize} m-0 me-3  ${!wrap ? 'flex-shrink-0' : ''} `}>{children}</H1Styled> {titleAddition}
             {buttonGroup && (
                 <MenuButton
                     aria-label="Open action menu"

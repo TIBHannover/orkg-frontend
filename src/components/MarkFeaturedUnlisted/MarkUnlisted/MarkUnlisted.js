@@ -42,7 +42,6 @@ const MarkUnlisted = ({ unlisted, size, handleChangeStatus }) => {
 };
 
 MarkUnlisted.propTypes = {
-    resourceId: PropTypes.string.isRequired,
     unlisted: PropTypes.bool,
     size: PropTypes.string.isRequired,
     handleChangeStatus: PropTypes.func.isRequired

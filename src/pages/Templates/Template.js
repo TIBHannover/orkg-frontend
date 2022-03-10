@@ -6,7 +6,6 @@ import ComponentsTab from 'components/Templates/Tabs/ComponentsTab/ComponentsTab
 import Unauthorized from 'pages/Unauthorized';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import Format from 'components/Templates/Tabs/Format/Format';
-import HelpModal from 'components/Templates/HelpModal';
 import { StyledContainer } from 'components/Templates/styled';
 import { setEditMode, loadTemplate, saveTemplate, setIsLoading, doneLoading, setClass } from 'actions/addTemplate';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -43,8 +42,7 @@ class Template extends Component {
             activeTab: '1',
             error: null,
             showHeaderBar: false,
-            menuOpen: false,
-            helpModalOpen: false
+            menuOpen: false
         };
     }
 
@@ -106,18 +104,15 @@ class Template extends Component {
             <>
                 <TitleBar
                     titleAddition={
-                        <Tippy content="Open help popup">
+                        <Tippy content="Open help center">
                             <span>
-                                <Button
-                                    color="link"
-                                    outline
-                                    size="sm"
-                                    style={{ fontSize: 22, lineHeight: 1 }}
-                                    className="p-0"
-                                    onClick={() => this.toggle('helpModalOpen')}
+                                <a
+                                    href="https://www.orkg.org/orkg/help-center/article/9/Templates_for_structuring_contribution_descriptions"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
                                 >
-                                    <Icon icon={faQuestionCircle} className="text-secondary" />
-                                </Button>
+                                    <Icon icon={faQuestionCircle} style={{ fontSize: 22, lineHeight: 1 }} className="text-secondary p-0" />
+                                </a>
                             </span>
                         </Tippy>
                     }
@@ -243,7 +238,6 @@ class Template extends Component {
                             </TabContent>
                         </div>
                     </div>
-                    <HelpModal isOpen={this.state.helpModalOpen} toggle={() => this.toggle('helpModalOpen')} />
                 </StyledContainer>
             </>
         );

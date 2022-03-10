@@ -35,11 +35,11 @@ function TemplateComponentProperty(props) {
                     {props.property?.id ? (
                         <Link to={reverse(ROUTES.PROPERTY, { id: props.property.id })} target="_blank" className="text-dark">
                             <DescriptionTooltip id={props.property.id} typeId={ENTITIES.PREDICATE}>
-                                {props.property.label?.charAt(0).toUpperCase() + props.property.label?.slice(1)}
+                                {props.property.label}
                             </DescriptionTooltip>
                         </Link>
                     ) : (
-                        props.property?.label?.charAt(0).toUpperCase() + props.property?.label.slice(1)
+                        props.property?.label
                     )}
 
                     {props.enableEdit && (
