@@ -1,15 +1,15 @@
 import { FormGroup, Label, FormText, Input, Table } from 'reactstrap';
-import { setHasLabelFormat, setLabelFormat } from 'actions/addTemplate';
+import { updateHasLabelFormat, updateLabelFormat } from 'slices/templateEditorSlice';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 function Format(props) {
     const handleChangeLabelFormat = event => {
-        props.setLabelFormat(event.target.value);
+        props.updateLabelFormat(event.target.value);
     };
 
     const handleSwitchHasLabelFormat = event => {
-        props.setHasLabelFormat(event.target.checked);
+        props.updateHasLabelFormat(event.target.checked);
     };
 
     return (
@@ -79,24 +79,24 @@ function Format(props) {
 Format.propTypes = {
     editMode: PropTypes.bool.isRequired,
     hasLabelFormat: PropTypes.bool.isRequired,
-    setHasLabelFormat: PropTypes.func.isRequired,
-    setLabelFormat: PropTypes.func.isRequired,
+    updateHasLabelFormat: PropTypes.func.isRequired,
+    updateLabelFormat: PropTypes.func.isRequired,
     components: PropTypes.array.isRequired,
     labelFormat: PropTypes.string.isRequired
 };
 
 const mapStateToProps = state => {
     return {
-        editMode: state.addTemplate.editMode,
-        hasLabelFormat: state.addTemplate.hasLabelFormat,
-        components: state.addTemplate.components,
-        labelFormat: state.addTemplate.labelFormat
+        editMode: state.templateEditor.editMode,
+        hasLabelFormat: state.templateEditor.hasLabelFormat,
+        components: state.templateEditor.components,
+        labelFormat: state.templateEditor.labelFormat
     };
 };
 
 const mapDispatchToProps = dispatch => ({
-    setHasLabelFormat: data => dispatch(setHasLabelFormat(data)),
-    setLabelFormat: data => dispatch(setLabelFormat(data))
+    updateHasLabelFormat: data => dispatch(updateHasLabelFormat(data)),
+    updateLabelFormat: data => dispatch(updateLabelFormat(data))
 });
 
 export default connect(

@@ -6,10 +6,10 @@ import statementBrowser from 'reducers/statementBrowser';
 import pdfTextAnnotation from 'reducers/pdfTextAnnotation';
 import viewPaper from 'reducers/viewPaper';
 import pdfAnnotation from 'reducers/pdfAnnotation';
-import addTemplate from 'reducers/addTemplate';
 import review from 'reducers/review';
 import literatureList from 'slices/literatureListSlice';
 import contributionEditor from 'slices/contributionEditorSlice';
+import templateEditor from 'slices/templateEditorSlice';
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default history =>
@@ -20,9 +20,9 @@ export default history =>
         statementBrowser,
         pdfAnnotation,
         auth,
-        addTemplate,
         pdfTextAnnotation,
         review,
         contributionEditor,
-        literatureList
+        literatureList,
+        templateEditor
     });
