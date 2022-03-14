@@ -3,6 +3,13 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [V0.65.2](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.65.1...V0.65.2) - 2022-03-14
+
+### Changes
+
+- fix(ContributionEditor): creating resources with existing label not possible, error on select option with enter key [`#808`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/808)
+
+---
 ## [V0.65.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.65...V0.65.1) - 2022-03-14
 
 ### Changes
