@@ -35,8 +35,8 @@ describe('table', () => {
         expect(screen.getByText('test literal')).toBeInTheDocument();
         expect(screen.getByRole('button', { name: 'test paper' })).toBeInTheDocument();
         expect(screen.getByRole('button', { name: 'test resource 2' })).toBeInTheDocument();
-        expect(screen.getByRole('button', { name: 'Test property' })).toBeInTheDocument();
-        expect(screen.getByRole('button', { name: 'Test property 2' })).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: 'test property' })).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: 'test property 2' })).toBeInTheDocument();
     });
 });
 

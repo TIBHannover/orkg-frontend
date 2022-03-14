@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import {
     Container,
     Button,
@@ -34,7 +34,6 @@ import ContentLoader from 'react-content-loader';
 import ROUTES from 'constants/routes.js';
 import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
-import { usePrevious } from 'react-use';
 import PropTypes from 'prop-types';
 import CheckSlug from 'components/CheckSlug/CheckSlug';
 import { reverseWithSlug } from 'utils';
@@ -48,19 +47,11 @@ const ResearchProblemHeader = ({ id }) => {
     const [showMoreFields, setShowMoreFields] = useState(false);
     const { researchProblemData, superProblems, isLoading, isFailedLoading, loadResearchProblemData } = useResearchProblem({ id });
     const [researchFields, isLoadingResearchFields] = useResearchProblemResearchFields({ researchProblemId: id });
-    const prevEditMode = usePrevious({ editMode });
     const { isFeatured, isUnlisted, handleChangeStatus } = useMarkFeaturedUnlisted({
         resourceId: id,
         unlisted: researchProblemData?.unlisted,
         featured: researchProblemData?.featured
     });
-
-    useEffect(() => {
-        if (!editMode && prevEditMode && prevEditMode.editMode !== editMode) {
-            loadResearchProblemData(id);
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [editMode]);
 
     return (
         <>
@@ -153,6 +144,7 @@ const ResearchProblemHeader = ({ id }) => {
                             label={researchProblemData.label}
                             enableEdit={true}
                             syncBackend={true}
+                            onCloseModal={() => loadResearchProblemData(id)}
                         />
                     )}
                     <Container className="p-0">
@@ -188,7 +180,7 @@ const ResearchProblemHeader = ({ id }) => {
                                                 </Link>
                                             ))}
                                             {researchProblemData.subProblems.length > 9 &&
-                                                researchProblemData.subProblems &&
+                                                showMoreFields &&
                                                 researchProblemData.subProblems.slice(9).map(subfield => (
                                                     <Link
                                                         key={`index${subfield.id}`}

@@ -1,10 +1,8 @@
 import { useEffect } from 'react';
 import { Row, Col, Button } from 'reactstrap';
 import { useSelector, useDispatch } from 'react-redux';
-import ContributionItemList from './ContributionItemList';
 import ContributionsHelpTour from './ContributionsHelpTour';
 import Tooltip from 'components/Utils/Tooltip';
-import { AddContribution, StyledHorizontalContributionsList } from './styled';
 import {
     nextStep,
     previousStep,
@@ -18,26 +16,14 @@ import {
 } from 'actions/addPaper';
 import Abstract from 'components/AddPaper/Abstract/Abstract';
 import Confirm from 'components/Confirmation/Confirmation';
-import Contribution from './Contribution';
-import { TransitionGroup, CSSTransition } from 'react-transition-group';
+import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
+import ContributionTab from 'components/ContributionTabs/ContributionTab';
+import AddContributionButton from 'components/ContributionTabs/AddContributionButton';
+import { StyledContributionTabs } from 'components/ContributionTabs/styled';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faMagic, faPlus } from '@fortawesome/free-solid-svg-icons';
-import styled from 'styled-components';
-import Tippy from '@tippyjs/react';
+import { faMagic, faAngleDown } from '@fortawesome/free-solid-svg-icons';
+import Tabs, { TabPane } from 'rc-tabs';
 import { updateSettings } from 'actions/statementBrowser';
-
-const AnimationContainer = styled(CSSTransition)`
-    transition: 0.3s background-color, 0.3s border-color;
-
-    &.fadeIn-enter {
-        opacity: 0;
-    }
-
-    &.fadeIn-enter-active {
-        opacity: 1;
-        transition: 0.7s opacity;
-    }
-`;
 
 const Contributions = () => {
     const {
@@ -127,6 +113,10 @@ const Contributions = () => {
         dispatch(openTour(step));
     };
 
+    const onTabChange = key => {
+        handleSelectContribution(key);
+    };
+
     return (
         <div>
             <div className="d-flex align-items-center mt-4 mb-4">
@@ -163,44 +153,45 @@ const Contributions = () => {
             </div>
             <Row className="mt-2 g-0">
                 <Col md="9">
-                    <StyledHorizontalContributionsList id="contributionsList">
-                        {contributions.allIds.map((contributionId, index) => {
-                            const contribution = contributions.byId[contributionId];
-
-                            return (
-                                <ContributionItemList
-                                    handleChangeContributionLabel={handleChange}
-                                    isSelected={contributionId === selectedContribution}
-                                    canDelete={contributions.allIds.length !== 1}
-                                    selectedContributionId={selectedContribution}
-                                    contribution={contribution}
-                                    key={contributionId}
-                                    toggleDeleteContribution={toggleDeleteContribution}
-                                    handleSelectContribution={handleSelectContribution}
-                                    enableEdit={true}
-                                />
-                            );
-                        })}
-
-                        <li>
-                            <AddContribution color="link" onClick={() => dispatch(createContribution({}))}>
-                                <Tippy content="Add contribution">
-                                    <span>
-                                        <Icon size="xs" icon={faPlus} />
-                                    </span>
-                                </Tippy>
-                            </AddContribution>
-                        </li>
-                    </StyledHorizontalContributionsList>
+                    <StyledContributionTabs>
+                        <Tabs
+                            tabBarExtraContent={<AddContributionButton onClick={() => dispatch(createContribution({}))} />}
+                            moreIcon={<Icon size="lg" icon={faAngleDown} />}
+                            activeKey={selectedContribution}
+                            onChange={onTabChange}
+                            destroyInactiveTabPane={true}
+                        >
+                            {contributions.allIds.map(contributionId => {
+                                const contribution = contributions.byId[contributionId];
+                                return (
+                                    <TabPane
+                                        tab={
+                                            <ContributionTab
+                                                handleChangeContributionLabel={handleChange}
+                                                isSelected={contribution.id === selectedContribution}
+                                                canDelete={contributions.allIds.length !== 1}
+                                                contribution={contribution}
+                                                key={contribution.id}
+                                                toggleDeleteContribution={toggleDeleteContribution}
+                                                enableEdit={true}
+                                            />
+                                        }
+                                        key={contribution.id}
+                                    >
+                                        <StatementBrowser
+                                            enableEdit={true}
+                                            syncBackend={false}
+                                            openExistingResourcesInDialog={false}
+                                            initialSubjectId={contribution.resourceId}
+                                            initialSubjectLabel={contribution.label}
+                                            renderTemplateBox={true}
+                                        />
+                                    </TabPane>
+                                );
+                            })}
+                        </Tabs>
+                    </StyledContributionTabs>
                 </Col>
-
-                <TransitionGroup className="col-md-9" exit={false}>
-                    <AnimationContainer classNames="fadeIn" timeout={{ enter: 700, exit: 0 }} key={selectedContribution}>
-                        <div>
-                            <Contribution id={selectedContribution} />
-                        </div>
-                    </AnimationContainer>
-                </TransitionGroup>
             </Row>
 
             <hr className="mt-5 mb-3" />

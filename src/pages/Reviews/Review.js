@@ -58,6 +58,10 @@ const GlobalStyle = createGlobalStyle`
             padding: 0;
             max-width: 100%;
             margin-top: -100px;
+
+            .box {
+                box-shadow: none;
+            }
         }
         body {
             background-color: #fff !important;
