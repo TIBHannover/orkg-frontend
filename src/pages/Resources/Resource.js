@@ -12,7 +12,7 @@ import { useLocation, Link } from 'react-router-dom';
 import Tippy from '@tippyjs/react';
 import ROUTES from 'constants/routes.js';
 import { connect, useSelector } from 'react-redux';
-import { resetStatementBrowser } from 'actions/statementBrowser';
+import { resetStatementBrowser } from 'slices/statementBrowserSlice';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPen, faTrash, faExternalLinkAlt, faTimes, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { CLASSES, PREDICATES } from 'constants/graphSettings';

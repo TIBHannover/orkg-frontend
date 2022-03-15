@@ -2,13 +2,14 @@ import * as type from './types.js';
 import { guid } from 'utils';
 import { mergeWith, isArray, uniqBy } from 'lodash';
 import {
-    createResource,
-    selectResource,
+    createResourceAction as createResource,
+    selectResourceAction as selectResource,
     loadStatementBrowserData,
+    fetchTemplatesOfClassIfNeeded,
     updateContributionLabel as updateContributionLabelInSB,
-    fetchTemplatesOfClassIfNeeded
-} from './statementBrowser';
-import { fillStatements } from './statementBrowser';
+    clearResourceHistory,
+    fillStatements
+} from 'slices/statementBrowserSlice';
 import { saveFullPaper } from 'services/backend/papers';
 import { toast } from 'react-toastify';
 import { CLASSES } from 'constants/graphSettings';
@@ -210,9 +211,7 @@ export const selectContribution = data => dispatch => {
         }
     });
 
-    dispatch({
-        type: type.CLEAR_RESOURCE_HISTORY
-    });
+    dispatch(clearResourceHistory());
 
     dispatch(
         selectResource({

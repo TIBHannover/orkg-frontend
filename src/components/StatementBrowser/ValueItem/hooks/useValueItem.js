@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from 'react';
-import { selectResource, fetchStatementsForResource, generatedFormattedLabel } from 'actions/statementBrowser';
+import { selectResourceAction as selectResource, fetchStatementsForResource, generatedFormattedLabel } from 'slices/statementBrowserSlice';
 import { uniq } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
 import { ENTITIES } from 'constants/graphSettings';

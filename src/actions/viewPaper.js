@@ -1,5 +1,12 @@
 import * as type from './types.js';
-import { createResource, fetchStatementsForResource, selectResource } from './statementBrowser';
+import {
+    createResourceAction as createResource,
+    fetchStatementsForResource,
+    selectResourceAction as selectResource,
+    clearResourceHistory,
+    createContributionObject,
+    loadContributionHistory
+} from 'slices/statementBrowserSlice';
 
 export const selectContribution = ({ contributionId: id, contributionLabel }) => (dispatch, getState) => {
     const contributionIsLoaded = !!getState().statementBrowser.resources.byId[id];
@@ -24,12 +31,11 @@ export const selectContribution = ({ contributionId: id, contributionLabel }) =>
             })
         );
         // this will create or set the selected contribution id in the statementBrowser (HERE CREATE)
-        dispatch({
-            type: type.STATEMENT_BROWSER_CREATE_CONTRIBUTION_OBJECT,
-            payload: {
+        dispatch(
+            createContributionObject({
                 id
-            }
-        });
+            })
+        );
 
         dispatch(
             fetchStatementsForResource({
@@ -37,18 +43,15 @@ export const selectContribution = ({ contributionId: id, contributionLabel }) =>
                 depth: 3 // load depth 3 the first time
             })
         );
-        dispatch({
-            type: type.CLEAR_RESOURCE_HISTORY
-        });
+        dispatch(clearResourceHistory());
     }
     // this will create or set the selected contribution id in the statementBrowser (HERE SELECT)
     Promise.resolve(
-        dispatch({
-            type: type.STATEMENT_BROWSER_CREATE_CONTRIBUTION_OBJECT,
-            payload: {
+        dispatch(
+            createContributionObject({
                 id
-            }
-        })
+            })
+        )
     ).then(() => {
         dispatch(
             selectResource({
@@ -66,12 +69,11 @@ export const selectContribution = ({ contributionId: id, contributionLabel }) =>
         });
 
         // this will load the contribution data/history into the statementBrowser
-        dispatch({
-            type: type.STATEMENT_BROWSER_LOAD_CONTRIBUTION_HISTORY,
-            payload: {
+        dispatch(
+            loadContributionHistory({
                 id
-            }
-        });
+            })
+        );
     });
 };
 

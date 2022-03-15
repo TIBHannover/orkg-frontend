@@ -8,7 +8,7 @@ import ROUTES from 'constants/routes';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import HELP_CENTER_ARTICLES from 'constants/helpCenterArticles';
-import { setIsHelpModalOpen } from 'actions/statementBrowser';
+import { setIsHelpModalOpen } from 'slices/statementBrowserSlice';
 import { reverseWithSlug } from 'utils';
 
 const SBEditorHelpModal = () => {

@@ -14,7 +14,7 @@ import {
     toggleAbstractDialog,
     setAbstractDialogView
 } from 'actions/addPaper';
-import { fillStatements } from 'actions/statementBrowser';
+import { fillStatements } from 'slices/statementBrowserSlice';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner, faThList, faMagic } from '@fortawesome/free-solid-svg-icons';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';

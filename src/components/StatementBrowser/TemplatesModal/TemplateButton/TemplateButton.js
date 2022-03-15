@@ -2,7 +2,11 @@ import { Button } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPlus, faSpinner, faTimes } from '@fortawesome/free-solid-svg-icons';
 import TemplateDetailsTooltip from './TemplateDetailsTooltip';
-import { fillResourceWithTemplate, removeEmptyPropertiesOfClass, updateResourceClasses } from 'actions/statementBrowser';
+import {
+    fillResourceWithTemplate,
+    removeEmptyPropertiesOfClass,
+    updateResourceClassesAction as updateResourceClasses
+} from 'slices/statementBrowserSlice';
 import { getTemplateById } from 'services/backend/statements';
 import { useDispatch, useSelector } from 'react-redux';
 import Tippy from '@tippyjs/react';

@@ -3,7 +3,7 @@ import { createResourceStatement, deleteStatementById } from 'services/backend/s
 import { updateResource, createResource } from 'services/backend/resources';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { updateContributionLabel } from 'actions/statementBrowser';
+import { updateContributionLabel } from 'slices/statementBrowserSlice';
 import { toast } from 'react-toastify';
 import Confirm from 'components/Confirmation/Confirmation';
 import { PREDICATES, CLASSES } from 'constants/graphSettings';

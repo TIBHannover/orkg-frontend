@@ -1,7 +1,7 @@
 import { Input, Button, Label } from 'reactstrap';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
-import { updatePreferences, setIsHelpModalOpen } from 'actions/statementBrowser';
+import { setIsHelpModalOpen, updatePreferences } from 'slices/statementBrowserSlice';
 import HELP_CENTER_ARTICLES from 'constants/helpCenterArticles';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
