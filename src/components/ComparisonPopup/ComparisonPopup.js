@@ -2,7 +2,7 @@ import { createRef, Component } from 'react';
 import { Badge, Container, Navbar, Button, ButtonGroup } from 'reactstrap';
 import { ComparisonBoxButton, ComparisonBox, Header, List, ContributionItem, Title, Number, Remove, StartComparison } from './styled';
 import { faChevronDown, faChevronUp, faTimes, faTrash, faCheck } from '@fortawesome/free-solid-svg-icons';
-import { loadComparisonFromLocalStorage, removeFromComparison } from 'actions/viewPaper';
+import { loadComparisonFromLocalStorage, removeFromComparison } from 'slices/viewPaperSlice';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
