@@ -1,6 +1,6 @@
 import { ButtonGroup, Button } from 'reactstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import { changeZoom } from 'actions/pdfTextAnnotation';
+import { changeZoom } from 'slices/pdfTextAnnotationSlice';
 import styled from 'styled-components';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSearchPlus, faSearchMinus } from '@fortawesome/free-solid-svg-icons';
