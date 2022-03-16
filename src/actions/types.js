@@ -1,5 +1,4 @@
 // Add paper
-
 export const UPDATE_GENERAL_DATA = 'UPDATE_GENERAL_DATA';
 export const ADD_PAPER_NEXT_STEP = 'ADD_PAPER_NEXT_STEP';
 export const ADD_PAPER_PREVIOUS_STEP = 'ADD_PAPER_PREVIOUS_STEP';
@@ -25,6 +24,7 @@ export const CLOSE_TOUR = 'CLOSE_TOUR';
 export const OPEN_TOUR = 'OPEN_TOUR';
 
 export const SAVE_ADD_PAPER = 'SAVE_ADD_PAPER';
+//END Add paper
 export const SET_PAPER_AUTHORS = 'SET_PAPER_AUTHORS';
 
 export const ADD_TO_COMPARISON = 'ADD_TO_COMPARISON';

@@ -6,14 +6,14 @@ import Tooltip from 'components/Utils/Tooltip';
 import {
     nextStep,
     previousStep,
-    createContribution,
-    deleteContribution,
-    selectContribution,
-    updateContributionLabel,
-    saveAddPaper,
+    createContributionAction as createContribution,
+    deleteContributionAction as deleteContribution,
+    selectContributionAction as selectContribution,
+    updateContributionLabelAction as updateContributionLabel,
+    saveAddPaperAction as saveAddPaper,
     openTour,
     toggleAbstractDialog
-} from 'actions/addPaper';
+} from 'slices/addPaperSlice';
 import { updateSettings } from 'slices/statementBrowserSlice';
 import Abstract from 'components/AddPaper/Abstract/Abstract';
 import Confirm from 'components/Confirmation/Confirmation';

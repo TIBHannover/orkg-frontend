@@ -8,12 +8,12 @@ import {
     updateAbstract,
     nextStep,
     previousStep,
-    createContribution,
+    createContributionAction as createContribution,
     createAnnotation,
     clearAnnotations,
     toggleAbstractDialog,
     setAbstractDialogView
-} from 'actions/addPaper';
+} from 'slices/addPaperSlice';
 import { fillStatements } from 'slices/statementBrowserSlice';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner, faThList, faMagic } from '@fortawesome/free-solid-svg-icons';

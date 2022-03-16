@@ -14,7 +14,7 @@ import styled, { withTheme } from 'styled-components';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import PropTypes from 'prop-types';
 import { resetStatementBrowser } from 'slices/statementBrowserSlice';
-import { openTour, closeTour, blockNavigation, loadPaperData } from '../actions/addPaper';
+import { openTour, closeTour, blockNavigation, loadPaperDataAction as loadPaperData } from 'slices/addPaperSlice';
 import { Prompt } from 'react-router';
 import GizmoGraphViewModal from 'components/ViewPaper/GraphView/GizmoGraphViewModal';
 import env from '@beam-australia/react-env';
@@ -113,7 +113,7 @@ class AddPaper extends Component {
         }
 
         if (!this.props.addPaper.shouldBlockNavigation && this.props.currentStep > 1 && !this.props.addPaper.paperNewResourceId) {
-            this.props.blockNavigation();
+            this.props.blockNavigation({ status: true });
             window.onbeforeunload = () => true;
         }
         if (!this.props.addPaper.shouldBlockNavigation && prevProps.addPaper.shouldBlockNavigation !== this.props.addPaper.shouldBlockNavigation) {
@@ -257,7 +257,7 @@ const mapDispatchToProps = dispatch => ({
     resetStatementBrowser: () => dispatch(resetStatementBrowser()),
     openTour: () => dispatch(openTour()),
     closeTour: () => dispatch(closeTour()),
-    blockNavigation: () => dispatch(blockNavigation()),
+    blockNavigation: data => dispatch(blockNavigation(data)),
     loadPaperData: data => dispatch(loadPaperData(data))
 });
 
