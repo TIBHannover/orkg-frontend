@@ -1,10 +1,10 @@
 import { combineReducers } from 'redux';
 import { connectRouter } from 'connected-react-router';
-import auth from 'reducers/auth';
 import pdfTextAnnotation from 'reducers/pdfTextAnnotation';
 import viewPaper from 'reducers/viewPaper';
 import pdfAnnotation from 'reducers/pdfAnnotation';
 import review from 'reducers/review';
+import auth from 'slices/authSlice';
 import statementBrowser from 'slices/statementBrowserSlice';
 import addPaper from 'slices/addPaperSlice';
 import literatureList from 'slices/literatureListSlice';

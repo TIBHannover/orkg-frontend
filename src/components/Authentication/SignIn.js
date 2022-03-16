@@ -2,7 +2,7 @@ import { Button, Form, FormGroup, Input, Label, Alert } from 'reactstrap';
 import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { openAuthDialog, toggleAuthDialog, updateAuth } from 'actions/auth';
+import { openAuthDialog, toggleAuthDialog, updateAuth } from 'slices/authSlice';
 import { signInWithEmailAndPassword, getUserInformation } from 'services/backend/users';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';

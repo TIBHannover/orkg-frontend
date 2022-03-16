@@ -13,7 +13,7 @@ import PropTypes from 'prop-types';
 import ROUTES from 'constants/routes';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
-import { openAuthDialog } from 'actions/auth';
+import { openAuthDialog } from 'slices/authSlice';
 import { connect } from 'react-redux';
 import slugify from 'slugify';
 import { getPublicUrl } from 'utils';

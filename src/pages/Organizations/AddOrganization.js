@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 import { createOrganization } from 'services/backend/organizations';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
-import { openAuthDialog } from 'actions/auth';
+import { openAuthDialog } from 'slices/authSlice';
 import PropTypes from 'prop-types';
 import REGEX from 'constants/regex';
 import { connect } from 'react-redux';
