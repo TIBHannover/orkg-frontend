@@ -203,13 +203,10 @@ const TableCellForm = ({ value, contributionId, propertyId, closeForm }) => {
                                 autoLoadOption={valueClass ? true : false}
                                 openMenuOnFocus={true}
                                 allowCreate
-                                allowCreateDuplicate={isUniqLabel}
+                                allowCreateDuplicate={!isUniqLabel}
                                 onKeyDown={e => {
                                     if (e.keyCode === 27) {
                                         // escape
-                                        closeForm?.(false);
-                                    } else if (e.keyCode === 13 && !isMenuOpen()) {
-                                        dispatch(addValue(entityType, { label: inputValue, selected: true }, valueClass, contributionId, propertyId));
                                         closeForm?.(false);
                                     }
                                 }}
