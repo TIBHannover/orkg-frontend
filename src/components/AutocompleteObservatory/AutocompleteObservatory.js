@@ -4,7 +4,7 @@ import { getAllObservatories } from 'services/backend/observatories';
 import { getAllOrganizations } from 'services/backend/organizations';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { Label } from 'reactstrap';
+import { Label, FormGroup } from 'reactstrap';
 import { ORGANIZATIONS_MISC } from 'constants/organizationsTypes';
 
 const LogoContainer = styled.div`
@@ -88,30 +88,38 @@ function AutocompleteObservatory(props) {
 
     return (
         <>
-            <Select
-                value={props.observatory}
-                components={{ Option: CustomOptionObservatory }}
-                cacheOptions
-                options={options}
-                onChange={onChangeObservatory}
-                getOptionValue={({ id }) => id}
-                getOptionLabel={({ name }) => name}
-                inputId={props.inputId}
-                isClearable={true}
-            />
-
-            <br />
-            <Label for="select-organization">Select an organization</Label>
-            <Select
-                value={props.organization}
-                components={{ Option: CustomOptionOrganization }}
-                options={optionsOrganizations}
-                onChange={onChangeOrganization}
-                getOptionValue={({ id }) => id}
-                getOptionLabel={({ name }) => name}
-                inputId="select-organization"
-                isClearable={true}
-            />
+            <p>
+                <small>Clear the observatory field to select a conference in the organization field.</small>
+            </p>
+            <FormGroup>
+                <Label for="select-observatory">Select an observatory</Label>
+                <Select
+                    value={props.observatory}
+                    components={{ Option: CustomOptionObservatory }}
+                    cacheOptions
+                    options={options}
+                    onChange={onChangeObservatory}
+                    getOptionValue={({ id }) => id}
+                    getOptionLabel={({ name }) => name}
+                    inputId="select-observatory"
+                    isClearable={true}
+                    classNamePrefix="react-select"
+                />
+            </FormGroup>
+            <FormGroup>
+                <Label for="select-organization">Select an organization</Label>
+                <Select
+                    value={props.organization}
+                    components={{ Option: CustomOptionOrganization }}
+                    options={optionsOrganizations}
+                    onChange={onChangeOrganization}
+                    getOptionValue={({ id }) => id}
+                    getOptionLabel={({ name }) => name}
+                    inputId="select-organization"
+                    isClearable={true}
+                    classNamePrefix="react-select"
+                />
+            </FormGroup>
         </>
     );
 }

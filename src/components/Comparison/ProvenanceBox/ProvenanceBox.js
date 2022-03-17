@@ -73,8 +73,8 @@ function ProvenanceBox(props) {
                         )}
                         {props.creator &&
                             props.creator.id &&
-                            (!props.provenance.organization.metadata.is_double_blind ||
-                                moment().format('YYYY-MM-DD') >= props.provenance.organization.metadata.date) && (
+                            (!props.provenance?.organization?.metadata?.is_double_blind ||
+                                moment().format('YYYY-MM-DD') >= props.provenance?.organization?.metadata?.date) && (
                                 <>
                                     <i>Added by</i>
                                     <br />

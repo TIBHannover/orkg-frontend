@@ -31,7 +31,7 @@ const ObservatoryBox = ({ provenance }) => {
 
     return (
         <ObservatoryBoxStyled>
-            {provenance.id && (
+            {provenance && provenance.id && (
                 <Link to={reverse(ROUTES.OBSERVATORY, { id: provenance.id })} className="text-center">
                     {provenance.organization.logo && (
                         <img
@@ -45,7 +45,7 @@ const ObservatoryBox = ({ provenance }) => {
                     {provenance && <div>{provenance.name}</div>}
                 </Link>
             )}
-            {!provenance.id && provenance.organization.id && (
+            {provenance && !provenance.id && provenance.organization.id && (
                 <Link to={reverse(ROUTES.ORGANIZATION, { id: provenance.organization.display_id })} className="text-center">
                     {provenance.organization.logo && (
                         <img
