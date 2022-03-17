@@ -222,7 +222,16 @@ function Publish(props) {
                                             '@id': props.metaData.hasPreviousVersion.id
                                         }
                                     ]
-                                })
+                                }),
+                                ...(conference &&
+                                    conference.metadata?.is_double_blind && {
+                                        [PREDICATES.IS_ANONYMIZED]: [
+                                            {
+                                                text: true,
+                                                datatype: 'xsd:boolean'
+                                            }
+                                        ]
+                                    })
                             },
                             observatoryId: MISC.UNKNOWN_ID,
                             organizationId: conference ? conference.id : MISC.UNKNOWN_ID
@@ -234,10 +243,6 @@ function Publish(props) {
                         resourceId: createdComparison.id,
                         data: { url: `${props.comparisonURLConfig}&response_hash=${response_hash}` }
                     });
-                    if (conference && conference.metadata.is_double_blind) {
-                        const anonymizeLiteral = await createLiteral(true);
-                        await createLiteralStatement(createdComparison.id, PREDICATES.IS_ANONYMIZED, anonymizeLiteral.id);
-                    }
                     toast.success('Comparison saved successfully');
                     // Assign a DOI
                     if (assignDOI) {
