@@ -25,6 +25,7 @@ import ROUTES from 'constants/routes.js';
 import queryString from 'query-string';
 import { usePrevious } from 'react-use';
 import Confirm from 'components/Confirmation/Confirmation';
+import { getOrganization } from 'services/backend/organizations';
 
 const DEFAULT_COMPARISON_METHOD = 'path';
 
@@ -242,6 +243,14 @@ function useComparison({ id }) {
             getObservatoryAndOrganizationInformation(observatory_id, organization_id)
                 .then(observatory => {
                     setProvenance(observatory);
+                })
+                .catch(() => {
+                    setProvenance(null);
+                });
+        } else if (organization_id && organization_id !== MISC.UNKNOWN_ID) {
+            getOrganization(organization_id)
+                .then(organization => {
+                    setProvenance({ organization: organization });
                 })
                 .catch(() => {
                     setProvenance(null);

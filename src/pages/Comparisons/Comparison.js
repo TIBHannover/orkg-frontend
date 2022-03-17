@@ -548,8 +548,7 @@ function Comparison(props) {
                                         />
                                     )}
                                 </h2>
-
-                                {!isFailedLoadingMetaData && <ComparisonMetaData metaData={metaData} />}
+                                {!isFailedLoadingMetaData && provenance && <ComparisonMetaData metaData={metaData} provenance={provenance} />}
                             </div>
 
                             {metaData.id && provenance && <ObservatoryBox provenance={provenance} />}
@@ -697,6 +696,7 @@ function Comparison(props) {
                 loadProvenanceInfos={loadProvenanceInfos}
                 data={data}
                 nextVersions={!isLoadingVersions && hasNextVersion ? versions : []}
+                anonymized={metaData?.anonymized}
             />
 
             {showSaveDraftDialog && (

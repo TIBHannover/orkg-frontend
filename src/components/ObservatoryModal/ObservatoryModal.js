@@ -32,7 +32,7 @@ const ObservatoryModal = props => {
             organization_id: organization?.id ?? MISC.UNKNOWN_ID,
             id: props.resourceId
         }).then(() => {
-            toast.success(`Observatory added to paper successfully`);
+            toast.success(`Observatory assigned to resource successfully`);
             props.callBack && props.callBack(observatory?.id ?? MISC.UNKNOWN_ID, organization?.id ?? MISC.UNKNOWN_ID);
             props.toggle();
         });
@@ -42,13 +42,11 @@ const ObservatoryModal = props => {
         <Modal isOpen={props.showDialog} toggle={props.toggle}>
             <ModalHeader toggle={props.toggle}>Assign resource to an observatory</ModalHeader>
             <ModalBody>
-                <Label for="select-observatory">Select an observatory</Label>
                 <AutoCompleteObservatory
                     onChangeObservatory={handleChangeObservatory}
                     onChangeOrganization={handleChangeOrganization}
                     observatory={observatory}
                     organization={organization}
-                    inputId="select-observatory"
                 />
             </ModalBody>
             <ModalFooter>

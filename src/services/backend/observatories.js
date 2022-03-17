@@ -71,7 +71,8 @@ export const getObservatoryAndOrganizationInformation = (observatoryId, organiza
                                 id: organizationId,
                                 name: orgResponse.name,
                                 logo: orgResponse.logo,
-                                display_id: orgResponse.display_id
+                                display_id: orgResponse.display_id,
+                                metadata: orgResponse.metadata
                             }
                         };
                     })

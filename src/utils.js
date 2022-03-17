@@ -344,6 +344,7 @@ export const getComparisonData = (resource, comparisonStatements) => {
     const video = filterObjectOfStatementsByPredicateAndClass(comparisonStatements, PREDICATES.HAS_VIDEO, true);
     const authors = filterObjectOfStatementsByPredicateAndClass(comparisonStatements, PREDICATES.HAS_AUTHOR, false);
     const properties = filterObjectOfStatementsByPredicateAndClass(comparisonStatements, PREDICATES.HAS_PROPERTY, false);
+    const anonymized = filterObjectOfStatementsByPredicateAndClass(comparisonStatements, PREDICATES.IS_ANONYMIZED, true);
 
     return {
         ...resource,
@@ -363,7 +364,8 @@ export const getComparisonData = (resource, comparisonStatements) => {
         figures,
         resources,
         properties,
-        video
+        video,
+        anonymized: anonymized ? true : false
     };
 };
 
