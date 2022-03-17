@@ -1,4 +1,4 @@
-import { reloadDataTableStatements } from 'actions/review';
+import { reloadDataTableStatements } from 'slices/reviewSlice';
 import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
 import PropTypes from 'prop-types';
 import { memo, useState } from 'react';

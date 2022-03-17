@@ -11,7 +11,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
-import { toggleHistoryModal as toggleHistoryModalAction, setIsEditing } from 'actions/review';
+import { toggleHistoryModal as toggleHistoryModalAction, setIsEditing } from 'slices/reviewSlice';
 import Breadcrumbs from 'components/Breadcrumbs/Breadcrumbs';
 import AcknowledgementsSection from 'components/Review/AcknowledgementsSection';
 import AddSection from 'components/Review/AddSection';
