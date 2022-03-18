@@ -3,6 +3,12 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [V0.66.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.66...V0.66.1) - 2022-03-18
+
+### Commits
+
+- update changelog [`03c9c63`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/commit/03c9c63e9f5efc1d880561c999d38c9aaa5c09ac)
+---
 ## [V0.66](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.65.2...V0.66) - 2022-03-17
 
 ### Changes
