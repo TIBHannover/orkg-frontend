@@ -3,6 +3,13 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [V0.67](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.66.1...V0.67) - 2022-03-18
+
+### Changes
+
+- ResearchField: Sync with backend changes [`#810`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/810)
+
+---
 ## [V0.66.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.66...V0.66.1) - 2022-03-18
 
 ### Commits
