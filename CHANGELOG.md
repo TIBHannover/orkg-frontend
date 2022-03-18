@@ -3,6 +3,13 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [V0.67.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.67...V0.67.1) - 2022-03-18
+
+### Changes
+
+- fix(Comparison): failed loading comparisons without an organization [`#811`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/811)
+
+---
 ## [V0.67](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.66.1...V0.67) - 2022-03-18
 
 ### Changes
