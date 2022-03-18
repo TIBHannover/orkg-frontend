@@ -29,8 +29,8 @@ function ComparisonMetaData(props) {
                         )}
                         {props.metaData.authors &&
                             props.metaData.authors.length > 0 &&
-                            (!props.provenance.organization.metadata.is_double_blind ||
-                                moment().format('YYYY-MM-DD') >= props.provenance.organization.metadata.date) && (
+                            (!props.provenance?.organization?.metadata?.is_double_blind ||
+                                moment().format('YYYY-MM-DD') >= props.provenance?.organization?.metadata?.date) && (
                                 <AuthorBadges authors={props.metaData.authors} />
                             )}
                     </div>
