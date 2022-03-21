@@ -548,10 +548,10 @@ function Comparison(props) {
                                         />
                                     )}
                                 </h2>
-                                {!isFailedLoadingMetaData && provenance && <ComparisonMetaData metaData={metaData} provenance={provenance} />}
+                                {!isFailedLoadingMetaData && <ComparisonMetaData metaData={metaData} provenance={provenance} />}
                             </div>
 
-                            {metaData.id && provenance && <ObservatoryBox provenance={provenance} />}
+                            {metaData.id && <ObservatoryBox provenance={provenance} />}
                         </div>
                     )}
                     {!isFailedLoadingMetaData && !isFailedLoadingComparisonResult && (
