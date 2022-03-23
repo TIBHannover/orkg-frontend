@@ -1,13 +1,10 @@
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 import { ListGroup, ListGroupItem, Button } from 'reactstrap';
 import ContentLoader from 'react-content-loader';
 import { Link, withRouter } from 'react-router-dom';
-import { CLASSES } from 'constants/graphSettings';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { getResourceLink } from 'utils';
-import moment from 'moment';
+import ItemMetadata from './ItemMetadata';
 
 const StyledLoadMoreButton = styled.div`
     padding-top: 0;
@@ -74,16 +71,7 @@ const Results = props => {
                                 return (
                                     <StyledListGroupItem rounded={props.hasNextPage.toString()} key={`result-${index}`} className="pt-1 pb-1">
                                         <Link to={getResourceLink(props.class, item.id)}>{item.label}</Link>
-                                        {item.classes && item.classes.includes(CLASSES.COMPARISON) && (
-                                            <div>
-                                                <small>
-                                                    <i className="text-muted">
-                                                        <Icon size="sm" icon={faCalendar} className="me-1" />{' '}
-                                                        {moment(item.created_at).format('DD MMMM YYYY - H:mm')}
-                                                    </i>
-                                                </small>
-                                            </div>
-                                        )}
+                                        <ItemMetadata item={item} showClasses={props.showClasses} />
                                     </StyledListGroupItem>
                                 );
                             })}
@@ -111,6 +99,7 @@ const Results = props => {
 
 Results.propTypes = {
     loading: PropTypes.bool.isRequired,
+    showClasses: PropTypes.bool.isRequired,
     label: PropTypes.string.isRequired,
     class: PropTypes.string.isRequired,
     items: PropTypes.array.isRequired,
