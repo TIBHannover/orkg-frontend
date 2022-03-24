@@ -41,7 +41,7 @@ const useTableCellForm = ({ value, contributionId, propertyId }) => {
             ? getConfigByType(isLiteralField ? (editMode ? value.datatype : MISC.DEFAULT_LITERAL_DATATYPE) : MISC.DEFAULT_LITERAL_DATATYPE).type
             : getConfigByClassId(valueClass.id).type
     );
-    const [disabledCreate, setDisabledCreate] = useState(false);
+    const [disabledCreate] = useState(false);
 
     const createBlankNode = () => {
         // 1 - create a resource

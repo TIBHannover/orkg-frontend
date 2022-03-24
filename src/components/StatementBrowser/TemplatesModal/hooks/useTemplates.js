@@ -183,7 +183,7 @@ const useTemplates = ({ onlyFeatured = true, isContributionEditor = false }) => 
                 setIsLoadingUsedTemplates(false);
             });
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [getTemplatesOfResourceId, , JSON.stringify(resource?.classes)]);
+    }, [getTemplatesOfResourceId, JSON.stringify(resource?.classes)]);
 
     const handleSelectedFilterChange = selected => {
         setTemplates([]);
