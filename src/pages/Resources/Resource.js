@@ -30,6 +30,7 @@ import { reverseWithSlug } from 'utils';
 import PapersWithCodeModal from 'components/PapersWithCodeModal/PapersWithCodeModal';
 import TitleBar from 'components/TitleBar/TitleBar';
 import EditModeHeader from 'components/EditModeHeader/EditModeHeader';
+import ItemMetadata from 'components/Search/ItemMetadata';
 
 const DEDICATED_PAGE_LINKS = {
     [CLASSES.PAPER]: {
@@ -331,7 +332,8 @@ function Resource(props) {
                             )}
                         </div>
                         <hr />
-
+                        <ItemMetadata item={resource} showCreatedAt={true} showCreatedBy={true} />
+                        <hr />
                         {/*Adding Visualization Component here */}
                         {hasVisualizationModelForGDC && (
                             <div className="mb-4">

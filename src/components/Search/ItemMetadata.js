@@ -1,14 +1,15 @@
 import PropTypes from 'prop-types';
-import { CLASSES } from 'constants/graphSettings';
 import { Button, InputGroup } from 'reactstrap';
 import moment from 'moment';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { faClipboard } from '@fortawesome/free-regular-svg-icons';
 import { toast } from 'react-toastify';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faCalendar, faTags, faArrowRight } from '@fortawesome/free-solid-svg-icons';
+import { faCalendar, faTags, faArrowRight, faUser } from '@fortawesome/free-solid-svg-icons';
 import pluralize from 'pluralize';
 import styled from 'styled-components';
+import UserAvatar from 'components/UserAvatar/UserAvatar';
+import { MISC } from 'constants/graphSettings';
 
 const NodeIdStyled = styled.div`
     .id {
@@ -44,14 +45,15 @@ const NodeIdStyled = styled.div`
     }
 `;
 
-const ItemMetadata = ({ item, showClasses }) => {
+const ItemMetadata = ({ item, showClasses, showCreatedAt, showCreatedBy }) => {
     return (
         <div className="d-flex">
             <div className="flex-grow-1">
-                {item.classes && item.classes.includes(CLASSES.COMPARISON) && (
+                {showCreatedAt && (
                     <small className="d-inline-block me-2 text-muted">
                         <i>
-                            <Icon size="sm" icon={faCalendar} className="me-1" /> {moment(item.created_at).format('DD MMMM YYYY - H:mm')}
+                            <Icon size="sm" icon={faCalendar} color="#dbdde5" className="me-1" />{' '}
+                            {moment(item.created_at).format('DD MMMM YYYY - H:mm')}
                         </i>
                     </small>
                 )}
@@ -71,8 +73,16 @@ const ItemMetadata = ({ item, showClasses }) => {
                         <i>{item.classes.join(', ')}</i>
                     </small>
                 )}
+                {showCreatedBy && item.created_by !== MISC.UNKNOWN_ID && (
+                    <small className="d-inline-block me-2 text-muted">
+                        <i>
+                            <Icon icon={faUser} color="#dbdde5" /> Created by :{' '}
+                            <UserAvatar size={24} userId={item.created_by} showDisplayName={true} />
+                        </i>
+                    </small>
+                )}
             </div>
-            <div className="d-flex align-items-end mb-1">
+            <div className="d-flex align-items-end">
                 <NodeIdStyled className="d-flex text-muted">
                     <span className="px-1 id">ID</span>
                     <InputGroup size="xs">
@@ -97,11 +107,15 @@ const ItemMetadata = ({ item, showClasses }) => {
 
 ItemMetadata.propTypes = {
     item: PropTypes.object.isRequired,
-    showClasses: PropTypes.bool
+    showClasses: PropTypes.bool,
+    showCreatedAt: PropTypes.bool,
+    showCreatedBy: PropTypes.bool
 };
 
 ItemMetadata.defaultProps = {
-    showClasses: false
+    showClasses: false,
+    showCreatedAt: false,
+    showCreatedBy: false
 };
 
 export default ItemMetadata;

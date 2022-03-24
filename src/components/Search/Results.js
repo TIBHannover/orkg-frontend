@@ -1,6 +1,7 @@
 import { ListGroup, ListGroupItem, Button } from 'reactstrap';
 import ContentLoader from 'react-content-loader';
 import { Link, withRouter } from 'react-router-dom';
+import { CLASSES } from 'constants/graphSettings';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { getResourceLink } from 'utils';
@@ -69,9 +70,13 @@ const Results = props => {
                         <ListGroup>
                             {props.items.map((item, index) => {
                                 return (
-                                    <StyledListGroupItem rounded={props.hasNextPage.toString()} key={`result-${index}`} className="pt-1 pb-1">
+                                    <StyledListGroupItem rounded={props.hasNextPage.toString()} key={`result-${index}`} className="pt-1 pb-2">
                                         <Link to={getResourceLink(props.class, item.id)}>{item.label}</Link>
-                                        <ItemMetadata item={item} showClasses={props.showClasses} />
+                                        <ItemMetadata
+                                            item={item}
+                                            showClasses={props.showClasses}
+                                            showCreatedAt={item.classes && item.classes.includes(CLASSES.COMPARISON)}
+                                        />
                                     </StyledListGroupItem>
                                 );
                             })}
