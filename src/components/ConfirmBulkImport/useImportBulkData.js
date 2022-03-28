@@ -124,7 +124,7 @@ const useImportBulkData = ({ data, onFinish }) => {
 
             for (const property in rowObject) {
                 let propertyId;
-                if (property !== 'contribution:research_problem') {
+                if (property !== 'orkg:research_problem') {
                     propertyId = valueToId[property] || undefined;
                 } else {
                     propertyId = PREDICATES.HAS_RESEARCH_PROBLEM;
