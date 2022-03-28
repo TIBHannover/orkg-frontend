@@ -32,7 +32,7 @@ const ConfirmBulkImport = props => {
     const isFinished = createdContributions.length > 0 && createdContributions.length === papers.length;
 
     return (
-        <Modal isOpen={isOpen} toggle={toggle} size="lg" backdrop="static">
+        <Modal isOpen={isOpen} size="lg" backdrop="static">
             <ModalHeader toggle={toggle}>Review import</ModalHeader>
             <ModalBody>
                 {!isLoading && createdContributions.length === 0 && (
