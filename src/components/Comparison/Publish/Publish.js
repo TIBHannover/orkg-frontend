@@ -34,6 +34,7 @@ import { PREDICATES, CLASSES, ENTITIES, MISC } from 'constants/graphSettings';
 import env from '@beam-australia/react-env';
 import Select from 'react-select';
 import { getConferences } from 'services/backend/organizations';
+import { useMatomo } from '@datapunt/matomo-tracker-react';
 
 const StyledCustomInput = styled(Input)`
     margin-right: 0;
@@ -84,6 +85,7 @@ function Publish(props) {
     const [comparisonCreators, setComparisonCreators] = useState(props.authors ?? []);
     const [conferencesList, setConferencesList] = useState([]);
     const [conference, setConference] = useState(null);
+    const { trackEvent } = useMatomo();
 
     const handleCreatorsChange = creators => {
         creators = creators ? creators : [];
@@ -243,6 +245,7 @@ function Publish(props) {
                         resourceId: createdComparison.id,
                         data: { url: `${props.comparisonURLConfig}&response_hash=${response_hash}` }
                     });
+                    trackEvent({ category: 'data-entry', action: 'publish-comparison' });
                     toast.success('Comparison saved successfully');
                     // Assign a DOI
                     if (assignDOI) {

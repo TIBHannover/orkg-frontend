@@ -13,6 +13,7 @@ import { Cookies } from 'react-cookie';
 import env from '@beam-australia/react-env';
 import InfoSheet from 'assets/pdf/infosheet-data-protection.pdf';
 import { reverse } from 'named-urls';
+import { useMatomo } from '@datapunt/matomo-tracker-react';
 
 const cookies = new Cookies();
 
@@ -26,6 +27,7 @@ export default function SignUp() {
     const [errors, setErrors] = useState(null);
     const [termsConditionIsChecked, setTermsConditionIsChecked] = useState(false);
     const [dataProtectionIsChecked, setDataProtectionIsChecked] = useState(false);
+    const { trackEvent } = useMatomo();
 
     const signUp = async e => {
         e.preventDefault();
@@ -60,6 +62,7 @@ export default function SignUp() {
                             dispatch(toggleAuthDialog());
                             setIsLoading(false);
                             setErrors(null);
+                            trackEvent({ category: 'authentication', action: 'sign-up' });
                         })
                         .catch(e => {
                             if (checkCookie()) {
