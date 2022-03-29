@@ -81,7 +81,7 @@
         "react-responsive-tabs": "^4.4.3",
         "react-router": "^5.2.0",
         "react-router-config": "^5.0.1",
-        "react-router-dom": "^5.3.0",
+        "react-router-dom": "^5.2.0",
         "react-scroll-sync": "^0.9.0",
         "react-select": "^5.2.1",
         "react-select-async-paginate": "^0.6.0",
