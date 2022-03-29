@@ -11,6 +11,7 @@ import styled from 'styled-components';
 import { isEmpty } from 'lodash';
 import { Button } from 'reactstrap';
 import { useSelector } from 'react-redux';
+import moment from 'moment';
 
 const StyledOrganizationCard = styled.div`
     border: 0;
@@ -70,13 +71,16 @@ function ProvenanceBox(props) {
                                 </h4>
                             </>
                         )}
-                        {props.creator && props.creator.id && (
-                            <>
-                                <i>Added by</i>
-                                <br />
-                                <Link to={reverse(ROUTES.USER_PROFILE, { userId: props.creator.id })}>{props.creator.display_name}</Link>
-                            </>
-                        )}
+                        {props.creator &&
+                            props.creator.id &&
+                            (!props.provenance?.organization?.metadata?.is_double_blind ||
+                                moment().format('YYYY-MM-DD') >= props.provenance?.organization?.metadata?.date) && (
+                                <>
+                                    <i>Added by</i>
+                                    <br />
+                                    <Link to={reverse(ROUTES.USER_PROFILE, { userId: props.creator.id })}>{props.creator.display_name}</Link>
+                                </>
+                            )}
                         <br /> <br />
                         {isEmpty(props.provenance) && !!user && user.isCurationAllowed && (
                             <Button size="sm" outline onClick={() => setShowAssignObservatory(true)}>

@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { Container, Table, Card, CardBody, Button, ButtonGroup, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import ROUTES from 'constants/routes';
 import { Link, useHistory } from 'react-router-dom';
@@ -18,7 +18,6 @@ import useBenchmarkDatasetPapers from 'components/Benchmarks/hooks/useBenchmarkD
 import CodeURLsTooltip from 'components/Benchmarks/BenchmarkCard/CodeURLsTooltip';
 import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
 import { useParams } from 'react-router-dom';
-import { usePrevious } from 'react-use';
 import { useTable, useSortBy } from 'react-table';
 import TitleBar from 'components/TitleBar/TitleBar';
 
@@ -59,7 +58,6 @@ function Benchmark() {
     const [resourceData, problemData, isLoading, isFailedLoading, loadResourceData] = useBenchmarkDatasetResource({ datasetId, problemId });
     const [menuOpen, setMenuOpen] = useState(false);
     const [editMode, setEditMode] = useState(false);
-    const prevEditMode = usePrevious({ editMode });
     const history = useHistory();
     const {
         isLoading: isLoadingPapers,
@@ -73,13 +71,6 @@ function Benchmark() {
         datasetId,
         problemId
     });
-
-    useEffect(() => {
-        if (!editMode && prevEditMode && prevEditMode.editMode !== editMode) {
-            loadResourceData(datasetId);
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [editMode]);
 
     const columns = useMemo(
         () => [
@@ -245,6 +236,7 @@ function Benchmark() {
                             label={resourceData.label}
                             enableEdit={true}
                             syncBackend={true}
+                            onCloseModal={() => loadResourceData(datasetId)}
                         />
                     )}
 

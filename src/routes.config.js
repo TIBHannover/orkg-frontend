@@ -62,7 +62,6 @@ import HelpCenterCategory from 'pages/HelpCenter/HelpCenterCategory';
 import HelpCenterArticle from 'pages/HelpCenter/HelpCenterArticle';
 import HelpCenterSearch from 'pages/HelpCenter/HelpCenterSearch';
 import WebinarMay11 from 'pages/WebinarMay11';
-import CurationCall from 'pages/CurationCall';
 import Lists from 'pages/Lists/Lists';
 import ListNew from 'pages/Lists/ListNew';
 import List from 'pages/Lists/List';
@@ -385,7 +384,10 @@ const routes = [
     // redirect legacy route
     {
         path: ROUTES.CURATION_CALL,
-        component: CurationCall
+        component: () => {
+            window.location.replace('https://www.orkg.org/orkg/about/28/Curation_Grants');
+            return null;
+        }
     },
     {
         path: ROUTES.HELP_CENTER,

@@ -188,7 +188,8 @@ const useContributions = ({ paperId, contributionId }) => {
         paperTitle: paperResource.label,
         handleChangeContributionLabel,
         handleCreateContribution,
-        toggleDeleteContribution
+        toggleDeleteContribution,
+        history
     };
 };
 

@@ -684,9 +684,9 @@ function Autocomplete(props) {
                 <Select
                     key={JSON.stringify(selectedOntologies.map(o => o.id))}
                     value={
-                        !props.isMulti && !props.fixedOptions
-                            ? props.value
-                            : props.value?.map?.(v => ({ ...v, isFixed: props.fixedOptions.includes(v.id) }))
+                        props.isMulti && props.fixedOptions?.length
+                            ? props.value?.map?.(v => ({ ...v, isFixed: props.fixedOptions.includes(v.id) }))
+                            : props.value
                     }
                     loadOptions={loadOptions}
                     additional={defaultAdditional}
