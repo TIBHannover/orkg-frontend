@@ -289,49 +289,45 @@ function Resource(props) {
                     )}
                     <EditModeHeader isVisible={editMode && canEdit} />
                     <Container className={`box clearfix pt-4 pb-4 ps-5 pe-5 ${editMode ? 'rounded-bottom' : 'rounded'}`}>
-                        <div className="mb-2">
-                            {!editMode || !canEdit ? (
-                                <div className="pb-2 mb-3">
-                                    <h3 className="" style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
-                                        {resource.label || (
-                                            <i>
-                                                <small>No label</small>
-                                            </i>
-                                        )}{' '}
-                                        <MarkFeatured size="xs" featured={isFeatured} handleChangeStatus={handleChangeStatus} />
-                                        <div className="d-inline-block ms-1">
-                                            <MarkUnlisted size="xs" unlisted={isUnlisted} handleChangeStatus={handleChangeStatus} />
-                                        </div>
-                                    </h3>
+                        {!editMode || !canEdit ? (
+                            <h3 className="" style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
+                                {resource.label || (
+                                    <i>
+                                        <small>No label</small>
+                                    </i>
+                                )}{' '}
+                                <MarkFeatured size="xs" featured={isFeatured} handleChangeStatus={handleChangeStatus} />
+                                <div className="d-inline-block ms-1">
+                                    <MarkUnlisted size="xs" unlisted={isUnlisted} handleChangeStatus={handleChangeStatus} />
                                 </div>
-                            ) : (
-                                <>
-                                    <EditableHeader id={props.match.params.id} value={resource.label} onChange={handleHeaderChange} />
-                                    {showDeleteButton && (
-                                        <ConditionalWrapper
-                                            condition={!canBeDeleted}
-                                            wrapper={children => (
-                                                <Tippy content="The resource cannot be deleted because it is used in statements (either as subject or object)">
-                                                    <span>{children}</span>
-                                                </Tippy>
-                                            )}
+                            </h3>
+                        ) : (
+                            <>
+                                <EditableHeader id={props.match.params.id} value={resource.label} onChange={handleHeaderChange} />
+                                {showDeleteButton && (
+                                    <ConditionalWrapper
+                                        condition={!canBeDeleted}
+                                        wrapper={children => (
+                                            <Tippy content="The resource cannot be deleted because it is used in statements (either as subject or object)">
+                                                <span>{children}</span>
+                                            </Tippy>
+                                        )}
+                                    >
+                                        <Button
+                                            color="danger"
+                                            size="sm"
+                                            className="mt-2 mb-3"
+                                            style={{ marginLeft: 'auto' }}
+                                            onClick={deleteResource}
+                                            disabled={!canBeDeleted}
                                         >
-                                            <Button
-                                                color="danger"
-                                                size="sm"
-                                                className="mt-2"
-                                                style={{ marginLeft: 'auto' }}
-                                                onClick={deleteResource}
-                                                disabled={!canBeDeleted}
-                                            >
-                                                <Icon icon={faTrash} /> Delete resource
-                                            </Button>
-                                        </ConditionalWrapper>
-                                    )}
-                                </>
-                            )}
-                        </div>
-                        <hr />
+                                            <Icon icon={faTrash} /> Delete resource
+                                        </Button>
+                                    </ConditionalWrapper>
+                                )}
+                            </>
+                        )}
+
                         <ItemMetadata item={resource} showCreatedAt={true} showCreatedBy={true} />
                         <hr />
                         {/*Adding Visualization Component here */}

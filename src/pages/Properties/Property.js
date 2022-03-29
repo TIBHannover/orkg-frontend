@@ -72,18 +72,13 @@ function Property(props) {
                     <Container className="p-0 clearfix">
                         <EditModeHeader isVisible={editMode} />
                         <div className={`box clearfix pt-4 pb-4 ps-5 pe-5 ${editMode ? 'rounded-bottom' : 'rounded'}`}>
-                            <div className="mb-2">
-                                <div className="pb-2 mb-3">
-                                    <h3 className="" style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
-                                        {property?.label || (
-                                            <i>
-                                                <small>No label</small>
-                                            </i>
-                                        )}
-                                    </h3>
-                                </div>
-                            </div>
-                            <hr />
+                            <h3 className="" style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
+                                {property?.label || (
+                                    <i>
+                                        <small>No label</small>
+                                    </i>
+                                )}
+                            </h3>
                             <ItemMetadata item={property} showCreatedAt={true} showCreatedBy={true} />
                             <hr />
                             <h3 className="h5">Statements</h3>
