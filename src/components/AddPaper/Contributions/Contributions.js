@@ -141,6 +141,7 @@ const Contributions = () => {
                                 </div>
                             </span>
                         }
+                        tippyProps={{ interactive: true }}
                     >
                         Specify research contributions
                     </Tooltip>

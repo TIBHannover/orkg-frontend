@@ -5,7 +5,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSort } from '@fortawesome/free-solid-svg-icons';
 import { SortableContainer, SortableElement, sortableHandle } from 'react-sortable-hoc';
 import capitalize from 'capitalize';
-import Tooltip from 'components/Utils/Tooltip';
+import Tippy from '@tippyjs/react';
 
 const DragHandle = styled.span`
     cursor: move;
@@ -41,9 +41,11 @@ function SelectProperties(props) {
                     {capitalize(property.label)}
                 </Label>
             </FormGroup>
-            <Tooltip message="Amount of contributions" hideDefaultIcon>
-                <Badge color="light">{property.contributionAmount}</Badge>
-            </Tooltip>
+            <Tippy content="Amount of contributions">
+                <span>
+                    <Badge color="light">{property.contributionAmount}</Badge>
+                </span>
+            </Tippy>
         </ListGroupItemStyled>
     ));
 
