@@ -1,7 +1,16 @@
 import { useState, useEffect } from 'react';
 import { Alert, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Button, Badge } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faEllipsisV, faLightbulb, faHistory, faChartBar, faExternalLinkAlt, faFilter, faPlus } from '@fortawesome/free-solid-svg-icons';
+import {
+    faEllipsisV,
+    faLightbulb,
+    faHistory,
+    faChartBar,
+    faExternalLinkAlt,
+    faFilter,
+    faPlus,
+    faChevronRight
+} from '@fortawesome/free-solid-svg-icons';
 import ComparisonLoadingComponent from 'components/Comparison/ComparisonLoadingComponent';
 import ComparisonTable from 'components/Comparison/Comparison';
 import ExportToLatex from 'components/Comparison/Export/ExportToLatex.js';
@@ -75,6 +84,7 @@ function Comparison(props) {
         provenance,
         researchField,
         setMetaData,
+        hiddenGroups,
         setComparisonType,
         setPredicatesList,
         toggleProperty,
@@ -92,7 +102,8 @@ function Comparison(props) {
         loadProvenanceInfos,
         loadVisualizations,
         handleEditContributions,
-        fetchLiveData
+        fetchLiveData,
+        handleToggleGroupVisibility
     } = useComparison({});
 
     const params = useParams();
@@ -308,7 +319,7 @@ function Comparison(props) {
                                 <DropdownMenu end style={{ zIndex: '1031' }}>
                                     <Dropdown isOpen={dropdownDensityOpen} toggle={() => setDropdownDensityOpen(v => !v)} direction="left">
                                         <DropdownToggle className="dropdown-item pe-auto" tag="div" style={{ cursor: 'pointer' }}>
-                                            View
+                                            View <Icon style={{ marginTop: '4px' }} icon={faChevronRight} pull="right" />
                                         </DropdownToggle>
                                         <DropdownMenu>
                                             <DropdownItem onClick={handleFullWidth}>
@@ -349,11 +360,11 @@ function Comparison(props) {
                                             <Dropdown isOpen={dropdownMethodOpen} toggle={() => setDropdownMethodOpen(v => !v)} direction="left">
                                                 <DropdownToggle
                                                     tag="div"
-                                                    className={`dropdown-item ${isPublished ? 'disabled' : ''}`}
+                                                    className={`dropdown-item d-flex ${isPublished ? 'disabled' : ''}`}
                                                     style={{ cursor: 'pointer' }}
                                                     disabled={isPublished}
                                                 >
-                                                    Comparison method
+                                                    Comparison method <Icon style={{ marginTop: '4px' }} icon={faChevronRight} pull="right" />
                                                 </DropdownToggle>
                                                 <DropdownMenu>
                                                     <div className="d-flex px-2">
@@ -606,6 +617,8 @@ function Comparison(props) {
                                             filterControlData={filterControlData}
                                             updateRulesOfProperty={updateRulesOfProperty}
                                             comparisonType={comparisonType}
+                                            handleToggleGroupVisibility={handleToggleGroupVisibility}
+                                            hiddenGroups={hiddenGroups}
                                         />
                                     </div>
                                 ) : (
