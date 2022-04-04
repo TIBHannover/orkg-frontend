@@ -395,6 +395,7 @@ const GeneralData = () => {
                                                     </div>
                                                 </div>
                                             }
+                                            tippyProps={{ interactive: true }}
                                         >
                                             Paper DOI or BibTeX
                                         </Tooltip>

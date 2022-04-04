@@ -8,7 +8,6 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Cookies } from 'react-cookie';
 import ROUTES from 'constants/routes.js';
-import Tooltip from '../Utils/Tooltip';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { faFile } from '@fortawesome/free-regular-svg-icons';
@@ -230,11 +229,13 @@ class ComparisonPopup extends Component {
                                                     </Title>
                                                     <Number>{byId[contributionId].contributionTitle}</Number>
                                                 </div>
-                                                <Tooltip message="Remove from comparison" hideDefaultIcon>
-                                                    <Remove>
-                                                        <Icon icon={faTimes} onClick={() => this.removeFromComparison(contributionId)} />
-                                                    </Remove>
-                                                </Tooltip>
+                                                <Tippy content="Remove from comparison">
+                                                    <span>
+                                                        <Remove>
+                                                            <Icon icon={faTimes} onClick={() => this.removeFromComparison(contributionId)} />
+                                                        </Remove>
+                                                    </span>
+                                                </Tippy>
                                             </div>
                                         </ContributionItem>
                                     ))}
