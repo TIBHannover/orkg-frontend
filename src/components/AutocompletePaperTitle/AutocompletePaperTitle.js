@@ -9,6 +9,7 @@ import { getStatementsBySubject } from 'services/backend/statements';
 import { getPapersByTitle } from 'services/semanticScholar';
 import { getPaperData } from 'utils';
 import ExistingDoiModal from 'components/AddPaper/GeneralData/ExistingDoiModal';
+import { SelectGlobalStyle } from 'components/Autocomplete/styled';
 
 const PAGE_SIZE = 10;
 const MIN_INPUT_LENGTH = 3;
@@ -107,6 +108,7 @@ function AutocompletePaperTitle({ value, onChange, onOptionClick, performExistin
     return (
         <>
             <StyledAutoCompleteInputFormControl className="form-control border-0">
+                <SelectGlobalStyle />
                 <AsyncPaginate
                     value=""
                     loadOptions={loadOptions}

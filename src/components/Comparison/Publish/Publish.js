@@ -34,6 +34,7 @@ import { PREDICATES, CLASSES, ENTITIES, MISC } from 'constants/graphSettings';
 import env from '@beam-australia/react-env';
 import Select from 'react-select';
 import { getConferences } from 'services/backend/organizations';
+import { SelectGlobalStyle } from 'components/Autocomplete/styled';
 
 const StyledCustomInput = styled(Input)`
     margin-right: 0;
@@ -543,6 +544,7 @@ function Publish(props) {
                                 isClearable={true}
                                 classNamePrefix="react-select"
                             />
+                            <SelectGlobalStyle />
                         </FormGroup>
                         <FormGroup>
                             <Label for="Creator">

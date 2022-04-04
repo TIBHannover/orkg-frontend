@@ -8,7 +8,7 @@ import DATA_TYPES from 'constants/DataTypes';
 import { Button, Badge } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
-import { ValueItemStyle } from 'components/StatementBrowser/styled';
+import { ValueItemStyle, PulsateIcon } from 'components/StatementBrowser/styled';
 import ValuePlugins from 'components/ValuePlugins/ValuePlugins';
 import { Link } from 'react-router-dom';
 import { getResourceLink } from 'utils';
@@ -21,6 +21,7 @@ import ValueItemOptions from './ValueItemOptions/ValueItemOptions';
 import ValueForm from 'components/StatementBrowser/ValueForm/ValueForm';
 import { Cookies } from 'react-cookie';
 import env from '@beam-australia/react-env';
+import styled from 'styled-components';
 
 const cookies = new Cookies();
 
@@ -117,7 +118,7 @@ const ValueItem = props => {
                                                     {value._class === ENTITIES.PREDICATE && <div className="typeCircle">P</div>}
                                                     {props.showHelp && value._class === ENTITIES.RESOURCE ? (
                                                         <span style={{ position: 'relative' }}>
-                                                            <span className="pulsate-css" />
+                                                            <PulsateIcon />
                                                             <ValuePlugins type="resource">
                                                                 {formattedLabel !== '' ? formattedLabel.toString() : <i>No label</i>}
                                                             </ValuePlugins>

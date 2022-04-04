@@ -175,6 +175,68 @@ const StyledAuthTooltip = styled(Tooltip)`
     }
 `;
 
+const StyledNavbar = styled(Navbar)`
+    &&& {
+        &:not(.home-page) {
+            box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.13);
+            background: white;
+        }
+
+        background: transparent;
+        border: 0;
+
+        .nav-link {
+            color: ${props => props.theme.secondary};
+
+            &:hover {
+                color: ${props => props.theme.primary};
+            }
+        }
+
+        .search-box {
+            input {
+                border-right: 0;
+            }
+
+            .search-icon {
+                color: ${props => props.theme.primary};
+            }
+
+            button {
+                border: 1px solid #ced4da;
+                border-left: 0 !important;
+                background: ${props => props.theme.inputBg};
+            }
+        }
+
+        &.home-page {
+            & .nav-link {
+                color: white;
+                &:hover {
+                    color: #bbbbbb;
+                }
+            }
+            & .sign-in {
+                color: white;
+                background: #32303b;
+                border-color: #32303b;
+                &:hover {
+                    color: white;
+                    background: #100f13;
+                    border-color: #100f13;
+                }
+            }
+            .search-box .search-icon {
+                color: ${props => props.theme.secondary};
+            }
+
+            @media (max-width: ${props => props.theme.gridBreakpoints.md}) {
+                background: #5f6474;
+            }
+        }
+    }
+`;
+
 class Header extends Component {
     constructor(props) {
         super(props);
@@ -341,7 +403,7 @@ class Header extends Component {
 
         return (
             <StyledTopBar className={this.state.isHomePageStyle ? 'home-page' : ''}>
-                <Navbar
+                <StyledNavbar
                     light={!this.state.isHomePageStyle}
                     dark={this.state.isHomePageStyle}
                     className={navbarClasses}
@@ -575,7 +637,7 @@ class Header extends Component {
                     </Collapse>
 
                     <Authentication />
-                </Navbar>
+                </StyledNavbar>
 
                 {this.props.location.pathname === ROUTES.HOME && <Jumbotron />}
             </StyledTopBar>

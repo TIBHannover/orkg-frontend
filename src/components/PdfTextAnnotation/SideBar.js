@@ -67,7 +67,7 @@ const SideBar = ({ pdfViewer }) => {
                         Save
                     </Button>
                     <DropdownToggle caret color="primary" className="ps-1 pe-2" />
-                    <DropdownMenu>
+                    <DropdownMenu end>
                         <DropdownItem onClick={() => setHelpIsOpen(true)}>
                             <Icon icon={faQuestionCircle} className="me-2 text-secondary" />
                             Start help tour

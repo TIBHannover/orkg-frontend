@@ -14,7 +14,7 @@ import { Button, ListGroup, ListGroupItem, Modal, ModalBody, ModalFooter, ModalH
 import { getPredicate } from 'services/backend/predicates';
 import { getResource } from 'services/backend/resources';
 import { getStatementsBySubject } from 'services/backend/statements';
-import styled from 'styled-components';
+import styled, { createGlobalStyle } from 'styled-components';
 import { toast } from 'react-toastify';
 
 const DragHandle = styled.div`
@@ -28,6 +28,13 @@ const DragHandle = styled.div`
 const ListGroupItemStyled = styled(ListGroupItem)`
     padding: 10px 10px 9px 5px !important;
     display: flex !important;
+`;
+
+const GlobalStyle = createGlobalStyle`
+    .sortable-helper{
+        z-index: 10000 !important;
+        border-radius: 0 !important;
+    }
 `;
 
 const SelectEntitiesModal = ({ toggle, section, type }) => {
@@ -172,9 +179,10 @@ const SelectEntitiesModal = ({ toggle, section, type }) => {
 
     return (
         <Modal isOpen toggle={toggle}>
+            <GlobalStyle />
             <ModalHeader toggle={toggle}>Select {type}</ModalHeader>
             <ModalBody>
-                <SortableList items={selectedEntities} onSortEnd={handleSort} lockAxis="y" helperClass="sortableHelper" useDragHandle />
+                <SortableList items={selectedEntities} onSortEnd={handleSort} lockAxis="y" helperClass="sortable-helper" useDragHandle />
                 <h2 className="h5 mt-3">Suggestions</h2>
 
                 {suggestionEntities.map((comparison, index) => {

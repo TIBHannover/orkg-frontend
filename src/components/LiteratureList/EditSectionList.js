@@ -9,6 +9,14 @@ import { SortableElement } from 'react-sortable-hoc';
 import { Alert, Button, ListGroup } from 'reactstrap';
 import { SortableContainer } from 'react-sortable-hoc';
 import { sortListEntries } from 'slices/literatureListSlice';
+import { createGlobalStyle } from 'styled-components';
+
+const GlobalStyle = createGlobalStyle`
+    .sortable-helper{
+        z-index: 10000 !important;
+        border-radius: 0 !important;
+    }
+`;
 
 const SortableList = SortableContainer(({ items, section }) => (
     <ListGroup>
@@ -47,6 +55,7 @@ const EditSectionList = ({ section }) => {
             )}
             {section.entries.length > 0 && (
                 <div className="mb-3 mt-2" style={{ pointerEvents: isSorting ? 'none' : 'all' }}>
+                    <GlobalStyle />
                     <SortableList
                         items={section.entries}
                         papers={papers}
@@ -55,7 +64,7 @@ const EditSectionList = ({ section }) => {
                         updateBeforeSortStart={() => setIsSorting(true)}
                         lockAxis="y"
                         useDragHandle
-                        helperClass="sortableHelper"
+                        helperClass="sortable-helper"
                     />
                 </div>
             )}

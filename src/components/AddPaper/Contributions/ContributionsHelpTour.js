@@ -141,7 +141,7 @@ class ContributionsHelpTour extends Component {
                     onRequestClose={this.requestCloseTour}
                     isOpen={this.props.isTourOpen}
                     startAt={this.props.tourStartAt}
-                    maskClassName="reactourMask"
+                    maskClassName="opacity-75"
                     showButtons={!this.props.showAbstractDialog}
                     showNavigation={!this.props.showAbstractDialog}
                 />
