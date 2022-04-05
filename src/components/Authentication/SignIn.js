@@ -11,6 +11,7 @@ import { checkCookie } from 'utils';
 import env from '@beam-australia/react-env';
 import { withRouter } from 'react-router-dom';
 import { compose } from 'redux';
+import withMatomo from 'components/Matomo/withMatomo';
 
 const cookies = new Cookies();
 
@@ -63,6 +64,7 @@ class SignIn extends Component {
                 });
                 this.props.toggleAuthDialog();
                 this.setState({ loading: false });
+                this.props.trackEvent({ category: 'authentication', action: 'sign-in' });
                 if (redirectRoute) {
                     this.props.history.push(redirectRoute);
                 }
@@ -134,6 +136,7 @@ SignIn.propTypes = {
     toggleAuthDialog: PropTypes.func.isRequired,
     signInRequired: PropTypes.bool.isRequired,
     history: PropTypes.object.isRequired,
+    trackEvent: PropTypes.func.isRequired,
     redirectRoute: PropTypes.string
 };
 
@@ -157,5 +160,6 @@ export default compose(
         mapStateToProps,
         mapDispatchToProps
     ),
-    withRouter
+    withRouter,
+    withMatomo
 )(SignIn);

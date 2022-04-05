@@ -14,12 +14,14 @@ import routes from 'constants/routes';
 import { Link } from 'react-router-dom';
 import { setVersions } from 'slices/reviewSlice';
 import { useDispatch } from 'react-redux';
+import { useMatomo } from '@datapunt/matomo-tracker-react';
 
 const PublishModal = ({ id, show, toggle, getVersions, paperId }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [updateMessage, setUpdateMessage] = useState('');
     const [publishedId, setPublishedId] = useState(null);
     const dispatch = useDispatch();
+    const { trackEvent } = useMatomo();
 
     const handlePublish = async () => {
         setIsLoading(true);
@@ -44,6 +46,7 @@ const PublishModal = ({ id, show, toggle, getVersions, paperId }) => {
             dispatch(setVersions(versions));
 
             toast.success('Review published successfully');
+            trackEvent({ category: 'data-entry', action: 'publish-review' });
             setPublishedId(versionResource.id);
             setIsLoading(false);
         } catch (e) {
