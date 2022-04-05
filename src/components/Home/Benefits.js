@@ -1,4 +1,4 @@
-import { openAuthDialog } from 'actions/auth';
+import { openAuthDialog } from 'slices/authSlice';
 import { ReactComponent as IconCited } from 'assets/img/benefits/cited.svg';
 import { ReactComponent as IconCommunity } from 'assets/img/benefits/community.svg';
 import { ReactComponent as IconContribute } from 'assets/img/benefits/contribute.svg';

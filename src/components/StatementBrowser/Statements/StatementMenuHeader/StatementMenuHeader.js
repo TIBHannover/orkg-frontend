@@ -7,7 +7,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faQuestionCircle, faPuzzlePiece, faSlidersH, faTimes } from '@fortawesome/free-solid-svg-icons';
 import HELP_CENTER_ARTICLES from 'constants/helpCenterArticles';
 import { useDispatch, useSelector } from 'react-redux';
-import { setIsHelpModalOpen, setIsTemplateModalOpen, setIsPreferencesOpen } from 'actions/statementBrowser';
+import { setIsHelpModalOpen, setIsPreferencesOpen, setIsTemplateModalOpen } from 'slices/statementBrowserSlice';
 import { ENTITIES } from 'constants/graphSettings';
 import Preferences from 'components/StatementBrowser/Preferences/Preferences';
 import PropTypes from 'prop-types';

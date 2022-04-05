@@ -1,5 +1,5 @@
 import Tippy from '@tippyjs/react';
-import { updateSectionType } from 'actions/review';
+import { updateSectionType } from 'slices/reviewSlice';
 import useOntology from 'components/PdfTextAnnotation/hooks/useOntology';
 import { SectionTypeContainerStyled, SectionTypeStyled } from 'components/ArticleBuilder/styled';
 import { CLASSES } from 'constants/graphSettings';

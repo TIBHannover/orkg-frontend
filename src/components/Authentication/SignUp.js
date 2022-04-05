@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Button, Form, FormGroup, Input, Label, Alert, FormFeedback } from 'reactstrap';
-import { toggleAuthDialog, updateAuth } from 'actions/auth';
+import { toggleAuthDialog, updateAuth } from 'slices/authSlice';
 import { Link } from 'react-router-dom';
 import { registerWithEmailAndPassword, signInWithEmailAndPassword, getUserInformation } from 'services/backend/users';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -13,6 +13,7 @@ import { Cookies } from 'react-cookie';
 import env from '@beam-australia/react-env';
 import InfoSheet from 'assets/pdf/infosheet-data-protection.pdf';
 import { reverse } from 'named-urls';
+import { useMatomo } from '@datapunt/matomo-tracker-react';
 
 const cookies = new Cookies();
 
@@ -26,6 +27,7 @@ export default function SignUp() {
     const [errors, setErrors] = useState(null);
     const [termsConditionIsChecked, setTermsConditionIsChecked] = useState(false);
     const [dataProtectionIsChecked, setDataProtectionIsChecked] = useState(false);
+    const { trackEvent } = useMatomo();
 
     const signUp = async e => {
         e.preventDefault();
@@ -60,6 +62,7 @@ export default function SignUp() {
                             dispatch(toggleAuthDialog());
                             setIsLoading(false);
                             setErrors(null);
+                            trackEvent({ category: 'authentication', action: 'sign-up' });
                         })
                         .catch(e => {
                             if (checkCookie()) {

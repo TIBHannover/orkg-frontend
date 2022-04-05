@@ -1,6 +1,6 @@
 import { faMinusCircle, faPlusCircle, faSort } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { saveEntities, saveShowProperties } from 'actions/review';
+import { saveEntities, saveShowProperties } from 'slices/reviewSlice';
 import arrayMove from 'array-move';
 import capitalize from 'capitalize';
 import Autocomplete from 'components/Autocomplete/Autocomplete';

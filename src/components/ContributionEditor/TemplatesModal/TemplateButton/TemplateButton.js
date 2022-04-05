@@ -71,6 +71,7 @@ const TemplateButton = props => {
                 toast.dismiss();
                 toast.error('Something went wrong while updating the classes.');
             });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const onTrigger = useCallback(() => {

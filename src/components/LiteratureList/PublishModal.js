@@ -1,3 +1,4 @@
+import { useMatomo } from '@datapunt/matomo-tracker-react';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import useLiteratureList from 'components/LiteratureList/hooks/useLiteratureList';
@@ -13,11 +14,13 @@ const PublishModal = ({ id, show, toggle, listId }) => {
     const [updateMessage, setUpdateMessage] = useState('');
     const [publishedId, setPublishedId] = useState(null);
     const { publishList } = useLiteratureList();
+    const { trackEvent } = useMatomo();
 
     const handlePublish = async () => {
         setIsLoading(true);
         const _publishedId = await publishList({ id, updateMessage, listId });
         setPublishedId(_publishedId);
+        trackEvent({ category: 'data-entry', action: 'publish-list' });
         setIsLoading(false);
     };
 

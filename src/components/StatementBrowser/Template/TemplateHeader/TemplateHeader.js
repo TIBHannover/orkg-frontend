@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { deleteValue, toggleEditValue, updateValueLabel, isSavingValue, doneSavingValue, deleteProperty } from 'actions/statementBrowser';
+import { deleteProperty, deleteValue, setSavingValue, toggleEditValue, updateValueLabel } from 'slices/statementBrowserSlice';
 import { Input } from 'reactstrap';
 import { faTrash, faPen, faQuestion, faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
 import StatementActionButton from 'components/StatementBrowser/StatementActionButton/StatementActionButton';
@@ -24,12 +24,12 @@ export default function TemplateHeader(props) {
                 })
             );
             if (props.syncBackend) {
-                dispatch(isSavingValue({ id: props.id })); // To show the saving message instead of the value label
+                dispatch(setSavingValue({ id: props.id, status: true })); // To show the saving message instead of the value label
                 if (props.resourceId) {
                     await updateResource(props.resourceId, props.value.label);
                     toast.success('Resource label updated successfully');
                 }
-                dispatch(doneSavingValue({ id: props.id }));
+                dispatch(setSavingValue({ id: props.id, status: false }));
             }
         }
     };

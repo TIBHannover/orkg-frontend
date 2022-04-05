@@ -7,7 +7,7 @@ import Unauthorized from 'pages/Unauthorized';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import Format from 'components/Templates/Tabs/Format/Format';
 import { StyledContainer } from 'components/Templates/styled';
-import { setEditMode, loadTemplate, saveTemplate, setIsLoading, doneLoading, setClass } from 'actions/addTemplate';
+import { setEditMode, loadTemplate, saveTemplate, updateClass } from 'slices/templateEditorSlice';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPen, faSpinner, faQuestionCircle, faEllipsisV, faSave } from '@fortawesome/free-solid-svg-icons';
 import { getParamFromQueryString } from 'utils';
@@ -72,7 +72,7 @@ class Template extends Component {
         const targetClass = getParamFromQueryString(this.props.location.search, 'classID');
         if (targetClass) {
             getClassById(targetClass).then(classesData => {
-                this.props.setClass(classesData);
+                this.props.updateClass(classesData);
             });
         }
     };
@@ -256,37 +256,33 @@ Template.propTypes = {
     loadTemplate: PropTypes.func.isRequired,
     saveTemplate: PropTypes.func.isRequired,
     editMode: PropTypes.bool.isRequired,
-    setIsLoading: PropTypes.func.isRequired,
     isLoading: PropTypes.bool.isRequired,
     isSaving: PropTypes.bool.isRequired,
     templateID: PropTypes.string.isRequired,
     label: PropTypes.string.isRequired,
-    doneLoading: PropTypes.func.isRequired,
     history: PropTypes.object.isRequired,
     template: PropTypes.object.isRequired,
-    setClass: PropTypes.func.isRequired,
+    updateClass: PropTypes.func.isRequired,
     user: PropTypes.oneOfType([PropTypes.object, PropTypes.number])
 };
 
 const mapStateToProps = state => {
     return {
         user: state.auth.user,
-        editMode: state.addTemplate.editMode,
-        isLoading: state.addTemplate.isLoading,
-        isSaving: state.addTemplate.isSaving,
-        templateID: state.addTemplate.templateID,
-        label: state.addTemplate.label,
-        template: state.addTemplate
+        editMode: state.templateEditor.editMode,
+        isLoading: state.templateEditor.isLoading,
+        isSaving: state.templateEditor.isSaving,
+        templateID: state.templateEditor.templateID,
+        label: state.templateEditor.label,
+        template: state.templateEditor
     };
 };
 
 const mapDispatchToProps = dispatch => ({
     setEditMode: data => dispatch(setEditMode(data)),
     loadTemplate: data => dispatch(loadTemplate(data)),
-    setIsLoading: () => dispatch(setIsLoading()),
-    doneLoading: () => dispatch(doneLoading()),
     saveTemplate: data => dispatch(saveTemplate(data)),
-    setClass: data => dispatch(setClass(data))
+    updateClass: data => dispatch(updateClass(data))
 });
 
 export default compose(

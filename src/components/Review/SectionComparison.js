@@ -1,11 +1,11 @@
-import { setComparisonData } from 'actions/review';
+import { setComparisonData } from 'slices/reviewSlice';
 import Comparison from 'components/Comparison/Comparison';
 import ComparisonLoadingComponent from 'components/Comparison/ComparisonLoadingComponent';
 import useComparison from 'components/Comparison/hooks/useComparison';
 import PropTypes from 'prop-types';
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { setUsedReferences } from 'actions/review';
+import { setUsedReferences } from 'slices/reviewSlice';
 import { isEqual } from 'lodash';
 import { Alert } from 'reactstrap';
 import ROUTES from 'constants/routes';

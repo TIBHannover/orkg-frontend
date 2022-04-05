@@ -5,8 +5,8 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import Select, { components } from 'react-select';
 import { useSelector, useDispatch } from 'react-redux';
-import { addToComparison, removeFromComparison } from 'actions/viewPaper';
 import { SelectGlobalStyle } from 'components/Autocomplete/styled';
+import { addToComparison, removeFromComparison } from 'slices/viewPaperSlice';
 
 const Option = ({ children, data, ...props }) => {
     return (

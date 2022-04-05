@@ -1,4 +1,4 @@
-import { createReference, createSection, updateSectionLink } from 'actions/review';
+import { createReference, createSection, updateSectionLink } from 'slices/reviewSlice';
 import Cite from 'citation-js';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
 import { SelectGlobalStyle } from 'components/Autocomplete/styled';

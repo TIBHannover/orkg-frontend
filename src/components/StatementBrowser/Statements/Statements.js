@@ -15,12 +15,12 @@ import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import FlipMove from 'react-flip-move';
 import {
+    updateSettings,
     getSuggestedProperties,
     initializeWithoutContribution,
     initializeWithResource,
-    updateSettings,
     setInitialPath
-} from 'actions/statementBrowser';
+} from 'slices/statementBrowserSlice';
 import { ENTITIES } from 'constants/graphSettings';
 import ClassesItem from 'components/StatementBrowser/ClassesItem/ClassesItem';
 import StatementMenuHeader from './StatementMenuHeader/StatementMenuHeader';

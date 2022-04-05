@@ -3,7 +3,7 @@ import { Component } from 'react';
 
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { toggleAuthDialog } from '../../actions/auth';
+import { toggleAuthDialog } from 'slices/authSlice';
 
 class ForgotPassword extends Component {
     constructor(props) {

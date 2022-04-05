@@ -28,7 +28,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Authentication from 'components/Authentication/Authentication';
 import SearchForm from './SearchForm';
-import { openAuthDialog, updateAuth, resetAuth } from 'actions/auth';
+import { openAuthDialog, updateAuth, resetAuth } from 'slices/authSlice';
 import { Redirect } from 'react-router-dom';
 import { getUserInformation } from 'services/backend/users';
 import greetingTime from 'greeting-time';

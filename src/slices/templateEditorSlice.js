@@ -1,127 +1,147 @@
-import * as type from './types.js';
+import { createSlice } from '@reduxjs/toolkit';
+import { LOCATION_CHANGE } from 'connected-react-router';
 import { deleteStatementsByIds, createResourceStatement, getTemplateById, getTemplatesByClass } from 'services/backend/statements';
+import { cloneDeep } from 'lodash';
+import { toast } from 'react-toastify';
 import { getClasses } from 'services/backend/classes';
 import { createLiteral } from 'services/backend/literals';
 import { createClass } from 'services/backend/classes';
 import { createResource, updateResource } from 'services/backend/resources';
-import { toast } from 'react-toastify';
 import { CLASSES, PREDICATES } from 'constants/graphSettings';
-import { cloneDeep } from 'lodash';
 
-export const setEditMode = data => dispatch => {
-    dispatch({
-        type: type.TEMPLATE_SET_EDIT_MODE,
-        payload: data
-    });
+const initialState = {
+    label: '',
+    editMode: false,
+    researchFields: [],
+    researchProblems: [],
+    predicate: null,
+    class: null,
+    templateID: '',
+    isStrict: false,
+    hasLabelFormat: false,
+    labelFormat: '',
+    error: null,
+    components: [],
+    isLoading: false,
+    statements: [],
+    isSaving: false
 };
 
-export const setLabel = data => dispatch => {
-    dispatch({
-        type: type.TEMPLATE_SET_LABEL,
-        payload: data
-    });
-};
+export const templateEditorSlice = createSlice({
+    name: 'templateEditor',
+    initialState,
+    reducers: {
+        updateLabel: (state, { payload }) => {
+            state.label = payload;
+        },
+        updatePredicate: (state, { payload }) => {
+            state.predicate = payload;
+        },
+        updateIsStrict: (state, { payload }) => {
+            state.isStrict = payload;
+        },
+        updateHasLabelFormat: (state, { payload }) => {
+            state.hasLabelFormat = payload;
+        },
+        updateLabelFormat: (state, { payload }) => {
+            state.labelFormat = payload;
+        },
+        updateClass: (state, { payload }) => {
+            state.class = payload;
+        },
+        updateResearchProblems: (state, { payload }) => {
+            state.researchProblems = payload;
+        },
+        updateResearchFields: (state, { payload }) => {
+            state.researchFields = payload;
+        },
+        setEditMode: (state, { payload }) => {
+            state.editMode = payload;
+        },
+        updateComponents: (state, { payload }) => {
+            state.components = payload;
+        },
+        initTemplate: (state, { payload }) => {
+            return {
+                ...initialState,
+                templateID: payload.templateID,
+                label: payload.label,
+                labelFormat: payload.labelFormat,
+                hasLabelFormat: payload.hasLabelFormat,
+                isStrict: payload.isStrict,
+                statements: payload.statements,
+                predicate: payload.predicate,
+                class: payload.class,
+                components: payload.components,
+                researchFields: payload.researchFields,
+                researchProblems: payload.researchProblems
+            };
+        },
+        setIsLoading: (state, { payload }) => {
+            state.isLoading = payload;
+        },
+        setHasFailed: (state, { payload }) => {
+            state.hasFailed = payload;
+        },
+        setIsSaving: (state, { payload }) => {
+            state.isSaving = payload;
+        },
+        setHasFailedSaving: (state, { payload }) => {
+            state.hasFailedSaving = payload;
+        },
+        setTemplateId: (state, { payload }) => {
+            state.templateID = payload;
+        }
+    },
+    extraReducers: {
+        [LOCATION_CHANGE]: () => initialState
+    }
+});
 
-export const setIsStrictTemplate = data => dispatch => {
-    dispatch({
-        type: type.TEMPLATE_SET_IS_STRICT,
-        payload: data
-    });
-};
+export const {
+    updateLabel,
+    updatePredicate,
+    updateIsStrict,
+    updateHasLabelFormat,
+    updateLabelFormat,
+    updateClass,
+    updateResearchProblems,
+    updateResearchFields,
+    setEditMode,
+    updateComponents,
+    initTemplate,
+    setIsLoading,
+    setHasFailed,
+    setIsSaving,
+    setHasFailedSaving,
+    setTemplateId
+} = templateEditorSlice.actions;
 
-export const setHasLabelFormat = data => dispatch => {
-    dispatch({
-        type: type.TEMPLATE_SET_HAS_LABEL_FORMAT,
-        payload: data
-    });
-};
-
-export const setLabelFormat = data => dispatch => {
-    dispatch({
-        type: type.TEMPLATE_SET_LABEL_FORMAT,
-        payload: data
-    });
-};
-
-export const setPredicate = data => dispatch => {
-    dispatch({
-        type: type.TEMPLATE_SET_PREDICATE,
-        payload: data
-    });
-};
-
-export const setClass = data => dispatch => {
-    dispatch({
-        type: type.TEMPLATE_SET_CLASS,
-        payload: data
-    });
-};
-
-export const setResearchProblems = data => dispatch => {
-    dispatch({
-        type: type.TEMPLATE_SET_RESEARCH_PROBLEMS,
-        payload: data
-    });
-};
-
-export const setResearchFields = data => dispatch => {
-    dispatch({
-        type: type.TEMPLATE_SET_RESEARCH_FIELDS,
-        payload: data
-    });
-};
-
-export const setComponents = data => dispatch => {
-    dispatch({
-        type: type.TEMPLATE_SET_COMPONENTS,
-        payload: data
-    });
-};
-
-export const setIsLoading = () => dispatch => {
-    dispatch({
-        type: type.IS_FETCHING_TEMPLATE
-    });
-};
-
-export const doneLoading = () => dispatch => {
-    dispatch({
-        type: type.DONE_FETCHING_TEMPLATE
-    });
-};
+export default templateEditorSlice.reducer;
 
 export const loadTemplate = data => dispatch => {
-    dispatch({
-        type: type.IS_FETCHING_TEMPLATE
-    });
+    dispatch(setIsLoading(true));
 
     return getTemplateById(data).then(templateData => {
-        dispatch({
-            type: type.TEMPLATE_INIT,
-            payload: {
+        dispatch(
+            initTemplate({
                 templateID: data,
                 ...templateData
-            }
-        });
-        dispatch({
-            type: type.DONE_FETCHING_TEMPLATE
-        });
+            })
+        );
+        dispatch(setIsLoading(false));
     });
 };
 
 export const saveTemplate = templateData => {
     return async dispatch => {
-        dispatch({
-            type: type.IS_SAVING_TEMPLATE
-        });
+        dispatch(setIsSaving(true));
         dispatch(setEditMode(false));
         const data = cloneDeep({ ...templateData });
 
         if (!data.label) {
             // Make the template label mandatory
-            dispatch({
-                type: type.FAILURE_SAVING_TEMPLATE
-            });
+            dispatch(setHasFailedSaving(true));
             toast.error('Please enter the name of template');
             return null;
         }
@@ -130,9 +150,7 @@ export const saveTemplate = templateData => {
             //  Check if the template of the class if already defined
             const templates = await getTemplatesByClass(data.class.id);
             if (templates.length > 0 && !templates.includes(data.templateID)) {
-                dispatch({
-                    type: type.FAILURE_SAVING_TEMPLATE
-                });
+                dispatch(setHasFailedSaving(true));
                 toast.error('The template of this class is already defined');
                 return null;
             }
@@ -245,11 +263,8 @@ export const saveTemplate = templateData => {
             }
 
             dispatch(loadTemplate(templateResource)); //reload the template
-
-            dispatch({
-                type: type.SAVE_TEMPLATE_DONE,
-                id: templateResource
-            });
+            dispatch(setIsSaving(false));
+            dispatch(setTemplateId(templateResource));
         });
     };
 };
