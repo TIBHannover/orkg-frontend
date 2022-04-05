@@ -1,7 +1,7 @@
 import { createRef, useState, useEffect } from 'react';
 import { ListGroup, ListGroupItem } from 'reactstrap';
 import Confirm from 'components/Confirmation/Confirmation';
-import { setTableData } from 'actions/pdfAnnotation';
+import { setTableData } from 'slices/pdfAnnotationSlice';
 import { toast } from 'react-toastify';
 import { readString } from 'react-papaparse';
 import { useSelector, useDispatch } from 'react-redux';
@@ -35,7 +35,7 @@ function useExtractionModal(props) {
                     fullData = readString(csv, {})['data']; //.join('\n')
                 }
 
-                dispatch(setTableData(props.id, fullData));
+                dispatch(setTableData({ id: props.id, tableData: fullData }));
             };
 
             setLoading(true);
@@ -297,7 +297,7 @@ function useExtractionModal(props) {
 
     const transposeTable = () => {
         const transposed = zip(...cloneDeep(tableData));
-        dispatch(setTableData(props.id, transposed));
+        dispatch(setTableData({ id: props.id, tableData: transposed }));
     };
 
     const clearImportError = () => {

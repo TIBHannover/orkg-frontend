@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Button, FormGroup, Modal, ModalHeader, ModalBody, Label, Input, ListGroupItem, Alert, InputGroup } from 'reactstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import ResearchFieldSelectorModal from 'components/ResearchFieldSelector/ResearchFieldSelectorModal';
-import { setIsTemplateModalOpen } from 'actions/statementBrowser';
+import { setIsTemplateModalOpen } from 'slices/statementBrowserSlice';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faAngleDoubleDown, faSpinner } from '@fortawesome/free-solid-svg-icons';

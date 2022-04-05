@@ -5,7 +5,7 @@ import DATA_TYPES from 'constants/DataTypes.js';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes.js';
-import { setComponents } from 'actions/addTemplate';
+import { updateComponents } from 'slices/templateEditorSlice';
 import { connect } from 'react-redux';
 import { CLASSES, ENTITIES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
@@ -23,7 +23,7 @@ function TemplateComponentValue(props) {
             }
             return _item;
         });
-        props.setComponents(templateComponents);
+        props.updateComponents(templateComponents);
     };
 
     const onChangeCardinality = event => {
@@ -39,7 +39,7 @@ function TemplateComponentValue(props) {
                 }
                 return _item;
             });
-            props.setComponents(templateComponents);
+            props.updateComponents(templateComponents);
         }
     };
 
@@ -145,7 +145,7 @@ function TemplateComponentValue(props) {
 
 TemplateComponentValue.propTypes = {
     components: PropTypes.array.isRequired,
-    setComponents: PropTypes.func.isRequired,
+    updateComponents: PropTypes.func.isRequired,
     id: PropTypes.number.isRequired,
     value: PropTypes.object,
     minOccurs: PropTypes.string.isRequired,
@@ -157,12 +157,12 @@ TemplateComponentValue.propTypes = {
 
 const mapStateToProps = state => {
     return {
-        components: state.addTemplate.components
+        components: state.templateEditor.components
     };
 };
 
 const mapDispatchToProps = dispatch => ({
-    setComponents: data => dispatch(setComponents(data))
+    updateComponents: data => dispatch(updateComponents(data))
 });
 
 export default connect(

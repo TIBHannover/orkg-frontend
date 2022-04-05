@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Button, Form, FormGroup, Input, Label, Alert, FormFeedback } from 'reactstrap';
-import { toggleAuthDialog, updateAuth } from 'actions/auth';
+import { toggleAuthDialog, updateAuth } from 'slices/authSlice';
 import { Link } from 'react-router-dom';
 import { registerWithEmailAndPassword, signInWithEmailAndPassword, getUserInformation } from 'services/backend/users';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';

@@ -12,7 +12,7 @@ import { toast } from 'react-toastify';
 import { reverse } from 'named-urls';
 import routes from 'constants/routes';
 import { Link } from 'react-router-dom';
-import { setVersions } from 'actions/review';
+import { setVersions } from 'slices/reviewSlice';
 import { useDispatch } from 'react-redux';
 
 const PublishModal = ({ id, show, toggle, getVersions, paperId }) => {

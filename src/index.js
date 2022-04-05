@@ -8,7 +8,7 @@ import { unregister } from './registerServiceWorker';
 import theme from 'assets/scss/ThemeVariables';
 import { Provider } from 'react-redux';
 import configureStore, { history } from './store';
-import rootReducer from './reducers/rootReducer';
+import rootReducer from './slices/rootReducer';
 import { CookiesProvider } from 'react-cookie';
 import { ThemeProvider } from 'styled-components';
 import { MatomoProvider, createInstance } from '@datapunt/matomo-tracker-react';
@@ -59,7 +59,7 @@ if (module.hot) {
         render();
     });
 
-    module.hot.accept('./reducers/rootReducer', () => {
+    module.hot.accept('./slices/rootReducer', () => {
         store.replaceReducer(rootReducer(history));
     });
 }

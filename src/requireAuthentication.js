@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Container } from 'reactstrap';
 import { useSelector, useDispatch } from 'react-redux';
-import { firstLoad } from 'actions/auth';
+import { firstLoad } from 'slices/authSlice';
 import Unauthorized from 'pages/Unauthorized';
 
 export default function requireAuthentication(Component) {

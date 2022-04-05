@@ -29,7 +29,7 @@ import { getResource } from 'services/backend/resources';
 import moment from 'moment';
 import ROUTES from 'constants/routes.js';
 import { useHistory, Link, useParams } from 'react-router-dom';
-import { openAuthDialog } from 'actions/auth';
+import { openAuthDialog } from 'slices/authSlice';
 import { CSVLink } from 'react-csv';
 import { generateRdfDataVocabularyFile, areAllRulesEmpty } from 'utils';
 import Tippy from '@tippyjs/react';

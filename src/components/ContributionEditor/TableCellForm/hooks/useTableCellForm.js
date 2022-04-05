@@ -8,7 +8,7 @@ import {
     updateLiteral,
     updateResourceLabel
 } from 'slices/contributionEditorSlice';
-import { getValueClass, isLiteral } from 'actions/statementBrowser';
+import { getValueClass, isLiteral } from 'slices/statementBrowserSlice';
 import validationSchema from 'components/StatementBrowser/ValueForm/helpers/validationSchema';
 import { getConfigByType, getConfigByClassId } from 'constants/DataTypes';
 import { useDispatch, useSelector } from 'react-redux';

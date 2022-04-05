@@ -7,7 +7,7 @@ import Tippy from '@tippyjs/react';
 import { summarizeText } from 'services/annotation/index';
 import { createGlobalStyle } from 'styled-components';
 import { useSelector, useDispatch } from 'react-redux';
-import { setShowHighlights as setShowHighlightsAction, setSummaryFetched as setSummaryFetchedAction } from 'actions/pdfTextAnnotation';
+import { setShowHighlights as setShowHighlightsAction, setSummaryFetched as setSummaryFetchedAction } from 'slices/pdfTextAnnotationSlice';
 import { toast } from 'react-toastify';
 import { isString } from 'lodash';
 import PropTypes from 'prop-types';
