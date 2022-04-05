@@ -42,7 +42,7 @@ export const SelectGlobalStyle = createGlobalStyle`
     }
     .react-select-dark__option--is-focused,
     .react-select-dark__option:active {
-        background: $light !important;
+        background: ${props => props.theme.light} !important;
         color: inherit !important;
     }
 `;

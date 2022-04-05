@@ -21,7 +21,6 @@ import ValueItemOptions from './ValueItemOptions/ValueItemOptions';
 import ValueForm from 'components/StatementBrowser/ValueForm/ValueForm';
 import { Cookies } from 'react-cookie';
 import env from '@beam-australia/react-env';
-import styled from 'styled-components';
 
 const cookies = new Cookies();
 
