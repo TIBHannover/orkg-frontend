@@ -19,6 +19,10 @@ import { Helmet } from 'react-helmet';
 import moment from 'moment';
 import TitleBar from 'components/TitleBar/TitleBar';
 import EditModeHeader from 'components/EditModeHeader/EditModeHeader';
+import { Alert } from 'reactstrap';
+import { Link } from 'react-router-dom';
+import { reverse } from 'named-urls';
+import ROUTES from 'constants/routes.js';
 
 const ViewPaper = () => {
     const { resourceId } = useParams();
@@ -29,7 +33,7 @@ const ViewPaper = () => {
             ? state.viewPaper.url.label
             : state.viewPaper.doi && state.viewPaper.doi[0].label.startsWith('10.')
             ? 'https://doi.org/' + state.viewPaper.doi.map(doi => doi.label.startsWith('10.') && doi.label)[0] //state.viewPaper.doi[0].label
-            : '9'
+            : ''
     );
     const dataCiteDoi = useSelector(
         state =>
@@ -149,6 +153,20 @@ const ViewPaper = () => {
                                 <rect x="24" y="6" rx="1" ry="1" width="10" height="2" />
                                 <rect x="36" y="6" rx="1" ry="1" width="10" height="2" />
                             </ContentLoader>
+                        )}
+                        {!isLoading && (
+                            <>
+                                {viewPaper.hasVersion && (
+                                    <Alert color="warning" className="container d-flex box">
+                                        <div className="flex-grow-1">
+                                            A published version of this paper is available.{' '}
+                                            <Link to={reverse(ROUTES.VIEW_PAPER_HISTORY, { resourceId: viewPaper.hasVersion.id })}>
+                                                View published version
+                                            </Link>
+                                        </div>
+                                    </Alert>
+                                )}
+                            </>
                         )}
                         {!isLoading && !isLoadingFailed && (
                             <>

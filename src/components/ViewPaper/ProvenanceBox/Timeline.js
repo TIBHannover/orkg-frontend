@@ -30,7 +30,27 @@ const Timeline = ({ contributors, paperResource, isLoadingContributors }) => {
                                         </>
                                     )}
 
-                                    {paperResource.created_by && contributor.createdBy !== paperResource.created_by && (
+                                    {paperResource.created_by && contributor.predicate && (
+                                        <>
+                                            Published by{' '}
+                                            {contributor.createdBy !== MISC.UNKNOWN_ID ? (
+                                                <>
+                                                    <Link
+                                                        to={reverse(ROUTES.USER_PROFILE, {
+                                                            userId: contributor.createdBy
+                                                        })}
+                                                    >
+                                                        <b>{contributor.created_by.display_name}</b>
+                                                    </Link>
+                                                    {contributor.object.id}
+                                                </>
+                                            ) : (
+                                                <b>{contributor.created_by.display_name}</b>
+                                            )}
+                                        </>
+                                    )}
+
+                                    {paperResource.created_by && contributor.createdBy !== paperResource.created_by && !contributor.predicate && (
                                         <>
                                             Updated by{' '}
                                             {contributor.createdBy !== MISC.UNKNOWN_ID ? (

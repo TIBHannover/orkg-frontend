@@ -15,11 +15,11 @@ export const getPaperByTitle = title => {
     return submitGetRequest(`${url}widgets/?title=${title}`);
 };
 
-export const generateDOIForORKGArtefact = (resource_id, title, subject, related_resources, description, authors, url, type, resourceType) => {
+export const generateDOIForORKGArtefact = (resource_id, title, subject, related_resources, description, authors, url, type, resource_type) => {
     return submitPostRequest(
         doisUrl,
         { 'Content-Type': 'application/json' },
-        { resource_id, title, subject, related_resources, description, authors, url, type, resourceType }
+        { resource_id, title, subject, related_resources, description, authors, url, type, resource_type }
     );
 };
 

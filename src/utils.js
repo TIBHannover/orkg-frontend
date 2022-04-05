@@ -190,7 +190,8 @@ export const getPaperData_ViewPaper = (paperResource, paperStatements) => {
         doi: filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_DOI, false),
         researchField: filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_RESEARCH_FIELD, true, CLASSES.RESEARCH_FIELD),
         publishedIn: filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_VENUE, true),
-        url: filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.URL, true)
+        url: filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.URL, true),
+        hasVersion: filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_PREVIOUS_VERSION, true)
     };
 };
 

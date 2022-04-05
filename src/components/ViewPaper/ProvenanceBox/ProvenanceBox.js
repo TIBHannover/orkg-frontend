@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { AnimationContainer, ProvenanceBoxTabs, ErrorMessage, SidebarStyledBox } from './styled';
 import { TransitionGroup } from 'react-transition-group';
 import { getContributorInformationById } from 'services/backend/contributors';
@@ -11,7 +11,7 @@ import Provenance from './Provenance';
 import Timeline from './Timeline';
 import env from '@beam-australia/react-env';
 import PWCProvenanceBox from 'components/Benchmarks/PWCProvenanceBox/PWCProvenanceBox';
-import { getStatementsBySubject } from 'services/backend/statements';
+import { getStatementsBySubject, getStatementsBySubjectAndPredicate } from 'services/backend/statements';
 import { getPaperData_ViewPaper } from 'utils';
 
 const ProvenanceBox = () => {
@@ -23,6 +23,8 @@ const ProvenanceBox = () => {
     const [createdBy, setCreatedBy] = useState(null);
     const [contributors, setContributors] = useState([]);
     const [doi, setDoi] = useState('');
+    const [publishInfo, setPublishInfo] = useState([]);
+    const [info, setInfo] = useState([]);
 
     useEffect(() => {
         const loadContributors = () => {
@@ -83,11 +85,41 @@ const ProvenanceBox = () => {
                 .catch(e => setDoi(null));
         };
 
+        const loadPublishInformation = (resourceId, list) => {
+            getStatementsBySubjectAndPredicate({ subjectId: resourceId, predicateId: 'hasPreviousVersion' })
+                .then(response => {
+                    if (response.length > 0) {
+                        getContributorInformationById(response[0].created_by).then(user => {
+                            list.push({ ...response, created_by: user });
+                        });
+                        loadPublishInformation(response[0].object['id'], list);
+                    } else {
+                        setPublishInfo(list);
+                    }
+                })
+                .catch(e => setDoi(null));
+        };
+
+        loadPublishInformation(paperResource.id, []);
         loadContributors();
         loadProvenance();
         loadCreator();
         loadDataCiteDoi();
     }, [paperResource.created_by, paperResource.id, paperResource.observatory_id, paperResource.organization_id]);
+
+    useMemo(() => {
+        if (publishInfo && contributors) {
+            //console.log(contributors);
+            const r = [...contributors];
+            // eslint-disable-next-line array-callback-return
+            publishInfo.map(res => {
+                res[0].created_by = res.created_by;
+                r.push(res[0]);
+            });
+            setInfo(r);
+            console.log(r);
+        }
+    }, [publishInfo, contributors]);
 
     const [activeTab, setActiveTab] = useState(1);
 
@@ -144,7 +176,7 @@ const ProvenanceBox = () => {
                                 observatoryInfo={observatoryInfo}
                                 organizationInfo={organizationInfo}
                                 paperResource={paperResource}
-                                contributors={contributors}
+                                contributors={info}
                                 createdBy={createdBy}
                                 isLoadingContributors={isLoadingContributors}
                             />
