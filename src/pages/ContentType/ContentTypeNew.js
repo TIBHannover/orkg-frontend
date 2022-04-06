@@ -1,4 +1,4 @@
-import { faSave, faTable, faFile } from '@fortawesome/free-solid-svg-icons';
+import { faFile } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import TitleBar from 'components/TitleBar/TitleBar';
 import { CLASSES } from 'constants/graphSettings';
@@ -8,21 +8,15 @@ import { useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router';
 import { Alert, Button, Container, FormGroup, Input, InputGroup, Label } from 'reactstrap';
 import { createResource } from 'services/backend/resources';
+import { supportedContentTypes } from 'components/ContentType/types';
 import { Link } from 'react-router-dom';
+import pluralize from 'pluralize';
+import { upperFirst } from 'lodash';
 
 const TYPES = [
+    ...supportedContentTypes,
     {
-        classId: CLASSES.SOFTWARE,
-        label: 'Software',
-        icon: faSave
-    },
-    {
-        classId: CLASSES.DATASET,
-        label: 'Dataset',
-        icon: faTable
-    },
-    {
-        classId: CLASSES.PAPER,
+        id: CLASSES.PAPER,
         label: 'Paper',
         icon: faFile
     }
@@ -38,7 +32,7 @@ const ContentTypeNew = () => {
     const [isLoading, setIsLoading] = useState(null);
 
     useEffect(() => {
-        setSelectedClassId(params.type || TYPES[0].classId);
+        setSelectedClassId(params.type || TYPES[0].id);
     }, [params.type]);
 
     const handleCreate = async () => {
@@ -54,16 +48,16 @@ const ContentTypeNew = () => {
             <Container className="box rounded pt-4 pb-4 ps-5 pe-5">
                 {TYPES.map(type => (
                     <Button
-                        key={type.classId}
-                        color={type.classId === selectedClassId ? 'primary' : 'link'}
-                        className={`px-2 me-4 ${type.classId !== selectedClassId && 'text-decoration-none text-dark'}`}
-                        onClick={() => setSelectedClassId(type.classId)}
+                        key={type.id}
+                        color={type.id === selectedClassId ? 'primary' : 'link'}
+                        className={`px-2 me-4 ${type.id !== selectedClassId && 'text-decoration-none text-dark'}`}
+                        onClick={() => setSelectedClassId(type.id)}
                         style={{ width: 80 }}
                     >
                         <div style={{ fontSize: 30 }}>
-                            <Icon icon={type.icon} className={type.classId !== selectedClassId ? 'text-secondary' : ''} />
+                            <Icon icon={type.icon} className={type.id !== selectedClassId ? 'text-secondary' : ''} />
                         </div>
-                        {type.label}
+                        {upperFirst(pluralize(type?.label || '', 0, false))}
                     </Button>
                 ))}
                 <hr />
