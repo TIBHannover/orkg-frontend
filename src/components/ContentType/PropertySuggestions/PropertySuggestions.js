@@ -1,6 +1,6 @@
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { createProperty, getSuggestedProperties } from 'actions/statementBrowser';
+import { createPropertyAction as createProperty, getSuggestedProperties } from 'slices/statementBrowserSlice';
 import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
 import { ENTITIES } from 'constants/graphSettings';
 import { createRef, useEffect, useMemo, useState } from 'react';
