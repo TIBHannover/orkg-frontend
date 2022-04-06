@@ -86,7 +86,7 @@ const DEDICATED_PAGE_LINKS = {
     },
     [CLASSES.LITERATURE_LIST]: {
         label: 'List',
-        route: ROUTES.LLIST,
+        route: ROUTES.LIST,
         routeParams: 'id'
     },
     [CLASSES.LITERATURE_LIST_PUBLISHED]: {
