@@ -1,5 +1,5 @@
 import Tippy from '@tippyjs/react';
-import { toggleHistoryModal as toggleHistoryModalAction } from 'actions/review';
+import { toggleHistoryModal as toggleHistoryModalAction } from 'slices/reviewSlice';
 import AuthorBadges from 'components/Badges/AuthorBadges/AuthorBadges';
 import ResearchFieldBadge from 'components/Badges/ResearchFieldBadge/ResearchFieldBadge';
 import Acknowledgements from 'components/Review/Acknowledgements';

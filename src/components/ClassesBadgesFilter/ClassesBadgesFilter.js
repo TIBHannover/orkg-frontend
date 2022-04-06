@@ -2,6 +2,7 @@ import { useCallback } from 'react';
 import Select, { components } from 'react-select';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
+import { SelectGlobalStyle } from 'components/Autocomplete/styled';
 
 const ClassesBadgesFilter = props => {
     const handleSelect = value => {
@@ -102,6 +103,7 @@ const ClassesBadgesFilter = props => {
                 styles={customStyles}
                 blurInputOnSelect={true}
             />
+            <SelectGlobalStyle />
         </div>
     );
 };

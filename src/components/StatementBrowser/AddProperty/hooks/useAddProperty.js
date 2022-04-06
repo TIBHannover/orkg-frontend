@@ -1,4 +1,4 @@
-import { createProperty, getNewPropertiesList, canAddProperty as canAddPropertyAction } from 'actions/statementBrowser';
+import { createPropertyAction as createProperty, getNewPropertiesList, canAddProperty as canAddPropertyAction } from 'slices/statementBrowserSlice';
 import useConfirmPropertyModal from 'components/StatementBrowser/AddProperty/hooks/useConfirmPropertyModal';
 import { useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';

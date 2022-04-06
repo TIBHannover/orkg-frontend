@@ -6,14 +6,15 @@ import Tooltip from 'components/Utils/Tooltip';
 import {
     nextStep,
     previousStep,
-    createContribution,
-    deleteContribution,
-    selectContribution,
-    updateContributionLabel,
-    saveAddPaper,
+    createContributionAction as createContribution,
+    deleteContributionAction as deleteContribution,
+    selectContributionAction as selectContribution,
+    updateContributionLabelAction as updateContributionLabel,
+    saveAddPaperAction as saveAddPaper,
     openTour,
     toggleAbstractDialog
-} from 'actions/addPaper';
+} from 'slices/addPaperSlice';
+import { updateSettings } from 'slices/statementBrowserSlice';
 import Abstract from 'components/AddPaper/Abstract/Abstract';
 import Confirm from 'components/Confirmation/Confirmation';
 import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
@@ -23,7 +24,6 @@ import { StyledContributionTabs } from 'components/ContributionTabs/styled';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faMagic, faAngleDown } from '@fortawesome/free-solid-svg-icons';
 import Tabs, { TabPane } from 'rc-tabs';
-import { updateSettings } from 'actions/statementBrowser';
 
 const Contributions = () => {
     const {
@@ -141,6 +141,7 @@ const Contributions = () => {
                                 </div>
                             </span>
                         }
+                        tippyProps={{ interactive: true }}
                     >
                         Specify research contributions
                     </Tooltip>

@@ -12,6 +12,7 @@ import { getStatementsBySubject } from 'services/backend/statements';
 import { getPapersByTitle } from 'services/semanticScholar';
 import { withTheme } from 'styled-components';
 import { getPaperData } from 'utils';
+import { SelectGlobalStyle } from 'components/Autocomplete/styled';
 
 const PAGE_SIZE = 10;
 const MIN_INPUT_LENGTH = 3;
@@ -164,6 +165,7 @@ function AutocompleteContentTypeTitle({
     return (
         <>
             <StyledAutoCompleteInputFormControl className="form-control border-0 rounded-0">
+                <SelectGlobalStyle />
                 <AsyncPaginate
                     value=""
                     loadOptions={loadOptions}

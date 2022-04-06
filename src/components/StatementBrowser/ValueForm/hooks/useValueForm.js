@@ -1,18 +1,16 @@
 import { useState, useCallback } from 'react';
 import {
-    createValue,
+    createValueAction as createValue,
     getComponentsByResourceIDAndPredicateID,
     fetchTemplatesOfClassIfNeeded,
     getValueClass,
     isLiteral,
-    updateValueLabel,
-    doneSavingValue,
-    isSavingValue,
-    isAddingValue,
-    doneAddingValue,
     fillStatements,
-    getSubjectIdByValue
-} from 'actions/statementBrowser';
+    getSubjectIdByValue,
+    setIsAddingValue,
+    setSavingValue,
+    updateValueLabel
+} from 'slices/statementBrowserSlice';
 import { createResourceStatement } from 'services/backend/statements';
 import { createResource, updateResource } from 'services/backend/resources';
 import { createLiteral, updateLiteral } from 'services/backend/literals';
@@ -58,7 +56,7 @@ const useValueForm = ({ valueId, resourceId, propertyId, syncBackend }) => {
         // Check if the user changed the label
         if (draftLabel !== value.label || draftDataType !== value.datatype) {
             if (syncBackend) {
-                dispatch(isSavingValue({ id: valueId })); // To show the saving message instead of the value label
+                dispatch(setSavingValue({ id: valueId, status: true })); // To show the saving message instead of the value label
                 if (value.resourceId) {
                     const apiCall =
                         value._class === ENTITIES.LITERAL
@@ -67,11 +65,11 @@ const useValueForm = ({ valueId, resourceId, propertyId, syncBackend }) => {
                     apiCall
                         .then(() => {
                             toast.success(`${value._class === ENTITIES.LITERAL ? 'Literal' : 'Resource'} label updated successfully`);
-                            dispatch(doneSavingValue({ id: valueId }));
+                            dispatch(setSavingValue({ id: valueId, status: false }));
                         })
                         .catch(() => {
                             toast.error('Something went wrong while updating the label.');
-                            dispatch(doneSavingValue({ id: valueId }));
+                            dispatch(setSavingValue({ id: valueId, status: false }));
                         });
                 }
             }
@@ -225,7 +223,7 @@ const useValueForm = ({ valueId, resourceId, propertyId, syncBackend }) => {
             let apiError = false;
             const existingResourceId = guid();
             if (syncBackend) {
-                dispatch(isAddingValue({ id: propertyId }));
+                dispatch(setIsAddingValue({ id: propertyId, status: true }));
                 let apiCall;
                 if (!value.selected || value.external) {
                     switch (entityType) {
@@ -258,7 +256,7 @@ const useValueForm = ({ valueId, resourceId, propertyId, syncBackend }) => {
                     .catch(() => {
                         apiError = true;
                         toast.error('Something went wrong while adding the value.');
-                        dispatch(doneAddingValue({ id: propertyId }));
+                        dispatch(setIsAddingValue({ id: propertyId, status: false }));
                     });
             }
             if (!apiError) {
@@ -283,7 +281,7 @@ const useValueForm = ({ valueId, resourceId, propertyId, syncBackend }) => {
                             syncBackend: syncBackend
                         })
                     ));
-                dispatch(doneAddingValue({ id: propertyId }));
+                dispatch(setIsAddingValue({ id: propertyId, status: false }));
                 return newEntity.id ?? existingResourceId;
             }
         },

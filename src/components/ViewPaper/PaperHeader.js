@@ -1,6 +1,6 @@
 import { faCalendar, faCheckCircle, faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { loadPaper } from 'actions/viewPaper';
+import { loadPaper } from 'slices/viewPaperSlice';
 import AuthorBadges from 'components/Badges/AuthorBadges/AuthorBadges';
 import ResearchFieldBadge from 'components/Badges/ResearchFieldBadge/ResearchFieldBadge';
 import useDeletePapers from 'components/ViewPaper/hooks/useDeletePapers';

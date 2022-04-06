@@ -1,4 +1,4 @@
-import { load as loadArticle } from 'actions/review';
+import { load as loadArticle } from 'slices/reviewSlice';
 import { CLASSES, MISC, PREDICATES } from 'constants/graphSettings';
 import { useCallback, useState } from 'react';
 import { useDispatch } from 'react-redux';

@@ -48,11 +48,6 @@ const TableCellForm = ({ value, contributionId, propertyId, closeForm }) => {
     const confirmConversion = useRef(null);
     const [suggestionType, setSuggestionType] = useState(null);
 
-    /* Select component reference can be used to check if menu is opened */
-    const isMenuOpen = () => {
-        return autocompleteInputRef.current.state.menuIsOpen && autocompleteInputRef.current.props.options.length > 0;
-    };
-
     useClickAway(refContainer, () => {
         //setIsCreating(false);
         if (!editMode) {

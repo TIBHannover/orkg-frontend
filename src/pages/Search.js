@@ -7,6 +7,7 @@ import { unionBy } from 'lodash';
 import TitleBar from 'components/TitleBar/TitleBar';
 import { useSearch } from 'components/Search/hooks/useSearch';
 import DEFAULT_FILTERS from 'constants/searchDefaultFilters';
+import { ENTITIES } from 'constants/graphSettings';
 
 export default function Search() {
     const { searchTerm, selectedFilters, results, isNextPageLoading, hasNextPage, isLoading, loadMoreResults, currentPage } = useSearch();
@@ -59,6 +60,7 @@ export default function Search() {
                                             return (
                                                 <div key={`filter-result${filter.id}`}>
                                                     <Results
+                                                        showClasses={ENTITIES.RESOURCE === filter.id}
                                                         loading={isNextPageLoading[filter.id] || false}
                                                         hasNextPage={hasNextPage[filter.id] || false}
                                                         loadMore={() => loadMoreResults(filter.id, currentPage[filter.id])}

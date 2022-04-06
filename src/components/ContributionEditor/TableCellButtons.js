@@ -3,7 +3,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPen, faTrash, faCheck, faTimes, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import StatementActionButton from 'components/StatementBrowser/StatementActionButton/StatementActionButton';
 import HELP_CENTER_ARTICLES from 'constants/helpCenterArticles';
-import { setIsHelpModalOpen } from 'actions/statementBrowser';
+import { setIsHelpModalOpen } from 'slices/statementBrowserSlice';
 import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import { useState } from 'react';

@@ -1,4 +1,4 @@
-import { deleteSection, updateSectionMarkdown, updateSectionTitle } from 'actions/review';
+import { deleteSection, updateSectionMarkdown, updateSectionTitle } from 'slices/reviewSlice';
 import AddSection from 'components/Review/AddSection';
 import SectionOntology from 'components/Review/DataTable/SectionOntology';
 import SectionContentLink from 'components/Review/SectionContentLink';

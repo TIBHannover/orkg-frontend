@@ -1,5 +1,5 @@
 import Tippy from '@tippyjs/react';
-import { updateTitle } from 'actions/review';
+import { updateTitle } from 'slices/reviewSlice';
 import ResearchField from 'components/Review/ResearchField';
 import { EditableTitle, SectionStyled, SectionTypeStyled } from 'components/ArticleBuilder/styled';
 import React, { useEffect, useState } from 'react';

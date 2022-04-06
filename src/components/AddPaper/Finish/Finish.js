@@ -8,8 +8,13 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { reverse } from 'named-urls';
 import ROUTES from '../../../constants/routes.js';
+import { compose } from 'redux';
+import withMatomo from 'components/Matomo/withMatomo.js';
 
 class Finish extends Component {
+    componentDidMount() {
+        this.props.trackEvent({ category: 'data-entry', action: 'add-paper-wizard' });
+    }
     render() {
         if (!this.props.paperNewResourceId) {
             // no ID yet, thus loading...
@@ -43,7 +48,8 @@ class Finish extends Component {
 }
 
 Finish.propTypes = {
-    paperNewResourceId: PropTypes.string
+    paperNewResourceId: PropTypes.string,
+    trackEvent: PropTypes.func.isRequired
 };
 
 Finish.defaultProps = {
@@ -54,4 +60,7 @@ const mapStateToProps = state => ({
     paperNewResourceId: state.addPaper.paperNewResourceId
 });
 
-export default connect(mapStateToProps)(Finish);
+export default compose(
+    connect(mapStateToProps),
+    withMatomo
+)(Finish);

@@ -8,7 +8,7 @@ import AnnotationCategory from 'components/PdfTextAnnotation/AnnotationCategory'
 import Completion from 'components/PdfTextAnnotation/ProgressBar';
 import Save from './Save';
 import SmartSentenceDetection from './SmartSentenceDetection';
-import { discardChanges } from 'actions/pdfTextAnnotation';
+import { discardChanges } from 'slices/pdfTextAnnotationSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import Help from './Help';
 import PropTypes from 'prop-types';
@@ -67,7 +67,7 @@ const SideBar = ({ pdfViewer }) => {
                         Save
                     </Button>
                     <DropdownToggle caret color="primary" className="ps-1 pe-2" />
-                    <DropdownMenu>
+                    <DropdownMenu end>
                         <DropdownItem onClick={() => setHelpIsOpen(true)}>
                             <Icon icon={faQuestionCircle} className="me-2 text-secondary" />
                             Start help tour

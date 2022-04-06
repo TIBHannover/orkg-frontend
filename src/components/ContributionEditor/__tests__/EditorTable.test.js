@@ -69,7 +69,9 @@ describe('literals', () => {
 
         expect(screen.getByRole('cell', { name: /new literal/i, hidden: true })).toBeInTheDocument();
     });
+});
 
+describe('literals', () => {
     it('should update table when literal is removed', async () => {
         setup(contributionLiteralOnly);
 
@@ -85,7 +87,6 @@ describe('literals', () => {
         expect(screen.queryByRole('cell', { name: /test literal/i, hidden: true })).not.toBeInTheDocument();
     });
 });
-
 /*
 describe('resources', () => {
     test('should update table when resources is updated', async () => {

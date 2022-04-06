@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Label, FormGroup } from 'reactstrap';
 import { ORGANIZATIONS_MISC } from 'constants/organizationsTypes';
+import { SelectGlobalStyle } from 'components/Autocomplete/styled';
 
 const LogoContainer = styled.div`
     overflow: hidden;
@@ -104,7 +105,7 @@ function AutocompleteObservatory(props) {
                     inputId="select-observatory"
                     isClearable={true}
                     classNamePrefix="react-select"
-                />
+                />{' '}
             </FormGroup>
             <FormGroup>
                 <Label for="select-organization">Select an organization</Label>
@@ -120,6 +121,7 @@ function AutocompleteObservatory(props) {
                     classNamePrefix="react-select"
                 />
             </FormGroup>
+            <SelectGlobalStyle />
         </>
     );
 }

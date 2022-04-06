@@ -1,5 +1,5 @@
 import { useDispatch } from 'react-redux';
-import { deleteAnnotation as deleteAnnotationAction } from 'actions/pdfTextAnnotation';
+import { deleteAnnotation as deleteAnnotationAction } from 'slices/pdfTextAnnotationSlice';
 
 const useDeleteAnnotation = () => {
     const dispatch = useDispatch();

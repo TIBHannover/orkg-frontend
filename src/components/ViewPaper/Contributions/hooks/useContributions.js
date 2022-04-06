@@ -3,7 +3,7 @@ import { createResourceStatement, deleteStatementById } from 'services/backend/s
 import { updateResource, createResource } from 'services/backend/resources';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { updateContributionLabel } from 'actions/statementBrowser';
+import { updateContributionLabel } from 'slices/statementBrowserSlice';
 import { toast } from 'react-toastify';
 import Confirm from 'components/Confirmation/Confirmation';
 import { PREDICATES, CLASSES } from 'constants/graphSettings';
@@ -14,13 +14,10 @@ import { getSimilarContribution } from 'services/similarity/index';
 import {
     selectContribution,
     setPaperContributions,
-    isAddingContribution,
-    doneAddingContribution,
-    isDeletingContribution,
-    doneDeletingContribution,
-    isSavingContribution,
-    doneSavingContribution
-} from 'actions/viewPaper';
+    setIsAddingContribution,
+    setIsDeletingContribution,
+    setIsSavingContribution
+} from 'slices/viewPaperSlice';
 
 const useContributions = ({ paperId, contributionId }) => {
     const [similarContributions, setSimilarContributions] = useState([]);
@@ -114,32 +111,32 @@ const useContributions = ({ paperId, contributionId }) => {
             const updatedObj = { ...contributions[objIndex], label: label };
             // update the contributions array
             const newContributions = [...contributions.slice(0, objIndex), updatedObj, ...contributions.slice(objIndex + 1)];
-            dispatch(isSavingContribution({ id: contributionId }));
+            dispatch(setIsSavingContribution({ id: contributionId, status: true }));
             updateResource(contributionId, label)
                 .then(() => {
                     dispatch(setPaperContributions(newContributions));
                     dispatch(updateContributionLabel({ id: contributionId, label: label }));
-                    dispatch(doneSavingContribution({ id: contributionId }));
+                    dispatch(setIsSavingContribution({ id: contributionId, status: false }));
                     toast.success('Contribution name updated successfully');
                 })
                 .catch(() => {
-                    dispatch(doneSavingContribution({ id: contributionId }));
+                    dispatch(setIsSavingContribution({ id: contributionId, status: false }));
                     toast.error('Something went wrong while updating contribution label.');
                 });
         }
     };
 
     const handleCreateContribution = () => {
-        dispatch(isAddingContribution());
+        dispatch(setIsAddingContribution(true));
         createResource(`Contribution ${contributions.length + 1}`, [CLASSES.CONTRIBUTION])
             .then(newContribution => createResourceStatement(paperId, PREDICATES.HAS_CONTRIBUTION, newContribution.id))
             .then(statement => {
                 dispatch(setPaperContributions([...contributions, { ...statement.object, statementId: statement.id }]));
-                dispatch(doneAddingContribution());
+                dispatch(setIsAddingContribution(false));
                 toast.success('Contribution created successfully');
             })
             .catch(() => {
-                dispatch(doneAddingContribution());
+                dispatch(setIsAddingContribution(false));
                 toast.error('Something went wrong while creating a new contribution.');
             });
     };
@@ -156,7 +153,7 @@ const useContributions = ({ paperId, contributionId }) => {
             const newContributions = contributions.filter(function(contribution) {
                 return contribution.id !== contributionId;
             });
-            dispatch(isDeletingContribution({ id: contributionId }));
+            dispatch(setIsDeletingContribution({ id: contributionId, status: true }));
             deleteStatementById(statementId)
                 .then(() => {
                     history.push(
@@ -165,13 +162,13 @@ const useContributions = ({ paperId, contributionId }) => {
                             contributionId: newContributions[0].id
                         })
                     );
-                    dispatch(doneDeletingContribution({ id: contributionId }));
+                    dispatch(setIsDeletingContribution({ id: contributionId, status: false }));
                     dispatch(setPaperContributions(newContributions));
                     setContributions(newContributions);
                     toast.success('Contribution deleted successfully');
                 })
                 .catch(() => {
-                    dispatch(doneDeletingContribution({ id: contributionId }));
+                    dispatch(setIsDeletingContribution({ id: contributionId, status: false }));
                     toast.error('Something went wrong while deleting the contribution.');
                 });
         }

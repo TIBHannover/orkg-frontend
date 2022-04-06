@@ -24,7 +24,7 @@ import Tooltip from 'components/Utils/Tooltip';
 import AuthorsInput from 'components/Utils/AuthorsInput';
 import Joi from 'joi';
 import { useSelector, useDispatch } from 'react-redux';
-import { updateGeneralData, nextStep, openTour, closeTour } from 'actions/addPaper';
+import { updateGeneralData, nextStep, openTour, closeTour } from 'slices/addPaperSlice';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import { useCookies } from 'react-cookie';
 import styled, { ThemeContext } from 'styled-components';
@@ -395,6 +395,7 @@ const GeneralData = () => {
                                                     </div>
                                                 </div>
                                             }
+                                            tippyProps={{ interactive: true }}
                                         >
                                             Paper DOI or BibTeX
                                         </Tooltip>
@@ -638,7 +639,7 @@ const GeneralData = () => {
                 onRequestClose={requestCloseTour}
                 isOpen={isTourOpen}
                 startAt={tourStartAt}
-                maskClassName="reactourMask"
+                maskClassName="opacity-75"
             />
 
             <Tour
@@ -662,7 +663,7 @@ const GeneralData = () => {
                 startAt={0}
                 showButtons={false}
                 showNavigation={false}
-                maskClassName="reactourMask"
+                maskClassName="opacity-75"
             />
         </div>
     );

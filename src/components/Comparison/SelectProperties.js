@@ -1,11 +1,11 @@
 import { Modal, ModalHeader, ModalBody, ListGroup, ListGroupItem, Badge, Input, Label, FormGroup } from 'reactstrap';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
+import styled, { createGlobalStyle } from 'styled-components';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSort } from '@fortawesome/free-solid-svg-icons';
 import { SortableContainer, SortableElement, sortableHandle } from 'react-sortable-hoc';
 import capitalize from 'capitalize';
-import Tooltip from 'components/Utils/Tooltip';
+import Tippy from '@tippyjs/react';
 
 const DragHandle = styled.span`
     cursor: move;
@@ -25,6 +25,13 @@ const ListGroupItemStyled = styled(ListGroupItem)`
     display: flex !important;
 `;
 
+const GlobalStyle = createGlobalStyle`
+    .sortable-helper{
+        z-index: 10000 !important;
+        border-radius: 0 !important;
+    }
+`;
+
 function SelectProperties(props) {
     const SortableHandle = sortableHandle(() => (
         <DragHandle>
@@ -41,9 +48,11 @@ function SelectProperties(props) {
                     {capitalize(property.label)}
                 </Label>
             </FormGroup>
-            <Tooltip message="Amount of contributions" hideDefaultIcon>
-                <Badge color="light">{property.contributionAmount}</Badge>
-            </Tooltip>
+            <Tippy content="Amount of contributions">
+                <span>
+                    <Badge color="light">{property.contributionAmount}</Badge>
+                </span>
+            </Tippy>
         </ListGroupItemStyled>
     ));
 
@@ -59,9 +68,10 @@ function SelectProperties(props) {
 
     return (
         <Modal isOpen={props.showPropertiesDialog} toggle={props.togglePropertiesDialog}>
+            <GlobalStyle />
             <ModalHeader toggle={props.togglePropertiesDialog}>Select properties</ModalHeader>
             <ModalBody>
-                <SortableList items={props.properties} onSortEnd={props.onSortEnd} lockAxis="y" helperClass="sortableHelper" useDragHandle />
+                <SortableList items={props.properties} onSortEnd={props.onSortEnd} lockAxis="y" helperClass="sortable-helper" useDragHandle />
             </ModalBody>
         </Modal>
     );
