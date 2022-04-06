@@ -1,6 +1,6 @@
 import TitleBar from 'components/TitleBar/TitleBar';
 import DraftComparisons from 'components/UserSettings/DraftComparisons/DraftComparisons';
-import DraftLists from 'components/UserSettings/DraftLiteratureLists/DraftLiteratureLists';
+import DraftLists from 'components/UserSettings/DraftLists/DraftLists';
 import DraftReviews from 'components/UserSettings/DraftReviews/DraftReviews';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
