@@ -1,8 +1,9 @@
-import { useContext } from 'react';
+import { useContext, useCallback } from 'react';
 import Select, { components } from 'react-select';
 //import { useSelector } from 'react-redux';
 import DATA_TYPES, { getConfigByType } from 'constants/DataTypes';
 import { ThemeContext } from 'styled-components';
+import { SelectGlobalStyle } from 'components/Autocomplete/styled';
 import Tippy from '@tippyjs/react';
 import PropTypes from 'prop-types';
 
@@ -10,12 +11,15 @@ const DatatypeSelector = props => {
     // const isCurationAllowed = useSelector(state => state.auth.user?.isCurationAllowed);
     const theme = useContext(ThemeContext);
 
-    const CustomOption = innerProps => (
-        <components.Option {...innerProps}>
-            <Tippy content={innerProps.data.tooltip} disabled={!innerProps.data.tooltip}>
-                <div>{innerProps.data.name}</div>
-            </Tippy>
-        </components.Option>
+    const CustomOption = useCallback(
+        innerProps => (
+            <components.Option {...innerProps}>
+                <Tippy content={innerProps.data.tooltip} disabled={!innerProps.data.tooltip}>
+                    <div>{innerProps.data.name}</div>
+                </Tippy>
+            </components.Option>
+        ),
+        []
     );
     const customStyles = {
         container: provided => ({
@@ -88,6 +92,7 @@ const DatatypeSelector = props => {
                 menuPortalTarget={props.menuPortalTarget}
                 inputId="datatypeSelector"
             />
+            <SelectGlobalStyle />
         </>
     );
 };

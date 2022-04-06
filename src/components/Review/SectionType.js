@@ -8,6 +8,7 @@ import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import Select, { components } from 'react-select';
+import { SelectGlobalStyle } from 'components/Autocomplete/styled';
 
 const Option = ({ children, ...props }) => {
     return <components.Option {...props}>{children}</components.Option>;
@@ -114,6 +115,7 @@ const SectionType = props => {
             )}
             {editMode && (
                 <SectionTypeContainerStyled>
+                    <SelectGlobalStyle />
                     <Select
                         value={typeValue}
                         onChange={handleChange}

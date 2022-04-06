@@ -120,7 +120,7 @@ const Help = props => {
                 onRequestClose={handleCloseTour}
                 isOpen={props.isOpen}
                 startAt={0}
-                maskClassName="reactourMask"
+                maskClassName="opacity-75"
                 steps={tourSteps}
             />
         </>

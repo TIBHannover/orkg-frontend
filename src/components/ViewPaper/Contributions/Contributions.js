@@ -14,7 +14,7 @@ import AddToComparison from 'components/PaperCard/AddToComparison';
 import ContributionTab from 'components/ContributionTabs/ContributionTab';
 import AddContributionButton from 'components/ContributionTabs/AddContributionButton';
 import { useSelector } from 'react-redux';
-import { StyledContributionTabs } from 'components/ContributionTabs/styled';
+import { StyledContributionTabs, GlobalStyle } from 'components/ContributionTabs/styled';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faAngleDown } from '@fortawesome/free-solid-svg-icons';
 import useContributions from './hooks/useContributions';
@@ -67,6 +67,7 @@ const Contributions = props => {
 
     return (
         <div>
+            <GlobalStyle />
             <Container>
                 <Row>
                     <Col md="9">

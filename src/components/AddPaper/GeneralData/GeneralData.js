@@ -639,7 +639,7 @@ const GeneralData = () => {
                 onRequestClose={requestCloseTour}
                 isOpen={isTourOpen}
                 startAt={tourStartAt}
-                maskClassName="reactourMask"
+                maskClassName="opacity-75"
             />
 
             <Tour
@@ -663,7 +663,7 @@ const GeneralData = () => {
                 startAt={0}
                 showButtons={false}
                 showNavigation={false}
-                maskClassName="reactourMask"
+                maskClassName="opacity-75"
             />
         </div>
     );

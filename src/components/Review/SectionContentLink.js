@@ -1,6 +1,7 @@
 import { createReference, createSection, updateSectionLink } from 'slices/reviewSlice';
 import Cite from 'citation-js';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
+import { SelectGlobalStyle } from 'components/Autocomplete/styled';
 import SectionComparison from 'components/Review/SectionComparison';
 import SectionVisualization from 'components/Review/SectionVisualization';
 import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
@@ -140,6 +141,7 @@ const SectionContentLink = props => {
 
     return (
         <div>
+            <SelectGlobalStyle />
             <Autocomplete
                 excludeClasses={
                     props.type === 'resource' ? `${CLASSES.PAPER},${CLASSES.CONTRIBUTION},${CLASSES.TEMPLATE},${CLASSES.RESEARCH_FIELD}` : undefined
