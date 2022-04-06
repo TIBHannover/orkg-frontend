@@ -118,8 +118,8 @@ function Resource(props) {
     const [isOpenPWCModal, setIsOpenPWCModal] = useState(false);
     const { isFeatured, isUnlisted, handleChangeStatus } = useMarkFeaturedUnlisted({
         resourceId: props.match.params.id,
-        unlisted: resource.unlisted,
-        featured: resource.featured
+        unlisted: resource?.unlisted,
+        featured: resource?.featured
     });
 
     useEffect(() => {
