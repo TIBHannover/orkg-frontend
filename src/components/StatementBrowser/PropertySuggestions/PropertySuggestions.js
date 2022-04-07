@@ -1,4 +1,4 @@
-import { ListGroup, ListGroupItem, Badge } from 'reactstrap';
+import { ListGroup, ListGroupItem, Badge, Col } from 'reactstrap';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
@@ -12,7 +12,7 @@ const PropertySuggestions = () => {
     const suggestedProperties = useSelector(state => getSuggestedProperties(state, selectedResource));
 
     return (
-        <>
+        <Col lg="12">
             <p className="text-muted mt-4">Suggested properties</p>
             <ListGroup>
                 {suggestedProperties.map((c, index) => (
@@ -48,7 +48,7 @@ const PropertySuggestions = () => {
                     </ListGroupItem>
                 ))}
             </ListGroup>
-        </>
+        </Col>
     );
 };
 

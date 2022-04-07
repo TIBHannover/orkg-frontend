@@ -40,7 +40,7 @@ import { disableBodyScroll, enableBodyScroll, clearAllBodyScrollLocks } from 'bo
 import ExistingDoiModal from './ExistingDoiModal';
 import { parseCiteResult } from 'utils';
 import env from '@beam-australia/react-env';
-import AutocompletePaperTitle from 'components/AutocompletePaperTitle/AutocompletePaperTitle';
+import AutocompleteContentTypeTitle from 'components/AutocompleteContentTypeTitle/AutocompleteContentTypeTitle';
 import Confirm from 'components/Confirmation/Confirmation';
 
 const Container = styled(CSSTransition)`
@@ -493,7 +493,7 @@ const GeneralData = () => {
                                 <Label for="paperTitle">
                                     <Tooltip message="The main title of the paper">Paper title</Tooltip>
                                 </Label>
-                                <AutocompletePaperTitle
+                                <AutocompleteContentTypeTitle
                                     value={title}
                                     onChange={value =>
                                         dispatch(

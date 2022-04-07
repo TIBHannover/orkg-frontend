@@ -4,7 +4,7 @@ import auth from 'slices/authSlice';
 import statementBrowser from 'slices/statementBrowserSlice';
 import addPaper from 'slices/addPaperSlice';
 import viewPaper from 'slices/viewPaperSlice';
-import literatureList from 'slices/literatureListSlice';
+import list from 'slices/listSlice';
 import contributionEditor from 'slices/contributionEditorSlice';
 import review from 'slices/reviewSlice';
 import templateEditor from 'slices/templateEditorSlice';
@@ -19,7 +19,7 @@ export default history =>
         statementBrowser,
         addPaper,
         viewPaper,
-        literatureList,
+        list,
         contributionEditor,
         review,
         templateEditor,

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import styled from 'styled-components';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faCalendar } from '@fortawesome/free-solid-svg-icons';
+import { faCalendar, faFile } from '@fortawesome/free-solid-svg-icons';
 import ROUTES from 'constants/routes.js';
 import AddToComparison from 'components/PaperCard/AddToComparison';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
@@ -16,6 +16,7 @@ import ContentLoader from 'react-content-loader';
 import Authors from './Authors';
 import PropTypes from 'prop-types';
 import moment from 'moment';
+import pluralize from 'pluralize';
 
 const PaperCardStyled = styled.div`
     &.selected {
@@ -67,7 +68,10 @@ const PaperCard = props => {
                     <div className="mb-2">
                         <Link
                             target={props.linkTarget ? props.linkTarget : undefined}
-                            to={reverse(ROUTES.VIEW_PAPER, { resourceId: props.paper.id, contributionId: props.contribution?.id ?? undefined })}
+                            to={
+                                props.route ||
+                                reverse(ROUTES.VIEW_PAPER, { resourceId: props.paper.id, contributionId: props.contribution?.id ?? undefined })
+                            }
                         >
                             {props.paper.title ? props.paper.title : <em>No title</em>}
                         </Link>
@@ -104,6 +108,12 @@ const PaperCard = props => {
                     )}
                     <div className="mb-1">
                         <small>
+                            {props.showContributionCount && (
+                                <div className="d-inline-block me-1">
+                                    <Icon size="sm" icon={faFile} className="me-1" />
+                                    {pluralize('contribution', props.paper.contributions?.length, true)}
+                                </div>
+                            )}
                             <Authors authors={props.paper.authors} />
                             {(props.paper.publicationMonth || props.paper.publicationYear) && (
                                 <Icon size="sm" icon={faCalendar} className="ms-2 me-1" />
@@ -165,7 +175,9 @@ PaperCard.propTypes = {
     onSelect: PropTypes.func,
     isListGroupItem: PropTypes.bool.isRequired,
     description: PropTypes.object,
-    linkTarget: PropTypes.string
+    linkTarget: PropTypes.string,
+    showContributionCount: PropTypes.bool.isRequired,
+    route: PropTypes.string
 };
 
 PaperCard.defaultProps = {
@@ -179,7 +191,9 @@ PaperCard.defaultProps = {
     showCurationFlags: true,
     isListGroupItem: true,
     onChange: () => {},
-    description: null
+    description: null,
+    showContributionCount: false,
+    route: null
 };
 
 export default PaperCard;
