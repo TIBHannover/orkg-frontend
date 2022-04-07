@@ -39,7 +39,7 @@ function Format(props) {
                                 disabled={!props.editMode}
                             />
                             <FormText>
-                                Use the reference of property IDs bellow to get each property placeholder.
+                                Use the reference of property IDs below to get each property placeholder.
                                 <br />
                                 The formatted text result will replace each {'{P…}'} placeholder in the string with its corresponding value.
                                 <br />

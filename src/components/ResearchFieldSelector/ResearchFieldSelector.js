@@ -42,9 +42,9 @@ const SubList = styled.ul`
 `;
 
 const IndicatorContainer = styled.div`
-    width: 30px;
+    width: 20px;
+    margin-right: 5px;
     text-align: center;
-    display: inline-flex;
 `;
 
 const CollapseButton = styled(Button)`
@@ -185,7 +185,7 @@ const ResearchFieldSelector = ({
             return (
                 <li key={field.id}>
                     <FieldItem onClick={e => handleFieldClick(e, field.id)} color="link" className={selectedResearchField === field.id && 'active'}>
-                        <div className="flex-grow-1">
+                        <div className="flex-grow-1 d-flex">
                             <IndicatorContainer onClick={e => handleFieldClick(e, field.id, false)}>
                                 {field.hasChildren && (
                                     <Icon icon={icon} spin={isLoading} className={selectedResearchField !== field.id ? 'text-secondary' : ''} />
@@ -255,7 +255,7 @@ const ResearchFieldSelector = ({
                         size="sm"
                         color="link"
                         disabled={!find(researchFields, f => f.isExpanded)}
-                        className="float-end pe-0"
+                        className="float-end pe-0 text-decoration-none"
                         onClick={() => {
                             const fields = cloneDeep(researchFields);
                             updateResearchField({
@@ -263,7 +263,7 @@ const ResearchFieldSelector = ({
                             });
                         }}
                     >
-                        <Icon icon={faMinusSquare} /> Collapse all
+                        <Icon icon={faMinusSquare} /> <span className="text-decoration-underline">Collapse all</span>
                     </CollapseButton>
                     <List>{fieldList(MISC.RESEARCH_FIELD_MAIN)}</List>
                 </div>
