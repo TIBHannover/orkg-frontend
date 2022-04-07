@@ -64,7 +64,7 @@ const ResearchFieldSelector = ({
     const [isLoading, setIsLoading] = useState(false);
     const [loadingId, setLoadingId] = useState(null);
 
-    const handleFieldSelect = selected => {
+    const handleFieldSelect = (selected, submit = false) => {
         setIsLoading(true);
         getParentResearchFields(selected.id).then(async parents => {
             parents = parents.reverse();
@@ -74,10 +74,14 @@ const ResearchFieldSelector = ({
                 fields = await getChildFields(parent.id, fields);
             }
 
-            updateResearchField({
-                researchFields: fields,
-                selectedResearchField: selected.id
-            });
+            updateResearchField(
+                {
+                    researchFields: fields,
+                    selectedResearchField: selected.id,
+                    selectedResearchFieldLabel: selected.label
+                },
+                submit
+            );
             setIsLoading(false);
         });
     };
