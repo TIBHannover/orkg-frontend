@@ -25,7 +25,7 @@ import {
     createResourceStatement,
     deleteStatementById,
     createLiteralStatement,
-    updateStatements,
+    updateStatement,
     deleteStatementsByIds
 } from 'services/backend/statements';
 import { createPredicate, getPredicate } from 'services/backend/predicates';
@@ -538,12 +538,30 @@ export const deleteProperty = ({ id, statementIds }) => dispatch => {
 };
 
 export const updateProperty = ({ id, statementIds, action, newId = null, newLabel = null }) => async dispatch => {
+    dispatch(setIsLoading(true));
     const property = await getOrCreateProperty({ action, id: newId, label: newLabel });
     if (!property) {
+        dispatch(setIsLoading(false));
         return;
     }
 
-    updateStatements(statementIds, { predicate_id: property.id })
+    try {
+        for (const statementId of statementIds) {
+            await updateStatement(statementId, { predicate_id: property.id });
+        }
+        dispatch(
+            propertyUpdated({
+                id,
+                newProperty: property,
+                statementIds
+            })
+        );
+    } catch (e) {
+        toast.error(`Error updating statements, please refresh the page`);
+    }
+    dispatch(setIsLoading(false));
+    // use this code instead when the backend issue is fixed: https://gitlab.com/TIBHannover/orkg/orkg-backend/-/issues/308
+    /*updateStatements(statementIds, { predicate_id: property.id })
         .then(() => {
             dispatch(
                 propertyUpdated({
@@ -553,7 +571,7 @@ export const updateProperty = ({ id, statementIds, action, newId = null, newLabe
                 })
             );
         })
-        .catch(e => toast.error(`Error updating statements, please refresh the page`));
+        .catch(e => toast.error(`Error updating statements, please refresh the page`));*/
 };
 
 /**
