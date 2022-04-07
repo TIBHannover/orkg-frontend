@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import styled from 'styled-components';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faCalendar } from '@fortawesome/free-solid-svg-icons';
+import { faCalendar, faFile } from '@fortawesome/free-solid-svg-icons';
 import ROUTES from 'constants/routes.js';
 import AddToComparison from 'components/PaperCard/AddToComparison';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
@@ -76,11 +76,6 @@ const PaperCard = props => {
                             {props.paper.title ? props.paper.title : <em>No title</em>}
                         </Link>
                         {props.contribution && <span className="text-muted"> - {props.contribution.title}</span>}
-                        {props.variant === 'list' && props.paper.contributions?.length > 0 && (
-                            <div className="d-inline-block ms-2">
-                                <CardBadge color="primary">{pluralize('contribution', props.paper.contributions?.length, true)}</CardBadge>
-                            </div>
-                        )}
                         {props.showBadge && (
                             <div className="d-inline-block ms-2">
                                 <CardBadge color="primary">Paper</CardBadge>
@@ -113,6 +108,12 @@ const PaperCard = props => {
                     )}
                     <div className="mb-1">
                         <small>
+                            {props.showContributionCount && (
+                                <div className="d-inline-block me-1">
+                                    <Icon size="sm" icon={faFile} className="me-1" />
+                                    {pluralize('contribution', props.paper.contributions?.length, true)}
+                                </div>
+                            )}
                             <Authors authors={props.paper.authors} />
                             {(props.paper.publicationMonth || props.paper.publicationYear) && (
                                 <Icon size="sm" icon={faCalendar} className="ms-2 me-1" />
@@ -175,7 +176,7 @@ PaperCard.propTypes = {
     isListGroupItem: PropTypes.bool.isRequired,
     description: PropTypes.object,
     linkTarget: PropTypes.string,
-    variant: PropTypes.string,
+    showContributionCount: PropTypes.bool.isRequired,
     route: PropTypes.string
 };
 
@@ -191,7 +192,7 @@ PaperCard.defaultProps = {
     isListGroupItem: true,
     onChange: () => {},
     description: null,
-    variant: 'default',
+    showContributionCount: false,
     route: null
 };
 

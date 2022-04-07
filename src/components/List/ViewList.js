@@ -114,7 +114,7 @@ const ViewList = ({ isEmbedded }) => {
                                                         }}
                                                         showAddToComparison={!isEmbedded}
                                                         linkTarget="_blank"
-                                                        variant="list"
+                                                        showContributionCount={true}
                                                         route={route}
                                                     />
                                                 </ListGroupItem>
