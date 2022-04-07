@@ -184,7 +184,7 @@ const TemplatesModal = props => {
 
                         {!isNextPageLoading && !targetFilter && !labelFilter && templates.length === 0 && featuredTemplates.length === 0 && (
                             <Alert color="info">
-                                Use the template browser bellow to find a suitable template for <b>all contributions</b>.
+                                Use the template browser below to find a suitable template for <b>all contributions</b>.
                                 <br />
                                 <small>You can search by label or filter by research field, research problem or class.</small>
                             </Alert>
