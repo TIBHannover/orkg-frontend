@@ -52,30 +52,53 @@ export default function Search() {
                                 <div className="text-center mt-4 mb-4">There are no results, please try a different search term</div>
                             ) : (
                                 <div>
-                                    {allFilters.map(filter => {
-                                        if (
-                                            selectedFilters.length === 0 ||
-                                            (selectedFilters.length > 0 && selectedFilters.map(c => c && c.id).includes(filter.id))
-                                        ) {
-                                            return (
-                                                <div key={`filter-result${filter.id}`}>
-                                                    <Results
-                                                        showClasses={ENTITIES.RESOURCE === filter.id}
-                                                        loading={isNextPageLoading[filter.id] || false}
-                                                        hasNextPage={hasNextPage[filter.id] || false}
-                                                        loadMore={() => loadMoreResults(filter.id, currentPage[filter.id])}
-                                                        items={results[filter.id] || []}
-                                                        label={filter.label || filter.id}
-                                                        class={filter.id}
-                                                        currentPage={currentPage[filter.id] || 0}
-                                                        showNoResultsMessage={selectedFilters.map(c => c.id).includes(filter.id)}
-                                                    />
-                                                </div>
-                                            );
-                                        } else {
-                                            return null;
-                                        }
-                                    })}
+                                    {allFilters
+                                        .filter(filter => (results[filter.id] || [])?.length > 0)
+                                        .map(filter => {
+                                            if (
+                                                selectedFilters.length === 0 ||
+                                                (selectedFilters.length > 0 && selectedFilters.map(c => c && c.id).includes(filter.id))
+                                            ) {
+                                                return (
+                                                    <div key={`filter-result${filter.id}`}>
+                                                        <Results
+                                                            showClasses={ENTITIES.RESOURCE === filter.id}
+                                                            loading={isNextPageLoading[filter.id] || false}
+                                                            hasNextPage={hasNextPage[filter.id] || false}
+                                                            loadMore={() => loadMoreResults(filter.id, currentPage[filter.id])}
+                                                            items={results[filter.id] || []}
+                                                            label={filter.label || filter.id}
+                                                            class={filter.id}
+                                                            currentPage={currentPage[filter.id] || 0}
+                                                            showNoResultsMessage={selectedFilters.map(c => c.id).includes(filter.id)}
+                                                        />
+                                                    </div>
+                                                );
+                                            } else {
+                                                return null;
+                                            }
+                                        })}
+                                    {allFilters.filter(
+                                        filter => (results[filter.id] || [])?.length === 0 && selectedFilters.map(c => c && c.id).includes(filter.id)
+                                    ).length > 0 && (
+                                        <>
+                                            <h2 className="h5">No results</h2>
+                                            <div className="text-center mt-4 mb-4">
+                                                There are no results for the rest of filters (
+                                                <i>
+                                                    {allFilters
+                                                        .filter(
+                                                            filter =>
+                                                                (results[filter.id] || [])?.length === 0 &&
+                                                                selectedFilters.map(c => c && c.id).includes(filter.id)
+                                                        )
+                                                        .map(f => f.label)
+                                                        .join(', ')}
+                                                </i>
+                                                ), please try a different search term
+                                            </div>
+                                        </>
+                                    )}
                                 </div>
                             )}
                         </div>
