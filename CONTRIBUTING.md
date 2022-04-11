@@ -99,7 +99,7 @@ The internal services are maintained in separate repositories, and each one of t
 
 This section talks briefly about various important directories and files in the source code.
 
--   **src/actions**, **src/reducers**, **src/slices** : These directories deal with [react-redux](https://redux.js.org/), and recently we try to move everything to **src/slices** since the adoption of [Redux Toolkit](https://redux-toolkit.js.org/)
+-   **src/slices** : This directory deals with [react-redux](https://redux.js.org/) using [Redux Toolkit](https://redux-toolkit.js.org/) approach.
 -   **src/assets**: for any assets like images, csv or something related to scss and bootstrap customization.
 -   **src/components**: small components or reusable components.
 -   **src/constants**: any constant values that we are used in the frontend

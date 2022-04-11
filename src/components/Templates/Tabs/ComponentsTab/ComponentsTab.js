@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react';
 import { Row, Col, FormGroup, Input, Label } from 'reactstrap';
 import { connect } from 'react-redux';
 import ConfirmClass from 'components/ConfirmationModal/ConfirmationModal';
-import { setComponents, setIsStrictTemplate } from 'actions/addTemplate';
+import { updateComponents, updateIsStrict } from 'slices/templateEditorSlice';
 import { createPredicate } from 'services/backend/predicates';
 import TemplateComponent from 'components/Templates/TemplateComponent/TemplateComponent';
 import AddPropertyView from 'components/StatementBrowser/AddProperty/AddPropertyView';
@@ -15,7 +15,7 @@ function ComponentsTab(props) {
     const { confirmProperty } = useConfirmPropertyModal();
 
     const handleDeleteTemplateComponent = index => {
-        props.setComponents(props.components.filter((item, j) => index !== j));
+        props.updateComponents(props.components.filter((item, j) => index !== j));
     };
 
     const handlePropertiesSelect = async (selected, action, index) => {
@@ -31,7 +31,7 @@ function ComponentsTab(props) {
                     }
                     return _item;
                 });
-                props.setComponents(templateComponents);
+                props.updateComponents(templateComponents);
             }
         } else {
             const templateComponents = props.components.map((item, j) => {
@@ -41,7 +41,7 @@ function ComponentsTab(props) {
                 }
                 return _item;
             });
-            props.setComponents(templateComponents);
+            props.updateComponents(templateComponents);
         }
     };
 
@@ -65,7 +65,7 @@ function ComponentsTab(props) {
             return _item;
         });
 
-        props.setComponents(templateComponents);
+        props.updateComponents(templateComponents);
     };
 
     const handleSelectNewProperty = ({ id, value: label }) => {
@@ -73,7 +73,7 @@ function ComponentsTab(props) {
             ...props.components,
             { property: { id, label: label }, value: {}, validationRules: {}, minOccurs: '0', maxOccurs: null, order: null }
         ];
-        props.setComponents(templateComponents);
+        props.updateComponents(templateComponents);
         setShowAddProperty(false);
     };
 
@@ -98,14 +98,14 @@ function ComponentsTab(props) {
                 order: null
             }
         ];
-        props.setComponents(templateComponents);
+        props.updateComponents(templateComponents);
         setShowAddProperty(false);
     };
 
     const moveCard = useCallback(
         (dragIndex, hoverIndex) => {
             const dragCard = props.components[dragIndex];
-            props.setComponents(
+            props.updateComponents(
                 update(props.components, {
                     $splice: [[dragIndex, 1], [hoverIndex, 0, dragCard]]
                 })
@@ -115,7 +115,7 @@ function ComponentsTab(props) {
     );
 
     const handleSwitchIsStrictTemplate = event => {
-        props.setIsStrictTemplate(event.target.checked);
+        props.updateIsStrict(event.target.checked);
     };
 
     return (
@@ -181,22 +181,22 @@ function ComponentsTab(props) {
 ComponentsTab.propTypes = {
     components: PropTypes.array.isRequired,
     editMode: PropTypes.bool.isRequired,
-    setComponents: PropTypes.func.isRequired,
-    setIsStrictTemplate: PropTypes.func.isRequired,
+    updateComponents: PropTypes.func.isRequired,
+    updateIsStrict: PropTypes.func.isRequired,
     isStrictTemplate: PropTypes.bool.isRequired
 };
 
 const mapStateToProps = state => {
     return {
-        components: state.addTemplate.components,
-        editMode: state.addTemplate.editMode,
-        isStrictTemplate: state.addTemplate.isStrict
+        components: state.templateEditor.components,
+        editMode: state.templateEditor.editMode,
+        isStrictTemplate: state.templateEditor.isStrict
     };
 };
 
 const mapDispatchToProps = dispatch => ({
-    setComponents: data => dispatch(setComponents(data)),
-    setIsStrictTemplate: data => dispatch(setIsStrictTemplate(data))
+    updateComponents: data => dispatch(updateComponents(data)),
+    updateIsStrict: data => dispatch(updateIsStrict(data))
 });
 
 export default connect(

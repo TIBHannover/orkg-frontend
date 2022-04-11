@@ -1,12 +1,16 @@
 import PropTypes from 'prop-types';
 import 'handsontable/dist/handsontable.full.css';
 import { HotTable } from '@handsontable/react';
-import { updateTableData } from 'actions/pdfAnnotation';
+import { updateTableData } from 'slices/pdfAnnotationSlice';
 import { useSelector, useDispatch } from 'react-redux';
 import EditorComponent from './EditorComponent';
 import Handsontable from 'handsontable';
 import { isString } from 'lodash';
+import { registerAllModules } from 'handsontable/registry';
 import useTableEditor from './hooks/useTableEditor';
+
+// register Handsontable's modules
+registerAllModules();
 
 const TableEditor = props => {
     const dispatch = useDispatch();
@@ -51,6 +55,7 @@ const TableEditor = props => {
             renderer={renderer}
             contextMenu={{
                 items: [
+                    /*
                     'row_above',
                     'row_below',
                     '---------',
@@ -62,6 +67,7 @@ const TableEditor = props => {
                     '---------',
                     'undo',
                     'redo',
+                    */
                     {
                         name: 'Merge cell values',
                         callback: mergeCellValues
@@ -78,7 +84,7 @@ const TableEditor = props => {
             }}
             stretchH="all"
             ref={props.setRef}
-            beforeChange={changes => dispatch(updateTableData(props.id, changes))}
+            beforeChange={changes => dispatch(updateTableData({ id: props.id, dataChanges: changes }))}
             afterRemoveCol={() => renderTable()}
         >
             <EditorComponent hot-editor id={props.id} />

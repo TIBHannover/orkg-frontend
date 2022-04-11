@@ -12,7 +12,7 @@ import { useLocation, Link } from 'react-router-dom';
 import Tippy from '@tippyjs/react';
 import ROUTES from 'constants/routes.js';
 import { connect, useSelector } from 'react-redux';
-import { resetStatementBrowser } from 'actions/statementBrowser';
+import { resetStatementBrowser } from 'slices/statementBrowserSlice';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPen, faTrash, faExternalLinkAlt, faTimes, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { CLASSES, PREDICATES } from 'constants/graphSettings';
@@ -30,6 +30,7 @@ import { reverseWithSlug } from 'utils';
 import PapersWithCodeModal from 'components/PapersWithCodeModal/PapersWithCodeModal';
 import TitleBar from 'components/TitleBar/TitleBar';
 import EditModeHeader from 'components/EditModeHeader/EditModeHeader';
+import ItemMetadata from 'components/Search/ItemMetadata';
 
 const DEDICATED_PAGE_LINKS = {
     [CLASSES.PAPER]: {
@@ -85,13 +86,13 @@ const DEDICATED_PAGE_LINKS = {
         routeParams: 'id'
     },
     [CLASSES.LITERATURE_LIST]: {
-        label: 'Literature list',
-        route: ROUTES.LITERATURE_LIST,
+        label: 'List',
+        route: ROUTES.LIST,
         routeParams: 'id'
     },
     [CLASSES.LITERATURE_LIST_PUBLISHED]: {
-        label: 'Literature list',
-        route: ROUTES.LITERATURE_LIST,
+        label: 'List',
+        route: ROUTES.LIST,
         routeParams: 'id'
     }
 };
@@ -117,8 +118,8 @@ function Resource(props) {
     const [isOpenPWCModal, setIsOpenPWCModal] = useState(false);
     const { isFeatured, isUnlisted, handleChangeStatus } = useMarkFeaturedUnlisted({
         resourceId: props.match.params.id,
-        unlisted: resource.unlisted,
-        featured: resource.featured
+        unlisted: resource?.unlisted,
+        featured: resource?.featured
     });
 
     useEffect(() => {
@@ -288,50 +289,47 @@ function Resource(props) {
                     )}
                     <EditModeHeader isVisible={editMode && canEdit} />
                     <Container className={`box clearfix pt-4 pb-4 ps-5 pe-5 ${editMode ? 'rounded-bottom' : 'rounded'}`}>
-                        <div className="mb-2">
-                            {!editMode || !canEdit ? (
-                                <div className="pb-2 mb-3">
-                                    <h3 className="" style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
-                                        {resource.label || (
-                                            <i>
-                                                <small>No label</small>
-                                            </i>
-                                        )}{' '}
-                                        <MarkFeatured size="xs" featured={isFeatured} handleChangeStatus={handleChangeStatus} />
-                                        <div className="d-inline-block ms-1">
-                                            <MarkUnlisted size="xs" unlisted={isUnlisted} handleChangeStatus={handleChangeStatus} />
-                                        </div>
-                                    </h3>
+                        {!editMode || !canEdit ? (
+                            <h3 className="" style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
+                                {resource.label || (
+                                    <i>
+                                        <small>No label</small>
+                                    </i>
+                                )}{' '}
+                                <MarkFeatured size="xs" featured={isFeatured} handleChangeStatus={handleChangeStatus} />
+                                <div className="d-inline-block ms-1">
+                                    <MarkUnlisted size="xs" unlisted={isUnlisted} handleChangeStatus={handleChangeStatus} />
                                 </div>
-                            ) : (
-                                <>
-                                    <EditableHeader id={props.match.params.id} value={resource.label} onChange={handleHeaderChange} />
-                                    {showDeleteButton && (
-                                        <ConditionalWrapper
-                                            condition={!canBeDeleted}
-                                            wrapper={children => (
-                                                <Tippy content="The resource cannot be deleted because it is used in statements (either as subject or object)">
-                                                    <span>{children}</span>
-                                                </Tippy>
-                                            )}
+                            </h3>
+                        ) : (
+                            <>
+                                <EditableHeader id={props.match.params.id} value={resource.label} onChange={handleHeaderChange} />
+                                {showDeleteButton && (
+                                    <ConditionalWrapper
+                                        condition={!canBeDeleted}
+                                        wrapper={children => (
+                                            <Tippy content="The resource cannot be deleted because it is used in statements (either as subject or object)">
+                                                <span>{children}</span>
+                                            </Tippy>
+                                        )}
+                                    >
+                                        <Button
+                                            color="danger"
+                                            size="sm"
+                                            className="mt-2 mb-3"
+                                            style={{ marginLeft: 'auto' }}
+                                            onClick={deleteResource}
+                                            disabled={!canBeDeleted}
                                         >
-                                            <Button
-                                                color="danger"
-                                                size="sm"
-                                                className="mt-2"
-                                                style={{ marginLeft: 'auto' }}
-                                                onClick={deleteResource}
-                                                disabled={!canBeDeleted}
-                                            >
-                                                <Icon icon={faTrash} /> Delete resource
-                                            </Button>
-                                        </ConditionalWrapper>
-                                    )}
-                                </>
-                            )}
-                        </div>
-                        <hr />
+                                            <Icon icon={faTrash} /> Delete resource
+                                        </Button>
+                                    </ConditionalWrapper>
+                                )}
+                            </>
+                        )}
 
+                        <ItemMetadata item={resource} showCreatedAt={true} showCreatedBy={true} />
+                        <hr />
                         {/*Adding Visualization Component here */}
                         {hasVisualizationModelForGDC && (
                             <div className="mb-4">

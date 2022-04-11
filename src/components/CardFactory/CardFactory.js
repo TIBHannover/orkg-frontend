@@ -2,7 +2,7 @@ import ComparisonCard from 'components/ComparisonCard/ComparisonCard';
 import PaperCard from 'components/PaperCard/PaperCard';
 import VisualizationCard from 'components/VisualizationCard/VisualizationCard';
 import ReviewCard from 'components/ReviewCard/ReviewCard';
-import ListCard from 'components/LiteratureList/ListCard';
+import ListCard from 'components/List/ListCard';
 import PropTypes from 'prop-types';
 import { useCallback } from 'react';
 import { CLASSES } from 'constants/graphSettings';

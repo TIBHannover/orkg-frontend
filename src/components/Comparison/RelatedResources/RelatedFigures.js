@@ -4,7 +4,7 @@ import { getStatementsBySubjects } from 'services/backend/statements';
 import { Card, CardImg, CardColumns } from 'reactstrap';
 import Lightbox from 'react-image-lightbox';
 import 'react-image-lightbox/style.css';
-import styled from 'styled-components';
+import styled, { createGlobalStyle } from 'styled-components';
 import { isString } from 'lodash';
 import { getRelatedFiguresData } from 'utils';
 import { useLocation } from 'react-router';
@@ -29,6 +29,12 @@ const CardStyled = styled(Card)`
         to {
             background-color: #e86161;
         }
+    }
+`;
+
+const GlobalStyle = createGlobalStyle`
+    .ril__image.ril-image-current:not(.ril-not-loaded) {
+        background: #fff;
     }
 `;
 
@@ -82,6 +88,7 @@ const RelatedFigures = props => {
     if (props.figureStatements.length > 0) {
         return (
             <>
+                <GlobalStyle />
                 <h3 className="mt-5 h5">Related figures</h3>{' '}
                 <CardColumns className="d-flex row">
                     {figures.map((figure, index) => (

@@ -1,7 +1,7 @@
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
-import { setResearchField } from 'actions/review';
+import { setResearchField } from 'slices/reviewSlice';
 import ResearchFieldSelectorModal from 'components/ResearchFieldSelector/ResearchFieldSelectorModal';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';

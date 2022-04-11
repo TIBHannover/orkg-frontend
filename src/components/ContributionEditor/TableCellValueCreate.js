@@ -56,6 +56,7 @@ const TableCellValueCreate = ({ isVisible, contributionId, propertyId, isEmptyCe
                             isDisabled={!canAddValue}
                             title={canAddValue ? 'Add value' : 'This property reached the maximum number of values set by template'}
                             icon={faPlus}
+                            appendTo={document.body}
                             action={() => {
                                 if (isBlankNode && entityType !== ENTITIES.LITERAL) {
                                     createBlankNode(entityType);

@@ -5,7 +5,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import AnnotationTooltip from './AnnotationTooltip';
 
-import { createAnnotation, updateAnnotationClass, removeAnnotation, validateAnnotation } from 'actions/addPaper';
+import { createAnnotation, updateAnnotationClass, removeAnnotation, validateAnnotation } from 'slices/addPaperSlice';
 
 function getAllIndexes(arr, val) {
     const indexes = [];

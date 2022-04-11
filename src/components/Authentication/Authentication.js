@@ -2,7 +2,7 @@ import { Modal, ModalBody, ModalFooter, ModalHeader, Button } from 'reactstrap';
 import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { openAuthDialog, toggleAuthDialog } from '../../actions/auth';
+import { openAuthDialog, toggleAuthDialog } from 'slices/authSlice';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import styled from 'styled-components';
 import ForgotPassword from './ForgotPassword';
