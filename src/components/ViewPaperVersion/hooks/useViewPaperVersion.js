@@ -1,6 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
 import { getStatementsBundleBySubject } from 'services/backend/statements';
-import { getIsVerified } from 'services/backend/papers';
 import { getResource } from 'services/backend/resources';
 import { useDispatch } from 'react-redux';
 import { resetStatementBrowser } from 'actions/statementBrowser';
@@ -8,6 +7,7 @@ import { loadPaper, setPaperAuthors } from 'actions/viewPaper';
 import { getPaperData_ViewPaper, filterObjectOfStatementsByPredicateAndClass, filterSubjectOfStatementsByPredicateAndClass } from 'utils';
 import { PREDICATES, CLASSES } from 'constants/graphSettings';
 import { getVisualization } from 'services/similarity';
+import { getStatementsByObject } from 'services/backend/statements';
 
 const useViewPaperVersion = ({ paperId }) => {
     const [isLoading, setIsLoading] = useState(true);
@@ -37,35 +37,9 @@ const useViewPaperVersion = ({ paperId }) => {
         [dispatch]
     );
 
-    const getResourceStatements = async (resourceId, data, list) => {
-        const statement = data.find(d => d.subject.id === resourceId);
-        console.log(statement);
-        if (statement) {
-            list.push(statement);
-        } else {
-            return list;
-        }
-        //const statements = await getStatementsBySubject({ id: resourceId });
-
-        if (statement.object._class === 'resource') {
-            //console.log(resourceId + '-' + statements.length);
-            //list.push(...statements);
-            //for (const statement of statements) {
-            //console.log(statement);
-            //if (statement.object._class === 'resource') {
-            //console.log(true);
-            await getResourceStatements(statement.object.id, data, list);
-            //}
-            //}
-            return list;
-        } else {
-            return list;
-        }
-    };
-
     const loadPaperData = useCallback(() => {
         setIsLoading(true);
-        dispatch(resetStatementBrowser());
+        //dispatch(resetStatementBrowser());
         getResource(paperId)
             .then(paperResource => {
                 if (!paperResource.classes.includes(PREDICATES.PAPER_VERSION)) {
@@ -82,27 +56,18 @@ const useViewPaperVersion = ({ paperId }) => {
                         CLASSES.CONTRIBUTION
                     );
                     const pp = contributions.filter((ele, ind) => ind === contributions.findIndex(elem => elem.id === ele.id));
-                    console.log(pp);
                     const rrr = [];
                     rrr.push(...pp);
-                    //setContributions(pp);
-                    setContributions(rrr);
-                    console.log(rrr);
-                    const subjectId = pp[0].id;
-                    //console.log(subjectId);
-                    for (const r1 of r.data.statements) {
-                        if (r1.subject.id === subjectId) {
-                            //console.log(r1);
-                            //console.log(await getResourceStatements(r1.object.id, r.data.statements, []));
-                        }
-                    }
-                    //console.log(contributions);
+                    setContributions(rrr.reverse());
                 });
                 Promise.all([
                     getStatementsBundleBySubject({ id: paperId, maxLevel: 2, blacklist: [CLASSES.RESEARCH_FIELD, CLASSES.CONTRIBUTION] })
                 ]).then(([paperStatements]) => {
                     const paperData = getPaperData_ViewPaper(paperResource, paperStatements.statements?.filter(s => s.subject.id === paperId));
-                    dispatch(loadPaper({ ...paperData }));
+                    Promise.all([getStatementsByObject({ id: paperId })]).then(([statements]) => {
+                        const paperId = statements && statements.find(stmt => stmt.subject.classes.find(s => s === CLASSES.PAPER));
+                        dispatch(loadPaper({ ...paperData, originalPaperId: paperId ? paperId.subject.id : '' }));
+                    });
                     setIsLoading(false);
                     setAuthorsORCID(paperStatements.statements, paperId);
                 });

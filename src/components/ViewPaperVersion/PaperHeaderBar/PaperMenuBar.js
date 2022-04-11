@@ -16,11 +16,6 @@ function PaperMenuBar(props) {
     const [menuOpen, setMenuOpen] = useState(false);
     const [isOpenPWCModal, setIsOpenPWCModal] = useState(false);
     const [showPublishDialog, setShowPublishDialog] = useState(false);
-    const [dataCiteDoi, setDataCiteDoi] = useState('');
-
-    const setPaperMetaData = dataCiteDoi => {
-        setDataCiteDoi(dataCiteDoi);
-    };
 
     return (
         <>
@@ -93,9 +88,7 @@ function PaperMenuBar(props) {
                 toggle={() => setShowPublishDialog(v => !v)}
                 paperId={props.id}
                 label={props.label}
-                //dataCiteDoi={props.dataCiteDoi ? props.dataCiteDoi : dataCiteDoi ? dataCiteDoi : ''}
                 paperLink={props.paperLink}
-                //setPaperMetaData={setPaperMetaData}
             />
         </>
     );

@@ -28,13 +28,6 @@ const ViewPaperVersion = () => {
     const [showExportCitationsDialog, setShowExportCitationsDialog] = useState(false);
     const [showPublishDialog, setShowPublishDialog] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
-    const paperLink = useSelector(state =>
-        state.viewPaper.url
-            ? state.viewPaper.url.label
-            : state.viewPaper.doi && state.viewPaper.doi[0].label.startsWith('10.')
-            ? 'https://doi.org/' + state.viewPaper.doi.map(doi => doi.label.startsWith('10.') && doi.label)[0] //state.viewPaper.doi[0].label
-            : ''
-    );
     const dataCiteDoi = useSelector(
         state =>
             state.viewPaper.doi &&
@@ -42,7 +35,6 @@ const ViewPaperVersion = () => {
             state.viewPaper.doi.length > 0 &&
             state.viewPaper.doi.map(doi => doi.label.startsWith(env('DATACITE_DOI_PREFIX')) && doi.label)[0]
     );
-    console.log(viewPaper);
 
     const { isLoading, isLoadingFailed, contributions } = useViewPaperVersion({
         paperId: resourceId
@@ -111,16 +103,16 @@ const ViewPaperVersion = () => {
             <Modal size="lg" isOpen={showPublishDialog} toggle={() => setShowPublishDialog(v => !v)}>
                 <ModalHeader toggle={() => setShowPublishDialog(v => !v)}>Publish ORKG paper</ModalHeader>
                 <ModalBody>
-                    <Alert color="info">
-                        {dataCiteDoi && (
+                    {dataCiteDoi && viewPaper.originalPaperId && (
+                        <Alert color="info">
                             <>
                                 {' '}
                                 This paper is already published, you can find the persistent link below.
-                                <Link to={reverse(ROUTES.VIEW_PAPER, { resourceId: 'R124009' })}> Fetch live data</Link> for updating the current
-                                version.{' '}
+                                <Link to={reverse(ROUTES.VIEW_PAPER, { resourceId: viewPaper.originalPaperId })}> Fetch live data</Link> for updating
+                                the current version.{' '}
                             </>
-                        )}
-                    </Alert>
+                        </Alert>
+                    )}
                     {dataCiteDoi && (
                         <FormGroup>
                             <Label for="paper_link">Paper link</Label>

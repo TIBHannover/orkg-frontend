@@ -15,40 +15,28 @@ import { StatementsGroupStyle, PropertyStyle, ValuesStyle } from 'components/Sta
 import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
 import { ENTITIES } from 'constants/graphSettings';
 import { ListGroup } from 'reactstrap';
-const Title = styled.div`
-    font-size: 18px;
-    font-weight: 500;
-    margin-top: 30px;
-    margin-bottom: 5px;
-
-    a {
-        margin-left: 15px;
-        span {
-            font-size: 80%;
-        }
-    }
-`;
+import { useHistory } from 'react-router-dom';
+import { reverse } from 'named-urls';
+import ROUTES from 'constants/routes.js';
 
 const Contributions = props => {
     const { resourceId, contributionId } = useParams();
 
-    const {
-        isLoading,
-        isLoadingContributionFailed,
-        isSimilarContributionsLoading,
-        isSimilarContributionsFailedLoading,
-        similarContributions,
-        selectedContribution,
-        contributions,
-        paperTitle,
-        contributionData
-    } = useContributions({
+    const { isLoading, isLoadingContributionFailed, selectedContribution, contributionData } = useContributions({
         paperId: resourceId,
-        contributionId
+        contributionId,
+        contributions: props.contributions
     });
-    const isAddingContribution = useSelector(state => state.viewPaper.isAddingContribution);
+    const history = useHistory();
 
-    const onTabChange = key => {};
+    const onTabChange = key => {
+        history.push(
+            reverse(ROUTES.VIEW_PAPER, {
+                resourceId: resourceId,
+                contributionId: key
+            })
+        );
+    };
 
     return (
         <div>
@@ -112,10 +100,9 @@ const Contributions = props => {
                                                             </ContentLoader>
                                                         </div>
                                                     )}
-                                                    {console.log(contributionData)}
                                                     {!isLoading && contributionData && (
                                                         <>
-                                                            {contributionData.map(cd => (
+                                                            {Object.keys(contributionData).map(cd => (
                                                                 <StatementsGroupStyle className="noTemplate list-group-item">
                                                                     <div className="row gx-0">
                                                                         <PropertyStyle className="col-4" tabIndex="0">
@@ -123,16 +110,18 @@ const Contributions = props => {
                                                                                 <div>
                                                                                     <div className="propertyLabel">
                                                                                         <DescriptionTooltip id="p26" typeId={ENTITIES.PREDICATE}>
-                                                                                            {cd.predicate.label}
+                                                                                            {cd}
                                                                                         </DescriptionTooltip>
                                                                                     </div>
                                                                                 </div>
                                                                             )}
                                                                         </PropertyStyle>
                                                                         <ValuesStyle className="col-8 valuesList">
-                                                                            <ListGroup flush className="px-3">
-                                                                                {cd.object.label}
-                                                                            </ListGroup>
+                                                                            {contributionData[cd].map(v => (
+                                                                                <ListGroup flush className="px-3 mt-2">
+                                                                                    {v.object.label}
+                                                                                </ListGroup>
+                                                                            ))}
                                                                         </ValuesStyle>
                                                                     </div>
                                                                 </StatementsGroupStyle>
@@ -145,8 +134,8 @@ const Contributions = props => {
                                         {isLoadingContributionFailed && (
                                             <>
                                                 <Alert className="mt-4 mb-5" color="danger">
-                                                    {contributions.length === 0 && 'This paper has no contributions yet!'}
-                                                    {contributions.length !== 0 && "Contribution doesn't exist."}
+                                                    {props.contributions.length === 0 && 'This paper has no contributions yet!'}
+                                                    {props.contributions.length !== 0 && "Contribution doesn't exist."}
                                                 </Alert>
                                             </>
                                         )}

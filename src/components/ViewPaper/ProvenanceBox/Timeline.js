@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes.js';
 import { MISC } from 'constants/graphSettings';
+import env from '@beam-australia/react-env';
 
 const Timeline = ({ contributors, paperResource, isLoadingContributors }) => {
     return (
@@ -15,7 +16,9 @@ const Timeline = ({ contributors, paperResource, isLoadingContributors }) => {
                     contributors.map((contributor, index) => {
                         return (
                             <StyledActivity key={`prov-${index}`} className="ps-3 pb-3">
-                                <div className="time">{moment(contributor.createdAt).format('DD MMM YYYY')}</div>
+                                <div className="time">
+                                    {moment(contributor.createdAt ? contributor.createdAt : contributor.created_at).format('DD MMM YYYY')}
+                                </div>
                                 <div>
                                     {paperResource.created_by && contributor.createdBy === paperResource.created_by && (
                                         <>
@@ -42,7 +45,17 @@ const Timeline = ({ contributors, paperResource, isLoadingContributors }) => {
                                                     >
                                                         <b>{contributor.created_by.display_name}</b>
                                                     </Link>
-                                                    {contributor.object.id}
+                                                    <br />
+                                                    <small>
+                                                        DOI:{' '}
+                                                        <a
+                                                            href={`https://doi.org/${env('DATACITE_DOI_PREFIX')}/${contributor.object.id}`}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                        >
+                                                            <b>{`${env('DATACITE_DOI_PREFIX')}/${contributor.object.id}`}</b>
+                                                        </a>
+                                                    </small>
                                                 </>
                                             ) : (
                                                 <b>{contributor.created_by.display_name}</b>

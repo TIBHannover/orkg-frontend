@@ -53,7 +53,6 @@ const routes = {
     TOOLS: '/tools',
     CONTRIBUTION_EDITOR: '/contribution-editor',
     ADD_COMPARISON: '/add-comparison',
-    VIEW_PAPER_HISTORY: '/paper-version/:resourceId',
     /* Legacy routes */
     PREDICATES: '/predicates',
     PREDICATE: '/predicate/:id',

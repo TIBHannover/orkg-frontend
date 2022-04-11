@@ -67,6 +67,7 @@ import LiteratureListNew from 'pages/LiteratureList/LiteratureListNew';
 import LiteratureList from 'pages/LiteratureList/LiteratureList';
 import LiteratureListDiff from 'pages/LiteratureList/LiteratureListDiff';
 import ViewPaperVersion from 'pages/ViewPaperVersion';
+import CheckPaperVersion from 'CheckPaperVersion';
 
 // use lazy loading of pages that contain large dependencies
 // run "npm run analyze" to ensure the listed dependencies are not loaded elsewhere and thus end up in the bundle
@@ -150,7 +151,7 @@ const routes = [
         /* TODO: slug for the paper title */
         path: ROUTES.VIEW_PAPER,
         exact: true,
-        component: ViewPaper
+        component: CheckPaperVersion
     },
     {
         path: ROUTES.COMPARISON_DIFF,
@@ -421,11 +422,6 @@ const legacyRoutes = [
     {
         path: ROUTES.SMART_REVIEWS,
         component: () => <Redirect to={{ pathname: ROUTES.REVIEWS, state: { status: 301 } }} />
-    },
-    {
-        path: ROUTES.VIEW_PAPER_HISTORY,
-        exact: true,
-        component: ViewPaperVersion
     }
 ];
 

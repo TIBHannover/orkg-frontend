@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Modal, ModalHeader, ModalBody, ModalFooter, Input, Button, Label, FormGroup, Alert, InputGroup } from 'reactstrap';
+import { Modal, ModalHeader, ModalBody, ModalFooter, Input, Button, Label, FormGroup, Alert } from 'reactstrap';
 import { toast } from 'react-toastify';
 import ROUTES from 'constants/routes.js';
 import PropTypes from 'prop-types';
@@ -7,10 +7,7 @@ import { generateDOIForORKGArtefact } from 'services/backend/misc';
 import { createLiteral } from 'services/backend/literals';
 import Tooltip from 'components/Utils/Tooltip';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faClipboard } from '@fortawesome/free-regular-svg-icons';
 import { reverse } from 'named-urls';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
 import styled from 'styled-components';
 import { PREDICATES, CLASSES, ENTITIES } from 'constants/graphSettings';
 import { getContributorsByResourceId } from 'services/backend/resources';
@@ -21,12 +18,7 @@ import { filterObjectOfStatementsByPredicateAndClass } from 'utils';
 import { createResourceData } from 'services/similarity/index';
 import { useSelector } from 'react-redux';
 import { createObject } from 'services/backend/misc';
-import {
-    createLiteralStatement,
-    createResourceStatement,
-    getStatementsByPredicateAndLiteral,
-    getStatementsBySubjectAndPredicate
-} from 'services/backend/statements';
+import { createLiteralStatement, createResourceStatement, getStatementsByPredicateAndLiteral } from 'services/backend/statements';
 import { createResource } from 'services/backend/resources';
 import { updateStatement } from 'services/backend/statements';
 import { Link } from 'react-router-dom';
@@ -68,31 +60,20 @@ function Publish(props) {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [subject, setSubject] = useState('');
-    //const [isLoadingContributors, setIsLoadingContributors] = useState(true);
     const [contributors, setContributors] = useState([]);
-    const [globalDepth, setGlobalDepth] = useState(1);
     const viewPaper = useSelector(state => state.viewPaper);
     const [dataCiteDoi, setDataCiteDoi] = useState('');
     const [createdPaperId, setCreatedPaperId] = useState('');
 
-    //const handleCreatorsChange = creators => {
-    //creators = creators ? creators : [];
-    //setPaperCreators(creators);
-    //};
-
     useEffect(() => {
         const loadContributors = () => {
-            //setIsLoadingContributors(true);
-            console.log(props.paperId);
             getContributorsByResourceId(props.paperId)
                 .then(contributors => {
                     console.log(contributors);
+                    contributors = contributors.filter(c => c.created_by.display_name !== 'Unknown');
                     setContributors(contributors ? contributors.reverse() : []);
-                    //setIsLoadingContributors(false);
                 })
-                .catch(error => {
-                    //setIsLoadingContributors(false);
-                });
+                .catch(error => {});
         };
         setTitle(props.label);
         setSubject(viewPaper.researchField);
@@ -114,12 +95,8 @@ function Publish(props) {
         const statements = await getStatementsBySubject({ id: resourceId });
         list.push(...statements);
         if (statements.length > 0) {
-            //console.log(resourceId + '-' + statements.length);
-            //list.push(...statements);
             for (const statement of statements) {
-                //console.log(statement);
                 if (statement.object._class === 'resource') {
-                    console.log(true);
                     await getResourceAndStatements(statement.object.id, list);
                 }
             }
@@ -131,61 +108,24 @@ function Publish(props) {
     };
 
     const getPaperStatements = async paperId => {
-        //console.log(paperId);
-
-        //const paper = {
-        //predicates: [],
-        //resource: {
-        //name: 'title',
-        //classes: ['PaperVersion']
-        //}
-        //};
-
-        //console.log();
-        //const createdPaper = await createObject(paper);
-        //console.log(createdPaper);
-        //await saveCreators(viewPaper.authors, createdPaper.id);
         const statements = await getStatementsBySubject({ id: paperId });
-        //console.log(statements);
         const result = filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.HAS_CONTRIBUTION, false, CLASSES.CONTRIBUTION);
-        //console.log(result);
         const ids = result.map(stmt => stmt.id);
-        //console.log(ids);
         const c = await getStatementsBySubjects({ ids: ids });
-        //console.log(c[0].statements);
-        const cids = c[0].statements;
-        //console.log(cids.length);
         const data = [];
-        for (let i = 0; i < cids.length; i++) {
-            const ct = cids[i];
-            //console.log(ct);
-            data.push(ct);
-            // for property of each contribution
-            //for (let j = 0; j < ct.statements.length; j++) {
-            //console.log(ct.statements[j]);
-            const st = await getResourceAndStatements(ct.object.id, []);
-            data.push(...st);
-            //console.log(st);
-            //}
+        for (let j = 0; j < c.length; j++) {
+            const cids = c[j].statements;
+            for (let i = 0; i < cids.length; i++) {
+                const ct = cids[i];
+                data.push(ct);
+                const st = await getResourceAndStatements(ct.object.id, []);
+                data.push(...st);
+            }
         }
         return data;
-        //let dataObject = { orkgOrigin: paperId, statements: data };
-        //await createResourceData({
-        //resourceId: paperId,
-        //data: { statements: data }
-        //});
-        //console.log(dataObject);
     };
 
     const publishDOI = async paperId => {
-        //if (props.paperId) {
-        //await saveCreators([''], props.paperId);
-        //}
-        // Load ORCID of curators
-        // prpend orkg in the title
-        // make it no editable
-        // history of paper
-        console.log(viewPaper.contributions[0].id);
         if (title && title.trim() !== '' && description && description.trim() !== '') {
             const paperStatements = await getPaperStatements(paperId);
             console.log(paperStatements);
@@ -193,7 +133,7 @@ function Publish(props) {
                 predicates: [],
                 resource: {
                     name: title,
-                    classes: ['PaperVersion'],
+                    classes: [CLASSES.PAPERVERSION],
                     values: {
                         [PREDICATES.DESCRIPTION]: [
                             {
@@ -211,7 +151,7 @@ function Publish(props) {
                         ...(viewPaper.publicationMonth && {
                             [PREDICATES.HAS_PUBLICATION_MONTH]: [
                                 {
-                                    text: viewPaper.publicationMonth
+                                    text: viewPaper.publicationMonth.label
                                 }
                             ]
                         }),
@@ -234,24 +174,20 @@ function Publish(props) {
             };
 
             const createdPaper = await createObject(paper_obj);
-            console.log(createdPaper);
+            // save authors, similar to comparison
             await saveCreators(viewPaper.authors, createdPaper.id);
-            console.log(props.paperLink.replace('https://doi.org/', ''));
-            //resource_id, title, subject, related_resources, description, authors, url, type, resourceType
             generateDOIForORKGArtefact(
                 createdPaper.id,
                 title,
                 subject ? subject.label : '',
-                //props.paperLink ? [props.paperLink.replace('https://doi.org/', '')] : [''],
                 viewPaper.contributions && viewPaper.contributions[0] ? [viewPaper.contributions[0].id] : [''],
                 description,
                 contributors.map(creator => ({ creator: creator.created_by.display_name, orcid: '' })),
-                `${getPublicUrl()}${reverse(ROUTES.VIEW_PAPER_HISTORY, { resourceId: createdPaper.id })}`,
+                `${getPublicUrl()}${reverse(ROUTES.VIEW_PAPER, { resourceId: createdPaper.id })}`,
                 CLASSES.PAPER,
                 CLASSES.DATASET
             )
                 .then(doiResponse => {
-                    console.log(doiResponse);
                     createLiteral(doiResponse.data.attributes.doi).then(doiLiteral => {
                         createResourceStatement(createdPaper.id, PREDICATES.HAS_DOI, doiLiteral.id);
                         if (viewPaper.hasVersion) {
@@ -264,16 +200,12 @@ function Publish(props) {
                         } else {
                             createResourceStatement(viewPaper.paperResource.id, PREDICATES.HAS_PREVIOUS_VERSION, createdPaper.id);
                         }
-                        //createResourceStatement(viewPaper.paperResource.id, PREDICATES.HAS_PREVIOUS_VERSION, createdPaper.id);
                         setDataCiteDoi(doiResponse.data.attributes.doi);
                         setCreatedPaperId(createdPaper.id);
-                        //props.setPaperMetaData(doiResponse.data.attributes.doi);
-                        //let dataObject = { orkgOrigin: paperId, statements: data };
                         createResourceData({
                             resourceId: createdPaper.id,
                             data: { statements: paperStatements }
                         });
-                        //console.log(dataObject);
                         setIsLoading(false);
                         toast.success('DOI has been registered successfully');
                     });
@@ -358,7 +290,7 @@ function Publish(props) {
                     {createdPaperId && dataCiteDoi && (
                         <>
                             DOI is assigned sucessfully.{' '}
-                            <Link to={reverse(ROUTES.VIEW_PAPER_HISTORY, { resourceId: createdPaperId })}>View published version</Link>
+                            <Link to={reverse(ROUTES.VIEW_PAPER, { resourceId: createdPaperId })}>View published version</Link>
                         </>
                     )}
                 </Alert>
@@ -413,14 +345,6 @@ function Publish(props) {
                             <Label for="Creator">
                                 <Tooltip message="The creator or creators of ORKG paper. Enter both the first and last name">Creators</Tooltip>
                             </Label>
-                            {/* {!props.dataCiteDOI && ( */}
-                            {/* <AuthorsInput */}
-                            {/* disabled={Boolean(contributors.length > 0)} */}
-                            {/* itemLabel="creator" */}
-                            {/* handler={handleCreatorsChange} */}
-                            {/* value={contributors} */}
-                            {/* /> */}
-                            {/* )} */}
                             {!dataCiteDoi &&
                                 props.paperId &&
                                 contributors.map((creator, index) => (

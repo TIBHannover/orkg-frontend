@@ -6,13 +6,12 @@ import { getObservatoryById } from 'services/backend/observatories';
 import { getContributorsByResourceId } from 'services/backend/resources';
 import { getOrganization } from 'services/backend/organizations';
 import { useSelector } from 'react-redux';
-import { MISC } from 'constants/graphSettings';
+import { MISC, PREDICATES } from 'constants/graphSettings';
 import Provenance from './Provenance';
 import Timeline from './Timeline';
 import env from '@beam-australia/react-env';
 import PWCProvenanceBox from 'components/Benchmarks/PWCProvenanceBox/PWCProvenanceBox';
-import { getStatementsBySubject, getStatementsBySubjectAndPredicate } from 'services/backend/statements';
-import { getPaperData_ViewPaper } from 'utils';
+import { getStatementsBySubjectAndPredicate } from 'services/backend/statements';
 
 const ProvenanceBox = () => {
     const paperResource = useSelector(state => state.viewPaper.paperResource);
@@ -22,10 +21,15 @@ const ProvenanceBox = () => {
     const [organizationInfo, setOrganizationInfo] = useState(null);
     const [createdBy, setCreatedBy] = useState(null);
     const [contributors, setContributors] = useState([]);
-    const [doi, setDoi] = useState('');
     const [publishInfo, setPublishInfo] = useState([]);
     const [info, setInfo] = useState([]);
-
+    const doi = useSelector(
+        state =>
+            state.viewPaper.doi &&
+            state.viewPaper.doi.length &&
+            state.viewPaper.doi.length > 0 &&
+            state.viewPaper.doi.map(doi => doi.label.startsWith(env('DATACITE_DOI_PREFIX')) && doi.label)[0]
+    );
     useEffect(() => {
         const loadContributors = () => {
             setIsLoadingContributors(true);
@@ -71,22 +75,8 @@ const ProvenanceBox = () => {
             }
         };
 
-        const loadDataCiteDoi = () => {
-            getStatementsBySubject({ id: paperResource.id })
-                .then(response => {
-                    const dois = getPaperData_ViewPaper(paperResource.id, response).doi;
-                    const dataCiteDoi = dois.filter(d => d.label.startsWith(env('DATACITE_DOI_PREFIX')));
-                    if (dataCiteDoi) {
-                        setDoi(dataCiteDoi[0].label);
-                    } else {
-                        setDoi('');
-                    }
-                })
-                .catch(e => setDoi(null));
-        };
-
         const loadPublishInformation = (resourceId, list) => {
-            getStatementsBySubjectAndPredicate({ subjectId: resourceId, predicateId: 'hasPreviousVersion' })
+            getStatementsBySubjectAndPredicate({ subjectId: resourceId, predicateId: PREDICATES.HAS_PREVIOUS_VERSION })
                 .then(response => {
                     if (response.length > 0) {
                         getContributorInformationById(response[0].created_by).then(user => {
@@ -97,19 +87,17 @@ const ProvenanceBox = () => {
                         setPublishInfo(list);
                     }
                 })
-                .catch(e => setDoi(null));
+                .catch(e => setPublishInfo(null));
         };
 
         loadPublishInformation(paperResource.id, []);
         loadContributors();
         loadProvenance();
         loadCreator();
-        loadDataCiteDoi();
     }, [paperResource.created_by, paperResource.id, paperResource.observatory_id, paperResource.organization_id]);
 
     useMemo(() => {
         if (publishInfo && contributors) {
-            //console.log(contributors);
             const r = [...contributors];
             // eslint-disable-next-line array-callback-return
             publishInfo.map(res => {
@@ -117,7 +105,6 @@ const ProvenanceBox = () => {
                 r.push(res[0]);
             });
             setInfo(r);
-            console.log(r);
         }
     }, [publishInfo, contributors]);
 

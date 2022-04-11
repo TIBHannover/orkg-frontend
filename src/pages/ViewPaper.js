@@ -160,7 +160,7 @@ const ViewPaper = () => {
                                     <Alert color="warning" className="container d-flex box">
                                         <div className="flex-grow-1">
                                             A published version of this paper is available.{' '}
-                                            <Link to={reverse(ROUTES.VIEW_PAPER_HISTORY, { resourceId: viewPaper.hasVersion.id })}>
+                                            <Link to={reverse(ROUTES.VIEW_PAPER, { resourceId: viewPaper.hasVersion.id })}>
                                                 View published version
                                             </Link>
                                         </div>
