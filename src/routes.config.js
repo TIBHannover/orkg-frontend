@@ -36,7 +36,6 @@ import AddOrganization from 'pages/Organizations/AddOrganization';
 import AddObservatory from 'pages/Observatories/AddObservatory';
 import Observatory from 'pages/Observatories/Observatory';
 import SearchResults from 'pages/Search';
-import ViewPaper from 'pages/ViewPaper';
 import Stats from 'pages/Stats';
 import UserSettings from 'pages/UserSettings';
 import UserProfile from 'pages/UserProfile';
@@ -66,7 +65,6 @@ import LiteratureLists from 'pages/LiteratureList/LiteratureLists';
 import LiteratureListNew from 'pages/LiteratureList/LiteratureListNew';
 import LiteratureList from 'pages/LiteratureList/LiteratureList';
 import LiteratureListDiff from 'pages/LiteratureList/LiteratureListDiff';
-import ViewPaperVersion from 'pages/ViewPaperVersion';
 import CheckPaperVersion from 'CheckPaperVersion';
 
 // use lazy loading of pages that contain large dependencies

@@ -2,7 +2,6 @@ import { useEffect, useState, useCallback } from 'react';
 import { getStatementsBundleBySubject } from 'services/backend/statements';
 import { getResource } from 'services/backend/resources';
 import { useDispatch } from 'react-redux';
-import { resetStatementBrowser } from 'actions/statementBrowser';
 import { loadPaper, setPaperAuthors } from 'actions/viewPaper';
 import { getPaperData_ViewPaper, filterObjectOfStatementsByPredicateAndClass, filterSubjectOfStatementsByPredicateAndClass } from 'utils';
 import { PREDICATES, CLASSES } from 'constants/graphSettings';

@@ -5,7 +5,6 @@ import { MISC } from 'constants/graphSettings';
 import queryString from 'query-string';
 import { orderBy } from 'lodash';
 import { url } from 'constants/misc';
-import { getStatementsBySubjectAndPredicate } from 'services/backend/statements';
 
 export const resourcesUrl = `${url}resources/`;
 
