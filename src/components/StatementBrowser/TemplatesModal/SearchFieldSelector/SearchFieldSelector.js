@@ -3,6 +3,7 @@ import Select from 'react-select';
 //import { useSelector } from 'react-redux';
 import { ThemeContext } from 'styled-components';
 import PropTypes from 'prop-types';
+import { SelectGlobalStyle } from 'components/Autocomplete/styled';
 
 const SearchFieldSelector = props => {
     const theme = useContext(ThemeContext);
@@ -74,6 +75,7 @@ const SearchFieldSelector = props => {
                 getOptionLabel={({ label }) => `By ${label}`}
                 isClearable={false}
             />
+            <SelectGlobalStyle />
         </>
     );
 };

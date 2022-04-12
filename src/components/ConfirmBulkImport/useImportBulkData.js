@@ -10,7 +10,7 @@ import { saveFullPaper } from 'services/backend/papers';
 import Cite from 'citation-js';
 import { parseCiteResult } from 'utils';
 import { toast } from 'react-toastify';
-import DATA_TYPES, { getSuggestionByValue } from 'constants/DataTypes';
+import DATA_TYPES, { checkDataTypeIsInValid, getSuggestionByValue } from 'constants/DataTypes';
 
 const PREDEFINED_COLUMNS = [
     'paper:title',
@@ -28,6 +28,7 @@ const useImportBulkData = ({ data, onFinish }) => {
     const [existingPaperIds, setExistingPaperIds] = useState([]);
     const [idToLabel, setIdToLabel] = useState({});
     const [isLoading, setIsLoading] = useState(false);
+    const [validationErrors, setValidationErrors] = useState({});
     const [createdContributions, setCreatedContributions] = useState([]);
 
     const getFirstValue = (object, key, defaultValue = '') => {
@@ -62,6 +63,7 @@ const useImportBulkData = ({ data, onFinish }) => {
 
     const makePaperList = useCallback(async () => {
         const _papers = [];
+        const _validationErrors = {};
         const header = data[0];
         const rows = data.slice(1);
         const _existingPaperIds = [];
@@ -74,7 +76,7 @@ const useImportBulkData = ({ data, onFinish }) => {
 
         setIsLoading(true);
 
-        for (const row of rows) {
+        for (const [i, row] of rows.entries()) {
             // make use of an array for cells, in case multiple columns exist with the same label
             let rowObject = {};
             for (const [index, headerItem] of header.entries()) {
@@ -219,15 +221,23 @@ const useImportBulkData = ({ data, onFinish }) => {
                             };
                         }
                     }
-
+                    let error = false;
                     if (!valueObject) {
                         const { text, datatype } = parseDataTypes({ value, property });
                         valueObject = {
                             text,
                             datatype
                         };
+                        error = checkDataTypeIsInValid({ dataType: datatype, value: text });
                     }
                     contributionStatements[propertyId].push(valueObject);
+                    if (!(i in _validationErrors)) {
+                        _validationErrors[i] = [];
+                    }
+                    if (!(propertyId in _validationErrors[i])) {
+                        _validationErrors[i][propertyId] = [];
+                    }
+                    _validationErrors[i][propertyId].push(error);
                 }
             }
 
@@ -257,6 +267,7 @@ const useImportBulkData = ({ data, onFinish }) => {
         setPapers(_papers);
         setExistingPaperIds(_existingPaperIds);
         setIdToLabel(_idToLabel);
+        setValidationErrors(_validationErrors);
     }, [cleanLabelProperty, data, parseDataTypes]);
 
     const getExistingPaperId = async (title, doi) => {
@@ -380,7 +391,7 @@ const useImportBulkData = ({ data, onFinish }) => {
         onFinish();
     };
 
-    return { papers, existingPaperIds, idToLabel, isLoading, createdContributions, makePaperList, handleImport };
+    return { papers, existingPaperIds, idToLabel, isLoading, createdContributions, makePaperList, handleImport, validationErrors };
 };
 
 export default useImportBulkData;

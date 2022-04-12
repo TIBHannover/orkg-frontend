@@ -23,6 +23,7 @@ import REGEX from 'constants/regex';
 import NativeListener from 'react-native-listener';
 import CustomOption from './CustomOption';
 import { ENTITIES } from 'constants/graphSettings';
+import { SelectGlobalStyle } from 'components/Autocomplete/styled';
 
 export const StyledAutoCompleteInputFormControl = styled.div`
     padding-top: 0 !important;
@@ -681,12 +682,13 @@ function Autocomplete(props) {
                 showDialog={ontologySelectorIsOpen}
             />
             <StyledAutoCompleteInputFormControl className={`form-control ${props.cssClasses ? props.cssClasses : 'default'} border-0`}>
+                <SelectGlobalStyle />
                 <Select
                     key={JSON.stringify(selectedOntologies.map(o => o.id))}
                     value={
-                        !props.isMulti && !props.fixedOptions
-                            ? props.value
-                            : props.value?.map?.(v => ({ ...v, isFixed: props.fixedOptions.includes(v.id) }))
+                        props.isMulti && props.fixedOptions?.length
+                            ? props.value?.map?.(v => ({ ...v, isFixed: props.fixedOptions.includes(v.id) }))
+                            : props.value
                     }
                     loadOptions={loadOptions}
                     additional={defaultAdditional}

@@ -6,7 +6,7 @@ import { StyledDropdownItem, StyledDropdownToggle } from 'components/StatementBr
 import { connect } from 'react-redux';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
-import { setLabelCache } from 'actions/pdfAnnotation';
+import { setLabelCache } from 'slices/pdfAnnotationSlice';
 import Tippy from '@tippyjs/react';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
 import { CLASSES, ENTITIES } from 'constants/graphSettings';

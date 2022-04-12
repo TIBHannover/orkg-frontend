@@ -1,4 +1,4 @@
-import { moveSection } from 'actions/review';
+import { moveSection } from 'slices/reviewSlice';
 import Outline from 'components/Review/Outline';
 import Section from 'components/Review/Section';
 import React, { useState } from 'react';

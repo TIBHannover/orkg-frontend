@@ -14,6 +14,7 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { ENTITIES } from 'constants/graphSettings';
 import ViewVisualizationModal from 'components/ViewVisualizationModal/ViewVisualizationModal';
+import { TippyVisualization } from 'libs/selfVisModel/styled';
 
 const VisualizationCard = styled.div`
     margin: 0 2px;
@@ -78,12 +79,11 @@ const SingleVisualizationComponent = props => {
     };
     return (
         <>
-            <Tippy
+            <TippyVisualization
                 onShow={handleMouseEnter}
                 onHide={handleMouseLeave}
                 interactive={true}
                 placement="bottom"
-                theme="visualizationPreview"
                 maxWidth={windowWidth}
                 content={
                     <div
@@ -211,7 +211,7 @@ const SingleVisualizationComponent = props => {
                         )}
                     </div>
                 </VisualizationCard>
-            </Tippy>
+            </TippyVisualization>
             {isOpenViewModal && (
                 <ViewVisualizationModal
                     isOpen={isOpenViewModal}

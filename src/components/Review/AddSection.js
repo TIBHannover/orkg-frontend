@@ -5,7 +5,7 @@ import { Button, ButtonGroup } from 'reactstrap';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
-import { createSection } from 'actions/review';
+import { createSection } from 'slices/reviewSlice';
 import { useClickAway } from 'react-use';
 
 const InvisibleByDefault = styled.div`

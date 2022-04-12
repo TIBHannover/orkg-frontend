@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import Statements from 'components/StatementBrowser/StatementBrowser';
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { updateSettings } from 'actions/statementBrowser';
+import { updateSettings } from 'slices/statementBrowserSlice';
 import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes';

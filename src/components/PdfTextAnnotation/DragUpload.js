@@ -5,7 +5,7 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { faFile } from '@fortawesome/free-regular-svg-icons';
 import { useDropzone } from 'react-dropzone';
 import { useSelector } from 'react-redux';
-import { uploadPdf } from 'actions/pdfTextAnnotation';
+import { uploadPdf } from 'slices/pdfTextAnnotationSlice';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 

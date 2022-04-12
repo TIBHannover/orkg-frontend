@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import ROUTES from 'constants/routes.js';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faLock } from '@fortawesome/free-solid-svg-icons';
-import { openAuthDialog } from 'actions/auth';
+import { openAuthDialog } from 'slices/authSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import TitleBar from 'components/TitleBar/TitleBar';
 

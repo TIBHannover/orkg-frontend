@@ -83,7 +83,7 @@ export const ReactTableWrapper = styled.div`
     &:not(.contribution-editor) {
         .table {
             .tr:hover .td > div > div {
-                background: #e7eaf1;
+                background: #f0f2f7;
             }
             .tr .td > div > .itemGroup,
             .tr:hover .td > div > .itemGroup {

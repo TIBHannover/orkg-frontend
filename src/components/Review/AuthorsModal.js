@@ -1,4 +1,4 @@
-import { updateAuthors } from 'actions/review';
+import { updateAuthors } from 'slices/reviewSlice';
 import AuthorsInput from 'components/Utils/AuthorsInput';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';

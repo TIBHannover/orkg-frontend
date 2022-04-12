@@ -8,7 +8,7 @@ import { getClassById } from 'services/backend/classes';
 import { reverse } from 'named-urls';
 import { CSSTransition } from 'react-transition-group';
 import ROUTES from 'constants/routes.js';
-import { updateResourceClasses, removeEmptyPropertiesOfClass } from 'actions/statementBrowser';
+import { updateResourceClassesAction as updateResourceClasses, removeEmptyPropertiesOfClass } from 'slices/statementBrowserSlice';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
 import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';

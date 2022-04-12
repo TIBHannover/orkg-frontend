@@ -16,6 +16,7 @@ import EditOrganization from 'components/Organization/EditOrganization';
 import { SubTitle, SubtitleSeparator } from 'components/styled';
 import { reverse } from 'named-urls';
 import TitleBar from 'components/TitleBar/TitleBar';
+import { ORGANIZATIONS_MISC } from 'constants/organizationsTypes';
 
 const StyledOrganizationHeader = styled.div`
     .logoContainer {
@@ -53,6 +54,9 @@ const OrganizationDetails = () => {
     const [logo, setLogo] = useState(null);
     const [createdBy, setCreatedBy] = useState(null);
     const [showEditDialog, setShowEditDialog] = useState(false);
+    const [type, setType] = useState(null);
+    const [date, setDate] = useState(null);
+    const [isDoubleBlind, setIsDoubleBlind] = useState(false);
     const { id } = useParams();
     const user = useSelector(state => state.auth.user);
 
@@ -68,6 +72,9 @@ const OrganizationDetails = () => {
                     setLogo(responseJson.logo);
                     setIsLoading(false);
                     setCreatedBy(responseJson.created_by);
+                    setType(responseJson.type);
+                    setDate(responseJson.metadata && responseJson.metadata.date ? responseJson.metadata.date : '');
+                    setIsDoubleBlind(responseJson.metadata && responseJson.metadata.is_double_blind && responseJson.metadata.is_double_blind);
                 })
                 .catch(error => {
                     setIsLoading(false);
@@ -77,10 +84,13 @@ const OrganizationDetails = () => {
         findOrg();
     }, [id]);
 
-    const updateOrganizationMetadata = (label, url, logo) => {
+    const updateOrganizationMetadata = (label, url, logo, type, date, isDoubleBlind) => {
         setLabel(label);
         setURL(url);
         setLogo(logo);
+        setType(type);
+        setDate(date);
+        setIsDoubleBlind(isDoubleBlind);
     };
 
     return (
@@ -141,6 +151,12 @@ const OrganizationDetails = () => {
                                         </Col>
                                     )}
                                 </Row>
+                                {type === ORGANIZATIONS_MISC.CONFERENCE && date && (
+                                    <>
+                                        <b>Conference date</b>: {date} <br />
+                                        <b>Review Process</b>: {isDoubleBlind ? 'Double-blind' : 'Single-blind'}
+                                    </>
+                                )}
                             </StyledOrganizationHeader>
                             <hr className="m-0" />
                             <CardBody>
@@ -159,6 +175,9 @@ const OrganizationDetails = () => {
                 url={url}
                 previewSrc={logo}
                 updateOrganizationMetadata={updateOrganizationMetadata}
+                type={type ? type : ''}
+                date={date ? date : ''}
+                isDoubleBlind={isDoubleBlind ? isDoubleBlind : false}
             />
         </>
     );

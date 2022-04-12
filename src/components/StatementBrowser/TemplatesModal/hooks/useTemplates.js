@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { getStatementsByObjectAndPredicate, getParentResearchFields } from 'services/backend/statements';
-import { getResearchProblemsOfContribution } from 'actions/statementBrowser';
+import { getResearchProblemsOfContribution } from 'slices/statementBrowserSlice';
 import { getResearchProblems, getResearchFields, getCommonClasses } from 'slices/contributionEditorSlice';
 import { uniqBy, differenceBy } from 'lodash';
 import { debounce } from 'lodash';
@@ -183,7 +183,7 @@ const useTemplates = ({ onlyFeatured = true, isContributionEditor = false }) => 
                 setIsLoadingUsedTemplates(false);
             });
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [getTemplatesOfResourceId, , JSON.stringify(resource?.classes)]);
+    }, [getTemplatesOfResourceId, JSON.stringify(resource?.classes)]);
 
     const handleSelectedFilterChange = selected => {
         setTemplates([]);
@@ -217,7 +217,9 @@ const useTemplates = ({ onlyFeatured = true, isContributionEditor = false }) => 
         templates: differenceBy(uniqBy(templates, 'id'), usedTemplates, 'id'),
         featuredTemplates: differenceBy(featuredTemplates, usedTemplates, 'id'),
         // Hide the delete button for contribution template
-        usedTemplates: usedTemplates.filter(t => t?.class?.id === CLASSES.CONTRIBUTION),
+        usedTemplates: usedTemplates.filter(t => {
+            return t?.classId !== CLASSES.CONTRIBUTION;
+        }),
         isLoadingUsedTemplates,
         researchField,
         isNextPageLoading,

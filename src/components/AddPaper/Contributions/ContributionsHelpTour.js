@@ -2,7 +2,7 @@ import { Component } from 'react';
 import { Modal, ModalHeader, ModalBody, Button } from 'reactstrap';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import { closeTour, openTour } from 'actions/addPaper';
+import { closeTour, openTour } from 'slices/addPaperSlice';
 import Tour from 'reactour';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
@@ -141,7 +141,7 @@ class ContributionsHelpTour extends Component {
                     onRequestClose={this.requestCloseTour}
                     isOpen={this.props.isTourOpen}
                     startAt={this.props.tourStartAt}
-                    maskClassName="reactourMask"
+                    maskClassName="opacity-75"
                     showButtons={!this.props.showAbstractDialog}
                     showNavigation={!this.props.showAbstractDialog}
                 />

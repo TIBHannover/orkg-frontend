@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { StyledItemProvenanceBox } from './styled';
 import ObservatoryModal from 'components/ObservatoryModal/ObservatoryModal';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { setPaperObservatory } from 'actions/viewPaper';
+import { setPaperObservatory } from 'slices/viewPaperSlice';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
 import PropTypes from 'prop-types';

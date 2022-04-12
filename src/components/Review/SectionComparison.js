@@ -1,12 +1,16 @@
-import { setComparisonData } from 'actions/review';
+import { setComparisonData } from 'slices/reviewSlice';
 import Comparison from 'components/Comparison/Comparison';
 import ComparisonLoadingComponent from 'components/Comparison/ComparisonLoadingComponent';
 import useComparison from 'components/Comparison/hooks/useComparison';
 import PropTypes from 'prop-types';
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { setUsedReferences } from 'actions/review';
+import { setUsedReferences } from 'slices/reviewSlice';
 import { isEqual } from 'lodash';
+import { Alert } from 'reactstrap';
+import ROUTES from 'constants/routes';
+import { reverse } from 'named-urls';
+import env from '@beam-australia/react-env';
 
 const SectionComparison = ({ id, sectionId }) => {
     const references = useSelector(state => state.review.references);
@@ -15,7 +19,18 @@ const SectionComparison = ({ id, sectionId }) => {
     const comparisonData = useComparison({
         id
     });
-    const { contributions, properties, data, isLoadingComparisonResult, filterControlData, updateRulesOfProperty, comparisonType } = comparisonData;
+
+    const {
+        contributions,
+        properties,
+        data,
+        isLoadingComparisonResult,
+        filterControlData,
+        updateRulesOfProperty,
+        comparisonType,
+        handleToggleGroupVisibility,
+        hiddenGroups
+    } = comparisonData;
 
     useEffect(() => {
         if (Object.keys(comparisonData.data).length === 0) {
@@ -44,23 +59,32 @@ const SectionComparison = ({ id, sectionId }) => {
         }
     }, [contributions, dispatch, references, sectionId, usedReferences]);
 
+    const url = env('URL') + reverse(ROUTES.COMPARISON, { comparisonId: id }).replace('/', '', 1);
+
     return (
         <>
-            {id && contributions.length > 0 && (
-                <Comparison
-                    data={data}
-                    properties={properties}
-                    contributions={contributions}
-                    removeContribution={() => {}}
-                    transpose={false}
-                    viewDensity="compact"
-                    comparisonType={comparisonType}
-                    filterControlData={filterControlData}
-                    updateRulesOfProperty={updateRulesOfProperty}
-                    embeddedMode={true}
-                />
-            )}
-            {id && isLoadingComparisonResult && <ComparisonLoadingComponent />}
+            <Alert color="info" fade={false} className="d-none d-print-block">
+                Comparison available via <a href={url}>{url}</a>
+            </Alert>
+            <div className="d-print-none">
+                {id && contributions.length > 0 && (
+                    <Comparison
+                        data={data}
+                        properties={properties}
+                        contributions={contributions}
+                        removeContribution={() => {}}
+                        transpose={false}
+                        viewDensity="compact"
+                        comparisonType={comparisonType}
+                        filterControlData={filterControlData}
+                        updateRulesOfProperty={updateRulesOfProperty}
+                        embeddedMode={true}
+                        handleToggleGroupVisibility={handleToggleGroupVisibility}
+                        hiddenGroups={hiddenGroups}
+                    />
+                )}
+                {id && isLoadingComparisonResult && <ComparisonLoadingComponent />}
+            </div>
         </>
     );
 };

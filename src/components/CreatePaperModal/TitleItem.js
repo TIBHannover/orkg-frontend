@@ -1,4 +1,4 @@
-import AutocompletePaperTitle from 'components/AutocompletePaperTitle/AutocompletePaperTitle';
+import AutocompleteContentTypeTitle from 'components/AutocompleteContentTypeTitle/AutocompleteContentTypeTitle';
 import ListItem from 'components/ViewPaper/EditDialog/ListItem';
 import { truncate } from 'lodash';
 import PropTypes from 'prop-types';
@@ -8,7 +8,7 @@ const TitleItem = ({ toggleItem, isExpanded, value, onChange, onOptionClick }) =
     return (
         <ListItem toggleItem={toggleItem} label="Title *" open={isExpanded} value={truncate(value ? value : '', { length: 60 })}>
             <InputGroup>
-                <AutocompletePaperTitle value={value} onChange={onChange} onOptionClick={onOptionClick} />
+                <AutocompleteContentTypeTitle value={value} onChange={onChange} onOptionClick={onOptionClick} />
             </InputGroup>
         </ListItem>
     );
