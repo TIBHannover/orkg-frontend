@@ -10,6 +10,7 @@ import { Link, useHistory } from 'react-router-dom';
 import Select, { components } from 'react-select';
 import { Alert, Button, Modal, ModalBody, ModalHeader } from 'reactstrap';
 import styled from 'styled-components';
+import { SelectGlobalStyle } from 'components/Autocomplete/styled';
 
 const Option = ({ children, data, ...props }) => {
     return (
@@ -113,6 +114,7 @@ const HistoryModal = ({ id, show, toggle, title, versions = [], routeDiff }) => 
                                             classNamePrefix="react-select"
                                             placeholder="Select version"
                                         />
+                                        <SelectGlobalStyle />
                                         <Button
                                             disabled={!selectedVersion2 || !selectedVersion1}
                                             color="secondary"

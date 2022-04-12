@@ -148,7 +148,7 @@ EditItem.propTypes = {
     toggleItem: PropTypes.func.isRequired,
     value: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.array, PropTypes.object]),
     onChange: PropTypes.func.isRequired,
-    type: PropTypes.oneOf(['text', 'month', 'year', 'authors', 'publishedIn', 'researchField']).isRequired,
+    type: PropTypes.oneOf(['text', 'month', 'year', 'authors', 'publishedIn', 'researchField', 'textarea']).isRequired,
     isLastItem: PropTypes.bool
 };
 

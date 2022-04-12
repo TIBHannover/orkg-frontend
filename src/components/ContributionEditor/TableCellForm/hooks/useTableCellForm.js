@@ -8,7 +8,7 @@ import {
     updateLiteral,
     updateResourceLabel
 } from 'slices/contributionEditorSlice';
-import { getValueClass, isLiteral } from 'actions/statementBrowser';
+import { getValueClass, isLiteral } from 'slices/statementBrowserSlice';
 import validationSchema from 'components/StatementBrowser/ValueForm/helpers/validationSchema';
 import { getConfigByType, getConfigByClassId } from 'constants/DataTypes';
 import { useDispatch, useSelector } from 'react-redux';
@@ -41,7 +41,7 @@ const useTableCellForm = ({ value, contributionId, propertyId }) => {
             ? getConfigByType(isLiteralField ? (editMode ? value.datatype : MISC.DEFAULT_LITERAL_DATATYPE) : MISC.DEFAULT_LITERAL_DATATYPE).type
             : getConfigByClassId(valueClass.id).type
     );
-    const [disabledCreate, setDisabledCreate] = useState(false);
+    const [disabledCreate] = useState(false);
 
     const createBlankNode = () => {
         // 1 - create a resource

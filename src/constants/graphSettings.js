@@ -64,7 +64,8 @@ export const PREDICATES = {
     HAS_ENTRY: 'HasEntry',
     HAS_HEADING_LEVEL: 'HasHeadingLevel',
     HAS_VIDEO: 'HasVideo',
-    PAPER_VERSION: 'PaperVersion'
+    PAPER_VERSION: 'PaperVersion',
+    IS_ANONYMIZED: 'IsAnonymized'
 };
 
 export const CLASSES = {
@@ -116,7 +117,8 @@ export const CLASSES = {
     INTEGER: 'Integer',
     BOOLEAN: 'Boolean',
     URI: 'URI',
-    PAPERVERSION: 'PaperVersion'
+    PAPERVERSION: 'PaperVersion',
+    SOFTWARE: 'Software'
 };
 
 export const MISC = {

@@ -9,7 +9,7 @@ import { NavLink } from 'react-router-dom';
 import ROUTES from 'constants/routes.js';
 import { reverse } from 'named-urls';
 import { connect } from 'react-redux';
-import { openAuthDialog } from 'actions/auth';
+import { openAuthDialog } from 'slices/authSlice';
 import Publish from 'components/ViewPaper/Publish/Publish';
 
 function PaperMenuBar(props) {

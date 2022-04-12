@@ -24,13 +24,14 @@ const AnimationContainer = styled(CSSTransition)`
 `;
 
 export const EditModeContainer = styled(Container)`
-    background-color: #80869b !important;
+    background-color: ${props => props.theme.secondary}!important;
     color: #fff;
     padding: 8px 25px !important;
     display: flex;
     align-items: center;
     box-shadow: 0px -2px 4px 0px rgb(0 0 0 / 13%);
     position: relative;
+    z-index: 1;
 `;
 
 export const Title = styled.div`

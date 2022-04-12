@@ -2,7 +2,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { getStatementsBundleBySubject } from 'services/backend/statements';
 import { getResource } from 'services/backend/resources';
 import { useDispatch } from 'react-redux';
-import { loadPaper, setPaperAuthors } from 'actions/viewPaper';
+import { loadPaper, setPaperAuthors } from 'slices/viewPaperSlice';
 import { getPaperData_ViewPaper, filterObjectOfStatementsByPredicateAndClass, filterSubjectOfStatementsByPredicateAndClass } from 'utils';
 import { PREDICATES, CLASSES } from 'constants/graphSettings';
 import { getVisualization } from 'services/similarity';

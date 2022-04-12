@@ -2,10 +2,10 @@ import { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import { Container, Button, Form, FormGroup, Input, Label, InputGroup } from 'reactstrap';
 import { toast } from 'react-toastify';
-import { createOrganization } from 'services/backend/organizations';
+import { createOrganization, createConference } from 'services/backend/organizations';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
-import { openAuthDialog } from 'actions/auth';
+import { openAuthDialog } from 'slices/authSlice';
 import PropTypes from 'prop-types';
 import REGEX from 'constants/regex';
 import { connect } from 'react-redux';
@@ -15,6 +15,7 @@ import slugify from 'slugify';
 import ROUTES from 'constants/routes';
 import Tooltip from 'components/Utils/Tooltip';
 import TitleBar from 'components/TitleBar/TitleBar';
+import { ORGANIZATIONS_TYPES, ORGANIZATIONS_MISC } from 'constants/organizationsTypes';
 
 class AddOrganization extends Component {
     constructor(props) {
@@ -27,7 +28,10 @@ class AddOrganization extends Component {
             display_id: '',
             permalink: '',
             logo: '',
-            editorState: 'edit'
+            editorState: 'edit',
+            organizationType: ORGANIZATIONS_TYPES.find(t => ORGANIZATIONS_MISC.GENERAL === t.id)?.id,
+            date: '',
+            isDoubleBlind: false
         };
 
         this.publicOrganizationRoute = `${getPublicUrl()}${reverse(ROUTES.ORGANIZATION, { id: ' ' })}`;
@@ -39,7 +43,7 @@ class AddOrganization extends Component {
 
     createNewOrganization = async () => {
         this.setState({ editorState: 'loading' });
-        const { name, logo, website, permalink } = this.state;
+        const { name, logo, website, permalink, organizationType, date, isDoubleBlind } = this.state;
 
         if (!name || name.length === 0) {
             toast.error(`Please enter an organization name`);
@@ -62,8 +66,28 @@ class AddOrganization extends Component {
             return;
         }
 
+        if (organizationType.length === 0) {
+            toast.error(`Please select an organization type`);
+            this.setState({ editorState: 'edit' });
+            return;
+        }
+
+        if (ORGANIZATIONS_TYPES.find(t => t.id === organizationType)?.requireDate && date.length === 0) {
+            toast.error(`Please select conference date`);
+            this.setState({ editorState: 'edit' });
+            return;
+        }
+
         try {
-            const responseJson = await createOrganization(name, logo[0], this.props.user.id, website, permalink);
+            let responseJson = '';
+            if (organizationType === ORGANIZATIONS_MISC.CONFERENCE) {
+                responseJson = await createConference(name, logo[0], this.props.user.id, website, permalink, organizationType, {
+                    date,
+                    is_double_blind: isDoubleBlind
+                });
+            } else {
+                responseJson = await createOrganization(name, logo[0], this.props.user.id, website, permalink, organizationType);
+            }
             this.navigateToOrganization(responseJson.display_id);
         } catch (error) {
             this.setState({ editorState: 'edit' });
@@ -156,7 +180,6 @@ class AddOrganization extends Component {
                                     </InputGroup>
                                 </div>
                             </FormGroup>
-
                             <FormGroup>
                                 <Label for="organizationWebsite">Website</Label>
                                 <Input
@@ -169,7 +192,51 @@ class AddOrganization extends Component {
                                     placeholder="https://www.example.com"
                                 />
                             </FormGroup>
-
+                            <FormGroup>
+                                <Label for="organizationType">Type</Label>
+                                <Input
+                                    onChange={e => {
+                                        this.setState({ organizationType: ORGANIZATIONS_TYPES.find(t => t.id === e.target.value)?.id });
+                                    }}
+                                    value={this.state.organizationType}
+                                    name="organizationType"
+                                    type="select"
+                                >
+                                    {ORGANIZATIONS_TYPES.map(option => (
+                                        <option key={option.id} value={option.id}>
+                                            {option.label}
+                                        </option>
+                                    ))}
+                                </Input>
+                            </FormGroup>
+                            {ORGANIZATIONS_TYPES.find(t => t.id === this.state.organizationType)?.requireDate && (
+                                <>
+                                    <FormGroup>
+                                        <Label for="conferenceDate">Conference date</Label>
+                                        <Input
+                                            onChange={this.handleChange}
+                                            type="date"
+                                            name="date"
+                                            id="conferenceDate"
+                                            value={this.state.date}
+                                            placeholder="yyyy-mm-dd"
+                                        />
+                                    </FormGroup>
+                                    <FormGroup check>
+                                        <Input
+                                            onChange={e => this.setState({ isDoubleBlind: e.target.checked })}
+                                            type="checkbox"
+                                            name="isDoubleBlind"
+                                            id="doubleBlind"
+                                            checked={this.state.isDoubleBlind}
+                                        />
+                                        <Label for="doubleBlind" check>
+                                            Double blind
+                                            <Tooltip message="By default the conference is considered single-blind." />
+                                        </Label>
+                                    </FormGroup>
+                                </>
+                            )}
                             <FormGroup>
                                 <Label for="organizationLogo">Logo</Label>
                                 <br />

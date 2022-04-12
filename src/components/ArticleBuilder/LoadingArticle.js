@@ -5,8 +5,8 @@ import { Container } from 'reactstrap';
 
 const LoadingArticle = () => (
     <Container className="p-0">
-        <div className="box rounded px-5 pt-5 pb-0">
-            <ContentLoader height="500" width="100%" speed={2} foregroundColor="#f3f3f3" backgroundColor="#ccc" viewBox="0 0 120 50">
+        <div className="box rounded px-5 pt-5 pb-5">
+            <ContentLoader width="100%" speed={2} foregroundColor="#f3f3f3" backgroundColor="#ccc" viewBox="0 0 100 40">
                 {/* title */}
                 <rect x="0" y="0" rx="0" ry="0" width="100" height="5" />
                 {/* authors */}

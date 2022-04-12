@@ -4,7 +4,7 @@ import { sortableContainer, sortableElement, sortableHandle } from 'react-sortab
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faTimes, faSpinner, faSort, faPen, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { faOrcid } from '@fortawesome/free-brands-svg-icons';
-import styled, { withTheme } from 'styled-components';
+import styled, { withTheme, createGlobalStyle } from 'styled-components';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
 import { CLASSES, ENTITIES } from 'constants/graphSettings';
 import { getPersonFullNameByORCID } from 'services/ORCID/index';
@@ -77,6 +77,12 @@ const AuthorTag = styled.div`
     .delete:hover {
         background-color: #e9ecef;
         color: #de350b;
+    }
+`;
+
+const GlobalStyle = createGlobalStyle`
+    .sortable-helper{
+        z-index: 10000 !important;
     }
 `;
 
@@ -252,11 +258,12 @@ class AuthorsInput extends Component {
     render() {
         return (
             <div className=" clearfix">
+                <GlobalStyle />
                 <div>
                     {this.props.value.length > 0 && (
                         <SortableContainer
                             useDragHandle
-                            helperClass="sortableHelperAuthors"
+                            helperClass="sortable-helper"
                             onSortEnd={this.onSortEnd}
                             className="clearfix"
                             onClick={this.props.value.length === 0 ? () => this.toggle('showAuthorForm') : undefined}

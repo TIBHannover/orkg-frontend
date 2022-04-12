@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Button } from 'reactstrap';
-import { toggleEditValue } from 'actions/statementBrowser';
-import { setIsHelpModalOpen, deleteValue, isValueHasFormattedLabel, isDeletingValue, doneDeletingValue } from 'actions/statementBrowser';
+import { deleteValue, setIsDeletingValue, setIsHelpModalOpen, toggleEditValue, isValueHasFormattedLabel } from 'slices/statementBrowserSlice';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faTrash, faPen, faTable, faCheck, faTimes, faQuestionCircle, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import StatementActionButton from 'components/StatementBrowser/StatementActionButton/StatementActionButton';
@@ -13,7 +12,6 @@ import HELP_CENTER_ARTICLES from 'constants/helpCenterArticles';
 import RDFDataCube from 'components/RDFDataCube/RDFDataCube';
 import { toast } from 'react-toastify';
 import InfoTippy from './InfoTippy';
-
 const ValueItemOptions = ({ id, enableEdit, syncBackend, handleOnClick }) => {
     const value = useSelector(state => state.statementBrowser.values.byId[id]);
     const preferences = useSelector(state => state.statementBrowser.preferences);
@@ -26,10 +24,10 @@ const ValueItemOptions = ({ id, enableEdit, syncBackend, handleOnClick }) => {
 
     const handleDeleteValue = async () => {
         if (syncBackend) {
-            dispatch(isDeletingValue({ id: id }));
+            dispatch(setIsDeletingValue({ id: id, status: true }));
             deleteStatementById(value.statementId)
                 .then(() => {
-                    dispatch(doneDeletingValue({ id: id }));
+                    //dispatch(setIsDeletingValue({ id: id, status: false }));
                     toast.success('Statement deleted successfully');
                     dispatch(
                         deleteValue({
@@ -39,7 +37,7 @@ const ValueItemOptions = ({ id, enableEdit, syncBackend, handleOnClick }) => {
                     );
                 })
                 .catch(() => {
-                    dispatch(doneDeletingValue({ id: id }));
+                    dispatch(setIsDeletingValue({ id: id, status: false }));
                     toast.error('Something went wrong while deleting the value.');
                 });
         } else {

@@ -5,7 +5,8 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import Select, { components } from 'react-select';
 import { useSelector, useDispatch } from 'react-redux';
-import { addToComparison, removeFromComparison } from 'actions/viewPaper';
+import { SelectGlobalStyle } from 'components/Autocomplete/styled';
+import { addToComparison, removeFromComparison } from 'slices/viewPaperSlice';
 
 const Option = ({ children, data, ...props }) => {
     return (
@@ -22,6 +23,11 @@ const CustomInputStyled = styled(Input)`
     &.custom-control {
         z-index: 0;
     }
+`;
+
+const SelectStyled = styled(Select)`
+    width: 300px;
+    color: ${props => props.theme.bodyColor};
 `;
 
 Option.propTypes = {
@@ -97,14 +103,14 @@ const AddToComparison = ({ contributionId, paper, showLabel }) => {
 
     return (
         <Tippy
-            theme={!contributionId && paper.contributions?.length > 1 ? 'visualizationPreview' : undefined}
             placement="bottom-start"
             interactiveDebounce={75}
             interactive={!contributionId && paper.contributions?.length > 1 ? true : false}
             content={
                 !contributionId && paper.contributions?.length > 1 ? (
-                    <div style={{ width: '300px' }}>
-                        <Select
+                    <>
+                        <SelectGlobalStyle />
+                        <SelectStyled
                             value={options.filter(o => comparison.allIds.includes(o.value))}
                             onChange={(selected, { action, option, removedValue }) => {
                                 if (option) {
@@ -127,7 +133,7 @@ const AddToComparison = ({ contributionId, paper, showLabel }) => {
                             placeholder="Select contribution to compare"
                             classNamePrefix="react-select"
                         />
-                    </div>
+                    </>
                 ) : isSelected ? (
                     'Remove from comparison'
                 ) : (

@@ -5,7 +5,7 @@ import { faSpinner, faPlus } from '@fortawesome/free-solid-svg-icons';
 import OrganizationCard from 'components/OrganizationCard/OrganizationCard';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import { getAllOrganizations } from 'services/backend/organizations';
-import { openAuthDialog } from 'actions/auth';
+import { openAuthDialog } from 'slices/authSlice';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';

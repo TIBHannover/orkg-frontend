@@ -1,4 +1,4 @@
-import { nextStep, previousStep, updateResearchField } from 'actions/addPaper';
+import { nextStep, previousStep, updateResearchField } from 'slices/addPaperSlice';
 import ResearchFieldSelector from 'components/ResearchFieldSelector/ResearchFieldSelector';
 import { useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';

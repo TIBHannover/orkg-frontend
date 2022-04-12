@@ -1,4 +1,4 @@
-import { createReference, setUsedReferences as setUsedReferencesAction } from 'actions/review';
+import { createReference, setUsedReferences as setUsedReferencesAction } from 'slices/reviewSlice';
 import { sanitize } from 'dompurify';
 import PropTypes from 'prop-types';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';

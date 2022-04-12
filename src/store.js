@@ -1,5 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
-import rootReducer from './reducers/rootReducer';
+import rootReducer from './slices/rootReducer';
 import { routerMiddleware } from 'connected-react-router';
 import { createBrowserHistory } from 'history';
 import env from '@beam-australia/react-env';

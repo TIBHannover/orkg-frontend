@@ -8,7 +8,7 @@ import ROUTES from 'constants/routes';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import HELP_CENTER_ARTICLES from 'constants/helpCenterArticles';
-import { setIsHelpModalOpen } from 'actions/statementBrowser';
+import { setIsHelpModalOpen } from 'slices/statementBrowserSlice';
 import { reverseWithSlug } from 'utils';
 
 const SBEditorHelpModal = () => {
@@ -21,6 +21,7 @@ const SBEditorHelpModal = () => {
     const [hasFailed, setHasFailed] = useState(false);
 
     useEffect(() => {
+        let isMounted = true;
         const fetchCategories = () => {
             if (helpCenterArticleId) {
                 const pagePromise = getHelpArticle(helpCenterArticleId);
@@ -33,8 +34,10 @@ const SBEditorHelpModal = () => {
                     where: HELP_CENTER_ARTICLES.SB_ARTICLES
                 })
                     .then(result => {
-                        setArticles(result);
-                        setIsLoading(false);
+                        if (isMounted) {
+                            setArticles(result);
+                            setIsLoading(false);
+                        }
                     })
                     .catch(e => {
                         setHasFailed(true);
@@ -44,6 +47,9 @@ const SBEditorHelpModal = () => {
         };
 
         fetchCategories();
+        return () => {
+            isMounted = false;
+        };
     }, [helpCenterArticleId, loadPage]);
 
     return (

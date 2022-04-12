@@ -48,11 +48,6 @@ const TableCellForm = ({ value, contributionId, propertyId, closeForm }) => {
     const confirmConversion = useRef(null);
     const [suggestionType, setSuggestionType] = useState(null);
 
-    /* Select component reference can be used to check if menu is opened */
-    const isMenuOpen = () => {
-        return autocompleteInputRef.current.state.menuIsOpen && autocompleteInputRef.current.props.options.length > 0;
-    };
-
     useClickAway(refContainer, () => {
         //setIsCreating(false);
         if (!editMode) {
@@ -203,13 +198,10 @@ const TableCellForm = ({ value, contributionId, propertyId, closeForm }) => {
                                 autoLoadOption={valueClass ? true : false}
                                 openMenuOnFocus={true}
                                 allowCreate
-                                allowCreateDuplicate={isUniqLabel}
+                                allowCreateDuplicate={!isUniqLabel}
                                 onKeyDown={e => {
                                     if (e.keyCode === 27) {
                                         // escape
-                                        closeForm?.(false);
-                                    } else if (e.keyCode === 13 && !isMenuOpen()) {
-                                        dispatch(addValue(entityType, { label: inputValue, selected: true }, valueClass, contributionId, propertyId));
                                         closeForm?.(false);
                                     }
                                 }}

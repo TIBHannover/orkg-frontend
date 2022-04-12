@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Button, FormGroup, Modal, ModalHeader, ModalBody, Label, Input, ListGroupItem, Alert, InputGroup } from 'reactstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import ResearchFieldSelectorModal from 'components/ResearchFieldSelector/ResearchFieldSelectorModal';
-import { setIsTemplateModalOpen } from 'actions/statementBrowser';
+import { setIsTemplateModalOpen } from 'slices/statementBrowserSlice';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faAngleDoubleDown, faSpinner } from '@fortawesome/free-solid-svg-icons';
@@ -40,8 +40,6 @@ const AnimationContainer = styled(CSSTransition)`
 const TemplatesModal = props => {
     const [source, target] = useSingleton();
     const isTemplatesModalOpen = useSelector(state => props.isTemplatesModalOpen ?? state.statementBrowser.isTemplatesModalOpen);
-    const contributions = useSelector(state => state.contributionEditor.contributions);
-    const selectedContributions = Object.keys(contributions);
     const [isOpenResearchFieldModal, setIsOpenResearchFieldModal] = useState(false);
     const onlyFeatured = true;
     const {
@@ -186,7 +184,7 @@ const TemplatesModal = props => {
 
                         {!isNextPageLoading && !targetFilter && !labelFilter && templates.length === 0 && featuredTemplates.length === 0 && (
                             <Alert color="info">
-                                Use the template browser bellow to find a suitable template for <b>all contributions</b>.
+                                Use the template browser below to find a suitable template for <b>all contributions</b>.
                                 <br />
                                 <small>You can search by label or filter by research field, research problem or class.</small>
                             </Alert>
