@@ -71,7 +71,7 @@ const useContributions = ({ paperId, contributionId, contributions }) => {
             setIsLoading(false);
         });
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [paperId, contributionId, selectedContribution]);
+    }, [paperId, selectedContribution]);
 
     return {
         isLoading,

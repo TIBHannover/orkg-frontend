@@ -72,9 +72,9 @@ const PaperVersionHeader = props => {
                     viewPaper.doi.length &&
                     viewPaper.doi.length > 0 &&
                     viewPaper.doi.map(
-                        doi =>
+                        (doi, i) =>
                             !doi.label.startsWith(env('DATACITE_DOI_PREFIX')) && (
-                                <div className="flex-shrink-0">
+                                <div className="flex-shrink-0" key={i}>
                                     <small>
                                         DOI:
                                         <a href={`https://doi.org/${doi.label}`} target="_blank" rel="noopener noreferrer">

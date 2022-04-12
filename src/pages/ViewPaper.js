@@ -121,7 +121,7 @@ const ViewPaper = () => {
                                     toggle={toggle}
                                     id={resourceId}
                                     label={viewPaper.paperResource?.label}
-                                    dataCiteDoi={dataCiteDoi}
+                                    dataCiteDoi={dataCiteDoi ? dataCiteDoi : ''}
                                 />
                             }
                         >
@@ -186,7 +186,7 @@ const ViewPaper = () => {
                             <>
                                 <hr className="mt-3" />
 
-                                <Contributions enableEdit={editMode} />
+                                <Contributions enableEdit={editMode} toggleEditMode={() => setEditMode(v => !v)} />
 
                                 <ComparisonPopup />
                             </>

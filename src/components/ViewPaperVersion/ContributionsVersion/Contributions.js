@@ -101,20 +101,20 @@ const Contributions = props => {
                                                     {!isLoading && contributionData && (
                                                         <>
                                                             {Object.keys(contributionData).map((cd, i) => (
-                                                                <StatementsGroupStyle className="noTemplate list-group-item">
+                                                                <StatementsGroupStyle className="noTemplate list-group-item" key={`st${i}`}>
                                                                     <div className="row gx-0">
-                                                                        <PropertyStyle className="col-4" tabIndex="0">
+                                                                        <PropertyStyle className="col-4" tabIndex="0" key={`p${i}`}>
                                                                             <div>
                                                                                 <div className="propertyLabel">
-                                                                                    <DescriptionTooltip typeId={ENTITIES.PREDICATE}>
+                                                                                    <DescriptionTooltip id="p26" typeId={ENTITIES.PREDICATE}>
                                                                                         {cd}
                                                                                     </DescriptionTooltip>
                                                                                 </div>
                                                                             </div>
                                                                         </PropertyStyle>
-                                                                        <ValuesStyle className="col-8 valuesList" key={i}>
+                                                                        <ValuesStyle className="col-8 valuesList" key={`v${i}`}>
                                                                             {contributionData[cd].map((v, index) => (
-                                                                                <ListGroup flush className="px-3 mt-2" key={index}>
+                                                                                <ListGroup flush className="px-3 mt-2" key={`pv${index}`}>
                                                                                     {v.object.label}
                                                                                 </ListGroup>
                                                                             ))}

@@ -154,7 +154,7 @@ const ProvenanceBox = () => {
                                 createdBy={createdBy}
                                 isLoadingProvenance={isLoadingProvenance}
                                 isLoadingContributors={isLoadingContributors}
-                                dataCiteDoi={doi}
+                                dataCiteDoi={doi ? doi : ''}
                             />
                         </AnimationContainer>
                     ) : (

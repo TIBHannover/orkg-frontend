@@ -99,7 +99,9 @@ const ViewPaperVersion = () => {
                     </Container>
                 </>
             )}
-            <ExportCitation showDialog={showExportCitationsDialog} toggle={() => setShowExportCitationsDialog(v => !v)} DOI={dataCiteDoi} />
+            {dataCiteDoi && (
+                <ExportCitation showDialog={showExportCitationsDialog} toggle={() => setShowExportCitationsDialog(v => !v)} DOI={dataCiteDoi} />
+            )}
             <Modal size="lg" isOpen={showPublishDialog} toggle={() => setShowPublishDialog(v => !v)}>
                 <ModalHeader toggle={() => setShowPublishDialog(v => !v)}>Publish ORKG paper</ModalHeader>
                 <ModalBody>
