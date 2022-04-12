@@ -27,11 +27,7 @@ const useViewPaperVersion = ({ paperId }) => {
                 }
             }
             authorsArray = authorsArray.length ? authorsArray.sort((a, b) => a.s_created_at.localeCompare(b.s_created_at)) : [];
-            dispatch(
-                setPaperAuthors({
-                    authors: authorsArray
-                })
-            );
+            dispatch(setPaperAuthors(authorsArray));
         },
         [dispatch]
     );
@@ -54,10 +50,8 @@ const useViewPaperVersion = ({ paperId }) => {
                         false,
                         CLASSES.CONTRIBUTION
                     );
+                    // remove duplicates becasue contributions subject could be multiple
                     const pp = contributions.filter((ele, ind) => ind === contributions.findIndex(elem => elem.id === ele.id));
-                    //console.log(pp.reverse());
-                    const rrr = [];
-                    rrr.push(...pp);
                     setContributions(pp.reverse());
                 });
                 Promise.all([
