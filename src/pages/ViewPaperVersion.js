@@ -93,7 +93,7 @@ const ViewPaperVersion = () => {
                         {!isLoading && (
                             <>
                                 <hr className="mt-3" />
-                                <Contributions enableEdit={false} toggleEditMode={false} contributions={contributions} />
+                                <Contributions contributions={contributions} />
                             </>
                         )}
                     </Container>

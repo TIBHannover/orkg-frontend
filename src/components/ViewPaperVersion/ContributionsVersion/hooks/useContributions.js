@@ -1,6 +1,4 @@
 import { useEffect, useState } from 'react';
-import { PREDICATES, CLASSES } from 'constants/graphSettings';
-import { filterSubjectOfStatementsByPredicateAndClass } from 'utils';
 import { getVisualization } from 'services/similarity';
 import { groupBy } from 'lodash';
 
@@ -13,7 +11,6 @@ const useContributions = ({ paperId, contributionId, contributions }) => {
     useEffect(() => {
         if (contributions?.length && (selectedContribution !== contributionId || !contributionId)) {
             try {
-                console.log(contributions);
                 // apply selected contribution
                 if (
                     contributionId &&

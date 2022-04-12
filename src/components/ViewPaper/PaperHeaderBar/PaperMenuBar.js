@@ -94,7 +94,6 @@ function PaperMenuBar(props) {
                 label={props.label}
                 dataCiteDoi={props.dataCiteDoi ? props.dataCiteDoi : dataCiteDoi ? dataCiteDoi : ''}
                 paperLink={props.paperLink}
-                setPaperMetaData={setPaperMetaData}
             />
         </>
     );

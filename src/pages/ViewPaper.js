@@ -186,7 +186,7 @@ const ViewPaper = () => {
                             <>
                                 <hr className="mt-3" />
 
-                                <Contributions enableEdit={editMode} toggleEditMode={() => setEditMode(v => !v)} />
+                                <Contributions enableEdit={editMode} />
 
                                 <ComparisonPopup />
                             </>

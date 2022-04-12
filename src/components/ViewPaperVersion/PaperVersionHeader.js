@@ -68,17 +68,6 @@ const PaperVersionHeader = props => {
                     </div>
                 )}
 
-                {viewPaper.doi && viewPaper.doi.label?.startsWith('10.') && (
-                    <div className="flex-shrink-0">
-                        <small>
-                            DOI:{' '}
-                            <a href={`https://doi.org/${viewPaper.doi.label}`} target="_blank" rel="noopener noreferrer">
-                                {viewPaper.doi.label}
-                            </a>
-                        </small>
-                    </div>
-                )}
-
                 {viewPaper.doi &&
                     viewPaper.doi.length &&
                     viewPaper.doi.length > 0 &&

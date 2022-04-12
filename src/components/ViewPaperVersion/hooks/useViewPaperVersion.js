@@ -55,9 +55,10 @@ const useViewPaperVersion = ({ paperId }) => {
                         CLASSES.CONTRIBUTION
                     );
                     const pp = contributions.filter((ele, ind) => ind === contributions.findIndex(elem => elem.id === ele.id));
+                    //console.log(pp.reverse());
                     const rrr = [];
                     rrr.push(...pp);
-                    setContributions(rrr.reverse());
+                    setContributions(pp.reverse());
                 });
                 Promise.all([
                     getStatementsBundleBySubject({ id: paperId, maxLevel: 2, blacklist: [CLASSES.RESEARCH_FIELD, CLASSES.CONTRIBUTION] })

@@ -100,23 +100,21 @@ const Contributions = props => {
                                                     )}
                                                     {!isLoading && contributionData && (
                                                         <>
-                                                            {Object.keys(contributionData).map(cd => (
+                                                            {Object.keys(contributionData).map((cd, i) => (
                                                                 <StatementsGroupStyle className="noTemplate list-group-item">
                                                                     <div className="row gx-0">
                                                                         <PropertyStyle className="col-4" tabIndex="0">
-                                                                            {true && (
-                                                                                <div>
-                                                                                    <div className="propertyLabel">
-                                                                                        <DescriptionTooltip id="p26" typeId={ENTITIES.PREDICATE}>
-                                                                                            {cd}
-                                                                                        </DescriptionTooltip>
-                                                                                    </div>
+                                                                            <div>
+                                                                                <div className="propertyLabel">
+                                                                                    <DescriptionTooltip typeId={ENTITIES.PREDICATE}>
+                                                                                        {cd}
+                                                                                    </DescriptionTooltip>
                                                                                 </div>
-                                                                            )}
+                                                                            </div>
                                                                         </PropertyStyle>
-                                                                        <ValuesStyle className="col-8 valuesList">
-                                                                            {contributionData[cd].map(v => (
-                                                                                <ListGroup flush className="px-3 mt-2">
+                                                                        <ValuesStyle className="col-8 valuesList" key={i}>
+                                                                            {contributionData[cd].map((v, index) => (
+                                                                                <ListGroup flush className="px-3 mt-2" key={index}>
                                                                                     {v.object.label}
                                                                                 </ListGroup>
                                                                             ))}
@@ -153,9 +151,7 @@ const Contributions = props => {
 };
 
 Contributions.propTypes = {
-    toggleEditMode: PropTypes.func.isRequired,
-    enableEdit: PropTypes.bool.isRequired,
-    contributions: PropTypes.object
+    contributions: PropTypes.array
 };
 
 export default Contributions;

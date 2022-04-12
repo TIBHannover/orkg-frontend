@@ -53,7 +53,7 @@ const PaperHeader = props => {
                 paperResource: { ...viewPaper.paperResource, label: data.paper.label },
                 publicationMonth: { ...viewPaper.publicationMonth, label: data.month?.label || null, id: data.month?.id },
                 publicationYear: { ...viewPaper.publicationYear, label: data.year?.label || null, id: data.year?.id },
-                doi: { ...viewPaper.doi, label: data.doi?.label, id: data.doi?.id },
+                doi: { ...viewPaper.doi, label: data.doi[0]?.label, id: data.doi[0]?.id },
                 authors: data.authors,
                 publishedIn: data.publishedIn,
                 url: { ...viewPaper.url, label: data.url?.label, id: data.url?.id },
@@ -112,33 +112,16 @@ const PaperHeader = props => {
                     </div>
                 )}
 
-                {viewPaper.doi && viewPaper.doi.label?.startsWith('10.') && (
+                {viewPaper.doi && viewPaper.doi[0].label?.startsWith('10.') && (
                     <div className="flex-shrink-0">
                         <small>
                             DOI:{' '}
-                            <a href={`https://doi.org/${viewPaper.doi.label}`} target="_blank" rel="noopener noreferrer">
-                                {viewPaper.doi.label}
+                            <a href={`https://doi.org/${viewPaper.doi[0].label}`} target="_blank" rel="noopener noreferrer">
+                                {viewPaper.doi[0].label}
                             </a>
                         </small>
                     </div>
                 )}
-
-                {viewPaper.doi &&
-                    viewPaper.doi.length &&
-                    viewPaper.doi.length > 0 &&
-                    viewPaper.doi.map(
-                        doi =>
-                            !doi.label.startsWith(env('DATACITE_DOI_PREFIX')) && (
-                                <div className="flex-shrink-0">
-                                    <small>
-                                        DOI:
-                                        <a href={`https://doi.org/${doi.label}`} target="_blank" rel="noopener noreferrer">
-                                            {doi.label}
-                                        </a>
-                                    </small>
-                                </div>
-                            )
-                    )}
             </div>
             <div className="d-flex">
                 <div className="flex-grow-1">
