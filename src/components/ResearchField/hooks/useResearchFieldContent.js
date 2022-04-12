@@ -91,10 +91,7 @@ function useResearchFieldContent({
                                 const resourceSubject = find(result.content, {
                                     id: statements.id
                                 });
-                                return getDataBasedOnType(
-                                    { ...resourceSubject, created_at: resourceSubject.createdAt, created_by: resourceSubject.createdBy },
-                                    statements.statements
-                                );
+                                return getDataBasedOnType(resourceSubject, statements.statements);
                             });
                             setItems(prevResources => {
                                 let newItems = groupVersionsOfComparisons([
