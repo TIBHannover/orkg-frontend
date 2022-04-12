@@ -68,8 +68,8 @@ const useViewPaperVersion = ({ paperId }) => {
                         const paperId = statements && statements.find(stmt => stmt.subject.classes.find(s => s === CLASSES.PAPER));
                         dispatch(loadPaper({ ...paperData, originalPaperId: paperId ? paperId.subject.id : '' }));
                     });
-                    setIsLoading(false);
                     setAuthorsORCID(paperStatements.statements, paperId);
+                    setIsLoading(false);
                 });
             })
             .catch(error => {

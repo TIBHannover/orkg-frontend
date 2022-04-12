@@ -11,7 +11,6 @@ import { reverse } from 'named-urls';
 import styled from 'styled-components';
 import { PREDICATES, CLASSES, ENTITIES } from 'constants/graphSettings';
 import { getContributorsByResourceId } from 'services/backend/resources';
-import env from '@beam-australia/react-env';
 import { getPublicUrl } from 'utils';
 import { getStatementsBySubject, getStatementsBySubjects } from 'services/backend/statements';
 import { filterObjectOfStatementsByPredicateAndClass } from 'utils';
@@ -127,7 +126,6 @@ function Publish(props) {
     const publishDOI = async paperId => {
         if (title && title.trim() !== '' && description && description.trim() !== '') {
             const paperStatements = await getPaperStatements(paperId);
-            console.log(paperStatements);
             const paper_obj = {
                 predicates: [],
                 resource: {
@@ -279,17 +277,13 @@ function Publish(props) {
             <ModalHeader toggle={props.toggle}>Publish ORKG paper</ModalHeader>
             <ModalBody>
                 <Alert color="info">
-                    {props.paperId && !dataCiteDoi && (
-                        <>
-                            A published paper is made public to other users.
-                            {` A DOI ${env('DATACITE_DOI_PREFIX')}/${props.paperId} 
-                            will be assigned to published paper and it cannot be changed in future.`}
-                        </>
-                    )}
+                    {props.paperId && !dataCiteDoi && <>A published paper is made public to other users.</>}
                     {createdPaperId && dataCiteDoi && (
                         <>
                             DOI is assigned sucessfully.{' '}
-                            <Link to={reverse(ROUTES.VIEW_PAPER, { resourceId: createdPaperId })}>View published version</Link>
+                            <Link target="_blank" to={reverse(ROUTES.VIEW_PAPER, { resourceId: createdPaperId })}>
+                                View published version
+                            </Link>
                         </>
                     )}
                 </Alert>
@@ -376,8 +370,7 @@ Publish.propTypes = {
     showDialog: PropTypes.bool.isRequired,
     toggle: PropTypes.func.isRequired,
     paperId: PropTypes.string,
-    label: PropTypes.string,
-    paperLink: PropTypes.string
+    label: PropTypes.string
 };
 
 export default Publish;
