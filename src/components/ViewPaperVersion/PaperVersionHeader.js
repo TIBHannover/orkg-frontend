@@ -88,7 +88,6 @@ const PaperVersionHeader = props => {
                                 <div className="flex-shrink-0">
                                     <small>
                                         DOI:
-                                        {console.log(doi.label)}
                                         <a href={`https://doi.org/${doi.label}`} target="_blank" rel="noopener noreferrer">
                                             {doi.label}
                                         </a>

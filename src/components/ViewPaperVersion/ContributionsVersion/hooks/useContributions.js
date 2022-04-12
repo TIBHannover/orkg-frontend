@@ -56,29 +56,25 @@ const useContributions = ({ paperId, contributionId, contributions }) => {
     useEffect(() => {
         getVisualization(paperId).then(async r => {
             setIsLoading(true);
-            const contributions = filterSubjectOfStatementsByPredicateAndClass(
-                r.data.statements,
-                PREDICATES.HAS_CONTRIBUTION,
-                false,
-                CLASSES.CONTRIBUTION
-            );
-            const pp = contributions.filter((ele, ind) => ind === contributions.findIndex(elem => elem.id === ele.id));
-            //TODO
-            const subjectId = pp[0].id;
-            const list = [];
-            for (const r1 of r.data.statements) {
-                if (r1.subject.id === subjectId) {
-                    list.push(r1);
-                    const response = await getResourceStatements(r1.object.id, r.data.statements, []);
-                    list.push(...response);
+            if (selectedContribution) {
+                const statement = r.data.statements.find(s => s.subject.id === selectedContribution);
+                //TODO
+                const subjectId = statement.subject.id;
+                const list = [];
+                for (const r1 of r.data.statements) {
+                    if (r1.subject.id === subjectId) {
+                        list.push(r1);
+                        const response = await getResourceStatements(r1.object.id, r.data.statements, []);
+                        list.push(...response);
+                    }
                 }
+                const rr = groupBy(list, 'predicate.label');
+                setContributionData(rr);
             }
-            const rr = groupBy(list, 'predicate.label');
             setIsLoading(false);
-            setContributionData(rr);
         });
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [paperId, contributionId, contributions]);
+    }, [paperId, contributionId, selectedContribution]);
 
     return {
         isLoading,

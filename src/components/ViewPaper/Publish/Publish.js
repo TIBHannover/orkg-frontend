@@ -69,7 +69,6 @@ function Publish(props) {
         const loadContributors = () => {
             getContributorsByResourceId(props.paperId)
                 .then(contributors => {
-                    console.log(contributors);
                     contributors = contributors.filter(c => c.created_by.display_name !== 'Unknown');
                     setContributors(contributors ? contributors.reverse() : []);
                 })
