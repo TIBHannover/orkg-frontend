@@ -26,6 +26,7 @@ import queryString from 'query-string';
 import { usePrevious } from 'react-use';
 import Confirm from 'components/Confirmation/Confirmation';
 import { getOrganization } from 'services/backend/organizations';
+import { asyncLocalStorage } from 'utils';
 
 const DEFAULT_COMPARISON_METHOD = 'path';
 
@@ -34,6 +35,7 @@ function useComparison({ id }) {
     const history = useHistory();
     const params = useParams();
     const comparisonId = id || params.comparisonId;
+    const hiddenGroupsStorageName = comparisonId ? `comparison-${comparisonId}-hidden-rows` : null;
 
     /**
      * @typedef {Object} MetaData
@@ -82,6 +84,7 @@ function useComparison({ id }) {
     const [contributionsList, setContributionsList] = useState([]);
     const [predicatesList, setPredicatesList] = useState([]);
     const [shouldFetchLiveComparison, setShouldFetchLiveComparison] = useState(false);
+    const [hiddenGroups, setHiddenGroups] = useState([]);
 
     // reference to previous comparison type
     const prevComparisonType = usePrevious(comparisonType);
@@ -655,6 +658,36 @@ function useComparison({ id }) {
         setShouldFetchLiveComparison(true);
     };
 
+    /**
+     * Function to toggle group visibility. If the comparison is published, the configuration is stored in local storage
+     */
+    const handleToggleGroupVisibility = property => {
+        const _hiddenGroups = hiddenGroups.includes(property) ? hiddenGroups.filter(id => id !== property) : [...hiddenGroups, property];
+        setHiddenGroups(_hiddenGroups);
+        if (hiddenGroupsStorageName) {
+            if (_hiddenGroups.length > 0) {
+                asyncLocalStorage.setItem(hiddenGroupsStorageName, JSON.stringify(_hiddenGroups));
+            } else {
+                asyncLocalStorage.removeItem(hiddenGroupsStorageName);
+            }
+        }
+    };
+
+    useEffect(() => {
+        const getHiddenGroup = async () => {
+            if (comparisonId && hiddenGroupsStorageName) {
+                const data = await asyncLocalStorage.getItem(hiddenGroupsStorageName);
+                try {
+                    const parsedData = JSON.parse(data);
+                    if (data && Array.isArray(parsedData)) {
+                        setHiddenGroups(parsedData);
+                    }
+                } catch (e) {}
+            }
+        };
+        getHiddenGroup();
+    }, [comparisonId, hiddenGroupsStorageName]);
+
     useEffect(() => {
         // only is there is no hash, live comparison data can be fetched
         if (shouldFetchLiveComparison && !responseHash) {
@@ -758,6 +791,7 @@ function useComparison({ id }) {
         provenance,
         researchField,
         setMetaData,
+        hiddenGroups,
         setComparisonType,
         setPredicatesList,
         toggleProperty,
@@ -776,7 +810,8 @@ function useComparison({ id }) {
         loadProvenanceInfos,
         loadVisualizations,
         handleEditContributions,
-        fetchLiveData
+        fetchLiveData,
+        handleToggleGroupVisibility
     };
 }
 export default useComparison;
