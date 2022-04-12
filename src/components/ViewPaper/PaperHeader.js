@@ -16,7 +16,6 @@ import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Button } from 'reactstrap';
 import { getAltMetrics } from 'services/altmetric/index';
-import env from '@beam-australia/react-env';
 import EditPaperDialog from './EditDialog/EditPaperDialog';
 
 const PaperHeader = props => {
