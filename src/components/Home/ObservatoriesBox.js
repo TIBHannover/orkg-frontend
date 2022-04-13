@@ -2,8 +2,6 @@ import ObservatoriesCarousel from 'components/ObservatoriesCarousel/Observatorie
 import { Link } from 'react-router-dom';
 import ROUTES from 'constants/routes.js';
 import useResearchFieldObservatories from 'components/ResearchField/hooks/useResearchFieldObservatories';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faStar } from '@fortawesome/free-solid-svg-icons';
 import Tippy from '@tippyjs/react';
 import PropTypes from 'prop-types';
 
@@ -20,9 +18,7 @@ const ObservatoriesBox = ({ researchFieldId }) => {
                 }}
             >
                 <Tippy content="Observatories organize research contributions in a particular research field and are curated by research organizations active in the respective field.">
-                    <span>
-                        <Icon icon={faStar} className="text-primary" /> Observatories
-                    </span>
+                    <span>Observatories</span>
                 </Tippy>
                 <Link to={ROUTES.OBSERVATORIES}>
                     <span style={{ fontSize: '0.9rem', float: 'right', marginTop: 2, marginBottom: 15 }}>More observatories</span>

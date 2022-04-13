@@ -28,7 +28,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Authentication from 'components/Authentication/Authentication';
 import SearchForm from './SearchForm';
-import { openAuthDialog, updateAuth, resetAuth } from 'actions/auth';
+import { openAuthDialog, updateAuth, resetAuth } from 'slices/authSlice';
 import { Redirect } from 'react-router-dom';
 import { getUserInformation } from 'services/backend/users';
 import greetingTime from 'greeting-time';
@@ -42,6 +42,7 @@ import { toast } from 'react-toastify';
 import HomeBannerBg from 'assets/img/graph-background.svg';
 import { scrollbarWidth } from '@xobotyi/scrollbar-width';
 import AboutMenu from 'components/Layout/Header/AboutMenu';
+import ContentTypesMenu from 'components/Layout/Header/ContentTypesMenu';
 
 const cookies = new Cookies();
 
@@ -175,6 +176,68 @@ const StyledAuthTooltip = styled(Tooltip)`
     }
 `;
 
+const StyledNavbar = styled(Navbar)`
+    &&& {
+        &:not(.home-page) {
+            box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.13);
+            background: white;
+        }
+
+        background: transparent;
+        border: 0;
+
+        .nav-link {
+            color: ${props => props.theme.secondary};
+
+            &:hover {
+                color: ${props => props.theme.primary};
+            }
+        }
+
+        .search-box {
+            input {
+                border-right: 0;
+            }
+
+            .search-icon {
+                color: ${props => props.theme.primary};
+            }
+
+            button {
+                border: 1px solid #ced4da;
+                border-left: 0 !important;
+                background: ${props => props.theme.inputBg};
+            }
+        }
+
+        &.home-page {
+            & .nav-link {
+                color: white;
+                &:hover {
+                    color: #bbbbbb;
+                }
+            }
+            & .sign-in {
+                color: white;
+                background: #32303b;
+                border-color: #32303b;
+                &:hover {
+                    color: white;
+                    background: #100f13;
+                    border-color: #100f13;
+                }
+            }
+            .search-box .search-icon {
+                color: ${props => props.theme.secondary};
+            }
+
+            @media (max-width: ${props => props.theme.gridBreakpoints.md}) {
+                background: #5f6474;
+            }
+        }
+    }
+`;
+
 class Header extends Component {
     constructor(props) {
         super(props);
@@ -184,6 +247,7 @@ class Header extends Component {
         this.state = {
             isOpen: false,
             isOpenAboutMenu: false,
+            isOpenViewMenu: false,
             userTooltipOpen: false,
             redirectLogout: false,
             isHomePageStyle: this.props.location.pathname === ROUTES.HOME ? true : false
@@ -292,10 +356,17 @@ class Header extends Component {
         });
     };
 
+    toggleViewMenu = () => {
+        this.setState({
+            isOpenViewMenu: !this.state.isOpenViewMenu
+        });
+    };
+
     closeMenu = () => {
         this.setState({
             isOpen: false,
-            isOpenAboutMenu: false
+            isOpenAboutMenu: false,
+            isOpenViewMenu: false
         });
     };
 
@@ -341,7 +412,7 @@ class Header extends Component {
 
         return (
             <StyledTopBar className={this.state.isHomePageStyle ? 'home-page' : ''}>
-                <Navbar
+                <StyledNavbar
                     light={!this.state.isHomePageStyle}
                     dark={this.state.isHomePageStyle}
                     className={navbarClasses}
@@ -363,7 +434,7 @@ class Header extends Component {
                     <Collapse isOpen={this.state.isOpen} navbar>
                         <Nav className="me-auto flex-shrink-0" navbar>
                             {/* view menu */}
-                            <ButtonDropdown nav>
+                            <ButtonDropdown nav isOpen={this.state.isOpenViewMenu} toggle={this.toggleViewMenu}>
                                 <DropdownToggle nav className="ms-2">
                                     View <FontAwesomeIcon style={{ marginTop: '4px' }} icon={faChevronDown} pull="right" />
                                 </DropdownToggle>
@@ -377,14 +448,14 @@ class Header extends Component {
                                     <DropdownItem tag={RouterNavLink} exact to={ROUTES.VISUALIZATIONS} onClick={this.closeMenu}>
                                         Visualizations
                                     </DropdownItem>
-                                    <DropdownItem tag={RouterNavLink} exact to={ROUTES.SMART_REVIEWS} onClick={this.closeMenu}>
-                                        SmartReviews{' '}
+                                    <DropdownItem tag={RouterNavLink} exact to={ROUTES.REVIEWS} onClick={this.closeMenu}>
+                                        Reviews{' '}
                                         <small>
                                             <Badge color="info">Beta</Badge>
                                         </small>
                                     </DropdownItem>
-                                    <DropdownItem tag={RouterNavLink} exact to={ROUTES.LITERATURE_LISTS} onClick={this.closeMenu}>
-                                        Literature list{' '}
+                                    <DropdownItem tag={RouterNavLink} exact to={ROUTES.LISTS} onClick={this.closeMenu}>
+                                        Lists{' '}
                                         <small>
                                             <Badge color="info">Beta</Badge>
                                         </small>
@@ -395,6 +466,9 @@ class Header extends Component {
                                     <DropdownItem tag={RouterNavLink} exact to={ROUTES.RESEARCH_FIELDS} onClick={this.closeMenu}>
                                         Research fields
                                     </DropdownItem>
+
+                                    <ContentTypesMenu closeMenu={this.closeMenu} />
+
                                     <DropdownItem divider />
                                     <DropdownItem tag={RouterNavLink} exact to={ROUTES.OBSERVATORIES} onClick={this.closeMenu}>
                                         Observatories{' '}
@@ -477,6 +551,7 @@ class Header extends Component {
                                 </DropdownToggle>
                                 <DropdownMenu>
                                     <AboutMenu closeMenu={this.closeMenu} />
+                                    <DropdownItem divider />
                                     <DropdownItem tag={RouterNavLink} exact to={ROUTES.HELP_CENTER} onClick={this.closeMenu}>
                                         Help center
                                     </DropdownItem>
@@ -574,7 +649,7 @@ class Header extends Component {
                     </Collapse>
 
                     <Authentication />
-                </Navbar>
+                </StyledNavbar>
 
                 {this.props.location.pathname === ROUTES.HOME && <Jumbotron />}
             </StyledTopBar>

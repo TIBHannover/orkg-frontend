@@ -13,7 +13,7 @@ import PropTypes from 'prop-types';
 import ROUTES from 'constants/routes';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
-import { openAuthDialog } from 'actions/auth';
+import { openAuthDialog } from 'slices/authSlice';
 import { connect } from 'react-redux';
 import slugify from 'slugify';
 import { getPublicUrl } from 'utils';
@@ -158,7 +158,7 @@ class AddObservatory extends Component {
                                                 <Tooltip message="Permalink field allows to identify the observatory page on ORKG in an easy-to-read form. Only underscores ( _ ), numbers, and letters are allowed." />
                                             </Label>
                                             <InputGroup>
-                                                {this.state.publicObservatoryRoute}
+                                                <span className="input-group-text">{this.state.publicObservatoryRoute}</span>
                                                 <Input
                                                     onChange={this.handleChange}
                                                     type="text"

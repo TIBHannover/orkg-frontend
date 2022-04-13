@@ -1,7 +1,7 @@
 import { forwardRef } from 'react';
 import StatementItem from 'components/StatementBrowser/StatementItem/StatementItem';
 import Template from 'components/StatementBrowser/Template/Template';
-import { isTemplateContextProperty } from 'actions/statementBrowser';
+import { isTemplateContextProperty } from 'slices/statementBrowserSlice';
 import PropTypes from 'prop-types';
 import { useCookies } from 'react-cookie';
 import { useSelector } from 'react-redux';
@@ -21,7 +21,7 @@ const StatementItemWrapper = forwardRef((props, ref) => {
             <StatementItem
                 key={`statement-p${props.propertyId}r${props.resourceId}`}
                 id={props.propertyId}
-                enableEdit={props.shared <= 1 ? props.enableEdit : false}
+                enableEdit={props.enableEdit}
                 syncBackend={props.syncBackend}
                 resourceId={props.resourceId}
                 showValueHelp={cookies && !cookies.showedValueHelp && props.isFirstItem ? true : false}
@@ -60,7 +60,6 @@ StatementItemWrapper.propTypes = {
     showValueHelp: PropTypes.bool,
     isFirstItem: PropTypes.bool,
     resourceId: PropTypes.string,
-    shared: PropTypes.number,
     openExistingResourcesInDialog: PropTypes.bool
 };
 

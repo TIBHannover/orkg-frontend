@@ -1,16 +1,15 @@
 import { useState, useCallback, useEffect } from 'react';
 import {
-    createValue,
+    createValueAction as createValue,
     getComponentsByResourceIDAndPredicateID,
     fetchTemplatesOfClassIfNeeded,
     createRequiredPropertiesInResource,
-    selectResource,
+    selectResourceAction as selectResource,
     getValueClass,
     isLiteral,
-    isAddingValue,
-    doneAddingValue,
-    fillStatements
-} from 'actions/statementBrowser';
+    fillStatements,
+    setIsAddingValue
+} from 'slices/statementBrowserSlice';
 import { createResourceStatement } from 'services/backend/statements';
 import { createLiteral } from 'services/backend/literals';
 import { createPredicate } from 'services/backend/predicates';
@@ -79,9 +78,10 @@ const useAddValue = ({ resourceId, propertyId, syncBackend }) => {
                 });
             }
             statements['values'].push({
-                type: 'literal',
+                _class: statement.value._class,
                 propertyId: createdProperties[statement.predicate.id],
-                label: statement.value.label
+                label: statement.value.label,
+                datatype: statement.value.datatype
             });
         }
         return statements;
@@ -90,7 +90,7 @@ const useAddValue = ({ resourceId, propertyId, syncBackend }) => {
     const createBlankNode = () => {
         // is the valueType is literal, it's not possible to set it as an object of a statement
         // 1 - create a resource
-        dispatch(isAddingValue({ id: propertyId }));
+        dispatch(setIsAddingValue({ id: propertyId, status: true }));
         handleAddValue(ENTITIES.RESOURCE, { label: isBlankNode, shared: 0 }).then(newResourceId => {
             // 2 - open the dialog on that resource
             if (openExistingResourcesInDialog) {
@@ -101,7 +101,7 @@ const useAddValue = ({ resourceId, propertyId, syncBackend }) => {
                         setModal(true);
                     })
                 );
-                dispatch(doneAddingValue({ id: propertyId }));
+                dispatch(setIsAddingValue({ id: propertyId, status: false }));
             } else {
                 dispatch(
                     selectResource({
@@ -111,7 +111,7 @@ const useAddValue = ({ resourceId, propertyId, syncBackend }) => {
                         propertyLabel: property.label
                     })
                 );
-                dispatch(doneAddingValue({ id: propertyId }));
+                dispatch(setIsAddingValue({ id: propertyId, status: false }));
             }
         });
     };

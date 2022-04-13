@@ -1,13 +1,14 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { getStatementsByObjectAndPredicate, getParentResearchFields } from 'services/backend/statements';
-import { getResearchProblemsOfContribution } from 'actions/statementBrowser';
+import { getResearchProblemsOfContribution } from 'slices/statementBrowserSlice';
+import { getResearchProblems, getResearchFields, getCommonClasses } from 'slices/contributionEditorSlice';
 import { uniqBy, differenceBy } from 'lodash';
 import { debounce } from 'lodash';
 import { getResourcesByClass } from 'services/backend/resources';
 import { CLASSES, ENTITIES, PREDICATES } from 'constants/graphSettings';
 
-const useTemplates = ({ onlyFeatured = true }) => {
+const useTemplates = ({ onlyFeatured = true, isContributionEditor = false }) => {
     const filterOptions = [
         { id: CLASSES.TEMPLATE, label: 'label', predicate: null, placeholder: 'Search template by label', entityType: null },
         {
@@ -42,11 +43,22 @@ const useTemplates = ({ onlyFeatured = true }) => {
     const [isLoadingUsedTemplates, setIsLoadingUsedTemplates] = useState(false);
     const [usedTemplates, setUsedTemplates] = useState([]);
 
-    const selectedResource = useSelector(state => state.statementBrowser.selectedResource);
-    const researchField = useSelector(state => state.viewPaper.researchField?.id || state.addPaper.selectedResearchField);
-    const resource = useSelector(state => selectedResource && state.statementBrowser.resources.byId[selectedResource]);
+    const selectedResource = useSelector(state => (!isContributionEditor ? state.statementBrowser.selectedResource : null));
+
+    // in case of contribution editor, we consider only the research field of the first contribution
+    const researchField = useSelector(state =>
+        !isContributionEditor ? state.viewPaper.researchField?.id || state.addPaper.selectedResearchField : getResearchFields(state)?.[0]
+    );
+    const resource = useSelector(state =>
+        !isContributionEditor ? selectedResource && state.statementBrowser.resources.byId[selectedResource] : { classes: getCommonClasses(state) }
+    );
+
     const researchProblems = useSelector(state =>
-        resource?.classes?.includes(CLASSES.CONTRIBUTION) ? getResearchProblemsOfContribution(state, selectedResource) : []
+        !isContributionEditor
+            ? resource?.classes?.includes(CLASSES.CONTRIBUTION)
+                ? getResearchProblemsOfContribution(state, selectedResource)
+                : []
+            : getResearchProblems(state)
     );
 
     /**
@@ -170,7 +182,8 @@ const useTemplates = ({ onlyFeatured = true }) => {
                 setUsedTemplates([]);
                 setIsLoadingUsedTemplates(false);
             });
-    }, [getTemplatesOfResourceId, resource?.classes]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [getTemplatesOfResourceId, JSON.stringify(resource?.classes)]);
 
     const handleSelectedFilterChange = selected => {
         setTemplates([]);
@@ -203,7 +216,10 @@ const useTemplates = ({ onlyFeatured = true }) => {
         filterOptions,
         templates: differenceBy(uniqBy(templates, 'id'), usedTemplates, 'id'),
         featuredTemplates: differenceBy(featuredTemplates, usedTemplates, 'id'),
-        usedTemplates,
+        // Hide the delete button for contribution template
+        usedTemplates: usedTemplates.filter(t => {
+            return t?.classId !== CLASSES.CONTRIBUTION;
+        }),
         isLoadingUsedTemplates,
         researchField,
         isNextPageLoading,

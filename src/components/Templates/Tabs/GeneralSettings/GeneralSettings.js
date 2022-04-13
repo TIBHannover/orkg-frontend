@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import { FormGroup, Label, FormText, Input } from 'reactstrap';
-import { setLabel, setPredicate, setClass, setResearchFields, setResearchProblems } from 'actions/addTemplate';
+import { updateLabel, updatePredicate, updateClass, updateResearchFields, updateResearchProblems } from 'slices/templateEditorSlice';
 import { createPredicate } from 'services/backend/predicates';
 import ConfirmClass from 'components/ConfirmationModal/ConfirmationModal';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
@@ -16,53 +16,53 @@ const GeneralSettings = () => {
     const predicateAutocompleteRef = useRef(null);
     const { confirmProperty } = useConfirmPropertyModal();
     const dispatch = useDispatch();
-    const { templateID, label, predicate, class: clasS, editMode, researchProblems, researchFields } = useSelector(state => state.addTemplate);
+    const { templateID, label, predicate, class: clasS, editMode, researchProblems, researchFields } = useSelector(state => state.templateEditor);
 
     const handleChangeLabel = event => {
-        dispatch(setLabel(event.target.value));
+        dispatch(updateLabel(event.target.value));
     };
 
     const handlePropertySelect = async (selected, { action }) => {
         if (action === 'select-option') {
-            dispatch(setPredicate(selected));
+            dispatch(updatePredicate(selected));
         } else if (action === 'create-option') {
             const confirmedProperty = await confirmProperty();
             if (confirmedProperty) {
                 const newPredicate = await createPredicate(selected.label);
                 selected.id = newPredicate.id;
-                dispatch(setPredicate(selected));
+                dispatch(updatePredicate(selected));
             }
             // blur the field allows to focus and open the menu again
             predicateAutocompleteRef.current && predicateAutocompleteRef.current.blur();
         } else if (action === 'clear') {
-            dispatch(setPredicate(null));
+            dispatch(updatePredicate(null));
         }
     };
 
     const handleClassSelect = async (selected, { action }) => {
         if (action === 'select-option') {
-            dispatch(setClass(selected));
+            dispatch(updateClass(selected));
         } else if (action === 'create-option') {
             const newClass = await ConfirmClass({
                 label: selected.label
             });
             if (newClass) {
                 selected.id = newClass.id;
-                dispatch(setClass(selected));
+                dispatch(updateClass(selected));
             }
             // blur the field allows to focus and open the menu again
             classAutocompleteRef.current && classAutocompleteRef.current.blur();
         } else if (action === 'clear') {
-            dispatch(setClass(null));
+            dispatch(updateClass(null));
         }
     };
 
     const handleResearchFieldSelect = selected => {
-        dispatch(setResearchFields(!selected ? [] : selected));
+        dispatch(updateResearchFields(!selected ? [] : selected));
     };
 
     const handleResearchProblemSelect = selected => {
-        dispatch(setResearchProblems(!selected ? [] : selected));
+        dispatch(updateResearchProblems(!selected ? [] : selected));
     };
 
     /*
@@ -99,8 +99,8 @@ const GeneralSettings = () => {
                 {editMode && <FormText>Specify the class of this template. If not specified, a class is generated automatically.</FormText>}
             </FormGroup>
             <>
-                <fieldset className="scheduler-border">
-                    <legend className="scheduler-border">Template use cases</legend>
+                <fieldset className="scheduler-border p-3">
+                    <legend className="mt-3">Template use cases</legend>
                     <p>
                         <small className="text-muted">
                             These fields are optional, the property is used to link the contribution resource to the template instance. The research

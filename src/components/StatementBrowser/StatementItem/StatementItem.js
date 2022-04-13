@@ -1,6 +1,6 @@
 import { forwardRef } from 'react';
 import useStatementItem from './hooks/useStatementItem';
-import { toggleEditPropertyLabel } from 'actions/statementBrowser';
+import { toggleEditPropertyLabel } from 'slices/statementBrowserSlice';
 import { faPen, faTrash, faCheck, faTimes, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { ListGroup, InputGroup } from 'reactstrap';
 import PropTypes from 'prop-types';

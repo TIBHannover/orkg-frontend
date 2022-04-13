@@ -1,12 +1,12 @@
 import { Container, ButtonGroup, Button } from 'reactstrap';
-import { setEditMode, saveTemplate } from 'actions/addTemplate';
+import { setEditMode, saveTemplate } from 'slices/templateEditorSlice';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPen, faSpinner, faSave } from '@fortawesome/free-solid-svg-icons';
-import { Title } from 'pages/ViewPaper';
 import { CSSTransition } from 'react-transition-group';
+import { Title } from 'components/EditModeHeader/EditModeHeader';
 
 const PaperHeaderBarContainer = styled.div`
     position: fixed;
@@ -80,10 +80,10 @@ TemplateEditorHeaderBar.propTypes = {
 
 const mapStateToProps = state => {
     return {
-        editMode: state.addTemplate.editMode,
-        isSaving: state.addTemplate.isSaving,
-        label: state.addTemplate.label,
-        template: state.addTemplate
+        editMode: state.templateEditor.editMode,
+        isSaving: state.templateEditor.isSaving,
+        label: state.templateEditor.label,
+        template: state.templateEditor
     };
 };
 

@@ -15,6 +15,7 @@ const theme = {
     dark: 'rgb(91, 97, 118)',
     bodyBg: 'rgb(233, 235, 242)',
     bodyColor: 'rgb(79, 79, 79)',
+    listGroupColor: 'rgb(79, 79, 79)',
     borderWidth: '1px',
     borderRadius: '6px',
     themeColors: {

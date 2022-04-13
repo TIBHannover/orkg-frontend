@@ -1,4 +1,4 @@
-import { updateTableData } from 'actions/pdfAnnotation';
+import { updateTableData, setTableData } from 'slices/pdfAnnotationSlice';
 import { useSelector, useDispatch } from 'react-redux';
 import { cloneDeep } from 'lodash';
 
@@ -16,7 +16,11 @@ function useTableEditor(tableId, tableRef) {
                 toRemove.push([i, 1]);
             }
         }
-        tableInstance.alter('remove_row', toRemove);
+        const _tableData = cloneDeep(tableData);
+        for (const toRemoveRow of toRemove) {
+            _tableData.splice(toRemoveRow[0], toRemoveRow[1]);
+        }
+        dispatch(setTableData({ id: tableId, tableData: _tableData }));
     };
 
     const renderTable = () => {
@@ -47,7 +51,7 @@ function useTableEditor(tableId, tableRef) {
 
                 // TODO: follow up with handontable issue https://forum.handsontable.com/t/gh-5727-contextmenu-callback-the-runhooks-method-cannot-be-called/4134/11
                 setTimeout(function() {
-                    dispatch(updateTableData(tableId, tableUpdates));
+                    dispatch(updateTableData({ id: tableId, dataChanges: tableUpdates }));
                 }, 100);
             }
         }

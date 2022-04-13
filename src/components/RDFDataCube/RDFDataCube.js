@@ -15,7 +15,11 @@ import {
     DropdownToggle,
     InputGroup
 } from 'reactstrap';
-import { selectResource, fetchStatementsForResource, createResource } from 'actions/statementBrowser';
+import {
+    selectResourceAction as selectResource,
+    fetchStatementsForResource,
+    createResourceAction as createResource
+} from 'slices/statementBrowserSlice';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner, faEllipsisV, faSortUp, faSortDown } from '@fortawesome/free-solid-svg-icons';
 import { getStatementsBySubject, getStatementsByObject } from 'services/backend/statements';

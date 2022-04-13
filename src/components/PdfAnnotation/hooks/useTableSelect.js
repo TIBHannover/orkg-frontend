@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { addTableRegion, deleteTableRegion } from 'actions/pdfAnnotation';
+import { addTableRegion, deleteTableRegion } from 'slices/pdfAnnotationSlice';
 import { useSelector, useDispatch } from 'react-redux';
 
 function useTableSelect(props) {

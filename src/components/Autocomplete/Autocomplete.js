@@ -23,6 +23,7 @@ import REGEX from 'constants/regex';
 import NativeListener from 'react-native-listener';
 import CustomOption from './CustomOption';
 import { ENTITIES } from 'constants/graphSettings';
+import { SelectGlobalStyle } from 'components/Autocomplete/styled';
 
 export const StyledAutoCompleteInputFormControl = styled.div`
     padding-top: 0 !important;
@@ -139,7 +140,7 @@ function Autocomplete(props) {
         }
         let responseJson;
         if (props.optionsClass) {
-            responseJson = await getResourcesByClass({ id: props.optionsClass, q: value.trim(), page: page, items: PAGE_SIZE });
+            responseJson = await getResourcesByClass({ id: props.optionsClass, q: value.trim(), page: page, items: PAGE_SIZE, exact });
         } else {
             const isURI = new RegExp(REGEX.URL).test(value.trim());
             if (props.entityType === ENTITIES.CLASS && isURI) {
@@ -627,9 +628,18 @@ function Autocomplete(props) {
             whiteSpace: 'normal',
             padding: 0
         }),
-        multiValueRemove: provided => ({
+        multiValueLabel: (provided, state) => ({
             ...provided,
+            ...(state.data.isFixed ? { paddingRight: '6px' } : {})
+        }),
+        multiValueRemove: (provided, state) => ({
+            ...provided,
+            ...(state.data.isFixed ? { display: 'none' } : {}),
             cursor: 'pointer'
+        }),
+        input: provided => ({
+            ...provided,
+            visibility: 'visible'
         })
     };
 
@@ -672,9 +682,14 @@ function Autocomplete(props) {
                 showDialog={ontologySelectorIsOpen}
             />
             <StyledAutoCompleteInputFormControl className={`form-control ${props.cssClasses ? props.cssClasses : 'default'} border-0`}>
+                <SelectGlobalStyle />
                 <Select
                     key={JSON.stringify(selectedOntologies.map(o => o.id))}
-                    value={props.value}
+                    value={
+                        props.isMulti && props.fixedOptions?.length
+                            ? props.value?.map?.(v => ({ ...v, isFixed: props.fixedOptions.includes(v.id) }))
+                            : props.value
+                    }
                     loadOptions={loadOptions}
                     additional={defaultAdditional}
                     noOptionsMessage={noResults}
@@ -778,7 +793,8 @@ Autocomplete.propTypes = {
     onChangeInputValue: PropTypes.func,
     inputValue: PropTypes.string,
     menuPortalTarget: PropTypes.object,
-    cacheOptions: PropTypes.bool
+    cacheOptions: PropTypes.bool,
+    fixedOptions: PropTypes.array
 };
 
 Autocomplete.defaultProps = {
@@ -797,6 +813,7 @@ Autocomplete.defaultProps = {
     inputValue: null,
     menuPortalTarget: null,
     allowCreateDuplicate: false,
-    cacheOptions: false
+    cacheOptions: false,
+    fixedOptions: []
 };
 export default withTheme(Autocomplete);

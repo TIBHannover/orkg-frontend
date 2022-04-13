@@ -1,4 +1,6 @@
 import useContributionEditor from 'components/ContributionEditor/hooks/useContributionEditor';
+import SBEditorHelpModal from 'components/StatementBrowser/SBEditorHelpModal/SBEditorHelpModal';
+import { Alert } from 'reactstrap';
 import PropTypes from 'prop-types';
 import { memo, useMemo } from 'react';
 import { useSelector } from 'react-redux';
@@ -40,42 +42,50 @@ const EditorTable = ({ scrollContainerBody }) => {
     );
 
     return (
-        <div role="table" id="comparisonTable" {...getTableProps()} className="table sticky mb-0 p-0" style={{ height: 'max-content' }}>
-            <ScrollSyncPane group="one">
-                <div style={{ overflow: 'auto', top: '71px', position: 'sticky', zIndex: '3' }} className="disable-scrollbars">
-                    {headerGroups.map(headerGroup => (
-                        <div className="header" {...headerGroup.getHeaderGroupProps()}>
-                            {headerGroup.headers.map(column => (
-                                <div {...column.getHeaderProps()} className="th p-0">
-                                    {column.render('Header')}
-                                </div>
-                            ))}
-                        </div>
-                    ))}
-                </div>
-            </ScrollSyncPane>
-            <ScrollSyncPane group="one">
-                {/* paddingBottom for the 'add value' bottom, which is positioned partially below the table */}
-                <div ref={scrollContainerBody} style={{ overflow: 'auto', paddingBottom: 15 }}>
-                    <div {...getTableBodyProps()} className="comparisonBody" style={{ ...getTableProps().style }}>
-                        <FlipMove duration={700} enterAnimation="accordionVertical" leaveAnimation="accordionVertical" className="p-0">
-                            {rows.map(row => {
-                                prepareRow(row);
-                                return (
-                                    <div {...row.getRowProps()} className="tr d-flex p-0" style={{ zIndex: 100 - row.index }}>
-                                        {row.cells.map(cell => (
-                                            <div {...cell.getCellProps()} className="td p-0">
-                                                {cell.render('Cell')}
-                                            </div>
-                                        ))}
+        <>
+            <SBEditorHelpModal />
+            <div role="table" id="comparisonTable" {...getTableProps()} className="table sticky mb-0 p-0" style={{ height: 'max-content' }}>
+                <ScrollSyncPane group="one">
+                    <div style={{ overflow: 'auto', top: '71px', position: 'sticky', zIndex: '3' }} className="disable-scrollbars">
+                        {headerGroups.map(headerGroup => (
+                            <div className="header" {...headerGroup.getHeaderGroupProps()}>
+                                {headerGroup.headers.map(column => (
+                                    <div {...column.getHeaderProps()} className="th p-0">
+                                        {column.render('Header')}
                                     </div>
-                                );
-                            })}
-                        </FlipMove>
+                                ))}
+                            </div>
+                        ))}
                     </div>
-                </div>
-            </ScrollSyncPane>
-        </div>
+                </ScrollSyncPane>
+                <ScrollSyncPane group="one">
+                    {/* paddingBottom for the 'add value' bottom, which is positioned partially below the table */}
+                    <div ref={scrollContainerBody} style={{ overflow: 'auto', paddingBottom: 15 }}>
+                        <div {...getTableBodyProps()} className="comparisonBody" style={{ ...getTableProps().style }}>
+                            <FlipMove duration={700} enterAnimation="accordionVertical" leaveAnimation="accordionVertical" className="p-0">
+                                {rows.map(row => {
+                                    prepareRow(row);
+                                    return (
+                                        <div {...row.getRowProps()} className="tr d-flex p-0" style={{ zIndex: 100 - row.index }}>
+                                            {row.cells.map(cell => (
+                                                <div {...cell.getCellProps()} className="td p-0">
+                                                    {cell.render('Cell')}
+                                                </div>
+                                            ))}
+                                        </div>
+                                    );
+                                })}
+                            </FlipMove>
+                        </div>
+                    </div>
+                    {rows.length === 0 && (
+                        <Alert className="mt-0" color="info">
+                            Start adding properties or use templates by using the buttons below
+                        </Alert>
+                    )}
+                </ScrollSyncPane>
+            </div>
+        </>
     );
 };
 

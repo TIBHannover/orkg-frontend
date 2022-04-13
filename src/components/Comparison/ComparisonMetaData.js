@@ -27,8 +27,12 @@ function ComparisonMetaData(props) {
                         ) : (
                             ''
                         )}
-
-                        {props.metaData.authors && props.metaData.authors.length > 0 && <AuthorBadges authors={props.metaData.authors} />}
+                        {props.metaData.authors &&
+                            props.metaData.authors.length > 0 &&
+                            (!props.provenance?.organization?.metadata?.is_double_blind ||
+                                moment().format('YYYY-MM-DD') >= props.provenance?.organization?.metadata?.date) && (
+                                <AuthorBadges authors={props.metaData.authors} />
+                            )}
                     </div>
                     {props.metaData.doi && (
                         <div>
@@ -62,7 +66,8 @@ function ComparisonMetaData(props) {
 
 ComparisonMetaData.propTypes = {
     metaData: PropTypes.object,
-    authors: PropTypes.array
+    authors: PropTypes.array,
+    provenance: PropTypes.object
 };
 
 export default ComparisonMetaData;

@@ -29,6 +29,9 @@ const EditItem = props => {
     } else if (props.type === 'month') {
         input = (
             <Input type="select" value={props.value} onChange={props.onChange}>
+                <option value="" key="">
+                    Month
+                </option>
                 {moment.months().map((el, index) => {
                     return (
                         <option value={index + 1} key={index + 1}>
@@ -42,6 +45,9 @@ const EditItem = props => {
     } else if (props.type === 'year') {
         input = (
             <Input type="select" value={props.value} onChange={props.onChange}>
+                <option value="" key="">
+                    Year
+                </option>
                 {range(1900, moment().year())
                     .reverse()
                     .map(year => (
@@ -142,7 +148,7 @@ EditItem.propTypes = {
     toggleItem: PropTypes.func.isRequired,
     value: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.array, PropTypes.object]),
     onChange: PropTypes.func.isRequired,
-    type: PropTypes.oneOf(['text', 'month', 'year', 'authors', 'publishedIn', 'researchField']).isRequired,
+    type: PropTypes.oneOf(['text', 'month', 'year', 'authors', 'publishedIn', 'researchField', 'textarea']).isRequired,
     isLastItem: PropTypes.bool
 };
 

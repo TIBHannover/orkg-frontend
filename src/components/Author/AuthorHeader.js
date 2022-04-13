@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Button, Container, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import useAuthor from './hooks/useAuthor';
 import NotFound from 'pages/NotFound';
@@ -11,7 +11,6 @@ import TitleBar from 'components/TitleBar/TitleBar';
 import styled from 'styled-components';
 import { NavLink } from 'react-router-dom';
 import ROUTES from 'constants/routes.js';
-import { usePrevious } from 'react-use';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 
@@ -31,17 +30,9 @@ const AuthorMetaInfo = styled.div`
 const AuthorHeader = ({ authorId }) => {
     const [menuOpen, setMenuOpen] = useState(false);
     const [editMode, setEditMode] = useState(false);
-    const prevEditMode = usePrevious({ editMode });
     const { author, isLoading, isFailedLoading, loadAuthorData } = useAuthor({
         authorId
     });
-
-    useEffect(() => {
-        if (!editMode && prevEditMode && prevEditMode.editMode !== editMode) {
-            loadAuthorData();
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [editMode]);
 
     return (
         <>
@@ -69,7 +60,7 @@ const AuthorHeader = ({ authorId }) => {
                                     <DropdownToggle size="sm" color="secondary" className="px-3 rounded-end" style={{ marginLeft: 2 }}>
                                         <Icon icon={faEllipsisV} />
                                     </DropdownToggle>
-                                    <DropdownMenu right>
+                                    <DropdownMenu end>
                                         <DropdownItem tag={NavLink} exact to={reverse(ROUTES.RESOURCE, { id: authorId })}>
                                             View resource
                                         </DropdownItem>
@@ -89,6 +80,7 @@ const AuthorHeader = ({ authorId }) => {
                             label={author.label}
                             enableEdit={true}
                             syncBackend={true}
+                            onCloseModal={() => loadAuthorData()}
                         />
                     )}
                     <Container className="p-0">
@@ -176,7 +168,7 @@ const AuthorHeader = ({ authorId }) => {
 };
 
 AuthorHeader.propTypes = {
-    authorId: PropTypes.object.isRequired
+    authorId: PropTypes.string.isRequired
 };
 
 export default AuthorHeader;

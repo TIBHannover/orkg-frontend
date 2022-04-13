@@ -2,7 +2,7 @@ import { Button, Form, FormGroup, Input, Label, Alert } from 'reactstrap';
 import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { openAuthDialog, toggleAuthDialog, updateAuth } from 'actions/auth';
+import { openAuthDialog, toggleAuthDialog, updateAuth } from 'slices/authSlice';
 import { signInWithEmailAndPassword, getUserInformation } from 'services/backend/users';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
@@ -11,6 +11,7 @@ import { checkCookie } from 'utils';
 import env from '@beam-australia/react-env';
 import { withRouter } from 'react-router-dom';
 import { compose } from 'redux';
+import withMatomo from 'components/Matomo/withMatomo';
 
 const cookies = new Cookies();
 
@@ -43,8 +44,8 @@ class SignIn extends Component {
             .then(token => {
                 userToken = token.access_token;
                 cookies.set('token', token.access_token, { path: env('PUBLIC_URL'), maxAge: token.expires_in });
-                token_expires_in = new Date(Date.now() + token.expires_in * 1000);
-                cookies.set('token_expires_in', token_expires_in.toUTCString(), { path: env('PUBLIC_URL'), maxAge: token.expires_in });
+                token_expires_in = new Date(Date.now() + token.expires_in * 1000).toUTCString();
+                cookies.set('token_expires_in', token_expires_in, { path: env('PUBLIC_URL'), maxAge: token.expires_in });
                 //window.location.reload();
                 return getUserInformation();
             })
@@ -63,6 +64,7 @@ class SignIn extends Component {
                 });
                 this.props.toggleAuthDialog();
                 this.setState({ loading: false });
+                this.props.trackEvent({ category: 'authentication', action: 'sign-in' });
                 if (redirectRoute) {
                     this.props.history.push(redirectRoute);
                 }
@@ -134,6 +136,7 @@ SignIn.propTypes = {
     toggleAuthDialog: PropTypes.func.isRequired,
     signInRequired: PropTypes.bool.isRequired,
     history: PropTypes.object.isRequired,
+    trackEvent: PropTypes.func.isRequired,
     redirectRoute: PropTypes.string
 };
 
@@ -157,5 +160,6 @@ export default compose(
         mapStateToProps,
         mapDispatchToProps
     ),
-    withRouter
+    withRouter,
+    withMatomo
 )(SignIn);

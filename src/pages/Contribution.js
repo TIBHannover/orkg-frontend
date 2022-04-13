@@ -15,7 +15,7 @@ export default function Contribution(props) {
     const contributionId = props.match.params.id;
     const [error, setError] = useState(false);
     const [paperId, setPaperId] = useState(null);
-    const [isSmartReview, setIsSmartReview] = useState(false);
+    const [isReview, setIsReview] = useState(false);
 
     useEffect(() => {
         getStatementsByObjectAndPredicate({ objectId: contributionId, predicateId: PREDICATES.HAS_CONTRIBUTION }).then(statements => {
@@ -29,7 +29,7 @@ export default function Contribution(props) {
                 _statement => _statement.subject.classes.includes(CLASSES.PAPER) || _statement.subject.classes.includes(CLASSES.SMART_REVIEW)
             );
 
-            setIsSmartReview(!!statements.find(_statement => _statement.subject.classes.includes(CLASSES.SMART_REVIEW)));
+            setIsReview(!!statements.find(_statement => _statement.subject.classes.includes(CLASSES.SMART_REVIEW)));
 
             if (!paperStatement) {
                 setError(true);
@@ -42,10 +42,10 @@ export default function Contribution(props) {
 
     if (error) {
         return <NotFound />;
-    } else if (!isSmartReview && paperId) {
+    } else if (!isReview && paperId) {
         return <Redirect to={reverse(ROUTES.VIEW_PAPER, { resourceId: paperId, contributionId })} />;
     } else if (paperId) {
-        return <Redirect to={reverse(ROUTES.SMART_REVIEW, { id: paperId })} />;
+        return <Redirect to={reverse(ROUTES.REVIEW, { id: paperId })} />;
     } else {
         return <Container className="box rounded pt-4 pb-4 ps-5 pe-5 mt-5 clearfix">Loading ...</Container>;
     }

@@ -32,6 +32,10 @@ import UserAvatar from 'components/UserAvatar/UserAvatar';
 import { slugify } from 'utils';
 import { PREDICATES, CLASSES, ENTITIES, MISC } from 'constants/graphSettings';
 import env from '@beam-australia/react-env';
+import Select from 'react-select';
+import { getConferences } from 'services/backend/organizations';
+import { SelectGlobalStyle } from 'components/Autocomplete/styled';
+import { useMatomo } from '@datapunt/matomo-tracker-react';
 
 const StyledCustomInput = styled(Input)`
     margin-right: 0;
@@ -80,6 +84,9 @@ function Publish(props) {
     );
     const [subject, setSubject] = useState(props.metaData && props.metaData.subject ? props.metaData.subject : undefined);
     const [comparisonCreators, setComparisonCreators] = useState(props.authors ?? []);
+    const [conferencesList, setConferencesList] = useState([]);
+    const [conference, setConference] = useState(null);
+    const { trackEvent } = useMatomo();
 
     const handleCreatorsChange = creators => {
         creators = creators ? creators : [];
@@ -93,6 +100,15 @@ function Publish(props) {
         setSubject(props.metaData && props.metaData.subject ? props.metaData.subject : undefined);
         setComparisonCreators(props.authors ? props.authors : []);
     }, [props.metaData, props.authors]);
+
+    useEffect(() => {
+        const getConferencesList = () => {
+            getConferences().then(response => {
+                setConferencesList(response);
+            });
+        };
+        getConferencesList();
+    }, []);
 
     // TODO: improve code by using reduce function and unify code with paper edit dialog
     const saveCreators = async (creators, resourceId) => {
@@ -209,8 +225,19 @@ function Publish(props) {
                                             '@id': props.metaData.hasPreviousVersion.id
                                         }
                                     ]
-                                })
-                            }
+                                }),
+                                ...(conference &&
+                                    conference.metadata?.is_double_blind && {
+                                        [PREDICATES.IS_ANONYMIZED]: [
+                                            {
+                                                text: true,
+                                                datatype: 'xsd:boolean'
+                                            }
+                                        ]
+                                    })
+                            },
+                            observatoryId: MISC.UNKNOWN_ID,
+                            organizationId: conference ? conference.id : MISC.UNKNOWN_ID
                         }
                     };
                     const createdComparison = await createObject(comparison_obj);
@@ -219,6 +246,7 @@ function Publish(props) {
                         resourceId: createdComparison.id,
                         data: { url: `${props.comparisonURLConfig}&response_hash=${response_hash}` }
                     });
+                    trackEvent({ category: 'data-entry', action: 'publish-comparison' });
                     toast.success('Comparison saved successfully');
                     // Assign a DOI
                     if (assignDOI) {
@@ -383,7 +411,7 @@ function Publish(props) {
                         </InputGroup>
                     </FormGroup>
                 )}
-                {props.comparisonId && !props.doi && (
+                {props.comparisonId && !props.doi && !props.anonymized && (
                     <FormGroup>
                         <div>
                             <Tooltip
@@ -508,6 +536,23 @@ function Publish(props) {
                             />
                         </FormGroup>
                         <FormGroup>
+                            <Label for="conference">
+                                <Tooltip message="Select a conference">Conference</Tooltip>
+                            </Label>
+                            <Select
+                                options={conferencesList}
+                                onChange={e => {
+                                    setConference(e);
+                                }}
+                                getOptionValue={({ id }) => id}
+                                isSearchable={true}
+                                getOptionLabel={({ name }) => name}
+                                isClearable={true}
+                                classNamePrefix="react-select"
+                            />
+                            <SelectGlobalStyle />
+                        </FormGroup>
+                        <FormGroup>
                             <Label for="Creator">
                                 <Tooltip message="The creator or creators of the comparison. Enter both the first and last name">Creators</Tooltip>
                             </Label>
@@ -531,7 +576,7 @@ function Publish(props) {
                                     </AuthorTag>
                                 ))}
                         </FormGroup>
-                        {!props.comparisonId && (
+                        {!props.comparisonId && (!conference || !conference.metadata.is_double_blind) && (
                             <FormGroup>
                                 <div>
                                     <Tooltip message="A DOI will be assigned to published comparison and it cannot be changed in future.">
@@ -597,7 +642,8 @@ Publish.propTypes = {
     loadCreatedBy: PropTypes.func.isRequired,
     loadProvenanceInfos: PropTypes.func.isRequired,
     data: PropTypes.object.isRequired,
-    nextVersions: PropTypes.array.isRequired
+    nextVersions: PropTypes.array.isRequired,
+    anonymized: PropTypes.bool
 };
 
 export default Publish;

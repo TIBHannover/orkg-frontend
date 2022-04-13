@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { openAuthDialog } from 'actions/auth';
+import { openAuthDialog } from 'slices/authSlice';
 import PropTypes from 'prop-types';
 
 const RequireAuthentication = ({ component: Component, ...rest }) => {

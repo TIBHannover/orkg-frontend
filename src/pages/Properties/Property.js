@@ -7,17 +7,18 @@ import RequireAuthentication from 'components/RequireAuthentication/RequireAuthe
 import NotFound from 'pages/NotFound';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPen, faTimes } from '@fortawesome/free-solid-svg-icons';
-import { EditModeHeader, Title } from 'pages/ViewPaper';
 import PropTypes from 'prop-types';
 import { useLocation } from 'react-router-dom';
 import PropertyStatements from 'components/PropertyStatements/PropertyStatements';
 import { ENTITIES } from 'constants/graphSettings';
 import TitleBar from 'components/TitleBar/TitleBar';
+import ItemMetadata from 'components/Search/ItemMetadata';
+import EditModeHeader from 'components/EditModeHeader/EditModeHeader';
 
 function Property(props) {
     const location = useLocation();
     const [error, setError] = useState(null);
-    const [label, setLabel] = useState('');
+    const [property, setProperty] = useState('');
     const [isLoading, setIsLoading] = useState(true);
     const [editMode, setEditMode] = useState(false);
     const propertyId = props.match.params.id;
@@ -29,11 +30,11 @@ function Property(props) {
                 const responseJson = await getPredicate(propertyId);
                 document.title = `${responseJson.label} - Property - ORKG`;
 
-                setLabel(responseJson.label);
+                setProperty(responseJson);
                 setIsLoading(false);
             } catch (err) {
                 console.error(err);
-                setLabel(null);
+                setProperty(null);
                 setError(err);
                 setIsLoading(false);
             }
@@ -69,25 +70,16 @@ function Property(props) {
                         Property view
                     </TitleBar>
                     <Container className="p-0 clearfix">
-                        {editMode && (
-                            <EditModeHeader className="box rounded-top">
-                                <Title>
-                                    Edit mode <span className="ps-2">Every change you make is automatically saved</span>
-                                </Title>
-                            </EditModeHeader>
-                        )}
+                        <EditModeHeader isVisible={editMode} />
                         <div className={`box clearfix pt-4 pb-4 ps-5 pe-5 ${editMode ? 'rounded-bottom' : 'rounded'}`}>
-                            <div className="mb-2">
-                                <div className="pb-2 mb-3">
-                                    <h3 className="" style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
-                                        {label || (
-                                            <i>
-                                                <small>No label</small>
-                                            </i>
-                                        )}
-                                    </h3>
-                                </div>
-                            </div>
+                            <h3 className="" style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
+                                {property?.label || (
+                                    <i>
+                                        <small>No label</small>
+                                    </i>
+                                )}
+                            </h3>
+                            <ItemMetadata item={property} showCreatedAt={true} showCreatedBy={true} />
                             <hr />
                             <h3 className="h5">Statements</h3>
                             <div className="clearfix">
@@ -97,7 +89,7 @@ function Property(props) {
                                     syncBackend={editMode}
                                     openExistingResourcesInDialog={false}
                                     initialSubjectId={propertyId}
-                                    initialSubjectLabel={label}
+                                    initialSubjectLabel={property?.label}
                                     newStore={true}
                                     propertiesAsLinks={true}
                                     resourcesAsLinks={true}

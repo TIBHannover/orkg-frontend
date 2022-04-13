@@ -8,7 +8,7 @@ import { getClassById } from 'services/backend/classes';
 import { reverse } from 'named-urls';
 import { CSSTransition } from 'react-transition-group';
 import ROUTES from 'constants/routes.js';
-import { updateResourceClasses, removeEmptyPropertiesOfClass } from 'actions/statementBrowser';
+import { updateResourceClassesAction as updateResourceClasses, removeEmptyPropertiesOfClass } from 'slices/statementBrowserSlice';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
 import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
@@ -58,7 +58,6 @@ const ClassesItem = props => {
     const [isSaving, setIsSaving] = useState(false);
     const dispatch = useDispatch();
     const preferences = useSelector(state => state.statementBrowser.preferences);
-    const shared = resource?.shared ?? 0;
 
     useEffect(() => {
         let isMounted = true;
@@ -177,7 +176,7 @@ const ClassesItem = props => {
                                 </InputGroup>
                             </div>
                         )}
-                        {shared <= 1 && props.enableEdit && !editMode && (
+                        {props.enableEdit && !editMode && (
                             <StatementActionButton title="Edit classes" icon={faPen} action={() => setEditMode(true)} />
                         )}
                     </ClassesStyle>

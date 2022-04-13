@@ -43,11 +43,10 @@ Below, we describe the components in this directory briefly.
 ├── SideBar.js (shows completion bar; lists all annotations)
 ├── SmartSentenceDetection.js (highlights sentences from the abstract generator)
 ├── ZoomBar.js (PDF zoom control)
-├── ../actions/pdfTextAnnotation.js (Redux actions)
-├── ../reducers/pdfTextAnnotation.js (Redux reducer)
+├── ../slices/pdfTextAnnotationSlices.js (Redux toolkit slices)
 ├── ../pages/PdfTextAnnotation.js (entry page of annotation tool; PDF renderer)
 ```
 
 ## Additional files
 
-Not all files for the PDF annotator are listed in this folder. First, [the entry point component](https://gitlab.com/TIBHannover/orkg/orkg-frontend/-/blob/43a6f01794b4da6e99b3a83f50db14ab33a39b9f/src/pages/PdfTextAnnotation.js) is the page that the user visits to start with annotating articles. Also, two Redux related file are relevant. The [PdfTextAnnotation actions file](https://gitlab.com/TIBHannover/orkg/orkg-frontend/-/blob/43a6f01794b4da6e99b3a83f50db14ab33a39b9f/src/actions/pdfTextAnnotation.js) contains the Redux actions. Additionally, [PdfTextAnnotation reducer file](https://gitlab.com/TIBHannover/orkg/orkg-frontend/-/blob/43a6f01794b4da6e99b3a83f50db14ab33a39b9f/src/reducers/pdfTextAnnotation.js) contains the Redux reducer.
+Not all files for the PDF annotator are listed in this folder. First, [the entry point component](https://gitlab.com/TIBHannover/orkg/orkg-frontend/-/blob/43a6f01794b4da6e99b3a83f50db14ab33a39b9f/src/pages/PdfTextAnnotation.js) is the page that the user visits to start with annotating articles. Also, A Redux toolkit related file is relevant. The PdfTextAnnotationSlice file contains the Redux actions and reducer.

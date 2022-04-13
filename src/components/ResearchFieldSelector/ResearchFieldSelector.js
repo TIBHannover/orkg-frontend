@@ -3,6 +3,7 @@ import { Button, Badge } from 'reactstrap';
 import { faMinusSquare, faPlusSquare, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
+import PreviouslySelectedResearchField from 'components/PreviouslySelectedResearchField/PreviouslySelectedResearchField';
 import { CLASSES, MISC, ENTITIES } from 'constants/graphSettings';
 import { sortBy, find, set, cloneDeep } from 'lodash';
 import { getParentResearchFields, getStatementsBySubjects } from 'services/backend/statements';
@@ -41,9 +42,9 @@ const SubList = styled.ul`
 `;
 
 const IndicatorContainer = styled.div`
-    width: 30px;
+    width: 20px;
+    margin-right: 5px;
     text-align: center;
-    display: inline-flex;
 `;
 
 const CollapseButton = styled(Button)`
@@ -52,7 +53,14 @@ const CollapseButton = styled(Button)`
     }
 `;
 
-const ResearchFieldSelector = ({ selectedResearchField, researchFields, updateResearchField, researchFieldStats }) => {
+const ResearchFieldSelector = ({
+    selectedResearchField,
+    researchFields,
+    updateResearchField,
+    researchFieldStats,
+    insideModal,
+    showPreviouslySelected
+}) => {
     const [isLoading, setIsLoading] = useState(false);
     const [loadingId, setLoadingId] = useState(null);
 
@@ -177,7 +185,7 @@ const ResearchFieldSelector = ({ selectedResearchField, researchFields, updateRe
             return (
                 <li key={field.id}>
                     <FieldItem onClick={e => handleFieldClick(e, field.id)} color="link" className={selectedResearchField === field.id && 'active'}>
-                        <div className="flex-grow-1">
+                        <div className="flex-grow-1 d-flex">
                             <IndicatorContainer onClick={e => handleFieldClick(e, field.id, false)}>
                                 {field.hasChildren && (
                                     <Icon icon={icon} spin={isLoading} className={selectedResearchField !== field.id ? 'text-secondary' : ''} />
@@ -230,26 +238,36 @@ const ResearchFieldSelector = ({ selectedResearchField, researchFields, updateRe
                     autoLoadOption={true}
                 />
             </div>
-            {isLoading && (
-                <div className="mb-2">
-                    <Icon icon={faSpinner} spin /> Loading
+
+            <div className="row">
+                {showPreviouslySelected && (
+                    <div className={`${insideModal ? 'col-12' : 'col-md-4 order-md-2'}`}>
+                        <PreviouslySelectedResearchField selectedResearchField={selectedResearchField} handleFieldSelect={handleFieldSelect} />
+                    </div>
+                )}
+                {isLoading && (
+                    <div className="mb-2">
+                        <Icon icon={faSpinner} spin /> Loading
+                    </div>
+                )}
+                <div className={`${insideModal || !showPreviouslySelected ? 'col-12' : 'col-md-8 order-md-1'}`}>
+                    <CollapseButton
+                        size="sm"
+                        color="link"
+                        disabled={!find(researchFields, f => f.isExpanded)}
+                        className="float-end pe-0 text-decoration-none"
+                        onClick={() => {
+                            const fields = cloneDeep(researchFields);
+                            updateResearchField({
+                                researchFields: fields.map(f => set(f, 'isExpanded', false))
+                            });
+                        }}
+                    >
+                        <Icon icon={faMinusSquare} /> <span className="text-decoration-underline">Collapse all</span>
+                    </CollapseButton>
+                    <List>{fieldList(MISC.RESEARCH_FIELD_MAIN)}</List>
                 </div>
-            )}
-            <CollapseButton
-                size="sm"
-                color="link"
-                disabled={!find(researchFields, f => f.isExpanded)}
-                className="float-end pe-0"
-                onClick={() => {
-                    const fields = cloneDeep(researchFields);
-                    updateResearchField({
-                        researchFields: fields.map(f => set(f, 'isExpanded', false))
-                    });
-                }}
-            >
-                <Icon icon={faMinusSquare} /> Collapse all
-            </CollapseButton>
-            <List>{fieldList(MISC.RESEARCH_FIELD_MAIN)}</List>
+            </div>
         </>
     );
 };
@@ -258,7 +276,14 @@ ResearchFieldSelector.propTypes = {
     selectedResearchField: PropTypes.string,
     researchFields: PropTypes.array,
     updateResearchField: PropTypes.func,
-    researchFieldStats: PropTypes.object
+    researchFieldStats: PropTypes.object,
+    insideModal: PropTypes.bool.isRequired,
+    showPreviouslySelected: PropTypes.bool.isRequired
+};
+
+ResearchFieldSelector.defaultProps = {
+    insideModal: false,
+    showPreviouslySelected: true
 };
 
 export default ResearchFieldSelector;

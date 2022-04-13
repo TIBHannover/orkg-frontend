@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { ListGroup } from 'reactstrap';
+import { Col, ListGroup, Row } from 'reactstrap';
 import AddProperty from 'components/StatementBrowser/AddProperty/AddProperty';
 import Breadcrumbs from 'components/StatementBrowser/Breadcrumbs/Breadcrumbs';
 import PropertySuggestions from 'components/StatementBrowser/PropertySuggestions/PropertySuggestions';
@@ -15,12 +15,12 @@ import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import FlipMove from 'react-flip-move';
 import {
+    updateSettings,
     getSuggestedProperties,
     initializeWithoutContribution,
     initializeWithResource,
-    updateSettings,
     setInitialPath
-} from 'actions/statementBrowser';
+} from 'slices/statementBrowserSlice';
 import { ENTITIES } from 'constants/graphSettings';
 import ClassesItem from 'components/StatementBrowser/ClassesItem/ClassesItem';
 import StatementMenuHeader from './StatementMenuHeader/StatementMenuHeader';
@@ -86,6 +86,7 @@ const Statements = props => {
     const statements = () => {
         let propertyIds = [];
         let shared = 1;
+        const propertySuggestionsComponent = props.propertySuggestionsComponent || <PropertySuggestions />;
         if (resource && selectedResource) {
             propertyIds = resource && isArray(resource.propertyIds) ? resource.propertyIds : [];
             shared = resource?.shared ?? 0;
@@ -93,42 +94,55 @@ const Statements = props => {
 
         return (
             <div>
-                <ClassesItem enableEdit={props.enableEdit} syncBackend={props.syncBackend} />
-                <ListGroup tag="div" className="listGroupEnlarge">
-                    {selectedResource && !resource.isFetching ? (
-                        <>
-                            <FlipMove>
-                                {propertyIds.length > 0 &&
-                                    propertyIds.map((propertyId, index) => {
-                                        return (
-                                            <StatementItemWrapper
-                                                key={`statement-p${propertyId}r${selectedResource}`}
-                                                enableEdit={props.enableEdit}
-                                                openExistingResourcesInDialog={props.openExistingResourcesInDialog}
-                                                isLastItem={propertyIds.length === index + 1}
-                                                isFirstItem={index === 0}
-                                                resourceId={selectedResource}
-                                                propertyId={propertyId}
-                                                shared={shared}
-                                                syncBackend={props.syncBackend}
-                                                renderTemplateBox={props.renderTemplateBox}
-                                            />
-                                        );
-                                    })}
-                            </FlipMove>
+                <ClassesItem
+                    enableEdit={(shared <= 1 || (props.canEditSharedRootLevel && level === 0)) && props.enableEdit}
+                    syncBackend={props.syncBackend}
+                />
+                <Row>
+                    <Col lg={props.propertySuggestionsComponent ? 9 : 12}>
+                        <ListGroup tag="div" className="listGroupEnlarge">
+                            {selectedResource && !resource.isFetching ? (
+                                <>
+                                    <FlipMove>
+                                        {propertyIds.length > 0 &&
+                                            propertyIds.map((propertyId, index) => {
+                                                return (
+                                                    <StatementItemWrapper
+                                                        key={`statement-p${propertyId}r${selectedResource}`}
+                                                        enableEdit={
+                                                            (shared <= 1 || (props.canEditSharedRootLevel && level === 0)) && props.enableEdit
+                                                        }
+                                                        openExistingResourcesInDialog={props.openExistingResourcesInDialog}
+                                                        isLastItem={propertyIds.length === index + 1}
+                                                        isFirstItem={index === 0}
+                                                        resourceId={selectedResource}
+                                                        propertyId={propertyId}
+                                                        syncBackend={props.syncBackend}
+                                                        renderTemplateBox={props.renderTemplateBox}
+                                                    />
+                                                );
+                                            })}
+                                    </FlipMove>
 
-                            {!resource.isFailedFetching && propertyIds.length === 0 && <NoData enableEdit={props.enableEdit} />}
-                            {resource.isFailedFetching && propertyIds.length === 0 && <NotFound />}
-                        </>
-                    ) : (
-                        <StyledStatementItem>
-                            <Icon icon={faSpinner} spin /> Loading
-                        </StyledStatementItem>
-                    )}
+                                    {!resource.isFailedFetching && propertyIds.length === 0 && <NoData enableEdit={props.enableEdit} />}
+                                    {resource.isFailedFetching && propertyIds.length === 0 && <NotFound />}
+                                </>
+                            ) : (
+                                <StyledStatementItem>
+                                    <Icon icon={faSpinner} spin /> Loading
+                                </StyledStatementItem>
+                            )}
 
-                    {shared <= 1 && props.enableEdit && <AddProperty resourceId={selectedResource} syncBackend={props.syncBackend} />}
-                    {shared <= 1 && props.enableEdit && suggestedProperties.length > 0 && <PropertySuggestions />}
-                </ListGroup>
+                            {(shared <= 1 || (props.canEditSharedRootLevel && level === 0)) && props.enableEdit && (
+                                <AddProperty resourceId={selectedResource} syncBackend={props.syncBackend} />
+                            )}
+                        </ListGroup>
+                    </Col>
+                    {(shared <= 1 || (props.canEditSharedRootLevel && level === 0)) &&
+                        props.enableEdit &&
+                        suggestedProperties.length > 0 &&
+                        propertySuggestionsComponent}
+                </Row>
             </div>
         );
     };
@@ -148,7 +162,14 @@ const Statements = props => {
 
     return (
         <>
-            {resource && <StatementMenuHeader enableEdit={props.enableEdit} syncBackend={props.syncBackend} resource={resource} />}
+            {resource && (
+                <StatementMenuHeader
+                    enableEdit={props.enableEdit}
+                    canEdit={resource?.shared <= 1 || (props.canEditSharedRootLevel && level === 0)}
+                    syncBackend={props.syncBackend}
+                    resource={resource}
+                />
+            )}
 
             <>
                 {level !== 0 && <Breadcrumbs />}
@@ -178,8 +199,10 @@ Statements.propTypes = {
     resourcesAsLinks: PropTypes.bool,
     initOnLocationChange: PropTypes.bool.isRequired,
     showExternalDescriptions: PropTypes.bool.isRequired,
+    propertySuggestionsComponent: PropTypes.node,
     keyToKeepStateOnLocationChange: PropTypes.string,
-    renderTemplateBox: PropTypes.bool
+    renderTemplateBox: PropTypes.bool,
+    canEditSharedRootLevel: PropTypes.bool.isRequired
 };
 
 Statements.defaultProps = {
@@ -196,7 +219,9 @@ Statements.defaultProps = {
     keyToKeepStateOnLocationChange: null,
     rootNodeType: ENTITIES.RESOURCE,
     renderTemplateBox: false,
-    initialPath: []
+    initialPath: [],
+    canEditSharedRootLevel: true,
+    propertySuggestionsComponent: null
 };
 
 export default Statements;

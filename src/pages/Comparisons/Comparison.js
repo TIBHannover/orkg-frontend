@@ -1,7 +1,16 @@
 import { useState, useEffect } from 'react';
 import { Alert, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Button, Badge } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faEllipsisV, faLightbulb, faHistory, faWindowMaximize, faChartBar, faExternalLinkAlt, faFilter } from '@fortawesome/free-solid-svg-icons';
+import {
+    faEllipsisV,
+    faLightbulb,
+    faHistory,
+    faChartBar,
+    faExternalLinkAlt,
+    faFilter,
+    faPlus,
+    faChevronRight
+} from '@fortawesome/free-solid-svg-icons';
 import ComparisonLoadingComponent from 'components/Comparison/ComparisonLoadingComponent';
 import ComparisonTable from 'components/Comparison/Comparison';
 import ExportToLatex from 'components/Comparison/Export/ExportToLatex.js';
@@ -16,6 +25,7 @@ import RelatedResources from 'components/Comparison/RelatedResources/RelatedReso
 import RelatedFigures from 'components/Comparison/RelatedResources/RelatedFigures';
 import ExportCitation from 'components/Comparison/Export/ExportCitation';
 import ComparisonMetaData from 'components/Comparison/ComparisonMetaData';
+import MarkFeaturedUnlistedContainer from 'components/Comparison/MarkFeaturedUnlistedContainer';
 import Share from 'components/Comparison/Share.js';
 import HistoryModal from 'components/Comparison/HistoryModal/HistoryModal';
 import useComparisonVersions from 'components/Comparison/hooks/useComparisonVersions';
@@ -28,7 +38,7 @@ import { getResource } from 'services/backend/resources';
 import moment from 'moment';
 import ROUTES from 'constants/routes.js';
 import { useHistory, Link, useParams } from 'react-router-dom';
-import { openAuthDialog } from 'actions/auth';
+import { openAuthDialog } from 'slices/authSlice';
 import { CSVLink } from 'react-csv';
 import { generateRdfDataVocabularyFile, areAllRulesEmpty } from 'utils';
 import Tippy from '@tippyjs/react';
@@ -47,6 +57,7 @@ import { Helmet } from 'react-helmet';
 import AppliedRule from 'components/Comparison/Filters/AppliedRule';
 import TitleBar from 'components/TitleBar/TitleBar';
 import SaveDraft from 'components/Comparison/SaveDraft/SaveDraft';
+import Confirm from 'components/Confirmation/Confirmation';
 
 function Comparison(props) {
     const {
@@ -73,6 +84,7 @@ function Comparison(props) {
         provenance,
         researchField,
         setMetaData,
+        hiddenGroups,
         setComparisonType,
         setPredicatesList,
         toggleProperty,
@@ -90,7 +102,8 @@ function Comparison(props) {
         loadProvenanceInfos,
         loadVisualizations,
         handleEditContributions,
-        fetchLiveData
+        fetchLiveData,
+        handleToggleGroupVisibility
     } = useComparison({});
 
     const params = useParams();
@@ -154,11 +167,18 @@ function Comparison(props) {
             setCookie('useFullWidthForComparisonTable', !v, { path: env('PUBLIC_URL'), maxAge: 315360000 }); // << TEN YEARS
             return !v;
         });
+        setDropdownOpen(false);
     };
 
     const handleViewDensity = density => {
         setCookie('viewDensityComparisonTable', density, { path: env('PUBLIC_URL'), maxAge: 315360000 }); // << TEN YEARS
         setViewDensity(density);
+        setDropdownOpen(false);
+    };
+
+    const handleTranspose = () => {
+        toggleTranspose(v => !v);
+        setDropdownOpen(false);
     };
 
     const containerStyle = fullWidth ? { maxWidth: 'calc(100% - 100px)' } : {};
@@ -233,6 +253,23 @@ function Comparison(props) {
         '@type': 'WebPage'
     };
 
+    const handleAddContribution = async () => {
+        if (isPublished) {
+            const isConfirmed = await Confirm({
+                title: 'This is a published comparison',
+                message: `The comparison you are viewing is published, which means it cannot be modified. To make changes, fetch the live comparison data and try this action again`,
+                cancelColor: 'light',
+                proceedLabel: 'Fetch live data'
+            });
+
+            if (isConfirmed) {
+                fetchLiveData();
+            }
+            return;
+        }
+        setShowAddContribution(v => !v);
+    };
+
     return (
         <div>
             <Breadcrumbs researchFieldId={metaData?.subject ? metaData?.subject.id : researchField ? researchField.id : null} />
@@ -250,28 +287,9 @@ function Comparison(props) {
                     !isLoadingComparisonResult &&
                     !isFailedLoadingComparisonResult && (
                         <>
-                            <Dropdown group isOpen={dropdownDensityOpen} toggle={() => setDropdownDensityOpen(v => !v)} style={{ marginRight: 2 }}>
-                                <DropdownToggle color="secondary" size="sm">
-                                    <Icon icon={faWindowMaximize} className="me-1" /> View
-                                </DropdownToggle>
-                                <DropdownMenu>
-                                    <DropdownItem onClick={handleFullWidth}>
-                                        <span className="me-2">{fullWidth ? 'Reduced width' : 'Full width'}</span>
-                                    </DropdownItem>
-                                    <DropdownItem onClick={() => toggleTranspose(v => !v)}>Transpose table</DropdownItem>
-                                    <DropdownItem divider />
-                                    <DropdownItem header>View density</DropdownItem>
-                                    <DropdownItem active={viewDensity === 'spacious'} onClick={() => handleViewDensity('spacious')}>
-                                        Spacious
-                                    </DropdownItem>
-                                    <DropdownItem active={viewDensity === 'normal'} onClick={() => handleViewDensity('normal')}>
-                                        Normal
-                                    </DropdownItem>
-                                    <DropdownItem active={viewDensity === 'compact'} onClick={() => handleViewDensity('compact')}>
-                                        Compact
-                                    </DropdownItem>
-                                </DropdownMenu>
-                            </Dropdown>
+                            <Button color="secondary" size="sm" style={{ marginRight: 2 }} onClick={handleAddContribution}>
+                                <Icon icon={faPlus} className="me-1" /> Add contribution
+                            </Button>
                             {!!metaData.id ? (
                                 <Button
                                     color="secondary"
@@ -298,19 +316,35 @@ function Comparison(props) {
                                 <DropdownToggle color="secondary" size="sm" className="rounded-end">
                                     <span className="me-2">Actions</span> <Icon icon={faEllipsisV} />
                                 </DropdownToggle>
-                                <DropdownMenu right style={{ zIndex: '1031' }}>
+                                <DropdownMenu end style={{ zIndex: '1031' }}>
+                                    <Dropdown isOpen={dropdownDensityOpen} toggle={() => setDropdownDensityOpen(v => !v)} direction="left">
+                                        <DropdownToggle className="dropdown-item pe-auto" tag="div" style={{ cursor: 'pointer' }}>
+                                            View <Icon style={{ marginTop: '4px' }} icon={faChevronRight} pull="right" />
+                                        </DropdownToggle>
+                                        <DropdownMenu>
+                                            <DropdownItem onClick={handleFullWidth}>
+                                                <span className="me-2">{fullWidth ? 'Reduced width' : 'Full width'}</span>
+                                            </DropdownItem>
+                                            <DropdownItem onClick={handleTranspose}>Transpose table</DropdownItem>
+                                            <DropdownItem divider />
+                                            <DropdownItem header>View density</DropdownItem>
+                                            <DropdownItem active={viewDensity === 'spacious'} onClick={() => handleViewDensity('spacious')}>
+                                                Spacious
+                                            </DropdownItem>
+                                            <DropdownItem active={viewDensity === 'normal'} onClick={() => handleViewDensity('normal')}>
+                                                Normal
+                                            </DropdownItem>
+                                            <DropdownItem active={viewDensity === 'compact'} onClick={() => handleViewDensity('compact')}>
+                                                Compact
+                                            </DropdownItem>
+                                        </DropdownMenu>
+                                    </Dropdown>
+                                    <DropdownItem divider />
                                     <DropdownItem header>Customize</DropdownItem>
                                     <Tippy disabled={isPublished} content="The comparison uses live data already">
                                         <span>
                                             <DropdownItem onClick={fetchLiveData} disabled={!isPublished}>
                                                 Fetch live data
-                                            </DropdownItem>
-                                        </span>
-                                    </Tippy>
-                                    <Tippy disabled={!isPublished} content={publishedMessage}>
-                                        <span>
-                                            <DropdownItem onClick={() => setShowAddContribution(v => !v)} disabled={isPublished}>
-                                                Add contribution
                                             </DropdownItem>
                                         </span>
                                     </Tippy>
@@ -326,11 +360,11 @@ function Comparison(props) {
                                             <Dropdown isOpen={dropdownMethodOpen} toggle={() => setDropdownMethodOpen(v => !v)} direction="left">
                                                 <DropdownToggle
                                                     tag="div"
-                                                    className={`dropdown-item ${isPublished ? 'disabled' : ''}`}
+                                                    className={`dropdown-item d-flex ${isPublished ? 'disabled' : ''}`}
                                                     style={{ cursor: 'pointer' }}
                                                     disabled={isPublished}
                                                 >
-                                                    Comparison method
+                                                    Comparison method <Icon style={{ marginTop: '4px' }} icon={faChevronRight} pull="right" />
                                                 </DropdownToggle>
                                                 <DropdownMenu>
                                                     <div className="d-flex px-2">
@@ -514,12 +548,21 @@ function Comparison(props) {
                     {!isFailedLoadingMetaData && !isFailedLoadingComparisonResult && (
                         <div className="p-0 d-flex align-items-start">
                             <div className="flex-grow-1">
-                                <h2 className="h4 mb-4 mt-4">{metaData.title ? metaData.title : 'Compare'}</h2>
-
-                                {!isFailedLoadingMetaData && <ComparisonMetaData metaData={metaData} />}
+                                <h2 className="h4 mb-4 mt-4">
+                                    {metaData.title ? metaData.title : 'Compare'}{' '}
+                                    {metaData.id && (
+                                        <MarkFeaturedUnlistedContainer
+                                            size="xs"
+                                            id={metaData?.id}
+                                            featured={metaData?.featured}
+                                            unlisted={metaData?.unlisted}
+                                        />
+                                    )}
+                                </h2>
+                                {!isFailedLoadingMetaData && <ComparisonMetaData metaData={metaData} provenance={provenance} />}
                             </div>
 
-                            {metaData.id && provenance && <ObservatoryBox provenance={provenance} />}
+                            {metaData.id && <ObservatoryBox provenance={provenance} />}
                         </div>
                     )}
                     {!isFailedLoadingMetaData && !isFailedLoadingComparisonResult && (
@@ -574,6 +617,8 @@ function Comparison(props) {
                                             filterControlData={filterControlData}
                                             updateRulesOfProperty={updateRulesOfProperty}
                                             comparisonType={comparisonType}
+                                            handleToggleGroupVisibility={handleToggleGroupVisibility}
+                                            hiddenGroups={hiddenGroups}
                                         />
                                     </div>
                                 ) : (
@@ -664,6 +709,7 @@ function Comparison(props) {
                 loadProvenanceInfos={loadProvenanceInfos}
                 data={data}
                 nextVersions={!isLoadingVersions && hasNextVersion ? versions : []}
+                anonymized={metaData?.anonymized}
             />
 
             {showSaveDraftDialog && (

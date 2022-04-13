@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from 'react';
-import { selectResource, fetchStatementsForResource, generatedFormattedLabel } from 'actions/statementBrowser';
+import { selectResourceAction as selectResource, fetchStatementsForResource, generatedFormattedLabel } from 'slices/statementBrowserSlice';
 import { uniq } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
 import { ENTITIES } from 'constants/graphSettings';
@@ -12,6 +12,7 @@ const useValueItem = ({ valueId, propertyId }) => {
     const openExistingResourcesInDialog = useSelector(state => state.statementBrowser.openExistingResourcesInDialog);
     const resource = useSelector(state => state.statementBrowser.resources.byId[value.resourceId]);
     const resourcesAsLinks = useSelector(state => state.statementBrowser.resourcesAsLinks);
+    const level = useSelector(state => state.statementBrowser.level);
 
     const [modal, setModal] = useState(false);
     const [dialogResourceId, setDialogResourceId] = useState(null);
@@ -83,10 +84,16 @@ const useValueItem = ({ valueId, propertyId }) => {
             );
         };
         const existingResourceId = resource ? resource.existingResourceId : false;
-        if (existingResourceId && !resource.isFetched && !resource.isFetching && value?._class === ENTITIES.RESOURCE && !resourcesAsLinks) {
+        if (
+            existingResourceId &&
+            !resource.isFetching &&
+            value?._class === ENTITIES.RESOURCE &&
+            !resourcesAsLinks &&
+            (!resource.isFetched || (level > 1 && resource?.fetchedDepth <= 1))
+        ) {
             loadResource();
         }
-    }, [dispatch, resource, resourcesAsLinks, value?._class]);
+    }, [dispatch, resource, resourcesAsLinks, value?._class, level]);
 
     const formattedLabel = useMemo(() => {
         if (value.classes) {

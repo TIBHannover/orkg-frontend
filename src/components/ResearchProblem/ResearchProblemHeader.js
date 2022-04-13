@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import {
     Container,
     Button,
@@ -26,12 +26,14 @@ import useResearchProblemResearchFields from 'components/ResearchProblem/hooks/u
 import AuthorsBox from 'components/TopAuthors/AuthorsBox';
 import ResearchFieldsBox from './ResearchFieldBox/ResearchFieldsBox';
 import SuperResearchProblemBox from './SuperResearchProblemBox/SuperResearchProblemBox';
+import FeaturedMark from 'components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
+import MarkUnlisted from 'components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
+import useMarkFeaturedUnlisted from 'components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
 import { NavLink } from 'react-router-dom';
 import ContentLoader from 'react-content-loader';
 import ROUTES from 'constants/routes.js';
 import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
-import { usePrevious } from 'react-use';
 import PropTypes from 'prop-types';
 import CheckSlug from 'components/CheckSlug/CheckSlug';
 import { reverseWithSlug } from 'utils';
@@ -45,14 +47,11 @@ const ResearchProblemHeader = ({ id }) => {
     const [showMoreFields, setShowMoreFields] = useState(false);
     const { researchProblemData, superProblems, isLoading, isFailedLoading, loadResearchProblemData } = useResearchProblem({ id });
     const [researchFields, isLoadingResearchFields] = useResearchProblemResearchFields({ researchProblemId: id });
-    const prevEditMode = usePrevious({ editMode });
-
-    useEffect(() => {
-        if (!editMode && prevEditMode && prevEditMode.editMode !== editMode) {
-            loadResearchProblemData(id);
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [editMode]);
+    const { isFeatured, isUnlisted, handleChangeStatus } = useMarkFeaturedUnlisted({
+        resourceId: id,
+        unlisted: researchProblemData?.unlisted,
+        featured: researchProblemData?.featured
+    });
 
     return (
         <>
@@ -100,7 +99,13 @@ const ResearchProblemHeader = ({ id }) => {
                         titleAddition={
                             <>
                                 <SubtitleSeparator />
-                                <SubTitle>{researchProblemData.label}</SubTitle>
+                                <SubTitle>Research problem</SubTitle>
+                                <>
+                                    <FeaturedMark size="sm" featured={isFeatured} handleChangeStatus={handleChangeStatus} />{' '}
+                                    <div className="d-inline-block ms-1">
+                                        <MarkUnlisted size="sm" resourceId={id} unlisted={isUnlisted} handleChangeStatus={handleChangeStatus} />
+                                    </div>
+                                </>
                             </>
                         }
                         buttonGroup={
@@ -119,7 +124,7 @@ const ResearchProblemHeader = ({ id }) => {
                                     <DropdownToggle size="sm" color="secondary" className="px-3 rounded-end">
                                         <Icon icon={faEllipsisV} />
                                     </DropdownToggle>
-                                    <DropdownMenu right>
+                                    <DropdownMenu end>
                                         <DropdownItem tag={NavLink} exact to={reverse(ROUTES.RESOURCE, { id })}>
                                             View resource
                                         </DropdownItem>
@@ -129,7 +134,7 @@ const ResearchProblemHeader = ({ id }) => {
                         }
                         wrap={false}
                     >
-                        Research problem
+                        {researchProblemData.label}
                     </TitleBar>
                     {editMode && (
                         <StatementBrowserDialog
@@ -139,6 +144,7 @@ const ResearchProblemHeader = ({ id }) => {
                             label={researchProblemData.label}
                             enableEdit={true}
                             syncBackend={true}
+                            onCloseModal={() => loadResearchProblemData(id)}
                         />
                     )}
                     <Container className="p-0">
@@ -158,7 +164,7 @@ const ResearchProblemHeader = ({ id }) => {
                                 <>
                                     <hr className="m-0" />
                                     <CardBody>
-                                        <CardTitle tag="h5">Subfields</CardTitle>
+                                        <CardTitle tag="h5">Subproblems</CardTitle>
                                         <div>
                                             {researchProblemData.subProblems.slice(0, 9).map(subfield => (
                                                 <Link
@@ -174,7 +180,7 @@ const ResearchProblemHeader = ({ id }) => {
                                                 </Link>
                                             ))}
                                             {researchProblemData.subProblems.length > 9 &&
-                                                researchProblemData.subProblems &&
+                                                showMoreFields &&
                                                 researchProblemData.subProblems.slice(9).map(subfield => (
                                                     <Link
                                                         key={`index${subfield.id}`}

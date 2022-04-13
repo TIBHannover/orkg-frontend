@@ -6,15 +6,13 @@ import ComponentsTab from 'components/Templates/Tabs/ComponentsTab/ComponentsTab
 import Unauthorized from 'pages/Unauthorized';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import Format from 'components/Templates/Tabs/Format/Format';
-import HelpModal from 'components/Templates/HelpModal';
 import { StyledContainer } from 'components/Templates/styled';
-import { setEditMode, loadTemplate, saveTemplate, setIsLoading, doneLoading, setClass } from 'actions/addTemplate';
+import { setEditMode, loadTemplate, saveTemplate, updateClass } from 'slices/templateEditorSlice';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPen, faSpinner, faQuestionCircle, faEllipsisV, faSave } from '@fortawesome/free-solid-svg-icons';
 import { getParamFromQueryString } from 'utils';
 import styled, { withTheme } from 'styled-components';
 import VisibilitySensor from 'react-visibility-sensor';
-import { EditModeHeader, Title } from 'pages/ViewPaper';
 import Tippy from '@tippyjs/react';
 import { getClassById } from 'services/backend/classes';
 import classnames from 'classnames';
@@ -25,6 +23,7 @@ import PropTypes from 'prop-types';
 import { reverse } from 'named-urls';
 import { NavLink as RouterNavLink } from 'react-router-dom';
 import TitleBar from 'components/TitleBar/TitleBar';
+import { EditModeContainer, Title } from 'components/EditModeHeader/EditModeHeader';
 
 const TabPaneStyled = styled(TabPane)`
     border: 1px solid #ced4da;
@@ -43,8 +42,7 @@ class Template extends Component {
             activeTab: '1',
             error: null,
             showHeaderBar: false,
-            menuOpen: false,
-            helpModalOpen: false
+            menuOpen: false
         };
     }
 
@@ -74,7 +72,7 @@ class Template extends Component {
         const targetClass = getParamFromQueryString(this.props.location.search, 'classID');
         if (targetClass) {
             getClassById(targetClass).then(classesData => {
-                this.props.setClass(classesData);
+                this.props.updateClass(classesData);
             });
         }
     };
@@ -106,18 +104,15 @@ class Template extends Component {
             <>
                 <TitleBar
                     titleAddition={
-                        <Tippy content="Open help popup">
+                        <Tippy content="Open help center">
                             <span>
-                                <Button
-                                    color="link"
-                                    outline
-                                    size="sm"
-                                    style={{ fontSize: 22, lineHeight: 1 }}
-                                    className="p-0"
-                                    onClick={() => this.toggle('helpModalOpen')}
+                                <a
+                                    href="https://www.orkg.org/orkg/help-center/article/9/Templates_for_structuring_contribution_descriptions"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
                                 >
-                                    <Icon icon={faQuestionCircle} className="text-secondary" />
-                                </Button>
+                                    <Icon icon={faQuestionCircle} style={{ fontSize: 22, lineHeight: 1 }} className="text-secondary p-0" />
+                                </a>
                             </span>
                         </Tippy>
                     }
@@ -153,7 +148,7 @@ class Template extends Component {
                                     <DropdownToggle size="sm" color="secondary" className="px-3 rounded-end" style={{ marginLeft: 2 }}>
                                         <Icon icon={faEllipsisV} />
                                     </DropdownToggle>
-                                    <DropdownMenu right>
+                                    <DropdownMenu end>
                                         <DropdownItem tag={RouterNavLink} exact to={reverse(ROUTES.RESOURCE, { id: this.props.match.params.id })}>
                                             View resource
                                         </DropdownItem>
@@ -168,9 +163,9 @@ class Template extends Component {
                 <StyledContainer className="p-0">
                     {this.state.showHeaderBar && <TemplateEditorHeaderBar id={this.props.match.params.id} />}
                     {(this.props.editMode || this.props.isSaving) && (
-                        <EditModeHeader className="box rounded-top">
+                        <EditModeContainer className="box rounded-top">
                             <Title>{this.props.match.params.id ? 'Edit mode' : 'Create template'}</Title>
-                        </EditModeHeader>
+                        </EditModeContainer>
                     )}
                     <div className={`box clearfix pt-4 pb-4 ps-5 pe-5 ${this.props.editMode ? 'rounded-bottom' : 'rounded'}`}>
                         <div className="mb-2">
@@ -243,7 +238,6 @@ class Template extends Component {
                             </TabContent>
                         </div>
                     </div>
-                    <HelpModal isOpen={this.state.helpModalOpen} toggle={() => this.toggle('helpModalOpen')} />
                 </StyledContainer>
             </>
         );
@@ -262,37 +256,33 @@ Template.propTypes = {
     loadTemplate: PropTypes.func.isRequired,
     saveTemplate: PropTypes.func.isRequired,
     editMode: PropTypes.bool.isRequired,
-    setIsLoading: PropTypes.func.isRequired,
     isLoading: PropTypes.bool.isRequired,
     isSaving: PropTypes.bool.isRequired,
     templateID: PropTypes.string.isRequired,
     label: PropTypes.string.isRequired,
-    doneLoading: PropTypes.func.isRequired,
     history: PropTypes.object.isRequired,
     template: PropTypes.object.isRequired,
-    setClass: PropTypes.func.isRequired,
+    updateClass: PropTypes.func.isRequired,
     user: PropTypes.oneOfType([PropTypes.object, PropTypes.number])
 };
 
 const mapStateToProps = state => {
     return {
         user: state.auth.user,
-        editMode: state.addTemplate.editMode,
-        isLoading: state.addTemplate.isLoading,
-        isSaving: state.addTemplate.isSaving,
-        templateID: state.addTemplate.templateID,
-        label: state.addTemplate.label,
-        template: state.addTemplate
+        editMode: state.templateEditor.editMode,
+        isLoading: state.templateEditor.isLoading,
+        isSaving: state.templateEditor.isSaving,
+        templateID: state.templateEditor.templateID,
+        label: state.templateEditor.label,
+        template: state.templateEditor
     };
 };
 
 const mapDispatchToProps = dispatch => ({
     setEditMode: data => dispatch(setEditMode(data)),
     loadTemplate: data => dispatch(loadTemplate(data)),
-    setIsLoading: () => dispatch(setIsLoading()),
-    doneLoading: () => dispatch(doneLoading()),
     saveTemplate: data => dispatch(saveTemplate(data)),
-    setClass: data => dispatch(setClass(data))
+    updateClass: data => dispatch(updateClass(data))
 });
 
 export default compose(
