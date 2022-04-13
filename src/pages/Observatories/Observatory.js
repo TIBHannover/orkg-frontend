@@ -67,14 +67,8 @@ const Observatory = () => {
         setResearchField(researchField);
     };
 
-    const updateOrganizationsList = (organization, status) => {
-        let organizations = '';
-        if (status) {
-            organizations = [organization, ...organizationsList];
-        } else {
-            organizations = organizationsList.filter(t => t !== organization);
-        }
-        setOrganizationsList(organizations);
+    const toggleOrganizationItem = organization => {
+        setOrganizationsList(v => (v.map(o => o.id).includes(organization.id) ? v.filter(t => t !== organization) : [organization, ...v]));
     };
 
     return (
@@ -122,7 +116,7 @@ const Observatory = () => {
                                     observatoryId={observatoryId}
                                     organizationsList={organizationsList}
                                     isLoadingOrganizations={isLoadingOrganizations}
-                                    updateOrganizationsList={updateOrganizationsList}
+                                    toggleOrganizationItem={toggleOrganizationItem}
                                 />
                             </Col>
                             <Col md="4" className="d-flex">

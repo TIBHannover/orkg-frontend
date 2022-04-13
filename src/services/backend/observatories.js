@@ -29,7 +29,7 @@ export const getUsersByObservatoryId = id => {
     return submitGetRequest(`${observatoriesUrl}${encodeURIComponent(id)}/users`);
 };
 
-export const updateObservatoryOrganization = (id, organization_id) => {
+export const addOrganizationToObservatory = (id, organization_id) => {
     return submitPutRequest(
         `${observatoriesUrl}add/${encodeURIComponent(id)}/organization`,
         { 'Content-Type': 'application/json' },

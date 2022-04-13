@@ -11,7 +11,8 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { toast } from 'react-toastify';
 import StatementActionButton from 'components/StatementBrowser/StatementActionButton/StatementActionButton';
 import { deleteOrganizationFromObservatory } from 'services/backend/observatories';
-const OrganizationsBox = ({ isLoadingOrganizations, organizationsList, observatoryId, updateOrganizationsList }) => {
+
+const OrganizationsBox = ({ isLoadingOrganizations, organizationsList, observatoryId, toggleOrganizationItem }) => {
     const user = useSelector(state => state.auth.user);
     const [showAddOrganizationDialog, setShowAddOrganizationDialog] = useState(false);
     const [organizations, setOrganizations] = useState([]);
@@ -23,7 +24,7 @@ const OrganizationsBox = ({ isLoadingOrganizations, organizationsList, observato
     const deleteOrganization = async organization => {
         await deleteOrganizationFromObservatory(observatoryId, organization.id)
             .then(_ => {
-                updateOrganizationsList(organization, false);
+                toggleOrganizationItem(organization);
                 toast.success('Organization deleted successfully');
             })
             .catch(() => {
@@ -33,101 +34,70 @@ const OrganizationsBox = ({ isLoadingOrganizations, organizationsList, observato
 
     return (
         <div className="box rounded-3 p-4 flex-grow-1">
-            <h5>Organizations</h5>
-            {!!user && user.isCurationAllowed && (
-                <Button outline size="sm" style={{ float: 'right', marginTop: '-33px' }} onClick={() => setShowAddOrganizationDialog(v => !v)}>
-                    <Icon icon={faPlus} /> Edit
-                </Button>
-            )}
+            <h5>
+                Organizations{' '}
+                {!!user && user.isCurationAllowed && (
+                    <Button outline size="sm" className="float-end" onClick={() => setShowAddOrganizationDialog(v => !v)}>
+                        <Icon icon={faPlus} /> Add
+                    </Button>
+                )}
+            </h5>
+
             {!isLoadingOrganizations ? (
                 <div className="mb-4 mt-4">
                     {organizations.length > 0 ? (
                         <div>
                             {organizations.map((organization, index) => {
-                                if (organization.logo) {
-                                    return (
-                                        <div
-                                            key={`c${index}`}
-                                            className="mb-3"
-                                            style={{
-                                                border: 'solid lightgray thin',
-                                                textAlign: 'center',
-                                                verticalAlign: 'middle',
-                                                paddingBottom: '11px'
-                                            }}
-                                        >
-                                            <Link to={reverse(ROUTES.ORGANIZATION, { id: organization.display_id })}>
+                                return (
+                                    <div
+                                        key={`c${index}`}
+                                        className={organization.logo ? 'mb-3' : 'mb-3 pl-2 pt-2 pb-2'}
+                                        style={{
+                                            border: 'solid lightgray thin',
+                                            textAlign: 'center',
+                                            verticalAlign: 'middle',
+                                            paddingBottom: `${organization.logo ? '11px' : '0'}`
+                                        }}
+                                    >
+                                        <Link to={reverse(ROUTES.ORGANIZATION, { id: organization.display_id })}>
+                                            {organization.logo ? (
                                                 <img
                                                     style={{ marginTop: 12 }}
                                                     height="50"
                                                     src={organization.logo}
                                                     alt={`${organization.name} logo`}
                                                 />
-                                            </Link>
-                                            {!!user && user.isCurationAllowed && (
-                                                <div className="mt-4" style={{ float: 'right' }}>
-                                                    <>
-                                                        <StatementActionButton
-                                                            title="Delete this organization from the observatory"
-                                                            icon={faTrash}
-                                                            requireConfirmation={true}
-                                                            confirmationButtons={[
-                                                                {
-                                                                    title: 'Delete',
-                                                                    color: 'danger',
-                                                                    icon: faCheck,
-                                                                    action: () => deleteOrganization(organization)
-                                                                },
-                                                                {
-                                                                    title: 'Cancel',
-                                                                    color: 'secondary',
-                                                                    icon: faTimes
-                                                                }
-                                                            ]}
-                                                        />
-                                                    </>
-                                                </div>
+                                            ) : (
+                                                organization.name
                                             )}
-                                        </div>
-                                    );
-                                } else {
-                                    return (
-                                        <div
-                                            key={`c${index}`}
-                                            className="mb-3 pl-2 pt-2 pb-2"
-                                            style={{
-                                                border: 'solid lightgray thin',
-                                                textAlign: 'center'
-                                            }}
-                                        >
-                                            <Link to={reverse(ROUTES.ORGANIZATION, { id: organization.display_id })}>{organization.name}</Link>
-                                            {!!user && user.isCurationAllowed && (
-                                                <div style={{ float: 'right' }}>
-                                                    <>
-                                                        <StatementActionButton
-                                                            title="Delete this organization from the observatory"
-                                                            icon={faTrash}
-                                                            requireConfirmation={true}
-                                                            confirmationButtons={[
-                                                                {
-                                                                    title: 'Delete',
-                                                                    color: 'danger',
-                                                                    icon: faCheck,
-                                                                    action: () => deleteOrganization(organization)
-                                                                },
-                                                                {
-                                                                    title: 'Cancel',
-                                                                    color: 'secondary',
-                                                                    icon: faTimes
-                                                                }
-                                                            ]}
-                                                        />
-                                                    </>
-                                                </div>
-                                            )}
-                                        </div>
-                                    );
-                                }
+                                        </Link>
+                                        {!!user && user.isCurationAllowed && (
+                                            <div className="mt-4 float-end">
+                                                <>
+                                                    <StatementActionButton
+                                                        title="Delete this organization from the observatory"
+                                                        icon={faTrash}
+                                                        requireConfirmation={true}
+                                                        confirmationMessage="Are you sure to delete?"
+                                                        confirmationButtons={[
+                                                            {
+                                                                title: 'Delete',
+                                                                color: 'danger',
+                                                                icon: faCheck,
+                                                                action: () => deleteOrganization(organization)
+                                                            },
+                                                            {
+                                                                title: 'Cancel',
+                                                                color: 'secondary',
+                                                                icon: faTimes
+                                                            }
+                                                        ]}
+                                                    />
+                                                </>
+                                            </div>
+                                        )}
+                                    </div>
+                                );
                             })}
                         </div>
                     ) : (
@@ -142,7 +112,7 @@ const OrganizationsBox = ({ isLoadingOrganizations, organizationsList, observato
                 toggle={() => setShowAddOrganizationDialog(v => !v)}
                 id={observatoryId}
                 organizations={organizations}
-                updateOrganizationsList={updateOrganizationsList}
+                toggleOrganizationItem={toggleOrganizationItem}
             />
         </div>
     );
@@ -152,7 +122,7 @@ OrganizationsBox.propTypes = {
     organizationsList: PropTypes.array.isRequired,
     isLoadingOrganizations: PropTypes.bool.isRequired,
     observatoryId: PropTypes.string.isRequired,
-    updateOrganizationsList: PropTypes.func.isRequired
+    toggleOrganizationItem: PropTypes.func.isRequired
 };
 
 export default OrganizationsBox;
