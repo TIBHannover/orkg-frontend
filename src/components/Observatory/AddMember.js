@@ -62,10 +62,10 @@ function AddMember(props) {
                         />
                         <br />
                         <div>
-                            Email
+                            User email
                             <FormGroup>
                                 <InputGroup>
-                                    <Input id="search_content" onChange={e => handleCreatorChange(e.target.value)} type="email" value={text} />
+                                    <Input onChange={e => handleCreatorChange(e.target.value)} type="email" value={text} />
                                 </InputGroup>
                             </FormGroup>
                         </div>
