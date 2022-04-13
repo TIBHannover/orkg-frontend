@@ -9,7 +9,7 @@ import {
     getStatementsByPredicateAndLiteral,
     getStatementsBySubjectAndPredicate
 } from 'services/backend/statements';
-import { generateDOIForORKGArtefact, createObject } from 'services/backend/misc';
+import { generateDoi, createObject } from 'services/backend/misc';
 import { createLiteral } from 'services/backend/literals';
 import { createResource } from 'services/backend/resources';
 import { getComparison, createResourceData } from 'services/similarity/index';
@@ -282,15 +282,17 @@ function Publish(props) {
             });
             comparisonCreatorsORCID = await Promise.all(comparisonCreatorsORCID);
             if (title && title.trim() !== '' && description && description.trim() !== '') {
-                generateDOIForORKGArtefact(
-                    comparisonId,
+                generateDoi({
+                    type: 'Comparison',
+                    resource_type: 'Dataset',
+                    resource_id: comparisonId,
                     title,
-                    subject ? subject.label : '',
+                    subject: subject ? subject.label : '',
                     description,
-                    props.contributionsList,
-                    comparisonCreatorsORCID.map(c => ({ creator: c.label, orcid: c.orcid })),
-                    `${props.publicURL}${reverse(ROUTES.COMPARISON, { comparisonId: comparisonId })}`
-                )
+                    related_resources: props.contributionsList,
+                    authors: comparisonCreatorsORCID.map(c => ({ creator: c.label, orcid: c.orcid })),
+                    url: `${props.publicURL}${reverse(ROUTES.COMPARISON, { comparisonId: comparisonId })}`
+                })
                     .then(doiResponse => {
                         props.setMetaData(prevMetaData => ({
                             ...prevMetaData,
@@ -303,6 +305,7 @@ function Publish(props) {
                         });
                     })
                     .catch(error => {
+                        console.log('error', error);
                         toast.error(`Error publishing a DOI`);
                         setIsLoading(false);
                     });
