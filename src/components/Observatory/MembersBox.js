@@ -34,16 +34,10 @@ const MembersBox = ({ observatoryId, organizationsList }) => {
         setUserData(user);
     }, [observatoryId, user]);
 
-    const updateObservatoryMembers = member => {
-        const membersList = [member, ...members];
-        setMembers(membersList);
-    };
-
     const deleteObservatoryMember = async user => {
         await deleteUserFromObservatoryById(user.id)
             .then(_ => {
-                const updatedList = members.filter(t => t !== user);
-                setMembers(updatedList);
+                setMembers(v => v.filter(t => t !== user));
                 toast.success('Member deleted successfully');
             })
             .catch(() => {
@@ -64,7 +58,7 @@ const MembersBox = ({ observatoryId, organizationsList }) => {
                     <div className="mt-3">
                         {members.length > 0 ? (
                             <div>
-                                {members.slice(0, 4).map((user, index) => {
+                                {members.slice(0, 3).map((user, index) => {
                                     return (
                                         <div key={`oc${index}`}>
                                             <ContributorCard
@@ -74,20 +68,22 @@ const MembersBox = ({ observatoryId, organizationsList }) => {
                                                 }}
                                                 options={
                                                     userData && userData.isCurationAllowed
-                                                        ? {
-                                                              label: 'Delete this member from the observatory',
-                                                              action: () => deleteObservatoryMember(user),
-                                                              icon: faTrash,
-                                                              requireConfirmation: true
-                                                          }
-                                                        : {}
+                                                        ? [
+                                                              {
+                                                                  label: 'Delete this member from the observatory',
+                                                                  action: () => deleteObservatoryMember(user),
+                                                                  icon: faTrash,
+                                                                  requireConfirmation: true
+                                                              }
+                                                          ]
+                                                        : []
                                                 }
                                             />
-                                            {members.slice(0, 4).length - 1 !== index && <hr style={{ width: '90%', margin: '10px auto' }} />}
+                                            {members.slice(0, 3).length - 1 !== index && <hr style={{ width: '90%', margin: '10px auto' }} />}
                                         </div>
                                     );
                                 })}
-                                {!isLoadingMembers && members?.length > 4 && (
+                                {!isLoadingMembers && members?.length > 3 && (
                                     <div className="text-center mt-3">
                                         <Button size="sm" onClick={() => setOpenModal(v => !v)} color="light">
                                             View more
@@ -108,13 +104,15 @@ const MembersBox = ({ observatoryId, organizationsList }) => {
                                                                         }}
                                                                         options={
                                                                             userData && userData.isCurationAllowed
-                                                                                ? {
-                                                                                      label: 'Delete this member from the observatory',
-                                                                                      action: () => deleteObservatoryMember(user),
-                                                                                      icon: faTrash,
-                                                                                      requireConfirmation: true
-                                                                                  }
-                                                                                : {}
+                                                                                ? [
+                                                                                      {
+                                                                                          label: 'Delete this member from the observatory',
+                                                                                          action: () => deleteObservatoryMember(user),
+                                                                                          icon: faTrash,
+                                                                                          requireConfirmation: true
+                                                                                      }
+                                                                                  ]
+                                                                                : []
                                                                         }
                                                                     />
                                                                     {members.length - 1 !== index && (
@@ -141,9 +139,9 @@ const MembersBox = ({ observatoryId, organizationsList }) => {
                 <AddMember
                     showDialog={showAddMemberDialog}
                     toggle={() => setShowAddMemberDialog(v => !v)}
-                    id={observatoryId}
+                    observatoryId={observatoryId}
                     organizationsList={organizationsList}
-                    updateObservatoryMembers={updateObservatoryMembers}
+                    updateObservatoryMembers={member => setMembers(v => [member, ...members])}
                 />
             </div>
         </div>

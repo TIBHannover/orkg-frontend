@@ -30,28 +30,28 @@ function ContributorCard(props) {
                         </div>
                     )}
                     <small>
-                        {props.options && props.options.label && (
-                            <>
-                                <StatementActionButton
-                                    title={props.options.label}
-                                    icon={props.options.icon}
-                                    requireConfirmation={props.options.requireConfirmation}
-                                    confirmationButtons={[
-                                        {
-                                            title: 'Delete',
-                                            color: 'danger',
-                                            icon: faCheck,
-                                            action: props.options.action
-                                        },
-                                        {
-                                            title: 'Cancel',
-                                            color: 'secondary',
-                                            icon: faTimes
-                                        }
-                                    ]}
-                                />
-                            </>
-                        )}
+                        {props.options?.map?.(option => (
+                            <StatementActionButton
+                                title={option.label}
+                                icon={option.icon}
+                                key={'contributor-card-' + props.contributor.id + '-' + option.label}
+                                requireConfirmation={option.requireConfirmation}
+                                confirmationMessage="Are you sure?"
+                                confirmationButtons={[
+                                    {
+                                        title: 'Delete',
+                                        color: 'danger',
+                                        icon: faCheck,
+                                        action: option.action
+                                    },
+                                    {
+                                        title: 'Cancel',
+                                        color: 'secondary',
+                                        icon: faTimes
+                                    }
+                                ]}
+                            />
+                        ))}
                     </small>
                     {props.contributor.counts && (
                         <>
@@ -99,7 +99,7 @@ function ContributorCard(props) {
 
 ContributorCard.propTypes = {
     contributor: PropTypes.object.isRequired,
-    options: PropTypes.object
+    options: PropTypes.array
 };
 
 export default ContributorCard;

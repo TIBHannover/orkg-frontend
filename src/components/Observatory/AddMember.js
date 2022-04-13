@@ -1,74 +1,69 @@
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter, FormGroup, Input, InputGroup } from 'reactstrap';
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter, FormGroup, Input, InputGroup, Label } from 'reactstrap';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import { useState, useEffect } from 'react';
-import { updateUserObservatory } from 'services/backend/users';
+import { addUserToObservatory } from 'services/backend/users';
+import { SelectGlobalStyle } from 'components/Autocomplete/styled';
+import { get_error_message } from 'utils';
 import Select from 'react-select';
 
 function AddMember(props) {
     const [isLoading, setIsLoading] = useState(false);
-    const [selectedOrganization, setSelectedOrganization] = useState('');
-    const [text, setText] = useState('');
+    const [selectedOrganization, setSelectedOrganization] = useState(props.organizationsList.length === 1 ? props.organizationsList[0] : null);
+    const [email, setEmail] = useState('');
 
-    useEffect(() => {}, []);
-
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         setIsLoading(true);
-        if (selectedOrganization && text.length > 0) {
-            updateObservatory(text);
-            setIsLoading(false);
+        if (selectedOrganization && email.length > 0) {
+            await addUserToObservatory(email, props.observatoryId, selectedOrganization.id)
+                .then(member => {
+                    toast.success('Member added successfully');
+                    props.updateObservatoryMembers(member);
+                    setIsLoading(false);
+                    setSelectedOrganization(props.organizationsList.length === 1 ? props.organizationsList[0] : null);
+                    setEmail('');
+                    props.toggle();
+                })
+                .catch(error => {
+                    toast.error(`Error adding member! ${get_error_message(error, 'user_email') ?? error?.message}`);
+                    setIsLoading(false);
+                });
         } else {
             setIsLoading(false);
             toast.error('Organization or user email is missing');
         }
     };
 
-    const updateObservatory = async user => {
-        await updateUserObservatory(user, props.id, selectedOrganization.id)
-            .then(member => {
-                toast.success('Member added successfully');
-                props.updateObservatoryMembers(member);
-                setIsLoading(false);
-                props.toggle();
-            })
-            .catch(error => {
-                toast.error(`error adding member ${error.message}`);
-                setIsLoading(false);
-            });
-    };
-
-    const handleCreatorChange = e => {
-        setText(e);
-    };
-
-    const handleOrganizationChange = selected => {
-        setSelectedOrganization(selected);
-    };
+    useEffect(() => {
+        setSelectedOrganization(props.organizationsList.length === 1 ? props.organizationsList[0] : null);
+    }, [props.organizationsList]);
 
     return (
         <>
-            <Modal size="lg" isOpen={props.showDialog} toggle={props.toggle}>
+            <Modal isOpen={props.showDialog} toggle={props.toggle}>
                 <ModalHeader toggle={props.toggle}>Add a member</ModalHeader>
                 <ModalBody>
                     <>
-                        Organization
-                        <Select
-                            value={props.organizationsList.length === 1 ? props.organizationsList[0] : selectedOrganization}
-                            options={props.organizationsList}
-                            onChange={handleOrganizationChange}
-                            getOptionValue={({ id }) => id}
-                            getOptionLabel={({ name }) => name}
-                            classNamePrefix="react-select"
-                        />
-                        <br />
-                        <div>
-                            User email
-                            <FormGroup>
-                                <InputGroup>
-                                    <Input onChange={e => handleCreatorChange(e.target.value)} type="email" value={text} />
-                                </InputGroup>
-                            </FormGroup>
-                        </div>
+                        <FormGroup>
+                            <Label for="organization">Organization</Label>
+                            <Select
+                                value={props.organizationsList.length === 1 ? props.organizationsList[0] : selectedOrganization}
+                                options={props.organizationsList}
+                                onChange={selected => setSelectedOrganization(selected)}
+                                getOptionValue={({ id }) => id}
+                                getOptionLabel={({ name }) => name}
+                                inputId="organization"
+                                classNamePrefix="react-select"
+                            />
+                            <SelectGlobalStyle />
+                        </FormGroup>
+                        <FormGroup>
+                            <Label for="userEmail">User email</Label>
+
+                            <InputGroup>
+                                <Input id="userEmail" onChange={e => setEmail(e.target.value)} type="email" value={email} />
+                            </InputGroup>
+                        </FormGroup>
                     </>
                 </ModalBody>
                 <ModalFooter>
@@ -86,7 +81,7 @@ function AddMember(props) {
 AddMember.propTypes = {
     showDialog: PropTypes.bool.isRequired,
     toggle: PropTypes.func.isRequired,
-    id: PropTypes.string,
+    observatoryId: PropTypes.string,
     organizationsList: PropTypes.array,
     updateObservatoryMembers: PropTypes.func
 };
