@@ -165,14 +165,15 @@ function Publish(props) {
                                     '@id': viewPaper.doi[0].id
                                 }
                             ]
-                        })
+                        }),
+                        [PREDICATES.HAS_AUTHOR]: viewPaper.authors.map(author => ({
+                            '@id': author.id
+                        }))
                     }
                 }
             };
 
             const createdPaper = await createObject(paper_obj);
-            // save authors, similar to comparison
-            await saveCreators(viewPaper.authors, createdPaper.id);
             generateDOIForORKGArtefact(
                 createdPaper.id,
                 title,
@@ -215,61 +216,6 @@ function Publish(props) {
             throw Error('Please enter a title and a description');
         }
         setIsLoading(false);
-    };
-
-    const saveCreators = async (creators, resourceId) => {
-        const authors = creators;
-        for (const author of authors) {
-            // create the author
-            if (author.orcid) {
-                // Create author with ORCID
-                // check if there's an author resource
-                const responseJson = await getStatementsByPredicateAndLiteral({
-                    predicateId: PREDICATES.HAS_ORCID,
-                    literal: author.orcid,
-                    subjectClass: CLASSES.AUTHOR,
-                    items: 1
-                });
-                if (responseJson.length > 0) {
-                    // Author resource exists
-                    const authorResource = responseJson[0];
-                    const authorStatement = await createResourceStatement(resourceId, PREDICATES.HAS_AUTHOR, authorResource.subject.id);
-                    authors.statementId = authorStatement.id;
-                    authors.id = authorResource.subject.id;
-                    authors.class = authorResource.subject._class;
-                    authors.classes = authorResource.subject.classes;
-                } else {
-                    // Author resource doesn't exist
-                    // Create resource author
-                    const authorResource = await createResource(author.label, [CLASSES.AUTHOR]);
-                    const orcidLiteral = await createLiteral(author.orcid);
-                    await createLiteralStatement(authorResource.id, PREDICATES.HAS_ORCID, orcidLiteral.id);
-                    const authorStatement = await createResourceStatement(resourceId, PREDICATES.HAS_AUTHOR, authorResource.id);
-                    authors.statementId = authorStatement.id;
-                    authors.id = authorResource.id;
-                    authors.class = authorResource._class;
-                    authors.classes = authorResource.classes;
-                }
-            } else {
-                // Author resource exists
-                if (author.label !== author.id) {
-                    const authorStatement = await createResourceStatement(resourceId, PREDICATES.HAS_AUTHOR, author.id);
-                    authors.statementId = authorStatement.id;
-                    authors.id = author.id;
-                    authors.class = author._class;
-                    authors.classes = author.classes;
-                } else {
-                    // Author resource doesn't exist
-                    const newLiteral = await createLiteral(author.label);
-                    // Create literal of author
-                    const authorStatement = await createLiteralStatement(resourceId, PREDICATES.HAS_AUTHOR, newLiteral.id);
-                    authors.statementId = authorStatement.id;
-                    authors.id = newLiteral.id;
-                    authors.class = authorStatement.object._class;
-                    authors.classes = authorStatement.object.classes;
-                }
-            }
-        }
     };
 
     return (
