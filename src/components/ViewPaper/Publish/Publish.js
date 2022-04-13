@@ -3,7 +3,7 @@ import { Modal, ModalHeader, ModalBody, ModalFooter, Input, Button, Label, FormG
 import { toast } from 'react-toastify';
 import ROUTES from 'constants/routes.js';
 import PropTypes from 'prop-types';
-import { generateDOIForORKGArtefact } from 'services/backend/misc';
+import { generateDoi } from 'services/backend/misc';
 import { createLiteral } from 'services/backend/literals';
 import Tooltip from 'components/Utils/Tooltip';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
@@ -17,8 +17,7 @@ import { filterObjectOfStatementsByPredicateAndClass } from 'utils';
 import { createResourceData } from 'services/similarity/index';
 import { useSelector } from 'react-redux';
 import { createObject } from 'services/backend/misc';
-import { createLiteralStatement, createResourceStatement, getStatementsByPredicateAndLiteral } from 'services/backend/statements';
-import { createResource } from 'services/backend/resources';
+import { createResourceStatement } from 'services/backend/statements';
 import { updateStatement } from 'services/backend/statements';
 import { Link } from 'react-router-dom';
 
@@ -174,17 +173,17 @@ function Publish(props) {
             };
 
             const createdPaper = await createObject(paper_obj);
-            generateDOIForORKGArtefact(
-                createdPaper.id,
+            generateDoi({
+                type: CLASSES.PAPER,
+                resource_type: CLASSES.DATASET,
+                resource_id: createdPaper.id,
                 title,
-                subject ? subject.label : '',
-                viewPaper.contributions && viewPaper.contributions[0] ? [viewPaper.contributions[0].id] : [''],
+                subject: subject ? subject.label : '',
                 description,
-                contributors.map(creator => ({ creator: creator.created_by.display_name, orcid: '' })),
-                `${getPublicUrl()}${reverse(ROUTES.VIEW_PAPER, { resourceId: createdPaper.id })}`,
-                CLASSES.PAPER,
-                CLASSES.DATASET
-            )
+                related_sources: viewPaper.contributions && viewPaper.contributions[0] ? [viewPaper.contributions[0].id] : [''],
+                authors: contributors.map(creator => ({ creator: creator.created_by.display_name, orcid: '' })),
+                url: `${getPublicUrl()}${reverse(ROUTES.VIEW_PAPER, { resourceId: createdPaper.id })}`
+            })
                 .then(doiResponse => {
                     createLiteral(doiResponse.data.attributes.doi).then(doiLiteral => {
                         createResourceStatement(createdPaper.id, PREDICATES.HAS_DOI, doiLiteral.id);
