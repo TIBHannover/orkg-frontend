@@ -88,44 +88,41 @@ const MembersBox = ({ observatoryId, organizationsList }) => {
                                         <Button size="sm" onClick={() => setOpenModal(v => !v)} color="light">
                                             View more
                                         </Button>
-                                        {openModal && (
-                                            <Modal isOpen={openModal} toggle={() => setOpenModal(v => !v)} size="lg">
-                                                <ModalHeader toggle={() => setOpenModal(v => !v)}>Observatory members</ModalHeader>
-                                                <ModalBody>
-                                                    <div className="clearfix">
-                                                        {members.map((user, index) => {
-                                                            return (
-                                                                <div key={`moc${index}`}>
-                                                                    <ContributorCard
-                                                                        contributor={{
-                                                                            ...user,
-                                                                            subTitle: organizationsList.find(o => o.id.includes(user.organization_id))
-                                                                                ?.name
-                                                                        }}
-                                                                        options={
-                                                                            userData && userData.isCurationAllowed
-                                                                                ? [
-                                                                                      {
-                                                                                          label: 'Delete this member from the observatory',
-                                                                                          action: () => deleteObservatoryMember(user),
-                                                                                          icon: faTrash,
-                                                                                          requireConfirmation: true
-                                                                                      }
-                                                                                  ]
-                                                                                : []
-                                                                        }
-                                                                    />
-                                                                    {members.length - 1 !== index && (
-                                                                        <hr style={{ width: '90%', margin: '10px auto' }} />
-                                                                    )}
-                                                                </div>
-                                                            );
-                                                        })}
-                                                    </div>
-                                                </ModalBody>
-                                            </Modal>
-                                        )}
                                     </div>
+                                )}
+                                {openModal && (
+                                    <Modal isOpen={openModal} toggle={() => setOpenModal(v => !v)} size="lg">
+                                        <ModalHeader toggle={() => setOpenModal(v => !v)}>Observatory members</ModalHeader>
+                                        <ModalBody>
+                                            <div className="clearfix">
+                                                {members.map((user, index) => {
+                                                    return (
+                                                        <div key={`moc${index}`}>
+                                                            <ContributorCard
+                                                                contributor={{
+                                                                    ...user,
+                                                                    subTitle: organizationsList.find(o => o.id.includes(user.organization_id))?.name
+                                                                }}
+                                                                options={
+                                                                    userData && userData.isCurationAllowed
+                                                                        ? [
+                                                                              {
+                                                                                  label: 'Delete this member from the observatory',
+                                                                                  action: () => deleteObservatoryMember(user),
+                                                                                  icon: faTrash,
+                                                                                  requireConfirmation: true
+                                                                              }
+                                                                          ]
+                                                                        : []
+                                                                }
+                                                            />
+                                                            {members.length - 1 !== index && <hr style={{ width: '90%', margin: '10px auto' }} />}
+                                                        </div>
+                                                    );
+                                                })}
+                                            </div>
+                                        </ModalBody>
+                                    </Modal>
                                 )}
                             </div>
                         ) : (
@@ -141,7 +138,7 @@ const MembersBox = ({ observatoryId, organizationsList }) => {
                     toggle={() => setShowAddMemberDialog(v => !v)}
                     observatoryId={observatoryId}
                     organizationsList={organizationsList}
-                    updateObservatoryMembers={member => setMembers(v => [member, ...members])}
+                    updateObservatoryMembers={member => setMembers(v => [member, ...v.filter(m => m.id !== member.id)])}
                 />
             </div>
         </div>
