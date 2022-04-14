@@ -80,7 +80,7 @@ export const addPaperSlice = createSlice({
         },
         openTour: (state, { payload }) => {
             state.isTourOpen = true;
-            state.tourStartAt = payload.step ? payload.step : 0;
+            state.tourStartAt = payload?.step ? payload.step : 0;
         },
         updateResearchField: (state, { payload }) => {
             state.researchFields = typeof payload.researchFields !== 'undefined' ? payload.researchFields : state.researchFields;
