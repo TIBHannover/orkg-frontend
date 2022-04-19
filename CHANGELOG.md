@@ -3,6 +3,18 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [V0.68.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.68...V0.68.1) - 2022-04-19
+
+### Changes
+
+- ux(Search ): hide message "There are no results..." in results [`#822`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/822)
+- ux(AddPaper): go to next step on field click [`#821`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/821)
+- fix: Template save button keeps saving state [`#824`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/824)
+- fix(Comparison): Error when publishing comparison DOI without creators [`#825`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/825)
+- fix(Review): duplicate publishing notification after publishing [`#826`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/826)
+- fix: Contributions Help Tour issue [`#823`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/823)
+
+---
 ## [V0.68](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.67.2...V0.68) - 2022-04-13
 
 ### Changes
