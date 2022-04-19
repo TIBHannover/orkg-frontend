@@ -94,12 +94,8 @@ const Observatory = () => {
                         Observatory
                     </TitleBar>
                     {description && (
-                        <Container className="p-0">
-                            <Card>
-                                <CardBody>
-                                    <div className="mb-4">{description}</div>
-                                </CardBody>
-                            </Card>
+                        <Container className="box rounded py-3 px-4 mb-4" style={{ whiteSpace: 'pre-wrap' }}>
+                            <p className="m-0">{description}</p>
                         </Container>
                     )}
                     <Container className="p-0">
