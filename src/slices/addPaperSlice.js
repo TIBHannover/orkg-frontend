@@ -86,6 +86,9 @@ export const addPaperSlice = createSlice({
             state.researchFields = typeof payload.researchFields !== 'undefined' ? payload.researchFields : state.researchFields;
             state.selectedResearchField =
                 typeof payload.selectedResearchField !== 'undefined' ? payload.selectedResearchField : state.selectedResearchField;
+            if (payload.submit) {
+                state.currentStep = state.currentStep + 1;
+            }
         },
         updateAbstract: (state, { payload }) => {
             state.abstract = payload;
