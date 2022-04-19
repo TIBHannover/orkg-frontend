@@ -84,7 +84,7 @@ export default function Search() {
                                         <>
                                             <h2 className="h5">No results</h2>
                                             <div className="text-center mt-4 mb-4">
-                                                There are no results for the rest of filters (
+                                                There are no results for the remaining filters (
                                                 <i>
                                                     {allFilters
                                                         .filter(
@@ -95,7 +95,7 @@ export default function Search() {
                                                         .map(f => f.label)
                                                         .join(', ')}
                                                 </i>
-                                                ), please try a different search term
+                                                )
                                             </div>
                                         </>
                                     )}
