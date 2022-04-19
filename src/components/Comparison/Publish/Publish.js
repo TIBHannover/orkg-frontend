@@ -171,7 +171,7 @@ function Publish(props) {
         setIsLoading(true);
         try {
             if (!props.comparisonId) {
-                if (title && title.trim() !== '' && description && description.trim() !== '') {
+                if (title && title.trim() !== '' && description && description.trim() !== '' && (!assignDOI || comparisonCreators?.length > 0)) {
                     let response_hash;
 
                     if (!props.responseHash) {
@@ -255,7 +255,7 @@ function Publish(props) {
                     setIsLoading(false);
                     history.push(reverse(ROUTES.COMPARISON, { comparisonId: createdComparison.id }));
                 } else {
-                    throw Error('Please enter a title and a description');
+                    throw Error('Please enter a title, description and creator(s)');
                 }
             } else {
                 publishDOI(props.comparisonId);
@@ -281,7 +281,7 @@ function Publish(props) {
                 }
             });
             comparisonCreatorsORCID = await Promise.all(comparisonCreatorsORCID);
-            if (title && title.trim() !== '' && description && description.trim() !== '') {
+            if (title && title.trim() !== '' && description && description.trim() !== '' && comparisonCreators?.length > 0) {
                 generateDoi({
                     type: 'Comparison',
                     resource_type: 'Dataset',
@@ -310,7 +310,7 @@ function Publish(props) {
                         setIsLoading(false);
                     });
             } else {
-                throw Error('Please enter a title and a description');
+                throw Error('Please enter a title, description and creator(s)');
             }
         } catch (error) {
             console.error(error);
