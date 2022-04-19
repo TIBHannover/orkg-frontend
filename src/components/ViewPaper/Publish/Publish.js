@@ -18,7 +18,7 @@ import { createResourceData } from 'services/similarity/index';
 import { useSelector } from 'react-redux';
 import { createObject } from 'services/backend/misc';
 import { createResourceStatement } from 'services/backend/statements';
-import { updateStatement } from 'services/backend/statements';
+import { updateStatement, deleteStatementById } from 'services/backend/statements';
 import { Link } from 'react-router-dom';
 
 const AuthorTag = styled.div`
@@ -131,11 +131,6 @@ function Publish(props) {
                     name: title,
                     classes: [CLASSES.PAPERVERSION],
                     values: {
-                        [PREDICATES.DESCRIPTION]: [
-                            {
-                                text: description
-                            }
-                        ],
                         ...(subject &&
                             subject.id && {
                                 [PREDICATES.HAS_RESEARCH_FIELD]: [
@@ -185,18 +180,14 @@ function Publish(props) {
                 url: `${getPublicUrl()}${reverse(ROUTES.VIEW_PAPER, { resourceId: createdPaper.id })}`
             })
                 .then(doiResponse => {
-                    createLiteral(doiResponse.data.attributes.doi).then(doiLiteral => {
+                    createLiteral(doiResponse.data.attributes.doi).then(async doiLiteral => {
                         createResourceStatement(createdPaper.id, PREDICATES.HAS_DOI, doiLiteral.id);
                         if (viewPaper.hasVersion) {
-                            updateStatement(viewPaper.hasVersion.statementId, {
-                                subject_id: viewPaper.paperResource.id,
-                                predicate_id: PREDICATES.HAS_PREVIOUS_VERSION,
-                                object_id: createdPaper.id
-                            });
+                            console.log(createdPaper.id);
+                            await deleteStatementById(viewPaper.hasVersion.statementId);
                             createResourceStatement(createdPaper.id, PREDICATES.HAS_PREVIOUS_VERSION, viewPaper.hasVersion.id);
-                        } else {
-                            createResourceStatement(viewPaper.paperResource.id, PREDICATES.HAS_PREVIOUS_VERSION, createdPaper.id);
                         }
+                        createResourceStatement(viewPaper.paperResource.id, PREDICATES.HAS_PREVIOUS_VERSION, createdPaper.id);
                         setDataCiteDoi(doiResponse.data.attributes.doi);
                         setCreatedPaperId(createdPaper.id);
                         createResourceData({
