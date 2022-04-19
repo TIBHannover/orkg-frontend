@@ -83,6 +83,7 @@ const Review = () => {
     const versions = useSelector(state => state.review.versions);
     const authors = useSelector(state => state.review.authorResources);
     const prevIsEditing = usePrevious(isEditing);
+    const prevIsOpenPublishModal = usePrevious(isOpenPublishModal);
     const dispatch = useDispatch();
     const history = useHistory();
     const { load, isLoading, isNotFound, getVersions } = useLoad();
@@ -104,10 +105,10 @@ const Review = () => {
     }, [paper]);
 
     useEffect(() => {
-        if (prevIsEditing && !isEditing) {
+        if (prevIsEditing && !isEditing && !prevIsOpenPublishModal) {
             setIsOpenShouldPublishModal(true);
         }
-    }, [isEditing, prevIsEditing]);
+    }, [isEditing, prevIsEditing, prevIsOpenPublishModal]);
 
     const handleEdit = async () => {
         if (isPublished) {
