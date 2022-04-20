@@ -50,8 +50,8 @@ const Help = styled.div`
 
 const HelpIcon = styled(Icon)`
     vertical-align: middle;
-    height: 48px;
-    width: 48px !important;
+    height: 28px;
+    width: 28px !important;
     z-index: 9999;
     background-color: ${props => props.theme.primary};
     display: inline-flex;
