@@ -102,7 +102,7 @@
         "redux-thunk": "^2.4.1",
         "sass": "^1.50.1",
         "sbd": "^1.0.19",
-        "showdown": "^2.0.3",
+        "showdown": "^2.1.0",
         "showdown-footnotes": "^2.1.2",
         "slugify": "^1.6.5",
         "source-map-explorer": "^2.5.2",
