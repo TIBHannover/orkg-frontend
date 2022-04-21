@@ -18,7 +18,7 @@ import { createResourceData } from 'services/similarity/index';
 import { useSelector } from 'react-redux';
 import { createObject } from 'services/backend/misc';
 import { createResourceStatement } from 'services/backend/statements';
-import { updateStatement, deleteStatementById } from 'services/backend/statements';
+import { deleteStatementById } from 'services/backend/statements';
 import { Link } from 'react-router-dom';
 
 const AuthorTag = styled.div`
@@ -129,7 +129,7 @@ function Publish(props) {
                 predicates: [],
                 resource: {
                     name: title,
-                    classes: [CLASSES.PAPERVERSION],
+                    classes: [CLASSES.PAPER_VERSION],
                     values: {
                         ...(subject &&
                             subject.id && {
@@ -213,7 +213,9 @@ function Publish(props) {
             <ModalHeader toggle={props.toggle}>Publish ORKG paper</ModalHeader>
             <ModalBody>
                 <Alert color="info">
-                    {props.paperId && !dataCiteDoi && <>A published paper is made public to other users.</>}
+                    {props.paperId && !dataCiteDoi && (
+                        <>Persistently identfied paper will be findable in global scholarly infrastructures (DataCite, OpenAIRE and ORCID).</>
+                    )}
                     {createdPaperId && dataCiteDoi && (
                         <>
                             DOI is assigned sucessfully.{' '}

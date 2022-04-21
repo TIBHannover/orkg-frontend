@@ -180,18 +180,19 @@ export const get_error_message = (errors, field = null) => {
 export const getPaperData_ViewPaper = (paperResource, paperStatements) => {
     const authors = filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_AUTHOR, false);
     const contributions = filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_CONTRIBUTION, false, CLASSES.CONTRIBUTION);
-
+    const dois = filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_DOI, false);
     return {
         paperResource: paperResource,
         authors: authors ? authors.sort((a, b) => a.s_created_at.localeCompare(b.s_created_at)) : [], // statements are ordered desc, so first author is last => thus reverse
         contributions: contributions.sort((a, b) => a.label.localeCompare(b.label)), // sort contributions ascending, so contribution 1, is actually the first one
         publicationMonth: filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_PUBLICATION_MONTH, true),
         publicationYear: filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_PUBLICATION_YEAR, true),
-        doi: filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_DOI, false),
+        doi: getDoi(dois, 'ORKG'),
         researchField: filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_RESEARCH_FIELD, true, CLASSES.RESEARCH_FIELD),
         publishedIn: filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_VENUE, true),
         url: filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.URL, true),
-        hasVersion: filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_PREVIOUS_VERSION, true)
+        hasVersion: filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_PREVIOUS_VERSION, true),
+        dataCiteDoi: getDoi(dois, 'DataCite')
     };
 };
 
@@ -230,6 +231,17 @@ export const getPaperData = (resource, paperStatements) => {
         publishedIn,
         url
     };
+};
+
+export const getDoi = (statement, type) => {
+    if (!statement.length) {
+        return;
+    }
+    if (type === 'DataCite') {
+        return statement.find(doi => doi.label?.startsWith(env('DATACITE_DOI_PREFIX'))) ?? '';
+    } else {
+        return statement.find(doi => doi.label?.startsWith('10.')) ?? '';
+    }
 };
 
 /**

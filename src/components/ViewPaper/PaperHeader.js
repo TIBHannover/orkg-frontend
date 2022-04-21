@@ -111,12 +111,12 @@ const PaperHeader = props => {
                     </div>
                 )}
 
-                {viewPaper.doi && viewPaper.doi[0].label?.startsWith('10.') && (
+                {viewPaper.doi && viewPaper.doi.label?.startsWith('10.') && (
                     <div className="flex-shrink-0">
                         <small>
                             DOI:{' '}
-                            <a href={`https://doi.org/${viewPaper.doi[0].label}`} target="_blank" rel="noopener noreferrer">
-                                {viewPaper.doi[0].label}
+                            <a href={`https://doi.org/${viewPaper.doi.label}`} target="_blank" rel="noopener noreferrer">
+                                {viewPaper.doi.label}
                             </a>
                         </small>
                     </div>

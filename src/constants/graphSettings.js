@@ -117,7 +117,7 @@ export const CLASSES = {
     INTEGER: 'Integer',
     BOOLEAN: 'Boolean',
     URI: 'URI',
-    PAPERVERSION: 'PaperVersion',
+    PAPER_VERSION: 'PaperVersion',
     SOFTWARE: 'Software'
 };
 

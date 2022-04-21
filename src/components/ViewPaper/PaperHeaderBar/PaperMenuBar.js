@@ -8,14 +8,19 @@ import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
 import ROUTES from 'constants/routes.js';
 import { reverse } from 'named-urls';
-import { connect } from 'react-redux';
 import { openAuthDialog } from 'slices/authSlice';
 import Publish from 'components/ViewPaper/Publish/Publish';
+import { useSelector, useDispatch } from 'react-redux';
 
 function PaperMenuBar(props) {
+    const dispatch = useDispatch();
     const [menuOpen, setMenuOpen] = useState(false);
     const [isOpenPWCModal, setIsOpenPWCModal] = useState(false);
     const [showPublishDialog, setShowPublishDialog] = useState(false);
+    const user = useSelector(state => state.auth.user);
+    const handleSignIn = () => {
+        dispatch(openAuthDialog({ action: 'signin' }));
+    };
 
     return (
         <>
@@ -64,19 +69,19 @@ function PaperMenuBar(props) {
                     <Icon icon={faEllipsisV} />
                 </DropdownToggle>
                 <DropdownMenu end>
-                    <DropdownItem tag={NavLink} exact to={reverse(ROUTES.RESOURCE, { id: props.id })}>
-                        View resource
-                    </DropdownItem>
                     <DropdownItem
                         onClick={e => {
-                            if (!props.user) {
-                                props.openAuthDialog({ action: 'signin', signInRequired: true });
+                            if (!user) {
+                                handleSignIn();
                             } else {
                                 setShowPublishDialog(v => !v);
                             }
                         }}
                     >
                         Publish
+                    </DropdownItem>
+                    <DropdownItem tag={NavLink} exact to={reverse(ROUTES.RESOURCE, { id: props.id })}>
+                        View resource
                     </DropdownItem>
                 </DropdownMenu>
             </ButtonDropdown>
@@ -87,27 +92,13 @@ function PaperMenuBar(props) {
     );
 }
 
-const mapStateToProps = state => ({
-    user: state.auth.user
-});
-
-const mapDispatchToProps = dispatch => ({
-    openAuthDialog: payload => dispatch(openAuthDialog(payload))
-});
-
 PaperMenuBar.propTypes = {
     editMode: PropTypes.bool.isRequired,
     disableEdit: PropTypes.bool.isRequired,
     paperLink: PropTypes.string,
     id: PropTypes.string,
     label: PropTypes.string,
-    toggle: PropTypes.func.isRequired,
-    openAuthDialog: PropTypes.func.isRequired,
-    user: PropTypes.oneOfType([PropTypes.object, PropTypes.number]),
-    dataCiteDoi: PropTypes.string
+    toggle: PropTypes.func.isRequired
 };
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(PaperMenuBar);
+export default PaperMenuBar;

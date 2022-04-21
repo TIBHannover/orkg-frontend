@@ -34,7 +34,6 @@ const useViewPaperVersion = ({ paperId }) => {
 
     const loadPaperData = useCallback(() => {
         setIsLoading(true);
-        //dispatch(resetStatementBrowser());
         getResource(paperId)
             .then(paperResource => {
                 if (!paperResource.classes.includes(PREDICATES.PAPER_VERSION)) {

@@ -31,17 +31,11 @@ const ViewPaper = () => {
     const paperLink = useSelector(state =>
         state.viewPaper.url
             ? state.viewPaper.url.label
-            : state.viewPaper.doi && state.viewPaper.doi[0].label.startsWith('10.')
-            ? 'https://doi.org/' + state.viewPaper.doi.map(doi => doi.label.startsWith('10.') && doi.label)[0] //state.viewPaper.doi[0].label
+            : state.viewPaper.doi && state.viewPaper.doi.label.startsWith('10.')
+            ? 'https://doi.org/' + state.viewPaper.doi.label
             : ''
     );
-    const dataCiteDoi = useSelector(
-        state =>
-            state.viewPaper.doi &&
-            state.viewPaper.doi.length &&
-            state.viewPaper.doi.length > 0 &&
-            state.viewPaper.doi.map(doi => doi.label.startsWith(env('DATACITE_DOI_PREFIX')) && doi.label)[0]
-    );
+    const dataCiteDoi = useSelector(state => state.viewPaper.dataCiteDoi);
 
     const {
         isLoading,

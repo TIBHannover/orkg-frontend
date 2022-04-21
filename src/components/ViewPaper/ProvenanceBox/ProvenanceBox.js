@@ -23,13 +23,8 @@ const ProvenanceBox = () => {
     const [contributors, setContributors] = useState([]);
     const [publishInfo, setPublishInfo] = useState([]);
     const [info, setInfo] = useState([]);
-    const doi = useSelector(
-        state =>
-            state.viewPaper.doi &&
-            state.viewPaper.doi.length &&
-            state.viewPaper.doi.length > 0 &&
-            state.viewPaper.doi.map(doi => doi.label.startsWith(env('DATACITE_DOI_PREFIX')) && doi.label)[0]
-    );
+    const doi = useSelector(state => state.viewPaper.dataCiteDoi);
+
     useEffect(() => {
         const loadContributors = () => {
             setIsLoadingContributors(true);
@@ -154,7 +149,7 @@ const ProvenanceBox = () => {
                                 createdBy={createdBy}
                                 isLoadingProvenance={isLoadingProvenance}
                                 isLoadingContributors={isLoadingContributors}
-                                dataCiteDoi={doi ? doi : ''}
+                                dataCiteDoi={doi ? doi.label : ''}
                             />
                         </AnimationContainer>
                     ) : (
