@@ -52,7 +52,7 @@ const PaperHeader = props => {
                 paperResource: { ...viewPaper.paperResource, label: data.paper.label },
                 publicationMonth: { ...viewPaper.publicationMonth, label: data.month?.label || null, id: data.month?.id },
                 publicationYear: { ...viewPaper.publicationYear, label: data.year?.label || null, id: data.year?.id },
-                doi: { ...viewPaper.doi, label: data.doi[0]?.label, id: data.doi[0]?.id },
+                doi: { ...viewPaper.doi, label: data.doi?.label, id: data.doi?.id },
                 authors: data.authors,
                 publishedIn: data.publishedIn,
                 url: { ...viewPaper.url, label: data.url?.label, id: data.url?.id },
