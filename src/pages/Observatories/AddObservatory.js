@@ -13,7 +13,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { openAuthDialog } from 'slices/authSlice';
 import { useSelector, useDispatch } from 'react-redux';
-import { useParams, useNavigate } from 'react-router-dom-v5-compat';
+import { useParams, useNavigate } from 'react-router-dom';
 import slugify from 'slugify';
 import { getPublicUrl } from 'utils';
 import Tooltip from 'components/Utils/Tooltip';

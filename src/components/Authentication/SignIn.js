@@ -5,7 +5,7 @@ import { toggleAuthDialog, updateAuth } from 'slices/authSlice';
 import { signInWithEmailAndPassword, getUserInformation } from 'services/backend/users';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { useNavigate } from 'react-router-dom-v5-compat';
+import { useNavigate } from 'react-router-dom';
 import { Cookies } from 'react-cookie';
 import { checkCookie } from 'utils';
 import env from '@beam-australia/react-env';

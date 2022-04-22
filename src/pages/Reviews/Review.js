@@ -28,7 +28,7 @@ import ROUTES from 'constants/routes';
 import moment from 'moment';
 import { reverse } from 'named-urls';
 import NotFound from 'pages/NotFound';
-import { useParams, useNavigate } from 'react-router-dom-v5-compat';
+import { useParams, useNavigate } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';

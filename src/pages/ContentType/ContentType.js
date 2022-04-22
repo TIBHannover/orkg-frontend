@@ -15,7 +15,7 @@ import NotFound from 'pages/NotFound';
 import Unauthorized from 'pages/Unauthorized';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { useParams, useNavigate } from 'react-router-dom-v5-compat';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Button, Container } from 'reactstrap';
 import { getResource } from 'services/backend/resources';
 

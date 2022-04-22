@@ -2,7 +2,7 @@ import TitleBar from 'components/TitleBar/TitleBar';
 import ROUTES from 'constants/routes';
 import NotFound from 'pages/NotFound';
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom-v5-compat';
+import { useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { Breadcrumb, BreadcrumbItem, Container } from 'reactstrap';
 import { getHelpCategory } from 'services/cms';

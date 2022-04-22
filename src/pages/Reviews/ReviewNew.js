@@ -8,7 +8,7 @@ import { reverse } from 'named-urls';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { Button, Container, FormGroup, Input, Label } from 'reactstrap';
-import { useNavigate } from 'react-router-dom-v5-compat';
+import { useNavigate } from 'react-router-dom';
 
 const ReviewNew = () => {
     const [title, setTitle] = useState('');

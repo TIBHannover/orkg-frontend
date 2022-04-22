@@ -2,7 +2,7 @@ import { useState } from 'react';
 import Confirm from 'components/Confirmation/Confirmation';
 import { deleteResource as deleteResourceNetwork } from 'services/backend/resources';
 import { toast } from 'react-toastify';
-import { useNavigate } from 'react-router-dom-v5-compat';
+import { useNavigate } from 'react-router-dom';
 import ROUTES from 'constants/routes.js';
 
 function useDeleteResource({ resourceId, redirect = false }) {

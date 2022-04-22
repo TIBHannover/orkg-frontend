@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router';
-import { useParams } from 'react-router-dom-v5-compat';
+import { useParams } from 'react-router-dom';
 import { CLASSES, ENTITIES } from 'constants/graphSettings';
 import { getArrayParamFromQueryString, getParamFromQueryString } from 'utils';
 import { getClassById, getClasses } from 'services/backend/classes';

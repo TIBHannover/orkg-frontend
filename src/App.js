@@ -6,8 +6,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import 'tippy.js/dist/tippy.css';
 import 'tippy.js/dist/backdrop.css';
 import 'tippy.js/animations/shift-away.css';
-import { ConnectedRouter } from 'connected-react-router';
-import { CompatRouter, Routes, Route } from 'react-router-dom-v5-compat';
+import { BrowserRouter } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { detect } from 'detect-browser';
 import ScrollToTop from 'components/ScrollToTop';
@@ -22,7 +22,7 @@ const renderRoutes = (routes, extraProps = {}, switchProps = {}) => {
     return routes ? (
         <Routes {...switchProps}>
             {routes.map((route, i) => (
-                <Route key={route.key || i} path={route.path} exact={route.exact} strict={route.strict} element={<route.component />} />
+                <Route key={route.key || i} path={route.path} exact={route.exact ?? false} strict={route.strict} element={<route.component />} />
             ))}
         </Routes>
     ) : null;
@@ -33,35 +33,31 @@ const App = ({ history }) => {
     const [showBrowserWarning] = useState(browser && browser.name === 'ie');
 
     return (
-        <ConnectedRouter history={history}>
-            <CompatRouter>
-                <ScrollToTop>
-                    <DefaultLayout>
-                        {showBrowserWarning && (
-                            <Alert color="danger" style={alertStyle} className="text-center">
-                                <strong>Outdated browser</strong> You are using Internet Explorer which is not supported. Please upgrade your browser
-                                for the best experience
+        <BrowserRouter history={history}>
+            <ScrollToTop>
+                <DefaultLayout>
+                    {showBrowserWarning && (
+                        <Alert color="danger" style={alertStyle} className="text-center">
+                            <strong>Outdated browser</strong> You are using Internet Explorer which is not supported. Please upgrade your browser for
+                            the best experience
+                        </Alert>
+                    )}
+                    {env('IS_TESTING_SERVER') === 'true' && (
+                        <>
+                            <MetaTags>
+                                <meta name="robots" content="noindex" /> {/* make sure search engines are not indexing our test server */}
+                            </MetaTags>
+                            <Alert color="warning" style={alertStyle} className="text-center">
+                                <strong>Warning:</strong> You are using a testing environment. Data you enter in the system can be deleted without any
+                                notice.
                             </Alert>
-                        )}
-                        {env('IS_TESTING_SERVER') === 'true' && (
-                            <>
-                                <MetaTags>
-                                    <meta name="robots" content="noindex" /> {/* make sure search engines are not indexing our test server */}
-                                </MetaTags>
-                                <Alert color="warning" style={alertStyle} className="text-center">
-                                    <strong>Warning:</strong> You are using a testing environment. Data you enter in the system can be deleted without
-                                    any notice.
-                                </Alert>
-                            </>
-                        )}
-                        {/* Suspense is used for when the component is lazy loaded */}
-                        <Suspense fallback={<div className="mt-5 mb-2 text-center">Loading...</div>}>
-                            <Routes>{renderRoutes(routes)}</Routes>
-                        </Suspense>
-                    </DefaultLayout>
-                </ScrollToTop>
-            </CompatRouter>
-        </ConnectedRouter>
+                        </>
+                    )}
+                    {/* Suspense is used for when the component is lazy loaded */}
+                    <Suspense fallback={<div className="mt-5 mb-2 text-center">Loading...</div>}>{renderRoutes(routes)}</Suspense>
+                </DefaultLayout>
+            </ScrollToTop>
+        </BrowserRouter>
     );
 };
 

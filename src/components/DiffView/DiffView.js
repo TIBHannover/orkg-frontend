@@ -7,7 +7,7 @@ import { reverse } from 'named-urls';
 import React, { useEffect, useState } from 'react';
 import ContentLoader from 'react-content-loader';
 import ReactDiffViewer from 'react-diff-viewer';
-import { useParams, useNavigate } from 'react-router-dom-v5-compat';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-use';
 import { Alert, Button } from 'reactstrap';
 import queryString from 'query-string';

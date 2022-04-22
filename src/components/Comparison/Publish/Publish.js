@@ -23,7 +23,7 @@ import { faOrcid } from '@fortawesome/free-brands-svg-icons';
 import { faClipboard } from '@fortawesome/free-regular-svg-icons';
 import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { reverse } from 'named-urls';
-import { useNavigate } from 'react-router-dom-v5-compat';
+import { useNavigate } from 'react-router-dom';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { Link } from 'react-router-dom';
 import { getPropertyObjectFromData, filterObjectOfStatementsByPredicateAndClass } from 'utils';

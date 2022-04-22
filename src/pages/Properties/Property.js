@@ -13,7 +13,7 @@ import { ENTITIES } from 'constants/graphSettings';
 import TitleBar from 'components/TitleBar/TitleBar';
 import ItemMetadata from 'components/Search/ItemMetadata';
 import EditModeHeader from 'components/EditModeHeader/EditModeHeader';
-import { useParams } from 'react-router-dom-v5-compat';
+import { useParams } from 'react-router-dom';
 function Property(props) {
     const location = useLocation();
     const [error, setError] = useState(null);

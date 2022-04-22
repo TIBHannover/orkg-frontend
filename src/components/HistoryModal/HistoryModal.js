@@ -7,7 +7,7 @@ import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom-v5-compat';
+import { useNavigate } from 'react-router-dom';
 import Select, { components } from 'react-select';
 import { Alert, Button, Modal, ModalBody, ModalHeader } from 'reactstrap';
 import styled from 'styled-components';

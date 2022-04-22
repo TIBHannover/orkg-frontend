@@ -4,7 +4,7 @@ import ObservatoryCard from 'components/ObservatoryCard/ObservatoryCard';
 import { getAllObservatories, getObservatoriesStats } from 'services/backend/observatories';
 import { getAllOrganizations } from 'services/backend/organizations';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { useLocation } from 'react-router-dom-v5-compat';
+import { useLocation } from 'react-router-dom';
 import { Container } from 'reactstrap';
 import { Col, Row } from 'reactstrap';
 import { TabContent, TabPane, NavLink } from 'reactstrap';

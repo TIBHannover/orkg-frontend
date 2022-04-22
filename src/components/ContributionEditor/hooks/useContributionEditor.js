@@ -6,7 +6,7 @@ import ROUTES from 'constants/routes';
 import { sortBy, uniq, without } from 'lodash';
 import queryString from 'query-string';
 import { useCallback } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom-v5-compat';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const useContributionEditor = () => {
     const location = useLocation();

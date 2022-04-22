@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Container } from 'reactstrap';
 import { getLongLink } from 'services/similarity/index';
-import { useParams } from 'react-router-dom-v5-compat';
+import { useParams } from 'react-router-dom';
 
 const RedirectShortLinks = () => {
     const params = useParams();

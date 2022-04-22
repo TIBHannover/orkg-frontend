@@ -40,7 +40,7 @@ import HomeBannerBg from 'assets/img/graph-background.svg';
 import { scrollbarWidth } from '@xobotyi/scrollbar-width';
 import AboutMenu from 'components/Layout/Header/AboutMenu';
 import ContentTypesMenu from 'components/Layout/Header/ContentTypesMenu';
-import { useLocation, useNavigate } from 'react-router-dom-v5-compat';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const cookies = new Cookies();
 

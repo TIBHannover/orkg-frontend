@@ -4,8 +4,7 @@ import ROUTES from 'constants/routes';
 import { getStatementsByObjectAndPredicate } from 'services/backend/statements';
 import { CLASSES, PREDICATES } from 'constants/graphSettings';
 import { reverse } from 'named-urls';
-import { Redirect } from 'react-router-dom';
-import { useParams } from 'react-router-dom-v5-compat';
+import { useParams, useNavigate } from 'react-router-dom';
 import NotFound from 'pages/NotFound';
 
 /**
@@ -13,6 +12,7 @@ import NotFound from 'pages/NotFound';
  */
 export default function Contribution(props) {
     const params = useParams();
+    const navigate = useNavigate();
     const contributionId = params.id;
     const [error, setError] = useState(false);
     const [paperId, setPaperId] = useState(null);
@@ -44,9 +44,9 @@ export default function Contribution(props) {
     if (error) {
         return <NotFound />;
     } else if (!isReview && paperId) {
-        return <Redirect to={reverse(ROUTES.VIEW_PAPER, { resourceId: paperId, contributionId })} />;
+        return navigate(reverse(ROUTES.VIEW_PAPER, { resourceId: paperId, contributionId }));
     } else if (paperId) {
-        return <Redirect to={reverse(ROUTES.REVIEW, { id: paperId })} />;
+        return navigate(reverse(ROUTES.REVIEW, { id: paperId }));
     } else {
         return <Container className="box rounded pt-4 pb-4 ps-5 pe-5 mt-5 clearfix">Loading ...</Container>;
     }

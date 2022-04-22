@@ -5,7 +5,7 @@ import { getStatementsBySubjectAndPredicate } from 'services/backend/statements'
 import { updateResourceClasses } from 'services/backend/resources';
 import { toast } from 'react-toastify';
 import { PREDICATES } from 'constants/graphSettings';
-import { useNavigate } from 'react-router-dom-v5-compat';
+import { useNavigate } from 'react-router-dom';
 import ROUTES from 'constants/routes.js';
 import pluralize from 'pluralize';
 

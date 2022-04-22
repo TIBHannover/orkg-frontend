@@ -6,16 +6,14 @@ import ROUTES from 'constants/routes.js';
 import { reverse } from 'named-urls';
 import { useLocation } from 'react-router';
 import REGEX from 'constants/regex';
-import { useRouteMatch } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom-v5-compat';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Form, Input, Button, InputGroup } from 'reactstrap';
 import { isString } from 'lodash';
 import { getArrayParamFromQueryString, getParamFromQueryString, getLinkByEntityType, getEntityTypeByID } from 'utils';
 
 const SearchForm = ({ placeholder, onSearch = null }) => {
     const [value, setValue] = useState('');
-    const match = useRouteMatch(ROUTES.SEARCH);
-    const urlSearchQuery = match?.params?.searchTerm;
+    const { searchTerm: urlSearchQuery } = useParams();
     const navigate = useNavigate();
     const location = useLocation();
 

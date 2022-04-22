@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import ROUTES from 'constants/routes.js';
 import { match } from 'path-to-regexp';
-import { useLocation } from 'react-router-dom-v5-compat';
+import { useLocation } from 'react-router-dom';
 import { usePrevious } from 'react-use';
 
 /* Scrolls browser window to top when new page is visited,

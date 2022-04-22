@@ -16,7 +16,7 @@ import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import { Link } from 'react-router-dom';
 import TitleBar from 'components/TitleBar/TitleBar';
-import { useParams } from 'react-router-dom-v5-compat';
+import { useParams } from 'react-router-dom';
 
 const StyledGravatar = styled(Gravatar)`
     border: 3px solid ${props => props.theme.dark};

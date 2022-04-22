@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import { useEffect, useRef, useState } from 'react';
 import { useClickAway } from 'react-use';
 import { Button } from 'reactstrap';
-import { useNavigate } from 'react-router-dom-v5-compat';
+import { useNavigate } from 'react-router-dom';
 import { SearchStyled, InputStyled, SearchButtonStyled } from 'components/styled';
 
 const HeaderSearchButton = ({ placeholder, type, userId }) => {

@@ -21,7 +21,7 @@ import useVenuePapers from 'components/Venue/useVenuePapers';
 import { NavLink } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import TitleBar from 'components/TitleBar/TitleBar';
-import { useParams } from 'react-router-dom-v5-compat';
+import { useParams } from 'react-router-dom';
 
 const VenuePage = () => {
     const params = useParams();

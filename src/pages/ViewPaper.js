@@ -2,7 +2,7 @@ import { Container, UncontrolledAlert } from 'reactstrap';
 import NotFound from 'pages/NotFound';
 import ContentLoader from 'react-content-loader';
 import { useLocation } from 'react-router-dom';
-import { useParams } from 'react-router-dom-v5-compat';
+import { useParams } from 'react-router-dom';
 import Contributions from 'components/ViewPaper/Contributions/Contributions';
 import useViewPaper from 'components/ViewPaper/hooks/useViewPaper';
 import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';

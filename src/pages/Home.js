@@ -1,4 +1,4 @@
-import { useNavigate, useLocation } from 'react-router-dom-v5-compat';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Container, Row, Col } from 'reactstrap';
 import ResearchFieldCards from 'components/Home/ResearchFieldCards';
 import ObservatoriesBox from 'components/Home/ObservatoriesBox';

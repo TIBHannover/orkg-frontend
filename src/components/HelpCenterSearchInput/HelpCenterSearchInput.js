@@ -1,7 +1,7 @@
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import { useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom-v5-compat';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Button, Input, InputGroup } from 'reactstrap';
 
 const HelpCenterSearchInput = () => {

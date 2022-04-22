@@ -5,7 +5,7 @@ import DraftReviews from 'components/UserSettings/DraftReviews/DraftReviews';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom-v5-compat';
+import { useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { Container, Row } from 'reactstrap';
 import styled from 'styled-components';

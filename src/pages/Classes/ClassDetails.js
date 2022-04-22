@@ -16,7 +16,7 @@ import ROUTES from 'constants/routes.js';
 import { useLocation } from 'react-router-dom';
 import { CLASSES, PREDICATES, ENTITIES } from 'constants/graphSettings';
 import TitleBar from 'components/TitleBar/TitleBar';
-import { useParams } from 'react-router-dom-v5-compat';
+import { useParams } from 'react-router-dom';
 
 function ClassDetails(props) {
     const location = useLocation();

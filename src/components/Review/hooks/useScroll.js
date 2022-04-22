@@ -1,7 +1,7 @@
 import { isString } from 'lodash';
 import { useEffect, useState } from 'react';
 import { useDebounce, usePrevious, useWindowScroll } from 'react-use';
-import { useNavigate, useLocation } from 'react-router-dom-v5-compat';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const useScroll = () => {
     const [scrollTop, setScrollTop] = useState(null);

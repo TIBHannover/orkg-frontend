@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useLocation } from 'react-router-dom-v5-compat';
+import { useLocation } from 'react-router-dom';
 
 /**
  * Listen for changes to the location and run the callback when the location changes.

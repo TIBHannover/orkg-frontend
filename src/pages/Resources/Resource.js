@@ -31,7 +31,7 @@ import PapersWithCodeModal from 'components/PapersWithCodeModal/PapersWithCodeMo
 import TitleBar from 'components/TitleBar/TitleBar';
 import EditModeHeader from 'components/EditModeHeader/EditModeHeader';
 import ItemMetadata from 'components/Search/ItemMetadata';
-import { useParams } from 'react-router-dom-v5-compat';
+import { useParams } from 'react-router-dom';
 
 const DEDICATED_PAGE_LINKS = {
     [CLASSES.PAPER]: {

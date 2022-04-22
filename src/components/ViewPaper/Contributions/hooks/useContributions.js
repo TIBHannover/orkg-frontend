@@ -10,7 +10,7 @@ import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes.js';
 import { getResource } from 'services/backend/resources';
 import { getSimilarContribution } from 'services/similarity/index';
-import { useNavigate } from 'react-router-dom-v5-compat';
+import { useNavigate } from 'react-router-dom';
 import {
     selectContribution,
     setPaperContributions,

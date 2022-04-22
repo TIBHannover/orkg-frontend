@@ -17,7 +17,7 @@ import {
     isPredicatesListCorrect
 } from 'utils';
 import { useLocation } from 'react-router-dom';
-import { useParams, useNavigate } from 'react-router-dom-v5-compat';
+import { useParams, useNavigate } from 'react-router-dom';
 import { PREDICATES, CLASSES, MISC } from 'constants/graphSettings';
 import { reverse } from 'named-urls';
 import { flatten, groupBy, intersection, findIndex, cloneDeep, isEmpty, uniq, without } from 'lodash';

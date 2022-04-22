@@ -19,7 +19,7 @@ import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { useParams } from 'react-router-dom-v5-compat';
+import { useParams } from 'react-router-dom';
 import { Alert, Button, Container } from 'reactstrap';
 import SectionComparison from 'components/Review/SectionComparison';
 import env from '@beam-australia/react-env';

@@ -15,7 +15,7 @@ import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import PropTypes from 'prop-types';
 import { resetStatementBrowser } from 'slices/statementBrowserSlice';
 import { openTour, closeTour, blockNavigation, loadPaperDataAction as loadPaperData } from 'slices/addPaperSlice';
-import { Prompt } from 'react-router';
+//import { Prompt } from 'react-router';
 import GizmoGraphViewModal from 'components/ViewPaper/GraphView/GizmoGraphViewModal';
 import env from '@beam-australia/react-env';
 import TitleBar from 'components/TitleBar/TitleBar';
@@ -177,7 +177,9 @@ class AddPaper extends Component {
 
         return (
             <div>
+                {/*
                 <Prompt when={this.props.addPaper.shouldBlockNavigation} message="You have unsaved changes, are you sure you want to leave?" />
+                 */}
 
                 <TitleBar
                     titleAddition={

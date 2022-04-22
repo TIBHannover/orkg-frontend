@@ -19,7 +19,7 @@ import NotFound from 'pages/NotFound';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
-import { useParams, useNavigate } from 'react-router-dom-v5-compat';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Button, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledButtonDropdown } from 'reactstrap';
 import Confirm from 'components/Confirmation/Confirmation';
 import { historyModalToggled, setIsEditing } from 'slices/listSlice';

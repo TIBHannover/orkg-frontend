@@ -5,7 +5,7 @@ import { CLASSES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom-v5-compat';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Alert, Button, Container, FormGroup, Input, InputGroup, Label } from 'reactstrap';
 import { createResource } from 'services/backend/resources';
 import { supportedContentTypes } from 'components/ContentType/types';

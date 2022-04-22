@@ -17,7 +17,7 @@ import useBenchmarkDatasetResource from 'components/Benchmarks/hooks/useBenchmar
 import useBenchmarkDatasetPapers from 'components/Benchmarks/hooks/useBenchmarkDatasetPapers';
 import CodeURLsTooltip from 'components/Benchmarks/BenchmarkCard/CodeURLsTooltip';
 import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
-import { useParams, useNavigate } from 'react-router-dom-v5-compat';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useTable, useSortBy } from 'react-table';
 import TitleBar from 'components/TitleBar/TitleBar';
 

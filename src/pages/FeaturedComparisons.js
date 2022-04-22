@@ -9,7 +9,7 @@ import { faLink, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 import { PREDICATES, CLASSES } from 'constants/graphSettings';
 import { kebabCase, isString } from 'lodash';
-import { useNavigate, useLocation } from 'react-router-dom-v5-compat';
+import { useNavigate, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import TitleBar from 'components/TitleBar/TitleBar';
 

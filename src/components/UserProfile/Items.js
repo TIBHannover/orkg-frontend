@@ -6,7 +6,7 @@ import { getStatementsBySubjects } from 'services/backend/statements';
 import { getPaperData, getComparisonData, groupVersionsOfComparisons } from 'utils';
 import { find, flatten } from 'lodash';
 import { Button, ListGroup } from 'reactstrap';
-import { useNavigate } from 'react-router-dom-v5-compat';
+import { useNavigate } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes.js';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';

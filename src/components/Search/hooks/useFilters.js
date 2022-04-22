@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useParams, useNavigate, useLocation } from 'react-router-dom-v5-compat';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import DEFAULT_FILTERS from 'constants/searchDefaultFilters';
 import REGEX from 'constants/regex';
 import { getClassById } from 'services/backend/classes';

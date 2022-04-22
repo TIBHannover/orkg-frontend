@@ -16,7 +16,7 @@ import { useSelector } from 'react-redux';
 import { PREDICATES, ENTITIES, CLASSES } from 'constants/graphSettings';
 import { getArrayParamFromQueryString } from 'utils';
 import TitleBar from 'components/TitleBar/TitleBar';
-import { useNavigate, useLocation } from 'react-router-dom-v5-compat';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const AddResource = () => {
     const isDOI = new RegExp(REGEX.DOI);

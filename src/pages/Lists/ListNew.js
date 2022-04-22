@@ -7,7 +7,7 @@ import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom-v5-compat';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { Button, Container, FormGroup, Input, Label } from 'reactstrap';
 import { createLiteral } from 'services/backend/literals';

@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { getContentByResearchProblemIdAndClasses } from 'services/backend/problems';
 import { getStatementsBySubjects } from 'services/backend/statements';
 import { getDataBasedOnType, groupVersionsOfComparisons, mergeAlternate } from 'utils';
-import { useNavigate } from 'react-router-dom-v5-compat';
+import { useNavigate } from 'react-router-dom';
 import ROUTES from 'constants/routes.js';
 import { reverseWithSlug } from 'utils';
 import { flatten } from 'lodash';

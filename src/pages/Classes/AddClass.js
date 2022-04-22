@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Container, Button, FormGroup, Input, Label, FormText } from 'reactstrap';
 import { createClass } from 'services/backend/classes';
-import { useNavigate } from 'react-router-dom-v5-compat';
+import { useNavigate } from 'react-router-dom';
 import REGEX from 'constants/regex';
 import { toast } from 'react-toastify';
 import { reverse } from 'named-urls';

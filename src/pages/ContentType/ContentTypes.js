@@ -11,7 +11,7 @@ import NotFound from 'pages/NotFound';
 import pluralize from 'pluralize';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useParams } from 'react-router-dom-v5-compat';
+import { useParams } from 'react-router-dom';
 import { getResourcesByClass } from 'services/backend/resources';
 
 function ContentTypes() {

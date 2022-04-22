@@ -6,7 +6,7 @@ import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes';
 import TitleBar from 'components/TitleBar/TitleBar';
 import requireAuthentication from 'requireAuthentication';
-import { useNavigate } from 'react-router-dom-v5-compat';
+import { useNavigate } from 'react-router-dom';
 
 const AddProperty = () => {
     const [label, setLabel] = useState('');

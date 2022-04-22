@@ -4,7 +4,7 @@ import { CmsPage } from 'components/styled';
 import TitleBar from 'components/TitleBar/TitleBar';
 import NotFound from 'pages/NotFound';
 import { useEffect } from 'react';
-import { useParams } from 'react-router-dom-v5-compat';
+import { useParams } from 'react-router-dom';
 import { Container } from 'reactstrap';
 import { getPageByUrl } from 'services/cms';
 

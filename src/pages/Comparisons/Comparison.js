@@ -38,7 +38,7 @@ import { getResource } from 'services/backend/resources';
 import moment from 'moment';
 import ROUTES from 'constants/routes.js';
 import { Link } from 'react-router-dom';
-import { useParams, useNavigate } from 'react-router-dom-v5-compat';
+import { useParams, useNavigate } from 'react-router-dom';
 import { openAuthDialog } from 'slices/authSlice';
 import { CSVLink } from 'react-csv';
 import { generateRdfDataVocabularyFile, areAllRulesEmpty } from 'utils';

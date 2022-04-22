@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import { lazy } from 'react';
-import { Redirect } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import ResourceDetails from 'pages/Resources/Resource';
 import AddPaper from 'pages/AddPaper';
 import AuthorPage from 'pages/AuthorPage';
@@ -203,7 +203,7 @@ const routes = [
         path: ROUTES.COMPARISON + '*',
         exact: true,
         component: ({ match, location }) => (
-            <Redirect
+            <Navigate
                 to={`${reverse(ROUTES.COMPARISON)}?contributions=${match.params[0].split('/').join(',')}${
                     location.search ? '&' + (location.search.charAt(0) === '?' ? location.search.substr(1) : location.search) : ''
                 }`}
@@ -214,13 +214,13 @@ const routes = [
         /* TODO: Remove this route (it's temporarily backward compatibility for moving predicates to properties naming */
         path: ROUTES.PREDICATES,
         exact: true,
-        component: () => <Redirect to={{ pathname: reverse(ROUTES.PROPERTIES), state: { status: 301 } }} />
+        component: () => <Navigate to={{ pathname: reverse(ROUTES.PROPERTIES), state: { status: 301 } }} />
     },
     {
         /* TODO: Remove this route (it's temporarily backward compatibility for moving predicates to properties naming */
         path: ROUTES.PREDICATE + '*',
         exact: true,
-        component: ({ match }) => <Redirect to={{ pathname: reverse(ROUTES.PROPERTY, { id: match.params.id }), state: { status: 301 } }} />
+        component: ({ match }) => <Navigate to={{ pathname: reverse(ROUTES.PROPERTY, { id: match.params.id }), state: { status: 301 } }} />
     },
     {
         path: ROUTES.PAPERS,
@@ -322,7 +322,7 @@ const routes = [
     },
     {
         path: ROUTES.TPDL,
-        component: () => <Redirect to="/" />
+        component: () => <Navigate to="/" />
     },
     {
         path: ROUTES.PDF_ANNOTATION,
@@ -334,7 +334,7 @@ const routes = [
     },
     {
         path: ROUTES.EXPORT_DATA,
-        component: () => <Redirect to={{ pathname: reverse(ROUTES.DATA), state: { status: 301 } }} />
+        component: () => <Navigate to={{ pathname: reverse(ROUTES.DATA), state: { status: 301 } }} />
     },
     {
         path: ROUTES.DATA,
@@ -447,7 +447,7 @@ const routes = [
     },
     {
         path: ROUTES.USER_UNPUBLISHED_REVIEWS,
-        component: () => <Redirect to={{ pathname: reverse(ROUTES.USER_SETTINGS, { tab: 'draft-reviews' }), state: { status: 301 } }} />
+        component: () => <Navigate to={{ pathname: reverse(ROUTES.USER_SETTINGS, { tab: 'draft-reviews' }), state: { status: 301 } }} />
     },
     {
         path: ROUTES.CONTENT_TYPE_NEW,
@@ -474,44 +474,44 @@ const routes = [
 const legacyRoutes = [
     {
         path: ROUTES.SMART_REVIEW_NEW,
-        component: () => <Redirect to={{ pathname: ROUTES.REVIEW_NEW, state: { status: 301 } }} />
+        component: () => <Navigate to={{ pathname: ROUTES.REVIEW_NEW, state: { status: 301 } }} />
     },
     {
         path: ROUTES.SMART_REVIEW_DIFF,
         component: ({ match }) => (
-            <Redirect
+            <Navigate
                 to={{ pathname: reverse(ROUTES.REVIEW_DIFF, { oldId: match.params.oldId, newId: match.params.newId }), state: { status: 301 } }}
             />
         )
     },
     {
         path: ROUTES.SMART_REVIEW,
-        component: ({ match }) => <Redirect to={{ pathname: reverse(ROUTES.REVIEW, { id: match.params.id }), state: { status: 301 } }} />
+        component: ({ match }) => <Navigate to={{ pathname: reverse(ROUTES.REVIEW, { id: match.params.id }), state: { status: 301 } }} />
     },
     {
         path: ROUTES.SMART_REVIEWS,
-        component: () => <Redirect to={{ pathname: ROUTES.REVIEWS, state: { status: 301 } }} />
+        component: () => <Navigate to={{ pathname: ROUTES.REVIEWS, state: { status: 301 } }} />
     },
     {
         path: ROUTES.LITERATURE_LISTS,
-        component: () => <Redirect to={{ pathname: ROUTES.LISTS, state: { status: 301 } }} />
+        component: () => <Navigate to={{ pathname: ROUTES.LISTS, state: { status: 301 } }} />
     },
     {
         path: ROUTES.LITERATURE_LIST,
-        component: ({ match }) => <Redirect to={{ pathname: reverse(ROUTES.LIST, { id: match.params.id }), state: { status: 301 } }} />
+        component: ({ match }) => <Navigate to={{ pathname: reverse(ROUTES.LIST, { id: match.params.id }), state: { status: 301 } }} />
     },
     {
         path: ROUTES.LITERATURE_LIST_NO_EMBED,
-        component: ({ match }) => <Redirect to={{ pathname: reverse(ROUTES.LIST, { id: match.params.id }), state: { status: 301 } }} />
+        component: ({ match }) => <Navigate to={{ pathname: reverse(ROUTES.LIST, { id: match.params.id }), state: { status: 301 } }} />
     },
     {
         path: ROUTES.LITERATURE_LIST_NEW,
-        component: () => <Redirect to={{ pathname: ROUTES.LIST_NEW, state: { status: 301 } }} />
+        component: () => <Navigate to={{ pathname: ROUTES.LIST_NEW, state: { status: 301 } }} />
     },
     {
         path: ROUTES.LITERATURE_LIST_DIFF,
         component: ({ match }) => (
-            <Redirect
+            <Navigate
                 to={{ pathname: reverse(ROUTES.LIST_DIFF, { oldId: match.params.oldId, newId: match.params.newId }), state: { status: 301 } }}
             />
         )

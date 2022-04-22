@@ -22,7 +22,7 @@ import { reverse } from 'named-urls';
 import { NavLink as RouterNavLink } from 'react-router-dom';
 import TitleBar from 'components/TitleBar/TitleBar';
 import { EditModeContainer, Title } from 'components/EditModeHeader/EditModeHeader';
-import { useParams, useNavigate } from 'react-router-dom-v5-compat';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 
 const TabPaneStyled = styled(TabPane)`
