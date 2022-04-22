@@ -1,4 +1,4 @@
-import { createRef, Component } from 'react';
+import { useRef, useState, useEffect, useCallback } from 'react';
 import {
     Button,
     UncontrolledButtonDropdown as ButtonDropdown,
@@ -14,7 +14,7 @@ import {
     Row,
     Badge
 } from 'reactstrap';
-import { Link, NavLink as RouterNavLink, withRouter } from 'react-router-dom';
+import { Link, NavLink as RouterNavLink } from 'react-router-dom';
 import Jumbotron from 'components/Home/Jumbotron';
 import AddNew from './AddNew';
 import { ReactComponent as Logo } from 'assets/img/logo.svg';
@@ -24,25 +24,23 @@ import { faChevronDown, faUser } from '@fortawesome/free-solid-svg-icons';
 import ROUTES from 'constants/routes.js';
 import { Cookies } from 'react-cookie';
 import Gravatar from 'react-gravatar';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import Authentication from 'components/Authentication/Authentication';
 import SearchForm from './SearchForm';
 import { openAuthDialog, updateAuth, resetAuth } from 'slices/authSlice';
-import { Redirect } from 'react-router-dom';
 import { getUserInformation } from 'services/backend/users';
 import greetingTime from 'greeting-time';
 import styled, { createGlobalStyle } from 'styled-components';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import { reverse } from 'named-urls';
-import { compose } from 'redux';
 import env from '@beam-australia/react-env';
 import { toast } from 'react-toastify';
 import HomeBannerBg from 'assets/img/graph-background.svg';
 import { scrollbarWidth } from '@xobotyi/scrollbar-width';
 import AboutMenu from 'components/Layout/Header/AboutMenu';
 import ContentTypesMenu from 'components/Layout/Header/ContentTypesMenu';
+import { useLocation, useNavigate } from 'react-router-dom-v5-compat';
 
 const cookies = new Cookies();
 
@@ -238,448 +236,393 @@ const StyledNavbar = styled(Navbar)`
     }
 `;
 
-class Header extends Component {
-    constructor(props) {
-        super(props);
+const Header = () => {
+    const [isOpenNavBar, setIsOpenNavBar] = useState(false);
+    const [isOpenAboutMenu, setIsOpenAboutMenu] = useState(false);
+    const [isOpenViewMenu, setIsOpenViewMenu] = useState(false);
+    const [userTooltipOpen, setUserTooltipOpen] = useState(false);
+    const [logoutTimeoutId, setLogoutTimeoutId] = useState(null);
 
-        this.toggle = this.toggle.bind(this);
+    const location = useLocation();
+    const [isHomePageStyle, setIsHomePageStyle] = useState(location.pathname === ROUTES.HOME ? true : false);
+    const user = useSelector(state => state.auth.user);
+    const userPopup = useRef(null);
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
-        this.state = {
-            isOpen: false,
-            isOpenAboutMenu: false,
-            isOpenViewMenu: false,
-            userTooltipOpen: false,
-            redirectLogout: false,
-            isHomePageStyle: this.props.location.pathname === ROUTES.HOME ? true : false
+    useEffect(() => {
+        setIsHomePageStyle(location.pathname === ROUTES.HOME ? true : false);
+    }, [location.pathname]);
+
+    const toggleUserTooltip = useCallback(() => {
+        setUserTooltipOpen(v => !userTooltipOpen);
+    }, [userTooltipOpen]);
+
+    useEffect(() => {
+        const userInformation = () => {
+            const cookies = new Cookies();
+            const token = cookies.get('token') ? cookies.get('token') : null;
+            const token_expires_in = cookies.get('token_expires_in') ? cookies.get('token_expires_in') : null;
+            if (token && !user) {
+                getUserInformation()
+                    .then(userData => {
+                        dispatch(
+                            updateAuth({
+                                user: {
+                                    displayName: userData.display_name,
+                                    id: userData.id,
+                                    token: token,
+                                    tokenExpire: token_expires_in,
+                                    email: userData.email,
+                                    isCurationAllowed: userData.is_curation_allowed
+                                }
+                            })
+                        );
+                    })
+                    .catch(error => {
+                        cookies.remove('token', { path: env('PUBLIC_URL') });
+                        cookies.remove('token_expires_in', { path: env('PUBLIC_URL') });
+                        dispatch(resetAuth());
+                    });
+            }
         };
 
-        this.userPopup = createRef();
+        const handleScroll = () => {
+            if (window.pageYOffset > 0) {
+                if (isHomePageStyle) {
+                    setIsHomePageStyle(false);
+                }
+            } else {
+                if (!isHomePageStyle && location.pathname === ROUTES.HOME) {
+                    setIsHomePageStyle(true);
+                }
+            }
+        };
 
-        this.logoutTimeoutId = null; // timeout for autologout
-    }
+        const handleClickOutside = event => {
+            if (userPopup.current && !userPopup.current.contains(event.target) && userTooltipOpen) {
+                toggleUserTooltip();
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        window.addEventListener('scroll', handleScroll);
+        userInformation();
 
-    componentDidMount() {
-        this.userInformation();
-        document.addEventListener('mousedown', this.handleClickOutside);
-        window.addEventListener('scroll', this.handleScroll);
-    }
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+            window.removeEventListener('scroll', handleScroll);
+            if (logoutTimeoutId) {
+                clearTimeout(logoutTimeoutId); // clear timeout
+                setLogoutTimeoutId(null);
+            }
+        };
+    }, [dispatch, isHomePageStyle, location.pathname, logoutTimeoutId, toggleUserTooltip, user, userTooltipOpen]);
 
-    componentDidUpdate(prevProps) {
-        if (this.props.location.pathname !== prevProps.location.pathname) {
-            this.setState({ isHomePageStyle: this.props.location.pathname === ROUTES.HOME ? true : false });
-        }
-        if (this.state.redirectLogout) {
-            this.setState({
-                redirectLogout: false
-            });
-        }
-        if (!this.logoutTimeoutId && this.props.user) {
+    useEffect(() => {
+        const tokenExpired = () => {
+            toast.warn('User session expired, please sign in again!');
+            cookies.remove('token', { path: env('PUBLIC_URL') });
+            cookies.remove('token_expires_in', { path: env('PUBLIC_URL') });
+            dispatch(resetAuth());
+            dispatch(openAuthDialog({ action: 'signin' }));
+            //logoutTimeoutId = null;
+        };
+        if (!logoutTimeoutId && user) {
             const token_expires_in = cookies.get('token_expires_in') ? cookies.get('token_expires_in') : null;
             // Get the diffrence between token expiration time and now
             const diff = new Date(token_expires_in) - Date.now();
             // set timeout to autologout
-            this.logoutTimeoutId = setTimeout(this.tokenExpired, diff);
+            setLogoutTimeoutId(setTimeout(tokenExpired, diff));
         }
-    }
+    }, [dispatch, logoutTimeoutId, user]);
 
-    componentWillUnmount() {
-        document.removeEventListener('mousedown', this.handleClickOutside);
-        window.removeEventListener('scroll', this.handleScroll);
-        if (this.logoutTimeoutId) {
-            clearTimeout(this.logoutTimeoutId); // clear timeout
-            this.logoutTimeoutId = null;
-        }
-    }
-
-    handleScroll = () => {
-        if (window.pageYOffset > 0) {
-            if (this.state.isHomePageStyle) {
-                this.setState({ isHomePageStyle: false });
-            }
-        } else {
-            if (!this.state.isHomePageStyle && this.props.location.pathname === ROUTES.HOME) {
-                this.setState({ isHomePageStyle: true });
-            }
-        }
+    const toggleNavBar = () => {
+        setIsOpenNavBar(v => !isOpenNavBar);
     };
 
-    handleClickOutside = event => {
-        if (this.userPopup.current && !this.userPopup.current.contains(event.target) && this.state.userTooltipOpen) {
-            this.toggleUserTooltip();
-        }
+    const toggleAboutMenu = () => {
+        setIsOpenAboutMenu(v => !isOpenAboutMenu);
     };
 
-    tokenExpired = () => {
-        toast.warn('User session expired, please sign in again!');
-        cookies.remove('token', { path: env('PUBLIC_URL') });
-        cookies.remove('token_expires_in', { path: env('PUBLIC_URL') });
-        this.props.resetAuth();
-        this.props.openAuthDialog({ action: 'signin' });
-        this.logoutTimeoutId = null;
+    const toggleViewMenu = () => {
+        setIsOpenViewMenu(v => !isOpenViewMenu);
     };
 
-    userInformation = () => {
-        const cookies = new Cookies();
-        const token = cookies.get('token') ? cookies.get('token') : null;
-        const token_expires_in = cookies.get('token_expires_in') ? cookies.get('token_expires_in') : null;
-        if (token && !this.props.user) {
-            getUserInformation()
-                .then(userData => {
-                    this.props.updateAuth({
-                        user: {
-                            displayName: userData.display_name,
-                            id: userData.id,
-                            token: token,
-                            tokenExpire: token_expires_in,
-                            email: userData.email,
-                            isCurationAllowed: userData.is_curation_allowed
-                        }
-                    });
-                })
-                .catch(error => {
-                    cookies.remove('token', { path: env('PUBLIC_URL') });
-                    cookies.remove('token_expires_in', { path: env('PUBLIC_URL') });
-                    this.props.resetAuth();
-                });
-        }
+    const closeMenu = () => {
+        setIsOpenViewMenu(false);
+        setIsOpenNavBar(false);
+        setIsOpenAboutMenu(false);
     };
 
-    toggle() {
-        this.setState({
-            isOpen: !this.state.isOpen
-        });
-    }
-
-    toggleAboutMenu = () => {
-        this.setState({
-            isOpenAboutMenu: !this.state.isOpenAboutMenu
-        });
-    };
-
-    toggleViewMenu = () => {
-        this.setState({
-            isOpenViewMenu: !this.state.isOpenViewMenu
-        });
-    };
-
-    closeMenu = () => {
-        this.setState({
-            isOpen: false,
-            isOpenAboutMenu: false,
-            isOpenViewMenu: false
-        });
-    };
-
-    toggleUserTooltip = () => {
-        this.setState({
-            userTooltipOpen: !this.state.userTooltipOpen
-        });
-    };
-
-    handleSignOut = () => {
-        this.props.resetAuth();
+    const handleSignOut = () => {
+        dispatch(resetAuth());
         const cookies = new Cookies();
         cookies.remove('token', { path: env('PUBLIC_URL') });
         cookies.remove('token_expires_in', { path: env('PUBLIC_URL') });
-        this.toggleUserTooltip();
-
-        this.setState({
-            redirectLogout: true
-        });
+        toggleUserTooltip();
+        navigate('/', { state: { signedOut: true } });
     };
 
-    requireAuthentication = (e, redirectRoute) => {
-        if (!this.props.user) {
-            this.props.openAuthDialog({ action: 'signin', signInRequired: true, redirectRoute });
+    const requireAuthentication = (e, redirectRoute) => {
+        if (!user) {
+            dispatch(openAuthDialog({ action: 'signin', signInRequired: true, redirectRoute }));
             // Don't follow the link when user is not authenticated
             e.preventDefault();
         } else {
-            this.toggle();
+            toggleNavBar();
         }
     };
 
-    render() {
-        if (this.state.redirectLogout) {
-            return <Redirect to={{ pathname: '/', state: { signedOut: true } }} />;
-        }
-        const email = this.props.user && this.props.user.email ? this.props.user.email : 'example@example.com';
-        const greeting = greetingTime(new Date());
-        const cookieInfoDismissed = cookies.get('cookieInfoDismissed') ? cookies.get('cookieInfoDismissed') : null;
-        const navbarClasses = `
-            ${this.state.isHomePageStyle ? 'home-page' : ''}
-            ${this.state.isHomePageStyle && this.state.isOpen ? 'shadow' : ''}
+    const email = user && user.email ? user.email : 'example@example.com';
+    const greeting = greetingTime(new Date());
+    const cookieInfoDismissed = cookies.get('cookieInfoDismissed') ? cookies.get('cookieInfoDismissed') : null;
+
+    const navbarClasses = `
+            ${isHomePageStyle ? 'home-page' : ''}
+            ${isHomePageStyle && isOpenNavBar ? 'shadow' : ''}
         `;
 
-        return (
-            <StyledTopBar className={this.state.isHomePageStyle ? 'home-page' : ''}>
-                <StyledNavbar
-                    light={!this.state.isHomePageStyle}
-                    dark={this.state.isHomePageStyle}
-                    className={navbarClasses}
-                    expand="md"
-                    fixed="top"
-                    container={!this.state.isHomePageStyle ? true : 'sm'}
-                    id="main-navbar"
-                    style={{ display: 'flex', width: '100%', transition: 'width 1s ease-in-out' }}
-                >
-                    <GlobalStyle scrollbarWidth={scrollbarWidth(true)} cookieInfoDismissed={cookieInfoDismissed} />
+    return (
+        <StyledTopBar className={isHomePageStyle ? 'home-page' : ''}>
+            <StyledNavbar
+                light={!isHomePageStyle}
+                dark={isHomePageStyle}
+                className={navbarClasses}
+                expand="md"
+                fixed="top"
+                id="main-navbar"
+                container={!isHomePageStyle ? true : 'sm'}
+                style={{ display: 'flex', width: '100%', transition: 'width 1s ease-in-out' }}
+            >
+                <GlobalStyle scrollbarWidth={scrollbarWidth(true)} cookieInfoDismissed={cookieInfoDismissed} />
 
-                    <StyledLink to={ROUTES.HOME} className="me-4 p-0" onClick={this.closeMenu}>
-                        {!this.state.isHomePageStyle && <Logo />}
-                        {this.state.isHomePageStyle && <LogoWhite />}
-                    </StyledLink>
+                <StyledLink to={ROUTES.HOME} className="me-4 p-0" onClick={closeMenu}>
+                    {!isHomePageStyle && <Logo />}
+                    {isHomePageStyle && <LogoWhite />}
+                </StyledLink>
 
-                    <NavbarToggler onClick={this.toggle} />
+                <NavbarToggler onClick={toggleNavBar} />
 
-                    <Collapse isOpen={this.state.isOpen} navbar>
-                        <Nav className="me-auto flex-shrink-0" navbar>
-                            {/* view menu */}
-                            <ButtonDropdown nav isOpen={this.state.isOpenViewMenu} toggle={this.toggleViewMenu}>
-                                <DropdownToggle nav className="ms-2">
-                                    View <FontAwesomeIcon style={{ marginTop: '4px' }} icon={faChevronDown} pull="right" />
-                                </DropdownToggle>
-                                <DropdownMenu>
-                                    <DropdownItem tag={RouterNavLink} exact to={ROUTES.COMPARISONS} onClick={this.closeMenu}>
-                                        Comparisons
-                                    </DropdownItem>
-                                    <DropdownItem tag={RouterNavLink} exact to={ROUTES.PAPERS} onClick={this.closeMenu}>
-                                        Papers
-                                    </DropdownItem>
-                                    <DropdownItem tag={RouterNavLink} exact to={ROUTES.VISUALIZATIONS} onClick={this.closeMenu}>
-                                        Visualizations
-                                    </DropdownItem>
-                                    <DropdownItem tag={RouterNavLink} exact to={ROUTES.REVIEWS} onClick={this.closeMenu}>
-                                        Reviews{' '}
-                                        <small>
-                                            <Badge color="info">Beta</Badge>
-                                        </small>
-                                    </DropdownItem>
-                                    <DropdownItem tag={RouterNavLink} exact to={ROUTES.LISTS} onClick={this.closeMenu}>
-                                        Lists{' '}
-                                        <small>
-                                            <Badge color="info">Beta</Badge>
-                                        </small>
-                                    </DropdownItem>
-                                    <DropdownItem tag={RouterNavLink} exact to={ROUTES.BENCHMARKS} onClick={this.closeMenu}>
-                                        Benchmarks
-                                    </DropdownItem>
-                                    <DropdownItem tag={RouterNavLink} exact to={ROUTES.RESEARCH_FIELDS} onClick={this.closeMenu}>
-                                        Research fields
-                                    </DropdownItem>
+                <Collapse isOpen={isOpenNavBar} navbar>
+                    <Nav className="me-auto flex-shrink-0" navbar>
+                        {/* view menu */}
+                        <ButtonDropdown nav isOpen={isOpenViewMenu} toggle={toggleViewMenu}>
+                            <DropdownToggle nav className="ms-2">
+                                View <FontAwesomeIcon style={{ marginTop: '4px' }} icon={faChevronDown} pull="right" />
+                            </DropdownToggle>
+                            <DropdownMenu>
+                                <DropdownItem tag={RouterNavLink} exact to={ROUTES.COMPARISONS} onClick={closeMenu}>
+                                    Comparisons
+                                </DropdownItem>
+                                <DropdownItem tag={RouterNavLink} exact to={ROUTES.PAPERS} onClick={closeMenu}>
+                                    Papers
+                                </DropdownItem>
+                                <DropdownItem tag={RouterNavLink} exact to={ROUTES.VISUALIZATIONS} onClick={closeMenu}>
+                                    Visualizations
+                                </DropdownItem>
+                                <DropdownItem tag={RouterNavLink} exact to={ROUTES.REVIEWS} onClick={closeMenu}>
+                                    Reviews{' '}
+                                    <small>
+                                        <Badge color="info">Beta</Badge>
+                                    </small>
+                                </DropdownItem>
+                                <DropdownItem tag={RouterNavLink} exact to={ROUTES.LISTS} onClick={closeMenu}>
+                                    Lists{' '}
+                                    <small>
+                                        <Badge color="info">Beta</Badge>
+                                    </small>
+                                </DropdownItem>
+                                <DropdownItem tag={RouterNavLink} exact to={ROUTES.BENCHMARKS} onClick={closeMenu}>
+                                    Benchmarks
+                                </DropdownItem>
+                                <DropdownItem tag={RouterNavLink} exact to={ROUTES.RESEARCH_FIELDS} onClick={closeMenu}>
+                                    Research fields
+                                </DropdownItem>
 
-                                    <ContentTypesMenu closeMenu={this.closeMenu} />
+                                <ContentTypesMenu closeMenu={closeMenu} />
 
-                                    <DropdownItem divider />
-                                    <DropdownItem tag={RouterNavLink} exact to={ROUTES.OBSERVATORIES} onClick={this.closeMenu}>
-                                        Observatories{' '}
-                                        <small>
-                                            <Badge color="info">Beta</Badge>
-                                        </small>
-                                    </DropdownItem>
-                                    <DropdownItem tag={RouterNavLink} exact to={ROUTES.ORGANIZATIONS} onClick={this.closeMenu}>
-                                        Organizations{' '}
-                                        <small>
-                                            <Badge color="info">Beta</Badge>
-                                        </small>
-                                    </DropdownItem>
-                                    <DropdownItem divider />
+                                <DropdownItem divider />
+                                <DropdownItem tag={RouterNavLink} exact to={ROUTES.OBSERVATORIES} onClick={closeMenu}>
+                                    Observatories{' '}
+                                    <small>
+                                        <Badge color="info">Beta</Badge>
+                                    </small>
+                                </DropdownItem>
+                                <DropdownItem tag={RouterNavLink} exact to={ROUTES.ORGANIZATIONS} onClick={closeMenu}>
+                                    Organizations{' '}
+                                    <small>
+                                        <Badge color="info">Beta</Badge>
+                                    </small>
+                                </DropdownItem>
+                                <DropdownItem divider />
 
-                                    <DropdownItem header>Advanced views</DropdownItem>
+                                <DropdownItem header>Advanced views</DropdownItem>
 
-                                    <DropdownItem tag={RouterNavLink} exact to={ROUTES.RESOURCES} onClick={this.closeMenu}>
-                                        Resources
-                                    </DropdownItem>
-                                    <DropdownItem tag={RouterNavLink} exact to={ROUTES.PROPERTIES} onClick={this.closeMenu}>
-                                        Properties
-                                    </DropdownItem>
-                                    <DropdownItem tag={RouterNavLink} exact to={ROUTES.CLASSES} onClick={this.closeMenu}>
-                                        Classes
-                                    </DropdownItem>
-                                </DropdownMenu>
-                            </ButtonDropdown>
+                                <DropdownItem tag={RouterNavLink} exact to={ROUTES.RESOURCES} onClick={closeMenu}>
+                                    Resources
+                                </DropdownItem>
+                                <DropdownItem tag={RouterNavLink} exact to={ROUTES.PROPERTIES} onClick={closeMenu}>
+                                    Properties
+                                </DropdownItem>
+                                <DropdownItem tag={RouterNavLink} exact to={ROUTES.CLASSES} onClick={closeMenu}>
+                                    Classes
+                                </DropdownItem>
+                            </DropdownMenu>
+                        </ButtonDropdown>
 
-                            {/* tools menu */}
-                            <ButtonDropdown nav>
-                                <DropdownToggle nav className="ms-2">
-                                    Tools <FontAwesomeIcon style={{ marginTop: '4px' }} icon={faChevronDown} pull="right" />
-                                </DropdownToggle>
-                                <DropdownMenu>
-                                    <DropdownItem tag={RouterNavLink} exact to={ROUTES.TOOLS} onClick={this.closeMenu}>
-                                        Tools overview
-                                    </DropdownItem>
-                                    <DropdownItem divider />
-                                    <DropdownItem header>Data entry</DropdownItem>
-                                    <DropdownItem
-                                        tag={RouterNavLink}
-                                        exact
-                                        to={ROUTES.CONTRIBUTION_EDITOR}
-                                        onClick={e => this.requireAuthentication(e, ROUTES.CONTRIBUTION_EDITOR)}
-                                    >
-                                        Contribution editor
-                                    </DropdownItem>
-                                    <DropdownItem
-                                        tag={RouterNavLink}
-                                        exact
-                                        to={ROUTES.CSV_IMPORT}
-                                        onClick={e => this.requireAuthentication(e, ROUTES.CSV_IMPORT)}
-                                    >
-                                        CSV import
-                                    </DropdownItem>
-                                    <DropdownItem
-                                        tag={RouterNavLink}
-                                        exact
-                                        to={ROUTES.PDF_ANNOTATION}
-                                        onClick={e => this.requireAuthentication(e, ROUTES.PDF_ANNOTATION)}
-                                    >
-                                        Survey table import
-                                    </DropdownItem>
-                                    <DropdownItem tag={RouterNavLink} exact to={ROUTES.TEMPLATES} onClick={this.closeMenu}>
-                                        Templates
-                                    </DropdownItem>
-                                    <DropdownItem divider />
-                                    <DropdownItem header>Data export</DropdownItem>
-                                    <DropdownItem tag={RouterNavLink} exact to={ROUTES.DATA} onClick={this.closeMenu}>
-                                        Data Access
-                                    </DropdownItem>
-                                </DropdownMenu>
-                            </ButtonDropdown>
-
-                            {/* about menu */}
-                            <ButtonDropdown isOpen={this.state.isOpenAboutMenu} toggle={this.toggleAboutMenu} nav>
-                                <DropdownToggle nav className="ms-2" onClick={this.toggleAboutMenu}>
-                                    About <FontAwesomeIcon style={{ marginTop: '4px' }} icon={faChevronDown} pull="right" />
-                                </DropdownToggle>
-                                <DropdownMenu>
-                                    <AboutMenu closeMenu={this.closeMenu} />
-                                    <DropdownItem divider />
-                                    <DropdownItem tag={RouterNavLink} exact to={ROUTES.HELP_CENTER} onClick={this.closeMenu}>
-                                        Help center
-                                    </DropdownItem>
-                                    <DropdownItem
-                                        tag="a"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        href="https://gitlab.com/TIBHannover/orkg/orkg-frontend/"
-                                        onClick={this.closeMenu}
-                                    >
-                                        GitLab <Icon size="sm" icon={faExternalLinkAlt} />
-                                    </DropdownItem>
-                                    <DropdownItem divider />
-                                    <DropdownItem tag={RouterNavLink} exact to={ROUTES.STATS} onClick={this.closeMenu}>
-                                        Statistics
-                                    </DropdownItem>
-                                </DropdownMenu>
-                            </ButtonDropdown>
-                        </Nav>
-
-                        <SearchForm placeholder="Search..." onSearch={this.closeMenu} />
-
-                        <AddNew isHomePageStyle={this.state.isHomePageStyle} onAdd={this.closeMenu} />
-
-                        {!!this.props.user && (
-                            <div className="ms-2">
-                                <StyledGravatar className="rounded-circle" email={email} size={40} id="TooltipExample" />
-                                <StyledAuthTooltip
-                                    fade={false}
-                                    trigger="click"
-                                    innerClassName="pe-3 ps-3 pt-3 pb-3 clearfix"
-                                    placement="bottom-end"
-                                    isOpen={this.state.userTooltipOpen}
-                                    target="TooltipExample"
-                                    toggle={this.toggleUserTooltip}
-                                    innerRef={this.userPopup}
+                        {/* tools menu */}
+                        <ButtonDropdown nav>
+                            <DropdownToggle nav className="ms-2">
+                                Tools <FontAwesomeIcon style={{ marginTop: '4px' }} icon={faChevronDown} pull="right" />
+                            </DropdownToggle>
+                            <DropdownMenu>
+                                <DropdownItem tag={RouterNavLink} exact to={ROUTES.TOOLS} onClick={closeMenu}>
+                                    Tools overview
+                                </DropdownItem>
+                                <DropdownItem divider />
+                                <DropdownItem header>Data entry</DropdownItem>
+                                <DropdownItem
+                                    tag={RouterNavLink}
+                                    exact
+                                    to={ROUTES.CONTRIBUTION_EDITOR}
+                                    onClick={e => requireAuthentication(e, ROUTES.CONTRIBUTION_EDITOR)}
                                 >
-                                    <Row>
-                                        <div className="col-3 text-center">
-                                            <Link onClick={this.toggleUserTooltip} to={reverse(ROUTES.USER_PROFILE, { userId: this.props.user.id })}>
-                                                <StyledGravatar
-                                                    className="rounded-circle"
-                                                    style={{ border: '3px solid #fff' }}
-                                                    email={email}
-                                                    size={76}
-                                                    id="TooltipExample"
-                                                />
-                                            </Link>
-                                        </div>
-                                        <div className="col-9 text-start">
-                                            <span className="ms-1">
-                                                {greeting} {this.props.user.displayName}
-                                            </span>
-                                            <ButtonGroup className="mt-2" size="sm">
-                                                <Button
-                                                    color="secondary"
-                                                    onClick={this.toggleUserTooltip}
-                                                    tag={Link}
-                                                    to={reverse(ROUTES.USER_PROFILE, { userId: this.props.user.id })}
-                                                >
-                                                    Profile
-                                                </Button>
-                                                <Button
-                                                    color="secondary"
-                                                    className="text-nowrap"
-                                                    onClick={this.toggleUserTooltip}
-                                                    tag={Link}
-                                                    to={reverse(ROUTES.USER_SETTINGS)}
-                                                >
-                                                    My account
-                                                </Button>
-                                                <Button onClick={this.handleSignOut} className="text-nowrap">
-                                                    Sign out
-                                                </Button>
-                                            </ButtonGroup>
-                                        </div>
-                                    </Row>
-                                </StyledAuthTooltip>
-                            </div>
-                        )}
-
-                        {!this.props.user && (
-                            <div className="mx-2 flex-shrink-0">
-                                <Button
-                                    color="secondary"
-                                    className="ps-4 pe-4 sign-in"
-                                    outline
-                                    onClick={() => this.props.openAuthDialog({ action: 'signin' })}
+                                    Contribution editor
+                                </DropdownItem>
+                                <DropdownItem
+                                    tag={RouterNavLink}
+                                    exact
+                                    to={ROUTES.CSV_IMPORT}
+                                    onClick={e => requireAuthentication(e, ROUTES.CSV_IMPORT)}
                                 >
-                                    {' '}
-                                    <FontAwesomeIcon className="me-1" icon={faUser} /> Sign in
-                                </Button>
-                            </div>
-                        )}
-                    </Collapse>
+                                    CSV import
+                                </DropdownItem>
+                                <DropdownItem
+                                    tag={RouterNavLink}
+                                    exact
+                                    to={ROUTES.PDF_ANNOTATION}
+                                    onClick={e => requireAuthentication(e, ROUTES.PDF_ANNOTATION)}
+                                >
+                                    Survey table import
+                                </DropdownItem>
+                                <DropdownItem tag={RouterNavLink} exact to={ROUTES.TEMPLATES} onClick={closeMenu}>
+                                    Templates
+                                </DropdownItem>
+                                <DropdownItem divider />
+                                <DropdownItem header>Data export</DropdownItem>
+                                <DropdownItem tag={RouterNavLink} exact to={ROUTES.DATA} onClick={closeMenu}>
+                                    Data Access
+                                </DropdownItem>
+                            </DropdownMenu>
+                        </ButtonDropdown>
 
-                    <Authentication />
-                </StyledNavbar>
+                        {/* about menu */}
+                        <ButtonDropdown isOpen={isOpenAboutMenu} toggle={toggleAboutMenu} nav>
+                            <DropdownToggle nav className="ms-2" onClick={toggleAboutMenu}>
+                                About <FontAwesomeIcon style={{ marginTop: '4px' }} icon={faChevronDown} pull="right" />
+                            </DropdownToggle>
+                            <DropdownMenu>
+                                <AboutMenu closeMenu={closeMenu} />
+                                <DropdownItem divider />
+                                <DropdownItem tag={RouterNavLink} exact to={ROUTES.HELP_CENTER} onClick={closeMenu}>
+                                    Help center
+                                </DropdownItem>
+                                <DropdownItem
+                                    tag="a"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    href="https://gitlab.com/TIBHannover/orkg/orkg-frontend/"
+                                    onClick={closeMenu}
+                                >
+                                    GitLab <Icon size="sm" icon={faExternalLinkAlt} />
+                                </DropdownItem>
+                                <DropdownItem divider />
+                                <DropdownItem tag={RouterNavLink} exact to={ROUTES.STATS} onClick={closeMenu}>
+                                    Statistics
+                                </DropdownItem>
+                            </DropdownMenu>
+                        </ButtonDropdown>
+                    </Nav>
 
-                {this.props.location.pathname === ROUTES.HOME && <Jumbotron />}
-            </StyledTopBar>
-        );
-    }
-}
+                    <SearchForm placeholder="Search..." onSearch={closeMenu} />
 
-const mapStateToProps = state => ({
-    dialogIsOpen: state.auth.dialogIsOpen,
-    user: state.auth.user
-});
+                    <AddNew isHomePageStyle={isHomePageStyle} onAdd={closeMenu} />
 
-const mapDispatchToProps = dispatch => ({
-    resetAuth: () => dispatch(resetAuth()),
-    openAuthDialog: payload => dispatch(openAuthDialog(payload)),
-    updateAuth: data => dispatch(updateAuth(data))
-});
+                    {!!user && (
+                        <div className="ms-2">
+                            <StyledGravatar className="rounded-circle" email={email} size={40} id="TooltipExample" />
+                            <StyledAuthTooltip
+                                fade={false}
+                                trigger="click"
+                                innerClassName="pe-3 ps-3 pt-3 pb-3 clearfix"
+                                placement="bottom-end"
+                                isOpen={userTooltipOpen}
+                                target="TooltipExample"
+                                toggle={toggleUserTooltip}
+                                innerRef={userPopup}
+                            >
+                                <Row>
+                                    <div className="col-3 text-center">
+                                        <Link onClick={toggleUserTooltip} to={reverse(ROUTES.USER_PROFILE, { userId: user.id })}>
+                                            <StyledGravatar
+                                                className="rounded-circle"
+                                                style={{ border: '3px solid #fff' }}
+                                                email={email}
+                                                size={76}
+                                                id="TooltipExample"
+                                            />
+                                        </Link>
+                                    </div>
+                                    <div className="col-9 text-start">
+                                        <span className="ms-1">
+                                            {greeting} {user.displayName}
+                                        </span>
+                                        <ButtonGroup className="mt-2" size="sm">
+                                            <Button
+                                                color="secondary"
+                                                onClick={toggleUserTooltip}
+                                                tag={Link}
+                                                to={reverse(ROUTES.USER_PROFILE, { userId: user.id })}
+                                            >
+                                                Profile
+                                            </Button>
+                                            <Button
+                                                color="secondary"
+                                                className="text-nowrap"
+                                                onClick={toggleUserTooltip}
+                                                tag={Link}
+                                                to={reverse(ROUTES.USER_SETTINGS)}
+                                            >
+                                                My account
+                                            </Button>
+                                            <Button onClick={handleSignOut} className="text-nowrap">
+                                                Sign out
+                                            </Button>
+                                        </ButtonGroup>
+                                    </div>
+                                </Row>
+                            </StyledAuthTooltip>
+                        </div>
+                    )}
 
-Header.propTypes = {
-    openAuthDialog: PropTypes.func.isRequired,
-    updateAuth: PropTypes.func.isRequired,
-    user: PropTypes.oneOfType([PropTypes.object, PropTypes.number]),
-    resetAuth: PropTypes.func.isRequired,
-    location: PropTypes.object.isRequired
+                    {!!!user && (
+                        <Button
+                            color="secondary"
+                            className="ps-4 pe-4 flex-shrink-0 sign-in"
+                            outline
+                            onClick={() => dispatch(openAuthDialog({ action: 'signin' }))}
+                        >
+                            <FontAwesomeIcon className="me-1" icon={faUser} /> Sign in
+                        </Button>
+                    )}
+                </Collapse>
+
+                <Authentication />
+            </StyledNavbar>
+
+            {location.pathname === ROUTES.HOME && <Jumbotron />}
+        </StyledTopBar>
+    );
 };
 
-export default compose(
-    connect(
-        mapStateToProps,
-        mapDispatchToProps
-    ),
-    withRouter
-)(Header);
+export default Header;

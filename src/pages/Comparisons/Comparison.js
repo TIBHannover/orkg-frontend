@@ -37,7 +37,8 @@ import ShareLinkMarker from 'components/ShareLinkMarker/ShareLinkMarker';
 import { getResource } from 'services/backend/resources';
 import moment from 'moment';
 import ROUTES from 'constants/routes.js';
-import { useHistory, Link, useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom-v5-compat';
 import { openAuthDialog } from 'slices/authSlice';
 import { CSVLink } from 'react-csv';
 import { generateRdfDataVocabularyFile, areAllRulesEmpty } from 'utils';
@@ -124,7 +125,7 @@ function Comparison(props) {
     /** adding some additional state for meta data **/
 
     const [cookies, setCookie] = useCookies();
-    const history = useHistory();
+    const navigate = useNavigate();
 
     const [fullWidth, setFullWidth] = useState(cookies.useFullWidthForComparisonTable === 'true' ? cookies.useFullWidthForComparisonTable : false);
     const [hideScrollHint, setHideScrollHint] = useState(cookies.seenShiftMouseWheelScroll ? cookies.seenShiftMouseWheelScroll : false);
@@ -149,7 +150,7 @@ function Comparison(props) {
      * Is case of an error the user can go to the previous link in history
      */
     const handleGoBack = () => {
-        history.goBack();
+        navigate(-1);
     };
 
     const closeOnExport = () => {

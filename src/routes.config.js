@@ -134,7 +134,17 @@ const routes = [
         component: Template
     },
     {
+        path: ROUTES.ADD_TEMPLATE,
+        exact: true,
+        component: Template
+    },
+    {
         path: ROUTES.USER_SETTINGS,
+        exact: true,
+        component: requireAuthentication(UserSettings)
+    },
+    {
+        path: ROUTES.USER_SETTINGS_NO_TAB,
         exact: true,
         component: requireAuthentication(UserSettings)
     },
@@ -155,6 +165,11 @@ const routes = [
         component: ViewPaper
     },
     {
+        path: ROUTES.VIEW_PAPER_NO_CONTRIBUTION,
+        exact: true,
+        component: ViewPaper
+    },
+    {
         path: ROUTES.COMPARISON_DIFF,
         component: ComparisonDiff
     },
@@ -165,6 +180,11 @@ const routes = [
     },
     {
         path: ROUTES.COMPARISON,
+        exact: true,
+        component: Comparison
+    },
+    {
+        path: ROUTES.COMPARISON_NOT_PUBLISHED,
         exact: true,
         component: Comparison
     },
@@ -223,11 +243,23 @@ const routes = [
         component: Visualization
     },
     {
+        path: ROUTES.VISUALIZATION_NO_ID,
+        component: Visualization
+    },
+    {
         path: ROUTES.RESEARCH_PROBLEM,
         component: ResearchProblem
     },
     {
+        path: ROUTES.RESEARCH_PROBLEM_NO_SLUG,
+        component: ResearchProblem
+    },
+    {
         path: ROUTES.RESEARCH_FIELD,
+        component: ResearchField
+    },
+    {
+        path: ROUTES.RESEARCH_FIELD_NO_SLUG,
         component: ResearchField
     },
     {
@@ -248,6 +280,10 @@ const routes = [
     },
     {
         path: ROUTES.SEARCH,
+        component: SearchResults
+    },
+    {
+        path: ROUTES.SEARCH_NO_TERM,
         component: SearchResults
     },
     {
@@ -354,6 +390,14 @@ const routes = [
         component: About
     },
     {
+        path: ROUTES.ABOUT_NO_SLUG,
+        component: About
+    },
+    {
+        path: ROUTES.ABOUT_NO_SLUG_ID,
+        component: About
+    },
+    {
         path: ROUTES.HELP_CENTER_CATEGORY,
         component: HelpCenterCategory
     },
@@ -381,6 +425,10 @@ const routes = [
         path: ROUTES.LIST,
         component: List
     },
+    {
+        path: ROUTES.LIST_NO_EMBED,
+        component: List
+    },
     // redirect legacy route
     {
         path: ROUTES.CURATION_CALL,
@@ -406,7 +454,15 @@ const routes = [
         component: ContentTypeNew
     },
     {
+        path: ROUTES.CONTENT_TYPE_NEW_NO_TYPE,
+        component: ContentTypeNew
+    },
+    {
         path: ROUTES.CONTENT_TYPE,
+        component: ContentType
+    },
+    {
+        path: ROUTES.CONTENT_TYPE_NO_MODE,
         component: ContentType
     },
     {
@@ -442,6 +498,10 @@ const legacyRoutes = [
     },
     {
         path: ROUTES.LITERATURE_LIST,
+        component: ({ match }) => <Redirect to={{ pathname: reverse(ROUTES.LIST, { id: match.params.id }), state: { status: 301 } }} />
+    },
+    {
+        path: ROUTES.LITERATURE_LIST_NO_EMBED,
         component: ({ match }) => <Redirect to={{ pathname: reverse(ROUTES.LIST, { id: match.params.id }), state: { status: 301 } }} />
     },
     {

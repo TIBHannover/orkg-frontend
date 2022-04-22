@@ -7,7 +7,7 @@ import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom-v5-compat';
 import { toast } from 'react-toastify';
 import { Button, Container, FormGroup, Input, Label } from 'reactstrap';
 import { createLiteral } from 'services/backend/literals';
@@ -18,8 +18,7 @@ const ListNew = () => {
     const [title, setTitle] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const displayName = useSelector(state => state.auth.user.displayName);
-    const history = useHistory();
-
+    const navigate = useNavigate();
     useEffect(() => {
         document.title = 'Create list - ORKG';
     });
@@ -34,7 +33,7 @@ const ListNew = () => {
         const { id } = await createResource(title, [CLASSES.LITERATURE_LIST]);
         const nameLiteral = await createLiteral(displayName);
         await createLiteralStatement(id, PREDICATES.HAS_AUTHOR, nameLiteral.id);
-        history.push(reverse(ROUTES.LIST, { id }));
+        navigate(reverse(ROUTES.LIST, { id }));
         setIsLoading(false);
     };
 

@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useLocation } from 'react-router';
-import { useParams, useHistory } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom-v5-compat';
 import DEFAULT_FILTERS from 'constants/searchDefaultFilters';
 import REGEX from 'constants/regex';
 import { getClassById } from 'services/backend/classes';
@@ -14,7 +13,7 @@ import dotProp from 'dot-prop-immutable';
 export const useFilters = () => {
     const { searchTerm } = useParams();
     const location = useLocation();
-    const history = useHistory();
+    const navigate = useNavigate();
     const user = useSelector(state => state.auth.user);
     // ensure the array format is accepted by the autocomplete component
     const selectedFiltersStrings = getArrayParamFromQueryString(decodeURIComponent(location.search), 'types').map(filter => ({ id: filter }));
@@ -49,7 +48,7 @@ export const useFilters = () => {
             const _query = decodeURIComponent(query);
             if (isString(_query) && _query.length >= REGEX.MINIMUM_LENGTH_PATTERN && getEntityTypeByID(_query)) {
                 const id = _query.substring(1);
-                history.push(getLinkByEntityType(getEntityTypeByID(_query), id));
+                navigate(getLinkByEntityType(getEntityTypeByID(_query), id));
             } else {
                 const _selectedFilters = createdBy
                     ? selectedFilters
@@ -62,7 +61,7 @@ export const useFilters = () => {
                           .map(sf => sf.id)
                           .join(',')
                     : selectedFilters.map(sf => sf.id).join(',');
-                history.push(
+                navigate(
                     reverse(ROUTES.SEARCH, { searchTerm: encodeURIComponent(_query) }) +
                         '?types=' +
                         _selectedFilters +
@@ -71,7 +70,7 @@ export const useFilters = () => {
                 );
             }
         },
-        [createdBy, history, selectedFilters]
+        [createdBy, navigate, selectedFilters]
     );
 
     useEffect(() => {

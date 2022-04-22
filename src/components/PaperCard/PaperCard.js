@@ -70,7 +70,10 @@ const PaperCard = props => {
                             target={props.linkTarget ? props.linkTarget : undefined}
                             to={
                                 props.route ||
-                                reverse(ROUTES.VIEW_PAPER, { resourceId: props.paper.id, contributionId: props.contribution?.id ?? undefined })
+                                reverse(props.contribution?.id ? ROUTES.VIEW_PAPER : ROUTES.VIEW_PAPER_NO_CONTRIBUTION, {
+                                    resourceId: props.paper.id,
+                                    contributionId: props.contribution?.id ?? undefined
+                                })
                             }
                         >
                             {props.paper.title ? props.paper.title : <em>No title</em>}

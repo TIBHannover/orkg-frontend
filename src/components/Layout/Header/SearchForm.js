@@ -6,7 +6,8 @@ import ROUTES from 'constants/routes.js';
 import { reverse } from 'named-urls';
 import { useLocation } from 'react-router';
 import REGEX from 'constants/regex';
-import { useRouteMatch, useHistory } from 'react-router-dom';
+import { useRouteMatch } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom-v5-compat';
 import { Form, Input, Button, InputGroup } from 'reactstrap';
 import { isString } from 'lodash';
 import { getArrayParamFromQueryString, getParamFromQueryString, getLinkByEntityType, getEntityTypeByID } from 'utils';
@@ -15,7 +16,7 @@ const SearchForm = ({ placeholder, onSearch = null }) => {
     const [value, setValue] = useState('');
     const match = useRouteMatch(ROUTES.SEARCH);
     const urlSearchQuery = match?.params?.searchTerm;
-    const history = useHistory();
+    const navigate = useNavigate();
     const location = useLocation();
 
     useEffect(() => {
@@ -34,7 +35,7 @@ const SearchForm = ({ placeholder, onSearch = null }) => {
         if (isString(value) && value.length >= REGEX.MINIMUM_LENGTH_PATTERN && getEntityTypeByID(value)) {
             const id = value.substring(1);
             setValue('');
-            route = history.push(getLinkByEntityType(getEntityTypeByID(value), id));
+            route = navigate(getLinkByEntityType(getEntityTypeByID(value), id));
         } else if (isString(value) && value) {
             const types = getArrayParamFromQueryString(location.search, 'types');
             const createdBy = getParamFromQueryString(location.search, 'createdBy');
@@ -45,7 +46,7 @@ const SearchForm = ({ placeholder, onSearch = null }) => {
         }
         onSearch && onSearch();
 
-        return route ? history.push(route) : null;
+        return route ? navigate(route) : null;
     };
 
     return (

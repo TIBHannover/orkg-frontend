@@ -15,8 +15,8 @@ import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import { Link } from 'react-router-dom';
-import PropTypes from 'prop-types';
 import TitleBar from 'components/TitleBar/TitleBar';
+import { useParams } from 'react-router-dom-v5-compat';
 
 const StyledGravatar = styled(Gravatar)`
     border: 3px solid ${props => props.theme.dark};
@@ -88,7 +88,8 @@ const UserProfile = props => {
     const [organizationData, setOrganizationData] = useState(null);
     const [isLoadingUserData, setIsLoadingUserData] = useState(false);
     const [notFound, setNotFound] = useState(false);
-    const userId = props.match.params.userId;
+    const params = useParams();
+    const userId = params.userId;
     const currentUserId = useSelector(state => state.auth.user?.id);
 
     useEffect(() => {
@@ -250,14 +251,6 @@ const UserProfile = props => {
             </Container>*/}
         </>
     );
-};
-
-UserProfile.propTypes = {
-    match: PropTypes.shape({
-        params: PropTypes.shape({
-            userId: PropTypes.string
-        }).isRequired
-    }).isRequired
 };
 
 export default UserProfile;

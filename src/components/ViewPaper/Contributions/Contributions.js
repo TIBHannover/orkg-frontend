@@ -8,7 +8,7 @@ import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
 import ContributionComparisons from 'components/ViewPaper/ContirbutionComparisons/ContributionComparisons';
 import ProvenanceBox from 'components/ViewPaper/ProvenanceBox/ProvenanceBox';
 import { reverse } from 'named-urls';
-import { useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom-v5-compat';
 import styled from 'styled-components';
 import AddToComparison from 'components/PaperCard/AddToComparison';
 import ContributionTab from 'components/ContributionTabs/ContributionTab';
@@ -49,7 +49,7 @@ const Contributions = props => {
         handleChangeContributionLabel,
         handleCreateContribution,
         toggleDeleteContribution,
-        history
+        navigate
     } = useContributions({
         paperId: resourceId,
         contributionId
@@ -57,7 +57,7 @@ const Contributions = props => {
     const isAddingContribution = useSelector(state => state.viewPaper.isAddingContribution);
 
     const onTabChange = key => {
-        history.push(
+        navigate(
             reverse(ROUTES.VIEW_PAPER, {
                 resourceId: resourceId,
                 contributionId: key

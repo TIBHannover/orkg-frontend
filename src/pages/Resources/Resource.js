@@ -31,6 +31,7 @@ import PapersWithCodeModal from 'components/PapersWithCodeModal/PapersWithCodeMo
 import TitleBar from 'components/TitleBar/TitleBar';
 import EditModeHeader from 'components/EditModeHeader/EditModeHeader';
 import ItemMetadata from 'components/Search/ItemMetadata';
+import { useParams } from 'react-router-dom-v5-compat';
 
 const DEDICATED_PAGE_LINKS = {
     [CLASSES.PAPER]: {
@@ -97,7 +98,8 @@ const DEDICATED_PAGE_LINKS = {
     }
 };
 function Resource(props) {
-    const resourceId = props.match.params.id;
+    const params = useParams();
+    const resourceId = params.id;
     const location = useLocation();
     const [error, setError] = useState(null);
     const [resource, setResource] = useState('');
@@ -117,7 +119,7 @@ function Resource(props) {
     const [createdBy, setCreatedBy] = useState(null);
     const [isOpenPWCModal, setIsOpenPWCModal] = useState(false);
     const { isFeatured, isUnlisted, handleChangeStatus } = useMarkFeaturedUnlisted({
-        resourceId: props.match.params.id,
+        resourceId: params.id,
         unlisted: resource?.unlisted,
         featured: resource?.featured
     });
@@ -146,7 +148,7 @@ function Resource(props) {
                         setHasVisualizationModelForGDC(false);
                     }
                     if (responseJson.classes.includes(CLASSES.COMPARISON)) {
-                        getStatementsBySubjectAndPredicate({ subjectId: props.match.params.id, predicateId: PREDICATES.HAS_DOI }).then(st => {
+                        getStatementsBySubjectAndPredicate({ subjectId: params.id, predicateId: PREDICATES.HAS_DOI }).then(st => {
                             if (st.length > 0) {
                                 setIsLoading(false);
                                 setHasDOI(true);
@@ -176,7 +178,7 @@ function Resource(props) {
                 });
         };
         findResource();
-    }, [location, props.match.params.id, resourceId, isCurationAllowed]);
+    }, [location, params.id, resourceId, isCurationAllowed]);
 
     useEffect(() => {
         setCanBeDeleted((values.allIds.length === 0 || properties.allIds.length === 0) && !hasObjectStatement);
@@ -224,7 +226,7 @@ function Resource(props) {
                                         size="sm"
                                         tag={Link}
                                         to={reverseWithSlug(dedicatedLink.route, {
-                                            [dedicatedLink.routeParams]: props.match.params.id,
+                                            [dedicatedLink.routeParams]: params.id,
                                             slug: dedicatedLink.hasSlug ? resource.label : undefined
                                         })}
                                         style={{ marginRight: 2 }}
@@ -303,7 +305,7 @@ function Resource(props) {
                             </h3>
                         ) : (
                             <>
-                                <EditableHeader id={props.match.params.id} value={resource.label} onChange={handleHeaderChange} />
+                                <EditableHeader id={params.id} value={resource.label} onChange={handleHeaderChange} />
                                 {showDeleteButton && (
                                     <ConditionalWrapper
                                         condition={!canBeDeleted}
@@ -350,7 +352,7 @@ function Resource(props) {
                                 resourcesAsLinks={true}
                             />
                         </div>
-                        <ObjectStatements resourceId={props.match.params.id} setHasObjectStatement={setHasObjectStatement} />
+                        <ObjectStatements resourceId={params.id} setHasObjectStatement={setHasObjectStatement} />
                     </Container>
                 </>
             )}
@@ -360,11 +362,6 @@ function Resource(props) {
 }
 
 Resource.propTypes = {
-    match: PropTypes.shape({
-        params: PropTypes.shape({
-            id: PropTypes.string.isRequired
-        }).isRequired
-    }).isRequired,
     resetStatementBrowser: PropTypes.func.isRequired
 };
 

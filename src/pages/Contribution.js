@@ -1,18 +1,19 @@
 import { useEffect, useState } from 'react';
 import { Container } from 'reactstrap';
 import ROUTES from 'constants/routes';
-import PropTypes from 'prop-types';
 import { getStatementsByObjectAndPredicate } from 'services/backend/statements';
 import { CLASSES, PREDICATES } from 'constants/graphSettings';
 import { reverse } from 'named-urls';
 import { Redirect } from 'react-router-dom';
+import { useParams } from 'react-router-dom-v5-compat';
 import NotFound from 'pages/NotFound';
 
 /**
  * Component for redirecting contribution IDs to the paper view
  */
 export default function Contribution(props) {
-    const contributionId = props.match.params.id;
+    const params = useParams();
+    const contributionId = params.id;
     const [error, setError] = useState(false);
     const [paperId, setPaperId] = useState(null);
     const [isReview, setIsReview] = useState(false);
@@ -50,11 +51,3 @@ export default function Contribution(props) {
         return <Container className="box rounded pt-4 pb-4 ps-5 pe-5 mt-5 clearfix">Loading ...</Container>;
     }
 }
-
-Contribution.propTypes = {
-    match: PropTypes.shape({
-        params: PropTypes.shape({
-            id: PropTypes.string.isRequired
-        }).isRequired
-    }).isRequired
-};

@@ -1,4 +1,4 @@
-import { useLocation, useHistory } from 'react-router';
+import { useNavigate, useLocation } from 'react-router-dom-v5-compat';
 import { Container, Row, Col } from 'reactstrap';
 import ResearchFieldCards from 'components/Home/ResearchFieldCards';
 import ObservatoriesBox from 'components/Home/ObservatoriesBox';
@@ -13,22 +13,25 @@ import { toast } from 'react-toastify';
 import { Helmet } from 'react-helmet';
 import env from '@beam-australia/react-env';
 import HomeAlerts from 'components/HomeAlerts/HomeAlerts';
+import { useEffect } from 'react';
 
 export default function Home() {
     const location = useLocation();
-    const history = useHistory();
+    const navigate = useNavigate();
     const { selectedResearchField, handleFieldSelect, researchFields, isLoadingFields } = useResearchFieldSelector({
         id: MISC.RESEARCH_FIELD_MAIN,
         label: 'Main'
     });
 
-    const showSignOutMessage = location.state && location.state.signedOut;
+    useEffect(() => {
+        const showSignOutMessage = location.state && location.state.signedOut;
 
-    if (showSignOutMessage) {
-        const locationState = { ...location.state, signedOut: false };
-        history.replace({ state: locationState });
-        toast.success('You have been signed out successfully');
-    }
+        if (showSignOutMessage) {
+            const locationState = { ...location.state, signedOut: false };
+            navigate({ state: locationState, replace: true });
+            toast.success('You have been signed out successfully');
+        }
+    }, [location, navigate]);
 
     return (
         <Container style={{ marginTop: env('IS_TESTING_SERVER') === 'true' ? -20 : -70 }}>

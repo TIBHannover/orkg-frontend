@@ -5,12 +5,13 @@ import DraftReviews from 'components/UserSettings/DraftReviews/DraftReviews';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router';
+import { useParams } from 'react-router-dom-v5-compat';
 import { Link } from 'react-router-dom';
 import { Container, Row } from 'reactstrap';
 import styled from 'styled-components';
 import GeneralSettings from 'components/UserSettings/GeneralSettings';
 import Password from 'components/UserSettings/Password';
+import requireAuthentication from 'requireAuthentication';
 
 export const StyledSettingsMenu = styled.div`
     padding: 0;
@@ -120,4 +121,4 @@ const UserSettings = () => {
     );
 };
 
-export default UserSettings;
+export default requireAuthentication(UserSettings);

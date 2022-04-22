@@ -5,7 +5,7 @@ import { CLASSES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import { useEffect, useState } from 'react';
-import { useHistory, useParams } from 'react-router';
+import { useParams, useNavigate } from 'react-router-dom-v5-compat';
 import { Alert, Button, Container, FormGroup, Input, InputGroup, Label } from 'reactstrap';
 import { createResource } from 'services/backend/resources';
 import { supportedContentTypes } from 'components/ContentType/types';
@@ -23,7 +23,7 @@ const TYPES = [
 ];
 
 const ContentTypeNew = () => {
-    const history = useHistory();
+    const navigate = useNavigate();
     const params = useParams();
 
     const [selectedClassId, setSelectedClassId] = useState();
@@ -39,7 +39,7 @@ const ContentTypeNew = () => {
         setIsLoading(true);
         const _resource = await createResource(title, [selectedClassId]);
         setResource(_resource);
-        history.push(reverse(ROUTES.CONTENT_TYPE, { id: _resource.id, type: selectedClassId, mode: 'edit' }));
+        navigate(reverse(ROUTES.CONTENT_TYPE, { id: _resource.id, type: selectedClassId, mode: 'edit' }));
     };
 
     return (

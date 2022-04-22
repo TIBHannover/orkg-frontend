@@ -1,20 +1,21 @@
 import { useState, useEffect } from 'react';
 import { Container, Button, FormGroup, Input, Label, FormText } from 'reactstrap';
 import { createClass } from 'services/backend/classes';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom-v5-compat';
 import REGEX from 'constants/regex';
 import { toast } from 'react-toastify';
 import { reverse } from 'named-urls';
 import { get_error_message } from 'utils';
 import ROUTES from 'constants/routes';
 import TitleBar from 'components/TitleBar/TitleBar';
+import requireAuthentication from 'requireAuthentication';
 
 const AddClass = () => {
     const isURI = new RegExp(REGEX.URL);
     const [uri, setUri] = useState('');
     const [label, setLabel] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-    const history = useHistory();
+    const navigate = useNavigate();
 
     useEffect(() => {
         // Set document title
@@ -31,7 +32,7 @@ const AddClass = () => {
                     const newClass = await createClass(label, uri ? uri : null);
                     toast.success('Class created successfully');
                     setIsLoading(false);
-                    history.push(reverse(ROUTES.CLASS, { id: newClass.id }));
+                    navigate(reverse(ROUTES.CLASS, { id: newClass.id }));
                 } catch (error) {
                     console.error(error);
                     setIsLoading(false);
@@ -83,4 +84,4 @@ const AddClass = () => {
     );
 };
 
-export default AddClass;
+export default requireAuthentication(AddClass);

@@ -16,7 +16,8 @@ import {
     getComparisonData,
     isPredicatesListCorrect
 } from 'utils';
-import { useParams, useLocation, useHistory } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom-v5-compat';
 import { PREDICATES, CLASSES, MISC } from 'constants/graphSettings';
 import { reverse } from 'named-urls';
 import { flatten, groupBy, intersection, findIndex, cloneDeep, isEmpty, uniq, without } from 'lodash';
@@ -32,7 +33,7 @@ const DEFAULT_COMPARISON_METHOD = 'path';
 
 function useComparison({ id }) {
     const location = useLocation();
-    const history = useHistory();
+    const navigate = useNavigate();
     const params = useParams();
     const comparisonId = id || params.comparisonId;
     const hiddenGroupsStorageName = comparisonId ? `comparison-${comparisonId}-hidden-rows` : null;
@@ -597,7 +598,7 @@ function useComparison({ id }) {
         );
         setComparisonURLConfig(`?${params}`);
         setShortLink('');
-        history.push(reverse(ROUTES.COMPARISON) + `?${params}`);
+        navigate(reverse(ROUTES.COMPARISON) + `?${params}`);
     };
 
     /**
@@ -643,7 +644,7 @@ function useComparison({ id }) {
         });
 
         if (isConfirmed) {
-            history.push(
+            navigate(
                 reverse(ROUTES.CONTRIBUTION_EDITOR) +
                     `?contributions=${contributionsList.join(',')}${
                         metaData?.hasPreviousVersion ? `&hasPreviousVersion=${metaData?.hasPreviousVersion.id}` : ''

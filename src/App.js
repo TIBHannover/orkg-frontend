@@ -1,6 +1,4 @@
 import { Suspense, useState } from 'react';
-import { Switch } from 'react-router-dom';
-import { renderRoutes } from 'react-router-config';
 import routes from 'routes.config';
 import DefaultLayout from 'components/Layout/DefaultLayout';
 import 'assets/scss/CustomBootstrap.scss';
@@ -9,7 +7,7 @@ import 'tippy.js/dist/tippy.css';
 import 'tippy.js/dist/backdrop.css';
 import 'tippy.js/animations/shift-away.css';
 import { ConnectedRouter } from 'connected-react-router';
-import { CompatRouter } from 'react-router-dom-v5-compat';
+import { CompatRouter, Routes, Route } from 'react-router-dom-v5-compat';
 import PropTypes from 'prop-types';
 import { detect } from 'detect-browser';
 import ScrollToTop from 'components/ScrollToTop';
@@ -18,6 +16,17 @@ import { Alert } from 'reactstrap';
 import env from '@beam-australia/react-env';
 
 const alertStyle = { borderRadius: '0', marginTop: '-30px', marginBottom: '30px' };
+
+//https://github.com/remix-run/react-router/blob/v5.3.1/packages/react-router-config/modules/renderRoutes.js
+const renderRoutes = (routes, extraProps = {}, switchProps = {}) => {
+    return routes ? (
+        <Routes {...switchProps}>
+            {routes.map((route, i) => (
+                <Route key={route.key || i} path={route.path} exact={route.exact} strict={route.strict} element={<route.component />} />
+            ))}
+        </Routes>
+    ) : null;
+};
 
 const App = ({ history }) => {
     const browser = detect();
@@ -47,7 +56,7 @@ const App = ({ history }) => {
                         )}
                         {/* Suspense is used for when the component is lazy loaded */}
                         <Suspense fallback={<div className="mt-5 mb-2 text-center">Loading...</div>}>
-                            <Switch>{renderRoutes(routes)}</Switch>
+                            <Routes>{renderRoutes(routes)}</Routes>
                         </Suspense>
                     </DefaultLayout>
                 </ScrollToTop>

@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import { Container, Table, Card, CardBody, Button, ButtonGroup, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import ROUTES from 'constants/routes';
-import { Link, useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import moment from 'moment';
 import { UncontrolledButtonDropdown } from 'reactstrap';
@@ -17,7 +17,7 @@ import useBenchmarkDatasetResource from 'components/Benchmarks/hooks/useBenchmar
 import useBenchmarkDatasetPapers from 'components/Benchmarks/hooks/useBenchmarkDatasetPapers';
 import CodeURLsTooltip from 'components/Benchmarks/BenchmarkCard/CodeURLsTooltip';
 import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom-v5-compat';
 import { useTable, useSortBy } from 'react-table';
 import TitleBar from 'components/TitleBar/TitleBar';
 
@@ -58,7 +58,7 @@ function Benchmark() {
     const [resourceData, problemData, isLoading, isFailedLoading, loadResourceData] = useBenchmarkDatasetResource({ datasetId, problemId });
     const [menuOpen, setMenuOpen] = useState(false);
     const [editMode, setEditMode] = useState(false);
-    const history = useHistory();
+    const navigate = useNavigate();
     const {
         isLoading: isLoadingPapers,
         isFailedLoadingPapers,
@@ -281,7 +281,7 @@ function Benchmark() {
                                             <DropdownItem
                                                 key={index}
                                                 disabled={isLoading}
-                                                onClick={() => history.push(reverse(ROUTES.BENCHMARK, { datasetId: datasetId, problemId: rp.id }))}
+                                                onClick={() => navigate(reverse(ROUTES.BENCHMARK, { datasetId: datasetId, problemId: rp.id }))}
                                             >
                                                 {rp.label}
                                             </DropdownItem>
@@ -338,7 +338,7 @@ function Benchmark() {
                                                     if (selection.length === 1) {
                                                         const [selectedItem] = selection;
                                                         const { row } = selectedItem;
-                                                        history.push(
+                                                        navigate(
                                                             reverse(ROUTES.VIEW_PAPER, {
                                                                 resourceId: benchmarkDatasetPapers[selectedMetric][row].paper_id
                                                             })

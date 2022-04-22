@@ -1,12 +1,12 @@
 import { isString } from 'lodash';
 import { useEffect, useState } from 'react';
-import { useHistory, useLocation } from 'react-router';
 import { useDebounce, usePrevious, useWindowScroll } from 'react-use';
+import { useNavigate, useLocation } from 'react-router-dom-v5-compat';
 
 const useScroll = () => {
     const [scrollTop, setScrollTop] = useState(null);
     const location = useLocation();
-    const history = useHistory();
+    const navigate = useNavigate();
     const prevHash = usePrevious(location.hash);
     const { y: windowScrollY } = useWindowScroll();
     const prevWindowScrollY = usePrevious(windowScrollY);
@@ -38,9 +38,9 @@ const useScroll = () => {
     // remove the hash from the url when the user scrolls to a different position
     useEffect(() => {
         if (scrollTop === -1 && windowScrollY !== prevWindowScrollY && location.hash) {
-            history.push(location.pathname);
+            navigate(location.pathname);
         }
-    }, [history, location.hash, location.pathname, prevWindowScrollY, scrollTop, windowScrollY]);
+    }, [navigate, location.hash, location.pathname, prevWindowScrollY, scrollTop, windowScrollY]);
 
     // set scrollTop to -1 when window.scrollTo is finished
     useDebounce(

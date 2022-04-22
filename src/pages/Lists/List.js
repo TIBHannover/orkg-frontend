@@ -18,7 +18,8 @@ import { reverse } from 'named-urls';
 import NotFound from 'pages/NotFound';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { NavLink, useHistory, useParams } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom-v5-compat';
 import { Button, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledButtonDropdown } from 'reactstrap';
 import Confirm from 'components/Confirmation/Confirmation';
 import { historyModalToggled, setIsEditing } from 'slices/listSlice';
@@ -68,7 +69,7 @@ const List = () => {
     const publicationDate = version ? moment(version.date).format('DD MMMM YYYY') : null;
     const versionNumber = versions.length ? versions.length - versions.findIndex(version => version.id === id) : null;
     const dispatch = useDispatch();
-    const history = useHistory();
+    const navigate = useNavigate();
     const toggleHistoryModal = () => dispatch(historyModalToggled());
     const { load, isLoading, isNotFound, getVersions } = useList();
 
@@ -93,7 +94,7 @@ const List = () => {
             });
 
             if (isConfirmed) {
-                history.push(reverse(ROUTES.LIST, { id: list.id }));
+                navigate(reverse(ROUTES.LIST, { id: list.id }));
             }
         } else {
             dispatch(setIsEditing(true));

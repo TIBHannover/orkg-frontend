@@ -12,7 +12,7 @@ import MembersBox from 'components/Observatory/MembersBox';
 import Breadcrumbs from 'components/Breadcrumbs/Breadcrumbs';
 import { SubTitle, SubtitleSeparator } from 'components/styled';
 import NotFound from 'pages/NotFound';
-import { useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom-v5-compat';
 import { useSelector } from 'react-redux';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';

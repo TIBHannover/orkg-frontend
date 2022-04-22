@@ -6,7 +6,8 @@ import moment from 'moment';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom-v5-compat';
 import Select, { components } from 'react-select';
 import { Alert, Button, Modal, ModalBody, ModalHeader } from 'reactstrap';
 import styled from 'styled-components';
@@ -69,8 +70,7 @@ const Time = styled.div`
 const HistoryModal = ({ id, show, toggle, title, versions = [], routeDiff }) => {
     const [selectedVersion1, setSelectedVersion1] = useState(null);
     const [selectedVersion2, setSelectedVersion2] = useState(null);
-    const history = useHistory();
-
+    const navigate = useNavigate();
     const options = versions.map((version, index) => ({
         label: `Version ${versions.length - index}`,
         value: version.id,
@@ -78,7 +78,7 @@ const HistoryModal = ({ id, show, toggle, title, versions = [], routeDiff }) => 
     }));
 
     const handleCompare = () => {
-        history.push(reverse(routeDiff, { oldId: selectedVersion1.value, newId: selectedVersion2.value }));
+        navigate(reverse(routeDiff, { oldId: selectedVersion1.value, newId: selectedVersion2.value }));
     };
 
     return (

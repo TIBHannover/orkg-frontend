@@ -5,12 +5,12 @@ import { getStatementsBySubjectAndPredicate } from 'services/backend/statements'
 import { updateResourceClasses } from 'services/backend/resources';
 import { toast } from 'react-toastify';
 import { PREDICATES } from 'constants/graphSettings';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom-v5-compat';
 import ROUTES from 'constants/routes.js';
 import pluralize from 'pluralize';
 
 function useDeletePapers({ paperIds, redirect = false, finishLoadingCallback = () => {} }) {
-    const history = useHistory();
+    const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(false);
 
     const deletePapers = async () => {
@@ -47,7 +47,7 @@ function useDeletePapers({ paperIds, redirect = false, finishLoadingCallback = (
             toast.success(`Successfully deleted ${pluralize('paper', paperIds.length, true)}`);
 
             if (redirect) {
-                history.push(ROUTES.HOME);
+                navigate(ROUTES.HOME);
             }
         }
     };

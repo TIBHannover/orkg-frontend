@@ -4,9 +4,9 @@ import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import { useEffect, useRef, useState } from 'react';
-import { useHistory } from 'react-router';
 import { useClickAway } from 'react-use';
 import { Button } from 'reactstrap';
+import { useNavigate } from 'react-router-dom-v5-compat';
 import { SearchStyled, InputStyled, SearchButtonStyled } from 'components/styled';
 
 const HeaderSearchButton = ({ placeholder, type, userId }) => {
@@ -14,7 +14,7 @@ const HeaderSearchButton = ({ placeholder, type, userId }) => {
     const [value, setValue] = useState('');
     const refContainer = useRef(null);
     const refInput = useRef(null);
-    const history = useHistory();
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (isSearchOpen && refInput.current) {
@@ -42,7 +42,7 @@ const HeaderSearchButton = ({ placeholder, type, userId }) => {
     };
 
     const goToResults = () => {
-        history.push(reverse(ROUTES.SEARCH, { searchTerm: encodeURIComponent(value) }) + `?types=${type ?? ''}&createdBy=${userId ?? ''}`);
+        navigate(reverse(ROUTES.SEARCH, { searchTerm: encodeURIComponent(value) }) + `?types=${type ?? ''}&createdBy=${userId ?? ''}`);
     };
 
     return isSearchOpen ? (

@@ -32,7 +32,7 @@ export function hashCode(s) {
 /**
  * Parse comma separated values from the query string
  *
- * @param {String} locationSearch this.props.location.search
+ * @param {String} locationSearch useLocation().search
  * @param {String} param parameter name
  * @return {Array} the list of values
  */
@@ -51,7 +51,7 @@ export function getArrayParamFromQueryString(locationSearch, param) {
 /**
  * Parse value from the query string
  *
- * @param {String} locationSearch this.props.location.search
+ * @param {String} locationSearch useLocation().search
  * @param {String} param parameter name
  * @param {Boolean} boolean return false instead of null
  * @return {String|Boolean} value

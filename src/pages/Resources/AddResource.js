@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
+import requireAuthentication from 'requireAuthentication';
 import { Container, Button, FormGroup, Input, Label } from 'reactstrap';
-import { useHistory, useLocation } from 'react-router-dom';
 import { createLiteralStatement } from 'services/backend/statements';
 import { getClassById } from 'services/backend/classes';
 import { createLiteral } from 'services/backend/literals';
@@ -16,6 +16,7 @@ import { useSelector } from 'react-redux';
 import { PREDICATES, ENTITIES, CLASSES } from 'constants/graphSettings';
 import { getArrayParamFromQueryString } from 'utils';
 import TitleBar from 'components/TitleBar/TitleBar';
+import { useNavigate, useLocation } from 'react-router-dom-v5-compat';
 
 const AddResource = () => {
     const isDOI = new RegExp(REGEX.DOI);
@@ -25,7 +26,7 @@ const AddResource = () => {
     const [isLoading, setIsLoading] = useState(false);
     const isCurationAllowed = useSelector(state => state.auth.user?.isCurationAllowed);
     const [isLoadingDefaultClasses, setIsLoadingDefaultClasses] = useState(false);
-    const history = useHistory();
+    const navigate = useNavigate();
     const location = useLocation();
 
     useEffect(() => {
@@ -61,7 +62,7 @@ const AddResource = () => {
                     const newResource = await createResource(label.trim(), classes ? classes.map(c => c.id) : []);
                     toast.success('Resource created successfully');
                     setIsLoading(false);
-                    history.push(reverse(ROUTES.RESOURCE, { id: newResource.id }));
+                    navigate(reverse(ROUTES.RESOURCE, { id: newResource.id }));
                 } catch (error) {
                     console.error(error);
                     setIsLoading(false);
@@ -78,7 +79,7 @@ const AddResource = () => {
                         await createLiteralStatement(newResource.id, PREDICATES.HAS_DOI, responseJsonDoi.id);
                         toast.success('Resource created successfully');
                         setIsLoading(false);
-                        history.push(reverse(ROUTES.RESOURCE, { id: newResource.id }));
+                        navigate(reverse(ROUTES.RESOURCE, { id: newResource.id }));
                     } catch (error) {
                         console.error(error);
                         toast.error(`Error finding DOI : ${error.message}`);
@@ -164,4 +165,4 @@ const AddResource = () => {
     );
 };
 
-export default AddResource;
+export default requireAuthentication(AddResource);

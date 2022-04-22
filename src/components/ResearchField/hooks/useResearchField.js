@@ -4,7 +4,7 @@ import { getStatementsBySubjectAndPredicate, getStatementsBySubject } from 'serv
 import { getResearchFieldsStats } from 'services/backend/stats';
 import { filterObjectOfStatementsByPredicateAndClass } from 'utils';
 import { orderBy } from 'lodash';
-import { useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom-v5-compat';
 import { PREDICATES } from 'constants/graphSettings';
 
 function useResearchField(initialVal = {}) {

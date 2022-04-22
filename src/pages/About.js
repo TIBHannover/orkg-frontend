@@ -6,7 +6,7 @@ import TitleBar from 'components/TitleBar/TitleBar';
 import ROUTES from 'constants/routes';
 import NotFound from 'pages/NotFound';
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router';
+import { useParams } from 'react-router-dom-v5-compat';
 import { Link } from 'react-router-dom';
 import { Container, Nav, Navbar, NavItem, Alert } from 'reactstrap';
 import { getAboutPage, getAboutPagesMenu } from 'services/cms';

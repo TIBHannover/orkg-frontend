@@ -14,7 +14,8 @@ import useMarkFeaturedUnlisted from 'components/MarkFeaturedUnlisted/hooks/useMa
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom-v5-compat';
 import { Alert, Button, Container, ListGroup, ListGroupItem } from 'reactstrap';
 import { historyModalToggled } from 'slices/listSlice';
 import ListEntryAmount from 'components/List/ListEntryAmount/ListEntryAmount';

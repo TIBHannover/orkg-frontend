@@ -1,19 +1,20 @@
 import { useEffect, useState } from 'react';
 import { Container } from 'reactstrap';
 import ROUTES from 'constants/routes';
-import PropTypes from 'prop-types';
 import { getStatementsByObjectAndPredicate } from 'services/backend/statements';
 import { CLASSES, PREDICATES } from 'constants/graphSettings';
 import { filterSubjectOfStatementsByPredicateAndClass } from 'utils';
 import { reverse } from 'named-urls';
 import { Redirect } from 'react-router-dom';
 import NotFound from 'pages/NotFound';
+import { useParams } from 'react-router-dom-v5-compat';
 
 /**
  * Component for redirecting visualization IDs to the comparison view
  */
-export default function Visualization(props) {
-    const visualizationId = props.match.params.id;
+export default function Visualization() {
+    const params = useParams();
+    const visualizationId = params.id;
     const [error, setError] = useState(false);
     const [comparisonId, setComparisonId] = useState(null);
 
@@ -40,11 +41,3 @@ export default function Visualization(props) {
         return <Container className="box rounded pt-4 pb-4 ps-5 pe-5 mt-5 clearfix">Loading ...</Container>;
     }
 }
-
-Visualization.propTypes = {
-    match: PropTypes.shape({
-        params: PropTypes.shape({
-            id: PropTypes.string.isRequired
-        }).isRequired
-    }).isRequired
-};

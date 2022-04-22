@@ -1,6 +1,7 @@
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
-import { Redirect, useParams } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
+import { useParams } from 'react-router-dom-v5-compat';
 import { usePrevious } from 'react-use';
 import { slugify } from 'utils';
 

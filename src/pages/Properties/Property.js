@@ -7,21 +7,21 @@ import RequireAuthentication from 'components/RequireAuthentication/RequireAuthe
 import NotFound from 'pages/NotFound';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPen, faTimes } from '@fortawesome/free-solid-svg-icons';
-import PropTypes from 'prop-types';
 import { useLocation } from 'react-router-dom';
 import PropertyStatements from 'components/PropertyStatements/PropertyStatements';
 import { ENTITIES } from 'constants/graphSettings';
 import TitleBar from 'components/TitleBar/TitleBar';
 import ItemMetadata from 'components/Search/ItemMetadata';
 import EditModeHeader from 'components/EditModeHeader/EditModeHeader';
-
+import { useParams } from 'react-router-dom-v5-compat';
 function Property(props) {
     const location = useLocation();
     const [error, setError] = useState(null);
     const [property, setProperty] = useState('');
     const [isLoading, setIsLoading] = useState(true);
     const [editMode, setEditMode] = useState(false);
-    const propertyId = props.match.params.id;
+    const params = useParams();
+    const propertyId = params.id;
 
     useEffect(() => {
         const findPredicate = async () => {
@@ -103,13 +103,5 @@ function Property(props) {
         </>
     );
 }
-
-Property.propTypes = {
-    match: PropTypes.shape({
-        params: PropTypes.shape({
-            id: PropTypes.string.isRequired
-        }).isRequired
-    }).isRequired
-};
 
 export default Property;

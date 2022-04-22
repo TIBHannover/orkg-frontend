@@ -6,7 +6,7 @@ import useResearchFieldObservatories from 'components/ResearchField/hooks/useRes
 import LastUpdatesBox from 'components/LastUpdatesBox/LastUpdatesBox';
 import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
 import IntegratedList from 'components/ResearchField/IntegratedList';
-import { useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom-v5-compat';
 import ResearchProblemsBox from 'components/ResearchProblemsBox/ResearchProblemsBox';
 
 const ResearchField = () => {
