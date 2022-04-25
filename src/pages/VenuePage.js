@@ -18,10 +18,9 @@ import { faSpinner, faAngleDoubleDown, faEllipsisV } from '@fortawesome/free-sol
 import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import useVenuePapers from 'components/Venue/useVenuePapers';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useParams } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import TitleBar from 'components/TitleBar/TitleBar';
-import { useParams } from 'react-router-dom';
 
 const VenuePage = () => {
     const params = useParams();

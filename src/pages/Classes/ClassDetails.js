@@ -10,13 +10,11 @@ import ImportCSVInstances from 'components/ClassInstances/ImportCSVInstances';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import InternalServerError from 'pages/InternalServerError';
 import NotFound from 'pages/NotFound';
-import { Link } from 'react-router-dom';
+import { Link, useParams, useLocation } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes.js';
-import { useLocation } from 'react-router-dom';
 import { CLASSES, PREDICATES, ENTITIES } from 'constants/graphSettings';
 import TitleBar from 'components/TitleBar/TitleBar';
-import { useParams } from 'react-router-dom';
 
 function ClassDetails(props) {
     const location = useLocation();

@@ -8,7 +8,7 @@ import EditableHeader from 'components/EditableHeader';
 import ObjectStatements from 'components/ObjectStatements/ObjectStatements';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import NotFound from 'pages/NotFound';
-import { useLocation, Link } from 'react-router-dom';
+import { useLocation, Link, useParams } from 'react-router-dom';
 import Tippy from '@tippyjs/react';
 import ROUTES from 'constants/routes.js';
 import { connect, useSelector } from 'react-redux';
@@ -31,7 +31,6 @@ import PapersWithCodeModal from 'components/PapersWithCodeModal/PapersWithCodeMo
 import TitleBar from 'components/TitleBar/TitleBar';
 import EditModeHeader from 'components/EditModeHeader/EditModeHeader';
 import ItemMetadata from 'components/Search/ItemMetadata';
-import { useParams } from 'react-router-dom';
 
 const DEDICATED_PAGE_LINKS = {
     [CLASSES.PAPER]: {

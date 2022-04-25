@@ -7,13 +7,13 @@ import RequireAuthentication from 'components/RequireAuthentication/RequireAuthe
 import NotFound from 'pages/NotFound';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPen, faTimes } from '@fortawesome/free-solid-svg-icons';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import PropertyStatements from 'components/PropertyStatements/PropertyStatements';
 import { ENTITIES } from 'constants/graphSettings';
 import TitleBar from 'components/TitleBar/TitleBar';
 import ItemMetadata from 'components/Search/ItemMetadata';
 import EditModeHeader from 'components/EditModeHeader/EditModeHeader';
-import { useParams } from 'react-router-dom';
+
 function Property(props) {
     const location = useLocation();
     const [error, setError] = useState(null);

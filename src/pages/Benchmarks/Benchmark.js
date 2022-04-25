@@ -1,7 +1,6 @@
 import { useState, useMemo } from 'react';
 import { Container, Table, Card, CardBody, Button, ButtonGroup, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import ROUTES from 'constants/routes';
-import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import moment from 'moment';
 import { UncontrolledButtonDropdown } from 'reactstrap';
@@ -9,7 +8,6 @@ import Chart from 'react-google-charts';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPen, faEllipsisV, faSortUp, faSortDown } from '@fortawesome/free-solid-svg-icons';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
-import { NavLink } from 'react-router-dom';
 import ContentLoader from 'react-content-loader';
 import { reverseWithSlug } from 'utils';
 import { SubTitle, SubtitleSeparator } from 'components/styled';
@@ -17,7 +15,7 @@ import useBenchmarkDatasetResource from 'components/Benchmarks/hooks/useBenchmar
 import useBenchmarkDatasetPapers from 'components/Benchmarks/hooks/useBenchmarkDatasetPapers';
 import CodeURLsTooltip from 'components/Benchmarks/BenchmarkCard/CodeURLsTooltip';
 import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, NavLink, Link } from 'react-router-dom';
 import { useTable, useSortBy } from 'react-table';
 import TitleBar from 'components/TitleBar/TitleBar';
 

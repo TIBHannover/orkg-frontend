@@ -5,11 +5,10 @@ import { CLASSES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { Alert, Button, Container, FormGroup, Input, InputGroup, Label } from 'reactstrap';
 import { createResource } from 'services/backend/resources';
 import { supportedContentTypes } from 'components/ContentType/types';
-import { Link } from 'react-router-dom';
 import pluralize from 'pluralize';
 import { upperFirst } from 'lodash';
 

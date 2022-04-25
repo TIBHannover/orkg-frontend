@@ -2,8 +2,7 @@ import HelpCenterSearchInput from 'components/HelpCenterSearchInput/HelpCenterSe
 import TitleBar from 'components/TitleBar/TitleBar';
 import ROUTES from 'constants/routes';
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { Breadcrumb, BreadcrumbItem, Container } from 'reactstrap';
 import { getHelpArticles } from 'services/cms';
 import { reverseWithSlug } from 'utils';

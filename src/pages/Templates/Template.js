@@ -19,11 +19,9 @@ import classnames from 'classnames';
 import { useDispatch, useSelector } from 'react-redux';
 import ROUTES from 'constants/routes.js';
 import { reverse } from 'named-urls';
-import { NavLink as RouterNavLink } from 'react-router-dom';
+import { NavLink as RouterNavLink, useParams, useNavigate, useLocation } from 'react-router-dom';
 import TitleBar from 'components/TitleBar/TitleBar';
 import { EditModeContainer, Title } from 'components/EditModeHeader/EditModeHeader';
-import { useParams, useNavigate } from 'react-router-dom';
-import { useLocation } from 'react-router-dom';
 
 const TabPaneStyled = styled(TabPane)`
     border: 1px solid #ced4da;

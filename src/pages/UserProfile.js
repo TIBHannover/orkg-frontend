@@ -14,9 +14,8 @@ import { CLASSES, MISC } from 'constants/graphSettings';
 import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import TitleBar from 'components/TitleBar/TitleBar';
-import { useParams } from 'react-router-dom';
 
 const StyledGravatar = styled(Gravatar)`
     border: 3px solid ${props => props.theme.dark};
