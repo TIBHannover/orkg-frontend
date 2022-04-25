@@ -112,7 +112,7 @@ const SignIn = props => {
 };
 
 SignIn.propTypes = {
-    signInRequired: PropTypes.bool.isRequired,
+    signInRequired: PropTypes.bool,
     redirectRoute: PropTypes.string
 };
 
