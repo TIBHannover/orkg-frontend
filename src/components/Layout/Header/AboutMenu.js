@@ -78,7 +78,7 @@ const AboutMenu = ({ closeMenu }) => {
                                         <DropdownItem
                                             key={id}
                                             tag={RouterNavLink}
-                                            exact
+                                            end
                                             to={reverseWithSlug(ROUTES.ABOUT, { id, slug: title })}
                                             onClick={() => closeMenu()}
                                         >

@@ -217,7 +217,7 @@ function Benchmark() {
                                         <Icon icon={faEllipsisV} />
                                     </DropdownToggle>
                                     <DropdownMenu end>
-                                        <DropdownItem tag={NavLink} exact to={reverse(ROUTES.RESOURCE, { id: datasetId })}>
+                                        <DropdownItem tag={NavLink} end to={reverse(ROUTES.RESOURCE, { id: datasetId })}>
                                             View resource
                                         </DropdownItem>
                                     </DropdownMenu>

@@ -124,7 +124,7 @@ const ResearchProblemHeader = ({ id }) => {
                                         <Icon icon={faEllipsisV} />
                                     </DropdownToggle>
                                     <DropdownMenu end>
-                                        <DropdownItem tag={NavLink} exact to={reverse(ROUTES.RESOURCE, { id })}>
+                                        <DropdownItem tag={NavLink} end to={reverse(ROUTES.RESOURCE, { id })}>
                                             View resource
                                         </DropdownItem>
                                     </DropdownMenu>

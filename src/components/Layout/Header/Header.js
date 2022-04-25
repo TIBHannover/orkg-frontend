@@ -410,44 +410,44 @@ const Header = () => {
                                 View <FontAwesomeIcon style={{ marginTop: '4px' }} icon={faChevronDown} pull="right" />
                             </DropdownToggle>
                             <DropdownMenu>
-                                <DropdownItem tag={RouterNavLink} exact to={ROUTES.COMPARISONS} onClick={closeMenu}>
+                                <DropdownItem tag={RouterNavLink} end to={ROUTES.COMPARISONS} onClick={closeMenu}>
                                     Comparisons
                                 </DropdownItem>
-                                <DropdownItem tag={RouterNavLink} exact to={ROUTES.PAPERS} onClick={closeMenu}>
+                                <DropdownItem tag={RouterNavLink} end to={ROUTES.PAPERS} onClick={closeMenu}>
                                     Papers
                                 </DropdownItem>
-                                <DropdownItem tag={RouterNavLink} exact to={ROUTES.VISUALIZATIONS} onClick={closeMenu}>
+                                <DropdownItem tag={RouterNavLink} end to={ROUTES.VISUALIZATIONS} onClick={closeMenu}>
                                     Visualizations
                                 </DropdownItem>
-                                <DropdownItem tag={RouterNavLink} exact to={ROUTES.REVIEWS} onClick={closeMenu}>
+                                <DropdownItem tag={RouterNavLink} end to={ROUTES.REVIEWS} onClick={closeMenu}>
                                     Reviews{' '}
                                     <small>
                                         <Badge color="info">Beta</Badge>
                                     </small>
                                 </DropdownItem>
-                                <DropdownItem tag={RouterNavLink} exact to={ROUTES.LISTS} onClick={closeMenu}>
+                                <DropdownItem tag={RouterNavLink} end to={ROUTES.LISTS} onClick={closeMenu}>
                                     Lists{' '}
                                     <small>
                                         <Badge color="info">Beta</Badge>
                                     </small>
                                 </DropdownItem>
-                                <DropdownItem tag={RouterNavLink} exact to={ROUTES.BENCHMARKS} onClick={closeMenu}>
+                                <DropdownItem tag={RouterNavLink} end to={ROUTES.BENCHMARKS} onClick={closeMenu}>
                                     Benchmarks
                                 </DropdownItem>
-                                <DropdownItem tag={RouterNavLink} exact to={ROUTES.RESEARCH_FIELDS} onClick={closeMenu}>
+                                <DropdownItem tag={RouterNavLink} end to={ROUTES.RESEARCH_FIELDS} onClick={closeMenu}>
                                     Research fields
                                 </DropdownItem>
 
                                 <ContentTypesMenu closeMenu={closeMenu} />
 
                                 <DropdownItem divider />
-                                <DropdownItem tag={RouterNavLink} exact to={ROUTES.OBSERVATORIES} onClick={closeMenu}>
+                                <DropdownItem tag={RouterNavLink} end to={ROUTES.OBSERVATORIES} onClick={closeMenu}>
                                     Observatories{' '}
                                     <small>
                                         <Badge color="info">Beta</Badge>
                                     </small>
                                 </DropdownItem>
-                                <DropdownItem tag={RouterNavLink} exact to={ROUTES.ORGANIZATIONS} onClick={closeMenu}>
+                                <DropdownItem tag={RouterNavLink} end to={ROUTES.ORGANIZATIONS} onClick={closeMenu}>
                                     Organizations{' '}
                                     <small>
                                         <Badge color="info">Beta</Badge>
@@ -457,13 +457,13 @@ const Header = () => {
 
                                 <DropdownItem header>Advanced views</DropdownItem>
 
-                                <DropdownItem tag={RouterNavLink} exact to={ROUTES.RESOURCES} onClick={closeMenu}>
+                                <DropdownItem tag={RouterNavLink} end to={ROUTES.RESOURCES} onClick={closeMenu}>
                                     Resources
                                 </DropdownItem>
-                                <DropdownItem tag={RouterNavLink} exact to={ROUTES.PROPERTIES} onClick={closeMenu}>
+                                <DropdownItem tag={RouterNavLink} end to={ROUTES.PROPERTIES} onClick={closeMenu}>
                                     Properties
                                 </DropdownItem>
-                                <DropdownItem tag={RouterNavLink} exact to={ROUTES.CLASSES} onClick={closeMenu}>
+                                <DropdownItem tag={RouterNavLink} end to={ROUTES.CLASSES} onClick={closeMenu}>
                                     Classes
                                 </DropdownItem>
                             </DropdownMenu>
@@ -475,14 +475,14 @@ const Header = () => {
                                 Tools <FontAwesomeIcon style={{ marginTop: '4px' }} icon={faChevronDown} pull="right" />
                             </DropdownToggle>
                             <DropdownMenu>
-                                <DropdownItem tag={RouterNavLink} exact to={ROUTES.TOOLS} onClick={closeMenu}>
+                                <DropdownItem tag={RouterNavLink} end to={ROUTES.TOOLS} onClick={closeMenu}>
                                     Tools overview
                                 </DropdownItem>
                                 <DropdownItem divider />
                                 <DropdownItem header>Data entry</DropdownItem>
                                 <DropdownItem
                                     tag={RouterNavLink}
-                                    exact
+                                    end
                                     to={ROUTES.CONTRIBUTION_EDITOR}
                                     onClick={e => requireAuthentication(e, ROUTES.CONTRIBUTION_EDITOR)}
                                 >
@@ -490,7 +490,7 @@ const Header = () => {
                                 </DropdownItem>
                                 <DropdownItem
                                     tag={RouterNavLink}
-                                    exact
+                                    end
                                     to={ROUTES.CSV_IMPORT}
                                     onClick={e => requireAuthentication(e, ROUTES.CSV_IMPORT)}
                                 >
@@ -498,18 +498,18 @@ const Header = () => {
                                 </DropdownItem>
                                 <DropdownItem
                                     tag={RouterNavLink}
-                                    exact
+                                    end
                                     to={ROUTES.PDF_ANNOTATION}
                                     onClick={e => requireAuthentication(e, ROUTES.PDF_ANNOTATION)}
                                 >
                                     Survey table import
                                 </DropdownItem>
-                                <DropdownItem tag={RouterNavLink} exact to={ROUTES.TEMPLATES} onClick={closeMenu}>
+                                <DropdownItem tag={RouterNavLink} end to={ROUTES.TEMPLATES} onClick={closeMenu}>
                                     Templates
                                 </DropdownItem>
                                 <DropdownItem divider />
                                 <DropdownItem header>Data export</DropdownItem>
-                                <DropdownItem tag={RouterNavLink} exact to={ROUTES.DATA} onClick={closeMenu}>
+                                <DropdownItem tag={RouterNavLink} end to={ROUTES.DATA} onClick={closeMenu}>
                                     Data Access
                                 </DropdownItem>
                             </DropdownMenu>
@@ -523,7 +523,7 @@ const Header = () => {
                             <DropdownMenu>
                                 <AboutMenu closeMenu={closeMenu} />
                                 <DropdownItem divider />
-                                <DropdownItem tag={RouterNavLink} exact to={ROUTES.HELP_CENTER} onClick={closeMenu}>
+                                <DropdownItem tag={RouterNavLink} end to={ROUTES.HELP_CENTER} onClick={closeMenu}>
                                     Help center
                                 </DropdownItem>
                                 <DropdownItem
@@ -536,7 +536,7 @@ const Header = () => {
                                     GitLab <Icon size="sm" icon={faExternalLinkAlt} />
                                 </DropdownItem>
                                 <DropdownItem divider />
-                                <DropdownItem tag={RouterNavLink} exact to={ROUTES.STATS} onClick={closeMenu}>
+                                <DropdownItem tag={RouterNavLink} end to={ROUTES.STATS} onClick={closeMenu}>
                                     Statistics
                                 </DropdownItem>
                             </DropdownMenu>

@@ -210,7 +210,7 @@ const List = () => {
                             </DropdownToggle>
                             <DropdownMenu end>
                                 <DropdownItem onClick={() => setIsOpenExportBibtexModal(true)}>Export as BibTeX</DropdownItem>
-                                <DropdownItem tag={NavLink} exact to={reverse(ROUTES.RESOURCE, { id })}>
+                                <DropdownItem tag={NavLink} end to={reverse(ROUTES.RESOURCE, { id })}>
                                     View resource
                                 </DropdownItem>
                             </DropdownMenu>

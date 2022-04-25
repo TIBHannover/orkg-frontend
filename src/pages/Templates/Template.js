@@ -128,7 +128,7 @@ const Template = () => {
                                     <Icon icon={faEllipsisV} />
                                 </DropdownToggle>
                                 <DropdownMenu end>
-                                    <DropdownItem tag={RouterNavLink} exact to={reverse(ROUTES.RESOURCE, { id: params.id })}>
+                                    <DropdownItem tag={RouterNavLink} end to={reverse(ROUTES.RESOURCE, { id: params.id })}>
                                         View resource
                                     </DropdownItem>
                                 </DropdownMenu>
