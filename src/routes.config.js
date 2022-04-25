@@ -133,7 +133,7 @@ const routes = [
         element: requireAuthentication(UserSettings)
     },
     {
-        path: ROUTES.USER_SETTINGS_NO_TAB,
+        path: ROUTES.USER_SETTINGS_DEFAULT,
         element: requireAuthentication(UserSettings)
     },
     {
@@ -146,11 +146,11 @@ const routes = [
     },
     {
         /* TODO: slug for the paper title */
-        path: ROUTES.VIEW_PAPER,
+        path: ROUTES.VIEW_PAPER_CONTRIBUTION,
         element: ViewPaper
     },
     {
-        path: ROUTES.VIEW_PAPER_NO_CONTRIBUTION,
+        path: ROUTES.VIEW_PAPER,
         element: ViewPaper
     },
     {
@@ -178,27 +178,6 @@ const routes = [
         element: Observatories
     },
     {
-        /* TODO: Remove this route (it's temporarily backward compatibility for moving contributions ids from view args to query string) */
-        path: ROUTES.COMPARISON + '*',
-        element: ({ match, location }) => (
-            <Navigate
-                to={`${reverse(ROUTES.COMPARISON)}?contributions=${match.params[0].split('/').join(',')}${
-                    location.search ? '&' + (location.search.charAt(0) === '?' ? location.search.substr(1) : location.search) : ''
-                }`}
-            />
-        )
-    },
-    {
-        /* TODO: Remove this route (it's temporarily backward compatibility for moving predicates to properties naming */
-        path: ROUTES.PREDICATES,
-        element: () => <Navigate to={{ pathname: reverse(ROUTES.PROPERTIES), state: { status: 301 } }} />
-    },
-    {
-        /* TODO: Remove this route (it's temporarily backward compatibility for moving predicates to properties naming */
-        path: ROUTES.PREDICATE + '*',
-        element: ({ match }) => <Navigate to={{ pathname: reverse(ROUTES.PROPERTY, { id: match.params.id }), state: { status: 301 } }} />
-    },
-    {
         path: ROUTES.PAPERS,
         element: Papers
     },
@@ -213,10 +192,6 @@ const routes = [
     },
     {
         path: ROUTES.VISUALIZATION,
-        element: Visualization
-    },
-    {
-        path: ROUTES.VISUALIZATION_NO_ID,
         element: Visualization
     },
     {
@@ -253,10 +228,6 @@ const routes = [
     },
     {
         path: ROUTES.SEARCH,
-        element: SearchResults
-    },
-    {
-        path: ROUTES.SEARCH_NO_TERM,
         element: SearchResults
     },
     {
@@ -393,7 +364,7 @@ const routes = [
         element: List
     },
     {
-        path: ROUTES.LIST_NO_EMBED,
+        path: ROUTES.LIST_EMBED,
         element: List
     },
     // redirect legacy route
@@ -468,8 +439,8 @@ const legacyRoutes = [
         element: ({ match }) => <Navigate to={{ pathname: reverse(ROUTES.LIST, { id: match.params.id }), state: { status: 301 } }} />
     },
     {
-        path: ROUTES.LITERATURE_LIST_NO_EMBED,
-        element: ({ match }) => <Navigate to={{ pathname: reverse(ROUTES.LIST, { id: match.params.id }), state: { status: 301 } }} />
+        path: ROUTES.LITERATURE_LIST_EMBED,
+        element: ({ match }) => <Navigate to={{ pathname: reverse(ROUTES.LIST_EMBED, { id: match.params.id }), state: { status: 301 } }} />
     },
     {
         path: ROUTES.LITERATURE_LIST_NEW,

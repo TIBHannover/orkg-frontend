@@ -1190,8 +1190,8 @@ export const applyRule = ({ filterControlData, type, propertyId, value }) => {
  */
 export const getResourceLink = (classId, id) => {
     const links = {
-        [CLASSES.PAPER]: [ROUTES.VIEW_PAPER, 'resourceId'],
-        [CLASSES.PROBLEM]: [ROUTES.RESEARCH_PROBLEM, 'researchProblemId'],
+        [CLASSES.PAPER]: [ROUTES.VIEW_PAPER_CONTRIBUTION, 'resourceId'],
+        [CLASSES.PROBLEM]: [ROUTES.RESEARCH_PROBLEM_NO_SLUG, 'researchProblemId'],
         [CLASSES.AUTHOR]: [ROUTES.AUTHOR_PAGE, 'authorId'],
         [CLASSES.COMPARISON]: [ROUTES.COMPARISON, 'comparisonId'],
         [CLASSES.VENUE]: [ROUTES.VENUE_PAGE, 'venueId'],

@@ -58,7 +58,7 @@ const Contributions = props => {
 
     const onTabChange = key => {
         navigate(
-            reverse(ROUTES.VIEW_PAPER, {
+            reverse(ROUTES.VIEW_PAPER_CONTRIBUTION, {
                 resourceId: resourceId,
                 contributionId: key
             })
@@ -178,7 +178,9 @@ const Contributions = props => {
                                                     {similarContributions.length > 0 && (
                                                         <Link
                                                             className="clearfix"
-                                                            to={`${reverse(ROUTES.COMPARISON)}?contributions=${contribution.id},${similarContributions
+                                                            to={`${reverse(ROUTES.COMPARISON_NOT_PUBLISHED)}?contributions=${
+                                                                contribution.id
+                                                            },${similarContributions
                                                                 .slice(0, 3)
                                                                 .map(s => s.contributionId)
                                                                 .join(',')}`}

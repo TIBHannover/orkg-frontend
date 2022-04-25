@@ -30,7 +30,7 @@ function ContentTypes() {
     }, [type]);
 
     const renderListItem = resource => (
-        <ShortRecord key={resource.id} header={resource.label} href={reverse(ROUTES.CONTENT_TYPE, { id: resource.id, type })}>
+        <ShortRecord key={resource.id} header={resource.label} href={reverse(ROUTES.CONTENT_TYPE_NO_MODE, { id: resource.id, type })}>
             {resource.id}
         </ShortRecord>
     );

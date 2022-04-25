@@ -11,7 +11,14 @@ const ScrollToTop = props => {
     const prevPathname = usePrevious(location.pathname);
 
     useEffect(() => {
-        const excludePages = [ROUTES.VIEW_PAPER, ROUTES.FEATURED_COMPARISONS, ROUTES.REVIEW, ROUTES.LIST, ROUTES.RESEARCH_FIELD];
+        const excludePages = [
+            ROUTES.VIEW_PAPER_CONTRIBUTION,
+            ROUTES.VIEW_PAPER,
+            ROUTES.FEATURED_COMPARISONS,
+            ROUTES.REVIEW,
+            ROUTES.LIST,
+            ROUTES.RESEARCH_FIELD
+        ];
         let preventScrollTop = false;
 
         for (const page of excludePages) {

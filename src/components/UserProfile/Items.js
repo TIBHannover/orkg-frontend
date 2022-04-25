@@ -40,7 +40,7 @@ const Items = props => {
 
     const comparePapers = () => {
         const contributionIds = flatten(resources.filter(r => selectedItems.includes(r.id))?.map(c => c.contributions?.map(c => c.id)));
-        navigate(reverse(ROUTES.COMPARISON) + `?contributions=${contributionIds.join(',')}`);
+        navigate(reverse(ROUTES.COMPARISON_NOT_PUBLISHED) + `?contributions=${contributionIds.join(',')}`);
     };
 
     const loadItems = useCallback(

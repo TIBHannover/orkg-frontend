@@ -43,7 +43,7 @@ export default function Contribution(props) {
     if (error) {
         return <NotFound />;
     } else if (!isReview && paperId) {
-        return <Navigate to={reverse(ROUTES.VIEW_PAPER, { resourceId: paperId, contributionId })} />;
+        return <Navigate to={reverse(ROUTES.VIEW_PAPER_CONTRIBUTION, { resourceId: paperId, contributionId })} />;
     } else if (paperId) {
         return <Navigate to={reverse(ROUTES.REVIEW, { id: paperId })} />;
     } else {

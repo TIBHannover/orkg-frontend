@@ -590,7 +590,7 @@ const Header = () => {
                                                 className="text-nowrap"
                                                 onClick={toggleUserTooltip}
                                                 tag={Link}
-                                                to={reverse(ROUTES.USER_SETTINGS)}
+                                                to={reverse(ROUTES.USER_SETTINGS_DEFAULT)}
                                             >
                                                 My account
                                             </Button>

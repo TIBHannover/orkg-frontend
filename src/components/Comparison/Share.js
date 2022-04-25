@@ -30,10 +30,12 @@ function Share(props) {
                     type: props.comparisonType,
                     save_response: true
                 });
-                link = `${props.publicURL}${reverse(ROUTES.COMPARISON)}${props.comparisonURLConfig}&response_hash=${saveComparison.response_hash}`;
+                link = `${props.publicURL}${reverse(ROUTES.COMPARISON_NOT_PUBLISHED)}${props.comparisonURLConfig}&response_hash=${
+                    saveComparison.response_hash
+                }`;
                 props.setResponseHash(saveComparison.response_hash);
             } else {
-                link = `${props.publicURL}${reverse(ROUTES.COMPARISON)}${props.comparisonURLConfig}`;
+                link = `${props.publicURL}${reverse(ROUTES.COMPARISON_NOT_PUBLISHED)}${props.comparisonURLConfig}`;
             }
             createShortLink({
                 long_url: link

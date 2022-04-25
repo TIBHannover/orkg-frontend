@@ -66,7 +66,7 @@ const AboutMenu = ({ closeMenu }) => {
                         <StyledButtonDropdown key={label} direction="right" className="w-100 nav inNavbar">
                             <DropdownToggle
                                 onClick={() => (subItems.length > 0 ? null : closeMenu())}
-                                to={reverse(ROUTES.ABOUT, {})}
+                                to={reverse(ROUTES.ABOUT_NO_SLUG_ID, {})}
                                 tag={subItems.length > 0 ? 'button' : RouterNavLink}
                                 className="dropdown-item w-100"
                             >

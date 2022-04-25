@@ -157,7 +157,7 @@ const useContributions = ({ paperId, contributionId }) => {
             deleteStatementById(statementId)
                 .then(() => {
                     navigate(
-                        reverse(ROUTES.VIEW_PAPER, {
+                        reverse(ROUTES.VIEW_PAPER_CONTRIBUTION, {
                             resourceId: paperId,
                             contributionId: newContributions[0].id
                         })
