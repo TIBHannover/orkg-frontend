@@ -14,7 +14,7 @@ import {
     Row,
     Badge
 } from 'reactstrap';
-import { Link, NavLink as RouterNavLink } from 'react-router-dom';
+import { Link, NavLink as RouterNavLink, useLocation, useNavigate } from 'react-router-dom';
 import Jumbotron from 'components/Home/Jumbotron';
 import AddNew from './AddNew';
 import { ReactComponent as Logo } from 'assets/img/logo.svg';
@@ -40,7 +40,6 @@ import HomeBannerBg from 'assets/img/graph-background.svg';
 import { scrollbarWidth } from '@xobotyi/scrollbar-width';
 import AboutMenu from 'components/Layout/Header/AboutMenu';
 import ContentTypesMenu from 'components/Layout/Header/ContentTypesMenu';
-import { useLocation, useNavigate } from 'react-router-dom';
 
 const cookies = new Cookies();
 
