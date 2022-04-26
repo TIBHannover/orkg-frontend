@@ -3,15 +3,15 @@ import { Button } from 'reactstrap';
 import ROUTES from 'constants/routes.js';
 import { Link } from 'react-router-dom';
 import ContentLoader from 'react-content-loader';
-import useResearchFieldProblems from 'components/ResearchProblemsBox/hooks/useResearchFieldProblems';
+import useResearchProblems from 'components/ResearchProblemsBox/hooks/useResearchProblems';
 import ResearchProblemsModal from './ResearchProblemsModal';
 import { truncate } from 'lodash';
 import PropTypes from 'prop-types';
 import { reverseWithSlug } from 'utils';
 import Tippy from '@tippyjs/react';
 
-const ResearchProblemsBox = ({ researchFieldId }) => {
-    const { problems, isLoading, totalElements } = useResearchFieldProblems({ initialSort: 'combined', researchFieldId, pageSize: 10 });
+const ResearchProblemsBox = ({ id, by = 'ResearchField' }) => {
+    const { problems, isLoading, totalElements } = useResearchProblems({ id, by, initialSort: 'combined', pageSize: 10 });
     const [openModal, setOpenModal] = useState(false);
 
     return (
@@ -55,7 +55,7 @@ const ResearchProblemsBox = ({ researchFieldId }) => {
                     <Button size="sm" onClick={() => setOpenModal(v => !v)} color="light">
                         View more
                     </Button>
-                    {openModal && <ResearchProblemsModal openModal={openModal} setOpenModal={setOpenModal} researchFieldId={researchFieldId} />}
+                    {openModal && <ResearchProblemsModal openModal={openModal} setOpenModal={setOpenModal} id={id} by={by} />}
                 </div>
             )}
         </div>
@@ -63,7 +63,8 @@ const ResearchProblemsBox = ({ researchFieldId }) => {
 };
 
 ResearchProblemsBox.propTypes = {
-    researchFieldId: PropTypes.string.isRequired
+    id: PropTypes.string.isRequired,
+    by: PropTypes.string.isRequired // ResearchField || Observatory
 };
 
 export default ResearchProblemsBox;

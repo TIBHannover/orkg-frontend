@@ -38,10 +38,6 @@ export const getComparisonsByObservatoryId = id => {
     return submitGetRequest(`${observatoriesUrl}${encodeURIComponent(id)}/comparisons`);
 };
 
-export const getProblemsByObservatoryId = id => {
-    return submitGetRequest(`${observatoriesUrl}${encodeURIComponent(id)}/problems`);
-};
-
 export const getContentByObservatoryIdAndClasses = ({
     id,
     page = 0,

@@ -195,7 +195,7 @@ export const getPaperData_ViewPaper = (paperResource, paperStatements) => {
 };
 
 /**
- * Parse paper statements and return a a paper object
+ * Parse paper statements and return a paper object
  * @param {Object} resource Paper resource
  * @param {Array} paperStatements
  */
