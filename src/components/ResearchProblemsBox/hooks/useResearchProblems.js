@@ -112,6 +112,7 @@ function useResearchProblems({ id, by = 'ResearchField', initialSort, initialInc
         includeSubFields,
         totalElements,
         page,
+        setProblems,
         handleLoadMore,
         setIncludeSubFields,
         setSort
