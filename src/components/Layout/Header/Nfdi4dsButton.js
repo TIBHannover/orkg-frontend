@@ -37,6 +37,10 @@ const Nfdi4dsButton = () => {
             fjs.parentNode.insertBefore(js, fjs);
         })(window, document, 'script', 'nfdi4ds', 'https://tibhannover.gitlab.io/nfdi4ds/nfdi4ds-widget/widget.js');
         window.nfdi4ds('widget');
+
+        return () => {
+            document.getElementById('nfdi4ds')?.remove();
+        };
     }, []);
 
     return (
