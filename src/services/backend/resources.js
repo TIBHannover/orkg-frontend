@@ -65,10 +65,10 @@ export const getResources = ({
 export const getContributorsByResourceId = id => {
     return submitGetRequest(`${resourcesUrl}${encodeURIComponent(id)}/contributors`).then(contributors => {
         const c = contributors.map(contributor => {
-            if (contributor.createdBy === MISC.UNKNOWN_ID) {
+            if (contributor.created_by === MISC.UNKNOWN_ID) {
                 return { ...contributor, created_by: { id: MISC.UNKNOWN_ID, display_name: 'Unknown' } };
             } else {
-                return getContributorInformationById(contributor.createdBy)
+                return getContributorInformationById(contributor.created_by)
                     .then(user => ({ ...contributor, created_by: user }))
                     .catch(() => ({ ...contributor, created_by: { id: MISC.UNKNOWN_ID, display_name: 'Unknown' } }));
             }

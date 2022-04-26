@@ -16,16 +16,14 @@ const Timeline = ({ contributors, paperResource, isLoadingContributors }) => {
                     contributors.map((contributor, index) => {
                         return (
                             <StyledActivity key={`prov-${index}`} className="ps-3 pb-3">
-                                <div className="time">
-                                    {moment(contributor.createdAt ? contributor.createdAt : contributor.created_at).format('DD MMM YYYY')}
-                                </div>
+                                <div className="time">{moment(contributor.created_at).format('DD MMM YYYY')}</div>
                                 <div>
-                                    {paperResource.created_by && contributor.createdBy === paperResource.created_by && (
+                                    {paperResource.created_by && contributor.created_by === paperResource.created_by && (
                                         <>
                                             Added by{' '}
                                             <Link
                                                 to={reverse(ROUTES.USER_PROFILE, {
-                                                    userId: contributor.createdBy
+                                                    userId: contributor.created_by
                                                 })}
                                             >
                                                 <b>{contributor.created_by.display_name}</b>
@@ -40,7 +38,7 @@ const Timeline = ({ contributors, paperResource, isLoadingContributors }) => {
                                                 <>
                                                     <Link
                                                         to={reverse(ROUTES.USER_PROFILE, {
-                                                            userId: contributor.createdBy
+                                                            userId: contributor.created_by
                                                         })}
                                                     >
                                                         <b>{contributor.created_by.display_name}</b>
@@ -63,13 +61,13 @@ const Timeline = ({ contributors, paperResource, isLoadingContributors }) => {
                                         </>
                                     )}
 
-                                    {paperResource.created_by && contributor.createdBy !== paperResource.created_by && !contributor.predicate && (
+                                    {paperResource.created_by && contributor.created_by !== paperResource.created_by && !contributor.predicate && (
                                         <>
                                             Updated by{' '}
-                                            {contributor.createdBy !== MISC.UNKNOWN_ID ? (
+                                            {contributor.created_by !== MISC.UNKNOWN_ID ? (
                                                 <Link
                                                     to={reverse(ROUTES.USER_PROFILE, {
-                                                        userId: contributor.createdBy
+                                                        userId: contributor.created_by
                                                     })}
                                                 >
                                                     <b>{contributor.created_by.display_name}</b>

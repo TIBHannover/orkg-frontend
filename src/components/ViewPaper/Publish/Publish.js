@@ -156,7 +156,7 @@ function Publish(props) {
                         ...(viewPaper.doi && {
                             [PREDICATES.HAS_DOI]: [
                                 {
-                                    '@id': viewPaper.doi[0].id
+                                    '@id': viewPaper.doi.id
                                 }
                             ]
                         }),

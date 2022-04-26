@@ -12,6 +12,7 @@ import Timeline from './Timeline';
 import env from '@beam-australia/react-env';
 import PWCProvenanceBox from 'components/Benchmarks/PWCProvenanceBox/PWCProvenanceBox';
 import { getStatementsBySubjectAndPredicate } from 'services/backend/statements';
+import { orderBy } from 'lodash';
 
 const ProvenanceBox = () => {
     const paperResource = useSelector(state => state.viewPaper.paperResource);
@@ -21,7 +22,6 @@ const ProvenanceBox = () => {
     const [organizationInfo, setOrganizationInfo] = useState(null);
     const [createdBy, setCreatedBy] = useState(null);
     const [contributors, setContributors] = useState([]);
-    const [publishInfo, setPublishInfo] = useState([]);
     const [info, setInfo] = useState([]);
     const doi = useSelector(state => state.viewPaper.dataCiteDoi);
 
@@ -70,6 +70,12 @@ const ProvenanceBox = () => {
             }
         };
 
+        loadContributors();
+        loadProvenance();
+        loadCreator();
+    }, [paperResource.created_by, paperResource.id, paperResource.observatory_id, paperResource.organization_id]);
+
+    useMemo(() => {
         const loadPublishInformation = (resourceId, list) => {
             getStatementsBySubjectAndPredicate({ subjectId: resourceId, predicateId: PREDICATES.HAS_PREVIOUS_VERSION })
                 .then(response => {
@@ -79,29 +85,21 @@ const ProvenanceBox = () => {
                         });
                         loadPublishInformation(response[0].object['id'], list);
                     } else {
-                        setPublishInfo(list);
+                        if (list && contributors) {
+                            // combining contributors and published with DOI information
+                            const r = [...contributors];
+                            list.forEach(res => {
+                                res[0].created_by = res.created_by;
+                                r.push(res[0]);
+                            });
+                            setInfo(orderBy(r, ['created_at'], ['desc']));
+                        }
                     }
                 })
-                .catch(e => setPublishInfo(null));
+                .catch(e => setInfo(null));
         };
-
         loadPublishInformation(paperResource.id, []);
-        loadContributors();
-        loadProvenance();
-        loadCreator();
-    }, [paperResource.created_by, paperResource.id, paperResource.observatory_id, paperResource.organization_id]);
-
-    useMemo(() => {
-        if (publishInfo && contributors) {
-            const r = [...contributors];
-            // eslint-disable-next-line array-callback-return
-            publishInfo.map(res => {
-                res[0].created_by = res.created_by;
-                r.push(res[0]);
-            });
-            setInfo(r);
-        }
-    }, [publishInfo, contributors]);
+    }, [contributors, paperResource.id]);
 
     const [activeTab, setActiveTab] = useState(1);
 
