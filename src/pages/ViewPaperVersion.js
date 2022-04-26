@@ -28,13 +28,7 @@ const ViewPaperVersion = () => {
     const [showExportCitationsDialog, setShowExportCitationsDialog] = useState(false);
     const [showPublishDialog, setShowPublishDialog] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
-    const dataCiteDoi = useSelector(
-        state =>
-            state.viewPaper.doi &&
-            state.viewPaper.doi.length &&
-            state.viewPaper.doi.length > 0 &&
-            state.viewPaper.doi.map(doi => doi.label.startsWith(env('DATACITE_DOI_PREFIX')) && doi.label)[0]
-    );
+    const dataCiteDoi = useSelector(state => state.viewPaper.dataCiteDoi);
 
     const { isLoading, isLoadingFailed, contributions } = useViewPaperVersion({
         paperId: resourceId
@@ -100,7 +94,7 @@ const ViewPaperVersion = () => {
                 </>
             )}
             {dataCiteDoi && (
-                <ExportCitation showDialog={showExportCitationsDialog} toggle={() => setShowExportCitationsDialog(v => !v)} DOI={dataCiteDoi} />
+                <ExportCitation showDialog={showExportCitationsDialog} toggle={() => setShowExportCitationsDialog(v => !v)} DOI={dataCiteDoi.label} />
             )}
             <Modal size="lg" isOpen={showPublishDialog} toggle={() => setShowPublishDialog(v => !v)}>
                 <ModalHeader toggle={() => setShowPublishDialog(v => !v)}>Publish ORKG paper</ModalHeader>
@@ -116,42 +110,42 @@ const ViewPaperVersion = () => {
                         </Alert>
                     )}
                     {dataCiteDoi && (
-                        <FormGroup>
-                            <Label for="paper_link">Paper link</Label>
-                            <InputGroup>
-                                <Input id="paper_link" value={`${window.location.href}`} disabled />
-                                <CopyToClipboard
-                                    text={`${window.location.href}`}
-                                    onCopy={() => {
-                                        toast.dismiss();
-                                        toast.success(`Paper link copied!`);
-                                    }}
-                                >
-                                    <Button color="primary" className="pl-3 pr-3" style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}>
-                                        <Icon icon={faClipboard} />
-                                    </Button>
-                                </CopyToClipboard>
-                            </InputGroup>
-                        </FormGroup>
-                    )}
-                    {dataCiteDoi && (
-                        <FormGroup>
-                            <Label for="doi_link">DOI</Label>
-                            <InputGroup>
-                                <Input id="doi_link" value={`https://doi.org/${dataCiteDoi}`} disabled />
-                                <CopyToClipboard
-                                    text={`https://doi.org/${dataCiteDoi}`}
-                                    onCopy={() => {
-                                        toast.dismiss();
-                                        toast.success(`DOI link copied!`);
-                                    }}
-                                >
-                                    <Button color="primary" className="pl-3 pr-3" style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}>
-                                        <Icon icon={faClipboard} />
-                                    </Button>
-                                </CopyToClipboard>
-                            </InputGroup>
-                        </FormGroup>
+                        <>
+                            <FormGroup>
+                                <Label for="paper_link">Paper link</Label>
+                                <InputGroup>
+                                    <Input id="paper_link" value={`${window.location.href}`} disabled />
+                                    <CopyToClipboard
+                                        text={`${window.location.href}`}
+                                        onCopy={() => {
+                                            toast.dismiss();
+                                            toast.success(`Paper link copied!`);
+                                        }}
+                                    >
+                                        <Button color="primary" className="pl-3 pr-3" style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}>
+                                            <Icon icon={faClipboard} />
+                                        </Button>
+                                    </CopyToClipboard>
+                                </InputGroup>
+                            </FormGroup>
+                            <FormGroup>
+                                <Label for="doi_link">DOI</Label>
+                                <InputGroup>
+                                    <Input id="doi_link" value={`https://doi.org/${dataCiteDoi.label}`} disabled />
+                                    <CopyToClipboard
+                                        text={`https://doi.org/${dataCiteDoi.label}`}
+                                        onCopy={() => {
+                                            toast.dismiss();
+                                            toast.success(`DOI link copied!`);
+                                        }}
+                                    >
+                                        <Button color="primary" className="pl-3 pr-3" style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}>
+                                            <Icon icon={faClipboard} />
+                                        </Button>
+                                    </CopyToClipboard>
+                                </InputGroup>
+                            </FormGroup>
+                        </>
                     )}
                 </ModalBody>
             </Modal>
