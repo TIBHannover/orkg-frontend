@@ -80,12 +80,15 @@ export const addPaperSlice = createSlice({
         },
         openTour: (state, { payload }) => {
             state.isTourOpen = true;
-            state.tourStartAt = payload.step ? payload.step : 0;
+            state.tourStartAt = payload?.step ? payload.step : 0;
         },
         updateResearchField: (state, { payload }) => {
             state.researchFields = typeof payload.researchFields !== 'undefined' ? payload.researchFields : state.researchFields;
             state.selectedResearchField =
                 typeof payload.selectedResearchField !== 'undefined' ? payload.selectedResearchField : state.selectedResearchField;
+            if (payload.submit) {
+                state.currentStep = state.currentStep + 1;
+            }
         },
         updateAbstract: (state, { payload }) => {
             state.abstract = payload;

@@ -156,6 +156,8 @@ class AuthorsInput extends Component {
     handleChange = selected => {
         if (selected.__isNew__) {
             selected = { ...selected, label: selected.value };
+        } else {
+            selected = { ...selected, _class: ENTITIES.RESOURCE };
         }
         this.setState({ authorInput: selected });
     };

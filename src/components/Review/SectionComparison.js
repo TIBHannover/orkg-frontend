@@ -20,7 +20,17 @@ const SectionComparison = ({ id, sectionId }) => {
         id
     });
 
-    const { contributions, properties, data, isLoadingComparisonResult, filterControlData, updateRulesOfProperty, comparisonType } = comparisonData;
+    const {
+        contributions,
+        properties,
+        data,
+        isLoadingComparisonResult,
+        filterControlData,
+        updateRulesOfProperty,
+        comparisonType,
+        handleToggleGroupVisibility,
+        hiddenGroups
+    } = comparisonData;
 
     useEffect(() => {
         if (Object.keys(comparisonData.data).length === 0) {
@@ -69,6 +79,8 @@ const SectionComparison = ({ id, sectionId }) => {
                         filterControlData={filterControlData}
                         updateRulesOfProperty={updateRulesOfProperty}
                         embeddedMode={true}
+                        handleToggleGroupVisibility={handleToggleGroupVisibility}
+                        hiddenGroups={hiddenGroups}
                     />
                 )}
                 {id && isLoadingComparisonResult && <ComparisonLoadingComponent />}

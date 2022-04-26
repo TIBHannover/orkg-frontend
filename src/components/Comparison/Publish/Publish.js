@@ -9,7 +9,7 @@ import {
     getStatementsByPredicateAndLiteral,
     getStatementsBySubjectAndPredicate
 } from 'services/backend/statements';
-import { generateDOIForComparison, createObject } from 'services/backend/misc';
+import { generateDoi, createObject } from 'services/backend/misc';
 import { createLiteral } from 'services/backend/literals';
 import { createResource } from 'services/backend/resources';
 import { getComparison, createResourceData } from 'services/similarity/index';
@@ -171,7 +171,7 @@ function Publish(props) {
         setIsLoading(true);
         try {
             if (!props.comparisonId) {
-                if (title && title.trim() !== '' && description && description.trim() !== '') {
+                if (title && title.trim() !== '' && description && description.trim() !== '' && (!assignDOI || comparisonCreators?.length > 0)) {
                     let response_hash;
 
                     if (!props.responseHash) {
@@ -255,7 +255,7 @@ function Publish(props) {
                     setIsLoading(false);
                     history.push(reverse(ROUTES.COMPARISON, { comparisonId: createdComparison.id }));
                 } else {
-                    throw Error('Please enter a title and a description');
+                    throw Error('Please enter a title, description and creator(s)');
                 }
             } else {
                 publishDOI(props.comparisonId);
@@ -281,16 +281,18 @@ function Publish(props) {
                 }
             });
             comparisonCreatorsORCID = await Promise.all(comparisonCreatorsORCID);
-            if (title && title.trim() !== '' && description && description.trim() !== '') {
-                generateDOIForComparison(
-                    comparisonId,
+            if (title && title.trim() !== '' && description && description.trim() !== '' && comparisonCreators?.length > 0) {
+                generateDoi({
+                    type: 'Comparison',
+                    resource_type: 'Dataset',
+                    resource_id: comparisonId,
                     title,
-                    subject ? subject.label : '',
+                    subject: subject ? subject.label : '',
                     description,
-                    props.contributionsList,
-                    comparisonCreatorsORCID.map(c => ({ creator: c.label, orcid: c.orcid })),
-                    `${props.publicURL}${reverse(ROUTES.COMPARISON, { comparisonId: comparisonId })}`
-                )
+                    related_resources: props.contributionsList,
+                    authors: comparisonCreatorsORCID.map(c => ({ creator: c.label, orcid: c.orcid })),
+                    url: `${props.publicURL}${reverse(ROUTES.COMPARISON, { comparisonId: comparisonId })}`
+                })
                     .then(doiResponse => {
                         props.setMetaData(prevMetaData => ({
                             ...prevMetaData,
@@ -303,11 +305,12 @@ function Publish(props) {
                         });
                     })
                     .catch(error => {
+                        console.log('error', error);
                         toast.error(`Error publishing a DOI`);
                         setIsLoading(false);
                     });
             } else {
-                throw Error('Please enter a title and a description');
+                throw Error('Please enter a title, description and creator(s)');
             }
         } catch (error) {
             console.error(error);
