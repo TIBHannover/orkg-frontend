@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Modal, ModalHeader, ModalBody, ModalFooter, Input, Button, Label, FormGroup, Alert } from 'reactstrap';
+import { Modal, ModalHeader, ModalBody, ModalFooter, Input, Button, Label, FormGroup, Alert, InputGroup } from 'reactstrap';
 import { toast } from 'react-toastify';
 import ROUTES from 'constants/routes.js';
 import PropTypes from 'prop-types';
@@ -20,6 +20,9 @@ import { createObject } from 'services/backend/misc';
 import { createResourceStatement } from 'services/backend/statements';
 import { deleteStatementById } from 'services/backend/statements';
 import { Link } from 'react-router-dom';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { faClipboard } from '@fortawesome/free-regular-svg-icons';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 
 const AuthorTag = styled.div`
     background-color: #e9ecef;
@@ -183,7 +186,6 @@ function Publish(props) {
                     createLiteral(doiResponse.data.attributes.doi).then(async doiLiteral => {
                         createResourceStatement(createdPaper.id, PREDICATES.HAS_DOI, doiLiteral.id);
                         if (viewPaper.hasVersion) {
-                            console.log(createdPaper.id);
                             await deleteStatementById(viewPaper.hasVersion.statementId);
                             createResourceStatement(createdPaper.id, PREDICATES.HAS_PREVIOUS_VERSION, viewPaper.hasVersion.id);
                         }
@@ -225,6 +227,27 @@ function Publish(props) {
                         </>
                     )}
                 </Alert>
+                {createdPaperId && dataCiteDoi && (
+                    <>
+                        <FormGroup>
+                            <Label for="doi_link">DOI</Label>
+                            <InputGroup>
+                                <Input id="doi_link" value={`https://doi.org/${dataCiteDoi}`} disabled />
+                                <CopyToClipboard
+                                    text={`https://doi.org/${dataCiteDoi}`}
+                                    onCopy={() => {
+                                        toast.dismiss();
+                                        toast.success(`DOI link copied!`);
+                                    }}
+                                >
+                                    <Button color="primary" className="pl-3 pr-3" style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}>
+                                        <Icon icon={faClipboard} />
+                                    </Button>
+                                </CopyToClipboard>
+                            </InputGroup>
+                        </FormGroup>
+                    </>
+                )}
                 {!dataCiteDoi && (
                     <>
                         {' '}

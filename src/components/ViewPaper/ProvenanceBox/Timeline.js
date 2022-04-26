@@ -31,10 +31,10 @@ const Timeline = ({ contributors, paperResource, isLoadingContributors }) => {
                                         </>
                                     )}
 
-                                    {paperResource.created_by && contributor.predicate && (
+                                    {paperResource.created_by && contributor.doi && (
                                         <>
                                             Published by{' '}
-                                            {contributor.createdBy !== MISC.UNKNOWN_ID ? (
+                                            {contributor.created_by !== MISC.UNKNOWN_ID ? (
                                                 <>
                                                     <Link
                                                         to={reverse(ROUTES.USER_PROFILE, {
@@ -46,13 +46,13 @@ const Timeline = ({ contributors, paperResource, isLoadingContributors }) => {
                                                     <br />
                                                     <small>
                                                         DOI:{' '}
-                                                        <a
-                                                            href={`https://doi.org/${env('DATACITE_DOI_PREFIX')}/${contributor.object.id}`}
-                                                            target="_blank"
-                                                            rel="noopener noreferrer"
+                                                        <Link
+                                                            to={reverse(ROUTES.VIEW_PAPER, {
+                                                                resourceId: contributor.doi.id
+                                                            })}
                                                         >
-                                                            <b>{`${env('DATACITE_DOI_PREFIX')}/${contributor.object.id}`}</b>
-                                                        </a>
+                                                            <b>{`${env('DATACITE_DOI_PREFIX')}/${contributor.doi.id}`}</b>
+                                                        </Link>
                                                     </small>
                                                 </>
                                             ) : (
@@ -61,7 +61,7 @@ const Timeline = ({ contributors, paperResource, isLoadingContributors }) => {
                                         </>
                                     )}
 
-                                    {paperResource.created_by && contributor.created_by !== paperResource.created_by && !contributor.predicate && (
+                                    {paperResource.created_by && contributor.created_by !== paperResource.created_by && !contributor.doi && (
                                         <>
                                             Updated by{' '}
                                             {contributor.created_by !== MISC.UNKNOWN_ID ? (

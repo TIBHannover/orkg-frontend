@@ -1,4 +1,19 @@
-import { Container, Modal, ModalHeader, ModalBody, Input, Button, Label, FormGroup, Alert, InputGroup } from 'reactstrap';
+import {
+    Container,
+    Modal,
+    ModalHeader,
+    ModalBody,
+    Input,
+    Button,
+    Label,
+    FormGroup,
+    Alert,
+    InputGroup,
+    ButtonDropdown,
+    DropdownToggle,
+    DropdownMenu,
+    DropdownItem
+} from 'reactstrap';
 import NotFound from 'pages/NotFound';
 import ContentLoader from 'react-content-loader';
 import { useParams } from 'react-router-dom';
@@ -8,9 +23,7 @@ import PaperVersionHeader from 'components/ViewPaperVersion/PaperVersionHeader';
 import Breadcrumbs from 'components/Breadcrumbs/Breadcrumbs';
 import ShareLinkMarker from 'components/ShareLinkMarker/ShareLinkMarker';
 import { useSelector } from 'react-redux';
-import env from '@beam-australia/react-env';
 import TitleBar from 'components/TitleBar/TitleBar';
-import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 import { useState } from 'react';

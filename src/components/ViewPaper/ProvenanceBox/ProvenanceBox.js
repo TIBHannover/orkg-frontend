@@ -80,18 +80,15 @@ const ProvenanceBox = () => {
             getStatementsBySubjectAndPredicate({ subjectId: resourceId, predicateId: PREDICATES.HAS_PREVIOUS_VERSION })
                 .then(response => {
                     if (response.length > 0) {
-                        getContributorInformationById(response[0].created_by).then(user => {
-                            list.push({ ...response, created_by: user });
+                        getContributorInformationById(response[0].object.created_by).then(user => {
+                            list.push({ created_at: response[0].object.created_at, created_by: user, doi: response[0].object });
                         });
                         loadPublishInformation(response[0].object['id'], list);
                     } else {
                         if (list && contributors) {
                             // combining contributors and published with DOI information
                             const r = [...contributors];
-                            list.forEach(res => {
-                                res[0].created_by = res.created_by;
-                                r.push(res[0]);
-                            });
+                            r.push(...list);
                             setInfo(orderBy(r, ['created_at'], ['desc']));
                         }
                     }
