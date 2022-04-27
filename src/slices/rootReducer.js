@@ -1,5 +1,4 @@
 import { combineReducers } from 'redux';
-import { connectRouter } from 'connected-react-router';
 import auth from 'slices/authSlice';
 import statementBrowser from 'slices/statementBrowserSlice';
 import addPaper from 'slices/addPaperSlice';
@@ -12,9 +11,9 @@ import pdfAnnotation from 'slices/pdfAnnotationSlice';
 import pdfTextAnnotation from 'slices/pdfTextAnnotationSlice';
 
 // eslint-disable-next-line import/no-anonymous-default-export
-export default history =>
+export default routerReducer =>
     combineReducers({
-        router: history ? connectRouter(history) : null,
+        router: routerReducer,
         auth,
         statementBrowser,
         addPaper,

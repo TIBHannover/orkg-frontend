@@ -2,7 +2,7 @@ import Cite from 'citation-js';
 import useScroll from 'components/Review/hooks/useScroll';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { useLocation } from 'react-router';
+import { useLocation } from 'react-router-dom';
 import { Alert } from 'reactstrap';
 import styled from 'styled-components';
 

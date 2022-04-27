@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { LOCATION_CHANGE } from 'connected-react-router';
+import { LOCATION_CHANGE } from 'redux-first-history';
 import { deleteStatementsByIds, createResourceStatement, getTemplateById, getTemplatesByClass } from 'services/backend/statements';
 import { cloneDeep } from 'lodash';
 import { toast } from 'react-toastify';

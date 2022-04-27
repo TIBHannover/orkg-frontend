@@ -1,7 +1,6 @@
 import { useState, useMemo } from 'react';
 import { Container, Table, Card, CardBody, Button, ButtonGroup, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import ROUTES from 'constants/routes';
-import { Link, useHistory } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import moment from 'moment';
 import { UncontrolledButtonDropdown } from 'reactstrap';
@@ -9,7 +8,6 @@ import Chart from 'react-google-charts';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPen, faEllipsisV, faSortUp, faSortDown } from '@fortawesome/free-solid-svg-icons';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
-import { NavLink } from 'react-router-dom';
 import ContentLoader from 'react-content-loader';
 import { reverseWithSlug } from 'utils';
 import { SubTitle, SubtitleSeparator } from 'components/styled';
@@ -17,7 +15,7 @@ import useBenchmarkDatasetResource from 'components/Benchmarks/hooks/useBenchmar
 import useBenchmarkDatasetPapers from 'components/Benchmarks/hooks/useBenchmarkDatasetPapers';
 import CodeURLsTooltip from 'components/Benchmarks/BenchmarkCard/CodeURLsTooltip';
 import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate, NavLink, Link } from 'react-router-dom';
 import { useTable, useSortBy } from 'react-table';
 import TitleBar from 'components/TitleBar/TitleBar';
 
@@ -58,7 +56,7 @@ function Benchmark() {
     const [resourceData, problemData, isLoading, isFailedLoading, loadResourceData] = useBenchmarkDatasetResource({ datasetId, problemId });
     const [menuOpen, setMenuOpen] = useState(false);
     const [editMode, setEditMode] = useState(false);
-    const history = useHistory();
+    const navigate = useNavigate();
     const {
         isLoading: isLoadingPapers,
         isFailedLoadingPapers,
@@ -217,7 +215,7 @@ function Benchmark() {
                                         <Icon icon={faEllipsisV} />
                                     </DropdownToggle>
                                     <DropdownMenu end>
-                                        <DropdownItem tag={NavLink} exact to={reverse(ROUTES.RESOURCE, { id: datasetId })}>
+                                        <DropdownItem tag={NavLink} end to={reverse(ROUTES.RESOURCE, { id: datasetId })}>
                                             View resource
                                         </DropdownItem>
                                     </DropdownMenu>
@@ -281,7 +279,7 @@ function Benchmark() {
                                             <DropdownItem
                                                 key={index}
                                                 disabled={isLoading}
-                                                onClick={() => history.push(reverse(ROUTES.BENCHMARK, { datasetId: datasetId, problemId: rp.id }))}
+                                                onClick={() => navigate(reverse(ROUTES.BENCHMARK, { datasetId: datasetId, problemId: rp.id }))}
                                             >
                                                 {rp.label}
                                             </DropdownItem>
@@ -338,7 +336,7 @@ function Benchmark() {
                                                     if (selection.length === 1) {
                                                         const [selectedItem] = selection;
                                                         const { row } = selectedItem;
-                                                        history.push(
+                                                        navigate(
                                                             reverse(ROUTES.VIEW_PAPER, {
                                                                 resourceId: benchmarkDatasetPapers[selectedMetric][row].paper_id
                                                             })

@@ -291,7 +291,7 @@ const AddEntryModal = ({ sectionId, isOpen, setIsOpen }) => {
                 </ModalBody>
                 <ModalFooter className="d-flex">
                     <div className="flex-grow-1">
-                        <Link to={reverse(ROUTES.CONTENT_TYPE_NEW)} target="_blank">
+                        <Link to={reverse(ROUTES.CONTENT_TYPE_NEW_NO_TYPE)} target="_blank">
                             <Button color="light">Create new</Button>
                         </Link>
                     </div>

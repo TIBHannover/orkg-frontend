@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { createResourceStatement, deleteStatementById } from 'services/backend/statements';
 import { updateResource, createResource } from 'services/backend/resources';
 import { useSelector, useDispatch } from 'react-redux';
-import { useHistory } from 'react-router-dom';
 import { updateContributionLabel } from 'slices/statementBrowserSlice';
 import { toast } from 'react-toastify';
 import Confirm from 'components/Confirmation/Confirmation';
@@ -11,6 +10,7 @@ import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes.js';
 import { getResource } from 'services/backend/resources';
 import { getSimilarContribution } from 'services/similarity/index';
+import { useNavigate } from 'react-router-dom';
 import {
     selectContribution,
     setPaperContributions,
@@ -32,7 +32,7 @@ const useContributions = ({ paperId, contributionId }) => {
     const [isLoadingContributionFailed, setLoadingContributionFailed] = useState(false);
 
     const [, setContributions] = useState([]);
-    const history = useHistory();
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (contributions?.length && (selectedContribution !== contributionId || !contributionId)) {
@@ -156,8 +156,8 @@ const useContributions = ({ paperId, contributionId }) => {
             dispatch(setIsDeletingContribution({ id: contributionId, status: true }));
             deleteStatementById(statementId)
                 .then(() => {
-                    history.push(
-                        reverse(ROUTES.VIEW_PAPER, {
+                    navigate(
+                        reverse(ROUTES.VIEW_PAPER_CONTRIBUTION, {
                             resourceId: paperId,
                             contributionId: newContributions[0].id
                         })
@@ -186,7 +186,7 @@ const useContributions = ({ paperId, contributionId }) => {
         handleChangeContributionLabel,
         handleCreateContribution,
         toggleDeleteContribution,
-        history
+        navigate
     };
 };
 
