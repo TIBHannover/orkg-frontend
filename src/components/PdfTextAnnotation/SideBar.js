@@ -7,7 +7,7 @@ import { Button, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } fr
 import AnnotationCategory from 'components/PdfTextAnnotation/AnnotationCategory';
 import Completion from 'components/PdfTextAnnotation/ProgressBar';
 import Save from './Save';
-import SmartSentenceDetection from './SmartSentenceDetection';
+//import SmartSentenceDetection from './SmartSentenceDetection';
 import { discardChanges } from 'slices/pdfTextAnnotationSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import Help from './Help';
@@ -31,7 +31,7 @@ const HeartsAreRed = styled.div`
     }
 `;
 
-const SideBar = ({ pdfViewer }) => {
+const SideBar = () => {
     const { recommendedClasses, nonRecommendedClasses } = useOntology();
     const [saveModalIsOpen, setSaveModalIsOpen] = useState(false);
     const [saveDropdownIsOpen, setSaveDropdownIsOpen] = useState(false);
@@ -82,7 +82,7 @@ const SideBar = ({ pdfViewer }) => {
 
             <Completion />
 
-            <SmartSentenceDetection pdfViewer={pdfViewer} />
+            {/*<SmartSentenceDetection pdfViewer={pdfViewer} />*/}
 
             <div id="annotation-categories">
                 {recommendedClasses.map(annotationClass => (
