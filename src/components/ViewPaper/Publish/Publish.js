@@ -128,6 +128,11 @@ function Publish(props) {
     const publishDOI = async paperId => {
         if (title && title.trim() !== '' && description && description.trim() !== '') {
             const paperStatements = await getPaperStatements(paperId);
+            if (paperStatements.length === 0) {
+                toast.error(`Ppaper must have atleast one contribution to be persistently identified.`);
+                setIsLoading(false);
+                return;
+            }
             const paper_obj = {
                 predicates: [],
                 resource: {
