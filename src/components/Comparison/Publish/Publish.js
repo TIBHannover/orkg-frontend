@@ -9,7 +9,7 @@ import {
     getStatementsByPredicateAndLiteral,
     getStatementsBySubjectAndPredicate
 } from 'services/backend/statements';
-import { generateDOIForComparison, createObject } from 'services/backend/misc';
+import { generateDoi, createObject } from 'services/backend/misc';
 import { createLiteral } from 'services/backend/literals';
 import { createResource } from 'services/backend/resources';
 import { getComparison, createResourceData } from 'services/similarity/index';
@@ -23,9 +23,8 @@ import { faOrcid } from '@fortawesome/free-brands-svg-icons';
 import { faClipboard } from '@fortawesome/free-regular-svg-icons';
 import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { reverse } from 'named-urls';
-import { useHistory } from 'react-router-dom';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
-import { Link } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { getPropertyObjectFromData, filterObjectOfStatementsByPredicateAndClass } from 'utils';
 import styled from 'styled-components';
 import UserAvatar from 'components/UserAvatar/UserAvatar';
@@ -75,7 +74,7 @@ const AuthorTag = styled.div`
 
 function Publish(props) {
     const [isLoading, setIsLoading] = useState(false);
-    const history = useHistory();
+    const navigate = useNavigate();
     const [assignDOI, setAssignDOI] = useState(false);
     const [title, setTitle] = useState(props.metaData && props.metaData.title ? props.metaData.title : '');
     const [description, setDescription] = useState(props.metaData && props.metaData.description ? props.metaData.description : '');
@@ -171,7 +170,7 @@ function Publish(props) {
         setIsLoading(true);
         try {
             if (!props.comparisonId) {
-                if (title && title.trim() !== '' && description && description.trim() !== '') {
+                if (title && title.trim() !== '' && description && description.trim() !== '' && (!assignDOI || comparisonCreators?.length > 0)) {
                     let response_hash;
 
                     if (!props.responseHash) {
@@ -253,9 +252,9 @@ function Publish(props) {
                         publishDOI(createdComparison.id);
                     }
                     setIsLoading(false);
-                    history.push(reverse(ROUTES.COMPARISON, { comparisonId: createdComparison.id }));
+                    navigate(reverse(ROUTES.COMPARISON, { comparisonId: createdComparison.id }));
                 } else {
-                    throw Error('Please enter a title and a description');
+                    throw Error('Please enter a title, description and creator(s)');
                 }
             } else {
                 publishDOI(props.comparisonId);
@@ -281,16 +280,18 @@ function Publish(props) {
                 }
             });
             comparisonCreatorsORCID = await Promise.all(comparisonCreatorsORCID);
-            if (title && title.trim() !== '' && description && description.trim() !== '') {
-                generateDOIForComparison(
-                    comparisonId,
+            if (title && title.trim() !== '' && description && description.trim() !== '' && comparisonCreators?.length > 0) {
+                generateDoi({
+                    type: 'Comparison',
+                    resource_type: 'Dataset',
+                    resource_id: comparisonId,
                     title,
-                    subject ? subject.label : '',
+                    subject: subject ? subject.label : '',
                     description,
-                    props.contributionsList,
-                    comparisonCreatorsORCID.map(c => ({ creator: c.label, orcid: c.orcid })),
-                    `${props.publicURL}${reverse(ROUTES.COMPARISON, { comparisonId: comparisonId })}`
-                )
+                    related_resources: props.contributionsList,
+                    authors: comparisonCreatorsORCID.map(c => ({ creator: c.label, orcid: c.orcid })),
+                    url: `${props.publicURL}${reverse(ROUTES.COMPARISON, { comparisonId: comparisonId })}`
+                })
                     .then(doiResponse => {
                         props.setMetaData(prevMetaData => ({
                             ...prevMetaData,
@@ -303,11 +304,12 @@ function Publish(props) {
                         });
                     })
                     .catch(error => {
+                        console.log('error', error);
                         toast.error(`Error publishing a DOI`);
                         setIsLoading(false);
                     });
             } else {
-                throw Error('Please enter a title and a description');
+                throw Error('Please enter a title, description and creator(s)');
             }
         } catch (error) {
             console.error(error);

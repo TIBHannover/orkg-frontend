@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { LOCATION_CHANGE } from 'connected-react-router';
+import { LOCATION_CHANGE } from 'redux-first-history';
 import { Cookies } from 'react-cookie';
 import env from '@beam-australia/react-env';
 import { guid } from 'utils';
@@ -80,12 +80,15 @@ export const addPaperSlice = createSlice({
         },
         openTour: (state, { payload }) => {
             state.isTourOpen = true;
-            state.tourStartAt = payload.step ? payload.step : 0;
+            state.tourStartAt = payload?.step ? payload.step : 0;
         },
         updateResearchField: (state, { payload }) => {
             state.researchFields = typeof payload.researchFields !== 'undefined' ? payload.researchFields : state.researchFields;
             state.selectedResearchField =
                 typeof payload.selectedResearchField !== 'undefined' ? payload.selectedResearchField : state.selectedResearchField;
+            if (payload.submit) {
+                state.currentStep = state.currentStep + 1;
+            }
         },
         updateAbstract: (state, { payload }) => {
             state.abstract = payload;

@@ -1,6 +1,6 @@
 import { ListGroup, ListGroupItem, Button } from 'reactstrap';
 import ContentLoader from 'react-content-loader';
-import { Link, withRouter } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { CLASSES } from 'constants/graphSettings';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
@@ -114,4 +114,4 @@ Results.propTypes = {
     currentPage: PropTypes.number.isRequired
 };
 
-export default withRouter(Results);
+export default Results;

@@ -6,12 +6,11 @@ import ROUTES from 'constants/routes';
 import { sortBy, uniq, without } from 'lodash';
 import queryString from 'query-string';
 import { useCallback } from 'react';
-import { useHistory, useLocation } from 'react-router';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const useContributionEditor = () => {
     const location = useLocation();
-    const history = useHistory();
-
+    const navigate = useNavigate();
     const getContributionIds = useCallback(() => {
         const { contributions } = queryString.parse(location.search, { arrayFormat: 'comma' });
         const contributionIds = contributions && !Array.isArray(contributions) ? [contributions] : contributions;
@@ -22,7 +21,7 @@ const useContributionEditor = () => {
 
     const handleAddContributions = ids => {
         const idsQueryString = [...getContributionIds(), ...ids].join(',');
-        history.push(
+        navigate(
             `${ROUTES.CONTRIBUTION_EDITOR}?contributions=${idsQueryString}${hasPreviousVersion ? `&hasPreviousVersion=${hasPreviousVersion}` : ''}`
         );
     };
@@ -31,7 +30,7 @@ const useContributionEditor = () => {
         const idsQueryString = getContributionIds()
             .filter(_id => _id !== id)
             .join(',');
-        history.push(
+        navigate(
             `${ROUTES.CONTRIBUTION_EDITOR}?contributions=${idsQueryString}${hasPreviousVersion ? `&hasPreviousVersion=${hasPreviousVersion}` : ''}`
         );
     };

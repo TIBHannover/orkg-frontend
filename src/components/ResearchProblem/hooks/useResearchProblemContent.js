@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { getContentByResearchProblemIdAndClasses } from 'services/backend/problems';
 import { getStatementsBySubjects } from 'services/backend/statements';
 import { getDataBasedOnType, groupVersionsOfComparisons, mergeAlternate } from 'utils';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import ROUTES from 'constants/routes.js';
 import { reverseWithSlug } from 'utils';
 import { flatten } from 'lodash';
@@ -26,7 +26,7 @@ function useResearchProblemContent({
     const [classFilterOptions] = useState(initialClassFilterOptions);
     const [classesFilter, setClassesFilter] = useState(initClassesFilter);
     const [totalElements, setTotalElements] = useState(0);
-    const history = useHistory();
+    const navigate = useNavigate();
 
     const loadData = useCallback(
         (page, total) => {
@@ -136,14 +136,14 @@ function useResearchProblemContent({
     // update url
     useEffect(() => {
         if (updateURL) {
-            history.push(
+            navigate(
                 `${reverseWithSlug(ROUTES.RESEARCH_PROBLEM, {
                     researchProblemId: researchProblemId,
                     slug: slug
                 })}?sort=${sort}&classesFilter=${classesFilter.map(c => c.id).join(',')}`
             );
         }
-    }, [researchProblemId, sort, classesFilter, history, updateURL, slug]);
+    }, [researchProblemId, sort, classesFilter, navigate, updateURL, slug]);
 
     useEffect(() => {
         loadData(0);

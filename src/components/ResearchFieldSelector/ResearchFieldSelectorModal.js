@@ -7,14 +7,24 @@ const ResearchFieldSelectorModal = ({ isOpen, toggle, onSelectField }) => {
     const [selectedResearchField, setSelectedResearchField] = useState('');
     const [researchFields, setResearchFields] = useState([]);
 
-    const handleUpdate = useCallback(data => {
-        if (data.selectedResearchField) {
-            setSelectedResearchField(data.selectedResearchField);
-        }
-        if (data.researchFields) {
-            setResearchFields(data.researchFields);
-        }
-    }, []);
+    const handleUpdate = useCallback(
+        (data, submit = false) => {
+            if (data.selectedResearchField) {
+                setSelectedResearchField(data.selectedResearchField);
+            }
+            if (data.researchFields) {
+                setResearchFields(data.researchFields);
+            }
+            if (submit) {
+                onSelectField({
+                    id: data.selectedResearchField,
+                    label: data.selectedResearchFieldLabel || ''
+                });
+                toggle();
+            }
+        },
+        [onSelectField, toggle]
+    );
 
     const handleSelect = () => {
         const field = researchFields.find(rf => rf.id === selectedResearchField);

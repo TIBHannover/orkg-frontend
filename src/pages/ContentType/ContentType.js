@@ -15,7 +15,7 @@ import NotFound from 'pages/NotFound';
 import Unauthorized from 'pages/Unauthorized';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { useHistory, useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Button, Container } from 'reactstrap';
 import { getResource } from 'services/backend/resources';
 
@@ -27,7 +27,7 @@ function ContentType() {
     const params = useParams();
     const [editMode, setEditMode] = useState(params.mode === 'edit' || false);
     const user = useSelector(state => state.auth.user);
-    const history = useHistory();
+    const navigate = useNavigate();
     const resourceId = params.id;
 
     useEffect(() => {
@@ -59,7 +59,7 @@ function ContentType() {
 
     const toggleEdit = () => {
         setEditMode(v => !v);
-        history.push(reverse(ROUTES.CONTENT_TYPE, { type: params.type, id: params.id, mode: params.mode !== 'edit' ? 'edit' : null }));
+        navigate(reverse(ROUTES.CONTENT_TYPE, { type: params.type, id: params.id, mode: params.mode !== 'edit' ? 'edit' : null }));
     };
 
     const handleHeaderChange = event => {

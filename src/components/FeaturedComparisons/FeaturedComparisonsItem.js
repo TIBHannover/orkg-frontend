@@ -4,8 +4,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
-import ROUTES from '../../constants/routes.js';
-import { withRouter } from 'react-router-dom';
+import ROUTES from 'constants/routes.js';
 import PropTypes from 'prop-types';
 
 const Comparison = styled(Card)`
@@ -74,7 +73,6 @@ class FeaturedComparisonsItem extends Component {
 }
 
 FeaturedComparisonsItem.propTypes = {
-    history: PropTypes.object.isRequired,
     icon: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
@@ -82,4 +80,4 @@ FeaturedComparisonsItem.propTypes = {
     contributions: PropTypes.array.isRequired
 };
 
-export default withRouter(FeaturedComparisonsItem);
+export default FeaturedComparisonsItem;

@@ -6,15 +6,14 @@ import TitleBar from 'components/TitleBar/TitleBar';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import React, { useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { Button, Container, FormGroup, Input, Label } from 'reactstrap';
+import { useNavigate } from 'react-router-dom';
 
 const ReviewNew = () => {
     const [title, setTitle] = useState('');
     const { create, isLoading } = useSave();
-    const history = useHistory();
-
+    const navigate = useNavigate();
     useEffect(() => {
         document.title = 'Create new review - ORKG';
     });
@@ -25,7 +24,7 @@ const ReviewNew = () => {
             return;
         }
         const id = await create(title);
-        history.push(reverse(ROUTES.REVIEW, { id }));
+        navigate(reverse(ROUTES.REVIEW, { id }));
     };
 
     return (
