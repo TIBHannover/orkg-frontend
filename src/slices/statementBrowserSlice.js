@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { LOCATION_CHANGE } from 'connected-react-router';
+import { LOCATION_CHANGE } from 'redux-first-history';
 import { ENTITIES, PREDICATES, CLASSES } from 'constants/graphSettings';
 import { match } from 'path-to-regexp';
 import { last, flatten, uniqBy } from 'lodash';
@@ -437,7 +437,7 @@ export const statementBrowserSlice = createSlice({
     },
     extraReducers: {
         [LOCATION_CHANGE]: (state, { payload }) => {
-            //from connected-react-router, reset the wizard when the page is changed
+            //from redux-first-history, reset the wizard when the page is changed
             const matchViewPaper = match(ROUTES.VIEW_PAPER);
             const contributionChange = matchViewPaper(payload.location.pathname);
 

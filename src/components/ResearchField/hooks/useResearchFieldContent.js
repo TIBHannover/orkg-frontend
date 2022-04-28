@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { getContentByResearchFieldIdAndClasses } from 'services/backend/researchFields';
 import { getStatementsBySubjects } from 'services/backend/statements';
 import { getDataBasedOnType, groupVersionsOfComparisons, mergeAlternate } from 'utils';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import ROUTES from 'constants/routes.js';
 import { reverseWithSlug } from 'utils';
 import { flatten } from 'lodash';
@@ -28,7 +28,7 @@ function useResearchFieldContent({
     const [classesFilter, setClassesFilter] = useState(initClassesFilter);
     const [totalElements, setTotalElements] = useState(0);
     const [includeSubFields, setIncludeSubFields] = useState(initialIncludeSubFields);
-    const history = useHistory();
+    const navigate = useNavigate();
 
     const loadData = useCallback(
         (page, total) => {
@@ -141,14 +141,14 @@ function useResearchFieldContent({
     // update url
     useEffect(() => {
         if (updateURL) {
-            history.push(
+            navigate(
                 `${reverseWithSlug(ROUTES.RESEARCH_FIELD, {
                     researchFieldId: researchFieldId,
                     slug: slug
                 })}?sort=${sort}&includeSubFields=${includeSubFields}&classesFilter=${classesFilter.map(c => c.id).join(',')}`
             );
         }
-    }, [researchFieldId, sort, includeSubFields, classesFilter, history, updateURL, slug]);
+    }, [researchFieldId, sort, includeSubFields, classesFilter, navigate, updateURL, slug]);
 
     useEffect(() => {
         loadData(0);

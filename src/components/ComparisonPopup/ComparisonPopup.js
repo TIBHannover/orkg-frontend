@@ -134,7 +134,7 @@ class ComparisonPopup extends Component {
 
         const contributionAmount = allIds.length;
         const ids = allIds.join(',');
-        const comparisonUrl = reverse(ROUTES.COMPARISON) + '?contributions=' + ids; // with named-urls it is not possible to use wildcard URLs, so replace the asterisk
+        const comparisonUrl = reverse(ROUTES.COMPARISON_NOT_PUBLISHED) + '?contributions=' + ids; // with named-urls it is not possible to use wildcard URLs, so replace the asterisk
 
         return (
             <ComparisonPopupStyled
@@ -220,7 +220,7 @@ class ComparisonPopup extends Component {
                                                 </div>
                                                 <div className="flex-grow-1 text-break">
                                                     <Title
-                                                        to={reverse(ROUTES.VIEW_PAPER, {
+                                                        to={reverse(ROUTES.VIEW_PAPER_CONTRIBUTION, {
                                                             resourceId: byId[contributionId].paperId,
                                                             contributionId: contributionId
                                                         })}

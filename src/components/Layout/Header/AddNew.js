@@ -135,7 +135,7 @@ const AddNew = ({ isHomePageStyle, onAdd = null }) => {
                         <RequireAuthentication
                             onClick={handleClickMenuItem}
                             component={ToolContainer}
-                            to={reverse(ROUTES.CONTENT_TYPE_NEW)}
+                            to={reverse(ROUTES.CONTENT_TYPE_NEW_NO_TYPE)}
                             className="d-flex p-2"
                         >
                             <ImgContainer>

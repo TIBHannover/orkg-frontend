@@ -168,7 +168,7 @@ const Templates = () => {
                         color="secondary"
                         size="sm"
                         className="btn btn-secondary btn-sm flex-shrink-0"
-                        to={reverse(ROUTES.TEMPLATE)}
+                        to={reverse(ROUTES.ADD_TEMPLATE)}
                     >
                         <Icon icon={faPlus} /> Create template
                     </RequireAuthentication>

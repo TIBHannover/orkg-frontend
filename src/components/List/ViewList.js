@@ -97,7 +97,7 @@ const ViewList = ({ isEmbedded }) => {
                                                 supportedContentTypes.find(c => c.id === classId)
                                             )?.[0];
                                             const route = !isPaper
-                                                ? reverse(ROUTES.CONTENT_TYPE, { id: contentType.id, type: contentTypeClass })
+                                                ? reverse(ROUTES.CONTENT_TYPE_NO_MODE, { id: contentType.id, type: contentTypeClass })
                                                 : undefined;
 
                                             return (

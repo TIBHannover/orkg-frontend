@@ -3,7 +3,7 @@ import { ListGroup, ListGroupItem } from 'reactstrap';
 import Confirm from 'components/Confirmation/Confirmation';
 import { setTableData } from 'slices/pdfAnnotationSlice';
 import { toast } from 'react-toastify';
-import { readString } from 'react-papaparse';
+import { usePapaParse } from 'react-papaparse';
 import { useSelector, useDispatch } from 'react-redux';
 import { zip, omit, isString, cloneDeep } from 'lodash';
 import { PREDICATES, MISC } from 'constants/graphSettings';
@@ -17,6 +17,7 @@ function useExtractionModal(props) {
     const [importedData, setImportedData] = useState(null);
     const editorRef = createRef();
     const dispatch = useDispatch();
+    const { readString } = usePapaParse();
     const pdf = useSelector(state => state.pdfAnnotation.pdf);
     const tableData = useSelector(state => state.pdfAnnotation.tableData[props.id]);
     const extractionSuccessful = tableData && tableData.length > 0;
@@ -67,7 +68,7 @@ function useExtractionModal(props) {
                 });
         };
         performTableExtraction();
-    }, [props.region, props.pageNumber, props.id, pdf, dispatch, tableData]);
+    }, [props.region, props.pageNumber, props.id, pdf, dispatch, tableData, readString]);
 
     const pxToPoint = x => (x * 72) / 96;
 
