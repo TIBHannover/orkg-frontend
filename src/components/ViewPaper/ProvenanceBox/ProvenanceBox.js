@@ -85,12 +85,15 @@ const ProvenanceBox = () => {
                         });
                         loadPublishInformation(response[0].object['id'], list);
                     } else {
+                        let r = [];
                         if (list && contributors) {
                             // combining contributors and published with DOI information
-                            const r = [...contributors];
+                            r = [...contributors];
                             r.push(...list);
-                            setInfo(orderBy(r, ['created_at'], ['desc']));
+                        } else {
+                            r = [...contributors];
                         }
+                        setInfo(orderBy(r, ['created_at'], ['desc']));
                     }
                 })
                 .catch(e => setInfo(null));
