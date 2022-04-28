@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { InputGroup, FormFeedback } from 'reactstrap';
-import { toggleEditValue } from 'actions/statementBrowser';
+import { toggleEditValue } from 'slices/statementBrowserSlice';
 import { StyledButton } from 'components/StatementBrowser/styled';
 import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
 import AutoComplete from 'components/Autocomplete/Autocomplete';

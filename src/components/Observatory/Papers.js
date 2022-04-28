@@ -10,11 +10,13 @@ import PropTypes from 'prop-types';
 
 const Papers = ({ observatoryId }) => {
     const [isLoadingPapers, setIsLoadingPapers] = useState(null);
+    const [isFailedLoadingPapers, setIsFailedLoadingPapers] = useState(false);
     const [papersList, setPapersList] = useState([]);
 
     useEffect(() => {
         const loadPapers = () => {
             setIsLoadingPapers(true);
+            setIsFailedLoadingPapers(false);
             getResourcesByObservatoryId(observatoryId)
                 .then(papers => {
                     // Fetch the data of each comparison
@@ -30,6 +32,7 @@ const Papers = ({ observatoryId }) => {
                     });
                 })
                 .catch(error => {
+                    setIsFailedLoadingPapers(true);
                     setIsLoadingPapers(false);
                 });
         };
@@ -54,7 +57,7 @@ const Papers = ({ observatoryId }) => {
                                 })}
                             </>
                         ) : (
-                            <div className="text-center mt-4 mb-4">No Papers</div>
+                            <div className="text-center mt-4 mb-4">{!isFailedLoadingPapers ? 'No Papers' : 'Failed loading observatory papers'}</div>
                         )}
                     </ListGroup>
                 )}

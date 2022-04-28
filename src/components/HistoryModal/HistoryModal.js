@@ -6,10 +6,11 @@ import moment from 'moment';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Select, { components } from 'react-select';
 import { Alert, Button, Modal, ModalBody, ModalHeader } from 'reactstrap';
 import styled from 'styled-components';
+import { SelectGlobalStyle } from 'components/Autocomplete/styled';
 
 const Option = ({ children, data, ...props }) => {
     return (
@@ -68,8 +69,7 @@ const Time = styled.div`
 const HistoryModal = ({ id, show, toggle, title, versions = [], routeDiff }) => {
     const [selectedVersion1, setSelectedVersion1] = useState(null);
     const [selectedVersion2, setSelectedVersion2] = useState(null);
-    const history = useHistory();
-
+    const navigate = useNavigate();
     const options = versions.map((version, index) => ({
         label: `Version ${versions.length - index}`,
         value: version.id,
@@ -77,7 +77,7 @@ const HistoryModal = ({ id, show, toggle, title, versions = [], routeDiff }) => 
     }));
 
     const handleCompare = () => {
-        history.push(reverse(routeDiff, { oldId: selectedVersion1.value, newId: selectedVersion2.value }));
+        navigate(reverse(routeDiff, { oldId: selectedVersion1.value, newId: selectedVersion2.value }));
     };
 
     return (
@@ -113,6 +113,7 @@ const HistoryModal = ({ id, show, toggle, title, versions = [], routeDiff }) => 
                                             classNamePrefix="react-select"
                                             placeholder="Select version"
                                         />
+                                        <SelectGlobalStyle />
                                         <Button
                                             disabled={!selectedVersion2 || !selectedVersion1}
                                             color="secondary"

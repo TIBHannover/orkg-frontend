@@ -6,10 +6,9 @@ import { getStatementsBySubjects } from 'services/backend/statements';
 import { getResourcesByClass } from 'services/backend/resources';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faLink, faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { PREDICATES, CLASSES } from 'constants/graphSettings';
 import { kebabCase, isString } from 'lodash';
-import { useLocation, useHistory } from 'react-router';
 import styled from 'styled-components';
 import TitleBar from 'components/TitleBar/TitleBar';
 
@@ -24,7 +23,7 @@ const FeaturedComparisons = () => {
     const [categories, setCategories] = useState([]);
     const [comparisons, setComparisons] = useState([]);
     const location = useLocation();
-    const history = useHistory();
+    const navigate = useNavigate();
 
     useEffect(() => {
         document.title = 'Featured comparisons - ORKG';
@@ -49,7 +48,7 @@ const FeaturedComparisons = () => {
     );
 
     const handleClick = (e, id) => {
-        history.push(`#${id}`);
+        navigate(`#${id}`);
         e.preventDefault();
     };
 

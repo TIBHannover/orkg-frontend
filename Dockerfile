@@ -10,12 +10,11 @@ ENV NODE_OPTIONS --max-old-space-size=8192
 COPY package.json package-lock.json ./
 
 # NOTE: opencollective is not required but leads to warnings if missing
-RUN npm install react-scripts@4.0.3 opencollective -g
+RUN npm install react-scripts@5.0.1 opencollective -g
 
 # install the dependencies
 # replace npm ci beceause of npm v7   
 # Peer Dependencies https://blog.npmjs.org/post/626173315965468672/npm-v7-series-beta-release-and-semver-major
-RUN npm install aoelen/react-pdf-highlighter-dist
 RUN npm install --legacy-peer-deps
 
 COPY . ./

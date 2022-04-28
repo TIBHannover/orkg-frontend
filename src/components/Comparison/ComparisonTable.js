@@ -43,7 +43,7 @@ const ComparisonTable = props => {
                               property: property,
                               values: props.contributions.map((contribution, index2) => {
                                   const data = props.data[property.id] ? props.data[property.id][index2] : null;
-                                  return data;
+                                  return data.sort((a, b) => a?.label?.localeCompare(b?.label));
                               })
                           };
                       })
@@ -54,7 +54,7 @@ const ComparisonTable = props => {
                               .filter(property => property.active)
                               .map((property, index2) => {
                                   const data = props.data[property.id] ? props.data[property.id][index] : null;
-                                  return data;
+                                  return data.sort((a, b) => a?.label?.localeCompare(b?.label));
                               })
                       };
                   }))
@@ -77,7 +77,7 @@ const ComparisonTable = props => {
                 });
                 // find where to place the header
                 if (found) {
-                    dataFrame.splice(index, 0, { property: { id: null, label: key, similar: [], group: true }, values: [] });
+                    dataFrame.splice(index, 0, { property: { id: null, label: key, similar: [], group: true, groupId: key }, values: [] });
                 }
                 return null;
             });
@@ -88,16 +88,17 @@ const ComparisonTable = props => {
                         if (row.property.label.startsWith(key)) {
                             return {
                                 values: row.values,
-                                property: { ...row.property, label: row.property.label.replace(key + '/', ''), grouped: true }
+                                property: { ...row.property, label: row.property.label.replace(key + '/', ''), grouped: true, inGroupId: key }
                             };
                         }
                         return row;
                     });
                     return null;
                 });
+            dataFrame = dataFrame.filter(row => !props.hiddenGroups.includes(row.property.inGroupId) || row.property.group);
         }
         return dataFrame;
-    }, [props.transpose, props.properties, props.contributions, props.comparisonType, props.data]);
+    }, [props.transpose, props.properties, props.contributions, props.comparisonType, props.data, props.hiddenGroups]);
 
     const defaultColumn = useMemo(
         () => ({
@@ -136,7 +137,10 @@ const ComparisonTable = props => {
                                     id={info.value.id}
                                     group={info.value.group ?? false}
                                     grouped={info.value.grouped ?? false}
+                                    groupId={info.value.groupId ?? null}
+                                    handleToggleShow={props.handleToggleGroupVisibility}
                                     property={props.comparisonType === 'merge' ? info.value : getPropertyObjectFromData(props.data, info.value)}
+                                    hiddenGroups={props.hiddenGroups}
                                 />
                             </PropertiesInner>
                         </Properties>
@@ -144,7 +148,7 @@ const ComparisonTable = props => {
                         <Properties className="columnContribution">
                             <PropertiesInner transpose={props.transpose}>
                                 <Link
-                                    to={reverse(ROUTES.VIEW_PAPER, {
+                                    to={reverse(ROUTES.VIEW_PAPER_CONTRIBUTION, {
                                         resourceId: info.value.paperId,
                                         contributionId: info.value.id
                                     })}
@@ -177,7 +181,7 @@ const ComparisonTable = props => {
                                           <ItemHeader key={`contribution${contribution.id}`}>
                                               <ItemHeaderInner>
                                                   <Link
-                                                      to={reverse(ROUTES.VIEW_PAPER, {
+                                                      to={reverse(ROUTES.VIEW_PAPER_CONTRIBUTION, {
                                                           resourceId: contribution.paperId,
                                                           contributionId: contribution.id
                                                       })}
@@ -245,7 +249,7 @@ const ComparisonTable = props => {
         ];
         // TODO: remove disable lint rule: useCallback for removeContribution and add used dependencies
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [props.transpose, props.properties, props.contributions, props.filterControlData, props.viewDensity, isSmallScreen]);
+    }, [props.transpose, props.properties, props.contributions, props.filterControlData, props.viewDensity, isSmallScreen, props.hiddenGroups]);
 
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable(
         {
@@ -323,11 +327,15 @@ ComparisonTable.propTypes = {
     scrollContainerBody: PropTypes.object.isRequired,
     filterControlData: PropTypes.array.isRequired,
     updateRulesOfProperty: PropTypes.func.isRequired,
-    embeddedMode: PropTypes.bool.isRequired
+    embeddedMode: PropTypes.bool.isRequired,
+    hiddenGroups: PropTypes.array,
+    handleToggleGroupVisibility: PropTypes.func
 };
 
 ComparisonTable.defaultProps = {
-    embeddedMode: false
+    embeddedMode: false,
+    hiddenGroups: [],
+    handleToggleGroupVisibility: null
 };
 
 export default memo(ComparisonTable, compareProps);

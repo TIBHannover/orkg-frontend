@@ -1,22 +1,22 @@
 import { Component } from 'react';
 import { Container, Button } from 'reactstrap';
 import { compose } from 'redux';
-import ProgressBar from '../components/AddPaper/ProgressBar';
-import GeneralData from '../components/AddPaper/GeneralData/GeneralData';
-import ResearchField from '../components/AddPaper/ResearchField/ResearchField';
-import Contributions from '../components/AddPaper/Contributions/Contributions';
+import ProgressBar from 'components/AddPaper/ProgressBar';
+import GeneralData from 'components/AddPaper/GeneralData/GeneralData';
+import ResearchField from 'components/AddPaper/ResearchField/ResearchField';
+import Contributions from 'components/AddPaper/Contributions/Contributions';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faQuestion, faProjectDiagram } from '@fortawesome/free-solid-svg-icons';
-import Finish from '../components/AddPaper/Finish/Finish';
+import Finish from 'components/AddPaper/Finish/Finish';
 import { withCookies } from 'react-cookie';
 import { connect } from 'react-redux';
 import styled, { withTheme } from 'styled-components';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import PropTypes from 'prop-types';
-import { resetStatementBrowser } from '../actions/statementBrowser';
-import { openTour, closeTour, blockNavigation, loadPaperData } from '../actions/addPaper';
-import { Prompt } from 'react-router';
-import GizmoGraphViewModal from '../components/ViewPaper/GraphView/GizmoGraphViewModal';
+import { resetStatementBrowser } from 'slices/statementBrowserSlice';
+import { openTour, closeTour, blockNavigation, loadPaperDataAction as loadPaperData } from 'slices/addPaperSlice';
+//import { Prompt } from 'react-router';
+import GizmoGraphViewModal from 'components/ViewPaper/GraphView/GizmoGraphViewModal';
 import env from '@beam-australia/react-env';
 import TitleBar from 'components/TitleBar/TitleBar';
 import { SubTitle, SubtitleSeparator } from 'components/styled';
@@ -50,8 +50,8 @@ const Help = styled.div`
 
 const HelpIcon = styled(Icon)`
     vertical-align: middle;
-    height: 48px;
-    width: 48px !important;
+    height: 28px;
+    width: 28px !important;
     z-index: 9999;
     background-color: ${props => props.theme.primary};
     display: inline-flex;
@@ -113,7 +113,7 @@ class AddPaper extends Component {
         }
 
         if (!this.props.addPaper.shouldBlockNavigation && this.props.currentStep > 1 && !this.props.addPaper.paperNewResourceId) {
-            this.props.blockNavigation();
+            this.props.blockNavigation({ status: true });
             window.onbeforeunload = () => true;
         }
         if (!this.props.addPaper.shouldBlockNavigation && prevProps.addPaper.shouldBlockNavigation !== this.props.addPaper.shouldBlockNavigation) {
@@ -177,7 +177,9 @@ class AddPaper extends Component {
 
         return (
             <div>
+                {/*
                 <Prompt when={this.props.addPaper.shouldBlockNavigation} message="You have unsaved changes, are you sure you want to leave?" />
+                 */}
 
                 <TitleBar
                     titleAddition={
@@ -257,7 +259,7 @@ const mapDispatchToProps = dispatch => ({
     resetStatementBrowser: () => dispatch(resetStatementBrowser()),
     openTour: () => dispatch(openTour()),
     closeTour: () => dispatch(closeTour()),
-    blockNavigation: () => dispatch(blockNavigation()),
+    blockNavigation: data => dispatch(blockNavigation(data)),
     loadPaperData: data => dispatch(loadPaperData(data))
 });
 

@@ -53,7 +53,7 @@ const Help = props => {
             ),
             style: tourStyle
         },
-        {
+        /*{
             selector: '#smart-sentence-detection',
             content: (
                 <>
@@ -78,7 +78,7 @@ const Help = props => {
                 </>
             ),
             style: tourStyle
-        },
+        },*/
         {
             selector: '#annotation-categories',
             content: (
@@ -120,7 +120,7 @@ const Help = props => {
                 onRequestClose={handleCloseTour}
                 isOpen={props.isOpen}
                 startAt={0}
-                maskClassName="reactourMask"
+                maskClassName="opacity-75"
                 steps={tourSteps}
             />
         </>

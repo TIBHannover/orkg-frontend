@@ -6,14 +6,15 @@ import Tooltip from 'components/Utils/Tooltip';
 import {
     nextStep,
     previousStep,
-    createContribution,
-    deleteContribution,
-    selectContribution,
-    updateContributionLabel,
-    saveAddPaper,
+    createContributionAction as createContribution,
+    deleteContributionAction as deleteContribution,
+    selectContributionAction as selectContribution,
+    updateContributionLabelAction as updateContributionLabel,
+    saveAddPaperAction as saveAddPaper,
     openTour,
     toggleAbstractDialog
-} from 'actions/addPaper';
+} from 'slices/addPaperSlice';
+import { updateSettings } from 'slices/statementBrowserSlice';
 import Abstract from 'components/AddPaper/Abstract/Abstract';
 import Confirm from 'components/Confirmation/Confirmation';
 import StatementBrowser from 'components/StatementBrowser/StatementBrowser';
@@ -23,7 +24,6 @@ import { StyledContributionTabs } from 'components/ContributionTabs/styled';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faMagic, faAngleDown } from '@fortawesome/free-solid-svg-icons';
 import Tabs, { TabPane } from 'rc-tabs';
-import { updateSettings } from 'actions/statementBrowser';
 
 const Contributions = () => {
     const {
@@ -117,6 +117,12 @@ const Contributions = () => {
         handleSelectContribution(key);
     };
 
+    const renderTabBar = (props, DefaultTabBar) => (
+        <div id="contributionsList">
+            <DefaultTabBar {...props} />
+        </div>
+    );
+
     return (
         <div>
             <div className="d-flex align-items-center mt-4 mb-4">
@@ -141,6 +147,7 @@ const Contributions = () => {
                                 </div>
                             </span>
                         }
+                        tippyProps={{ interactive: true }}
                     >
                         Specify research contributions
                     </Tooltip>
@@ -155,6 +162,7 @@ const Contributions = () => {
                 <Col md="9">
                     <StyledContributionTabs>
                         <Tabs
+                            renderTabBar={renderTabBar}
                             tabBarExtraContent={<AddContributionButton onClick={() => dispatch(createContribution({}))} />}
                             moreIcon={<Icon size="lg" icon={faAngleDown} />}
                             activeKey={selectedContribution}
@@ -178,14 +186,16 @@ const Contributions = () => {
                                         }
                                         key={contribution.id}
                                     >
-                                        <StatementBrowser
-                                            enableEdit={true}
-                                            syncBackend={false}
-                                            openExistingResourcesInDialog={false}
-                                            initialSubjectId={contribution.resourceId}
-                                            initialSubjectLabel={contribution.label}
-                                            renderTemplateBox={true}
-                                        />
+                                        <div className="contributionData">
+                                            <StatementBrowser
+                                                enableEdit={true}
+                                                syncBackend={false}
+                                                openExistingResourcesInDialog={false}
+                                                initialSubjectId={contribution.resourceId}
+                                                initialSubjectLabel={contribution.label}
+                                                renderTemplateBox={true}
+                                            />
+                                        </div>
                                     </TabPane>
                                 );
                             })}

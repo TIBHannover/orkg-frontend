@@ -1,5 +1,5 @@
 import { FormGroup, Label, Col, Input, FormText } from 'reactstrap';
-import { setComponents } from 'actions/addTemplate';
+import { updateComponents } from 'slices/templateEditorSlice';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
@@ -12,7 +12,7 @@ function ValidationRules(props) {
             }
             return item;
         });
-        props.setComponents(templateComponents);
+        props.updateComponents(templateComponents);
     };
 
     return (
@@ -87,18 +87,18 @@ ValidationRules.propTypes = {
     validationRules: PropTypes.object,
     enableEdit: PropTypes.bool.isRequired,
     components: PropTypes.array.isRequired,
-    setComponents: PropTypes.func.isRequired
+    updateComponents: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => {
     return {
-        components: state.addTemplate.components,
-        editMode: state.addTemplate.editMode
+        components: state.templateEditor.components,
+        editMode: state.templateEditor.editMode
     };
 };
 
 const mapDispatchToProps = dispatch => ({
-    setComponents: data => dispatch(setComponents(data))
+    updateComponents: data => dispatch(updateComponents(data))
 });
 
 export default connect(

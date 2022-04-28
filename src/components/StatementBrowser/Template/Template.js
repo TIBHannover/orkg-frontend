@@ -1,4 +1,4 @@
-import { doneAnimation } from 'actions/statementBrowser';
+import { setDoneAnimation } from 'slices/statementBrowserSlice';
 import AddProperty from 'components/StatementBrowser/AddProperty/AddProperty';
 import TemplateHeader from 'components/StatementBrowser/Template/TemplateHeader/TemplateHeader';
 import StatementItem from 'components/StatementBrowser/StatementItem/StatementItem';
@@ -24,7 +24,7 @@ const Template = props => {
             timeout={!property.isAnimated ? { enter: 700 } : { enter: 0 }}
             addEndListener={() => {
                 if (!property.isAnimated) {
-                    dispatch(doneAnimation({ id: props.propertyId }));
+                    dispatch(setDoneAnimation({ id: props.propertyId }));
                 }
             }}
             appear

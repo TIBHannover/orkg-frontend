@@ -14,7 +14,7 @@ import AddToComparison from 'components/PaperCard/AddToComparison';
 import ContributionTab from 'components/ContributionTabs/ContributionTab';
 import AddContributionButton from 'components/ContributionTabs/AddContributionButton';
 import { useSelector } from 'react-redux';
-import { StyledContributionTabs } from 'components/ContributionTabs/styled';
+import { StyledContributionTabs, GlobalStyle } from 'components/ContributionTabs/styled';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faAngleDown } from '@fortawesome/free-solid-svg-icons';
 import useContributions from './hooks/useContributions';
@@ -49,7 +49,7 @@ const Contributions = props => {
         handleChangeContributionLabel,
         handleCreateContribution,
         toggleDeleteContribution,
-        history
+        navigate
     } = useContributions({
         paperId: resourceId,
         contributionId
@@ -57,8 +57,8 @@ const Contributions = props => {
     const isAddingContribution = useSelector(state => state.viewPaper.isAddingContribution);
 
     const onTabChange = key => {
-        history.push(
-            reverse(ROUTES.VIEW_PAPER, {
+        navigate(
+            reverse(ROUTES.VIEW_PAPER_CONTRIBUTION, {
                 resourceId: resourceId,
                 contributionId: key
             })
@@ -67,6 +67,7 @@ const Contributions = props => {
 
     return (
         <div>
+            <GlobalStyle />
             <Container>
                 <Row>
                     <Col md="9">
@@ -177,7 +178,9 @@ const Contributions = props => {
                                                     {similarContributions.length > 0 && (
                                                         <Link
                                                             className="clearfix"
-                                                            to={`${reverse(ROUTES.COMPARISON)}?contributions=${contribution.id},${similarContributions
+                                                            to={`${reverse(ROUTES.COMPARISON_NOT_PUBLISHED)}?contributions=${
+                                                                contribution.id
+                                                            },${similarContributions
                                                                 .slice(0, 3)
                                                                 .map(s => s.contributionId)
                                                                 .join(',')}`}

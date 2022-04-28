@@ -4,7 +4,7 @@ import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowser
 import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
 import FilterWrapper from 'components/Comparison/Filters/FilterWrapper';
 import FilterModal from 'components/Comparison/Filters/FilterModal';
-import { faFilter, faLevelUpAlt } from '@fortawesome/free-solid-svg-icons';
+import { faFilter, faLevelUpAlt, faMinusSquare, faPlusSquare } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { getRuleByProperty, getValuesByProperty, getDataByProperty } from 'utils';
 import styled from 'styled-components';
@@ -50,7 +50,20 @@ const FilterButton = styled(Button)`
     }
 `;
 
-const PropertyValue = ({ id, label, property, similar, filterControlData, updateRulesOfProperty, embeddedMode, group, grouped = false }) => {
+const PropertyValue = ({
+    id,
+    label,
+    property,
+    similar,
+    filterControlData,
+    updateRulesOfProperty,
+    embeddedMode,
+    group,
+    grouped = false,
+    handleToggleShow,
+    groupId,
+    hiddenGroups
+}) => {
     const [showStatementBrowser, setShowStatementBrowser] = useState(false);
     const [showFilterDialog, setShowFilterDialog] = useState(false);
 
@@ -116,6 +129,11 @@ const PropertyValue = ({ id, label, property, similar, filterControlData, update
                 </>
             )}
             {group && label}
+            {group && (
+                <Button color="link" className="px-1 py-0 m-0 text-light-darker" onClick={() => handleToggleShow(groupId)}>
+                    <Icon icon={hiddenGroups.includes(groupId) ? faPlusSquare : faMinusSquare} />
+                </Button>
+            )}
             {showStatementBrowser && (
                 <StatementBrowserDialog
                     show={true}
@@ -138,13 +156,18 @@ PropertyValue.propTypes = {
     grouped: PropTypes.bool,
     filterControlData: PropTypes.array.isRequired,
     updateRulesOfProperty: PropTypes.func.isRequired,
-    embeddedMode: PropTypes.bool.isRequired
+    embeddedMode: PropTypes.bool.isRequired,
+    handleToggleShow: PropTypes.func.isRequired,
+    groupId: PropTypes.string,
+    hiddenGroups: PropTypes.array
 };
 
 PropertyValue.defaultProps = {
     label: PropTypes.string.isRequired,
     similar: PropTypes.array,
-    embeddedMode: false
+    embeddedMode: false,
+    groupId: null,
+    hiddenGroups: []
 };
 
 export default PropertyValue;

@@ -1,5 +1,5 @@
 import Tippy from '@tippyjs/react';
-import { toggleHistoryModal as toggleHistoryModalAction } from 'actions/review';
+import { toggleHistoryModal as toggleHistoryModalAction } from 'slices/reviewSlice';
 import AuthorBadges from 'components/Badges/AuthorBadges/AuthorBadges';
 import ResearchFieldBadge from 'components/Badges/ResearchFieldBadge/ResearchFieldBadge';
 import Acknowledgements from 'components/Review/Acknowledgements';
@@ -18,7 +18,8 @@ import { CLASSES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { Alert, Button, Container } from 'reactstrap';
 import SectionComparison from 'components/Review/SectionComparison';
 import env from '@beam-australia/react-env';

@@ -416,3 +416,37 @@ export const TemplateHeaderStyle = styled.div`
         }
     }
 `;
+
+export const PulsateIcon = styled.span`
+    animation: pulsate 1s ease-out;
+    animation-iteration-count: infinite;
+    opacity: 0;
+
+    /* you dont need the stuff below, but its what I used to create the loading circle */
+    border: 3px solid ${props => props.theme.primary};
+    border-radius: 30px;
+    height: 18px;
+    width: 18px;
+    position: absolute;
+    display: inline-block;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    cursor: pointer;
+
+    @keyframes pulsate {
+        0% {
+            -webkit-transform: scale(0.1, 0.1);
+            opacity: 0;
+        }
+        50% {
+            opacity: 1;
+        }
+        100% {
+            -webkit-transform: scale(1.2, 1.2);
+            opacity: 0;
+        }
+    }
+`;

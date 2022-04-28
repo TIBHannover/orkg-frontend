@@ -1,7 +1,7 @@
 import { forwardRef } from 'react';
 import StatementItem from 'components/StatementBrowser/StatementItem/StatementItem';
 import Template from 'components/StatementBrowser/Template/Template';
-import { isTemplateContextProperty } from 'actions/statementBrowser';
+import { isTemplateContextProperty } from 'slices/statementBrowserSlice';
 import PropTypes from 'prop-types';
 import { useCookies } from 'react-cookie';
 import { useSelector } from 'react-redux';

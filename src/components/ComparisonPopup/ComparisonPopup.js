@@ -2,13 +2,12 @@ import { createRef, Component } from 'react';
 import { Badge, Container, Navbar, Button, ButtonGroup } from 'reactstrap';
 import { ComparisonBoxButton, ComparisonBox, Header, List, ContributionItem, Title, Number, Remove, StartComparison } from './styled';
 import { faChevronDown, faChevronUp, faTimes, faTrash, faCheck } from '@fortawesome/free-solid-svg-icons';
-import { loadComparisonFromLocalStorage, removeFromComparison } from 'actions/viewPaper';
+import { loadComparisonFromLocalStorage, removeFromComparison } from 'slices/viewPaperSlice';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Cookies } from 'react-cookie';
 import ROUTES from 'constants/routes.js';
-import Tooltip from '../Utils/Tooltip';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { faFile } from '@fortawesome/free-regular-svg-icons';
@@ -135,7 +134,7 @@ class ComparisonPopup extends Component {
 
         const contributionAmount = allIds.length;
         const ids = allIds.join(',');
-        const comparisonUrl = reverse(ROUTES.COMPARISON) + '?contributions=' + ids; // with named-urls it is not possible to use wildcard URLs, so replace the asterisk
+        const comparisonUrl = reverse(ROUTES.COMPARISON_NOT_PUBLISHED) + '?contributions=' + ids; // with named-urls it is not possible to use wildcard URLs, so replace the asterisk
 
         return (
             <ComparisonPopupStyled
@@ -221,7 +220,7 @@ class ComparisonPopup extends Component {
                                                 </div>
                                                 <div className="flex-grow-1 text-break">
                                                     <Title
-                                                        to={reverse(ROUTES.VIEW_PAPER, {
+                                                        to={reverse(ROUTES.VIEW_PAPER_CONTRIBUTION, {
                                                             resourceId: byId[contributionId].paperId,
                                                             contributionId: contributionId
                                                         })}
@@ -230,11 +229,13 @@ class ComparisonPopup extends Component {
                                                     </Title>
                                                     <Number>{byId[contributionId].contributionTitle}</Number>
                                                 </div>
-                                                <Tooltip message="Remove from comparison" hideDefaultIcon>
-                                                    <Remove>
-                                                        <Icon icon={faTimes} onClick={() => this.removeFromComparison(contributionId)} />
-                                                    </Remove>
-                                                </Tooltip>
+                                                <Tippy content="Remove from comparison">
+                                                    <span>
+                                                        <Remove>
+                                                            <Icon icon={faTimes} onClick={() => this.removeFromComparison(contributionId)} />
+                                                        </Remove>
+                                                    </span>
+                                                </Tippy>
                                             </div>
                                         </ContributionItem>
                                     ))}

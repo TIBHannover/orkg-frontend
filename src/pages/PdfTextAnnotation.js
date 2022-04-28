@@ -7,11 +7,10 @@ import Sidebar from 'components/PdfTextAnnotation/SideBar';
 import AnnotationTooltipNew from 'components/PdfTextAnnotation/AnnotationTooltipNew';
 import AnnotationTooltipExisting from 'components/PdfTextAnnotation/AnnotationTooltipExisting';
 import { useDispatch, useSelector } from 'react-redux';
-import { createAnnotation, setIsLoadedPdfViewer } from 'actions/pdfTextAnnotation';
+import { createAnnotation, setIsLoadedPdfViewer } from 'slices/pdfTextAnnotationSlice';
 import Highlight from 'components/PdfTextAnnotation/Highlight';
 import useDeleteAnnotation from 'components/PdfTextAnnotation/hooks/useDeleteAnnotation';
 import DragUpload from 'components/PdfTextAnnotation/DragUpload';
-import ZoomBar from 'components/PdfTextAnnotation/ZoomBar';
 
 const Wrapper = styled.div`
     margin-top: -30px;
@@ -101,7 +100,7 @@ const PdfTextAnnotation = () => {
     return (
         <Wrapper>
             <Sidebar pdfViewer={pdfViewer} />
-            {pdf && <ZoomBar />}
+            {/*pdf && <ZoomBar />*/}
 
             <Main>
                 {pdf ? (

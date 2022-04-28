@@ -7,6 +7,8 @@ import Header from 'components/Layout/Header/Header';
 import Footer from 'components/Layout/Footer';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { useMatomo } from '@datapunt/matomo-tracker-react';
+import useOnLocationChange from 'components/Layout/hooks/useOnLocationChange';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import styled from 'styled-components';
 import { useLocation } from 'react-router-dom';
@@ -100,11 +102,19 @@ export default function DefaultLayout(props) {
     const showFooter = location.pathname !== ROUTES.PDF_TEXT_ANNOTATION && location.pathname !== ROUTES.PDF_ANNOTATION;
     const [cookies, setCookie] = useCookies(['cookieInfoDismissed']);
     const [visible, setVisible] = useState(!Boolean(cookies.cookieInfoDismissed));
+    const { trackPageView } = useMatomo();
 
     const onDismissCookieInfo = () => {
         setCookie('cookieInfoDismissed', true, { path: env('PUBLIC_URL'), maxAge: 365 * 24 * 60 * 60 * 1000 });
         setVisible(false);
     };
+
+    useOnLocationChange(() =>
+        setTimeout(function() {
+            // Track page view
+            trackPageView();
+        }, 1000)
+    );
 
     return (
         <StyledBody className="body">

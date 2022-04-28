@@ -151,13 +151,11 @@ class AbstractAnnotatorView extends Component {
                                 />
                                 <div className="mt-2 text-center">
                                     <span className="me-2">Certainty {this.props.certaintyThreshold[0].toFixed(2)}</span>
-                                    <Tooltip
-                                        trigger="click"
-                                        hideDefaultIcon={true}
-                                        message="Here you can adjust the certainty value, that means at which level you accept the confidence ratio of automatic annotations. Only the shown annotations will be used to create the contribution data in the next step."
-                                    >
-                                        <Icon style={{ cursor: 'pointer' }} className="text-primary" icon={faQuestionCircle} />
-                                    </Tooltip>
+                                    <Tippy content="Here you can adjust the certainty value, that means at which level you accept the confidence ratio of automatic annotations. Only the shown annotations will be used to create the contribution data in the next step.">
+                                        <span>
+                                            <Icon className="text-primary" icon={faQuestionCircle} />
+                                        </span>
+                                    </Tippy>
                                 </div>
                             </div>
                         </div>

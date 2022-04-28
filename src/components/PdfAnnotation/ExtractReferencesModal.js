@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Modal, ModalHeader, ModalBody, ModalFooter, Button, Alert, Form, FormGroup, Label, Input } from 'reactstrap';
 import PropTypes from 'prop-types';
-import { updateTableData } from '../../actions/pdfAnnotation';
+import { updateTableData } from 'slices/pdfAnnotationSlice';
 import { toast } from 'react-toastify';
 import { useSelector, useDispatch } from 'react-redux';
 import { cloneDeep, isString } from 'lodash';
@@ -120,7 +120,7 @@ const ExtractReferencesModal = props => {
             }
         }
 
-        dispatch(updateTableData(props.id, tableUpdates));
+        dispatch(updateTableData({ id: props.id, dataChanges: tableUpdates }));
 
         // close the modal
         props.toggle();

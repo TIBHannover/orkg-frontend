@@ -3,6 +3,78 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [V0.68.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.68...V0.68.1) - 2022-04-19
+
+### Changes
+
+- ux(Search ): hide message "There are no results..." in results [`#822`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/822)
+- ux(AddPaper): go to next step on field click [`#821`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/821)
+- fix: Template save button keeps saving state [`#824`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/824)
+- fix(Comparison): Error when publishing comparison DOI without creators [`#825`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/825)
+- fix(Review): duplicate publishing notification after publishing [`#826`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/826)
+- fix: Contributions Help Tour issue [`#823`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/823)
+
+---
+## [V0.68](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.67.2...V0.68) - 2022-04-13
+
+### Changes
+
+- feat(Review): publish reviews with DOI [`#638`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/638)
+- Comparison: improve navigation [`#809`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/809)
+- feat(List): generic list of ORKG content [`#769`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/769)
+- fix(ContributionEditor): fix updating property [`#820`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/820)
+- fix: Non-existing resource: no error message displayed [`#819`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/819)
+- refactor: move global CSS code to respective components [`#818`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/818)
+- feat: integrate event tracking [`#816`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/816)
+- refactor: Transition to Redux Toolkit [`#807`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/807)
+- Resource: show metadata [`#813`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/813)
+- Tooltip: use Tippy instead of Reactstrap [`#817`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/817)
+- CsvImport: static backdrop, rename research problem column [`#815`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/815)
+- CI: use https explicitly to install aoelen/react-pdf-highlighter-dist [`#814`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/814)
+
+---
+## [V0.67.2](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.67.1...V0.67.2) - 2022-03-21
+
+### Changes
+
+- fix(Comparison): metadata not showing [`#812`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/812)
+
+---
+## [V0.67.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.67...V0.67.1) - 2022-03-18
+
+### Changes
+
+- fix(Comparison): failed loading comparisons without an organization [`#811`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/811)
+
+---
+## [V0.67](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.66...V0.67) - 2022-03-18
+
+### Changes
+
+- ResearchField: Sync with backend changes [`#810`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/810)
+
+---
+## [V0.66](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.65.2...V0.66) - 2022-03-17
+
+### Changes
+
+- feat(Comparison): Anonymize authors while publishing [`#770`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/770)
+
+---
+## [V0.65.2](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.65.1...V0.65.2) - 2022-03-14
+
+### Changes
+
+- fix(ContributionEditor): creating resources with existing label not possible, error on select option with enter key [`#808`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/808)
+
+---
+## [V0.65.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.65...V0.65.1) - 2022-03-14
+
+### Changes
+
+- fix(Autocomplete): doesn't show value [`#806`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/806)
+
+---
 ## [V0.65](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.64...V0.65) - 2022-03-08
 
 ### Changes

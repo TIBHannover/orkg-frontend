@@ -13,19 +13,14 @@ const DiffTitle = ({ data }) => (
                 </span>
             )}
         </span>{' '}
-        <Button color="light" size="sm" tag={Link} to={data.route}>
+        <Button color="light" size="sm" tag={Link} to={data.route ?? ''}>
             {data.buttonText}
         </Button>
     </div>
 );
 
 DiffTitle.propTypes = {
-    data: PropTypes.object.isRequired,
-    id: PropTypes.string.isRequired,
-    versions: PropTypes.array.isRequired,
-    route: PropTypes.string.isRequired,
-    buttonText: PropTypes.string.isRequired,
-    creator: PropTypes.string
+    data: PropTypes.object.isRequired
 };
 
 export default DiffTitle;

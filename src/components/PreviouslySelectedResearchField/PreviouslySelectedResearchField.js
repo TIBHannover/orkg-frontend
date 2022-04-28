@@ -25,7 +25,7 @@ const PreviouslySelectedResearchField = props => {
                             <Button
                                 key={rf.id}
                                 color="light"
-                                onClick={() => props.handleFieldSelect(rf)}
+                                onClick={() => props.handleFieldSelect(rf, true)}
                                 className={`me-2 mb-2 text-start rounded-pill ${props.selectedResearchField === rf.id ? 'active' : ''}`}
                                 size="sm"
                             >

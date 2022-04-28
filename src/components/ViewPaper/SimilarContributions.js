@@ -75,7 +75,7 @@ const SimilarContributions = ({ similarContributions = [] }) => {
                             <CardWrapper key={`sim${index}`} lg={4} className="mt-2 justify-content-center">
                                 <Card
                                     key={`s${contribution.contributionId}`}
-                                    to={reverse(ROUTES.VIEW_PAPER, {
+                                    to={reverse(ROUTES.VIEW_PAPER_CONTRIBUTION, {
                                         resourceId: contribution.paperId,
                                         contributionId: contribution.contributionId
                                     })}

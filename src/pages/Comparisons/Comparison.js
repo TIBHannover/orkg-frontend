@@ -1,7 +1,16 @@
 import { useState, useEffect } from 'react';
 import { Alert, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Button, Badge } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faEllipsisV, faLightbulb, faHistory, faChartBar, faExternalLinkAlt, faFilter, faPlus } from '@fortawesome/free-solid-svg-icons';
+import {
+    faEllipsisV,
+    faLightbulb,
+    faHistory,
+    faChartBar,
+    faExternalLinkAlt,
+    faFilter,
+    faPlus,
+    faChevronRight
+} from '@fortawesome/free-solid-svg-icons';
 import ComparisonLoadingComponent from 'components/Comparison/ComparisonLoadingComponent';
 import ComparisonTable from 'components/Comparison/Comparison';
 import ExportToLatex from 'components/Comparison/Export/ExportToLatex.js';
@@ -28,8 +37,8 @@ import ShareLinkMarker from 'components/ShareLinkMarker/ShareLinkMarker';
 import { getResource } from 'services/backend/resources';
 import moment from 'moment';
 import ROUTES from 'constants/routes.js';
-import { useHistory, Link, useParams } from 'react-router-dom';
-import { openAuthDialog } from 'actions/auth';
+import { useParams, useNavigate, Link, NavLink } from 'react-router-dom';
+import { openAuthDialog } from 'slices/authSlice';
 import { CSVLink } from 'react-csv';
 import { generateRdfDataVocabularyFile, areAllRulesEmpty } from 'utils';
 import Tippy from '@tippyjs/react';
@@ -41,7 +50,6 @@ import IntelligentMerge from 'assets/img/comparison-intelligent-merge.svg';
 import AddVisualizationModal from 'libs/selfVisModel/ComparisonComponents/AddVisualizationModal';
 import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
 import PreviewVisualizationComparison from 'libs/selfVisModel/ComparisonComponents/PreviewVisualizationComparison';
-import { NavLink } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import env from '@beam-australia/react-env';
 import { Helmet } from 'react-helmet';
@@ -75,6 +83,7 @@ function Comparison(props) {
         provenance,
         researchField,
         setMetaData,
+        hiddenGroups,
         setComparisonType,
         setPredicatesList,
         toggleProperty,
@@ -92,7 +101,8 @@ function Comparison(props) {
         loadProvenanceInfos,
         loadVisualizations,
         handleEditContributions,
-        fetchLiveData
+        fetchLiveData,
+        handleToggleGroupVisibility
     } = useComparison({});
 
     const params = useParams();
@@ -113,7 +123,7 @@ function Comparison(props) {
     /** adding some additional state for meta data **/
 
     const [cookies, setCookie] = useCookies();
-    const history = useHistory();
+    const navigate = useNavigate();
 
     const [fullWidth, setFullWidth] = useState(cookies.useFullWidthForComparisonTable === 'true' ? cookies.useFullWidthForComparisonTable : false);
     const [hideScrollHint, setHideScrollHint] = useState(cookies.seenShiftMouseWheelScroll ? cookies.seenShiftMouseWheelScroll : false);
@@ -138,7 +148,7 @@ function Comparison(props) {
      * Is case of an error the user can go to the previous link in history
      */
     const handleGoBack = () => {
-        history.goBack();
+        navigate(-1);
     };
 
     const closeOnExport = () => {
@@ -308,7 +318,7 @@ function Comparison(props) {
                                 <DropdownMenu end style={{ zIndex: '1031' }}>
                                     <Dropdown isOpen={dropdownDensityOpen} toggle={() => setDropdownDensityOpen(v => !v)} direction="left">
                                         <DropdownToggle className="dropdown-item pe-auto" tag="div" style={{ cursor: 'pointer' }}>
-                                            View
+                                            View <Icon style={{ marginTop: '4px' }} icon={faChevronRight} pull="right" />
                                         </DropdownToggle>
                                         <DropdownMenu>
                                             <DropdownItem onClick={handleFullWidth}>
@@ -349,11 +359,11 @@ function Comparison(props) {
                                             <Dropdown isOpen={dropdownMethodOpen} toggle={() => setDropdownMethodOpen(v => !v)} direction="left">
                                                 <DropdownToggle
                                                     tag="div"
-                                                    className={`dropdown-item ${isPublished ? 'disabled' : ''}`}
+                                                    className={`dropdown-item d-flex ${isPublished ? 'disabled' : ''}`}
                                                     style={{ cursor: 'pointer' }}
                                                     disabled={isPublished}
                                                 >
-                                                    Comparison method
+                                                    Comparison method <Icon style={{ marginTop: '4px' }} icon={faChevronRight} pull="right" />
                                                 </DropdownToggle>
                                                 <DropdownMenu>
                                                     <div className="d-flex px-2">
@@ -472,7 +482,7 @@ function Comparison(props) {
                                     {metaData?.id && (
                                         <>
                                             <DropdownItem divider />
-                                            <DropdownItem tag={NavLink} exact to={reverse(ROUTES.RESOURCE, { id: metaData.id })}>
+                                            <DropdownItem tag={NavLink} end to={reverse(ROUTES.RESOURCE, { id: metaData.id })}>
                                                 View resource
                                             </DropdownItem>
                                         </>
@@ -548,11 +558,10 @@ function Comparison(props) {
                                         />
                                     )}
                                 </h2>
-
-                                {!isFailedLoadingMetaData && <ComparisonMetaData metaData={metaData} />}
+                                {!isFailedLoadingMetaData && <ComparisonMetaData metaData={metaData} provenance={provenance} />}
                             </div>
 
-                            {metaData.id && provenance && <ObservatoryBox provenance={provenance} />}
+                            {metaData.id && <ObservatoryBox provenance={provenance} />}
                         </div>
                     )}
                     {!isFailedLoadingMetaData && !isFailedLoadingComparisonResult && (
@@ -607,6 +616,8 @@ function Comparison(props) {
                                             filterControlData={filterControlData}
                                             updateRulesOfProperty={updateRulesOfProperty}
                                             comparisonType={comparisonType}
+                                            handleToggleGroupVisibility={handleToggleGroupVisibility}
+                                            hiddenGroups={hiddenGroups}
                                         />
                                     </div>
                                 ) : (
@@ -697,6 +708,7 @@ function Comparison(props) {
                 loadProvenanceInfos={loadProvenanceInfos}
                 data={data}
                 nextVersions={!isLoadingVersions && hasNextVersion ? versions : []}
+                anonymized={metaData?.anonymized}
             />
 
             {showSaveDraftDialog && (

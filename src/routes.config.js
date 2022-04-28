@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import { lazy } from 'react';
-import { Redirect } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import ResourceDetails from 'pages/Resources/Resource';
 import AddPaper from 'pages/AddPaper';
 import AuthorPage from 'pages/AuthorPage';
@@ -62,10 +62,13 @@ import HelpCenterCategory from 'pages/HelpCenter/HelpCenterCategory';
 import HelpCenterArticle from 'pages/HelpCenter/HelpCenterArticle';
 import HelpCenterSearch from 'pages/HelpCenter/HelpCenterSearch';
 import WebinarMay11 from 'pages/WebinarMay11';
-import LiteratureLists from 'pages/LiteratureList/LiteratureLists';
-import LiteratureListNew from 'pages/LiteratureList/LiteratureListNew';
-import LiteratureList from 'pages/LiteratureList/LiteratureList';
-import LiteratureListDiff from 'pages/LiteratureList/LiteratureListDiff';
+import Lists from 'pages/Lists/Lists';
+import ListNew from 'pages/Lists/ListNew';
+import List from 'pages/Lists/List';
+import ListDiff from 'pages/Lists/ListDiff';
+import ContentTypeNew from 'pages/ContentType/ContentTypeNew';
+import ContentType from 'pages/ContentType/ContentType';
+import ContentTypes from 'pages/ContentType/ContentTypes';
 
 // use lazy loading of pages that contain large dependencies
 // run "npm run analyze" to ensure the listed dependencies are not loaded elsewhere and thus end up in the bundle
@@ -75,351 +78,381 @@ const PdfAnnotation = lazy(() => import('pages/PdfAnnotation')); // for dependen
 const routes = [
     {
         path: ROUTES.HOME,
-        exact: true,
-        component: Home
+        element: Home
     },
     {
         path: ROUTES.RESOURCES,
-        exact: true,
-        component: Resources
+        element: Resources
     },
     {
         path: ROUTES.RESOURCE,
-        component: ResourceDetails
+        element: ResourceDetails
     },
     {
         path: ROUTES.ADD_RESOURCE,
-        exact: true,
-        component: requireAuthentication(AddResource)
+        element: requireAuthentication(AddResource)
     },
     {
         path: ROUTES.PROPERTIES,
-        exact: true,
-        component: Properties
+        element: Properties
     },
     {
         path: ROUTES.PROPERTY,
-        component: PropertyDetails
+        element: PropertyDetails
     },
     {
         path: ROUTES.ADD_PROPERTY,
-        exact: true,
-        component: requireAuthentication(AddProperty)
+        element: requireAuthentication(AddProperty)
     },
     {
         path: ROUTES.CLASSES,
-        exact: true,
-        component: Classes
+        element: Classes
     },
     {
         path: ROUTES.CLASS,
-        component: ClassDetails
+        element: ClassDetails
     },
     {
         path: ROUTES.ADD_CLASS,
-        exact: true,
-        component: requireAuthentication(AddClass)
+        element: requireAuthentication(AddClass)
     },
     {
         path: ROUTES.TEMPLATES,
-        exact: true,
-        component: Templates
+        element: Templates
     },
     {
         path: ROUTES.TEMPLATE,
-        exact: true,
-        component: Template
+        element: Template
+    },
+    {
+        path: ROUTES.ADD_TEMPLATE,
+        element: Template
     },
     {
         path: ROUTES.USER_SETTINGS,
-        exact: true,
-        component: requireAuthentication(UserSettings)
+        element: requireAuthentication(UserSettings)
+    },
+    {
+        path: ROUTES.USER_SETTINGS_DEFAULT,
+        element: requireAuthentication(UserSettings)
     },
     {
         path: ROUTES.USER_PROFILE,
-        exact: true,
-        component: UserProfile
+        element: UserProfile
     },
     {
         path: ROUTES.ADD_PAPER.GENERAL_DATA,
-        exact: true,
-        component: requireAuthentication(AddPaper)
+        element: requireAuthentication(AddPaper)
     },
     {
         /* TODO: slug for the paper title */
+        path: ROUTES.VIEW_PAPER_CONTRIBUTION,
+        element: ViewPaper
+    },
+    {
         path: ROUTES.VIEW_PAPER,
-        exact: true,
-        component: ViewPaper
+        element: ViewPaper
     },
     {
         path: ROUTES.COMPARISON_DIFF,
-        component: ComparisonDiff
+        element: ComparisonDiff
     },
     {
         path: ROUTES.COMPARISON_SHORTLINK,
-        exact: true,
-        component: RedirectShortLinks
+        element: RedirectShortLinks
     },
     {
         path: ROUTES.COMPARISON,
-        exact: true,
-        component: Comparison
+        element: Comparison
+    },
+    {
+        path: ROUTES.COMPARISON_NOT_PUBLISHED,
+        element: Comparison
     },
     {
         path: ROUTES.ORGANIZATIONS,
-        exact: true,
-        component: Organizations
+        element: Organizations
     },
     {
         path: ROUTES.OBSERVATORIES,
-        exact: true,
-        component: Observatories
-    },
-    {
-        /* TODO: Remove this route (it's temporarily backward compatibility for moving contributions ids from view args to query string) */
-        path: ROUTES.COMPARISON + '*',
-        exact: true,
-        component: ({ match, location }) => (
-            <Redirect
-                to={`${reverse(ROUTES.COMPARISON)}?contributions=${match.params[0].split('/').join(',')}${
-                    location.search ? '&' + (location.search.charAt(0) === '?' ? location.search.substr(1) : location.search) : ''
-                }`}
-            />
-        )
-    },
-    {
-        /* TODO: Remove this route (it's temporarily backward compatibility for moving predicates to properties naming */
-        path: ROUTES.PREDICATES,
-        exact: true,
-        component: () => <Redirect to={{ pathname: reverse(ROUTES.PROPERTIES), state: { status: 301 } }} />
-    },
-    {
-        /* TODO: Remove this route (it's temporarily backward compatibility for moving predicates to properties naming */
-        path: ROUTES.PREDICATE + '*',
-        exact: true,
-        component: ({ match }) => <Redirect to={{ pathname: reverse(ROUTES.PROPERTY, { id: match.params.id }), state: { status: 301 } }} />
+        element: Observatories
     },
     {
         path: ROUTES.PAPERS,
-        exact: true,
-        component: Papers
+        element: Papers
     },
     {
         path: ROUTES.COMPARISONS,
-        exact: true,
-        component: Comparisons
+        element: Comparisons
     },
 
     {
         path: ROUTES.VISUALIZATIONS,
-        exact: true,
-        component: Visualizations
+        element: Visualizations
     },
     {
         path: ROUTES.VISUALIZATION,
-        component: Visualization
+        element: Visualization
     },
     {
         path: ROUTES.RESEARCH_PROBLEM,
-        component: ResearchProblem
+        element: ResearchProblem
+    },
+    {
+        path: ROUTES.RESEARCH_PROBLEM_NO_SLUG,
+        element: ResearchProblem
     },
     {
         path: ROUTES.RESEARCH_FIELD,
-        component: ResearchField
+        element: ResearchField
+    },
+    {
+        path: ROUTES.RESEARCH_FIELD_NO_SLUG,
+        element: ResearchField
     },
     {
         path: ROUTES.RESEARCH_FIELDS,
-        component: ResearchFields
+        element: ResearchFields
     },
     {
         path: ROUTES.VENUE_PAGE,
-        component: VenuePage
+        element: VenuePage
     },
     {
         path: ROUTES.AUTHOR_PAGE,
-        component: AuthorPage
+        element: AuthorPage
     },
     {
         path: ROUTES.CHANGELOG,
-        component: Changelog
+        element: Changelog
     },
     {
         path: ROUTES.SEARCH,
-        component: SearchResults
+        element: SearchResults
     },
     {
         path: ROUTES.STATS,
-        component: Stats
+        element: Stats
     },
     /* Legacy routes, only used for debugging now */
     {
         path: ROUTES.FEATURED_COMPARISONS,
-        component: FeaturedComparisons
+        element: FeaturedComparisons
     },
     {
         path: ROUTES.ORGANIZATION,
-        exact: true,
-        component: OrganizationDetails
+        element: OrganizationDetails
     },
     {
         path: ROUTES.ADD_ORGANIZATION,
-        exact: true,
-        component: requireAuthentication(AddOrganization)
+        element: requireAuthentication(AddOrganization)
     },
     {
         path: ROUTES.ADD_OBSERVATORY,
-        exact: true,
-        component: requireAuthentication(AddObservatory)
+        element: requireAuthentication(AddObservatory)
     },
     {
         path: ROUTES.OBSERVATORY,
-        exact: true,
-        component: Observatory
+        element: Observatory
     },
     {
         path: ROUTES.PDF_TEXT_ANNOTATION,
-        exact: true,
-        component: PdfTextAnnotation
+        element: PdfTextAnnotation
     },
     {
         path: ROUTES.TPDL,
-        component: () => <Redirect to="/" />
+        element: () => <Navigate to="/" />
     },
     {
         path: ROUTES.PDF_ANNOTATION,
-        component: requireAuthentication(PdfAnnotation)
+        element: requireAuthentication(PdfAnnotation)
     },
     {
         path: ROUTES.CONTRIBUTION,
-        component: Contribution
+        element: Contribution
     },
     {
         path: ROUTES.EXPORT_DATA,
-        component: () => <Redirect to={{ pathname: reverse(ROUTES.DATA), state: { status: 301 } }} />
+        element: () => <Navigate to={{ pathname: reverse(ROUTES.DATA), state: { status: 301 } }} />
     },
     {
         path: ROUTES.DATA,
-        component: Data
+        element: Data
     },
     {
         path: ROUTES.CSV_IMPORT,
-        component: requireAuthentication(CsvImport)
+        element: requireAuthentication(CsvImport)
     },
     {
         path: ROUTES.BENCHMARKS,
-        exact: true,
-        component: Benchmarks
+        element: Benchmarks
     },
     {
         path: ROUTES.BENCHMARK,
-        component: Benchmark
+        element: Benchmark
     },
     {
         path: ROUTES.REVIEW_NEW,
-        component: requireAuthentication(ReviewNew)
+        element: requireAuthentication(ReviewNew)
     },
     {
         path: ROUTES.REVIEW_DIFF,
-        component: ReviewDiff
+        element: ReviewDiff
     },
     {
         path: ROUTES.REVIEW,
-        component: Review
+        element: Review
     },
     {
         path: ROUTES.REVIEWS,
-        component: Reviews
+        element: Reviews
     },
     {
         path: ROUTES.CONTRIBUTION_EDITOR,
-        component: requireAuthentication(ContributionEditor)
+        element: requireAuthentication(ContributionEditor)
     },
     {
         path: ROUTES.ADD_COMPARISON,
-        component: AddComparison
+        element: AddComparison
     },
     {
         path: ROUTES.TOOLS,
-        component: Tools
+        element: Tools
     },
     {
         path: ROUTES.PAGE,
-        component: Page
+        element: Page
     },
     {
         path: ROUTES.ABOUT,
-        component: About
+        element: About
+    },
+    {
+        path: ROUTES.ABOUT_NO_SLUG,
+        element: About
+    },
+    {
+        path: ROUTES.ABOUT_NO_SLUG_ID,
+        element: About
     },
     {
         path: ROUTES.HELP_CENTER_CATEGORY,
-        component: HelpCenterCategory
+        element: HelpCenterCategory
     },
     {
         path: ROUTES.HELP_CENTER_ARTICLE,
-        component: HelpCenterArticle
+        element: HelpCenterArticle
     },
     {
         path: ROUTES.HELP_CENTER_SEARCH,
-        component: HelpCenterSearch
+        element: HelpCenterSearch
     },
     {
-        path: ROUTES.LITERATURE_LISTS,
-        component: LiteratureLists
+        path: ROUTES.LISTS,
+        element: Lists
     },
     {
-        path: ROUTES.LITERATURE_LIST_NEW,
-        component: LiteratureListNew
+        path: ROUTES.LIST_NEW,
+        element: ListNew
     },
     {
-        path: ROUTES.LITERATURE_LIST_DIFF,
-        component: LiteratureListDiff
+        path: ROUTES.LIST_DIFF,
+        element: ListDiff
     },
     {
-        path: ROUTES.LITERATURE_LIST,
-        component: LiteratureList
+        path: ROUTES.LIST,
+        element: List
+    },
+    {
+        path: ROUTES.LIST_EMBED,
+        element: List
     },
     // redirect legacy route
     {
         path: ROUTES.CURATION_CALL,
-        component: () => {
+        element: () => {
             window.location.replace('https://www.orkg.org/orkg/about/28/Curation_Grants');
             return null;
         }
     },
     {
         path: ROUTES.HELP_CENTER,
-        component: HelpCenter
+        element: HelpCenter
     },
     {
         path: ROUTES.WEBINAR_MAY_11,
-        component: WebinarMay11
+        element: WebinarMay11
     },
     {
         path: ROUTES.USER_UNPUBLISHED_REVIEWS,
-        component: () => <Redirect to={{ pathname: reverse(ROUTES.USER_SETTINGS, { tab: 'draft-reviews' }), state: { status: 301 } }} />
+        element: () => <Navigate to={{ pathname: reverse(ROUTES.USER_SETTINGS, { tab: 'draft-reviews' }), state: { status: 301 } }} />
+    },
+    {
+        path: ROUTES.CONTENT_TYPE_NEW,
+        element: ContentTypeNew
+    },
+    {
+        path: ROUTES.CONTENT_TYPE_NEW_NO_TYPE,
+        element: ContentTypeNew
+    },
+    {
+        path: ROUTES.CONTENT_TYPE,
+        element: ContentType
+    },
+    {
+        path: ROUTES.CONTENT_TYPE_NO_MODE,
+        element: ContentType
+    },
+    {
+        path: ROUTES.CONTENT_TYPES,
+        element: ContentTypes
     }
 ];
 
 const legacyRoutes = [
     {
         path: ROUTES.SMART_REVIEW_NEW,
-        component: () => <Redirect to={{ pathname: ROUTES.REVIEW_NEW, state: { status: 301 } }} />
+        element: () => <Navigate to={{ pathname: ROUTES.REVIEW_NEW, state: { status: 301 } }} />
     },
     {
         path: ROUTES.SMART_REVIEW_DIFF,
-        component: ({ match }) => (
-            <Redirect
+        element: ({ match }) => (
+            <Navigate
                 to={{ pathname: reverse(ROUTES.REVIEW_DIFF, { oldId: match.params.oldId, newId: match.params.newId }), state: { status: 301 } }}
             />
         )
     },
     {
         path: ROUTES.SMART_REVIEW,
-        component: ({ match }) => <Redirect to={{ pathname: reverse(ROUTES.REVIEW, { id: match.params.id }), state: { status: 301 } }} />
+        element: ({ match }) => <Navigate to={{ pathname: reverse(ROUTES.REVIEW, { id: match.params.id }), state: { status: 301 } }} />
     },
     {
         path: ROUTES.SMART_REVIEWS,
-        component: () => <Redirect to={{ pathname: ROUTES.REVIEWS, state: { status: 301 } }} />
+        element: () => <Navigate to={{ pathname: ROUTES.REVIEWS, state: { status: 301 } }} />
+    },
+    {
+        path: ROUTES.LITERATURE_LISTS,
+        element: () => <Navigate to={{ pathname: ROUTES.LISTS, state: { status: 301 } }} />
+    },
+    {
+        path: ROUTES.LITERATURE_LIST,
+        element: ({ match }) => <Navigate to={{ pathname: reverse(ROUTES.LIST, { id: match.params.id }), state: { status: 301 } }} />
+    },
+    {
+        path: ROUTES.LITERATURE_LIST_EMBED,
+        element: ({ match }) => <Navigate to={{ pathname: reverse(ROUTES.LIST_EMBED, { id: match.params.id }), state: { status: 301 } }} />
+    },
+    {
+        path: ROUTES.LITERATURE_LIST_NEW,
+        element: () => <Navigate to={{ pathname: ROUTES.LIST_NEW, state: { status: 301 } }} />
+    },
+    {
+        path: ROUTES.LITERATURE_LIST_DIFF,
+        element: ({ match }) => (
+            <Navigate
+                to={{ pathname: reverse(ROUTES.LIST_DIFF, { oldId: match.params.oldId, newId: match.params.newId }), state: { status: 301 } }}
+            />
+        )
     }
 ];
 
@@ -428,7 +461,8 @@ const allRoutes = [
     ...legacyRoutes,
     // NotFound must be the last route
     {
-        component: NotFound
+        path: '*',
+        element: NotFound
     }
 ];
 

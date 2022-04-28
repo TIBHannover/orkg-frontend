@@ -1,7 +1,7 @@
 import { Button, ButtonGroup } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSearchMinus, faSearchPlus, faExpandArrowsAlt, faTimesCircle, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
-import { resetPdfAnnotation } from 'actions/pdfAnnotation';
+import { resetPdfAnnotation } from 'slices/pdfAnnotationSlice';
 import { useSelector, useDispatch } from 'react-redux';
 import Confirm from 'components/Confirmation/Confirmation';
 import styled from 'styled-components';

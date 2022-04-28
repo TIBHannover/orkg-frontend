@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
-import { updateAnnotationClass, removeAnnotation, toggleEditAnnotation } from 'actions/addPaper';
+import { updateAnnotationClass, removeAnnotation, toggleEditAnnotation } from 'slices/addPaperSlice';
 import Tippy from '@tippyjs/react';
 import { ENTITIES } from 'constants/graphSettings';
 import capitalize from 'capitalize';

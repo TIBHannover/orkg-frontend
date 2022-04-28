@@ -1,38 +1,39 @@
-import { Component } from 'react';
-import { withRouter } from 'react-router-dom';
-import PropTypes from 'prop-types';
+import { useEffect } from 'react';
 import ROUTES from 'constants/routes.js';
 import { match } from 'path-to-regexp';
+import { useLocation } from 'react-router-dom';
+import { usePrevious } from 'react-use';
 
 /* Scrolls browser window to top when new page is visited,
 but preserves scroll position when previous page is visited */
-class ScrollToTop extends Component {
-    componentDidUpdate(prevProps) {
-        if (this.props.location !== prevProps.location) {
-            const excludePages = [ROUTES.VIEW_PAPER, ROUTES.FEATURED_COMPARISONS, ROUTES.REVIEW, ROUTES.LITERATURE_LIST, ROUTES.RESEARCH_FIELD];
-            let preventScrollTop = false;
+const ScrollToTop = props => {
+    const location = useLocation();
+    const prevPathname = usePrevious(location.pathname);
 
-            for (const page of excludePages) {
-                const matchPage = match(page);
-                if (matchPage(this.props.location.pathname) && matchPage(prevProps.location.pathname)) {
-                    preventScrollTop = true;
-                    break;
-                }
-            }
-            if (!preventScrollTop) {
-                window.scrollTo(0, 0);
+    useEffect(() => {
+        const excludePages = [
+            ROUTES.VIEW_PAPER_CONTRIBUTION,
+            ROUTES.VIEW_PAPER,
+            ROUTES.FEATURED_COMPARISONS,
+            ROUTES.REVIEW,
+            ROUTES.LIST,
+            ROUTES.RESEARCH_FIELD
+        ];
+        let preventScrollTop = false;
+
+        for (const page of excludePages) {
+            const matchPage = match(page);
+            if (matchPage(location.pathname) && matchPage(prevPathname)) {
+                preventScrollTop = true;
+                break;
             }
         }
-    }
+        if (!preventScrollTop) {
+            window.scrollTo(0, 0);
+        }
+    }, [location.pathname, prevPathname]);
 
-    render() {
-        return this.props.children;
-    }
-}
-
-ScrollToTop.propTypes = {
-    location: PropTypes.object.isRequired,
-    children: PropTypes.node.isRequired
+    return props.children;
 };
 
-export default withRouter(ScrollToTop);
+export default ScrollToTop;

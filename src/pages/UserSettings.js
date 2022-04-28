@@ -1,16 +1,16 @@
 import TitleBar from 'components/TitleBar/TitleBar';
 import DraftComparisons from 'components/UserSettings/DraftComparisons/DraftComparisons';
-import DraftLiteratureLists from 'components/UserSettings/DraftLiteratureLists/DraftLiteratureLists';
+import DraftLists from 'components/UserSettings/DraftLists/DraftLists';
 import DraftReviews from 'components/UserSettings/DraftReviews/DraftReviews';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router';
-import { Link } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { Container, Row } from 'reactstrap';
 import styled from 'styled-components';
 import GeneralSettings from 'components/UserSettings/GeneralSettings';
 import Password from 'components/UserSettings/Password';
+import requireAuthentication from 'requireAuthentication';
 
 export const StyledSettingsMenu = styled.div`
     padding: 0;
@@ -43,7 +43,7 @@ const TABS = {
     PASSWORD: 'password',
     DRAFT_COMPARISONS: 'draft-comparisons',
     DRAFT_REVIEWS: 'draft-reviews',
-    DRAFT_LITERATURE_LISTS: 'draft-literature-lists'
+    DRAFT_LISTS: 'draft-lists'
 };
 
 const UserSettings = () => {
@@ -88,10 +88,10 @@ const UserSettings = () => {
                                     Draft reviews
                                 </Link>
                                 <Link
-                                    to={reverse(ROUTES.USER_SETTINGS, { tab: TABS.DRAFT_LITERATURE_LISTS })}
-                                    className={activeTab === TABS.DRAFT_LITERATURE_LISTS ? 'active' : ''}
+                                    to={reverse(ROUTES.USER_SETTINGS, { tab: TABS.DRAFT_LISTS })}
+                                    className={activeTab === TABS.DRAFT_LISTS ? 'active' : ''}
                                 >
-                                    Draft literature list
+                                    Draft lists
                                 </Link>
                             </StyledSettingsMenu>
                         </Container>
@@ -112,7 +112,7 @@ const UserSettings = () => {
 
                         {activeTab === TABS.DRAFT_REVIEWS && <DraftReviews />}
 
-                        {activeTab === TABS.DRAFT_LITERATURE_LISTS && <DraftLiteratureLists />}
+                        {activeTab === TABS.DRAFT_LISTS && <DraftLists />}
                     </div>
                 </Row>
             </Container>
@@ -120,4 +120,4 @@ const UserSettings = () => {
     );
 };
 
-export default UserSettings;
+export default requireAuthentication(UserSettings);

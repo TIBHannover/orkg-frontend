@@ -3,6 +3,7 @@ import { getStatementsBySubject, getStatementsBySubjectAndPredicate } from 'serv
 import { getContributorInformationById } from 'services/backend/contributors';
 import { getObservatoryAndOrganizationInformation } from 'services/backend/observatories';
 import { getResource } from 'services/backend/resources';
+import env from '@beam-australia/react-env';
 import { getComparison, getResourceData } from 'services/similarity/index';
 import {
     extendPropertyIds,
@@ -16,7 +17,7 @@ import {
     getComparisonData,
     isPredicatesListCorrect
 } from 'utils';
-import { useParams, useLocation, useHistory } from 'react-router-dom';
+import { useLocation, useParams, useNavigate } from 'react-router-dom';
 import { PREDICATES, CLASSES, MISC } from 'constants/graphSettings';
 import { reverse } from 'named-urls';
 import { flatten, groupBy, intersection, findIndex, cloneDeep, isEmpty, uniq, without } from 'lodash';
@@ -25,14 +26,17 @@ import ROUTES from 'constants/routes.js';
 import queryString from 'query-string';
 import { usePrevious } from 'react-use';
 import Confirm from 'components/Confirmation/Confirmation';
+import { getOrganization } from 'services/backend/organizations';
+import { asyncLocalStorage } from 'utils';
 
 const DEFAULT_COMPARISON_METHOD = 'path';
 
 function useComparison({ id }) {
     const location = useLocation();
-    const history = useHistory();
+    const navigate = useNavigate();
     const params = useParams();
     const comparisonId = id || params.comparisonId;
+    const hiddenGroupsStorageName = comparisonId ? `comparison-${comparisonId}-hidden-rows` : null;
 
     /**
      * @typedef {Object} MetaData
@@ -70,7 +74,7 @@ function useComparison({ id }) {
 
     // urls
     const [urlNeedsToUpdate, setUrlNeedsToUpdate] = useState(false);
-    const [publicURL, setPublicURL] = useState(window.location.href);
+    const publicURL = env('URL').replace(/\/$/, '');
     const [comparisonURLConfig, setComparisonURLConfig] = useState(window.location.search);
     const [shortLink, setShortLink] = useState('');
 
@@ -81,6 +85,7 @@ function useComparison({ id }) {
     const [contributionsList, setContributionsList] = useState([]);
     const [predicatesList, setPredicatesList] = useState([]);
     const [shouldFetchLiveComparison, setShouldFetchLiveComparison] = useState(false);
+    const [hiddenGroups, setHiddenGroups] = useState([]);
 
     // reference to previous comparison type
     const prevComparisonType = usePrevious(comparisonType);
@@ -92,20 +97,6 @@ function useComparison({ id }) {
     const [isFailedLoadingMetaData, setIsFailedLoadingMetaData] = useState(false);
     const [isLoadingComparisonResult, setIsLoadingComparisonResult] = useState(true);
     const [isFailedLoadingComparisonResult, setIsFailedLoadingComparisonResult] = useState(false);
-
-    /**
-     * set comparison Public URL
-     *
-     * This function get the public url of ORKG without any route
-     *
-     * if the app runs under orkg.org/orkg it will set orkg.org/orkg as public URL
-     */
-    const updateComparisonPublicURL = () => {
-        const newURL = `${window.location.protocol}//${window.location.host}${window.location.pathname
-            .replace(reverse(ROUTES.COMPARISON, { comparisonId: comparisonId }), '')
-            .replace(/\/$/, '')}`;
-        setPublicURL(newURL);
-    };
 
     const loadVisualizations = comparisonID => {
         getStatementsBySubjectAndPredicate({ subjectId: comparisonID, predicateId: PREDICATES.HAS_VISUALIZATION }).then(statements => {
@@ -242,6 +233,14 @@ function useComparison({ id }) {
             getObservatoryAndOrganizationInformation(observatory_id, organization_id)
                 .then(observatory => {
                     setProvenance(observatory);
+                })
+                .catch(() => {
+                    setProvenance(null);
+                });
+        } else if (organization_id && organization_id !== MISC.UNKNOWN_ID) {
+            getOrganization(organization_id)
+                .then(organization => {
+                    setProvenance({ organization: organization });
                 })
                 .catch(() => {
                     setProvenance(null);
@@ -585,7 +584,7 @@ function useComparison({ id }) {
         );
         setComparisonURLConfig(`?${params}`);
         setShortLink('');
-        history.push(reverse(ROUTES.COMPARISON) + `?${params}`);
+        navigate(reverse(ROUTES.COMPARISON_NOT_PUBLISHED) + `?${params}`);
     };
 
     /**
@@ -631,7 +630,7 @@ function useComparison({ id }) {
         });
 
         if (isConfirmed) {
-            history.push(
+            navigate(
                 reverse(ROUTES.CONTRIBUTION_EDITOR) +
                     `?contributions=${contributionsList.join(',')}${
                         metaData?.hasPreviousVersion ? `&hasPreviousVersion=${metaData?.hasPreviousVersion.id}` : ''
@@ -645,6 +644,36 @@ function useComparison({ id }) {
         setResponseHash(null);
         setShouldFetchLiveComparison(true);
     };
+
+    /**
+     * Function to toggle group visibility. If the comparison is published, the configuration is stored in local storage
+     */
+    const handleToggleGroupVisibility = property => {
+        const _hiddenGroups = hiddenGroups.includes(property) ? hiddenGroups.filter(id => id !== property) : [...hiddenGroups, property];
+        setHiddenGroups(_hiddenGroups);
+        if (hiddenGroupsStorageName) {
+            if (_hiddenGroups.length > 0) {
+                asyncLocalStorage.setItem(hiddenGroupsStorageName, JSON.stringify(_hiddenGroups));
+            } else {
+                asyncLocalStorage.removeItem(hiddenGroupsStorageName);
+            }
+        }
+    };
+
+    useEffect(() => {
+        const getHiddenGroup = async () => {
+            if (comparisonId && hiddenGroupsStorageName) {
+                const data = await asyncLocalStorage.getItem(hiddenGroupsStorageName);
+                try {
+                    const parsedData = JSON.parse(data);
+                    if (data && Array.isArray(parsedData)) {
+                        setHiddenGroups(parsedData);
+                    }
+                } catch (e) {}
+            }
+        };
+        getHiddenGroup();
+    }, [comparisonId, hiddenGroupsStorageName]);
 
     useEffect(() => {
         // only is there is no hash, live comparison data can be fetched
@@ -669,7 +698,6 @@ function useComparison({ id }) {
             setContributionsList(contributionsIDs);
             setPredicatesList(getArrayParamFromQueryString(location.search, 'properties'));
         }
-        updateComparisonPublicURL();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [comparisonId, loadComparisonMetaData]);
 
@@ -749,6 +777,7 @@ function useComparison({ id }) {
         provenance,
         researchField,
         setMetaData,
+        hiddenGroups,
         setComparisonType,
         setPredicatesList,
         toggleProperty,
@@ -767,7 +796,8 @@ function useComparison({ id }) {
         loadProvenanceInfos,
         loadVisualizations,
         handleEditContributions,
-        fetchLiveData
+        fetchLiveData,
+        handleToggleGroupVisibility
     };
 }
 export default useComparison;
