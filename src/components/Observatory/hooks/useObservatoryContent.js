@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { getContentByObservatoryIdAndClasses } from 'services/backend/observatories';
 import { getStatementsBySubjects } from 'services/backend/statements';
 import { getDataBasedOnType, groupVersionsOfComparisons, mergeAlternate } from 'utils';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import ROUTES from 'constants/routes.js';
 import { reverseWithSlug } from 'utils';
 import { flatten } from 'lodash';
@@ -18,7 +18,7 @@ function useObservatoryContent({ observatoryId, initialSort, initialClassFilterO
     const [classFilterOptions] = useState(initialClassFilterOptions);
     const [classesFilter, setClassesFilter] = useState(initClassesFilter);
     const [totalElements, setTotalElements] = useState(0);
-    const history = useHistory();
+    const navigate = useNavigate();
 
     const loadData = useCallback(
         (page, total) => {
@@ -128,13 +128,13 @@ function useObservatoryContent({ observatoryId, initialSort, initialClassFilterO
     // update url
     useEffect(() => {
         if (updateURL) {
-            history.push(
+            navigate(
                 `${reverseWithSlug(ROUTES.OBSERVATORY, {
                     id: observatoryId
                 })}?sort=${sort}&classesFilter=${classesFilter.map(c => c.id).join(',')}`
             );
         }
-    }, [observatoryId, sort, classesFilter, history, updateURL]);
+    }, [observatoryId, sort, classesFilter, navigate, updateURL]);
 
     useEffect(() => {
         loadData(0);

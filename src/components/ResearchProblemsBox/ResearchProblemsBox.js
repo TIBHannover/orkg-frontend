@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button, Badge } from 'reactstrap';
+import { Button } from 'reactstrap';
 import ROUTES from 'constants/routes.js';
 import { Link } from 'react-router-dom';
 import ContentLoader from 'react-content-loader';
