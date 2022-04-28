@@ -80,7 +80,7 @@ function PaperMenuBar(props) {
                     >
                         Publish
                     </DropdownItem>
-                    <DropdownItem tag={NavLink} exact to={reverse(ROUTES.RESOURCE, { id: props.id })}>
+                    <DropdownItem tag={NavLink} end to={reverse(ROUTES.RESOURCE, { id: props.id })}>
                         View resource
                     </DropdownItem>
                 </DropdownMenu>

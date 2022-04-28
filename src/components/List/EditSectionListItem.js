@@ -122,7 +122,7 @@ const EditSectionListItem = ({ entry, sectionId, statementId }) => {
                     showAddToComparison
                     linkTarget="_blank"
                     showContributionCount={true}
-                    route={!isPaper ? reverse(ROUTES.CONTENT_TYPE, { id: contentType.id, type: contentTypeClass }) : undefined}
+                    route={!isPaper ? reverse(ROUTES.CONTENT_TYPE_NO_MODE, { id: contentType.id, type: contentTypeClass }) : undefined}
                 />
             </div>
             {isOpenEditModal && (

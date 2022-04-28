@@ -74,7 +74,7 @@ const Footer = () => (
                         <hr className="me-5" />
                         <ul className="p-0" style={{ listStyle: 'none' }}>
                             <li>
-                                <Link to={reverse(ROUTES.ABOUT, {})}>About us</Link>
+                                <Link to={reverse(ROUTES.ABOUT_NO_SLUG_ID, {})}>About us</Link>
                             </li>
                             <li>
                                 <Link to={ROUTES.HELP_CENTER}>Help center</Link>

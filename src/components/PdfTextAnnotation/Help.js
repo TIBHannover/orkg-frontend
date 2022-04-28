@@ -53,7 +53,7 @@ const Help = props => {
             ),
             style: tourStyle
         },
-        {
+        /*{
             selector: '#smart-sentence-detection',
             content: (
                 <>
@@ -78,7 +78,7 @@ const Help = props => {
                 </>
             ),
             style: tourStyle
-        },
+        },*/
         {
             selector: '#annotation-categories',
             content: (

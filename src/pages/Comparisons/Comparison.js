@@ -37,7 +37,7 @@ import ShareLinkMarker from 'components/ShareLinkMarker/ShareLinkMarker';
 import { getResource } from 'services/backend/resources';
 import moment from 'moment';
 import ROUTES from 'constants/routes.js';
-import { useHistory, Link, useParams } from 'react-router-dom';
+import { useParams, useNavigate, Link, NavLink } from 'react-router-dom';
 import { openAuthDialog } from 'slices/authSlice';
 import { CSVLink } from 'react-csv';
 import { generateRdfDataVocabularyFile, areAllRulesEmpty } from 'utils';
@@ -50,7 +50,6 @@ import IntelligentMerge from 'assets/img/comparison-intelligent-merge.svg';
 import AddVisualizationModal from 'libs/selfVisModel/ComparisonComponents/AddVisualizationModal';
 import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
 import PreviewVisualizationComparison from 'libs/selfVisModel/ComparisonComponents/PreviewVisualizationComparison';
-import { NavLink } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import env from '@beam-australia/react-env';
 import { Helmet } from 'react-helmet';
@@ -124,7 +123,7 @@ function Comparison(props) {
     /** adding some additional state for meta data **/
 
     const [cookies, setCookie] = useCookies();
-    const history = useHistory();
+    const navigate = useNavigate();
 
     const [fullWidth, setFullWidth] = useState(cookies.useFullWidthForComparisonTable === 'true' ? cookies.useFullWidthForComparisonTable : false);
     const [hideScrollHint, setHideScrollHint] = useState(cookies.seenShiftMouseWheelScroll ? cookies.seenShiftMouseWheelScroll : false);
@@ -149,7 +148,7 @@ function Comparison(props) {
      * Is case of an error the user can go to the previous link in history
      */
     const handleGoBack = () => {
-        history.goBack();
+        navigate(-1);
     };
 
     const closeOnExport = () => {
@@ -483,7 +482,7 @@ function Comparison(props) {
                                     {metaData?.id && (
                                         <>
                                             <DropdownItem divider />
-                                            <DropdownItem tag={NavLink} exact to={reverse(ROUTES.RESOURCE, { id: metaData.id })}>
+                                            <DropdownItem tag={NavLink} end to={reverse(ROUTES.RESOURCE, { id: metaData.id })}>
                                                 View resource
                                             </DropdownItem>
                                         </>

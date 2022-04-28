@@ -49,7 +49,7 @@ const Contributions = props => {
         handleChangeContributionLabel,
         handleCreateContribution,
         toggleDeleteContribution,
-        history
+        navigate
     } = useContributions({
         paperId: resourceId,
         contributionId
@@ -57,8 +57,8 @@ const Contributions = props => {
     const isAddingContribution = useSelector(state => state.viewPaper.isAddingContribution);
 
     const onTabChange = key => {
-        history.push(
-            reverse(ROUTES.VIEW_PAPER, {
+        navigate(
+            reverse(ROUTES.VIEW_PAPER_CONTRIBUTION, {
                 resourceId: resourceId,
                 contributionId: key
             })
@@ -178,7 +178,9 @@ const Contributions = props => {
                                                     {similarContributions.length > 0 && (
                                                         <Link
                                                             className="clearfix"
-                                                            to={`${reverse(ROUTES.COMPARISON)}?contributions=${contribution.id},${similarContributions
+                                                            to={`${reverse(ROUTES.COMPARISON_NOT_PUBLISHED)}?contributions=${
+                                                                contribution.id
+                                                            },${similarContributions
                                                                 .slice(0, 3)
                                                                 .map(s => s.contributionId)
                                                                 .join(',')}`}

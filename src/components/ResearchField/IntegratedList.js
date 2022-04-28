@@ -9,7 +9,7 @@ import { useSelector } from 'react-redux';
 import ContentLoader from 'react-content-loader';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
-import { useLocation } from 'react-router';
+import { useLocation } from 'react-router-dom';
 import queryString from 'query-string';
 
 const DEFAULT_CLASSES_FILTER = [
