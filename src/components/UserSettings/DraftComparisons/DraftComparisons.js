@@ -93,7 +93,7 @@ const DraftComparisons = () => {
                     {draftComparisons.map(draftComparison => (
                         <ListGroupItem key={draftComparison.id} className="d-flex justify-content-between align-items-center px-4 py-3">
                             <div>
-                                <Link to={reverse(ROUTES.COMPARISON) + draftComparison.url}>{draftComparison.label}</Link> <br />
+                                <Link to={reverse(ROUTES.COMPARISON_NOT_PUBLISHED) + draftComparison.url}>{draftComparison.label}</Link> <br />
                                 <small>
                                     <Icon icon={faCalendar} /> {moment(draftComparison.created_at).format('DD MMMM YYYY')}{' '}
                                     <Icon icon={faClock} className="ms-2 me-1" />

@@ -1,17 +1,20 @@
 import { useState, useEffect } from 'react';
 import ViewPaper from 'pages/ViewPaper';
+import { useParams } from 'react-router-dom';
 import ViewPaperVersion from 'pages/ViewPaperVersion';
 import { getResource } from 'services/backend/resources';
 import { CLASSES } from 'constants/graphSettings';
 
-export default function CheckPaperVersion(props) {
+export default function CheckPaperVersion() {
     const [paperType, setPaperType] = useState('');
+    const params = useParams();
+
     useEffect(() => {
-        getResource(props.match.params.resourceId).then(r => {
+        getResource(params.resourceId).then(r => {
             const type = r.classes.find(c => c === CLASSES.PAPER || c === CLASSES.PAPER_VERSION);
             setPaperType(type);
         });
-    }, [props]);
+    }, [params]);
 
     if (paperType === CLASSES.PAPER) {
         return <ViewPaper />;

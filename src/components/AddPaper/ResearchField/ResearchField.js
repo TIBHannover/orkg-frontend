@@ -10,13 +10,13 @@ const ResearchField = () => {
     const researchFields = useSelector(state => state.addPaper.researchFields);
     const dispatch = useDispatch();
 
-    const handleNextClick = () => {
+    const handleNextClick = useCallback(() => {
         if (!selectedResearchField) {
             setShowError(true);
             return;
         }
         dispatch(nextStep());
-    };
+    }, [dispatch, selectedResearchField]);
 
     let researchFieldLabel;
     if (researchFields && researchFields.length > 0) {
@@ -25,8 +25,8 @@ const ResearchField = () => {
     }
 
     const handleUpdateResearchField = useCallback(
-        data => {
-            dispatch(updateResearchField(data));
+        (data, submit = false) => {
+            dispatch(updateResearchField({ ...data, submit }));
         },
         [dispatch]
     );

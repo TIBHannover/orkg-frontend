@@ -11,7 +11,6 @@ import { createAnnotation, setIsLoadedPdfViewer } from 'slices/pdfTextAnnotation
 import Highlight from 'components/PdfTextAnnotation/Highlight';
 import useDeleteAnnotation from 'components/PdfTextAnnotation/hooks/useDeleteAnnotation';
 import DragUpload from 'components/PdfTextAnnotation/DragUpload';
-import ZoomBar from 'components/PdfTextAnnotation/ZoomBar';
 
 const Wrapper = styled.div`
     margin-top: -30px;
@@ -101,7 +100,7 @@ const PdfTextAnnotation = () => {
     return (
         <Wrapper>
             <Sidebar pdfViewer={pdfViewer} />
-            {pdf && <ZoomBar />}
+            {/*pdf && <ZoomBar />*/}
 
             <Main>
                 {pdf ? (

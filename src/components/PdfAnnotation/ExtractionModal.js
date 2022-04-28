@@ -30,7 +30,9 @@ const ExtractionModal = props => {
     };
     const { removeEmptyRows } = useTableEditor(props.id, editorRef);
 
-    const comparisonUrl = importedData ? reverse(ROUTES.COMPARISON) + '?contributions=' + importedData.map(entry => entry.contributionId) : null;
+    const comparisonUrl = importedData
+        ? reverse(ROUTES.COMPARISON_NOT_PUBLISHED) + '?contributions=' + importedData.map(entry => entry.contributionId)
+        : null;
 
     return (
         <>

@@ -1,7 +1,7 @@
 import { Container, UncontrolledAlert } from 'reactstrap';
 import NotFound from 'pages/NotFound';
 import ContentLoader from 'react-content-loader';
-import { useParams, useLocation } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import Contributions from 'components/ViewPaper/Contributions/Contributions';
 import useViewPaper from 'components/ViewPaper/hooks/useViewPaper';
 import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';

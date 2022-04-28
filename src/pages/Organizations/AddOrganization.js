@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import { Redirect } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import { Container, Button, Form, FormGroup, Input, Label, InputGroup } from 'reactstrap';
 import { toast } from 'react-toastify';
 import { createOrganization, createConference } from 'services/backend/organizations';
@@ -138,7 +138,7 @@ class AddOrganization extends Component {
                 permalink: ''
             });
 
-            return <Redirect to={reverse(ROUTES.ORGANIZATION, { id: this.state.display_id })} />;
+            return <Navigate to={reverse(ROUTES.ORGANIZATION, { id: this.state.display_id })} />;
         }
 
         return (

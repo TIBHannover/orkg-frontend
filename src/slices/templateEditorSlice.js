@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { LOCATION_CHANGE } from 'connected-react-router';
+import { LOCATION_CHANGE } from 'redux-first-history';
 import { deleteStatementsByIds, createResourceStatement, getTemplateById, getTemplatesByClass } from 'services/backend/statements';
 import { cloneDeep } from 'lodash';
 import { toast } from 'react-toastify';
@@ -142,6 +142,8 @@ export const saveTemplate = templateData => {
         if (!data.label) {
             // Make the template label mandatory
             dispatch(setHasFailedSaving(true));
+            dispatch(setIsSaving(false));
+            dispatch(setEditMode(true));
             toast.error('Please enter the name of template');
             return null;
         }
@@ -151,6 +153,8 @@ export const saveTemplate = templateData => {
             const templates = await getTemplatesByClass(data.class.id);
             if (templates.length > 0 && !templates.includes(data.templateID)) {
                 dispatch(setHasFailedSaving(true));
+                dispatch(setIsSaving(false));
+                dispatch(setEditMode(true));
                 toast.error('The template of this class is already defined');
                 return null;
             }
@@ -255,16 +259,23 @@ export const saveTemplate = templateData => {
             promises.push(createResourceStatement(templateResource, PREDICATES.TEMPLATE_LABEL_FORMAT, labelFormatLiteral.id));
         }
 
-        Promise.all(promises).then(() => {
-            if (data.templateID) {
-                toast.success('Template updated successfully');
-            } else {
-                toast.success('Template created successfully');
-            }
+        Promise.all(promises)
+            .then(() => {
+                if (data.templateID) {
+                    toast.success('Template updated successfully');
+                } else {
+                    toast.success('Template created successfully');
+                }
 
-            dispatch(loadTemplate(templateResource)); //reload the template
-            dispatch(setIsSaving(false));
-            dispatch(setTemplateId(templateResource));
-        });
+                dispatch(loadTemplate(templateResource)); //reload the template
+                dispatch(setIsSaving(false));
+                dispatch(setTemplateId(templateResource));
+            })
+            .catch(() => {
+                dispatch(setHasFailedSaving(true));
+                dispatch(setIsSaving(false));
+                dispatch(setEditMode(true));
+                toast.error('Template failed saving!');
+            });
     };
 };

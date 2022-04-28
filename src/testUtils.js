@@ -1,5 +1,5 @@
 import { render as rtlRender } from '@testing-library/react';
-import { ConnectedRouter } from 'connected-react-router';
+import { HistoryRouter as Router } from 'redux-first-history/rr6';
 import { Provider } from 'react-redux';
 import configureStore, { history } from 'store';
 import theme from 'assets/scss/ThemeVariables';
@@ -12,9 +12,9 @@ const render = (ui, { initialState, store = configureStore(initialState), ...ren
     const wrapper = ({ children }) => (
         <Provider store={store}>
             <ThemeProvider theme={theme}>
-                <ConnectedRouter history={history} noInitialPop>
+                <Router history={history} noInitialPop>
                     {children}
-                </ConnectedRouter>
+                </Router>
                 <ToastContainer position="top-right" autoClose={5000} hideProgressBar className="toast-container" icon={false} theme="colored" />
             </ThemeProvider>
         </Provider>

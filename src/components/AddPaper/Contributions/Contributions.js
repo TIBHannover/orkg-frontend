@@ -117,6 +117,12 @@ const Contributions = () => {
         handleSelectContribution(key);
     };
 
+    const renderTabBar = (props, DefaultTabBar) => (
+        <div id="contributionsList">
+            <DefaultTabBar {...props} />
+        </div>
+    );
+
     return (
         <div>
             <div className="d-flex align-items-center mt-4 mb-4">
@@ -156,6 +162,7 @@ const Contributions = () => {
                 <Col md="9">
                     <StyledContributionTabs>
                         <Tabs
+                            renderTabBar={renderTabBar}
                             tabBarExtraContent={<AddContributionButton onClick={() => dispatch(createContribution({}))} />}
                             moreIcon={<Icon size="lg" icon={faAngleDown} />}
                             activeKey={selectedContribution}
@@ -179,14 +186,16 @@ const Contributions = () => {
                                         }
                                         key={contribution.id}
                                     >
-                                        <StatementBrowser
-                                            enableEdit={true}
-                                            syncBackend={false}
-                                            openExistingResourcesInDialog={false}
-                                            initialSubjectId={contribution.resourceId}
-                                            initialSubjectLabel={contribution.label}
-                                            renderTemplateBox={true}
-                                        />
+                                        <div className="contributionData">
+                                            <StatementBrowser
+                                                enableEdit={true}
+                                                syncBackend={false}
+                                                openExistingResourcesInDialog={false}
+                                                initialSubjectId={contribution.resourceId}
+                                                initialSubjectLabel={contribution.label}
+                                                renderTemplateBox={true}
+                                            />
+                                        </div>
                                     </TabPane>
                                 );
                             })}

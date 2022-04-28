@@ -13,7 +13,7 @@ import { StatementsGroupStyle, PropertyStyle, ValuesStyle } from 'components/Sta
 import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
 import { ENTITIES } from 'constants/graphSettings';
 import { ListGroup } from 'reactstrap';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes.js';
 
@@ -25,11 +25,11 @@ const Contributions = props => {
         contributionId,
         contributions: props.contributions
     });
-    const history = useHistory();
+    const navigate = useNavigate();
 
     const onTabChange = key => {
-        history.push(
-            reverse(ROUTES.VIEW_PAPER, {
+        navigate(
+            reverse(ROUTES.VIEW_PAPER_CONTRIBUTION, {
                 resourceId: resourceId,
                 contributionId: key
             })

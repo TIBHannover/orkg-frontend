@@ -31,7 +31,7 @@ import styled, { ThemeContext } from 'styled-components';
 import moment from 'moment';
 import Cite from 'citation-js';
 import Tour from 'reactour';
-import { useLocation } from 'react-router';
+import { useLocation } from 'react-router-dom';
 import queryString from 'query-string';
 import { getPaperData } from 'utils';
 import { getStatementsBySubject } from 'services/backend/statements';

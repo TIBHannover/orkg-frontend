@@ -1,16 +1,17 @@
 import { useState, useEffect } from 'react';
 import { Container, Button, FormGroup, Input, Label } from 'reactstrap';
 import { createPredicate } from 'services/backend/predicates';
-import { useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes';
 import TitleBar from 'components/TitleBar/TitleBar';
+import requireAuthentication from 'requireAuthentication';
+import { useNavigate } from 'react-router-dom';
 
 const AddProperty = () => {
     const [label, setLabel] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-    const history = useHistory();
+    const navigate = useNavigate();
 
     useEffect(() => {
         // Set document title
@@ -24,7 +25,7 @@ const AddProperty = () => {
                 const newProperty = await createPredicate(label);
                 toast.success('Property created successfully');
                 setIsLoading(false);
-                history.push(reverse(ROUTES.PROPERTY, { id: newProperty.id }));
+                navigate(reverse(ROUTES.PROPERTY, { id: newProperty.id }));
             } catch (error) {
                 console.error(error);
                 toast.error(`Error creating property ${error.message}`);
@@ -62,4 +63,4 @@ const AddProperty = () => {
     );
 };
 
-export default AddProperty;
+export default requireAuthentication(AddProperty);

@@ -7,7 +7,7 @@ import 'react-image-lightbox/style.css';
 import styled, { createGlobalStyle } from 'styled-components';
 import { isString } from 'lodash';
 import { getRelatedFiguresData } from 'utils';
-import { useLocation } from 'react-router';
+import { useLocation } from 'react-router-dom';
 
 const CardStyled = styled(Card)`
     cursor: pointer;

@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import arrayMove from 'array-move';
-import { LOCATION_CHANGE } from 'connected-react-router';
+import { LOCATION_CHANGE } from 'redux-first-history';
 import { CLASSES, PREDICATES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import dotProp from 'dot-prop-immutable';
