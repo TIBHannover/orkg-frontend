@@ -7,8 +7,7 @@ import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import NotFound from 'pages/NotFound';
 import { useEffect } from 'react';
-import { useParams } from 'react-router';
-import { Link } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { Breadcrumb, BreadcrumbItem, Container } from 'reactstrap';
 import { getHelpArticle } from 'services/cms';
 

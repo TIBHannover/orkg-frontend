@@ -28,10 +28,9 @@ import ROUTES from 'constants/routes';
 import moment from 'moment';
 import { reverse } from 'named-urls';
 import NotFound from 'pages/NotFound';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate, NavLink } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { NavLink, useHistory } from 'react-router-dom';
 import { Button, Container, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledButtonDropdown } from 'reactstrap';
 import Confirm from 'components/Confirmation/Confirmation';
 import { createGlobalStyle } from 'styled-components';
@@ -85,7 +84,7 @@ const Review = () => {
     const prevIsEditing = usePrevious(isEditing);
     const prevIsOpenPublishModal = usePrevious(isOpenPublishModal);
     const dispatch = useDispatch();
-    const history = useHistory();
+    const navigate = useNavigate();
     const { load, isLoading, isNotFound, getVersions } = useLoad();
     const { id } = useParams();
     const version = versions.find(version => version.id === id);
@@ -119,7 +118,7 @@ const Review = () => {
             });
 
             if (isConfirmed) {
-                history.push(reverse(ROUTES.REVIEW, { id: paper.id }));
+                navigate(reverse(ROUTES.REVIEW, { id: paper.id }));
             }
         } else {
             dispatch(setIsEditing(true));
@@ -269,7 +268,7 @@ const Review = () => {
                                 <Icon icon={faEllipsisV} />
                             </DropdownToggle>
                             <DropdownMenu end>
-                                <DropdownItem tag={NavLink} exact to={reverse(ROUTES.RESOURCE, { id })}>
+                                <DropdownItem tag={NavLink} end to={reverse(ROUTES.RESOURCE, { id })}>
                                     View resource
                                 </DropdownItem>
                             </DropdownMenu>

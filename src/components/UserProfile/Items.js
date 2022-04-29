@@ -6,7 +6,7 @@ import { getStatementsBySubjects } from 'services/backend/statements';
 import { getPaperData, getComparisonData, groupVersionsOfComparisons } from 'utils';
 import { find, flatten } from 'lodash';
 import { Button, ListGroup } from 'reactstrap';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes.js';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -22,7 +22,7 @@ const Items = props => {
     const [page, setPage] = useState(0);
     const [resources, setResources] = useState([]);
     const [selectedItems, setSelectedItems] = useState([]);
-    const history = useHistory();
+    const navigate = useNavigate();
 
     const finishLoadingCallback = () => {
         // reload the papers, in case page is already 0, manually call loadItems()
@@ -40,7 +40,7 @@ const Items = props => {
 
     const comparePapers = () => {
         const contributionIds = flatten(resources.filter(r => selectedItems.includes(r.id))?.map(c => c.contributions?.map(c => c.id)));
-        history.push(reverse(ROUTES.COMPARISON) + `?contributions=${contributionIds.join(',')}`);
+        navigate(reverse(ROUTES.COMPARISON_NOT_PUBLISHED) + `?contributions=${contributionIds.join(',')}`);
     };
 
     const loadItems = useCallback(

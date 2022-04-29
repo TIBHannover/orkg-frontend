@@ -1,44 +1,29 @@
-import { Component } from 'react';
+import { useEffect, useState } from 'react';
 import { Container } from 'reactstrap';
-import PropTypes from 'prop-types';
 import { getLongLink } from 'services/similarity/index';
+import { useParams } from 'react-router-dom';
 
-class RedirectShortLinks extends Component {
-    constructor(props) {
-        super(props);
+const RedirectShortLinks = () => {
+    const params = useParams();
 
-        this.state = {
-            loading: true,
-            longURL: null
-        };
-    }
+    const [isLoading] = useState(true);
 
-    componentDidMount = () => {
-        getLongLink(this.props.match.params.shortCode).then(data => {
+    useEffect(() => {
+        getLongLink(params.shortCode).then(data => {
             window.location.href = data.long_url;
             return null;
         });
-    };
+    }, [params.shortCode]);
 
-    render() {
-        return (
-            <>
-                {this.state.loading && (
-                    <Container className="p-0 d-flex align-items-center">
-                        <h1 className="h5 mt-4 mb-4 ">Redirection....</h1>
-                    </Container>
-                )}
-            </>
-        );
-    }
-}
-
-RedirectShortLinks.propTypes = {
-    match: PropTypes.shape({
-        params: PropTypes.shape({
-            shortCode: PropTypes.string.isRequired
-        }).isRequired
-    }).isRequired
+    return (
+        <>
+            {isLoading && (
+                <Container className="p-0 d-flex align-items-center">
+                    <h1 className="h5 mt-4 mb-4 ">Redirection....</h1>
+                </Container>
+            )}
+        </>
+    );
 };
 
 export default RedirectShortLinks;

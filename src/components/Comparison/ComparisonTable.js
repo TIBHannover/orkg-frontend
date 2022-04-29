@@ -148,7 +148,7 @@ const ComparisonTable = props => {
                         <Properties className="columnContribution">
                             <PropertiesInner transpose={props.transpose}>
                                 <Link
-                                    to={reverse(ROUTES.VIEW_PAPER, {
+                                    to={reverse(ROUTES.VIEW_PAPER_CONTRIBUTION, {
                                         resourceId: info.value.paperId,
                                         contributionId: info.value.id
                                     })}
@@ -181,7 +181,7 @@ const ComparisonTable = props => {
                                           <ItemHeader key={`contribution${contribution.id}`}>
                                               <ItemHeaderInner>
                                                   <Link
-                                                      to={reverse(ROUTES.VIEW_PAPER, {
+                                                      to={reverse(ROUTES.VIEW_PAPER_CONTRIBUTION, {
                                                           resourceId: contribution.paperId,
                                                           contributionId: contribution.id
                                                       })}

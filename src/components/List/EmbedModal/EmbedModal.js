@@ -16,7 +16,7 @@ function EmbedModal({ isOpen, toggle, id }) {
     const list = useSelector(state => state.list.list);
     const isPublished = useSelector(state => state.list.isPublished);
     const title = `ORKG list - ${list?.title}`;
-    const src = `${env('URL')}${reverse(ROUTES.LIST, {
+    const src = `${env('URL')}${reverse(ROUTES.LIST_EMBED, {
         id,
         embed: 'embed'
     }).replace('/', '', 1)}`;

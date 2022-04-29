@@ -15,6 +15,7 @@ import { MatomoProvider, createInstance } from '@datapunt/matomo-tracker-react';
 import { DndProvider } from 'react-dnd';
 import env from '@beam-australia/react-env';
 import { HTML5Backend } from 'react-dnd-html5-backend';
+import { HistoryRouter as Router } from 'redux-first-history/rr6';
 
 const matomoInstance =
     env('MATOMO_TRACKER') === 'true'
@@ -40,7 +41,9 @@ const render = () => {
                 <Provider store={store}>
                     <ThemeProvider theme={theme}>
                         <MatomoProvider value={matomoInstance}>
-                            <App history={history} />
+                            <Router history={history}>
+                                <App />
+                            </Router>
                         </MatomoProvider>
                     </ThemeProvider>
                 </Provider>
