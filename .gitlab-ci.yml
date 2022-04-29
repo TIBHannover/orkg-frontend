@@ -33,3 +33,11 @@ container_scanning:
 
 dependency_scanning:
     stage: verify
+
+deploy:incubating:
+  stage: release
+  image: buildpack-deps:buster-curl
+  script:
+    - curl --fail -X POST -F "token=$PIPELINE_TRIGGER_TOKEN" -F "ref=master" -F "variables[ORKG_COMPONENT_NAME]=orkg-frontend" -F "variables[ORKG_COMPONENT_REF_NAME]=$CI_COMMIT_REF_NAME" https://git.tib.eu/api/v4/projects/1317/trigger/pipeline
+  rules:
+    - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
