@@ -14,6 +14,7 @@ const NavItemStyled = styled(NavItem)`
         }
     }
     @media (max-width: ${props => props.theme.gridBreakpoints.md}) {
+        padding-left: 0 !important;
         .nfdi4ds-banner {
             padding: 10px 0;
         }
