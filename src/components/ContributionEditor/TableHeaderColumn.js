@@ -63,7 +63,7 @@ const TableHeaderColumn = ({ contribution, paper }) => {
                     <span>
                         <Button
                             color="link"
-                            className="text-secondary-darker p-0 text-start text-decoration-none"
+                            className="text-secondary-darker p-0 text-start text-decoration-none user-select-auto"
                             onClick={env('PWC_USER_ID') !== contribution.created_by ? handleEditPaper : undefined}
                         >
                             {paper.label || <em>No title</em>}
@@ -71,7 +71,7 @@ const TableHeaderColumn = ({ contribution, paper }) => {
                     </span>
                 </Tippy>
                 <Contribution className="contribution-editor">
-                    <ContributionButton color="link" onClick={() => setIsOpenContributionModal(true)}>
+                    <ContributionButton color="link" className="user-select-auto" onClick={() => setIsOpenContributionModal(true)}>
                         <Tippy
                             interactive={true}
                             appendTo={document.body}

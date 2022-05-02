@@ -86,7 +86,7 @@ const PropertyValue = ({
         <>
             {!group && (
                 <>
-                    <Button onClick={handleOpenStatementBrowser} color="link" className="text-start text-light m-0 p-0 text-break">
+                    <Button onClick={handleOpenStatementBrowser} color="link" className="text-start text-light m-0 p-0 text-break user-select-auto">
                         <DescriptionTooltip
                             id={property?.id}
                             typeId={ENTITIES.PREDICATE}
