@@ -35,7 +35,7 @@ const Nfdi4dsButton = () => {
             js.id = o;
             js.src = f;
             js.async = 1;
-            fjs.parentNode.insertBefore(js, fjs);
+            fjs?.parentNode.insertBefore(js, fjs);
         })(window, document, 'script', 'nfdi4ds', 'https://tibhannover.gitlab.io/nfdi4ds/nfdi4ds-widget/widget.js');
         window.nfdi4ds('widget');
 
