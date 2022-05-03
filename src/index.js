@@ -41,7 +41,7 @@ const render = () => {
                 <Provider store={store}>
                     <ThemeProvider theme={theme}>
                         <MatomoProvider value={matomoInstance}>
-                            <Router history={history}>
+                            <Router basename={env('PUBLIC_URL')} history={history}>
                                 <App />
                             </Router>
                         </MatomoProvider>
