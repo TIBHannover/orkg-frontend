@@ -99,7 +99,7 @@ const ContributionEditor = () => {
                     <>
                         <Button
                             tag={Link}
-                            to={`${reverse(routes.COMPARISON)}?contributions=${contributionIds.join(',')}${
+                            to={`${reverse(routes.COMPARISON_NOT_PUBLISHED)}?contributions=${contributionIds.join(',')}${
                                 hasPreviousVersion ? `&hasPreviousVersion=${hasPreviousVersion}` : ''
                             }`}
                             color="secondary"
