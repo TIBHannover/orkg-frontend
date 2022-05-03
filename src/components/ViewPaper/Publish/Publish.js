@@ -129,7 +129,7 @@ function Publish(props) {
         if (title && title.trim() !== '' && description && description.trim() !== '') {
             const paperStatements = await getPaperStatements(paperId);
             if (paperStatements.length === 0) {
-                toast.error(`Paper must have atleast one contribution to be persistently identified.`);
+                toast.error(`Paper must have at least one contribution to be persistently identified.`);
                 setIsLoading(false);
                 return;
             }
