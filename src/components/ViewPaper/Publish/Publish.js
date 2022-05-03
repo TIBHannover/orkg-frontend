@@ -129,7 +129,7 @@ function Publish(props) {
         if (title && title.trim() !== '' && description && description.trim() !== '') {
             const paperStatements = await getPaperStatements(paperId);
             if (paperStatements.length === 0) {
-                toast.error(`Ppaper must have atleast one contribution to be persistently identified.`);
+                toast.error(`Paper must have atleast one contribution to be persistently identified.`);
                 setIsLoading(false);
                 return;
             }
@@ -221,7 +221,7 @@ function Publish(props) {
             <ModalBody>
                 <Alert color="info">
                     {props.paperId && !dataCiteDoi && (
-                        <>Persistently identfied paper will be findable in global scholarly infrastructures (DataCite, OpenAIRE and ORCID).</>
+                        <>Persistently identified paper will be findable in global scholarly infrastructures (DataCite, OpenAIRE and ORCID).</>
                     )}
                     {createdPaperId && dataCiteDoi && (
                         <>
