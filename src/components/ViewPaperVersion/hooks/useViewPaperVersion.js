@@ -36,7 +36,7 @@ const useViewPaperVersion = ({ paperId }) => {
         setIsLoading(true);
         getResource(paperId)
             .then(paperResource => {
-                if (!paperResource.classes.includes(PREDICATES.PAPER_VERSION)) {
+                if (!paperResource.classes.includes(CLASSES.PAPER_VERSION)) {
                     setIsLoadingFailed(true);
                     setIsLoading(false);
                     return;
