@@ -1,9 +1,4 @@
-import { submitGetRequest } from 'network';
 import env from '@beam-australia/react-env';
-
-export const getComparisonDataByDOI = id => {
-    return submitGetRequest(`${env('DATACITE_URL')}/${env('DATACITE_DOI_PREFIX')}/${encodeURIComponent(id)}`);
-};
 
 export const getCitationByDOI = (DOI, style = '', header = 'text/x-bibliography') => {
     let headers = '';

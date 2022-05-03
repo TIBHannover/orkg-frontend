@@ -5,8 +5,11 @@ import ViewPaperVersion from 'pages/ViewPaperVersion';
 import { getResource } from 'services/backend/resources';
 import { CLASSES } from 'constants/graphSettings';
 
+/**
+ * This component checks if the paper if a published version or live version and return the correct page
+ */
 export default function CheckPaperVersion() {
-    const [paperType, setPaperType] = useState('');
+    const [paperType, setPaperType] = useState(null);
     const params = useParams();
 
     useEffect(() => {
@@ -16,9 +19,9 @@ export default function CheckPaperVersion() {
         });
     }, [params]);
 
-    if (paperType === CLASSES.PAPER) {
-        return <ViewPaper />;
-    } else {
+    if (paperType === CLASSES.PAPER_VERSION) {
         return <ViewPaperVersion />;
+    } else {
+        return <ViewPaper />;
     }
 }

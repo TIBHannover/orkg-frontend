@@ -38,6 +38,11 @@ const DEDICATED_PAGE_LINKS = {
         route: ROUTES.VIEW_PAPER,
         routeParams: 'resourceId'
     },
+    [CLASSES.PAPER_VERSION]: {
+        label: 'Paper',
+        route: ROUTES.VIEW_PAPER,
+        routeParams: 'resourceId'
+    },
     [CLASSES.PROBLEM]: {
         label: 'Research problem',
         route: ROUTES.RESEARCH_PROBLEM,
