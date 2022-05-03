@@ -3,6 +3,15 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [V0.69.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.69...V0.69.1) - 2022-05-03
+
+### Changes
+
+- fix(ContributionEditor): "view comparison" button not working [`#835`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/835)
+- fix: add url prefix for links [`#834`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/834)
+- Add GitLab CI configuration for deployment to test system [`#833`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/833)
+
+---
 ## [V0.69](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.68.1...V0.69) - 2022-05-02
 
 ### Changes
