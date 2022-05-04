@@ -210,9 +210,9 @@ function Publish(props) {
                     setIsLoading(false);
                 });
         } else {
-            throw Error('Please enter a title and a description');
+            toast.error(`Title or a description is missing.`);
+            setIsLoading(false);
         }
-        setIsLoading(false);
     };
 
     return (

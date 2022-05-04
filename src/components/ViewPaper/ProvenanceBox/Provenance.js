@@ -110,7 +110,7 @@ const Provenance = ({
                     {!isLoadingContributors &&
                         contributors?.length > 0 &&
                         contributors
-                            .filter(c => c.createdBy !== MISC.UNKNOWN_ID)
+                            .filter(c => c.created_by !== MISC.UNKNOWN_ID)
                             .map((contributor, index) => (
                                 <div key={`cntbrs-${contributor.id}${index}`}>
                                     <Link
