@@ -35,7 +35,6 @@ const ViewPaper = () => {
             ? 'https://doi.org/' + state.viewPaper.doi.label
             : ''
     );
-    const dataCiteDoi = useSelector(state => state.viewPaper.dataCiteDoi);
 
     const {
         isLoading,
@@ -115,7 +114,6 @@ const ViewPaper = () => {
                                     toggle={toggle}
                                     id={resourceId}
                                     label={viewPaper.paperResource?.label}
-                                    dataCiteDoi={dataCiteDoi ? dataCiteDoi : ''}
                                 />
                             }
                         >
@@ -151,7 +149,7 @@ const ViewPaper = () => {
                         {!isLoading && (
                             <>
                                 {viewPaper.hasVersion && (
-                                    <Alert color="warning" className="container d-flex box">
+                                    <Alert color="warning" className="container d-flex">
                                         <div className="flex-grow-1">
                                             A published version of this paper is available.{' '}
                                             <Link to={reverse(ROUTES.VIEW_PAPER, { resourceId: viewPaper.hasVersion.id })}>
