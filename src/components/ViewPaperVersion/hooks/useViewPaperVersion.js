@@ -6,7 +6,7 @@ import { loadPaper, setPaperAuthors } from 'slices/viewPaperSlice';
 import { getPaperData_ViewPaper, filterObjectOfStatementsByPredicateAndClass, filterSubjectOfStatementsByPredicateAndClass } from 'utils';
 import { PREDICATES, CLASSES } from 'constants/graphSettings';
 import { getVisualization } from 'services/similarity';
-import { getStatementsByObject } from 'services/backend/statements';
+import { getStatementsByObjectAndPredicate } from 'services/backend/statements';
 
 const useViewPaperVersion = ({ paperId }) => {
     const [isLoading, setIsLoading] = useState(true);
@@ -55,12 +55,16 @@ const useViewPaperVersion = ({ paperId }) => {
                 });
                 Promise.all([
                     getStatementsBundleBySubject({ id: paperId, maxLevel: 2, blacklist: [CLASSES.RESEARCH_FIELD, CLASSES.CONTRIBUTION] })
-                ]).then(([paperStatements]) => {
+                ]).then(async ([paperStatements]) => {
                     const paperData = getPaperData_ViewPaper(paperResource, paperStatements.statements?.filter(s => s.subject.id === paperId));
-                    Promise.all([getStatementsByObject({ id: paperId })]).then(([statements]) => {
-                        const paperId = statements && statements.find(stmt => stmt.subject.classes.find(s => s === CLASSES.PAPER));
-                        dispatch(loadPaper({ ...paperData, originalPaperId: paperId ? paperId.subject.id : '' }));
-                    });
+                    let statement = await getStatementsByObjectAndPredicate({ objectId: paperId, predicateId: PREDICATES.HAS_PREVIOUS_VERSION });
+                    for (; !statement[0].subject.classes.find(s => s === CLASSES.PAPER); ) {
+                        statement = await getStatementsByObjectAndPredicate({
+                            objectId: statement[0].subject.id,
+                            predicateId: PREDICATES.HAS_PREVIOUS_VERSION
+                        });
+                    }
+                    dispatch(loadPaper({ ...paperData, originalPaperId: statement && statement[0].subject.id ? statement[0].subject.id : '' }));
                     setAuthorsORCID(paperStatements.statements, paperId);
                     setIsLoading(false);
                 });

@@ -92,6 +92,18 @@ const ViewPaperVersion = () => {
                                 <rect x="36" y="6" rx="1" ry="1" width="10" height="2" />
                             </ContentLoader>
                         )}
+                        {!isLoading && (
+                            <>
+                                {viewPaper.originalPaperId && (
+                                    <Alert color="warning" className="container d-flex box">
+                                        <div className="flex-grow-1">
+                                            You are viewing the published version of the paper. Click to{' '}
+                                            <Link to={reverse(ROUTES.VIEW_PAPER, { resourceId: viewPaper.originalPaperId })}>Fetch live data</Link>
+                                        </div>
+                                    </Alert>
+                                )}
+                            </>
+                        )}
                         {!isLoading && !isLoadingFailed && (
                             <>
                                 <PaperVersionHeader />
