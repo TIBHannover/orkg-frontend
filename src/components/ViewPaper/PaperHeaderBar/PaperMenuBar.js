@@ -8,19 +8,12 @@ import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
 import ROUTES from 'constants/routes.js';
 import { reverse } from 'named-urls';
-import { openAuthDialog } from 'slices/authSlice';
 import Publish from 'components/ViewPaper/Publish/Publish';
-import { useSelector, useDispatch } from 'react-redux';
 
 function PaperMenuBar(props) {
-    const dispatch = useDispatch();
     const [menuOpen, setMenuOpen] = useState(false);
     const [isOpenPWCModal, setIsOpenPWCModal] = useState(false);
     const [showPublishDialog, setShowPublishDialog] = useState(false);
-    const user = useSelector(state => state.auth.user);
-    const handleSignIn = () => {
-        dispatch(openAuthDialog({ action: 'signin' }));
-    };
 
     return (
         <>
@@ -69,17 +62,9 @@ function PaperMenuBar(props) {
                     <Icon icon={faEllipsisV} />
                 </DropdownToggle>
                 <DropdownMenu end>
-                    <DropdownItem
-                        onClick={e => {
-                            if (!user) {
-                                handleSignIn();
-                            } else {
-                                setShowPublishDialog(v => !v);
-                            }
-                        }}
-                    >
+                    <RequireAuthentication component={DropdownItem} onClick={() => setShowPublishDialog(v => !v)}>
                         Publish
-                    </DropdownItem>
+                    </RequireAuthentication>
                     <DropdownItem tag={NavLink} end to={reverse(ROUTES.RESOURCE, { id: props.id })}>
                         View resource
                     </DropdownItem>
