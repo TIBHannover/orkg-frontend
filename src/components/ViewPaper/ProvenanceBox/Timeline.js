@@ -7,13 +7,13 @@ import ROUTES from 'constants/routes.js';
 import { MISC } from 'constants/graphSettings';
 import env from '@beam-australia/react-env';
 
-const Timeline = ({ contributors, paperResource, isLoadingContributors }) => {
+const Timeline = ({ versions, paperResource, isLoadingContributors }) => {
     return (
         <div>
             <div className="pt-3 pb-3 ps-3 pe-3">
                 {!isLoadingContributors &&
-                    contributors?.length > 0 &&
-                    contributors.map((contributor, index) => {
+                    versions?.length > 0 &&
+                    versions.map((contributor, index) => {
                         return (
                             <StyledActivity key={`prov-${index}`} className="ps-3 pb-3">
                                 <div className="time">{moment(contributor.created_at).format('DD MMM YYYY')}</div>
@@ -81,7 +81,7 @@ const Timeline = ({ contributors, paperResource, isLoadingContributors }) => {
                             </StyledActivity>
                         );
                     })}
-                {!isLoadingContributors && contributors?.length === 0 && 'No contributors'}
+                {!isLoadingContributors && versions?.length === 0 && 'No contributors'}
                 {isLoadingContributors && 'Loading ...'}
             </div>
         </div>
@@ -89,7 +89,7 @@ const Timeline = ({ contributors, paperResource, isLoadingContributors }) => {
 };
 
 Timeline.propTypes = {
-    contributors: PropTypes.array,
+    versions: PropTypes.array,
     paperResource: PropTypes.object,
     isLoadingContributors: PropTypes.bool
 };

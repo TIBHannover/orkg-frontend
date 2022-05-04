@@ -1,105 +1,23 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState } from 'react';
 import { AnimationContainer, ProvenanceBoxTabs, ErrorMessage, SidebarStyledBox } from './styled';
 import { TransitionGroup } from 'react-transition-group';
-import { getContributorInformationById } from 'services/backend/contributors';
-import { getObservatoryById } from 'services/backend/observatories';
-import { getContributorsByResourceId } from 'services/backend/resources';
-import { getOrganization } from 'services/backend/organizations';
-import { useSelector } from 'react-redux';
-import { MISC, PREDICATES } from 'constants/graphSettings';
 import Provenance from './Provenance';
 import Timeline from './Timeline';
 import env from '@beam-australia/react-env';
 import PWCProvenanceBox from 'components/Benchmarks/PWCProvenanceBox/PWCProvenanceBox';
-import { getStatementsBySubjectAndPredicate } from 'services/backend/statements';
-import { orderBy } from 'lodash';
+import useProvenance from 'components/ViewPaper/hooks/useProvenance';
 
 const ProvenanceBox = () => {
-    const paperResource = useSelector(state => state.viewPaper.paperResource);
-    const [isLoadingProvenance, setIsLoadingProvenance] = useState(true);
-    const [isLoadingContributors, setIsLoadingContributors] = useState(true);
-    const [observatoryInfo, setObservatoryInfo] = useState(null);
-    const [organizationInfo, setOrganizationInfo] = useState(null);
-    const [createdBy, setCreatedBy] = useState(null);
-    const [contributors, setContributors] = useState([]);
-    const [info, setInfo] = useState([]);
-    const doi = useSelector(state => state.viewPaper.dataCiteDoi);
-
-    useEffect(() => {
-        const loadContributors = () => {
-            setIsLoadingContributors(true);
-            getContributorsByResourceId(paperResource.id)
-                .then(contributors => {
-                    setContributors(contributors ? contributors.reverse() : []);
-                    setIsLoadingContributors(false);
-                })
-                .catch(error => {
-                    setIsLoadingContributors(false);
-                });
-        };
-        const loadProvenance = () => {
-            setIsLoadingProvenance(true);
-            const observatoryCall =
-                paperResource.observatory_id !== MISC.UNKNOWN_ID
-                    ? getObservatoryById(paperResource.observatory_id).catch(e => null)
-                    : Promise.resolve(null);
-
-            const organizationCall =
-                paperResource.organization_id !== MISC.UNKNOWN_ID
-                    ? getOrganization(paperResource.organization_id).catch(e => null)
-                    : Promise.resolve(null);
-
-            Promise.all([observatoryCall, organizationCall])
-                .then(([observatory, organization]) => {
-                    setObservatoryInfo(observatory);
-                    setOrganizationInfo(organization);
-                    setIsLoadingProvenance(false);
-                })
-                .catch(() => setIsLoadingProvenance(false));
-        };
-
-        const loadCreator = () => {
-            if (paperResource.created_by && paperResource.created_by !== MISC.UNKNOWN_ID) {
-                getContributorInformationById(paperResource.created_by)
-                    .then(creator => {
-                        setCreatedBy(creator);
-                    })
-                    .catch(e => setCreatedBy(null));
-            } else {
-                setCreatedBy(null);
-            }
-        };
-
-        loadContributors();
-        loadProvenance();
-        loadCreator();
-    }, [paperResource.created_by, paperResource.id, paperResource.observatory_id, paperResource.organization_id]);
-
-    useMemo(() => {
-        const loadPublishInformation = (resourceId, list) => {
-            getStatementsBySubjectAndPredicate({ subjectId: resourceId, predicateId: PREDICATES.HAS_PREVIOUS_VERSION })
-                .then(response => {
-                    if (response.length > 0) {
-                        getContributorInformationById(response[0].object.created_by).then(user => {
-                            list.push({ created_at: response[0].object.created_at, created_by: user, doi: response[0].object });
-                        });
-                        loadPublishInformation(response[0].object['id'], list);
-                    } else {
-                        let r = [];
-                        if (list && contributors) {
-                            // combining contributors and published with DOI information
-                            r = [...contributors];
-                            r.push(...list);
-                        } else {
-                            r = [...contributors];
-                        }
-                        setInfo(orderBy(r, ['created_at'], ['desc']));
-                    }
-                })
-                .catch(e => setInfo(null));
-        };
-        loadPublishInformation(paperResource.id, []);
-    }, [contributors, paperResource.id]);
+    const {
+        paperResource,
+        isLoadingProvenance,
+        isLoadingContributors,
+        observatoryInfo,
+        organizationInfo,
+        createdBy,
+        versions,
+        contributors
+    } = useProvenance();
 
     const [activeTab, setActiveTab] = useState(1);
 
@@ -147,7 +65,6 @@ const ProvenanceBox = () => {
                                 createdBy={createdBy}
                                 isLoadingProvenance={isLoadingProvenance}
                                 isLoadingContributors={isLoadingContributors}
-                                dataCiteDoi={doi ? doi.label : ''}
                             />
                         </AnimationContainer>
                     ) : (
@@ -156,7 +73,7 @@ const ProvenanceBox = () => {
                                 observatoryInfo={observatoryInfo}
                                 organizationInfo={organizationInfo}
                                 paperResource={paperResource}
-                                contributors={info}
+                                versions={versions}
                                 createdBy={createdBy}
                                 isLoadingContributors={isLoadingContributors}
                             />
