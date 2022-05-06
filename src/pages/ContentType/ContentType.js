@@ -59,7 +59,13 @@ function ContentType() {
 
     const toggleEdit = () => {
         setEditMode(v => !v);
-        navigate(reverse(ROUTES.CONTENT_TYPE, { type: params.type, id: params.id, mode: params.mode !== 'edit' ? 'edit' : null }));
+        navigate(
+            reverse(params.mode !== 'edit' ? ROUTES.CONTENT_TYPE : ROUTES.CONTENT_TYPE_NO_MODE, {
+                type: params.type,
+                id: params.id,
+                mode: params.mode !== 'edit' ? 'edit' : null
+            })
+        );
     };
 
     const handleHeaderChange = event => {
