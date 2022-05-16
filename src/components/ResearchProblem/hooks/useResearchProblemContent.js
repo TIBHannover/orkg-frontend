@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import ROUTES from 'constants/routes.js';
 import { reverseWithSlug } from 'utils';
 import { flatten } from 'lodash';
+import { reverse } from 'named-urls';
 
 function useResearchProblemContent({
     researchProblemId,
@@ -137,10 +138,16 @@ function useResearchProblemContent({
     useEffect(() => {
         if (updateURL) {
             navigate(
-                `${reverseWithSlug(ROUTES.RESEARCH_PROBLEM, {
-                    researchProblemId: researchProblemId,
-                    slug: slug
-                })}?sort=${sort}&classesFilter=${classesFilter.map(c => c.id).join(',')}`
+                `${
+                    slug
+                        ? reverseWithSlug(ROUTES.RESEARCH_PROBLEM, {
+                              researchProblemId: researchProblemId,
+                              slug: slug
+                          })
+                        : reverse(ROUTES.RESEARCH_PROBLEM_NO_SLUG, {
+                              researchProblemId: researchProblemId
+                          })
+                }?sort=${sort}&classesFilter=${classesFilter.map(c => c.id).join(',')}`
             );
         }
     }, [researchProblemId, sort, classesFilter, navigate, updateURL, slug]);
