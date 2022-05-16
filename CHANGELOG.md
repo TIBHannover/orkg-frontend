@@ -3,6 +3,16 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [V0.69.2](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.69.1...V0.69.2) - 2022-05-16
+
+### Changes
+
+- fix(Search): infinite loop after changing search query [`#840`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/840)
+- fix(Redirect): research problem/field slug redirection leads to 404 [`#839`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/839)
+- fix: Broken links in Search and Dataset pages [`#836`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/836)
+- fix: broken slug redirect [`#837`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/837)
+
+---
 ## [V0.69.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.69...V0.69.1) - 2022-05-03
 
 ### Changes
