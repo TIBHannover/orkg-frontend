@@ -70,7 +70,8 @@ export const useFilters = () => {
                 );
             }
         },
-        [createdBy, navigate, selectedFilters]
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [createdBy, selectedFilters]
     );
 
     useEffect(() => {
