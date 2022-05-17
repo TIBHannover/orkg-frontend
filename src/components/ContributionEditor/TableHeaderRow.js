@@ -79,7 +79,11 @@ const TableHeaderRow = ({ property }) => {
             <Properties className="columnProperty" onDoubleClick={handleStartEdit}>
                 <PropertiesInner cellPadding={10}>
                     <div className="position-relative">
-                        <Button onClick={() => setIsOpenStatementBrowser(true)} color="link" className="text-light m-0 p-0 text-start">
+                        <Button
+                            onClick={() => setIsOpenStatementBrowser(true)}
+                            color="link"
+                            className="text-light m-0 p-0 text-start user-select-auto"
+                        >
                             {property.label}
                         </Button>
                         {pwcStatementIds.length === 0 && (

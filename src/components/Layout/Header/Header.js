@@ -40,6 +40,7 @@ import HomeBannerBg from 'assets/img/graph-background.svg';
 import { scrollbarWidth } from '@xobotyi/scrollbar-width';
 import AboutMenu from 'components/Layout/Header/AboutMenu';
 import ContentTypesMenu from 'components/Layout/Header/ContentTypesMenu';
+import Nfdi4dsButton from 'components/Layout/Header/Nfdi4dsButton';
 
 const cookies = new Cookies();
 
@@ -541,6 +542,7 @@ const Header = () => {
                                 </DropdownItem>
                             </DropdownMenu>
                         </ButtonDropdown>
+                        <Nfdi4dsButton />
                     </Nav>
 
                     <SearchForm placeholder="Search..." onSearch={closeMenu} />
