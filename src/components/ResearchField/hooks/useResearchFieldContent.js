@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import ROUTES from 'constants/routes.js';
 import { reverseWithSlug } from 'utils';
 import { flatten } from 'lodash';
+import { reverse } from 'named-urls';
 
 function useResearchFieldContent({
     researchFieldId,
@@ -142,10 +143,16 @@ function useResearchFieldContent({
     useEffect(() => {
         if (updateURL) {
             navigate(
-                `${reverseWithSlug(ROUTES.RESEARCH_FIELD, {
-                    researchFieldId: researchFieldId,
-                    slug: slug
-                })}?sort=${sort}&includeSubFields=${includeSubFields}&classesFilter=${classesFilter.map(c => c.id).join(',')}`
+                `${
+                    slug
+                        ? reverseWithSlug(ROUTES.RESEARCH_FIELD, {
+                              researchFieldId: researchFieldId,
+                              slug: slug
+                          })
+                        : reverse(ROUTES.RESEARCH_FIELD_NO_SLUG, {
+                              researchFieldId: researchFieldId
+                          })
+                }?sort=${sort}&includeSubFields=${includeSubFields}&classesFilter=${classesFilter.map(c => c.id).join(',')}`
             );
         }
     }, [researchFieldId, sort, includeSubFields, classesFilter, navigate, updateURL, slug]);

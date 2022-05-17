@@ -48,7 +48,7 @@ const TableCellValueResource = ({ value }) => {
 
     return (
         <>
-            <Button color="link" className="p-0 text-wrap" style={{ maxWidth: '100%' }} onClick={() => setIsModalOpen(true)}>
+            <Button color="link" className="p-0 text-wrap user-select-auto" style={{ maxWidth: '100%' }} onClick={() => setIsModalOpen(true)}>
                 {formattedLabel !== '' ? formattedLabel.toString() : <i>No label</i>}
             </Button>
             {isModelOpen && (
