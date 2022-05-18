@@ -65,6 +65,7 @@ export const templateEditorSlice = createSlice({
             return {
                 ...initialState,
                 templateID: payload.templateID,
+                created_by: payload.created_by,
                 label: payload.label,
                 labelFormat: payload.labelFormat,
                 hasLabelFormat: payload.hasLabelFormat,
