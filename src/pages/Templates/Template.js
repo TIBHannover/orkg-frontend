@@ -138,7 +138,7 @@ const Template = () => {
                 {!params.id ? 'Create new template' : 'Template'}
             </TitleBar>
             <StyledContainer className="p-0">
-                {showHeaderBar && <TemplateEditorHeaderBar id={params.id} />}
+                {showHeaderBar && <TemplateEditorHeaderBar />}
                 {(editMode || isSaving) && (
                     <EditModeContainer className="box rounded-top">
                         <Title>{params.id ? 'Edit mode' : 'Create template'}</Title>

@@ -1,18 +1,22 @@
 import { FormGroup, Label, Col, Input, FormText } from 'reactstrap';
 import { updateComponents } from 'slices/templateEditorSlice';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 
-function ValidationRules(props) {
+const ValidationRules = props => {
+    const dispatch = useDispatch();
+    const components = useSelector(state => state.templateEditor.components);
+    const editMode = useSelector(state => state.templateEditor.editMode);
+
     const onChange = event => {
         const newValidationRules = { ...props.validationRules, [event.target.name]: event.target.value };
-        const templateComponents = props.components.map((item, j) => {
+        const templateComponents = components.map((item, j) => {
             if (j === props.id) {
                 item.validationRules = newValidationRules;
             }
             return item;
         });
-        props.updateComponents(templateComponents);
+        dispatch(updateComponents(templateComponents));
     };
 
     return (
@@ -25,7 +29,7 @@ function ValidationRules(props) {
                         </Label>
                         <Col sm={9}>
                             <Input
-                                disabled={!props.enableEdit}
+                                disabled={!editMode}
                                 bsSize="sm"
                                 type="text"
                                 name="pattern"
@@ -47,7 +51,7 @@ function ValidationRules(props) {
                         </Label>
                         <Col sm={9}>
                             <Input
-                                disabled={!props.enableEdit}
+                                disabled={!editMode}
                                 onChange={onChange}
                                 bsSize="sm"
                                 type="text"
@@ -64,7 +68,7 @@ function ValidationRules(props) {
                         </Label>
                         <Col sm={9}>
                             <Input
-                                disabled={!props.enableEdit}
+                                disabled={!editMode}
                                 onChange={onChange}
                                 bsSize="sm"
                                 value={props.validationRules['max']}
@@ -79,29 +83,12 @@ function ValidationRules(props) {
             )}
         </div>
     );
-}
+};
 
 ValidationRules.propTypes = {
     id: PropTypes.number.isRequired,
     value: PropTypes.object.isRequired,
-    validationRules: PropTypes.object,
-    enableEdit: PropTypes.bool.isRequired,
-    components: PropTypes.array.isRequired,
-    updateComponents: PropTypes.func.isRequired
+    validationRules: PropTypes.object
 };
 
-const mapStateToProps = state => {
-    return {
-        components: state.templateEditor.components,
-        editMode: state.templateEditor.editMode
-    };
-};
-
-const mapDispatchToProps = dispatch => ({
-    updateComponents: data => dispatch(updateComponents(data))
-});
-
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(ValidationRules);
+export default ValidationRules;

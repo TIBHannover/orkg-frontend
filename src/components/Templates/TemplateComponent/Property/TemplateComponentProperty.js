@@ -11,6 +11,7 @@ import PropTypes from 'prop-types';
 import { reverse } from 'named-urls';
 import { Link } from 'react-router-dom';
 import ROUTES from 'constants/routes.js';
+import { useSelector } from 'react-redux';
 import DescriptionTooltip from 'components/DescriptionTooltip/DescriptionTooltip';
 import styled from 'styled-components';
 
@@ -22,10 +23,11 @@ const DragHandler = styled.div`
 
 function TemplateComponentProperty(props) {
     const [isEditing, setIsEditing] = useState(false);
+    const editMode = useSelector(state => state.templateEditor.editMode);
 
     return (
         <PropertyStyle className="col-4" tabIndex="0">
-            {props.enableEdit && (
+            {editMode && (
                 <DragHandler ref={props.dragRef}>
                     <Icon icon={faArrowsAlt} />
                 </DragHandler>
@@ -42,7 +44,7 @@ function TemplateComponentProperty(props) {
                         props.property?.label
                     )}
 
-                    {props.enableEdit && (
+                    {editMode && (
                         <div className="propertyOptions">
                             <StatementActionButton title="Edit property" icon={faPen} action={() => setIsEditing(true)} />
                             <StatementActionButton
@@ -98,7 +100,6 @@ TemplateComponentProperty.propTypes = {
     id: PropTypes.number.isRequired,
     property: PropTypes.object.isRequired,
     handleDeleteTemplateComponent: PropTypes.func.isRequired,
-    enableEdit: PropTypes.bool.isRequired,
     handlePropertiesSelect: PropTypes.func.isRequired,
     dragRef: PropTypes.oneOfType([PropTypes.func, PropTypes.shape({ current: PropTypes.instanceOf(Element) })])
 };
