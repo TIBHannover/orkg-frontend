@@ -1,24 +1,14 @@
 import { find } from 'lodash';
 import { useCallback, useEffect, useState } from 'react';
-import { getContentByResearchFieldIdAndClasses } from 'services/backend/researchFields';
+import { getContentByObservatoryIdAndClasses } from 'services/backend/observatories';
 import { getStatementsBySubjects } from 'services/backend/statements';
 import { getDataBasedOnType, groupVersionsOfComparisons, mergeAlternate } from 'utils';
 import { useNavigate } from 'react-router-dom';
 import ROUTES from 'constants/routes.js';
 import { reverseWithSlug } from 'utils';
 import { flatten } from 'lodash';
-import { reverse } from 'named-urls';
 
-function useResearchFieldContent({
-    researchFieldId,
-    slug,
-    initialSort,
-    initialIncludeSubFields,
-    initialClassFilterOptions,
-    initClassesFilter,
-    pageSize = 10,
-    updateURL = false
-}) {
+function useObservatoryContent({ observatoryId, initialSort, initialClassFilterOptions, initClassesFilter, pageSize = 10, updateURL = false }) {
     const [isLoading, setIsLoading] = useState(false);
     const [hasNextPage, setHasNextPage] = useState(false);
     const [isLastPageReached, setIsLastPageReached] = useState(false);
@@ -28,7 +18,6 @@ function useResearchFieldContent({
     const [classFilterOptions] = useState(initialClassFilterOptions);
     const [classesFilter, setClassesFilter] = useState(initClassesFilter);
     const [totalElements, setTotalElements] = useState(0);
-    const [includeSubFields, setIncludeSubFields] = useState(initialIncludeSubFields);
     const navigate = useNavigate();
 
     const loadData = useCallback(
@@ -37,24 +26,22 @@ function useResearchFieldContent({
             let contentService;
             if (sort === 'combined') {
                 // in case of combined sort we list 50% featured and 50% unfeatured items
-                const noFeaturedContentService = getContentByResearchFieldIdAndClasses({
-                    id: researchFieldId,
+                const noFeaturedContentService = getContentByObservatoryIdAndClasses({
+                    id: observatoryId,
                     page: page,
                     items: Math.round(pageSize / 2),
                     sortBy: 'created_at',
                     desc: true,
-                    subfields: includeSubFields,
                     featured: false,
                     unlisted: false,
                     classes: classesFilter.map(c => c.id)
                 });
-                const featuredContentService = getContentByResearchFieldIdAndClasses({
-                    id: researchFieldId,
+                const featuredContentService = getContentByObservatoryIdAndClasses({
+                    id: observatoryId,
                     page: page,
                     items: Math.round(pageSize / 2),
                     sortBy: 'created_at',
                     desc: true,
-                    subfields: includeSubFields,
                     featured: true,
                     unlisted: false,
                     classes: classesFilter.map(c => c.id)
@@ -68,13 +55,12 @@ function useResearchFieldContent({
                     };
                 });
             } else {
-                contentService = getContentByResearchFieldIdAndClasses({
-                    id: researchFieldId,
+                contentService = getContentByObservatoryIdAndClasses({
+                    id: observatoryId,
                     page: page,
                     items: pageSize,
                     sortBy: 'created_at',
                     desc: true,
-                    subfields: includeSubFields,
                     featured: sort === 'featured' ? true : null,
                     unlisted: sort === 'unlisted' ? true : false,
                     classes: classesFilter.map(c => c.id)
@@ -127,35 +113,28 @@ function useResearchFieldContent({
                     console.log(error);
                 });
         },
-        [sort, researchFieldId, pageSize, includeSubFields, classesFilter]
+        [sort, observatoryId, pageSize, classesFilter]
     );
 
-    // reset resources when the researchFieldId has changed
+    // reset resources when the observatoryId has changed
     useEffect(() => {
         setItems([]);
         setHasNextPage(false);
         setIsLastPageReached(false);
         setPage(0);
         setTotalElements(0);
-    }, [researchFieldId, sort, includeSubFields, classesFilter]);
+    }, [observatoryId, sort, classesFilter]);
 
     // update url
     useEffect(() => {
         if (updateURL) {
             navigate(
-                `${
-                    slug
-                        ? reverseWithSlug(ROUTES.RESEARCH_FIELD, {
-                              researchFieldId: researchFieldId,
-                              slug: slug
-                          })
-                        : reverse(ROUTES.RESEARCH_FIELD_NO_SLUG, {
-                              researchFieldId: researchFieldId
-                          })
-                }?sort=${sort}&includeSubFields=${includeSubFields}&classesFilter=${classesFilter.map(c => c.id).join(',')}`
+                `${reverseWithSlug(ROUTES.OBSERVATORY, {
+                    id: observatoryId
+                })}?sort=${sort}&classesFilter=${classesFilter.map(c => c.id).join(',')}`
             );
         }
-    }, [researchFieldId, sort, includeSubFields, classesFilter, navigate, updateURL, slug]);
+    }, [observatoryId, sort, classesFilter, navigate, updateURL]);
 
     useEffect(() => {
         loadData(0);
@@ -173,15 +152,13 @@ function useResearchFieldContent({
         hasNextPage,
         isLastPageReached,
         sort,
-        includeSubFields,
         totalElements,
         page,
         classFilterOptions,
         classesFilter,
         setClassesFilter,
         handleLoadMore,
-        setIncludeSubFields,
         setSort
     };
 }
-export default useResearchFieldContent;
+export default useObservatoryContent;

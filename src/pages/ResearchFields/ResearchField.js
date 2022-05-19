@@ -22,7 +22,7 @@ const ResearchField = () => {
             <Container className="p-0">
                 <Row className="mt-3">
                     <Col md="4" className="d-flex">
-                        <ResearchProblemsBox researchFieldId={researchFieldId} />
+                        <ResearchProblemsBox id={researchFieldId} />
                     </Col>
                     <Col md="4" className="d-flex mt-3 mt-md-0">
                         <LastUpdatesBox researchFieldId={researchFieldId} />

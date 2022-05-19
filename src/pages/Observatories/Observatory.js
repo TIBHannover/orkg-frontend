@@ -4,10 +4,9 @@ import { getOrganization } from 'services/backend/organizations';
 import { getObservatoryById } from 'services/backend/observatories';
 import InternalServerError from 'pages/InternalServerError';
 import EditObservatory from 'components/Observatory/EditObservatory';
-import Comparisons from 'components/Observatory/Comparisons';
-import Papers from 'components/Observatory/Papers';
-import ResearchProblemsBox from 'components/Observatory/ResearchProblemsBox';
+import ResearchProblemsBox from 'components/ResearchProblemsBox/ResearchProblemsBox';
 import OrganizationsBox from 'components/Observatory/OrganizationsBox';
+import IntegratedList from 'components/Observatory/IntegratedList';
 import MembersBox from 'components/Observatory/MembersBox';
 import Breadcrumbs from 'components/Breadcrumbs/Breadcrumbs';
 import { SubTitle, SubtitleSeparator } from 'components/styled';
@@ -105,7 +104,7 @@ const Observatory = () => {
                     <Container className="p-0">
                         <Row className="mt-3">
                             <Col md="4" className="d-flex">
-                                <ResearchProblemsBox observatoryId={observatoryId} organizationsList={organizationsList} />
+                                <ResearchProblemsBox id={observatoryId} by="Observatory" organizationsList={organizationsList} />
                             </Col>
                             <Col md="4" className="d-flex">
                                 <OrganizationsBox
@@ -120,8 +119,9 @@ const Observatory = () => {
                             </Col>
                         </Row>
                     </Container>
-                    <Comparisons observatoryId={observatoryId} />
-                    <Papers observatoryId={observatoryId} />
+
+                    <IntegratedList id={observatoryId} boxShadow />
+
                     <EditObservatory
                         showDialog={showEditDialog}
                         toggle={() => setShowEditDialog(v => !v)}
