@@ -14,7 +14,7 @@ const StatementBrowser = props => {
             setStore(
                 configureStore({
                     auth
-                })
+                }).store
             );
         }
     }, [auth, newStore]);

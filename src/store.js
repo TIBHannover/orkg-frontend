@@ -9,11 +9,12 @@ const { createReduxHistory, routerMiddleware, routerReducer } = createReduxHisto
 });
 
 export default function store(initialState = {}) {
-    return configureStore({
+    const store = configureStore({
         preloadedState: initialState,
         reducer: combinedReducers(routerReducer),
         middleware: getDefaultMiddleware => getDefaultMiddleware().concat(routerMiddleware)
     });
-}
+    const history = createReduxHistory(store);
 
-export const history = createReduxHistory(store());
+    return { store, history };
+}

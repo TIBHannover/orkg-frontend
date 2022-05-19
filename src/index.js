@@ -7,7 +7,7 @@ import App from './App';
 import { unregister } from './registerServiceWorker';
 import theme from 'assets/scss/ThemeVariables';
 import { Provider } from 'react-redux';
-import configureStore, { history } from './store';
+import configureStore from './store';
 import rootReducer from './slices/rootReducer';
 import { CookiesProvider } from 'react-cookie';
 import { ThemeProvider } from 'styled-components';
@@ -33,7 +33,8 @@ const matomoInstance =
           })
         : undefined;
 
-const store = configureStore();
+const { store, history } = configureStore();
+
 const render = () => {
     ReactDOM.render(
         <DndProvider backend={HTML5Backend}>
