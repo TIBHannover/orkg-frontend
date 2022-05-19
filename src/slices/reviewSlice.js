@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { LOCATION_CHANGE } from 'redux-first-history';
+import { LOCATION_CHANGE } from 'store';
 import { match } from 'path-to-regexp';
 import ROUTES from 'constants/routes';
 import arrayMove from 'array-move';

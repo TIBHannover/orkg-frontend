@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { LOCATION_CHANGE } from 'redux-first-history';
+import { LOCATION_CHANGE } from 'store';
 import { Cookies } from 'react-cookie';
 import env from '@beam-australia/react-env';
 import { guid } from 'utils';
