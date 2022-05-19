@@ -4,9 +4,11 @@ import PropTypes from 'prop-types';
 import TemplateComponentProperty from './Property/TemplateComponentProperty';
 import TemplateComponentValue from './Value/TemplateComponentValue';
 import { useDrag, useDrop } from 'react-dnd';
+import { useSelector } from 'react-redux';
 import ItemTypes from 'constants/dndTypes';
 
 function TemplateComponent(props) {
+    const editMode = useSelector(state => state.templateEditor.editMode);
     const ref = useRef(null);
     const [, drop] = useDrop({
         accept: ItemTypes.TEMPLATE_COMPONENT,
@@ -54,7 +56,7 @@ function TemplateComponent(props) {
         collect: monitor => ({
             isDragging: monitor.isDragging()
         }),
-        canDrag: () => props.enableEdit
+        canDrag: () => editMode
     });
     const opacity = isDragging ? 0 : 1;
 
@@ -67,7 +69,6 @@ function TemplateComponent(props) {
                     handleDeleteTemplateComponent={props.handleDeleteTemplateComponent}
                     id={props.id}
                     property={props.property}
-                    enableEdit={props.enableEdit}
                     handlePropertiesSelect={props.handlePropertiesSelect}
                     dragRef={drag}
                 />
@@ -76,7 +77,6 @@ function TemplateComponent(props) {
                     value={props.value}
                     minOccurs={props.minOccurs}
                     maxOccurs={props.maxOccurs}
-                    enableEdit={props.enableEdit}
                     validationRules={props.validationRules}
                     handleClassOfPropertySelect={props.handleClassOfPropertySelect}
                 />
@@ -94,7 +94,6 @@ TemplateComponent.propTypes = {
     validationRules: PropTypes.object,
     moveCard: PropTypes.func.isRequired,
     handleDeleteTemplateComponent: PropTypes.func.isRequired,
-    enableEdit: PropTypes.bool.isRequired,
     handlePropertiesSelect: PropTypes.func.isRequired,
     handleClassOfPropertySelect: PropTypes.func.isRequired
 };

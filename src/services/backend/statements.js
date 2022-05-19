@@ -211,7 +211,7 @@ export const getTemplateById = async templateId => {
     if (!response) {
         return Promise.reject(new Error('Template not found'));
     }
-    const label = filterStatementsBySubjectId(response.statements, templateId)?.[0]?.subject.label ?? '';
+    const subject = filterStatementsBySubjectId(response.statements, templateId)?.[0]?.subject ?? { label: '', created_by: MISC.UNKNOWN_ID };
     const statements = filterStatementsBySubjectId(response.statements, templateId);
     const templatePredicate = filterObjectOfStatementsByPredicateAndClass(
         response.statements,
@@ -233,7 +233,7 @@ export const getTemplateById = async templateId => {
     const templateIsStrict = filterObjectOfStatementsByPredicateAndClass(response.statements, PREDICATES.TEMPLATE_STRICT, true, null, templateId);
     const templateComponents = filterObjectOfStatementsByPredicateAndClass(
         response.statements,
-        PREDICATES.TEMPLATE_COMPONENT,
+        PREDICATES.HAS_TEMPLATE_COMPONENT,
         false,
         null,
         templateId
@@ -261,7 +261,7 @@ export const getTemplateById = async templateId => {
 
     return {
         id: templateId,
-        label: label,
+        ...subject,
         statements: statements.map(s => s.id),
         predicate: templatePredicate,
         labelFormat: templateFormatLabel ? templateFormatLabel.label : '',
