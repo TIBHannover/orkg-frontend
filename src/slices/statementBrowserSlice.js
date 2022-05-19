@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { LOCATION_CHANGE } from 'redux-first-history';
+import { LOCATION_CHANGE } from 'store';
 import { ENTITIES, PREDICATES, CLASSES } from 'constants/graphSettings';
 import { match } from 'path-to-regexp';
 import { last, flatten, uniqBy } from 'lodash';
