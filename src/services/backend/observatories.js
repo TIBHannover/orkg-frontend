@@ -29,6 +29,22 @@ export const getUsersByObservatoryId = id => {
     return submitGetRequest(`${observatoriesUrl}${encodeURIComponent(id)}/users`);
 };
 
+export const addOrganizationToObservatory = (id, organization_id) => {
+    return submitPutRequest(
+        `${observatoriesUrl}add/${encodeURIComponent(id)}/organization`,
+        { 'Content-Type': 'application/json' },
+        { organization_id }
+    );
+};
+
+export const deleteOrganizationFromObservatory = (id, organization_id) => {
+    return submitPutRequest(
+        `${observatoriesUrl}delete/${encodeURIComponent(id)}/organization`,
+        { 'Content-Type': 'application/json' },
+        { organization_id }
+    );
+};
+
 export const getResourcesByObservatoryId = id => {
     return submitGetRequest(`${observatoriesUrl}${encodeURIComponent(id)}/papers`);
 };

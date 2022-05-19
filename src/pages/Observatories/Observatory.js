@@ -67,6 +67,10 @@ const Observatory = () => {
         setResearchField(researchField);
     };
 
+    const toggleOrganizationItem = organization => {
+        setOrganizationsList(v => (v.map(o => o.id).includes(organization.id) ? v.filter(t => t !== organization) : [organization, ...v]));
+    };
+
     return (
         <>
             {isLoading && <Container className="box rounded pt-4 pb-4 ps-5 pe-5 mt-5 clearfix">Loading ...</Container>}
@@ -108,6 +112,7 @@ const Observatory = () => {
                                     observatoryId={observatoryId}
                                     organizationsList={organizationsList}
                                     isLoadingOrganizations={isLoadingOrganizations}
+                                    toggleOrganizationItem={toggleOrganizationItem}
                                 />
                             </Col>
                             <Col md="4" className="d-flex">
