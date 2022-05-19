@@ -46,15 +46,17 @@ const HelpCenterArticle = () => {
                             <BreadcrumbItem>
                                 <Link to={ROUTES.HELP_CENTER}>Help center</Link>
                             </BreadcrumbItem>
-                            <BreadcrumbItem>
-                                <Link
-                                    to={reverse(ROUTES.HELP_CENTER_CATEGORY, {
-                                        id: page.help_category.id
-                                    })}
-                                >
-                                    {page.help_category.title}
-                                </Link>
-                            </BreadcrumbItem>
+                            {page.help_category && (
+                                <BreadcrumbItem>
+                                    <Link
+                                        to={reverse(ROUTES.HELP_CENTER_CATEGORY, {
+                                            id: page.help_category.id
+                                        })}
+                                    >
+                                        {page.help_category.title}
+                                    </Link>
+                                </BreadcrumbItem>
+                            )}
                             <BreadcrumbItem active>{page.title}</BreadcrumbItem>
                         </Breadcrumb>
                         <h1 className="h3 my-4">{page.title}</h1>
