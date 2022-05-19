@@ -233,7 +233,7 @@ export const getTemplateById = async templateId => {
     const templateIsStrict = filterObjectOfStatementsByPredicateAndClass(response.statements, PREDICATES.TEMPLATE_STRICT, true, null, templateId);
     const templateComponents = filterObjectOfStatementsByPredicateAndClass(
         response.statements,
-        PREDICATES.TEMPLATE_COMPONENT,
+        PREDICATES.HAS_TEMPLATE_COMPONENT,
         false,
         null,
         templateId

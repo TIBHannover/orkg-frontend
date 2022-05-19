@@ -221,8 +221,8 @@ export const saveTemplate = templateData => {
         // save template properties
         if (data.components && data.components.length > 0) {
             for (const [index, property] of data.components.entries()) {
-                const component = await createResource(`Component for template ${templateResource}`);
-                promises.push(createResourceStatement(templateResource, PREDICATES.TEMPLATE_COMPONENT, component.id));
+                const component = await createResource(`Component for template ${templateResource}`, [CLASSES.TEMPLATE_COMPONENT]);
+                promises.push(createResourceStatement(templateResource, PREDICATES.HAS_TEMPLATE_COMPONENT, component.id));
                 promises.push(createResourceStatement(component.id, PREDICATES.TEMPLATE_COMPONENT_PROPERTY, property.property.id));
                 if (property.value && property.value.id) {
                     promises.push(createResourceStatement(component.id, PREDICATES.TEMPLATE_COMPONENT_VALUE, property.value.id));
