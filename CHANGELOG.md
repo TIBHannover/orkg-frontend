@@ -3,6 +3,13 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [V0.70.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.70...V0.70.1) - 2022-05-20
+
+### Changes
+
+- fix: circular store dependency [`#845`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/845)
+
+---
 ## [V0.70](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.69.2...V0.70) - 2022-05-20
 
 ### Changes
