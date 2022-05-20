@@ -19,6 +19,7 @@ import {
 import { Cookies } from 'react-cookie';
 import env from '@beam-australia/react-env';
 import slugifyString from 'slugify';
+import { LOCATION_CHANGE as LOCATION_CHANGE_RFH } from 'redux-first-history';
 
 const cookies = new Cookies();
 
@@ -1457,3 +1458,6 @@ export const groupArrayByDirectoryPrefix = strings => {
     }
     return groups;
 };
+
+const isInTest = typeof global.it === 'function';
+export const LOCATION_CHANGE = !isInTest ? LOCATION_CHANGE_RFH : 'NoReset';
