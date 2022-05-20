@@ -3,6 +3,17 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [V0.70](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.69.2...V0.70) - 2022-05-20
+
+### Changes
+
+- Resolve "Issue with reset redux state on location change" [`#844`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/844)
+- refactor(Templates): type resources of “TemplateComponentClass” [`#841`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/841)
+- feat(Observatories): Combined lists and paginate content [`#804`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/804)
+- feat(HelpArticle): support articles without category [`#842`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/842)
+- feat(Observatory): link contributors and organizations with observatories from the UI [`#549`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/549)
+
+---
 ## [V0.69.2](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.69.1...V0.69.2) - 2022-05-16
 
 ### Changes
