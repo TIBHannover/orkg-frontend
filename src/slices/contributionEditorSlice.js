@@ -29,7 +29,7 @@ import {
     deleteStatementsByIds
 } from 'services/backend/statements';
 import { createPredicate, getPredicate } from 'services/backend/predicates';
-import { LOCATION_CHANGE } from 'store';
+import { LOCATION_CHANGE } from 'utils';
 
 const initialState = {
     contributions: {},
