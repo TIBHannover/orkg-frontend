@@ -22,7 +22,7 @@ const DEFAULT_CLASSES_FILTER = [
     */
 ];
 
-const IntegratedList = ({ id, boxShadow }) => {
+const IntegratedList = ({ id, slug, boxShadow }) => {
     const location = useLocation();
     const params = queryString.parse(location.search);
 
@@ -40,6 +40,7 @@ const IntegratedList = ({ id, boxShadow }) => {
         setSort
     } = useObservatoryContent({
         observatoryId: id,
+        slug: slug,
         initialSort: params.sort ?? 'combined',
         initialClassFilterOptions: DEFAULT_CLASSES_FILTER,
         initClassesFilter: params.classesFilter
@@ -175,6 +176,7 @@ const IntegratedList = ({ id, boxShadow }) => {
 
 IntegratedList.propTypes = {
     id: PropTypes.string.isRequired,
+    slug: PropTypes.string,
     boxShadow: PropTypes.bool
 };
 

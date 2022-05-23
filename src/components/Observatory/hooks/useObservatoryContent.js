@@ -8,7 +8,7 @@ import ROUTES from 'constants/routes.js';
 import { reverseWithSlug } from 'utils';
 import { flatten } from 'lodash';
 
-function useObservatoryContent({ observatoryId, initialSort, initialClassFilterOptions, initClassesFilter, pageSize = 10, updateURL = false }) {
+function useObservatoryContent({ observatoryId, slug, initialSort, initialClassFilterOptions, initClassesFilter, pageSize = 10, updateURL = false }) {
     const [isLoading, setIsLoading] = useState(false);
     const [hasNextPage, setHasNextPage] = useState(false);
     const [isLastPageReached, setIsLastPageReached] = useState(false);
@@ -130,11 +130,11 @@ function useObservatoryContent({ observatoryId, initialSort, initialClassFilterO
         if (updateURL) {
             navigate(
                 `${reverseWithSlug(ROUTES.OBSERVATORY, {
-                    id: observatoryId
+                    id: slug
                 })}?sort=${sort}&classesFilter=${classesFilter.map(c => c.id).join(',')}`
             );
         }
-    }, [observatoryId, sort, classesFilter, navigate, updateURL]);
+    }, [observatoryId, slug, sort, classesFilter, navigate, updateURL]);
 
     useEffect(() => {
         loadData(0);
