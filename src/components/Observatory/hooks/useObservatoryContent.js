@@ -1,12 +1,10 @@
-import { find } from 'lodash';
+import { find, flatten } from 'lodash';
 import { useCallback, useEffect, useState } from 'react';
 import { getContentByObservatoryIdAndClasses } from 'services/backend/observatories';
 import { getStatementsBySubjects } from 'services/backend/statements';
-import { getDataBasedOnType, groupVersionsOfComparisons, mergeAlternate } from 'utils';
+import { getDataBasedOnType, groupVersionsOfComparisons, mergeAlternate, reverseWithSlug } from 'utils';
 import { useNavigate } from 'react-router-dom';
 import ROUTES from 'constants/routes.js';
-import { reverseWithSlug } from 'utils';
-import { flatten } from 'lodash';
 
 function useObservatoryContent({ observatoryId, initialSort, initialClassFilterOptions, initClassesFilter, pageSize = 10, updateURL = false }) {
     const [isLoading, setIsLoading] = useState(false);
@@ -28,42 +26,42 @@ function useObservatoryContent({ observatoryId, initialSort, initialClassFilterO
                 // in case of combined sort we list 50% featured and 50% unfeatured items
                 const noFeaturedContentService = getContentByObservatoryIdAndClasses({
                     id: observatoryId,
-                    page: page,
+                    page,
                     items: Math.round(pageSize / 2),
                     sortBy: 'created_at',
                     desc: true,
                     featured: false,
                     unlisted: false,
-                    classes: classesFilter.map(c => c.id)
+                    classes: classesFilter.map(c => c.id),
                 });
                 const featuredContentService = getContentByObservatoryIdAndClasses({
                     id: observatoryId,
-                    page: page,
+                    page,
                     items: Math.round(pageSize / 2),
                     sortBy: 'created_at',
                     desc: true,
                     featured: true,
                     unlisted: false,
-                    classes: classesFilter.map(c => c.id)
+                    classes: classesFilter.map(c => c.id),
                 });
                 contentService = Promise.all([noFeaturedContentService, featuredContentService]).then(([noFeaturedContent, featuredContent]) => {
                     const combinedComparisons = mergeAlternate(noFeaturedContent.content, featuredContent.content);
                     return {
                         content: combinedComparisons,
                         totalElements: page === 0 ? noFeaturedContent.totalElements + featuredContent.totalElements : total,
-                        last: noFeaturedContent.last && featuredContent.last
+                        last: noFeaturedContent.last && featuredContent.last,
                     };
                 });
             } else {
                 contentService = getContentByObservatoryIdAndClasses({
                     id: observatoryId,
-                    page: page,
+                    page,
                     items: pageSize,
                     sortBy: 'created_at',
                     desc: true,
                     featured: sort === 'featured' ? true : null,
-                    unlisted: sort === 'unlisted' ? true : false,
-                    classes: classesFilter.map(c => c.id)
+                    unlisted: sort === 'unlisted',
+                    classes: classesFilter.map(c => c.id),
                 }).then(response => ({ ...response, content: response.content }));
             }
 
@@ -71,19 +69,19 @@ function useObservatoryContent({ observatoryId, initialSort, initialClassFilterO
                 .then(result => {
                     // Fetch the data of each content
                     getStatementsBySubjects({
-                        ids: result.content.map(p => p.id)
+                        ids: result.content.map(p => p.id),
                     })
                         .then(contentsStatements => {
                             const dataObjects = contentsStatements.map(statements => {
                                 const resourceSubject = find(result.content, {
-                                    id: statements.id
+                                    id: statements.id,
                                 });
                                 return getDataBasedOnType(resourceSubject, statements.statements);
                             });
                             setItems(prevResources => {
                                 let newItems = groupVersionsOfComparisons([
                                     ...flatten([...prevResources.map(c => c.versions ?? []), ...prevResources]),
-                                    ...dataObjects
+                                    ...dataObjects,
                                 ]);
                                 if (sort === 'combined') {
                                     newItems = mergeAlternate(newItems.filter(i => i.featured), newItems.filter(i => !i.featured));
@@ -100,7 +98,7 @@ function useObservatoryContent({ observatoryId, initialSort, initialClassFilterO
                         .catch(error => {
                             setIsLoading(false);
                             setHasNextPage(false);
-                            setIsLastPageReached(page > 1 ? true : false);
+                            setIsLastPageReached(page > 1);
 
                             console.log(error);
                         });
@@ -108,12 +106,12 @@ function useObservatoryContent({ observatoryId, initialSort, initialClassFilterO
                 .catch(error => {
                     setIsLoading(false);
                     setHasNextPage(false);
-                    setIsLastPageReached(page > 1 ? true : false);
+                    setIsLastPageReached(page > 1);
 
                     console.log(error);
                 });
         },
-        [sort, observatoryId, pageSize, classesFilter]
+        [sort, observatoryId, pageSize, classesFilter],
     );
 
     // reset resources when the observatoryId has changed
@@ -130,8 +128,8 @@ function useObservatoryContent({ observatoryId, initialSort, initialClassFilterO
         if (updateURL) {
             navigate(
                 `${reverseWithSlug(ROUTES.OBSERVATORY, {
-                    id: observatoryId
-                })}?sort=${sort}&classesFilter=${classesFilter.map(c => c.id).join(',')}`
+                    id: observatoryId,
+                })}?sort=${sort}&classesFilter=${classesFilter.map(c => c.id).join(',')}`,
             );
         }
     }, [observatoryId, sort, classesFilter, navigate, updateURL]);
@@ -147,7 +145,7 @@ function useObservatoryContent({ observatoryId, initialSort, initialClassFilterO
     };
 
     return {
-        items: items,
+        items,
         isLoading,
         hasNextPage,
         isLastPageReached,
@@ -158,7 +156,7 @@ function useObservatoryContent({ observatoryId, initialSort, initialClassFilterO
         classesFilter,
         setClassesFilter,
         handleLoadMore,
-        setSort
+        setSort,
     };
 }
 export default useObservatoryContent;

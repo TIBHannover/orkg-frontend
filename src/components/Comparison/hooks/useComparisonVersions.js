@@ -12,7 +12,7 @@ function useComparisonVersions({ cId }) {
             getComparisonVersionsById(id).then(v => {
                 setVersions(v);
                 setIsLoadingVersions(false);
-                setHasNextVersion(v?.length > 0 && v[0].id !== id ? true : false);
+                setHasNextVersion(!!(v?.length > 0 && v[0].id !== id));
             });
         }
     }, []);
@@ -25,7 +25,7 @@ function useComparisonVersions({ cId }) {
         versions,
         isLoadingVersions,
         hasNextVersion,
-        loadVersions
+        loadVersions,
     };
 }
 export default useComparisonVersions;

@@ -64,7 +64,7 @@ export const PREDICATES = {
     HAS_ENTRY: 'HasEntry',
     HAS_HEADING_LEVEL: 'HasHeadingLevel',
     HAS_VIDEO: 'HasVideo',
-    IS_ANONYMIZED: 'IsAnonymized'
+    IS_ANONYMIZED: 'IsAnonymized',
 };
 
 export const CLASSES = {
@@ -117,13 +117,13 @@ export const CLASSES = {
     INTEGER: 'Integer',
     BOOLEAN: 'Boolean',
     URI: 'URI',
-    SOFTWARE: 'Software'
+    SOFTWARE: 'Software',
 };
 
 export const MISC = {
     RESEARCH_FIELD_MAIN: 'R11',
     DEFAULT_LITERAL_DATATYPE: 'xsd:string',
-    UNKNOWN_ID: '00000000-0000-0000-0000-000000000000'
+    UNKNOWN_ID: '00000000-0000-0000-0000-000000000000',
 };
 
 /* entities usually are returned by the backend (in _class) to specify the type of node  */
@@ -131,5 +131,5 @@ export const ENTITIES = {
     CLASS: 'class',
     PREDICATE: 'predicate',
     RESOURCE: 'resource',
-    LITERAL: 'literal'
+    LITERAL: 'literal',
 };

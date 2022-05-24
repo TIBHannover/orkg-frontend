@@ -24,7 +24,7 @@ const NavItemStyled = styled(NavItem)`
 const Nfdi4dsButton = () => {
     useEffect(() => {
         (function(w, d, s, o, f, js, fjs) {
-            w['nfdi4dsWidget'] = o;
+            w.nfdi4dsWidget = o;
             w[o] =
                 w[o] ||
                 function() {

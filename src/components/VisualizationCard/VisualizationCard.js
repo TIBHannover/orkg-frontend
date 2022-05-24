@@ -5,15 +5,15 @@ import UserAvatar from 'components/UserAvatar/UserAvatar';
 import MarkFeatured from 'components/MarkFeaturedUnlisted/MarkFeatured/MarkFeatured';
 import MarkUnlisted from 'components/MarkFeaturedUnlisted/MarkUnlisted/MarkUnlisted';
 import useMarkFeaturedUnlisted from 'components/MarkFeaturedUnlisted/hooks/useMarkFeaturedUnlisted';
-import useVisualizationResearchField from './hooks/useVisualizationResearchField';
 import RelativeBreadcrumbs from 'components/RelativeBreadcrumbs/RelativeBreadcrumbs';
 import { CardBadge } from 'components/styled';
 import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import styled from 'styled-components';
-import Thumbnail from './Thumbnail';
 import PropTypes from 'prop-types';
 import moment from 'moment';
+import Thumbnail from './Thumbnail';
+import useVisualizationResearchField from './hooks/useVisualizationResearchField';
 
 const VisualizationCardStyled = styled.div`
     a {
@@ -29,11 +29,11 @@ const VisualizationCard = props => {
     const { isFeatured, isUnlisted, handleChangeStatus } = useMarkFeaturedUnlisted({
         resourceId: props.visualization.id,
         unlisted: props.visualization?.unlisted,
-        featured: props.visualization?.featured
+        featured: props.visualization?.featured,
     });
 
     const { researchField } = useVisualizationResearchField({
-        visualizationId: props.visualization.id
+        visualizationId: props.visualization.id,
     });
 
     return (
@@ -54,7 +54,7 @@ const VisualizationCard = props => {
                         <Link
                             to={
                                 props.visualization.comparisonId
-                                    ? reverse(ROUTES.COMPARISON, { comparisonId: props.visualization.comparisonId }) + '#Vis' + props.visualization.id
+                                    ? `${reverse(ROUTES.COMPARISON, { comparisonId: props.visualization.comparisonId })}#Vis${props.visualization.id}`
                                     : reverse(ROUTES.VISUALIZATION, { id: props.visualization.id })
                             }
                         >
@@ -115,15 +115,15 @@ VisualizationCard.propTypes = {
         created_by: PropTypes.string,
         description: PropTypes.string,
         featured: PropTypes.bool,
-        unlisted: PropTypes.bool
+        unlisted: PropTypes.bool,
     }).isRequired,
     showBadge: PropTypes.bool.isRequired,
-    showCurationFlags: PropTypes.bool.isRequired
+    showCurationFlags: PropTypes.bool.isRequired,
 };
 
 VisualizationCard.defaultProps = {
     showBadge: false,
-    showCurationFlags: true
+    showCurationFlags: true,
 };
 
 export default VisualizationCard;

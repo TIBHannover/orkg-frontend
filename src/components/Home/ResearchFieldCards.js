@@ -110,11 +110,10 @@ const ResearchFieldCards = ({ selectedResearchField, handleFieldSelect, research
         fetchResearchFieldsStats();
     }, []);
 
-    const fetchResearchFieldsStats = () => {
-        return getResearchFieldsStats().then(results => {
+    const fetchResearchFieldsStats = () =>
+        getResearchFieldsStats().then(results => {
             setStats(results);
         });
-    };
 
     return (
         <>
@@ -146,7 +145,7 @@ const ResearchFieldCards = ({ selectedResearchField, handleFieldSelect, research
                             tag={Link}
                             to={reverseWithSlug(ROUTES.RESEARCH_FIELD, {
                                 researchFieldId: selectedResearchField.id,
-                                slug: selectedResearchField.label
+                                slug: selectedResearchField.label,
                             })}
                             color="light"
                             size="sm"
@@ -168,20 +167,18 @@ const ResearchFieldCards = ({ selectedResearchField, handleFieldSelect, research
                 <div className="mt-3">
                     <div>
                         <TransitionGroup id="research-field-cards" className="mt-2 justify-content-center d-flex flex-wrap" exit={false}>
-                            {researchFields.slice(0, 9).map(field => {
-                                return (
-                                    <AnimationContainer key={field.id} classNames="fadeIn" timeout={{ enter: 500, exit: 0 }}>
-                                        <Card
-                                            role="button"
-                                            disabled={has(stats, field.id) && stats[field.id] === 0}
-                                            onClick={() => handleFieldSelect(field)}
-                                        >
-                                            <CardTitle className="card-title m-0 text-center">{field.label}</CardTitle>
-                                            <PaperAmount>{has(stats, field.id) ? stats[field.id] : 0} papers</PaperAmount>
-                                        </Card>
-                                    </AnimationContainer>
-                                );
-                            })}
+                            {researchFields.slice(0, 9).map(field => (
+                                <AnimationContainer key={field.id} classNames="fadeIn" timeout={{ enter: 500, exit: 0 }}>
+                                    <Card
+                                        role="button"
+                                        disabled={has(stats, field.id) && stats[field.id] === 0}
+                                        onClick={() => handleFieldSelect(field)}
+                                    >
+                                        <CardTitle className="card-title m-0 text-center">{field.label}</CardTitle>
+                                        <PaperAmount>{has(stats, field.id) ? stats[field.id] : 0} papers</PaperAmount>
+                                    </Card>
+                                </AnimationContainer>
+                            ))}
                             {researchFields.length > 9 &&
                                 showMoreFields &&
                                 researchFields.slice(9).map(field => (
@@ -236,7 +233,7 @@ ResearchFieldCards.propTypes = {
     selectedResearchField: PropTypes.object,
     researchFields: PropTypes.array,
     handleFieldSelect: PropTypes.func,
-    isLoading: PropTypes.bool.isRequired
+    isLoading: PropTypes.bool.isRequired,
 };
 
 export default ResearchFieldCards;

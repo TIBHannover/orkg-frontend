@@ -1,10 +1,10 @@
 import { Container, Button, ListGroup } from 'reactstrap';
 import ComparisonCard from 'components/ComparisonCard/ComparisonCard';
-import useContributionComparison from './hooks/useContributionComparison';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
+import useContributionComparison from './hooks/useContributionComparison';
 
 const Title = styled.div`
     font-size: 18px;
@@ -53,8 +53,8 @@ function ContributionComparisons(props) {
             <Container className="mt-3 p-0">
                 {comparisons.length > 0 && (
                     <ListGroup>
-                        {comparisons.map(comparison => {
-                            return (
+                        {comparisons.map(
+                            comparison =>
                                 comparison && (
                                     <ComparisonCard
                                         rounded={!hasNextPage ? 'false' : 'true'}
@@ -63,9 +63,8 @@ function ContributionComparisons(props) {
                                         showCurationFlags={false}
                                         showBadge={false}
                                     />
-                                )
-                            );
-                        })}
+                                ),
+                        )}
                     </ListGroup>
                 )}
                 {!isLoadingComparisons && hasNextPage && (
@@ -94,7 +93,7 @@ function ContributionComparisons(props) {
 }
 
 ContributionComparisons.propTypes = {
-    contributionId: PropTypes.string.isRequired
+    contributionId: PropTypes.string.isRequired,
 };
 
 export default ContributionComparisons;

@@ -29,7 +29,7 @@ const AddClass = () => {
                 toast.error('Please enter a valid URI of the class');
             } else {
                 try {
-                    const newClass = await createClass(label, uri ? uri : null);
+                    const newClass = await createClass(label, uri || null);
                     toast.success('Class created successfully');
                     setIsLoading(false);
                     navigate(reverse(ROUTES.CLASS, { id: newClass.id }));

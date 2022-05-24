@@ -119,7 +119,7 @@ const DiffView = ({ type, diffRoute, getData }) => {
 DiffView.propTypes = {
     type: PropTypes.string.isRequired,
     diffRoute: PropTypes.string.isRequired,
-    getData: PropTypes.func.isRequired
+    getData: PropTypes.func.isRequired,
 };
 
 export default DiffView;

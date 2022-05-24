@@ -4,7 +4,6 @@ import ROUTES from 'constants/routes.js';
 import { Link } from 'react-router-dom';
 import ContentLoader from 'react-content-loader';
 import useResearchProblems from 'components/ResearchProblemsBox/hooks/useResearchProblems';
-import ResearchProblemsModal from './ResearchProblemsModal';
 import AddResearchProblem from 'components/Observatory/AddResearchProblem';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -13,6 +12,7 @@ import PropTypes from 'prop-types';
 import { reverseWithSlug } from 'utils';
 import Tippy from '@tippyjs/react';
 import { useSelector } from 'react-redux';
+import ResearchProblemsModal from './ResearchProblemsModal';
 
 const ResearchProblemsBox = ({ id, by = 'ResearchField', organizationsList }) => {
     const { problems, isLoading, totalElements, setProblems } = useResearchProblems({ id, by, initialSort: 'combined', pageSize: 10 });
@@ -81,7 +81,7 @@ const ResearchProblemsBox = ({ id, by = 'ResearchField', organizationsList }) =>
 ResearchProblemsBox.propTypes = {
     id: PropTypes.string.isRequired,
     by: PropTypes.string.isRequired, // ResearchField || Observatory
-    organizationsList: PropTypes.array
+    organizationsList: PropTypes.array,
 };
 
 export default ResearchProblemsBox;

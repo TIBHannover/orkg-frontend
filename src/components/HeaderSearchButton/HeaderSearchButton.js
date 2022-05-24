@@ -42,7 +42,7 @@ const HeaderSearchButton = ({ placeholder, type, userId }) => {
     };
 
     const goToResults = () => {
-        navigate(reverse(ROUTES.SEARCH, { searchTerm: encodeURIComponent(value) }) + `?types=${type ?? ''}&createdBy=${userId ?? ''}`);
+        navigate(`${reverse(ROUTES.SEARCH, { searchTerm: encodeURIComponent(value) })}?types=${type ?? ''}&createdBy=${userId ?? ''}`);
     };
 
     return isSearchOpen ? (
@@ -69,11 +69,11 @@ const HeaderSearchButton = ({ placeholder, type, userId }) => {
 HeaderSearchButton.propTypes = {
     placeholder: PropTypes.string,
     type: PropTypes.string,
-    userId: PropTypes.string
+    userId: PropTypes.string,
 };
 
 HeaderSearchButton.defaultProps = {
-    placeholder: ''
+    placeholder: '',
 };
 
 export default HeaderSearchButton;

@@ -14,7 +14,7 @@ function OntologiesModal(props) {
                         requestUrl={olsBaseUrl}
                         onChange={(selected, action) => {
                             // blur the field allows to focus and open the menu again
-                            props.setSelectedOntologies(selected ? selected : []);
+                            props.setSelectedOntologies(selected || []);
                         }}
                         placeholder="Select or type to enter an ontology"
                         value={props.selectedOntologies}
@@ -44,7 +44,7 @@ OntologiesModal.propTypes = {
     showDialog: PropTypes.bool.isRequired,
     toggle: PropTypes.func.isRequired,
     selectedOntologies: PropTypes.array.isRequired,
-    setSelectedOntologies: PropTypes.func.isRequired
+    setSelectedOntologies: PropTypes.func.isRequired,
 };
 
 export default OntologiesModal;

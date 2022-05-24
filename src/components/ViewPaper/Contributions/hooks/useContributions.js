@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { createResourceStatement, deleteStatementById } from 'services/backend/statements';
-import { updateResource, createResource } from 'services/backend/resources';
+import { updateResource, createResource, getResource } from 'services/backend/resources';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateContributionLabel } from 'slices/statementBrowserSlice';
 import { toast } from 'react-toastify';
@@ -8,7 +8,6 @@ import Confirm from 'components/Confirmation/Confirmation';
 import { PREDICATES, CLASSES } from 'constants/graphSettings';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes.js';
-import { getResource } from 'services/backend/resources';
 import { getSimilarContribution } from 'services/similarity/index';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -16,7 +15,7 @@ import {
     setPaperContributions,
     setIsAddingContribution,
     setIsDeletingContribution,
-    setIsSavingContribution
+    setIsSavingContribution,
 } from 'slices/viewPaperSlice';
 
 const useContributions = ({ paperId, contributionId }) => {
@@ -38,21 +37,10 @@ const useContributions = ({ paperId, contributionId }) => {
         if (contributions?.length && (selectedContribution !== contributionId || !contributionId)) {
             try {
                 // apply selected contribution
-                if (
-                    contributionId &&
-                    !contributions.some(el => {
-                        return el.id === contributionId;
-                    })
-                ) {
+                if (contributionId && !contributions.some(el => el.id === contributionId)) {
                     throw new Error('Contribution not found');
                 }
-                const selected =
-                    contributionId &&
-                    contributions.some(el => {
-                        return el.id === contributionId;
-                    })
-                        ? contributionId
-                        : contributions[0].id;
+                const selected = contributionId && contributions.some(el => el.id === contributionId) ? contributionId : contributions[0].id;
                 setSelectedContribution(selected);
             } catch (error) {
                 console.log(error);
@@ -72,21 +60,21 @@ const useContributions = ({ paperId, contributionId }) => {
                 dispatch(
                     selectContribution({
                         contributionId,
-                        contributionLabel: contributionResource.label
-                    })
+                        contributionLabel: contributionResource.label,
+                    }),
                 );
             } else {
                 setLoadingContributionFailed(true);
             }
             getSimilarContribution(selectedContribution)
                 .then(sContributions => {
-                    const sContributionsData = sContributions.map(paper => {
+                    const sContributionsData = sContributions.map(paper =>
                         // Fetch the data of each paper
-                        return getResource(paper.paperId).then(paperResource => {
+                        getResource(paper.paperId).then(paperResource => {
                             paper.title = paperResource.label;
                             return paper;
-                        });
-                    });
+                        }),
+                    );
                     Promise.all(sContributionsData).then(results => {
                         setSimilarContributions(results);
                         setIsSimilarContributionsLoading(false);
@@ -104,18 +92,18 @@ const useContributions = ({ paperId, contributionId }) => {
     }, [contributions, dispatch, selectedContribution]);
 
     const handleChangeContributionLabel = (contributionId, label) => {
-        //find the index of contribution
+        // find the index of contribution
         const objIndex = contributions.findIndex(obj => obj.id === contributionId);
         if (contributions[objIndex].label !== label) {
             // set the label of the contribution
-            const updatedObj = { ...contributions[objIndex], label: label };
+            const updatedObj = { ...contributions[objIndex], label };
             // update the contributions array
             const newContributions = [...contributions.slice(0, objIndex), updatedObj, ...contributions.slice(objIndex + 1)];
             dispatch(setIsSavingContribution({ id: contributionId, status: true }));
             updateResource(contributionId, label)
                 .then(() => {
                     dispatch(setPaperContributions(newContributions));
-                    dispatch(updateContributionLabel({ id: contributionId, label: label }));
+                    dispatch(updateContributionLabel({ id: contributionId, label }));
                     dispatch(setIsSavingContribution({ id: contributionId, status: false }));
                     toast.success('Contribution name updated successfully');
                 })
@@ -144,23 +132,21 @@ const useContributions = ({ paperId, contributionId }) => {
     const toggleDeleteContribution = async contributionId => {
         const result = await Confirm({
             title: 'Are you sure?',
-            message: 'Are you sure you want to delete this contribution?'
+            message: 'Are you sure you want to delete this contribution?',
         });
 
         if (result) {
             const objIndex = contributions.findIndex(obj => obj.id === contributionId);
-            const statementId = contributions[objIndex].statementId;
-            const newContributions = contributions.filter(function(contribution) {
-                return contribution.id !== contributionId;
-            });
+            const { statementId } = contributions[objIndex];
+            const newContributions = contributions.filter(contribution => contribution.id !== contributionId);
             dispatch(setIsDeletingContribution({ id: contributionId, status: true }));
             deleteStatementById(statementId)
                 .then(() => {
                     navigate(
                         reverse(ROUTES.VIEW_PAPER_CONTRIBUTION, {
                             resourceId: paperId,
-                            contributionId: newContributions[0].id
-                        })
+                            contributionId: newContributions[0].id,
+                        }),
                     );
                     dispatch(setIsDeletingContribution({ id: contributionId, status: false }));
                     dispatch(setPaperContributions(newContributions));
@@ -186,7 +172,7 @@ const useContributions = ({ paperId, contributionId }) => {
         handleChangeContributionLabel,
         handleCreateContribution,
         toggleDeleteContribution,
-        navigate
+        navigate,
     };
 };
 

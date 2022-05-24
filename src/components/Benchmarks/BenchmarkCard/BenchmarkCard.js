@@ -34,7 +34,7 @@ function BenchmarkCard(props) {
             <Link
                 to={reverseWithSlug(ROUTES.RESEARCH_PROBLEM, {
                     researchProblemId: props.benchmark.research_problem.id,
-                    slug: props.benchmark.research_problem.label
+                    slug: props.benchmark.research_problem.label,
                 })}
                 style={{ textDecoration: 'none' }}
             >
@@ -57,7 +57,7 @@ function BenchmarkCard(props) {
 }
 
 BenchmarkCard.propTypes = {
-    benchmark: PropTypes.object.isRequired
+    benchmark: PropTypes.object.isRequired,
 };
 
 export default BenchmarkCard;

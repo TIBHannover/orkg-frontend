@@ -18,11 +18,11 @@ const useSave = () => {
                         {
                             label: 'Contribution',
                             classes: [CLASSES.CONTRIBUTION, CLASSES.CONTRIBUTION_SMART_REVIEW],
-                            values: {}
-                        }
-                    ]
-                }
-            }
+                            values: {},
+                        },
+                    ],
+                },
+            },
         };
 
         const createdPaper = await createObject(paper);

@@ -48,7 +48,7 @@ const AuthorsModal = props => {
 
 AuthorsModal.propTypes = {
     toggle: PropTypes.func.isRequired,
-    show: PropTypes.bool.isRequired
+    show: PropTypes.bool.isRequired,
 };
 
 export default AuthorsModal;

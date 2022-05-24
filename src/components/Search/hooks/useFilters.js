@@ -17,7 +17,7 @@ export const useFilters = () => {
     const user = useSelector(state => state.auth.user);
     // ensure the array format is accepted by the autocomplete component
     const selectedFiltersStrings = getArrayParamFromQueryString(decodeURIComponent(location.search), 'types').map(filter => ({ id: filter }));
-    const [selectedFilters, setSelectedFilters] = useState(selectedFiltersStrings ? selectedFiltersStrings : DEFAULT_FILTERS);
+    const [selectedFilters, setSelectedFilters] = useState(selectedFiltersStrings || DEFAULT_FILTERS);
     const [value, setValue] = useState(searchTerm ?? '');
     const [createdBy, setCreatedBy] = useState(getParamFromQueryString(location.search, 'createdBy'));
     const [isLoadingFilterClasses, setIsLoadingFilterClasses] = useState(true);
@@ -31,14 +31,12 @@ export const useFilters = () => {
         let _selectedFilters = [];
         if (filterClass === null) {
             _selectedFilters = selectedFilters.filter(s => DEFAULT_FILTERS.map(df => df.id).includes(s.id));
+        } else if (selectedFilters.map(sf => sf.id).includes(filterClass.id)) {
+            // remove the filter
+            const index = selectedFilters.map(sf => sf.id).indexOf(filterClass.id);
+            _selectedFilters = dotProp.delete(selectedFilters, index);
         } else {
-            if (selectedFilters.map(sf => sf.id).includes(filterClass.id)) {
-                // remove the filter
-                const index = selectedFilters.map(sf => sf.id).indexOf(filterClass.id);
-                _selectedFilters = dotProp.delete(selectedFilters, index);
-            } else {
-                _selectedFilters = [...selectedFilters, filterClass];
-            }
+            _selectedFilters = [...selectedFilters, filterClass];
         }
         setSelectedFilters(_selectedFilters);
     };
@@ -56,22 +54,18 @@ export const useFilters = () => {
                               classObj =>
                                   !DEFAULT_FILTERS.filter(df => !df.isCreatedByActive)
                                       .map(df => df.id)
-                                      .includes(classObj.id)
+                                      .includes(classObj.id),
                           )
                           .map(sf => sf.id)
                           .join(',')
                     : selectedFilters.map(sf => sf.id).join(',');
                 navigate(
-                    reverse(ROUTES.SEARCH, { searchTerm: encodeURIComponent(_query) }) +
-                        '?types=' +
-                        _selectedFilters +
-                        '&createdBy=' +
-                        (createdBy ?? '')
+                    `${reverse(ROUTES.SEARCH, { searchTerm: encodeURIComponent(_query) })}?types=${_selectedFilters}&createdBy=${createdBy ?? ''}`,
                 );
             }
         },
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [createdBy, selectedFilters]
+        [createdBy, selectedFilters],
     );
 
     useEffect(() => {
@@ -112,7 +106,7 @@ export const useFilters = () => {
         setValue,
         setCreatedBy,
         toggleFilter,
-        submitSearch
+        submitSearch,
     };
 };
 

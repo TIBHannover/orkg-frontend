@@ -17,10 +17,10 @@ const usePreviouslySelectedResearchField = () => {
             items: 8,
             sortBy: 'created_at',
             desc: true,
-            creator: userId
+            creator: userId,
         }).then(result => {
             const papers = result.content.map(p =>
-                getStatementsBySubjectAndPredicate({ subjectId: p.id, predicateId: PREDICATES.HAS_RESEARCH_FIELD })
+                getStatementsBySubjectAndPredicate({ subjectId: p.id, predicateId: PREDICATES.HAS_RESEARCH_FIELD }),
             );
             Promise.all(papers)
                 .then(results => {

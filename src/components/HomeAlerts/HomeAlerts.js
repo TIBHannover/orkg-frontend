@@ -36,7 +36,7 @@ const HomeAlerts = () => {
             <AlertStyled key={alert.id} color={alert.color} className="box mt-2">
                 <div dangerouslySetInnerHTML={{ __html: converter.makeHtml(alert.message) }} />
             </AlertStyled>
-        ) : null
+        ) : null,
     );
 };
 

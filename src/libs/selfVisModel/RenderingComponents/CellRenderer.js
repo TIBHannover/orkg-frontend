@@ -1,3 +1,5 @@
+import Tippy from '@tippyjs/react';
+import PropTypes from 'prop-types';
 import {
     PropertyCell,
     ContributionCell,
@@ -5,10 +7,8 @@ import {
     MetaMapperSelector,
     MetaMapperSelectorSimple,
     ValueCell,
-    TippyContainer
+    TippyContainer,
 } from './styledComponents';
-import Tippy from '@tippyjs/react';
-import PropTypes from 'prop-types';
 
 export default function CellRenderer(props) {
     return (
@@ -44,5 +44,5 @@ CellRenderer.propTypes = {
     type: PropTypes.string.isRequired,
     data: PropTypes.object,
     children: PropTypes.any,
-    tippyTarget: PropTypes.object
+    tippyTarget: PropTypes.object,
 };

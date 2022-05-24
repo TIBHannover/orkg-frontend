@@ -32,11 +32,11 @@ class ValuePlugins extends Component {
 ValuePlugins.propTypes = {
     children: PropTypes.oneOfType([PropTypes.string, PropTypes.object, PropTypes.node]).isRequired,
     type: PropTypes.oneOf(['resource', 'literal']),
-    options: PropTypes.object.isRequired
+    options: PropTypes.object.isRequired,
 };
 
 ValuePlugins.defaultProps = {
-    options: {}
+    options: {},
 };
 
 export default ValuePlugins;

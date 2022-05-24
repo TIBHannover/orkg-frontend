@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
-import { markAsFeatured, removeFeaturedFlag } from 'services/backend/resources';
-import { markAsUnlisted, removeUnlistedFlag } from 'services/backend/resources';
+import { markAsFeatured, removeFeaturedFlag, markAsUnlisted, removeUnlistedFlag } from 'services/backend/resources';
 import { useSelector } from 'react-redux';
 
 function useMarkFeaturedUnlisted({ resourceId, unlisted, featured }) {
@@ -38,7 +37,7 @@ function useMarkFeaturedUnlisted({ resourceId, unlisted, featured }) {
     return {
         isFeatured,
         isUnlisted,
-        handleChangeStatus
+        handleChangeStatus,
     };
 }
 export default useMarkFeaturedUnlisted;

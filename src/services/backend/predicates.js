@@ -4,17 +4,11 @@ import { url } from 'constants/misc';
 
 export const predicatesUrl = `${url}predicates/`;
 
-export const getPredicate = id => {
-    return submitGetRequest(`${predicatesUrl}${encodeURIComponent(id)}/`);
-};
+export const getPredicate = id => submitGetRequest(`${predicatesUrl}${encodeURIComponent(id)}/`);
 
-export const createPredicate = label => {
-    return submitPostRequest(predicatesUrl, { 'Content-Type': 'application/json' }, { label: label });
-};
+export const createPredicate = label => submitPostRequest(predicatesUrl, { 'Content-Type': 'application/json' }, { label });
 
-export const updatePredicate = (id, label) => {
-    return submitPutRequest(`${predicatesUrl}${id}`, { 'Content-Type': 'application/json' }, { label: label });
-};
+export const updatePredicate = (id, label) => submitPutRequest(`${predicatesUrl}${id}`, { 'Content-Type': 'application/json' }, { label });
 
 export const getPredicates = ({
     page = 0,
@@ -23,15 +17,15 @@ export const getPredicates = ({
     desc = true,
     q = null,
     exact = false,
-    returnContent = false
+    returnContent = false,
 }) => {
     const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
     const params = queryString.stringify(
         { page, size, sort, exact, ...(q ? { q } : {}) },
         {
             skipNull: true,
-            skipEmptyString: true
-        }
+            skipEmptyString: true,
+        },
     );
 
     return submitGetRequest(`${predicatesUrl}?${params}`).then(res => (returnContent ? res.content : res));

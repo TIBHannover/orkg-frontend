@@ -28,8 +28,8 @@ const ViewPaper = () => {
         state.viewPaper.url
             ? state.viewPaper.url.label
             : state.viewPaper.doi && state.viewPaper.doi.label.startsWith('10.')
-            ? 'https://doi.org/' + state.viewPaper.doi.label
-            : ''
+            ? `https://doi.org/${state.viewPaper.doi.label}`
+            : '',
     );
 
     const {
@@ -41,19 +41,18 @@ const ViewPaper = () => {
         toggle,
         handleShowHeaderBar,
         setEditMode,
-        setShowGraphModal
+        setShowGraphModal,
     } = useViewPaper({
-        paperId: resourceId
+        paperId: resourceId,
     });
 
     let comingFromWizard = queryString.parse(location.search);
     comingFromWizard = comingFromWizard ? comingFromWizard.comingFromWizard === 'true' : false;
 
-    const getSEODescription = () => {
-        return `Published: ${viewPaper.publicationMonth ? moment(viewPaper.publicationMonth.label, 'M').format('MMMM') : ''} ${
+    const getSEODescription = () =>
+        `Published: ${viewPaper.publicationMonth ? moment(viewPaper.publicationMonth.label, 'M').format('MMMM') : ''} ${
             viewPaper.publicationYear ? viewPaper.publicationYear.label : ''
         } • Research field: ${viewPaper?.researchField?.label} • Authors: ${viewPaper?.authors?.map(author => author.label).join(', ')}`;
-    };
 
     const ldJson = {
         mainEntity: {
@@ -63,16 +62,16 @@ const ViewPaper = () => {
             author: viewPaper?.authors?.map(author => ({
                 name: author.label,
                 ...(author.orcid ? { url: `http://orcid.org/${author.orcid}` } : {}),
-                '@type': 'Person'
+                '@type': 'Person',
             })),
             datePublished: `${viewPaper?.publicationMonth ? moment(viewPaper?.publicationMonth?.label, 'M').format('MMMM') : ''} ${
                 viewPaper?.publicationYear ? viewPaper?.publicationYear?.label : ''
             }`,
             about: viewPaper?.researchField?.label,
-            '@type': 'ScholarlyArticle'
+            '@type': 'ScholarlyArticle',
         },
         '@context': 'https://schema.org',
-        '@type': 'WebPage'
+        '@type': 'WebPage',
     };
 
     return (

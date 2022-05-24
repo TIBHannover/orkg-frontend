@@ -1,5 +1,4 @@
 import { forwardRef } from 'react';
-import useStatementItem from './hooks/useStatementItem';
 import { toggleEditPropertyLabel } from 'slices/statementBrowserSlice';
 import { faPen, faTrash, faCheck, faTimes, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { ListGroup, InputGroup } from 'reactstrap';
@@ -15,6 +14,7 @@ import { ENTITIES } from 'constants/graphSettings';
 import { reverse } from 'named-urls';
 import { Link } from 'react-router-dom';
 import ROUTES from 'constants/routes.js';
+import useStatementItem from './hooks/useStatementItem';
 
 const StatementItem = forwardRef((props, ref) => {
     const {
@@ -27,11 +27,11 @@ const StatementItem = forwardRef((props, ref) => {
         property,
         predicateLabel,
         handleChange,
-        handleDeleteStatement
+        handleDeleteStatement,
     } = useStatementItem({
         propertyId: props.id,
         resourceId: props.resourceId,
-        syncBackend: props.syncBackend
+        syncBackend: props.syncBackend,
     });
 
     return (
@@ -96,13 +96,13 @@ const StatementItem = forwardRef((props, ref) => {
                                                     title: 'Delete',
                                                     color: 'danger',
                                                     icon: faCheck,
-                                                    action: handleDeleteStatement
+                                                    action: handleDeleteStatement,
                                                 },
                                                 {
                                                     title: 'Cancel',
                                                     color: 'secondary',
-                                                    icon: faTimes
-                                                }
+                                                    icon: faTimes,
+                                                },
                                             ]}
                                             testId={`delete-property-${property.existingPredicateId}`}
                                         />
@@ -156,7 +156,7 @@ const StatementItem = forwardRef((props, ref) => {
                                         syncBackend={props.syncBackend}
                                         propertyId={props.id}
                                         contextStyle="Template"
-                                        showHelp={props.showValueHelp && index === 0 ? true : false}
+                                        showHelp={!!(props.showValueHelp && index === 0)}
                                     />
                                 );
                             })}
@@ -181,12 +181,12 @@ StatementItem.propTypes = {
     syncBackend: PropTypes.bool.isRequired,
     showValueHelp: PropTypes.bool,
     resourceId: PropTypes.string,
-    inTemplate: PropTypes.bool
+    inTemplate: PropTypes.bool,
 };
 
 StatementItem.defaultProps = {
     resourceId: null,
-    showValueHelp: false
+    showValueHelp: false,
 };
 
 export default StatementItem;

@@ -15,7 +15,8 @@ import {
     applyRule,
     getRuleByProperty,
     getComparisonData,
-    isPredicatesListCorrect
+    isPredicatesListCorrect,
+    asyncLocalStorage,
 } from 'utils';
 import { useLocation, useParams, useNavigate } from 'react-router-dom';
 import { PREDICATES, CLASSES, MISC } from 'constants/graphSettings';
@@ -27,7 +28,6 @@ import queryString from 'query-string';
 import { usePrevious } from 'react-use';
 import Confirm from 'components/Confirmation/Confirmation';
 import { getOrganization } from 'services/backend/organizations';
-import { asyncLocalStorage } from 'utils';
 
 const DEFAULT_COMPARISON_METHOD = 'path';
 
@@ -104,9 +104,9 @@ function useComparison({ id }) {
                 statements,
                 PREDICATES.HAS_VISUALIZATION,
                 false,
-                CLASSES.VISUALIZATION
+                CLASSES.VISUALIZATION,
             );
-            setMetaData({ ...metaData, visualizations: visualizations });
+            setMetaData({ ...metaData, visualizations });
         });
     };
     /**
@@ -134,10 +134,10 @@ function useComparison({ id }) {
                             ...comparisonObject,
                             title: comparisonObject.label,
                             createdAt: comparisonObject.created_at,
-                            createdBy: comparisonObject.created_by
+                            createdBy: comparisonObject.created_by,
                         });
 
-                        const url = configurationData.data.url;
+                        const { url } = configurationData.data;
                         if (url) {
                             setResponseHash(getParamFromQueryString(url.substring(url.indexOf('?')), 'response_hash'));
                             setComparisonType(getParamFromQueryString(url.substring(url.indexOf('?')), 'type') ?? DEFAULT_COMPARISON_METHOD);
@@ -149,7 +149,7 @@ function useComparison({ id }) {
                             setContributionsList(contributionsIDs);
                         } else {
                             setPredicatesList(
-                                filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.HAS_PROPERTY, false)?.map(p => p.id)
+                                filterObjectOfStatementsByPredicateAndClass(statements, PREDICATES.HAS_PROPERTY, false)?.map(p => p.id),
                             );
                             const contributionsIDs =
                                 without(
@@ -158,12 +158,12 @@ function useComparison({ id }) {
                                             statements,
                                             PREDICATES.COMPARE_CONTRIBUTION,
                                             false,
-                                            CLASSES.CONTRIBUTION
-                                        )?.map(c => c.id) ?? []
+                                            CLASSES.CONTRIBUTION,
+                                        )?.map(c => c.id) ?? [],
                                     ),
                                     undefined,
                                     null,
-                                    ''
+                                    '',
                                 ) ?? [];
                             setContributionsList(contributionsIDs);
                         }
@@ -172,7 +172,7 @@ function useComparison({ id }) {
                                 statements,
                                 PREDICATES.COMPARE_CONTRIBUTION,
                                 false,
-                                CLASSES.CONTRIBUTION
+                                CLASSES.CONTRIBUTION,
                             )?.map(c => c.id)
                         ) {
                             setIsLoadingComparisonResult(false);
@@ -240,7 +240,7 @@ function useComparison({ id }) {
         } else if (organization_id && organization_id !== MISC.UNKNOWN_ID) {
             getOrganization(organization_id)
                 .then(organization => {
-                    setProvenance({ organization: organization });
+                    setProvenance({ organization });
                 })
                 .catch(() => {
                     setProvenance(null);
@@ -284,13 +284,12 @@ function useComparison({ id }) {
                     }
                 });
             } else {
-                //no properties ids in the url, but the ones from the api still need to be sorted
+                // no properties ids in the url, but the ones from the api still need to be sorted
                 comparisonData.properties.sort((a, b) => {
                     if (a.active === b.active) {
                         return a.label.toLowerCase().localeCompare(b.label.toLowerCase());
-                    } else {
-                        return !a.active ? 1 : -1;
                     }
+                    return !a.active ? 1 : -1;
                 });
             }
 
@@ -301,7 +300,7 @@ function useComparison({ id }) {
 
             return comparisonData.properties;
         },
-        [predicatesList]
+        [predicatesList],
     );
 
     /**
@@ -314,16 +313,14 @@ function useComparison({ id }) {
      */
     const generateFilterControlData = (contributions, properties, data) => {
         const controlData = [
-            ...properties.map(property => {
-                return {
-                    property,
-                    rules: [],
-                    values: groupBy(
-                        flatten(contributions.map((_, index) => data[property.id][index]).filter(([first]) => Object.keys(first).length !== 0)),
-                        'label'
-                    )
-                };
-            })
+            ...properties.map(property => ({
+                property,
+                rules: [],
+                values: groupBy(
+                    flatten(contributions.map((_, index) => data[property.id][index]).filter(([first]) => Object.keys(first).length !== 0)),
+                    'label',
+                ),
+            })),
         ];
         controlData.forEach(item => {
             Object.keys(item.values).forEach(key => {
@@ -390,18 +387,18 @@ function useComparison({ id }) {
     const getComparisonResult = useCallback(() => {
         setIsLoadingComparisonResult(true);
         getComparison({ contributionIds: contributionsList, type: comparisonType, response_hash: responseHash, save_response: false })
-            .then(comparisonData => {
+            .then(comparisonData =>
                 // get Research field of the first contributions
-                return getStatementsBySubjectAndPredicate({
+                getStatementsBySubjectAndPredicate({
                     subjectId: comparisonData.contributions[0].paperId,
-                    predicateId: PREDICATES.HAS_RESEARCH_FIELD
+                    predicateId: PREDICATES.HAS_RESEARCH_FIELD,
                 }).then(s => {
                     if (s.length && !metaData?.subject) {
                         setResearchField(s[0].object);
                     }
                     return Promise.resolve(comparisonData);
-                });
-            })
+                }),
+            )
             .then(comparisonData => {
                 // mocking function to allow for deletion of contributions via the url
                 comparisonData.contributions.forEach((contribution, index) => {
@@ -430,7 +427,7 @@ function useComparison({ id }) {
             .then(() => {
                 if (!comparisonId && queryString.parse(location.search)?.hasPreviousVersion) {
                     getResource(queryString.parse(location.search).hasPreviousVersion).then(prevVersion =>
-                        setMetaData({ ...metaData, hasPreviousVersion: prevVersion })
+                        setMetaData({ ...metaData, hasPreviousVersion: prevVersion }),
                     );
                 }
             })
@@ -474,9 +471,7 @@ function useComparison({ id }) {
         const cIndex = findIndex(contributions, c => c.id === contributionId);
         const newContributions = contributions
             .filter(c => c.id !== contributionId)
-            .map(contribution => {
-                return { ...contribution, active: contribution.active };
-            });
+            .map(contribution => ({ ...contribution, active: contribution.active }));
         const newData = cloneDeep(data);
         let newProperties = cloneDeep(properties);
         for (const property in newData) {
@@ -510,9 +505,9 @@ function useComparison({ id }) {
      * @param {array} contributionIds Contribution ids to display
      */
     const displayContributions = contributionIds => {
-        const newContributions = contributions.map(contribution => {
-            return contributionIds.includes(contribution.id) ? { ...contribution, active: true } : { ...contribution, active: false };
-        });
+        const newContributions = contributions.map(contribution =>
+            contributionIds.includes(contribution.id) ? { ...contribution, active: true } : { ...contribution, active: false },
+        );
         setContributionsList(activatedContributionsToList(newContributions));
         setContributions(newContributions);
         setUrlNeedsToUpdate(true);
@@ -574,17 +569,17 @@ function useComparison({ id }) {
                 contributions: contributionsList.join(','),
                 properties: predicatesList.map(predicate => encodeURIComponent(predicate)).join(','),
                 type: comparisonType,
-                transpose: transpose
+                transpose,
             },
             {
                 skipNull: true,
                 skipEmptyString: true,
-                encode: false
-            }
+                encode: false,
+            },
         );
         setComparisonURLConfig(`?${params}`);
         setShortLink('');
-        navigate(reverse(ROUTES.COMPARISON_NOT_PUBLISHED) + `?${params}`);
+        navigate(`${reverse(ROUTES.COMPARISON_NOT_PUBLISHED)}?${params}`);
     };
 
     /**
@@ -625,16 +620,16 @@ function useComparison({ id }) {
     const handleEditContributions = async () => {
         const isConfirmed = await Confirm({
             title: 'Edit contribution data',
-            message: `You are about the edit the contributions displayed in the comparison. Changing this data does not only affect this comparison, but also other parts of the ORKG`,
-            proceedLabel: 'Continue'
+            message:
+                'You are about the edit the contributions displayed in the comparison. Changing this data does not only affect this comparison, but also other parts of the ORKG',
+            proceedLabel: 'Continue',
         });
 
         if (isConfirmed) {
             navigate(
-                reverse(ROUTES.CONTRIBUTION_EDITOR) +
-                    `?contributions=${contributionsList.join(',')}${
-                        metaData?.hasPreviousVersion ? `&hasPreviousVersion=${metaData?.hasPreviousVersion.id}` : ''
-                    }`
+                `${reverse(ROUTES.CONTRIBUTION_EDITOR)}?contributions=${contributionsList.join(',')}${
+                    metaData?.hasPreviousVersion ? `&hasPreviousVersion=${metaData?.hasPreviousVersion.id}` : ''
+                }`,
             );
         }
     };
@@ -690,7 +685,7 @@ function useComparison({ id }) {
             // Update browser title
             document.title = 'Comparison - ORKG';
             setResponseHash(
-                metaData?.hasPreviousVersion?.id && responseHash ? responseHash : getParamFromQueryString(location.search, 'response_hash')
+                metaData?.hasPreviousVersion?.id && responseHash ? responseHash : getParamFromQueryString(location.search, 'response_hash'),
             );
             setComparisonType(getParamFromQueryString(location.search, 'type') ?? DEFAULT_COMPARISON_METHOD);
             setTranspose(getParamFromQueryString(location.search, 'transpose', true));
@@ -734,7 +729,7 @@ function useComparison({ id }) {
                     doi: '',
                     hasPreviousVersion: { id: metaData.id, created_at: metaData.createdAt, created_by: metaData.created_by },
                     id: null,
-                    visualizations: []
+                    visualizations: [],
                 });
             }
             setUrlNeedsToUpdate(false);
@@ -797,7 +792,7 @@ function useComparison({ id }) {
         loadVisualizations,
         handleEditContributions,
         fetchLiveData,
-        handleToggleGroupVisibility
+        handleToggleGroupVisibility,
     };
 }
 export default useComparison;

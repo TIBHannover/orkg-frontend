@@ -9,19 +9,19 @@ import {
     getSubjectIdByValue,
     setIsAddingValue,
     setSavingValue,
-    updateValueLabel
+    updateValueLabel,
 } from 'slices/statementBrowserSlice';
 import { createResourceStatement } from 'services/backend/statements';
 import { createResource, updateResource } from 'services/backend/resources';
 import { createLiteral, updateLiteral } from 'services/backend/literals';
 import { createClass } from 'services/backend/classes';
 import { createPredicate } from 'services/backend/predicates';
-import validationSchema from '../helpers/validationSchema';
 import { getConfigByType, getConfigByClassId } from 'constants/DataTypes';
 import { useDispatch, useSelector } from 'react-redux';
 import { guid } from 'utils';
 import { toast } from 'react-toastify';
 import { ENTITIES, CLASSES, MISC } from 'constants/graphSettings';
+import validationSchema from '../helpers/validationSchema';
 
 const useValueForm = ({ valueId, resourceId, propertyId, syncBackend }) => {
     const dispatch = useDispatch();
@@ -34,21 +34,21 @@ const useValueForm = ({ valueId, resourceId, propertyId, syncBackend }) => {
     const isLiteralField = useSelector(state =>
         editMode
             ? value._class === ENTITIES.LITERAL
-            : isLiteral(getComponentsByResourceIDAndPredicateID(state, resourceId, property?.existingPredicateId))
+            : isLiteral(getComponentsByResourceIDAndPredicateID(state, resourceId, property?.existingPredicateId)),
     );
-    const isUniqLabel = valueClass && valueClass.id === CLASSES.PROBLEM ? true : false;
+    const isUniqLabel = !!(valueClass && valueClass.id === CLASSES.PROBLEM);
 
     const [entityType, setEntityType] = useState(
         !valueClass?.id
             ? getConfigByType(isLiteralField ? MISC.DEFAULT_LITERAL_DATATYPE : ENTITIES.RESOURCE)._class
-            : getConfigByClassId(valueClass.id)._class
+            : getConfigByClassId(valueClass.id)._class,
     );
 
     const [inputValue, setInputValue] = useState(editMode ? value.label : '');
     const [inputDataType, setInputDataType] = useState(
         !valueClass?.id
             ? getConfigByType(isLiteralField ? (editMode ? value.datatype : MISC.DEFAULT_LITERAL_DATATYPE) : ENTITIES.RESOURCE).type
-            : getConfigByClassId(valueClass.id).type
+            : getConfigByClassId(valueClass.id).type,
     );
     const [disabledCreate, setDisabledCreate] = useState(false);
 
@@ -77,8 +77,8 @@ const useValueForm = ({ valueId, resourceId, propertyId, syncBackend }) => {
                 updateValueLabel({
                     label: draftLabel,
                     datatype: draftDataType,
-                    valueId: valueId
-                })
+                    valueId,
+                }),
             );
         }
     };
@@ -94,15 +94,14 @@ const useValueForm = ({ valueId, resourceId, propertyId, syncBackend }) => {
                 component = {
                     value: valueClass,
                     property: { id: property.id, label: property.label },
-                    validationRules: property.validationRules
+                    validationRules: property.validationRules,
                 };
             }
             const schema = validationSchema(component);
             return schema;
-        } else {
-            const config = getConfigByType(inputDataType);
-            return config.schema;
         }
+        const config = getConfigByType(inputDataType);
+        return config.schema;
     });
 
     if (valueClass) {
@@ -112,8 +111,8 @@ const useValueForm = ({ valueId, resourceId, propertyId, syncBackend }) => {
     const isBlankNode = useSelector(state => {
         if (valueClass && !isLiteralField) {
             if (state.statementBrowser.classes[valueClass.id]?.templateIds) {
-                const templateIds = state.statementBrowser.classes[valueClass.id].templateIds;
-                //check if it's an inline resource
+                const { templateIds } = state.statementBrowser.classes[valueClass.id];
+                // check if it's an inline resource
                 for (const templateId of templateIds) {
                     const template = state.statementBrowser.templates[templateId];
                     if (template && template.hasLabelFormat) {
@@ -141,7 +140,7 @@ const useValueForm = ({ valueId, resourceId, propertyId, syncBackend }) => {
                     id: resource.id,
                     label: resource.label,
                     ...(resource.shared ? { shared: resource.shared } : {}),
-                    ...(resource.classes ? { classes: resource.classes } : {})
+                    ...(resource.classes ? { classes: resource.classes } : {}),
                 });
             }
         }
@@ -187,17 +186,17 @@ const useValueForm = ({ valueId, resourceId, propertyId, syncBackend }) => {
             const _propertyID = guid();
             if (!createdProperties[statement.predicate.id]) {
                 createdProperties[statement.predicate.id] = _propertyID;
-                statements['properties'].push({
+                statements.properties.push({
                     propertyId: createdProperties[statement.predicate.id],
                     existingPredicateId: statement.predicate.id,
-                    label: statement.predicate.label
+                    label: statement.predicate.label,
                 });
             }
-            statements['values'].push({
+            statements.values.push({
                 _class: statement.value._class,
                 propertyId: createdProperties[statement.predicate.id],
                 label: statement.value.label,
-                datatype: statement.value.datatype
+                datatype: statement.value.datatype,
             });
         }
         return statements;
@@ -263,33 +262,33 @@ const useValueForm = ({ valueId, resourceId, propertyId, syncBackend }) => {
                 dispatch(
                     createValue({
                         ...newEntity,
-                        //valueId: newEntity.id ?? existingResourceId,
+                        // valueId: newEntity.id ?? existingResourceId,
                         classes: newEntity.classes ?? (valueClass ? [valueClass?.id] : []),
                         _class: entityType,
-                        propertyId: propertyId,
+                        propertyId,
                         existingResourceId: newEntity.id ?? existingResourceId,
-                        isExistingValue: newEntity.id ? true : false,
-                        statementId: newStatement?.id
-                    })
+                        isExistingValue: !!newEntity.id,
+                        statementId: newStatement?.id,
+                    }),
                 );
-                //create statements
+                // create statements
                 value.statements &&
                     (await dispatch(
                         fillStatements({
                             statements: generateStatementsFromExternalData(value.statements),
                             resourceId: newEntity.id ?? existingResourceId,
-                            syncBackend: syncBackend
-                        })
+                            syncBackend,
+                        }),
                     ));
                 dispatch(setIsAddingValue({ id: propertyId, status: false }));
                 return newEntity.id ?? existingResourceId;
             }
         },
-        [dispatch, property?.existingPredicateId, propertyId, resourceId, syncBackend, valueClass]
+        [dispatch, property?.existingPredicateId, propertyId, resourceId, syncBackend, valueClass],
     );
 
     const handleCreateExistingLabel = (inputValue, selectOptions) => {
-        //check if label exists
+        // check if label exists
         if (
             isUniqLabel &&
             inputValue &&
@@ -297,12 +296,12 @@ const useValueForm = ({ valueId, resourceId, propertyId, syncBackend }) => {
                 .map(s =>
                     String(s.label)
                         .trim()
-                        .toLowerCase()
+                        .toLowerCase(),
                 )
                 .includes(
                     String(inputValue)
                         .trim()
-                        .toLowerCase()
+                        .toLowerCase(),
                 )
         ) {
             setDisabledCreate(true);
@@ -329,7 +328,7 @@ const useValueForm = ({ valueId, resourceId, propertyId, syncBackend }) => {
         newResources,
         disabledCreate,
         handleCreateExistingLabel,
-        commitChangeLabel
+        commitChangeLabel,
     };
 };
 

@@ -79,11 +79,11 @@ const Footer = () => (
                             <li>
                                 <Link to={ROUTES.HELP_CENTER}>Help center</Link>
                             </li>
-                            {/*<li>
+                            {/* <li>
                                 <a href="https://projects.tib.eu/orkg/get-involved/" target="_blank" rel="noopener noreferrer">
                                     Get involved
                                 </a>
-                            </li>*/}
+                            </li> */}
                             <li>
                                 <Link to={reverse(ROUTES.PAGE, { url: ROUTES_CMS.DATA_PROTECTION })}>Data protection</Link>
                             </li>

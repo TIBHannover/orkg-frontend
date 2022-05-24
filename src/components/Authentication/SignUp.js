@@ -44,7 +44,7 @@ export default function SignUp() {
                             token_expires_in = new Date(Date.now() + token.expires_in * 1000).toUTCString();
                             cookies.set('token_expires_in', token_expires_in, { path: env('PUBLIC_URL'), maxAge: token.expires_in });
                             return getUserInformation();
-                            //window.location.reload();
+                            // window.location.reload();
                         })
                         .then(userData => {
                             dispatch(
@@ -55,9 +55,9 @@ export default function SignUp() {
                                         token: userToken,
                                         email: userData.email,
                                         tokenExpire: token_expires_in,
-                                        isCurationAllowed: userData.is_curation_allowed
-                                    }
-                                })
+                                        isCurationAllowed: userData.is_curation_allowed,
+                                    },
+                                }),
                             );
                             dispatch(toggleAuthDialog());
                             setIsLoading(false);

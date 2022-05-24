@@ -31,7 +31,7 @@ const useViewPaper = ({ paperId }) => {
             authorsArray = authorsArray.length ? authorsArray.sort((a, b) => a.s_created_at.localeCompare(b.s_created_at)) : [];
             dispatch(setPaperAuthors(authorsArray));
         },
-        [dispatch]
+        [dispatch],
     );
 
     const loadPaperData = useCallback(() => {
@@ -47,10 +47,10 @@ const useViewPaper = ({ paperId }) => {
                 // Load the paper metadata but skip the research field and contribution data
                 Promise.all([
                     getStatementsBundleBySubject({ id: paperId, maxLevel: 2, blacklist: [CLASSES.RESEARCH_FIELD, CLASSES.CONTRIBUTION] }),
-                    getIsVerified(paperId).catch(() => false)
+                    getIsVerified(paperId).catch(() => false),
                 ]).then(([paperStatements, verified]) => {
                     const paperData = getPaperData_ViewPaper(paperResource, paperStatements.statements?.filter(s => s.subject.id === paperId));
-                    dispatch(loadPaper({ ...paperData, verified: verified }));
+                    dispatch(loadPaper({ ...paperData, verified }));
                     setIsLoading(false);
                     setAuthorsORCID(paperStatements.statements, paperId);
                 });
@@ -91,7 +91,7 @@ const useViewPaper = ({ paperId }) => {
         toggle,
         handleShowHeaderBar,
         setEditMode,
-        setShowGraphModal
+        setShowGraphModal,
     };
 };
 

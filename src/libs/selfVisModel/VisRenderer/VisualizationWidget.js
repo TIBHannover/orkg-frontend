@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import VisualizationSelector from './VisualizationSelector';
-import AbstractRenderer from './AbstractRenderer';
-import AbstractCustomizationWidget from './AbstractCustomizationWidget';
-import TableInput from './tableInput';
 import { Button } from 'reactstrap';
 import styled, { keyframes } from 'styled-components';
 import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
 import PropTypes from 'prop-types';
+import VisualizationSelector from './VisualizationSelector';
+import AbstractRenderer from './AbstractRenderer';
+import AbstractCustomizationWidget from './AbstractCustomizationWidget';
+import TableInput from './tableInput';
 
 export default class VisualizationWidget extends Component {
     constructor(props) {
@@ -18,7 +18,7 @@ export default class VisualizationWidget extends Component {
 
         this.state = {
             inputTableExpanded: false,
-            enableAnimations: false
+            enableAnimations: false,
         };
     }
 
@@ -33,6 +33,7 @@ export default class VisualizationWidget extends Component {
     componentWillUnmount() {
         window.removeEventListener('resize', this.updateDimensions);
     }
+
     updateDimensions = () => {
         this.setState({ windowWidth: window.innerWidth, enableAnimations: false });
     };
@@ -53,6 +54,7 @@ export default class VisualizationWidget extends Component {
             this.refAbstractRenderer.current.setCustomizationState(state);
         }
     };
+
     createChartVisualization = () => {
         if (this.refAbstractRenderer.current) {
             this.refAbstractRenderer.current.createChartVisualization();
@@ -64,16 +66,15 @@ export default class VisualizationWidget extends Component {
             this.refAbstractRenderer.current.applySelectors();
         }
     };
-    makeRequestAreaWidth = () => {
-        return this.props.comparePropsWithActualWidth(this.props.width);
-    };
 
-    /** component rendering entrance point **/
+    makeRequestAreaWidth = () => this.props.comparePropsWithActualWidth(this.props.width);
+
+    /** component rendering entrance point * */
     render() {
         const areaWidth = this.makeRequestAreaWidth();
         const widthOffset = 400;
         return (
-            <div style={{ height: this.props.height + 'px', overflow: 'auto' }}>
+            <div style={{ height: `${this.props.height}px`, overflow: 'auto' }}>
                 {!this.props.isLoading && (
                     <div>
                         <InputTableContainer
@@ -87,7 +88,7 @@ export default class VisualizationWidget extends Component {
                                 padding: '10px',
                                 height: this.props.height,
                                 float: 'left',
-                                position: 'relative'
+                                position: 'relative',
                             }}
                         >
                             {this.state.inputTableExpanded && <TableInput height={this.props.height - 5} />}
@@ -103,7 +104,7 @@ export default class VisualizationWidget extends Component {
                                 position: 'absolute',
                                 padding: '10px',
                                 // backgroundColor: 'green',
-                                width: this.state.inputTableExpanded ? areaWidth - widthOffset : areaWidth
+                                width: this.state.inputTableExpanded ? areaWidth - widthOffset : areaWidth,
                             }}
                         >
                             <div style={{ display: 'flex' }}>
@@ -154,7 +155,7 @@ VisualizationWidget.propTypes = {
     isLoading: PropTypes.bool,
     height: PropTypes.number,
     width: PropTypes.number,
-    comparePropsWithActualWidth: PropTypes.func
+    comparePropsWithActualWidth: PropTypes.func,
 };
 
 const expandAndHideContentContainerAnimation = ({ expanded, width, initialRendering }) => {
@@ -170,9 +171,9 @@ const expandAndHideContentContainerAnimation = ({ expanded, width, initialRender
   
   }
 `;
-    } else {
-        // this is the static rendering on load
-        return keyframes`
+    }
+    // this is the static rendering on load
+    return keyframes`
   from {
     left: ${expanded ? 0 : -width}px;
     
@@ -183,7 +184,6 @@ const expandAndHideContentContainerAnimation = ({ expanded, width, initialRender
   
   }
 `;
-    }
 };
 
 const expandContainerAnimation = ({ expanded, parentWidth, totalWidth, initialRendering }) => {
@@ -198,9 +198,9 @@ const expandContainerAnimation = ({ expanded, parentWidth, totalWidth, initialRe
     width: ${expanded ? totalWidth - parentWidth : totalWidth}px;
   }
 `;
-    } else {
-        // this is the static rendering on load
-        return keyframes`
+    }
+    // this is the static rendering on load
+    return keyframes`
   from {
     left: ${expanded ? parentWidth : 0}px;
     width: ${expanded ? totalWidth - parentWidth : totalWidth}px;
@@ -210,7 +210,6 @@ const expandContainerAnimation = ({ expanded, parentWidth, totalWidth, initialRe
     width: ${expanded ? totalWidth - parentWidth : totalWidth}px;
   }
 `;
-    }
 };
 const InputTableContainer = styled.div`
     animation-name: ${expandAndHideContentContainerAnimation};

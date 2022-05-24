@@ -98,7 +98,7 @@ TitleBar.propTypes = {
     titleAddition: PropTypes.oneOfType([PropTypes.node, PropTypes.string]),
     children: PropTypes.oneOfType([PropTypes.node, PropTypes.string]),
     titleSize: PropTypes.string,
-    wrap: PropTypes.bool
+    wrap: PropTypes.bool,
 };
 
 export default TitleBar;

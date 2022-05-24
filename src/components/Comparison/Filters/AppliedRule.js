@@ -36,7 +36,7 @@ const AppliedRule = props => {
 };
 
 AppliedRule.propTypes = {
-    data: PropTypes.object.isRequired
+    data: PropTypes.object.isRequired,
 };
 
 export default AppliedRule;

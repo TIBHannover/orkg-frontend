@@ -1,5 +1,5 @@
-import App from './App';
 import { render, screen } from 'testUtils';
+import App from './App';
 
 jest.mock('react-responsive-tabs', () => ({ children }) => null);
 

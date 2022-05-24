@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
 import { Alert, Button } from 'reactstrap';
 import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
+import PropTypes from 'prop-types';
 import {
     createValueSelectors,
     createLabelSelectors,
     createLabelEditor,
     addYAxisSelector,
     createValueEditor,
-    initializeFromCustomizer
+    initializeFromCustomizer,
 } from './HelperFunctions';
-import PropTypes from 'prop-types';
 
 class CustomizationBarChart extends Component {
     constructor(props) {
@@ -17,11 +17,11 @@ class CustomizationBarChart extends Component {
         this.selfVisModel = new SelfVisDataModel(); // this access the instance of the data (its a singleton)
         this.errorCodeItem = {
             0: 'BAR_CHART_NO_STRING_TYPES_FOR_LABEL',
-            1: 'BAR_CHART_NO_NUMBER_TYPES_FOR_VALUE'
+            1: 'BAR_CHART_NO_NUMBER_TYPES_FOR_VALUE',
         };
         this.errorCodeMessages = {
             BAR_CHART_NO_STRING_TYPES_FOR_LABEL: 'BarChart error: It appears there is no column mapped as string for labels',
-            BAR_CHART_NO_NUMBER_TYPES_FOR_VALUE: 'BarChart error: It appears there is no column mapped as number for values'
+            BAR_CHART_NO_NUMBER_TYPES_FOR_VALUE: 'BarChart error: It appears there is no column mapped as number for values',
         };
         this.yAxisSelectorMaxCount = -1;
     }
@@ -35,7 +35,7 @@ class CustomizationBarChart extends Component {
         xAxisSelectorOpen: false,
         yAxisSelectorOpen: [],
         yAxisInterValSelectors: {},
-        yAxisSelectorCount: 1
+        yAxisSelectorCount: 1,
     };
 
     componentDidMount() {
@@ -48,20 +48,13 @@ class CustomizationBarChart extends Component {
         }
     };
 
-    createValueSelectors = () => {
-        return createValueSelectors(this);
-    };
+    createValueSelectors = () => createValueSelectors(this);
 
-    createLabelSelectors = () => {
-        return createLabelSelectors(this);
-    };
+    createLabelSelectors = () => createLabelSelectors(this);
 
-    createLabelEditor = () => {
-        return createLabelEditor(this);
-    };
-    createValueEditor = () => {
-        return createValueEditor(this);
-    };
+    createLabelEditor = () => createLabelEditor(this);
+
+    createValueEditor = () => createValueEditor(this);
 
     renderErrorMessages = () => {
         const msg = this.errorCodeMessages[this.errorCodeItem[this.state.errorValue]];
@@ -109,6 +102,6 @@ class CustomizationBarChart extends Component {
 CustomizationBarChart.propTypes = {
     propagateUpdates: PropTypes.func,
     createChartVisualization: PropTypes.func,
-    restoreCustomizationState: PropTypes.bool
+    restoreCustomizationState: PropTypes.bool,
 };
 export default CustomizationBarChart;

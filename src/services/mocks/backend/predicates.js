@@ -13,7 +13,7 @@ const predicates = [
                         created_at: '2021-07-09T09:29:50.284483Z',
                         created_by: '00000000-0000-0000-0000-000000000000',
                         _class: 'predicate',
-                        description: null
+                        description: null,
                     },
                     {
                         id: `P${faker.datatype.number()}`,
@@ -21,28 +21,28 @@ const predicates = [
                         created_at: '2021-07-09T09:29:50.284483Z',
                         created_by: '00000000-0000-0000-0000-000000000000',
                         _class: 'predicate',
-                        description: null
+                        description: null,
                     },
                     {
-                        id: `P1`,
+                        id: 'P1',
                         label: 'property 1',
                         created_at: '2021-07-09T09:29:50.284483Z',
                         created_by: '00000000-0000-0000-0000-000000000000',
                         _class: 'predicate',
-                        description: null
-                    }
+                        description: null,
+                    },
                 ],
                 pageable: {
                     sort: {
                         sorted: true,
                         unsorted: false,
-                        empty: false
+                        empty: false,
                     },
                     pageNumber: 0,
                     pageSize: 10,
                     offset: 0,
                     paged: true,
-                    unpaged: false
+                    unpaged: false,
                 },
                 totalPages: 1,
                 totalElements: 2,
@@ -51,14 +51,14 @@ const predicates = [
                 sort: {
                     sorted: true,
                     unsorted: false,
-                    empty: false
+                    empty: false,
                 },
                 number: 0,
                 numberOfElements: 2,
                 size: 10,
-                empty: true
-            })
-        )
+                empty: true,
+            }),
+        ),
     ),
     rest.get(`${predicatesUrl}:id`, (req, res, ctx) => {
         const { id } = req.params;
@@ -74,8 +74,8 @@ const predicates = [
                 _class: 'predicate',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
-            })
+                organization_id: '00000000-0000-0000-0000-000000000000',
+            }),
         );
     }),
     rest.post(`${predicatesUrl}`, (req, res, ctx) => {
@@ -83,14 +83,14 @@ const predicates = [
         return res(
             ctx.json({
                 id: `P${faker.datatype.number()}`,
-                label: label,
+                label,
                 created_at: '2021-11-10T15:12:12.33781Z',
                 created_by: '40f2034c-986b-451f-ac08-67b1bd23fe3d',
                 _class: 'predicate',
-                description: null
-            })
+                description: null,
+            }),
         );
-    })
+    }),
 ];
 
 export default predicates;

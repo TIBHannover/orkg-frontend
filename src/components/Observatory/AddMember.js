@@ -83,7 +83,7 @@ AddMember.propTypes = {
     toggle: PropTypes.func.isRequired,
     observatoryId: PropTypes.string,
     organizationsList: PropTypes.array,
-    updateObservatoryMembers: PropTypes.func
+    updateObservatoryMembers: PropTypes.func,
 };
 
 export default AddMember;

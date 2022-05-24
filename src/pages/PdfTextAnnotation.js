@@ -54,7 +54,7 @@ const PdfTextAnnotation = () => {
     );
 
     const handleHighlightTransform = (highlight, index, setTip, hideTip, viewportToScaled, screenshot, isScrolledTo) => {
-        const isTextHighlight = !Boolean(highlight.content && highlight.content.image);
+        const isTextHighlight = !(highlight.content && highlight.content.image);
 
         const component = isTextHighlight ? (
             <Highlight isScrolledTo={isScrolledTo} position={highlight.position} type={highlight.type} />
@@ -100,7 +100,7 @@ const PdfTextAnnotation = () => {
     return (
         <Wrapper>
             <Sidebar pdfViewer={pdfViewer} />
-            {/*pdf && <ZoomBar />*/}
+            {/* pdf && <ZoomBar /> */}
 
             <Main>
                 {pdf ? (

@@ -74,12 +74,11 @@ export default function Search() {
                                                         />
                                                     </div>
                                                 );
-                                            } else {
-                                                return null;
                                             }
+                                            return null;
                                         })}
                                     {allFilters.filter(
-                                        filter => (results[filter.id] || [])?.length === 0 && selectedFilters.map(c => c && c.id).includes(filter.id)
+                                        filter => (results[filter.id] || [])?.length === 0 && selectedFilters.map(c => c && c.id).includes(filter.id),
                                     ).length > 0 && (
                                         <>
                                             <h2 className="h5">No results</h2>
@@ -90,7 +89,7 @@ export default function Search() {
                                                         .filter(
                                                             filter =>
                                                                 (results[filter.id] || [])?.length === 0 &&
-                                                                selectedFilters.map(c => c && c.id).includes(filter.id)
+                                                                selectedFilters.map(c => c && c.id).includes(filter.id),
                                                         )
                                                         .map(f => f.label)
                                                         .join(', ')}

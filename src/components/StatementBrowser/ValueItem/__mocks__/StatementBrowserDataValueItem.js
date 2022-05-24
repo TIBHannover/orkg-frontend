@@ -17,7 +17,7 @@ export const statementBrowser1P2V = {
             showClasses: false,
             showStatementInfo: true,
             showValueInfo: true,
-            showLiteralDataTypes: true
+            showLiteralDataTypes: true,
         },
         resources: {
             byId: {
@@ -30,7 +30,7 @@ export const statementBrowser1P2V = {
                     _class: 'resource',
                     isFetching: false,
                     isFetched: true,
-                    fetchedDepth: 1
+                    fetchedDepth: 1,
                 },
                 L402121: {
                     valueId: '16f78e47-1912-7326-3162-a6d005b95fd7',
@@ -50,10 +50,10 @@ export const statementBrowser1P2V = {
                     created_at: '2021-11-12T10:18:21.511257Z',
                     created_by: '40f2034c-986b-451f-ac08-67b1bd23fe3d',
                     _class: 'literal',
-                    propertyIds: []
-                }
+                    propertyIds: [],
+                },
             },
-            allIds: ['R144078', 'L402121']
+            allIds: ['R144078', 'L402121'],
         },
         properties: {
             byId: {
@@ -71,10 +71,10 @@ export const statementBrowser1P2V = {
                     valueIds: ['16f78e47-1912-7326-3162-a6d005b95fd7'],
                     isEditing: false,
                     isSaving: false,
-                    isAnimated: false
-                }
+                    isAnimated: false,
+                },
             },
-            allIds: ['4c8d6e8f-0295-bd7f-0230-997f9400f14d']
+            allIds: ['4c8d6e8f-0295-bd7f-0230-997f9400f14d'],
         },
         values: {
             byId: {
@@ -98,25 +98,25 @@ export const statementBrowser1P2V = {
                     _class: 'literal',
                     isEditing: false,
                     isSaving: false,
-                    shared: 1
-                }
+                    shared: 1,
+                },
             },
-            allIds: ['16f78e47-1912-7326-3162-a6d005b95fd7']
+            allIds: ['16f78e47-1912-7326-3162-a6d005b95fd7'],
         },
         resourceHistory: {
             byId: {
                 R144078: {
                     id: 'R144078',
-                    label: 'Test'
-                }
+                    label: 'Test',
+                },
             },
-            allIds: ['R144078']
+            allIds: ['R144078'],
         },
         templates: {},
         classes: {},
         contributions: {},
-        selectedContributionId: ''
-    }
+        selectedContributionId: '',
+    },
 };
 
 export const statementBrowser1P7V = {
@@ -138,7 +138,7 @@ export const statementBrowser1P7V = {
             showClasses: false,
             showStatementInfo: true,
             showValueInfo: true,
-            showLiteralDataTypes: true
+            showLiteralDataTypes: true,
         },
         resources: {
             byId: {
@@ -151,7 +151,7 @@ export const statementBrowser1P7V = {
                     _class: 'resource',
                     isFetching: false,
                     isFetched: true,
-                    fetchedDepth: 1
+                    fetchedDepth: 1,
                 },
                 L402126: {
                     valueId: '2c9a364e-86e9-595c-deed-71c7e2b2ad75',
@@ -171,7 +171,7 @@ export const statementBrowser1P7V = {
                     created_at: '2021-11-12T13:42:41.240441Z',
                     created_by: '40f2034c-986b-451f-ac08-67b1bd23fe3d',
                     _class: 'literal',
-                    propertyIds: []
+                    propertyIds: [],
                 },
                 L402124: {
                     valueId: '7b5e79ac-26e6-b05a-a99c-2e2e4ef61946',
@@ -191,7 +191,7 @@ export const statementBrowser1P7V = {
                     created_at: '2021-11-12T13:42:08.759782Z',
                     created_by: '40f2034c-986b-451f-ac08-67b1bd23fe3d',
                     _class: 'literal',
-                    propertyIds: []
+                    propertyIds: [],
                 },
                 L402123: {
                     valueId: 'a94f9585-1cb7-e9f5-9539-4cc90e1e0b91',
@@ -211,7 +211,7 @@ export const statementBrowser1P7V = {
                     created_at: '2021-11-12T13:41:45.927113Z',
                     created_by: '40f2034c-986b-451f-ac08-67b1bd23fe3d',
                     _class: 'literal',
-                    propertyIds: []
+                    propertyIds: [],
                 },
                 L402125: {
                     valueId: 'd39d45d1-3e27-3b6a-b2c6-5f5134bad8bd',
@@ -231,7 +231,7 @@ export const statementBrowser1P7V = {
                     created_at: '2021-11-12T13:42:19.196889Z',
                     created_by: '40f2034c-986b-451f-ac08-67b1bd23fe3d',
                     _class: 'literal',
-                    propertyIds: []
+                    propertyIds: [],
                 },
                 L402121: {
                     valueId: '5b790dfb-82e6-256e-8458-60d78bfa5d37',
@@ -251,7 +251,7 @@ export const statementBrowser1P7V = {
                     created_at: '2021-11-12T10:18:21.511257Z',
                     created_by: '40f2034c-986b-451f-ac08-67b1bd23fe3d',
                     _class: 'literal',
-                    propertyIds: []
+                    propertyIds: [],
                 },
                 R144079: {
                     valueId: 'c1aae3c4-4b49-8e5f-7d3f-ba4f8725899b',
@@ -275,7 +275,7 @@ export const statementBrowser1P7V = {
                     observatory_id: '00000000-0000-0000-0000-000000000000',
                     extraction_method: 'UNKNOWN',
                     organization_id: '00000000-0000-0000-0000-000000000000',
-                    propertyIds: []
+                    propertyIds: [],
                 },
                 L402127: {
                     valueId: '1cf10225-1ef6-364e-b829-9797abbbc969',
@@ -295,10 +295,10 @@ export const statementBrowser1P7V = {
                     created_at: '2021-11-12T13:44:06.885298Z',
                     created_by: '40f2034c-986b-451f-ac08-67b1bd23fe3d',
                     _class: 'literal',
-                    propertyIds: []
-                }
+                    propertyIds: [],
+                },
             },
-            allIds: ['R144078', 'L402126', 'L402124', 'L402123', 'L402125', 'L402121', 'R144079', 'L402127']
+            allIds: ['R144078', 'L402126', 'L402124', 'L402123', 'L402125', 'L402121', 'R144079', 'L402127'],
         },
         properties: {
             byId: {
@@ -320,14 +320,14 @@ export const statementBrowser1P7V = {
                         'd39d45d1-3e27-3b6a-b2c6-5f5134bad8bd',
                         '5b790dfb-82e6-256e-8458-60d78bfa5d37',
                         'c1aae3c4-4b49-8e5f-7d3f-ba4f8725899b',
-                        '1cf10225-1ef6-364e-b829-9797abbbc969'
+                        '1cf10225-1ef6-364e-b829-9797abbbc969',
                     ],
                     isEditing: false,
                     isSaving: false,
-                    isAnimated: false
-                }
+                    isAnimated: false,
+                },
             },
-            allIds: ['854d2c9d-8758-ebdf-9bec-7cffd0d46d58']
+            allIds: ['854d2c9d-8758-ebdf-9bec-7cffd0d46d58'],
         },
         values: {
             byId: {
@@ -351,7 +351,7 @@ export const statementBrowser1P7V = {
                     _class: 'literal',
                     isEditing: false,
                     isSaving: false,
-                    shared: 1
+                    shared: 1,
                 },
                 '7b5e79ac-26e6-b05a-a99c-2e2e4ef61946': {
                     valueId: '7b5e79ac-26e6-b05a-a99c-2e2e4ef61946',
@@ -373,7 +373,7 @@ export const statementBrowser1P7V = {
                     _class: 'literal',
                     isEditing: false,
                     isSaving: false,
-                    shared: 1
+                    shared: 1,
                 },
                 'a94f9585-1cb7-e9f5-9539-4cc90e1e0b91': {
                     valueId: 'a94f9585-1cb7-e9f5-9539-4cc90e1e0b91',
@@ -395,7 +395,7 @@ export const statementBrowser1P7V = {
                     _class: 'literal',
                     isEditing: false,
                     isSaving: false,
-                    shared: 1
+                    shared: 1,
                 },
                 'd39d45d1-3e27-3b6a-b2c6-5f5134bad8bd': {
                     valueId: 'd39d45d1-3e27-3b6a-b2c6-5f5134bad8bd',
@@ -417,7 +417,7 @@ export const statementBrowser1P7V = {
                     _class: 'literal',
                     isEditing: false,
                     isSaving: false,
-                    shared: 1
+                    shared: 1,
                 },
                 '5b790dfb-82e6-256e-8458-60d78bfa5d37': {
                     valueId: '5b790dfb-82e6-256e-8458-60d78bfa5d37',
@@ -439,7 +439,7 @@ export const statementBrowser1P7V = {
                     _class: 'literal',
                     isEditing: false,
                     isSaving: false,
-                    shared: 1
+                    shared: 1,
                 },
                 'c1aae3c4-4b49-8e5f-7d3f-ba4f8725899b': {
                     valueId: 'c1aae3c4-4b49-8e5f-7d3f-ba4f8725899b',
@@ -464,7 +464,7 @@ export const statementBrowser1P7V = {
                     extraction_method: 'UNKNOWN',
                     organization_id: '00000000-0000-0000-0000-000000000000',
                     isEditing: false,
-                    isSaving: false
+                    isSaving: false,
                 },
                 '1cf10225-1ef6-364e-b829-9797abbbc969': {
                     valueId: '1cf10225-1ef6-364e-b829-9797abbbc969',
@@ -486,8 +486,8 @@ export const statementBrowser1P7V = {
                     _class: 'literal',
                     isEditing: false,
                     isSaving: false,
-                    shared: 1
-                }
+                    shared: 1,
+                },
             },
             allIds: [
                 '2c9a364e-86e9-595c-deed-71c7e2b2ad75',
@@ -496,23 +496,23 @@ export const statementBrowser1P7V = {
                 'd39d45d1-3e27-3b6a-b2c6-5f5134bad8bd',
                 '5b790dfb-82e6-256e-8458-60d78bfa5d37',
                 'c1aae3c4-4b49-8e5f-7d3f-ba4f8725899b',
-                '1cf10225-1ef6-364e-b829-9797abbbc969'
-            ]
+                '1cf10225-1ef6-364e-b829-9797abbbc969',
+            ],
         },
         resourceHistory: {
             byId: {
                 R144078: {
                     id: 'R144078',
-                    label: 'Test'
-                }
+                    label: 'Test',
+                },
             },
-            allIds: ['R144078']
+            allIds: ['R144078'],
         },
         templates: {},
         classes: {},
         contributions: {},
-        selectedContributionId: ''
-    }
+        selectedContributionId: '',
+    },
 };
 
 export const statementBrowser1QBDataset = {
@@ -534,7 +534,7 @@ export const statementBrowser1QBDataset = {
             showClasses: false,
             showStatementInfo: true,
             showValueInfo: true,
-            showLiteralDataTypes: true
+            showLiteralDataTypes: true,
         },
         resources: {
             byId: {
@@ -547,7 +547,7 @@ export const statementBrowser1QBDataset = {
                     _class: 'resource',
                     isFetching: false,
                     isFetched: true,
-                    fetchedDepth: 1
+                    fetchedDepth: 1,
                 },
                 R8184: {
                     valueId: 'e4030c32-4e15-ae2e-c6f9-687591cf617e',
@@ -572,7 +572,7 @@ export const statementBrowser1QBDataset = {
                     extraction_method: 'UNKNOWN',
                     organization_id: '00000000-0000-0000-0000-000000000000',
                     propertyIds: ['1c2fd390-8b25-2767-ee62-89c6dc376bf9'],
-                    isFetching: false
+                    isFetching: false,
                 },
                 R8174: {
                     valueId: 'ad23400c-f0ae-6fb8-aeb4-897f044307d0',
@@ -596,10 +596,10 @@ export const statementBrowser1QBDataset = {
                     observatory_id: '00000000-0000-0000-0000-000000000000',
                     extraction_method: 'UNKNOWN',
                     organization_id: '00000000-0000-0000-0000-000000000000',
-                    propertyIds: []
-                }
+                    propertyIds: [],
+                },
             },
-            allIds: ['R8195', 'R8184', 'R8174']
+            allIds: ['R8195', 'R8184', 'R8174'],
         },
         properties: {
             byId: {
@@ -617,7 +617,7 @@ export const statementBrowser1QBDataset = {
                     valueIds: ['e4030c32-4e15-ae2e-c6f9-687591cf617e'],
                     isEditing: false,
                     isSaving: false,
-                    isAnimated: false
+                    isAnimated: false,
                 },
                 '1c2fd390-8b25-2767-ee62-89c6dc376bf9': {
                     propertyId: '1c2fd390-8b25-2767-ee62-89c6dc376bf9',
@@ -633,10 +633,10 @@ export const statementBrowser1QBDataset = {
                     valueIds: ['ad23400c-f0ae-6fb8-aeb4-897f044307d0'],
                     isEditing: false,
                     isSaving: false,
-                    isAnimated: false
-                }
+                    isAnimated: false,
+                },
             },
-            allIds: ['8bd2d009-b720-9efd-711e-f594330a2235', '1c2fd390-8b25-2767-ee62-89c6dc376bf9']
+            allIds: ['8bd2d009-b720-9efd-711e-f594330a2235', '1c2fd390-8b25-2767-ee62-89c6dc376bf9'],
         },
         values: {
             byId: {
@@ -663,7 +663,7 @@ export const statementBrowser1QBDataset = {
                     extraction_method: 'UNKNOWN',
                     organization_id: '00000000-0000-0000-0000-000000000000',
                     isEditing: false,
-                    isSaving: false
+                    isSaving: false,
                 },
                 'ad23400c-f0ae-6fb8-aeb4-897f044307d0': {
                     valueId: 'ad23400c-f0ae-6fb8-aeb4-897f044307d0',
@@ -688,32 +688,32 @@ export const statementBrowser1QBDataset = {
                     extraction_method: 'UNKNOWN',
                     organization_id: '00000000-0000-0000-0000-000000000000',
                     isEditing: false,
-                    isSaving: false
-                }
+                    isSaving: false,
+                },
             },
-            allIds: ['e4030c32-4e15-ae2e-c6f9-687591cf617e', 'ad23400c-f0ae-6fb8-aeb4-897f044307d0']
+            allIds: ['e4030c32-4e15-ae2e-c6f9-687591cf617e', 'ad23400c-f0ae-6fb8-aeb4-897f044307d0'],
         },
         resourceHistory: {
             byId: {
                 R8195: {
                     id: 'R8195',
-                    label: 'DILS2018 technical evaluation'
-                }
+                    label: 'DILS2018 technical evaluation',
+                },
             },
-            allIds: ['R8195']
+            allIds: ['R8195'],
         },
         templates: {},
         classes: {
             QBDataset: {
                 isFetching: false,
-                templateIds: []
+                templateIds: [],
             },
             C8: {
                 isFetching: false,
-                templateIds: []
-            }
+                templateIds: [],
+            },
         },
         contributions: {},
-        selectedContributionId: ''
-    }
+        selectedContributionId: '',
+    },
 };

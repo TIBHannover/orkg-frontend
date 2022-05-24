@@ -13,7 +13,7 @@ class EditableHeader extends Component {
         this.state = {
             /* Possible values: 'view', 'edit', 'loading'. */
             editorState: 'view',
-            value: this.props.value
+            value: this.props.value,
         };
     }
 
@@ -88,7 +88,7 @@ class EditableHeader extends Component {
 EditableHeader.propTypes = {
     id: PropTypes.string.isRequired,
     value: PropTypes.string.isRequired,
-    onChange: PropTypes.func.isRequired
+    onChange: PropTypes.func.isRequired,
 };
 
 export default EditableHeader;

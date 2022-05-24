@@ -13,7 +13,7 @@ export const r0COVIDStatements = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'SAME_AS',
@@ -21,7 +21,7 @@ export const r0COVIDStatements = {
                 created_at: '2020-03-03T15:10:27.312+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: 'The property that determines that two given individuals are equal.'
+                description: 'The property that determines that two given individuals are equal.',
             },
             object: {
                 id: 'L238749',
@@ -29,10 +29,10 @@ export const r0COVIDStatements = {
                 datatype: 'xsd:string',
                 created_at: '2020-12-17T10:48:31.925957+01:00',
                 created_by: '1427a1ee-7551-47b1-9152-8274ab6cd7a4',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2020-12-17T10:48:32.055916+01:00',
-            created_by: '1427a1ee-7551-47b1-9152-8274ab6cd7a4'
+            created_by: '1427a1ee-7551-47b1-9152-8274ab6cd7a4',
         },
         {
             id: 'S156036',
@@ -46,7 +46,7 @@ export const r0COVIDStatements = {
                 _class: 'resource',
                 observatory_id: '06144227-7efc-478c-8555-25147020f02f',
                 extraction_method: 'UNKNOWN',
-                organization_id: 'edc18168-c4ee-4cb8-a98a-136f748e912e'
+                organization_id: 'edc18168-c4ee-4cb8-a98a-136f748e912e',
             },
             predicate: {
                 id: 'description',
@@ -55,7 +55,7 @@ export const r0COVIDStatements = {
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
                 description:
-                    'A textual comment helps clarify the meaning of RDF classes and properties. Such in-line documentation complements the use of both formal techniques (Ontology and rule languages) and informal (prose documentation, examples, test cases). A variety of documentation forms can be combined to indicate the intended meaning of the classes and properties described in an RDF vocabulary. Since RDF vocabularies are expressed as RDF graphs, vocabularies defined in other namespaces may be used to provide richer documentation.'
+                    'A textual comment helps clarify the meaning of RDF classes and properties. Such in-line documentation complements the use of both formal techniques (Ontology and rule languages) and informal (prose documentation, examples, test cases). A variety of documentation forms can be combined to indicate the intended meaning of the classes and properties described in an RDF vocabulary. Since RDF vocabularies are expressed as RDF graphs, vocabularies defined in other namespaces may be used to provide richer documentation.',
             },
             object: {
                 id: 'L94013',
@@ -63,10 +63,10 @@ export const r0COVIDStatements = {
                 datatype: 'xsd:string',
                 created_at: '2020-10-16T14:19:45.023109+02:00',
                 created_by: '64acea2a-d2d7-4b28-9ada-8f9c0c5afea2',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2020-10-16T14:19:45.077826+02:00',
-            created_by: '64acea2a-d2d7-4b28-9ada-8f9c0c5afea2'
+            created_by: '64acea2a-d2d7-4b28-9ada-8f9c0c5afea2',
         },
         {
             id: 'S155223',
@@ -80,7 +80,7 @@ export const r0COVIDStatements = {
                 _class: 'resource',
                 observatory_id: '06144227-7efc-478c-8555-25147020f02f',
                 extraction_method: 'UNKNOWN',
-                organization_id: 'edc18168-c4ee-4cb8-a98a-136f748e912e'
+                organization_id: 'edc18168-c4ee-4cb8-a98a-136f748e912e',
             },
             predicate: {
                 id: 'SAME_AS',
@@ -88,7 +88,7 @@ export const r0COVIDStatements = {
                 created_at: '2020-03-03T15:10:27.312+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: 'The property that determines that two given individuals are equal.'
+                description: 'The property that determines that two given individuals are equal.',
             },
             object: {
                 id: 'L92962',
@@ -96,10 +96,10 @@ export const r0COVIDStatements = {
                 datatype: 'xsd:string',
                 created_at: '2020-10-13T12:50:52.620725+02:00',
                 created_by: '07a4c04e-f0ed-407e-a097-b676d5228a40',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2020-10-13T12:50:52.668608+02:00',
-            created_by: '07a4c04e-f0ed-407e-a097-b676d5228a40'
+            created_by: '07a4c04e-f0ed-407e-a097-b676d5228a40',
         },
         {
             id: 'S147547',
@@ -113,7 +113,7 @@ export const r0COVIDStatements = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'SAME_AS',
@@ -121,7 +121,7 @@ export const r0COVIDStatements = {
                 created_at: '2020-03-03T15:10:27.312+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: 'The property that determines that two given individuals are equal.'
+                description: 'The property that determines that two given individuals are equal.',
             },
             object: {
                 id: 'L90716',
@@ -129,10 +129,10 @@ export const r0COVIDStatements = {
                 datatype: 'xsd:string',
                 created_at: '2020-09-10T11:52:38.993571+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2020-09-10T11:52:44.10468+02:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S147154',
@@ -146,7 +146,7 @@ export const r0COVIDStatements = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'P19000',
@@ -154,7 +154,7 @@ export const r0COVIDStatements = {
                 created_at: '2020-05-20T10:06:08.581557+02:00',
                 created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L90520',
@@ -162,10 +162,10 @@ export const r0COVIDStatements = {
                 datatype: 'xsd:decimal',
                 created_at: '2020-09-08T14:29:40.388295+02:00',
                 created_by: '0efd9541-14af-4304-829b-4bad37fe81dd',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2020-09-08T14:29:40.427717+02:00',
-            created_by: '0efd9541-14af-4304-829b-4bad37fe81dd'
+            created_by: '0efd9541-14af-4304-829b-4bad37fe81dd',
         },
         {
             id: 'S136899',
@@ -179,7 +179,7 @@ export const r0COVIDStatements = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'P32',
@@ -187,7 +187,7 @@ export const r0COVIDStatements = {
                 created_at: '2021-07-08T09:04:36.219272Z',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: 'represents the research problem of a paper'
+                description: 'represents the research problem of a paper',
             },
             object: {
                 id: 'R44546',
@@ -199,10 +199,10 @@ export const r0COVIDStatements = {
                 _class: 'resource',
                 observatory_id: '06144227-7efc-478c-8555-25147020f02f',
                 extraction_method: 'UNKNOWN',
-                organization_id: 'edc18168-c4ee-4cb8-a98a-136f748e912e'
+                organization_id: 'edc18168-c4ee-4cb8-a98a-136f748e912e',
             },
             created_at: '2020-06-22T13:01:50.186553+02:00',
-            created_by: '11947df3-db67-4180-a370-70d63480086d'
+            created_by: '11947df3-db67-4180-a370-70d63480086d',
         },
         {
             id: 'S136898',
@@ -216,7 +216,7 @@ export const r0COVIDStatements = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'P15699',
@@ -224,7 +224,7 @@ export const r0COVIDStatements = {
                 created_at: '2020-04-01T17:36:43.886+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L83687',
@@ -232,10 +232,10 @@ export const r0COVIDStatements = {
                 datatype: 'xsd:string',
                 created_at: '2020-06-22T13:01:50.159566+02:00',
                 created_by: '11947df3-db67-4180-a370-70d63480086d',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2020-06-22T13:01:50.177984+02:00',
-            created_by: '11947df3-db67-4180-a370-70d63480086d'
+            created_by: '11947df3-db67-4180-a370-70d63480086d',
         },
         {
             id: 'S136897',
@@ -249,7 +249,7 @@ export const r0COVIDStatements = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'P15700',
@@ -257,7 +257,7 @@ export const r0COVIDStatements = {
                 created_at: '2020-04-01T17:36:52.522+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L83686',
@@ -265,10 +265,10 @@ export const r0COVIDStatements = {
                 datatype: 'xsd:string',
                 created_at: '2020-06-22T13:01:50.149027+02:00',
                 created_by: '11947df3-db67-4180-a370-70d63480086d',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2020-06-22T13:01:50.156159+02:00',
-            created_by: '11947df3-db67-4180-a370-70d63480086d'
+            created_by: '11947df3-db67-4180-a370-70d63480086d',
         },
         {
             id: 'S136896',
@@ -282,7 +282,7 @@ export const r0COVIDStatements = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'P15414',
@@ -290,7 +290,7 @@ export const r0COVIDStatements = {
                 created_at: '2020-03-31T10:00:25.217+02:00',
                 created_by: '07a4c04e-f0ed-407e-a097-b676d5228a40',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'R44730',
@@ -302,10 +302,10 @@ export const r0COVIDStatements = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             created_at: '2020-06-22T13:01:50.145517+02:00',
-            created_by: '11947df3-db67-4180-a370-70d63480086d'
+            created_by: '11947df3-db67-4180-a370-70d63480086d',
         },
         {
             id: 'S136895',
@@ -319,7 +319,7 @@ export const r0COVIDStatements = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'P5049',
@@ -327,7 +327,7 @@ export const r0COVIDStatements = {
                 created_at: '2019-12-17T12:37:34.456+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'R25007',
@@ -339,10 +339,10 @@ export const r0COVIDStatements = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             created_at: '2020-06-22T13:01:50.129323+02:00',
-            created_by: '11947df3-db67-4180-a370-70d63480086d'
+            created_by: '11947df3-db67-4180-a370-70d63480086d',
         },
         {
             id: 'S136894',
@@ -356,7 +356,7 @@ export const r0COVIDStatements = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'HAS_VALUE',
@@ -364,7 +364,7 @@ export const r0COVIDStatements = {
                 created_at: '2021-07-08T09:04:38.44545Z',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L83685',
@@ -372,10 +372,10 @@ export const r0COVIDStatements = {
                 datatype: 'xsd:string',
                 created_at: '2020-06-22T13:01:50.115165+02:00',
                 created_by: '11947df3-db67-4180-a370-70d63480086d',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2020-06-22T13:01:50.122482+02:00',
-            created_by: '11947df3-db67-4180-a370-70d63480086d'
+            created_by: '11947df3-db67-4180-a370-70d63480086d',
         },
         {
             id: 'S136893',
@@ -389,7 +389,7 @@ export const r0COVIDStatements = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'P19001',
@@ -397,7 +397,7 @@ export const r0COVIDStatements = {
                 created_at: '2020-05-20T10:06:41.124954+02:00',
                 created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L83684',
@@ -405,10 +405,10 @@ export const r0COVIDStatements = {
                 datatype: 'xsd:string',
                 created_at: '2020-06-22T13:01:50.104795+02:00',
                 created_by: '11947df3-db67-4180-a370-70d63480086d',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2020-06-22T13:01:50.111731+02:00',
-            created_by: '11947df3-db67-4180-a370-70d63480086d'
+            created_by: '11947df3-db67-4180-a370-70d63480086d',
         },
         {
             id: 'S136891',
@@ -422,7 +422,7 @@ export const r0COVIDStatements = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'P23142',
@@ -430,7 +430,7 @@ export const r0COVIDStatements = {
                 created_at: '2020-06-17T08:50:33.77763+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'R44729',
@@ -442,10 +442,10 @@ export const r0COVIDStatements = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             created_at: '2020-06-22T13:01:50.090324+02:00',
-            created_by: '11947df3-db67-4180-a370-70d63480086d'
+            created_by: '11947df3-db67-4180-a370-70d63480086d',
         },
         {
             id: 'S136890',
@@ -459,7 +459,7 @@ export const r0COVIDStatements = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'P23140',
@@ -467,7 +467,7 @@ export const r0COVIDStatements = {
                 created_at: '2020-06-11T17:54:44.198814+02:00',
                 created_by: '1427a1ee-7551-47b1-9152-8274ab6cd7a4',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'R44728',
@@ -479,10 +479,10 @@ export const r0COVIDStatements = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             created_at: '2020-06-22T13:01:50.07587+02:00',
-            created_by: '11947df3-db67-4180-a370-70d63480086d'
+            created_by: '11947df3-db67-4180-a370-70d63480086d',
         },
         {
             id: 'S122143',
@@ -496,7 +496,7 @@ export const r0COVIDStatements = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'SAME_AS',
@@ -504,7 +504,7 @@ export const r0COVIDStatements = {
                 created_at: '2020-03-03T15:10:27.312+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: 'The property that determines that two given individuals are equal.'
+                description: 'The property that determines that two given individuals are equal.',
             },
             object: {
                 id: 'L73843',
@@ -512,12 +512,12 @@ export const r0COVIDStatements = {
                 datatype: 'xsd:string',
                 created_at: '2020-03-31T15:42:22.643+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2020-03-31T15:42:23.019+02:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
-        }
-    ]
+            created_by: '00000000-0000-0000-0000-000000000000',
+        },
+    ],
 };
 
 export const templateOfClassProblem = {
@@ -534,7 +534,7 @@ export const templateOfClassProblem = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateOfClass',
@@ -542,7 +542,7 @@ export const templateOfClassProblem = {
                 created_at: '2020-03-10T13:47:00.32+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'Problem',
@@ -551,11 +551,11 @@ export const templateOfClassProblem = {
                 created_at: '2021-07-08T14:40:33.845758Z',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'class',
-                description: null
+                description: null,
             },
             created_at: '2021-05-31T16:11:58.554367+02:00',
-            created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a'
-        }
+            created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a',
+        },
     ],
     pageable: { sort: { sorted: true, unsorted: false, empty: false }, pageNumber: 0, pageSize: 2000, offset: 0, paged: true, unpaged: false },
     totalPages: 1,
@@ -566,7 +566,7 @@ export const templateOfClassProblem = {
     size: 2000,
     number: 0,
     numberOfElements: 1,
-    empty: false
+    empty: false,
 };
 
 export const templateOfClassC2005 = {
@@ -583,7 +583,7 @@ export const templateOfClassC2005 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateOfClass',
@@ -591,7 +591,7 @@ export const templateOfClassC2005 = {
                 created_at: '2020-03-10T13:47:00.32+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'C2005',
@@ -600,11 +600,11 @@ export const templateOfClassC2005 = {
                 created_at: '2020-04-01T17:25:04.926+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'class',
-                description: null
+                description: null,
             },
             created_at: '2020-05-20T10:24:51.808881+02:00',
-            created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a'
-        }
+            created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a',
+        },
     ],
     pageable: { sort: { sorted: true, unsorted: false, empty: false }, pageNumber: 0, pageSize: 2000, offset: 0, paged: true, unpaged: false },
     totalPages: 1,
@@ -615,7 +615,7 @@ export const templateOfClassC2005 = {
     size: 2000,
     number: 0,
     numberOfElements: 1,
-    empty: false
+    empty: false,
 };
 
 export const templateOfClassC2003 = {
@@ -632,7 +632,7 @@ export const templateOfClassC2003 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateOfClass',
@@ -640,7 +640,7 @@ export const templateOfClassC2003 = {
                 created_at: '2020-03-10T13:47:00.32+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'C2003',
@@ -649,11 +649,11 @@ export const templateOfClassC2003 = {
                 created_at: '2020-04-01T15:47:05.343+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'class',
-                description: null
+                description: null,
             },
             created_at: '2020-07-28T17:51:12.068136+02:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
-        }
+            created_by: '00000000-0000-0000-0000-000000000000',
+        },
     ],
     pageable: { sort: { sorted: true, unsorted: false, empty: false }, pageNumber: 0, pageSize: 2000, offset: 0, paged: true, unpaged: false },
     totalPages: 1,
@@ -664,7 +664,7 @@ export const templateOfClassC2003 = {
     size: 2000,
     number: 0,
     numberOfElements: 1,
-    empty: false
+    empty: false,
 };
 
 export const templateOfClassC5001 = {
@@ -681,7 +681,7 @@ export const templateOfClassC5001 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateOfClass',
@@ -689,7 +689,7 @@ export const templateOfClassC5001 = {
                 created_at: '2020-03-10T13:47:00.32+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'C5001',
@@ -698,11 +698,11 @@ export const templateOfClassC5001 = {
                 created_at: '2020-06-11T12:36:57.681872+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'class',
-                description: null
+                description: null,
             },
             created_at: '2020-06-17T08:50:37.117284+02:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
-        }
+            created_by: '00000000-0000-0000-0000-000000000000',
+        },
     ],
     pageable: { sort: { sorted: true, unsorted: false, empty: false }, pageNumber: 0, pageSize: 2000, offset: 0, paged: true, unpaged: false },
     totalPages: 1,
@@ -713,7 +713,7 @@ export const templateOfClassC5001 = {
     size: 2000,
     number: 0,
     numberOfElements: 1,
-    empty: false
+    empty: false,
 };
 
 export const templateOfClassC4000 = {
@@ -730,7 +730,7 @@ export const templateOfClassC4000 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateOfClass',
@@ -738,7 +738,7 @@ export const templateOfClassC4000 = {
                 created_at: '2020-03-10T13:47:00.32+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'C4000',
@@ -747,11 +747,11 @@ export const templateOfClassC4000 = {
                 created_at: '2020-06-03T20:21:11.980177+02:00',
                 created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a',
                 _class: 'class',
-                description: null
+                description: null,
             },
             created_at: '2020-06-19T16:34:12.606443+02:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
-        }
+            created_by: '00000000-0000-0000-0000-000000000000',
+        },
     ],
     pageable: { sort: { sorted: true, unsorted: false, empty: false }, pageNumber: 0, pageSize: 2000, offset: 0, paged: true, unpaged: false },
     totalPages: 1,
@@ -762,7 +762,7 @@ export const templateOfClassC4000 = {
     size: 2000,
     number: 0,
     numberOfElements: 1,
-    empty: false
+    empty: false,
 };
 export const statementsR48000 = {
     root: 'R48000',
@@ -779,7 +779,7 @@ export const statementsR48000 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentOrder',
@@ -787,7 +787,7 @@ export const statementsR48000 = {
                 created_at: '2020-05-19T14:20:36.459531+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L364324',
@@ -795,10 +795,10 @@ export const statementsR48000 = {
                 datatype: 'xsd:string',
                 created_at: '2021-05-31T16:12:00.435246+02:00',
                 created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2021-05-31T16:12:01.242476+02:00',
-            created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a'
+            created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a',
         },
         {
             id: 'S504394',
@@ -812,7 +812,7 @@ export const statementsR48000 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentProperty',
@@ -820,7 +820,7 @@ export const statementsR48000 = {
                 created_at: '2020-03-10T13:48:09.148+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'subProblem',
@@ -828,10 +828,10 @@ export const statementsR48000 = {
                 created_at: '2020-07-22T15:44:00.035164+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             created_at: '2021-05-31T16:12:00.806236+02:00',
-            created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a'
+            created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a',
         },
         {
             id: 'S504396',
@@ -845,7 +845,7 @@ export const statementsR48000 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentOccurrenceMin',
@@ -853,7 +853,7 @@ export const statementsR48000 = {
                 created_at: '2020-05-19T14:20:36.52552+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L364323',
@@ -861,10 +861,10 @@ export const statementsR48000 = {
                 datatype: 'xsd:string',
                 created_at: '2021-05-31T16:11:59.929207+02:00',
                 created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2021-05-31T16:12:00.768321+02:00',
-            created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a'
+            created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a',
         },
         {
             id: 'S504393',
@@ -878,7 +878,7 @@ export const statementsR48000 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponent',
@@ -886,7 +886,7 @@ export const statementsR48000 = {
                 created_at: '2020-03-10T13:47:56.848+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'R110689',
@@ -898,10 +898,10 @@ export const statementsR48000 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             created_at: '2021-05-31T16:12:00.620268+02:00',
-            created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a'
+            created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a',
         },
         {
             id: 'S504395',
@@ -915,7 +915,7 @@ export const statementsR48000 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentValue',
@@ -923,7 +923,7 @@ export const statementsR48000 = {
                 created_at: '2020-03-10T13:48:19.775+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'Problem',
@@ -932,10 +932,10 @@ export const statementsR48000 = {
                 created_at: '2021-07-08T14:39:22.986351Z',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'class',
-                description: null
+                description: null,
             },
             created_at: '2021-05-31T16:12:00.618639+02:00',
-            created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a'
+            created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a',
         },
         {
             id: 'S504391',
@@ -949,7 +949,7 @@ export const statementsR48000 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentOrder',
@@ -957,7 +957,7 @@ export const statementsR48000 = {
                 created_at: '2020-05-19T14:20:36.459531+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L364322',
@@ -965,10 +965,10 @@ export const statementsR48000 = {
                 datatype: 'xsd:string',
                 created_at: '2021-05-31T16:11:59.435139+02:00',
                 created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2021-05-31T16:12:00.51665+02:00',
-            created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a'
+            created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a',
         },
         {
             id: 'S504392',
@@ -982,7 +982,7 @@ export const statementsR48000 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentValue',
@@ -990,7 +990,7 @@ export const statementsR48000 = {
                 created_at: '2020-03-10T13:48:19.775+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'String',
@@ -999,10 +999,10 @@ export const statementsR48000 = {
                 created_at: '2020-05-19T14:20:35.172106+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'class',
-                description: null
+                description: null,
             },
             created_at: '2021-05-31T16:12:00.408506+02:00',
-            created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a'
+            created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a',
         },
         {
             id: 'S504390',
@@ -1016,7 +1016,7 @@ export const statementsR48000 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentOccurrenceMin',
@@ -1024,7 +1024,7 @@ export const statementsR48000 = {
                 created_at: '2020-05-19T14:20:36.52552+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L364321',
@@ -1032,10 +1032,10 @@ export const statementsR48000 = {
                 datatype: 'xsd:string',
                 created_at: '2021-05-31T16:11:59.040364+02:00',
                 created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2021-05-31T16:11:59.899932+02:00',
-            created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a'
+            created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a',
         },
         {
             id: 'S504388',
@@ -1049,7 +1049,7 @@ export const statementsR48000 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentValue',
@@ -1057,7 +1057,7 @@ export const statementsR48000 = {
                 created_at: '2020-03-10T13:48:19.775+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'String',
@@ -1066,10 +1066,10 @@ export const statementsR48000 = {
                 created_at: '2020-05-19T14:20:35.172106+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'class',
-                description: null
+                description: null,
             },
             created_at: '2021-05-31T16:11:59.84485+02:00',
-            created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a'
+            created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a',
         },
         {
             id: 'S504389',
@@ -1083,7 +1083,7 @@ export const statementsR48000 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentProperty',
@@ -1091,7 +1091,7 @@ export const statementsR48000 = {
                 created_at: '2020-03-10T13:48:09.148+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'SAME_AS',
@@ -1099,10 +1099,10 @@ export const statementsR48000 = {
                 created_at: '2020-03-03T15:10:27.312+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             created_at: '2021-05-31T16:11:59.844193+02:00',
-            created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a'
+            created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a',
         },
         {
             id: 'S504387',
@@ -1116,7 +1116,7 @@ export const statementsR48000 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponent',
@@ -1124,7 +1124,7 @@ export const statementsR48000 = {
                 created_at: '2020-03-10T13:47:56.848+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'R110688',
@@ -1136,10 +1136,10 @@ export const statementsR48000 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             created_at: '2021-05-31T16:11:59.712637+02:00',
-            created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a'
+            created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a',
         },
         {
             id: 'S504386',
@@ -1153,7 +1153,7 @@ export const statementsR48000 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentValue',
@@ -1161,7 +1161,7 @@ export const statementsR48000 = {
                 created_at: '2020-03-10T13:48:19.775+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'String',
@@ -1170,10 +1170,10 @@ export const statementsR48000 = {
                 created_at: '2020-05-19T14:20:35.172106+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'class',
-                description: null
+                description: null,
             },
             created_at: '2021-05-31T16:11:59.608361+02:00',
-            created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a'
+            created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a',
         },
         {
             id: 'S504385',
@@ -1187,7 +1187,7 @@ export const statementsR48000 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentOrder',
@@ -1195,7 +1195,7 @@ export const statementsR48000 = {
                 created_at: '2020-05-19T14:20:36.459531+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L364320',
@@ -1203,10 +1203,10 @@ export const statementsR48000 = {
                 datatype: 'xsd:string',
                 created_at: '2021-05-31T16:11:58.582304+02:00',
                 created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2021-05-31T16:11:59.408163+02:00',
-            created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a'
+            created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a',
         },
         {
             id: 'S504384',
@@ -1220,7 +1220,7 @@ export const statementsR48000 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentOccurrenceMax',
@@ -1228,7 +1228,7 @@ export const statementsR48000 = {
                 created_at: '2020-05-19T14:20:36.589812+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L364319',
@@ -1236,10 +1236,10 @@ export const statementsR48000 = {
                 datatype: 'xsd:string',
                 created_at: '2021-05-31T16:11:58.043838+02:00',
                 created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2021-05-31T16:11:59.013203+02:00',
-            created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a'
+            created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a',
         },
         {
             id: 'S504383',
@@ -1253,7 +1253,7 @@ export const statementsR48000 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentOccurrenceMin',
@@ -1261,7 +1261,7 @@ export const statementsR48000 = {
                 created_at: '2020-05-19T14:20:36.52552+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L364318',
@@ -1269,10 +1269,10 @@ export const statementsR48000 = {
                 datatype: 'xsd:string',
                 created_at: '2021-05-31T16:11:57.937656+02:00',
                 created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2021-05-31T16:11:58.896621+02:00',
-            created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a'
+            created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a',
         },
         {
             id: 'S504382',
@@ -1286,7 +1286,7 @@ export const statementsR48000 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentProperty',
@@ -1294,7 +1294,7 @@ export const statementsR48000 = {
                 created_at: '2020-03-10T13:48:09.148+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'description',
@@ -1302,10 +1302,10 @@ export const statementsR48000 = {
                 created_at: '2021-07-08T14:39:22.988185Z',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             created_at: '2021-05-31T16:11:58.856445+02:00',
-            created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a'
+            created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a',
         },
         {
             id: 'S504381',
@@ -1319,7 +1319,7 @@ export const statementsR48000 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentValue',
@@ -1327,7 +1327,7 @@ export const statementsR48000 = {
                 created_at: '2020-03-10T13:48:19.775+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'String',
@@ -1336,10 +1336,10 @@ export const statementsR48000 = {
                 created_at: '2020-05-19T14:20:35.172106+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'class',
-                description: null
+                description: null,
             },
             created_at: '2021-05-31T16:11:58.856266+02:00',
-            created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a'
+            created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a',
         },
         {
             id: 'S504380',
@@ -1353,7 +1353,7 @@ export const statementsR48000 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponent',
@@ -1361,7 +1361,7 @@ export const statementsR48000 = {
                 created_at: '2020-03-10T13:47:56.848+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'R110687',
@@ -1373,10 +1373,10 @@ export const statementsR48000 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             created_at: '2021-05-31T16:11:58.827017+02:00',
-            created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a'
+            created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a',
         },
         {
             id: 'S504379',
@@ -1390,7 +1390,7 @@ export const statementsR48000 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateOfClass',
@@ -1398,7 +1398,7 @@ export const statementsR48000 = {
                 created_at: '2020-03-10T13:47:00.32+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'Problem',
@@ -1407,12 +1407,12 @@ export const statementsR48000 = {
                 created_at: '2021-07-08T14:39:22.986351Z',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'class',
-                description: null
+                description: null,
             },
             created_at: '2021-05-31T16:11:58.554367+02:00',
-            created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a'
-        }
-    ]
+            created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a',
+        },
+    ],
 };
 
 export const statementsR35087 = {
@@ -1430,7 +1430,7 @@ export const statementsR35087 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateLabelFormat',
@@ -1438,7 +1438,7 @@ export const statementsR35087 = {
                 created_at: '2020-05-19T14:20:36.314927+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L78043',
@@ -1446,10 +1446,10 @@ export const statementsR35087 = {
                 datatype: 'xsd:string',
                 created_at: '2020-05-20T10:24:52.297267+02:00',
                 created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2020-05-20T10:24:52.672276+02:00',
-            created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a'
+            created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a',
         },
         {
             id: 'S129103',
@@ -1463,7 +1463,7 @@ export const statementsR35087 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentOrder',
@@ -1471,7 +1471,7 @@ export const statementsR35087 = {
                 created_at: '2020-05-19T14:20:36.459531+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L78042',
@@ -1479,10 +1479,10 @@ export const statementsR35087 = {
                 datatype: 'xsd:string',
                 created_at: '2020-05-20T10:24:52.240907+02:00',
                 created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2020-05-20T10:24:52.569348+02:00',
-            created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a'
+            created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a',
         },
         {
             id: 'S129102',
@@ -1496,7 +1496,7 @@ export const statementsR35087 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentOccurrenceMax',
@@ -1504,7 +1504,7 @@ export const statementsR35087 = {
                 created_at: '2020-05-19T14:20:36.589812+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L78041',
@@ -1512,10 +1512,10 @@ export const statementsR35087 = {
                 datatype: 'xsd:string',
                 created_at: '2020-05-20T10:24:51.995238+02:00',
                 created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2020-05-20T10:24:52.313328+02:00',
-            created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a'
+            created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a',
         },
         {
             id: 'S129101',
@@ -1529,7 +1529,7 @@ export const statementsR35087 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentOccurrenceMin',
@@ -1537,7 +1537,7 @@ export const statementsR35087 = {
                 created_at: '2020-05-19T14:20:36.52552+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L78040',
@@ -1545,10 +1545,10 @@ export const statementsR35087 = {
                 datatype: 'xsd:string',
                 created_at: '2020-05-20T10:24:51.929923+02:00',
                 created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2020-05-20T10:24:52.247599+02:00',
-            created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a'
+            created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a',
         },
         {
             id: 'S129100',
@@ -1562,7 +1562,7 @@ export const statementsR35087 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponent',
@@ -1570,7 +1570,7 @@ export const statementsR35087 = {
                 created_at: '2020-03-10T13:47:56.848+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'R40017',
@@ -1582,10 +1582,10 @@ export const statementsR35087 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             created_at: '2020-05-20T10:24:52.246574+02:00',
-            created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a'
+            created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a',
         },
         {
             id: 'S129099',
@@ -1599,7 +1599,7 @@ export const statementsR35087 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentValue',
@@ -1607,7 +1607,7 @@ export const statementsR35087 = {
                 created_at: '2020-03-10T13:48:19.775+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'Date',
@@ -1616,10 +1616,10 @@ export const statementsR35087 = {
                 created_at: '2020-05-19T14:20:35.105176+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'class',
-                description: null
+                description: null,
             },
             created_at: '2020-05-20T10:24:52.225278+02:00',
-            created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a'
+            created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a',
         },
         {
             id: 'S129098',
@@ -1633,7 +1633,7 @@ export const statementsR35087 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentOrder',
@@ -1641,7 +1641,7 @@ export const statementsR35087 = {
                 created_at: '2020-05-19T14:20:36.459531+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L78039',
@@ -1649,10 +1649,10 @@ export const statementsR35087 = {
                 datatype: 'xsd:string',
                 created_at: '2020-05-20T10:24:51.836312+02:00',
                 created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2020-05-20T10:24:52.207002+02:00',
-            created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a'
+            created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a',
         },
         {
             id: 'S129097',
@@ -1666,7 +1666,7 @@ export const statementsR35087 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentProperty',
@@ -1674,7 +1674,7 @@ export const statementsR35087 = {
                 created_at: '2020-03-10T13:48:09.148+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'P15700',
@@ -1682,10 +1682,10 @@ export const statementsR35087 = {
                 created_at: '2020-04-01T17:36:52.522+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             created_at: '2020-05-20T10:24:52.197751+02:00',
-            created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a'
+            created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a',
         },
         {
             id: 'S129096',
@@ -1699,7 +1699,7 @@ export const statementsR35087 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentOccurrenceMax',
@@ -1707,7 +1707,7 @@ export const statementsR35087 = {
                 created_at: '2020-05-19T14:20:36.589812+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L78038',
@@ -1715,10 +1715,10 @@ export const statementsR35087 = {
                 datatype: 'xsd:string',
                 created_at: '2020-05-20T10:24:51.573881+02:00',
                 created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2020-05-20T10:24:51.985703+02:00',
-            created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a'
+            created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a',
         },
         {
             id: 'S129095',
@@ -1732,7 +1732,7 @@ export const statementsR35087 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentValue',
@@ -1740,7 +1740,7 @@ export const statementsR35087 = {
                 created_at: '2020-03-10T13:48:19.775+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'Date',
@@ -1749,10 +1749,10 @@ export const statementsR35087 = {
                 created_at: '2020-05-19T14:20:35.105176+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'class',
-                description: null
+                description: null,
             },
             created_at: '2020-05-20T10:24:51.894951+02:00',
-            created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a'
+            created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a',
         },
         {
             id: 'S129094',
@@ -1766,7 +1766,7 @@ export const statementsR35087 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentProperty',
@@ -1774,7 +1774,7 @@ export const statementsR35087 = {
                 created_at: '2020-03-10T13:48:09.148+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'P15699',
@@ -1782,10 +1782,10 @@ export const statementsR35087 = {
                 created_at: '2020-04-01T17:36:43.886+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             created_at: '2020-05-20T10:24:51.881527+02:00',
-            created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a'
+            created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a',
         },
         {
             id: 'S129093',
@@ -1799,7 +1799,7 @@ export const statementsR35087 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponent',
@@ -1807,7 +1807,7 @@ export const statementsR35087 = {
                 created_at: '2020-03-10T13:47:56.848+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'R40016',
@@ -1819,10 +1819,10 @@ export const statementsR35087 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             created_at: '2020-05-20T10:24:51.881476+02:00',
-            created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a'
+            created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a',
         },
         {
             id: 'S129092',
@@ -1836,7 +1836,7 @@ export const statementsR35087 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentOccurrenceMin',
@@ -1844,7 +1844,7 @@ export const statementsR35087 = {
                 created_at: '2020-05-19T14:20:36.52552+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L78037',
@@ -1852,10 +1852,10 @@ export const statementsR35087 = {
                 datatype: 'xsd:string',
                 created_at: '2020-05-20T10:24:51.532741+02:00',
                 created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2020-05-20T10:24:51.878196+02:00',
-            created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a'
+            created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a',
         },
         {
             id: 'S129091',
@@ -1869,7 +1869,7 @@ export const statementsR35087 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateOfClass',
@@ -1877,7 +1877,7 @@ export const statementsR35087 = {
                 created_at: '2020-03-10T13:47:00.32+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'C2005',
@@ -1886,12 +1886,12 @@ export const statementsR35087 = {
                 created_at: '2020-04-01T17:25:04.926+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'class',
-                description: null
+                description: null,
             },
             created_at: '2020-05-20T10:24:51.808881+02:00',
-            created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a'
-        }
-    ]
+            created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a',
+        },
+    ],
 };
 
 export const statementsR35077 = {
@@ -1909,7 +1909,7 @@ export const statementsR35077 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateLabelFormat',
@@ -1917,7 +1917,7 @@ export const statementsR35077 = {
                 created_at: '2020-05-19T14:20:36.314927+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L89058',
@@ -1925,10 +1925,10 @@ export const statementsR35077 = {
                 datatype: 'xsd:string',
                 created_at: '2020-07-28T17:51:12.415593+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2020-07-28T17:51:12.45274+02:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S144125',
@@ -1942,7 +1942,7 @@ export const statementsR35077 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentOrder',
@@ -1950,7 +1950,7 @@ export const statementsR35077 = {
                 created_at: '2020-05-19T14:20:36.459531+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L89057',
@@ -1958,10 +1958,10 @@ export const statementsR35077 = {
                 datatype: 'xsd:string',
                 created_at: '2020-07-28T17:51:12.396174+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2020-07-28T17:51:12.417174+02:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S144124',
@@ -1975,7 +1975,7 @@ export const statementsR35077 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentOccurrenceMax',
@@ -1983,7 +1983,7 @@ export const statementsR35077 = {
                 created_at: '2020-05-19T14:20:36.589812+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L89056',
@@ -1991,10 +1991,10 @@ export const statementsR35077 = {
                 datatype: 'xsd:string',
                 created_at: '2020-07-28T17:51:12.37328+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2020-07-28T17:51:12.398279+02:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S144123',
@@ -2008,7 +2008,7 @@ export const statementsR35077 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentOccurrenceMin',
@@ -2016,7 +2016,7 @@ export const statementsR35077 = {
                 created_at: '2020-05-19T14:20:36.52552+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L89055',
@@ -2024,10 +2024,10 @@ export const statementsR35077 = {
                 datatype: 'xsd:string',
                 created_at: '2020-07-28T17:51:12.35273+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2020-07-28T17:51:12.373104+02:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S144122',
@@ -2041,7 +2041,7 @@ export const statementsR35077 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentValue',
@@ -2049,7 +2049,7 @@ export const statementsR35077 = {
                 created_at: '2020-03-10T13:48:19.775+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'C7001',
@@ -2058,10 +2058,10 @@ export const statementsR35077 = {
                 created_at: '2020-07-28T17:50:38.923842+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'class',
-                description: null
+                description: null,
             },
             created_at: '2020-07-28T17:51:12.348642+02:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S144121',
@@ -2075,7 +2075,7 @@ export const statementsR35077 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentProperty',
@@ -2083,7 +2083,7 @@ export const statementsR35077 = {
                 created_at: '2020-03-10T13:48:09.148+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'P7004',
@@ -2091,10 +2091,10 @@ export const statementsR35077 = {
                 created_at: '2019-12-18T15:04:34.397+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             created_at: '2020-07-28T17:51:12.337479+02:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S144120',
@@ -2108,7 +2108,7 @@ export const statementsR35077 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponent',
@@ -2116,7 +2116,7 @@ export const statementsR35077 = {
                 created_at: '2020-03-10T13:47:56.848+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'R48018',
@@ -2128,10 +2128,10 @@ export const statementsR35077 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             created_at: '2020-07-28T17:51:12.333724+02:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S144119',
@@ -2145,7 +2145,7 @@ export const statementsR35077 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentValue',
@@ -2153,7 +2153,7 @@ export const statementsR35077 = {
                 created_at: '2020-03-10T13:48:19.775+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'Number',
@@ -2162,10 +2162,10 @@ export const statementsR35077 = {
                 created_at: '2020-05-19T14:20:35.235199+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'class',
-                description: null
+                description: null,
             },
             created_at: '2020-07-28T17:51:12.305241+02:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S144118',
@@ -2179,7 +2179,7 @@ export const statementsR35077 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentOrder',
@@ -2187,7 +2187,7 @@ export const statementsR35077 = {
                 created_at: '2020-05-19T14:20:36.459531+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L89054',
@@ -2195,10 +2195,10 @@ export const statementsR35077 = {
                 datatype: 'xsd:string',
                 created_at: '2020-07-28T17:51:12.276804+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2020-07-28T17:51:12.303583+02:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S144117',
@@ -2212,7 +2212,7 @@ export const statementsR35077 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentOccurrenceMax',
@@ -2220,7 +2220,7 @@ export const statementsR35077 = {
                 created_at: '2020-05-19T14:20:36.589812+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L89053',
@@ -2228,10 +2228,10 @@ export const statementsR35077 = {
                 datatype: 'xsd:string',
                 created_at: '2020-07-28T17:51:12.248715+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2020-07-28T17:51:12.278357+02:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S144116',
@@ -2245,7 +2245,7 @@ export const statementsR35077 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentOccurrenceMin',
@@ -2253,7 +2253,7 @@ export const statementsR35077 = {
                 created_at: '2020-05-19T14:20:36.52552+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L89052',
@@ -2261,10 +2261,10 @@ export const statementsR35077 = {
                 datatype: 'xsd:string',
                 created_at: '2020-07-28T17:51:12.225053+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2020-07-28T17:51:12.250727+02:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S144115',
@@ -2278,7 +2278,7 @@ export const statementsR35077 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentValue',
@@ -2286,7 +2286,7 @@ export const statementsR35077 = {
                 created_at: '2020-03-10T13:48:19.775+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'Number',
@@ -2295,10 +2295,10 @@ export const statementsR35077 = {
                 created_at: '2020-05-19T14:20:35.235199+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'class',
-                description: null
+                description: null,
             },
             created_at: '2020-07-28T17:51:12.224898+02:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S144114',
@@ -2312,7 +2312,7 @@ export const statementsR35077 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentProperty',
@@ -2320,7 +2320,7 @@ export const statementsR35077 = {
                 created_at: '2020-03-10T13:48:09.148+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'P19001',
@@ -2328,10 +2328,10 @@ export const statementsR35077 = {
                 created_at: '2020-05-20T10:06:41.124954+02:00',
                 created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             created_at: '2020-07-28T17:51:12.221771+02:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S144113',
@@ -2345,7 +2345,7 @@ export const statementsR35077 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponent',
@@ -2353,7 +2353,7 @@ export const statementsR35077 = {
                 created_at: '2020-03-10T13:47:56.848+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'R48017',
@@ -2365,10 +2365,10 @@ export const statementsR35077 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             created_at: '2020-07-28T17:51:12.219747+02:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S144112',
@@ -2382,7 +2382,7 @@ export const statementsR35077 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentValue',
@@ -2390,7 +2390,7 @@ export const statementsR35077 = {
                 created_at: '2020-03-10T13:48:19.775+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'Number',
@@ -2399,10 +2399,10 @@ export const statementsR35077 = {
                 created_at: '2020-05-19T14:20:35.235199+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'class',
-                description: null
+                description: null,
             },
             created_at: '2020-07-28T17:51:12.195245+02:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S144111',
@@ -2416,7 +2416,7 @@ export const statementsR35077 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentOrder',
@@ -2424,7 +2424,7 @@ export const statementsR35077 = {
                 created_at: '2020-05-19T14:20:36.459531+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L89051',
@@ -2432,10 +2432,10 @@ export const statementsR35077 = {
                 datatype: 'xsd:string',
                 created_at: '2020-07-28T17:51:12.16678+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2020-07-28T17:51:12.191008+02:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S144110',
@@ -2449,7 +2449,7 @@ export const statementsR35077 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentOccurrenceMax',
@@ -2457,7 +2457,7 @@ export const statementsR35077 = {
                 created_at: '2020-05-19T14:20:36.589812+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L89050',
@@ -2465,10 +2465,10 @@ export const statementsR35077 = {
                 datatype: 'xsd:string',
                 created_at: '2020-07-28T17:51:12.137312+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2020-07-28T17:51:12.16941+02:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S144109',
@@ -2482,7 +2482,7 @@ export const statementsR35077 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentOccurrenceMin',
@@ -2490,7 +2490,7 @@ export const statementsR35077 = {
                 created_at: '2020-05-19T14:20:36.52552+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L89049',
@@ -2498,10 +2498,10 @@ export const statementsR35077 = {
                 datatype: 'xsd:string',
                 created_at: '2020-07-28T17:51:12.109259+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2020-07-28T17:51:12.139163+02:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S144108',
@@ -2515,7 +2515,7 @@ export const statementsR35077 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentValue',
@@ -2523,7 +2523,7 @@ export const statementsR35077 = {
                 created_at: '2020-03-10T13:48:19.775+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'Number',
@@ -2532,10 +2532,10 @@ export const statementsR35077 = {
                 created_at: '2020-05-19T14:20:35.235199+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'class',
-                description: null
+                description: null,
             },
             created_at: '2020-07-28T17:51:12.099925+02:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S144107',
@@ -2549,7 +2549,7 @@ export const statementsR35077 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentProperty',
@@ -2557,7 +2557,7 @@ export const statementsR35077 = {
                 created_at: '2020-03-10T13:48:09.148+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'P19000',
@@ -2565,10 +2565,10 @@ export const statementsR35077 = {
                 created_at: '2020-05-20T10:06:08.581557+02:00',
                 created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             created_at: '2020-07-28T17:51:12.09801+02:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S144106',
@@ -2582,7 +2582,7 @@ export const statementsR35077 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponent',
@@ -2590,7 +2590,7 @@ export const statementsR35077 = {
                 created_at: '2020-03-10T13:47:56.848+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'R48016',
@@ -2602,10 +2602,10 @@ export const statementsR35077 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             created_at: '2020-07-28T17:51:12.094867+02:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S144105',
@@ -2619,7 +2619,7 @@ export const statementsR35077 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateOfClass',
@@ -2627,7 +2627,7 @@ export const statementsR35077 = {
                 created_at: '2020-03-10T13:47:00.32+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'C2003',
@@ -2636,10 +2636,10 @@ export const statementsR35077 = {
                 created_at: '2020-04-01T15:47:05.343+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'class',
-                description: null
+                description: null,
             },
             created_at: '2020-07-28T17:51:12.068136+02:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S144104',
@@ -2653,7 +2653,7 @@ export const statementsR35077 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateStrict',
@@ -2661,7 +2661,7 @@ export const statementsR35077 = {
                 created_at: '2020-05-19T14:20:36.383776+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L89048',
@@ -2669,12 +2669,12 @@ export const statementsR35077 = {
                 datatype: 'xsd:string',
                 created_at: '2020-07-28T17:51:12.02963+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2020-07-28T17:51:12.066932+02:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
-        }
-    ]
+            created_by: '00000000-0000-0000-0000-000000000000',
+        },
+    ],
 };
 
 export const statementsR44415 = {
@@ -2692,7 +2692,7 @@ export const statementsR44415 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateLabelFormat',
@@ -2700,7 +2700,7 @@ export const statementsR44415 = {
                 created_at: '2020-05-19T14:20:36.314927+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L83314',
@@ -2708,10 +2708,10 @@ export const statementsR44415 = {
                 datatype: 'xsd:string',
                 created_at: '2020-06-17T08:50:37.362162+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2020-06-17T08:50:37.384905+02:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S136320',
@@ -2725,7 +2725,7 @@ export const statementsR44415 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentOrder',
@@ -2733,7 +2733,7 @@ export const statementsR44415 = {
                 created_at: '2020-05-19T14:20:36.459531+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L83313',
@@ -2741,10 +2741,10 @@ export const statementsR44415 = {
                 datatype: 'xsd:string',
                 created_at: '2020-06-17T08:50:37.336539+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2020-06-17T08:50:37.363778+02:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S136319',
@@ -2758,7 +2758,7 @@ export const statementsR44415 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentOccurrenceMax',
@@ -2766,7 +2766,7 @@ export const statementsR44415 = {
                 created_at: '2020-05-19T14:20:36.589812+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L83312',
@@ -2774,10 +2774,10 @@ export const statementsR44415 = {
                 datatype: 'xsd:string',
                 created_at: '2020-06-17T08:50:37.301054+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2020-06-17T08:50:37.337861+02:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S136318',
@@ -2791,7 +2791,7 @@ export const statementsR44415 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentOccurrenceMin',
@@ -2799,7 +2799,7 @@ export const statementsR44415 = {
                 created_at: '2020-05-19T14:20:36.52552+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L83311',
@@ -2807,10 +2807,10 @@ export const statementsR44415 = {
                 datatype: 'xsd:string',
                 created_at: '2020-06-17T08:50:37.278695+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2020-06-17T08:50:37.303138+02:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S136317',
@@ -2824,7 +2824,7 @@ export const statementsR44415 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentValue',
@@ -2832,7 +2832,7 @@ export const statementsR44415 = {
                 created_at: '2020-03-10T13:48:19.775+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'C2003',
@@ -2841,10 +2841,10 @@ export const statementsR44415 = {
                 created_at: '2020-04-01T15:47:05.343+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'class',
-                description: null
+                description: null,
             },
             created_at: '2020-06-17T08:50:37.280039+02:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S136316',
@@ -2858,7 +2858,7 @@ export const statementsR44415 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentProperty',
@@ -2866,7 +2866,7 @@ export const statementsR44415 = {
                 created_at: '2020-03-10T13:48:09.148+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'P23142',
@@ -2874,10 +2874,10 @@ export const statementsR44415 = {
                 created_at: '2020-06-17T08:50:33.77763+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             created_at: '2020-06-17T08:50:37.27631+02:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S136315',
@@ -2891,7 +2891,7 @@ export const statementsR44415 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponent',
@@ -2899,7 +2899,7 @@ export const statementsR44415 = {
                 created_at: '2020-03-10T13:47:56.848+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'R44636',
@@ -2911,10 +2911,10 @@ export const statementsR44415 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             created_at: '2020-06-17T08:50:37.274594+02:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S136314',
@@ -2928,7 +2928,7 @@ export const statementsR44415 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentValue',
@@ -2936,7 +2936,7 @@ export const statementsR44415 = {
                 created_at: '2020-03-10T13:48:19.775+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'Number',
@@ -2945,10 +2945,10 @@ export const statementsR44415 = {
                 created_at: '2020-05-19T14:20:35.235199+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'class',
-                description: null
+                description: null,
             },
             created_at: '2020-06-17T08:50:37.244654+02:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S136313',
@@ -2962,7 +2962,7 @@ export const statementsR44415 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentOrder',
@@ -2970,7 +2970,7 @@ export const statementsR44415 = {
                 created_at: '2020-05-19T14:20:36.459531+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L83310',
@@ -2978,10 +2978,10 @@ export const statementsR44415 = {
                 datatype: 'xsd:string',
                 created_at: '2020-06-17T08:50:37.210637+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2020-06-17T08:50:37.239345+02:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S136312',
@@ -2995,7 +2995,7 @@ export const statementsR44415 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentOccurrenceMax',
@@ -3003,7 +3003,7 @@ export const statementsR44415 = {
                 created_at: '2020-05-19T14:20:36.589812+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L83309',
@@ -3011,10 +3011,10 @@ export const statementsR44415 = {
                 datatype: 'xsd:string',
                 created_at: '2020-06-17T08:50:37.188006+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2020-06-17T08:50:37.210788+02:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S136311',
@@ -3028,7 +3028,7 @@ export const statementsR44415 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentOccurrenceMin',
@@ -3036,7 +3036,7 @@ export const statementsR44415 = {
                 created_at: '2020-05-19T14:20:36.52552+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L83308',
@@ -3044,10 +3044,10 @@ export const statementsR44415 = {
                 datatype: 'xsd:string',
                 created_at: '2020-06-17T08:50:37.167675+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2020-06-17T08:50:37.189993+02:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S136310',
@@ -3061,7 +3061,7 @@ export const statementsR44415 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentValue',
@@ -3069,7 +3069,7 @@ export const statementsR44415 = {
                 created_at: '2020-03-10T13:48:19.775+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'Number',
@@ -3078,10 +3078,10 @@ export const statementsR44415 = {
                 created_at: '2020-05-19T14:20:35.235199+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'class',
-                description: null
+                description: null,
             },
             created_at: '2020-06-17T08:50:37.1683+02:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S136309',
@@ -3095,7 +3095,7 @@ export const statementsR44415 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentProperty',
@@ -3103,7 +3103,7 @@ export const statementsR44415 = {
                 created_at: '2020-03-10T13:48:09.148+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'HAS_VALUE',
@@ -3111,10 +3111,10 @@ export const statementsR44415 = {
                 created_at: '2021-07-08T14:39:23.091739Z',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             created_at: '2020-06-17T08:50:37.156754+02:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S136308',
@@ -3128,7 +3128,7 @@ export const statementsR44415 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponent',
@@ -3136,7 +3136,7 @@ export const statementsR44415 = {
                 created_at: '2020-03-10T13:47:56.848+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'R44635',
@@ -3148,10 +3148,10 @@ export const statementsR44415 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             created_at: '2020-06-17T08:50:37.152418+02:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S136307',
@@ -3165,7 +3165,7 @@ export const statementsR44415 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateOfClass',
@@ -3173,7 +3173,7 @@ export const statementsR44415 = {
                 created_at: '2020-03-10T13:47:00.32+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'C5001',
@@ -3182,12 +3182,12 @@ export const statementsR44415 = {
                 created_at: '2020-06-11T12:36:57.681872+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'class',
-                description: null
+                description: null,
             },
             created_at: '2020-06-17T08:50:37.117284+02:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
-        }
-    ]
+            created_by: '00000000-0000-0000-0000-000000000000',
+        },
+    ],
 };
 
 export const statementsR0TemplateR40006 = {
@@ -3205,7 +3205,7 @@ export const statementsR0TemplateR40006 = {
                 _class: 'resource',
                 observatory_id: '06144227-7efc-478c-8555-25147020f02f',
                 extraction_method: 'UNKNOWN',
-                organization_id: 'edc18168-c4ee-4cb8-a98a-136f748e912e'
+                organization_id: 'edc18168-c4ee-4cb8-a98a-136f748e912e',
             },
             predicate: {
                 id: 'description',
@@ -3214,7 +3214,7 @@ export const statementsR0TemplateR40006 = {
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
                 description:
-                    'A textual comment helps clarify the meaning of RDF classes and properties. Such in-line documentation complements the use of both formal techniques (Ontology and rule languages) and informal (prose documentation, examples, test cases). A variety of documentation forms can be combined to indicate the intended meaning of the classes and properties described in an RDF vocabulary. Since RDF vocabularies are expressed as RDF graphs, vocabularies defined in other namespaces may be used to provide richer documentation.'
+                    'A textual comment helps clarify the meaning of RDF classes and properties. Such in-line documentation complements the use of both formal techniques (Ontology and rule languages) and informal (prose documentation, examples, test cases). A variety of documentation forms can be combined to indicate the intended meaning of the classes and properties described in an RDF vocabulary. Since RDF vocabularies are expressed as RDF graphs, vocabularies defined in other namespaces may be used to provide richer documentation.',
             },
             object: {
                 id: 'L94013',
@@ -3222,10 +3222,10 @@ export const statementsR0TemplateR40006 = {
                 datatype: 'xsd:string',
                 created_at: '2020-10-16T14:19:45.023109+02:00',
                 created_by: '64acea2a-d2d7-4b28-9ada-8f9c0c5afea2',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2020-10-16T14:19:45.077826+02:00',
-            created_by: '64acea2a-d2d7-4b28-9ada-8f9c0c5afea2'
+            created_by: '64acea2a-d2d7-4b28-9ada-8f9c0c5afea2',
         },
         {
             id: 'S155223',
@@ -3239,7 +3239,7 @@ export const statementsR0TemplateR40006 = {
                 _class: 'resource',
                 observatory_id: '06144227-7efc-478c-8555-25147020f02f',
                 extraction_method: 'UNKNOWN',
-                organization_id: 'edc18168-c4ee-4cb8-a98a-136f748e912e'
+                organization_id: 'edc18168-c4ee-4cb8-a98a-136f748e912e',
             },
             predicate: {
                 id: 'SAME_AS',
@@ -3247,7 +3247,7 @@ export const statementsR0TemplateR40006 = {
                 created_at: '2020-03-03T15:10:27.312+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: 'The property that determines that two given individuals are equal.'
+                description: 'The property that determines that two given individuals are equal.',
             },
             object: {
                 id: 'L92962',
@@ -3255,10 +3255,10 @@ export const statementsR0TemplateR40006 = {
                 datatype: 'xsd:string',
                 created_at: '2020-10-13T12:50:52.620725+02:00',
                 created_by: '07a4c04e-f0ed-407e-a097-b676d5228a40',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2020-10-13T12:50:52.668608+02:00',
-            created_by: '07a4c04e-f0ed-407e-a097-b676d5228a40'
+            created_by: '07a4c04e-f0ed-407e-a097-b676d5228a40',
         },
         {
             id: 'S136506',
@@ -3272,7 +3272,7 @@ export const statementsR0TemplateR40006 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentOrder',
@@ -3280,7 +3280,7 @@ export const statementsR0TemplateR40006 = {
                 created_at: '2020-05-19T14:20:36.459531+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L83423',
@@ -3288,10 +3288,10 @@ export const statementsR0TemplateR40006 = {
                 datatype: 'xsd:string',
                 created_at: '2020-06-19T16:34:13.503458+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2020-06-19T16:34:13.553935+02:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S136505',
@@ -3305,7 +3305,7 @@ export const statementsR0TemplateR40006 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentOccurrenceMax',
@@ -3313,7 +3313,7 @@ export const statementsR0TemplateR40006 = {
                 created_at: '2020-05-19T14:20:36.589812+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L83422',
@@ -3321,10 +3321,10 @@ export const statementsR0TemplateR40006 = {
                 datatype: 'xsd:string',
                 created_at: '2020-06-19T16:34:13.445451+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2020-06-19T16:34:13.508003+02:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S136504',
@@ -3338,7 +3338,7 @@ export const statementsR0TemplateR40006 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentOccurrenceMin',
@@ -3346,7 +3346,7 @@ export const statementsR0TemplateR40006 = {
                 created_at: '2020-05-19T14:20:36.52552+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L83421',
@@ -3354,10 +3354,10 @@ export const statementsR0TemplateR40006 = {
                 datatype: 'xsd:string',
                 created_at: '2020-06-19T16:34:13.290278+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2020-06-19T16:34:13.450494+02:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S136503',
@@ -3371,7 +3371,7 @@ export const statementsR0TemplateR40006 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponent',
@@ -3379,7 +3379,7 @@ export const statementsR0TemplateR40006 = {
                 created_at: '2020-03-10T13:47:56.848+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'R44674',
@@ -3391,10 +3391,10 @@ export const statementsR0TemplateR40006 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             created_at: '2020-06-19T16:34:13.294788+02:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S136502',
@@ -3408,7 +3408,7 @@ export const statementsR0TemplateR40006 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentProperty',
@@ -3416,7 +3416,7 @@ export const statementsR0TemplateR40006 = {
                 created_at: '2020-03-10T13:48:09.148+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'P15414',
@@ -3424,10 +3424,10 @@ export const statementsR0TemplateR40006 = {
                 created_at: '2020-03-31T10:00:25.217+02:00',
                 created_by: '07a4c04e-f0ed-407e-a097-b676d5228a40',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             created_at: '2020-06-19T16:34:13.294687+02:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S136501',
@@ -3441,7 +3441,7 @@ export const statementsR0TemplateR40006 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentValue',
@@ -3449,7 +3449,7 @@ export const statementsR0TemplateR40006 = {
                 created_at: '2020-03-10T13:48:19.775+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'C2005',
@@ -3458,10 +3458,10 @@ export const statementsR0TemplateR40006 = {
                 created_at: '2020-04-01T17:25:04.926+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'class',
-                description: null
+                description: null,
             },
             created_at: '2020-06-19T16:34:13.294681+02:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S136500',
@@ -3475,7 +3475,7 @@ export const statementsR0TemplateR40006 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentOrder',
@@ -3483,7 +3483,7 @@ export const statementsR0TemplateR40006 = {
                 created_at: '2020-05-19T14:20:36.459531+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L83420',
@@ -3491,10 +3491,10 @@ export const statementsR0TemplateR40006 = {
                 datatype: 'xsd:string',
                 created_at: '2020-06-19T16:34:13.175066+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2020-06-19T16:34:13.229903+02:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S136499',
@@ -3508,7 +3508,7 @@ export const statementsR0TemplateR40006 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentOccurrenceMax',
@@ -3516,7 +3516,7 @@ export const statementsR0TemplateR40006 = {
                 created_at: '2020-05-19T14:20:36.589812+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L83419',
@@ -3524,10 +3524,10 @@ export const statementsR0TemplateR40006 = {
                 datatype: 'xsd:string',
                 created_at: '2020-06-19T16:34:13.119383+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2020-06-19T16:34:13.175682+02:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S136498',
@@ -3541,7 +3541,7 @@ export const statementsR0TemplateR40006 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentOccurrenceMin',
@@ -3549,7 +3549,7 @@ export const statementsR0TemplateR40006 = {
                 created_at: '2020-05-19T14:20:36.52552+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L83418',
@@ -3557,10 +3557,10 @@ export const statementsR0TemplateR40006 = {
                 datatype: 'xsd:string',
                 created_at: '2020-06-19T16:34:13.057898+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2020-06-19T16:34:13.119985+02:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S136497',
@@ -3574,7 +3574,7 @@ export const statementsR0TemplateR40006 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponent',
@@ -3582,7 +3582,7 @@ export const statementsR0TemplateR40006 = {
                 created_at: '2020-03-10T13:47:56.848+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'R44673',
@@ -3594,10 +3594,10 @@ export const statementsR0TemplateR40006 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             created_at: '2020-06-19T16:34:13.061941+02:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S136496',
@@ -3611,7 +3611,7 @@ export const statementsR0TemplateR40006 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentValue',
@@ -3619,7 +3619,7 @@ export const statementsR0TemplateR40006 = {
                 created_at: '2020-03-10T13:48:19.775+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'DCLocation',
@@ -3628,10 +3628,10 @@ export const statementsR0TemplateR40006 = {
                 created_at: '2020-08-20T14:23:36.493994+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'class',
-                description: null
+                description: null,
             },
             created_at: '2020-06-19T16:34:13.061776+02:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S136495',
@@ -3645,7 +3645,7 @@ export const statementsR0TemplateR40006 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentProperty',
@@ -3653,7 +3653,7 @@ export const statementsR0TemplateR40006 = {
                 created_at: '2020-03-10T13:48:09.148+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'P5049',
@@ -3661,10 +3661,10 @@ export const statementsR0TemplateR40006 = {
                 created_at: '2019-12-17T12:37:34.456+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             created_at: '2020-06-19T16:34:13.061678+02:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S136494',
@@ -3678,7 +3678,7 @@ export const statementsR0TemplateR40006 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentOrder',
@@ -3686,7 +3686,7 @@ export const statementsR0TemplateR40006 = {
                 created_at: '2020-05-19T14:20:36.459531+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L83417',
@@ -3694,10 +3694,10 @@ export const statementsR0TemplateR40006 = {
                 datatype: 'xsd:string',
                 created_at: '2020-06-19T16:34:12.916956+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2020-06-19T16:34:12.968857+02:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S136493',
@@ -3711,7 +3711,7 @@ export const statementsR0TemplateR40006 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentOccurrenceMax',
@@ -3719,7 +3719,7 @@ export const statementsR0TemplateR40006 = {
                 created_at: '2020-05-19T14:20:36.589812+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L83416',
@@ -3727,10 +3727,10 @@ export const statementsR0TemplateR40006 = {
                 datatype: 'xsd:string',
                 created_at: '2020-06-19T16:34:12.857513+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2020-06-19T16:34:12.917436+02:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S136492',
@@ -3744,7 +3744,7 @@ export const statementsR0TemplateR40006 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentOccurrenceMin',
@@ -3752,7 +3752,7 @@ export const statementsR0TemplateR40006 = {
                 created_at: '2020-05-19T14:20:36.52552+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L83415',
@@ -3760,10 +3760,10 @@ export const statementsR0TemplateR40006 = {
                 datatype: 'xsd:string',
                 created_at: '2020-06-19T16:34:12.798172+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2020-06-19T16:34:12.861684+02:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S136491',
@@ -3777,7 +3777,7 @@ export const statementsR0TemplateR40006 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentProperty',
@@ -3785,7 +3785,7 @@ export const statementsR0TemplateR40006 = {
                 created_at: '2020-03-10T13:48:09.148+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'P23140',
@@ -3793,10 +3793,10 @@ export const statementsR0TemplateR40006 = {
                 created_at: '2020-06-11T17:54:44.198814+02:00',
                 created_by: '1427a1ee-7551-47b1-9152-8274ab6cd7a4',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             created_at: '2020-06-19T16:34:12.800783+02:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S136490',
@@ -3810,7 +3810,7 @@ export const statementsR0TemplateR40006 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentValue',
@@ -3818,7 +3818,7 @@ export const statementsR0TemplateR40006 = {
                 created_at: '2020-03-10T13:48:19.775+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'C5001',
@@ -3827,10 +3827,10 @@ export const statementsR0TemplateR40006 = {
                 created_at: '2020-06-11T12:36:57.681872+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'class',
-                description: null
+                description: null,
             },
             created_at: '2020-06-19T16:34:12.80053+02:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S136489',
@@ -3844,7 +3844,7 @@ export const statementsR0TemplateR40006 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponent',
@@ -3852,7 +3852,7 @@ export const statementsR0TemplateR40006 = {
                 created_at: '2020-03-10T13:47:56.848+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'R44672',
@@ -3864,10 +3864,10 @@ export const statementsR0TemplateR40006 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             created_at: '2020-06-19T16:34:12.796139+02:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S136488',
@@ -3881,7 +3881,7 @@ export const statementsR0TemplateR40006 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateOfResearchProblem',
@@ -3889,7 +3889,7 @@ export const statementsR0TemplateR40006 = {
                 created_at: '2020-03-10T13:47:42.791+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'R44546',
@@ -3901,10 +3901,10 @@ export const statementsR0TemplateR40006 = {
                 _class: 'resource',
                 observatory_id: '06144227-7efc-478c-8555-25147020f02f',
                 extraction_method: 'UNKNOWN',
-                organization_id: 'edc18168-c4ee-4cb8-a98a-136f748e912e'
+                organization_id: 'edc18168-c4ee-4cb8-a98a-136f748e912e',
             },
             created_at: '2020-06-19T16:34:12.676038+02:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S136487',
@@ -3918,7 +3918,7 @@ export const statementsR0TemplateR40006 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateOfPredicate',
@@ -3926,7 +3926,7 @@ export const statementsR0TemplateR40006 = {
                 created_at: '2020-03-10T13:46:47.042+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'P31',
@@ -3934,10 +3934,10 @@ export const statementsR0TemplateR40006 = {
                 created_at: '2021-11-15T11:45:22.745495Z',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             created_at: '2020-06-19T16:34:12.670454+02:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S136486',
@@ -3951,7 +3951,7 @@ export const statementsR0TemplateR40006 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateOfResearchField',
@@ -3959,7 +3959,7 @@ export const statementsR0TemplateR40006 = {
                 created_at: '2020-03-10T13:46:12.733+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'R12',
@@ -3971,10 +3971,10 @@ export const statementsR0TemplateR40006 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             created_at: '2020-06-19T16:34:12.660337+02:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S136485',
@@ -3988,7 +3988,7 @@ export const statementsR0TemplateR40006 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateOfClass',
@@ -3996,7 +3996,7 @@ export const statementsR0TemplateR40006 = {
                 created_at: '2020-03-10T13:47:00.32+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'C4000',
@@ -4005,12 +4005,12 @@ export const statementsR0TemplateR40006 = {
                 created_at: '2020-06-03T20:21:11.980177+02:00',
                 created_by: '1ce9b643-32aa-439a-8237-058342cc2b6a',
                 _class: 'class',
-                description: null
+                description: null,
             },
             created_at: '2020-06-19T16:34:12.606443+02:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
-        }
-    ]
+            created_by: '00000000-0000-0000-0000-000000000000',
+        },
+    ],
 };
 
 // Resources of QBDataset
@@ -4029,7 +4029,7 @@ export const statementsR8184 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'P4007',
@@ -4037,7 +4037,7 @@ export const statementsR8184 = {
                 created_at: '2021-11-16T12:49:02.562702Z',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'R8174',
@@ -4049,11 +4049,11 @@ export const statementsR8184 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             created_at: '2019-12-19T15:07:01.31+01:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
-        }
+            created_by: '00000000-0000-0000-0000-000000000000',
+        },
     ],
     pageable: { sort: { sorted: true, unsorted: false, empty: false }, pageNumber: 0, pageSize: 2000, offset: 0, paged: true, unpaged: false },
     totalPages: 1,
@@ -4064,7 +4064,7 @@ export const statementsR8184 = {
     size: 2000,
     number: 0,
     numberOfElements: 1,
-    empty: false
+    empty: false,
 };
 
 export const statementsR8174 = {
@@ -4081,7 +4081,7 @@ export const statementsR8174 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'P4008',
@@ -4089,7 +4089,7 @@ export const statementsR8174 = {
                 created_at: '2021-11-16T12:49:40.668611Z',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'R8185',
@@ -4101,10 +4101,10 @@ export const statementsR8174 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             created_at: '2019-12-19T15:07:02.056+01:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S12410',
@@ -4118,7 +4118,7 @@ export const statementsR8174 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'P4008',
@@ -4126,7 +4126,7 @@ export const statementsR8174 = {
                 created_at: '2021-11-16T12:49:40.668611Z',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'R8182',
@@ -4138,10 +4138,10 @@ export const statementsR8174 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             created_at: '2019-12-19T15:07:01.763+01:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S12409',
@@ -4155,7 +4155,7 @@ export const statementsR8174 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'P4008',
@@ -4163,7 +4163,7 @@ export const statementsR8174 = {
                 created_at: '2021-11-16T12:49:40.668611Z',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'R8181',
@@ -4175,10 +4175,10 @@ export const statementsR8174 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             created_at: '2019-12-19T15:07:01.71+01:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S12394',
@@ -4192,7 +4192,7 @@ export const statementsR8174 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'P4008',
@@ -4200,7 +4200,7 @@ export const statementsR8174 = {
                 created_at: '2021-11-16T12:49:40.668611Z',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'R8177',
@@ -4212,10 +4212,10 @@ export const statementsR8174 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             created_at: '2019-12-19T15:07:00.439+01:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S12393',
@@ -4229,7 +4229,7 @@ export const statementsR8174 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'P4008',
@@ -4237,7 +4237,7 @@ export const statementsR8174 = {
                 created_at: '2021-11-16T12:49:40.668611Z',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'R8172',
@@ -4249,10 +4249,10 @@ export const statementsR8174 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             created_at: '2019-12-19T15:07:00.382+01:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S12384',
@@ -4266,7 +4266,7 @@ export const statementsR8174 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'P4008',
@@ -4274,7 +4274,7 @@ export const statementsR8174 = {
                 created_at: '2021-11-16T12:49:40.668611Z',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'R8173',
@@ -4286,10 +4286,10 @@ export const statementsR8174 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             created_at: '2019-12-19T15:06:59.388+01:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S12381',
@@ -4303,7 +4303,7 @@ export const statementsR8174 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'P4008',
@@ -4311,7 +4311,7 @@ export const statementsR8174 = {
                 created_at: '2021-11-16T12:49:40.668611Z',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'R8178',
@@ -4323,10 +4323,10 @@ export const statementsR8174 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             created_at: '2019-12-19T15:06:59.04+01:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S12377',
@@ -4340,7 +4340,7 @@ export const statementsR8174 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'P4008',
@@ -4348,7 +4348,7 @@ export const statementsR8174 = {
                 created_at: '2021-11-16T12:49:40.668611Z',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'R8175',
@@ -4360,11 +4360,11 @@ export const statementsR8174 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             created_at: '2019-12-19T15:06:58.59+01:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
-        }
+            created_by: '00000000-0000-0000-0000-000000000000',
+        },
     ],
     pageable: { sort: { sorted: true, unsorted: false, empty: false }, pageNumber: 0, pageSize: 2000, offset: 0, paged: true, unpaged: false },
     totalPages: 1,
@@ -4375,7 +4375,7 @@ export const statementsR8174 = {
     size: 2000,
     number: 0,
     numberOfElements: 8,
-    empty: false
+    empty: false,
 };
 
 export const statementsR8185 = {
@@ -4392,7 +4392,7 @@ export const statementsR8185 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'P5103',
@@ -4400,7 +4400,7 @@ export const statementsR8185 = {
                 created_at: '2019-12-17T12:44:59.59+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L8138',
@@ -4408,10 +4408,10 @@ export const statementsR8185 = {
                 datatype: 'xsd:string',
                 created_at: '2019-12-19T15:07:01.837+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2019-12-19T15:07:01.853+01:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S12401',
@@ -4425,7 +4425,7 @@ export const statementsR8185 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'P4006',
@@ -4433,7 +4433,7 @@ export const statementsR8185 = {
                 created_at: '2021-11-16T12:50:08.979291Z',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'R8183',
@@ -4445,11 +4445,11 @@ export const statementsR8185 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             created_at: '2019-12-19T15:07:01.148+01:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
-        }
+            created_by: '00000000-0000-0000-0000-000000000000',
+        },
     ],
     pageable: { sort: { sorted: true, unsorted: false, empty: false }, pageNumber: 0, pageSize: 2000, offset: 0, paged: true, unpaged: false },
     totalPages: 1,
@@ -4460,7 +4460,7 @@ export const statementsR8185 = {
     size: 2000,
     number: 0,
     numberOfElements: 2,
-    empty: false
+    empty: false,
 };
 
 export const statementsR8182 = {
@@ -4477,7 +4477,7 @@ export const statementsR8182 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'P4006',
@@ -4485,7 +4485,7 @@ export const statementsR8182 = {
                 created_at: '2021-11-16T12:50:33.941917Z',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'R8176',
@@ -4497,10 +4497,10 @@ export const statementsR8182 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             created_at: '2019-12-19T15:07:01.225+01:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S12392',
@@ -4514,7 +4514,7 @@ export const statementsR8182 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'P5103',
@@ -4522,7 +4522,7 @@ export const statementsR8182 = {
                 created_at: '2019-12-17T12:44:59.59+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L8130',
@@ -4530,11 +4530,11 @@ export const statementsR8182 = {
                 datatype: 'xsd:string',
                 created_at: '2019-12-19T15:07:00.325+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2019-12-19T15:07:00.34+01:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
-        }
+            created_by: '00000000-0000-0000-0000-000000000000',
+        },
     ],
     pageable: { sort: { sorted: true, unsorted: false, empty: false }, pageNumber: 0, pageSize: 2000, offset: 0, paged: true, unpaged: false },
     totalPages: 1,
@@ -4545,7 +4545,7 @@ export const statementsR8182 = {
     size: 2000,
     number: 0,
     numberOfElements: 2,
-    empty: false
+    empty: false,
 };
 
 export const statementsR8181 = {
@@ -4562,7 +4562,7 @@ export const statementsR8181 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'P5103',
@@ -4570,7 +4570,7 @@ export const statementsR8181 = {
                 created_at: '2019-12-17T12:44:59.59+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L8133',
@@ -4578,10 +4578,10 @@ export const statementsR8181 = {
                 datatype: 'xsd:string',
                 created_at: '2019-12-19T15:07:00.841+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2019-12-19T15:07:00.857+01:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S12390',
@@ -4595,7 +4595,7 @@ export const statementsR8181 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'P4006',
@@ -4603,7 +4603,7 @@ export const statementsR8181 = {
                 created_at: '2021-11-16T12:51:00.55217Z',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'R8179',
@@ -4615,11 +4615,11 @@ export const statementsR8181 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             created_at: '2019-12-19T15:07:00.125+01:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
-        }
+            created_by: '00000000-0000-0000-0000-000000000000',
+        },
     ],
     pageable: { sort: { sorted: true, unsorted: false, empty: false }, pageNumber: 0, pageSize: 2000, offset: 0, paged: true, unpaged: false },
     totalPages: 1,
@@ -4630,7 +4630,7 @@ export const statementsR8181 = {
     size: 2000,
     number: 0,
     numberOfElements: 2,
-    empty: false
+    empty: false,
 };
 
 export const statementsR8177 = {
@@ -4647,7 +4647,7 @@ export const statementsR8177 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'P5103',
@@ -4655,7 +4655,7 @@ export const statementsR8177 = {
                 created_at: '2019-12-17T12:44:59.59+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L8129',
@@ -4663,10 +4663,10 @@ export const statementsR8177 = {
                 datatype: 'xsd:string',
                 created_at: '2019-12-19T15:07:00.197+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2019-12-19T15:07:00.214+01:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S12380',
@@ -4680,7 +4680,7 @@ export const statementsR8177 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'P4006',
@@ -4688,7 +4688,7 @@ export const statementsR8177 = {
                 created_at: '2021-11-16T12:51:31.561861Z',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'R8168',
@@ -4700,11 +4700,11 @@ export const statementsR8177 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             created_at: '2019-12-19T15:06:58.91+01:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
-        }
+            created_by: '00000000-0000-0000-0000-000000000000',
+        },
     ],
     pageable: { sort: { sorted: true, unsorted: false, empty: false }, pageNumber: 0, pageSize: 2000, offset: 0, paged: true, unpaged: false },
     totalPages: 1,
@@ -4715,7 +4715,7 @@ export const statementsR8177 = {
     size: 2000,
     number: 0,
     numberOfElements: 2,
-    empty: false
+    empty: false,
 };
 
 export const statementsR8172 = {
@@ -4732,7 +4732,7 @@ export const statementsR8172 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'P4006',
@@ -4740,7 +4740,7 @@ export const statementsR8172 = {
                 created_at: '2021-11-16T12:52:00.771988Z',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'R8180',
@@ -4752,10 +4752,10 @@ export const statementsR8172 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             created_at: '2019-12-19T15:07:00.014+01:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S12375',
@@ -4769,7 +4769,7 @@ export const statementsR8172 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'P5103',
@@ -4777,7 +4777,7 @@ export const statementsR8172 = {
                 created_at: '2019-12-17T12:44:59.59+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L8120',
@@ -4785,11 +4785,11 @@ export const statementsR8172 = {
                 datatype: 'xsd:string',
                 created_at: '2019-12-19T15:06:58.306+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2019-12-19T15:06:58.321+01:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
-        }
+            created_by: '00000000-0000-0000-0000-000000000000',
+        },
     ],
     pageable: { sort: { sorted: true, unsorted: false, empty: false }, pageNumber: 0, pageSize: 2000, offset: 0, paged: true, unpaged: false },
     totalPages: 1,
@@ -4800,7 +4800,7 @@ export const statementsR8172 = {
     size: 2000,
     number: 0,
     numberOfElements: 2,
-    empty: false
+    empty: false,
 };
 
 export const statementsR8173 = {
@@ -4817,7 +4817,7 @@ export const statementsR8173 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'P4004',
@@ -4825,7 +4825,7 @@ export const statementsR8173 = {
                 created_at: '2021-11-16T12:52:28.478249Z',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'R8171',
@@ -4837,10 +4837,10 @@ export const statementsR8173 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             created_at: '2019-12-19T15:07:01.661+01:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S12376',
@@ -4854,7 +4854,7 @@ export const statementsR8173 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'P5103',
@@ -4862,7 +4862,7 @@ export const statementsR8173 = {
                 created_at: '2019-12-17T12:44:59.59+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L8121',
@@ -4870,11 +4870,11 @@ export const statementsR8173 = {
                 datatype: 'xsd:string',
                 created_at: '2019-12-19T15:06:58.415+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2019-12-19T15:06:58.44+01:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
-        }
+            created_by: '00000000-0000-0000-0000-000000000000',
+        },
     ],
     pageable: { sort: { sorted: true, unsorted: false, empty: false }, pageNumber: 0, pageSize: 2000, offset: 0, paged: true, unpaged: false },
     totalPages: 1,
@@ -4885,7 +4885,7 @@ export const statementsR8173 = {
     size: 2000,
     number: 0,
     numberOfElements: 2,
-    empty: false
+    empty: false,
 };
 
 export const statementsR8178 = {
@@ -4902,7 +4902,7 @@ export const statementsR8178 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'P4006',
@@ -4910,7 +4910,7 @@ export const statementsR8178 = {
                 created_at: '2021-11-16T12:52:58.585466Z',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'R8169',
@@ -4922,10 +4922,10 @@ export const statementsR8178 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             created_at: '2019-12-19T15:07:01.267+01:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S12399',
@@ -4939,7 +4939,7 @@ export const statementsR8178 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'P5103',
@@ -4947,7 +4947,7 @@ export const statementsR8178 = {
                 created_at: '2019-12-17T12:44:59.59+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L8134',
@@ -4955,11 +4955,11 @@ export const statementsR8178 = {
                 datatype: 'xsd:string',
                 created_at: '2019-12-19T15:07:00.911+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2019-12-19T15:07:00.926+01:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
-        }
+            created_by: '00000000-0000-0000-0000-000000000000',
+        },
     ],
     pageable: { sort: { sorted: true, unsorted: false, empty: false }, pageNumber: 0, pageSize: 2000, offset: 0, paged: true, unpaged: false },
     totalPages: 1,
@@ -4970,7 +4970,7 @@ export const statementsR8178 = {
     size: 2000,
     number: 0,
     numberOfElements: 2,
-    empty: false
+    empty: false,
 };
 
 export const statementsR8175 = {
@@ -4987,7 +4987,7 @@ export const statementsR8175 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'P5103',
@@ -4995,7 +4995,7 @@ export const statementsR8175 = {
                 created_at: '2019-12-17T12:44:59.59+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L8126',
@@ -5003,10 +5003,10 @@ export const statementsR8175 = {
                 datatype: 'xsd:string',
                 created_at: '2019-12-19T15:06:59.589+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2019-12-19T15:06:59.606+01:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S12378',
@@ -5020,7 +5020,7 @@ export const statementsR8175 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'P4006',
@@ -5028,7 +5028,7 @@ export const statementsR8175 = {
                 created_at: '2021-11-16T12:53:28.371993Z',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'R8167',
@@ -5040,11 +5040,11 @@ export const statementsR8175 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             created_at: '2019-12-19T15:06:58.653+01:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
-        }
+            created_by: '00000000-0000-0000-0000-000000000000',
+        },
     ],
     pageable: { sort: { sorted: true, unsorted: false, empty: false }, pageNumber: 0, pageSize: 2000, offset: 0, paged: true, unpaged: false },
     totalPages: 1,
@@ -5055,7 +5055,7 @@ export const statementsR8175 = {
     size: 2000,
     number: 0,
     numberOfElements: 2,
-    empty: false
+    empty: false,
 };
 
 export const statementsR8166 = {
@@ -5072,7 +5072,7 @@ export const statementsR8166 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'P7032',
@@ -5080,7 +5080,7 @@ export const statementsR8166 = {
                 created_at: '2019-12-19T15:07:01.448+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L8137',
@@ -5088,10 +5088,10 @@ export const statementsR8166 = {
                 datatype: 'xsd:string',
                 created_at: '2019-12-19T15:07:01.6+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2019-12-19T15:07:01.615+01:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S12402',
@@ -5105,7 +5105,7 @@ export const statementsR8166 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'P2005',
@@ -5113,7 +5113,7 @@ export const statementsR8166 = {
                 created_at: '2021-11-16T14:05:16.952145Z',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'R8184',
@@ -5125,10 +5125,10 @@ export const statementsR8166 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             created_at: '2019-12-19T15:07:01.186+01:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S12395',
@@ -5142,7 +5142,7 @@ export const statementsR8166 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'P7031',
@@ -5150,7 +5150,7 @@ export const statementsR8166 = {
                 created_at: '2019-12-19T15:07:00.548+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L8131',
@@ -5158,10 +5158,10 @@ export const statementsR8166 = {
                 datatype: 'xsd:string',
                 created_at: '2019-12-19T15:07:00.568+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2019-12-19T15:07:00.582+01:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S12385',
@@ -5175,7 +5175,7 @@ export const statementsR8166 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'P7029',
@@ -5183,7 +5183,7 @@ export const statementsR8166 = {
                 created_at: '2019-12-19T15:06:58.78+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L8125',
@@ -5191,10 +5191,10 @@ export const statementsR8166 = {
                 datatype: 'xsd:string',
                 created_at: '2019-12-19T15:06:59.5+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2019-12-19T15:06:59.538+01:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S12383',
@@ -5208,7 +5208,7 @@ export const statementsR8166 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'P7028',
@@ -5216,7 +5216,7 @@ export const statementsR8166 = {
                 created_at: '2019-12-19T15:06:58.174+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L8124',
@@ -5224,10 +5224,10 @@ export const statementsR8166 = {
                 datatype: 'xsd:string',
                 created_at: '2019-12-19T15:06:59.333+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2019-12-19T15:06:59.349+01:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S12382',
@@ -5241,7 +5241,7 @@ export const statementsR8166 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'P7030',
@@ -5249,7 +5249,7 @@ export const statementsR8166 = {
                 created_at: '2019-12-19T15:06:59.187+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L8123',
@@ -5257,10 +5257,10 @@ export const statementsR8166 = {
                 datatype: 'xsd:string',
                 created_at: '2019-12-19T15:06:59.219+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2019-12-19T15:06:59.24+01:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S12373',
@@ -5274,7 +5274,7 @@ export const statementsR8166 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'P7027',
@@ -5282,7 +5282,7 @@ export const statementsR8166 = {
                 created_at: '2019-12-19T15:06:57.927+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L8118',
@@ -5290,10 +5290,10 @@ export const statementsR8166 = {
                 datatype: 'xsd:string',
                 created_at: '2019-12-19T15:06:57.956+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2019-12-19T15:06:57.971+01:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S12372',
@@ -5307,7 +5307,7 @@ export const statementsR8166 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'P7026',
@@ -5315,7 +5315,7 @@ export const statementsR8166 = {
                 created_at: '2019-12-19T15:06:57.75+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L8117',
@@ -5323,10 +5323,10 @@ export const statementsR8166 = {
                 datatype: 'xsd:string',
                 created_at: '2019-12-19T15:06:57.776+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2019-12-19T15:06:57.79+01:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S12371',
@@ -5340,7 +5340,7 @@ export const statementsR8166 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'P7025',
@@ -5348,7 +5348,7 @@ export const statementsR8166 = {
                 created_at: '2019-12-19T15:06:57.548+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L8116',
@@ -5356,11 +5356,11 @@ export const statementsR8166 = {
                 datatype: 'xsd:string',
                 created_at: '2019-12-19T15:06:57.573+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2019-12-19T15:06:57.593+01:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
-        }
+            created_by: '00000000-0000-0000-0000-000000000000',
+        },
     ],
     pageable: { sort: { sorted: true, unsorted: false, empty: false }, pageNumber: 0, pageSize: 2000, offset: 0, paged: true, unpaged: false },
     totalPages: 1,
@@ -5371,7 +5371,7 @@ export const statementsR8166 = {
     size: 2000,
     number: 0,
     numberOfElements: 9,
-    empty: false
+    empty: false,
 };
 
 export const statementsR8170 = {
@@ -5388,7 +5388,7 @@ export const statementsR8170 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'P7026',
@@ -5396,7 +5396,7 @@ export const statementsR8170 = {
                 created_at: '2019-12-19T15:06:57.75+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L8139',
@@ -5404,10 +5404,10 @@ export const statementsR8170 = {
                 datatype: 'xsd:string',
                 created_at: '2019-12-19T15:07:01.982+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2019-12-19T15:07:01.999+01:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S12406',
@@ -5421,7 +5421,7 @@ export const statementsR8170 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'P7032',
@@ -5429,7 +5429,7 @@ export const statementsR8170 = {
                 created_at: '2019-12-19T15:07:01.448+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L8136',
@@ -5437,10 +5437,10 @@ export const statementsR8170 = {
                 datatype: 'xsd:string',
                 created_at: '2019-12-19T15:07:01.482+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2019-12-19T15:07:01.496+01:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S12400',
@@ -5454,7 +5454,7 @@ export const statementsR8170 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'P7031',
@@ -5462,7 +5462,7 @@ export const statementsR8170 = {
                 created_at: '2019-12-19T15:07:00.548+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L8135',
@@ -5470,10 +5470,10 @@ export const statementsR8170 = {
                 datatype: 'xsd:string',
                 created_at: '2019-12-19T15:07:01.042+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2019-12-19T15:07:01.059+01:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S12397',
@@ -5487,7 +5487,7 @@ export const statementsR8170 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'P7027',
@@ -5495,7 +5495,7 @@ export const statementsR8170 = {
                 created_at: '2019-12-19T15:06:57.927+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L8132',
@@ -5503,10 +5503,10 @@ export const statementsR8170 = {
                 datatype: 'xsd:string',
                 created_at: '2019-12-19T15:07:00.739+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2019-12-19T15:07:00.761+01:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S12396',
@@ -5520,7 +5520,7 @@ export const statementsR8170 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'P2005',
@@ -5528,7 +5528,7 @@ export const statementsR8170 = {
                 created_at: '2021-11-16T12:55:00.06714Z',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'R8184',
@@ -5540,10 +5540,10 @@ export const statementsR8170 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             created_at: '2019-12-19T15:07:00.657+01:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S12388',
@@ -5557,7 +5557,7 @@ export const statementsR8170 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'P7030',
@@ -5565,7 +5565,7 @@ export const statementsR8170 = {
                 created_at: '2019-12-19T15:06:59.187+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L8128',
@@ -5573,10 +5573,10 @@ export const statementsR8170 = {
                 datatype: 'xsd:string',
                 created_at: '2019-12-19T15:06:59.881+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2019-12-19T15:06:59.896+01:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S12387',
@@ -5590,7 +5590,7 @@ export const statementsR8170 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'P7025',
@@ -5598,7 +5598,7 @@ export const statementsR8170 = {
                 created_at: '2019-12-19T15:06:57.548+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L8127',
@@ -5606,10 +5606,10 @@ export const statementsR8170 = {
                 datatype: 'xsd:string',
                 created_at: '2019-12-19T15:06:59.74+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2019-12-19T15:06:59.757+01:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S12379',
@@ -5623,7 +5623,7 @@ export const statementsR8170 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'P7029',
@@ -5631,7 +5631,7 @@ export const statementsR8170 = {
                 created_at: '2019-12-19T15:06:58.78+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L8122',
@@ -5639,10 +5639,10 @@ export const statementsR8170 = {
                 datatype: 'xsd:string',
                 created_at: '2019-12-19T15:06:58.815+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2019-12-19T15:06:58.831+01:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S12374',
@@ -5656,7 +5656,7 @@ export const statementsR8170 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'P7028',
@@ -5664,7 +5664,7 @@ export const statementsR8170 = {
                 created_at: '2019-12-19T15:06:58.174+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L8119',
@@ -5672,11 +5672,11 @@ export const statementsR8170 = {
                 datatype: 'xsd:string',
                 created_at: '2019-12-19T15:06:58.201+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2019-12-19T15:06:58.216+01:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
-        }
+            created_by: '00000000-0000-0000-0000-000000000000',
+        },
     ],
     pageable: { sort: { sorted: true, unsorted: false, empty: false }, pageNumber: 0, pageSize: 2000, offset: 0, paged: true, unpaged: false },
     totalPages: 1,
@@ -5687,7 +5687,7 @@ export const statementsR8170 = {
     size: 2000,
     number: 0,
     numberOfElements: 9,
-    empty: false
+    empty: false,
 };
 
 export const statementsR8184Object = {
@@ -5704,7 +5704,7 @@ export const statementsR8184Object = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'P1',
@@ -5712,7 +5712,7 @@ export const statementsR8184Object = {
                 created_at: '2021-11-16T13:08:46.448006Z',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'R8184',
@@ -5724,10 +5724,10 @@ export const statementsR8184Object = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             created_at: '2019-12-19T15:07:02.48+01:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S12402',
@@ -5741,7 +5741,7 @@ export const statementsR8184Object = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'P2005',
@@ -5749,7 +5749,7 @@ export const statementsR8184Object = {
                 created_at: '2021-11-16T13:08:46.460086Z',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'R8184',
@@ -5761,10 +5761,10 @@ export const statementsR8184Object = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             created_at: '2019-12-19T15:07:01.186+01:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
+            created_by: '00000000-0000-0000-0000-000000000000',
         },
         {
             id: 'S12396',
@@ -5778,7 +5778,7 @@ export const statementsR8184Object = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'P2005',
@@ -5786,7 +5786,7 @@ export const statementsR8184Object = {
                 created_at: '2021-11-16T13:08:46.460086Z',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'R8184',
@@ -5798,11 +5798,11 @@ export const statementsR8184Object = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             created_at: '2019-12-19T15:07:00.657+01:00',
-            created_by: '00000000-0000-0000-0000-000000000000'
-        }
+            created_by: '00000000-0000-0000-0000-000000000000',
+        },
     ],
     pageable: { sort: { sorted: true, unsorted: false, empty: false }, pageNumber: 0, pageSize: 2000, offset: 0, paged: true, unpaged: false },
     totalPages: 1,
@@ -5813,7 +5813,7 @@ export const statementsR8184Object = {
     size: 2000,
     number: 0,
     numberOfElements: 3,
-    empty: false
+    empty: false,
 };
 
 // End of Resources of QBDataset
@@ -5835,7 +5835,7 @@ export const statementsR68106 = {
                 _class: 'resource',
                 observatory_id: '20fb01da-9e04-4724-b71d-0436aa56ab98',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'P7004',
@@ -5843,7 +5843,7 @@ export const statementsR68106 = {
                 created_at: '2019-12-18T15:04:34.397+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L238288',
@@ -5851,10 +5851,10 @@ export const statementsR68106 = {
                 datatype: 'xsd:string',
                 created_at: '2020-12-11T15:32:58.885771+01:00',
                 created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2020-12-11T15:32:58.951304+01:00',
-            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
         },
         {
             id: 'S324438',
@@ -5868,7 +5868,7 @@ export const statementsR68106 = {
                 _class: 'resource',
                 observatory_id: '20fb01da-9e04-4724-b71d-0436aa56ab98',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'P32123',
@@ -5876,7 +5876,7 @@ export const statementsR68106 = {
                 created_at: '2020-11-17T17:45:17.662487+01:00',
                 created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L238287',
@@ -5884,10 +5884,10 @@ export const statementsR68106 = {
                 datatype: 'xsd:decimal',
                 created_at: '2020-12-11T15:32:52.972118+01:00',
                 created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2020-12-11T15:32:53.010793+01:00',
-            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
         },
         {
             id: 'S324437',
@@ -5901,7 +5901,7 @@ export const statementsR68106 = {
                 _class: 'resource',
                 observatory_id: '20fb01da-9e04-4724-b71d-0436aa56ab98',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'P7004',
@@ -5909,7 +5909,7 @@ export const statementsR68106 = {
                 created_at: '2019-12-18T15:04:34.397+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L238286',
@@ -5917,10 +5917,10 @@ export const statementsR68106 = {
                 datatype: 'xsd:string',
                 created_at: '2020-12-11T15:32:45.509062+01:00',
                 created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2020-12-11T15:32:45.553403+01:00',
-            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
         },
         {
             id: 'S324436',
@@ -5934,7 +5934,7 @@ export const statementsR68106 = {
                 _class: 'resource',
                 observatory_id: '20fb01da-9e04-4724-b71d-0436aa56ab98',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'P32124',
@@ -5942,7 +5942,7 @@ export const statementsR68106 = {
                 created_at: '2020-11-18T15:55:34.16892+01:00',
                 created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L238285',
@@ -5950,10 +5950,10 @@ export const statementsR68106 = {
                 datatype: 'xsd:decimal',
                 created_at: '2020-12-11T15:32:44.519092+01:00',
                 created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2020-12-11T15:32:44.561477+01:00',
-            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
         },
         {
             id: 'S324435',
@@ -5967,7 +5967,7 @@ export const statementsR68106 = {
                 _class: 'resource',
                 observatory_id: '20fb01da-9e04-4724-b71d-0436aa56ab98',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'HAS_EVALUATION',
@@ -5975,7 +5975,7 @@ export const statementsR68106 = {
                 created_at: '2021-11-29T15:37:34.658972Z',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L238284',
@@ -5983,10 +5983,10 @@ export const statementsR68106 = {
                 datatype: 'xsd:string',
                 created_at: '2020-12-11T15:32:29.885137+01:00',
                 created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2020-12-11T15:32:29.926244+01:00',
-            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
         },
         {
             id: 'S324434',
@@ -6000,7 +6000,7 @@ export const statementsR68106 = {
                 _class: 'resource',
                 observatory_id: '20fb01da-9e04-4724-b71d-0436aa56ab98',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'HAS_EVALUATION',
@@ -6008,7 +6008,7 @@ export const statementsR68106 = {
                 created_at: '2021-11-29T15:37:34.658972Z',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L238283',
@@ -6016,10 +6016,10 @@ export const statementsR68106 = {
                 datatype: 'xsd:string',
                 created_at: '2020-12-11T15:32:17.321972+01:00',
                 created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2020-12-11T15:32:17.367936+01:00',
-            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
         },
         {
             id: 'S324433',
@@ -6033,7 +6033,7 @@ export const statementsR68106 = {
                 _class: 'resource',
                 observatory_id: '20fb01da-9e04-4724-b71d-0436aa56ab98',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'P32',
@@ -6041,7 +6041,7 @@ export const statementsR68106 = {
                 created_at: '2021-11-29T15:37:34.676597Z',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: 'The addressed research problem'
+                description: 'The addressed research problem',
             },
             object: {
                 id: 'R56000',
@@ -6053,10 +6053,10 @@ export const statementsR68106 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             created_at: '2020-12-11T15:31:57.464953+01:00',
-            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
         },
         {
             id: 'S324431',
@@ -6070,7 +6070,7 @@ export const statementsR68106 = {
                 _class: 'resource',
                 observatory_id: '20fb01da-9e04-4724-b71d-0436aa56ab98',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'P25059',
@@ -6078,7 +6078,7 @@ export const statementsR68106 = {
                 created_at: '2020-07-17T17:36:30.931738+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: 'instance of a class fabio:Dataset. https://sparontologies.github.io/fabio/current/fabio.html#d4e2865'
+                description: 'instance of a class fabio:Dataset. https://sparontologies.github.io/fabio/current/fabio.html#d4e2865',
             },
             object: {
                 id: 'L238282',
@@ -6086,10 +6086,10 @@ export const statementsR68106 = {
                 datatype: 'xsd:string',
                 created_at: '2020-12-11T15:31:43.373313+01:00',
                 created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2020-12-11T15:31:43.4166+01:00',
-            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
         },
         {
             id: 'S324430',
@@ -6103,7 +6103,7 @@ export const statementsR68106 = {
                 _class: 'resource',
                 observatory_id: '20fb01da-9e04-4724-b71d-0436aa56ab98',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'P25059',
@@ -6111,7 +6111,7 @@ export const statementsR68106 = {
                 created_at: '2020-07-17T17:36:30.931738+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: 'instance of a class fabio:Dataset. https://sparontologies.github.io/fabio/current/fabio.html#d4e2865'
+                description: 'instance of a class fabio:Dataset. https://sparontologies.github.io/fabio/current/fabio.html#d4e2865',
             },
             object: {
                 id: 'L238281',
@@ -6119,10 +6119,10 @@ export const statementsR68106 = {
                 datatype: 'xsd:string',
                 created_at: '2020-12-11T15:31:34.596066+01:00',
                 created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2020-12-11T15:31:34.640499+01:00',
-            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
         },
         {
             id: 'S324429',
@@ -6136,7 +6136,7 @@ export const statementsR68106 = {
                 _class: 'resource',
                 observatory_id: '20fb01da-9e04-4724-b71d-0436aa56ab98',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'P32121',
@@ -6144,7 +6144,7 @@ export const statementsR68106 = {
                 created_at: '2020-11-16T11:36:49.793804+01:00',
                 created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'R68108',
@@ -6156,10 +6156,10 @@ export const statementsR68106 = {
                 _class: 'resource',
                 observatory_id: '20fb01da-9e04-4724-b71d-0436aa56ab98',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             created_at: '2020-12-11T15:31:30.334889+01:00',
-            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
         },
         {
             id: 'S324428',
@@ -6173,7 +6173,7 @@ export const statementsR68106 = {
                 _class: 'resource',
                 observatory_id: '20fb01da-9e04-4724-b71d-0436aa56ab98',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'P32121',
@@ -6181,7 +6181,7 @@ export const statementsR68106 = {
                 created_at: '2020-11-16T11:36:49.793804+01:00',
                 created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'R68107',
@@ -6193,12 +6193,12 @@ export const statementsR68106 = {
                 _class: 'resource',
                 observatory_id: '20fb01da-9e04-4724-b71d-0436aa56ab98',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             created_at: '2020-12-11T15:31:28.810017+01:00',
-            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
-        }
-    ]
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+        },
+    ],
 };
 
 export const templateOfClassC12000 = {
@@ -6215,7 +6215,7 @@ export const templateOfClassC12000 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateOfClass',
@@ -6223,7 +6223,7 @@ export const templateOfClassC12000 = {
                 created_at: '2020-03-10T13:47:00.32+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'C12000',
@@ -6232,11 +6232,11 @@ export const templateOfClassC12000 = {
                 created_at: '2020-11-12T17:42:36.744606+01:00',
                 created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
                 _class: 'class',
-                description: null
+                description: null,
             },
             created_at: '2020-11-18T15:56:20.329002+01:00',
-            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
-        }
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+        },
     ],
     pageable: { sort: { sorted: true, unsorted: false, empty: false }, pageNumber: 0, pageSize: 2000, offset: 0, paged: true, unpaged: false },
     totalPages: 1,
@@ -6247,7 +6247,7 @@ export const templateOfClassC12000 = {
     size: 2000,
     number: 0,
     numberOfElements: 1,
-    empty: false
+    empty: false,
 };
 
 export const templateOfClassC12001 = {
@@ -6264,7 +6264,7 @@ export const templateOfClassC12001 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateOfClass',
@@ -6272,7 +6272,7 @@ export const templateOfClassC12001 = {
                 created_at: '2020-03-10T13:47:00.32+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'C12001',
@@ -6281,11 +6281,11 @@ export const templateOfClassC12001 = {
                 created_at: '2020-11-16T11:57:23.81483+01:00',
                 created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
                 _class: 'class',
-                description: null
+                description: null,
             },
             created_at: '2020-11-17T17:45:52.998708+01:00',
-            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
-        }
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
+        },
     ],
     pageable: { sort: { sorted: true, unsorted: false, empty: false }, pageNumber: 0, pageSize: 2000, offset: 0, paged: true, unpaged: false },
     totalPages: 1,
@@ -6296,7 +6296,7 @@ export const templateOfClassC12001 = {
     size: 2000,
     number: 0,
     numberOfElements: 1,
-    empty: false
+    empty: false,
 };
 
 export const statementsR54875 = {
@@ -6314,7 +6314,7 @@ export const statementsR54875 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentValue',
@@ -6322,7 +6322,7 @@ export const statementsR54875 = {
                 created_at: '2020-03-10T13:48:19.775+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'String',
@@ -6331,10 +6331,10 @@ export const statementsR54875 = {
                 created_at: '2020-05-19T14:20:35.172106+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'class',
-                description: null
+                description: null,
             },
             created_at: '2020-11-17T17:45:54.067746+01:00',
-            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
         },
         {
             id: 'S178986',
@@ -6348,7 +6348,7 @@ export const statementsR54875 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentValidationRule',
@@ -6356,7 +6356,7 @@ export const statementsR54875 = {
                 created_at: '2020-05-19T14:20:36.236688+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L110831',
@@ -6364,10 +6364,10 @@ export const statementsR54875 = {
                 datatype: 'xsd:string',
                 created_at: '2020-11-17T17:45:54.016512+01:00',
                 created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2020-11-17T17:45:54.067169+01:00',
-            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
         },
         {
             id: 'S178985',
@@ -6381,7 +6381,7 @@ export const statementsR54875 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentOrder',
@@ -6389,7 +6389,7 @@ export const statementsR54875 = {
                 created_at: '2020-05-19T14:20:36.459531+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L110830',
@@ -6397,10 +6397,10 @@ export const statementsR54875 = {
                 datatype: 'xsd:string',
                 created_at: '2020-11-17T17:45:53.96877+01:00',
                 created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2020-11-17T17:45:54.020416+01:00',
-            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
         },
         {
             id: 'S178984',
@@ -6414,7 +6414,7 @@ export const statementsR54875 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentOccurrenceMax',
@@ -6422,7 +6422,7 @@ export const statementsR54875 = {
                 created_at: '2020-05-19T14:20:36.589812+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L110829',
@@ -6430,10 +6430,10 @@ export const statementsR54875 = {
                 datatype: 'xsd:string',
                 created_at: '2020-11-17T17:45:53.920124+01:00',
                 created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2020-11-17T17:45:53.97323+01:00',
-            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
         },
         {
             id: 'S178983',
@@ -6447,7 +6447,7 @@ export const statementsR54875 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentOccurrenceMin',
@@ -6455,7 +6455,7 @@ export const statementsR54875 = {
                 created_at: '2020-05-19T14:20:36.52552+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L110828',
@@ -6463,10 +6463,10 @@ export const statementsR54875 = {
                 datatype: 'xsd:string',
                 created_at: '2020-11-17T17:45:53.874684+01:00',
                 created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2020-11-17T17:45:53.923926+01:00',
-            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
         },
         {
             id: 'S178982',
@@ -6480,7 +6480,7 @@ export const statementsR54875 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentValue',
@@ -6488,7 +6488,7 @@ export const statementsR54875 = {
                 created_at: '2020-03-10T13:48:19.775+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'String',
@@ -6497,10 +6497,10 @@ export const statementsR54875 = {
                 created_at: '2020-05-19T14:20:35.172106+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'class',
-                description: null
+                description: null,
             },
             created_at: '2020-11-17T17:45:53.878+01:00',
-            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
         },
         {
             id: 'S178981',
@@ -6514,7 +6514,7 @@ export const statementsR54875 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentProperty',
@@ -6522,7 +6522,7 @@ export const statementsR54875 = {
                 created_at: '2020-03-10T13:48:09.148+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'P7004',
@@ -6530,10 +6530,10 @@ export const statementsR54875 = {
                 created_at: '2019-12-18T15:04:34.397+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             created_at: '2020-11-17T17:45:53.876124+01:00',
-            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
         },
         {
             id: 'S178980',
@@ -6547,7 +6547,7 @@ export const statementsR54875 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponent',
@@ -6555,7 +6555,7 @@ export const statementsR54875 = {
                 created_at: '2020-03-10T13:47:56.848+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'R55266',
@@ -6567,10 +6567,10 @@ export const statementsR54875 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             created_at: '2020-11-17T17:45:53.875949+01:00',
-            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
         },
         {
             id: 'S178979',
@@ -6584,7 +6584,7 @@ export const statementsR54875 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentValue',
@@ -6592,7 +6592,7 @@ export const statementsR54875 = {
                 created_at: '2020-03-10T13:48:19.775+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'Number',
@@ -6601,10 +6601,10 @@ export const statementsR54875 = {
                 created_at: '2020-05-19T14:20:35.235199+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'class',
-                description: null
+                description: null,
             },
             created_at: '2020-11-17T17:45:53.833403+01:00',
-            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
         },
         {
             id: 'S178978',
@@ -6618,7 +6618,7 @@ export const statementsR54875 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentOrder',
@@ -6626,7 +6626,7 @@ export const statementsR54875 = {
                 created_at: '2020-05-19T14:20:36.459531+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L110827',
@@ -6634,10 +6634,10 @@ export const statementsR54875 = {
                 datatype: 'xsd:string',
                 created_at: '2020-11-17T17:45:53.785587+01:00',
                 created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2020-11-17T17:45:53.832934+01:00',
-            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
         },
         {
             id: 'S178977',
@@ -6651,7 +6651,7 @@ export const statementsR54875 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentOccurrenceMax',
@@ -6659,7 +6659,7 @@ export const statementsR54875 = {
                 created_at: '2020-05-19T14:20:36.589812+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L110826',
@@ -6667,10 +6667,10 @@ export const statementsR54875 = {
                 datatype: 'xsd:string',
                 created_at: '2020-11-17T17:45:53.710967+01:00',
                 created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2020-11-17T17:45:53.757831+01:00',
-            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
         },
         {
             id: 'S178976',
@@ -6684,7 +6684,7 @@ export const statementsR54875 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentOccurrenceMin',
@@ -6692,7 +6692,7 @@ export const statementsR54875 = {
                 created_at: '2020-05-19T14:20:36.52552+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L110825',
@@ -6700,10 +6700,10 @@ export const statementsR54875 = {
                 datatype: 'xsd:string',
                 created_at: '2020-11-17T17:45:53.669864+01:00',
                 created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2020-11-17T17:45:53.714449+01:00',
-            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
         },
         {
             id: 'S178975',
@@ -6717,7 +6717,7 @@ export const statementsR54875 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentProperty',
@@ -6725,7 +6725,7 @@ export const statementsR54875 = {
                 created_at: '2020-03-10T13:48:09.148+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'P32123',
@@ -6733,10 +6733,10 @@ export const statementsR54875 = {
                 created_at: '2020-11-17T17:45:17.662487+01:00',
                 created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             created_at: '2020-11-17T17:45:53.673517+01:00',
-            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
         },
         {
             id: 'S178974',
@@ -6750,7 +6750,7 @@ export const statementsR54875 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponent',
@@ -6758,7 +6758,7 @@ export const statementsR54875 = {
                 created_at: '2020-03-10T13:47:56.848+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'R55265',
@@ -6770,10 +6770,10 @@ export const statementsR54875 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             created_at: '2020-11-17T17:45:53.673243+01:00',
-            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
         },
         {
             id: 'S178973',
@@ -6787,7 +6787,7 @@ export const statementsR54875 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentValue',
@@ -6795,7 +6795,7 @@ export const statementsR54875 = {
                 created_at: '2020-03-10T13:48:19.775+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'Number',
@@ -6804,10 +6804,10 @@ export const statementsR54875 = {
                 created_at: '2020-05-19T14:20:35.235199+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'class',
-                description: null
+                description: null,
             },
             created_at: '2020-11-17T17:45:53.673118+01:00',
-            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
         },
         {
             id: 'S178972',
@@ -6821,7 +6821,7 @@ export const statementsR54875 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentValue',
@@ -6829,7 +6829,7 @@ export const statementsR54875 = {
                 created_at: '2020-03-10T13:48:19.775+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'String',
@@ -6838,10 +6838,10 @@ export const statementsR54875 = {
                 created_at: '2020-05-19T14:20:35.172106+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'class',
-                description: null
+                description: null,
             },
             created_at: '2020-11-17T17:45:53.623223+01:00',
-            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
         },
         {
             id: 'S178971',
@@ -6855,7 +6855,7 @@ export const statementsR54875 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentValidationRule',
@@ -6863,7 +6863,7 @@ export const statementsR54875 = {
                 created_at: '2020-05-19T14:20:36.236688+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L110824',
@@ -6871,10 +6871,10 @@ export const statementsR54875 = {
                 datatype: 'xsd:string',
                 created_at: '2020-11-17T17:45:53.572942+01:00',
                 created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2020-11-17T17:45:53.622118+01:00',
-            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
         },
         {
             id: 'S178970',
@@ -6888,7 +6888,7 @@ export const statementsR54875 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentOrder',
@@ -6896,7 +6896,7 @@ export const statementsR54875 = {
                 created_at: '2020-05-19T14:20:36.459531+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L110823',
@@ -6904,10 +6904,10 @@ export const statementsR54875 = {
                 datatype: 'xsd:string',
                 created_at: '2020-11-17T17:45:53.526139+01:00',
                 created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2020-11-17T17:45:53.575828+01:00',
-            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
         },
         {
             id: 'S178969',
@@ -6921,7 +6921,7 @@ export const statementsR54875 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentOccurrenceMax',
@@ -6929,7 +6929,7 @@ export const statementsR54875 = {
                 created_at: '2020-05-19T14:20:36.589812+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L110822',
@@ -6937,10 +6937,10 @@ export const statementsR54875 = {
                 datatype: 'xsd:string',
                 created_at: '2020-11-17T17:45:53.481069+01:00',
                 created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2020-11-17T17:45:53.529691+01:00',
-            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
         },
         {
             id: 'S178968',
@@ -6954,7 +6954,7 @@ export const statementsR54875 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentOccurrenceMin',
@@ -6962,7 +6962,7 @@ export const statementsR54875 = {
                 created_at: '2020-05-19T14:20:36.52552+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L110821',
@@ -6970,10 +6970,10 @@ export const statementsR54875 = {
                 datatype: 'xsd:string',
                 created_at: '2020-11-17T17:45:53.434035+01:00',
                 created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2020-11-17T17:45:53.483938+01:00',
-            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
         },
         {
             id: 'S178967',
@@ -6987,7 +6987,7 @@ export const statementsR54875 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentValue',
@@ -6995,7 +6995,7 @@ export const statementsR54875 = {
                 created_at: '2020-03-10T13:48:19.775+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'String',
@@ -7004,10 +7004,10 @@ export const statementsR54875 = {
                 created_at: '2020-05-19T14:20:35.172106+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'class',
-                description: null
+                description: null,
             },
             created_at: '2020-11-17T17:45:53.437559+01:00',
-            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
         },
         {
             id: 'S178966',
@@ -7021,7 +7021,7 @@ export const statementsR54875 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentProperty',
@@ -7029,7 +7029,7 @@ export const statementsR54875 = {
                 created_at: '2020-03-10T13:48:09.148+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'HAS_EVALUATION',
@@ -7037,10 +7037,10 @@ export const statementsR54875 = {
                 created_at: '2021-11-29T15:45:44.256083Z',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             created_at: '2020-11-17T17:45:53.437438+01:00',
-            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
         },
         {
             id: 'S178965',
@@ -7054,7 +7054,7 @@ export const statementsR54875 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponent',
@@ -7062,7 +7062,7 @@ export const statementsR54875 = {
                 created_at: '2020-03-10T13:47:56.848+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'R55264',
@@ -7074,10 +7074,10 @@ export const statementsR54875 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             created_at: '2020-11-17T17:45:53.432822+01:00',
-            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
         },
         {
             id: 'S178964',
@@ -7091,7 +7091,7 @@ export const statementsR54875 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentValue',
@@ -7099,7 +7099,7 @@ export const statementsR54875 = {
                 created_at: '2020-03-10T13:48:19.775+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'String',
@@ -7108,10 +7108,10 @@ export const statementsR54875 = {
                 created_at: '2020-05-19T14:20:35.172106+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'class',
-                description: null
+                description: null,
             },
             created_at: '2020-11-17T17:45:53.378019+01:00',
-            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
         },
         {
             id: 'S178963',
@@ -7125,7 +7125,7 @@ export const statementsR54875 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentOrder',
@@ -7133,7 +7133,7 @@ export const statementsR54875 = {
                 created_at: '2020-05-19T14:20:36.459531+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L110820',
@@ -7141,10 +7141,10 @@ export const statementsR54875 = {
                 datatype: 'xsd:string',
                 created_at: '2020-11-17T17:45:53.330796+01:00',
                 created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2020-11-17T17:45:53.373335+01:00',
-            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
         },
         {
             id: 'S178962',
@@ -7158,7 +7158,7 @@ export const statementsR54875 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentOccurrenceMax',
@@ -7166,7 +7166,7 @@ export const statementsR54875 = {
                 created_at: '2020-05-19T14:20:36.589812+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L110819',
@@ -7174,10 +7174,10 @@ export const statementsR54875 = {
                 datatype: 'xsd:string',
                 created_at: '2020-11-17T17:45:53.278374+01:00',
                 created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2020-11-17T17:45:53.330868+01:00',
-            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
         },
         {
             id: 'S178961',
@@ -7191,7 +7191,7 @@ export const statementsR54875 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentOccurrenceMin',
@@ -7199,7 +7199,7 @@ export const statementsR54875 = {
                 created_at: '2020-05-19T14:20:36.52552+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L110818',
@@ -7207,10 +7207,10 @@ export const statementsR54875 = {
                 datatype: 'xsd:string',
                 created_at: '2020-11-17T17:45:53.220595+01:00',
                 created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2020-11-17T17:45:53.282412+01:00',
-            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
         },
         {
             id: 'S178960',
@@ -7224,7 +7224,7 @@ export const statementsR54875 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentProperty',
@@ -7232,7 +7232,7 @@ export const statementsR54875 = {
                 created_at: '2020-03-10T13:48:09.148+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'P25059',
@@ -7240,10 +7240,10 @@ export const statementsR54875 = {
                 created_at: '2020-07-17T17:36:30.931738+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             created_at: '2020-11-17T17:45:53.223859+01:00',
-            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
         },
         {
             id: 'S178959',
@@ -7257,7 +7257,7 @@ export const statementsR54875 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentValue',
@@ -7265,7 +7265,7 @@ export const statementsR54875 = {
                 created_at: '2020-03-10T13:48:19.775+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'String',
@@ -7274,10 +7274,10 @@ export const statementsR54875 = {
                 created_at: '2020-05-19T14:20:35.172106+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'class',
-                description: null
+                description: null,
             },
             created_at: '2020-11-17T17:45:53.22383+01:00',
-            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
         },
         {
             id: 'S178958',
@@ -7291,7 +7291,7 @@ export const statementsR54875 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponent',
@@ -7299,7 +7299,7 @@ export const statementsR54875 = {
                 created_at: '2020-03-10T13:47:56.848+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'R55263',
@@ -7311,10 +7311,10 @@ export const statementsR54875 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             created_at: '2020-11-17T17:45:53.223799+01:00',
-            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
         },
         {
             id: 'S178957',
@@ -7328,7 +7328,7 @@ export const statementsR54875 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateOfResearchProblem',
@@ -7336,7 +7336,7 @@ export const statementsR54875 = {
                 created_at: '2020-03-10T13:47:42.791+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'R8065',
@@ -7348,10 +7348,10 @@ export const statementsR54875 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             created_at: '2020-11-17T17:45:53.193409+01:00',
-            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
         },
         {
             id: 'S178956',
@@ -7365,7 +7365,7 @@ export const statementsR54875 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateOfPredicate',
@@ -7373,7 +7373,7 @@ export const statementsR54875 = {
                 created_at: '2020-03-10T13:46:47.042+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'P32121',
@@ -7381,10 +7381,10 @@ export const statementsR54875 = {
                 created_at: '2020-11-16T11:36:49.793804+01:00',
                 created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             created_at: '2020-11-17T17:45:53.177787+01:00',
-            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
         },
         {
             id: 'S178955',
@@ -7398,7 +7398,7 @@ export const statementsR54875 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateOfResearchField',
@@ -7406,7 +7406,7 @@ export const statementsR54875 = {
                 created_at: '2020-03-10T13:46:12.733+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'R169',
@@ -7418,10 +7418,10 @@ export const statementsR54875 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             created_at: '2020-11-17T17:45:53.177302+01:00',
-            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
         },
         {
             id: 'S178954',
@@ -7435,7 +7435,7 @@ export const statementsR54875 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateOfResearchField',
@@ -7443,7 +7443,7 @@ export const statementsR54875 = {
                 created_at: '2020-03-10T13:46:12.733+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'R167',
@@ -7455,10 +7455,10 @@ export const statementsR54875 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             created_at: '2020-11-17T17:45:53.176793+01:00',
-            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
         },
         {
             id: 'S178953',
@@ -7472,7 +7472,7 @@ export const statementsR54875 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateOfClass',
@@ -7480,7 +7480,7 @@ export const statementsR54875 = {
                 created_at: '2020-03-10T13:47:00.32+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'C12001',
@@ -7489,10 +7489,10 @@ export const statementsR54875 = {
                 created_at: '2020-11-16T11:57:23.81483+01:00',
                 created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
                 _class: 'class',
-                description: null
+                description: null,
             },
             created_at: '2020-11-17T17:45:52.998708+01:00',
-            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
         },
         {
             id: 'S165',
@@ -7506,7 +7506,7 @@ export const statementsR54875 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'P36',
@@ -7514,7 +7514,7 @@ export const statementsR54875 = {
                 created_at: '2021-11-29T15:45:44.615957Z',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'R169',
@@ -7526,12 +7526,12 @@ export const statementsR54875 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             created_at: '2019-01-06T15:04:07.692Z',
-            created_by: '00000000-0000-0000-0000-000000000000'
-        }
-    ]
+            created_by: '00000000-0000-0000-0000-000000000000',
+        },
+    ],
 };
 
 export const statementsR54009 = {
@@ -7549,7 +7549,7 @@ export const statementsR54009 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentValue',
@@ -7557,7 +7557,7 @@ export const statementsR54009 = {
                 created_at: '2020-03-10T13:48:19.775+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'String',
@@ -7566,10 +7566,10 @@ export const statementsR54009 = {
                 created_at: '2020-05-19T14:20:35.172106+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'class',
-                description: null
+                description: null,
             },
             created_at: '2020-11-18T15:56:21.111243+01:00',
-            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
         },
         {
             id: 'S181907',
@@ -7583,7 +7583,7 @@ export const statementsR54009 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentOrder',
@@ -7591,7 +7591,7 @@ export const statementsR54009 = {
                 created_at: '2020-05-19T14:20:36.459531+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L111724',
@@ -7599,10 +7599,10 @@ export const statementsR54009 = {
                 datatype: 'xsd:string',
                 created_at: '2020-11-18T15:56:21.061546+01:00',
                 created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2020-11-18T15:56:21.110312+01:00',
-            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
         },
         {
             id: 'S181906',
@@ -7616,7 +7616,7 @@ export const statementsR54009 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentOccurrenceMax',
@@ -7624,7 +7624,7 @@ export const statementsR54009 = {
                 created_at: '2020-05-19T14:20:36.589812+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L111723',
@@ -7632,10 +7632,10 @@ export const statementsR54009 = {
                 datatype: 'xsd:string',
                 created_at: '2020-11-18T15:56:21.025253+01:00',
                 created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2020-11-18T15:56:21.065897+01:00',
-            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
         },
         {
             id: 'S181905',
@@ -7649,7 +7649,7 @@ export const statementsR54009 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentOccurrenceMin',
@@ -7657,7 +7657,7 @@ export const statementsR54009 = {
                 created_at: '2020-05-19T14:20:36.52552+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L111722',
@@ -7665,10 +7665,10 @@ export const statementsR54009 = {
                 datatype: 'xsd:string',
                 created_at: '2020-11-18T15:56:20.982605+01:00',
                 created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2020-11-18T15:56:21.029255+01:00',
-            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
         },
         {
             id: 'S181904',
@@ -7682,7 +7682,7 @@ export const statementsR54009 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentProperty',
@@ -7690,7 +7690,7 @@ export const statementsR54009 = {
                 created_at: '2020-03-10T13:48:09.148+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'P7004',
@@ -7698,10 +7698,10 @@ export const statementsR54009 = {
                 created_at: '2019-12-18T15:04:34.397+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             created_at: '2020-11-18T15:56:20.983949+01:00',
-            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
         },
         {
             id: 'S181903',
@@ -7715,7 +7715,7 @@ export const statementsR54009 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponent',
@@ -7723,7 +7723,7 @@ export const statementsR54009 = {
                 created_at: '2020-03-10T13:47:56.848+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'R55344',
@@ -7735,10 +7735,10 @@ export const statementsR54009 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             created_at: '2020-11-18T15:56:20.983821+01:00',
-            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
         },
         {
             id: 'S181902',
@@ -7752,7 +7752,7 @@ export const statementsR54009 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentValue',
@@ -7760,7 +7760,7 @@ export const statementsR54009 = {
                 created_at: '2020-03-10T13:48:19.775+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'String',
@@ -7769,10 +7769,10 @@ export const statementsR54009 = {
                 created_at: '2020-05-19T14:20:35.172106+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'class',
-                description: null
+                description: null,
             },
             created_at: '2020-11-18T15:56:20.98367+01:00',
-            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
         },
         {
             id: 'S181901',
@@ -7786,7 +7786,7 @@ export const statementsR54009 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentValue',
@@ -7794,7 +7794,7 @@ export const statementsR54009 = {
                 created_at: '2020-03-10T13:48:19.775+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'Number',
@@ -7803,10 +7803,10 @@ export const statementsR54009 = {
                 created_at: '2020-05-19T14:20:35.235199+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'class',
-                description: null
+                description: null,
             },
             created_at: '2020-11-18T15:56:20.939185+01:00',
-            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
         },
         {
             id: 'S181900',
@@ -7820,7 +7820,7 @@ export const statementsR54009 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentOrder',
@@ -7828,7 +7828,7 @@ export const statementsR54009 = {
                 created_at: '2020-05-19T14:20:36.459531+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L111721',
@@ -7836,10 +7836,10 @@ export const statementsR54009 = {
                 datatype: 'xsd:string',
                 created_at: '2020-11-18T15:56:20.897553+01:00',
                 created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2020-11-18T15:56:20.938715+01:00',
-            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
         },
         {
             id: 'S181899',
@@ -7853,7 +7853,7 @@ export const statementsR54009 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentOccurrenceMax',
@@ -7861,7 +7861,7 @@ export const statementsR54009 = {
                 created_at: '2020-05-19T14:20:36.589812+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L111720',
@@ -7869,10 +7869,10 @@ export const statementsR54009 = {
                 datatype: 'xsd:string',
                 created_at: '2020-11-18T15:56:20.861789+01:00',
                 created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2020-11-18T15:56:20.901076+01:00',
-            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
         },
         {
             id: 'S181898',
@@ -7886,7 +7886,7 @@ export const statementsR54009 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentOccurrenceMin',
@@ -7894,7 +7894,7 @@ export const statementsR54009 = {
                 created_at: '2020-05-19T14:20:36.52552+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L111719',
@@ -7902,10 +7902,10 @@ export const statementsR54009 = {
                 datatype: 'xsd:string',
                 created_at: '2020-11-18T15:56:20.824441+01:00',
                 created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2020-11-18T15:56:20.863385+01:00',
-            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
         },
         {
             id: 'S181897',
@@ -7919,7 +7919,7 @@ export const statementsR54009 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentValue',
@@ -7927,7 +7927,7 @@ export const statementsR54009 = {
                 created_at: '2020-03-10T13:48:19.775+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'Number',
@@ -7936,10 +7936,10 @@ export const statementsR54009 = {
                 created_at: '2020-05-19T14:20:35.235199+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'class',
-                description: null
+                description: null,
             },
             created_at: '2020-11-18T15:56:20.827646+01:00',
-            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
         },
         {
             id: 'S181896',
@@ -7953,7 +7953,7 @@ export const statementsR54009 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentProperty',
@@ -7961,7 +7961,7 @@ export const statementsR54009 = {
                 created_at: '2020-03-10T13:48:09.148+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'P32124',
@@ -7969,10 +7969,10 @@ export const statementsR54009 = {
                 created_at: '2020-11-18T15:55:34.16892+01:00',
                 created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             created_at: '2020-11-18T15:56:20.827555+01:00',
-            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
         },
         {
             id: 'S181895',
@@ -7986,7 +7986,7 @@ export const statementsR54009 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponent',
@@ -7994,7 +7994,7 @@ export const statementsR54009 = {
                 created_at: '2020-03-10T13:47:56.848+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'R55343',
@@ -8006,10 +8006,10 @@ export const statementsR54009 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             created_at: '2020-11-18T15:56:20.827284+01:00',
-            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
         },
         {
             id: 'S181894',
@@ -8023,7 +8023,7 @@ export const statementsR54009 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentValue',
@@ -8031,7 +8031,7 @@ export const statementsR54009 = {
                 created_at: '2020-03-10T13:48:19.775+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'String',
@@ -8040,10 +8040,10 @@ export const statementsR54009 = {
                 created_at: '2020-05-19T14:20:35.172106+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'class',
-                description: null
+                description: null,
             },
             created_at: '2020-11-18T15:56:20.784461+01:00',
-            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
         },
         {
             id: 'S181893',
@@ -8057,7 +8057,7 @@ export const statementsR54009 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentOrder',
@@ -8065,7 +8065,7 @@ export const statementsR54009 = {
                 created_at: '2020-05-19T14:20:36.459531+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L111718',
@@ -8073,10 +8073,10 @@ export const statementsR54009 = {
                 datatype: 'xsd:string',
                 created_at: '2020-11-18T15:56:20.745479+01:00',
                 created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2020-11-18T15:56:20.783632+01:00',
-            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
         },
         {
             id: 'S181892',
@@ -8090,7 +8090,7 @@ export const statementsR54009 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentOccurrenceMax',
@@ -8098,7 +8098,7 @@ export const statementsR54009 = {
                 created_at: '2020-05-19T14:20:36.589812+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L111717',
@@ -8106,10 +8106,10 @@ export const statementsR54009 = {
                 datatype: 'xsd:string',
                 created_at: '2020-11-18T15:56:20.708158+01:00',
                 created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2020-11-18T15:56:20.747225+01:00',
-            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
         },
         {
             id: 'S181891',
@@ -8123,7 +8123,7 @@ export const statementsR54009 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentOccurrenceMin',
@@ -8131,7 +8131,7 @@ export const statementsR54009 = {
                 created_at: '2020-05-19T14:20:36.52552+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L111716',
@@ -8139,10 +8139,10 @@ export const statementsR54009 = {
                 datatype: 'xsd:string',
                 created_at: '2020-11-18T15:56:20.668325+01:00',
                 created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2020-11-18T15:56:20.711605+01:00',
-            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
         },
         {
             id: 'S181890',
@@ -8156,7 +8156,7 @@ export const statementsR54009 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponent',
@@ -8164,7 +8164,7 @@ export const statementsR54009 = {
                 created_at: '2020-03-10T13:47:56.848+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'R55342',
@@ -8176,10 +8176,10 @@ export const statementsR54009 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             created_at: '2020-11-18T15:56:20.667243+01:00',
-            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
         },
         {
             id: 'S181889',
@@ -8193,7 +8193,7 @@ export const statementsR54009 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentProperty',
@@ -8201,7 +8201,7 @@ export const statementsR54009 = {
                 created_at: '2020-03-10T13:48:09.148+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'HAS_EVALUATION',
@@ -8209,10 +8209,10 @@ export const statementsR54009 = {
                 created_at: '2021-11-29T15:46:29.899487Z',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             created_at: '2020-11-18T15:56:20.667217+01:00',
-            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
         },
         {
             id: 'S181888',
@@ -8226,7 +8226,7 @@ export const statementsR54009 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentValue',
@@ -8234,7 +8234,7 @@ export const statementsR54009 = {
                 created_at: '2020-03-10T13:48:19.775+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'String',
@@ -8243,10 +8243,10 @@ export const statementsR54009 = {
                 created_at: '2020-05-19T14:20:35.172106+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'class',
-                description: null
+                description: null,
             },
             created_at: '2020-11-18T15:56:20.667176+01:00',
-            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
         },
         {
             id: 'S181887',
@@ -8260,7 +8260,7 @@ export const statementsR54009 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentValue',
@@ -8268,7 +8268,7 @@ export const statementsR54009 = {
                 created_at: '2020-03-10T13:48:19.775+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'String',
@@ -8277,10 +8277,10 @@ export const statementsR54009 = {
                 created_at: '2020-05-19T14:20:35.172106+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'class',
-                description: null
+                description: null,
             },
             created_at: '2020-11-18T15:56:20.627977+01:00',
-            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
         },
         {
             id: 'S181886',
@@ -8294,7 +8294,7 @@ export const statementsR54009 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentOrder',
@@ -8302,7 +8302,7 @@ export const statementsR54009 = {
                 created_at: '2020-05-19T14:20:36.459531+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L111715',
@@ -8310,10 +8310,10 @@ export const statementsR54009 = {
                 datatype: 'xsd:string',
                 created_at: '2020-11-18T15:56:20.588654+01:00',
                 created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2020-11-18T15:56:20.627692+01:00',
-            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
         },
         {
             id: 'S181885',
@@ -8327,7 +8327,7 @@ export const statementsR54009 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentOccurrenceMax',
@@ -8335,7 +8335,7 @@ export const statementsR54009 = {
                 created_at: '2020-05-19T14:20:36.589812+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L111714',
@@ -8343,10 +8343,10 @@ export const statementsR54009 = {
                 datatype: 'xsd:string',
                 created_at: '2020-11-18T15:56:20.552732+01:00',
                 created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2020-11-18T15:56:20.592001+01:00',
-            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
         },
         {
             id: 'S181884',
@@ -8360,7 +8360,7 @@ export const statementsR54009 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentOccurrenceMin',
@@ -8368,7 +8368,7 @@ export const statementsR54009 = {
                 created_at: '2020-05-19T14:20:36.52552+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'L111713',
@@ -8376,10 +8376,10 @@ export const statementsR54009 = {
                 datatype: 'xsd:string',
                 created_at: '2020-11-18T15:56:20.513657+01:00',
                 created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
-                _class: 'literal'
+                _class: 'literal',
             },
             created_at: '2020-11-18T15:56:20.556671+01:00',
-            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
         },
         {
             id: 'S181883',
@@ -8393,7 +8393,7 @@ export const statementsR54009 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentValue',
@@ -8401,7 +8401,7 @@ export const statementsR54009 = {
                 created_at: '2020-03-10T13:48:19.775+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'String',
@@ -8410,10 +8410,10 @@ export const statementsR54009 = {
                 created_at: '2020-05-19T14:20:35.172106+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'class',
-                description: null
+                description: null,
             },
             created_at: '2020-11-18T15:56:20.509813+01:00',
-            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
         },
         {
             id: 'S181882',
@@ -8427,7 +8427,7 @@ export const statementsR54009 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponentProperty',
@@ -8435,7 +8435,7 @@ export const statementsR54009 = {
                 created_at: '2020-03-10T13:48:09.148+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'P25059',
@@ -8443,10 +8443,10 @@ export const statementsR54009 = {
                 created_at: '2020-07-17T17:36:30.931738+02:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             created_at: '2020-11-18T15:56:20.509086+01:00',
-            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
         },
         {
             id: 'S181881',
@@ -8460,7 +8460,7 @@ export const statementsR54009 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateComponent',
@@ -8468,7 +8468,7 @@ export const statementsR54009 = {
                 created_at: '2020-03-10T13:47:56.848+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'R55341',
@@ -8480,10 +8480,10 @@ export const statementsR54009 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             created_at: '2020-11-18T15:56:20.508506+01:00',
-            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
         },
         {
             id: 'S181880',
@@ -8497,7 +8497,7 @@ export const statementsR54009 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateOfResearchProblem',
@@ -8505,7 +8505,7 @@ export const statementsR54009 = {
                 created_at: '2020-03-10T13:47:42.791+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'R8065',
@@ -8517,10 +8517,10 @@ export const statementsR54009 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             created_at: '2020-11-18T15:56:20.451885+01:00',
-            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
         },
         {
             id: 'S181879',
@@ -8534,7 +8534,7 @@ export const statementsR54009 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateOfPredicate',
@@ -8542,7 +8542,7 @@ export const statementsR54009 = {
                 created_at: '2020-03-10T13:46:47.042+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'P32121',
@@ -8550,10 +8550,10 @@ export const statementsR54009 = {
                 created_at: '2020-11-16T11:36:49.793804+01:00',
                 created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             created_at: '2020-11-18T15:56:20.451704+01:00',
-            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
         },
         {
             id: 'S181878',
@@ -8567,7 +8567,7 @@ export const statementsR54009 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateOfResearchField',
@@ -8575,7 +8575,7 @@ export const statementsR54009 = {
                 created_at: '2020-03-10T13:46:12.733+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'R169',
@@ -8587,10 +8587,10 @@ export const statementsR54009 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             created_at: '2020-11-18T15:56:20.44801+01:00',
-            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
         },
         {
             id: 'S181877',
@@ -8604,7 +8604,7 @@ export const statementsR54009 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateOfResearchField',
@@ -8612,7 +8612,7 @@ export const statementsR54009 = {
                 created_at: '2020-03-10T13:46:12.733+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'R167',
@@ -8624,10 +8624,10 @@ export const statementsR54009 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             created_at: '2020-11-18T15:56:20.441669+01:00',
-            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
         },
         {
             id: 'S181876',
@@ -8641,7 +8641,7 @@ export const statementsR54009 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'TemplateOfClass',
@@ -8649,7 +8649,7 @@ export const statementsR54009 = {
                 created_at: '2020-03-10T13:47:00.32+01:00',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'C12000',
@@ -8658,10 +8658,10 @@ export const statementsR54009 = {
                 created_at: '2020-11-12T17:42:36.744606+01:00',
                 created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
                 _class: 'class',
-                description: null
+                description: null,
             },
             created_at: '2020-11-18T15:56:20.329002+01:00',
-            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef'
+            created_by: 'aadbff1e-8f03-40a3-85a0-198f6b2baaef',
         },
         {
             id: 'S165',
@@ -8675,7 +8675,7 @@ export const statementsR54009 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             predicate: {
                 id: 'P36',
@@ -8683,7 +8683,7 @@ export const statementsR54009 = {
                 created_at: '2021-11-29T15:46:30.128458Z',
                 created_by: '00000000-0000-0000-0000-000000000000',
                 _class: 'predicate',
-                description: null
+                description: null,
             },
             object: {
                 id: 'R169',
@@ -8695,10 +8695,10 @@ export const statementsR54009 = {
                 _class: 'resource',
                 observatory_id: '00000000-0000-0000-0000-000000000000',
                 extraction_method: 'UNKNOWN',
-                organization_id: '00000000-0000-0000-0000-000000000000'
+                organization_id: '00000000-0000-0000-0000-000000000000',
             },
             created_at: '2019-01-06T15:04:07.692Z',
-            created_by: '00000000-0000-0000-0000-000000000000'
-        }
-    ]
+            created_by: '00000000-0000-0000-0000-000000000000',
+        },
+    ],
 };

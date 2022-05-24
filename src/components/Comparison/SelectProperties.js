@@ -56,15 +56,13 @@ function SelectProperties(props) {
         </ListGroupItemStyled>
     ));
 
-    const SortableList = SortableContainer(({ items }) => {
-        return (
-            <ListGroup>
-                {items.map((value, index) => (
-                    <SortableItem key={`item-${index}`} index={index} value={value} />
-                ))}
-            </ListGroup>
-        );
-    });
+    const SortableList = SortableContainer(({ items }) => (
+        <ListGroup>
+            {items.map((value, index) => (
+                <SortableItem key={`item-${index}`} index={index} value={value} />
+            ))}
+        </ListGroup>
+    ));
 
     return (
         <Modal isOpen={props.showPropertiesDialog} toggle={props.togglePropertiesDialog}>
@@ -82,7 +80,7 @@ SelectProperties.propTypes = {
     togglePropertiesDialog: PropTypes.func.isRequired,
     properties: PropTypes.array.isRequired,
     onSortEnd: PropTypes.func.isRequired,
-    toggleProperty: PropTypes.func.isRequired
+    toggleProperty: PropTypes.func.isRequired,
 };
 
 export default SelectProperties;

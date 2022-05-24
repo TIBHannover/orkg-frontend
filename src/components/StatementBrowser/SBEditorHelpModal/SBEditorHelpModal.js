@@ -31,7 +31,7 @@ const SBEditorHelpModal = () => {
                 setIsLoading(true);
                 setHasFailed(false);
                 getHelpArticles({
-                    where: HELP_CENTER_ARTICLES.SB_ARTICLES
+                    where: HELP_CENTER_ARTICLES.SB_ARTICLES,
                 })
                     .then(result => {
                         if (isMounted) {
@@ -98,7 +98,7 @@ const SBEditorHelpModal = () => {
                                         rel="noopener noreferrer"
                                         to={reverseWithSlug(ROUTES.HELP_CENTER_ARTICLE, {
                                             id: article.id,
-                                            slug: article.title
+                                            slug: article.title,
                                         })}
                                     >
                                         {article.title}

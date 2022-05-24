@@ -17,7 +17,7 @@ class EditObservatory extends Component {
             isLoadingName: false,
             isLoadingDescription: false,
             researchField: this.props.researchField,
-            isLoadingResearchField: false
+            isLoadingResearchField: false,
         };
     }
 
@@ -41,9 +41,9 @@ class EditObservatory extends Component {
 
     handleSubmit = async e => {
         const value = this.state.label;
-        const description = this.state.description;
-        const id = this.props.id;
-        const researchField = this.state.researchField;
+        const { description } = this.state;
+        const { id } = this.props;
+        const { researchField } = this.state;
 
         let isUpdatedLabel = true;
         let isUpdatedDescription = true;
@@ -52,17 +52,17 @@ class EditObservatory extends Component {
         toast.dismiss();
 
         if (value !== this.props.label && value.length === 0) {
-            toast.error(`Please enter an observatory name`);
+            toast.error('Please enter an observatory name');
             return false;
         }
 
         if (description !== this.props.description && description.length === 0) {
-            toast.error(`Please enter an observatory description`);
+            toast.error('Please enter an observatory description');
             return false;
         }
 
         if (!isEqual(researchField, this.props.researchField) && researchField === null) {
-            toast.error(`Please enter an observatory research field`);
+            toast.error('Please enter an observatory research field');
             return false;
         }
 
@@ -82,7 +82,7 @@ class EditObservatory extends Component {
         }
 
         if (isUpdatedLabel || isUpdatedDescription || isUpdatedResearchField) {
-            toast.success(`Observatory updated successfully`);
+            toast.success('Observatory updated successfully');
             this.props.updateObservatoryMetadata(value, description, researchField);
             this.props.toggle();
         } else {
@@ -197,7 +197,7 @@ EditObservatory.propTypes = {
     id: PropTypes.string,
     description: PropTypes.string,
     researchField: PropTypes.object,
-    updateObservatoryMetadata: PropTypes.func.isRequired
+    updateObservatoryMetadata: PropTypes.func.isRequired,
 };
 
 export default EditObservatory;

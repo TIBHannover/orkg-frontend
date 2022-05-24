@@ -61,7 +61,7 @@ function OrganizationCard(props) {
 }
 
 OrganizationCard.propTypes = {
-    organization: PropTypes.object.isRequired
+    organization: PropTypes.object.isRequired,
 };
 
 export default OrganizationCard;

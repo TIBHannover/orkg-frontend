@@ -18,8 +18,7 @@ import { CLASSES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { Alert, Button, Container } from 'reactstrap';
 import SectionComparison from 'components/Review/SectionComparison';
 import env from '@beam-australia/react-env';
@@ -42,7 +41,7 @@ const ViewArticle = () => {
     const { isFeatured, isUnlisted, handleChangeStatus } = useMarkFeaturedUnlisted({
         resourceId: id,
         unlisted: articleResource?.unlisted,
-        featured: articleResource?.featured
+        featured: articleResource?.featured,
     });
 
     return (
@@ -95,7 +94,7 @@ const ViewArticle = () => {
                                         CLASSES.PROPERTY_SECTION,
                                         CLASSES.COMPARISON_SECTION,
                                         CLASSES.VISUALIZATION_SECTION,
-                                        CLASSES.ONTOLOGY_SECTION
+                                        CLASSES.ONTOLOGY_SECTION,
                                     ].includes(section.type.id)
                                 ) {
                                     return (
@@ -121,8 +120,8 @@ const ViewArticle = () => {
                                                                                 ? ROUTES.RESOURCE
                                                                                 : ROUTES.PREDICATE,
                                                                             {
-                                                                                id: section.contentLink.objectId
-                                                                            }
+                                                                                id: section.contentLink.objectId,
+                                                                            },
                                                                         )}
                                                                         target="_blank"
                                                                     >
@@ -158,22 +157,21 @@ const ViewArticle = () => {
                                             )}
                                         </section>
                                     );
-                                } else {
-                                    return (
-                                        <section key={section.id} typeof={`doco:Section deo:${section?.type?.id}`} property="c4o:hasContent">
-                                            <h2
-                                                className="h4 border-bottom mt-4"
-                                                style={{ whiteSpace: 'pre-line' }}
-                                                typeof="doco:SectionTitle"
-                                                property="c4o:hasContent"
-                                                id={`section-${section.id}`}
-                                            >
-                                                {section.title.label}
-                                            </h2>
-                                            <MarkdownRenderer text={section.markdown.label} id={section.markdown.id} />
-                                        </section>
-                                    );
                                 }
+                                return (
+                                    <section key={section.id} typeof={`doco:Section deo:${section?.type?.id}`} property="c4o:hasContent">
+                                        <h2
+                                            className="h4 border-bottom mt-4"
+                                            style={{ whiteSpace: 'pre-line' }}
+                                            typeof="doco:SectionTitle"
+                                            property="c4o:hasContent"
+                                            id={`section-${section.id}`}
+                                        >
+                                            {section.title.label}
+                                        </h2>
+                                        <MarkdownRenderer text={section.markdown.label} id={section.markdown.id} />
+                                    </section>
+                                );
                             })}
                             <section typeof="doco:Section deo:Acknowledgements">
                                 <h2

@@ -24,7 +24,7 @@ function FilterModalFooter({ handleApply, handleCancel, handleReset }) {
 FilterModalFooter.propTypes = {
     handleApply: PropTypes.func.isRequired,
     handleCancel: PropTypes.func.isRequired,
-    handleReset: PropTypes.func.isRequired
+    handleReset: PropTypes.func.isRequired,
 };
 
 export default FilterModalFooter;

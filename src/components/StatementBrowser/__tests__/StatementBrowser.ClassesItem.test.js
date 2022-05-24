@@ -1,7 +1,7 @@
 import { render, screen, waitFor, fireEvent, waitForElementToBeRemoved } from 'testUtils';
-import StatementBrowser from '../StatementBrowser';
 import { ENTITIES } from 'constants/graphSettings';
 import selectEvent from 'react-select-event';
+import StatementBrowser from '../StatementBrowser';
 
 jest.mock('react-flip-move', () => ({ children }) => children);
 jest.mock('components/UserAvatar/UserAvatar', () => () => null);
@@ -14,8 +14,8 @@ const setup = (
         newStore: true,
         rootNodeType: ENTITIES.RESOURCE,
         enableEdit: true,
-        syncBackend: true
-    }
+        syncBackend: true,
+    },
 ) => {
     render(<StatementBrowser {...props} />, { initialState });
 };

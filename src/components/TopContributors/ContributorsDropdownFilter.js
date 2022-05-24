@@ -87,7 +87,7 @@ ContributorsDropdownFilter.propTypes = {
     includeSubFields: PropTypes.bool.isRequired,
     setSort: PropTypes.func.isRequired,
     researchFieldId: PropTypes.string,
-    setIncludeSubFields: PropTypes.func.isRequired
+    setIncludeSubFields: PropTypes.func.isRequired,
 };
 
 export default ContributorsDropdownFilter;

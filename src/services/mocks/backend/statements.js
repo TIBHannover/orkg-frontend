@@ -29,7 +29,7 @@ import {
     templateOfClassC12000,
     templateOfClassC12001,
     statementsR54875,
-    statementsR54009
+    statementsR54009,
 } from 'services/mocks/backend/__mocks__/Statements';
 import faker from 'faker';
 
@@ -48,45 +48,43 @@ const statements = [
             R40006: statementsR0TemplateR40006,
             R68106: statementsR68106,
             R54875: statementsR54875,
-            R54009: statementsR54009
+            R54009: statementsR54009,
         };
         if (MAPPING[id]) {
             return res(ctx.json(MAPPING[id]));
-        } else {
-            return res(ctx.json({ root: id, statements: [] }));
         }
+        return res(ctx.json({ root: id, statements: [] }));
     }),
     rest.get(`${statementsUrl}object/:id`, (req, res, ctx) => {
         const { id } = req.params;
         const MAPPING = {
-            R8184: statementsR8184Object
+            R8184: statementsR8184Object,
         };
         if (MAPPING[id]) {
             return res(ctx.json(MAPPING[id]));
-        } else {
-            return res(
-                ctx.json({
-                    content: [],
-                    pageable: {
-                        sort: { sorted: true, unsorted: false, empty: false },
-                        pageNumber: 0,
-                        pageSize: 2000,
-                        offset: 0,
-                        paged: true,
-                        unpaged: false
-                    },
-                    totalPages: 0,
-                    totalElements: 0,
-                    last: true,
-                    first: true,
-                    sort: { sorted: true, unsorted: false, empty: false },
-                    size: 2000,
-                    number: 0,
-                    numberOfElements: 0,
-                    empty: true
-                })
-            );
         }
+        return res(
+            ctx.json({
+                content: [],
+                pageable: {
+                    sort: { sorted: true, unsorted: false, empty: false },
+                    pageNumber: 0,
+                    pageSize: 2000,
+                    offset: 0,
+                    paged: true,
+                    unpaged: false,
+                },
+                totalPages: 0,
+                totalElements: 0,
+                last: true,
+                first: true,
+                sort: { sorted: true, unsorted: false, empty: false },
+                size: 2000,
+                number: 0,
+                numberOfElements: 0,
+                empty: true,
+            }),
+        );
     }),
     rest.get(`${statementsUrl}subject/:id/`, (req, res, ctx) => {
         const { id } = req.params;
@@ -102,34 +100,33 @@ const statements = [
             R8178: statementsR8178,
             R8175: statementsR8175,
             R8166: statementsR8166,
-            R8170: statementsR8170
+            R8170: statementsR8170,
         };
         if (MAPPING[id]) {
             return res(ctx.json(MAPPING[id]));
-        } else {
-            return res(
-                ctx.json({
-                    content: [],
-                    pageable: {
-                        sort: { sorted: true, unsorted: false, empty: false },
-                        pageNumber: 0,
-                        pageSize: 2000,
-                        offset: 0,
-                        paged: true,
-                        unpaged: false
-                    },
-                    totalPages: 0,
-                    totalElements: 0,
-                    last: true,
-                    first: true,
-                    sort: { sorted: true, unsorted: false, empty: false },
-                    size: 2000,
-                    number: 0,
-                    numberOfElements: 0,
-                    empty: true
-                })
-            );
         }
+        return res(
+            ctx.json({
+                content: [],
+                pageable: {
+                    sort: { sorted: true, unsorted: false, empty: false },
+                    pageNumber: 0,
+                    pageSize: 2000,
+                    offset: 0,
+                    paged: true,
+                    unpaged: false,
+                },
+                totalPages: 0,
+                totalElements: 0,
+                last: true,
+                first: true,
+                sort: { sorted: true, unsorted: false, empty: false },
+                size: 2000,
+                number: 0,
+                numberOfElements: 0,
+                empty: true,
+            }),
+        );
     }),
     rest.get(`${statementsUrl}object/:id/predicate/TemplateOfClass/`, (req, res, ctx) => {
         const { id } = req.params;
@@ -140,34 +137,33 @@ const statements = [
             C4000: templateOfClassC4000,
             C5001: templateOfClassC5001,
             C12000: templateOfClassC12000,
-            C12001: templateOfClassC12001
+            C12001: templateOfClassC12001,
         };
         if (MAPPING[id]) {
             return res(ctx.json(MAPPING[id]));
-        } else {
-            return res(
-                ctx.json({
-                    content: [],
-                    pageable: {
-                        sort: { sorted: true, unsorted: false, empty: false },
-                        pageNumber: 0,
-                        pageSize: 2000,
-                        offset: 0,
-                        paged: true,
-                        unpaged: false
-                    },
-                    totalPages: 0,
-                    totalElements: 0,
-                    last: true,
-                    first: true,
-                    sort: { sorted: true, unsorted: false, empty: false },
-                    size: 2000,
-                    number: 0,
-                    numberOfElements: 0,
-                    empty: true
-                })
-            );
         }
+        return res(
+            ctx.json({
+                content: [],
+                pageable: {
+                    sort: { sorted: true, unsorted: false, empty: false },
+                    pageNumber: 0,
+                    pageSize: 2000,
+                    offset: 0,
+                    paged: true,
+                    unpaged: false,
+                },
+                totalPages: 0,
+                totalElements: 0,
+                last: true,
+                first: true,
+                sort: { sorted: true, unsorted: false, empty: false },
+                size: 2000,
+                number: 0,
+                numberOfElements: 0,
+                empty: true,
+            }),
+        );
     }),
     rest.post(statementsUrl, (req, res, ctx) => {
         const { subject_id, predicate_id, object_id } = req.body;
@@ -185,7 +181,7 @@ const statements = [
                     _class: 'resource',
                     observatory_id: '00000000-0000-0000-0000-000000000000',
                     extraction_method: 'UNKNOWN',
-                    organization_id: '00000000-0000-0000-0000-000000000000'
+                    organization_id: '00000000-0000-0000-0000-000000000000',
                 },
                 predicate: {
                     id: predicate_id,
@@ -193,7 +189,7 @@ const statements = [
                     created_at: '2020-06-11T17:54:44.198814+02:00',
                     created_by: '1427a1ee-7551-47b1-9152-8274ab6cd7a4',
                     _class: 'predicate',
-                    description: null
+                    description: null,
                 },
                 object: {
                     id: object_id,
@@ -205,13 +201,13 @@ const statements = [
                     _class: 'resource',
                     observatory_id: '00000000-0000-0000-0000-000000000000',
                     extraction_method: 'UNKNOWN',
-                    organization_id: '00000000-0000-0000-0000-000000000000'
+                    organization_id: '00000000-0000-0000-0000-000000000000',
                 },
                 created_at: '2021-11-15T14:42:08.595765Z',
-                created_by: '40f2034c-986b-451f-ac08-67b1bd23fe3d'
-            })
+                created_by: '40f2034c-986b-451f-ac08-67b1bd23fe3d',
+            }),
         );
-    })
+    }),
 ];
 
 export default statements;

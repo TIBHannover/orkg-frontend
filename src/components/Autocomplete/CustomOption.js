@@ -150,7 +150,7 @@ export default function CustomOption(props) {
                                             props.data.statements
                                                 .filter(
                                                     statement =>
-                                                        statement.predicate.id === PREDICATES.URL || statement.predicate.id === PREDICATES.SAME_AS
+                                                        statement.predicate.id === PREDICATES.URL || statement.predicate.id === PREDICATES.SAME_AS,
                                                 )
                                                 .map((statement, index) => (
                                                     <div key={`s${index}`}>
@@ -189,7 +189,7 @@ export default function CustomOption(props) {
                                                                 <li key={s.id}>
                                                                     {s.predicate.label}:{' '}
                                                                     {truncate(s.object.label ? s.object.label : '', {
-                                                                        length: MAXIMUM_DESCRIPTION_LENGTH
+                                                                        length: MAXIMUM_DESCRIPTION_LENGTH,
                                                                     })}
                                                                 </li>
                                                             ))}
@@ -240,5 +240,5 @@ export default function CustomOption(props) {
 CustomOption.propTypes = {
     children: PropTypes.node.isRequired,
     data: PropTypes.object.isRequired,
-    innerProps: PropTypes.object.isRequired
+    innerProps: PropTypes.object.isRequired,
 };

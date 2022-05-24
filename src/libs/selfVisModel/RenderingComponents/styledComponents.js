@@ -13,7 +13,7 @@ export const TippyContainer = styled.div`
     //margin-left: 0.5px;
 `;
 
-/** adding styled divs for different cell items **/
+/** adding styled divs for different cell items * */
 export const TableCell = styled.div`
     &.noselect {
         -webkit-touch-callout: none; /* iOS Safari */
@@ -26,7 +26,7 @@ export const TableCell = styled.div`
     }
 `;
 
-/** adding styled divs for different cell items **/
+/** adding styled divs for different cell items * */
 export const PropertyCell = styled.div`
     overflow: hidden;
     text-overflow: ellipsis;

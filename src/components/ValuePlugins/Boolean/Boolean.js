@@ -43,20 +43,20 @@ class Boolean extends Component {
                     <Icon icon={faCheck} aria-label="Check mark" />
                 </Check>
             );
-        } else if (this.falseValues.indexOf(labelToText.toLowerCase()) !== -1) {
+        }
+        if (this.falseValues.indexOf(labelToText.toLowerCase()) !== -1) {
             return (
                 <Cross>
                     <Icon icon={faTimes} aria-label="Cross mark" />
                 </Cross>
             );
-        } else {
-            return label;
         }
+        return label;
     }
 }
 
 Boolean.propTypes = {
-    children: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired
+    children: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,
 };
 
 export default Boolean;

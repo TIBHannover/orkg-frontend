@@ -36,7 +36,7 @@ class RelatedResourcesCard extends Component {
         this.state = {
             relatedFigures: [],
             activeItemIndex: 0,
-            loadingFigures: false
+            loadingFigures: false,
         };
     }
 
@@ -61,23 +61,23 @@ class RelatedResourcesCard extends Component {
         // using flatMap to get { id: comparison.id, figure: f }
         const comparisonFigureMap = flatMap(
             this.props.figureStatements.filter(fs => fs.figures !== null).map(fs => ({ id: fs.id, figures: fs.figures })),
-            v => {
-                return v.figures.map(f => ({ id: v.id, figure: f }));
-            }
+            v => v.figures.map(f => ({ id: v.id, figure: f })),
         );
         getStatementsBySubjects({
-            ids: comparisonFigureMap.map(resource => resource.figure.id)
+            ids: comparisonFigureMap.map(resource => resource.figure.id),
         })
             .then(resourcesStatements => {
                 this.setState({
                     relatedFigures: getRelatedFiguresData(resourcesStatements).map(rf => ({
                         ...rf,
-                        id: find(comparisonFigureMap, c => {
-                            // use find to get the comparison id of the figure
-                            return c.figure.id === rf.figureId;
-                        }).id
+                        id: find(
+                            comparisonFigureMap,
+                            c =>
+                                // use find to get the comparison id of the figure
+                                c.figure.id === rf.figureId,
+                        ).id,
                     })),
-                    loadingFigures: false
+                    loadingFigures: false,
                 });
             })
             .catch(err => {
@@ -102,24 +102,24 @@ class RelatedResourcesCard extends Component {
                     breakpoint: 1024,
                     settings: {
                         slidesToShow: 3,
-                        slidesToScroll: 3
-                    }
+                        slidesToScroll: 3,
+                    },
                 },
                 {
                     breakpoint: 600,
                     settings: {
                         slidesToShow: 2,
-                        slidesToScroll: 2
-                    }
+                        slidesToScroll: 2,
+                    },
                 },
                 {
                     breakpoint: 480,
                     settings: {
                         slidesToShow: 1,
-                        slidesToScroll: 1
-                    }
-                }
-            ]
+                        slidesToScroll: 1,
+                    },
+                },
+            ],
         };
 
         return !this.state.loadingFigures ? (
@@ -128,7 +128,7 @@ class RelatedResourcesCard extends Component {
                     <StyledSlider {...settings}>
                         {this.state.relatedFigures.map(url => (
                             <SlideItem key={url.figureId}>
-                                <Link to={reverse(ROUTES.COMPARISON, { comparisonId: url.id }) + '#' + url.figureId}>
+                                <Link to={`${reverse(ROUTES.COMPARISON, { comparisonId: url.id })}#${url.figureId}`}>
                                     <div className="logoContainer">
                                         <SlideImg src={url.src} alt={url.alt} />
                                     </div>
@@ -147,7 +147,7 @@ class RelatedResourcesCard extends Component {
 }
 
 RelatedResourcesCard.propTypes = {
-    figureStatements: PropTypes.array.isRequired
+    figureStatements: PropTypes.array.isRequired,
 };
 
 export default RelatedResourcesCard;

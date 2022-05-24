@@ -23,7 +23,7 @@ class GeneralSettings extends Component {
             display_name: '',
             email: '',
             loading: false,
-            errors: null
+            errors: null,
         };
     }
 
@@ -36,13 +36,13 @@ class GeneralSettings extends Component {
 
         this.setState({
             display_name: userData.display_name,
-            email: userData.email
+            email: userData.email,
         });
     };
 
     handleInputChange = e => {
         this.setState({
-            [e.target.name]: e.target.value
+            [e.target.name]: e.target.value,
         });
     };
 
@@ -51,19 +51,19 @@ class GeneralSettings extends Component {
 
         if (!display_name) {
             this.setState({
-                errors: { message: 'Please fill out all fields' }
+                errors: { message: 'Please fill out all fields' },
             });
             return;
         }
 
         this.setState({
             loading: true,
-            errors: null
+            errors: null,
         });
 
         updateUserInformation({
             email,
-            display_name
+            display_name,
         })
             .then(response => {
                 toast.success('Your changes have been saved successfully');
@@ -71,13 +71,13 @@ class GeneralSettings extends Component {
 
                 this.setState({
                     loading: false,
-                    errors: null
+                    errors: null,
                 });
             })
             .catch(err => {
                 this.setState({
                     loading: false,
-                    errors: err
+                    errors: err,
                 });
             });
     };
@@ -146,19 +146,19 @@ class GeneralSettings extends Component {
 }
 
 const mapDispatchToProps = dispatch => ({
-    updateAuth: data => dispatch(updateAuth(data))
+    updateAuth: data => dispatch(updateAuth(data)),
 });
 
 const mapStateToProps = state => ({
-    user: state.auth.user
+    user: state.auth.user,
 });
 
 GeneralSettings.propTypes = {
     updateAuth: PropTypes.func.isRequired,
-    user: PropTypes.oneOfType([PropTypes.object, PropTypes.number])
+    user: PropTypes.oneOfType([PropTypes.object, PropTypes.number]),
 };
 
 export default connect(
     mapStateToProps,
-    mapDispatchToProps
+    mapDispatchToProps,
 )(GeneralSettings);

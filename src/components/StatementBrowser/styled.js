@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { ListGroupItem, DropdownItem, Button, DropdownToggle } from 'reactstrap';
 
-/*propertyItem*/
+/* propertyItem */
 export const StyledStatementItem = styled(ListGroupItem)`
     padding: 0.5rem 0.75rem !important;
     cursor: default;
@@ -45,7 +45,7 @@ export const StyledStatementItem = styled(ListGroupItem)`
     }
 `;
 
-/*levelBox*/
+/* levelBox */
 export const StyledLevelBox = styled.div`
     // The hierarchy indicator doesn't look nice when properties have a space between them
     /*border-color: #dfdfdf; //don't use default color, since it is partially transparent $list-group-border-color;
@@ -68,7 +68,7 @@ export const StyledLevelBox = styled.div`
     }
 `;
 
-/*dropdownItem*/
+/* dropdownItem */
 export const StyledDropdownItem = styled(DropdownItem)`
     outline: 0;
     & svg {
@@ -93,7 +93,7 @@ export const StyledButton = styled(Button)`
 `;
 
 export const StyledDropdownToggle = styled(DropdownToggle).withConfig({
-    shouldForwardProp: prop => !['disableBorderRadiusLeft', 'disableBorderRadiusRight'].includes(prop)
+    shouldForwardProp: prop => !['disableBorderRadiusLeft', 'disableBorderRadiusRight'].includes(prop),
 })`
     border-top-left-radius: ${props => (props.disableBorderRadiusLeft ? '0' : '4px !important')};
     border-bottom-left-radius: ${props => (props.disableBorderRadiusLeft ? '0' : '4px !important')};

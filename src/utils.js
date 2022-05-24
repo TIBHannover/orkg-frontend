@@ -14,7 +14,7 @@ import {
     createLiteralStatement,
     createResourceStatement,
     deleteStatementsByIds,
-    getStatementsByPredicateAndLiteral
+    getStatementsByPredicateAndLiteral,
 } from 'services/backend/statements';
 import { Cookies } from 'react-cookie';
 import env from '@beam-australia/react-env';
@@ -129,12 +129,10 @@ export const guid = () => {
             .toString(16)
             .substring(1);
     }
-    return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+    return `${s4() + s4()}-${s4()}-${s4()}-${s4()}-${s4()}${s4()}${s4()}`;
 };
 
-export const range = (start, end) => {
-    return [...Array(1 + end - start).keys()].map(v => start + v);
-};
+export const range = (start, end) => [...Array(1 + end - start).keys()].map(v => start + v);
 
 export function timeoutPromise(ms, promise) {
     return new Promise((resolve, reject) => {
@@ -149,7 +147,7 @@ export function timeoutPromise(ms, promise) {
             err => {
                 clearTimeout(timeoutId);
                 reject(err);
-            }
+            },
         );
     });
 }
@@ -167,7 +165,7 @@ export const get_error_message = (errors, field = null) => {
         return null;
     }
     if (field === null) {
-        return Boolean(errors.message) ? errors.message : null;
+        return errors.message ? errors.message : null;
     }
     const field_error = errors.errors ? errors.errors.find(e => e.field === field) : null;
     return field_error ? capitalize(field_error.message) : null;
@@ -183,7 +181,7 @@ export const getPaperData_ViewPaper = (paperResource, paperStatements) => {
     const contributions = filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_CONTRIBUTION, false, CLASSES.CONTRIBUTION);
 
     return {
-        paperResource: paperResource,
+        paperResource,
         authors: authors ? authors.sort((a, b) => a.s_created_at.localeCompare(b.s_created_at)) : [], // statements are ordered desc, so first author is last => thus reverse
         contributions: contributions.sort((a, b) => a.label.localeCompare(b.label)), // sort contributions ascending, so contribution 1, is actually the first one
         publicationMonth: filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_PUBLICATION_MONTH, true),
@@ -191,7 +189,7 @@ export const getPaperData_ViewPaper = (paperResource, paperStatements) => {
         doi: filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_DOI, true),
         researchField: filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_RESEARCH_FIELD, true, CLASSES.RESEARCH_FIELD),
         publishedIn: filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_VENUE, true),
-        url: filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.URL, true)
+        url: filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.URL, true),
     };
 };
 
@@ -228,7 +226,7 @@ export const getPaperData = (resource, paperStatements) => {
         order,
         created_by: resource.created_by !== MISC.UNKNOWN_ID ? resource.created_by : null,
         publishedIn,
-        url
+        url,
     };
 };
 
@@ -249,7 +247,7 @@ export const getReviewData = (resource, statements) => {
         description: description?.label ?? '',
         researchField,
         authors,
-        paperId
+        paperId,
     };
 };
 
@@ -270,7 +268,7 @@ export const getListData = (resource, statements) => {
         description: description?.label ?? '',
         researchField,
         authors,
-        listId
+        listId,
     };
 };
 
@@ -293,7 +291,7 @@ export const getAuthorData = (resource, statements) => {
         website,
         linkedIn,
         researchGate,
-        googleScholar
+        googleScholar,
     };
 };
 
@@ -308,7 +306,7 @@ export const getComparisonData = (resource, comparisonStatements) => {
         comparisonStatements,
         PREDICATES.COMPARE_CONTRIBUTION,
         false,
-        CLASSES.CONTRIBUTION
+        CLASSES.CONTRIBUTION,
     );
     const references = filterObjectOfStatementsByPredicateAndClass(comparisonStatements, PREDICATES.REFERENCE, false);
     const doi = filterObjectOfStatementsByPredicateAndClass(comparisonStatements, PREDICATES.HAS_DOI, true);
@@ -316,7 +314,7 @@ export const getComparisonData = (resource, comparisonStatements) => {
         comparisonStatements,
         PREDICATES.HAS_PREVIOUS_VERSION,
         true,
-        CLASSES.COMPARISON
+        CLASSES.COMPARISON,
     );
     const icon = filterObjectOfStatementsByPredicateAndClass(comparisonStatements, PREDICATES.ICON, true);
     const type = filterObjectOfStatementsByPredicateAndClass(comparisonStatements, PREDICATES.TYPE, true);
@@ -327,19 +325,19 @@ export const getComparisonData = (resource, comparisonStatements) => {
         comparisonStatements,
         PREDICATES.RELATED_RESOURCE,
         false,
-        CLASSES.COMPARISON_RELATED_RESOURCE
+        CLASSES.COMPARISON_RELATED_RESOURCE,
     );
     const figures = filterObjectOfStatementsByPredicateAndClass(
         comparisonStatements,
         PREDICATES.RELATED_FIGURE,
         false,
-        CLASSES.COMPARISON_RELATED_FIGURE
+        CLASSES.COMPARISON_RELATED_FIGURE,
     );
     const visualizations = filterObjectOfStatementsByPredicateAndClass(
         comparisonStatements,
         PREDICATES.HAS_VISUALIZATION,
         false,
-        CLASSES.VISUALIZATION
+        CLASSES.VISUALIZATION,
     );
 
     const video = filterObjectOfStatementsByPredicateAndClass(comparisonStatements, PREDICATES.HAS_VIDEO, true);
@@ -351,14 +349,14 @@ export const getComparisonData = (resource, comparisonStatements) => {
         ...resource,
         label: resource.label ? resource.label : 'No Title',
         authors: authors ? authors.sort((a, b) => a.s_created_at.localeCompare(b.s_created_at)) : [], // sort authors by their statement creation time (s_created_at)
-        contributions: contributions,
+        contributions,
         references,
         doi: doi ? doi.label : '',
         description: description ? description.label : '',
         icon: icon ? icon.label : '',
         order: order ? order.label : Infinity,
         type: type ? type.id : '',
-        onHomePage: onHomePage ? true : false,
+        onHomePage: !!onHomePage,
         researchField: subject,
         hasPreviousVersion,
         visualizations,
@@ -366,7 +364,7 @@ export const getComparisonData = (resource, comparisonStatements) => {
         resources,
         properties,
         video,
-        anonymized: anonymized ? true : false
+        anonymized: !!anonymized,
     };
 };
 
@@ -381,7 +379,7 @@ export const getTemplateComponentData = (component, componentStatements) => {
         PREDICATES.TEMPLATE_COMPONENT_PROPERTY,
         true,
         null,
-        component.id
+        component.id,
     );
     const value = filterObjectOfStatementsByPredicateAndClass(componentStatements, PREDICATES.TEMPLATE_COMPONENT_VALUE, true, null, component.id);
 
@@ -390,7 +388,7 @@ export const getTemplateComponentData = (component, componentStatements) => {
         PREDICATES.TEMPLATE_COMPONENT_VALIDATION_RULE,
         false,
         null,
-        component.id
+        component.id,
     );
 
     const minOccurs = filterObjectOfStatementsByPredicateAndClass(
@@ -398,7 +396,7 @@ export const getTemplateComponentData = (component, componentStatements) => {
         PREDICATES.TEMPLATE_COMPONENT_OCCURRENCE_MIN,
         true,
         null,
-        component.id
+        component.id,
     );
 
     const maxOccurs = filterObjectOfStatementsByPredicateAndClass(
@@ -406,7 +404,7 @@ export const getTemplateComponentData = (component, componentStatements) => {
         PREDICATES.TEMPLATE_COMPONENT_OCCURRENCE_MAX,
         true,
         null,
-        component.id
+        component.id,
     );
 
     const order = filterObjectOfStatementsByPredicateAndClass(componentStatements, PREDICATES.TEMPLATE_COMPONENT_ORDER, true, null, component.id);
@@ -416,13 +414,13 @@ export const getTemplateComponentData = (component, componentStatements) => {
         property: property
             ? {
                   id: property.id,
-                  label: property.label
+                  label: property.label,
               }
             : {},
         value: value
             ? {
                   id: value.id,
-                  label: value.label
+                  label: value.label,
               }
             : null,
         minOccurs: minOccurs ? minOccurs.label : 0,
@@ -435,7 +433,7 @@ export const getTemplateComponentData = (component, componentStatements) => {
                       const value = item.label.split(/#(.+)/)[1];
                       return Object.assign(obj, { [rule]: value });
                   }, {})
-                : {}
+                : {},
     };
 };
 
@@ -452,7 +450,7 @@ export const getVisualizationData = (resource, visualizationStatements) => {
     return {
         ...resource,
         description: description ? description.object.label : '',
-        authors: authors ? authors.sort((a, b) => a.s_created_at.localeCompare(b.s_created_at)) : []
+        authors: authors ? authors.sort((a, b) => a.s_created_at.localeCompare(b.s_created_at)) : [],
     };
 };
 
@@ -494,7 +492,7 @@ export const generateRdfDataVocabularyFile = (data, contributions, properties, m
     const orkgVocab = rdf.ns('http://orkg.org/orkg/vocab/#');
     const orkgResource = rdf.ns('http://orkg.org/orkg/resource/');
     const gds = new rdf.Graph();
-    //Vocabulary properties labels
+    // Vocabulary properties labels
     gds.add(new rdf.Triple(cubens('dataSet'), rdf.rdfsns('label'), new rdf.Literal('dataSet')));
     gds.add(new rdf.Triple(cubens('structure'), rdf.rdfsns('label'), new rdf.Literal('structure')));
     gds.add(new rdf.Triple(cubens('component'), rdf.rdfsns('label'), new rdf.Literal('component')));
@@ -504,35 +502,28 @@ export const generateRdfDataVocabularyFile = (data, contributions, properties, m
     gds.add(new rdf.Triple(cubens('attribute'), rdf.rdfsns('label'), new rdf.Literal('attribute')));
     gds.add(new rdf.Triple(cubens('measure'), rdf.rdfsns('label'), new rdf.Literal('measure')));
     gds.add(new rdf.Triple(cubens('order'), rdf.rdfsns('label'), new rdf.Literal('order')));
-    //BNodes
+    // BNodes
     const ds = new rdf.BlankNode();
     const dsd = new rdf.BlankNode();
-    //Dataset
+    // Dataset
     gds.add(new rdf.Triple(ds, rdf.rdfns('type'), cubens('DataSet')));
     // Metadata
     const dcterms = rdf.ns('http://purl.org/dc/terms/#');
-    gds.add(new rdf.Triple(ds, dcterms('title'), new rdf.Literal(metadata.title ? metadata.title : `Comparison - ORKG`)));
-    gds.add(new rdf.Triple(ds, dcterms('description'), new rdf.Literal(metadata.description ? metadata.description : `Description`)));
-    gds.add(new rdf.Triple(ds, dcterms('creator'), new rdf.Literal(metadata.creator ? metadata.creator : `Creator`)));
-    gds.add(new rdf.Triple(ds, dcterms('date'), new rdf.Literal(metadata.date ? metadata.date : `Date`)));
+    gds.add(new rdf.Triple(ds, dcterms('title'), new rdf.Literal(metadata.title ? metadata.title : 'Comparison - ORKG')));
+    gds.add(new rdf.Triple(ds, dcterms('description'), new rdf.Literal(metadata.description ? metadata.description : 'Description')));
+    gds.add(new rdf.Triple(ds, dcterms('creator'), new rdf.Literal(metadata.creator ? metadata.creator : 'Creator')));
+    gds.add(new rdf.Triple(ds, dcterms('date'), new rdf.Literal(metadata.date ? metadata.date : 'Date')));
     gds.add(new rdf.Triple(ds, dcterms('license'), new rdf.NamedNode('https://creativecommons.org/licenses/by-sa/4.0/')));
-    gds.add(new rdf.Triple(ds, rdf.rdfsns('label'), new rdf.Literal(`Comparison - ORKG`)));
+    gds.add(new rdf.Triple(ds, rdf.rdfsns('label'), new rdf.Literal('Comparison - ORKG')));
     gds.add(new rdf.Triple(ds, cubens('structure'), dsd));
     // DataStructureDefinition
     gds.add(new rdf.Triple(dsd, rdf.rdfns('type'), cubens('DataStructureDefinition')));
     gds.add(new rdf.Triple(dsd, rdf.rdfsns('label'), new rdf.Literal('Data Structure Definition')));
     const cs = {};
     const dt = {};
-    //components
-    const columns = [
-        { id: 'Properties', title: 'Properties' },
-        ...contributions
-            .filter(c => c.active)
-            .map((contribution, index) => {
-                return contribution;
-            })
-    ];
-    columns.forEach(function(column, index) {
+    // components
+    const columns = [{ id: 'Properties', title: 'Properties' }, ...contributions.filter(c => c.active).map((contribution, index) => contribution)];
+    columns.forEach((column, index) => {
         if (column.id === 'Properties') {
             cs[column.id] = new rdf.BlankNode();
             dt[column.id] = orkgVocab('Property');
@@ -543,7 +534,7 @@ export const generateRdfDataVocabularyFile = (data, contributions, properties, m
 
         gds.add(new rdf.Triple(dsd, cubens('component'), cs[column.id]));
         gds.add(new rdf.Triple(cs[column.id], rdf.rdfns('type'), cubens('ComponentSpecification')));
-        gds.add(new rdf.Triple(cs[column.id], rdf.rdfsns('label'), new rdf.Literal(`Component Specification`)));
+        gds.add(new rdf.Triple(cs[column.id], rdf.rdfsns('label'), new rdf.Literal('Component Specification')));
         gds.add(new rdf.Triple(cs[column.id], cubens('order'), new rdf.Literal(index.toString())));
         if (column.id === 'Properties') {
             gds.add(new rdf.Triple(cs[column.id], cubens('dimension'), dt[column.id]));
@@ -555,7 +546,7 @@ export const generateRdfDataVocabularyFile = (data, contributions, properties, m
         gds.add(new rdf.Triple(dt[column.id], rdf.rdfns('type'), cubens('ComponentProperty')));
         gds.add(new rdf.Triple(dt[column.id], rdf.rdfsns('label'), new rdf.Literal(column.title.toString())));
     });
-    //data
+    // data
     properties
         .filter(property => property.active && data[property.id])
         .map((property, index) => {
@@ -563,7 +554,7 @@ export const generateRdfDataVocabularyFile = (data, contributions, properties, m
             gds.add(new rdf.Triple(bno, rdf.rdfns('type'), cubens('Observation')));
             gds.add(new rdf.Triple(bno, rdf.rdfsns('label'), new rdf.Literal(`Observation #{${index + 1}}`)));
             gds.add(new rdf.Triple(bno, cubens('dataSet'), ds));
-            gds.add(new rdf.Triple(bno, dt['Properties'].toString(), new rdf.Literal(property.label.toString())));
+            gds.add(new rdf.Triple(bno, dt.Properties.toString(), new rdf.Literal(property.label.toString())));
             contributions.map((contribution, index2) => {
                 if (contribution.active) {
                     const cell = data[property.id][index2];
@@ -584,15 +575,15 @@ export const generateRdfDataVocabularyFile = (data, contributions, properties, m
             });
             return null;
         });
-    //Create the RDF file
+    // Create the RDF file
     const file = new Blob(
         [
             gds
                 .toArray()
                 .map(t => t.toString())
-                .join('\n')
+                .join('\n'),
         ],
-        { type: 'text/n3' }
+        { type: 'text/n3' },
     );
     element.href = URL.createObjectURL(file);
     element.download = 'ComparisonRDF.n3';
@@ -614,18 +605,18 @@ export const filterObjectOfStatementsByPredicateAndClass = (statementsArray, pre
         return isUnique ? null : [];
     }
     let result = statementsArray.filter(
-        statement => statement.predicate.id === predicateID && (statement.subject.id === subjectID || subjectID === null)
+        statement => statement.predicate.id === predicateID && (statement.subject.id === subjectID || subjectID === null),
     );
     if (classID) {
         result = statementsArray.filter(statement => statement.object.classes && statement.object.classes.includes(classID));
     }
     if (result.length > 0 && isUnique) {
         return { ...result[0].object, statementId: result[0].id, s_created_at: result[0].created_at };
-    } else if (result.length > 0 && !isUnique) {
-        return result.map(s => ({ ...s.object, statementId: s.id, s_created_at: s.created_at }));
-    } else {
-        return isUnique ? null : [];
     }
+    if (result.length > 0 && !isUnique) {
+        return result.map(s => ({ ...s.object, statementId: s.id, s_created_at: s.created_at }));
+    }
+    return isUnique ? null : [];
 };
 
 /**
@@ -645,30 +636,26 @@ export const filterSubjectOfStatementsByPredicateAndClass = (statementsArray, pr
     }
     if (result.length > 0 && isUnique) {
         return { ...result[0].subject, statementId: result[0].id, s_created_at: result[0].created_at };
-    } else if (result.length > 0 && !isUnique) {
-        return result.map(s => ({ ...s.subject, statementId: s.id, s_created_at: s.created_at }));
-    } else {
-        return isUnique ? null : [];
     }
+    if (result.length > 0 && !isUnique) {
+        return result.map(s => ({ ...s.subject, statementId: s.id, s_created_at: s.created_at }));
+    }
+    return isUnique ? null : [];
 };
 
 // https://stackoverflow.com/questions/42921220/is-any-solution-to-do-localstorage-setitem-in-asynchronous-way-in-javascript
 export const asyncLocalStorage = {
-    setItem: function(key, value) {
-        return Promise.resolve().then(function() {
+    setItem(key, value) {
+        return Promise.resolve().then(() => {
             localStorage.setItem(key, value);
         });
     },
-    getItem: function(key) {
-        return Promise.resolve().then(function() {
-            return localStorage.getItem(key);
-        });
+    getItem(key) {
+        return Promise.resolve().then(() => localStorage.getItem(key));
     },
-    removeItem: function(key) {
-        return Promise.resolve().then(function() {
-            return localStorage.removeItem(key);
-        });
-    }
+    removeItem(key) {
+        return Promise.resolve().then(() => localStorage.removeItem(key));
+    },
 };
 
 /**
@@ -680,7 +667,7 @@ export const asyncLocalStorage = {
  */
 export const extendPropertyIds = (propertyIds, data) => {
     const result = [];
-    propertyIds.forEach(function(pID, index) {
+    propertyIds.forEach((pID, index) => {
         result.push(pID);
         // loop on the predicates of comparison result
         for (const [pr, values] of Object.entries(data)) {
@@ -690,9 +677,8 @@ export const extendPropertyIds = (propertyIds, data) => {
             const allV = flattenDepth(values, 2).filter(value => {
                 if (value.path && value.path.length > 0 && value.path[value.path.length - 1] === pID && pr !== pID) {
                     return true;
-                } else {
-                    return false;
                 }
+                return false;
             });
             if (allV.length > 0) {
                 result.push(pr);
@@ -717,7 +703,8 @@ export const isPredicatesListCorrect = (propertyIds, _comparisonType) => {
     }
     if (_comparisonType === 'merge') {
         return propertyIds.every(element => !element.includes('/'));
-    } else if (_comparisonType === 'path') {
+    }
+    if (_comparisonType === 'path') {
         return propertyIds.some(element => element.includes('/') || !element.match(/^P([0-9])+$/));
     }
     return true;
@@ -732,7 +719,7 @@ export const isPredicatesListCorrect = (propertyIds, _comparisonType) => {
 export const similarPropertiesByLabel = (propertyLabel, propertyData) => {
     const result = [];
     // flat property values and add similar but not equal labels
-    flattenDepth(propertyData, 2).forEach(function(value, index) {
+    flattenDepth(propertyData, 2).forEach((value, index) => {
         if (value.pathLabels && value.pathLabels.length > 0 && value.pathLabels[value.pathLabels.length - 1] !== propertyLabel) {
             result.push(value.pathLabels[value.pathLabels.length - 1]);
         }
@@ -823,13 +810,13 @@ export const mergeAlternate = (array1, array2) => {
 
 // TODO: could be part of a 'parseDoi' hook when the add paper wizard is refactored to support hooks
 export const parseCiteResult = paper => {
-    let paperTitle = '',
-        paperAuthors = [],
-        paperPublicationMonth = '',
-        paperPublicationYear = '',
-        doi = '',
-        publishedIn = '',
-        url = '';
+    let paperTitle = '';
+    let paperAuthors = [];
+    let paperPublicationMonth = '';
+    let paperPublicationYear = '';
+    let doi = '';
+    let publishedIn = '';
+    let url = '';
 
     try {
         const { title, subtitle, author, issued, DOI, URL, 'container-title': containerTitle } = paper.data[0];
@@ -848,7 +835,7 @@ export const parseCiteResult = paper => {
                 return {
                     label: unescape(fullname),
                     id: fullname,
-                    orcid: author.ORCID ? author.ORCID : ''
+                    orcid: author.ORCID ? author.ORCID : '',
                 };
             });
         }
@@ -860,8 +847,8 @@ export const parseCiteResult = paper => {
         if (year) {
             paperPublicationYear = year;
         }
-        doi = DOI ? DOI : '';
-        url = URL ? URL : '';
+        doi = DOI || '';
+        url = URL || '';
         if (containerTitle && isString(containerTitle)) {
             publishedIn = unescape(containerTitle);
         }
@@ -876,7 +863,7 @@ export const parseCiteResult = paper => {
         paperPublicationYear,
         doi,
         publishedIn,
-        url
+        url,
     };
 };
 
@@ -901,7 +888,7 @@ export function getRelatedFiguresData(resourcesStatements) {
         return {
             src: imageStatement ? imageStatement.object.label : '',
             figureId: resourceStatements.id,
-            alt
+            alt,
         };
     });
     return _figures;
@@ -921,7 +908,7 @@ export function getRelatedResourcesData(resourcesStatements) {
             image: imageStatement ? imageStatement.object.label : '',
             id: resourceStatements.id,
             title: resourceStatements.statements[0]?.subject?.label,
-            description: descriptionStatement ? descriptionStatement.object.label : ''
+            description: descriptionStatement ? descriptionStatement.object.label : '',
         };
     });
     return _resources;
@@ -947,11 +934,11 @@ export function truncStringPortion(str, firstCharCount = str.length, endCharCoun
         firstCharCount + endCharCount >= str.length
     ) {
         return str;
-    } else if (endCharCount === 0) {
-        return str.slice(0, firstCharCount) + '.'.repeat(dotCount);
-    } else {
-        return str.slice(0, firstCharCount) + '.'.repeat(dotCount) + str.slice(str.length - endCharCount);
     }
+    if (endCharCount === 0) {
+        return str.slice(0, firstCharCount) + '.'.repeat(dotCount);
+    }
+    return str.slice(0, firstCharCount) + '.'.repeat(dotCount) + str.slice(str.length - endCharCount);
 }
 
 // TODO: refactor the authors dialog and create a hook to put this function
@@ -978,7 +965,7 @@ export async function saveAuthors({ prevAuthors, newAuthors, resourceId }) {
                 predicateId: PREDICATES.HAS_ORCID,
                 literal: author.orcid,
                 subjectClass: CLASSES.AUTHOR,
-                items: 1
+                items: 1,
             });
             if (responseJson.length > 0) {
                 // Author resource exists
@@ -1101,7 +1088,7 @@ const applyGte = ({ filterControlData, propertyId, value }) => {
     return [].concat(
         ...Object.keys(data)
             .filter(key => parseFloat(key) >= parseFloat(value))
-            .map(key => data[key])
+            .map(key => data[key]),
     );
 };
 
@@ -1110,7 +1097,7 @@ const applyLte = ({ filterControlData, propertyId, value }) => {
     return [].concat(
         ...Object.keys(data)
             .filter(key => parseFloat(key) <= parseFloat(value))
-            .map(key => data[key])
+            .map(key => data[key]),
     );
 };
 
@@ -1119,7 +1106,7 @@ const applyGteDate = ({ filterControlData, propertyId, value }) => {
     return [].concat(
         ...Object.keys(data)
             .filter(key => key >= value)
-            .map(key => data[key])
+            .map(key => data[key]),
     );
 };
 
@@ -1128,7 +1115,7 @@ const applyLteDate = ({ filterControlData, propertyId, value }) => {
     return [].concat(
         ...Object.keys(data)
             .filter(key => key <= value)
-            .map(key => data[key])
+            .map(key => data[key]),
     );
 };
 
@@ -1137,7 +1124,7 @@ const applyNotEq = ({ filterControlData, propertyId, value }) => {
     return [].concat(
         ...Object.keys(data)
             .filter(key => !value.includes(parseFloat(key)))
-            .map(key => data[key])
+            .map(key => data[key]),
     );
 };
 
@@ -1146,7 +1133,7 @@ const applyNotEqDate = ({ filterControlData, propertyId, value }) => {
     return [].concat(
         ...Object.keys(data)
             .filter(key => !value.includes(key))
-            .map(key => data[key])
+            .map(key => data[key]),
     );
 };
 
@@ -1155,7 +1142,7 @@ const applyInc = ({ filterControlData, propertyId, value }) => {
     return [].concat(
         ...Object.keys(data)
             .filter(key => value.filter(val => key.includes(val)).length > 0)
-            .map(key => data[key])
+            .map(key => data[key]),
     );
 };
 
@@ -1204,9 +1191,9 @@ export const getResourceLink = (classId, id) => {
         [ENTITIES.RESOURCE]: [ROUTES.RESOURCE, 'id'],
         [ENTITIES.PREDICATE]: [ROUTES.PROPERTY, 'id'],
         [ENTITIES.CLASS]: [ROUTES.CLASS, 'id'],
-        default: [ROUTES.RESOURCE, 'id']
+        default: [ROUTES.RESOURCE, 'id'],
     };
-    const [route, idParam] = links[classId] || links['default'];
+    const [route, idParam] = links[classId] || links.default;
     return reverse(route, { [idParam]: id });
 };
 
@@ -1221,7 +1208,7 @@ export const getLinkByEntityType = (_class, id) => {
     const links = {
         [ENTITIES.RESOURCE]: ROUTES.RESOURCE,
         [ENTITIES.CLASS]: ROUTES.CLASS,
-        [ENTITIES.PREDICATE]: ROUTES.PROPERTY
+        [ENTITIES.PREDICATE]: ROUTES.PROPERTY,
     };
     return links[_class] ? reverse(links[_class], { id }) : '';
 };
@@ -1318,18 +1305,16 @@ export const stringifySort = sort => {
         combined: 'Top recent',
         unlisted: 'Unlisted',
         top: 'Last 30 days',
-        all: 'All time'
+        all: 'All time',
     };
-    return stringsSortMapping[sort] ?? stringsSortMapping['newest'];
+    return stringsSortMapping[sort] ?? stringsSortMapping.newest;
 };
 
 /**
  * Use reverse from 'named-urls' and automatically slugifies the slug param
  * @param input string that should be slugified
  */
-export const slugify = input => {
-    return slugifyString(input.replace('/', ' '), '_');
-};
+export const slugify = input => slugifyString(input.replace('/', ' '), '_');
 
 /**
  * Get base url of the application
@@ -1355,9 +1340,7 @@ export const reverseWithSlug = (route, params) => reverse(route, { ...params, sl
  * @return {Object} The property object
  */
 export const getPropertyObjectFromData = (data, value) => {
-    const notEmptyCell = find(flatten(data[value.id]), function(v) {
-        return v?.path?.length > 0;
-    });
+    const notEmptyCell = find(flatten(data[value.id]), v => v?.path?.length > 0);
     return notEmptyCell && notEmptyCell.path?.length && notEmptyCell.pathLabels?.length
         ? { id: last(notEmptyCell.path), label: last(notEmptyCell.pathLabels) }
         : value;
@@ -1370,12 +1353,10 @@ export const getPropertyObjectFromData = (data, value) => {
 export const checkCookie = () => {
     cookies.set('testcookie', 1, { path: env('PUBLIC_URL'), maxAge: 5 });
     const cookieEnabled = cookies.get('testcookie') ? cookies.get('testcookie') : null;
-    return cookieEnabled ? true : false;
+    return !!cookieEnabled;
 };
 
-export const filterStatementsBySubjectId = (statements, subjectId) => {
-    return statements.filter(statement => statement.subject.id === subjectId);
-};
+export const filterStatementsBySubjectId = (statements, subjectId) => statements.filter(statement => statement.subject.id === subjectId);
 
 /**
  * Parse resource statements and return an object of its type
@@ -1397,9 +1378,8 @@ export const getDataBasedOnType = (resource, statements) => {
     }
     if (resource?.classes?.includes(CLASSES.LITERATURE_LIST) || resource?.classes?.includes(CLASSES.LITERATURE_LIST_PUBLISHED)) {
         return getListData(resource, statements);
-    } else {
-        return undefined;
     }
+    return undefined;
 };
 
 // returns the position of the first differing character between
@@ -1418,9 +1398,7 @@ export const stringComparePosition = (left, right) => {
 
 // returns the part of the string preceding (but not including) the
 // final directory delimiter, or empty if none are found
-export const truncateToLastDir = str => {
-    return str.substr(0, str.lastIndexOf('/')).toString();
-};
+export const truncateToLastDir = str => str.substr(0, str.lastIndexOf('/')).toString();
 
 export const groupArrayByDirectoryPrefix = strings => {
     const groups = {};
@@ -1438,14 +1416,14 @@ export const groupArrayByDirectoryPrefix = strings => {
                       ...groups[prefix],
                       {
                           0: strings[i],
-                          1: strings[j]
-                      }
+                          1: strings[j],
+                      },
                   ]
                 : [
                       {
                           0: strings[i],
-                          1: strings[j]
-                      }
+                          1: strings[j],
+                      },
                   ];
         }
     }

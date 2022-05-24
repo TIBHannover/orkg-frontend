@@ -6,8 +6,8 @@ import { reverse } from 'named-urls';
 import { faArrowCircleLeft, faArrowCircleRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';
-import { StyledSlider } from './styled';
 import PropTypes from 'prop-types';
+import { StyledSlider } from './styled';
 
 const BenchmarkCarouselCardStyled = styled.div`
     margin: 0 10px;
@@ -45,24 +45,24 @@ function BenchmarksCarousel(props) {
                 breakpoint: 1024,
                 settings: {
                     slidesToShow: 3,
-                    slidesToScroll: 3
-                }
+                    slidesToScroll: 3,
+                },
             },
             {
                 breakpoint: 600,
                 settings: {
                     slidesToShow: 2,
-                    slidesToScroll: 2
-                }
+                    slidesToScroll: 2,
+                },
             },
             {
                 breakpoint: 480,
                 settings: {
                     slidesToShow: 1,
-                    slidesToScroll: 1
-                }
-            }
-        ]
+                    slidesToScroll: 1,
+                },
+            },
+        ],
     };
 
     return (
@@ -71,7 +71,7 @@ function BenchmarksCarousel(props) {
                 {benchmarks.map((benchmark, index) => {
                     const marginClasses = classNames({
                         'ms-0': index === 0,
-                        'me-0': index === benchmarks.length
+                        'me-0': index === benchmarks.length,
                     });
                     return (
                         <BenchmarkCarouselCardStyled key={benchmark.id} className={marginClasses}>
@@ -102,7 +102,7 @@ function BenchmarksCarousel(props) {
 
 BenchmarksCarousel.propTypes = {
     problemId: PropTypes.string.isRequired,
-    benchmarks: PropTypes.array.isRequired
+    benchmarks: PropTypes.array.isRequired,
 };
 
 export default BenchmarksCarousel;

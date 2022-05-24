@@ -5,6 +5,4 @@ import env from '@beam-australia/react-env';
 export const contributorsUrl = `${url}contributors/`;
 export const authenticationUrl = env('BACKEND_URL');
 
-export const getContributorInformationById = contributorsId => {
-    return submitGetRequest(`${contributorsUrl}` + contributorsId, {}, true);
-};
+export const getContributorInformationById = contributorsId => submitGetRequest(`${contributorsUrl}${contributorsId}`, {}, true);

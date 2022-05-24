@@ -19,7 +19,7 @@ function CreateClassModal(props) {
                 toast.error('Please enter a valid URI of the class');
             } else {
                 try {
-                    const newClass = await createClass(label, uri ? uri : null);
+                    const newClass = await createClass(label, uri || null);
                     props.onClose(newClass);
                     setErrors(null);
                 } catch (error) {
@@ -70,7 +70,7 @@ function CreateClassModal(props) {
 CreateClassModal.propTypes = {
     onClose: PropTypes.func.isRequired,
     label: PropTypes.string.isRequired,
-    uri: PropTypes.string
+    uri: PropTypes.string,
 };
 
 export default CreateClassModal;
