@@ -24,7 +24,7 @@ const MembersModal = ({ members, openModal, setOpenModal }) => {
                             </div>
                         );
                     })}
-                    {members?.length === 0 && <div className="mt-4 mb-4">No members yet.</div>}
+                    {members?.length === 0 && <div className="mt-4 mb-4">No members yet</div>}
                 </div>
             </ModalBody>
         </Modal>

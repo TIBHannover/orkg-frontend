@@ -77,7 +77,7 @@ const ResearchProblemsModal = ({ id, by = 'ResearchField', openModal, setOpenMod
                             Load more research problems
                         </div>
                     )}
-                    {!hasNextPage && isLastPageReached && page !== 1 && <div className="text-center mt-3">You have reached the last page.</div>}
+                    {!hasNextPage && isLastPageReached && page !== 1 && <div className="text-center mt-3">You have reached the last page</div>}
                     {isLoading && (
                         <div className="mt-4 mb-4">
                             <ContentLoader

@@ -40,7 +40,7 @@ const ResearchProblemsBox = ({ id, by = 'ResearchField', organizationsList }) =>
             </div>
             <div className="flex-grow-1">
                 {!isLoading && totalElements > 0 && (
-                    <div className="ps-3 pt-2">
+                    <ul className="ps-3 pt-2">
                         {problems.slice(0, 5).map(rp => (
                             <li key={`rp${rp.id}`}>
                                 <Tippy content={rp.label} disabled={rp.label?.length <= 70}>
@@ -50,9 +50,9 @@ const ResearchProblemsBox = ({ id, by = 'ResearchField', organizationsList }) =>
                                 </Tippy>
                             </li>
                         ))}
-                    </div>
+                    </ul>
                 )}
-                {!isLoading && totalElements === 0 && <>No research problems.</>}
+                {!isLoading && totalElements === 0 && <div className="text-center my-4">No research problems yet</div>}
             </div>
             {isLoading && (
                 <div className="mt-4 mb-4">

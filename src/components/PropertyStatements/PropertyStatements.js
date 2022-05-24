@@ -82,7 +82,7 @@ const PropertyStatements = ({ propertyId }) => {
 
                 {isLoading && loadingIndicator}
 
-                {statements.length === 0 && !isLoading && <div className="text-center mb-2">This property isn't used in any statement yet!</div>}
+                {statements.length === 0 && !isLoading && <div className="text-center mb-2">This property isn't used in any statement yet</div>}
             </Collapse>
         </div>
     );

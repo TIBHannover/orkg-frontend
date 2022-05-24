@@ -10,12 +10,17 @@ import SelfVisDataModel from 'libs/selfVisModel/SelfVisDataModel';
 import { addVisualization } from 'services/similarity';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
 
 function PublishVisualization(props) {
     const [isLoading, setIsLoading] = useState(false);
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
-    const [visualizationCreators, setVisualizationCreators] = useState(props.authors ?? []);
+    const displayName = useSelector(state => state.auth.user.displayName);
+
+    const [visualizationCreators, setVisualizationCreators] = useState(
+        props.authors ?? [{ label: displayName, id: displayName, orcid: '', statementId: '' }]
+    );
 
     const handleCreatorsChange = creators => {
         creators = creators ? creators : [];
@@ -131,7 +136,7 @@ function PublishVisualization(props) {
             if (execute === true) {
                 try {
                     if (description === '' || title === '') {
-                        toast.error(`Please set title and description`);
+                        toast.error(`Please enter a title and description`);
                     } else {
                         const newResource = await createResource(title ? title : '', [CLASSES.VISUALIZATION]);
                         // we need not to create a resource statement on the comparision;
@@ -187,7 +192,9 @@ function PublishVisualization(props) {
                     </FormGroup>
                     <FormGroup>
                         <Label for="Creator">
-                            <Tooltip message="The creator or creators of the visualization. Enter both the first and last name">Contributors</Tooltip>
+                            <Tooltip message="The creator(s) of the visualization. Enter both the first and last name">
+                                Creators <span className="text-muted fst-italic">(optional)</span>
+                            </Tooltip>
                         </Label>
                         <AuthorsInput itemLabel="creator" handler={handleCreatorsChange} value={visualizationCreators} />
                     </FormGroup>

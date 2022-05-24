@@ -131,25 +131,26 @@ class EditObservatory extends Component {
         return (
             <>
                 <Modal size="lg" isOpen={this.props.showDialog} toggle={this.props.toggle}>
-                    <ModalHeader toggle={this.props.toggle}>Update an Observatory</ModalHeader>
+                    <ModalHeader toggle={this.props.toggle}>Update observatory</ModalHeader>
                     <ModalBody>
                         <>
                             {' '}
                             <FormGroup>
-                                <Label for="ObservatoryName">Name</Label>
+                                <Label for="observatory-name">Name</Label>
                                 <Input
                                     onChange={this.handleChange}
                                     type="text"
                                     name="label"
-                                    id="ObservatoryName"
+                                    id="observatory-name"
                                     value={this.state.label}
                                     placeholder="Name"
                                     disabled={isLoading}
                                 />
                             </FormGroup>
                             <FormGroup>
-                                <Label for="ObservatoryResearchField">Research Field</Label>
+                                <Label for="observatory-research-field">Research field</Label>
                                 <AutoComplete
+                                    inputId="observatory-research-field"
                                     entityType={ENTITIES.RESOURCE}
                                     optionsClass={CLASSES.RESEARCH_FIELD}
                                     placeholder="Select research field"
@@ -163,12 +164,12 @@ class EditObservatory extends Component {
                                 />
                             </FormGroup>
                             <FormGroup>
-                                <Label for="ObservatoryDescription">Description</Label>
+                                <Label for="observatory-description">Description</Label>
                                 <Input
                                     onChange={this.handleChange}
                                     type="textarea"
                                     name="description"
-                                    id="observatoryDescription"
+                                    id="observatory-description"
                                     value={this.state.description}
                                     rows={4}
                                     placeholder="description"

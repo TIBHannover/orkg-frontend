@@ -142,42 +142,32 @@ const SingleVisualizationComponent = props => {
                                         {props.input.created_at ? moment(props.input.created_at).format('dddd, MMMM Do YYYY') : ''}
                                     </span>
                                 </div>
-                                <div className="col-6 p-2 mb-2">
-                                    <b>Meta Information:</b> <br />
+                                {props.input.authors && props.input.authors.length > 0 && (
                                     <div className="mb-2">
-                                        <i>Created on: </i>
-                                        <span className="badge badge-light me-2">
-                                            <Icon icon={faCalendar} className="text-primary" />{' '}
-                                            {props.input.created_at ? moment(props.input.created_at).format('dddd, MMMM Do YYYY') : ''}
-                                        </span>
-                                    </div>
-                                    {props.input.authors && props.input.authors.length > 0 && (
-                                        <div className="mb-2">
-                                            <i>Created by: </i>
-                                            {props.input.authors.map(author => {
-                                                if (author && author.class === ENTITIES.RESOURCE) {
-                                                    return (
-                                                        <Link
-                                                            className="d-inline-block me-2 mb-2"
-                                                            to={reverse(ROUTES.AUTHOR_PAGE, { authorId: author.id })}
-                                                            key={`author${author.id}`}
-                                                        >
-                                                            <Badge color="light">
-                                                                <Icon icon={faUser} className="text-primary" /> {author.label}
-                                                            </Badge>
-                                                        </Link>
-                                                    );
-                                                } else {
-                                                    return (
-                                                        <Badge key={`author${author.id}`} color="light" className="me-2 mb-2">
-                                                            <Icon icon={faUser} /> {author.label}
+                                        <i>Created by: </i>
+                                        {props.input.authors.map(author => {
+                                            if (author && author.class === ENTITIES.RESOURCE) {
+                                                return (
+                                                    <Link
+                                                        className="d-inline-block me-2 mb-2"
+                                                        to={reverse(ROUTES.AUTHOR_PAGE, { authorId: author.id })}
+                                                        key={`author${author.id}`}
+                                                    >
+                                                        <Badge color="light">
+                                                            <Icon icon={faUser} className="text-primary" /> {author.label}
                                                         </Badge>
-                                                    );
-                                                }
-                                            })}
-                                        </div>
-                                    )}
-                                </div>
+                                                    </Link>
+                                                );
+                                            } else {
+                                                return (
+                                                    <Badge key={`author${author.id}`} color="light" className="me-2 mb-2">
+                                                        <Icon icon={faUser} /> {author.label}
+                                                    </Badge>
+                                                );
+                                            }
+                                        })}
+                                    </div>
+                                )}
                             </div>
                             {!isHovering && <div style={{ width: windowWidth - 20 + 'px', height: windowHeight - 50 + 'px' }} />}
                         </div>

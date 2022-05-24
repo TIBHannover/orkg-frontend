@@ -63,7 +63,7 @@ function Benchmarks() {
                             })}
                 </Row>
 
-                {benchmarks.length === 0 && !isLoadingBenchmarks && <div className="text-center mt-4 mb-4">No benchmarks yet!</div>}
+                {benchmarks.length === 0 && !isLoadingBenchmarks && <div className="text-center mt-4 mb-4">No benchmarks yet</div>}
                 {benchmarks.length !== 0 &&
                     benchmarks.filter(b => b.research_problem.label.toLowerCase().includes(filter.toLowerCase())).length === 0 &&
                     !isLoadingBenchmarks && <div className="text-center mt-4 mb-4">Sorry, no benchmarks found - try a different search query</div>}

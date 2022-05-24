@@ -260,12 +260,12 @@ class EditOrganization extends Component {
         return (
             <>
                 <Modal isOpen={this.props.showDialog} toggle={this.props.toggle}>
-                    <ModalHeader toggle={this.props.toggle}>Update an Organization</ModalHeader>
+                    <ModalHeader toggle={this.props.toggle}>Update organization</ModalHeader>
                     <ModalBody>
                         <>
                             {' '}
                             <FormGroup>
-                                <Label for="ResourceLabel">Organization Name</Label>
+                                <Label for="ResourceLabel">Organization name</Label>
                                 <Input
                                     onChange={this.handleChange}
                                     type="text"
@@ -289,13 +289,14 @@ class EditOrganization extends Component {
                                 />
                             </FormGroup>
                             <FormGroup>
-                                <Label for="type">Type</Label>
+                                <Label for="organization-type">Type</Label>
                                 <Input
                                     onChange={e => {
                                         this.setState({ type: ORGANIZATIONS_TYPES.find(t => t.id === e.target.value)?.id });
                                     }}
                                     value={this.state.type}
                                     name="type"
+                                    id="organization-type"
                                     type="select"
                                 >
                                     {ORGANIZATIONS_TYPES.map(option => (

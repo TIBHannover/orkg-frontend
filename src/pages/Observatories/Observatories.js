@@ -173,7 +173,7 @@ const Observatories = () => {
                         </Col>
                     </Row>
                 )}
-                {Object.keys(observatories).length === 0 && !isNextPageLoading && <div className="text-center mt-4 mb-4">No observatories yet!</div>}
+                {Object.keys(observatories).length === 0 && !isNextPageLoading && <div className="text-center mt-4 mb-4">No observatories yet</div>}
                 {failedLoading && !isNextPageLoading && (
                     <div className="text-center mt-4 mb-4">Something went wrong while loading observatories!</div>
                 )}

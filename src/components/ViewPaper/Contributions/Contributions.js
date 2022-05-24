@@ -202,8 +202,8 @@ const Contributions = props => {
                                         {isLoadingContributionFailed && (
                                             <>
                                                 <Alert className="mt-4 mb-5" color="danger">
-                                                    {contributions.length === 0 && 'This paper has no contributions yet!'}
-                                                    {contributions.length !== 0 && "Contribution doesn't exist."}
+                                                    {contributions.length === 0 && 'This paper has no contributions yet'}
+                                                    {contributions.length !== 0 && "Contribution doesn't exist"}
                                                 </Alert>
                                             </>
                                         )}

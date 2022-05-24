@@ -29,7 +29,7 @@ const AuthorsBox = ({ researchProblemId }) => {
                         ))}
                     </div>
                 )}
-                {!isLoading && authors?.length === 0 && <div className="mt-4 mb-4">No authors in this research problem yet.</div>}
+                {!isLoading && authors?.length === 0 && <div className="mt-4 mb-4">No authors in this research problem yet</div>}
                 {!isLoading && authors?.length > 3 && (
                     <div className="text-center mt-3">
                         <Button size="sm" onClick={() => setOpenModal(v => !v)} color="light">

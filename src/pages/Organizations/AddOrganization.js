@@ -38,7 +38,7 @@ class AddOrganization extends Component {
     }
 
     componentDidMount() {
-        document.title = 'Create new organization - ORKG';
+        document.title = 'Create organization - ORKG';
     }
 
     createNewOrganization = async () => {
@@ -143,7 +143,7 @@ class AddOrganization extends Component {
 
         return (
             <>
-                <TitleBar>Create new organization</TitleBar>
+                <TitleBar>Create organization</TitleBar>
                 <Container className="box rounded pt-4 pb-4 ps-5 pe-5">
                     {!!this.props.user && this.props.user.isCurationAllowed && (
                         <Form className="ps-3 pe-3 pt-2">
@@ -156,7 +156,6 @@ class AddOrganization extends Component {
                                     id="organizationName"
                                     disabled={loading}
                                     value={this.state.name}
-                                    placeholder="Organization name"
                                 />
                             </FormGroup>
 
@@ -201,6 +200,7 @@ class AddOrganization extends Component {
                                     value={this.state.organizationType}
                                     name="organizationType"
                                     type="select"
+                                    id="organizationType"
                                 >
                                     {ORGANIZATIONS_TYPES.map(option => (
                                         <option key={option.id} value={option.id}>
@@ -247,19 +247,17 @@ class AddOrganization extends Component {
                                 )}
                                 <Input type="file" id="organizationLogo" onChange={this.handlePreview} />
                             </FormGroup>
-                            <hr />
-                            <div className="text-end">
-                                <Button color="primary" onClick={this.createNewOrganization} className="mb-2" disabled={loading}>
-                                    {!loading ? 'Create organization' : <span>Loading</span>}
-                                </Button>
-                            </div>
+
+                            <Button color="primary" onClick={this.createNewOrganization} className="mb-2 mt-2" disabled={loading}>
+                                {!loading ? 'Create organization' : <span>Loading</span>}
+                            </Button>
                         </Form>
                     )}
 
                     {(!!!this.props.user || !this.props.user.isCurationAllowed) && (
                         <>
                             <Button color="link" className="p-0 mb-2 mt-2 clearfix" onClick={() => this.props.openAuthDialog({ action: 'signin' })}>
-                                <Icon className="me-1" icon={faUser} /> Signin to create organization
+                                <Icon className="me-1" icon={faUser} /> Sign in to create organization
                             </Button>
                         </>
                     )}

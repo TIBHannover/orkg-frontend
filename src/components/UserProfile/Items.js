@@ -181,7 +181,7 @@ const Items = props => {
 
             {resources.length === 0 && !isLoading && (
                 <div className="box rounded-3 p-5 text-center mt-4 mb-4">
-                    This user hasn't added any {props.filterLabel} to ORKG yet.
+                    This user hasn't added any {props.filterLabel} to ORKG yet
                     <br />
                 </div>
             )}

@@ -57,6 +57,8 @@ import AppliedRule from 'components/Comparison/Filters/AppliedRule';
 import TitleBar from 'components/TitleBar/TitleBar';
 import SaveDraft from 'components/Comparison/SaveDraft/SaveDraft';
 import Confirm from 'components/Confirmation/Confirmation';
+import pluralize from 'pluralize';
+import { SubTitle } from 'components/styled';
 
 function Comparison(props) {
     const {
@@ -492,17 +494,12 @@ function Comparison(props) {
                         </>
                     )
                 }
+                titleAddition={
+                    !isFailedLoadingMetaData &&
+                    contributionsList.length > 1 && <SubTitle>{pluralize('contribution', contributionsList.length, true)}</SubTitle>
+                }
             >
-                Comparison{' '}
-                {!isFailedLoadingMetaData && contributionsList.length > 1 && (
-                    <Tippy content="The amount of compared contributions">
-                        <span>
-                            <Badge color="secondary" pill style={{ fontSize: '65%' }}>
-                                {contributionsList.length}
-                            </Badge>
-                        </span>
-                    </Tippy>
-                )}
+                Comparison
             </TitleBar>
 
             {!isLoadingVersions && hasNextVersion && (
@@ -547,17 +544,19 @@ function Comparison(props) {
                     {!isFailedLoadingMetaData && !isFailedLoadingComparisonResult && (
                         <div className="p-0 d-flex align-items-start">
                             <div className="flex-grow-1">
-                                <h2 className="h4 mb-4 mt-4">
-                                    {metaData.title ? metaData.title : 'Compare'}{' '}
-                                    {metaData.id && (
-                                        <MarkFeaturedUnlistedContainer
-                                            size="xs"
-                                            id={metaData?.id}
-                                            featured={metaData?.featured}
-                                            unlisted={metaData?.unlisted}
-                                        />
-                                    )}
-                                </h2>
+                                {(metaData.title || metaData.id) && (
+                                    <h2 className="h4 mb-4 mt-4">
+                                        {metaData.title}{' '}
+                                        {metaData.id && (
+                                            <MarkFeaturedUnlistedContainer
+                                                size="xs"
+                                                id={metaData?.id}
+                                                featured={metaData?.featured}
+                                                unlisted={metaData?.unlisted}
+                                            />
+                                        )}
+                                    </h2>
+                                )}
                                 {!isFailedLoadingMetaData && <ComparisonMetaData metaData={metaData} provenance={provenance} />}
                             </div>
 

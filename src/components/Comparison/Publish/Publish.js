@@ -35,6 +35,8 @@ import Select from 'react-select';
 import { getConferences } from 'services/backend/organizations';
 import { SelectGlobalStyle } from 'components/Autocomplete/styled';
 import { useMatomo } from '@datapunt/matomo-tracker-react';
+import { useSelector } from 'react-redux';
+import ResearchFieldSelectorModal from 'components/ResearchFieldSelector/ResearchFieldSelectorModal';
 
 const StyledCustomInput = styled(Input)`
     margin-right: 0;
@@ -85,7 +87,11 @@ function Publish(props) {
     const [comparisonCreators, setComparisonCreators] = useState(props.authors ?? []);
     const [conferencesList, setConferencesList] = useState([]);
     const [conference, setConference] = useState(null);
+    const [isOpenResearchFieldModal, setIsOpenResearchFieldModal] = useState(false);
+    const [inputValue, setInputValue] = useState(null);
+
     const { trackEvent } = useMatomo();
+    const displayName = useSelector(state => state.auth.user.displayName);
 
     const handleCreatorsChange = creators => {
         creators = creators ? creators : [];
@@ -97,8 +103,8 @@ function Publish(props) {
         setDescription(props.metaData && props.metaData.description ? props.metaData.description : '');
         setReferences(props.metaData?.references?.length > 0 ? props.metaData.references.map(r => r.label) : ['']);
         setSubject(props.metaData && props.metaData.subject ? props.metaData.subject : undefined);
-        setComparisonCreators(props.authors ? props.authors : []);
-    }, [props.metaData, props.authors]);
+        setComparisonCreators(props.authors ? props.authors : [{ label: displayName, id: displayName, orcid: '', statementId: '' }]);
+    }, [props.metaData, props.authors, displayName]);
 
     useEffect(() => {
         const getConferencesList = () => {
@@ -164,7 +170,6 @@ function Publish(props) {
             }
         }
     };
-
     const handleSubmit = async e => {
         e.preventDefault();
         setIsLoading(true);
@@ -183,7 +188,7 @@ function Publish(props) {
                     } else {
                         response_hash = props.responseHash;
                     }
-                    const comparison_obj = {
+                    const comparisonObject = {
                         predicates: [],
                         resource: {
                             name: title,
@@ -239,7 +244,7 @@ function Publish(props) {
                             organizationId: conference ? conference.id : MISC.UNKNOWN_ID
                         }
                     };
-                    const createdComparison = await createObject(comparison_obj);
+                    const createdComparison = await createObject(comparisonObject);
                     await saveCreators(comparisonCreators, createdComparison.id);
                     await createResourceData({
                         resourceId: createdComparison.id,
@@ -313,7 +318,7 @@ function Publish(props) {
             }
         } catch (error) {
             console.error(error);
-            toast.error(`Error publishing a comparison : ${error.message}`);
+            toast.error(`Error publishing a comparison: ${error.message}`);
             setIsLoading(false);
         }
     };
@@ -331,6 +336,12 @@ function Publish(props) {
         setReferences(list);
     };
 
+    const handleSelectField = ({ id, label }) =>
+        setSubject({
+            id,
+            label
+        });
+
     return (
         <Modal size="lg" isOpen={props.showDialog} toggle={props.toggle}>
             <ModalHeader toggle={props.toggle}>Publish comparison</ModalHeader>
@@ -342,15 +353,13 @@ function Publish(props) {
                     {!props.comparisonId && (
                         <>
                             A published comparison is made public to other users. The state of the comparison is saved and a persistent link is
-                            created.
+                            created
                         </>
                     )}
                     {props.comparisonId && !props.doi && (
-                        <>This comparison is already published, you can find the persistent link below, or create a DOI for this comparison.</>
+                        <>This comparison is already published, you can find the persistent link below, or create a DOI for this comparison</>
                     )}
-                    {props.comparisonId && props.doi && (
-                        <>This comparison is already published, you can find the persistent link and the DOI below.</>
-                    )}
+                    {props.comparisonId && props.doi && <>This comparison is already published, you can find the persistent link and the DOI below</>}
                 </Alert>
                 {!props.comparisonId && props.metaData.hasPreviousVersion && (
                     <Alert color="info">
@@ -365,7 +374,6 @@ function Publish(props) {
                                 <UserAvatar showDisplayName={true} userId={props.metaData.hasPreviousVersion.created_by} />
                             </>
                         )}
-                        .
                     </Alert>
                 )}
                 {props.comparisonId && (
@@ -470,90 +478,42 @@ function Publish(props) {
                             />
                         </FormGroup>
                         <FormGroup>
-                            <Label>
-                                <Tooltip message="Enter a reference to the data sources from which the comparison is generated">
-                                    Reference (optional)
-                                </Tooltip>
-                            </Label>
-                            {references &&
-                                references.map((x, i) => {
-                                    return (
-                                        <InputGroup className="mb-1" key={`ref${i}`}>
-                                            <Input
-                                                disabled={Boolean(props.comparisonId)}
-                                                type="text"
-                                                name="reference"
-                                                value={x}
-                                                onChange={e => handleReferenceChange(e, i)}
-                                            />
-                                            {!Boolean(props.comparisonId) && (
-                                                <>
-                                                    {references.length !== 1 && (
-                                                        <Button
-                                                            color="light"
-                                                            onClick={() => handleRemoveReferenceClick(i)}
-                                                            className="ps-3 pe-3"
-                                                            style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
-                                                        >
-                                                            <Icon icon={faTrash} />
-                                                        </Button>
-                                                    )}
-                                                    {references.length - 1 === i && (
-                                                        <Button
-                                                            color="secondary"
-                                                            onClick={() => setReferences([...references, ''])}
-                                                            className="ps-3 pe-3"
-                                                            outline
-                                                            style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
-                                                        >
-                                                            <Icon icon={faPlus} />
-                                                        </Button>
-                                                    )}
-                                                </>
-                                            )}
-                                        </InputGroup>
-                                    );
-                                })}
-                        </FormGroup>
-                        <FormGroup>
                             <Label for="research-field">
-                                <Tooltip message="Enter a subject of the comparison">Research Field</Tooltip>
+                                <Tooltip message="Enter the research field of the comparison">Research field</Tooltip>
                             </Label>
+                            <InputGroup>
+                                <Autocomplete
+                                    allowCreate={false}
+                                    entityType={ENTITIES.RESOURCE}
+                                    optionsClass={CLASSES.RESEARCH_FIELD}
+                                    onItemSelected={i => {
+                                        setSubject({ ...i, label: i.value });
+                                    }}
+                                    placeholder="Search or choose a research field"
+                                    autoFocus
+                                    cacheOptions
+                                    value={subject ? subject : null}
+                                    isClearable={false}
+                                    onBlur={() => setInputValue('')}
+                                    onChangeInputValue={e => setInputValue(e)}
+                                    inputValue={inputValue}
+                                />
+                                <Button color="secondary" onClick={() => setIsOpenResearchFieldModal(true)}>
+                                    Choose
+                                </Button>
 
-                            <Autocomplete
-                                entityType={ENTITIES.RESOURCE}
-                                optionsClass={CLASSES.RESEARCH_FIELD}
-                                placeholder="Enter a research field"
-                                onItemSelected={i => {
-                                    setSubject({ ...i, label: i.value });
-                                }}
-                                value={subject}
-                                autoLoadOption={true}
-                                openMenuOnFocus={false}
-                                allowCreate={false}
-                                inputId="research-field"
-                            />
-                        </FormGroup>
-                        <FormGroup>
-                            <Label for="conference">
-                                <Tooltip message="Select a conference">Conference</Tooltip>
-                            </Label>
-                            <Select
-                                options={conferencesList}
-                                onChange={e => {
-                                    setConference(e);
-                                }}
-                                getOptionValue={({ id }) => id}
-                                isSearchable={true}
-                                getOptionLabel={({ name }) => name}
-                                isClearable={true}
-                                classNamePrefix="react-select"
-                            />
-                            <SelectGlobalStyle />
+                                {isOpenResearchFieldModal && (
+                                    <ResearchFieldSelectorModal
+                                        isOpen
+                                        toggle={() => setIsOpenResearchFieldModal(v => !v)}
+                                        onSelectField={handleSelectField}
+                                    />
+                                )}
+                            </InputGroup>
                         </FormGroup>
                         <FormGroup>
                             <Label for="Creator">
-                                <Tooltip message="The creator or creators of the comparison. Enter both the first and last name">Creators</Tooltip>
+                                <Tooltip message="The creator(s) of the comparison. Enter both the first and last name">Creators</Tooltip>
                             </Label>
                             {!props.doi && (!props.comparisonId || props.authors.length === 0) && (
                                 <AuthorsInput
@@ -597,6 +557,71 @@ function Publish(props) {
                                 </div>
                             </FormGroup>
                         )}
+                        <FormGroup>
+                            <Label for="publish-reference">
+                                <Tooltip message="Enter a reference to the data sources from which the comparison is generated. Leave empty if the comparison is created from scratch">
+                                    References <span className="text-muted fst-italic">(optional)</span>
+                                </Tooltip>
+                            </Label>
+                            {references &&
+                                references.map((x, i) => {
+                                    return (
+                                        <InputGroup className="mb-1" key={`ref${i}`}>
+                                            <Input
+                                                disabled={Boolean(props.comparisonId)}
+                                                type="text"
+                                                name="reference"
+                                                value={x}
+                                                onChange={e => handleReferenceChange(e, i)}
+                                                id="publish-reference"
+                                            />
+                                            {!Boolean(props.comparisonId) && (
+                                                <>
+                                                    {references.length !== 1 && (
+                                                        <Button
+                                                            color="light"
+                                                            onClick={() => handleRemoveReferenceClick(i)}
+                                                            className="ps-3 pe-3"
+                                                            style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
+                                                        >
+                                                            <Icon icon={faTrash} />
+                                                        </Button>
+                                                    )}
+                                                    {references.length - 1 === i && (
+                                                        <Button
+                                                            color="secondary"
+                                                            onClick={() => setReferences([...references, ''])}
+                                                            style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
+                                                        >
+                                                            <Icon icon={faPlus} /> Add
+                                                        </Button>
+                                                    )}
+                                                </>
+                                            )}
+                                        </InputGroup>
+                                    );
+                                })}
+                        </FormGroup>
+                        <FormGroup>
+                            <Label for="conference">
+                                <Tooltip message="Select a conference">
+                                    Conference <span className="text-muted fst-italic">(optional)</span>
+                                </Tooltip>
+                            </Label>
+                            <Select
+                                options={conferencesList}
+                                onChange={e => {
+                                    setConference(e);
+                                }}
+                                getOptionValue={({ id }) => id}
+                                isSearchable={true}
+                                getOptionLabel={({ name }) => name}
+                                isClearable={true}
+                                classNamePrefix="react-select"
+                                inputId="conference"
+                            />
+                            <SelectGlobalStyle />
+                        </FormGroup>
                     </>
                 )}
 

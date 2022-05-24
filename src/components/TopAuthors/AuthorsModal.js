@@ -34,7 +34,7 @@ const ContributorsModal = ({ researchProblemId, openModal, setOpenModal }) => {
                                 </div>
                             );
                         })}
-                    {!isLoading && authors?.length === 0 && <div className="mt-4 mb-4">No authors yet.</div>}
+                    {!isLoading && authors?.length === 0 && <div className="mt-4 mb-4">No authors yet</div>}
                     {isLoading && (
                         <div className="mt-4 mb-4">
                             <ContentLoader height={130} width={200} foregroundColor="#d9d9d9" backgroundColor="#ecebeb">

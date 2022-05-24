@@ -86,7 +86,7 @@ const AuthorWorks = ({ authorId }) => {
                     {works.length > 0 && <ListGroup>{works.filter(r => r).map(resource => renderItem(resource))}</ListGroup>}
                     {totalElements === 0 && !isNextPageLoading && (
                         <ListGroupItem tag="div" className="text-center p-4">
-                            There are no works of this author, yet.
+                            There are no works of this author, yet
                         </ListGroupItem>
                     )}
                     {isNextPageLoading && (
@@ -107,7 +107,7 @@ const AuthorWorks = ({ authorId }) => {
                     )}
                     {!hasNextPage && isLastPageReached && page > 1 && totalElements !== 0 && (
                         <ListGroupItem tag="div" className="text-center">
-                            You have reached the last page.
+                            You have reached the last page
                         </ListGroupItem>
                     )}
                 </Container>

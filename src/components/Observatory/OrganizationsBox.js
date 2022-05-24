@@ -33,7 +33,7 @@ const OrganizationsBox = ({ isLoadingOrganizations, organizationsList, observato
     };
 
     return (
-        <div className="box rounded-3 p-4 flex-grow-1">
+        <div className="box rounded-3 p-3 flex-grow-1">
             <h5>
                 Organizations{' '}
                 {!!user && user.isCurationAllowed && (
@@ -49,16 +49,7 @@ const OrganizationsBox = ({ isLoadingOrganizations, organizationsList, observato
                         <div>
                             {organizations.map((organization, index) => {
                                 return (
-                                    <div
-                                        key={`c${index}`}
-                                        className={organization.logo ? 'mb-3' : 'mb-3 pl-2 pt-2 pb-2'}
-                                        style={{
-                                            border: 'solid lightgray thin',
-                                            textAlign: 'center',
-                                            verticalAlign: 'middle',
-                                            paddingBottom: `${organization.logo ? '11px' : '0'}`
-                                        }}
-                                    >
+                                    <div key={`c${index}`} className="mb-3 pl-2 py-2 rounded border text-center position-relative">
                                         <Link to={reverse(ROUTES.ORGANIZATION, { id: organization.display_id })}>
                                             {organization.logo ? (
                                                 <img
@@ -72,28 +63,26 @@ const OrganizationsBox = ({ isLoadingOrganizations, organizationsList, observato
                                             )}
                                         </Link>
                                         {!!user && user.isCurationAllowed && (
-                                            <div className="mt-4 float-end">
-                                                <>
-                                                    <StatementActionButton
-                                                        title="Delete this organization from the observatory"
-                                                        icon={faTrash}
-                                                        requireConfirmation={true}
-                                                        confirmationMessage="Are you sure to delete?"
-                                                        confirmationButtons={[
-                                                            {
-                                                                title: 'Delete',
-                                                                color: 'danger',
-                                                                icon: faCheck,
-                                                                action: () => deleteOrganization(organization)
-                                                            },
-                                                            {
-                                                                title: 'Cancel',
-                                                                color: 'secondary',
-                                                                icon: faTimes
-                                                            }
-                                                        ]}
-                                                    />
-                                                </>
+                                            <div className="position-absolute" style={{ top: 3, right: 0 }}>
+                                                <StatementActionButton
+                                                    title="Delete this organization from the observatory"
+                                                    icon={faTrash}
+                                                    requireConfirmation={true}
+                                                    confirmationMessage="Are you sure to delete?"
+                                                    confirmationButtons={[
+                                                        {
+                                                            title: 'Delete',
+                                                            color: 'danger',
+                                                            icon: faCheck,
+                                                            action: () => deleteOrganization(organization)
+                                                        },
+                                                        {
+                                                            title: 'Cancel',
+                                                            color: 'secondary',
+                                                            icon: faTimes
+                                                        }
+                                                    ]}
+                                                />
                                             </div>
                                         )}
                                     </div>

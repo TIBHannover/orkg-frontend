@@ -1,21 +1,8 @@
 import { useState } from 'react';
-import {
-    Container,
-    Button,
-    ButtonDropdown,
-    DropdownToggle,
-    DropdownMenu,
-    DropdownItem,
-    Card,
-    CardBody,
-    CardTitle,
-    Badge,
-    Row,
-    Col
-} from 'reactstrap';
+import { Container, Button, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Badge, Row, Col } from 'reactstrap';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
-import { SubTitle, SubtitleSeparator } from 'components/styled';
+import { SubTitle } from 'components/styled';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPen, faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 import ExternalDescription from 'components/ResearchProblem/ExternalDescription';
@@ -97,14 +84,11 @@ const ResearchProblemHeader = ({ id }) => {
                     <TitleBar
                         titleAddition={
                             <>
-                                <SubtitleSeparator />
                                 <SubTitle>Research problem</SubTitle>
-                                <>
-                                    <FeaturedMark size="sm" featured={isFeatured} handleChangeStatus={handleChangeStatus} />{' '}
-                                    <div className="d-inline-block ms-1">
-                                        <MarkUnlisted size="sm" resourceId={id} unlisted={isUnlisted} handleChangeStatus={handleChangeStatus} />
-                                    </div>
-                                </>
+                                <FeaturedMark size="sm" featured={isFeatured} handleChangeStatus={handleChangeStatus} />{' '}
+                                <div className="d-inline-block ms-1">
+                                    <MarkUnlisted size="sm" resourceId={id} unlisted={isUnlisted} handleChangeStatus={handleChangeStatus} />
+                                </div>
                             </>
                         }
                         buttonGroup={
@@ -146,71 +130,62 @@ const ResearchProblemHeader = ({ id }) => {
                             onCloseModal={() => loadResearchProblemData(id)}
                         />
                     )}
-                    <Container className="p-0">
-                        <Card>
-                            <CardBody>
-                                <CardTitle tag="h5">Description</CardTitle>
-                                {researchProblemData.description && <div className="mb-4">{researchProblemData.description}</div>}
-                                {!researchProblemData.description && <div className="mb-2">No description for this research problem yet!</div>}
-                                {researchProblemData.sameAs && (
-                                    <ExternalDescription
-                                        query={researchProblemData.sameAs ? researchProblemData.sameAs.label : researchProblemData.label}
-                                    />
-                                )}
-                            </CardBody>
+                    <Container className="p-3 rounded box">
+                        <h2 className="h5">Description</h2>
+                        {researchProblemData.description && <div className="mb-4">{researchProblemData.description}</div>}
+                        {!researchProblemData.description && <div className="mb-2">No description for this research problem yet</div>}
+                        {researchProblemData.sameAs && (
+                            <ExternalDescription query={researchProblemData.sameAs ? researchProblemData.sameAs.label : researchProblemData.label} />
+                        )}
 
-                            {researchProblemData.subProblems && researchProblemData.subProblems.length > 0 && (
-                                <>
-                                    <hr className="m-0" />
-                                    <CardBody>
-                                        <CardTitle tag="h5">Subproblems</CardTitle>
-                                        <div>
-                                            {researchProblemData.subProblems.slice(0, 9).map(subfield => (
-                                                <Link
-                                                    key={`index${subfield.id}`}
-                                                    to={reverseWithSlug(ROUTES.RESEARCH_PROBLEM, {
-                                                        researchProblemId: subfield.id,
-                                                        slug: subfield.label
-                                                    })}
-                                                >
-                                                    <Badge color="light" className="me-2 mb-2">
-                                                        {subfield.label}
-                                                    </Badge>
-                                                </Link>
-                                            ))}
-                                            {researchProblemData.subProblems.length > 9 &&
-                                                showMoreFields &&
-                                                researchProblemData.subProblems.slice(9).map(subfield => (
-                                                    <Link
-                                                        key={`index${subfield.id}`}
-                                                        to={reverseWithSlug(ROUTES.RESEARCH_PROBLEM, {
-                                                            researchProblemId: subfield.id,
-                                                            slug: subfield.label
-                                                        })}
-                                                    >
-                                                        <Badge color="light" className="me-2 mb-2">
-                                                            {subfield.label}
-                                                        </Badge>
-                                                    </Link>
-                                                ))}
-                                            {researchProblemData.subProblems.length > 9 && (
-                                                <Button onClick={() => setShowMoreFields(v => !v)} color="link" size="sm">
-                                                    {showMoreFields ? 'Show less subfields' : 'Show more subfields'}
-                                                </Button>
-                                            )}
-                                        </div>
-                                    </CardBody>
-                                </>
-                            )}
+                        {researchProblemData.subProblems && researchProblemData.subProblems.length > 0 && (
+                            <>
+                                <hr />
 
-                            <hr className="m-0" />
-                            <CardBody>
-                                <Contributors researchProblemId={id} />
-                            </CardBody>
-                        </Card>
+                                <h2 className="h5">Subproblems</h2>
+                                <div>
+                                    {researchProblemData.subProblems.slice(0, 9).map(subfield => (
+                                        <Link
+                                            key={`index${subfield.id}`}
+                                            to={reverseWithSlug(ROUTES.RESEARCH_PROBLEM, {
+                                                researchProblemId: subfield.id,
+                                                slug: subfield.label
+                                            })}
+                                        >
+                                            <Badge color="light" className="me-2 mb-2">
+                                                {subfield.label}
+                                            </Badge>
+                                        </Link>
+                                    ))}
+                                    {researchProblemData.subProblems.length > 9 &&
+                                        showMoreFields &&
+                                        researchProblemData.subProblems.slice(9).map(subfield => (
+                                            <Link
+                                                key={`index${subfield.id}`}
+                                                to={reverseWithSlug(ROUTES.RESEARCH_PROBLEM, {
+                                                    researchProblemId: subfield.id,
+                                                    slug: subfield.label
+                                                })}
+                                            >
+                                                <Badge color="light" className="me-2 mb-2">
+                                                    {subfield.label}
+                                                </Badge>
+                                            </Link>
+                                        ))}
+                                    {researchProblemData.subProblems.length > 9 && (
+                                        <Button onClick={() => setShowMoreFields(v => !v)} color="link" size="sm" className="p-0 ms-2">
+                                            {showMoreFields ? 'Show less subfields' : 'Show more subfields'}
+                                        </Button>
+                                    )}
+                                </div>
+                            </>
+                        )}
+
+                        <hr />
+                        <Contributors researchProblemId={id} />
                     </Container>
                     <Container className="p-0">
-                        <Row className="mt-3">
+                        <Row className="mt-4">
                             <Col md="4" className="d-flex ">
                                 <AuthorsBox researchProblemId={id} />
                             </Col>

@@ -1,4 +1,3 @@
-import { Card, CardBody } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import ROUTES from 'constants/routes';
 import styled from 'styled-components';
@@ -10,7 +9,6 @@ import { StyledSlider } from './styled';
 import PropTypes from 'prop-types';
 
 const BenchmarkCarouselCardStyled = styled.div`
-    margin: 0 10px;
     display: flex !important;
 
     .benchmarkStats {
@@ -66,7 +64,7 @@ function BenchmarksCarousel(props) {
     };
 
     return (
-        <div>
+        <div style={{ margin: -7 }}>
             <StyledSlider {...settings}>
                 {benchmarks.map((benchmark, index) => {
                     const marginClasses = classNames({
@@ -75,23 +73,21 @@ function BenchmarksCarousel(props) {
                     });
                     return (
                         <BenchmarkCarouselCardStyled key={benchmark.id} className={marginClasses}>
-                            <Card className="flex-grow-1">
-                                <Link
-                                    to={reverse(ROUTES.BENCHMARK, { datasetId: benchmark.id, problemId: props.problemId })}
-                                    className="d-flex"
-                                    style={{ textDecoration: 'none', flex: 1 }}
-                                >
-                                    <CardBody className="d-flex flex-column">
-                                        <div className="benchmarkName flex-grow-1">{benchmark.label}</div>
+                            <Link
+                                to={reverse(ROUTES.BENCHMARK, { datasetId: benchmark.id, problemId: props.problemId })}
+                                className="d-flex box rounded m-2 p-3 flex-grow-1"
+                                style={{ textDecoration: 'none', flex: 1 }}
+                            >
+                                <div className="d-flex flex-column">
+                                    <div className="benchmarkName flex-grow-1">{benchmark.label}</div>
 
-                                        <div className="benchmarkStats text-muted">
-                                            Models: <b>{benchmark.total_models}</b> <br />
-                                            Papers: <b>{benchmark.total_papers}</b> <br />
-                                            Code: <b>{benchmark.total_codes}</b>
-                                        </div>
-                                    </CardBody>
-                                </Link>
-                            </Card>
+                                    <div className="benchmarkStats text-muted">
+                                        Models: <b>{benchmark.total_models}</b> <br />
+                                        Papers: <b>{benchmark.total_papers}</b> <br />
+                                        Code: <b>{benchmark.total_codes}</b>
+                                    </div>
+                                </div>
+                            </Link>
                         </BenchmarkCarouselCardStyled>
                     );
                 })}

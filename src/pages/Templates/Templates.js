@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Container, Col, Row, FormGroup, Label, Form, Input, ListGroup, ListGroupItem, Alert } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
-import { faAngleDoubleDown, faPlus, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 import { getStatementsByObjectAndPredicate } from 'services/backend/statements';
 import { getResourcesByClass } from 'services/backend/resources';
@@ -187,13 +187,12 @@ const Templates = () => {
                     >
                         ORKG help center
                     </a>
-                    .
                 </Alert>
                 <Form className="mb-3">
                     <Row>
                         <Col md={6}>
                             <FormGroup>
-                                <Label for="exampleEmail">Filter by research field</Label>
+                                <Label for="filter-research-field">Filter by research field</Label>
                                 <AutoComplete
                                     entityType={ENTITIES.RESOURCE}
                                     optionsClass={CLASSES.RESEARCH_FIELD}
@@ -205,12 +204,13 @@ const Templates = () => {
                                     allowCreate={false}
                                     isClearable
                                     autoFocus={false}
+                                    inputId="filter-research-field"
                                 />
                             </FormGroup>
                         </Col>
                         <Col md={6}>
                             <FormGroup>
-                                <Label for="examplePassword">Filter by reseach problem</Label>
+                                <Label for="filter-research-problem">Filter by research problem</Label>
                                 <AutoComplete
                                     entityType={ENTITIES.RESOURCE}
                                     optionsClass={CLASSES.PROBLEM}
@@ -222,6 +222,7 @@ const Templates = () => {
                                     allowCreate={false}
                                     isClearable
                                     autoFocus={false}
+                                    inputId="filter-research-problem"
                                 />
                             </FormGroup>
                         </Col>
@@ -229,13 +230,13 @@ const Templates = () => {
                     <Row>
                         <Col md={6}>
                             <FormGroup>
-                                <Label for="filterLabel">Filter by Label</Label>
-                                <Input value={filterLabel} type="text" name="filterLabel" onChange={handleLabelFilter} />
+                                <Label for="filter-label">Filter by label</Label>
+                                <Input value={filterLabel} type="text" id="filter-label" onChange={handleLabelFilter} />
                             </FormGroup>
                         </Col>
                         <Col md={6}>
                             <FormGroup>
-                                <Label for="examplePassword">Filter by class</Label>
+                                <Label for="filter-class">Filter by class</Label>
                                 <AutoComplete
                                     entityType={ENTITIES.CLASS}
                                     placeholder="Select or type to enter a class"
@@ -246,6 +247,7 @@ const Templates = () => {
                                     allowCreate={false}
                                     isClearable
                                     autoFocus={false}
+                                    inputId="filter-class"
                                 />
                             </FormGroup>
                         </Col>
@@ -283,12 +285,12 @@ const Templates = () => {
                                     : undefined
                             }
                         >
-                            <Icon icon={faAngleDoubleDown} /> Load more templates
+                            Load more templates
                         </ListGroupItem>
                     )}
                     {!hasNextPage && isLastPageReached && page > 1 && (
                         <ListGroupItem tag="div" className="text-center">
-                            You have reached the last page.
+                            You have reached the last page
                         </ListGroupItem>
                     )}
                 </ListGroup>

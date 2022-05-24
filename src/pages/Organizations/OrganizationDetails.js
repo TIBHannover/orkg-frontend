@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Container, Row, Col, Button, Card, CardBody } from 'reactstrap';
+import { Container, Row, Col, Button } from 'reactstrap';
 import { getOrganization } from 'services/backend/organizations';
 import InternalServerError from 'pages/InternalServerError';
 import Members from 'components/Organization/Members';
@@ -13,7 +13,7 @@ import styled from 'styled-components';
 import ROUTES from 'constants/routes';
 import { faPen, faPlus } from '@fortawesome/free-solid-svg-icons';
 import EditOrganization from 'components/Organization/EditOrganization';
-import { SubTitle, SubtitleSeparator } from 'components/styled';
+import { SubTitle } from 'components/styled';
 import { reverse } from 'named-urls';
 import TitleBar from 'components/TitleBar/TitleBar';
 import { ORGANIZATIONS_MISC } from 'constants/organizationsTypes';
@@ -100,12 +100,7 @@ const OrganizationDetails = () => {
             {!isLoading && !error && label && (
                 <>
                     <TitleBar
-                        titleAddition={
-                            <>
-                                <SubtitleSeparator />
-                                <SubTitle>{label}</SubTitle>
-                            </>
-                        }
+                        titleAddition={<SubTitle>{label}</SubTitle>}
                         buttonGroup={
                             !!user &&
                             (user.id === createdBy || user.isCurationAllowed) && (
@@ -117,7 +112,7 @@ const OrganizationDetails = () => {
                                         to={reverse(ROUTES.ADD_OBSERVATORY, { id: organizationId })}
                                         style={{ marginRight: 2 }}
                                     >
-                                        <Icon icon={faPlus} /> Create new observatory
+                                        <Icon icon={faPlus} /> Create observatory
                                     </Button>
                                     <Button color="secondary" size="sm" onClick={() => setShowEditDialog(v => !v)}>
                                         <Icon icon={faPen} /> Edit
@@ -129,40 +124,35 @@ const OrganizationDetails = () => {
                     >
                         Organization
                     </TitleBar>
-                    <Container className="p-0">
-                        <Card>
-                            <StyledOrganizationHeader className="mb-2  py-4 px-3">
-                                <Row>
-                                    <Col md={{ size: 8, order: 1 }} sm={{ size: 12, order: 2 }} xs={{ size: 12, order: 2 }}>
-                                        {label}
-                                        <div className="mt-2">
-                                            <a className="p-0 mt-2" href={url} target="_blank" rel="noopener noreferrer">
-                                                <Icon size="sm" icon={faGlobe} /> website {url && <Icon size="sm" icon={faExternalLinkAlt} />}
-                                            </a>
-                                        </div>
-                                    </Col>
-                                    {logo && (
-                                        <Col md={{ size: 4, order: 2 }} sm={{ size: 12, order: 1 }} xs={{ size: 12, order: 1 }}>
-                                            <a className="p-0" href={url} target="_blank" rel="noopener noreferrer">
-                                                <div className="logoContainer">
-                                                    <img className="mx-auto" src={logo} alt={`${label} logo`} />
-                                                </div>
-                                            </a>
-                                        </Col>
+                    <Container className="p-3 box rounded">
+                        <StyledOrganizationHeader className="mb-2 py-2">
+                            <Row>
+                                <Col md={{ size: 8, order: 1 }} sm={{ size: 12, order: 2 }} xs={{ size: 12, order: 2 }}>
+                                    <a className="p-0 mt-2" href={url} target="_blank" rel="noopener noreferrer">
+                                        <Icon size="sm" icon={faGlobe} /> {url} {url && <Icon size="sm" icon={faExternalLinkAlt} />}
+                                    </a>
+
+                                    {type === ORGANIZATIONS_MISC.CONFERENCE && date && (
+                                        <p className="mb-0 mt-2">
+                                            <b>Conference date</b>: {date} <br />
+                                            <b>Review Process</b>: {isDoubleBlind ? 'Double-blind' : 'Single-blind'}
+                                        </p>
                                     )}
-                                </Row>
-                                {type === ORGANIZATIONS_MISC.CONFERENCE && date && (
-                                    <>
-                                        <b>Conference date</b>: {date} <br />
-                                        <b>Review Process</b>: {isDoubleBlind ? 'Double-blind' : 'Single-blind'}
-                                    </>
+                                </Col>
+                                {logo && (
+                                    <Col md={{ size: 4, order: 2 }} sm={{ size: 12, order: 1 }} xs={{ size: 12, order: 1 }}>
+                                        <a className="p-0" href={url} target="_blank" rel="noopener noreferrer">
+                                            <div className="logoContainer">
+                                                <img className="mx-auto" src={logo} alt={`${label} logo`} />
+                                            </div>
+                                        </a>
+                                    </Col>
                                 )}
-                            </StyledOrganizationHeader>
-                            <hr className="m-0" />
-                            <CardBody>
-                                <Members organizationsId={organizationId} />
-                            </CardBody>
-                        </Card>
+                            </Row>
+                        </StyledOrganizationHeader>
+                        <hr />
+
+                        <Members organizationsId={organizationId} />
                     </Container>
                     <Observatories organizationsId={organizationId} />
                 </>

@@ -47,7 +47,7 @@ export const StyledMenuListHeader = styled.div`
 `;
 
 function Autocomplete(props) {
-    const [inputValue, setInputValue] = useState(typeof props.value !== 'object' || props.value === null ? props.value : props.value.label);
+    const [inputValue, setInputValue] = useState(typeof props.value !== 'object' || props.value === null ? props.value : null);
     const [menuIsOpen, setMenuIsOpen] = useState(false);
     const [ontologySelectorIsOpen, setOntologySelectorIsOpen] = useState(false);
     const [selectedOntologies, setSelectedOntologies] = useState([]);

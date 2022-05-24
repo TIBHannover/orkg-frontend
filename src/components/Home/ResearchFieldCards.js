@@ -123,7 +123,7 @@ const ResearchFieldCards = ({ selectedResearchField, handleFieldSelect, research
                     <Icon icon={faStream} className="text-primary" /> Browse by research field
                 </h1>
                 <div className="col-md-4 mt-2 mt-md-0 flex-row-reverse d-flex">
-                    <div>
+                    <div style={{ minWidth: 300 }}>
                         <Autocomplete
                             requestUrl={resourcesUrl}
                             optionsClass={CLASSES.RESEARCH_FIELD}
