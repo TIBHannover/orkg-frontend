@@ -4,7 +4,7 @@ import { createClass } from 'services/backend/classes';
 import REGEX from 'constants/regex';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
-import { get_error_message } from 'utils';
+import { getErrorMessage } from 'utils';
 
 function CreateClassModal(props) {
     const isURI = new RegExp(REGEX.URL).test(props.label.trim());
@@ -49,9 +49,9 @@ function CreateClassModal(props) {
                         value={uri}
                         placeholder="Enter the URI of the class"
                         onChange={e => setUri(e.target.value)}
-                        invalid={Boolean(get_error_message(errors, 'uri'))}
+                        invalid={Boolean(getErrorMessage(errors, 'uri'))}
                     />
-                    {Boolean(get_error_message(errors, 'uri')) && <FormFeedback>{get_error_message(errors, 'uri')}</FormFeedback>}
+                    {Boolean(getErrorMessage(errors, 'uri')) && <FormFeedback>{getErrorMessage(errors, 'uri')}</FormFeedback>}
                     <FormText color="muted">Please provide the URI of the class if you are using a class defined in an external ontology</FormText>
                 </FormGroup>
             </ModalBody>

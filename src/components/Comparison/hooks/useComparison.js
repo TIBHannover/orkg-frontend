@@ -11,7 +11,7 @@ import {
     filterObjectOfStatementsByPredicateAndClass,
     getArrayParamFromQueryString,
     getParamFromQueryString,
-    get_error_message,
+    getErrorMessage,
     applyRule,
     getRuleByProperty,
     getComparisonData,
@@ -190,7 +190,7 @@ function useComparison({ id }) {
                     if (error.statusCode && error.statusCode === 404) {
                         errorMessage = 'The requested resource is not found';
                     } else {
-                        errorMessage = get_error_message(error);
+                        errorMessage = getErrorMessage(error);
                     }
                     setErrors(errorMessage);
                     setIsLoadingMetaData(false);
@@ -433,7 +433,7 @@ function useComparison({ id }) {
             })
             .catch(error => {
                 console.log(error);
-                setErrors(get_error_message(error));
+                setErrors(getErrorMessage(error));
                 setIsLoadingComparisonResult(false);
                 setIsFailedLoadingComparisonResult(true);
             });

@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import REGEX from 'constants/regex';
 import { toast } from 'react-toastify';
 import { reverse } from 'named-urls';
-import { get_error_message } from 'utils';
+import { getErrorMessage } from 'utils';
 import ROUTES from 'constants/routes';
 import TitleBar from 'components/TitleBar/TitleBar';
 import requireAuthentication from 'requireAuthentication';
@@ -36,7 +36,7 @@ const AddClass = () => {
                 } catch (error) {
                     console.error(error);
                     setIsLoading(false);
-                    toast.error(`${get_error_message(error, 'uri')}`);
+                    toast.error(`${getErrorMessage(error, 'uri')}`);
                 }
             }
         } else {

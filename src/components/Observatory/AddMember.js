@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { useState, useEffect } from 'react';
 import { addUserToObservatory } from 'services/backend/users';
 import { SelectGlobalStyle } from 'components/Autocomplete/styled';
-import { get_error_message } from 'utils';
+import { getErrorMessage } from 'utils';
 import Select from 'react-select';
 
 function AddMember(props) {
@@ -25,7 +25,7 @@ function AddMember(props) {
                     props.toggle();
                 })
                 .catch(error => {
-                    toast.error(`Error adding member! ${get_error_message(error, 'user_email') ?? error?.message}`);
+                    toast.error(`Error adding member! ${getErrorMessage(error, 'user_email') ?? error?.message}`);
                     setIsLoading(false);
                 });
         } else {

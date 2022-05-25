@@ -23,13 +23,6 @@ import { LOCATION_CHANGE as LOCATION_CHANGE_RFH } from 'redux-first-history';
 
 const cookies = new Cookies();
 
-export function hashCode(s) {
-    return s.split('').reduce((a, b) => {
-        a = (a << 5) - a + b.charCodeAt(0);
-        return a & a;
-    }, 0);
-}
-
 /**
  * Parse comma separated values from the query string
  *
@@ -109,7 +102,7 @@ export function deleteArrayEntryByObjectValue(arr, object, value) {
 
     let indexToDelete = -1;
 
-    for (let i = 0; i < newArr.length; i++) {
+    for (let i = 0; i < newArr.length; i += 1) {
         if (newArr[i][object] === value) {
             indexToDelete = i;
             break;
@@ -160,30 +153,70 @@ export function timeoutPromise(ms, promise) {
  * @param {Object} errors
  * @param {String} field
  */
-export const get_error_message = (errors, field = null) => {
+export const getErrorMessage = (errors, field = null) => {
     if (!errors) {
         return null;
     }
     if (field === null) {
         return errors.message ? errors.message : null;
     }
-    const field_error = errors.errors ? errors.errors.find(e => e.field === field) : null;
-    return field_error ? capitalize(field_error.message) : null;
+    const fieldError = errors.errors ? errors.errors.find(e => e.field === field) : null;
+    return fieldError ? capitalize(fieldError.message) : null;
 };
+
+/**
+ * Filter a list of statements by predicate id and return the object (including the statement id and created_at)
+ *
+ * @param {Array} statementsArray Array of statements
+ * @param {String} predicateID Predicate ID
+ * @param {String} classID Class ID
+ * @param {String} subjectID Subject ID
+ * @param {Boolean} isUnique if this predicate is unique and has one value
+ */
+export const filterObjectOfStatementsByPredicateAndClass = (statementsArray, predicateID, isUnique = true, classID = null, subjectID = null) => {
+    if (!statementsArray) {
+        return isUnique ? null : [];
+    }
+    let result = statementsArray.filter(
+        statement => statement.predicate.id === predicateID && (statement.subject.id === subjectID || subjectID === null),
+    );
+    if (classID) {
+        result = statementsArray.filter(statement => statement.object.classes && statement.object.classes.includes(classID));
+    }
+    if (result.length > 0 && isUnique) {
+        return { ...result[0].object, statementId: result[0].id, s_created_at: result[0].created_at };
+    }
+    if (result.length > 0 && !isUnique) {
+        return result.map(s => ({ ...s.object, statementId: s.id, s_created_at: s.created_at }));
+    }
+    return isUnique ? null : [];
+};
+
+function getOrder(paperStatements) {
+    let order = paperStatements.filter(statement => statement.predicate.id === PREDICATES.ORDER);
+    if (order.length > 0) {
+        order = order[0].object.label;
+    } else {
+        order = Infinity;
+    }
+    return order;
+}
 
 /**
  * Parse paper statements and return a a paper object
  *
  * @param {Array} paperStatements
  */
-export const getPaperData_ViewPaper = (paperResource, paperStatements) => {
+export const getPaperDataViewPaper = (paperResource, paperStatements) => {
     const authors = filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_AUTHOR, false);
     const contributions = filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_CONTRIBUTION, false, CLASSES.CONTRIBUTION);
 
     return {
         paperResource,
-        authors: authors ? authors.sort((a, b) => a.s_created_at.localeCompare(b.s_created_at)) : [], // statements are ordered desc, so first author is last => thus reverse
-        contributions: contributions.sort((a, b) => a.label.localeCompare(b.label)), // sort contributions ascending, so contribution 1, is actually the first one
+        // statements are ordered desc, so first author is last => thus reverse
+        authors: authors ? authors.sort((a, b) => a.s_created_at.localeCompare(b.s_created_at)) : [],
+        // sort contributions ascending, so contribution 1, is actually the first one
+        contributions: contributions.sort((a, b) => a.label.localeCompare(b.label)),
         publicationMonth: filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_PUBLICATION_MONTH, true),
         publicationYear: filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_PUBLICATION_YEAR, true),
         doi: filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_DOI, true),
@@ -206,7 +239,8 @@ export const getPaperData = (resource, paperStatements) => {
     }
     const researchField = filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_RESEARCH_FIELD, true, CLASSES.RESEARCH_FIELD);
     const publicationYear = filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_PUBLICATION_YEAR, true);
-    const publicationMonth = filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_PUBLICATION_MONTH, true); // gets month[0] and resourceId[1]
+    // gets month[0] and resourceId[1]
+    const publicationMonth = filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_PUBLICATION_MONTH, true);
     const authors = filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_AUTHOR, false);
     const contributions = filterObjectOfStatementsByPredicateAndClass(paperStatements, PREDICATES.HAS_CONTRIBUTION, false, CLASSES.CONTRIBUTION);
     const order = getOrder(paperStatements);
@@ -222,7 +256,8 @@ export const getPaperData = (resource, paperStatements) => {
         researchField,
         doi,
         authors: authors ? authors.sort((a, b) => a.s_created_at.localeCompare(b.s_created_at)) : [],
-        contributions: contributions ? contributions.sort((a, b) => a.label.localeCompare(b.label)) : [], // sort contributions ascending, so contribution 1, is actually the first one
+        // sort contributions ascending, so contribution 1, is actually the first one
+        contributions: contributions ? contributions.sort((a, b) => a.label.localeCompare(b.label)) : [],
         order,
         created_by: resource.created_by !== MISC.UNKNOWN_ID ? resource.created_by : null,
         publishedIn,
@@ -348,7 +383,8 @@ export const getComparisonData = (resource, comparisonStatements) => {
     return {
         ...resource,
         label: resource.label ? resource.label : 'No Title',
-        authors: authors ? authors.sort((a, b) => a.s_created_at.localeCompare(b.s_created_at)) : [], // sort authors by their statement creation time (s_created_at)
+        // sort authors by their statement creation time (s_created_at)
+        authors: authors ? authors.sort((a, b) => a.s_created_at.localeCompare(b.s_created_at)) : [],
         contributions,
         references,
         doi: doi ? doi.label : '',
@@ -430,8 +466,8 @@ export const getTemplateComponentData = (component, componentStatements) => {
             validationRules && Object.keys(validationRules).length > 0
                 ? validationRules.reduce((obj, item) => {
                       const rule = item.label.split(/#(.+)/)[0];
-                      const value = item.label.split(/#(.+)/)[1];
-                      return Object.assign(obj, { [rule]: value });
+                      const _value = item.label.split(/#(.+)/)[1];
+                      return Object.assign(obj, { [rule]: _value });
                   }, {})
                 : {},
     };
@@ -592,34 +628,6 @@ export const generateRdfDataVocabularyFile = (data, contributions, properties, m
 };
 
 /**
- * Filter a list of statements by predicate id and return the object (including the statement id and created_at)
- *
- * @param {Array} statementsArray Array of statements
- * @param {String} predicateID Predicate ID
- * @param {String} classID Class ID
- * @param {String} subjectID Subject ID
- * @param {Boolean} isUnique if this predicate is unique and has one value
- */
-export const filterObjectOfStatementsByPredicateAndClass = (statementsArray, predicateID, isUnique = true, classID = null, subjectID = null) => {
-    if (!statementsArray) {
-        return isUnique ? null : [];
-    }
-    let result = statementsArray.filter(
-        statement => statement.predicate.id === predicateID && (statement.subject.id === subjectID || subjectID === null),
-    );
-    if (classID) {
-        result = statementsArray.filter(statement => statement.object.classes && statement.object.classes.includes(classID));
-    }
-    if (result.length > 0 && isUnique) {
-        return { ...result[0].object, statementId: result[0].id, s_created_at: result[0].created_at };
-    }
-    if (result.length > 0 && !isUnique) {
-        return result.map(s => ({ ...s.object, statementId: s.id, s_created_at: s.created_at }));
-    }
-    return isUnique ? null : [];
-};
-
-/**
  * Filter a list of statements by predicate id and return the subject (including the statement id and created_at)
  *
  * @param {Array} statementsArray Array of statements
@@ -727,7 +735,7 @@ export const similarPropertiesByLabel = (propertyLabel, propertyData) => {
     return uniq(result);
 };
 
-export function list_to_tree(list) {
+export function listToTree(list) {
     const map = {};
     let node;
     const roots = [];
@@ -767,7 +775,7 @@ export const groupVersionsOfComparisons = (comparisons, sortFunc = (a, b) => new
     // 1- Remove duplicated and keep the ones with hasPreviousVersion
     let result = comparisons.filter(c => c?.classes?.includes(CLASSES.COMPARISON));
     // 2- Make a tree of versions
-    result = list_to_tree(uniqBy(sortBy(result, 'hasPreviousVersion'), 'id'));
+    result = listToTree(uniqBy(sortBy(result, 'hasPreviousVersion'), 'id'));
     // 3- We flat the versions  inside the roots
     for (let i = 0; i < result.length; i += 1) {
         // Always the new version if the main resource
@@ -866,16 +874,6 @@ export const parseCiteResult = paper => {
         url,
     };
 };
-
-function getOrder(paperStatements) {
-    let order = paperStatements.filter(statement => statement.predicate.id === PREDICATES.ORDER);
-    if (order.length > 0) {
-        order = order[0].object.label;
-    } else {
-        order = Infinity;
-    }
-    return order;
-}
 
 /**
  * Parse resources statements and return a related figures objects

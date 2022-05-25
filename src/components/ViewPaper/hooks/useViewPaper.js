@@ -5,7 +5,7 @@ import { getResource } from 'services/backend/resources';
 import { useDispatch } from 'react-redux';
 import { resetStatementBrowser } from 'slices/statementBrowserSlice';
 import { loadPaper, setPaperAuthors } from 'slices/viewPaperSlice';
-import { getPaperData_ViewPaper, filterObjectOfStatementsByPredicateAndClass } from 'utils';
+import { getPaperDataViewPaper, filterObjectOfStatementsByPredicateAndClass } from 'utils';
 import { PREDICATES, CLASSES } from 'constants/graphSettings';
 
 const useViewPaper = ({ paperId }) => {
@@ -49,7 +49,7 @@ const useViewPaper = ({ paperId }) => {
                     getStatementsBundleBySubject({ id: paperId, maxLevel: 2, blacklist: [CLASSES.RESEARCH_FIELD, CLASSES.CONTRIBUTION] }),
                     getIsVerified(paperId).catch(() => false),
                 ]).then(([paperStatements, verified]) => {
-                    const paperData = getPaperData_ViewPaper(paperResource, paperStatements.statements?.filter(s => s.subject.id === paperId));
+                    const paperData = getPaperDataViewPaper(paperResource, paperStatements.statements?.filter(s => s.subject.id === paperId));
                     dispatch(loadPaper({ ...paperData, verified }));
                     setIsLoading(false);
                     setAuthorsORCID(paperStatements.statements, paperId);

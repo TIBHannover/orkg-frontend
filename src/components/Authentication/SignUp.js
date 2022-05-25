@@ -6,7 +6,7 @@ import { registerWithEmailAndPassword, signInWithEmailAndPassword, getUserInform
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { useDispatch } from 'react-redux';
-import { get_error_message, checkCookie } from 'utils';
+import { getErrorMessage, checkCookie } from 'utils';
 import ROUTES_CMS from 'constants/routesCms';
 import ROUTES from 'constants/routes';
 import { Cookies } from 'react-cookie';
@@ -95,7 +95,7 @@ export default function SignUp() {
     return (
         <>
             <Form className="ps-3 pe-3 pt-2" onSubmit={signUp}>
-                {Boolean(get_error_message(errors)) && <Alert color="danger">{get_error_message(errors)}</Alert>}
+                {Boolean(getErrorMessage(errors)) && <Alert color="danger">{getErrorMessage(errors)}</Alert>}
                 <FormGroup>
                     <Label for="name">Display name</Label>
                     <Input
@@ -105,9 +105,9 @@ export default function SignUp() {
                         name="name"
                         id="name"
                         placeholder="Name"
-                        invalid={Boolean(get_error_message(errors, 'display_name'))}
+                        invalid={Boolean(getErrorMessage(errors, 'display_name'))}
                     />
-                    {Boolean(get_error_message(errors, 'display_name')) && <FormFeedback>{get_error_message(errors, 'display_name')}</FormFeedback>}
+                    {Boolean(getErrorMessage(errors, 'display_name')) && <FormFeedback>{getErrorMessage(errors, 'display_name')}</FormFeedback>}
                 </FormGroup>
                 <FormGroup>
                     <Label for="Email">Email address</Label>
@@ -118,9 +118,9 @@ export default function SignUp() {
                         name="email"
                         id="Email"
                         placeholder="Email address"
-                        invalid={Boolean(get_error_message(errors, 'email'))}
+                        invalid={Boolean(getErrorMessage(errors, 'email'))}
                     />
-                    {Boolean(get_error_message(errors, 'email')) && <FormFeedback>{get_error_message(errors, 'email')}</FormFeedback>}
+                    {Boolean(getErrorMessage(errors, 'email')) && <FormFeedback>{getErrorMessage(errors, 'email')}</FormFeedback>}
                 </FormGroup>
                 <FormGroup>
                     <Label for="Password">Password</Label>
@@ -131,9 +131,9 @@ export default function SignUp() {
                         name="password"
                         id="Password"
                         placeholder="Password"
-                        invalid={Boolean(get_error_message(errors, 'password'))}
+                        invalid={Boolean(getErrorMessage(errors, 'password'))}
                     />
-                    {Boolean(get_error_message(errors, 'password')) && <FormFeedback>{get_error_message(errors, 'password')}</FormFeedback>}
+                    {Boolean(getErrorMessage(errors, 'password')) && <FormFeedback>{getErrorMessage(errors, 'password')}</FormFeedback>}
                 </FormGroup>
                 <FormGroup>
                     <Label for="matching_password">Confirm Password</Label>
@@ -144,10 +144,10 @@ export default function SignUp() {
                         name="matching_password"
                         id="matching_password"
                         placeholder="Confirm password"
-                        invalid={Boolean(get_error_message(errors, 'matching_password'))}
+                        invalid={Boolean(getErrorMessage(errors, 'matching_password'))}
                     />
-                    {Boolean(get_error_message(errors, 'matching_password')) && (
-                        <FormFeedback>{get_error_message(errors, 'matching_password')}</FormFeedback>
+                    {Boolean(getErrorMessage(errors, 'matching_password')) && (
+                        <FormFeedback>{getErrorMessage(errors, 'matching_password')}</FormFeedback>
                     )}
                 </FormGroup>
                 <FormGroup check className="mb-0" style={{ fontSize: '90%' }}>

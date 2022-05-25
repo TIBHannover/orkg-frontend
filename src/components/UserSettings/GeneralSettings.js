@@ -6,7 +6,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner, faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
 import { updateAuth } from 'slices/authSlice';
-import { get_error_message } from 'utils';
+import { getErrorMessage } from 'utils';
 import { toast } from 'react-toastify';
 import Gravatar from 'react-gravatar';
 import styled from 'styled-components';
@@ -85,7 +85,7 @@ class GeneralSettings extends Component {
     render = () => (
         <>
             <h5 className="mb-4">General account settings</h5>
-            {Boolean(get_error_message(this.state.errors)) && <Alert color="danger">{get_error_message(this.state.errors)}</Alert>}
+            {Boolean(getErrorMessage(this.state.errors)) && <Alert color="danger">{getErrorMessage(this.state.errors)}</Alert>}
             <Form>
                 <FormGroup>
                     <Label for="display_name">Display name</Label>
@@ -95,10 +95,10 @@ class GeneralSettings extends Component {
                         name="display_name"
                         id="display_name"
                         placeholder="Display name"
-                        invalid={Boolean(get_error_message(this.state.errors, 'display_name'))}
+                        invalid={Boolean(getErrorMessage(this.state.errors, 'display_name'))}
                     />
-                    {Boolean(get_error_message(this.state.errors, 'display_name')) && (
-                        <FormFeedback>{get_error_message(this.state.errors, 'display_name')}</FormFeedback>
+                    {Boolean(getErrorMessage(this.state.errors, 'display_name')) && (
+                        <FormFeedback>{getErrorMessage(this.state.errors, 'display_name')}</FormFeedback>
                     )}
                 </FormGroup>
                 <FormGroup>
