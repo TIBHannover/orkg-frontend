@@ -55,7 +55,7 @@ const CreatePaperModal = ({ isOpen, toggle, onCreatePaper, initialValue }) => {
 
     const FIELDS = {
         researchField: {
-            label: 'Research Field *',
+            label: 'Research field *',
             type: 'researchField',
             value: researchField,
             onChange: setResearchField,

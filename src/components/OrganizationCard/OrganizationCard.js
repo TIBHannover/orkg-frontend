@@ -36,25 +36,25 @@ function OrganizationCard(props) {
     return (
         <div className="col-4 mb-3">
             {props.organization.logo && (
-                <StyledOrganizationCard className="card h-100">
-                    <Link className="logoContainer" to={reverse(ROUTES.ORGANIZATION, { id: props.organization.display_id })}>
-                        <img className="mx-auto p-2" src={props.organization.logo} alt={`${props.organization.name} logo`} />
-                    </Link>
-                    <CardBody>
-                        <CardTitle className="text-center">
-                            <Link to={reverse(ROUTES.ORGANIZATION, { id: props.organization.display_id })}>{props.organization.name}</Link>
-                        </CardTitle>
-                    </CardBody>
-                </StyledOrganizationCard>
+                <Link to={reverse(ROUTES.ORGANIZATION, { id: props.organization.display_id })}>
+                    <StyledOrganizationCard className="card h-100">
+                        <Link className="logoContainer" to={reverse(ROUTES.ORGANIZATION, { id: props.organization.display_id })}>
+                            <img className="mx-auto p-2" src={props.organization.logo} alt={`${props.organization.name} logo`} />
+                        </Link>
+                        <CardBody>
+                            <CardTitle className="text-center">{props.organization.name}</CardTitle>
+                        </CardBody>
+                    </StyledOrganizationCard>
+                </Link>
             )}
             {!props.organization.logo && (
-                <Card className="h-100">
-                    <CardBody className="d-flex">
-                        <CardTitle className="align-self-center text-center flex-grow-1">
-                            <Link to={reverse(ROUTES.ORGANIZATION, { id: props.organization.display_id })}>{props.organization.name}</Link>
-                        </CardTitle>
-                    </CardBody>
-                </Card>
+                <Link to={reverse(ROUTES.ORGANIZATION, { id: props.organization.display_id })}>
+                    <Card className="h-100">
+                        <CardBody className="d-flex">
+                            <CardTitle className="align-self-center text-center flex-grow-1">{props.organization.name}</CardTitle>
+                        </CardBody>
+                    </Card>
+                </Link>
             )}
         </div>
     );

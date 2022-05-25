@@ -21,30 +21,31 @@ const LastUpdatesBox = ({ researchFieldId }) => {
             <h5>Last updates</h5>
             <div className="mt-3 flex-grow-1">
                 <div>
-                    {!isLoading &&
-                        activities?.length > 0 &&
-                        activities.slice(0, 3).map(activity => (
-                            <StyledActivity key={`log${activity.id}`} className="ps-3 pb-3">
-                                <div className="time">{moment(activity.created_at).fromNow()}</div>
-                                <div className="action">
-                                    {activity.profile?.id ? (
-                                        <>
-                                            <Link to={reverse(ROUTES.USER_PROFILE, { userId: activity.profile.id })}>
-                                                {activity.profile.display_name}
-                                            </Link>
-                                        </>
-                                    ) : (
-                                        <i>Anonymous user</i>
-                                    )}{' '}
-                                    added
-                                    {` ${getResourceTypeLabel(activity.classes?.length > 0 ? activity.classes[0] : '')} `}
-                                    <Link to={getResourceLink(activity.classes?.length > 0 ? activity.classes[0] : '', activity.id)}>
-                                        {truncate(activity.label, { length: 50 })}
-                                    </Link>
-                                </div>
-                            </StyledActivity>
-                        ))}
-
+                    <div>
+                        {!isLoading &&
+                            activities?.length > 0 &&
+                            activities.slice(0, 3).map(activity => (
+                                <StyledActivity key={`log${activity.id}`} className="ps-3 pb-3">
+                                    <div className="time">{moment(activity.created_at).fromNow()}</div>
+                                    <div className="action">
+                                        {activity.profile?.id ? (
+                                            <>
+                                                <Link to={reverse(ROUTES.USER_PROFILE, { userId: activity.profile.id })}>
+                                                    {activity.profile.display_name}
+                                                </Link>
+                                            </>
+                                        ) : (
+                                            <i>Anonymous user</i>
+                                        )}{' '}
+                                        added
+                                        {` ${getResourceTypeLabel(activity.classes?.length > 0 ? activity.classes[0] : '')} `}
+                                        <Link to={getResourceLink(activity.classes?.length > 0 ? activity.classes[0] : '', activity.id)}>
+                                            {truncate(activity.label, { length: 50 })}
+                                        </Link>
+                                    </div>
+                                </StyledActivity>
+                            ))}
+                    </div>
                     {!isLoading && activities.length > 3 && (
                         <div className="text-center">
                             <Button size="sm" onClick={() => setOpenModal(v => !v)} color="light">

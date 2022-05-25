@@ -121,7 +121,7 @@ const useListPage = ({ label, resourceClass, renderListItem }) => {
                             Load more
                         </div>
                     )}
-                    {!hasNextPage && isLastPageReached && <div className="text-center mt-3">You have reached the last page.</div>}
+                    {!hasNextPage && isLastPageReached && <div className="text-center mt-3">You have reached the last page</div>}
                 </ListGroup>
             </Container>
         </>

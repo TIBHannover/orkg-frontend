@@ -73,7 +73,7 @@ const HelpCenter = () => {
                 <Row className="mt-5">
                     {categories.map(category => (
                         <Col key={category.id} md="6">
-                            <h3>
+                            <h2 className="h4">
                                 <Link
                                     to={reverse(ROUTES.HELP_CENTER_CATEGORY, {
                                         id: category.id,
@@ -82,7 +82,7 @@ const HelpCenter = () => {
                                 >
                                     {category.title}
                                 </Link>
-                            </h3>
+                            </h2>
                             <ul className="ps-3 mb-0">
                                 {category.help_articles &&
                                     category.help_articles.slice(0, 5).map(article => (

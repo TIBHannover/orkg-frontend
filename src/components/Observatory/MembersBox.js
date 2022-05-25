@@ -46,7 +46,7 @@ const MembersBox = ({ observatoryId, organizationsList }) => {
     };
 
     return (
-        <div className="box rounded-3 p-4 flex-grow-1">
+        <div className="box rounded-3 p-3 flex-grow-1">
             <h5>Members</h5>
             {!!user && user.isCurationAllowed && (
                 <Button outline size="sm" style={{ float: 'right', marginTop: '-33px' }} onClick={() => setShowAddMemberDialog(v => !v)}>
@@ -122,7 +122,7 @@ const MembersBox = ({ observatoryId, organizationsList }) => {
                                 )}
                             </div>
                         ) : (
-                            <div className="text-center mt-4 mb-4">No members in this observatory yet.</div>
+                            <div className="text-center mt-4 mb-4">No members in this observatory yet</div>
                         )}
                     </div>
                 ) : (

@@ -130,14 +130,14 @@ const IntegratedList = ({ id, boxShadow }) => {
                                 Load more content
                             </div>
                         )}
-                        {!hasNextPage && isLastPageReached && page !== 1 && <div className="text-center mt-3">You have reached the last page.</div>}
+                        {!hasNextPage && isLastPageReached && page !== 1 && <div className="text-center m-2">You have reached the last page</div>}
                     </ListGroup>
                 )}
                 {items.length === 0 && !isLoading && (
                     <div className={boxShadow ? 'container box rounded' : ''}>
                         <div className="p-5 text-center mt-4 mb-4">
                             There are no {sort === 'featured' ? 'featured' : sort === 'unlisted' ? 'unlisted' : ''}{' '}
-                            {classesFilter.map(c => c.label).join(', ')} for this observatory, yet.
+                            {classesFilter.map(c => c.label).join(', ')} for this observatory, yet
                             <br />
                             <br />
                         </div>

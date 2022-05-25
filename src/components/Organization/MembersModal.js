@@ -18,10 +18,9 @@ const MembersModal = ({ members, openModal, setOpenModal }) => (
                                 />
                             </div>
                         </div>
-                        {members.length - 1 !== index && <hr className="mb-0 mt-3" />}
                     </div>
                 ))}
-                {members?.length === 0 && <div className="mt-4 mb-4">No members yet.</div>}
+                {members?.length === 0 && <div className="mt-4 mb-4">No members yet</div>}
             </div>
         </ModalBody>
     </Modal>

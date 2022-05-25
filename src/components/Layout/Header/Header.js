@@ -416,15 +416,27 @@ const Header = () => {
                                 <DropdownItem tag={RouterNavLink} end to={ROUTES.VISUALIZATIONS} onClick={closeMenu}>
                                     Visualizations
                                 </DropdownItem>
-                                <DropdownItem tag={RouterNavLink} end to={ROUTES.REVIEWS} onClick={closeMenu}>
+                                <DropdownItem
+                                    tag={RouterNavLink}
+                                    end
+                                    to={ROUTES.REVIEWS}
+                                    onClick={closeMenu}
+                                    className="d-flex justify-content-between"
+                                >
                                     Reviews{' '}
-                                    <small>
+                                    <small className="ms-2">
                                         <Badge color="info">Beta</Badge>
                                     </small>
                                 </DropdownItem>
-                                <DropdownItem tag={RouterNavLink} end to={ROUTES.LISTS} onClick={closeMenu}>
+                                <DropdownItem
+                                    tag={RouterNavLink}
+                                    end
+                                    to={ROUTES.LISTS}
+                                    onClick={closeMenu}
+                                    className="d-flex justify-content-between"
+                                >
                                     Lists{' '}
-                                    <small>
+                                    <small className="ms-2">
                                         <Badge color="info">Beta</Badge>
                                     </small>
                                 </DropdownItem>
@@ -438,15 +450,27 @@ const Header = () => {
                                 <ContentTypesMenu closeMenu={closeMenu} />
 
                                 <DropdownItem divider />
-                                <DropdownItem tag={RouterNavLink} end to={ROUTES.OBSERVATORIES} onClick={closeMenu}>
+                                <DropdownItem
+                                    tag={RouterNavLink}
+                                    end
+                                    to={ROUTES.OBSERVATORIES}
+                                    onClick={closeMenu}
+                                    className="d-flex justify-content-between"
+                                >
                                     Observatories{' '}
-                                    <small>
+                                    <small className="ms-2">
                                         <Badge color="info">Beta</Badge>
                                     </small>
                                 </DropdownItem>
-                                <DropdownItem tag={RouterNavLink} end to={ROUTES.ORGANIZATIONS} onClick={closeMenu}>
+                                <DropdownItem
+                                    tag={RouterNavLink}
+                                    end
+                                    to={ROUTES.ORGANIZATIONS}
+                                    onClick={closeMenu}
+                                    className="d-flex justify-content-between"
+                                >
                                     Organizations{' '}
-                                    <small>
+                                    <small className="ms-2">
                                         <Badge color="info">Beta</Badge>
                                     </small>
                                 </DropdownItem>

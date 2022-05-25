@@ -43,15 +43,13 @@ const Observatories = ({ organizationsId }) => {
                 {observatories?.length > 0 && (
                     <ListGroup className="box">
                         {observatories.map((observatory, index) => (
-                            <div key={`c${index}`} className="list-group-item list-group-item-action pe-2 p-3">
+                            <div key={`c${index}`} className="list-group-item pe-2 p-3">
                                 <div>
-                                    <div>
-                                        <Link to={reverse(ROUTES.OBSERVATORY, { id: observatory.display_id })}>{observatory.name}</Link>
-                                    </div>
-                                    <Dotdotdot clamp={3}>
-                                        <small className="text-muted">{observatory.description}</small>
-                                    </Dotdotdot>
+                                    <Link to={reverse(ROUTES.OBSERVATORY, { id: observatory.display_id })}>{observatory.name}</Link>
                                 </div>
+                                <Dotdotdot clamp={3}>
+                                    <small className="text-muted">{observatory.description}</small>
+                                </Dotdotdot>
                             </div>
                         ))}
                     </ListGroup>

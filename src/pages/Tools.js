@@ -13,7 +13,7 @@ const ToolsContainer = styled(Container)`
     flex-wrap: wrap;
     justify-content: center;
     max-width: 1340px !important;
-    margin-top: 50px;
+    margin-top: 30px;
 
     @media (max-width: 768px) {
         margin-top: 0;

@@ -122,17 +122,12 @@ const AddResource = () => {
                 <div className="pt-2">
                     <FormGroup>
                         <Label for="ResourceLabel">Resource label or DOI</Label>
-                        <Input
-                            onChange={e => setLabel(e.target.value)}
-                            type="text"
-                            name="value"
-                            id="ResourceLabel"
-                            disabled={isLoading}
-                            placeholder="Resource label or DOI"
-                        />
+                        <Input onChange={e => setLabel(e.target.value)} type="text" name="value" id="ResourceLabel" disabled={isLoading} />
                     </FormGroup>
                     <FormGroup>
-                        <Label for="select-classes">Classes</Label>
+                        <Label for="select-classes">
+                            Classes <span className="text-muted fst-italic">(optional)</span>
+                        </Label>
                         {!isLoadingDefaultClasses && (
                             <AutoComplete
                                 entityType={ENTITIES.CLASS}

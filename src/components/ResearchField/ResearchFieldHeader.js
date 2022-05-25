@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { Container, Button, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Card, CardBody, CardTitle, Badge } from 'reactstrap';
+import { Container, Button, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Badge } from 'reactstrap';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
-import { SubTitle, SubtitleSeparator } from 'components/styled';
+import { SubTitle } from 'components/styled';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPen, faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 import useResearchField from 'components/ResearchField/hooks/useResearchField';
@@ -80,12 +80,7 @@ const ResearchFieldHeader = ({ id }) => {
                         />
                     )}
                     <TitleBar
-                        titleAddition={
-                            <>
-                                <SubtitleSeparator />
-                                <SubTitle>Research field</SubTitle>
-                            </>
-                        }
+                        titleAddition={<SubTitle>Research field</SubTitle>}
                         buttonGroup={
                             <>
                                 {isCurationAllowed && (
@@ -117,74 +112,68 @@ const ResearchFieldHeader = ({ id }) => {
                         {researchFieldData.label}
                     </TitleBar>
 
-                    <Container className="p-0">
-                        <Card>
-                            {(researchFieldData.description || researchFieldData.sameAs) && (
-                                <>
-                                    <CardBody>
-                                        {researchFieldData.description && (
-                                            <>
-                                                <CardTitle tag="h5">Description</CardTitle>
-                                                {researchFieldData.description && <p className="m-0">{researchFieldData.description}</p>}
-                                            </>
-                                        )}
-                                        {researchFieldData.sameAs && (
-                                            <ExternalDescription
-                                                query={researchFieldData.sameAs ? researchFieldData.sameAs.label : researchFieldData.label}
-                                            />
-                                        )}
-                                    </CardBody>
-                                    <hr className="m-0" />
-                                </>
-                            )}
-                            {subResearchFields && subResearchFields.length > 0 && (
-                                <>
-                                    <CardBody>
-                                        <CardTitle tag="h5">Subfields</CardTitle>
-                                        <div>
-                                            {subResearchFields.slice(0, 9).map(subfield => (
-                                                <Link
-                                                    key={`index${subfield.id}`}
-                                                    to={reverseWithSlug(ROUTES.RESEARCH_FIELD, {
-                                                        researchFieldId: subfield.id,
-                                                        slug: subfield.label,
-                                                    })}
-                                                >
-                                                    <Badge color="light" className="me-2 mb-2">
-                                                        {subfield.label}
-                                                    </Badge>
-                                                </Link>
-                                            ))}
-                                            {subResearchFields.length > 9 &&
-                                                showMoreFields &&
-                                                subResearchFields.slice(9).map(subfield => (
-                                                    <Link
-                                                        key={`index${subfield.id}`}
-                                                        to={reverseWithSlug(ROUTES.RESEARCH_FIELD, {
-                                                            researchFieldId: subfield.id,
-                                                            slug: subfield.label,
-                                                        })}
-                                                    >
-                                                        <Badge color="light" className="me-2 mb-2">
-                                                            {subfield.label}
-                                                        </Badge>
-                                                    </Link>
-                                                ))}
-                                            {subResearchFields.length > 9 && (
-                                                <Button onClick={() => setShowMoreFields(v => !v)} color="link" size="sm">
-                                                    {showMoreFields ? 'Show less subfields' : 'Show more subfields'}
-                                                </Button>
-                                            )}
-                                        </div>
-                                    </CardBody>
-                                    <hr className="m-0" />
-                                </>
-                            )}
+                    <Container className="p-3 box rounded">
+                        {(researchFieldData.description || researchFieldData.sameAs) && (
+                            <>
+                                {researchFieldData.description && (
+                                    <>
+                                        <h2 className="h5">Description</h2>
+                                        {researchFieldData.description && <p className="m-0">{researchFieldData.description}</p>}
+                                    </>
+                                )}
+                                {researchFieldData.sameAs && (
+                                    <ExternalDescription
+                                        query={researchFieldData.sameAs ? researchFieldData.sameAs.label : researchFieldData.label}
+                                    />
+                                )}
 
-                            <CardBody>
-                                <Contributors researchFieldId={id} />
-                            </CardBody>
-                        </Card>
+                                <hr className="my-3" />
+                            </>
+                        )}
+                        {subResearchFields && subResearchFields.length > 0 && (
+                            <>
+                                <h2 className="h5">Subfields</h2>
+                                <div>
+                                    {subResearchFields.slice(0, 9).map(subfield => (
+                                        <Link
+                                            key={`index${subfield.id}`}
+                                            to={reverseWithSlug(ROUTES.RESEARCH_FIELD, {
+                                                researchFieldId: subfield.id,
+                                                slug: subfield.label,
+                                            })}
+                                        >
+                                            <Badge color="light" className="me-2 mb-2">
+                                                {subfield.label}
+                                            </Badge>
+                                        </Link>
+                                    ))}
+                                    {subResearchFields.length > 9 &&
+                                        showMoreFields &&
+                                        subResearchFields.slice(9).map(subfield => (
+                                            <Link
+                                                key={`index${subfield.id}`}
+                                                to={reverseWithSlug(ROUTES.RESEARCH_FIELD, {
+                                                    researchFieldId: subfield.id,
+                                                    slug: subfield.label,
+                                                })}
+                                            >
+                                                <Badge color="light" className="me-2 mb-2">
+                                                    {subfield.label}
+                                                </Badge>
+                                            </Link>
+                                        ))}
+                                    {subResearchFields.length > 9 && (
+                                        <Button onClick={() => setShowMoreFields(v => !v)} color="link" size="sm" className="p-0 ms-2">
+                                            {showMoreFields ? 'Show less subfields' : 'Show more subfields'}
+                                        </Button>
+                                    )}
+                                </div>
+
+                                <hr className="my-3" />
+                            </>
+                        )}
+
+                        <Contributors researchFieldId={id} />
                     </Container>
                 </>
             )}

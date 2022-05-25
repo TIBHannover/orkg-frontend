@@ -63,7 +63,7 @@ class Organizations extends Component {
                                 className="btn btn-secondary btn-sm flex-shrink-0"
                                 to={ROUTES.ADD_ORGANIZATION}
                             >
-                                <Icon icon={faPlus} /> Create new organization
+                                <Icon icon={faPlus} /> Create organization
                             </RequireAuthentication>
                         )
                     }
@@ -79,7 +79,7 @@ class Organizations extends Component {
                         </div>
                     )}
                     {this.state.organizations.length === 0 && !this.state.isNextPageLoading && (
-                        <div className="text-center mt-4 mb-4">No organizations yet!</div>
+                        <div className="text-center mt-4 mb-4">No organizations yet</div>
                     )}
                     {this.state.isNextPageLoading && (
                         <div className="text-center mt-4 mb-4">

@@ -8,7 +8,7 @@ const SuperResearchProblemBox = ({ isLoading, superProblems }) => (
         <h5>Super-problems</h5>
         <div>
             <small className="text-muted">
-                Research problems that has this problem as <i>Sub Problem</i>.
+                Research problems that has this problem as <i>Sub Problem</i>
             </small>
         </div>
         {!isLoading ? (
@@ -29,11 +29,11 @@ const SuperResearchProblemBox = ({ isLoading, superProblems }) => (
                         ))}
                     </ul>
                 ) : (
-                    <div className="text-center mt-4 mb-4">No super research problems.</div>
+                    <div className="text-center mt-4 mb-4">No super research problems</div>
                 )}
             </div>
         ) : (
-            <div className="text-center mt-4 mb-4">Loading super research problems ...</div>
+            <div className="text-center mt-4 mb-4">Loading super research problems...</div>
         )}
     </div>
 );

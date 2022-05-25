@@ -19,7 +19,7 @@ import { openTour, closeTour, blockNavigation, loadPaperDataAction as loadPaperD
 import GizmoGraphViewModal from 'components/ViewPaper/GraphView/GizmoGraphViewModal';
 import env from '@beam-australia/react-env';
 import TitleBar from 'components/TitleBar/TitleBar';
-import { SubTitle, SubtitleSeparator } from 'components/styled';
+import { SubTitle } from 'components/styled';
 
 const Help = styled.div`
     box-sizing: border-box;
@@ -182,14 +182,7 @@ class AddPaper extends Component {
                  */}
 
                 <TitleBar
-                    titleAddition={
-                        this.props.currentStep > 1 && (
-                            <>
-                                <SubtitleSeparator />
-                                <SubTitle>{this.props.addPaper.title}</SubTitle>
-                            </>
-                        )
-                    }
+                    titleAddition={this.props.currentStep > 1 && <SubTitle>{this.props.addPaper.title}</SubTitle>}
                     buttonGroup={
                         <Button
                             color="secondary"

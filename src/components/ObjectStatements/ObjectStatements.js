@@ -118,7 +118,7 @@ const ObjectStatements = props => {
 
                 {isLoading && loadingIndicator}
 
-                {statements.length === 0 && !isLoading && <div className="text-center mb-2">This resource isn't used as an object yet.</div>}
+                {statements.length === 0 && !isLoading && <div className="text-center mb-2">This resource isn't used as an object yet</div>}
             </Collapse>
         </div>
     );

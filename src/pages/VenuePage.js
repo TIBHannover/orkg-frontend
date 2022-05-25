@@ -95,7 +95,7 @@ const VenuePage = () => {
                         )}
                         {totalElements === 0 && !isNextPageLoading && (
                             <ListGroupItem tag="div" className="text-center p-4">
-                                There are no works of this author, yet.
+                                There are no works of this author, yet
                             </ListGroupItem>
                         )}
                         {isNextPageLoading && (
@@ -115,7 +115,7 @@ const VenuePage = () => {
                             </ListGroupItem>
                         )}
                         {!hasNextPage && isLastPageReached && page > 1 && totalElements !== 0 && (
-                            <div className="text-center mt-3">You have reached the last page.</div>
+                            <div className="text-center mt-3">You have reached the last page</div>
                         )}
                     </Container>
                     <ComparisonPopup />

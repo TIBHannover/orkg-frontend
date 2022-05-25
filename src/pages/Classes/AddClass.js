@@ -52,31 +52,19 @@ const AddClass = () => {
                 <div className="pt-2">
                     <FormGroup>
                         <Label for="classLabel">Class label</Label>
-                        <Input
-                            onChange={e => setLabel(e.target.value)}
-                            type="text"
-                            name="value"
-                            id="classLabel"
-                            disabled={isLoading}
-                            placeholder="Class label"
-                        />
+                        <Input onChange={e => setLabel(e.target.value)} type="text" name="value" id="classLabel" disabled={isLoading} />
                     </FormGroup>
                     <FormGroup>
-                        <Label for="URIInput">URI</Label>
-                        <Input
-                            type="uri"
-                            name="uri"
-                            id="URIInput"
-                            value={uri}
-                            placeholder="Enter the URI of the class"
-                            onChange={e => setUri(e.target.value)}
-                        />
+                        <Label for="URIInput">
+                            URI <span className="text-muted fst-italic">(optional)</span>
+                        </Label>
+                        <Input type="uri" name="uri" id="URIInput" value={uri} onChange={e => setUri(e.target.value)} />
                         <FormText color="muted">
                             Please provide the URI of the class if you are using a class defined in an external ontology
                         </FormText>
                     </FormGroup>
                     <Button color="primary" onClick={handleAdd} className="mt-3 mb-2" disabled={isLoading}>
-                        {!isLoading ? 'Create Class' : <span>Loading</span>}
+                        {!isLoading ? 'Create class' : <span>Loading</span>}
                     </Button>
                 </div>
             </Container>

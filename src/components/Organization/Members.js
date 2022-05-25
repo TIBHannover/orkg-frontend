@@ -60,7 +60,7 @@ const Members = ({ organizationsId }) => {
                     )}
                 </ContributorsAvatars>
             )}
-            {!isLoadingMembers && members?.length === 0 && <div className="mt-4 mb-4">No members in this organization yet.</div>}
+            {!isLoadingMembers && members?.length === 0 && <div className="mb-2">No members in this organization yet</div>}
             {members.length > 18 && openModal && (
                 <MembersModal members={members} openModal={openModal} setOpenModal={setOpenModal} organizationsId={organizationsId} />
             )}

@@ -140,17 +140,16 @@ function ObservatoriesCarousel(props) {
                         <CarouselIndicatorsStyled items={props.observatories} activeIndex={activeIndex} onClickHandler={goToIndex} />
                     </Carousel>
                 ) : (
-                    <div className="pt-4 pb-4 ps-4 pe-4">
-                        No observatories yet!
+                    <div className="pt-4 pb-4 ps-4 pe-4 text-center">
+                        No observatories yet
                         <br />
-                        <small className="text-muted">
-                            How observatories are managed?{' '}
+                        <small>
                             <a
                                 href="https://www.orkg.org/orkg/help-center/article/8/Observatories_for_specific_research_fields"
                                 target="_blank"
                                 rel="noopener noreferrer"
                             >
-                                ORKG help center
+                                How observatories are managed?
                             </a>
                         </small>
                     </div>

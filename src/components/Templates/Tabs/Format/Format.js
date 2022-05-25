@@ -36,8 +36,14 @@ const Format = () => {
                 {hasLabelFormat && components?.length > 0 && (
                     <div className="mt-3">
                         <FormGroup className="mb-4">
-                            <Label>Formatted label</Label>
-                            <Input placeholder="{P123} to {P456}" value={labelFormat} onChange={handleChangeLabelFormat} disabled={!editMode} />
+                            <Label for="formatted-label">Formatted label</Label>
+                            <Input
+                                placeholder="{P123} to {P456}"
+                                value={labelFormat}
+                                onChange={handleChangeLabelFormat}
+                                disabled={!editMode}
+                                id="formatted-label"
+                            />
                             <FormText>
                                 Use the reference of property IDs below to get each property placeholder.
                                 <br />

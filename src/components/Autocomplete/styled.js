@@ -5,6 +5,7 @@ export const SelectGlobalStyle = createGlobalStyle`
     // can be activated in react select by using "classNamePrefix="react-select""
     .react-select__control {
         cursor: pointer !important;
+        background: ${props => props.theme.inputBg}!important;
     }
     .react-select__control--is-focused {
         border-color: rgba(232, 97, 97, 0.25) !important;

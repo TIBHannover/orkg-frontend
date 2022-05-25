@@ -85,7 +85,7 @@ const EditPaperDialog = ({ paperData, isOpen, toggle, afterUpdate, showPaperLink
             onChange: e => setTitle(e.target.value),
         },
         researchField: {
-            label: 'Research Field',
+            label: 'Research field',
             type: 'researchField',
             value: researchField,
             onChange: value =>

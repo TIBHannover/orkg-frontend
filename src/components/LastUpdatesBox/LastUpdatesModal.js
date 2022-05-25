@@ -15,9 +15,8 @@ const LastUpdatesBox = ({ researchFieldId, openModal, setOpenModal }) => {
 
     return (
         <Modal isOpen={openModal} toggle={() => setOpenModal(v => !v)} size="lg">
-            <ModalHeader toggle={() => setOpenModal(v => !v)}>Last updates</ModalHeader>
+            <ModalHeader toggle={() => setOpenModal(v => !v)}>Last 30 updates</ModalHeader>
             <ModalBody>
-                <div className="ps-2 pe-2 mb-3">Last 30 updates:</div>
                 <div className="ps-3 pe-3">
                     {!isLoading &&
                         activities.map((activity, index) => (

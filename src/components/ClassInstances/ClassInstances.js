@@ -130,7 +130,7 @@ const ClassInstances = props => {
                                 )}
                                 {!hasNextPage && isLastPageReached && page !== 0 && (
                                     <tr className="text-center mt-3">
-                                        <td colSpan="3">You have reached the last page.</td>
+                                        <td colSpan="3">You have reached the last page</td>
                                     </tr>
                                 )}
                             </tbody>
@@ -147,7 +147,7 @@ const ClassInstances = props => {
                                 No result found for the term: <i>{searchQuery}</i>.
                             </>
                         ) : (
-                            'This class has no instances yet.'
+                            'This class has no instances yet'
                         )}
                     </div>
                 )}

@@ -29,10 +29,9 @@ const ContributorsModal = ({ researchProblemId, openModal, setOpenModal }) => {
                                         <AuthorCard author={author.author} subTitle={pluralize('paper', author.papers, true)} />
                                     </div>
                                 </div>
-                                {authors.length - 1 !== index && <hr className="mb-0 mt-3" />}
                             </div>
                         ))}
-                    {!isLoading && authors?.length === 0 && <div className="mt-4 mb-4">No authors yet.</div>}
+                    {!isLoading && authors?.length === 0 && <div className="mt-4 mb-4">No authors yet</div>}
                     {isLoading && (
                         <div className="mt-4 mb-4">
                             <ContentLoader height={130} width={200} foregroundColor="#d9d9d9" backgroundColor="#ecebeb">
